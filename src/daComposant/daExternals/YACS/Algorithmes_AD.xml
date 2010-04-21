@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<proc>
+   <property name="DefaultStudyID" value="1"/>
+   <type name="bool" kind="bool"/>
+   <sequence name="boolvec" content="bool"/>
+   <type name="double" kind="double"/>
+   <sequence name="dblevec" content="double"/>
+   <objref name="file" id="file"/>
+   <type name="int" kind="int"/>
+   <sequence name="intvec" content="int"/>
+   <objref name="pyobj" id="python:obj:1.0"/>
+   <type name="string" kind="string"/>
+   <sequence name="stringvec" content="string"/>
+   <container name="DefaultContainer">
+      <property name="container_name" value="FactoryServer"/>
+      <property name="hostname" value="localhost"/>
+   </container>
+   <inline name="BLUE par matrices">
+      <function name="algorithm">
+         <code><![CDATA[import sys, os
+sys.path.insert(0, "../../Sources/daCore")
+sys.path.insert(0, "../../ComposantAD/daCore")
+#sys.path.insert(0, os.path.join(os.environ["HOME"],"SALOME5/supplements_JPA/ComposantAD/daCore"))
+
+import numpy
+from AssimilationStudy import AssimilationStudy
+
+def algorithm(Yo, B, R, H, Xb):
+    #
+    # Remise en place des matrices
+    # -------------------
+    dimensionXb = len( Xb )
+    dimensionYo = len( Yo )
+    B = numpy.matrix( B, numpy.float ).reshape((dimensionXb,dimensionXb))
+    R = numpy.matrix( R, numpy.float ).reshape((dimensionYo,dimensionYo))
+    H = numpy.matrix( H, numpy.float ).reshape((dimensionYo,dimensionXb))
+    #
+    # Analyse
+    # -------
+    ADD = AssimilationStudy()
+    ADD.setBackground         (asVector     = Xb )
+    ADD.setBackgroundError    (asCovariance = B )
+    ADD.setObservation        (asVector     = Yo )
+    ADD.setObservationError   (asCovariance = R )
+    ADD.setObservationOperator(asMatrix     = H )
+    #
+    ADD.setAlgorithm(choice="Blue")
+    #
+    ADD.analyze()
+    #
+    Xa = ADD.get("Analysis").valueserie(0)
+    Innovation = ADD.get("Innovation").valueserie(0)
+    A = []
+    #
+    return Xa, A, Innovation
+]]></code>
+      </function>
+      <inport name="Yo" type="dblevec"/>
+      <inport name="B" type="dblevec"/>
+      <inport name="R" type="dblevec"/>
+      <inport name="H" type="dblevec"/>
+      <inport name="Xb" type="dblevec"/>
+      <outport name="Xa" type="dblevec"/>
+      <outport name="A" type="dblevec"/>
+      <outport name="Innovation" type="dblevec"/>
+   </inline>
+   <inline name="3D-VAR par matrices">
+      <function name="algorithm">
+         <code><![CDATA[import sys, os
+sys.path.insert(0, "../../Sources/daCore")
+sys.path.insert(0, "../../ComposantAD/daCore")
+#sys.path.insert(0, os.path.join(os.environ["HOME"],"SALOME5/supplements_JPA/ComposantAD/daCore"))
+
+import numpy
+from AssimilationStudy import AssimilationStudy
+
+def algorithm(Yo, B, R, H, Xb):
+    #
+    # Remise en place des matrices
+    # -------------------
+    dimensionXb = len( Xb )
+    dimensionYo = len( Yo )
+    B = numpy.matrix( B, numpy.float ).reshape((dimensionXb,dimensionXb))
+    R = numpy.matrix( R, numpy.float ).reshape((dimensionYo,dimensionYo))
+    H = numpy.matrix( H, numpy.float ).reshape((dimensionYo,dimensionXb))
+    #
+    # Analyse
+    # -------
+    ADD = AssimilationStudy()
+    ADD.setBackground         (asVector     = Xb )
+    ADD.setBackgroundError    (asCovariance = B )
+    ADD.setObservation        (asVector     = Yo )
+    ADD.setObservationError   (asCovariance = R )
+    ADD.setObservationOperator(asMatrix     = H )
+    #
+    ADD.setAlgorithm(choice="3DVAR")
+    #
+    ADD.analyze()
+    #
+    Xa = ADD.get("Analysis").valueserie(0)
+    Innovation = ADD.get("Innovation").valueserie(0)
+    A = []
+    #
+    return Xa, A, Innovation
+]]></code>
+      </function>
+      <inport name="Yo" type="dblevec"/>
+      <inport name="B" type="dblevec"/>
+      <inport name="R" type="dblevec"/>
+      <inport name="H" type="dblevec"/>
+      <inport name="Xb" type="dblevec"/>
+      <outport name="Xa" type="dblevec"/>
+      <outport name="A" type="dblevec"/>
+      <outport name="Innovation" type="dblevec"/>
+   </inline>
+   <inline name="3D-VAR par fonctions">
+      <function name="algorithm">
+         <code><![CDATA[import sys, os
+sys.path.insert(0, "../../Sources/daCore")
+sys.path.insert(0, "../../ComposantAD/daCore")
+#sys.path.insert(0, os.path.join(os.environ["HOME"],"SALOME5/supplements_JPA/ComposantAD/daCore"))
+
+import numpy
+from AssimilationStudy import AssimilationStudy
+
+def algorithm( Yo, B, R, FunctionH, TangentH, AdjointH, Xb, Bounds ):
+    #
+    # Remise en place des matrices
+    # -------------------
+    dimensionXb = len( Xb )
+    dimensionYo = len( Yo )
+    B = numpy.matrix( B, numpy.float ).reshape((dimensionXb,dimensionXb))
+    R = numpy.matrix( R, numpy.float ).reshape((dimensionYo,dimensionYo))
+    #
+    # Analyse
+    # -------
+    ADD = AssimilationStudy()
+    ADD.setBackground         (asVector     = Xb )
+    ADD.setBackgroundError    (asCovariance = B )
+    ADD.setObservation        (asVector     = Yo )
+    ADD.setObservationError   (asCovariance = R )
+    ADD.setObservationOperator(asFunction   = {"Direct":FunctionH,
+                                               "Tangent":TangentH,
+                                               "Adjoint":AdjointH} )
+    #
+    ADD.setAlgorithm(choice="3DVAR")
+    ADD.setAlgorithmParameters(asDico={
+        "Minimizer":"LBFGSB",
+        "Bounds"   :Bounds,
+        })
+    #
+    ADD.analyze()
+    #
+    Xa = ADD.get("Analysis").valueserie(0)
+    Innovation = ADD.get("Innovation").valueserie(0)
+    A = []
+    #
+    return Xa, A, Innovation
+]]></code>
+      </function>
+      <inport name="Yo" type="dblevec"/>
+      <inport name="B" type="dblevec"/>
+      <inport name="R" type="dblevec"/>
+      <inport name="FunctionH" type="pyobj"/>
+      <inport name="TangentH" type="pyobj"/>
+      <inport name="AdjointH" type="pyobj"/>
+      <inport name="Xb" type="dblevec"/>
+      <inport name="Bounds" type="pyobj"/>
+      <outport name="Xa" type="dblevec"/>
+      <outport name="A" type="dblevec"/>
+      <outport name="Innovation" type="dblevec"/>
+   </inline>
+   <parameter>
+      <tonode>BLUE par matrices</tonode><toport>Yo</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE par matrices</tonode><toport>B</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE par matrices</tonode><toport>R</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE par matrices</tonode><toport>H</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE par matrices</tonode><toport>Xb</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par matrices</tonode><toport>Yo</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par matrices</tonode><toport>B</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par matrices</tonode><toport>R</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par matrices</tonode><toport>H</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par matrices</tonode><toport>Xb</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par fonctions</tonode><toport>Yo</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par fonctions</tonode><toport>B</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par fonctions</tonode><toport>R</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par fonctions</tonode><toport>Xb</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>3D-VAR par fonctions</tonode><toport>Bounds</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <presentation name="BLUE par matrices" x="9" y="80.5" width="227.5" height="226"/>
+   <presentation name="3D-VAR par matrices" x="237.5" y="80.5" width="227.5" height="226"/>
+   <presentation name="3D-VAR par fonctions" x="465.5" y="80.5" width="227.5" height="313"/>
+   <presentation name="__ROOT__" x="0" y="0" width="702" height="402.5"/>
+</proc>

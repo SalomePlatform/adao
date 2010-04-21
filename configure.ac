@@ -71,6 +71,6 @@ AC_CONFIG_FILES([
         idl/Makefile
         resources/Makefile
         src/Makefile
-
+        src/daComposant/Makefile
         ])
 AC_OUTPUT
