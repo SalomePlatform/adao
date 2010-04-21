@@ -73,5 +73,6 @@ AC_CONFIG_FILES([
         src/Makefile
         src/daComposant/Makefile
         src/daSalome/Makefile
+        bin/Makefile
         ])
 AC_OUTPUT

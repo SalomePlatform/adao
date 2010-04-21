@@ -28,26 +28,7 @@ from optparse import OptionParser
 from daYacsSchemaCreator.methods import *
 from daYacsSchemaCreator.help_methods import *
 
-# Variables globales
-global my_parser
-
-# Init part
-def init():
-
-  logging.basicConfig(level=logging.DEBUG, format='%(levelname)-8s %(message)s')
-  usage = "usage: %prog [options] config_file yacs_schema_filename"
-  version="%prog 0.1"
-  global my_parser
-  my_parser = OptionParser(usage=usage, version=version)
-
-# Start application
-def main():
-
-  print "-- Starting YacsSchemaCreator --"
-  (options, args) = my_parser.parse_args()
-  check_args(args)
-  config_file =  args[0]
-  yacs_schema_filename =  args[1]
+def create_schema(config_file, yacs_schema_filename):
 
   # Import config_file
   try:
@@ -63,13 +44,6 @@ def main():
   else:
     globals()['study_config'] = locals()['study_config']
 
-  if "DATASSIM_ROOT_DIR" not in os.environ:
-    logging.fatal("You have to define DATASSIM_ROOT_DIR")
-    sys.exit(1)
-
   check_study(study_config)
   proc = create_yacs_proc(study_config)
   write_yacs_proc(proc, yacs_schema_filename)
-
-init()
-main()
