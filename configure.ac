@@ -10,6 +10,8 @@ if test "x$Kernel_ok" = "xno"; then
   AC_MSG_ERROR([You must define a correct KERNEL_ROOT_DIR or use the --with-kernel= configure option !])
 fi
 
+AC_ENABLE_DEBUG(yes)
+AC_DISABLE_PRODUCTION
 AC_PROG_LIBTOOL
 AC_PROG_CC
 AC_PROG_CXX
