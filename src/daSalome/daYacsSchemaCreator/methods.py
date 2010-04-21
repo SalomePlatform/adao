@@ -39,7 +39,7 @@ def create_yacs_proc(study_config):
   l.registerProcCataLoader()
   runtime = pilot.getRuntime()
   try:
-    catalogAd = runtime.loadCatalog("proc", os.environ["DATASSIM_ROOT_DIR"] + "share/salome/resources/datassim/DATASSIMSchemaCatalog.xml")
+    catalogAd = runtime.loadCatalog("proc", os.environ["DATASSIM_ROOT_DIR"] + "/share/salome/resources/datassim/DATASSIMSchemaCatalog.xml")
   except:
     logging.fatal("Exception in loading DataAssim YACS catalog")
     traceback.print_exc()
