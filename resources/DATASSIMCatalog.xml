@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='us-ascii' ?>
+
+<!-- XML component catalog -->
+<begin-catalog>
+
+<!-- Path prefix information -->
+
+<path-prefix-list>
+</path-prefix-list>
+
+<!-- Commonly used types  -->
+<type-list>
+  <objref name="pyobj" id="python:obj:1.0"/>
+  <objref name="file" id="file"/>
+</type-list>
+
+<!-- Component list -->
+<component-list>
+
+</component-list>
+</begin-catalog>

@@ -1,0 +1,19 @@
+
+#ifndef _DATASSIM_IDL_
+#define _DATASSIM_IDL_
+
+#include "DSC_Engines.idl"
+#include "SALOME_Exception.idl"
+#include "SALOME_PACOExtension.idl"
+
+module DATASSIM
+{
+typedef sequence<string> stringvec;
+typedef sequence<double> dblevec;
+typedef sequence<long> intvec;
+typedef Engines::dataref dataref;
+
+
+};
+
+#endif
