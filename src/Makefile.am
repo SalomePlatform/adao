@@ -1,1 +1,1 @@
-SUBDIRS= daComposant
+SUBDIRS= daComposant daSalome

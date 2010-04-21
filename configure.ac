@@ -72,5 +72,6 @@ AC_CONFIG_FILES([
         resources/Makefile
         src/Makefile
         src/daComposant/Makefile
+        src/daSalome/Makefile
         ])
 AC_OUTPUT

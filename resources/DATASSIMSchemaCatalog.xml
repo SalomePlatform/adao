@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<proc>
+  
+  <objref name="computeAD" id="python:computeAD:1.0">
+    <base>pyobj</base>
+  </objref>
+
+  <inline name="CreateAssimilationStudy">
+    <script><code>
+
+<![CDATA[
+import numpy
+print "Entering in CreateAssimilationStudy"
+print "Name is", Name
+print "Algorithm is", Algorithm
+
+
+# Data
+print "Data entered are:"
+# Background
+try:
+  Background
+except NameError:
+  pass
+else:
+  print "Background is", Background
+  print "BackgroundType is", BackgroundType
+
+# BackgroundError
+try:
+  BackgroundError
+except NameError:
+  pass
+else:
+  print "BackgroundError is", BackgroundError
+  print "BackgroundErrorType is", BackgroundErrorType
+
+# Observation
+try:
+  Observation
+except NameError:
+  pass
+else:
+  print "Observation is", Observation
+  print "ObservationType is", ObservationType
+
+# ObservationError
+try:
+  ObservationError
+except NameError:
+  pass
+else:
+  print "ObservationError is", ObservationError
+  print "ObservationErrorType is", ObservationErrorType
+
+# ObservationOperator
+try:
+  ObservationOperator
+except NameError:
+  pass
+else:
+  print "ObservationOperator is", ObservationOperator
+  print "ObservationOperatorType is", ObservationOperatorType
+
+]]>
+
+</code></script>
+    <inport name="Name" type="string"/>
+    <inport name="Algorithm" type="string"/>
+  </inline>
+
+  <inline name="CreateNumpyMatrixFromString">
+    <script><code><![CDATA[
+print "Entering in CreateNumpyMatrixFromString"
+import numpy
+matrix = numpy.matrix(matrix_in_string)
+type = "Matrix"
+print "Matrix is", matrix
+]]></code></script>
+    <inport name="matrix_in_string" type="string"/>
+    <outport name="matrix" type="pyobj"/>
+    <outport name="type" type="string"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorFromString">
+    <script><code><![CDATA[
+print "Entering in CreateNumpyVectorFromString"
+import numpy
+vector = numpy.matrix(vector_in_string)
+type = "Vector"
+print "Vector is", vector
+]]></code></script>
+    <inport name="vector_in_string" type="string"/>
+    <outport name="vector" type="pyobj"/>
+    <outport name="type" type="string"/>
+  </inline>
+
+</proc>
