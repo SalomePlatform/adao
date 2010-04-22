@@ -73,11 +73,13 @@ else:
   assim_study.setObservationOperatorType(ObservationOperatorType)
   assim_study.setObservationOperator(ObservationOperator)
 
+Study = assim_study
 ]]>
 
 </code></script>
     <inport name="Name" type="string"/>
     <inport name="Algorithm" type="string"/>
+    <outport name="Study" type="pyobj"/>
   </inline>
 
   <inline name="CreateNumpyMatrixFromString">
@@ -106,4 +108,14 @@ print "Vector is", vector
     <outport name="type" type="string"/>
   </inline>
 
+  <inline name="SimpleExecuteDirectAlgorithm">
+    <script><code><![CDATA[
+print "Entering in SimpleExecuteDirectAlgorithm"
+from daYacsIntegration.daStudy import *
+ADD = Study.getAssimilationStudy()
+ADD.analyze()
+]]></code></script>
+    <inport name="Study" type="pyobj"/>
+    <outport name="Study" type="pyobj"/>
+  </inline>
 </proc>

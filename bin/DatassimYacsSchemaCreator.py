@@ -39,6 +39,7 @@ try:
 except:
   logging.fatal("Import of DATASSIM python modules failed !" +
                 "\n add DATASSIM python installation directory in your PYTHONPATH")
+  traceback.print_exc()
   sys.exit(1)
 
 # Parse arguments

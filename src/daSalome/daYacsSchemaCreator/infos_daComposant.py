@@ -45,4 +45,5 @@ AssimAlgos = ["Blue", "EnsembleBlue", "Kalman", "LinearLeastSquares", "3DVAR"]
 AlgoDataRequirements = {}
 AlgoDataRequirements["Blue"] = ["Background", "BackgroundError",
                                 "Observation", "ObservationOperator", "ObservationError"]
-
+AlgoType = {}
+AlgoType["Blue"] = "Direct"

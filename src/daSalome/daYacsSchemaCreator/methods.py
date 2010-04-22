@@ -91,7 +91,17 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
 
 
-  # Step 3: create optimizer loop
+  # Step 3: create compute bloc
+  compute_bloc = runtime.createBloc("compute_bloc")
+  proc.edAddChild(compute_bloc)
+  proc.edAddCFLink(CAS_node, compute_bloc)
+
+  if AlgoType[study_config["Algorithm"]] == "Direct":
+    # We don't need to use an optimizer loop
+    factory_execute_node = catalogAd._nodeMap["SimpleExecuteDirectAlgorithm"]
+    execute_node = factory_execute_node.cloneNode("Execute" + study_config["Algorithm"])
+    compute_bloc.edAddChild(execute_node)
+    proc.edAddDFLink(CAS_node.getOutputPort("Study"), execute_node.getInputPort("Study"))
 
   # Step 4: create post-processing from user configuration
 
