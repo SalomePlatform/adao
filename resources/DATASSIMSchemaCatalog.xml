@@ -14,6 +14,9 @@ print "Entering in CreateAssimilationStudy"
 print "Name is", Name
 print "Algorithm is", Algorithm
 
+# Create Assimilation study
+from daYacsIntegration.daStudy import *
+assim_study = daStudy(Name, Algorithm)
 
 # Data
 print "Data entered are:"
@@ -25,6 +28,8 @@ except NameError:
 else:
   print "Background is", Background
   print "BackgroundType is", BackgroundType
+  assim_study.setBackgroundType(BackgroundType)
+  assim_study.setBackground(Background)
 
 # BackgroundError
 try:
@@ -34,6 +39,7 @@ except NameError:
 else:
   print "BackgroundError is", BackgroundError
   print "BackgroundErrorType is", BackgroundErrorType
+  assim_study.setBackgroundError(BackgroundError)
 
 # Observation
 try:
@@ -43,6 +49,8 @@ except NameError:
 else:
   print "Observation is", Observation
   print "ObservationType is", ObservationType
+  assim_study.setObservationType(ObservationType)
+  assim_study.setObservation(Observation)
 
 # ObservationError
 try:
@@ -52,6 +60,7 @@ except NameError:
 else:
   print "ObservationError is", ObservationError
   print "ObservationErrorType is", ObservationErrorType
+  assim_study.setObservationError(ObservationError)
 
 # ObservationOperator
 try:
@@ -61,9 +70,9 @@ except NameError:
 else:
   print "ObservationOperator is", ObservationOperator
   print "ObservationOperatorType is", ObservationOperatorType
+  assim_study.setObservationOperatorType(ObservationOperatorType)
+  assim_study.setObservationOperator(ObservationOperator)
 
-from daYacsIntegration.daStudy import *
-assim_study = daStudy(Name, Algorithm)
 ]]>
 
 </code></script>
