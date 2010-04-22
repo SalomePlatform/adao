@@ -20,6 +20,11 @@
 # --
 
 
+# -- Infos pour le parser --
+
+AnalysisData = {}
+AnalysisFromList = ["string", "file"]
+
 # -- Infos from daCore --
 AssimData = ["Background", "BackgroundError",
              "Observation", "ObservationError", "ObservationOperator", "ObservationOperatorAppliedToX",

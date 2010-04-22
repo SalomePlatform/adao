@@ -116,6 +116,28 @@ def create_yacs_proc(study_config):
       proc.edAddCFLink(compute_bloc, analysis_node)
       proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
+    elif analysis_config["From"] == "file":
+      factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
+      analysis_node = factory_analysis_node.cloneNode("User Analysis")
+      default_script = analysis_node.getScript()
+      if not os.path.exists(analysis_config["Data"]):
+        logging.fatal("Analysis source file does not exists ! :" + str(analysis_config["Data"]))
+        sys.exit(1)
+      try:
+        analysis_file = open(analysis_config["Data"], 'r')
+      except:
+        logging.fatal("Exception in openng analysis file : " + str(analysis_config["Data"]))
+        traceback.print_exc()
+        sys.exit(1)
+      file_text = analysis_file.read()
+      final_script = default_script + file_text
+      analysis_node.setScript(final_script)
+      proc.edAddChild(analysis_node)
+      proc.edAddCFLink(compute_bloc, analysis_node)
+      proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+
+      pass
+
   return proc
 
 def write_yacs_proc(proc, yacs_schema_filename):

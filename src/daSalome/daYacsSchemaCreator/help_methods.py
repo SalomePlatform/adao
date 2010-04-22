@@ -76,9 +76,9 @@ def check_study(study_config):
       logging.fatal("Analysis found but From is not defined in the analysis configuration !")
       sys.exit(1)
     else:
-      if analysis_config["From"] != "string":
+      if analysis_config["From"] not in AnalysisFromList:
         logging.fatal("Analysis From defined in the study configuration does not have a correct type : " + str(analysis_config["From"])
-                      + "\n You can have : string")
+                      + "\n You can have : " + str(AnalysisFromList))
         sys.exit(1)
     if "Data" not in analysis_config:
       logging.fatal("Analysis found but Data is not defined in the analysis configuration !")
