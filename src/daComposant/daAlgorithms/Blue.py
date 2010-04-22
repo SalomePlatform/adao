@@ -23,11 +23,11 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD - Mars 2008"
 
-import sys ; sys.path.insert(0, "../daCore")
+import sys
 import logging
-import Persistence
-from BasicObjects import Algorithm
-import PlatformInfo ; m = PlatformInfo.SystemUsage()
+from daCore import Persistence
+from daCore.BasicObjects import Algorithm
+from daCore import PlatformInfo ; m = PlatformInfo.SystemUsage()
 
 # ==============================================================================
 class ElementaryAlgorithm(Algorithm):

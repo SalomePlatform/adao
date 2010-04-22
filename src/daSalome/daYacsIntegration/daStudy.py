@@ -1,8 +1,8 @@
 #-*-coding:iso-8859-1-*-
 
-from AssimilationStudy import AssimilationStudy
+from daCore.AssimilationStudy import AssimilationStudy
 
-class adStudy:
+class daStudy:
 
   def __init__(self, name, algorithm):
 

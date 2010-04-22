@@ -62,6 +62,8 @@ else:
   print "ObservationOperator is", ObservationOperator
   print "ObservationOperatorType is", ObservationOperatorType
 
+from daYacsIntegration.daStudy import *
+assim_study = daStudy(Name, Algorithm)
 ]]>
 
 </code></script>
