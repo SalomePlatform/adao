@@ -104,6 +104,17 @@ def create_yacs_proc(study_config):
     proc.edAddDFLink(CAS_node.getOutputPort("Study"), execute_node.getInputPort("Study"))
 
   # Step 4: create post-processing from user configuration
+  if "Analysis" in study_config.keys():
+    analysis_config = study_config["Analysis"]
+    if analysis_config["From"] == "string":
+      factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
+      analysis_node = factory_analysis_node.cloneNode("User Analysis")
+      default_script = analysis_node.getScript()
+      final_script = default_script + analysis_config["Data"]
+      analysis_node.setScript(final_script)
+      proc.edAddChild(analysis_node)
+      proc.edAddCFLink(compute_bloc, analysis_node)
+      proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
   return proc
 

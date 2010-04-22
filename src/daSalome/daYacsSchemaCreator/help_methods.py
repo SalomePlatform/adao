@@ -69,6 +69,22 @@ def check_study(study_config):
     if key in AssimData:
       check_data(key, study_config[key])
 
+  # Analyse
+  if "Analysis" in study_config.keys():
+    analysis_config = study_config["Analysis"]
+    if "From" not in analysis_config:
+      logging.fatal("Analysis found but From is not defined in the analysis configuration !")
+      sys.exit(1)
+    else:
+      if analysis_config["From"] != "string":
+        logging.fatal("Analysis From defined in the study configuration does not have a correct type : " + str(analysis_config["From"])
+                      + "\n You can have : string")
+        sys.exit(1)
+    if "Data" not in analysis_config:
+      logging.fatal("Analysis found but Data is not defined in the analysis configuration !")
+      sys.exit(1)
+
+
 def check_data(data_name, data_config):
 
   logging.debug("[check_data] " + data_name)

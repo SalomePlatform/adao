@@ -118,4 +118,16 @@ ADD.analyze()
     <inport name="Study" type="pyobj"/>
     <outport name="Study" type="pyobj"/>
   </inline>
+
+  <inline name="SimpleUserAnalysis">
+    <script><code><![CDATA[
+#-*-coding:iso-8859-1-*-
+print "Entering in SimpleUserAnalysis"
+from daYacsIntegration.daStudy import *
+ADD = Study.getAssimilationStudy()
+# User code is below
+
+]]></code></script>
+    <inport name="Study" type="pyobj"/>
+  </inline>
 </proc>
