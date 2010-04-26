@@ -66,7 +66,7 @@ def create_yacs_proc(study_config):
 
       key_type = key + "Type"
 
-      if data_config["Type"] == "Vector" and data_config["From"] == "string":
+      if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromString"]
         back_node = factory_back_node.cloneNode("Get" + key)
@@ -78,7 +78,7 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
 
-      if data_config["Type"] == "Matrix" and data_config["From"] == "string":
+      if data_config["Type"] == "Matrix" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromString"]
         back_node = factory_back_node.cloneNode("Get" + key)
@@ -106,7 +106,7 @@ def create_yacs_proc(study_config):
   # Step 4: create post-processing from user configuration
   if "Analysis" in study_config.keys():
     analysis_config = study_config["Analysis"]
-    if analysis_config["From"] == "string":
+    if analysis_config["From"] == "String":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
       analysis_node = factory_analysis_node.cloneNode("User Analysis")
       default_script = analysis_node.getScript()
@@ -116,7 +116,7 @@ def create_yacs_proc(study_config):
       proc.edAddCFLink(compute_bloc, analysis_node)
       proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
-    elif analysis_config["From"] == "file":
+    elif analysis_config["From"] == "File":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
       analysis_node = factory_analysis_node.cloneNode("User Analysis")
       default_script = analysis_node.getScript()

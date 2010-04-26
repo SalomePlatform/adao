@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+import os, sys
+
+print "import des prefs de Datassim"
+
+# Configuration de Eficas
+# INSTALLDIR, REPINI est obligatoire
+INSTALLDIR = "/home/aribes/Dev/Src/CVS_SALOME/EficasV1"
+sys.path[:0]=[INSTALLDIR]
+# positionnee a repin au debut mise a jour dans configuration
+REPINI=os.path.dirname(os.path.abspath(__file__))
+
+# initialdir sert comme directory initial des QFileDialog
+initialdir=os.environ["PWD"]
+# Codage des strings qui accepte les accents (en remplacement de 'ascii')
+encoding='iso-8859-1'
+# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+lang='fr'
+
+
+# INSTALLDIR sert � localiser l'installation d'Eficas
+#INSTALLDIR=os.path.join(REPINI,'..')
+
+
+
+# Acces a la documentation
+#rep_cata        = INSTALLDIR
+#path_doc        = os.path.join(rep_cata,'Doc')
+#exec_acrobat    = "/usr/bin/xpdf"
+#savedir         = os.environ['HOME']
+
+
+# OpenTURNS Python module
+#OpenTURNS_path="/local00/home/dutka/OpenTURNS/trunk-cmake/build-autotools/install/lib/python2.4/site-packages"
+# Choix des catalogues
+#sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
+

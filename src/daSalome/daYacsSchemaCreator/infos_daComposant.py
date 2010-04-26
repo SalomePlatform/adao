@@ -23,7 +23,7 @@
 # -- Infos pour le parser --
 
 AnalysisData = {}
-AnalysisFromList = ["string", "file"]
+AnalysisFromList = ["String", "File"]
 
 # -- Infos from daCore --
 AssimData = ["Background", "BackgroundError",
@@ -39,8 +39,8 @@ AssimType["ObservationOperator"] = ["Matrix", "Function"]
 AssimType["ObservationOperatorAppliedToX"] = ["List"]
 
 FromNumpyList = {}
-FromNumpyList["Vector"] = ["string"]
-FromNumpyList["Matrix"] = ["string"]
+FromNumpyList["Vector"] = ["String"]
+FromNumpyList["Matrix"] = ["String"]
 FromNumpyList["Function"] = ["Dict"]
 FromNumpyList["List"] = ["List"]
 

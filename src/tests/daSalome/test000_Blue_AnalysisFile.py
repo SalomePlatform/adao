@@ -6,35 +6,35 @@ study_config["Algorithm"] = "Blue"
 Background_config = {}
 Background_config["Data"] = "0,1,2"
 Background_config["Type"] = "Vector"
-Background_config["From"] = "string"
+Background_config["From"] = "String"
 study_config["Background"] = Background_config
 
 BackgroundError_config = {}
 BackgroundError_config["Data"] = "1 0 0;0 1 0;0 0 1"
 BackgroundError_config["Type"] = "Matrix"
-BackgroundError_config["From"] = "string"
+BackgroundError_config["From"] = "String"
 study_config["BackgroundError"] = BackgroundError_config
 
 Observation_config = {}
 Observation_config["Data"] = "0.5,1.5,2.5"
 Observation_config["Type"] = "Vector"
-Observation_config["From"] = "string"
+Observation_config["From"] = "String"
 study_config["Observation"] = Observation_config
 
 ObservationError_config = {}
 ObservationError_config["Data"] = "1 0 0;0 1 0;0 0 1"
 ObservationError_config["Type"] = "Matrix"
-ObservationError_config["From"] = "string"
+ObservationError_config["From"] = "String"
 study_config["ObservationError"] = ObservationError_config
 
 ObservationOperator_config = {}
 ObservationOperator_config["Data"] = "1 0 0;0 1 0;0 0 1"
 ObservationOperator_config["Type"] = "Matrix"
-ObservationOperator_config["From"] = "string"
+ObservationOperator_config["From"] = "String"
 study_config["ObservationOperator"] = ObservationOperator_config
 
 Analysis_config = {}
 Analysis_config["Data"] = "/home/aribes/Projets/DATASSIM_SRC/src/tests/daSalome/test000_Blue_AnalysisCode.py"
-Analysis_config["From"] = "file"
+Analysis_config["From"] = "File"
 study_config["Analysis"] = Analysis_config
 
