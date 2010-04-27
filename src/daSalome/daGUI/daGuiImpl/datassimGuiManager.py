@@ -38,9 +38,11 @@ from daGuiImpl.enumerate import Enumerate
 #
 UI_ELT_IDS = Enumerate([
         'DATASSIM_MENU_ID',
+        'NEW_DATASSIMCASE_ID',
         ],offset=950)
 
 ACTIONS_MAP={
+    UI_ELT_IDS.NEW_DATASSIMCASE_ID:"newDatassimCase",
 }
 
 class DatassimGuiUiComponentBuilder:
@@ -61,3 +63,41 @@ class DatassimGuiUiComponentBuilder:
         # create toolbar
         tid = sgPyQt.createTool( "DATASSIM" )
 
+        a = sgPyQt.createAction( UI_ELT_IDS.NEW_DATASSIMCASE_ID, "New case", "New case", "Create a new datassim case", "" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+
+class DatassimGuiActionImpl():
+    """
+    This class implements the ui actions concerning the management of oma study
+    cases.
+    """
+    __dlgNewStudyCase = None
+    __dlgEficasWrapper = None
+
+    def __init__(self):
+        pass
+        # This dialog is created once so that it can be recycled for each call
+        # to newOmaCase().
+        #self.__dlgNewStudyCase = DlgNewStudyCase()
+        #self.__dlgEficasWrapper = OmaEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
+
+    # ==========================================================================
+    # Processing of ui actions
+    #
+    def processAction(self,actionId):
+        """
+        Main switch function for ui actions processing
+        """
+        if ACTIONS_MAP.has_key(actionId):
+            try:
+                functionName = ACTIONS_MAP[actionId]
+                getattr(self,functionName)()
+            except:
+                traceback.print_exc()
+        else:
+            msg = "The requested action is not implemented: " + str(actionId)
+            print msg
+
+    def newDatassimCase(self):
+      print "newDatassimCase"

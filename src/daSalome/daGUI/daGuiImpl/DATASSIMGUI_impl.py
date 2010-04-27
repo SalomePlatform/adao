@@ -52,8 +52,8 @@ def _setContext( studyID ):
     __current_context__ = __study2context__[studyID]
     return __current_context__
 
-#from oma.salome.omaGuiManager import OmaGuiActionImpl
-#actionImpl = OmaGuiActionImpl()
+from daGuiImpl.datassimGuiManager import DatassimGuiActionImpl
+actionImpl = DatassimGuiActionImpl()
 # This object does not need to be embedded in a GUI context object. A single
 # instance for all studies is a priori sufficient.
 
@@ -120,7 +120,7 @@ def OnGUIEvent(actionId) :
     toolbar button). The actionId value is the ID associated to the item.
     """
     pass
-#    actionImpl.processAction(actionId)
+    actionImpl.processAction(actionId)
 
     
 # called when module's preferences are changed
