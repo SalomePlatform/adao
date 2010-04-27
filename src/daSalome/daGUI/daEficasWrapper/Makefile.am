@@ -19,16 +19,14 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-mypkgpythondir =$(salomepythondir)/daGuiImpl
+mypkgpythondir =$(salomepythondir)/daEficasWrapper
 
 mypkgpython_PYTHON = \
+		     eficasWrapper.py \
 		     __init__.py \
-		     DATASSIMGUI_impl.py \
-		     datassimGuiManager.py \
-		     datassimGuiHelper.py \
-		     datassimModuleHelper.py \
-		     datassimStudyEditor.py \
-		     studyedit.py \
-		     enumerate.py
+		     datassimEficasWrapper.py
+
+EXTRA_DIST = eficasWrapper.py.in
+
 
 

@@ -1,0 +1,278 @@
+# -*- coding: iso-8859-1 -*-
+#  Copyright (C) 2010 EDF R&D
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+
+__author__="aribes/gboulant"
+
+# HACK - Pour l'instant
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)-8s %(message)s')
+logger = logging.getLogger()
+
+class DevelException(Exception):
+    def __init__(self, message):
+        """Canonical constructor"""
+        Exception.__init__(self,message)
+
+#
+# ==============================================================================
+# Interface of an eficas observer (for implementing the subject/observer pattern)
+# ==============================================================================
+#
+from daGuiImpl.enumerate import Enumerate
+class EficasObserver:
+    """
+    This class specifies the interface of an eficas observer. See example at the
+    bottom of this file.
+    """
+    def processEficasEvent(self, eficasWrapper, eficasEvent):
+        """
+        This function should be implemented in the concrete Observer.
+        @param eficasWrapper the instance of the source EficasWrapper
+        @param eficasEvent the emitted event (instance of EficasEvent)
+        """
+        raise DevelException("processEficasEvent not implemented yet")
+
+class EficasEvent:
+    EVENT_TYPES=Enumerate([
+        'CLOSE',
+        'SAVE'
+    ])
+
+    def __init__(self,eventType,callbackId=None):
+        """
+        Creates an eficas event to be used by an EficasWrapper to notify an
+        EficasObserver.
+
+        The eventType depends of the context of creation. It specify the nature
+        of the event inside EficasWrapper that triggers the creation of this instance.
+        
+        The callbackId is an object used by the EficasObserver to map the
+        notification (this received event) with the initial event (callback)
+        This object can be anything and has to be defined through a convention
+        that both the EficasWrapper and the EficasObserver can understand.
+        Typically, the eficas observer set the callback id to the eficas wrapper
+        before running the asynchronous show. Then, when an event is raised by
+        the eficas wrapper toward its observer, it embeds the callback id so that
+        the observer can match the received event to the initial trigger context.
+        
+        @param the eventType to be choosen in the EVENT_TYPES
+        @param callbackId an arbitrary data object
+        """
+        if not self.EVENT_TYPES.isValid(eventType):
+            raise DevelException("The event type "+str(eventType)+" is not defined")
+
+        self.eventType = eventType
+        self.callbackId = callbackId
+
+#
+# ==============================================================================
+# Definition of an Eficas wrapper for integration to the SALOME framework
+# This wrapper is not specific to the OMA context and is intended not to be.
+# ==============================================================================
+#
+eficasPath = '@EFICAS_DIR@'
+import os
+if os.environ.has_key( "EFICAS_ROOT"):
+    eficasPath = os.environ["EFICAS_ROOT"]
+import sys
+sys.path[:0]=[eficasPath,
+              os.path.join( eficasPath,'Editeur'),
+              os.path.join( eficasPath,'UiQT4'),
+             ]
+
+import Editeur
+from InterfaceQT4 import qtEficas
+
+class EficasWrapper(qtEficas.Appli):
+
+    def __init__(self, parent, code , fichier=None, module="Eficas", version=None, salome=0):
+
+        self.__codetype = code
+        self.__jdc = None
+
+        # variables for the notification procedure
+        self.__observer  = None
+        self.__callbackId = None
+
+        # The convention is that the python pref associated to the code are in
+        # a folder whose name is the code name with lower letters but the
+        # first that is in capital letter.
+        pathCode=code[0]+code[1:].lower()
+        sys.path[:0]=[os.path.join(eficasPath,pathCode)]
+
+        if Editeur.__dict__.has_key( 'session' ):
+            from Editeur import session
+            eficasArg = []
+            eficasArg += sys.argv
+            if fichier:
+                eficasArg += [ fichier ]
+            if version:
+                eficasArg += [ "-c", version ]
+            else :
+                print "noversion"
+            session.parse( eficasArg )
+
+        qtEficas.Appli.__init__( self,code=code,salome=salome,parent=parent)
+
+    def setCodeType(self,code):
+        self.__codetype = code
+
+    def setJdc(self, value, name=None):
+        self.__jdc = value
+        if self.__jdc is None:
+            editor = self.viewmanager.getEditor()
+            editor.fichier = os.path.abspath(unicode("/tmp/eficasfile.comm"))
+        else:
+            fichier = os.path.abspath(unicode("/tmp/eficasfile.comm"))
+            f = open(fichier,'w')
+            f.write(self.__jdc)
+            f.close()
+            editor=self.viewmanager.getEditor( fichier,units=None)
+
+        # _TODO_ set the name and indicate that it's not used to ask a filename
+        #index=self.viewmanager.myQtab.currentIndex()
+        #self.viewmanager.myQtab.setTabText(index,fileName)
+
+    def getJdc(self):
+        # First update the jdc attribute and return the value
+        self.__jdc = self.__getJdcText()
+        return self.__jdc
+
+    # ==========================================================================
+    # Function for the notification interface between an EficasWrapper an an
+    # EficasObserver.
+    #
+    def addObserver(self, observer):
+        """
+        In fact, only one observer may be defined for the moment.
+        """
+        try:
+            observer.processEficasEvent
+        except:
+            raise DevelException("the argument should implement the function processEficasEvent")
+        self.__observer = observer
+
+    def notifyObserver(self, eventType):
+        eficasEvent = EficasEvent(eventType, self.getCallbackId())
+        self.__observer.processEficasEvent(self, eficasEvent)
+
+    def setCallbackId(self, callbackId):
+        """
+        This function should be used to define the callback identifier that
+        will be used by the observer to map the notifcation event with the source
+        event.
+        @param callbackId Any object to be used in the notification interface
+        """
+        self.__callbackId = callbackId
+
+    def getCallbackId(self):
+        return self.__callbackId
+
+    # ==========================================================================
+    # Functions to handle the Eficas callback functions
+    #
+    def closeEvent(self,event):
+        """
+        This method is a notification function called at the end of the eficas
+        processes quit/exit.
+        This close event has to be overload to handle the management of data
+        saving process, and to prevent the application from bug when reopen
+        eficas after a first close operation inside SALOME.
+        @overload
+        """
+        logger.debug("#### Handle closeEvent")
+
+        # Get the data and notify the observers of the event
+        # _TODO_ get data
+        self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE)
+        self.fileCloseAll()
+
+        # This is to prevent from bug when reopen eficas after a first close
+        # operation inside SALOME.
+        import InterfaceQT4.readercata
+        if hasattr(InterfaceQT4.readercata,'reader') :
+           del InterfaceQT4.readercata.reader
+        event.accept()
+
+
+    def fileSave(self):
+        """
+        @overload
+        """
+        logger.debug("This is my fileSave")
+        # Notify the observers of the event
+        self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
+
+        qtEficas.Appli.fileSave(self)
+
+
+    def fileSaveAs(self):
+        """
+        @overload
+        """
+        logger.debug("This is my fileSaveAs")
+        self.fileSave()
+
+    def fileClose(self):
+        """
+        @overload
+        """
+        logger.debug("This is my fileClose")
+        qtEficas.Appli.fileClose(self)
+
+    def fileCloseAll(self):
+        """
+        @overload
+        """
+        logger.debug("This is my fileCloseAll")
+        qtEficas.Appli.fileCloseAll(self)
+
+    # ==========================================================================
+    # helper functions
+    #
+    def __getJdcText(self):
+        """
+        This function returns the current jdc in text format.
+        """
+        index=self.viewmanager.myQtab.currentIndex()
+        if index < 0 : return
+
+        editor=self.viewmanager.dict_editors[index]
+        format = self.format_fichier
+        strSource = str( editor.get_text_JDC(format) )
+        return strSource
+
+    def displayNew(self):
+        self.fileNew()
+        self.show()
+
+    # ==========================================================================
+    # Test functions ...
+    #
+    def __displayData(self, textjdc):
+        index=self.viewmanager.myQtab.currentIndex()
+        if index < 0 : return
+
+        editor=self.viewmanager.dict_editors[index]
+
+        jdc=editor.readercata.cata[0].JdC(procedure=textjdc,appli=editor,cata=editor.readercata.cata,cata_ord_dico=editor.readercata.cata_ordonne_dico,nom="JDC name",rep_mat=editor.CONFIGURATION.rep_mat)
+        self.viewmanager.getEditor("toto.com",jdc)
+
+

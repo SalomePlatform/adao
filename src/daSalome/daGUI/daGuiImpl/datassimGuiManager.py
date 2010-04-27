@@ -31,6 +31,12 @@ import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
 from daGuiImpl.enumerate import Enumerate
+from daEficasWrapper.datassimEficasWrapper import DatassimEficasWrapper
+from daEficasWrapper.eficasWrapper import EficasObserver
+from daEficasWrapper.eficasWrapper import EficasEvent
+import datassimGuiHelper
+import datassimStudyEditor
+
 #
 # ==============================================================================
 # Classes to manage the building of UI components
@@ -67,12 +73,11 @@ class DatassimGuiUiComponentBuilder:
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
 
-class DatassimGuiActionImpl():
+class DatassimGuiActionImpl(EficasObserver):
     """
     This class implements the ui actions concerning the management of oma study
     cases.
     """
-    __dlgNewStudyCase = None
     __dlgEficasWrapper = None
 
     def __init__(self):
@@ -80,7 +85,8 @@ class DatassimGuiActionImpl():
         # This dialog is created once so that it can be recycled for each call
         # to newOmaCase().
         #self.__dlgNewStudyCase = DlgNewStudyCase()
-        #self.__dlgEficasWrapper = OmaEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
+        self.__dlgEficasWrapper = DatassimEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
+        self.__dlgEficasWrapper.addObserver(self)
 
     # ==========================================================================
     # Processing of ui actions
@@ -101,3 +107,47 @@ class DatassimGuiActionImpl():
 
     def newDatassimCase(self):
       print "newDatassimCase"
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, "newDatassimCase")
+      datassimGuiHelper.refreshObjectBrowser()
+      callbackId = [salomeStudyId, salomeStudyItem]
+      self.__dlgEficasWrapper.setCallbackId(callbackId)
+      self.__dlgEficasWrapper.displayNew()
+
+    # ==========================================================================
+    # Processing notifications from eficas
+    #
+    __processOptions={
+        EficasEvent.EVENT_TYPES.CLOSE : "_processEficasCloseEvent",
+        EficasEvent.EVENT_TYPES.SAVE  : "_processEficasSaveEvent"
+        }
+    def processEficasEvent(self, eficasWrapper, eficasEvent):
+        """
+        Implementation of the interface EficasObserver. The implementation is a
+        switch on the possible types of events defined in EficasEvent.EVENT_TYPES.
+        @overload
+        """
+        functionName = self.__processOptions.get(eficasEvent.eventType, lambda : "_processEficasUnknownEvent")
+        return getattr(self,functionName)(eficasWrapper, eficasEvent)
+
+    def _processEficasCloseEvent(self, eficasWrapper, eficasEvent):
+        print "This is the process of EficasCloseEvent"
+        print "Remove datassim case in study if empty..."
+        pass
+
+    def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
+        callbackId = eficasEvent.callbackId
+        if callbackId is None:
+            raise DevelException("the callback data should not be None. Can't guess what are the study and case")
+        [targetSalomeStudyId,targetSalomeStudyItem] = callbackId
+        if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
+            raise DevelException("the parameters targetSalomeStudyId and targetSalomeStudyItem should not be None")
+
+        file_name = eficasWrapper.getCurrentFileName()
+        datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, file_name)
+        #studyCase = omaStudyEditor.getOmaCaseFromItem(targetSalomeStudyId, targetSalomeStudyItem)
+        #studyCase = eficasWrapper.getData(studyCase)
+        #logger.debug("jdc="+str(studyCase.userdata.getJdc()))
+
+    def _processEficasUnknownEvent(self, eficasWrapper, eficasEvent):
+      print "Unknown Eficas Event"

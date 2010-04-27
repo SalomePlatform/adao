@@ -71,6 +71,8 @@ AC_CONFIG_FILES([
         src/daSalome/Makefile
         src/daSalome/daGUI/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
+        src/daSalome/daGUI/daEficasWrapper/Makefile
+        src/daSalome/daGUI/daEficasWrapper/eficasWrapper.py
         bin/Makefile
         bin/qtEficas_datassim_study.py
         ])
