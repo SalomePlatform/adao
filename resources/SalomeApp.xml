@@ -1,0 +1,11 @@
+<document>
+  <section name="DATASSIM">
+    <!-- Major module parameters -->
+    <parameter name="name"    value="DATASSIM"/>
+    <parameter name="library" value="SalomePyQtGUI"/>
+  </section>
+  <section name="resources">
+    <!-- Module resources -->
+    <parameter name="DATASSIM" value="${DATASSIM_ROOT_DIR}/share/salome/resources/datassim"/>
+  </section>
+</document>

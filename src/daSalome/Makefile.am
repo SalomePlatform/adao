@@ -1,5 +1,7 @@
 include $(top_srcdir)/adm_local/make_common_starter.am
 
+SUBDIRS= daGUI
+
 EXTRA_DIST = daYacsSchemaCreator daYacsIntegration
 
 DIR = $(top_srcdir)/src/daSalome/
