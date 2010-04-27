@@ -18,13 +18,10 @@ AC_PROG_CXX
 CHECK_F77
 CHECK_BOOST
 CHECK_OMNIORB
-CHECK_PACO
-CHECK_MPI
+CHECK_EFICAS
 
 MODULE_NAME=datassim
 AC_SUBST(MODULE_NAME)
-
-AC_CHECK_ASTER
 
 echo
 echo
@@ -42,9 +39,7 @@ echo "  OmniOrbpy (CORBA) ...... : $omniORBpy_ok"
 echo "  Python ................. : $python_ok"
 echo "  Boost  ................. : $boost_ok"
 echo "  SALOME KERNEL .......... : $Kernel_ok"
-echo "  PaCO++ ................. : $PaCO_ok"
-echo "  MPI .................... : $mpi_ok"
-echo "  Code Aster ............. : $Aster_ok"
+echo "  Eficas ................. : $eficas_ok"
 echo
 echo "------------------------------------------------------------------------"
 echo
@@ -72,9 +67,11 @@ AC_CONFIG_FILES([
         resources/Makefile
         src/Makefile
         src/daComposant/Makefile
+        src/daEficas/Makefile
         src/daSalome/Makefile
         src/daSalome/daGUI/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
         bin/Makefile
+        bin/qtEficas_datassim_study.py
         ])
 AC_OUTPUT

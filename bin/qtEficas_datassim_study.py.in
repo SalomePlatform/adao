@@ -4,11 +4,18 @@
 """
    Ce module sert à lancer EFICAS pour Datassim
 """
+
+import sys
+# Configuration de l'installation
+INSTALLDIR = "@EFICAS_DIR@"
+sys.path[:0]=[INSTALLDIR]
+DATASSIM_INSTALL_DIR = "@PYTHON_SITE@/salome/daEficas"
+sys.path[:0]=[DATASSIM_INSTALL_DIR]
+
 # Configuration
 import prefs
 import prefs_DATASSIM
 
 # Modules Eficas
-import sys
 from InterfaceQT4 import eficas_go
 eficas_go.lance_eficas(code=prefs.code)

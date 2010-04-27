@@ -1,1 +1,1 @@
-SUBDIRS= daComposant daSalome
+SUBDIRS = daComposant daSalome daEficas
