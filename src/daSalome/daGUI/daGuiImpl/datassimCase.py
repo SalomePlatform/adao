@@ -21,6 +21,7 @@
 class DatassimCase:
 
   __name = "new_case"
+  __filename = ""
 
   def __init__(self):
     pass
@@ -30,3 +31,9 @@ class DatassimCase:
 
   def set_name(self, name):
     self.__name = name
+
+  def get_filename(self):
+    return self.__filename
+
+  def set_filename(self, name):
+    self.__filename = name

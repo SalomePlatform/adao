@@ -36,6 +36,7 @@ class DatassimEficasWrapper(EficasWrapper):
 
     __myCallbackId = {}
     __close_editor = None
+    __file_open_name = ""
 
     def __init__(self, parent, code="DATASSIM"):
         EficasWrapper.__init__(self, parent, code)
@@ -74,17 +75,45 @@ class DatassimEficasWrapper(EficasWrapper):
         CaseName = self.viewmanager.myQtab.tabText(index)
         return CaseName
       else:
-        CaseName = self.__close_editor.fichier.split('/')[-1]
+        CaseName = str(self.__close_editor.fichier.split('/')[-1])
         return CaseName
+
+    def getFileCaseName(self):
+      if self.__close_editor is None:
+        index = self.viewmanager.myQtab.currentIndex()
+        editor = self.viewmanager.dict_editors[index]
+        return str(editor.fichier)
+      else:
+        return str(self.__close_editor.fichier)
 
     def Openfile(self, filename):
       self.viewmanager.handleOpen(fichier=filename)
+
+    def handleOpenRecent(self):
+      """
+      @overload
+      """
+      idx = self.sender()
+      fichier = self.ficRecents[idx]
+      self.__file_open_name = fichier
+      self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN)
+      self.__file_open_name = ""
 
     def fileOpen(self):
         """
         @overload
         """
-        QtGui.QMessageBox.warning( self, "Alerte", "You cannot Open a Case into Eficas window when you are using Datassim SALOME module")
+        fichier = QtGui.QFileDialog.getOpenFileName(self,
+                                                    self.trUtf8('Ouvrir Fichier'),
+                                                    self.CONFIGURATION.savedir,
+                                                    self.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+        if fichier.isNull(): return
+        self.__file_open_name = fichier
+        self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN)
+        self.__file_open_name = ""
+
+    def getOpenFileName(self):
+      return str(self.__file_open_name)
 
     def fileClose(self):
         """

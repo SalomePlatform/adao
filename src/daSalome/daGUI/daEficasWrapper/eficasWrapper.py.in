@@ -54,6 +54,7 @@ class EficasEvent:
         'CLOSE',
         'SAVE',
         'DESTROY',
+        'OPEN',
         'NEW'
     ])
 
@@ -172,7 +173,7 @@ class EficasWrapper(qtEficas.Appli):
         self.__observer = observer
 
     def notifyObserver(self, eventType):
-      if eventType != EficasEvent.EVENT_TYPES.NEW:
+      if eventType != EficasEvent.EVENT_TYPES.NEW and eventType != EficasEvent.EVENT_TYPES.OPEN:
         eficasEvent = EficasEvent(eventType, self.getCallbackId())
       else:
         eficasEvent = EficasEvent(eventType)

@@ -27,6 +27,7 @@ __author__ = "aribes/gboulant"
 
 import traceback
 from PyQt4.QtCore import QObject
+from PyQt4 import QtGui,QtCore
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
@@ -48,6 +49,7 @@ __cases__ = {}
 UI_ELT_IDS = Enumerate([
         'DATASSIM_MENU_ID',
         'NEW_DATASSIMCASE_ID',
+        'OPEN_DATASSIMCASE_ID',
         'EDIT_DATASSIMCASE_POP_ID',
         'DELETE_DATASSIMCASE_POP_ID',
         'YACS_EXPORT_POP_ID',
@@ -55,6 +57,7 @@ UI_ELT_IDS = Enumerate([
 
 ACTIONS_MAP={
     UI_ELT_IDS.NEW_DATASSIMCASE_ID:"newDatassimCase",
+    UI_ELT_IDS.OPEN_DATASSIMCASE_ID:"openDatassimCase",
     UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID:"editDatassimCase",
 }
 
@@ -77,6 +80,9 @@ class DatassimGuiUiComponentBuilder:
         tid = sgPyQt.createTool( "DATASSIM" )
 
         a = sgPyQt.createAction( UI_ELT_IDS.NEW_DATASSIMCASE_ID, "New case", "New case", "Create a new datassim case", "" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_DATASSIMCASE_ID, "Open case", "Open case", "Open a datassim case", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
 
@@ -128,6 +134,28 @@ class DatassimGuiActionImpl(EficasObserver):
     def newDatassimCase(self):
       self.__dlgEficasWrapper.displayNew()
 
+    def openDatassimCase(self):
+      global __cases__
+      fichier = QtGui.QFileDialog.getOpenFileName(SalomePyQt.SalomePyQt().getDesktop(),
+                                                  self.__dlgEficasWrapper.trUtf8('Ouvrir Fichier'),
+                                                  self.__dlgEficasWrapper.CONFIGURATION.savedir,
+                                                  self.__dlgEficasWrapper.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+      if fichier.isNull(): return
+      new_case = DatassimCase()
+      new_case.set_filename(str(fichier))
+      new_case.set_name(str(fichier.split('/')[-1]))
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
+      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      __cases__[case_key] = new_case
+
+      # Open file in Eficas
+      self.__dlgEficasWrapper.Openfile(new_case.get_filename())
+      callbackId = [salomeStudyId, salomeStudyItem]
+      self.__dlgEficasWrapper.setCallbackId(callbackId)
+      self.__dlgEficasWrapper.show()
+      datassimGuiHelper.refreshObjectBrowser()
+
     def editDatassimCase(self):
       global __cases__
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
@@ -135,7 +163,7 @@ class DatassimGuiActionImpl(EficasObserver):
       case_key = (salomeStudyId, salomeStudyItem.GetName())
       try:
         case = __cases__[case_key]
-        self.__dlgEficasWrapper.Openfile(case.get_name())
+        self.__dlgEficasWrapper.Openfile(case.get_filename())
         callbackId = [salomeStudyId, salomeStudyItem]
         self.__dlgEficasWrapper.setCallbackId(callbackId)
         self.__dlgEficasWrapper.show()
@@ -151,7 +179,8 @@ class DatassimGuiActionImpl(EficasObserver):
         EficasEvent.EVENT_TYPES.CLOSE : "_processEficasCloseEvent",
         EficasEvent.EVENT_TYPES.SAVE  : "_processEficasSaveEvent",
         EficasEvent.EVENT_TYPES.NEW  : "_processEficasNewEvent",
-        EficasEvent.EVENT_TYPES.DESTROY  : "_processEficasDestroyEvent"
+        EficasEvent.EVENT_TYPES.DESTROY  : "_processEficasDestroyEvent",
+        EficasEvent.EVENT_TYPES.OPEN  : "_processEficasOpenEvent"
         }
     def processEficasEvent(self, eficasWrapper, eficasEvent):
         """
@@ -163,8 +192,6 @@ class DatassimGuiActionImpl(EficasObserver):
         return getattr(self,functionName)(eficasWrapper, eficasEvent)
 
     def _processEficasCloseEvent(self, eficasWrapper, eficasEvent):
-        print "This is the process of EficasCloseEvent"
-        print "Remove datassim case in study if empty..."
         pass
 
     def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
@@ -178,24 +205,49 @@ class DatassimGuiActionImpl(EficasObserver):
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
 
-    def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
+    def _processEficasOpenEvent(self, eficasWrapper, eficasEvent):
+      global __cases__
+
+      # Ouverture du fichier
+      self.__dlgEficasWrapper.Openfile(self.__dlgEficasWrapper.getOpenFileName())
+
+      # Creation d'un nouveau cas
+      new_case = DatassimCase()
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
+      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      __cases__[case_key] = new_case
+
+      # Connexion du nouveau cas
+      callbackId = [salomeStudyId, salomeStudyItem]
+      self.__dlgEficasWrapper.setCallbackId(callbackId)
+
+      # On sauvegarde le cas
+      self._processEficasSaveEvent(self.__dlgEficasWrapper, None, callbackId)
+
+    def _processEficasSaveEvent(self, eficasWrapper, eficasEvent, callbackId=None):
         global __cases__
-        callbackId = eficasEvent.callbackId
         if callbackId is None:
+          callbackId = eficasEvent.callbackId
+          if callbackId is None:
             raise DevelException("the callback data should not be None. Can't guess what are the study and case")
-        [targetSalomeStudyId,targetSalomeStudyItem] = callbackId
-        if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
+          [targetSalomeStudyId,targetSalomeStudyItem] = callbackId
+          if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
             raise DevelException("the parameters targetSalomeStudyId and targetSalomeStudyItem should not be None")
+        else:
+          [targetSalomeStudyId,targetSalomeStudyItem] = callbackId
 
         # Get Editor All infos we need !
-        file_name = eficasWrapper.getCaseName()
-        if file_name != "" :
+        case_name = eficasWrapper.getCaseName()
+        file_case_name = eficasWrapper.getFileCaseName()
+        if case_name != "" :
           # Get case
           old_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
           case =__cases__[old_case_key]
 
           # Set new informations
-          case.set_name(file_name)
+          case.set_name(case_name)
+          case.set_filename(file_case_name)
           datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
 
           # Case key changed !
