@@ -51,7 +51,7 @@ UI_ELT_IDS = Enumerate([
         'NEW_DATASSIMCASE_ID',
         'OPEN_DATASSIMCASE_ID',
         'EDIT_DATASSIMCASE_POP_ID',
-        'DELETE_DATASSIMCASE_POP_ID',
+        'REMOVE_DATASSIMCASE_POP_ID',
         'YACS_EXPORT_POP_ID',
         ],offset=950)
 
@@ -88,13 +88,13 @@ class DatassimGuiUiComponentBuilder:
 
         # the following action are used in context popup
         a = sgPyQt.createAction( UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID, "Edit case", "Edit case", "Edit the selected study case", "" )
-        a = sgPyQt.createAction( UI_ELT_IDS.DELETE_DATASSIMCASE_POP_ID, "Delete case", "Delete case", "Delete the selected study case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID, "Remove case", "Remove case", "Remove the selected study case", "" )
         a = sgPyQt.createAction( UI_ELT_IDS.YACS_EXPORT_POP_ID, "Export to YACS", "Export to YACS", "Generate a YACS graph executing this case", "" )
 
     def createPopupMenuOnItem(self,popup,salomeSudyId, item):
         if datassimStudyEditor.isValidDatassimCaseItem(salomeSudyId, item):
           popup.addAction( sgPyQt.action( UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID ) )
-          popup.addAction( sgPyQt.action( UI_ELT_IDS.DELETE_DATASSIMCASE_POP_ID ) )
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID ) )
           popup.addAction( sgPyQt.action( UI_ELT_IDS.YACS_EXPORT_POP_ID ) )
 
         return popup
@@ -163,9 +163,10 @@ class DatassimGuiActionImpl(EficasObserver):
       case_key = (salomeStudyId, salomeStudyItem.GetName())
       try:
         case = __cases__[case_key]
-        self.__dlgEficasWrapper.Openfile(case.get_filename())
-        callbackId = [salomeStudyId, salomeStudyItem]
-        self.__dlgEficasWrapper.setCallbackId(callbackId)
+        if case.get_filename() is not None and case.get_name() != "new_case":
+          self.__dlgEficasWrapper.Openfile(case.get_filename())
+          callbackId = [salomeStudyId, salomeStudyItem]
+          self.__dlgEficasWrapper.setCallbackId(callbackId)
         self.__dlgEficasWrapper.show()
       except:
         print "Oups - cannot edit case !"

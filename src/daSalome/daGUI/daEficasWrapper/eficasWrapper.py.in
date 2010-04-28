@@ -203,11 +203,9 @@ class EficasWrapper(qtEficas.Appli):
         eficas after a first close operation inside SALOME.
         @overload
         """
-        logger.debug("#### Handle closeEvent")
-
         # Get the data and notify the observers of the event
         # _TODO_ get data
-        self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE)
+        #self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE)
         self.fileCloseAll()
 
         # This is to prevent from bug when reopen eficas after a first close

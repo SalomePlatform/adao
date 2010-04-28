@@ -82,9 +82,9 @@ class DatassimEficasWrapper(EficasWrapper):
       if self.__close_editor is None:
         index = self.viewmanager.myQtab.currentIndex()
         editor = self.viewmanager.dict_editors[index]
-        return str(editor.fichier)
+        return editor.fichier
       else:
-        return str(self.__close_editor.fichier)
+        return self.__close_editor.fichier
 
     def Openfile(self, filename):
       self.viewmanager.handleOpen(fichier=filename)
@@ -140,5 +140,9 @@ class DatassimEficasWrapper(EficasWrapper):
       """
       while len(self.viewmanager.dict_editors) > 0:
         self.viewmanager.myQtab.setCurrentIndex(0)
-        res = self.fileClose()
-        if res==2 : return res   # l utilsateur a annule
+        if self.viewmanager.myQtab.currentIndex() == 0:
+          res = self.fileClose()
+          if res==2 : return res   # l utilsateur a annule
+        else:
+          return 0
+

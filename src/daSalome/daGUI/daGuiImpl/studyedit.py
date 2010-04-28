@@ -296,7 +296,7 @@ class StudyEditor:
         :type  typeId: integer
         :param typeId: item type (attribute 'AttributeLocalID').
         """
-        print "setItem (ID=%s): name=%s, fileType=%s, fileName=%s, comment=%s, icon=%s, IOR=%s" % (item.GetID(), name, fileType, fileName, comment, icon, IOR)
+        #print "setItem (ID=%s): name=%s, fileType=%s, fileName=%s, comment=%s, icon=%s, IOR=%s" % (item.GetID(), name, fileType, fileName, comment, icon, IOR)
         # Explicit cast is necessary for unicode to string conversion
         if name is not None:
             self.builder.SetName(item, str(name))
