@@ -146,7 +146,7 @@ class DatassimGuiActionImpl(EficasObserver):
       new_case.set_name(str(fichier.split('/')[-1]))
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
-      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      case_key = (salomeStudyId, salomeStudyItem.GetID())
       __cases__[case_key] = new_case
 
       # Open file in Eficas
@@ -160,7 +160,7 @@ class DatassimGuiActionImpl(EficasObserver):
       global __cases__
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
-      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      case_key = (salomeStudyId, salomeStudyItem.GetID())
       try:
         case = __cases__[case_key]
         if case.get_filename() is not None and case.get_name() != "new_case":
@@ -200,7 +200,7 @@ class DatassimGuiActionImpl(EficasObserver):
       new_case = DatassimCase()
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
-      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      case_key = (salomeStudyId, salomeStudyItem.GetID())
       __cases__[case_key] = new_case
       datassimGuiHelper.refreshObjectBrowser()
       callbackId = [salomeStudyId, salomeStudyItem]
@@ -216,7 +216,7 @@ class DatassimGuiActionImpl(EficasObserver):
       new_case = DatassimCase()
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
-      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      case_key = (salomeStudyId, salomeStudyItem.GetID())
       __cases__[case_key] = new_case
 
       # Connexion du nouveau cas
@@ -243,19 +243,19 @@ class DatassimGuiActionImpl(EficasObserver):
         file_case_name = eficasWrapper.getFileCaseName()
         if case_name != "" :
           # Get case
-          old_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
+          old_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetID())
           case =__cases__[old_case_key]
 
           # Set new informations
-          case.set_name(case_name)
           case.set_filename(file_case_name)
+          case.set_name(case_name)
           datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
 
           # Case key changed !
-          new_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
+          #new_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetID())
           # A ne pas inverser !!!
-          __cases__.pop(old_case_key)
-          __cases__[new_case_key] = case
+          #__cases__.pop(old_case_key)
+          #__cases__[new_case_key] = case
 
           datassimGuiHelper.refreshObjectBrowser()
 
@@ -268,7 +268,7 @@ class DatassimGuiActionImpl(EficasObserver):
         if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
             raise DevelException("the parameters targetSalomeStudyId and targetSalomeStudyItem should not be None")
 
-        case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
+        case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetID())
         __cases__.pop(case_key)
         datassimStudyEditor.removeItem(targetSalomeStudyId, targetSalomeStudyItem)
         datassimGuiHelper.refreshObjectBrowser()

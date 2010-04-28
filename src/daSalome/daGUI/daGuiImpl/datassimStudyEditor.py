@@ -60,7 +60,7 @@ def addInStudy(salomeStudyId, datassimCase):
         componentName = datassimModuleHelper.componentUserName())
 
     itemName  = datassimCase.get_name()
-    itemValue = ""
+    itemValue = str(datassimCase.get_filename())
     itemType  = DATASSIM_ITEM_TYPES.DATASSIM_CASE
 
     salomeStudyItem = studyEditor.createItem(
@@ -76,8 +76,12 @@ def updateItem(salomeStudyId, salomeStudyItem, datassimCase):
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
     
-    itemName  = datassimCase.get_name()
-    itemValue = ""
+    if salomeStudyItem.GetName()[:-2] != datassimCase.get_name():
+      itemName  = datassimCase.get_name()
+      itemValue = datassimCase.get_filename()
+    else:
+      itemName  = salomeStudyItem.GetName()
+      itemValue = datassimCase.get_filename()
 
     studyEditor.setItem(salomeStudyItem,
         name    = itemName,
