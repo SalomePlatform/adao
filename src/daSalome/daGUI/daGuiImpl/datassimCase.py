@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-1 -*-
 #  Copyright (C) 2010 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
@@ -17,19 +18,15 @@
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-include $(top_srcdir)/adm_local/make_common_starter.am
+class DatassimCase:
 
-mypkgpythondir =$(salomepythondir)/daGuiImpl
+  __name = "new_case"
 
-mypkgpython_PYTHON = \
-		     __init__.py \
-		     DATASSIMGUI_impl.py \
-		     datassimGuiManager.py \
-		     datassimGuiHelper.py \
-		     datassimModuleHelper.py \
-		     datassimStudyEditor.py \
-		     studyedit.py \
-		     datassimCase.py \
-		     enumerate.py
+  def __init__(self):
+    pass
 
+  def get_name(self):
+    return self.__name
 
+  def set_name(self, name):
+    self.__name = name

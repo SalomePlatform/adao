@@ -23,6 +23,7 @@ __author__="aribes/gboulant"
 from enumerate import Enumerate
 import studyedit
 import datassimModuleHelper
+from daGuiImpl.datassimCase import DatassimCase
 
 #
 # ==============================================================================
@@ -58,7 +59,7 @@ def addInStudy(salomeStudyId, datassimCase):
         engineName    = datassimModuleHelper.componentName(),
         componentName = datassimModuleHelper.componentUserName())
 
-    itemName  = datassimCase
+    itemName  = datassimCase.get_name()
     itemValue = ""
     itemType  = DATASSIM_ITEM_TYPES.DATASSIM_CASE
 
@@ -75,7 +76,7 @@ def updateItem(salomeStudyId, salomeStudyItem, datassimCase):
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
     
-    itemName  = datassimCase
+    itemName  = datassimCase.get_name()
     itemValue = ""
 
     studyEditor.setItem(salomeStudyItem,
@@ -86,8 +87,6 @@ def removeItem(salomeStudyId, item):
     """
     Remove the item from the specified study.
     """
-    if not isValidDatassimCaseItem(salomeStudyId, item):
-        return False
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
     return studyEditor.removeItem(item,True)
 
@@ -105,18 +104,3 @@ def isValidDatassimCaseItem(salomeStudyId,item):
         return False
 
     return True
-
-
-def getDatassimCaseFromItem(salomeStudyId, item):
-    """
-    Get the datassim case from the selected item.
-    Note that the study must be specify to retrieve the attributes value from
-    the item reference. The attribute values are stored in the study object.
-    """
-    if not isValidDatassimCaseItem(salomeStudyId, item):
-        return None
-
-    itemName  = item.GetName()
-    itemValue = item.GetComment()
-    return itemName
-

@@ -31,11 +31,14 @@ import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
 from daGuiImpl.enumerate import Enumerate
+from daGuiImpl.datassimCase import DatassimCase
 from daEficasWrapper.datassimEficasWrapper import DatassimEficasWrapper
 from daEficasWrapper.eficasWrapper import EficasObserver
 from daEficasWrapper.eficasWrapper import EficasEvent
 import datassimGuiHelper
 import datassimStudyEditor
+
+__cases__ = {}
 
 #
 # ==============================================================================
@@ -106,12 +109,6 @@ class DatassimGuiActionImpl(EficasObserver):
             print msg
 
     def newDatassimCase(self):
-      print "newDatassimCase"
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, "newDatassimCase")
-      datassimGuiHelper.refreshObjectBrowser()
-      callbackId = [salomeStudyId, salomeStudyItem]
-      self.__dlgEficasWrapper.setCallbackId(callbackId)
       self.__dlgEficasWrapper.displayNew()
 
     # ==========================================================================
@@ -119,7 +116,9 @@ class DatassimGuiActionImpl(EficasObserver):
     #
     __processOptions={
         EficasEvent.EVENT_TYPES.CLOSE : "_processEficasCloseEvent",
-        EficasEvent.EVENT_TYPES.SAVE  : "_processEficasSaveEvent"
+        EficasEvent.EVENT_TYPES.SAVE  : "_processEficasSaveEvent",
+        EficasEvent.EVENT_TYPES.NEW  : "_processEficasNewEvent",
+        EficasEvent.EVENT_TYPES.DESTROY  : "_processEficasDestroyEvent"
         }
     def processEficasEvent(self, eficasWrapper, eficasEvent):
         """
@@ -135,6 +134,17 @@ class DatassimGuiActionImpl(EficasObserver):
         print "Remove datassim case in study if empty..."
         pass
 
+    def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
+      global __cases__
+      new_case = DatassimCase()
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
+      case_key = (salomeStudyId, salomeStudyItem)
+      __cases__[case_key] = new_case
+      datassimGuiHelper.refreshObjectBrowser()
+      callbackId = [salomeStudyId, salomeStudyItem]
+      self.__dlgEficasWrapper.setCallbackId(callbackId)
+
     def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
         callbackId = eficasEvent.callbackId
         if callbackId is None:
@@ -143,11 +153,27 @@ class DatassimGuiActionImpl(EficasObserver):
         if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
             raise DevelException("the parameters targetSalomeStudyId and targetSalomeStudyItem should not be None")
 
-        file_name = eficasWrapper.getCurrentFileName()
-        datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, file_name)
-        #studyCase = omaStudyEditor.getOmaCaseFromItem(targetSalomeStudyId, targetSalomeStudyItem)
-        #studyCase = eficasWrapper.getData(studyCase)
-        #logger.debug("jdc="+str(studyCase.userdata.getJdc()))
+        # Get Editor All infos we need !
+        file_name = eficasWrapper.getCaseName()
+        if file_name != "" :
+          case_key = (targetSalomeStudyId, targetSalomeStudyItem)
+          case =__cases__[case_key]
+          case.set_name(file_name)
+          datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
+          datassimGuiHelper.refreshObjectBrowser()
+
+    def _processEficasDestroyEvent(self, eficasWrapper, eficasEvent):
+        callbackId = eficasEvent.callbackId
+        if callbackId is None:
+            raise DevelException("the callback data should not be None. Can't guess what are the study and case")
+        [targetSalomeStudyId,targetSalomeStudyItem] = callbackId
+        if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
+            raise DevelException("the parameters targetSalomeStudyId and targetSalomeStudyItem should not be None")
+
+        case_key = (targetSalomeStudyId, targetSalomeStudyItem)
+        __cases__.pop(case_key)
+        datassimStudyEditor.removeItem(targetSalomeStudyId, targetSalomeStudyItem)
+        datassimGuiHelper.refreshObjectBrowser()
 
     def _processEficasUnknownEvent(self, eficasWrapper, eficasEvent):
       print "Unknown Eficas Event"

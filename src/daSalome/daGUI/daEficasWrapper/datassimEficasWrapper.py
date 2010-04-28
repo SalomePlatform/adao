@@ -19,6 +19,7 @@
 #
 
 from eficasWrapper import *
+from PyQt4 import QtGui,QtCore
 import sys
 
 # Configuration de l'installation
@@ -32,15 +33,33 @@ sys.path[:0]=[DATASSIM_INSTALL_DIR]
 # ================================================
 #
 class DatassimEficasWrapper(EficasWrapper):
+
+    __myCallbackId = {}
+    __close_editor = None
+
     def __init__(self, parent, code="DATASSIM"):
         EficasWrapper.__init__(self, parent, code)
+
+    # Association de l'objet editor avec le callbackId
+    def setCallbackId(self, callbackId):
+      index = self.viewmanager.myQtab.currentIndex()
+      self.__myCallbackId[self.viewmanager.dict_editors[index]] = callbackId
+
+    def getCallbackId(self):
+      if self.__close_editor is None:
+        index = self.viewmanager.myQtab.currentIndex()
+        return self.__myCallbackId[self.viewmanager.dict_editors[index]]
+      else:
+        return self.__myCallbackId[self.__close_editor]
 
     def fileSave(self):
         """
         @overload
         """
         qtEficas.Appli.fileSave(self)
-        self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
+        index = self.viewmanager.myQtab.currentIndex()
+        if index > -1 :
+          self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
 
     def fileSaveAs(self):
         """
@@ -49,10 +68,45 @@ class DatassimEficasWrapper(EficasWrapper):
         qtEficas.Appli.fileSaveAs(self)
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
 
-    def getCurrentFileName(self):
-       index = self.viewmanager.myQtab.currentIndex()
-       print index
-       rtn = ""
-       if index > 0 :
-         rtn  = self.viewmanager.myQtab.tabText(index)
-       return rtn
+    def getCaseName(self):
+      if self.__close_editor is None:
+        index = self.viewmanager.myQtab.currentIndex()
+        CaseName = self.viewmanager.myQtab.tabText(index)
+        return CaseName
+      else:
+        CaseName = self.__close_editor.fichier.split('/')[-1]
+        return CaseName
+
+    def fileOpen(self):
+        """
+        @overload
+        """
+        QtGui.QMessageBox.warning( self, "Alerte", "You cannot Open a Case into Eficas window when you are using Datassim SALOME module")
+
+    def fileClose(self):
+        """
+        @overload
+        """
+        index = self.viewmanager.myQtab.currentIndex()
+        self.__close_editor = self.viewmanager.dict_editors[index]
+        res = self.viewmanager.handleClose(self)
+        if res != 2: # l utilsateur a annule
+          if self.__close_editor.fichier is None:
+            # We have to destroy the case
+            self.notifyObserver(EficasEvent.EVENT_TYPES.DESTROY)
+            self.__myCallbackId.pop(self.__close_editor)
+          else:
+            # Il faudrait en faire plus -> Voir Edit dans SALOME !
+            self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
+            self.__myCallbackId.pop(self.__close_editor)
+        self.__close_editor = None
+        return res
+
+    def fileCloseAll(self):
+      """
+      @overload
+      """
+      while len(self.viewmanager.dict_editors) > 0:
+        self.viewmanager.myQtab.setCurrentIndex(0)
+        res = self.fileClose()
+        if res==2 : return res   # l utilsateur a annule

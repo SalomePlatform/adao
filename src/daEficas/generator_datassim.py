@@ -23,6 +23,7 @@ class DatassimGenerator(PythonGenerator):
     self.dictMCVal={}
     self.text_comm = ""
     self.text_da = ""
+    self.text_da_status = False
 
   def gener(self,obj,format='brut',config=None):
     print "DatassimGenerator gener"
@@ -30,16 +31,23 @@ class DatassimGenerator(PythonGenerator):
 
     print "Dictionnaire"
     print self.dictMCVal
-
-    self.generate_da()
+    
+    try :
+      self.text_da_status = False
+      self.generate_da()
+      self.text_da_status = True
+    except:
+      print "Case seems not be correct"
+      pass
     return self.text_comm
 
   def writeDefault(self, fn):
-    print "writeDefault"
-    filename = fn[:fn.rfind(".")] + '.py'
-    f = open( str(filename), 'wb')
-    f.write( self.text_da )
-    f.close()
+    if self.text_da_status:
+      print "write datassim python command file"
+      filename = fn[:fn.rfind(".")] + '.py'
+      f = open( str(filename), 'wb')
+      f.write( self.text_da )
+      f.close()
 
   def generMCSIMP(self,obj) :
     """

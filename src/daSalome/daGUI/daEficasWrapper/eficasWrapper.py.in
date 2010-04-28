@@ -52,7 +52,9 @@ class EficasObserver:
 class EficasEvent:
     EVENT_TYPES=Enumerate([
         'CLOSE',
-        'SAVE'
+        'SAVE',
+        'DESTROY',
+        'NEW'
     ])
 
     def __init__(self,eventType,callbackId=None):
@@ -170,8 +172,11 @@ class EficasWrapper(qtEficas.Appli):
         self.__observer = observer
 
     def notifyObserver(self, eventType):
+      if eventType != EficasEvent.EVENT_TYPES.NEW:
         eficasEvent = EficasEvent(eventType, self.getCallbackId())
-        self.__observer.processEficasEvent(self, eficasEvent)
+      else:
+        eficasEvent = EficasEvent(eventType)
+      self.__observer.processEficasEvent(self, eficasEvent)
 
     def setCallbackId(self, callbackId):
         """
@@ -211,6 +216,15 @@ class EficasWrapper(qtEficas.Appli):
            del InterfaceQT4.readercata.reader
         event.accept()
 
+    def fileNew(self):        
+        """
+        @overload
+        """
+        logger.debug("This is my fileNew")
+        qtEficas.Appli.fileNew(self)
+        # Notify the observers of the event - after to be able to handled with editor
+        # If needed
+        self.notifyObserver(EficasEvent.EVENT_TYPES.NEW)
 
     def fileSave(self):
         """
