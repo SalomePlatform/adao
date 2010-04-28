@@ -35,6 +35,7 @@ sgPyQt = SalomePyQt.SalomePyQt()
 # to be created for each study. It contains at least the ui component builder that
 # creates the menu and toolbar items (must be created for every study)
 
+from daGuiImpl import datassimGuiHelper
 from daGuiImpl.datassimGuiManager import DatassimGuiUiComponentBuilder
 class GUIcontext:
     uiComponentBuilder = None
@@ -105,14 +106,12 @@ def activeStudyChanged( studyID ):
 # called when popup menu is invoked
 # popup menu and menu context are passed as parameters
 def createPopupMenu( popup, context ):
-  pass
-#    activeStudyId = sgPyQt.getStudyId()
-#    if omaModuleHelper.verbose() : print "OMAGUI.createPopupMenu(): context = %s" % context
-#    ctx = _setContext( sgPyQt.getStudyId() )
-#    selcount, selected = omaGuiHelper.getAllSelected(activeStudyId)
-#    if selcount == 1:
-#        selectedItem = omaGuiHelper.getSelectedItem(activeStudyId)
-#        popup = ctx.uiComponentBuilder.createPopupMenuOnItem(popup, activeStudyId, selectedItem)
+  activeStudyId = sgPyQt.getStudyId()
+  ctx = _setContext(sgPyQt.getStudyId())
+  selcount, selected = datassimGuiHelper.getAllSelected(activeStudyId)
+  if selcount == 1:
+    selectedItem = datassimGuiHelper.getSelectedItem(activeStudyId)
+    popup = ctx.uiComponentBuilder.createPopupMenuOnItem(popup, activeStudyId, selectedItem)
 
 def OnGUIEvent(actionId) :
     """

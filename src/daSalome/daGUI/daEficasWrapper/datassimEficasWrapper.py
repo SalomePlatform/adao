@@ -77,6 +77,9 @@ class DatassimEficasWrapper(EficasWrapper):
         CaseName = self.__close_editor.fichier.split('/')[-1]
         return CaseName
 
+    def Openfile(self, filename):
+      self.viewmanager.handleOpen(fichier=filename)
+
     def fileOpen(self):
         """
         @overload

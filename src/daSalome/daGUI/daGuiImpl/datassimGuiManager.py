@@ -48,10 +48,14 @@ __cases__ = {}
 UI_ELT_IDS = Enumerate([
         'DATASSIM_MENU_ID',
         'NEW_DATASSIMCASE_ID',
+        'EDIT_DATASSIMCASE_POP_ID',
+        'DELETE_DATASSIMCASE_POP_ID',
+        'YACS_EXPORT_POP_ID',
         ],offset=950)
 
 ACTIONS_MAP={
     UI_ELT_IDS.NEW_DATASSIMCASE_ID:"newDatassimCase",
+    UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID:"editDatassimCase",
 }
 
 class DatassimGuiUiComponentBuilder:
@@ -75,6 +79,19 @@ class DatassimGuiUiComponentBuilder:
         a = sgPyQt.createAction( UI_ELT_IDS.NEW_DATASSIMCASE_ID, "New case", "New case", "Create a new datassim case", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
+
+        # the following action are used in context popup
+        a = sgPyQt.createAction( UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID, "Edit case", "Edit case", "Edit the selected study case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.DELETE_DATASSIMCASE_POP_ID, "Delete case", "Delete case", "Delete the selected study case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.YACS_EXPORT_POP_ID, "Export to YACS", "Export to YACS", "Generate a YACS graph executing this case", "" )
+
+    def createPopupMenuOnItem(self,popup,salomeSudyId, item):
+        if datassimStudyEditor.isValidDatassimCaseItem(salomeSudyId, item):
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID ) )
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.DELETE_DATASSIMCASE_POP_ID ) )
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.YACS_EXPORT_POP_ID ) )
+
+        return popup
 
 class DatassimGuiActionImpl(EficasObserver):
     """
@@ -111,6 +128,22 @@ class DatassimGuiActionImpl(EficasObserver):
     def newDatassimCase(self):
       self.__dlgEficasWrapper.displayNew()
 
+    def editDatassimCase(self):
+      global __cases__
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
+      case_key = (salomeStudyId, salomeStudyItem.GetName())
+      try:
+        case = __cases__[case_key]
+        self.__dlgEficasWrapper.Openfile(case.get_name())
+        callbackId = [salomeStudyId, salomeStudyItem]
+        self.__dlgEficasWrapper.setCallbackId(callbackId)
+        self.__dlgEficasWrapper.show()
+      except:
+        print "Oups - cannot edit case !"
+        traceback.print_exc()
+
+
     # ==========================================================================
     # Processing notifications from eficas
     #
@@ -139,13 +172,14 @@ class DatassimGuiActionImpl(EficasObserver):
       new_case = DatassimCase()
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
-      case_key = (salomeStudyId, salomeStudyItem)
+      case_key = (salomeStudyId, salomeStudyItem.GetName())
       __cases__[case_key] = new_case
       datassimGuiHelper.refreshObjectBrowser()
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
 
     def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
+        global __cases__
         callbackId = eficasEvent.callbackId
         if callbackId is None:
             raise DevelException("the callback data should not be None. Can't guess what are the study and case")
@@ -156,13 +190,24 @@ class DatassimGuiActionImpl(EficasObserver):
         # Get Editor All infos we need !
         file_name = eficasWrapper.getCaseName()
         if file_name != "" :
-          case_key = (targetSalomeStudyId, targetSalomeStudyItem)
-          case =__cases__[case_key]
+          # Get case
+          old_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
+          case =__cases__[old_case_key]
+
+          # Set new informations
           case.set_name(file_name)
           datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
+
+          # Case key changed !
+          new_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
+          # A ne pas inverser !!!
+          __cases__.pop(old_case_key)
+          __cases__[new_case_key] = case
+
           datassimGuiHelper.refreshObjectBrowser()
 
     def _processEficasDestroyEvent(self, eficasWrapper, eficasEvent):
+        global __cases__
         callbackId = eficasEvent.callbackId
         if callbackId is None:
             raise DevelException("the callback data should not be None. Can't guess what are the study and case")
@@ -170,7 +215,7 @@ class DatassimGuiActionImpl(EficasObserver):
         if ( targetSalomeStudyId is None ) or ( targetSalomeStudyItem is None ):
             raise DevelException("the parameters targetSalomeStudyId and targetSalomeStudyItem should not be None")
 
-        case_key = (targetSalomeStudyId, targetSalomeStudyItem)
+        case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetName())
         __cases__.pop(case_key)
         datassimStudyEditor.removeItem(targetSalomeStudyId, targetSalomeStudyItem)
         datassimGuiHelper.refreshObjectBrowser()
