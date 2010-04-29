@@ -18,13 +18,18 @@
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
+import os
+import subprocess
+import traceback
+import SalomePyQt
+
 class DatassimCase:
 
-  __name = "new_case"
-  __filename = ""
 
   def __init__(self):
-    pass
+    self.__name = "new_case"
+    self.__filename = ""
+    self.__yacs_filename = ""
 
   def get_name(self):
     return self.__name
@@ -37,3 +42,47 @@ class DatassimCase:
 
   def set_filename(self, name):
     self.__filename = str(name)
+
+  def createYACSFile(self):
+    rtn = ""
+    if (self.__filename == ""):
+      return "You need to save your case to export it"
+
+    filename = self.__filename[:self.__filename.rfind(".")] + '.py'
+    if not os.path.exists(filename):
+      msg =  "Cannot find the py file for YACS generation \n"
+      msg += "Is your case correct ? \n"
+      msg += "(Try to load: " + filename + ")"
+      return msg
+
+    if not os.environ.has_key("DATASSIM_ROOT_DIR"):
+      return "Please add DATASSIM_ROOT_DIR to your environnement"
+
+    datassim_path = os.environ["DATASSIM_ROOT_DIR"]
+    datassim_exe = datassim_path + "/bin/salome/DatassimYacsSchemaCreator.py"
+    self.__yacs_filename = self.__filename[:self.__filename.rfind(".")] + '.xml'
+    args = [datassim_exe, filename, self.__yacs_filename]
+    p = subprocess.Popen(args)
+    (stdoutdata, stderrdata) = p.communicate()
+    if not os.path.exists(self.__yacs_filename):
+      msg  = "An error occured during the execution of DatassimYacsSchemaCreator.py \n"
+      msg += "See erros details in your terminal \n"
+      return msg
+    return rtn
+
+  def exportCaseToYACS(self):
+    rtn = ""
+    rtn = self.createYACSFile()
+    if rtn != "":
+      return rtn
+
+    try:
+      import libYACS_Swig
+      yacs_swig = libYACS_Swig.YACS_Swig()
+      yacs_swig.loadSchema(self.__yacs_filename)
+    except:
+      msg =  "Please install YACS module, error was: \n"
+      msg += traceback.format_exc()
+      return msg
+    return rtn
+

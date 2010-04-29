@@ -60,6 +60,7 @@ ACTIONS_MAP={
     UI_ELT_IDS.OPEN_DATASSIMCASE_ID:"openDatassimCase",
     UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID:"editDatassimCase",
     UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID:"removeDatassimCase",
+    UI_ELT_IDS.YACS_EXPORT_POP_ID:"exportCaseToYACS",
 }
 
 class DatassimGuiUiComponentBuilder:
@@ -111,6 +112,7 @@ class DatassimGuiActionImpl(EficasObserver):
         # This dialog is created once so that it can be recycled for each call
         # to newOmaCase().
         #self.__dlgNewStudyCase = DlgNewStudyCase()
+        self.__parent = SalomePyQt.SalomePyQt().getDesktop()
         self.__dlgEficasWrapper = DatassimEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
         self.__dlgEficasWrapper.addObserver(self)
         self.__Eficas_viewId = -1
@@ -222,6 +224,18 @@ class DatassimGuiActionImpl(EficasObserver):
         __cases__.pop(case_key)
         datassimStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
         datassimGuiHelper.refreshObjectBrowser()
+
+    def exportCaseToYACS(self):
+      global __cases__
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
+      case_key = (salomeStudyId, salomeStudyItem.GetID())
+      case = __cases__[case_key]
+
+      msg = case.exportCaseToYACS()
+      
+      if msg != "":
+        datassimGuiHelper.gui_warning(self.__parent, msg)
 
     # ==========================================================================
     # Processing notifications from eficas
