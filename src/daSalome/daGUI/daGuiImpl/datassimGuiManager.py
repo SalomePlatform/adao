@@ -59,6 +59,7 @@ ACTIONS_MAP={
     UI_ELT_IDS.NEW_DATASSIMCASE_ID:"newDatassimCase",
     UI_ELT_IDS.OPEN_DATASSIMCASE_ID:"openDatassimCase",
     UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID:"editDatassimCase",
+    UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID:"removeDatassimCase",
 }
 
 class DatassimGuiUiComponentBuilder:
@@ -163,15 +164,37 @@ class DatassimGuiActionImpl(EficasObserver):
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       try:
         case = __cases__[case_key]
-        if case.get_filename() is not None and case.get_name() != "new_case":
+        # Search if case is in Eficas !
+        callbackId = [salomeStudyId, salomeStudyItem]
+        case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
+        # If case is not in eficas Open It !
+        if case_open_in_eficas == False:
           self.__dlgEficasWrapper.Openfile(case.get_filename())
           callbackId = [salomeStudyId, salomeStudyItem]
           self.__dlgEficasWrapper.setCallbackId(callbackId)
-        self.__dlgEficasWrapper.show()
+          self.__dlgEficasWrapper.show()
       except:
         print "Oups - cannot edit case !"
         traceback.print_exc()
 
+    def removeDatassimCase(self):
+      global __cases__
+
+      # First step: selectCase
+      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
+      salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
+      callbackId = [salomeStudyId, salomeStudyItem]
+      case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
+      # If case is in eficas close it !
+      if case_open_in_eficas:
+        self.__dlgEficasWrapper.fileClose()
+
+      # Test if case exists
+      case_key = (salomeStudyId, salomeStudyItem.GetID())
+      if __cases__.has_key(case_key):
+        __cases__.pop(case_key)
+        datassimStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
+        datassimGuiHelper.refreshObjectBrowser()
 
     # ==========================================================================
     # Processing notifications from eficas

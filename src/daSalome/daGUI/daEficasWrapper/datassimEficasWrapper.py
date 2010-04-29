@@ -115,6 +115,17 @@ class DatassimEficasWrapper(EficasWrapper):
     def getOpenFileName(self):
       return str(self.__file_open_name)
 
+    def selectCase(self, callbackId):
+      rtn = False
+      for editor, myCallbackId in self.__myCallbackId.iteritems():
+        if myCallbackId[0] == callbackId[0]:
+          if myCallbackId[1].GetID() == callbackId[1].GetID():
+            rtn = True
+            for indexEditor in self.viewmanager.dict_editors.keys():
+              if editor is self.viewmanager.dict_editors[indexEditor]:
+                self.viewmanager.myQtab.setCurrentIndex(indexEditor)
+      return rtn
+
     def fileClose(self):
         """
         @overload
