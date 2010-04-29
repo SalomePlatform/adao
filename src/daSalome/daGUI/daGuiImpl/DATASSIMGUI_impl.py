@@ -37,10 +37,13 @@ sgPyQt = SalomePyQt.SalomePyQt()
 
 from daGuiImpl import datassimGuiHelper
 from daGuiImpl.datassimGuiManager import DatassimGuiUiComponentBuilder
+from daGuiImpl.datassimGuiManager import DatassimGuiActionImpl
 class GUIcontext:
     uiComponentBuilder = None
+    actionImpl = None
     def __init__(self):
         self.uiComponentBuilder = DatassimGuiUiComponentBuilder()
+        self.actionImpl = DatassimGuiActionImpl()
 
 
 __study2context__   = {}
@@ -48,13 +51,12 @@ __current_context__ = None
 def _setContext( studyID ):
     global __study2context__, __current_context__
     if not __study2context__.has_key(studyID):
+        print "create new context"
         __study2context__[studyID] = GUIcontext()
         pass
     __current_context__ = __study2context__[studyID]
     return __current_context__
 
-from daGuiImpl.datassimGuiManager import DatassimGuiActionImpl
-actionImpl = DatassimGuiActionImpl()
 # This object does not need to be embedded in a GUI context object. A single
 # instance for all studies is a priori sufficient.
 
@@ -89,7 +91,9 @@ def createPreferences():
 # called when module is activated
 # returns True if activating is successfull and False otherwise
 def activate():
+    print "activate study",  sgPyQt.getStudyId()
     ctx = _setContext( sgPyQt.getStudyId() )
+    ctx.actionImpl.activate()
     return True
 
 # called when module is deactivated
@@ -119,7 +123,8 @@ def OnGUIEvent(actionId) :
     toolbar button). The actionId value is the ID associated to the item.
     """
     pass
-    actionImpl.processAction(actionId)
+    ctx = _setContext( sgPyQt.getStudyId() )
+    ctx.actionImpl.processAction(actionId)
 
     
 # called when module's preferences are changed

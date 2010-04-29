@@ -34,12 +34,11 @@ sys.path[:0]=[DATASSIM_INSTALL_DIR]
 #
 class DatassimEficasWrapper(EficasWrapper):
 
-    __myCallbackId = {}
-    __close_editor = None
-    __file_open_name = ""
-
     def __init__(self, parent, code="DATASSIM"):
         EficasWrapper.__init__(self, parent, code)
+        self.__myCallbackId = {}
+        self.__close_editor = None
+        self.__file_open_name = ""
 
     def init_gui(self):
       EficasWrapper.init_gui(self)

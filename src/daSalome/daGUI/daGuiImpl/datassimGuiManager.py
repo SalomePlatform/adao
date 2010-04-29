@@ -105,8 +105,6 @@ class DatassimGuiActionImpl(EficasObserver):
     This class implements the ui actions concerning the management of oma study
     cases.
     """
-    __dlgEficasWrapper = None
-    __Eficas_viewId = -1
 
     def __init__(self):
         pass
@@ -115,6 +113,7 @@ class DatassimGuiActionImpl(EficasObserver):
         #self.__dlgNewStudyCase = DlgNewStudyCase()
         self.__dlgEficasWrapper = DatassimEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
         self.__dlgEficasWrapper.addObserver(self)
+        self.__Eficas_viewId = -1
 
     # ==========================================================================
     # Processing of ui actions
@@ -148,6 +147,8 @@ class DatassimGuiActionImpl(EficasObserver):
             self.__dlgEficasWrapper.init_gui()
             self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithMain(self.__dlgEficasWrapper)
 
+    def activate(self):
+      self.showEficas()
 
     def newDatassimCase(self):
       self.showEficas()
