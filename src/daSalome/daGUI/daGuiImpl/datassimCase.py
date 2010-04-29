@@ -30,10 +30,10 @@ class DatassimCase:
     return self.__name
 
   def set_name(self, name):
-    self.__name = name
+    self.__name = str(name)
 
   def get_filename(self):
     return self.__filename
 
   def set_filename(self, name):
-    self.__filename = name
+    self.__filename = str(name)

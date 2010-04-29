@@ -106,6 +106,7 @@ class DatassimGuiActionImpl(EficasObserver):
     cases.
     """
     __dlgEficasWrapper = None
+    __Eficas_viewId = -1
 
     def __init__(self):
         pass
@@ -132,10 +133,28 @@ class DatassimGuiActionImpl(EficasObserver):
             msg = "The requested action is not implemented: " + str(actionId)
             print msg
 
+    def showEficas(self):
+      if self.__Eficas_viewId == -1:
+        print "First showEficas"
+        self.__dlgEficasWrapper.init_gui()
+        self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithMain(self.__dlgEficasWrapper)
+      else:
+        print "myViewId =",  self.__Eficas_viewId
+        print "activeView =", SalomePyQt.SalomePyQt().getActiveView()
+        if SalomePyQt.SalomePyQt().getActiveView() != self.__Eficas_viewId :
+          result_activate = SalomePyQt.SalomePyQt().activateView(self.__Eficas_viewId)
+          if result_activate == False:
+            print "View was close - create a new eficas widget"
+            self.__dlgEficasWrapper.init_gui()
+            self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithMain(self.__dlgEficasWrapper)
+
+
     def newDatassimCase(self):
-      self.__dlgEficasWrapper.displayNew()
+      self.showEficas()
+      self.__dlgEficasWrapper.fileNew()
 
     def openDatassimCase(self):
+      self.showEficas()
       global __cases__
       fichier = QtGui.QFileDialog.getOpenFileName(SalomePyQt.SalomePyQt().getDesktop(),
                                                   self.__dlgEficasWrapper.trUtf8('Ouvrir Fichier'),
@@ -154,25 +173,32 @@ class DatassimGuiActionImpl(EficasObserver):
       self.__dlgEficasWrapper.Openfile(new_case.get_filename())
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
-      self.__dlgEficasWrapper.show()
+      self.showEficas()
       datassimGuiHelper.refreshObjectBrowser()
 
     def editDatassimCase(self):
+      # First we show eficas - all cases are reloaded
       global __cases__
+
+      # Take study item
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
+
+      # ShowEficas, If case is an empty case - case is destroyed by reopen
+      self.showEficas()
       try:
         case = __cases__[case_key]
         # Search if case is in Eficas !
         callbackId = [salomeStudyId, salomeStudyItem]
         case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
+
         # If case is not in eficas Open It !
         if case_open_in_eficas == False:
-          self.__dlgEficasWrapper.Openfile(case.get_filename())
-          callbackId = [salomeStudyId, salomeStudyItem]
-          self.__dlgEficasWrapper.setCallbackId(callbackId)
-          self.__dlgEficasWrapper.show()
+          if case.get_filename() != "":
+            self.__dlgEficasWrapper.Openfile(case.get_filename())
+            callbackId = [salomeStudyId, salomeStudyItem]
+            self.__dlgEficasWrapper.setCallbackId(callbackId)
       except:
         print "Oups - cannot edit case !"
         traceback.print_exc()
@@ -204,7 +230,8 @@ class DatassimGuiActionImpl(EficasObserver):
         EficasEvent.EVENT_TYPES.SAVE  : "_processEficasSaveEvent",
         EficasEvent.EVENT_TYPES.NEW  : "_processEficasNewEvent",
         EficasEvent.EVENT_TYPES.DESTROY  : "_processEficasDestroyEvent",
-        EficasEvent.EVENT_TYPES.OPEN  : "_processEficasOpenEvent"
+        EficasEvent.EVENT_TYPES.OPEN  : "_processEficasOpenEvent",
+        EficasEvent.EVENT_TYPES.REOPEN  : "_processEficasReOpenEvent"
         }
     def processEficasEvent(self, eficasWrapper, eficasEvent):
         """
@@ -221,6 +248,8 @@ class DatassimGuiActionImpl(EficasObserver):
     def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
       global __cases__
       new_case = DatassimCase()
+      case_name = eficasWrapper.getCaseName()
+      new_case.set_name(case_name)
       salomeStudyId   = datassimGuiHelper.getActiveStudyId()
       salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
@@ -228,6 +257,34 @@ class DatassimGuiActionImpl(EficasObserver):
       datassimGuiHelper.refreshObjectBrowser()
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
+
+    def _processEficasReOpenEvent(self, eficasWrapper, eficasEvent):
+      global __cases__
+      try:
+        callbackId = eficasEvent.callbackId
+        [salomeStudyId, salomeStudyItem] = callbackId
+        case_key = (salomeStudyId, salomeStudyItem.GetID())
+        case = __cases__[case_key]
+        # Search if case is in Eficas !
+        callbackId = [salomeStudyId, salomeStudyItem]
+        print "selectCase"
+        case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
+        # If case is not in eficas Open It !
+        if case_open_in_eficas == False:
+          print "reopen selectCase"
+          if case.get_filename() != "":
+            self.__dlgEficasWrapper.Openfile(case.get_filename())
+            callbackId = [salomeStudyId, salomeStudyItem]
+            self.__dlgEficasWrapper.setCallbackId(callbackId)
+          else:
+            # Since I am an empty case I destroy myself before reloading
+            datassimStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
+            datassimGuiHelper.refreshObjectBrowser()
+            __cases__.pop(case_key)
+            self.__dlgEficasWrapper.fileNew()
+      except:
+        print "Oups - cannot reopen case !"
+        traceback.print_exc()
 
     def _processEficasOpenEvent(self, eficasWrapper, eficasEvent):
       global __cases__
@@ -270,8 +327,11 @@ class DatassimGuiActionImpl(EficasObserver):
           case =__cases__[old_case_key]
 
           # Set new informations
-          case.set_filename(file_case_name)
           case.set_name(case_name)
+          if str(case_name).startswith("Untitled"):
+            pass
+          else:
+            case.set_filename(file_case_name)
           datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
 
           # Case key changed !

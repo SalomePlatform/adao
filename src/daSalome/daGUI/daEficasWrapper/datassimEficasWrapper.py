@@ -41,6 +41,13 @@ class DatassimEficasWrapper(EficasWrapper):
     def __init__(self, parent, code="DATASSIM"):
         EficasWrapper.__init__(self, parent, code)
 
+    def init_gui(self):
+      EficasWrapper.init_gui(self)
+      print "self.__myCallbackId", self.__myCallbackId
+      save_CallbackId =  self.__myCallbackId.copy()
+      for editor, myCallbackId in save_CallbackId.iteritems():
+        self.notifyObserver(EficasEvent.EVENT_TYPES.REOPEN, callbackId=myCallbackId)
+
     # Association de l'objet editor avec le callbackId
     def setCallbackId(self, callbackId):
       index = self.viewmanager.myQtab.currentIndex()
@@ -120,10 +127,13 @@ class DatassimEficasWrapper(EficasWrapper):
       for editor, myCallbackId in self.__myCallbackId.iteritems():
         if myCallbackId[0] == callbackId[0]:
           if myCallbackId[1].GetID() == callbackId[1].GetID():
-            rtn = True
-            for indexEditor in self.viewmanager.dict_editors.keys():
-              if editor is self.viewmanager.dict_editors[indexEditor]:
-                self.viewmanager.myQtab.setCurrentIndex(indexEditor)
+            try:
+              for indexEditor in self.viewmanager.dict_editors.keys():
+                if editor is self.viewmanager.dict_editors[indexEditor]:
+                  self.viewmanager.myQtab.setCurrentIndex(indexEditor)
+                  rtn = True
+            except:
+              pass
       return rtn
 
     def fileClose(self):

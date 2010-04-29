@@ -55,6 +55,7 @@ class EficasEvent:
         'SAVE',
         'DESTROY',
         'OPEN',
+        'REOPEN',
         'NEW'
     ])
 
@@ -109,6 +110,8 @@ class EficasWrapper(qtEficas.Appli):
 
         self.__codetype = code
         self.__jdc = None
+        self.__salome = salome
+        self.__parent = parent
 
         # variables for the notification procedure
         self.__observer  = None
@@ -132,7 +135,12 @@ class EficasWrapper(qtEficas.Appli):
                 print "noversion"
             session.parse( eficasArg )
 
-        qtEficas.Appli.__init__( self,code=code,salome=salome,parent=parent)
+    #    qtEficas.Appli.__init__( self,code=code,salome=salome,parent=parent)
+    def init_gui(self):
+      import InterfaceQT4.readercata
+      if hasattr(InterfaceQT4.readercata,'reader') :
+         del InterfaceQT4.readercata.reader
+      qtEficas.Appli.__init__( self,code=self.__codetype,salome=self.__salome,parent=self.__parent)
 
     def setCodeType(self,code):
         self.__codetype = code
@@ -172,9 +180,12 @@ class EficasWrapper(qtEficas.Appli):
             raise DevelException("the argument should implement the function processEficasEvent")
         self.__observer = observer
 
-    def notifyObserver(self, eventType):
+    def notifyObserver(self, eventType, callbackId=None):
       if eventType != EficasEvent.EVENT_TYPES.NEW and eventType != EficasEvent.EVENT_TYPES.OPEN:
-        eficasEvent = EficasEvent(eventType, self.getCallbackId())
+        if callbackId is None :
+          eficasEvent = EficasEvent(eventType, self.getCallbackId())
+        else:
+          eficasEvent = EficasEvent(eventType, callbackId)
       else:
         eficasEvent = EficasEvent(eventType)
       self.__observer.processEficasEvent(self, eficasEvent)
