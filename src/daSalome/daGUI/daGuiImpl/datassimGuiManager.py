@@ -138,7 +138,12 @@ class DatassimGuiActionImpl(EficasObserver):
       if self.__Eficas_viewId == -1:
         print "First showEficas"
         self.__dlgEficasWrapper.init_gui()
-        self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithMain(self.__dlgEficasWrapper)
+
+        # Scroll Widget
+        area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
+        area.setWidget( self.__dlgEficasWrapper)
+        area.setWidgetResizable(1)
+        self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithWidget(area)
       else:
         print "myViewId =",  self.__Eficas_viewId
         print "activeView =", SalomePyQt.SalomePyQt().getActiveView()
@@ -147,7 +152,12 @@ class DatassimGuiActionImpl(EficasObserver):
           if result_activate == False:
             print "View was close - create a new eficas widget"
             self.__dlgEficasWrapper.init_gui()
-            self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithMain(self.__dlgEficasWrapper)
+
+            # Scroll Widget
+            area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
+            area.setWidget( self.__dlgEficasWrapper)
+            area.setWidgetResizable(1)
+            self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithWidget(area)
 
     def activate(self):
       self.showEficas()
