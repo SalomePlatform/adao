@@ -5,7 +5,7 @@ print "import des prefs de Datassim"
 
 # Configuration de Eficas
 # INSTALLDIR, REPINI est obligatoire
-INSTALLDIR = "/home/aribes/Dev/Src/CVS_SALOME/EficasV1"
+INSTALLDIR = "@EFICAS_DIR@"
 sys.path[:0]=[INSTALLDIR]
 # positionnee a repin au debut mise a jour dans configuration
 REPINI=os.path.dirname(os.path.abspath(__file__))

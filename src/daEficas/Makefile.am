@@ -29,3 +29,5 @@ mypkgpython_PYTHON = \
 		     __init__.py \
 		     prefs_DATASSIM.py \
 		     prefs.py
+
+EXTRA_DIST = prefs_DATASSIM.py.in
