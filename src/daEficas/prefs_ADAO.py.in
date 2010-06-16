@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, sys
 
-print "import des prefs de Datassim"
+print "import des prefs de Adao"
 
 # Configuration de Eficas
 # INSTALLDIR, REPINI est obligatoire

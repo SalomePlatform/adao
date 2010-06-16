@@ -22,12 +22,12 @@ include $(top_srcdir)/adm_local/make_common_starter.am
 mypkgpythondir =$(salomepythondir)/daEficas
 
 mypkgpython_PYTHON = \
-		     configuration_DATASSIM.py \
-		     convert_datassim.py \
-		     DATASSIM_Cata_V0.py \
-		     generator_datassim.py \
+		     configuration_ADAO.py \
+		     convert_adao.py \
+		     ADAO_Cata_V0.py \
+		     generator_adao.py \
 		     __init__.py \
-		     prefs_DATASSIM.py \
+		     prefs_ADAO.py \
 		     prefs.py
 
-EXTRA_DIST = prefs_DATASSIM.py.in
+EXTRA_DIST = prefs_ADAO.py.in

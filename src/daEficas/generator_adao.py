@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-print "import generator_datassim"
+print "import generator_adao"
 
 from generator.generator_python import PythonGenerator
 
@@ -11,12 +11,12 @@ def entryPoint():
    """
    return {
         # Le nom du plugin
-          'name' : 'datassim',
+        'name' : 'adao',
         # La factory pour creer une instance du plugin
-          'factory' : DatassimGenerator,
+          'factory' : AdaoGenerator,
           }
 
-class DatassimGenerator(PythonGenerator):
+class AdaoGenerator(PythonGenerator):
 
   def __init__(self,cr=None):
     PythonGenerator.__init__(self, cr)
@@ -26,7 +26,7 @@ class DatassimGenerator(PythonGenerator):
     self.text_da_status = False
 
   def gener(self,obj,format='brut',config=None):
-    print "DatassimGenerator gener"
+    print "AdaoGenerator gener"
     self.text_comm = PythonGenerator.gener(self, obj, format, config)
 
     print "Dictionnaire"
@@ -43,7 +43,7 @@ class DatassimGenerator(PythonGenerator):
 
   def writeDefault(self, fn):
     if self.text_da_status:
-      print "write datassim python command file"
+      print "write adao python command file"
       filename = fn[:fn.rfind(".")] + '.py'
       f = open( str(filename), 'wb')
       f.write( self.text_da )

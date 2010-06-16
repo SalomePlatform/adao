@@ -1,2 +1,2 @@
 # Fichier obligatoire ne devant que contenir la variable code...
-code = "DATASSIM"
+code = "ADAO"

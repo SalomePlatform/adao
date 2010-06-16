@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-print "import convert_datassim"
+print "import convert_adao"
 
 import convert.parseur_python
 from convert.convert_python import *
@@ -11,7 +11,7 @@ def entryPoint():
    """
    return {
         # Le nom du plugin
-          'name' : 'datassim',
+          'name' : 'adao',
         # La factory pour créer une instance du plugin
           'factory' : PythonParser,
           }

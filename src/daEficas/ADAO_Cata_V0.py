@@ -7,7 +7,7 @@
 import Accas
 from Accas import *
 
-JdC = JDC_CATA (code = 'DATASSIM',
+JdC = JDC_CATA (code = 'ADAO',
                 execmodul = None,
                 regles = ( AU_MOINS_UN ('ASSIM_STUDY')),
                )
