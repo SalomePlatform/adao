@@ -26,19 +26,19 @@ import traceback
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)-8s %(message)s')
 
-print "-- Starting DatassimYacsSchemaCreator --"
+print "-- Starting AdaoYacsSchemaCreator --"
 
 # Check some basics variables
-if "DATASSIM_ROOT_DIR" not in os.environ:
-  logging.fatal("You have to define DATASSIM_ROOT_DIR")
+if "ADAO_ROOT_DIR" not in os.environ:
+  logging.fatal("You have to define ADAO_ROOT_DIR")
   sys.exit(1)
 
 try:
   from daYacsSchemaCreator.run import *
   from daYacsSchemaCreator.help_methods import *
 except:
-  logging.fatal("Import of DATASSIM python modules failed !" +
-                "\n add DATASSIM python installation directory in your PYTHONPATH")
+  logging.fatal("Import of ADAO python modules failed !" +
+                "\n add ADAO python installation directory in your PYTHONPATH")
   traceback.print_exc()
   sys.exit(1)
 

@@ -2,19 +2,19 @@
 # -*- coding: utf-8 -*-
 
 """
-   Ce module sert à lancer EFICAS pour Datassim
+   Ce module sert à lancer EFICAS pour Adao
 """
 
 import sys
 # Configuration de l'installation
 INSTALLDIR = "@EFICAS_DIR@"
 sys.path[:0]=[INSTALLDIR]
-DATASSIM_INSTALL_DIR = "@PYTHON_SITE@/salome/daEficas"
-sys.path[:0]=[DATASSIM_INSTALL_DIR]
+ADAO_INSTALL_DIR = "@PYTHON_SITE@/salome/daEficas"
+sys.path[:0]=[ADAO_INSTALL_DIR]
 
 # Configuration
 import prefs
-import prefs_DATASSIM
+import prefs_ADAO
 
 # Modules Eficas
 from InterfaceQT4 import eficas_go
