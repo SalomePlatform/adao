@@ -1,11 +1,11 @@
 <document>
-  <section name="DATASSIM">
+  <section name="ADAO">
     <!-- Major module parameters -->
-    <parameter name="name"    value="DATASSIM"/>
+    <parameter name="name"    value="ADAO"/>
     <parameter name="library" value="SalomePyQtGUI"/>
   </section>
   <section name="resources">
     <!-- Module resources -->
-    <parameter name="DATASSIM" value="${DATASSIM_ROOT_DIR}/share/salome/resources/datassim"/>
+    <parameter name="ADAO" value="${ADAO_ROOT_DIR}/share/salome/resources/adao"/>
   </section>
 </document>
