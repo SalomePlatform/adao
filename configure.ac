@@ -1,8 +1,8 @@
 
-AC_INIT(datassim, 1.0)
+AC_INIT(adao, 1.0)
 AC_CONFIG_AUX_DIR(adm_local)
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(datassim_config.h)
+AM_CONFIG_HEADER(adao_config.h)
 
 dnl Check Salome Install
 CHECK_KERNEL
@@ -20,7 +20,7 @@ CHECK_BOOST
 CHECK_OMNIORB
 CHECK_EFICAS
 
-MODULE_NAME=datassim
+MODULE_NAME=adao
 AC_SUBST(MODULE_NAME)
 
 echo
@@ -68,13 +68,13 @@ AC_CONFIG_FILES([
         src/Makefile
         src/daComposant/Makefile
         src/daEficas/Makefile
-        src/daEficas/prefs_DATASSIM.py
+        src/daEficas/prefs_ADAO.py
         src/daSalome/Makefile
         src/daSalome/daGUI/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
         src/daSalome/daGUI/daEficasWrapper/Makefile
         src/daSalome/daGUI/daEficasWrapper/eficasWrapper.py
         bin/Makefile
-        bin/qtEficas_datassim_study.py
+        bin/qtEficas_adao_study.py
         ])
 AC_OUTPUT
