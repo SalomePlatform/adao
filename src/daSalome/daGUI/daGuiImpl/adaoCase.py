@@ -23,8 +23,7 @@ import subprocess
 import traceback
 import SalomePyQt
 
-class DatassimCase:
-
+class AdaoCase:
 
   def __init__(self):
     self.__name = "new_case"
@@ -55,17 +54,17 @@ class DatassimCase:
       msg += "(Try to load: " + filename + ")"
       return msg
 
-    if not os.environ.has_key("DATASSIM_ROOT_DIR"):
-      return "Please add DATASSIM_ROOT_DIR to your environnement"
+    if not os.environ.has_key("ADAO_ROOT_DIR"):
+      return "Please add ADAO_ROOT_DIR to your environnement"
 
-    datassim_path = os.environ["DATASSIM_ROOT_DIR"]
-    datassim_exe = datassim_path + "/bin/salome/DatassimYacsSchemaCreator.py"
+    adao_path = os.environ["ADAO_ROOT_DIR"]
+    adao_exe = adao_path + "/bin/salome/AdaoYacsSchemaCreator.py"
     self.__yacs_filename = self.__filename[:self.__filename.rfind(".")] + '.xml'
-    args = [datassim_exe, filename, self.__yacs_filename]
+    args = [adao_exe, filename, self.__yacs_filename]
     p = subprocess.Popen(args)
     (stdoutdata, stderrdata) = p.communicate()
     if not os.path.exists(self.__yacs_filename):
-      msg  = "An error occured during the execution of DatassimYacsSchemaCreator.py \n"
+      msg  = "An error occured during the execution of AdaoYacsSchemaCreator.py \n"
       msg += "See erros details in your terminal \n"
       return msg
     return rtn

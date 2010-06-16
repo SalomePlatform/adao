@@ -78,7 +78,7 @@ def componentName():
     # Note that this name should be (i) the name used for the class implementing
     # the component CORBA interface and (ii) the name used to declare the component
     # in the catalog of the module.
-    return "DATASSIM"
+    return "ADAO"
 
 # _MEM_ we use here the tr() translation methode to manage constant parameters
 # in the application. We could have specified instead constant values directly
@@ -87,13 +87,13 @@ from PyQt4.QtCore import QObject
 QObjectTR=QObject()
 
 def componentUserName():
-    return "DATASSIM"
+    return "ADAO"
 
 def modulePixmap():
     """
     Get the reference pixmap for this module.
     """
-    return "DATASSIM_small.png"
+    return "ADAO_small.png"
 
 __verbose__ = None
 def verbose():

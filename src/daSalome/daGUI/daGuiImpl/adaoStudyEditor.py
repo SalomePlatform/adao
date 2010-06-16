@@ -22,16 +22,16 @@ __author__="aribes/gboulant"
 
 from enumerate import Enumerate
 import studyedit
-import datassimModuleHelper
-from daGuiImpl.datassimCase import DatassimCase
+import adaoModuleHelper
+from daGuiImpl.adaoCase import AdaoCase
 
 #
 # ==============================================================================
 # Constant parameters and identifiers
 # ==============================================================================
 #
-DATASSIM_ITEM_TYPES = Enumerate([
-    "DATASSIM_CASE",
+ADAO_ITEM_TYPES = Enumerate([
+    "ADAO_CASE",
 ])
 
 #
@@ -46,25 +46,25 @@ DATASSIM_ITEM_TYPES = Enumerate([
 #   a SComponent is a reference in a study toward a SALOME component
 #
 
-def addInStudy(salomeStudyId, datassimCase):
+def addInStudy(salomeStudyId, adaoCase):
     """
     This function adds in the specified SALOME study a study entry that corresponds
-    to the specified datassim case. This study case is put in a folder under
-    the DATASSIM component and is identified by the case name.
+    to the specified adao case. This study case is put in a folder under
+    the ADAO component and is identified by the case name.
     """
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
 
-    datassimRootEntry = studyEditor.findOrCreateComponent(
-        engineName    = datassimModuleHelper.componentName(),
-        componentName = datassimModuleHelper.componentUserName())
+    adaoRootEntry = studyEditor.findOrCreateComponent(
+        engineName    = adaoModuleHelper.componentName(),
+        componentName = adaoModuleHelper.componentUserName())
 
-    itemName  = datassimCase.get_name()
-    itemValue = str(datassimCase.get_filename())
-    itemType  = DATASSIM_ITEM_TYPES.DATASSIM_CASE
+    itemName  = adaoCase.get_name()
+    itemValue = str(adaoCase.get_filename())
+    itemType  = ADAO_ITEM_TYPES.ADAO_CASE
 
     salomeStudyItem = studyEditor.createItem(
-        datassimRootEntry, itemName,
+        adaoRootEntry, itemName,
         comment = itemValue,
         typeId  = itemType)
     # _MEM_ Note that we use the comment attribute to store the serialize
@@ -72,16 +72,16 @@ def addInStudy(salomeStudyId, datassimCase):
 
     return salomeStudyItem
 
-def updateItem(salomeStudyId, salomeStudyItem, datassimCase):
+def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
     
-    if salomeStudyItem.GetName()[:-2] != datassimCase.get_name():
-      itemName  = datassimCase.get_name()
-      itemValue = datassimCase.get_filename()
+    if salomeStudyItem.GetName()[:-2] != adaoCase.get_name():
+      itemName  = adaoCase.get_name()
+      itemValue = adaoCase.get_filename()
     else:
       itemName  = salomeStudyItem.GetName()
-      itemValue = datassimCase.get_filename()
+      itemValue = adaoCase.get_filename()
 
     studyEditor.setItem(salomeStudyItem,
         name    = itemName,
@@ -95,16 +95,16 @@ def removeItem(salomeStudyId, item):
     return studyEditor.removeItem(item,True)
 
 
-def isValidDatassimCaseItem(salomeStudyId,item):
+def isValidAdaoCaseItem(salomeStudyId,item):
     """
-    Return true if the specified item corresponds to a valid datassimCase
+    Return true if the specified item corresponds to a valid adaoCase
     """
     if item is None:
         return False
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
     itemType = studyEditor.getTypeId(item)
-    if itemType != DATASSIM_ITEM_TYPES.DATASSIM_CASE:
+    if itemType != ADAO_ITEM_TYPES.ADAO_CASE:
         return False
 
     return True

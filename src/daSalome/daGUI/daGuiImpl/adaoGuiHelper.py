@@ -25,7 +25,7 @@ import salome
 import SalomePyQt
 __sgPyQt = SalomePyQt.SalomePyQt()
 
-import datassimModuleHelper
+import adaoModuleHelper
 from PyQt4 import QtGui,QtCore
 
 def waitCursor():
@@ -54,7 +54,7 @@ def getActiveStudy():
     makes sens only in the GUI context.
     """
     studyId = getActiveStudyId()()
-    study = datassimModuleHelper.getStudyManager().GetStudyByID( studyId )
+    study = adaoModuleHelper.getStudyManager().GetStudyByID( studyId )
     return study
 
 def refreshObjectBrowser():
@@ -74,7 +74,7 @@ def getSelectedItem(salomeStudyId=getActiveStudyId()):
     if salome.sg is None:
         raise Exception("GuiHelper.getSelectedItem can't be used without the GUI context")
 
-    salomeStudy = datassimModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
+    salomeStudy = adaoModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
 
     item = None
     listEntries=salome.sg.getAllSelected()
@@ -91,11 +91,11 @@ def getAllSelected(salomeStudyId):
     if salome.sg is None:
         raise OmaException("getSelectedItem can't be used without the GUI context", OmaException.TYPES.DEVEL)
 
-    study = datassimModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
+    study = adaoModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
     selcount = salome.sg.SelectedCount()
     seltypes = {}
     for i in range( selcount ):
-        __incObjToMap( seltypes, datassimModuleHelper.getObjectID( study, salome.sg.getSelected( i ) ) )
+        __incObjToMap( seltypes, adaoModuleHelper.getObjectID( study, salome.sg.getSelected( i ) ) )
         pass
     return selcount, seltypes
 

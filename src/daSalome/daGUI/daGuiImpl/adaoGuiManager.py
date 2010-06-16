@@ -32,12 +32,12 @@ import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
 from daGuiImpl.enumerate import Enumerate
-from daGuiImpl.datassimCase import DatassimCase
-from daEficasWrapper.datassimEficasWrapper import DatassimEficasWrapper
+from daGuiImpl.adaoCase import AdaoCase
+from daEficasWrapper.adaoEficasWrapper import AdaoEficasWrapper
 from daEficasWrapper.eficasWrapper import EficasObserver
 from daEficasWrapper.eficasWrapper import EficasEvent
-import datassimGuiHelper
-import datassimStudyEditor
+import adaoGuiHelper
+import adaoStudyEditor
 
 __cases__ = {}
 
@@ -47,23 +47,23 @@ __cases__ = {}
 # ==============================================================================
 #
 UI_ELT_IDS = Enumerate([
-        'DATASSIM_MENU_ID',
-        'NEW_DATASSIMCASE_ID',
-        'OPEN_DATASSIMCASE_ID',
-        'EDIT_DATASSIMCASE_POP_ID',
-        'REMOVE_DATASSIMCASE_POP_ID',
+        'ADAO_MENU_ID',
+        'NEW_ADAOCASE_ID',
+        'OPEN_ADAOCASE_ID',
+        'EDIT_ADAOCASE_POP_ID',
+        'REMOVE_ADAOCASE_POP_ID',
         'YACS_EXPORT_POP_ID',
         ],offset=950)
 
 ACTIONS_MAP={
-    UI_ELT_IDS.NEW_DATASSIMCASE_ID:"newDatassimCase",
-    UI_ELT_IDS.OPEN_DATASSIMCASE_ID:"openDatassimCase",
-    UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID:"editDatassimCase",
-    UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID:"removeDatassimCase",
+    UI_ELT_IDS.NEW_ADAOCASE_ID:"newAdaoCase",
+    UI_ELT_IDS.OPEN_ADAOCASE_ID:"openAdaoCase",
+    UI_ELT_IDS.EDIT_ADAOCASE_POP_ID:"editAdaoCase",
+    UI_ELT_IDS.REMOVE_ADAOCASE_POP_ID:"removeAdaoCase",
     UI_ELT_IDS.YACS_EXPORT_POP_ID:"exportCaseToYACS",
 }
 
-class DatassimGuiUiComponentBuilder:
+class AdaoGuiUiComponentBuilder:
     """
     The initialisation of this class creates the graphic components involved
     in the GUI (menu, menu item, toolbar). A ui component builder should be
@@ -77,31 +77,31 @@ class DatassimGuiUiComponentBuilder:
         objectTR = QObject()
 
         # create top-level menu
-        mid = sgPyQt.createMenu( "DATASSIM", -1, UI_ELT_IDS.DATASSIM_MENU_ID, sgPyQt.defaultMenuGroup() )
+        mid = sgPyQt.createMenu( "ADAO", -1, UI_ELT_IDS.ADAO_MENU_ID, sgPyQt.defaultMenuGroup() )
         # create toolbar
-        tid = sgPyQt.createTool( "DATASSIM" )
+        tid = sgPyQt.createTool( "ADAO" )
 
-        a = sgPyQt.createAction( UI_ELT_IDS.NEW_DATASSIMCASE_ID, "New case", "New case", "Create a new datassim case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.NEW_ADAOCASE_ID, "New case", "New case", "Create a new adao case", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
-        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_DATASSIMCASE_ID, "Open case", "Open case", "Open a datassim case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_ADAOCASE_ID, "Open case", "Open case", "Open a adao case", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
 
         # the following action are used in context popup
-        a = sgPyQt.createAction( UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID, "Edit case", "Edit case", "Edit the selected study case", "" )
-        a = sgPyQt.createAction( UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID, "Remove case", "Remove case", "Remove the selected study case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.EDIT_ADAOCASE_POP_ID, "Edit case", "Edit case", "Edit the selected study case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.REMOVE_ADAOCASE_POP_ID, "Remove case", "Remove case", "Remove the selected study case", "" )
         a = sgPyQt.createAction( UI_ELT_IDS.YACS_EXPORT_POP_ID, "Export to YACS", "Export to YACS", "Generate a YACS graph executing this case", "" )
 
     def createPopupMenuOnItem(self,popup,salomeSudyId, item):
-        if datassimStudyEditor.isValidDatassimCaseItem(salomeSudyId, item):
-          popup.addAction( sgPyQt.action( UI_ELT_IDS.EDIT_DATASSIMCASE_POP_ID ) )
-          popup.addAction( sgPyQt.action( UI_ELT_IDS.REMOVE_DATASSIMCASE_POP_ID ) )
+        if adaoStudyEditor.isValidAdaoCaseItem(salomeSudyId, item):
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.EDIT_ADAOCASE_POP_ID ) )
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.REMOVE_ADAOCASE_POP_ID ) )
           popup.addAction( sgPyQt.action( UI_ELT_IDS.YACS_EXPORT_POP_ID ) )
 
         return popup
 
-class DatassimGuiActionImpl(EficasObserver):
+class AdaoGuiActionImpl(EficasObserver):
     """
     This class implements the ui actions concerning the management of oma study
     cases.
@@ -113,7 +113,7 @@ class DatassimGuiActionImpl(EficasObserver):
         # to newOmaCase().
         #self.__dlgNewStudyCase = DlgNewStudyCase()
         self.__parent = SalomePyQt.SalomePyQt().getDesktop()
-        self.__dlgEficasWrapper = DatassimEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
+        self.__dlgEficasWrapper = AdaoEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
         self.__dlgEficasWrapper.addObserver(self)
         self.__Eficas_viewId = -1
 
@@ -162,11 +162,11 @@ class DatassimGuiActionImpl(EficasObserver):
     def activate(self):
       self.showEficas()
 
-    def newDatassimCase(self):
+    def newAdaoCase(self):
       self.showEficas()
       self.__dlgEficasWrapper.fileNew()
 
-    def openDatassimCase(self):
+    def openAdaoCase(self):
       self.showEficas()
       global __cases__
       fichier = QtGui.QFileDialog.getOpenFileName(SalomePyQt.SalomePyQt().getDesktop(),
@@ -174,11 +174,11 @@ class DatassimGuiActionImpl(EficasObserver):
                                                   self.__dlgEficasWrapper.CONFIGURATION.savedir,
                                                   self.__dlgEficasWrapper.trUtf8('JDC Files (*.comm);;''All Files (*)'))
       if fichier.isNull(): return
-      new_case = DatassimCase()
+      new_case = AdaoCase()
       new_case.set_filename(str(fichier))
       new_case.set_name(str(fichier.split('/')[-1]))
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
+      salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+      salomeStudyItem = adaoStudyEditor.addInStudy(salomeStudyId, new_case)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       __cases__[case_key] = new_case
 
@@ -187,15 +187,15 @@ class DatassimGuiActionImpl(EficasObserver):
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
       self.showEficas()
-      datassimGuiHelper.refreshObjectBrowser()
+      adaoGuiHelper.refreshObjectBrowser()
 
-    def editDatassimCase(self):
+    def editAdaoCase(self):
       # First we show eficas - all cases are reloaded
       global __cases__
 
       # Take study item
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
+      salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+      salomeStudyItem = adaoGuiHelper.getSelectedItem(salomeStudyId)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
 
       # ShowEficas, If case is an empty case - case is destroyed by reopen
@@ -216,12 +216,12 @@ class DatassimGuiActionImpl(EficasObserver):
         print "Oups - cannot edit case !"
         traceback.print_exc()
 
-    def removeDatassimCase(self):
+    def removeAdaoCase(self):
       global __cases__
 
       # First step: selectCase
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
+      salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+      salomeStudyItem = adaoGuiHelper.getSelectedItem(salomeStudyId)
       callbackId = [salomeStudyId, salomeStudyItem]
       case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
       # If case is in eficas close it !
@@ -232,20 +232,20 @@ class DatassimGuiActionImpl(EficasObserver):
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       if __cases__.has_key(case_key):
         __cases__.pop(case_key)
-        datassimStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
-        datassimGuiHelper.refreshObjectBrowser()
+        adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
+        adaoGuiHelper.refreshObjectBrowser()
 
     def exportCaseToYACS(self):
       global __cases__
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimGuiHelper.getSelectedItem(salomeStudyId)
+      salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+      salomeStudyItem = adaoGuiHelper.getSelectedItem(salomeStudyId)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       case = __cases__[case_key]
 
       msg = case.exportCaseToYACS()
       
       if msg != "":
-        datassimGuiHelper.gui_warning(self.__parent, msg)
+        adaoGuiHelper.gui_warning(self.__parent, msg)
 
     # ==========================================================================
     # Processing notifications from eficas
@@ -272,14 +272,14 @@ class DatassimGuiActionImpl(EficasObserver):
 
     def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
       global __cases__
-      new_case = DatassimCase()
+      new_case = AdaoCase()
       case_name = eficasWrapper.getCaseName()
       new_case.set_name(case_name)
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
+      salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+      salomeStudyItem = adaoStudyEditor.addInStudy(salomeStudyId, new_case)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       __cases__[case_key] = new_case
-      datassimGuiHelper.refreshObjectBrowser()
+      adaoGuiHelper.refreshObjectBrowser()
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
 
@@ -303,8 +303,8 @@ class DatassimGuiActionImpl(EficasObserver):
             self.__dlgEficasWrapper.setCallbackId(callbackId)
           else:
             # Since I am an empty case I destroy myself before reloading
-            datassimStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
-            datassimGuiHelper.refreshObjectBrowser()
+            adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
+            adaoGuiHelper.refreshObjectBrowser()
             __cases__.pop(case_key)
             self.__dlgEficasWrapper.fileNew()
       except:
@@ -318,9 +318,9 @@ class DatassimGuiActionImpl(EficasObserver):
       self.__dlgEficasWrapper.Openfile(self.__dlgEficasWrapper.getOpenFileName())
 
       # Creation d'un nouveau cas
-      new_case = DatassimCase()
-      salomeStudyId   = datassimGuiHelper.getActiveStudyId()
-      salomeStudyItem = datassimStudyEditor.addInStudy(salomeStudyId, new_case)
+      new_case = AdaoCase()
+      salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+      salomeStudyItem = adaoStudyEditor.addInStudy(salomeStudyId, new_case)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       __cases__[case_key] = new_case
 
@@ -357,7 +357,7 @@ class DatassimGuiActionImpl(EficasObserver):
             pass
           else:
             case.set_filename(file_case_name)
-          datassimStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
+          adaoStudyEditor.updateItem(targetSalomeStudyId, targetSalomeStudyItem, case)
 
           # Case key changed !
           #new_case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetID())
@@ -365,7 +365,7 @@ class DatassimGuiActionImpl(EficasObserver):
           #__cases__.pop(old_case_key)
           #__cases__[new_case_key] = case
 
-          datassimGuiHelper.refreshObjectBrowser()
+          adaoGuiHelper.refreshObjectBrowser()
 
     def _processEficasDestroyEvent(self, eficasWrapper, eficasEvent):
         global __cases__
@@ -378,8 +378,8 @@ class DatassimGuiActionImpl(EficasObserver):
 
         case_key = (targetSalomeStudyId, targetSalomeStudyItem.GetID())
         __cases__.pop(case_key)
-        datassimStudyEditor.removeItem(targetSalomeStudyId, targetSalomeStudyItem)
-        datassimGuiHelper.refreshObjectBrowser()
+        adaoStudyEditor.removeItem(targetSalomeStudyId, targetSalomeStudyItem)
+        adaoGuiHelper.refreshObjectBrowser()
 
     def _processEficasUnknownEvent(self, eficasWrapper, eficasEvent):
       print "Unknown Eficas Event"

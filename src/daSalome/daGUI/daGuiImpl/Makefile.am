@@ -23,13 +23,13 @@ mypkgpythondir =$(salomepythondir)/daGuiImpl
 
 mypkgpython_PYTHON = \
 		     __init__.py \
-		     DATASSIMGUI_impl.py \
-		     datassimGuiManager.py \
-		     datassimGuiHelper.py \
-		     datassimModuleHelper.py \
-		     datassimStudyEditor.py \
+		     ADAOGUI_impl.py \
+		     adaoGuiManager.py \
+		     adaoGuiHelper.py \
+		     adaoModuleHelper.py \
+		     adaoStudyEditor.py \
 		     studyedit.py \
-		     datassimCase.py \
+		     adaoCase.py \
 		     enumerate.py
 
 
