@@ -1,17 +1,17 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-BUILT_SOURCES = DATASSIMSK.cc 
-IDL_FILES=DATASSIM.idl
+BUILT_SOURCES = ADAOSK.cc 
+IDL_FILES=ADAO.idl
 
-lib_LTLIBRARIES = libDATASSIM.la
+lib_LTLIBRARIES = libADAO.la
 salomeidl_DATA = $(IDL_FILES) 
-salomepython_DATA = DATASSIM_idl.py 
-libDATASSIM_la_SOURCES      =
-nodist_libDATASSIM_la_SOURCES = DATASSIMSK.cc
-nodist_salomeinclude_HEADERS= DATASSIM.hh 
-libDATASSIM_la_CXXFLAGS     = -I.  $(KERNEL_INCLUDES)
-libDATASSIM_la_LIBADD     = $(KERNEL_LIBS)
+salomepython_DATA = ADAO_idl.py 
+libADAO_la_SOURCES      =
+nodist_libADAO_la_SOURCES = ADAOSK.cc
+nodist_salomeinclude_HEADERS= ADAO.hh 
+libADAO_la_CXXFLAGS     = -I.  $(KERNEL_INCLUDES)
+libADAO_la_LIBADD     = $(KERNEL_LIBS)
 ##########################################################
 %SK.cc %.hh : %.idl
 	$(OMNIORB_IDL) -bcxx $(IDLCXXFLAGS) $(OMNIORB_IDLCXXFLAGS) $(IDL_INCLUDES) $<
@@ -25,12 +25,12 @@ CLEANFILES = *.hh *SK.cc *.py *.hxx *.cxx
 EXTRA_DIST = $(IDL_FILES)
 
 clean-local:
-	rm -rf DATASSIM DATASSIM__POA
+	rm -rf ADAO ADAO__POA
 
 install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(salomepythondir)
-	cp -R DATASSIM DATASSIM__POA $(DESTDIR)$(salomepythondir)
+	cp -R ADAO ADAO__POA $(DESTDIR)$(salomepythondir)
 
 uninstall-local:
-	rm -rf $(DESTDIR)$(salomepythondir)/DATASSIM
-	rm -rf $(DESTDIR)$(salomepythondir)/DATASSIM__POA
+	rm -rf $(DESTDIR)$(salomepythondir)/ADAO
+	rm -rf $(DESTDIR)$(salomepythondir)/ADAO__POA

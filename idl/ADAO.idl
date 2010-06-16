@@ -1,12 +1,12 @@
 
-#ifndef _DATASSIM_IDL_
-#define _DATASSIM_IDL_
+#ifndef _ADAO_IDL_
+#define _ADAO_IDL_
 
 #include "DSC_Engines.idl"
 #include "SALOME_Exception.idl"
 #include "SALOME_PACOExtension.idl"
 
-module DATASSIM
+module ADAO
 {
 typedef sequence<string> stringvec;
 typedef sequence<double> dblevec;
