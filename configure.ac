@@ -74,6 +74,9 @@ AC_CONFIG_FILES([
         src/daSalome/daGUI/daGuiImpl/Makefile
         src/daSalome/daGUI/daEficasWrapper/Makefile
         src/daSalome/daGUI/daEficasWrapper/eficasWrapper.py
+        src/tests/Makefile
+        src/tests/daSalome/Makefile
+        src/tests/daSalome/test000_Blue_AnalysisFile.py
         bin/Makefile
         bin/qtEficas_adao_study.py
         ])

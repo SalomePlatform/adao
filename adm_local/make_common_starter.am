@@ -12,6 +12,9 @@ salomeidldir       = $(prefix)/idl/salome
 # Directory for installing resource files
 salomeresdir       = $(prefix)/share/salome/resources/${MODULE_NAME}
 
+# Directory for installing tests files
+testsdir       = $(prefix)/tests
+
 # Directories for installing admin files
 admlocaldir       = $(prefix)/adm_local
 admlocalunixdir     = $(admlocaldir)/unix
