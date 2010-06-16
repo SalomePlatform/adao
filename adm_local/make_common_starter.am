@@ -24,7 +24,7 @@ admlocalm4dir        = $(admlocaldir)/unix/config_files
 sharedpkgpythondir =$(pkgpythondir)/shared_modules
 
 # Documentation directory
-docdir             = $(datadir)/doc/salome
+docdir             = $(datadir)/doc/salome/adao
 
 IDL_INCLUDES = -I$(KERNEL_ROOT_DIR)/idl/salome
 KERNEL_LIBS= -L$(KERNEL_ROOT_DIR)/lib/salome -lSalomeContainer -lOpUtil -lSalomeDSCContainer -lSalomeDSCSuperv -lSalomeDatastream -lSalomeDSCSupervBasic -lCalciumC
