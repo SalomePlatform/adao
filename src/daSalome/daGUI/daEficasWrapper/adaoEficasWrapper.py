@@ -24,17 +24,17 @@ import sys
 
 # Configuration de l'installation
 my_path = os.path.dirname(os.path.abspath(__file__))
-DATASSIM_INSTALL_DIR = my_path + "/../daEficas"
-sys.path[:0]=[DATASSIM_INSTALL_DIR]
+ADAO_INSTALL_DIR = my_path + "/../daEficas"
+sys.path[:0]=[ADAO_INSTALL_DIR]
 
 #
-# ================================================
-# Specialization of the EficasWrapper for DATASSIM
-# ================================================
+# ============================================
+# Specialization of the EficasWrapper for ADAO
+# ============================================
 #
-class DatassimEficasWrapper(EficasWrapper):
+class AdaoEficasWrapper(EficasWrapper):
 
-    def __init__(self, parent, code="DATASSIM"):
+    def __init__(self, parent, code="ADAO"):
         EficasWrapper.__init__(self, parent, code)
         self.__myCallbackId = {}
         self.__close_editor = None

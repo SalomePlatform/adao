@@ -29,7 +29,7 @@ reasons:
    modules, for example for test purposes.
 """
 
-from daGuiImpl import DATASSIMGUI_impl as GuiImpl
+from daGuiImpl import ADAOGUI_impl as GuiImpl
 
 
 # called when module is initialized

@@ -21,4 +21,4 @@ SUBDIRS = daGuiImpl daEficasWrapper
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-salomepython_PYTHON= DATASSIMGUI.py
+salomepython_PYTHON= ADAOGUI.py

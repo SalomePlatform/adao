@@ -24,7 +24,7 @@ mypkgpythondir =$(salomepythondir)/daEficasWrapper
 mypkgpython_PYTHON = \
 		     eficasWrapper.py \
 		     __init__.py \
-		     datassimEficasWrapper.py
+		     adaoEficasWrapper.py
 
 EXTRA_DIST = eficasWrapper.py.in
 
