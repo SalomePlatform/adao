@@ -1,0 +1,76 @@
+######################################################################
+######################################################################
+######################################################################
+
+  <I> <INIAST> VOUS UTILISEZ UNE VIEILLE VERSION DE CODE_ASTER.
+
+  EN METTANT A JOUR VOTRE VERSION, VOUS BENEFICIEREZ DES
+  DERNIERES AMELIORATIONS APPORTEES AU CODE DEPUIS 15 MOIS.
+  SI VOUS AVEZ DES DEVELOPPEMENTS PRIVES, VOUS RISQUEZ
+  D'AVOIR UN TRAVAIL IMPORTANT DE REINGENIERIE SI VOUS NE
+  SUIVEZ PAS LES MISES A JOUR.
+
+######################################################################
+######################################################################
+######################################################################
+
+                                         -- CODE_ASTER -- VERSION D'EXPLOITATION  9.04    --
+
+                                                   COPYRIGHT  EDF-R&D 1991 - 2008
+
+                                               EXECUTION DU : MA-23-MARS-2010 11:20:11
+
+                                                   PLATE-FORME : CLI23JP         
+
+                                                NB MAX PROC OpenMP:   1             
+
+                                                     SYSTEME : LINUX           
+
+                                                       CPU : I686            
+
+
+   !-----------------------------------------------------------------------!
+   !   Liste des alarmes émises lors de l'exécution du calcul.             !
+   !                                                                       !
+   !   Les alarmes que vous avez choisies d'ignorer sont précédées de (*). !
+   !   Nombre d'occurrences pour chacune des alarmes :                     !
+   !          aucune alarme                                                !
+   !-----------------------------------------------------------------------!
+
+ <I> <FIN> FERMETURE DE LA BASE "GLOBALE" EFFECTUEE.
+ <I> <FIN> ARRET NORMAL DANS "FIN" PAR APPEL A "JEFINI".
+
+ ********************************************************************************
+ * COMMAND                  :       USER :     SYSTEM :   USER+SYS :    ELAPSED *
+ ********************************************************************************
+ * init (jdc)               :       2.86 :       0.15 :       3.01 :       3.05 *
+ *  . compile               :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . exec_compile          :       0.34 :       0.00 :       0.34 :       0.36 *
+ *  . report                :       0.03 :       0.00 :       0.03 :       0.03 *
+ *  . build                 :       0.00 :       0.00 :       0.00 :       0.00 *
+ * DEBUT                    :       0.06 :       0.06 :       0.12 :       0.89 *
+ * LIRE_MAILLAGE            :       0.01 :       0.00 :       0.01 :       0.01 *
+ * DEFI_GROUP               :       0.00 :       0.00 :       0.00 :       0.01 *
+ * DEFI_MATERIAU            :       0.00 :       0.00 :       0.00 :       0.00 *
+ * AFFE_MATERIAU            :       0.00 :       0.00 :       0.00 :       0.01 *
+ * AFFE_MODELE              :       0.01 :       0.00 :       0.01 :       0.01 *
+ * AFFE_CHAR_MECA           :       0.02 :       0.00 :       0.02 :       0.02 *
+ * DEFI_FONCTION            :       0.00 :       0.00 :       0.00 :       0.00 *
+ * DEFI_LIST_REEL           :       0.00 :       0.00 :       0.00 :       0.00 *
+ * STAT_NON_LINE            :       0.57 :       0.01 :       0.58 :       0.61 *
+ * CALC_ELEM                :       0.29 :       0.00 :       0.29 :       0.29 *
+ * POST_RELEVE_T            :       0.08 :       0.00 :       0.08 :       0.07 *
+ * POST_RELEVE_T            :       0.08 :       0.00 :       0.08 :       0.09 *
+ * DEFI_FICHIER             :       0.01 :       0.00 :       0.01 :       0.00 *
+ * IMPR_TABLE               :       0.02 :       0.00 :       0.02 :       0.02 *
+ * DEFI_FICHIER             :       0.00 :       0.00 :       0.00 :       0.00 *
+ * DEFI_FICHIER             :       0.00 :       0.00 :       0.00 :       0.00 *
+ * IMPR_TABLE               :       0.02 :       0.00 :       0.02 :       0.02 *
+ * DEFI_FICHIER             :       0.00 :       0.00 :       0.00 :       0.00 *
+ * FIN                      :       0.04 :       0.03 :       0.07 :       0.08 *
+ *  . part Superviseur      :       2.97 :       0.21 :       3.18 :       4.00 *
+ *  . part Fortran          :       1.13 :       0.04 :       1.17 :       1.20 *
+ ********************************************************************************
+ * TOTAL_JOB                :       4.10 :       0.25 :       4.35 :       5.20 *
+ ********************************************************************************
+

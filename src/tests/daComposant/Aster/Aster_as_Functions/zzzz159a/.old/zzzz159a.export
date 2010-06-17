@@ -1,0 +1,40 @@
+P profastk assire@clau5aaa:/home/assire/DEV/MACR_RECAL/YACS/zzzz159a/zzzz159a.astk
+P serveur clau5aaa.
+P noeud clau5aaa
+P username assire
+P mclient clau5aaa
+P uclient assire
+P version STA9.4
+P lang fr
+P debug nodebug
+P mode interactif
+P ncpus 1
+P mpi_nbcpu 1
+P mpi_nbnoeud 1
+P classe 
+P depart 
+P distrib 
+P timeout 
+P exectool 
+P nomjob zzzz159a
+P origine ASTK 1.7.1
+P display cli75ca.der.edf.fr:0
+A args 
+A memjeveux 16.0
+P mem_aster 50.0
+A tpmax 300
+P memjob 262144
+P tpsjob 5
+P xterm /usr/bin/xterm -sb -si -geometry 90x32 -display cli75ca.der.edf.fr:0
+P nbmaxnook 5
+P cpresok RESNOOK
+P facmtps 1
+P corefilesize unlimited
+F comm /home/assire/DEV/MACR_RECAL/YACS/zzzz159a/zzzz159a.comm D 1
+F libr /home/assire/DEV/MACR_RECAL/YACS/zzzz159a/zzzz159a.3 D 3
+F mail /home/assire/DEV/MACR_RECAL/YACS/zzzz159a/zzzz159a.mail D 20
+F mess /home/assire/DEV/MACR_RECAL/YACS/zzzz159a/zzzz159a.mess R 6
+F resu /home/assire/DEV/MACR_RECAL/YACS/zzzz159a/zzzz159a.resu R 8
+P consbtc oui
+P soumbtc oui
+P actions make_etude

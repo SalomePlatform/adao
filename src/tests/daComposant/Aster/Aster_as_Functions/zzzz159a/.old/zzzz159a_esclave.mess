@@ -1,0 +1,1091 @@
+==========================================
+==========================================
+DEBUT();
+
+DSDE__ = 1000.001
+
+YOUN__ = 80000.0
+
+SIGY__ = 30.0
+
+MA=LIRE_MAILLAGE();
+
+MA=DEFI_GROUP(reuse =MA,
+              MAILLAGE=MA,
+              CREA_GROUP_NO=_F(TOUT_GROUP_MA='OUI',),);
+
+
+ACIER=DEFI_MATERIAU(ECRO_LINE=_F(D_SIGM_EPSI=DSDE__,
+                                 SY=SIGY__,),
+                    ELAS=_F(NU=0.3,
+                            E=YOUN__,),);
+
+CHMAT=AFFE_MATERIAU(AFFE=_F(MATER=ACIER,
+                            TOUT='OUI',),
+                    MAILLAGE=MA,);
+
+MO=AFFE_MODELE(AFFE=_F(TOUT='OUI',
+                       PHENOMENE='MECANIQUE',
+                       MODELISATION='AXIS',),
+               MAILLAGE=MA,);
+
+TRACTION=AFFE_CHAR_MECA(DDL_IMPO=(_F(DY=5.E-3,
+                                     GROUP_NO='CD',),
+                                  _F(DY=0.0,
+                                     GROUP_NO='AB',),),
+                        MODELE=MO,);
+
+
+RAMPE=DEFI_FONCTION(NOM_PARA='INST',
+                    VALE=(0.0,0.0,1.0,1.0),);
+
+INSTANTS=DEFI_LIST_REEL(INTERVALLE=_F(JUSQU_A=1.0,
+                                      NOMBRE=10,),
+                        DEBUT=0.0,);
+
+EVOL=STAT_NON_LINE(CHAM_MATER=CHMAT,
+                   MODELE=MO,
+                   ARCHIVAGE=_F(LIST_INST=INSTANTS,
+                                ARCH_ETAT_INIT='OUI',),
+                   CONVERGENCE=_F(ITER_GLOB_MAXI=10,
+                                  RESI_GLOB_RELA=1.E-05,),
+                   COMP_INCR=_F(RELATION='VMIS_ISOT_LINE',),
+                   INCREMENT=_F(LIST_INST=INSTANTS,
+                                SUBD_METHODE='UNIFORME',
+                                SUBD_PAS=4,
+                                SUBD_COEF_PAS_1=1.0,
+                                SUBD_PAS_MINI=1.E-05,),
+                   NEWTON=_F(REAC_ITER=1,
+                             REAC_INCR=1,),
+                   EXCIT=_F(CHARGE=TRACTION,
+                            FONC_MULT=RAMPE,),);
+
+EVOL=CALC_ELEM(reuse =EVOL,
+               RESULTAT=EVOL,
+               CHAM_MATER=CHMAT,
+               MODELE=MO,
+               OPTION=('SIEF_ELNO_ELGA','VARI_ELNO_ELGA'),);
+               
+REPONSE1=POST_RELEVE_T(ACTION=_F(OPERATION='EXTRACTION',
+                        INTITULE='SIGYY',
+                        RESULTAT =EVOL,
+                        NOM_CHAM ='SIEF_ELNO_ELGA',
+                        NOM_CMP  = 'SIYY',
+                        GROUP_NO = 'A',),);
+                        
+REPONSE2=POST_RELEVE_T(ACTION=_F(OPERATION='EXTRACTION',
+                        INTITULE='V1',
+                        RESULTAT =EVOL,
+                        NOM_CHAM ='VARI_ELNO_ELGA',
+                        NOM_CMP  = 'V1',
+                        GROUP_NO = 'A',),);
+
+# Recuperation de la table : 
+DEFI_FICHIER(UNITE=99, FICHIER='./REPE_OUT/fort.100',);
+IMPR_TABLE(TABLE=REPONSE1, FORMAT='ASTER', UNITE=99, INFO=1, FORMAT_R='E30.20',);
+DEFI_FICHIER(ACTION='LIBERER', UNITE=99,);
+
+# Recuperation de la table : 
+DEFI_FICHIER(UNITE=99, FICHIER='./REPE_OUT/fort.101',);
+IMPR_TABLE(TABLE=REPONSE2, FORMAT='ASTER', UNITE=99, INFO=1, FORMAT_R='E30.20',);
+DEFI_FICHIER(ACTION='LIBERER', UNITE=99,);
+
+
+FIN();
+
+==========================================
+==========================================
+
+ PARAMETRES DE LA GESTION MEMOIRE JEVEUX  
+ =======================================
+ LIMITE MEMOIRE STATIQUE       :        1048576 OCTETS (       1.000 Mo)
+ MEMOIRE DISPONIBLE            :        1048576 OCTETS
+ MEMOIRE PRISE                 :        1048576 OCTETS (       1.000 Mo)
+ LIMITE MEMOIRE DYNAMIQUE      :      133169152 OCTETS (     127.000 Mo)
+
+ LIMITE TAILLE DES BASES       :        48.00   Go 
+ =======================================
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0001            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DEBUT(RESERVE_CPU=_F(BORNE=900),
+        MEMOIRE=_F(GESTION='RAPIDE',
+                   TYPE_ALLOCATION=1,
+                   TAILLE_BLOC=800.0,
+                   DYNAMIQUE=1),
+        PAR_LOT='OUI',
+        IMPR_MACRO='NON',
+        );
+
+                                         -- CODE_ASTER -- VERSION D'EXPLOITATION  9.04    --
+
+                                                   COPYRIGHT  EDF-R&D 1991 - 2008
+
+                                               EXECUTION DU : ME-07-OCTO-2009 17:44:31
+
+                                                   PLATE-FORME : CLAU5AAA        
+
+                                                NB MAX PROC OpenMP:   1             
+
+                                                     SYSTEME : LINUX           
+
+                                                       CPU : X86_64          
+
+
+
+
+
+  Valeur initiale du temps CPU maximum =   300 secondes
+  Valeur du temps CPU maximum passé aux commandes =   270 secondes
+  Réserve CPU prévue = 30 secondes
+
+     NOM DE LA BASE                          :  LDUMMY
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  5
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  100
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  8192
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  1
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  20
+     TAILLE MAXIMUM DU REPERTOIRE            :  250
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  8 %
+
+ Debut de lecture
+
+     REOUVERTURE DE LA BASE                  :  ELEMBASE
+     CREEE AVEC LA VERSION                   :  9.04.00
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  17
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  512
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  113
+     TAILLE MAXIMUM DU REPERTOIRE            :  300
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  37 %
+
+     NOM DE LA BASE                          :  ELEMBASE
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  17
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  512
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  39
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  113
+     TAILLE MAXIMUM DU REPERTOIRE            :  300
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  37 %
+
+ Relecture des catalogues dans ELEMBASE faite.
+
+ fin de lecture (durée  0.010000  s.) 
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.34 Mo) 
+
+    #  FIN COMMANDE NO : 0001   DUREE TOTALE:        0.04s (SYST:        0.03s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0002            CONCEPT DE TYPE : maillage_sdaster
+    #  -------------                  ----------------- 
+   MA=LIRE_MAILLAGE(INFO=1,
+                   VERI_MAIL=_F(APLAT=1.E-3,
+                                VERIF='OUI'),
+                   UNITE=20,
+                   FORMAT='ASTER',
+                   );
+
+  ====== VERIFICATION DU MAILLAGE ======
+
+
+------------ MAILLAGE MA       - IMPRESSIONS NIVEAU  1 ------------
+
+ %  GIBI FECIT                                                                  
+
+NOMBRE DE NOEUDS                           4
+
+NOMBRE DE MAILLES                          5
+                              SEG2                    4
+                              QUAD4                   1
+
+NOMBRE DE GROUPES DE NOEUDS                4
+                              D                    1
+                              C                    1
+                              A                    1
+                              B                    1
+
+NOMBRE DE GROUPES DE MAILLES               5
+                              AB                   1
+                              BC                   1
+                              CD                   1
+                              DA                   1
+                              MA                   5
+
+--------------------------------------------------------------------------------
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.42 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.34 Mo) 
+
+    #  FIN COMMANDE NO : 0002   DUREE TOTALE:        0.01s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0003            CONCEPT DE TYPE : maillage_sdaster
+    #  -------------                  ----------------- 
+   MA=DEFI_GROUP(reuse = MA,
+                MAILLAGE=MA,
+                CREA_GROUP_NO=_F(TOUT_GROUP_MA='OUI'),
+                ALARME='OUI',
+                );
+
+
+
+NOMBRE  DE GROUPES DE NOEUDS CREES :      5
+=======================================
+
+               --------------------------------------
+               ! NOM DU GROUPE ! NBRE DE NOEUDS DU  !
+               !    NOEUDS     !      GROUPE_NO     !
+               --------------------------------------
+               !  AB           !         2          !
+               !  BC           !         2          !
+               !  CD           !         2          !
+               !  DA           !         2          !
+               !  MA           !         4          !
+               --------------------------------------
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.34 Mo) 
+
+    #  FIN COMMANDE NO : 0003   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0004            CONCEPT DE TYPE : mater_sdaster
+    #  -------------                  ----------------- 
+   ACIER=DEFI_MATERIAU(INFO=1,
+                      ELAS=_F(E=8.E4,
+                              NU=0.29999999999999999),
+                      ECRO_LINE=_F(SY=30.0,
+                                   D_SIGM_EPSI=1000.001),
+                      );
+
+
+ MATERIAU : ACIER   
+ RELATION DE COMPORTEMENT: ECRO_LINE       
+                           ELAS            
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.34 Mo) 
+
+    #  FIN COMMANDE NO : 0004   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0005            CONCEPT DE TYPE : cham_mater
+    #  -------------                  ----------------- 
+   CHMAT=AFFE_MATERIAU(VARC_M_ZIRC=_F(),
+                      INFO=1,
+                      VARC_TEMP=_F(),
+                      MAILLAGE=MA,
+                      VARC_HYDR=_F(),
+                      VARC_CORR=_F(),
+                      VARC_EPSA=_F(),
+                      VARC_IRRA=_F(),
+                      VARC_NEUT1=_F(),
+                      VARC_NEUT2=_F(),
+                      AFFE=_F(MATER=ACIER,
+                              TOUT='OUI'),
+                      VARC_M_ACIER=_F(),
+                      VARC_SECH=_F(),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.34 Mo) 
+
+    #  FIN COMMANDE NO : 0005   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0006            CONCEPT DE TYPE : modele_sdaster
+    #  -------------                  ----------------- 
+   MO=AFFE_MODELE(MAILLAGE=MA,
+                 INFO=1,
+                 AFFE=_F(PHENOMENE='MECANIQUE',
+                         TOUT='OUI',
+                         MODELISATION='AXIS'),
+                 VERI_JACOBIEN='OUI',
+                 );
+
+
+ SUR LES            5 MAILLES DU MAILLAGE MA      
+    ON A DEMANDE L'AFFECTATION DE            5
+    ON A PU EN AFFECTER                      5
+
+    MODELISATION      ELEMENT FINI      TYPE MAILLE          NOMBRE
+    AXIS              MEAXQU4           QUAD4                     1
+                      MEAXSE2           SEG2                      4
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.36 Mo) 
+
+    #  FIN COMMANDE NO : 0006   DUREE TOTALE:        0.01s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0007            CONCEPT DE TYPE : char_meca
+    #  -------------                  ----------------- 
+   TRACTION=AFFE_CHAR_MECA(INFO=1,
+                          VERI_NORM='OUI',
+                          DDL_IMPO=(_F(GROUP_NO='CD',
+                                       DY=5.0000000000000001E-3),
+                                    _F(GROUP_NO='AB',
+                                       DY=0.0)),
+                          LIAISON_XFEM='NON',
+                          MODELE=MO,
+                          );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.36 Mo) 
+
+    #  FIN COMMANDE NO : 0007   DUREE TOTALE:        0.01s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0008            CONCEPT DE TYPE : fonction_sdaster
+    #  -------------                  ----------------- 
+   RAMPE=DEFI_FONCTION(INFO=1,
+                      PROL_DROITE='EXCLU',
+                      INTERPOL='LIN',
+                      VALE=(0.0,0.0,1.0,1.0,),
+                      NOM_PARA='INST',
+                      PROL_GAUCHE='EXCLU',
+                      NOM_RESU='TOUTRESU',
+                      VERIF='CROISSANT',
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.36 Mo) 
+
+    #  FIN COMMANDE NO : 0008   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0009            CONCEPT DE TYPE : listr8_sdaster
+    #  -------------                  ----------------- 
+   INSTANTS=DEFI_LIST_REEL(INTERVALLE=_F(NOMBRE=10,
+                                        JUSQU_A=1.0),
+                          INFO=1,
+                          DEBUT=0.0,
+                          );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.43 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.36 Mo) 
+
+    #  FIN COMMANDE NO : 0009   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0010            CONCEPT DE TYPE : evol_noli
+    #  -------------                  ----------------- 
+   EVOL=STAT_NON_LINE(EXCIT=_F(TYPE_CHARGE='FIXE_CSTE',
+                              CHARGE=TRACTION,
+                              FONC_MULT=RAMPE),
+                     SOLVEUR=_F(RENUM='METIS',
+                                STOP_SINGULIER='OUI',
+                                METHODE='MULT_FRONT',
+                                NPREC=8,
+                                SYME='NON'),
+                     NEWTON=_F(REAC_INCR=1,
+                               MATRICE='TANGENTE',
+                               REAC_ITER=1,
+                               REAC_ITER_ELAS=0),
+                     INCREMENT=_F(SUBD_NIVEAU=3,
+                                  SUBD_PAS_MINI=1.0000000000000001E-05,
+                                  SUBD_METHODE='UNIFORME',
+                                  ERRE_TEMPS='NON',
+                                  LIST_INST=INSTANTS,
+                                  SUBD_PAS=4,
+                                  SUBD_COEF_PAS_1=1.0,
+                                  PRECISION=9.9999999999999995E-07),
+                     COMP_INCR=_F(ITER_INTE_PAS=0,
+                                  RESI_INTE_RELA=9.9999999999999995E-07,
+                                  PARM_THETA=1.0,
+                                  ALGO_1D='ANALYTIQUE',
+                                  RESO_INTE='IMPLICITE',
+                                  ITER_INTE_MAXI=10,
+                                  RESI_DEBORST=9.9999999999999995E-07,
+                                  RELATION='VMIS_ISOT_LINE',
+                                  ALGO_C_PLAN='ANALYTIQUE',
+                                  DEFORMATION='PETIT',
+                                  ITER_MAXI_DEBORST=1),
+                     CONVERGENCE=_F(ARRET='OUI',
+                                    ITER_GLOB_MAXI=10,
+                                    TYPE='PIC',
+                                    ITER_GLOB_ELAS=25,
+                                    RESI_GLOB_RELA=1.0000000000000001E-05),
+                     ARCHIVAGE=_F(LIST_INST=INSTANTS,
+                                  PRECISION=9.9999999999999995E-07,
+                                  ARCH_ETAT_INIT='OUI'),
+                     MODELE=MO,
+                     CHAM_MATER=CHMAT,
+                     );
+
+ --- NOMBRE TOTAL DE NOEUDS :                    12  DONT :                     8  NOEUDS "LAGRANGE"
+ --- NOMBRE TOTAL D'EQUATIONS :                    16
+ --- TAILLE DU PROFIL MORSE DE LA TRIANGULAIRE SUPERIEURE (FORMAT SCR):           64
+ --- DONC LA TAILLE DE LA MATRICE EST:
+ --- EN SYMETRIQUE     NNZ=           64
+ --- EN NON SYMETRIQUE NNZ=          112
+
+
+ARCHIVAGE DE L'ETAT INITIAL
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  0.00000E+00  NUMERO D'ORDRE :     0
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  0.00000E+00  NUMERO D'ORDRE :     0
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  0.00000E+00  NUMERO D'ORDRE :     0
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  1.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0        X | 1.64858E-01  X | 2.19811E+00    |TANGENTE        |
+|     1          | 1.76899E-16    | 1.77636E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  1.768986057E-16 SUR N3      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  1.00000E-01  NUMERO D'ORDRE :     1
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  1.00000E-01  NUMERO D'ORDRE :     1
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  1.00000E-01  NUMERO D'ORDRE :     1
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.040 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.000 s                 - NBRE NEWT.:     2
+   TEMPS ARCHIVAGE                :  0.010 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     1
+   TEMPS FACTORISATION MATRICE    :  0.010 s                 - NBRE FACT.:     2
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     3
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     2
+   TEMPS AUTRES OPERATIONS        :  0.020 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  2.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 5.22031E-16    | 5.32907E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  5.220313870E-16 SUR N4      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  2.00000E-01  NUMERO D'ORDRE :     2
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  2.00000E-01  NUMERO D'ORDRE :     2
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  2.00000E-01  NUMERO D'ORDRE :     2
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.020 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.010 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  3.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 3.83044E-16    | 3.97409E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  3.830443559E-16 SUR N3      DX      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  3.00000E-01  NUMERO D'ORDRE :     3
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  3.00000E-01  NUMERO D'ORDRE :     3
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  3.00000E-01  NUMERO D'ORDRE :     3
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.030 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.020 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  4.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 1.34807E-15    | 1.42109E-14    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  1.348065200E-15 SUR N3      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  4.00000E-01  NUMERO D'ORDRE :     4
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  4.00000E-01  NUMERO D'ORDRE :     4
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  4.00000E-01  NUMERO D'ORDRE :     4
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.020 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.010 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  5.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 3.34182E-16    | 3.57854E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  3.341823986E-16 SUR N2      DX      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  5.00000E-01  NUMERO D'ORDRE :     5
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  5.00000E-01  NUMERO D'ORDRE :     5
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  5.00000E-01  NUMERO D'ORDRE :     5
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.030 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.000 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.030 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  6.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 4.90029E-16    | 5.32907E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  4.900294335E-16 SUR N3      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  6.00000E-01  NUMERO D'ORDRE :     6
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  6.00000E-01  NUMERO D'ORDRE :     6
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  6.00000E-01  NUMERO D'ORDRE :     6
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.020 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.010 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  7.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 4.82633E-16    | 5.32907E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  4.826327561E-16 SUR N3      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  7.00000E-01  NUMERO D'ORDRE :     7
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  7.00000E-01  NUMERO D'ORDRE :     7
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  7.00000E-01  NUMERO D'ORDRE :     7
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.030 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.020 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  8.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 6.33941E-16    | 7.10543E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  6.339414059E-16 SUR N3      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  8.00000E-01  NUMERO D'ORDRE :     8
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  8.00000E-01  NUMERO D'ORDRE :     8
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  8.00000E-01  NUMERO D'ORDRE :     8
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.020 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.000 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.000 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.020 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  9.000000000E-01
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 4.68490E-16    | 5.32907E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  4.684896593E-16 SUR N2      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  9.00000E-01  NUMERO D'ORDRE :     9
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  9.00000E-01  NUMERO D'ORDRE :     9
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  9.00000E-01  NUMERO D'ORDRE :     9
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.030 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.010 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.020 s                
+
+
+---------------------------------------------------------------------
+
+INSTANT DE CALCUL :  1.000000000E+00
+
+---------------------------------------------------------------------
+|   ITERATIONS   |     RESIDU     |     RESIDU     |     OPTION     |
+|     NEWTON     |     RELATIF    |     ABSOLU     |   ASSEMBLAGE   |
+|                | RESI_GLOB_RELA | RESI_GLOB_MAXI |                |
+---------------------------------------------------------------------
+|     0          | 3.84770E-16    | 4.44089E-15    |TANGENTE        |
+---------------------------------------------------------------------
+
+<*> CRITERE(S) DE CONVERGENCE ATTEINT(S)
+
+RESIDU RESI_GLOB_RELA   VAUT  3.847703831E-16 SUR N4      DY      
+
+ARCHIVAGE DES CHAMPS: 
+   CHAMP STOCKE : DEPL             INSTANT :  1.00000E+00  NUMERO D'ORDRE :    10
+   CHAMP STOCKE : SIEF_ELGA        INSTANT :  1.00000E+00  NUMERO D'ORDRE :    10
+   CHAMP STOCKE : VARI_ELGA        INSTANT :  1.00000E+00  NUMERO D'ORDRE :    10
+
+TEMPS CPU CONSOMME DANS CE PAS DE TEMPS :  0.030 s                
+   TEMPS PAR ITERATION DE NEWTON  :  0.020 s                 - NBRE NEWT.:     1
+   TEMPS ARCHIVAGE                :  0.000 s                
+   TEMPS CREATION NUMEROTATION    :  0.000 s                 - NBRE NUME.:     0
+   TEMPS FACTORISATION MATRICE    :  0.000 s                 - NBRE FACT.:     1
+   TEMPS INTEGRATION COMPORTEMENT :  0.010 s                 - NBRE INTE.:     2
+   TEMPS RESOLUTION K.U = F       :  0.000 s                 - NBRE RESO.:     1
+   TEMPS AUTRES OPERATIONS        :  0.020 s                
+
+
+---------------------------------------------------------------------
+STATISTIQUES SUR LE TRANSITOIRE 
+---------------------------------------------------------------------
+   NOMBRE DE PAS DE TEMPS                  :     10
+   NOMBRE D'ITERATIONS DE NEWTON           :     11
+   NOMBRE DE CREATION DE NUMEROTATION      :      1
+   NOMBRE DE FACTORISATION DE MATRICE      :     11
+   NOMBRE D'INTEGRATION DE COMPORTEMENT    :     21
+   NOMBRE DE RESOLUTION K.U = F            :     11
+   TEMPS POUR CREATION NUMEROTATION        :  0.000 s                
+   TEMPS POUR FACTORISATION MATRICE        :  0.010 s                
+   TEMPS POUR INTEGRATION COMPORTEMENT     :  0.080 s                
+   TEMPS POUR RESOLUTION K.U = F           :  0.000 s                
+---------------------------------------------------------------------
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.86 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0010   DUREE TOTALE:        0.32s (SYST:        0.02s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0011            CONCEPT DE TYPE : evol_noli
+    #  -------------                  ----------------- 
+   EVOL=CALC_ELEM(reuse = EVOL,
+                 INFO=1,
+                 CRITERE='RELATIF',
+                 SOLVEUR=_F(RENUM='METIS',
+                            STOP_SINGULIER='OUI',
+                            METHODE='MULT_FRONT',
+                            NPREC=8),
+                 RESULTAT=EVOL,
+                 OPTION=('SIEF_ELNO_ELGA','VARI_ELNO_ELGA',),
+                 NORME='VMIS',
+                 TYPE_OPTION='TOUTES',
+                 PRECISION=9.9999999999999995E-07,
+                 MODELE=MO,
+                 CHAM_MATER=CHMAT,
+                 );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.88 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0011   DUREE TOTALE:        0.15s (SYST:        0.01s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0012            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   REPONSE1=POST_RELEVE_T(ACTION=_F(NOM_CMP='SIYY',
+                                   GROUP_NO='A',
+                                   INTITULE='SIGYY',
+                                   REPERE='GLOBAL',
+                                   FORMAT_C='MODULE',
+                                   CRITERE='RELATIF',
+                                   PRECISION=9.9999999999999995E-07,
+                                   MOYE_NOEUD='OUI',
+                                   NOM_CHAM='SIEF_ELNO_ELGA',
+                                   RESULTAT=EVOL,
+                                   OPERATION='EXTRACTION'),
+                         INFO=1,
+                         );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0012   DUREE TOTALE:        0.04s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0013            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   REPONSE2=POST_RELEVE_T(ACTION=_F(NOM_CMP='V1',
+                                   GROUP_NO='A',
+                                   INTITULE='V1',
+                                   REPERE='GLOBAL',
+                                   FORMAT_C='MODULE',
+                                   CRITERE='RELATIF',
+                                   PRECISION=9.9999999999999995E-07,
+                                   MOYE_NOEUD='OUI',
+                                   NOM_CHAM='VARI_ELNO_ELGA',
+                                   RESULTAT=EVOL,
+                                   OPERATION='EXTRACTION'),
+                         INFO=1,
+                         );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0013   DUREE TOTALE:        0.05s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0014            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DEFI_FICHIER(ACTION='ASSOCIER',
+               FICHIER='./REPE_OUT/fort.100',
+               ACCES='NEW',
+               TYPE='ASCII',
+               UNITE=99,
+               );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0014   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0015            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   IMPR_TABLE(INFO=1,
+             IMPR_FONCTION='NON',
+             FORMAT='ASTER',
+             UNITE=99,
+             FORMAT_R='E30.20',
+             TABLE=REPONSE1,
+             FORMAT_C='MODULE_PHASE',
+             );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0015   DUREE TOTALE:        0.01s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0019            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DEFI_FICHIER(ACTION='LIBERER',
+               UNITE=99,
+               );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0019   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0020            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DEFI_FICHIER(ACTION='ASSOCIER',
+               FICHIER='./REPE_OUT/fort.101',
+               ACCES='NEW',
+               TYPE='ASCII',
+               UNITE=99,
+               );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0020   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0021            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   IMPR_TABLE(INFO=1,
+             IMPR_FONCTION='NON',
+             FORMAT='ASTER',
+             UNITE=99,
+             FORMAT_R='E30.20',
+             TABLE=REPONSE2,
+             FORMAT_C='MODULE_PHASE',
+             );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0021   DUREE TOTALE:        0.01s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0025            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DEFI_FICHIER(ACTION='LIBERER',
+               UNITE=99,
+               );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.89 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0025   DUREE TOTALE:        0.00s (SYST:        0.00s)
+    #  ---------------------------------------------------------------------------
+
+   !-----------------------------------------------------------------------!
+   !   Liste des alarmes émises lors de l'exécution du calcul.             !
+   !                                                                       !
+   !   Les alarmes que vous avez choisies d'ignorer sont précédées de (*). !
+   !   Nombre d'occurrences pour chacune des alarmes :                     !
+   !          aucune alarme                                                !
+   !-----------------------------------------------------------------------!
+
+
+    #  --------------------------------------------------------------------------- 
+    #  COMMANDE NO :  0026            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   FIN(RETASSAGE='NON',
+      INFO_RESU='OUI',
+      FORMAT_HDF='NON',
+      UNITE=6,
+      PERFORMANCE='OUI',
+      );
+
+
+ ======>
+
+ STRUCTURE DU CONCEPT EVOL     CALCULE POUR         11 NUMEROS D'ORDRE
+
+ LISTE DES NOMS SYMBOLIQUES:
+ ! ---------- !----------------!----------------!----------------!----------------!----------------!----------------!
+ ! NUME_ORDRE !      DEPL      !   SIEF_ELGA    ! SIEF_ELNO_ELGA !   VARI_ELGA    ! VARI_ELNO_ELGA !  COMPORTEMENT  !
+ ! ---------- !----------------!----------------!----------------!----------------!----------------!----------------!
+ !          0 !     DEPL_R     !     SIEF_R     !     SIEF_R     !     VARI_R     !     VARI_R     !     COMPOR     !
+ !        ... !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !
+ !         10 !     DEPL_R     !     SIEF_R     !     SIEF_R     !     VARI_R     !     VARI_R     !     COMPOR     !
+ ! ---------- !----------------!----------------!----------------!----------------!----------------!----------------!
+
+ LISTE DES NOMS DE VARIABLES D'ACCES:
+                                      INST             DE TYPE  R
+
+ LISTE DES NOMS DE PARAMETRES:
+ ! ---------- !----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!
+ ! NUME_ORDRE !    CARAELEM    !    CHAMPMAT    !   CHAR_MINI    !  ETA_PILOTAGE  !     EXCIT      !     GFITER     !  ITER_DASHPOT  !   ITER_GLOB    !   ITER_LINE    !     MODELE     !   RESI_GLOB    !RESI_GLOB_MOINS ! RESI_GLOB_RELA !   RESI_REFE    ! TRAN_GENE_NOLI !
+ ! ---------- !----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!
+ !          0 !       K8       !       K8       !       R        !       R        !      K24       !       I        !       I        !       I        !       I        !       K8       !       R        !       R        !       R        !       R        !      K24       !
+ !        ... !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !      ...       !
+ !         10 !       K8       !       K8       !       R        !       R        !      K24       !       I        !       I        !       I        !       I        !       K8       !       R        !       R        !       R        !       R        !      K24       !
+ ! ---------- !----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!----------------!
+ ---------------------------------------------------------------------------
+ Concepts de la base: G
+    Nom       Type                 Taille (Mo)         Nombre      Nombre de
+                                                     d'objets       segments
+    TOTAL                                10.32            413            596
+  
+    MA         MAILLAGE_SDASTER           0.01             35             70
+    ACIER      MATER_SDASTER              0.00              7              7
+    CHMAT      CHAM_MATER                 0.00              5             10
+    MO         MODELE_SDASTER             0.00              7             12
+    TRACTION   CHAR_MECA                  0.00             19             39
+    RAMPE      FONCTION_SDASTER           0.00              3              3
+    INSTANTS   LISTR8_SDASTER             0.00              5              5
+    EVOL       EVOL_NOLI                  0.42            237            301
+    REPONSE1   TABLE_SDASTER              0.01             26             26
+    REPONSE2   TABLE_SDASTER              0.01             26             26
+    &FOZERO                               0.00              2              2
+    &&_NUM_C                              0.00              1              1
+    &&SYS.KR                              0.04              1              1
+    &CATA.AC                              0.00              2              4
+    &CATA.CL                              0.17              1              3
+    &CATA.GD                              0.04              4             11
+    &CATA.ME                              0.08              2              4
+    &CATA.OP                              0.17              3             13
+    &CATA.PH                              0.00              1              1
+    &CATA.TE                              9.37             17             42
+    &CATA.TH                              0.00              2              4
+    &CATA.TM                              0.01              7             11
+ ---------------------------------------------------------------------------
+
+     NOM DE LA BASE                          :  GLOBALE
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  21
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  62914
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  14
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  627
+     TAILLE MAXIMUM DU REPERTOIRE            :  2000
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  31 %
+
+     NOM DE LA BASE                          :  VOLATILE
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  3
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  62914
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  2
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  1260
+     TAILLE MAXIMUM DU REPERTOIRE            :  2000
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  63 %
+  
+   STATISTIQUES CONCERNANT L'ALLOCATION DYNAMIQUE :
+     TAILLE CUMULEE MAXIMUM                    20  Mo,
+     TAILLE CUMULEE LIBEREE                    61  Mo.
+     NOMBRE TOTAL D'ALLOCATIONS  :                52059 .
+     NOMBRE TOTAL DE LIBERATIONS :                52060 .
+                         0  APPELS AU MECANISME DE LIBERATION.
+     TAILLE MEMOIRE CUMULEE RECUPEREE :                    0  Mo.
+  
+ <I>       FIN D'EXECUTION LE : ME-07-OCTO-2009 17:44:31
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :         0.00 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         0.00 Mo (MAXIMUM ATTEINT :        16.39 Mo) 
+
+    #  FIN COMMANDE NO : 0026   DUREE TOTALE:        0.05s (SYST:        0.04s)
+    #  ---------------------------------------------------------------------------
+
+
+  <I> <INFORMATION TEMPS D'EXECUTION> (EN SECONDE)
+      TEMPS CPU TOTAL ..............          2.56
+      TEMPS CPU USER TOTAL .........          2.32
+      TEMPS CPU SYSTEME TOTAL ......          0.24
+      TEMPS CPU RESTANT ............        297.44
+
+EXECUTION_CODE_ASTER_EXIT_0003-13520=0

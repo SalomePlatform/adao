@@ -1,0 +1,75 @@
+                                 -- CODE_ASTER -- VERSION CORRECTIVE  9.04.10 AVANT STABILISATION --
+
+                                                   COPYRIGHT  EDF-R&D 1991 - 2009
+
+                                               EXECUTION DU : ME-06-MAI -2009 09:56:41
+
+                                                   PLATE-FORME : CLAU5AAA        
+
+                                                NB MAX PROC OpenMP:   1             
+
+                                                     SYSTEME : LINUX           
+
+                                                       CPU : X86_64          
+
+
+--------------------------------------------------------------------------------
+ ---- FONCTION: OPTIM                                                    
+REFERENCE: ANALYTIQUE      
+ OK  INST         RELA -5.61E-05 % VALE: 1.9999988779191D+05
+      1.00000E+00 TOLE     0.010 % REFE: 2.0000000000000D+05
+ ---- FONCTION: OPTIM                                                    
+REFERENCE: ANALYTIQUE      
+ OK  INST         RELA    -0.002 % VALE: 1.9999557065461D+03
+      2.00000E+00 TOLE     0.010 % REFE: 2.0000000000000D+03
+ ---- FONCTION: OPTIM                                                    
+REFERENCE: ANALYTIQUE      
+ OK  INST         RELA  1.39E-04 % VALE: 2.0000027886708D+02
+      3.00000E+00 TOLE     0.010 % REFE: 2.0000000000000D+02
+
+   !-----------------------------------------------------------------------!
+   !   Liste des alarmes émises lors de l'exécution du calcul.             !
+   !                                                                       !
+   !   Les alarmes que vous avez choisies d'ignorer sont précédées de (*). !
+   !   Nombre d'occurrences pour chacune des alarmes :                     !
+   !          aucune alarme                                                !
+   !-----------------------------------------------------------------------!
+
+ <I> <FIN> FERMETURE DE LA BASE "GLOBALE" EFFECTUEE.
+ <I> <FIN> ARRET NORMAL DANS "FIN" PAR APPEL A "JEFINI".
+
+ ********************************************************************************
+ * COMMAND                  :       USER :     SYSTEM :   USER+SYS :    ELAPSED *
+ ********************************************************************************
+ * init (jdc)               :       1.53 :       0.13 :       1.66 :       1.66 *
+ *  . compile               :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . exec_compile          :       0.07 :       0.01 :       0.08 :       0.09 *
+ *  . report                :       0.07 :       0.00 :       0.07 :       0.06 *
+ *  . build                 :       0.00 :       0.00 :       0.00 :       0.00 *
+ * DEBUT                    :       0.00 :       0.03 :       0.03 :       0.04 *
+ * MACR_RECAL               :      68.54 :      12.75 :      81.29 :      91.67 *
+ *  . INFO_EXEC_ASTER       :       0.00 :       0.01 :       0.01 :       0.00 *
+ *  . DETRUIRE              :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . INFO_EXEC_ASTER       :       0.01 :       0.00 :       0.01 :       0.00 *
+ *  . DETRUIRE              :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . INFO_EXEC_ASTER       :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . DETRUIRE              :       0.01 :       0.00 :       0.01 :       0.01 *
+ *  . INFO_EXEC_ASTER       :       0.01 :       0.00 :       0.01 :       0.01 *
+ *  . DETRUIRE              :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . INFO_EXEC_ASTER       :       0.00 :       0.00 :       0.00 :       0.01 *
+ *  . DETRUIRE              :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . INFO_EXEC_ASTER       :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . DETRUIRE              :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . INFO_EXEC_ASTER       :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . DETRUIRE              :       0.00 :       0.00 :       0.00 :       0.00 *
+ *  . DEFI_LIST_REEL        :       0.00 :       0.00 :       0.00 :       0.00 *
+ * DEFI_LIST_REEL           :       0.00 :       0.00 :       0.00 :       0.00 *
+ * DEFI_FONCTION            :       0.00 :       0.00 :       0.00 :       0.00 *
+ * TEST_FONCTION            :       0.01 :       0.00 :       0.01 :       0.01 *
+ * FIN                      :       0.00 :       0.03 :       0.03 :       0.04 *
+ *  . part Superviseur      :      70.07 :      12.91 :      82.98 :      93.37 *
+ *  . part Fortran          :       0.03 :       0.04 :       0.07 :       0.08 *
+ ********************************************************************************
+ * TOTAL_JOB                :      70.10 :      12.95 :      83.05 :      93.45 *
+ ********************************************************************************
+

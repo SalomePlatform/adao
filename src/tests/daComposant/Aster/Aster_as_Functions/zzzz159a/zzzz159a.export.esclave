@@ -1,0 +1,14 @@
+P version STA9.4
+P debug nodebug
+P mode interactif
+P nomjob zzzz159a
+P origine ASTK 1.7.1
+A memjeveux 16.0
+A tpmax 300
+P tpsjob 5
+P xterm /usr/bin/xterm -sb -si -geometry 90x32 -display cli75ca.der.edf.fr:0
+F comm /home/ahbhhjp/SALOME5/supplements_JPA/Aster/Aster_as_Functions/zzzz159a/zzzz159a.3 D 1
+F mail /home/ahbhhjp/SALOME5/supplements_JPA/Aster/Aster_as_Functions/zzzz159a/zzzz159a.mail D 20
+F mess /home/ahbhhjp/SALOME5/supplements_JPA/Aster/Aster_as_Functions/zzzz159a/zzzz159a_esclave.mess R 6
+F resu /home/ahbhhjp/SALOME5/supplements_JPA/Aster/Aster_as_Functions/zzzz159a/zzzz159a_esclave.resu R 8
+P actions make_etude

@@ -1,0 +1,1140 @@
+==========================================
+==========================================
+# MODIF  DATE 15/05/2007   AUTEUR ASSIRE A.ASSIRE 
+# TITRE TEST DE LA MACRO COMMANDE DE RECALAGE
+#            CONFIGURATION MANAGEMENT OF EDF VERSION
+# ======================================================================
+# COPYRIGHT (C) 1991 - 2002  EDF R&D                  WWW.CODE-ASTER.ORG
+# THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY  
+# IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE AS PUBLISHED BY  
+# THE FREE SOFTWARE FOUNDATION; EITHER VERSION 2 OF THE LICENSE, OR     
+# (AT YOUR OPTION) ANY LATER VERSION.                                                    
+#                                                                       
+# THIS PROGRAM IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL, BUT   
+# WITHOUT ANY WARRANTY; WITHOUT EVEN THE IMPLIED WARRANTY OF            
+# MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. SEE THE GNU      
+# GENERAL PUBLIC LICENSE FOR MORE DETAILS.                              
+#                                                                       
+# YOU SHOULD HAVE RECEIVED A COPY OF THE GNU GENERAL PUBLIC LICENSE     
+# ALONG WITH THIS PROGRAM; IF NOT, WRITE TO EDF R&D CODE_ASTER,         
+#    1 AVENUE DU GENERAL DE GAULLE, 92141 CLAMART CEDEX, FRANCE.        
+# ======================================================================
+# RESPONSABLE ASSIRE A.ASSIRE
+
+DEBUT(CODE=_F(NOM='ZZZZ159A',NIV_PUB_WEB='INTERNET',VISU_EFICAS='NON'), IMPR_MACRO='OUI')
+
+parametres =[['YOUN__',100000.,50000.,500000.],['DSDE__',1000.,500.,10000.],['SIGY__',30.,5.,500.]]
+
+calcul = [['REPONSE1','INST','SIYY'],['REPONSE2','INST','V1']]
+
+experience=[    Numeric.array([[0.00000E+00  , 0.00000E+00 ],
+                              [5.00000E-02  , 5.00000E+01 ],
+                              [1.00000E-01  , 1.00000E+02 ],
+                              [1.50000E-01  , 1.50000E+02 ],
+                              [2.00000E-01  , 2.00000E+02 ],
+                              [2.50000E-01  , 2.00500E+02 ],
+                              [3.00000E-01  , 2.01000E+02 ],
+                              [3.50000E-01  , 2.01500E+02 ],
+                              [4.00000E-01  , 2.02000E+02 ],
+                              [4.50000E-01  , 2.02500E+02 ],
+                              [5.00000E-01  , 2.03000E+02 ],
+                              [5.50000E-01  , 2.03500E+02 ],
+                              [6.00000E-01  , 2.04000E+02 ],
+                              [6.50000E-01  , 2.04500E+02 ],
+                              [7.00000E-01  , 2.05000E+02 ],
+                              [7.50000E-01  , 2.05500E+02 ],
+                              [8.00000E-01  , 2.06000E+02 ],
+                              [8.50000E-01  , 2.06500E+02 ],
+                              [9.00000E-01  , 2.07000E+02 ],
+                              [9.50000E-01  , 2.07500E+02 ],
+                              [1.00000E+00  , 2.08000E+02 ]]),
+               Numeric.array([[0.00000E+00  , 0.00000E+00 ],
+                              [5.00000E-02  , 0.00000E+00 ],
+                              [1.00000E-01  , 0.00000E+00 ],
+                              [1.50000E-01  , 0.00000E+00 ],
+                              [2.00000E-01  , 0.00000E+00 ],
+                              [2.50000E-01  , 2.47500E-04 ],
+                              [3.00000E-01  , 4.95000E-04 ],
+                              [3.50000E-01  , 7.42500E-04 ],
+                              [4.00000E-01  , 9.90000E-04 ],
+                              [4.50000E-01  , 1.23750E-03 ],
+                              [5.00000E-01  , 1.48500E-03 ],
+                              [5.50000E-01  , 1.73250E-03 ],
+                              [6.00000E-01  , 1.98000E-03 ],
+                              [6.50000E-01  , 2.22750E-03 ],
+                              [7.00000E-01  , 2.47500E-03 ],
+                              [7.50000E-01  , 2.72250E-03 ],
+                              [8.00000E-01  , 2.97000E-03 ],
+                              [8.50000E-01  , 3.21750E-03 ],
+                              [9.00000E-01  , 3.46500E-03 ],
+                              [9.50000E-01  , 3.71250E-03 ],
+                              [1.00000E+00  , 3.96000E-03 ]]) ]
+                              
+
+# LANCEMENT DE L'IDENTIFICATION
+
+RESU=MACR_RECAL(
+         UNITE_ESCL       =3,
+         RESU_EXP         =experience,
+         LIST_PARA        =parametres,
+         RESU_CALC        =calcul,
+#         SUIVI_ESCLAVE    ='OUI',
+)  ;
+
+
+# On cree une liste bidon pour pouvoir
+# definir une fonction testable par TEST_RESU
+BIDON=DEFI_LIST_REEL(DEBUT=1.,
+                     INTERVALLE=_F(JUSQU_A = 3., NOMBRE=2));
+
+OPTIM=DEFI_FONCTION(NOM_PARA='INST',
+                    VALE_PARA=BIDON,
+                    VALE_FONC=RESU);
+
+TEST_FONCTION ( VALEUR =(_F( FONCTION = OPTIM,
+                           PRECISION = 1.E-4,
+                           VALE_PARA = 1.,
+                           REFERENCE = 'ANALYTIQUE',
+                           VALE_REFE = 200000.,
+                         ),
+                       _F( FONCTION = OPTIM,
+                           PRECISION = 1.E-4,
+                           VALE_PARA = 2.,
+                           REFERENCE = 'ANALYTIQUE',
+                           VALE_REFE = 2000.,
+                         ),
+                       _F( FONCTION = OPTIM,
+                           PRECISION = 1.E-4,
+                           VALE_PARA = 3.,
+                           REFERENCE = 'ANALYTIQUE',
+                           VALE_REFE = 200.,
+                         ),
+              )
+              ) ;
+
+
+FIN()
+
+==========================================
+==========================================
+
+ PARAMETRES DE LA GESTION MEMOIRE JEVEUX  
+ =======================================
+ LIMITE MEMOIRE STATIQUE       :        1048576 OCTETS (       1.000 Mo)
+ MEMOIRE DISPONIBLE            :        1048576 OCTETS
+ MEMOIRE PRISE                 :        1048576 OCTETS (       1.000 Mo)
+ LIMITE MEMOIRE DYNAMIQUE      :      133169152 OCTETS (     127.000 Mo)
+
+ LIMITE TAILLE DES BASES       :        48.00   Go 
+ =======================================
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0001            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DEBUT(MEMOIRE=_F(GESTION='RAPIDE',
+                   TYPE_ALLOCATION=1,
+                   TAILLE_BLOC=800.0,
+                   DYNAMIQUE=1),
+        RESERVE_CPU=_F(BORNE=900),
+        CODE=_F(VISU_EFICAS='NON',
+                NOM='ZZZZ159A',
+                NIV_PUB_WEB='INTERNET'),
+        PAR_LOT='OUI',
+        IMPR_MACRO='OUI',
+        );
+
+                                 -- CODE_ASTER -- VERSION CORRECTIVE  9.04.10 AVANT STABILISATION --
+
+                                                   COPYRIGHT  EDF-R&D 1991 - 2009
+
+                                               EXECUTION DU : ME-06-MAI -2009 09:56:41
+
+                                                   PLATE-FORME : CLAU5AAA        
+
+                                                NB MAX PROC OpenMP:   1             
+
+                                                     SYSTEME : LINUX           
+
+                                                       CPU : X86_64          
+
+
+
+
+
+   !--------------------------------------------------------------------------------!
+   !                                                                                !
+   ! Le mot-clé facteur CODE dans DEBUT/POURSUITE est réservé aux cas-tests.        !
+   ! Il ne faut pas l'utiliser dans les études car il modifie certaines valeurs par !
+   ! défaut des commandes DEBUT/POURSUITE, comme le comportement en cas d'erreur.   !
+   !                                                                                !
+   !--------------------------------------------------------------------------------!
+
+  Valeur initiale du temps CPU maximum =   300 secondes
+  Valeur du temps CPU maximum passé aux commandes =   290 secondes
+  Réserve CPU prévue = 10 secondes
+
+     NOM DE LA BASE                          :  LDUMMY
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  5
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  100
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  8192
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  1
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  20
+     TAILLE MAXIMUM DU REPERTOIRE            :  250
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  8 %
+
+ Debut de lecture
+
+     REOUVERTURE DE LA BASE                  :  ELEMBASE
+     CREEE AVEC LA VERSION                   :  9.04.10
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  17
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  512
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  113
+     TAILLE MAXIMUM DU REPERTOIRE            :  300
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  37 %
+
+     NOM DE LA BASE                          :  ELEMBASE
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  17
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  512
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  39
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  113
+     TAILLE MAXIMUM DU REPERTOIRE            :  300
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  37 %
+
+ Relecture des catalogues dans ELEMBASE faite.
+
+ fin de lecture (durée  0.000000  s.) 
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0001   USER+SYST:        0.03s (SYST:        0.03s, ELAPS:        0.04s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0002            CONCEPT DE TYPE : listr8_sdaster
+    #  -------------                  ----------------- 
+   RESU=MACR_RECAL(LIST_PARA=(['YOUN__', 100000.0, 50000.0, 500000.0],['DSDE__', 1000.0, 500.0, 10000.0],['SIGY__', 30.0, 5.0, 500.0],),
+                  INFO=2,
+                  RESI_GLOB_RELA=1.E-3,
+                  METHODE='LEVENBERG',
+                  ITER_MAXI=10,
+                  PARA_DIFF_FINI=1.E-3,
+                  ITER_FONC_MAXI=100,
+                  UNITE_RESU=91,
+                  RESU_EXP=(array([[  0.00000000e+00,   0.00000000e+00],
+                         [  5.00000000e-02,   5.00000000e+01],
+                         [  1.00000000e-01,   1.00000000e+02],
+                         [  1.50000000e-01,   1.50000000e+02],
+                         [  2.00000000e-01,   2.00000000e+02],
+                         [  2.50000000e-01,   2.00500000e+02],
+                         [  3.00000000e-01,   2.01000000e+02],
+                         [  3.50000000e-01,   2.01500000e+02],
+                         [  4.00000000e-01,   2.02000000e+02],
+                         [  4.50000000e-01,   2.02500000e+02],
+                         [  5.00000000e-01,   2.03000000e+02],
+                         [  5.50000000e-01,   2.03500000e+02],
+                         [  6.00000000e-01,   2.04000000e+02],
+                         [  6.50000000e-01,   2.04500000e+02],
+                         [  7.00000000e-01,   2.05000000e+02],
+                         [  7.50000000e-01,   2.05500000e+02],
+                         [  8.00000000e-01,   2.06000000e+02],
+                         [  8.50000000e-01,   2.06500000e+02],
+                         [  9.00000000e-01,   2.07000000e+02],
+                         [  9.50000000e-01,   2.07500000e+02],
+                         [  1.00000000e+00,   2.08000000e+02]]),array([[  0.00000000e+00,   0.00000000e+00],
+                         [  5.00000000e-02,   0.00000000e+00],
+                         [  1.00000000e-01,   0.00000000e+00],
+                         [  1.50000000e-01,   0.00000000e+00],
+                         [  2.00000000e-01,   0.00000000e+00],
+                         [  2.50000000e-01,   2.47500000e-04],
+                         [  3.00000000e-01,   4.95000000e-04],
+                         [  3.50000000e-01,   7.42500000e-04],
+                         [  4.00000000e-01,   9.90000000e-04],
+                         [  4.50000000e-01,   1.23750000e-03],
+                         [  5.00000000e-01,   1.48500000e-03],
+                         [  5.50000000e-01,   1.73250000e-03],
+                         [  6.00000000e-01,   1.98000000e-03],
+                         [  6.50000000e-01,   2.22750000e-03],
+                         [  7.00000000e-01,   2.47500000e-03],
+                         [  7.50000000e-01,   2.72250000e-03],
+                         [  8.00000000e-01,   2.97000000e-03],
+                         [  8.50000000e-01,   3.21750000e-03],
+                         [  9.00000000e-01,   3.46500000e-03],
+                         [  9.50000000e-01,   3.71250000e-03],
+                         [  1.00000000e+00,   3.96000000e-03]]),),
+                  SUIVI_ESCLAVE='NON',
+                  RESU_CALC=(['REPONSE1', 'INST', 'SIYY'],['REPONSE2', 'INST', 'V1'],),
+                  UNITE_ESCL=3,
+                  );
+
+
+ <I> <MACR_RECAL> Information : les calculs esclaves utiliseront : 16.0 Mega Mots.
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0003            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0003   USER+SYST:        0.01s (SYST:        0.01s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0004            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0004   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Lancement de l'optimisation avec la methode : LEVENBERG
+
+
+
+ <I> <MACR_RECAL> Calcul de F avec les parametres:
+			DSDE__ : 1000.0
+			SIGY__ : 30.0
+			YOUN__ : 100000.0
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : DSDE__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : SIGY__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : YOUN__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0005            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0005   USER+SYST:        0.01s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0006            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0006   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Calcul de F avec les parametres:
+			DSDE__ : 10000.0
+			SIGY__ : 151.731118886
+			YOUN__ : 301898.569367
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : DSDE__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : SIGY__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : YOUN__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> Informations de convergence :
+=======================================================
+Fin de l'iteration 1 :
+
+=> Fonctionnelle = 0.260753211389
+=> Residu        = 0.306899632314
+=======================================================
+
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0007            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0007   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0008            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0008   USER+SYST:        0.01s (SYST:        0.00s, ELAPS:        0.01s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Calcul de F avec les parametres:
+			DSDE__ : 500.0
+			SIGY__ : 217.057406104
+			YOUN__ : 158942.014264
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : DSDE__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : SIGY__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : YOUN__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> Informations de convergence :
+=======================================================
+Fin de l'iteration 2 :
+
+=> Fonctionnelle = 0.0792976627028
+=> Residu        = 0.487273959063
+=======================================================
+
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0009            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0009   USER+SYST:        0.01s (SYST:        0.00s, ELAPS:        0.01s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0010            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0010   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Calcul de F avec les parametres:
+			DSDE__ : 674.451660145
+			SIGY__ : 204.642657655
+			YOUN__ : 192539.892386
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : DSDE__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : SIGY__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : YOUN__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> Informations de convergence :
+=======================================================
+Fin de l'iteration 3 :
+
+=> Fonctionnelle = 0.0020640804233
+=> Residu        = 0.0538959232037
+=======================================================
+
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0011            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0011   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.01s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0012            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0012   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Calcul de F avec les parametres:
+			DSDE__ : 1938.61024277
+			SIGY__ : 200.272730302
+			YOUN__ : 199790.458381
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : DSDE__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : SIGY__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : YOUN__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> Informations de convergence :
+=======================================================
+Fin de l'iteration 4 :
+
+=> Fonctionnelle = 2.96656150823e-06
+=> Residu        = 0.00180738090126
+=======================================================
+
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0013            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0013   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0014            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0014   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Calcul de F avec les parametres:
+			DSDE__ : 1999.95570655
+			SIGY__ : 200.000278867
+			YOUN__ : 199999.887792
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : DSDE__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : SIGY__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> On utilise les differences finies pour calculer la sensibilite de : YOUN__ 
+
+
+
+ <I> <MACR_RECAL> Lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Fin du lancement de la commande : /local00/aster/ASTK/ASTK_SERV/bin/as_run tmp_export
+
+
+
+ <I> <MACR_RECAL> Diagnostic du calcul esclave : OK
+
+
+
+ <I> <MACR_RECAL> Informations de convergence :
+=======================================================
+Fin de l'iteration 5 :
+
+=> Fonctionnelle = 2.18082517772e-12
+=> Residu        = 1.75721683395e-06
+=======================================================
+
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0015            CONCEPT DE TYPE : table_sdaster
+    #  -------------                  ----------------- 
+   CPU=INFO_EXEC_ASTER(INFO=1,
+                      LISTE_INFO=('CPU_RESTANT',),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0015   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0016            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   DETRUIRE(INFO=1,
+           CONCEPT=_F(NOM='CPU'),
+           ALARME='OUI',
+           );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0016   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+ <I> <MACR_RECAL> Nombre d'evaluation de la fonction : 24
+
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0017            CONCEPT DE TYPE : listr8_sdaster
+    #  -------------                  ----------------- 
+   RESU=DEFI_LIST_REEL(INFO=1,
+                      VALE=(1.9999988779191489E5,1999.9557065460588,200.00027886707795,),
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0017   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0002   USER+SYST:       81.29s (SYST:       12.75s, ELAPS:       91.67s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0018            CONCEPT DE TYPE : listr8_sdaster
+    #  -------------                  ----------------- 
+   BIDON=DEFI_LIST_REEL(INTERVALLE=_F(NOMBRE=2,
+                                     JUSQU_A=3.0),
+                       INFO=1,
+                       DEBUT=1.0,
+                       );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0018   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0019            CONCEPT DE TYPE : fonction_sdaster
+    #  -------------                  ----------------- 
+   OPTIM=DEFI_FONCTION(VALE_FONC=RESU,
+                      INFO=1,
+                      VALE_PARA=BIDON,
+                      PROL_DROITE='EXCLU',
+                      INTERPOL='LIN',
+                      NOM_PARA='INST',
+                      PROL_GAUCHE='EXCLU',
+                      NOM_RESU='TOUTRESU',
+                      VERIF='CROISSANT',
+                      );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0019   USER+SYST:        0.00s (SYST:        0.00s, ELAPS:        0.00s)
+    #  ------------------------------------------------------------------------------------------
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0020            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   TEST_FONCTION(TEST_NOOK='NON',
+                VALEUR=(_F(VALE_REFE=2.E5,
+                           CRITERE='RELATIF',
+                           VALE_PARA=1.0,
+                           REFERENCE='ANALYTIQUE',
+                           PRECISION=1.E-4,
+                           VALE_ABS='NON',
+                           FONCTION=OPTIM),
+                        _F(VALE_REFE=2000.0,
+                           CRITERE='RELATIF',
+                           VALE_PARA=2.0,
+                           REFERENCE='ANALYTIQUE',
+                           PRECISION=1.E-4,
+                           VALE_ABS='NON',
+                           FONCTION=OPTIM),
+                        _F(VALE_REFE=200.0,
+                           CRITERE='RELATIF',
+                           VALE_PARA=3.0,
+                           REFERENCE='ANALYTIQUE',
+                           PRECISION=1.E-4,
+                           VALE_ABS='NON',
+                           FONCTION=OPTIM)),
+                );
+
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :        17.41 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         7.53 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0020   USER+SYST:        0.01s (SYST:        0.00s, ELAPS:        0.01s)
+    #  ------------------------------------------------------------------------------------------
+
+   !-----------------------------------------------------------------------!
+   !   Liste des alarmes émises lors de l'exécution du calcul.             !
+   !                                                                       !
+   !   Les alarmes que vous avez choisies d'ignorer sont précédées de (*). !
+   !   Nombre d'occurrences pour chacune des alarmes :                     !
+   !          aucune alarme                                                !
+   !-----------------------------------------------------------------------!
+
+
+    #  ------------------------------------------------------------------------------------------ 
+    #  COMMANDE NO :  0021            CONCEPT DE TYPE : 
+    #  -------------                  ----------------- 
+   FIN(RETASSAGE='NON',
+      INFO_RESU='OUI',
+      FORMAT_HDF='NON',
+      UNITE=6,
+      PERFORMANCE='OUI',
+      );
+
+ ---------------------------------------------------------------------------
+ Concepts de la base: G
+    Nom       Type                 Taille (Mo)         Nombre      Nombre de
+                                                     d'objets       segments
+    TOTAL                                 9.88             56            110
+  
+    RESU       LISTR8_SDASTER             0.00              5              5
+    BIDON      LISTR8_SDASTER             0.00              5              5
+    OPTIM      FONCTION_SDASTER           0.00              3              3
+    &FOZERO                               0.00              2              2
+    &&_NUM_C                              0.00              1              1
+    &&SYS.KR                              0.04              1              1
+    &CATA.AC                              0.00              2              4
+    &CATA.CL                              0.17              1              3
+    &CATA.GD                              0.04              4             11
+    &CATA.ME                              0.08              2              4
+    &CATA.OP                              0.17              3             13
+    &CATA.PH                              0.00              1              1
+    &CATA.TE                              9.37             17             42
+    &CATA.TH                              0.00              2              4
+    &CATA.TM                              0.01              7             11
+ ---------------------------------------------------------------------------
+
+     NOM DE LA BASE                          :  GLOBALE
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  20
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  62914
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  13
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  136
+     TAILLE MAXIMUM DU REPERTOIRE            :  2000
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  6 %
+
+     NOM DE LA BASE                          :  VOLATILE
+     NOMBRE D'ENREGISTREMENTS UTILISES       :  3
+     NOMBRE D'ENREGISTREMENTS MAXIMUM        :  62914
+     LONGUEUR D'ENREGISTREMENT (OCTETS)      :  819200
+     NOMBRE TOTAL D'ENTREES/SORTIES          :  2
+     NOMBRE D'IDENTIFICATEURS UTILISES       :  39
+     TAILLE MAXIMUM DU REPERTOIRE            :  2000
+     POURCENTAGE D'UTILISATION DU REPERTOIRE :  1 %
+  
+   STATISTIQUES CONCERNANT L'ALLOCATION DYNAMIQUE :
+     TAILLE CUMULEE MAXIMUM                     21  Mo,
+     TAILLE CUMULEE LIBEREE                     21  Mo.
+     NOMBRE TOTAL D'ALLOCATIONS  :                   487 .
+     NOMBRE TOTAL DE LIBERATIONS :                   488 .
+                          0  APPELS AU MECANISME DE LIBERATION.
+     TAILLE MEMOIRE CUMULEE RECUPEREE :                     0  Mo.
+  
+ <I>       FIN D'EXECUTION LE : ME-06-MAI -2009 09:58:12
+  
+    #  USAGE DE LA MEMOIRE JEVEUX
+    #     - MEMOIRE DYNAMIQUE CONSOMMEE :         0.00 Mo (MAXIMUM ATTEINT :        20.85 Mo) 
+    #     - MEMOIRE UTILISEE            :         0.00 Mo (MAXIMUM ATTEINT :        13.35 Mo) 
+
+    #  FIN COMMANDE NO : 0021   USER+SYST:        0.03s (SYST:        0.03s, ELAPS:        0.04s)
+    #  ------------------------------------------------------------------------------------------
+
+
+  <I> <INFORMATION TEMPS D'EXECUTION> (EN SECONDE)
+      TEMPS CPU TOTAL ..............         83.05
+      TEMPS CPU USER TOTAL .........         70.10
+      TEMPS CPU SYSTEME TOTAL ......         12.95
+      TEMPS CPU RESTANT ............        216.95
+
+EXECUTION_CODE_ASTER_EXIT_11933=0

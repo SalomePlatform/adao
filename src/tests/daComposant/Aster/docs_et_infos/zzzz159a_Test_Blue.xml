@@ -1,0 +1,832 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
+<proc>
+   <property name="DefaultStudyID" value="1"/>
+   <type name="bool" kind="bool"/>
+   <sequence name="boolvec" content="bool"/>
+   <type name="double" kind="double"/>
+   <sequence name="dblevec" content="double"/>
+   <objref name="file" id="file"/>
+   <type name="int" kind="int"/>
+   <sequence name="intvec" content="int"/>
+   <objref name="pyobj" id="python:obj:1.0"/>
+   <sequence name="seqdblevec" content="dblevec"/>
+   <sequence name="seqint" content="int"/>
+   <sequence name="seqintvec" content="intvec"/>
+   <type name="string" kind="string"/>
+   <sequence name="stringvec" content="string"/>
+   <container name="DefaultContainer">
+      <property name="container_name" value="FactoryServer"/>
+      <property name="hostname" value="localhost"/>
+   </container>
+   <bloc name="Global_Parameters">
+      <datanode name="Codes_Parameters">
+         <parameter name="ASTER_ROOT" type="string">
+            <value><string>/home/ahbhhjp/SALOME5/Aster/aster-STA94-i386/aster</string></value>
+         </parameter>
+         <parameter name="rcdir" type="string">
+            <value><string>2009.1</string></value>
+         </parameter>
+         <parameter name="debug" type="bool">
+            <value><boolean>1</boolean></value>
+         </parameter>
+         <parameter name="DISPLAY" type="string">
+            <value><string>:0.0</string></value>
+         </parameter>
+         <parameter name="SOURCES_ROOT" type="string">
+            <value><string>/home/ahbhhjp/SALOME5/Aster/YACS</string></value>
+         </parameter>
+      </datanode>
+      <inline name="Study_Parameters">
+         <script><code><![CDATA[print 'Debut N_MR_Parameters'
+
+import Numeric
+
+export = '/home/ahbhhjp/SALOME5/Aster/YACS/zzzz159a/zzzz159a.export.esclave'
+
+fileparameters = '/home/ahbhhjp/SALOME5/Aster/YACS/N_MR_Parameters.py'
+fileparameters = ''
+
+parametres =[['YOUN__',100000.,50000.,500000.],['DSDE__',1000.,500.,10000.],['SIGY__',30.,5.,500.]]
+
+calcul = [['REPONSE1','INST','SIYY'],['REPONSE2','INST','V1']]
+
+experiences=[  Numeric.array([[0.00000E+00  , 0.00000E+00 ],
+                              [1.00000E-01  , 1.00000E+02 ],
+                              [2.00000E-01  , 2.00000E+02 ],
+                              [3.00000E-01  , 2.01000E+02 ],
+                              [4.00000E-01  , 2.02000E+02 ],
+                              [5.00000E-01  , 2.03000E+02 ],
+                              [6.00000E-01  , 2.04000E+02 ],
+                              [7.00000E-01  , 2.05000E+02 ],
+                              [8.00000E-01  , 2.06000E+02 ],
+                              [9.00000E-01  , 2.07000E+02 ],
+                              [1.00000E+00  , 2.08000E+02 ]]),
+               Numeric.array([[0.00000E+00  , 0.00000E+00 ],
+                              [1.00000E-01  , 0.00000E+00 ],
+                              [2.00000E-01  , 0.00000E+00 ],
+                              [3.00000E-01  , 4.95000E-04 ],
+                              [4.00000E-01  , 9.90000E-04 ],
+                              [5.00000E-01  , 1.48500E-03 ],
+                              [6.00000E-01  , 1.98000E-03 ],
+                              [7.00000E-01  , 2.47500E-03 ],
+                              [8.00000E-01  , 2.97000E-03 ],
+                              [9.00000E-01  , 3.46500E-03 ],
+                              [1.00000E+00  , 3.96000E-03 ]]) ]
+
+print 'Fin N_MR_Parameters'
+]]></code></script>
+         <outport name="export" type="string"/>
+         <outport name="parametres" type="pyobj"/>
+         <outport name="calcul" type="pyobj"/>
+         <outport name="experiences" type="pyobj"/>
+         <outport name="fileparameters" type="string"/>
+      </inline>
+   </bloc>
+   <inline name="BLUE">
+      <function name="algorithm">
+         <code><![CDATA[import sys, os
+sys.path.insert(0, os.path.join(os.environ["HOME"],"SALOME5/supplements_JPA/ComposantAD/daCore"))
+import numpy
+from AssimilationStudy import AssimilationStudy
+
+def algorithm(Xb, Yo, B, R, H):
+    print Xb
+    #
+    # Remise en place des matrices
+    # -------------------
+    dimensionXb = len( Xb )
+    dimensionYo = len( Yo )
+    B = numpy.matrix( B, numpy.float ).reshape((dimensionXb,dimensionXb))
+    R = numpy.matrix( R, numpy.float ).reshape((dimensionYo,dimensionYo))
+    H = numpy.matrix( H, numpy.float ).reshape((dimensionYo,dimensionXb))
+    #
+    # Analyse BLUE
+    # ------------
+    ADD = AssimilationStudy()
+    ADD.setBackground         (asVector     = Xb )
+    ADD.setBackgroundError    (asCovariance = B )
+    ADD.setObservation        (asVector     = Yo )
+    ADD.setObservationError   (asCovariance = R )
+    ADD.setObservationOperator(asMatrix     = H )
+    #
+    ADD.setControls()
+    ADD.setAlgorithm(choice="Blue")
+    #
+    ADD.analyze()
+    #
+    Xa = ADD.get("Analysis").valueserie(0)
+    Innovation = ADD.get("Innovation").valueserie(0)
+    A = []
+    #
+    return Xa, A, Innovation
+]]></code>
+      </function>
+      <inport name="Xb" type="dblevec"/>
+      <inport name="Yo" type="dblevec"/>
+      <inport name="B" type="dblevec"/>
+      <inport name="R" type="dblevec"/>
+      <inport name="H" type="dblevec"/>
+      <outport name="Xa" type="dblevec"/>
+      <outport name="A" type="dblevec"/>
+      <outport name="Innovation" type="dblevec"/>
+   </inline>
+   <bloc name="H_linearization">
+      <foreach name="Finite_differences_derivation" type="int">
+         <bloc name="Elementary_calculation">
+            <inline name="Perturbated_point_X">
+               <script><code><![CDATA[print iter
+print seq_X[iter]
+X = seq_X[iter]
+]]></code></script>
+               <inport name="iter" type="int"/>
+               <inport name="seq_X" type="seqdblevec"/>
+               <outport name="X" type="dblevec"/>
+               <outport name="iter" type="int"/>
+            </inline>
+            <inline name="ASTER">
+               <script><code><![CDATA[print 'Debut ASTER_recal'
+
+import os
+execfile( os.path.join(SOURCES_ROOT, 'N_Code_Aster.py') )
+
+print 'RESU_CALC (%s): %s ' % (iter, RESU_CALC)
+print 'DIAG (%s): %s' % (iter, DIAG)
+]]></code></script>
+               <inport name="X" type="dblevec"/>
+               <inport name="iter" type="int"/>
+               <inport name="ASTER_ROOT" type="string"/>
+               <inport name="rcdir" type="string"/>
+               <inport name="debug" type="bool"/>
+               <inport name="DISPLAY" type="string"/>
+               <inport name="SOURCES_ROOT" type="string"/>
+               <inport name="export" type="string"/>
+               <inport name="parametres" type="pyobj"/>
+               <inport name="calcul" type="pyobj"/>
+               <inport name="experience" type="pyobj"/>
+               <inport name="fileparameters" type="string"/>
+               <outport name="FX" type="dblevec"/>
+               <outport name="FY" type="dblevec"/>
+               <outport name="DIMS" type="intvec"/>
+               <outport name="DIAG" type="string"/>
+               <outport name="iter" type="int"/>
+            </inline>
+            <control> <fromnode>Perturbated_point_X</fromnode> <tonode>ASTER</tonode> </control>
+            <datalink control="false">
+               <fromnode>Perturbated_point_X</fromnode> <fromport>X</fromport>
+               <tonode>ASTER</tonode> <toport>X</toport>
+            </datalink>
+            <datalink control="false">
+               <fromnode>Perturbated_point_X</fromnode> <fromport>iter</fromport>
+               <tonode>ASTER</tonode> <toport>iter</toport>
+            </datalink>
+         </bloc>
+      </foreach>
+      <inline name="Gradient">
+         <script><code><![CDATA[
+print "seq_FX=", seq_FX
+print "seq_FY=", seq_FY
+print "seq_DIMS=", seq_DIMS
+print "lst_DIAG=", lst_DIAG
+print "lst_iter=", lst_iter
+print "dX=", dX
+
+import os
+execfile( os.path.join(SOURCES_ROOT, 'N_Gradient.py') )
+
+print "fonctionnelle=", fonctionnelle
+print "gradient=", gradient
+
+import numpy
+H = numpy.array( gradient )
+H = H.flatten()
+]]></code></script>
+         <inport name="seq_FX" type="seqdblevec"/>
+         <inport name="seq_FY" type="seqdblevec"/>
+         <inport name="seq_DIMS" type="seqintvec"/>
+         <inport name="lst_DIAG" type="stringvec"/>
+         <inport name="lst_iter" type="intvec"/>
+         <inport name="dX" type="dblevec"/>
+         <inport name="SOURCES_ROOT" type="string"/>
+         <outport name="fonctionnelle" type="dblevec"/>
+         <outport name="gradient" type="seqdblevec"/>
+         <outport name="H" type="dblevec"/>
+      </inline>
+      <inline name="Input">
+         <function name="inputctrl">
+            <code><![CDATA[# debug : nb permet de limiter le nb de directions pour les differences finies
+nb = None  # on calcule pour tous les parametres
+#nb = 1
+
+print
+print "XXXXXXXXXXXXX======== Demarrage de la procedure"
+print
+import copy
+
+def inputctrl( X, dX ):
+
+   if len( X ) != len( dX ):
+      raise ValueError("X and dX has to present the same lenght")
+
+   nbparam = len(X)
+   if nb: nbparam = min(nb, nbparam)
+   seq_X = [ X ]
+   for i in range(nbparam):
+      Xplus = copy.copy(X)
+      Xplus[i] = X[i] + dX[i]
+      seq_X.append( Xplus )
+
+   nb_core = 2
+   itervect = range( len(seq_X) )
+   nbBranches = min(nb_core, len( itervect ))
+
+   print "  Taille du vecteur :", nbparam
+   print "seq_X:", seq_X
+   print "nbBranches:", nbBranches
+   print "itervect:", itervect
+
+   # debug
+   #nbBranches = 1
+   #if nbBranches==1:
+   #    itervect = [0]
+   #    seq_X = [ X ]
+
+   return nbBranches, itervect, seq_X, dX
+]]></code>
+         </function>
+         <inport name="X" type="dblevec"/>
+         <inport name="dX" type="dblevec"/>
+         <outport name="nbBranches" type="int"/>
+         <outport name="itervect" type="intvec"/>
+         <outport name="seq_X" type="seqdblevec"/>
+         <outport name="dX" type="dblevec"/>
+      </inline>
+      <inline name="Temporary_Parameters">
+         <script><code><![CDATA[# Boitier pour une interface simple de variables temporaires]]></code></script>
+         <inport name="ASTER_ROOT" type="string"/>
+         <inport name="rcdir" type="string"/>
+         <inport name="debug" type="bool"/>
+         <inport name="DISPLAY" type="string"/>
+         <inport name="SOURCES_ROOT" type="string"/>
+         <inport name="export" type="string"/>
+         <inport name="parametres" type="pyobj"/>
+         <inport name="calcul" type="pyobj"/>
+         <inport name="experience" type="pyobj"/>
+         <inport name="fileparameters" type="string"/>
+         <outport name="ASTER_ROOT" type="string"/>
+         <outport name="rcdir" type="string"/>
+         <outport name="debug" type="bool"/>
+         <outport name="DISPLAY" type="string"/>
+         <outport name="SOURCES_ROOT" type="string"/>
+         <outport name="export" type="string"/>
+         <outport name="parametres" type="pyobj"/>
+         <outport name="calcul" type="pyobj"/>
+         <outport name="experience" type="pyobj"/>
+         <outport name="fileparameters" type="string"/>
+      </inline>
+      <control> <fromnode>Finite_differences_derivation</fromnode> <tonode>Gradient</tonode> </control>
+      <control> <fromnode>Input</fromnode> <tonode>Finite_differences_derivation</tonode> </control>
+      <control> <fromnode>Input</fromnode> <tonode>Gradient</tonode> </control>
+      <control> <fromnode>Temporary_Parameters</fromnode> <tonode>Finite_differences_derivation</tonode> </control>
+      <control> <fromnode>Temporary_Parameters</fromnode> <tonode>Gradient</tonode> </control>
+      <datalink control="false">
+         <fromnode>Finite_differences_derivation</fromnode> <fromport>SmplPrt</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.Perturbated_point_X</tonode> <toport>iter</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Input</fromnode> <fromport>nbBranches</fromport>
+         <tonode>Finite_differences_derivation</tonode> <toport>nbBranches</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Input</fromnode> <fromport>itervect</fromport>
+         <tonode>Finite_differences_derivation</tonode> <toport>SmplsCollection</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Input</fromnode> <fromport>seq_X</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.Perturbated_point_X</tonode> <toport>seq_X</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Input</fromnode> <fromport>dX</fromport>
+         <tonode>Gradient</tonode> <toport>dX</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>ASTER_ROOT</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>ASTER_ROOT</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>rcdir</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>rcdir</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>debug</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>debug</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>DISPLAY</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>DISPLAY</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>SOURCES_ROOT</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>SOURCES_ROOT</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>SOURCES_ROOT</fromport>
+         <tonode>Gradient</tonode> <toport>SOURCES_ROOT</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>export</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>export</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>parametres</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>parametres</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>calcul</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>calcul</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>experience</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>experience</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Temporary_Parameters</fromnode> <fromport>fileparameters</fromport>
+         <tonode>Finite_differences_derivation.Elementary_calculation.ASTER</tonode> <toport>fileparameters</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Finite_differences_derivation.Elementary_calculation.ASTER</fromnode> <fromport>FX</fromport>
+         <tonode>Gradient</tonode> <toport>seq_FX</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Finite_differences_derivation.Elementary_calculation.ASTER</fromnode> <fromport>FY</fromport>
+         <tonode>Gradient</tonode> <toport>seq_FY</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Finite_differences_derivation.Elementary_calculation.ASTER</fromnode> <fromport>DIMS</fromport>
+         <tonode>Gradient</tonode> <toport>seq_DIMS</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Finite_differences_derivation.Elementary_calculation.ASTER</fromnode> <fromport>DIAG</fromport>
+         <tonode>Gradient</tonode> <toport>lst_DIAG</toport>
+      </datalink>
+      <datalink control="false">
+         <fromnode>Finite_differences_derivation.Elementary_calculation.ASTER</fromnode> <fromport>iter</fromport>
+         <tonode>Gradient</tonode> <toport>lst_iter</toport>
+      </datalink>
+   </bloc>
+   <inline name="Sorties du test">
+      <script><code><![CDATA[import numpy
+print "Diagnostics de sortie de test :"
+print "  Remise en numpy des resultats"
+Xa = numpy.array(xa)
+Xb = numpy.array(xb)
+dimensionXb = len( Xb )
+dimensionYo = len( Yo )
+print "Verification de remise a l'echelle de B, R et H"
+B = numpy.matrix( B, numpy.float ).reshape((dimensionXb,dimensionXb))
+R = numpy.matrix( R, numpy.float ).reshape((dimensionYo,dimensionYo))
+H = numpy.matrix( H, numpy.float ).reshape((dimensionYo,dimensionXb))
+I = numpy.matrix(numpy.core.identity(dimensionYo))
+deltaB = Xa - Xb
+deltaA = (Yo - numpy.dot(H,Xa)).A1
+deltaI = (Yo - numpy.dot(H,Xb)).A1
+print "Calcul de LS"
+print "deltaA",deltaA
+LS = float(numpy.dot(deltaA, deltaA))
+print "Calcul de LSI"
+LSI = float(numpy.dot(deltaI, deltaI))
+print "Calcul de J"
+J = float( numpy.dot(deltaB, numpy.dot(B,deltaB).A1) + numpy.dot(deltaA, numpy.dot(R,deltaA).A1) )
+print "Calcul de JI"
+JI = float( numpy.dot(deltaI, numpy.dot(R,deltaI).A1) )
+
+print
+print "Sortie du test :"
+print "  Xb =",Xb
+print "  Xa =",Xa
+print "Difference Xa-Xb :"
+print "  Xa-Xb      =",deltaB
+print "  max(Xa-Xb) =",max(deltaB)
+print "  min(Xa-Xb) =",min(deltaB)
+print "Fonctionnelles d'ecarts :"
+print "  Initialement : J  =",JI
+print "                 LS =",LSI
+print "  Analyse      : J  =",J,"(Baise de %i%s)"%(100.*(JI-J)/J,"%")
+print "                 LS =",LS,"(Baise de %i%s)"%(100.*(LSI-LS)/LSI,"%")
+print "Autres informations :"
+print "  d  =",Innovation
+print "  A  =",A
+print
+]]></code></script>
+      <inport name="xa" type="dblevec"/>
+      <inport name="A" type="dblevec"/>
+      <inport name="Innovation" type="dblevec"/>
+      <inport name="xb" type="dblevec"/>
+      <inport name="Yo" type="dblevec"/>
+      <inport name="B" type="dblevec"/>
+      <inport name="R" type="dblevec"/>
+      <inport name="H" type="dblevec"/>
+   </inline>
+   <inline name="Building_B">
+      <script><code><![CDATA[# Construction de la matrice de covariances d'erreurs d'ebauche
+import numpy
+
+dimension = len( parametres )
+
+B  = numpy.matrix(numpy.core.identity(dimension))
+B = B.A1
+]]></code></script>
+      <inport name="parametres" type="pyobj"/>
+      <outport name="B" type="dblevec"/>
+   </inline>
+   <inline name="Building_R">
+      <script><code><![CDATA[# Construction de la matrice de covariances d'erreurs de mesure
+import numpy
+
+dimension = len( experiences ) * len( experiences[0] )
+
+R  = numpy.matrix(numpy.core.identity(dimension))
+R = R.A1
+]]></code></script>
+      <inport name="experiences" type="pyobj"/>
+      <outport name="R" type="dblevec"/>
+   </inline>
+   <inline name="Building_Xb">
+      <script><code><![CDATA[# Script pour extraire l'ebauche comme une liste
+# et une liste de bornes [min,max]
+
+dx = 1.e-2 # Increment en pourcent de Xb
+
+Xb = []
+dXb = []
+Bornes = []
+parametres =[['YOUN__',100000.,50000.,500000.],['DSDE__',1000.,500.,10000.],['SIGY__',30.,5.,500.]]
+
+for parametre in parametres:
+    Xb.append( parametre[1] )
+    dXb.append( dx * parametre[1] )
+    Bornes.append( parametre[2:4] )
+]]></code></script>
+      <inport name="parametres" type="pyobj"/>
+      <outport name="Xb" type="dblevec"/>
+      <outport name="Bornes" type="seqdblevec"/>
+      <outport name="dXb" type="dblevec"/>
+   </inline>
+   <inline name="Building_Yo">
+      <script><code><![CDATA[# Script pour extraire l'es mesures/observations et leur nom
+# comme une liste
+
+if len(calcul) != len(experiences):
+    raise ValueError("Les nombres de variables calculees et observees doient etre les memes")
+
+if len(experiences) >=1:
+    nb_observations_par_experience = len( experiences[0] )
+
+Yo     = []
+Nom_Yo = []
+
+for i in range( len(experiences) ):
+    Nom_Yo.append( calcul[i][2] )
+    if len( experiences[i] ) != nb_observations_par_experience:
+        raise ValueError("Le nombre de mesures par serie experimentale doit etre constant egal a %i mais la serie %i est longue de %i"%(nb_observations_par_experience,i,len(experiences[i])))
+    for observation in experiences[i]:
+        Yo.append( observation[1] )
+]]></code></script>
+      <inport name="calcul" type="pyobj"/>
+      <inport name="experiences" type="pyobj"/>
+      <outport name="Yo" type="dblevec"/>
+      <outport name="Nom_Yo" type="stringvec"/>
+   </inline>
+   <inline name="Entres du test">
+      <script><code><![CDATA[import numpy
+
+print
+print "### ============================================================="
+print "### Verification des arguments fabriques pour passer d'Aster a AD"
+print
+print "    Tailles et types :"
+print "      de Xb",len(Xb),type(Xb)
+print "      de Yo",len(Yo),type(Yo)
+print "      de B ",len(B),type(B)
+print "      de R ",len(R),type(R)
+print "      de H ",len(H),type(H)
+print
+print "    Verification de remise a l'echelle :"
+dimensionXb = len( Xb )
+dimensionYo = len( Yo )
+print "      de B"
+numpyB = numpy.matrix( B, numpy.float ).reshape((dimensionXb,dimensionXb))
+print "      de R"
+numpyR = numpy.matrix( R, numpy.float ).reshape((dimensionYo,dimensionYo))
+print "      de H"
+numpyH = numpy.matrix( H, numpy.float ).reshape((dimensionYo,dimensionXb))
+print "### ============================================================="
+print
+]]></code></script>
+      <inport name="Xb" type="dblevec"/>
+      <inport name="Yo" type="dblevec"/>
+      <inport name="B" type="dblevec"/>
+      <inport name="R" type="dblevec"/>
+      <inport name="H" type="dblevec"/>
+      <outport name="Xb" type="dblevec"/>
+      <outport name="Yo" type="dblevec"/>
+      <outport name="B" type="dblevec"/>
+      <outport name="R" type="dblevec"/>
+      <outport name="H" type="dblevec"/>
+   </inline>
+   <control> <fromnode>Global_Parameters</fromnode> <tonode>Building_B</tonode> </control>
+   <control> <fromnode>Global_Parameters</fromnode> <tonode>H_linearization</tonode> </control>
+   <control> <fromnode>Global_Parameters</fromnode> <tonode>Building_Yo</tonode> </control>
+   <control> <fromnode>Global_Parameters</fromnode> <tonode>Building_R</tonode> </control>
+   <control> <fromnode>Global_Parameters</fromnode> <tonode>Building_Xb</tonode> </control>
+   <control> <fromnode>BLUE</fromnode> <tonode>Sorties du test</tonode> </control>
+   <control> <fromnode>H_linearization</fromnode> <tonode>BLUE</tonode> </control>
+   <control> <fromnode>H_linearization</fromnode> <tonode>Entres du test</tonode> </control>
+   <control> <fromnode>Building_B</fromnode> <tonode>BLUE</tonode> </control>
+   <control> <fromnode>Building_B</fromnode> <tonode>Entres du test</tonode> </control>
+   <control> <fromnode>Building_R</fromnode> <tonode>BLUE</tonode> </control>
+   <control> <fromnode>Building_R</fromnode> <tonode>Entres du test</tonode> </control>
+   <control> <fromnode>Building_Xb</fromnode> <tonode>H_linearization</tonode> </control>
+   <control> <fromnode>Building_Xb</fromnode> <tonode>BLUE</tonode> </control>
+   <control> <fromnode>Building_Xb</fromnode> <tonode>Entres du test</tonode> </control>
+   <control> <fromnode>Building_Xb</fromnode> <tonode>Sorties du test</tonode> </control>
+   <control> <fromnode>Building_Yo</fromnode> <tonode>BLUE</tonode> </control>
+   <control> <fromnode>Building_Yo</fromnode> <tonode>Entres du test</tonode> </control>
+   <control> <fromnode>Entres du test</fromnode> <tonode>BLUE</tonode> </control>
+   <control> <fromnode>Entres du test</fromnode> <tonode>Sorties du test</tonode> </control>
+   <datalink control="false">
+      <fromnode>BLUE</fromnode> <fromport>Xa</fromport>
+      <tonode>Sorties du test</tonode> <toport>xa</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>BLUE</fromnode> <fromport>A</fromport>
+      <tonode>Sorties du test</tonode> <toport>A</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>BLUE</fromnode> <fromport>Innovation</fromport>
+      <tonode>Sorties du test</tonode> <toport>Innovation</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_B</fromnode> <fromport>B</fromport>
+      <tonode>Entres du test</tonode> <toport>B</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_R</fromnode> <fromport>R</fromport>
+      <tonode>Entres du test</tonode> <toport>R</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_Xb</fromnode> <fromport>Xb</fromport>
+      <tonode>Sorties du test</tonode> <toport>xb</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_Xb</fromnode> <fromport>Xb</fromport>
+      <tonode>H_linearization.Input</tonode> <toport>X</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_Xb</fromnode> <fromport>Xb</fromport>
+      <tonode>Entres du test</tonode> <toport>Xb</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_Xb</fromnode> <fromport>dXb</fromport>
+      <tonode>H_linearization.Input</tonode> <toport>dX</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Building_Yo</fromnode> <fromport>Yo</fromport>
+      <tonode>Entres du test</tonode> <toport>Yo</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>Xb</fromport>
+      <tonode>BLUE</tonode> <toport>Xb</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>Yo</fromport>
+      <tonode>BLUE</tonode> <toport>Yo</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>Yo</fromport>
+      <tonode>Sorties du test</tonode> <toport>Yo</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>B</fromport>
+      <tonode>BLUE</tonode> <toport>B</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>B</fromport>
+      <tonode>Sorties du test</tonode> <toport>B</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>R</fromport>
+      <tonode>BLUE</tonode> <toport>R</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>R</fromport>
+      <tonode>Sorties du test</tonode> <toport>R</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>H</fromport>
+      <tonode>BLUE</tonode> <toport>H</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Entres du test</fromnode> <fromport>H</fromport>
+      <tonode>Sorties du test</tonode> <toport>H</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Codes_Parameters</fromnode> <fromport>ASTER_ROOT</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>ASTER_ROOT</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Codes_Parameters</fromnode> <fromport>rcdir</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>rcdir</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Codes_Parameters</fromnode> <fromport>debug</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>debug</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Codes_Parameters</fromnode> <fromport>DISPLAY</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>DISPLAY</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Codes_Parameters</fromnode> <fromport>SOURCES_ROOT</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>SOURCES_ROOT</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>export</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>export</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>parametres</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>parametres</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>calcul</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>calcul</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>experiences</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>experience</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>fileparameters</fromport>
+      <tonode>H_linearization.Temporary_Parameters</tonode> <toport>fileparameters</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>parametres</fromport>
+      <tonode>Building_B</tonode> <toport>parametres</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>experiences</fromport>
+      <tonode>Building_R</tonode> <toport>experiences</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>parametres</fromport>
+      <tonode>Building_Xb</tonode> <toport>parametres</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>calcul</fromport>
+      <tonode>Building_Yo</tonode> <toport>calcul</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>Global_Parameters.Study_Parameters</fromnode> <fromport>experiences</fromport>
+      <tonode>Building_Yo</tonode> <toport>experiences</toport>
+   </datalink>
+   <datalink control="false">
+      <fromnode>H_linearization.Gradient</fromnode> <fromport>H</fromport>
+      <tonode>Entres du test</tonode> <toport>H</toport>
+   </datalink>
+   <parameter>
+      <tonode>Building_B</tonode><toport>parametres</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Input</tonode><toport>X</toport>
+      <value><array><data>
+<value><double>80000</double></value>
+<value><double>1000</double></value>
+<value><double>30</double></value>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Input</tonode><toport>dX</toport>
+      <value><array><data>
+<value><double>0.001</double></value>
+<value><double>0.001</double></value>
+<value><double>0.0001</double></value>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>ASTER_ROOT</toport>
+      <value><string>''</string></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>rcdir</toport>
+      <value><string>''</string></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>debug</toport>
+      <value><boolean>0</boolean></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>DISPLAY</toport>
+      <value><string>:0.0</string></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>SOURCES_ROOT</toport>
+      <value><string>.</string></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>export</toport>
+      <value><string>''</string></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>parametres</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>calcul</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>experience</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Temporary_Parameters</tonode><toport>fileparameters</toport>
+      <value><string>[]</string></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE</tonode><toport>Xb</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE</tonode><toport>Yo</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE</tonode><toport>B</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE</tonode><toport>R</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>BLUE</tonode><toport>H</toport>
+      <value><array><data>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>Building_Yo</tonode><toport>calcul</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>Building_Yo</tonode><toport>experiences</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>H_linearization.Finite_differences_derivation.Elementary_calculation.ASTER</tonode><toport>X</toport>
+      <value><array><data>
+<value><double>80000</double></value>
+<value><double>1000</double></value>
+<value><double>30</double></value>
+</data></array></value>
+   </parameter>
+   <parameter>
+      <tonode>Building_R</tonode><toport>experiences</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <parameter>
+      <tonode>Building_Xb</tonode><toport>parametres</toport>
+      <value><objref>(lp1
+.</objref></value>
+   </parameter>
+   <presentation name="H_linearization.Finite_differences_derivation.Elementary_calculation" x="200.486" y="130.5" width="512" height="517.75"/>
+   <presentation name="Building_B" x="1355" y="1532.25" width="227.5" height="110"/>
+   <presentation name="H_linearization.Input" x="24" y="666.75" width="227.5" height="197"/>
+   <presentation name="H_linearization" x="818.5" y="228.875" width="1300.5" height="872.75"/>
+   <presentation name="Global_Parameters.Codes_Parameters" x="8.5" y="80.25" width="258.5" height="226"/>
+   <presentation name="H_linearization.Temporary_Parameters" x="8.5" y="278.75" width="258.5" height="371"/>
+   <presentation name="BLUE" x="2427.31" y="1333.25" width="227.5" height="226"/>
+   <presentation name="Global_Parameters.Study_Parameters" x="21.5" y="324.25" width="232.5" height="226"/>
+   <presentation name="Building_Yo" x="571" y="1413.75" width="227.5" height="139"/>
+   <presentation name="H_linearization.Finite_differences_derivation" x="304.007" y="135.625" width="721.486" height="657.25"/>
+   <presentation name="H_linearization.Gradient" x="1063" y="322.25" width="227.5" height="284"/>
+   <presentation name="Global_Parameters" x="9.25" y="385.625" width="277" height="559.25"/>
+   <presentation name="H_linearization.Finite_differences_derivation.Elementary_calculation.ASTER" x="275" y="79.75" width="227.5" height="429"/>
+   <presentation name="Building_R" x="1355" y="1754.25" width="227.5" height="110"/>
+   <presentation name="Building_Xb" x="325" y="244.25" width="227.5" height="168"/>
+   <presentation name="Entres du test" x="2159" y="1333.25" width="227.5" height="226"/>
+   <presentation name="Sorties du test" x="2691.25" y="1347.75" width="223" height="313"/>
+   <presentation name="H_linearization.Finite_differences_derivation.Elementary_calculation.Perturbated_point_X" x="9" y="224.75" width="227.5" height="139"/>
+   <presentation name="__ROOT__" x="0" y="0" width="2923.5" height="1873.25"/>
+</proc>
