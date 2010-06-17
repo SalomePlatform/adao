@@ -13,7 +13,9 @@ salomeidldir       = $(prefix)/idl/salome
 salomeresdir       = $(prefix)/share/salome/resources/${MODULE_NAME}
 
 # Directory for installing tests files
-testsdir       = $(prefix)/tests
+testsdir             = $(prefix)/tests
+testsdasalomedir     = $(testsdir)/daSalome
+testsplateformedir   = $(testsdir)/daComposant/Plateforme
 
 # Directories for installing admin files
 admlocaldir       = $(prefix)/adm_local

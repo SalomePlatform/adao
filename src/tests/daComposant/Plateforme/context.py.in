@@ -1,0 +1,5 @@
+#-*-coding:utf-8*-
+
+# Permet de définir ou se trouve daCore
+import sys ; sys.path.insert(0, "@PYTHON_SITE@/salome/daCore")
+

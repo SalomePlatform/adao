@@ -115,6 +115,9 @@ AC_CONFIG_FILES([
         src/tests/Makefile
         src/tests/daSalome/Makefile
         src/tests/daSalome/test000_Blue_AnalysisFile.py
+        src/tests/daComposant/Makefile
+        src/tests/daComposant/Plateforme/Makefile
+        src/tests/daComposant/Plateforme/context.py
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile
