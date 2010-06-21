@@ -14,7 +14,10 @@ class daStudy:
 
     self.ADD = AssimilationStudy(name)
     self.ADD.setControls()
-    self.ADD.setAlgorithm(choice="Blue")
+    self.algorithm = algorithm
+
+  def initAlgorithm():
+    self.ADD.setAlgorithm(choice=self.algorithm)
 
   def getAssimilationStudy(self):
 

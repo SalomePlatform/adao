@@ -6,6 +6,7 @@ import numpy
 import threading
 
 from daCore.AssimilationStudy import AssimilationStudy
+import daStudy
 
 class OptimizerHooks:
 
@@ -16,9 +17,9 @@ class OptimizerHooks:
     self.sample_counter = 0
     self.counter_lock = threading.Lock()
 
-  def Direct(self, X, sync = true):
+  def Direct(self, X, sync = 1):
     print "Call Direct OptimizerHooks"
-    if sync == true:
+    if sync == 1:
       # 1: Get a unique sample number
       self.counter_lock.acquire()
       self.sample_counter += 1
@@ -53,9 +54,9 @@ class OptimizerHooks:
       print "sync false is not yet implemented"
       raise ValueError("sync == false not yet implemented")
 
-  def Tangent(self, X, sync = true):
+  def Tangent(self, X, sync = 1):
     print "Call Tangent OptimizerHooks"
-    if sync == true:
+    if sync == 1:
       # 1: Get a unique sample number
       self.counter_lock.acquire()
       self.sample_counter += 1
@@ -90,9 +91,9 @@ class OptimizerHooks:
       print "sync false is not yet implemented"
       raise ValueError("sync == false not yet implemented")
 
-  def Adjoint(self, (X, Y), sync = true):
+  def Adjoint(self, (X, Y), sync = 1):
     print "Call Adjoint OptimizerHooks"
-    if sync == true:
+    if sync == 1:
       # 1: Get a unique sample number
       self.counter_lock.acquire()
       self.sample_counter += 1
@@ -144,10 +145,18 @@ class AssimilationAlgorithm_asynch_3DVAR(SALOMERuntime.OptimizerAlgASync):
   def initialize(self,input):
     print "Algorithme initialize"
 
+    # get the daStudy
+    print "Input is ", input
+    str_da_study = input.getStringValue()
+    da_study = pickle.loads(str_da_study)
+    print "da_study is ", da_study
+    da_study.initAlgorithm()
+    self.ADD = da_study.getAssimilationStudy()
+
   def startToTakeDecision(self):
     print "Algorithme startToTakeDecision"
 
-    TODO !!
+    #TODO !!
 
     precision = 1.e-13
     dimension = 3
@@ -199,3 +208,6 @@ class AssimilationAlgorithm_asynch_3DVAR(SALOMERuntime.OptimizerAlgASync):
     return self.tin
   def getTCForOut(self):
     return self.tout
+  def getTCForAlgoInit(self):
+    return self.tin
+
