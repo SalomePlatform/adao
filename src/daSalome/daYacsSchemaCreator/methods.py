@@ -180,8 +180,17 @@ def create_yacs_proc(study_config):
       proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
 
     else:
-      logging.fatal("Fake optim script node currently not implemented")
-      sys.exit(1)
+      factory_opt_script_node = catalogAd._nodeMap["FakeOptimizerLoopNode"]
+      opt_script_node = factory_opt_script_node.cloneNode("FakeFunctionNode")
+
+      # Add it
+      computation_bloc = runtime.createBloc("computation_bloc")
+      optimizer_node.edSetNode(computation_bloc)
+      computation_bloc.edAddChild(opt_script_node)
+
+      # We connect Optimizer with the script
+      proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
+      proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
 
   # Step 4: create post-processing from user configuration
   if "Analysis" in study_config.keys():

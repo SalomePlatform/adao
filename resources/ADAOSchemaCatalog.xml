@@ -71,8 +71,8 @@ except NameError:
 else:
   #print "ObservationOperator is", ObservationOperator
   #print "ObservationOperatorType is", ObservationOperatorType
-  assim_study.setObservationOperatorType(ObservationOperatorType)
-  assim_study.setObservationOperator(ObservationOperator)
+  assim_study.setObservationOperatorType("Matrix", ObservationOperatorType)
+  assim_study.setObservationOperator("Matrix", ObservationOperator)
   ObservationOperatorOk = 1
 
 if ObservationOperatorOk == 0:

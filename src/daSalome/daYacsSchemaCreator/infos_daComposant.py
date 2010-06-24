@@ -54,5 +54,6 @@ AlgoDataRequirements["Blue"] = ["Background", "BackgroundError",
 AlgoDataRequirements["3DVAR"] = ["Background", "BackgroundError",
                                  "Observation", "ObservationOperator", "ObservationError"]
 AlgoType = {}
-AlgoType["Blue"] = "Direct"
+#AlgoType["Blue"] = "Direct"
+AlgoType["Blue"] = "Optim"
 AlgoType["3DVAR"] = "Optim"
