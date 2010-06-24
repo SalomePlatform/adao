@@ -78,6 +78,19 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
 
+      if data_config["Type"] == "Vector" and data_config["From"] == "Script":
+        # Create node
+        factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromScript"]
+        back_node = factory_back_node.cloneNode("Get" + key)
+        back_node.getInputPort("script").edInitPy(data_config["Data"])
+        back_node.edAddOutputPort(key, t_pyobj)
+        proc.edAddChild(back_node)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        CAS_node.edAddInputPort(key_type, t_string)
+        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+
       if data_config["Type"] == "Matrix" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromString"]
@@ -90,6 +103,25 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
 
+      if data_config["Type"] == "Matrix" and data_config["From"] == "Script":
+        # Create node
+        factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromScript"]
+        back_node = factory_back_node.cloneNode("Get" + key)
+        back_node.getInputPort("script").edInitPy(data_config["Data"])
+        back_node.edAddOutputPort(key, t_pyobj)
+        proc.edAddChild(back_node)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        CAS_node.edAddInputPort(key_type, t_string)
+        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+
+      if data_config["Type"] == "Function" and data_config["From"] == "Dict" and key == "ObservationOperator":
+         FunctionDict = data_config["Data"]
+         for FunctionName in FunctionDict["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
 
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
@@ -103,6 +135,54 @@ def create_yacs_proc(study_config):
     compute_bloc.edAddChild(execute_node)
     proc.edAddDFLink(CAS_node.getOutputPort("Study"), execute_node.getInputPort("Study"))
 
+  if AlgoType[study_config["Algorithm"]] == "Optim":
+    # We use an optimizer loop
+    name = "Execute" + study_config["Algorithm"]
+    algLib = "daYacsIntegration.py"
+    factoryName = "AssimilationAlgorithm_asynch"
+    optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
+    compute_bloc.edAddChild(optimizer_node)
+    proc.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
+
+    # Check if we have a python script for OptimizerLoopNode
+    data_config = study_config["ObservationOperator"]
+    if data_config["Type"] == "Function" and data_config["From"] == "Dict":
+      # Get script
+      FunctionDict = data_config["Data"]
+      script_filename = ""
+      for FunctionName in FunctionDict["Function"]:
+        # We currently support only one file
+        script_filename = FunctionDict["Script"][FunctionName]
+        break
+
+      # We create a new pyscript node
+      opt_script_node = runtime.createScriptNode("", "FunctionNode")
+      if not os.path.exists(script_filename):
+        logging.fatal("Function script source file does not exists ! :" + script_filename)
+        sys.exit(1)
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        logging.fatal("Exception in opening function script file : " + script_filename)
+        traceback.print_exc()
+        sys.exit(1)
+      opt_script_node.setScript(script_str.read())
+      opt_script_node.edAddInputPort("computation", t_pyobj)
+      opt_script_node.edAddOutputPort("result", t_pyobj)
+
+      # Add it
+      computation_bloc = runtime.createBloc("computation_bloc")
+      optimizer_node.edSetNode(computation_bloc)
+      computation_bloc.edAddChild(opt_script_node)
+
+      # We connect Optimizer with the script
+      proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
+      proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+    else:
+      logging.fatal("Fake optim script node currently not implemented")
+      sys.exit(1)
+
   # Step 4: create post-processing from user configuration
   if "Analysis" in study_config.keys():
     analysis_config = study_config["Analysis"]
@@ -114,7 +194,10 @@ def create_yacs_proc(study_config):
       analysis_node.setScript(final_script)
       proc.edAddChild(analysis_node)
       proc.edAddCFLink(compute_bloc, analysis_node)
-      proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+      if AlgoType[study_config["Algorithm"]] == "Optim":
+        proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
+      else:
+        proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
     elif analysis_config["From"] == "File":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
@@ -126,7 +209,7 @@ def create_yacs_proc(study_config):
       try:
         analysis_file = open(analysis_config["Data"], 'r')
       except:
-        logging.fatal("Exception in openng analysis file : " + str(analysis_config["Data"]))
+        logging.fatal("Exception in opening analysis file : " + str(analysis_config["Data"]))
         traceback.print_exc()
         sys.exit(1)
       file_text = analysis_file.read()
@@ -134,7 +217,10 @@ def create_yacs_proc(study_config):
       analysis_node.setScript(final_script)
       proc.edAddChild(analysis_node)
       proc.edAddCFLink(compute_bloc, analysis_node)
-      proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+      if AlgoType[study_config["Algorithm"]] == "Optim":
+        proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
+      else:
+        proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
       pass
 

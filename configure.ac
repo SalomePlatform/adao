@@ -115,6 +115,7 @@ AC_CONFIG_FILES([
         src/tests/Makefile
         src/tests/daSalome/Makefile
         src/tests/daSalome/test000_Blue_AnalysisFile.py
+        src/tests/daSalome/test017_3DVAR_par_fonction.py
         src/tests/daComposant/Makefile
         src/tests/daComposant/Plateforme/Makefile
         src/tests/daComposant/Plateforme/context.py

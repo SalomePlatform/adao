@@ -562,6 +562,11 @@ class AssimilationStudy:
         sys.path = list(set(sys.path)) # Conserve en unique exemplaire chaque chemin
         return 1
 
+    def prepare_to_pickle(self):
+      self.__algorithmFile = None
+      self.__diagnosticFile = None
+      self.__H  = {}
+
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'

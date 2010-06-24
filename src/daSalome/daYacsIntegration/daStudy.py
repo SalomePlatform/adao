@@ -15,8 +15,13 @@ class daStudy:
     self.ADD = AssimilationStudy(name)
     self.ADD.setControls()
     self.algorithm = algorithm
+    self.Background = None
 
-  def initAlgorithm():
+    # Observation Management
+    self.ObservationOperatorType = {}
+    self.FunctionObservationOperator = {}
+
+  def initAlgorithm(self):
     self.ADD.setAlgorithm(choice=self.algorithm)
 
   def getAssimilationStudy(self):
@@ -39,8 +44,13 @@ class daStudy:
     except AttributeError:
       raise daError("[daStudy::setBackground] Type is not defined !")
 
+    self.Background = Background
+
     if self.BackgroundType == "Vector":
       self.ADD.setBackground(asVector = Background)
+
+  def getBackground(self):
+    return self.Background
 
   def setBackgroundError(self, BackgroundError):
 
@@ -64,23 +74,33 @@ class daStudy:
       self.ADD.setObservation(asVector = Observation)
 
   def setObservationError(self, ObservationError):
-
     self.ADD.setObservationError(asCovariance = ObservationError)
 
-  def setObservationOperatorType(self, Type):
 
+  def getObservationOperatorType(self, Name):
+    rtn = None
+    try:
+      rtn = self.ObservationOperatorType[Name]
+    except:
+      pass
+    return rtn
+
+  def setObservationOperatorType(self, Name, Type):
     if Type == "Matrix":
-      self.ObservationOperatorType = Type
+      self.ObservationOperatorType[Name] = Type
+    elif Type == "Function":
+      self.ObservationOperatorType[Name] = Type
     else:
       raise daError("[daStudy::setObservationOperatorType] Type is unkown : " + Type + " Types are : Matrix")
 
-  def setObservationOperator(self, ObservationOperator):
-
+  def setObservationOperator(self, Name, ObservationOperator):
     try:
-      self.ObservationOperatorType
+      self.ObservationOperatorType[Name]
     except AttributeError:
       raise daError("[daStudy::setObservationOperator] Type is not defined !")
 
-    if self.ObservationOperatorType == "Matrix":
+    if self.ObservationOperatorType[Name] == "Matrix":
       self.ADD.setObservationOperator(asMatrix = ObservationOperator)
+    elif self.ObservationOperatorType[Name] == "Function":
+      self.FunctionObservationOperator[Name] = ObservationOperator
 

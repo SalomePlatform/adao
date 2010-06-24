@@ -26,8 +26,8 @@ try:
 except NameError:
   pass
 else:
-  print "Background is", Background
-  print "BackgroundType is", BackgroundType
+  #print "Background is", Background
+  #print "BackgroundType is", BackgroundType
   assim_study.setBackgroundType(BackgroundType)
   assim_study.setBackground(Background)
 
@@ -37,8 +37,8 @@ try:
 except NameError:
   pass
 else:
-  print "BackgroundError is", BackgroundError
-  print "BackgroundErrorType is", BackgroundErrorType
+  #print "BackgroundError is", BackgroundError
+  #print "BackgroundErrorType is", BackgroundErrorType
   assim_study.setBackgroundError(BackgroundError)
 
 # Observation
@@ -47,8 +47,8 @@ try:
 except NameError:
   pass
 else:
-  print "Observation is", Observation
-  print "ObservationType is", ObservationType
+  #print "Observation is", Observation
+  #print "ObservationType is", ObservationType
   assim_study.setObservationType(ObservationType)
   assim_study.setObservation(Observation)
 
@@ -58,20 +58,49 @@ try:
 except NameError:
   pass
 else:
-  print "ObservationError is", ObservationError
-  print "ObservationErrorType is", ObservationErrorType
+  #print "ObservationError is", ObservationError
+  #print "ObservationErrorType is", ObservationErrorType
   assim_study.setObservationError(ObservationError)
 
 # ObservationOperator
+ObservationOperatorOk = 0
 try:
   ObservationOperator
 except NameError:
   pass
 else:
-  print "ObservationOperator is", ObservationOperator
-  print "ObservationOperatorType is", ObservationOperatorType
+  #print "ObservationOperator is", ObservationOperator
+  #print "ObservationOperatorType is", ObservationOperatorType
   assim_study.setObservationOperatorType(ObservationOperatorType)
   assim_study.setObservationOperator(ObservationOperator)
+  ObservationOperatorOk = 1
+
+if ObservationOperatorOk == 0:
+  try:
+    ObservationOperatorDirect
+  except NameError:
+    pass
+  else:
+    #print "ObservationOperatorDirect is", ObservationOperatorDirect
+    assim_study.setObservationOperatorType("Direct", "Function")
+    assim_study.setObservationOperator("Direct", ObservationOperatorDirect)
+  try:
+    ObservationOperatorTangent
+  except NameError:
+    pass
+  else:
+    #print "ObservationOperatorTangent is", ObservationOperatorTangent
+    assim_study.setObservationOperatorType("Tangent", "Function")
+    assim_study.setObservationOperator("Tangent", ObservationOperatorTangent)
+  try:
+    ObservationOperatorAdjoint
+  except NameError:
+    pass
+  else:
+    #print "ObservationOperatorAdjoint is", ObservationOperatorAdjoint
+    assim_study.setObservationOperatorType("Adjoint", "Function")
+    assim_study.setObservationOperator("Adjoint", ObservationOperatorAdjoint)
+
 
 Study = assim_study
 ]]>
@@ -95,6 +124,16 @@ print "Matrix is", matrix
     <outport name="type" type="string"/>
   </inline>
 
+  <inline name="CreateNumpyMatrixFromScript">
+    <script><code><![CDATA[
+print "Entering in CreateNumpyMatrixFromScript"
+execfile(script)
+type = "Matrix"
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+  </inline>
+
   <inline name="CreateNumpyVectorFromString">
     <script><code><![CDATA[
 print "Entering in CreateNumpyVectorFromString"
@@ -105,6 +144,16 @@ print "Vector is", vector
 ]]></code></script>
     <inport name="vector_in_string" type="string"/>
     <outport name="vector" type="pyobj"/>
+    <outport name="type" type="string"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorFromScript">
+    <script><code><![CDATA[
+print "Entering in CreateNumpyVectorFromScript"
+execfile(script)
+type = "Vector"
+]]></code></script>
+    <inport name="script" type="string"/>
     <outport name="type" type="string"/>
   </inline>
 
@@ -130,4 +179,14 @@ ADD = Study.getAssimilationStudy()
 ]]></code></script>
     <inport name="Study" type="pyobj"/>
   </inline>
+
+  <inline name="FakeOptimizerLoopNode">
+    <script><code><![CDATA[
+print "Entering in FakeOptimizerLoopNode"
+result = None
+]]></code></script>
+    <inport name="computation" type="pyobj"/>
+    <outport name="result" type="pyobj"/>
+  </inline>
+
 </proc>

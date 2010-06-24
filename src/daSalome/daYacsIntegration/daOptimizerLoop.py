@@ -6,7 +6,7 @@ import numpy
 import threading
 
 from daCore.AssimilationStudy import AssimilationStudy
-import daStudy
+from daYacsIntegration import daStudy
 
 class OptimizerHooks:
 
@@ -26,18 +26,23 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      matrix_to_pool = pickle.dumps(X)
-      self.optim_algo.pool.pushInSample(local_counter, matrix_to_pool)
+      computation = {}
+      computation["method"] = "Direct"
+      computation["data"] = X
+      computation = pickle.dumps(computation)
+      self.optim_algo.pool.pushInSample(local_counter, computation)
 
       # 3: Wait
       while 1:
+        print "waiting"
         self.optim_algo.signalMasterAndWait()
+        print "signal"
         if self.optim_algo.isTerminationRequested():
           self.optim_algo.pool.destroyAll()
           return
         else:
           # Get current Id
-          sample_id = self.pool.getCurrentId()
+          sample_id = self.optim_algo.pool.getCurrentId()
           if sample_id == local_counter:
             # 4: Data is ready
             matrix_from_pool = self.optim_algo.pool.getOutSample(local_counter).getStringValue()
@@ -52,7 +57,7 @@ class OptimizerHooks:
             return Y
     else:
       print "sync false is not yet implemented"
-      raise ValueError("sync == false not yet implemented")
+      raise daStudy.daError("sync == false not yet implemented")
 
   def Tangent(self, X, sync = 1):
     print "Call Tangent OptimizerHooks"
@@ -63,8 +68,11 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      matrix_to_pool = pickle.dumps(X)
-      self.optim_algo.pool.pushInSample(local_counter, matrix_to_pool)
+      computation = {}
+      computation["method"] = "Tangent"
+      computation["data"] = X
+      computation = pickle.dumps(computation)
+      self.optim_algo.pool.pushInSample(local_counter, computation)
 
       # 3: Wait
       while 1:
@@ -74,7 +82,7 @@ class OptimizerHooks:
           return
         else:
           # Get current Id
-          sample_id = self.pool.getCurrentId()
+          sample_id = self.optim_algo.pool.getCurrentId()
           if sample_id == local_counter:
             # 4: Data is ready
             matrix_from_pool = self.optim_algo.pool.getOutSample(local_counter).getStringValue()
@@ -89,7 +97,7 @@ class OptimizerHooks:
             return Y
     else:
       print "sync false is not yet implemented"
-      raise ValueError("sync == false not yet implemented")
+      raise daStudy.daError("sync == false not yet implemented")
 
   def Adjoint(self, (X, Y), sync = 1):
     print "Call Adjoint OptimizerHooks"
@@ -100,18 +108,23 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      matrix_to_pool = pickle.dumps(Y)
-      self.optim_algo.pool.pushInSample(local_counter, matrix_to_pool)
+      computation = {}
+      computation["method"] = "Adjoint"
+      computation["data"] = (X, Y)
+      computation = pickle.dumps(computation)
+      self.optim_algo.pool.pushInSample(local_counter, computation)
 
       # 3: Wait
       while 1:
+        print "waiting"
         self.optim_algo.signalMasterAndWait()
+        print "signal"
         if self.optim_algo.isTerminationRequested():
           self.optim_algo.pool.destroyAll()
           return
         else:
           # Get current Id
-          sample_id = self.pool.getCurrentId()
+          sample_id = self.optim_algo.pool.getCurrentId()
           if sample_id == local_counter:
             # 4: Data is ready
             matrix_from_pool = self.optim_algo.pool.getOutSample(local_counter).getStringValue()
@@ -126,9 +139,9 @@ class OptimizerHooks:
             return Z
     else:
       print "sync false is not yet implemented"
-      raise ValueError("sync == false not yet implemented")
+      raise daStudy.daError("sync == false not yet implemented")
 
-class AssimilationAlgorithm_asynch_3DVAR(SALOMERuntime.OptimizerAlgASync):
+class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
   def __init__(self):
     SALOMERuntime.RuntimeSALOME_setRuntime()
@@ -146,54 +159,43 @@ class AssimilationAlgorithm_asynch_3DVAR(SALOMERuntime.OptimizerAlgASync):
     print "Algorithme initialize"
 
     # get the daStudy
-    print "Input is ", input
+    #print "[Debug] Input is ", input
     str_da_study = input.getStringValue()
-    da_study = pickle.loads(str_da_study)
-    print "da_study is ", da_study
-    da_study.initAlgorithm()
-    self.ADD = da_study.getAssimilationStudy()
+    self.da_study = pickle.loads(str_da_study)
+    #print "[Debug] da_study is ", self.da_study
+    self.da_study.initAlgorithm()
+    self.ADD = self.da_study.getAssimilationStudy()
 
   def startToTakeDecision(self):
     print "Algorithme startToTakeDecision"
 
-    #TODO !!
+    # Check if ObservationOperator is already set
+    if self.da_study.getObservationOperatorType("Direct") == "Function" or self.da_study.getObservationOperatorType("Tangent") == "Function" or self.da_study.getObservationOperatorType("Adjoint") == "Function" :
+      # Use proxy function for YACS
+      self.hooks = OptimizerHooks(self)
+      direct = tangent = adjoint = None
+      if self.da_study.getObservationOperatorType("Direct") == "Function":
+        direct = self.hooks.Direct
+      if self.da_study.getObservationOperatorType("Tangent") == "Function" :
+        tangent = self.hooks.Tangent
+      if self.da_study.getObservationOperatorType("Adjoint") == "Function" :
+        adjoint = self.hooks.Adjoint
 
-    precision = 1.e-13
-    dimension = 3
+      # Set ObservationOperator
+      self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
 
-    xt = numpy.matrix(numpy.arange(dimension)).T
-    Eo = numpy.matrix(numpy.zeros((dimension,))).T
-    Eb = numpy.matrix(numpy.zeros((dimension,))).T
-    H  = numpy.matrix(numpy.core.identity(dimension))
-    xb = xt + Eb
-    yo = FunctionH( xt ) + Eo
-    xb = xb.A1
-    yo = yo.A1
-    R  = numpy.matrix(numpy.core.identity(dimension)).T
-    B  = numpy.matrix(numpy.core.identity(dimension)).T
 
-    ADD = AssimilationStudy()
-    ADD.setBackground         (asVector     = xb )
-    ADD.setBackgroundError    (asCovariance = B )
-    ADD.setObservation        (asVector     = yo )
-    ADD.setObservationError   (asCovariance = R )
-    ADD.setObservationOperator(asFunction   = {"Tangent":FunctionH,
-                                               "Adjoint":AdjointH} )
-    ADD.setControls()
-    ADD.setAlgorithm(choice="3DVAR")
-    ADD.analyze()
+    # Start Assimilation Study
+    self.ADD.analyze()
 
-    xa = numpy.array(ADD.get("Analysis").valueserie(0))
-    d  = numpy.array(ADD.get("Innovation").valueserie(0))
-    if max(abs(xa - xb)) > precision:
-        raise ValueError("Résultat du test erroné (1)")
-    elif max(abs(d)) > precision:
-        raise ValueError("Résultat du test erroné (2)")
-    else:
-        print "    Test correct, erreur maximale inférieure à %s"%precision
-        print
-    # On a fini !
+    # Assimilation Study is finished
     self.pool.destroyAll()
+
+  def getAlgoResult(self):
+    print "getAlgoResult"
+    self.ADD.prepare_to_pickle()
+    result = pickle.dumps(self.da_study)
+    return result
 
   # Obligatoire ???
   def finish(self):
@@ -210,4 +212,6 @@ class AssimilationAlgorithm_asynch_3DVAR(SALOMERuntime.OptimizerAlgASync):
     return self.tout
   def getTCForAlgoInit(self):
     return self.tin
+  def getTCForAlgoResult(self):
+    return self.tout
 

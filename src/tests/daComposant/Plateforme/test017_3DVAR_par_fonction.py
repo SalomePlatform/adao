@@ -51,6 +51,12 @@ def test(precision = 1.e-10, dimension = 3):
     # ------------------------------------------------
     R  = numpy.matrix(numpy.core.identity(dimension)).T
     B  = numpy.matrix(numpy.core.identity(dimension)).T
+
+    print "xb", xb
+    print "B", B
+    print "yo", yo
+    print "R", R
+
     #
     # Analyse
     # -------

@@ -39,8 +39,8 @@ AssimType["ObservationOperator"] = ["Matrix", "Function"]
 AssimType["ObservationOperatorAppliedToX"] = ["List"]
 
 FromNumpyList = {}
-FromNumpyList["Vector"] = ["String"]
-FromNumpyList["Matrix"] = ["String"]
+FromNumpyList["Vector"] = ["String", "Script"]
+FromNumpyList["Matrix"] = ["String", "Script"]
 FromNumpyList["Function"] = ["Dict"]
 FromNumpyList["List"] = ["List"]
 
@@ -50,5 +50,9 @@ AssimAlgos = ["Blue", "EnsembleBlue", "Kalman", "LinearLeastSquares", "3DVAR"]
 AlgoDataRequirements = {}
 AlgoDataRequirements["Blue"] = ["Background", "BackgroundError",
                                 "Observation", "ObservationOperator", "ObservationError"]
+
+AlgoDataRequirements["3DVAR"] = ["Background", "BackgroundError",
+                                 "Observation", "ObservationOperator", "ObservationError"]
 AlgoType = {}
 AlgoType["Blue"] = "Direct"
+AlgoType["3DVAR"] = "Optim"
