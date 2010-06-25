@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -63,6 +63,8 @@ import numpy
 from numpy import random
 from scipy import arange, asarray, stats
 from scipy.stats import histogram2, chisquare, chisqprob, norm
+from scipy.stats import distributions
+import scipy, sys, time, os
 import logging
 
 # ==============================================================================
@@ -215,6 +217,24 @@ class StatspourTests :
         logging.debug("Valeur du Khi2=%s"%self.__Q)
         return self.__Q
 
+    def ComputeValue_ks(self) :
+        """
+        Calcul de la valeur ks pour le test de kolmogorov smirnov
+        """
+        if self.__testHomogen :
+          kobs,ktheo=self.__kobs.tolist(),self.__kobsHomogen.tolist()
+        else :
+          kobs,ktheo=self.__kobs.tolist(),self.__ktheo.tolist()
+
+        self.sortobs=asarray([scipy.sum(kobs[:i]) for i in range(1,1+(scipy.shape(kobs)[0]))])
+        self.sortobs=self.sortobs/float(scipy.sum(kobs))
+        self.sortthe=self.__cdf(self.__subdiv)
+        DKS1=max(abs(self.sortthe-self.sortobs))
+        DKS2=max(abs(self.sortthe[1:]-self.sortobs[0:-1]))
+        self.__ks=max(DKS1,DKS2)
+        logging.debug("Valeur du ks test=%s"%self.__ks)
+        return self.__ks
+
     def ComputeArea(self):
         """
         Calcul de la p-value
@@ -222,11 +242,25 @@ class StatspourTests :
         self.__areakhi2 = 100 * chisqprob(self.__Q, self.__ddl)
         return self.__areakhi2  
 
+    def ComputeArea_ks(self):
+        """
+        Calcul de la p-value ks
+        """
+        self.__areaks = 100 * distributions.ksone.sf(self.__ks,self.__modalites)
+        return self.__areaks
+
     def WriteMessage(self):
         """
         Interpretation du test
         """
         message = "Il y a %.2f%s de chance de se tromper en refusant l'adequation"%(self.__areakhi2,"%")
+        return message
+
+    def WriteMessage_ks(self):
+        """
+        Interpretation du test
+        """
+        message = "Il y a %.2f%s de chance de se tromper en refusant l'adequation"%(self.__areaks,"%")
         return message
   
     def WriteMessageHomogen(self):
@@ -281,6 +315,28 @@ def ComputeKhi2_Gauss(
     logging.debug("message %s"%message)
     return classes, eftheo, efobs, valeurKhi2, areaKhi2, message
 
+def Compute_ks(
+        vectorV = None,
+        dx = 0.1,
+        SuppressEmptyClasses = True,
+        nbclasses = None
+        ):
+    """
+    Test du KS adequation entre un vecteur donne et une gaussienne theo de mean et std celles du vecteur
+    """
+    essai = StatspourTests( cdftheo=norm, pdftest = None, obs = vectorV, use_mean_std_exp=True,dxmin=dx, obsHomogen = None, nbclasses = nbclasses)
+    essai.MakeClasses()
+    essai.ComputeObs()
+    essai.ComputeTheo()
+    classes,eftheo, efobs = essai.Computepdfs()
+    essai.Computeddl()
+    valeur_ks= essai.ComputeValue_ks()
+    area_ks = essai.ComputeArea_ks()
+    message = essai.WriteMessage_ks()
+    logging.debug("message %s"%message)
+    return classes, eftheo, efobs, valeur_ks, area_ks, message
+
+
 def ComputeKhi2_Homogen(
         vectorV1 = None,
         vectorV2 = None,
@@ -308,7 +364,7 @@ if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
     #
     numpy.random.seed(100)
-
+#-------------------------------------------------------------------------
     # Test de verification d adequation entre une gaussienne et un tirage gaussien
     print ''
     print 'Test de verification d adequation entre une gaussienne centree normale et un tirage gaussien'
@@ -323,7 +379,7 @@ if __name__ == "__main__":
        raise ValueError("The computation of the khisquare value is WRONG")
 
     numpy.random.seed(2490)
-
+#-------------------------------------------------------------------------
     # Test de verification d adequation entre une gaussienne et un vecteur donne
     print ''
     print 'Test de verification d adequation entre une gaussienne et un vecteur donne'
@@ -337,7 +393,22 @@ if __name__ == "__main__":
        print "The computation of the khisquare value is OK"
     else :
        raise ValueError("The computation of the khisquare value is WRONG")
+#-------------------------------------------------------------------------
+    # Test de verification d adequation entre une gaussienne et un vecteur donne par KS
+    print ''
+    print 'Test de verification d adequation entre une gaussienne et un vecteur donne par KS'
+#    V = random.normal(50.,1.5,1000)
+    classes, eftheo, efobs, valeur_ks, area_ks, message = Compute_ks(dx = 0.1, vectorV = V, SuppressEmptyClasses = True, nbclasses = None)
+    print '  valeur_ks=',valeur_ks
+    print '  area_ks=',area_ks
+    print ' ',message
 
+    if (numpy.abs(area_ks - 82.17)< 1.e-2) :
+       print "The computation of the ks value is OK"
+    else :
+       raise ValueError("The computation of the ks value is WRONG")
+
+#-------------------------------------------------------------------------
     # Test de d homogeneite entre 2 vecteurs donnes
     print ''
     print 'Test d homogeneite entre 2 vecteurs donnes'
@@ -353,7 +424,7 @@ if __name__ == "__main__":
        print "The computation of the khisquare value is OK"
     else :
        raise ValueError("The computation of the khisquare value is WRONG")
-
+#-------------------------------------------------------------------------
     # Test de verification d adequation entre une gaussienne et un tirage gaussien en faisant varier le nombre de classes, echantillon de taille 10000
     print ''
     print 'Test de verification d adequation entre une gaussienne et un vecteur aleatoire gaussien de taille 10000'
@@ -376,7 +447,7 @@ if __name__ == "__main__":
        print "The computation of the khisquare value is OK"
     else :
        raise ValueError("The computation of the khisquare value is WRONG")
-
+#-------------------------------------------------------------------------
     # Test de verification d adequation entre une gaussienne et un tirage gaussien en faisant varier le nombre de classes, echantillon de taille 1000
     print ''
     print 'Test de verification d adequation entre une gaussienne et un vecteur aleatoire gaussien de taille 1000'
@@ -399,6 +470,7 @@ if __name__ == "__main__":
        print "The computation of the khisquare value is OK"
     else :
        raise ValueError("The computation of the khisquare value is WRONG")
+#-------------------------------------------------------------------------
 
    # Test de verification d adequation entre une gaussienne et un tirage gaussien en faisant varier le nombre de classes, echantillon de taille 100
     print ''

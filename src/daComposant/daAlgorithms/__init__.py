@@ -1,5 +1,5 @@
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public

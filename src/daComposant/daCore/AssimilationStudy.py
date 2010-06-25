@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -466,7 +466,7 @@ class AssimilationStudy:
         """
         Renvoie les résultats disponibles après l'exécution de la méthode
         d'assimilation, ou les diagnostics disponibles. Attention, quand un
-        diagnostic porte le même nom qu'un variable stockée, c'est la variable
+        diagnostic porte le même nom qu'une variable stockée, c'est la variable
         stockée qui est renvoyée, et le diagnostic est inatteignable.
         """
         if key is not None:
@@ -481,10 +481,29 @@ class AssimilationStudy:
             allvariables.update( self.__StoredDiagnostics )
             return allvariables
     
+    def get_available_variables(self, key=None):
+        """
+        Renvoie les variables potentiellement utilisables pour l'étude,
+        identifiés par les chaînes de caractères. L'algorithme doit avoir été
+        préalablement choisi sinon la méthode renvoie "None".
+        """
+        
+        if type( self.__algorithm ) is type( {} ):
+            return None
+        if key is not None:
+            if self.__algorithm.has_key(key):
+                return self.__algorithm.get( key )
+            else:
+                raise ValueError("The requested key \"%s\" does not exists as a stored variable."%key)
+        else:
+            variables = self.__algorithm.get().keys()
+            variables.sort()
+            return variables
+    
     def get_available_algorithms(self):
         """
-        Renvoie la liste des algorithmes identifiés par les chaînes de
-        caractères
+        Renvoie la liste des algorithmes potentiellement utilisables, identifiés
+        par les chaînes de caractères.
         """
         files = []
         for directory in sys.path:
@@ -498,8 +517,8 @@ class AssimilationStudy:
         
     def get_available_diagnostics(self):
         """
-        Renvoie la liste des diagnostics identifiés par les chaînes de
-        caractères
+        Renvoie la liste des diagnostics potentiellement utilisables, identifiés
+        par les chaînes de caractères.
         """
         files = []
         for directory in sys.path:
@@ -562,6 +581,41 @@ class AssimilationStudy:
         sys.path = list(set(sys.path)) # Conserve en unique exemplaire chaque chemin
         return 1
 
+    # -----------------------------------------------------------
+    def setDataObserver(self,
+            VariableName   = None,
+            HookFunction   = None,
+            HookParameters = None,
+            Scheduler      = None,
+            ):
+        """
+        Permet d'associer un observer à une variable nommée gérée en interne,
+        activable selon des règles définies dans le Scheduler.
+        """
+        # 
+        if type( self.__algorithm ) is dict:
+            raise ValueError("No observer can be build before choosing an algorithm.")
+        #
+        # Vérification du nom de variable et typage
+        # -----------------------------------------
+        if type( VariableName ) is str:
+            VariableNames = [VariableName,]
+        elif type( VariableName ) is list:
+            VariableNames = map( str, VariableName )
+        else:
+            raise ValueError("The observer requires a name or a list of names of variables.")
+        #
+        # Association interne de l'observer à la variable
+        # -----------------------------------------------
+        for n in VariableNames:
+            if not self.__algorithm.has_key( n ):
+                raise ValueError("An observer requires to be set on a variable named %s which does not exist."%n)
+        else:
+            self.__algorithm.StoredVariables[ n ].setDataObserver(
+                Scheduler      = Scheduler,
+                HookFunction   = HookFunction,
+                HookParameters = HookParameters,
+                )
     def prepare_to_pickle(self):
       self.__algorithmFile = None
       self.__diagnosticFile = None
@@ -584,6 +638,10 @@ if __name__ == "__main__":
     ADD.analyze()
     
     print "Nombre d'analyses  :", ADD.get("Analysis").stepnumber()
+    print "Ebauche            :", [0, 1, 2]
+    print "Observation        :", [0.5, 1.5, 2.5]
+    print "Demi-somme         :", list((numpy.array([0, 1, 2])+numpy.array([0.5, 1.5, 2.5]))/2)
+    print "  qui doit être identique à :"
     print "Analyse résultante :", ADD.get("Analysis").valueserie(0)
     print "Innovation         :", ADD.get("Innovation").valueserie(0)
     print
@@ -601,3 +659,15 @@ if __name__ == "__main__":
     print "Variables et diagnostics disponibles :", liste
     print
 
+    def obs(var=None,info=None):
+        print "  ---> Mise en oeuvre de l'observer"
+        print "       var  =",var.valueserie(-1)
+        print "       info =",info
+    ADD.setDataObserver( 'Analysis', HookFunction=obs, Scheduler = [2, 4], HookParameters = "Second observer")
+    # Attention, il faut décaler le stockage de 1 pour suivre le pas interne
+    # car le pas 0 correspond à l'analyse ci-dessus.
+    for i in range(1,6):
+        print
+        print "Action sur la variable observée, étape :",i
+        ADD.get('Analysis').store( [i, i, i] )
+    print

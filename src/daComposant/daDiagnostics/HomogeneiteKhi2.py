@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -29,20 +29,15 @@ __doc__ = """
 """
 __author__ = "Sophie RICCI - Juillet 2008"
 
-import sys ; sys.path.insert(0, "../daCore")
-
 import numpy
-from numpy import random
-
-import Persistence
-from BasicObjects import Diagnostic
+from daCore import BasicObjects, Persistence
 from ComputeKhi2 import ComputeKhi2_Homogen
 import logging
 
 # ==============================================================================
-class ElementaryDiagnostic(Diagnostic,Persistence.OneScalar):
+class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
     def __init__(self, name="", unit="", basetype = None, parameters = {} ):
-        Diagnostic.__init__(self, name, parameters)
+        BasicObjects.Diagnostic.__init__(self, name, parameters)
         Persistence.OneScalar.__init__( self, name, unit, basetype = bool )
         for key in ["tolerance", "dxclasse", "nbclasses"]:
             if not self.parameters.has_key(key):
@@ -109,9 +104,9 @@ if __name__ == "__main__":
     # Tirage de l'echantillon aleatoire 
     # --------------------------------------------------------------------
     numpy.random.seed(4000)
-    x1 = random.normal(50.,1.5,10000)
+    x1 = numpy.random.normal(50.,1.5,10000)
     numpy.random.seed(2490)
-    x2 = random.normal(50.,1.5,10000)
+    x2 = numpy.random.normal(50.,1.5,10000)
     #
     # Calcul 
     # --------------------------------------------------------------------

@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -23,16 +23,14 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD - Septembre 2008"
 
-import sys ; sys.path.insert(0, "../daCore")
-
 import os.path
 import numpy
-from BasicObjects import Diagnostic
+from daCore import BasicObjects
 
 # ==============================================================================
-class ElementaryDiagnostic(Diagnostic):
+class ElementaryDiagnostic(BasicObjects.Diagnostic):
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
-        Diagnostic.__init__(self, name, parameters)
+        BasicObjects.Diagnostic.__init__(self, name, parameters)
         try:
             import Gnuplot
             self.__gnuplot = Gnuplot

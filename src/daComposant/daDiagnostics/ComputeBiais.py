@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -25,17 +25,13 @@ __doc__ = """
 """
 __author__ = "Sophie RICCI - Aout 2008"
 
-import sys ; sys.path.insert(0, "../daCore") 
-
 import numpy
-import Persistence
-from BasicObjects import Diagnostic
-from AssimilationStudy import AssimilationStudy
+from daCore import BasicObjects, Persistence
 
 # ==============================================================================
-class ElementaryDiagnostic(Diagnostic,Persistence.OneScalar):
+class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
-        Diagnostic.__init__(self, name, parameters)
+        BasicObjects.Diagnostic.__init__(self, name, parameters)
         Persistence.OneScalar.__init__( self, name, unit, basetype = float )
 
     def _formula(self, V):

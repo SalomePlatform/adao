@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -23,17 +23,16 @@ __doc__ = """
 """
 __author__ = "Sebastien MASSART, Jean-Philippe ARGAUD - Novembre 2008"
 
-import sys ; sys.path.insert(0, "../daCore")
 import logging
+from daCore import BasicObjects, PlatformInfo
+m = PlatformInfo.SystemUsage()
+
 import numpy
-import Persistence
-from BasicObjects import Algorithm
-import PlatformInfo ; m = PlatformInfo.SystemUsage()
 
 # ==============================================================================
-class ElementaryAlgorithm(Algorithm):
+class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        Algorithm.__init__(self)
+        BasicObjects.Algorithm.__init__(self)
         self._name = "ENSEMBLEBLUE"
         logging.debug("%s Initialisation"%self._name)
 

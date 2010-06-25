@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -57,6 +57,10 @@ class Persistence:
         #
         self.__steps    = []
         self.__values   = []
+        #
+        self.__dynamic  = False
+        #
+        self.__dataobservers = []
     
     def basetype(self, basetype=None):
         """
@@ -81,6 +85,11 @@ class Persistence:
             self.__steps.append(self.__step)
         #
         self.__values.append(self.__basetype(value))
+        #
+        if self.__dynamic: self.__replot()
+        for hook, parameters, scheduler in self.__dataobservers:
+            if self.__step in scheduler:
+                hook( self, parameters )
 
     def shape(self):
         """
@@ -201,6 +210,42 @@ class Persistence:
         except:
             raise TypeError("Base type is incompatible with numpy")
 
+    def __preplot(self,
+            title    = "",
+            xlabel   = "",
+            ylabel   = "",
+            ltitle   = None,
+            geometry = "600x400",
+            persist  = False,
+            pause    = True,
+            ):
+        import os
+        #
+        # Vérification de la disponibilité du module Gnuplot
+        try:
+            import Gnuplot
+            self.__gnuplot = Gnuplot
+        except:
+            raise ImportError("The Gnuplot module is required to plot the object.")
+        #
+        # Vérification et compléments sur les paramètres d'entrée
+        if persist:
+            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
+        else:
+            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
+        if ltitle is None:
+            ltitle = ""
+        self.__g = self.__gnuplot.Gnuplot() # persist=1
+        self.__g('set terminal '+self.__gnuplot.GnuplotOpts.default_term)
+        self.__g('set style data lines')
+        self.__g('set grid')
+        self.__g('set autoscale')
+        self.__g('set xlabel "'+str(xlabel).encode('ascii','replace')+'"')
+        self.__g('set ylabel "'+str(ylabel).encode('ascii','replace')+'"')
+        self.__title  = title
+        self.__ltitle = ltitle
+        self.__pause  = pause
+
     def plot(self, item=None, step=None,
             steps    = None,
             title    = "",
@@ -209,6 +254,7 @@ class Persistence:
             ltitle   = None,
             geometry = "600x400",
             filename = "",
+            dynamic  = False,
             persist  = False,
             pause    = True,
             ):
@@ -236,6 +282,10 @@ class Persistence:
             - filename : base de nom de fichier Postscript pour une sauvegarde,
                          qui est automatiquement complétée par le numéro du
                          fichier calculé par incrément simple de compteur
+            - dynamic  : effectue un affichage des valeurs à chaque stockage
+                         (au-delà du second) La méthode "plot" permet de déclarer
+                         l'affichage dynamique, et c'est la méthode "__replot"
+                         qui est utilisée pour l'effectuer
             - persist  : booléen indiquant que la fenêtre affichée sera
                          conservée lors du passage au dessin suivant
                          Par défaut, persist = False
@@ -244,28 +294,11 @@ class Persistence:
                          Par défaut, pause = True
         """
         import os
-        #
-        # Vérification de la disponibilité du module Gnuplot
-        try:
-            import Gnuplot
-            self.__gnuplot = Gnuplot
-        except:
-            raise ImportError("The Gnuplot module is required to plot the object.")
-        #
-        # Vérification et compléments sur les paramètres d'entrée
-        if persist:
-            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
-        else:
-            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
-        if ltitle is None:
-            ltitle = ""
-        self.__g = self.__gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+self.__gnuplot.GnuplotOpts.default_term)
-        self.__g('set style data lines')
-        self.__g('set grid')
-        self.__g('set autoscale')
-        self.__g('set xlabel "'+str(xlabel).encode('ascii','replace')+'"')
-        self.__g('set ylabel "'+str(ylabel).encode('ascii','replace')+'"')
+        if not self.__dynamic:
+            self.__preplot(title, xlabel, ylabel, ltitle, geometry, persist, pause )
+            if dynamic:
+                self.__dynamic = True
+                if len(self.__values) == 0: return 0
         #
         # Tracé du ou des vecteurs demandés
         indexes = []
@@ -292,8 +325,22 @@ class Persistence:
                 if os.path.isfile(stepfilename):
                     raise ValueError("Error: a file with this name \"%s\" already exists."%stepfilename)
                 self.__g.hardcopy(filename=stepfilename, color=1)
-            if pause:
+            if self.__pause:
                 raw_input('Please press return to continue...\n')
+
+    def __replot(self):
+        """
+        Affichage dans le cas du suivi dynamique de la variable
+        """
+        if self.__dynamic and len(self.__values) < 2: return 0
+        #
+        import os
+        self.__g('set title  "'+str(self.__title).encode('ascii','replace'))
+        Steps = range(len(self.__values))
+        self.__g.plot( self.__gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
+        #
+        if self.__pause:
+            raw_input('Please press return to continue...\n')
 
     # ---------------------------------------------------------
     def stepmean(self):
@@ -400,7 +447,7 @@ class Persistence:
             - ltitle   : titre associé au vecteur tracé
             - geometry : taille en pixels de la fenêtre et position du coin haut
                          gauche, au format X11 : LxH+X+Y (défaut : 600x400)
-            - filename : nom de fichier Postscript pour une sauvegarde,
+            - filename : nom de fichier Postscript pour une sauvegarde
             - persist  : booléen indiquant que la fenêtre affichée sera
                          conservée lors du passage au dessin suivant
                          Par défaut, persist = False
@@ -447,6 +494,35 @@ class Persistence:
             self.__g.hardcopy(filename=filename, color=1)
         if pause:
             raw_input('Please press return to continue...\n')
+
+    # ---------------------------------------------------------
+    def setDataObserver(self,
+        HookFunction   = None,
+        HookParameters = None,
+        Scheduler      = None,
+        ):
+        """
+        Méthode d'association à la variable d'un triplet définissant un observer
+        
+        Le Scheduler attendu est une fréquence, une simple liste d'index ou un
+        xrange des index.
+        """
+        #
+        # Vérification du Scheduler
+        # -------------------------
+        maxiter = int( 1e9 )
+        if type(Scheduler) is int:    # Considéré comme une fréquence à partir de 0
+            Schedulers = xrange( 0, maxiter, int(Scheduler) )
+        elif type(Scheduler) is xrange: # Considéré comme un itérateur
+            Schedulers = Scheduler
+        elif type(Scheduler) is list: # Considéré comme des index explicites
+            Schedulers = map( long, Scheduler )
+        else:                         # Dans tous les autres cas, activé par défaut
+            Schedulers = xrange( 0, maxiter )
+        #
+        # Stockage interne de l'observer dans la variable
+        # -----------------------------------------------
+        self.__dataobservers.append( [HookFunction, HookParameters, Schedulers] )
 
 # ==============================================================================
 class OneScalar(Persistence):
@@ -659,5 +735,62 @@ if __name__ == "__main__":
     print "Les images ont été stockées en fichiers Postscript"
     print "Taille \"shape\" du dernier objet stocké",OBJET_DE_TEST.shape()
     print "Taille \"len\" du dernier objet stocké",len(OBJET_DE_TEST)
+    del OBJET_DE_TEST
+    print
+
+    print "======> Affichage dynamique d'objets"
+    OBJET_DE_TEST = Persistence("My object", unit="", basetype=float)
+    D = OBJET_DE_TEST
+    D.plot(
+        dynamic = True,
+        title   = "Valeur suivie",
+        xlabel  = "Pas",
+        ylabel  = "Valeur",
+        pause   = False,
+        )
+    for i in range(1,11):
+        D.store( i*i )
+    print "Taille \"shape\" du dernier objet stocké",OBJET_DE_TEST.shape()
+    print "Taille \"len\" du dernier objet stocké",len(OBJET_DE_TEST)
+    print "Nombre d'objets stockés",OBJET_DE_TEST.stepnumber()
+    del OBJET_DE_TEST
+    print
+
+    print "======> Affectation simple d'observateurs dynamiques"
+    def obs(var=None,info=None):
+        print "  ---> Mise en oeuvre de l'observer"
+        print "       var  =",var.valueserie(-1)
+        print "       info =",info
+    OBJET_DE_TEST = Persistence("My object", unit="", basetype=list)
+    D = OBJET_DE_TEST
+    D.setDataObserver( HookFunction = obs )
+    for i in range(5):
+        # print
+        print "Action de 1 observer sur la variable observée, étape :",i
+        D.store( [i, i, i] )
+    del OBJET_DE_TEST
+    print
+
+    print "======> Affectation multiple d'observateurs dynamiques"
+    def obs(var=None,info=None):
+        print "  ---> Mise en oeuvre de l'observer"
+        print "       var  =",var.valueserie(-1)
+        print "       info =",info
+    OBJET_DE_TEST = Persistence("My object", unit="", basetype=list)
+    D = OBJET_DE_TEST
+    D.setDataObserver(
+        HookFunction   = obs,
+        Scheduler      = [2, 4],
+        HookParameters = "Second observer",
+        )
+    D.setDataObserver(
+        HookFunction   = obs,
+        Scheduler      = xrange(1,3),
+        HookParameters = "Troisième observer",
+        )
+    for i in range(5):
+        # print
+        print "Action de 2 observers sur la variable observée, étape :",i
+        D.store( [i, i, i] )
     del OBJET_DE_TEST
     print

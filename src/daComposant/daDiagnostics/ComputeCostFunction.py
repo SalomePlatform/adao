@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -23,28 +23,26 @@ __doc__ = """
 """
 __author__ = "Sophie RICCI - Octobre 2008"
 
-import sys ; sys.path.insert(0, "../daCore") 
-
 import numpy
-import Persistence
-from BasicObjects import Diagnostic
-from AssimilationStudy import AssimilationStudy
+from daCore import BasicObjects, Persistence
 import logging
 
 # ==============================================================================
-class ElementaryDiagnostic(Diagnostic,Persistence.OneScalar):
+class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
-        Diagnostic.__init__(self, name)
+        BasicObjects.Diagnostic.__init__(self, name)
         Persistence.OneScalar.__init__( self, name, unit, basetype = float)
 
     def _formula(self, X, HX, Xb, Y, R, B):
         """
         Calcul de la fonction cout
         """
-        Jb = 1./2. * (X - Xb).T * B.I * (X - Xb)
+#        Jb = 1./2. * (X - Xb).T * B.I * (X - Xb)
+        Jb = 1./2. * numpy.dot((X - Xb) ,numpy.asarray(numpy.dot(B.I,(X - Xb)).A1))
         logging.info( "Partial cost function : Jb = %s"%Jb )
         #
-        Jo = 1./2. * (Y - HX).T  * R.I * (Y - HX)
+#        Jo = 1./2. * (Y - HX).T  * R.I * (Y - HX)
+        Jo = 1./2. * numpy.dot((Y - HX) ,numpy.asarray(numpy.dot(R.I,(Y - HX)).A1))
         logging.info( "Partial cost function : Jo = %s"%Jo )
         #
         J = Jb + Jo
@@ -94,7 +92,8 @@ if __name__ == "__main__":
     xb = numpy.array([2., 2.])
     yo = numpy.array([5., 6.])
     H = numpy.matrix(numpy.identity(2))
-    Hx = H*x
+#    Hx = H*x
+    Hx = numpy.dot(H,x)
     Hx = Hx.T
     B =  numpy.matrix(numpy.identity(2))
     R =  numpy.matrix(numpy.identity(2))

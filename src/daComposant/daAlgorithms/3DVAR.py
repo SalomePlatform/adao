@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -23,11 +23,9 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD - Mars 2009"
 
-import sys ; sys.path.insert(0, "../daCore")
 import logging
-from daCore import Persistence
-from daCore.BasicObjects import Algorithm
-from daCore import PlatformInfo ; m = PlatformInfo.SystemUsage()
+from daCore import BasicObjects, PlatformInfo
+m = PlatformInfo.SystemUsage()
 
 import numpy
 import scipy.optimize
@@ -42,9 +40,9 @@ else:
     disp    = 0
 
 # ==============================================================================
-class ElementaryAlgorithm(Algorithm):
+class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        Algorithm.__init__(self)
+        BasicObjects.Algorithm.__init__(self)
         self._name = "3DVAR"
         logging.debug("%s Initialisation"%self._name)
 

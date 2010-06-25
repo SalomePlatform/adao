@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2009  EDF R&D
+#  Copyright (C) 2008-2010  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -23,16 +23,14 @@ __doc__ = """
 """
 __author__ = "Sophie RICCI, Jean-Philippe ARGAUD - Septembre 2008"
 
-import sys ; sys.path.insert(0, "../daCore")
 import logging
-import Persistence
-from BasicObjects import Algorithm
-import PlatformInfo ; m = PlatformInfo.SystemUsage()
+from daCore import BasicObjects, PlatformInfo
+m = PlatformInfo.SystemUsage()
 
 # ==============================================================================
-class ElementaryAlgorithm(Algorithm):
+class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        Algorithm.__init__(self)
+        BasicObjects.Algorithm.__init__(self)
         self._name = "LINEARLEASTSQUARES"
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None):
