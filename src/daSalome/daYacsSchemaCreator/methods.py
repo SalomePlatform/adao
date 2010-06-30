@@ -66,6 +66,17 @@ def create_yacs_proc(study_config):
 
       key_type = key + "Type"
 
+      if data_config["Type"] == "Dict" and data_config["From"] == "Script":
+        # Create node
+        factory_back_node = catalogAd._nodeMap["CreateDictFromScript"]
+        back_node = factory_back_node.cloneNode("Get" + key)
+        back_node.getInputPort("script").edInitPy(data_config["Data"])
+        back_node.edAddOutputPort(key, t_pyobj)
+        proc.edAddChild(back_node)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromString"]

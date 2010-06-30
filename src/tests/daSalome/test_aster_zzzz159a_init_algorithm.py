@@ -10,6 +10,6 @@ if debug:
     print "Bornes  = ",Bornes
     print
 
-Algorithm = { "Minimizer"           : "TNC",
-              "Bounds"              : Bornes,
-            }
+AlgorithmParameters = { "Minimizer"           : "TNC",
+    "Bounds"              : Bornes,
+    }

@@ -15,14 +15,21 @@ class daStudy:
     self.ADD = AssimilationStudy(name)
     self.ADD.setControls()
     self.algorithm = algorithm
+    self.algorithm_dict = None
     self.Background = None
 
     # Observation Management
     self.ObservationOperatorType = {}
     self.FunctionObservationOperator = {}
 
+  def setAlgorithmParameters(self, parameters):
+    self.algorithm_dict = parameters
+
   def initAlgorithm(self):
+
     self.ADD.setAlgorithm(choice=self.algorithm)
+    if self.algorithm_dict != None:
+      self.ADD.setAlgorithmParameters(asDico=self.algorithm_dict)
 
   def getAssimilationStudy(self):
 

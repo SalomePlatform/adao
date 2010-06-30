@@ -28,7 +28,7 @@ AnalysisFromList = ["String", "File"]
 # -- Infos from daCore --
 AssimData = ["Background", "BackgroundError",
              "Observation", "ObservationError", "ObservationOperator", "ObservationOperatorAppliedToX",
-             "EvolutionModel", "EvolutionError"]
+             "EvolutionModel", "EvolutionError", "AlgorithmParameters"]
 
 AssimType = {}
 AssimType["Background"] = ["Vector"]
@@ -37,6 +37,7 @@ AssimType["Observation"] = ["Vector"]
 AssimType["ObservationError"] = ["Matrix"]
 AssimType["ObservationOperator"] = ["Matrix", "Function"]
 AssimType["ObservationOperatorAppliedToX"] = ["List"]
+AssimType["AlgorithmParameters"] = ["Dict"]
 
 FromNumpyList = {}
 FromNumpyList["Vector"] = ["String", "Script"]

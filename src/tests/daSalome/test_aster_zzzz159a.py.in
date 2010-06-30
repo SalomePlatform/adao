@@ -14,7 +14,7 @@ Algorithm_config = {}
 Algorithm_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_init_algorithm.py"
 Algorithm_config["Type"] = "Dict"
 Algorithm_config["From"] = "Script"
-study_config["Algorithm"] = Algorithm_config
+study_config["AlgorithmParameters"] = Algorithm_config
 
 Background_config = {}
 Background_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_background.py"

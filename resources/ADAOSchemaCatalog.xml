@@ -18,6 +18,14 @@ print "Algorithm is", Algorithm
 from daYacsIntegration.daStudy import *
 assim_study = daStudy(Name, Algorithm)
 
+# Algorithm parameters
+try:
+  AlgorithmParameters
+except NameError:
+  pass
+else:
+  assim_study.setAlgorithmParameters(AlgorithmParameters)
+
 # Data
 print "Data entered are:"
 # Background
@@ -187,6 +195,14 @@ result = None
 ]]></code></script>
     <inport name="computation" type="pyobj"/>
     <outport name="result" type="pyobj"/>
+  </inline>
+
+  <inline name="CreateDictFromScript">
+    <script><code><![CDATA[
+print "Entering in CreateDictFromScript"
+execfile(script)
+]]></code></script>
+    <inport name="script" type="string"/>
   </inline>
 
 </proc>
