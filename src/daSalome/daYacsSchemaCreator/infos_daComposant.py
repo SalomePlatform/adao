@@ -43,6 +43,7 @@ FromNumpyList["Vector"] = ["String", "Script"]
 FromNumpyList["Matrix"] = ["String", "Script"]
 FromNumpyList["Function"] = ["Dict"]
 FromNumpyList["List"] = ["List"]
+FromNumpyList["Dict"] = ["Script"]
 
 # -- Infos from daAlgorithms --
 AssimAlgos = ["Blue", "EnsembleBlue", "Kalman", "LinearLeastSquares", "3DVAR"]

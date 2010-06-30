@@ -1,0 +1,54 @@
+#-*-coding:iso-8859-1-*-
+study_config = {}
+study_config["Name"] = "test_aster_zzzz159a"
+study_config["Algorithm"] = "3DVAR"
+
+Init_config = {}
+Init_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_init_parameters.py"
+Init_config["Type"] = "Dict"
+Init_config["From"] = "Script"
+Init_config["Target"] = ["Algorithm"]
+study_config["Init"] = Init_config
+
+Algorithm_config = {}
+Algorithm_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_init_algorithm.py"
+Algorithm_config["Type"] = "Dict"
+Algorithm_config["From"] = "Script"
+study_config["Algorithm"] = Algorithm_config
+
+Background_config = {}
+Background_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_background.py"
+Background_config["Type"] = "Vector"
+Background_config["From"] = "Script"
+study_config["Background"] = Background_config
+
+BackgroundError_config = {}
+BackgroundError_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_background_error.py"
+BackgroundError_config["Type"] = "Matrix"
+BackgroundError_config["From"] = "Script"
+study_config["BackgroundError"] = BackgroundError_config
+
+Observation_config = {}
+Observation_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_observation.py"
+Observation_config["Type"] = "Vector"
+Observation_config["From"] = "Script"
+study_config["Observation"] = Observation_config
+
+ObservationError_config = {}
+ObservationError_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_observation_error.py"
+ObservationError_config["Type"] = "Matrix"
+ObservationError_config["From"] = "Script"
+study_config["ObservationError"] = ObservationError_config
+
+FunctionDict = {}
+FunctionDict["Function"] = ["Direct", "Tangent", "Adjoint"]
+FunctionDict["Script"] = {}
+FunctionDict["Script"]["Direct"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_functions.py"
+FunctionDict["Script"]["Tangent"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_functions.py"
+FunctionDict["Script"]["Adjoint"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_functions.py"
+ObservationOperator_config = {}
+ObservationOperator_config["Data"] = FunctionDict
+ObservationOperator_config["Type"] = "Function"
+ObservationOperator_config["From"] = "Dict"
+study_config["ObservationOperator"] = ObservationOperator_config
+
