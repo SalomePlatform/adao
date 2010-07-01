@@ -1,3 +1,5 @@
+#-*-coding:iso-8859-1-*-
+import numpy
 debug = init_data["debug"]
 parametres = init_data["parametres"]
 

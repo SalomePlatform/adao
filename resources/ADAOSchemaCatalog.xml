@@ -205,4 +205,13 @@ execfile(script)
     <inport name="script" type="string"/>
   </inline>
 
+  <inline name="InitUserDataFromScript">
+    <script><code><![CDATA[
+print "Entering in InitUserDataFromScript"
+execfile(script)
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="init_data" type="pyobj"/>
+  </inline>
+
 </proc>

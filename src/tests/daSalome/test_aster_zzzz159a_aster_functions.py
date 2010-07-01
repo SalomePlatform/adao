@@ -22,6 +22,7 @@ def UTMESS(code='I', txt=''):
 def get_tables(tables_calc,tmp_repe_table,prof):
    """ Recupere les resultats Aster (Table Aster -> Numeric Python)
    """
+   global debug
    import Numeric
    assert (tables_calc is not None)
    assert (tmp_repe_table is not None)
@@ -76,7 +77,6 @@ def get_tables(tables_calc,tmp_repe_table,prof):
 	  message = "Erreur 3!\n" + str(err)
 	  UTMESS('F', message)
    resu_calc = Lrep
-   from N_Parameters import debug
    if debug: print 'resu_calc:', resu_calc
 
    return resu_calc
@@ -86,6 +86,14 @@ def get_tables(tables_calc,tmp_repe_table,prof):
 #===============================================================================
 def Calcul_Aster_Ponctuel( X0 = None ):
     #
+    global ASTER_ROOT
+    global debug
+    global SOURCES_ROOT
+    global export
+    global calcul
+    global parametres
+    global python_version
+
     import numpy
     if type(X0) is type(numpy.matrix([])):
         X0 = X0.A1.tolist()
@@ -93,11 +101,13 @@ def Calcul_Aster_Ponctuel( X0 = None ):
         X0 = list(X0)
     # ----------------------------------------------------------------------------
     # Parametres
-    isFromYacs = globals().get('ASTER_ROOT', None)  # execution via YACS ou en externe
-    if not isFromYacs:
-        from N_Parameters import ASTER_ROOT, debug, SOURCES_ROOT, DISPLAY
-        from N_Study_Parameters import export
-        from N_MR_Parameters import calcul, parametres
+    #isFromYacs = globals().get('ASTER_ROOT', None)  # execution via YACS ou en externe
+    #isFromYacs = ASTER_ROOT
+    #print "isFromYacs:", isFromYacs
+    #if not isFromYacs:
+    #    from N_Parameters import ASTER_ROOT, debug, SOURCES_ROOT, DISPLAY
+    #    from N_Study_Parameters import export
+    #    from N_MR_Parameters import calcul, parametres
     os.environ['ASTER_ROOT'] = ASTER_ROOT
 
     # ----------------------------------------------------------------------------
@@ -280,6 +290,13 @@ def Calcul_Aster_Ponctuel( X0 = None ):
 
 #===============================================================================
 def Calcul_Aster_Jacobienne( X0 = None ):
+    global ASTER_ROOT
+    global debug
+    global SOURCES_ROOT
+    global export
+    global calcul
+    global parametres
+    global python_version
     #
     import numpy
     if type(X0) is type(numpy.matrix([])):
@@ -292,11 +309,11 @@ def Calcul_Aster_Jacobienne( X0 = None ):
     # dX = globals().get('dX', [ 0.1, 0.1, 0.001])  # execution via YACS ou en externe
     # ----------------------------------------------------------------------------
     # Parametres
-    isFromYacs = globals().get('ASTER_ROOT', None)  # execution via YACS ou en externe
-    if not isFromYacs:
-        from N_Parameters import ASTER_ROOT, debug, SOURCES_ROOT, DISPLAY
-        from N_Study_Parameters import export
-        from N_MR_Parameters import calcul, parametres
+    #isFromYacs = globals().get('ASTER_ROOT', None)  # execution via YACS ou en externe
+    #if not isFromYacs:
+    #    from N_Parameters import ASTER_ROOT, debug, SOURCES_ROOT, DISPLAY
+    #    from N_Study_Parameters import export
+    #    from N_MR_Parameters import calcul, parametres
     os.environ['ASTER_ROOT'] = ASTER_ROOT
 
     # ----------------------------------------------------------------------------

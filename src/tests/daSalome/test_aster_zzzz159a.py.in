@@ -7,7 +7,8 @@ Init_config = {}
 Init_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_init_parameters.py"
 Init_config["Type"] = "Dict"
 Init_config["From"] = "Script"
-Init_config["Target"] = ["Algorithm"]
+Init_config["Target"] = ["AlgorithmParameters", "Background", "BackgroundError",
+    "Observation", "ObservationError", "ObservationOperator"]
 study_config["Init"] = Init_config
 
 Algorithm_config = {}
@@ -52,3 +53,12 @@ ObservationOperator_config["Type"] = "Function"
 ObservationOperator_config["From"] = "Dict"
 study_config["ObservationOperator"] = ObservationOperator_config
 
+Analysis_config = {}
+Analysis_config["Data"] = """
+import numpy
+
+Xa = ADD.get("Analysis").valueserie(0)
+print "Analyse = ",Xa
+"""
+Analysis_config["From"] = "String"
+study_config["Analysis"] = Analysis_config

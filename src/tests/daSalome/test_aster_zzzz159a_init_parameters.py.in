@@ -12,9 +12,10 @@ init_data = {}
 init_data['ASTER_ROOT'] = os.environ['ASTER_ROOT']
 init_data['debug'] = False
 init_data['python_version'] = "python@PYTHON_VERSION@"
+init_data['SOURCES_ROOT'] = "@prefix@" + '/tests/daSalome'
 
 # Partie contenant les parametres de l'étude
-export=os.environ["ADAO_ROOT_DIR"] + '/tests/daSalome/zzzz159a.export.esclave'
+init_data['export'] = "@prefix@" + '/tests/daSalome/zzzz159a.export.esclave'
 
 import Numeric
 parametres =[['YOUN__',100000.,50000.,500000.],['DSDE__',1000.,500.,10000.],['SIGY__',30.,5.,500.]]

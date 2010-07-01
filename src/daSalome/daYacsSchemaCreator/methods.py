@@ -58,6 +58,16 @@ def create_yacs_proc(study_config):
   CAS_node.getInputPort("Algorithm").edInitPy(study_config["Algorithm"])
   proc.edAddChild(CAS_node)
 
+  # Step 0.5: Find if there is a user init node
+  init_config = {}
+  init_config["Target"] = []
+  if "Init" in study_config.keys():
+    init_config = study_config["Init"]
+    factory_init_node = catalogAd._nodeMap["InitUserDataFromScript"]
+    init_node = factory_init_node.cloneNode("InitUserData")
+    init_node.getInputPort("script").edInitPy(init_config["Data"])
+    proc.edAddChild(init_node)
+
   # Step 1: get input data from user configuration
 
   for key in study_config.keys():
@@ -76,6 +86,10 @@ def create_yacs_proc(study_config):
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        # Connect node with InitUserData
+        if key in init_config["Target"]:
+          back_node.edAddInputPort("init_data", t_pyobj)
+          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
@@ -88,6 +102,10 @@ def create_yacs_proc(study_config):
         CAS_node.edAddInputPort(key_type, t_string)
         proc.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        # Connect node with InitUserData
+        if key in init_config["Target"]:
+          back_node.edAddInputPort("init_data", t_pyobj)
+          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "Script":
         # Create node
@@ -101,6 +119,10 @@ def create_yacs_proc(study_config):
         CAS_node.edAddInputPort(key_type, t_string)
         proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        # Connect node with InitUserData
+        if key in init_config["Target"]:
+          back_node.edAddInputPort("init_data", t_pyobj)
+          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Matrix" and data_config["From"] == "String":
         # Create node
@@ -113,6 +135,10 @@ def create_yacs_proc(study_config):
         CAS_node.edAddInputPort(key_type, t_string)
         proc.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        # Connect node with InitUserData
+        if key in init_config["Target"]:
+          back_node.edAddInputPort("init_data", t_pyobj)
+          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Matrix" and data_config["From"] == "Script":
         # Create node
@@ -126,6 +152,10 @@ def create_yacs_proc(study_config):
         CAS_node.edAddInputPort(key_type, t_string)
         proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        # Connect node with InitUserData
+        if key in init_config["Target"]:
+          back_node.edAddInputPort("init_data", t_pyobj)
+          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Function" and data_config["From"] == "Dict" and key == "ObservationOperator":
          FunctionDict = data_config["Data"]
@@ -189,6 +219,11 @@ def create_yacs_proc(study_config):
       # We connect Optimizer with the script
       proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
       proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+      # Connect node with InitUserData
+      if "ObservationOperator" in init_config["Target"]:
+        opt_script_node.edAddInputPort("init_data", t_pyobj)
+        proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
 
     else:
       factory_opt_script_node = catalogAd._nodeMap["FakeOptimizerLoopNode"]

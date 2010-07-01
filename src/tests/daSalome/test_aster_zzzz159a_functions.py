@@ -1,5 +1,8 @@
 import numpy
 import pickle
+import sys
+
+sys.path.insert(0, init_data['SOURCES_ROOT'])
 import test_aster_zzzz159a_aster_functions as Code_Aster
 
 # Configuration du module
