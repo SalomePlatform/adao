@@ -12,7 +12,7 @@ Init_config["Target"] = ["AlgorithmParameters", "Background", "BackgroundError",
 study_config["Init"] = Init_config
 
 Algorithm_config = {}
-Algorithm_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_init_algorithm.py"
+Algorithm_config["Data"] = "@prefix@/tests/daSalome/test_aster_zzzz159a_init_algorithm_LBFGSB.py"
 Algorithm_config["Type"] = "Dict"
 Algorithm_config["From"] = "Script"
 study_config["AlgorithmParameters"] = Algorithm_config

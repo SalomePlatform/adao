@@ -12,6 +12,8 @@ DATA_INST = \
 	    test_aster_zzzz159a_init_algorithm.py \
 	    test_aster_zzzz159a_init_parameters.py \
 	    test_aster_zzzz159a.py \
+	    test_aster_zzzz159a_LBFGSB.py \
+	    test_aster_zzzz159a_init_algorithm_LBFGSB.py \
 	    zzzz159a.3  zzzz159a.export.esclave  zzzz159a.mail
 
 testsdasalome_DATA = ${DATA_INST}
@@ -27,4 +29,6 @@ EXTRA_DIST = test000_Blue_AnalysisCode.py test000_Blue_AnalysisFile.py.in test00
 	     test_aster_zzzz159a_init_algorithm.py \
 	     test_aster_zzzz159a_init_parameters.py.in \
 	     test_aster_zzzz159a.py.in \
+	     test_aster_zzzz159a_LBFGSB.py.in \
+	     test_aster_zzzz159a_init_algorithm_LBFGSB.py \
 	     zzzz159a.3  zzzz159a.export.esclave.in  zzzz159a.mail

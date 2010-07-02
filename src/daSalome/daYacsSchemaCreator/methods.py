@@ -254,6 +254,11 @@ def create_yacs_proc(study_config):
       else:
         proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
+      # Connect node with InitUserData
+      if "Analysis" in init_config["Target"]:
+        analysis_node.edAddInputPort("init_data", t_pyobj)
+        proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
+
     elif analysis_config["From"] == "File":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
       analysis_node = factory_analysis_node.cloneNode("User Analysis")
@@ -276,6 +281,10 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
       else:
         proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+      # Connect node with InitUserData
+      if "Analysis" in init_config["Target"]:
+        analysis_node.edAddInputPort("init_data", t_pyobj)
+        proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
       pass
 
