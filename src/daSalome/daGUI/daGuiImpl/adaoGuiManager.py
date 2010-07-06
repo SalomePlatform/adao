@@ -73,7 +73,7 @@ class AdaoGuiUiComponentBuilder:
         self.initUiComponents()
 
     def initUiComponents(self):
-        
+
         objectTR = QObject()
 
         # create top-level menu
@@ -136,7 +136,6 @@ class AdaoGuiActionImpl(EficasObserver):
 
     def showEficas(self):
       if self.__Eficas_viewId == -1:
-        print "First showEficas"
         self.__dlgEficasWrapper.init_gui()
 
         # Scroll Widget
@@ -145,12 +144,9 @@ class AdaoGuiActionImpl(EficasObserver):
         area.setWidgetResizable(1)
         self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithWidget(area)
       else:
-        print "myViewId =",  self.__Eficas_viewId
-        print "activeView =", SalomePyQt.SalomePyQt().getActiveView()
         if SalomePyQt.SalomePyQt().getActiveView() != self.__Eficas_viewId :
           result_activate = SalomePyQt.SalomePyQt().activateView(self.__Eficas_viewId)
           if result_activate == False:
-            print "View was close - create a new eficas widget"
             self.__dlgEficasWrapper.init_gui()
 
             # Scroll Widget
@@ -213,8 +209,8 @@ class AdaoGuiActionImpl(EficasObserver):
             callbackId = [salomeStudyId, salomeStudyItem]
             self.__dlgEficasWrapper.setCallbackId(callbackId)
       except:
-        print "Oups - cannot edit case !"
-        traceback.print_exc()
+        # Case has been destroyed - create a new one
+        self.__dlgEficasWrapper.fileNew()
 
     def removeAdaoCase(self):
       global __cases__
@@ -235,6 +231,9 @@ class AdaoGuiActionImpl(EficasObserver):
         adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
         adaoGuiHelper.refreshObjectBrowser()
 
+      # Remove Callback in adaoEficasWrapper
+      self.__dlgEficasWrapper.removeCallbackId(callbackId)
+
     def exportCaseToYACS(self):
       global __cases__
       salomeStudyId   = adaoGuiHelper.getActiveStudyId()
@@ -243,7 +242,6 @@ class AdaoGuiActionImpl(EficasObserver):
       case = __cases__[case_key]
 
       msg = case.exportCaseToYACS()
-      
       if msg != "":
         adaoGuiHelper.gui_warning(self.__parent, msg)
 
@@ -292,11 +290,9 @@ class AdaoGuiActionImpl(EficasObserver):
         case = __cases__[case_key]
         # Search if case is in Eficas !
         callbackId = [salomeStudyId, salomeStudyItem]
-        print "selectCase"
         case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
         # If case is not in eficas Open It !
         if case_open_in_eficas == False:
-          print "reopen selectCase"
           if case.get_filename() != "":
             self.__dlgEficasWrapper.Openfile(case.get_filename())
             callbackId = [salomeStudyId, salomeStudyItem]
@@ -306,7 +302,8 @@ class AdaoGuiActionImpl(EficasObserver):
             adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
             adaoGuiHelper.refreshObjectBrowser()
             __cases__.pop(case_key)
-            self.__dlgEficasWrapper.fileNew()
+            callbackId = [salomeStudyId, salomeStudyItem]
+            self.__dlgEficasWrapper.removeCallbackId(callbackId)
       except:
         print "Oups - cannot reopen case !"
         traceback.print_exc()

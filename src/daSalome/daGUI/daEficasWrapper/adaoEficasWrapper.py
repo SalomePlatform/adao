@@ -18,46 +18,59 @@
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from eficasWrapper import *
-from PyQt4 import QtGui,QtCore
 import sys
+import os
+from PyQt4 import QtGui,QtCore
 
-# Configuration de l'installation
-my_path = os.path.dirname(os.path.abspath(__file__))
-ADAO_INSTALL_DIR = my_path + "/../daEficas"
-sys.path[:0]=[ADAO_INSTALL_DIR]
+# Import from EFICAS_SRC
+import eficasSalome
+# Import from Eficas
+from InterfaceQT4 import qtEficas
+
+from adaoWrapperUtils import *
 
 #
 # ============================================
 # Specialization of the EficasWrapper for ADAO
 # ============================================
 #
-class AdaoEficasWrapper(EficasWrapper):
+class AdaoEficasWrapper(eficasSalome.MyEficas):
 
-    def __init__(self, parent, code="ADAO"):
-        EficasWrapper.__init__(self, parent, code)
+    def __init__(self, parent):
+        # Configuration de l'installation
+        # Permet à EFICAS de faire ses import correctement
+        my_path = os.path.dirname(os.path.abspath(__file__))
+        ADAO_INSTALL_DIR = my_path + "/../daEficas"
+        sys.path[:0]=[ADAO_INSTALL_DIR]
+
         self.__myCallbackId = {}
         self.__close_editor = None
         self.__file_open_name = ""
+        self.__parent = parent
 
     def init_gui(self):
-      EficasWrapper.init_gui(self)
-      print "self.__myCallbackId", self.__myCallbackId
+      eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
+      # On réouvre tous les fichiers comm
+      # On fait une copie pour ne pas tomber dans une boucle infinie
       save_CallbackId =  self.__myCallbackId.copy()
       for editor, myCallbackId in save_CallbackId.iteritems():
         self.notifyObserver(EficasEvent.EVENT_TYPES.REOPEN, callbackId=myCallbackId)
 
-    # Association de l'objet editor avec le callbackId
-    def setCallbackId(self, callbackId):
-      index = self.viewmanager.myQtab.currentIndex()
-      self.__myCallbackId[self.viewmanager.dict_editors[index]] = callbackId
+    def addJdcInSalome(  self, jdcPath ):
+      # On gere nous meme l'etude
+      pass
 
-    def getCallbackId(self):
-      if self.__close_editor is None:
-        index = self.viewmanager.myQtab.currentIndex()
-        return self.__myCallbackId[self.viewmanager.dict_editors[index]]
-      else:
-        return self.__myCallbackId[self.__close_editor]
+    def fileNew(self):        
+        """
+        @overload
+        """
+        qtEficas.Appli.fileNew(self)
+        self.notifyObserver(EficasEvent.EVENT_TYPES.NEW)
+
+    def openEmptyCase(self, callbackId):        
+        qtEficas.Appli.fileNew(self)
+        self.removeCallbackId(callbackId)
+        self.setCallbackId(callbackId)
 
     def fileSave(self):
         """
@@ -165,4 +178,50 @@ class AdaoEficasWrapper(EficasWrapper):
           if res==2 : return res   # l utilsateur a annule
         else:
           return 0
+
+    # ==========================================================================
+    # Function for the notification interface between an EficasWrapper an an
+    # EficasObserver.
+
+    # Association de l'objet editor avec le callbackId
+    def setCallbackId(self, callbackId):
+      index = self.viewmanager.myQtab.currentIndex()
+      self.__myCallbackId[self.viewmanager.dict_editors[index]] = callbackId
+
+    def removeCallbackId(self, callbackId):
+      key_to_remove = None
+      for k, v in self.__myCallbackId.iteritems():
+        if v[0] == callbackId[0] and v[1].GetID() == callbackId[1].GetID():
+          key_to_remove = k
+      if key_to_remove is not None:    
+        del self.__myCallbackId[key_to_remove]
+      else:
+        print "Oups - cannot find callbackId"
+
+    def getCallbackId(self):
+      if self.__close_editor is None:
+        index = self.viewmanager.myQtab.currentIndex()
+        return self.__myCallbackId[self.viewmanager.dict_editors[index]]
+      else:
+        return self.__myCallbackId[self.__close_editor]
+
+    def addObserver(self, observer):
+        """
+        In fact, only one observer may be defined for the moment.
+        """
+        try:
+            observer.processEficasEvent
+        except:
+            raise DevelException("the argument should implement the function processEficasEvent")
+        self.__observer = observer
+
+    def notifyObserver(self, eventType, callbackId=None):
+      if eventType != EficasEvent.EVENT_TYPES.NEW and eventType != EficasEvent.EVENT_TYPES.OPEN:
+        if callbackId is None :
+          eficasEvent = EficasEvent(eventType, self.getCallbackId())
+        else:
+          eficasEvent = EficasEvent(eventType, callbackId)
+      else:
+        eficasEvent = EficasEvent(eventType)
+      self.__observer.processEficasEvent(self, eficasEvent)
 

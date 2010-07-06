@@ -21,6 +21,7 @@ class CONFIG:
     self.appli   = appli  
     self.code    = appli.code
     self.rep_ini = repIni
+    self.rep_mat=" " # Compatbilite Aster
     self.savedir      = self.rep_user
     self.generator_module = "generator_adao"
     self.convert_module = "convert_adao"
