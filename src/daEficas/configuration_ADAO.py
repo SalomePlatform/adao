@@ -26,9 +26,9 @@ class CONFIG:
     self.convert_module = "convert_adao"
 
     # Format des catalogues...
-    # (code,version,catalogue,formatIn) et  ,formatOut) ?
-    self.catalogues = []
-    self.catalogues.append(["ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"])
+    # (code, version, catalogue, formatIn, formatOut)
+    # Il faut les mettre dans un tuple
+    self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
 
 def make_config(appli,rep):
 
