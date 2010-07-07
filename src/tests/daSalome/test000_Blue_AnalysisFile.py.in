@@ -35,6 +35,6 @@ study_config["ObservationOperator"] = ObservationOperator_config
 
 Analysis_config = {}
 Analysis_config["Data"] = "@prefix@/tests/daSalome/test000_Blue_AnalysisCode.py"
-Analysis_config["From"] = "File"
+Analysis_config["From"] = "Script"
 study_config["Analysis"] = Analysis_config
 

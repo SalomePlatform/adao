@@ -23,27 +23,31 @@
 # -- Infos pour le parser --
 
 AnalysisData = {}
-AnalysisFromList = ["String", "File"]
+AnalysisFromList = ["String", "Script"]
 
 # -- Infos from daCore --
+#AssimData = ["Background", "BackgroundError",
+#             "Observation", "ObservationError", "ObservationOperator", "ObservationOperatorAppliedToX",
+#             "EvolutionModel", "EvolutionError", "AlgorithmParameters"]
+
 AssimData = ["Background", "BackgroundError",
-             "Observation", "ObservationError", "ObservationOperator", "ObservationOperatorAppliedToX",
+             "Observation", "ObservationError", "ObservationOperator",
              "EvolutionModel", "EvolutionError", "AlgorithmParameters"]
+
 
 AssimType = {}
 AssimType["Background"] = ["Vector"]
 AssimType["BackgroundError"] = ["Matrix"]
 AssimType["Observation"] = ["Vector"]
 AssimType["ObservationError"] = ["Matrix"]
-AssimType["ObservationOperator"] = ["Matrix", "Function"]
-AssimType["ObservationOperatorAppliedToX"] = ["List"]
+AssimType["ObservationOperator"] = ["Matrix", "FunctionDict"]
 AssimType["AlgorithmParameters"] = ["Dict"]
+#AssimType["ObservationOperatorAppliedToX"] = ["List"]
 
 FromNumpyList = {}
 FromNumpyList["Vector"] = ["String", "Script"]
 FromNumpyList["Matrix"] = ["String", "Script"]
-FromNumpyList["Function"] = ["Dict"]
-FromNumpyList["List"] = ["List"]
+FromNumpyList["Function"] = ["FunctionDict"]
 FromNumpyList["Dict"] = ["Script"]
 
 # -- Infos from daAlgorithms --
@@ -56,6 +60,32 @@ AlgoDataRequirements["Blue"] = ["Background", "BackgroundError",
 AlgoDataRequirements["3DVAR"] = ["Background", "BackgroundError",
                                  "Observation", "ObservationOperator", "ObservationError"]
 AlgoType = {}
-#AlgoType["Blue"] = "Direct"
 AlgoType["Blue"] = "Optim"
 AlgoType["3DVAR"] = "Optim"
+AlgoType["EnsembleBlue"] = "Optim"
+AlgoType["Kalman"] = "Optim"
+AlgoType["LinearLeastSquares"] = "Optim"
+#AlgoType["Blue"] = "Direct"
+
+# Basic data types
+BasicDataInputs = ["String", "Script", "FunctionDict"]
+
+# Data input dict
+DataTypeDict = {}
+DataTypeDict["Vector"]   = ["String", "Script"]
+DataTypeDict["Matrix"]   = ["String", "Script"]
+DataTypeDict["Function"] = ["FunctionDict"]
+DataTypeDict["Dict"]     = ["Script"]
+
+# Assimilation data input
+AssimDataDict = {}
+AssimDataDict["Background"] = ["Vector"]
+AssimDataDict["BackgroundError"] = ["Matrix"]
+AssimDataDict["Observation"] = ["Vector"]
+AssimDataDict["ObservationError"] = ["Matrix"]
+AssimDataDict["ObservationOperator"] = ["Matrix", "Function"]
+AssimDataDict["AlgorithmParameters"] = ["Dict"]
+
+# Assimilation optional nodes
+OptDict = {}
+OptDict["Analysis"]   = ["String", "Script"]

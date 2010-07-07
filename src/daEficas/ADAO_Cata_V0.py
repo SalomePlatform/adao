@@ -44,7 +44,8 @@ def F_OBSERVATION_ERROR(statut) : return FACT(statut=statut,
 
 def F_OBSERVATION_OPERATOR(statut) : return FACT(statut=statut,
                                                  regles = ( UN_PARMI ("MATRIX", "FUNCTION")),
-                                                 MATRIX = F_MATRIX("o"),
+                                                 MATRIX = F_MATRIX("f"),
+                                                 FUNCTION = F_VECTOR("f"),
                                                 )
 
 def F_ANALYSIS(statut) : return FACT(statut = statut,

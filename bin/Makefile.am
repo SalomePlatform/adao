@@ -1,5 +1,11 @@
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-bin_SCRIPTS = AdaoYacsSchemaCreator.py qtEficas_adao_study.py
+bin_SCRIPTS = AdaoYacsSchemaCreator.py qtEficas_adao_study.py AdaoCalatogGenerator.py
 
-EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in
+EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in AdaoCalatogGenerator.py
+
+install-data-hook:
+	@export PYTHONPATH=${salomepythondir} && python $(top_srcdir)/bin/AdaoCalatogGenerator.py ${salomepythondir}/daEficas CatalogTest.py
+
+uninstall-hook:
+	@rm  ${salomepythondir}/daEficas/CatalogTest.py

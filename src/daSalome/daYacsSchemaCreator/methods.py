@@ -157,7 +157,7 @@ def create_yacs_proc(study_config):
           back_node.edAddInputPort("init_data", t_pyobj)
           proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
-      if data_config["Type"] == "Function" and data_config["From"] == "Dict" and key == "ObservationOperator":
+      if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "ObservationOperator":
          FunctionDict = data_config["Data"]
          for FunctionName in FunctionDict["Function"]:
            port_name = "ObservationOperator" + FunctionName
@@ -187,7 +187,7 @@ def create_yacs_proc(study_config):
 
     # Check if we have a python script for OptimizerLoopNode
     data_config = study_config["ObservationOperator"]
-    if data_config["Type"] == "Function" and data_config["From"] == "Dict":
+    if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
       # Get script
       FunctionDict = data_config["Data"]
       script_filename = ""
