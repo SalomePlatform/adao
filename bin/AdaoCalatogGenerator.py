@@ -53,21 +53,22 @@ String_data_bloc = """
 """
 
 Script_data_bloc = """
-                                     FILE_DATA = BLOC ( condition = " FROM in ( 'File', ) ",
+                                     FILE_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
                                                   FILE = SIMP(statut = "o", typ = "Fichier"),
                                                  ),
 """
 
 Dict_data_bloc = """
-                                     FILE_DATA = BLOC ( condition = " FROM in ( 'File', ) ",
+                                     FILE_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
                                                   FILE = SIMP(statut = "o", typ = "Fichier"),
                                                  ),
 """
 
+# Pour l'instant on ne gère qu'un seul script pour toutes les functions
 FunctionDict_data_bloc = """
-                                     FILE_DATA = BLOC ( condition = " FROM in ( 'File', ) ",
+                                     FILE_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
 
                                                   FILE = SIMP(statut = "o", typ = "Fichier"),
                                                  ),
@@ -104,6 +105,7 @@ assim_algo = """
                                                  Observation = F_Observation("o"),
                                                  ObservationError = F_ObservationError("o"),
                                                  ObservationOperator = F_ObservationOperator("o"),
+                                                 AlgorithmParameters = F_AlgorithmParameters("f"),
 ${decl_opts}
                                                 ),
 """
