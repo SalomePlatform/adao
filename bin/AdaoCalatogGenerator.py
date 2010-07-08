@@ -76,11 +76,25 @@ FunctionDict_data_bloc = """
 
 data_method = """
 def F_${data_name}(statut) : return FACT(statut = statut,
-                                     FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into})),
+                                         FILE = SIMP(statut = "o", typ = "TXM", into=(${data_into})),
 ${data_bloc}
                                     )
 """
 
+init_method = """
+def F_InitChoice() : return  ("Background",
+                              "BackgroundError",
+                              "Observation",
+                              "ObservationError",
+                              "ObservationOperator",
+                              "AlgorithmParameters",
+                              "Analysis",
+                             )
+def F_Init(statut) : return FACT(statut = statut,
+                                 FILE = SIMP(statut = "o", typ = "Fichier"),
+                                 TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice()),
+                                )
+"""
 assim_data_method = """
 def F_${assim_name}(statut) : return FACT(statut=statut,
                                           regles = ( UN_PARMI (${choices})),
@@ -106,6 +120,7 @@ assim_algo = """
                                                  ObservationError = F_ObservationError("o"),
                                                  ObservationOperator = F_ObservationOperator("o"),
                                                  AlgorithmParameters = F_AlgorithmParameters("f"),
+                                                 Init = F_Init("f"),
 ${decl_opts}
                                                 ),
 """
@@ -225,6 +240,9 @@ for opt_name in infos.OptDict.keys():
                                         data_bloc = data_bloc))
 
   opt_names.append(opt_name)
+
+# Step 5: Add init node
+mem_file.write(init_method)
 
 # Final step: Add algorithm and assim_study
 algos = ""
