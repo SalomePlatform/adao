@@ -259,7 +259,7 @@ def create_yacs_proc(study_config):
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
-    elif analysis_config["From"] == "File":
+    elif analysis_config["From"] == "Script":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
       analysis_node = factory_analysis_node.cloneNode("User Analysis")
       default_script = analysis_node.getScript()
