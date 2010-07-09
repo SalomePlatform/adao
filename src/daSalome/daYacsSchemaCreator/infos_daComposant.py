@@ -40,7 +40,7 @@ AssimType["Background"] = ["Vector"]
 AssimType["BackgroundError"] = ["Matrix"]
 AssimType["Observation"] = ["Vector"]
 AssimType["ObservationError"] = ["Matrix"]
-AssimType["ObservationOperator"] = ["Matrix", "FunctionDict"]
+AssimType["ObservationOperator"] = ["Matrix", "Function"]
 AssimType["AlgorithmParameters"] = ["Dict"]
 #AssimType["ObservationOperatorAppliedToX"] = ["List"]
 

@@ -36,7 +36,7 @@ FunctionDict["Script"]["Adjoint"] = "@prefix@/tests/daSalome/test017_3DVAR_funct
 ObservationOperator_config = {}
 ObservationOperator_config["Data"] = FunctionDict
 ObservationOperator_config["Type"] = "Function"
-ObservationOperator_config["From"] = "Dict"
+ObservationOperator_config["From"] = "FunctionDict"
 study_config["ObservationOperator"] = ObservationOperator_config
 
 Analysis_config = {}
