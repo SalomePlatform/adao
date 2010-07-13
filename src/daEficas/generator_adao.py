@@ -31,7 +31,7 @@ class AdaoGenerator(PythonGenerator):
 
     print "Dictionnaire"
     print self.dictMCVal
-    
+
     try :
       self.text_da_status = False
       self.generate_da()
@@ -87,17 +87,29 @@ class AdaoGenerator(PythonGenerator):
   def add_data(self, data_name):
     search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__"
     back_search_text = search_text + data_name + "__"
-    try :
-      back_from = self.dictMCVal[back_search_text + "VECTOR__FROM"]
-      back_data = self.dictMCVal[back_search_text + "VECTOR__DATA"]
+
+    # Data is a Vector
+    search_vector = back_search_text + "Vector"
+    if search_vector + "__FROM" in self.dictMCVal:
+      back_from = self.dictMCVal[search_vector + "__FROM"]
+
+      # Vector is from a string
+      search_string = search_vector + "__STRING_DATA__STRING"
+      if search_string in self.dictMCVal:
+        back_data = self.dictMCVal[search_string]
+      # Vector is from a script  
+      search_script = search_vector + "__SCRIPT_DATA__SCRIPT_FILE"
+      if search_script in self.dictMCVal:
+        back_data = self.dictMCVal[search_script]
+      else:
+        print "[generator adao] Error cannot found Vector data"
 
       self.text_da += data_name + "_config = {} \n"
       self.text_da += data_name + "_config[\"Type\"] = \"Vector\" \n"
       self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
       self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
-    except:
-      pass
+
     try :
       back_from = self.dictMCVal[back_search_text + "MATRIX__FROM"]
       back_data = self.dictMCVal[back_search_text + "MATRIX__DATA"]
