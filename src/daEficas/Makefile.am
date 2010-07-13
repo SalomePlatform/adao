@@ -24,10 +24,9 @@ mypkgpythondir =$(salomepythondir)/daEficas
 mypkgpython_PYTHON = \
 		     configuration_ADAO.py \
 		     convert_adao.py \
-		     ADAO_Cata_V0.py \
 		     generator_adao.py \
 		     __init__.py \
 		     prefs_ADAO.py \
 		     prefs.py
 
-EXTRA_DIST = prefs_ADAO.py.in
+EXTRA_DIST = prefs_ADAO.py.in ADAO_Cata_V0.py

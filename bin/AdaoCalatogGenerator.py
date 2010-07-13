@@ -53,30 +53,30 @@ String_data_bloc = """
 """
 
 Script_data_bloc = """
-                                     FILE_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
+                                     SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
-                                                  FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                  SCRIPT_FILE = SIMP(statut = "o", typ = "Fichier"),
                                                  ),
 """
 
 Dict_data_bloc = """
-                                     FILE_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
+                                     DICT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
-                                                  FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                  SCRIPT_FILE = SIMP(statut = "o", typ = "Fichier"),
                                                  ),
 """
 
 # Pour l'instant on ne gère qu'un seul script pour toutes les functions
 FunctionDict_data_bloc = """
-                                     FILE_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
+                                     FUNCTIONDICT_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
 
-                                                  FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                  FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "Fichier"),
                                                  ),
 """
 
 data_method = """
 def F_${data_name}(statut) : return FACT(statut = statut,
-                                         FILE = SIMP(statut = "o", typ = "TXM", into=(${data_into})),
+                                         FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into})),
 ${data_bloc}
                                     )
 """
@@ -91,8 +91,8 @@ def F_InitChoice() : return  ("Background",
                               "Analysis",
                              )
 def F_Init(statut) : return FACT(statut = statut,
-                                 FILE = SIMP(statut = "o", typ = "Fichier"),
-                                 TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice()),
+                                 INIT_FILE = SIMP(statut = "o", typ = "Fichier"),
+                                 TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice(),  validators=VerifExiste(2)),
                                 )
 """
 assim_data_method = """
