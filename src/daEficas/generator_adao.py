@@ -2,6 +2,7 @@
 print "import generator_adao"
 
 from generator.generator_python import PythonGenerator
+import traceback
 
 def entryPoint():
    """
@@ -38,6 +39,7 @@ class AdaoGenerator(PythonGenerator):
       self.text_da_status = True
     except:
       print "Case seems not be correct"
+      traceback.print_exc()
       pass
     return self.text_comm
 
@@ -74,7 +76,11 @@ class AdaoGenerator(PythonGenerator):
     self.text_da += "#-*-coding:iso-8859-1-*- \n"
     self.text_da += "study_config = {} \n"
     self.text_da += "study_config[\"Name\"] = \"" + self.dictMCVal["__ASSIM_STUDY__STUDY_NAME"] + "\"\n"
-    self.text_da += "study_config[\"Algorithm\"] = \"" + self.dictMCVal["ALGORITHM_NAME"] + "\"\n"
+    
+    if self.dictMCVal["ALGORITHM_NAME"] != "ThreeDVAR":
+      self.text_da += "study_config[\"Algorithm\"] = \"" + self.dictMCVal["ALGORITHM_NAME"] + "\"\n"
+    else:
+      self.text_da += "study_config[\"Algorithm\"] = \"3DVAR\"\n"
 
 
     self.add_data("Background")
@@ -135,6 +141,25 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_config[\"Type\"] = \"Matrix\" \n"
       self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
       self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
+      self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
+      return 1
+
+    # Data is a FunctionDict
+    search_function = back_search_text + "Function"
+    if search_function + "__FROM" in self.dictMCVal:
+      back_from = self.dictMCVal[search_function + "__FROM"]
+      back_data = self.dictMCVal[search_function + "__FUNCTIONDICT_DATA__FUNCTIONDICT_FILE"]
+
+      self.text_da += "FunctionDict = {} \n"
+      self.text_da += "FunctionDict[\"Function\"] = [\"Direct\", \"Tangent\", \"Adjoint\"] \n"
+      self.text_da += "FunctionDict[\"Script\"] = {} \n"
+      self.text_da += "FunctionDict[\"Script\"][\"Direct\"] = \"" + back_data + "\" \n"
+      self.text_da += "FunctionDict[\"Script\"][\"Tangent\"] = \"" + back_data + "\" \n"
+      self.text_da += "FunctionDict[\"Script\"][\"Adjoint\"] = \"" + back_data + "\" \n"
+      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config[\"Type\"] = \"Function\" \n"
+      self.text_da += data_name + "_config[\"From\"] = \"FunctionDict\" \n"
+      self.text_da += data_name + "_config[\"Data\"] = FunctionDict \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
       return 1
 
