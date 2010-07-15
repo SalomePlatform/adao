@@ -92,7 +92,7 @@ def F_InitChoice() : return  ("Background",
                              )
 def F_Init(statut) : return FACT(statut = statut,
                                  INIT_FILE = SIMP(statut = "o", typ = "Fichier"),
-                                 TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice(),  validators=(VerifExiste(2), NoRepeat())),
+                                 TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice(),  validators=(VerifExiste(2))),
                                 )
 """
 assim_data_method = """

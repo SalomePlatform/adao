@@ -76,7 +76,7 @@ class AdaoGenerator(PythonGenerator):
     self.text_da += "#-*-coding:iso-8859-1-*- \n"
     self.text_da += "study_config = {} \n"
     self.text_da += "study_config[\"Name\"] = \"" + self.dictMCVal["__ASSIM_STUDY__STUDY_NAME"] + "\"\n"
-    
+
     if self.dictMCVal["ALGORITHM_NAME"] != "ThreeDVAR":
       self.text_da += "study_config[\"Algorithm\"] = \"" + self.dictMCVal["ALGORITHM_NAME"] + "\"\n"
     else:
@@ -90,7 +90,9 @@ class AdaoGenerator(PythonGenerator):
     self.add_data("ObservationOperator")
 
     # Optionnel
+    self.add_data("AlgorithmParameters")
     self.add_analysis()
+    self.add_init()
 
   def add_data(self, data_name):
     search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__"
@@ -144,22 +146,35 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
       return 1
 
+    # Data is a Dict
+    search_dict = back_search_text + "Dict"
+    if search_dict + "__FROM" in self.dictMCVal:
+      back_from = self.dictMCVal[search_dict + "__FROM"]
+      back_data = self.dictMCVal[search_dict + "__SCRIPT_DATA__SCRIPT_FILE"]
+
+      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config[\"Type\"] = \"Dict\" \n"
+      self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
+      self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
+      self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
+      return 1
+
     # Data is a FunctionDict
     search_function = back_search_text + "Function"
     if search_function + "__FROM" in self.dictMCVal:
       back_from = self.dictMCVal[search_function + "__FROM"]
       back_data = self.dictMCVal[search_function + "__FUNCTIONDICT_DATA__FUNCTIONDICT_FILE"]
 
-      self.text_da += "FunctionDict = {} \n"
-      self.text_da += "FunctionDict[\"Function\"] = [\"Direct\", \"Tangent\", \"Adjoint\"] \n"
-      self.text_da += "FunctionDict[\"Script\"] = {} \n"
-      self.text_da += "FunctionDict[\"Script\"][\"Direct\"] = \"" + back_data + "\" \n"
-      self.text_da += "FunctionDict[\"Script\"][\"Tangent\"] = \"" + back_data + "\" \n"
-      self.text_da += "FunctionDict[\"Script\"][\"Adjoint\"] = \"" + back_data + "\" \n"
+      self.text_da += data_name + "_FunctionDict = {} \n"
+      self.text_da += data_name + "_FunctionDict[\"Function\"] = [\"Direct\", \"Tangent\", \"Adjoint\"] \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"] = {} \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Direct\"] = \"" + back_data + "\" \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Tangent\"] = \"" + back_data + "\" \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Adjoint\"] = \"" + back_data + "\" \n"
       self.text_da += data_name + "_config = {} \n"
       self.text_da += data_name + "_config[\"Type\"] = \"Function\" \n"
       self.text_da += data_name + "_config[\"From\"] = \"FunctionDict\" \n"
-      self.text_da += data_name + "_config[\"Data\"] = FunctionDict \n"
+      self.text_da += data_name + "_config[\"Data\"] = " + data_name + "_FunctionDict \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
       return 1
 
@@ -184,4 +199,22 @@ class AdaoGenerator(PythonGenerator):
         pass
     except:
       pass
+
+  def add_init(self):
+    search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__Init__"
+
+    if search_text + "INIT_FILE" in self.dictMCVal:
+
+      init_file_data = self.dictMCVal[search_text + "INIT_FILE"]
+      init_target_list = self.dictMCVal[search_text + "TARGET_LIST"]
+
+      self.text_da += "Init_config = {} \n"
+      self.text_da += "Init_config[\"Type\"] = \"Dict\" \n"
+      self.text_da += "Init_config[\"From\"] = \"Script\" \n"
+      self.text_da += "Init_config[\"Data\"] = \"" + init_file_data + "\"\n"
+      self.text_da += "Init_config[\"Target\"] = ["
+      for target in init_target_list:
+        self.text_da += "\"" + target + "\","
+      self.text_da += "] \n"
+      self.text_da += "study_config[\"Init\"] = Init_config \n"
 
