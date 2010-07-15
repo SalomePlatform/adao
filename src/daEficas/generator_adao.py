@@ -82,6 +82,8 @@ class AdaoGenerator(PythonGenerator):
     self.add_data("Observation")
     self.add_data("ObservationError")
     self.add_data("ObservationOperator")
+
+    # Optionnel
     self.add_analysis()
 
   def add_data(self, data_name):
@@ -93,13 +95,14 @@ class AdaoGenerator(PythonGenerator):
     if search_vector + "__FROM" in self.dictMCVal:
       back_from = self.dictMCVal[search_vector + "__FROM"]
 
-      # Vector is from a string
       search_string = search_vector + "__STRING_DATA__STRING"
+      search_script = search_vector + "__SCRIPT_DATA__SCRIPT_FILE"
+
+      # Vector is from a string
       if search_string in self.dictMCVal:
         back_data = self.dictMCVal[search_string]
-      # Vector is from a script  
-      search_script = search_vector + "__SCRIPT_DATA__SCRIPT_FILE"
-      if search_script in self.dictMCVal:
+      # Vector is from a script
+      elif search_script in self.dictMCVal:
         back_data = self.dictMCVal[search_script]
       else:
         print "[generator adao] Error cannot found Vector data"
@@ -109,24 +112,37 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
       self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
+      return 1
 
-    try :
-      back_from = self.dictMCVal[back_search_text + "MATRIX__FROM"]
-      back_data = self.dictMCVal[back_search_text + "MATRIX__DATA"]
+    # Data is a Matrix
+    search_matrix = back_search_text + "Matrix"
+    if search_matrix + "__FROM" in self.dictMCVal:
+      back_from = self.dictMCVal[search_matrix + "__FROM"]
+
+      search_string = search_matrix + "__STRING_DATA__STRING"
+      search_script = search_matrix + "__SCRIPT_DATA__SCRIPT_FILE"
+
+      # Matrix is from a string
+      if search_string in self.dictMCVal:
+        back_data = self.dictMCVal[search_string]
+      # Matrix is from a script
+      elif search_script in self.dictMCVal:
+        back_data = self.dictMCVal[search_script]
+      else:
+        print "[generator adao] Error cannot found Matrix data"
 
       self.text_da += data_name + "_config = {} \n"
       self.text_da += data_name + "_config[\"Type\"] = \"Matrix\" \n"
       self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
       self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
-    except:
-      pass
+      return 1
 
   def add_analysis(self):
     search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__Analysis__"
     try :
       ana_from = self.dictMCVal[search_text + "FROM"]
-      print ana_from
+
       if ana_from == "String":
         ana_data = self.dictMCVal[search_text + "STRING_DATA__STRING"]
         self.text_da += "Analysis_config = {} \n"
@@ -134,10 +150,10 @@ class AdaoGenerator(PythonGenerator):
         self.text_da += "Analysis_config[\"Data\"] = \"\"\"" + ana_data + "\"\"\" \n"
         self.text_da += "study_config[\"Analysis\"] = Analysis_config \n"
         pass
-      if ana_from == "File":
-        ana_data = self.dictMCVal[search_text + "FILE_DATA__FILE"]
+      if ana_from == "Script":
+        ana_data = self.dictMCVal[search_text + "SCRIPT_DATA__SCRIPT_FILE"]
         self.text_da += "Analysis_config = {} \n"
-        self.text_da += "Analysis_config[\"From\"] = \"File\" \n"
+        self.text_da += "Analysis_config[\"From\"] = \"Script\" \n"
         self.text_da += "Analysis_config[\"Data\"] = \"" + ana_data + "\" \n"
         self.text_da += "study_config[\"Analysis\"] = Analysis_config \n"
         pass
