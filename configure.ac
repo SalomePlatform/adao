@@ -35,6 +35,7 @@ AC_PROG_CXX
 CHECK_KERNEL
 CHECK_OMNIORB
 CHECK_EFICAS
+CHECK_MODULE_EFICAS
 CHECK_SCIPY
 CHECK_SPHINX
 
@@ -57,6 +58,7 @@ echo "  OmniOrb (CORBA) ........ : $omniORB_ok"
 echo "  OmniOrbpy (CORBA) ...... : $omniORBpy_ok"
 echo "  SALOME KERNEL .......... : $Kernel_ok"
 echo "  Eficas ................. : $eficas_ok"
+echo "  Module Eficas .......... : $module_eficas_ok"
 echo
 echo "Optional products:"
 echo "  Sphinx (for doc)........ : $threads_ok"
@@ -90,6 +92,10 @@ if test "x$Kernel_ok" = "xno"; then
 fi
 if test "x$eficas_ok" = "xno"; then
   AC_MSG_WARN([Eficas is required for SALOME Module part])
+  salome_module_ok=no
+fi
+if test "x$module_eficas_ok" = "xno"; then
+  AC_MSG_WARN([Module Eficas is required for SALOME Module part])
   salome_module_ok=no
 fi
 
