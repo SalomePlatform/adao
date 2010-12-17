@@ -5,20 +5,20 @@ AC_CHECKING(for Eficas)
 eficas_ok=no
 
 AC_ARG_WITH(eficas,
-	    [  --with-eficas=DIR               root directory path of Eficas installation],
+	    [  --with-module-eficas=DIR        root directory path of Module Eficas installation],
 	    EFICAS_DIR=$withval,EFICAS_DIR="")
 
 if test "x$EFICAS_DIR" = "x" ; then
 
   # no --with-eficas option used
 
-  if test "x$EFICAS_ROOT" != "x" ; then
+  if test "x$EFICAS_ROOT_DIR" != "x" ; then
 
-  #EFICAS_ROOT environment variable defined
-  EFICAS_DIR=$EFICAS_ROOT
+  #EFICAS_ROOT_DIR environment variable defined
+  EFICAS_DIR=$EFICAS_ROOT_DIR
 
   else
-    AC_MSG_WARN("EFICAS_ROOT is not defined")
+    AC_MSG_WARN("EFICAS_ROOT_DIR is not defined")
   fi
 
 fi
