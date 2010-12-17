@@ -138,11 +138,15 @@ class AdaoGuiActionImpl(EficasObserver):
       if self.__Eficas_viewId == -1:
         self.__dlgEficasWrapper.init_gui()
 
+
         # Scroll Widget
         area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
         area.setWidget( self.__dlgEficasWrapper)
         area.setWidgetResizable(1)
-        self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithWidget(area)
+
+        wmType = "ADAO View"
+        self.__Eficas_viewId = sgPyQt.createView(wmType, area)
+        sgPyQt.setViewClosable(self.__Eficas_viewId, False)
       else:
         if SalomePyQt.SalomePyQt().getActiveView() != self.__Eficas_viewId :
           result_activate = SalomePyQt.SalomePyQt().activateView(self.__Eficas_viewId)
@@ -153,7 +157,10 @@ class AdaoGuiActionImpl(EficasObserver):
             area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
             area.setWidget( self.__dlgEficasWrapper)
             area.setWidgetResizable(1)
-            self.__Eficas_viewId = SalomePyQt.SalomePyQt().createViewWithWidget(area)
+
+            wmType = "ADAO View"
+            self.__Eficas_viewId = sgPyQt.createView(wmType, area)
+            sgPyQt.setViewClosable(self.__Eficas_viewId, False)
 
     def activate(self):
       self.showEficas()
