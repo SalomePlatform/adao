@@ -17,8 +17,8 @@
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SUBDIRS = daGuiImpl daEficasWrapper
+SUBDIRS = daGuiImpl daEficasWrapper daGuiComponent
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-salomepython_PYTHON= ADAOGUI.py
+salomepython_PYTHON= ADAOGUI.py ADAO.py

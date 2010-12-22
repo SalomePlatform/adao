@@ -2,18 +2,17 @@
 #ifndef _ADAO_IDL_
 #define _ADAO_IDL_
 
+#include "SALOME_Component.idl"
 #include "DSC_Engines.idl"
-#include "SALOME_Exception.idl"
-#include "SALOME_PACOExtension.idl"
 
 module ADAO
 {
-typedef sequence<string> stringvec;
-typedef sequence<double> dblevec;
-typedef sequence<long> intvec;
-typedef Engines::dataref dataref;
-
-
+  interface ADAO_GUI_COMPONENT : Engines::Superv_Component
+  {
+   /*!
+    * Test that the component is ok
+    */
+    void print_ping();
+  };
 };
-
 #endif
