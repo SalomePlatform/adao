@@ -3,9 +3,14 @@
     <!-- Major module parameters -->
     <parameter name="name"    value="ADAO"/>
     <parameter name="library" value="SalomePyQtGUI"/>
+    <parameter name="documentation" value="adao_help"/>
   </section>
   <section name="resources">
     <!-- Module resources -->
     <parameter name="ADAO" value="${ADAO_ROOT_DIR}/share/salome/resources/adao"/>
+  </section>
+  <section name="adao_help">
+    <parameter name="sub_menu"     value="%1 module"/>
+    <parameter name="User's Guide" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/index.html"/>
   </section>
 </document>

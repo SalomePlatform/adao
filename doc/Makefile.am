@@ -1,19 +1,21 @@
+include $(top_srcdir)/adm_local/make_common_starter.am
+
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = $(top_builddir)/doc/build
 
-EXTRA_DIST = main.rst conf.py
+EXTRA_DIST = main.rst intro.rst conf.py
 
 install-data-local:
 	make html
 	${mkinstalldirs} $(DESTDIR)$(docdir)
-	cp -R $(BUILDDIR)/html $(DESTDIR)$(docdir)
+	cp -R $(BUILDDIR)/html/* $(DESTDIR)$(docdir)
 
 uninstall-local:
 	chmod -R +w $(DESTDIR)$(docdir)
-	rm -rf $(DESTDIR)$(docdir)/html
+	rm -rf $(DESTDIR)$(docdir)
 
 clean-local:
 	-rm -rf $(top_builddir)/doc/build
