@@ -60,14 +60,14 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       # On gere nous meme l'etude
       pass
 
-    def fileNew(self):        
+    def fileNew(self):
         """
         @overload
         """
         qtEficas.Appli.fileNew(self)
         self.notifyObserver(EficasEvent.EVENT_TYPES.NEW)
 
-    def openEmptyCase(self, callbackId):        
+    def openEmptyCase(self, callbackId):
         qtEficas.Appli.fileNew(self)
         self.removeCallbackId(callbackId)
         self.setCallbackId(callbackId)
@@ -190,10 +190,12 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def removeCallbackId(self, callbackId):
       key_to_remove = None
+      print callbackId
       for k, v in self.__myCallbackId.iteritems():
+        print k, v
         if v[0] == callbackId[0] and v[1].GetID() == callbackId[1].GetID():
           key_to_remove = k
-      if key_to_remove is not None:    
+      if key_to_remove is not None:
         del self.__myCallbackId[key_to_remove]
       else:
         print "Oups - cannot find callbackId"

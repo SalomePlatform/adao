@@ -165,6 +165,8 @@ class AdaoGuiActionImpl(EficasObserver):
     def activate(self):
       self.showEficas()
 
+    # Actions from SALOME GUI
+
     def newAdaoCase(self):
       self.showEficas()
       self.__dlgEficasWrapper.fileNew()
@@ -227,40 +229,45 @@ class AdaoGuiActionImpl(EficasObserver):
       salomeStudyItem = adaoGuiHelper.getSelectedItem(salomeStudyId)
       callbackId = [salomeStudyId, salomeStudyItem]
       case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
+
       # If case is in eficas close it !
       if case_open_in_eficas:
+        # fileClose: remove the CallbackId
+        # fileClose: sends a destroy event
         self.__dlgEficasWrapper.fileClose()
-
-      # Test if case exists
-      case_key = (salomeStudyId, salomeStudyItem.GetID())
-      if __cases__.has_key(case_key):
-        __cases__.pop(case_key)
-        adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
-        adaoGuiHelper.refreshObjectBrowser()
-
-      # Remove Callback in adaoEficasWrapper
-      self.__dlgEficasWrapper.removeCallbackId(callbackId)
+      else:
+        # Test if case exists
+        case_key = (salomeStudyId, salomeStudyItem.GetID())
+        if __cases__.has_key(case_key):
+          __cases__.pop(case_key)
+          adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
+          adaoGuiHelper.refreshObjectBrowser()
 
     def exportCaseToYACS(self):
       global __cases__
+
+      # Get case from study
       salomeStudyId   = adaoGuiHelper.getActiveStudyId()
       salomeStudyItem = adaoGuiHelper.getSelectedItem(salomeStudyId)
       case_key = (salomeStudyId, salomeStudyItem.GetID())
       case = __cases__[case_key]
 
+      # Generates YACS schema and export it
       msg = case.exportCaseToYACS()
+
+      # If msg is not empty -> error found
       if msg != "":
         adaoGuiHelper.gui_warning(self.__parent, msg)
 
     # ==========================================================================
-    # Processing notifications from eficas
+    # Processing notifications from adaoEficasWrapper
     #
     __processOptions={
-        EficasEvent.EVENT_TYPES.CLOSE : "_processEficasCloseEvent",
-        EficasEvent.EVENT_TYPES.SAVE  : "_processEficasSaveEvent",
-        EficasEvent.EVENT_TYPES.NEW  : "_processEficasNewEvent",
-        EficasEvent.EVENT_TYPES.DESTROY  : "_processEficasDestroyEvent",
-        EficasEvent.EVENT_TYPES.OPEN  : "_processEficasOpenEvent",
+        EficasEvent.EVENT_TYPES.CLOSE   : "_processEficasCloseEvent",
+        EficasEvent.EVENT_TYPES.SAVE    : "_processEficasSaveEvent",
+        EficasEvent.EVENT_TYPES.NEW     : "_processEficasNewEvent",
+        EficasEvent.EVENT_TYPES.DESTROY : "_processEficasDestroyEvent",
+        EficasEvent.EVENT_TYPES.OPEN    : "_processEficasOpenEvent",
         EficasEvent.EVENT_TYPES.REOPEN  : "_processEficasReOpenEvent"
         }
     def processEficasEvent(self, eficasWrapper, eficasEvent):
