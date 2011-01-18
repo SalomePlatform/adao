@@ -60,7 +60,7 @@ class AdaoCase:
     adao_path = os.environ["ADAO_ROOT_DIR"]
     adao_exe = adao_path + "/bin/salome/AdaoYacsSchemaCreator.py"
     self.__yacs_filename = self.__filename[:self.__filename.rfind(".")] + '.xml'
-    args = [adao_exe, filename, self.__yacs_filename]
+    args = ["python", adao_exe, filename, self.__yacs_filename]
     p = subprocess.Popen(args)
     (stdoutdata, stderrdata) = p.communicate()
     if not os.path.exists(self.__yacs_filename):
