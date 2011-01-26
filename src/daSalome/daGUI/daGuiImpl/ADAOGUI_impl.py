@@ -98,6 +98,8 @@ def activate():
 
 # called when module is deactivated
 def deactivate():
+    ctx = _setContext( sgPyQt.getStudyId() )
+    ctx.actionImpl.deactivate()
     pass
 
 # called when active study is changed

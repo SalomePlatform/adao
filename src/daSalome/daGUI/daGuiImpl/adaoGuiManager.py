@@ -161,9 +161,15 @@ class AdaoGuiActionImpl(EficasObserver):
             wmType = "ADAO View"
             self.__Eficas_viewId = sgPyQt.createView(wmType, area)
             sgPyQt.setViewClosable(self.__Eficas_viewId, False)
+        self.__dlgEficasWrapper.setEnabled(True)
 
     def activate(self):
       self.showEficas()
+
+    def deactivate(self):
+      self.showEficas()
+      if self.__Eficas_viewId != -1:
+        self.__dlgEficasWrapper.setEnabled(False)
 
     # Actions from SALOME GUI
 
