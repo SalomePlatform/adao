@@ -121,6 +121,13 @@ class Algorithm:
         interne à l'objet, mais auquel on accède par la méthode "get".
         
         Les variables prévues sont :
+            - CostFunctionJ  : fonction-cout globale, somme des deux parties suivantes
+            - CostFunctionJb : partie ébauche ou background de la fonction-cout
+            - CostFunctionJo : partie observations de la fonction-cout
+            - GradientOfCostFunctionJ  : gradient de la fonction-cout globale
+            - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-cout
+            - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-cout
+            - CurrentState : état courant lors d'itérations
             - Analysis : l'analyse
             - Innovation : l'innovation : d = Y - H Xb
             - SigmaObs2 : correction optimale des erreurs d'observation
@@ -132,13 +139,16 @@ class Algorithm:
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
+        self._name = None
         self.StoredVariables = {}
+        #
         self.StoredVariables["CostFunctionJ"]            = Persistence.OneScalar(name = "CostFunctionJ")
         self.StoredVariables["CostFunctionJb"]           = Persistence.OneScalar(name = "CostFunctionJb")
         self.StoredVariables["CostFunctionJo"]           = Persistence.OneScalar(name = "CostFunctionJo")
-        self.StoredVariables["GradientOfCostFunctionJ"]  = Persistence.OneScalar(name = "GradientOfCostFunctionJ")
-        self.StoredVariables["GradientOfCostFunctionJb"] = Persistence.OneScalar(name = "GradientOfCostFunctionJb")
-        self.StoredVariables["GradientOfCostFunctionJo"] = Persistence.OneScalar(name = "GradientOfCostFunctionJo")
+        self.StoredVariables["GradientOfCostFunctionJ"]  = Persistence.OneVector(name = "GradientOfCostFunctionJ")
+        self.StoredVariables["GradientOfCostFunctionJb"] = Persistence.OneVector(name = "GradientOfCostFunctionJb")
+        self.StoredVariables["GradientOfCostFunctionJo"] = Persistence.OneVector(name = "GradientOfCostFunctionJo")
+        self.StoredVariables["CurrentState"]             = Persistence.OneVector(name = "CurrentState")
         self.StoredVariables["Analysis"]                 = Persistence.OneVector(name = "Analysis")
         self.StoredVariables["Innovation"]               = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["SigmaObs2"]                = Persistence.OneScalar(name = "SigmaObs2")
@@ -147,7 +157,6 @@ class Algorithm:
         self.StoredVariables["OMB"]                      = Persistence.OneVector(name = "OMB")
         self.StoredVariables["BMA"]                      = Persistence.OneVector(name = "BMA")
         self.StoredVariables["CovarianceAPosteriori"]    = Persistence.OneMatrix(name = "CovarianceAPosteriori")
-        self._name = None
 
     def get(self, key=None):
         """
@@ -168,7 +177,13 @@ class Algorithm:
         """
         return self.StoredVariables.has_key(key)
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None):
+    def keys(self):
+        """
+        Renvoie la liste des clés de variables stockées.
+        """
+        return self.StoredVariables.keys()
+
+    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
         Doit implémenter l'opération élémentaire de calcul d'assimilation sous
         sa forme mathématique la plus naturelle possible.

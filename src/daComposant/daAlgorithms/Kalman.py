@@ -39,7 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._name = "KALMAN"
         logging.debug("%s Initialisation"%self._name)
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None):
+    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
         Calcul de l'estimateur de Kalman
         """

@@ -46,7 +46,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._name = "3DVAR"
         logging.debug("%s Initialisation"%self._name)
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None):
+    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
         Calcul de l'estimateur 3D-VAR
         """
@@ -64,6 +64,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             logging.debug("%s Calcul de Hm(Xb)"%self._name)
             HXb = Hm( Xb )
+        HXb = numpy.asmatrix(HXb).flatten().T
         #
         # Calcul du préconditionnement
         # ----------------------------
@@ -92,6 +93,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.info("%s CostFunction Jb = %s"%(self._name, Jb))
             logging.info("%s CostFunction Jo = %s"%(self._name, Jo))
             logging.info("%s CostFunction J  = %s"%(self._name, J))
+            self.StoredVariables["CurrentState"].store( _X.A1 )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
@@ -108,9 +110,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s GradientOfCostFunction GradJb = %s"%(self._name, numpy.asmatrix( GradJb ).flatten()))
             logging.debug("%s GradientOfCostFunction GradJo = %s"%(self._name, numpy.asmatrix( GradJo ).flatten()))
             logging.debug("%s GradientOfCostFunction GradJ  = %s"%(self._name, numpy.asmatrix( GradJ  ).flatten()))
-            # self.StoredVariables["GradientOfCostFunctionJb"].store( Jb )
-            # self.StoredVariables["GradientOfCostFunctionJo"].store( Jo )
-            # self.StoredVariables["GradientOfCostFunctionJ" ].store( J )
             return GradJ.A1
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -123,18 +122,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Paramètres de pilotage
         # ----------------------
-        if Par.has_key("Bounds") and (type(Par["Bounds"]) is type([]) or type(Par["Bounds"]) is type(())) and (len(Par["Bounds"]) > 0):
-            Bounds = Par["Bounds"]
+        if Parameters.has_key("Bounds") and (type(Parameters["Bounds"]) is type([]) or type(Parameters["Bounds"]) is type(())) and (len(Parameters["Bounds"]) > 0):
+            Bounds = Parameters["Bounds"]
         else:
             Bounds = None
         MinimizerList = ["LBFGSB","TNC", "CG", "BFGS"]
-        if Par.has_key("Minimizer") and (Par["Minimizer"] in MinimizerList):
-            Minimizer = str( Par["Minimizer"] )
+        if Parameters.has_key("Minimizer") and (Parameters["Minimizer"] in MinimizerList):
+            Minimizer = str( Parameters["Minimizer"] )
         else:
             Minimizer = "LBFGSB"
         logging.debug("%s Minimiseur utilisé = %s"%(self._name, Minimizer))
-        if Par.has_key("MaximumNumberOfSteps") and (Par["MaximumNumberOfSteps"] > -1):
-            maxiter = int( Par["MaximumNumberOfSteps"] )
+        if Parameters.has_key("MaximumNumberOfSteps") and (Parameters["MaximumNumberOfSteps"] > -1):
+            maxiter = int( Parameters["MaximumNumberOfSteps"] )
         else:
             maxiter = 15000
         logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, maxiter))
@@ -150,6 +149,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 bounds      = Bounds,
                 maxfun      = maxiter,
                 iprint      = iprint,
+                factr       = 1.,
                 )
             logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
             logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, Informations['funcalls']))

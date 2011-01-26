@@ -27,6 +27,8 @@ import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
 
+import numpy
+
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
@@ -34,7 +36,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._name = "BLUE"
         logging.debug("%s Initialisation"%self._name)
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None):
+    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
         Calcul de l'estimateur BLUE (ou Kalman simple, ou Interpolation Optimale)
         """
@@ -52,8 +54,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             logging.debug("%s Calcul de Hm * Xb"%self._name)
             HXb = Hm * Xb
-        
+        HXb = numpy.asmatrix(HXb).flatten().T
+        #
         # Calcul de la matrice de gain dans l'espace le plus petit
+        # --------------------------------------------------------
         if Y.size <= Xb.size:
             logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
             K  = B * Ht * (Hm * B * Ht + R).I

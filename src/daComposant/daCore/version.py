@@ -19,5 +19,5 @@
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 name    = "Data Assimilation Package"
-version = "0.2.0"
-date    = "lundi 23 septembre 2009, 11:11:11 (UTC+0200)"
+version = "0.3.0"
+date    = "lundi 15 octobre 2010, 11:11:11 (UTC+0200)"

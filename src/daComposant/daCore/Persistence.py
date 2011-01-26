@@ -154,6 +154,20 @@ class Persistence:
         return len(self.__steps)
 
     # ---------------------------------------------------------
+    # Méthodes d'accès de type dictionnaire
+    def keys(self):
+        return self.stepserie()
+
+    def values(self):
+        return self.valueserie()
+
+    def items(self):
+        pairs = []
+        for i in xrange(self.stepnumber()):
+            pairs.append( (self.stepserie(item=i), self.valueserie(item=i)) )
+        return pairs
+
+    # ---------------------------------------------------------
     def mean(self):
         """
         Renvoie la valeur moyenne des données à chaque pas. Il faut que le type
@@ -564,6 +578,180 @@ class OneList(Persistence):
     def __init__(self, name="", unit="", basetype = list):
         Persistence.__init__(self, name, unit, basetype)
 
+def NoType( value ): return value
+
+class OneNoType(Persistence):
+    """
+    Classe définissant le stockage d'un objet sans modification (cast) de type.
+    Attention, selon le véritable type de l'objet stocké à chaque pas, les
+    opérations arithmétiques à base de numpy peuvent être invalides ou donner
+    des résultats inatendus. Cette classe n'est donc à utiliser qu'à bon escient
+    volontairement, et pas du tout par défaut.
+    """
+    def __init__(self, name="", unit="", basetype = NoType):
+        Persistence.__init__(self, name, unit, basetype)
+
+# ==============================================================================
+class CompositePersistence:
+    """
+    Structure de stockage permettant de rassembler plusieurs objets de
+    persistence.
+    
+    Des objets par défaut sont prévus, et des objets supplémentaires peuvent
+    être ajoutés.
+    """
+    def __init__(self, name=""):
+        """
+        name : nom courant
+        
+        La gestion interne des données est exclusivement basée sur les variables
+        initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
+        objets comme des attributs) :
+        __StoredObjects : objets de type persistence collectés dans cet objet
+        """
+        self.__name = str(name)
+        #
+        self.__StoredObjects = {}
+        #
+        # Definition des objets par defaut
+        # --------------------------------
+        self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
+        self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
+        self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
+        self.__StoredObjects["ObservationError"] = OneMatrix("ObservationError")
+        self.__StoredObjects["Analysis"]         = OneVector("Analysis", basetype=numpy.array)
+        self.__StoredObjects["AnalysisError"]    = OneMatrix("AnalysisError")
+        self.__StoredObjects["Innovation"]       = OneVector("Innovation", basetype=numpy.array)
+        self.__StoredObjects["KalmanGainK"]      = OneMatrix("KalmanGainK")
+        self.__StoredObjects["OperatorH"]        = OneMatrix("OperatorH")
+        self.__StoredObjects["RmsOMA"]           = OneScalar("RmsOMA")
+        self.__StoredObjects["RmsOMB"]           = OneScalar("RmsOMB")
+        self.__StoredObjects["RmsBMA"]           = OneScalar("RmsBMA")
+        #
+
+    def store(self, name=None, value=None, step=None):
+        """
+        Stockage d'une valeur "value" pour le "step" dans la variable "name".
+        """
+        if name is None: raise ValueError("Storable object name is required for storage.")
+        if name not in self.__StoredObjects.keys():
+            raise ValueError("No such name '%s' exists in storable objects."%name)
+        self.__StoredObjects[name].store( value=value, step=step )
+
+    def add_object(self, name=None, persistenceType=Persistence, basetype=numpy.array ):
+        """
+        Ajoute dans les objets stockables un nouvel objet défini par son nom, son
+        type de Persistence et son type de base à chaque pas.
+        """
+        if name is None: raise ValueError("Object name is required for adding an object.")
+        if name in self.__StoredObjects.keys():
+            raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
+        self.__StoredObjects[name] = persistenceType( name=str(name), basetype=basetype )
+
+    def get_object(self, name=None ):
+        """
+        Renvoie l'objet de type Persistence qui porte le nom demandé.
+        """
+        if name is None: raise ValueError("Object name is required for retrieving an object.")
+        if name not in self.__StoredObjects.keys():
+            raise ValueError("No such name '%s' exists in stored objects."%name)
+        return self.__StoredObjects[name]
+
+    def set_object(self, name=None, objet=None ):
+        """
+        Affecte directement un 'objet' qui porte le nom 'name' demandé.
+        Attention, il n'est pas effectué de vérification sur le type, qui doit
+        comporter les méthodes habituelles de Persistence pour que cela
+        fonctionne.
+        """
+        if name is None: raise ValueError("Object name is required for setting an object.")
+        if name in self.__StoredObjects.keys():
+            raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
+        self.__StoredObjects[name] = objet
+
+    def del_object(self, name=None ):
+        """
+        Supprime un objet de la liste des objets stockables.
+        """
+        if name is None: raise ValueError("Object name is required for retrieving an object.")
+        if name not in self.__StoredObjects.keys():
+            raise ValueError("No such name '%s' exists in stored objects."%name)
+        del self.__StoredObjects[name]
+
+    # ---------------------------------------------------------
+    # Méthodes d'accès de type dictionnaire
+    def __getitem__(self, name=None ):
+        return self.get_object( name )
+
+    def __setitem__(self, name=None, objet=None ):
+        self.set_object( name, objet )
+
+    def keys(self):
+        return self.get_stored_objects(hideVoidObjects = False)
+
+    def values(self):
+        return self.__StoredObjects.values()
+
+    def items(self):
+        return self.__StoredObjects.items()
+
+    # ---------------------------------------------------------
+    def get_stored_objects(self, hideVoidObjects = False):
+        objs = self.__StoredObjects.keys()
+        if hideVoidObjects:
+            usedObjs = []
+            for k in objs:
+                try:
+                    if len(self.__StoredObjects[k]) > 0: usedObjs.append( k )
+                except:
+                    pass
+            objs = usedObjs
+        objs.sort()
+        return objs
+
+    # ---------------------------------------------------------
+    def save_composite(self, filename=None, mode="pickle"):
+        """
+        Enregistre l'objet dans le fichier indiqué selon le "mode" demandé,
+        et renvoi le nom du fichier
+        """
+        import os
+        if filename is None:
+            filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl"
+        else:
+            filename = os.path.abspath( filename )
+        #
+        import cPickle
+        if mode is "pickle":
+            output = open( filename, 'wb')
+            cPickle.dump(self, output)
+            output.close()
+        else:
+            raise ValueError("Save mode '%s' unknown. Choose another one."%mode)
+        #
+        return filename
+
+    def load_composite(self, filename=None, mode="pickle"):
+        """
+        Recharge un objet composite sauvé en fichier
+        """
+        import os
+        if filename is None:
+            raise ValueError("A file name if requested to load a composite.")
+        else:
+            filename = os.path.abspath( filename )
+        #
+        import cPickle
+        if mode is "pickle":
+            pkl_file = open(filename, 'rb')
+            output = cPickle.load(pkl_file)
+            for k in output.keys():
+                self[k] = output[k]
+        else:
+            raise ValueError("Load mode '%s' unknown. Choose another one."%mode)
+        #
+        return filename
+
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
@@ -704,7 +892,48 @@ if __name__ == "__main__":
     del OBJET_DE_TEST
     print
 
-    print "======> Affichage d'objets stockés"
+    print "======> Utilisation des méthodes d'accès de type dictionnaire"
+    OBJET_DE_TEST = OneScalar("My int", unit="cm", basetype=int)
+    for i in range(5):
+        OBJET_DE_TEST.store( 7+i )
+    print "Taille \"len\"        :", len(OBJET_DE_TEST)
+    print "Les pas de stockage :", OBJET_DE_TEST.keys()
+    print "Les valeurs         :", OBJET_DE_TEST.values()
+    print "Les paires          :", OBJET_DE_TEST.items()
+    del OBJET_DE_TEST
+    print
+
+    print "======> Persistence composite"
+    OBJET_DE_TEST = CompositePersistence("My CompositePersistence")
+    print "Objets stockables :", OBJET_DE_TEST.get_stored_objects()
+    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
+    print "--> Stockage d'une valeur de Background"
+    OBJET_DE_TEST.store("Background",numpy.zeros(5))
+    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
+    print "--> Ajout d'un objet nouveau par defaut, de type vecteur numpy par pas"
+    OBJET_DE_TEST.add_object("ValeursVectorielles")
+    OBJET_DE_TEST.store("ValeursVectorielles",numpy.zeros(5))
+    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
+    print "--> Ajout d'un objet nouveau de type liste par pas"
+    OBJET_DE_TEST.add_object("ValeursList", persistenceType=OneList )
+    OBJET_DE_TEST.store("ValeursList",range(5))
+    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
+    print "--> Ajout d'un objet nouveau, de type vecteur string par pas"
+    OBJET_DE_TEST.add_object("ValeursStr", persistenceType=Persistence, basetype=str )
+    OBJET_DE_TEST.store("ValeursStr","c020")
+    OBJET_DE_TEST.store("ValeursStr","c021")
+    print "Les valeurs       :", OBJET_DE_TEST.get_object("ValeursStr").valueserie()
+    print "Acces comme dict  :", OBJET_DE_TEST["ValeursStr"].stepserie()
+    print "Acces comme dict  :", OBJET_DE_TEST["ValeursStr"].valueserie()
+    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
+    print "--> Suppression d'un objet"
+    OBJET_DE_TEST.del_object("ValeursVectorielles")
+    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
+    print "--> Enregistrement de l'objet complet de Persistence composite"
+    OBJET_DE_TEST.save_composite("composite.pkl")
+    print
+
+    print "======> Affichage graphique d'objets stockés"
     OBJET_DE_TEST = Persistence("My object", unit="", basetype=numpy.array)
     D = OBJET_DE_TEST
     vect1 = [1, 2, 1, 2, 1]
@@ -715,7 +944,7 @@ if __name__ == "__main__":
     D.store(vect1)
     D.store(vect2)
     D.store(vect3)
-    print "Affichage de l'ensemble du stockage sur une même image"
+    print "Affichage graphique de l'ensemble du stockage sur une même image"
     D.stepplot(
         title = "Tous les vecteurs",
         filename="vecteurs.ps",
@@ -724,7 +953,7 @@ if __name__ == "__main__":
         pause = False )
     print "Stockage d'un quatrième vecteur de longueur différente"
     D.store(vect4)
-    print "Affichage séparé du dernier stockage"
+    print "Affichage graphique séparé du dernier stockage"
     D.plot(
         item  = 3,
         title = "Vecteurs",
@@ -738,7 +967,7 @@ if __name__ == "__main__":
     del OBJET_DE_TEST
     print
 
-    print "======> Affichage dynamique d'objets"
+    print "======> Affichage graphique dynamique d'objets"
     OBJET_DE_TEST = Persistence("My object", unit="", basetype=float)
     D = OBJET_DE_TEST
     D.plot(

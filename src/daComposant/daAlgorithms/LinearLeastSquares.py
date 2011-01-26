@@ -33,7 +33,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self)
         self._name = "LINEARLEASTSQUARES"
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None):
+    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
         Calcul de l'estimateur au sens des moindres carres sans ebauche
         """

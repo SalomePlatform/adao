@@ -36,7 +36,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._name = "ENSEMBLEBLUE"
         logging.debug("%s Initialisation"%self._name)
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Par=None ):
+    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None ):
         """
         Calcul d'une estimation BLUE d'ensemble :
             - génération d'un ensemble d'observations, de même taille que le

@@ -71,14 +71,15 @@ class AssimilationStudy:
         self.__M  = {}
         #
         self.__X  = Persistence.OneVector()
-        self.__Parameters = {}
+        self.__Parameters        = {}
         self.__StoredDiagnostics = {}
+        self.__StoredInputs      = {}
         #
         # Variables temporaires
-        self.__algorithm     = {}
-        self.__algorithmFile = None
-        self.__algorithmName = None
-        self.__diagnosticFile = None
+        self.__algorithm         = {}
+        self.__algorithmFile     = None
+        self.__algorithmName     = None
+        self.__diagnosticFile    = None
         #
         # Récupère le chemin du répertoire parent et l'ajoute au path
         # (Cela complète l'action de la classe PathManagement dans PlatformInfo,
@@ -92,6 +93,7 @@ class AssimilationStudy:
             asVector           = None,
             asPersistentVector = None,
             Scheduler          = None,
+            toBeStored         = False,
             ):
         """
         Permet de définir l'estimation a priori :
@@ -100,6 +102,8 @@ class AssimilationStudy:
         - asPersistentVector : entrée des données, comme un vecteur de type
           persistent contruit avec la classe ad-hoc "Persistence"
         - Scheduler est le contrôle temporel des données
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         if asVector is not None:
             if type( asVector ) is type( numpy.matrix([]) ):
@@ -110,15 +114,24 @@ class AssimilationStudy:
             self.__Xb = asPersistentVector
         else:
             raise ValueError("Error: improperly defined background")
+        if toBeStored:
+           self.__StoredInputs["Background"] = self.__Xb
         return 0
     
-    def setBackgroundError(self, asCovariance=None):
+    def setBackgroundError(self,
+            asCovariance = None,
+            toBeStored   = False,
+            ):
         """
         Permet de définir la covariance des erreurs d'ébauche :
         - asCovariance : entrée des données, comme une matrice compatible avec
           le constructeur de numpy.matrix
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         self.__B  = numpy.matrix( asCovariance, numpy.float )
+        if toBeStored:
+            self.__StoredInputs["BackgroundError"] = self.__B
         return 0
 
     # -----------------------------------------------------------
@@ -126,6 +139,7 @@ class AssimilationStudy:
             asVector           = None,
             asPersistentVector = None,
             Scheduler          = None,
+            toBeStored         = False,
             ):
         """
         Permet de définir les observations :
@@ -134,6 +148,8 @@ class AssimilationStudy:
         - asPersistentVector : entrée des données, comme un vecteur de type
           persistent contruit avec la classe ad-hoc "Persistence"
         - Scheduler est le contrôle temporel des données disponibles
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         if asVector is not None:
             if type( asVector ) is type( numpy.matrix([]) ):
@@ -144,21 +160,31 @@ class AssimilationStudy:
             self.__Y = asPersistentVector
         else:
             raise ValueError("Error: improperly defined observations")
+        if toBeStored:
+            self.__StoredInputs["Observation"] = self.__Y
         return 0
 
-    def setObservationError(self, asCovariance=None):
+    def setObservationError(self,
+            asCovariance = None,
+            toBeStored   = False,
+            ):
         """
         Permet de définir la covariance des erreurs d'observations :
         - asCovariance : entrée des données, comme une matrice compatible avec
           le constructeur de numpy.matrix
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         self.__R  = numpy.matrix( asCovariance, numpy.float )
+        if toBeStored:
+            self.__StoredInputs["ObservationError"] = self.__R
         return 0
 
     def setObservationOperator(self,
             asFunction = {"Direct":None, "Tangent":None, "Adjoint":None},
             asMatrix   = None,
             appliedToX = None,
+            toBeStored = False,
             ):
         """
         Permet de définir un opérateur d'observation H. L'ordre de priorité des
@@ -175,6 +201,8 @@ class AssimilationStudy:
           X divers, l'opérateur par sa valeur appliquée à cet X particulier,
           sous la forme d'un dictionnaire appliedToX[NAME] avec NAME un nom.
           L'opérateur doit néanmoins déjà avoir été défini comme d'habitude.
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         if (type(asFunction) is type({})) and (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
@@ -207,6 +235,8 @@ class AssimilationStudy:
         else:
             self.__H["AppliedToX"] = None
         #
+        if toBeStored:
+            self.__StoredInputs["ObservationOperator"] = self.__H
         return 0
 
     # -----------------------------------------------------------
@@ -214,6 +244,7 @@ class AssimilationStudy:
             asFunction = {"Direct":None, "Tangent":None, "Adjoint":None},
             asMatrix   = None,
             Scheduler  = None,
+            toBeStored = False,
             ):
         """
         Permet de définir un opérateur d'évolution M. L'ordre de priorité des
@@ -226,6 +257,8 @@ class AssimilationStudy:
           la matrice, et l'opérateur "Adjoint" à l'aide de la transposée. La
           matrice fournie doit être sous une forme compatible avec le
           constructeur de numpy.matrix.
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         if (type(asFunction) is type({})) and (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
@@ -241,19 +274,32 @@ class AssimilationStudy:
             self.__M["Adjoint"] = Operator( fromMatrix = matrice.T )
         else:
             raise ValueError("Error: improperly defined evolution operator")
+        #
+        if toBeStored:
+            self.__StoredInputs["EvolutionModel"] = self.__M
         return 0
 
-    def setEvolutionError(self, asCovariance=None):
+    def setEvolutionError(self,
+            asCovariance = None,
+            toBeStored   = False,
+            ):
         """
         Permet de définir la covariance des erreurs de modèle :
         - asCovariance : entrée des données, comme une matrice compatible avec
           le constructeur de numpy.matrix
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         self.__Q  = numpy.matrix( asCovariance, numpy.float )
+        if toBeStored:
+            self.__StoredInputs["EvolutionError"] = self.__Q
         return 0
 
     # -----------------------------------------------------------
-    def setControls (self, asVector = None ):
+    def setControls (self,
+            asVector = None,
+            toBeStored   = False,
+            ):
         """
         Permet de définir la valeur initiale du vecteur X contenant toutes les
         variables de contrôle, i.e. les paramètres ou l'état dont on veut
@@ -261,9 +307,13 @@ class AssimilationStudy:
         algorithme itératif/incrémental
         - asVector : entrée des données, comme un vecteur compatible avec le
           constructeur de numpy.matrix.
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
         """
         if asVector is not None:
             self.__X.store( asVector )
+        if toBeStored:
+            self.__StoredInputs["Controls"] = self.__X
         return 0
 
     # -----------------------------------------------------------
@@ -302,6 +352,7 @@ class AssimilationStudy:
         # Instancie un objet du type élémentaire du fichier
         # -------------------------------------------------
         self.__algorithm = self.__algorithmFile.ElementaryAlgorithm()
+        self.__StoredInputs["AlgorithmName"] = str(choice)
         return 0
 
     def setAlgorithmParameters(self, asDico=None):
@@ -309,7 +360,11 @@ class AssimilationStudy:
         Permet de définir les paramètres de l'algorithme, sous la forme d'un
         dictionnaire.
         """
-        self.__Parameters = dict( asDico )
+        if asDico is not None:
+            self.__Parameters = dict( asDico )
+        else:
+            self.__Parameters = {}
+        self.__StoredInputs["AlgorithmParameters"] = self.__Parameters
         return 0
 
     # -----------------------------------------------------------
@@ -341,8 +396,10 @@ class AssimilationStudy:
         #
         # Instancie un objet du type élémentaire du fichier
         # -------------------------------------------------
-        if self.__StoredDiagnostics.has_key(name):
-            raise ValueError("A diagnostic with the same name already exists")
+        if self.__StoredInputs.has_key(name):
+            raise ValueError("A default input with the same name \"%s\" already exists."%str(name))
+        elif self.__StoredDiagnostics.has_key(name):
+            raise ValueError("A diagnostic with the same name \"%s\" already exists."%str(name))
         else:
             self.__StoredDiagnostics[name] = self.__diagnosticFile.ElementaryDiagnostic(
                 name       = name,
@@ -450,14 +507,14 @@ class AssimilationStudy:
         self.shape_validate()
         #
         self.__algorithm.run(
-            Xb  = self.__Xb,
-            Y   = self.__Y,
-            H   = self.__H,
-            M   = self.__M,
-            R   = self.__R,
-            B   = self.__B,
-            Q   = self.__Q,
-            Par = self.__Parameters,
+            Xb         = self.__Xb,
+            Y          = self.__Y,
+            H          = self.__H,
+            M          = self.__M,
+            R          = self.__R,
+            B          = self.__B,
+            Q          = self.__Q,
+            Parameters = self.__Parameters,
             )
         return 0
 
@@ -472,31 +529,33 @@ class AssimilationStudy:
         if key is not None:
             if self.__algorithm.has_key(key):
                 return self.__algorithm.get( key )
+            elif self.__StoredInputs.has_key(key):
+                return self.__StoredInputs[key]
             elif self.__StoredDiagnostics.has_key(key):
                 return self.__StoredDiagnostics[key]
             else:
-                raise ValueError("The requested key \"%s\" does not exists as a diagnostic or as a stored variable."%key)
+                raise ValueError("The requested key \"%s\" does not exists as an input, a diagnostic or a stored variable."%key)
         else:
             allvariables = self.__algorithm.get()
             allvariables.update( self.__StoredDiagnostics )
+            allvariables.update( self.__StoredInputs )
             return allvariables
     
-    def get_available_variables(self, key=None):
+    def get_available_variables(self):
         """
         Renvoie les variables potentiellement utilisables pour l'étude,
+        initialement stockées comme données d'entrées ou dans les algorithmes,
         identifiés par les chaînes de caractères. L'algorithme doit avoir été
         préalablement choisi sinon la méthode renvoie "None".
         """
-        
-        if type( self.__algorithm ) is type( {} ):
+        if len( self.__algorithm.keys()) == 0 and len( self.__StoredInputs.keys() ) == 0:
             return None
-        if key is not None:
-            if self.__algorithm.has_key(key):
-                return self.__algorithm.get( key )
-            else:
-                raise ValueError("The requested key \"%s\" does not exists as a stored variable."%key)
         else:
-            variables = self.__algorithm.get().keys()
+            variables = []
+            if len( self.__algorithm.keys()) > 0:
+                variables.extend( self.__algorithm.get().keys() )
+            if len( self.__StoredInputs.keys() ) > 0:
+                variables.extend( self.__StoredInputs.keys() )
             variables.sort()
             return variables
     
@@ -616,10 +675,11 @@ class AssimilationStudy:
                 HookFunction   = HookFunction,
                 HookParameters = HookParameters,
                 )
+
     def prepare_to_pickle(self):
-      self.__algorithmFile = None
-      self.__diagnosticFile = None
-      self.__H  = {}
+        self.__algorithmFile = None
+        self.__diagnosticFile = None
+        self.__H  = {}
 
 # ==============================================================================
 if __name__ == "__main__":
@@ -646,19 +706,21 @@ if __name__ == "__main__":
     print "Innovation         :", ADD.get("Innovation").valueserie(0)
     print
     
-    print "Algorithmes disponibles :", ADD.get_available_algorithms()
-    # print " Chemin des algorithmes :", ADD.get_algorithms_main_path()
-    print "Diagnostics disponibles :", ADD.get_available_diagnostics()
-    # print " Chemin des diagnostics :", ADD.get_diagnostics_main_path()
+    print "Algorithmes disponibles.......................:", ADD.get_available_algorithms()
+    # print " Chemin des algorithmes.....................:", ADD.get_algorithms_main_path()
+    print "Diagnostics types disponibles.................:", ADD.get_available_diagnostics()
+    # print " Chemin des diagnostics.....................:", ADD.get_diagnostics_main_path()
+    print "Variables disponibles.........................:", ADD.get_available_variables()
     print
 
     ADD.setDiagnostic("RMS", "Ma RMS")
     
     liste = ADD.get().keys()
     liste.sort()
-    print "Variables et diagnostics disponibles :", liste
-    print
+    print "Variables et diagnostics nommés disponibles...:", liste
 
+    print
+    print "Exemple de mise en place d'un observeur :"
     def obs(var=None,info=None):
         print "  ---> Mise en oeuvre de l'observer"
         print "       var  =",var.valueserie(-1)
