@@ -1,4 +1,9 @@
-Introduction à ADAO
-+++++++++++++++++++
+================================================================================
+Introduction to ADAO
+================================================================================
 
-todo
+The aim of ADAO module is to help using *data assimilation* methodology in
+conjunction with other calculation modules in SALOME.
+
+
+--TODO--

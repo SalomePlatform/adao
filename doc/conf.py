@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ADAO'
-copyright = u'2010, EDF R&D, Jean-Philippe Argaud, André Ribes'
+copyright = u'2008-2011, EDF R&D, J.-P. Argaud, A. Ribes'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
