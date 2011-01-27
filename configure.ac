@@ -127,8 +127,6 @@ AC_CONFIG_FILES([
         src/tests/daSalome/test_aster_zzzz159a.py
         src/tests/daSalome/test_aster_zzzz159a_LBFGSB.py
         src/tests/daSalome/zzzz159a.export.esclave
-        src/tests/daComposant/Makefile
-        src/tests/daComposant/Plateforme/Makefile
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile

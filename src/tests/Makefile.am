@@ -1,4 +1,4 @@
-SUBDIRS = daComposant
+SUBDIRS =
 
 if SALOME_MODULE
 SUBDIRS += daSalome
