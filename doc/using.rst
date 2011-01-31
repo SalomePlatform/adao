@@ -1,3 +1,5 @@
+.. _section_using:
+
 ================================================================================
 Using the module ADAO
 ================================================================================
@@ -5,7 +7,7 @@ Using the module ADAO
 This section presents the usage of the ADAO module in SALOME.
 
 Logical procedure to build an ADAO test case
---------------------------------------------------------------------------------
+--------------------------------------------
 
 The construction of an ADAO case follows a simple approach to define the set of
 input data, either static or dynamic data, and then generates a complete block
@@ -26,16 +28,16 @@ data assimilation study. These data can be in SALOME or not.
 Each step will be detailed later in the next section.
 
 Detailed procedure to build an ADAO test case
---------------------------------------------------------------------------------
+---------------------------------------------
 
 Activate the ADAO module and use the editor GUI
-++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++
 
 As always for a module, it has to be activated by choosing the appropriate
 module button (or menu) in the toolbar of SALOME. A popup appears, allowing to
 choose between creating a new study, or opening an already existing one:
 
-  .. _adao_activate:
+  .. _adao_activate1:
   .. image:: images/adao_activate.png
     :align: center
   .. centered::
@@ -64,7 +66,7 @@ You will be prompted for a location in your file tree and a name, that will be
 completed by a "*.comm*" extension used for JDC EFICAS files.
 
 Build and modify the ADAO case and save it
-++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++
 
 To build a case using EFICAS, you have to go through a series of steps for
 selecting a keyword and then filling in its value. The structured editor
@@ -79,16 +81,16 @@ incorrect keywords are identified by a visual error red flag.
 At the end, you have to save your ADAO case.
 
 Export the ADAO case as a YACS scheme
-++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++
 
 
 
 Modify and supplement the YACS scheme and save it
-++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 Execute the YACS case and obtain the results
-++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++
 
 
 
@@ -96,7 +98,7 @@ Execute the YACS case and obtain the results
 
 
 Reference description of the commands and keywords available throught the GUI
---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 --TODO--
 

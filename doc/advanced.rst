@@ -1,3 +1,5 @@
+.. _section_advanced:
+
 ================================================================================
 Advanced usage of ADAO
 ================================================================================
@@ -32,7 +34,7 @@ Running an ADAO calculation scheme in YACS in console mode
 
 This section describes how to execute in console mode a YACS calculation scheme,
 obtained using the ADAO "Export to YACS" function. It uses the standard YACS
-console mode, wich will be briefly recall here (see YACS documentation for more
+console mode, which will be briefly recall here (see YACS documentation for more
 information).
 
 The way to do that is as follows:

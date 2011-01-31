@@ -1,3 +1,5 @@
+.. _section_examples:
+
 ================================================================================
 Examples on using the ADAO module
 ================================================================================
@@ -59,7 +61,7 @@ Using the GUI to build the ADAO case
 First, you have to activate the ADAO module by choosing the appropriate module
 button or menu of SALOME, and you will see:
 
-  .. _adao_activate:
+  .. _adao_activate2:
   .. image:: images/adao_activate.png
     :align: center
   .. centered::

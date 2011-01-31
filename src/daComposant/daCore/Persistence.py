@@ -538,6 +538,32 @@ class Persistence:
         # -----------------------------------------------
         self.__dataobservers.append( [HookFunction, HookParameters, Schedulers] )
 
+    def removeDataObserver(self,
+        HookFunction   = None,
+        ):
+        """
+        Méthode de suppression d'un observer sur la variable.
+        
+        On peut donner dans HookFunction la meme fonction que lors de la
+        définition, ou un simple string qui est le nom de la fonction.
+        
+        """
+        if hasattr(HookFunction,"func_name"):
+            name = str( HookFunction.func_name )
+        elif type(HookFunction) is str:
+            name = str( HookFunction )
+        else:
+            name = None
+        #
+        i = -1
+        index_to_remove = []
+        for [hf, hp, hs] in self.__dataobservers:
+            i = i + 1
+            if name is hf.func_name: index_to_remove.append( i )
+        index_to_remove.reverse()
+        for i in index_to_remove:
+                self.__dataobservers.pop( i )
+
 # ==============================================================================
 class OneScalar(Persistence):
     """
@@ -1005,21 +1031,35 @@ if __name__ == "__main__":
         print "  ---> Mise en oeuvre de l'observer"
         print "       var  =",var.valueserie(-1)
         print "       info =",info
+    def obs_bis(var=None,info=None):
+        print "  ---> Mise en oeuvre de l'observer"
+        print "       var  =",var.valueserie(-1)
+        print "       info =",info
     OBJET_DE_TEST = Persistence("My object", unit="", basetype=list)
     D = OBJET_DE_TEST
     D.setDataObserver(
         HookFunction   = obs,
         Scheduler      = [2, 4],
-        HookParameters = "Second observer",
+        HookParameters = "Premier observer",
         )
     D.setDataObserver(
         HookFunction   = obs,
         Scheduler      = xrange(1,3),
+        HookParameters = "Second observer",
+        )
+    D.setDataObserver(
+        HookFunction   = obs_bis,
+        Scheduler      = range(1,3)+range(7,9),
         HookParameters = "Troisième observer",
         )
     for i in range(5):
-        # print
-        print "Action de 2 observers sur la variable observée, étape :",i
+        print "Action de 3 observers sur la variable observée, étape :",i
+        D.store( [i, i, i] )
+    D.removeDataObserver(
+        HookFunction   = obs,
+        )
+    for i in range(5,10):
+        print "Action d'un seul observer sur la variable observée, étape :",i
         D.store( [i, i, i] )
     del OBJET_DE_TEST
     print

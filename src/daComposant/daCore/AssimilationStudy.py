@@ -648,8 +648,8 @@ class AssimilationStudy:
             Scheduler      = None,
             ):
         """
-        Permet d'associer un observer à une variable nommée gérée en interne,
-        activable selon des règles définies dans le Scheduler.
+        Permet d'associer un observer à une ou des variables nommées gérées en
+        interne, activable selon des règles définies dans le Scheduler.
         """
         # 
         if type( self.__algorithm ) is dict:
@@ -674,6 +674,36 @@ class AssimilationStudy:
                 Scheduler      = Scheduler,
                 HookFunction   = HookFunction,
                 HookParameters = HookParameters,
+                )
+
+    def removeDataObserver(self,
+            VariableName   = None,
+            HookFunction   = None,
+            ):
+        """
+        Permet de retirer un observer à une ou des variable nommée.
+        """
+        # 
+        if type( self.__algorithm ) is dict:
+            raise ValueError("No observer can be removed before choosing an algorithm.")
+        #
+        # Vérification du nom de variable et typage
+        # -----------------------------------------
+        if type( VariableName ) is str:
+            VariableNames = [VariableName,]
+        elif type( VariableName ) is list:
+            VariableNames = map( str, VariableName )
+        else:
+            raise ValueError("The observer requires a name or a list of names of variables.")
+        #
+        # Association interne de l'observer à la variable
+        # -----------------------------------------------
+        for n in VariableNames:
+            if not self.__algorithm.has_key( n ):
+                raise ValueError("An observer requires to be removed on a variable named %s which does not exist."%n)
+        else:
+            self.__algorithm.StoredVariables[ n ].removeDataObserver(
+                HookFunction   = HookFunction,
                 )
 
     def prepare_to_pickle(self):
