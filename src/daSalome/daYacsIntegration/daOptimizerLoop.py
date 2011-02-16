@@ -171,6 +171,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
     # Check if ObservationOperator is already set
     if self.da_study.getObservationOperatorType("Direct") == "Function" or self.da_study.getObservationOperatorType("Tangent") == "Function" or self.da_study.getObservationOperatorType("Adjoint") == "Function" :
+      print "Set Hooks"
       # Use proxy function for YACS
       self.hooks = OptimizerHooks(self)
       direct = tangent = adjoint = None
@@ -186,6 +187,10 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
 
     # Start Assimilation Study
+    import logging
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    print "ADD analyze"
     self.ADD.analyze()
 
     # Assimilation Study is finished

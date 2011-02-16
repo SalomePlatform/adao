@@ -50,8 +50,12 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def init_gui(self):
       eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
+
+
       # On réouvre tous les fichiers comm
       # On fait une copie pour ne pas tomber dans une boucle infinie
+      # Deprecated
+      # Normalement on ne ferme plus le GUI donc on ne passe plus par là
       save_CallbackId =  self.__myCallbackId.copy()
       for editor, myCallbackId in save_CallbackId.iteritems():
         self.notifyObserver(EficasEvent.EVENT_TYPES.REOPEN, callbackId=myCallbackId)

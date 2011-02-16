@@ -28,6 +28,7 @@ mypkgpython_PYTHON = \
 		     adaoGuiHelper.py \
 		     adaoModuleHelper.py \
 		     adaoStudyEditor.py \
+		     adaoLogger.py \
 		     studyedit.py \
 		     adaoCase.py \
 		     enumerate.py

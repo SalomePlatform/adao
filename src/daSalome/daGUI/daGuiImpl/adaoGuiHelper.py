@@ -65,6 +65,12 @@ def refreshObjectBrowser():
     if salome.sg is not None:
         salome.sg.updateObjBrowser(0)
 
+def selectItem(salomeStudyItem):
+  print "selectItem", salomeStudyItem
+  if salome.sg is not None:
+    salome.sg.ClearIObjects()
+    salome.sg.AddIObject(salomeStudyItem)
+
 def getSelectedItem(salomeStudyId=getActiveStudyId()):
     """
     Get the current selection. If more than one item are selected, the

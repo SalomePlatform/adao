@@ -30,3 +30,7 @@ def debug(msg):
 def error(msg):
   adao_logger.setColor(termcolor.RED)
   adao_logger.error(msg)
+
+def warning(msg):
+  adao_logger.setColor(termcolor.BLUE)
+  adao_logger.warning(msg)

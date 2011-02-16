@@ -38,6 +38,7 @@ from daEficasWrapper.eficasWrapper import EficasObserver
 from daEficasWrapper.eficasWrapper import EficasEvent
 import adaoGuiHelper
 import adaoStudyEditor
+import adaoLogger
 
 __cases__ = {}
 
@@ -50,16 +51,20 @@ UI_ELT_IDS = Enumerate([
         'ADAO_MENU_ID',
         'NEW_ADAOCASE_ID',
         'OPEN_ADAOCASE_ID',
+        'SAVE_ADAOCASE_ID',
+        'CLOSE_ADAOCASE_ID',
+
         'EDIT_ADAOCASE_POP_ID',
-        'REMOVE_ADAOCASE_POP_ID',
         'YACS_EXPORT_POP_ID',
         ],offset=950)
 
 ACTIONS_MAP={
     UI_ELT_IDS.NEW_ADAOCASE_ID:"newAdaoCase",
     UI_ELT_IDS.OPEN_ADAOCASE_ID:"openAdaoCase",
+    UI_ELT_IDS.SAVE_ADAOCASE_ID:"saveAdaoCase",
+    UI_ELT_IDS.CLOSE_ADAOCASE_ID:"closeAdaoCase",
+
     UI_ELT_IDS.EDIT_ADAOCASE_POP_ID:"editAdaoCase",
-    UI_ELT_IDS.REMOVE_ADAOCASE_POP_ID:"removeAdaoCase",
     UI_ELT_IDS.YACS_EXPORT_POP_ID:"exportCaseToYACS",
 }
 
@@ -84,19 +89,27 @@ class AdaoGuiUiComponentBuilder:
         a = sgPyQt.createAction( UI_ELT_IDS.NEW_ADAOCASE_ID, "New case", "New case", "Create a new adao case", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
-        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_ADAOCASE_ID, "Open case", "Open case", "Open a adao case", "" )
+        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_ADAOCASE_ID, "Open case", "Open case", "Open an adao case", "" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.SAVE_ADAOCASE_ID, "Save case", "Save case", "Save an adao case", "" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an adao case", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
 
         # the following action are used in context popup
+        a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close the selected case", "" )
+
         a = sgPyQt.createAction( UI_ELT_IDS.EDIT_ADAOCASE_POP_ID, "Edit case", "Edit case", "Edit the selected study case", "" )
-        a = sgPyQt.createAction( UI_ELT_IDS.REMOVE_ADAOCASE_POP_ID, "Remove case", "Remove case", "Remove the selected study case", "" )
         a = sgPyQt.createAction( UI_ELT_IDS.YACS_EXPORT_POP_ID, "Export to YACS", "Export to YACS", "Generate a YACS graph executing this case", "" )
 
     def createPopupMenuOnItem(self,popup,salomeSudyId, item):
         if adaoStudyEditor.isValidAdaoCaseItem(salomeSudyId, item):
+          popup.addAction( sgPyQt.action( UI_ELT_IDS.CLOSE_ADAOCASE_ID ) )
+
           popup.addAction( sgPyQt.action( UI_ELT_IDS.EDIT_ADAOCASE_POP_ID ) )
-          popup.addAction( sgPyQt.action( UI_ELT_IDS.REMOVE_ADAOCASE_POP_ID ) )
           popup.addAction( sgPyQt.action( UI_ELT_IDS.YACS_EXPORT_POP_ID ) )
 
         return popup
@@ -174,10 +187,14 @@ class AdaoGuiActionImpl(EficasObserver):
     # Actions from SALOME GUI
 
     def newAdaoCase(self):
+
+      adaoLogger.debug("newAdaoCase")
       self.showEficas()
       self.__dlgEficasWrapper.fileNew()
 
     def openAdaoCase(self):
+
+      adaoLogger.debug("openAdaoCase")
       self.showEficas()
       global __cases__
       fichier = QtGui.QFileDialog.getOpenFileName(SalomePyQt.SalomePyQt().getDesktop(),
@@ -201,7 +218,8 @@ class AdaoGuiActionImpl(EficasObserver):
       adaoGuiHelper.refreshObjectBrowser()
 
     def editAdaoCase(self):
-      # First we show eficas - all cases are reloaded
+
+      adaoLogger.debug("editAdaoCase")
       global __cases__
 
       # Take study item
@@ -227,12 +245,20 @@ class AdaoGuiActionImpl(EficasObserver):
         # Case has been destroyed - create a new one
         self.__dlgEficasWrapper.fileNew()
 
-    def removeAdaoCase(self):
+    def closeAdaoCase(self):
+
+      adaoLogger.debug("closeAdaoCase")
       global __cases__
 
-      # First step: selectCase
+      # First step: get selected case
       salomeStudyId   = adaoGuiHelper.getActiveStudyId()
       salomeStudyItem = adaoGuiHelper.getSelectedItem(salomeStudyId)
+
+      # Check if there is a selected case
+      if salomeStudyItem is None:
+        print "[Close case] Please select a case"
+        return
+
       callbackId = [salomeStudyId, salomeStudyItem]
       case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
 
@@ -249,7 +275,14 @@ class AdaoGuiActionImpl(EficasObserver):
           adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
           adaoGuiHelper.refreshObjectBrowser()
 
+    def saveAdaoCase(self):
+
+      adaoLogger.debug("saveAdaoCase")
+      global __cases__
+
     def exportCaseToYACS(self):
+
+      adaoLogger.debug("exportCaseToYACS")
       global __cases__
 
       # Get case from study
@@ -290,6 +323,7 @@ class AdaoGuiActionImpl(EficasObserver):
 
     def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
       global __cases__
+
       new_case = AdaoCase()
       case_name = eficasWrapper.getCaseName()
       new_case.set_name(case_name)
@@ -301,32 +335,9 @@ class AdaoGuiActionImpl(EficasObserver):
       callbackId = [salomeStudyId, salomeStudyItem]
       self.__dlgEficasWrapper.setCallbackId(callbackId)
 
-    def _processEficasReOpenEvent(self, eficasWrapper, eficasEvent):
-      global __cases__
-      try:
-        callbackId = eficasEvent.callbackId
-        [salomeStudyId, salomeStudyItem] = callbackId
-        case_key = (salomeStudyId, salomeStudyItem.GetID())
-        case = __cases__[case_key]
-        # Search if case is in Eficas !
-        callbackId = [salomeStudyId, salomeStudyItem]
-        case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
-        # If case is not in eficas Open It !
-        if case_open_in_eficas == False:
-          if case.get_filename() != "":
-            self.__dlgEficasWrapper.Openfile(case.get_filename())
-            callbackId = [salomeStudyId, salomeStudyItem]
-            self.__dlgEficasWrapper.setCallbackId(callbackId)
-          else:
-            # Since I am an empty case I destroy myself before reloading
-            adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
-            adaoGuiHelper.refreshObjectBrowser()
-            __cases__.pop(case_key)
-            callbackId = [salomeStudyId, salomeStudyItem]
-            self.__dlgEficasWrapper.removeCallbackId(callbackId)
-      except:
-        print "Oups - cannot reopen case !"
-        traceback.print_exc()
+      # We need to select the case
+      adaoGuiHelper.selectItem(salomeStudyItem.GetID())
+
 
     def _processEficasOpenEvent(self, eficasWrapper, eficasEvent):
       global __cases__
@@ -397,6 +408,38 @@ class AdaoGuiActionImpl(EficasObserver):
         __cases__.pop(case_key)
         adaoStudyEditor.removeItem(targetSalomeStudyId, targetSalomeStudyItem)
         adaoGuiHelper.refreshObjectBrowser()
+
+    # Deprecated
+    # Normalement on ne ferme plus le GUI donc on ne passe plus par là
+    def _processEficasReOpenEvent(self, eficasWrapper, eficasEvent):
+
+      adaoLogger.warning("_processEficasReOpenEvent")
+      global __cases__
+
+      try:
+        callbackId = eficasEvent.callbackId
+        [salomeStudyId, salomeStudyItem] = callbackId
+        case_key = (salomeStudyId, salomeStudyItem.GetID())
+        case = __cases__[case_key]
+        # Search if case is in Eficas !
+        callbackId = [salomeStudyId, salomeStudyItem]
+        case_open_in_eficas = self.__dlgEficasWrapper.selectCase(callbackId)
+        # If case is not in eficas Open It !
+        if case_open_in_eficas == False:
+          if case.get_filename() != "":
+            self.__dlgEficasWrapper.Openfile(case.get_filename())
+            callbackId = [salomeStudyId, salomeStudyItem]
+            self.__dlgEficasWrapper.setCallbackId(callbackId)
+          else:
+            # Since I am an empty case I destroy myself before reloading
+            adaoStudyEditor.removeItem(salomeStudyId, salomeStudyItem)
+            adaoGuiHelper.refreshObjectBrowser()
+            __cases__.pop(case_key)
+            callbackId = [salomeStudyId, salomeStudyItem]
+            self.__dlgEficasWrapper.removeCallbackId(callbackId)
+      except:
+        print "Oups - cannot reopen case !"
+        traceback.print_exc()
 
     def _processEficasUnknownEvent(self, eficasWrapper, eficasEvent):
       print "Unknown Eficas Event"
