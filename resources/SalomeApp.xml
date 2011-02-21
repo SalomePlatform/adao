@@ -1,8 +1,9 @@
 <document>
   <section name="ADAO">
     <!-- Major module parameters -->
-    <parameter name="name"    value="ADAO"/>
-    <parameter name="library" value="SalomePyQtGUI"/>
+    <parameter name="name"          value="ADAO"/>
+    <parameter name="icon"          value="ADAO.png"/>
+    <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
   </section>
   <section name="resources">
