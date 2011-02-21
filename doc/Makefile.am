@@ -5,6 +5,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = $(top_builddir)/doc/build
+SRCDIR        = $(top_srcdir)/doc
 
 EXTRA_DIST = main.rst intro.rst conf.py
 
@@ -12,10 +13,12 @@ install-data-local:
 	make html
 	${mkinstalldirs} $(DESTDIR)$(docdir)
 	cp -R $(BUILDDIR)/html/* $(DESTDIR)$(docdir)
+	cp $(SRCDIR)/resources/*.png $(salomeresdir)
 
 uninstall-local:
 	chmod -R +w $(DESTDIR)$(docdir)
 	rm -rf $(DESTDIR)$(docdir)
+	rm  $(salomeresdir)/*.png
 
 clean-local:
 	-rm -rf $(top_builddir)/doc/build
