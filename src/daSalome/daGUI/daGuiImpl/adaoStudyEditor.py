@@ -77,9 +77,9 @@ def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
 
-    if salomeStudyItem.GetName()[:-2] != adaoCase.get_name():
-      itemName  = adaoCase.get_name()
-      itemValue = adaoCase.get_filename()
+    if salomeStudyItem.GetName()[:-2] != adaoCase.name:
+      itemName  = adaoCase.name
+      itemValue = adaoCase.filename
     else:
       itemName  = salomeStudyItem.GetName()
       itemValue = adaoCase.get_filename()

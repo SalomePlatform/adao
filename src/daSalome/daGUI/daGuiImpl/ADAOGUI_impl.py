@@ -120,7 +120,6 @@ def OnGUIEvent(actionId) :
     toolbar button). The actionId value is the ID associated to the item.
     """
     pass
-    print "OnGUIEvent", actionId
     ctx = _setContext( sgPyQt.getStudyId() )
     ctx.adaoCaseManager.processGUIEvent(actionId)
 

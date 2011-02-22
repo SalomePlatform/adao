@@ -146,14 +146,26 @@ class AdaoCaseManager(EficasObserver):
     # Ajout du cas
     self.cases[adao_case.name] = adao_case
 
+  # Sauvegarde d'un cas
+  # 1: la fonction saveAdaoCase est appelée par le GUI SALOME
+  # 2: la fonction _processEficasSaveEvent est appelée par le manager EFICAS
+  def saveAdaoCase(self):
+    adaoLogger.debug("Sauvegarde du cas s'il y a modification")
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        self.eficas_manager.adaoFileSave(adao_case)
+        break
 
-
-
-
-
-
-
-
+  def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
+    adao_case = eficasEvent.callbackId
+    # On met à jour l'étude
+    adaoStudyEditor.updateItem(adao_case.salome_study_id, adao_case.salome_study_item, adao_case)
+    # Affichage correct dans l'étude
+    adaoGuiHelper.refreshObjectBrowser()
+    adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
+    # Ajout du cas
+    self.cases[adao_case.name] = adao_case
 
   # Gestion des évènements venant du manager Eficas
   __processOptions={

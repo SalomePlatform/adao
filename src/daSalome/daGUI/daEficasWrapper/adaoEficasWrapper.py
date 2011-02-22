@@ -84,14 +84,15 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         self.removeCallbackId(callbackId)
         self.setCallbackId(callbackId)
 
-    def fileSave(self):
-        """
-        @overload
-        """
-        qtEficas.Appli.fileSave(self)
-        index = self.viewmanager.myQtab.currentIndex()
-        if index > -1 :
-          self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
+    def adaoFileSave(self, adao_case):
+
+        ok = qtEficas.Appli.fileSave(self)
+        if ok:
+          index = self.viewmanager.myQtab.currentIndex()
+          adao_case.name          = str(self.viewmanager.myQtab.tabText(index)) # Utilisation de str() pour passer d'un Qstring à un string
+          adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+          adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
+          self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def fileSaveAs(self):
         """
