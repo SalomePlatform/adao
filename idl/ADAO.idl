@@ -7,7 +7,7 @@
 
 module ADAO
 {
-  interface ADAO_GUI_COMPONENT : Engines::Superv_Component
+  interface ADAO_COMPONENT : Engines::Component, SALOMEDS::Driver
   {
    /*!
     * Test that the component is ok

@@ -22,15 +22,40 @@ from salome.kernel.logger import Logger
 from salome.kernel import termcolor
 
 adao_logger = Logger("ADAO")
+adao_engine_logger = Logger("ADAO ENGINE")
 
-def debug(msg):
-  adao_logger.setColor(termcolor.GREEN)
-  adao_logger.debug(msg)
+def info(msg, logger = "ADAO"):
 
-def error(msg):
-  adao_logger.setColor(termcolor.RED)
-  adao_logger.error(msg)
+  if logger == "ADAO":
+    adao_logger.setColor(termcolor.BLUE)
+    adao_logger.info(msg)
+  elif logger == "ENGINE":
+    adao_engine_logger.setColor(termcolor.BLUE)
+    adao_engine_logger.info(msg)
 
-def warning(msg):
-  adao_logger.setColor(termcolor.BLUE)
-  adao_logger.warning(msg)
+def debug(msg, logger = "ADAO"):
+
+  if logger == "ADAO":
+    adao_logger.setColor(termcolor.GREEN)
+    adao_logger.debug(msg)
+  elif logger == "ENGINE":
+    adao_engine_logger.setColor(termcolor.GREEN)
+    adao_engine_logger.debug(msg)
+
+def error(msg, logger = "ADAO"):
+
+  if logger == "ADAO":
+    adao_logger.setColor(termcolor.RED)
+    adao_logger.error(msg)
+  elif logger == "ENGINE":
+    adao_engine_logger.setColor(termcolor.RED)
+    adao_engine_logger.error(msg)
+
+def warning(msg, logger = "ADAO"):
+
+  if logger == "ADAO":
+    adao_logger.setColor(termcolor.CYAN)
+    adao_logger.warning(msg)
+  elif logger == "ENGINE":
+    adao_engine_logger.setColor(termcolor.CYAN)
+    adao_engine_logger.warning(msg)

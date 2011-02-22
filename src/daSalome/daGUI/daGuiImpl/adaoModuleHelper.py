@@ -20,10 +20,6 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# ---
-# Author : Vadim SANDLER, Open CASCADE S.A.S. (vadim.sandler@opencascade.com)
-# ---
-#
 
 __all__ = [
     "moduleID",
@@ -54,14 +50,14 @@ import SALOMEDS_Attributes_idl
 # Get OMA module's ID
 ###
 def moduleID():
-    MODULE_ID = 1100
+    MODULE_ID = 6100
     return MODULE_ID
 
 ###
 # Get OMA object's ID
 ###
 def objectID():
-    OBJECT_ID = 1110
+    OBJECT_ID = 6110
     return OBJECT_ID
 
 ###
@@ -78,7 +74,7 @@ def componentName():
     # Note that this name should be (i) the name used for the class implementing
     # the component CORBA interface and (ii) the name used to declare the component
     # in the catalog of the module.
-    return "ADAO"
+    return "ADAO_ENGINE"
 
 # _MEM_ we use here the tr() translation methode to manage constant parameters
 # in the application. We could have specified instead constant values directly
@@ -93,7 +89,7 @@ def modulePixmap():
     """
     Get the reference pixmap for this module.
     """
-    return "ADAO_small.png"
+    return "ADAO.png"
 
 __verbose__ = None
 def verbose():

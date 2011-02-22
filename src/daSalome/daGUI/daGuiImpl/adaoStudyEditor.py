@@ -21,7 +21,9 @@
 __author__="aribes/gboulant"
 
 from enumerate import Enumerate
-import studyedit
+
+from salome.kernel import studyedit
+
 import adaoModuleHelper
 from daGuiImpl.adaoCase import AdaoCase
 
@@ -56,7 +58,7 @@ def addInStudy(salomeStudyId, adaoCase):
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
 
     adaoRootEntry = studyEditor.findOrCreateComponent(
-        engineName    = adaoModuleHelper.componentName(),
+        moduleName    = adaoModuleHelper.componentName(),
         componentName = adaoModuleHelper.componentUserName())
 
     itemName  = adaoCase.get_name()
@@ -75,7 +77,7 @@ def addInStudy(salomeStudyId, adaoCase):
 def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
 
     studyEditor = studyedit.getStudyEditor(salomeStudyId)
-    
+
     if salomeStudyItem.GetName()[:-2] != adaoCase.get_name():
       itemName  = adaoCase.get_name()
       itemValue = adaoCase.get_filename()

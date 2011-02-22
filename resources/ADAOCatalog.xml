@@ -16,6 +16,8 @@
 
 <!-- Component list -->
 <component-list>
-
+  <component>
+    <component-name>ADAO_ENGINE</component-name>
+  </component>
 </component-list>
 </begin-catalog>
