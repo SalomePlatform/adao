@@ -57,7 +57,7 @@ UI_ELT_IDS = Enumerate([
 
         'EDIT_ADAOCASE_POP_ID',
         'YACS_EXPORT_POP_ID',
-        ],offset=950)
+        ],offset=6950)
 
 ACTIONS_MAP={
     UI_ELT_IDS.NEW_ADAOCASE_ID:"newAdaoCase",
@@ -70,11 +70,133 @@ ACTIONS_MAP={
     UI_ELT_IDS.YACS_EXPORT_POP_ID:"exportCaseToYACS",
 }
 
+
+class AdaoCaseManager(EficasObserver):
+  """
+  Cette classe gére les cas ADAO et coordonne les GUI de SALOME (l'étude)
+  et le GUI de l'objet Eficas (héritage du module Eficas)
+  """
+  def __init__(self):
+
+    # Création d'un dictionnaire de cas
+    # Key   == nom du cas
+    # Value == objet AdaoCase()
+    self.cases = {}
+
+
+    # Création des deux managers
+    self.salome_manager = AdaoGuiUiComponentBuilder()
+    self.eficas_manager = AdaoEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
+
+    # On s'enregistre comme observer pour les évènements venant d'Eficas
+    # Les évènements du salome_manager viennent par le biais de la méthode
+    # processGUIEvent
+    self.eficas_manager.addObserver(self)
+
+    # Création du GUI Eficas
+    self.eficas_manager.init_gui()
+
+    # Création du viewer QT
+    # Scroll Widget (pour les petites résolutions)
+    area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
+    area.setWidget(self.eficas_manager)
+    area.setWidgetResizable(1)
+    wmType = "ADAO View"
+    self.eficas_viewId = sgPyQt.createView(wmType, area)
+
+    # On interdit que la vue soit fermée
+    # Cela simplifier grandement le code
+    sgPyQt.setViewClosable(self.eficas_viewId, False)
+
+  def activate(self):
+    self.__dlgEficasWrapper.setEnabled(True)
+
+  def deactivate(self):
+    self.__dlgEficasWrapper.setEnabled(False)
+
+  def _processEficasTabChanged(self, eficasWrapper, eficasEvent):
+    """
+    Gestion de la synchonisation entre le tab courant et la selection
+    dans l'étude
+    """
+    editor = eficasEvent.callbackId
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.eficas_editor is editor:
+        adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
+        break
+
+  # Création d'un nouveau cas
+  # 1: la fonction newAdaoCase est appelée par le GUI SALOME
+  # 2: la fonction _processEficasNewEvent est appelée par le manager EFICAS
+  def newAdaoCase(self):
+    adaoLogger.debug("Création d'un nouveau cas adao")
+    self.eficas_manager.adaofileNew(AdaoCase())
+
+  def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
+    adao_case = eficasEvent.callbackId
+    # Ajout dand l'étude
+    salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+    salomeStudyItem = adaoStudyEditor.addInStudy(salomeStudyId, adao_case)
+    # Affichage correct dans l'étude
+    adaoGuiHelper.refreshObjectBrowser()
+    adaoGuiHelper.selectItem(salomeStudyItem.GetID())
+    # Finalisation des données du cas
+    adao_case.salome_study_id   = salomeStudyId
+    adao_case.salome_study_item = salomeStudyItem
+    # Ajout du cas
+    self.cases[adao_case.name] = adao_case
+
+
+
+
+
+
+
+
+
+
+  # Gestion des évènements venant du manager Eficas
+  __processOptions={
+      EficasEvent.EVENT_TYPES.CLOSE      : "_processEficasCloseEvent",
+      EficasEvent.EVENT_TYPES.SAVE       : "_processEficasSaveEvent",
+      EficasEvent.EVENT_TYPES.NEW        : "_processEficasNewEvent",
+      EficasEvent.EVENT_TYPES.DESTROY    : "_processEficasDestroyEvent",
+      EficasEvent.EVENT_TYPES.OPEN       : "_processEficasOpenEvent",
+      EficasEvent.EVENT_TYPES.REOPEN     : "_processEficasReOpenEvent",
+      EficasEvent.EVENT_TYPES.TABCHANGED : "_processEficasTabChanged"
+      }
+
+  def processEficasEvent(self, eficasWrapper, eficasEvent):
+      """
+      Implementation of the interface EficasObserver. The implementation is a
+      switch on the possible types of events defined in EficasEvent.EVENT_TYPES.
+      @overload
+      """
+      functionName = self.__processOptions.get(eficasEvent.eventType, lambda : "_processEficasUnknownEvent")
+      return getattr(self,functionName)(eficasWrapper, eficasEvent)
+
+  def _processEficasUnknownEvent(self, eficasWrapper, eficasEvent):
+    adaoLogger.error("Unknown Eficas Event")
+
+  # Gestion des évènements venant du GUI de SALOME
+  def processGUIEvent(self, actionId):
+    """
+    Main switch function for ui actions processing
+    """
+    if ACTIONS_MAP.has_key(actionId):
+      try:
+          functionName = ACTIONS_MAP[actionId]
+          getattr(self,functionName)()
+      except:
+          traceback.print_exc()
+    else:
+      adaoLogger.warning("The requested action is not implemented: " + str(actionId))
+
 class AdaoGuiUiComponentBuilder:
     """
     The initialisation of this class creates the graphic components involved
     in the GUI (menu, menu item, toolbar). A ui component builder should be
-    created for each opened study and associated to its context (see usage in OMAGUI.py).
+    created for each opened study and associated to its context.
     """
     def __init__(self):
         self.initUiComponents()

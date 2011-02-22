@@ -36,22 +36,18 @@ sgPyQt = SalomePyQt.SalomePyQt()
 # creates the menu and toolbar items (must be created for every study)
 
 from daGuiImpl import adaoGuiHelper
-from daGuiImpl.adaoGuiManager import AdaoGuiUiComponentBuilder
-from daGuiImpl.adaoGuiManager import AdaoGuiActionImpl
-class GUIcontext:
-    uiComponentBuilder = None
-    actionImpl = None
-    def __init__(self):
-        self.uiComponentBuilder = AdaoGuiUiComponentBuilder()
-        self.actionImpl = AdaoGuiActionImpl()
+from daGuiImpl.adaoGuiManager import AdaoCaseManager
 
+class GUIcontext:
+    adaoCaseManager = None
+    def __init__(self):
+        self.adaoCaseManager = AdaoCaseManager()
 
 __study2context__   = {}
 __current_context__ = None
 def _setContext( studyID ):
     global __study2context__, __current_context__
     if not __study2context__.has_key(studyID):
-        print "create new context"
         __study2context__[studyID] = GUIcontext()
         pass
     __current_context__ = __study2context__[studyID]
@@ -92,15 +88,14 @@ def createPreferences():
 # called when module is activated
 # returns True if activating is successfull and False otherwise
 def activate():
-    print "activate study",  sgPyQt.getStudyId()
     ctx = _setContext( sgPyQt.getStudyId() )
-    ctx.actionImpl.activate()
+    ctx.adaoCaseManager.activate()
     return True
 
 # called when module is deactivated
 def deactivate():
     ctx = _setContext( sgPyQt.getStudyId() )
-    ctx.actionImpl.deactivate()
+    ctx.adaoCaseManager.deactivate()
     pass
 
 # called when active study is changed
@@ -108,7 +103,6 @@ def deactivate():
 def activeStudyChanged( studyID ):
     ctx = _setContext( sgPyQt.getStudyId() )
     pass
-
 
 # called when popup menu is invoked
 # popup menu and menu context are passed as parameters
@@ -118,7 +112,7 @@ def createPopupMenu( popup, context ):
   selcount, selected = adaoGuiHelper.getAllSelected(activeStudyId)
   if selcount == 1:
     selectedItem = adaoGuiHelper.getSelectedItem(activeStudyId)
-    popup = ctx.uiComponentBuilder.createPopupMenuOnItem(popup, activeStudyId, selectedItem)
+    popup = ctx.adaoCaseManager.salome_manager.createPopupMenuOnItem(popup, activeStudyId, selectedItem)
 
 def OnGUIEvent(actionId) :
     """
@@ -128,7 +122,7 @@ def OnGUIEvent(actionId) :
     pass
     print "OnGUIEvent", actionId
     ctx = _setContext( sgPyQt.getStudyId() )
-    ctx.actionImpl.processAction(actionId)
+    ctx.adaoCaseManager.processGUIEvent(actionId)
 
 # called when module's preferences are changed
 # preference's resources section and setting name are passed as parameters

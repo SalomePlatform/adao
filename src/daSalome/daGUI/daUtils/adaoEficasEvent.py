@@ -52,7 +52,8 @@ class EficasEvent:
         'DESTROY',
         'OPEN',
         'REOPEN',
-        'NEW'
+        'NEW',
+        'TABCHANGED'
     ])
 
     def __init__(self,eventType,callbackId=None):

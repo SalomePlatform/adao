@@ -23,9 +23,12 @@ import os
 
 import eficasSalome               # Import from EFICAS_SRC
 from InterfaceQT4 import qtEficas # Import from Eficas
-from PyQt4 import QtGui,QtCore    # Import from PyQT
+from PyQt4.QtGui  import *        # Import from PyQT
+from PyQt4.QtCore import *        # Import from PyQT
+from PyQt4.QtAssistant import *   # Import from PyQT
 
 from daUtils.adaoEficasEvent import *
+from daGuiImpl.adaoLogger import *
 
 #
 # ============================================
@@ -47,7 +50,9 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         self.__parent = parent
 
     def init_gui(self):
+
       eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
+      self.connect(self.viewmanager.myQtab, SIGNAL('currentChanged(int)'), self.tabChanged)
 
 
       # On réouvre tous les fichiers comm
@@ -58,16 +63,21 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       for editor, myCallbackId in save_CallbackId.iteritems():
         self.notifyObserver(EficasEvent.EVENT_TYPES.REOPEN, callbackId=myCallbackId)
 
+    def tabChanged(self, index):
+      debug("tabChanged " + str(index))
+      self.notifyObserver(EficasEvent.EVENT_TYPES.TABCHANGED, callbackId=self.viewmanager.dict_editors[index])
+
     def addJdcInSalome(  self, jdcPath ):
       # On gere nous meme l'etude
       pass
 
-    def fileNew(self):
-        """
-        @overload
-        """
+    def adaofileNew(self, adao_case):
+
         qtEficas.Appli.fileNew(self)
-        self.notifyObserver(EficasEvent.EVENT_TYPES.NEW)
+        index = self.viewmanager.myQtab.currentIndex()
+        adao_case.name          = str(self.viewmanager.myQtab.tabText(index)) # Utilisation de str() pour passer d'un Qstring à un string
+        adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+        self.notifyObserver(EficasEvent.EVENT_TYPES.NEW, callbackId=adao_case)
 
     def openEmptyCase(self, callbackId):
         qtEficas.Appli.fileNew(self)
@@ -124,10 +134,10 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         """
         @overload
         """
-        fichier = QtGui.QFileDialog.getOpenFileName(self,
-                                                    self.trUtf8('Ouvrir Fichier'),
-                                                    self.CONFIGURATION.savedir,
-                                                    self.trUtf8('JDC Files (*.comm);;''All Files (*)'))
+        fichier = QFileDialog.getOpenFileName(self,
+                                              self.trUtf8('Ouvrir Fichier'),
+                                              self.CONFIGURATION.savedir,
+                                              self.trUtf8('JDC Files (*.comm);;''All Files (*)'))
         if fichier.isNull(): return
         self.__file_open_name = fichier
         self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN)
@@ -220,7 +230,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         self.__observer = observer
 
     def notifyObserver(self, eventType, callbackId=None):
-      if eventType != EficasEvent.EVENT_TYPES.NEW and eventType != EficasEvent.EVENT_TYPES.OPEN:
+      if eventType != EficasEvent.EVENT_TYPES.OPEN:
         if callbackId is None :
           eficasEvent = EficasEvent(eventType, self.getCallbackId())
         else:

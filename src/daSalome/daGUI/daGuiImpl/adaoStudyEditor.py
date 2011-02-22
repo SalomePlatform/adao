@@ -59,18 +59,17 @@ def addInStudy(salomeStudyId, adaoCase):
 
     adaoRootEntry = studyEditor.findOrCreateComponent(
         moduleName    = adaoModuleHelper.componentName(),
-        componentName = adaoModuleHelper.componentUserName())
+        componentName = adaoModuleHelper.componentUserName(),
+        icon          = adaoModuleHelper.modulePixmap())
 
-    itemName  = adaoCase.get_name()
-    itemValue = str(adaoCase.get_filename())
+    itemName  = adaoCase.name
+    itemValue = adaoCase.filename
     itemType  = ADAO_ITEM_TYPES.ADAO_CASE
 
     salomeStudyItem = studyEditor.createItem(
         adaoRootEntry, itemName,
         comment = itemValue,
         typeId  = itemType)
-    # _MEM_ Note that we use the comment attribute to store the serialize
-    # description of the data.
 
     return salomeStudyItem
 
