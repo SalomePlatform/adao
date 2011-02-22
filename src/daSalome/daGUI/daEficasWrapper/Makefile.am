@@ -22,8 +22,5 @@ include $(top_srcdir)/adm_local/make_common_starter.am
 mypkgpythondir =$(salomepythondir)/daEficasWrapper
 
 mypkgpython_PYTHON = \
-		     eficasWrapper.py \
 		     __init__.py \
-		     adaoEficasWrapper.py \
-		     adaoWrapperUtils.py
-
+		     adaoEficasWrapper.py

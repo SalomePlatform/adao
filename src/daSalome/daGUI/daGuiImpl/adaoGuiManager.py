@@ -34,8 +34,8 @@ sgPyQt = SalomePyQt.SalomePyQt()
 from daGuiImpl.enumerate import Enumerate
 from daGuiImpl.adaoCase import AdaoCase
 from daEficasWrapper.adaoEficasWrapper import AdaoEficasWrapper
-from daEficasWrapper.eficasWrapper import EficasObserver
-from daEficasWrapper.eficasWrapper import EficasEvent
+
+from daUtils.adaoEficasEvent import *
 import adaoGuiHelper
 import adaoStudyEditor
 import adaoLogger

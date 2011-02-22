@@ -115,6 +115,7 @@ AC_CONFIG_FILES([
         src/daEficas/prefs_ADAO.py
         src/daSalome/Makefile
         src/daSalome/daGUI/Makefile
+        src/daSalome/daGUI/daUtils/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
         src/daSalome/daGUI/daEficasWrapper/Makefile
         src/daSalome/daGUI/daGuiComponent/Makefile

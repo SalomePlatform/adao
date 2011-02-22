@@ -20,14 +20,12 @@
 
 import sys
 import os
-from PyQt4 import QtGui,QtCore
 
-# Import from EFICAS_SRC
-import eficasSalome
-# Import from Eficas
-from InterfaceQT4 import qtEficas
+import eficasSalome               # Import from EFICAS_SRC
+from InterfaceQT4 import qtEficas # Import from Eficas
+from PyQt4 import QtGui,QtCore    # Import from PyQT
 
-from adaoWrapperUtils import *
+from daUtils.adaoEficasEvent import *
 
 #
 # ============================================
