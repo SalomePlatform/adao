@@ -30,48 +30,66 @@ reasons:
 """
 
 from daGuiImpl import ADAOGUI_impl as GuiImpl
+from daGuiImpl import adaoLogger
 
+adaoLogger.debug("Import ADAOGUI")
 
 # called when module is initialized
 # perform initialization actions
 def initialize():
-    GuiImpl.initialize()
+  adaoLogger.debug("initialize")
+  GuiImpl.initialize()
 
 # called when module is initialized
 # return map of popup windows to be used by the module
 def windows():
-    return GuiImpl.windows()
+  adaoLogger.debug("windows")
+  return GuiImpl.windows()
+
+def views():
+  adaoLogger.debug("views")
+  return GuiImpl.views()
 
 # called when module is initialized
 # export module's preferences
 def createPreferences():
-    GuiImpl.createPreferences()
+  adaoLogger.debug("createPreferences")
+  GuiImpl.createPreferences()
 
 # called when module is activated
 # returns True if activating is successfull and False otherwise
 def activate():
-    return GuiImpl.activate()
+  adaoLogger.debug("activate")
+  return GuiImpl.activate()
 
 # called when module is deactivated
 def deactivate():
-    GuiImpl.deactivate()
+  adaoLogger.debug("deactivate")
+  GuiImpl.deactivate()
 
 # called when active study is changed
 # active study ID is passed as parameter
 def activeStudyChanged( studyID ):
-    GuiImpl.activeStudyChanged( studyID )
+  adaoLogger.debug("activeStudyChanged")
+  GuiImpl.activeStudyChanged( studyID )
 
 # called when popup menu is invoked
 # popup menu and menu context are passed as parameters
 def createPopupMenu( popup, context ):
-    GuiImpl.createPopupMenu(popup, context )
+  adaoLogger.debug("createPopupMenu")
+  GuiImpl.createPopupMenu(popup, context )
 
 # called when GUI action is activated
 # action ID is passed as parameter
 def OnGUIEvent(commandID) :
-    GuiImpl.OnGUIEvent(commandID)
+  adaoLogger.debug("OnGUIEvent")
+  GuiImpl.OnGUIEvent(commandID)
 
 # called when module's preferences are changed
 # preference's resources section and setting name are passed as parameters
 def preferenceChanged( section, setting ):
-    GuiImpl.preferenceChanged( section, setting )
+  adaoLogger.debug("preferenceChanged")
+  GuiImpl.preferenceChanged( section, setting )
+
+def activeViewChanged(toto, myView):
+  adaoLogger.debug("activeViewChanged")

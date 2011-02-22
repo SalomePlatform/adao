@@ -27,7 +27,3 @@ mypkgpython_PYTHON = \
 		     adaoEficasWrapper.py \
 		     adaoWrapperUtils.py
 
-EXTRA_DIST = eficasWrapper.py.in
-
-
-

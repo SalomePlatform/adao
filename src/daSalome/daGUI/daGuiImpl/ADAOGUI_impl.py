@@ -80,7 +80,8 @@ def windows():
 # called when module is initialized
 # return list of 2d/3d views to be used ny the module
 def views():
-    return []
+  print "views"
+  return []
 
 def createPreferences():
     """
@@ -125,6 +126,7 @@ def OnGUIEvent(actionId) :
     toolbar button). The actionId value is the ID associated to the item.
     """
     pass
+    print "OnGUIEvent", actionId
     ctx = _setContext( sgPyQt.getStudyId() )
     ctx.actionImpl.processAction(actionId)
 
@@ -136,7 +138,8 @@ def preferenceChanged( section, setting ):
 # called when active view is changed
 # view ID is passed as parameter
 def activeViewChanged( viewID ):
-    pass
+  print "activeViewChanged", viewID
+  pass
 
 # called when active view is cloned
 # cloned view ID is passed as parameter

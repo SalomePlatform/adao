@@ -117,7 +117,6 @@ AC_CONFIG_FILES([
         src/daSalome/daGUI/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
         src/daSalome/daGUI/daEficasWrapper/Makefile
-        src/daSalome/daGUI/daEficasWrapper/eficasWrapper.py
         src/daSalome/daGUI/daGuiComponent/Makefile
         src/tests/Makefile
         src/tests/daSalome/Makefile

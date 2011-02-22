@@ -52,6 +52,7 @@ UI_ELT_IDS = Enumerate([
         'NEW_ADAOCASE_ID',
         'OPEN_ADAOCASE_ID',
         'SAVE_ADAOCASE_ID',
+        'SAVE_AS_ADAOCASE_ID',
         'CLOSE_ADAOCASE_ID',
 
         'EDIT_ADAOCASE_POP_ID',
@@ -62,6 +63,7 @@ ACTIONS_MAP={
     UI_ELT_IDS.NEW_ADAOCASE_ID:"newAdaoCase",
     UI_ELT_IDS.OPEN_ADAOCASE_ID:"openAdaoCase",
     UI_ELT_IDS.SAVE_ADAOCASE_ID:"saveAdaoCase",
+    UI_ELT_IDS.SAVE_AS_ADAOCASE_ID:"saveasAdaoCase",
     UI_ELT_IDS.CLOSE_ADAOCASE_ID:"closeAdaoCase",
 
     UI_ELT_IDS.EDIT_ADAOCASE_POP_ID:"editAdaoCase",
@@ -93,6 +95,9 @@ class AdaoGuiUiComponentBuilder:
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.SAVE_ADAOCASE_ID, "Save case", "Save case", "Save an adao case", "" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.SAVE_AS_ADAOCASE_ID, "Save as case", "Save as case", "Save an adao case as", "" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an adao case", "" )
@@ -278,6 +283,11 @@ class AdaoGuiActionImpl(EficasObserver):
     def saveAdaoCase(self):
 
       adaoLogger.debug("saveAdaoCase")
+      global __cases__
+
+    def saveasAdaoCase(self):
+
+      adaoLogger.debug("saveasAdaoCase")
       global __cases__
 
     def exportCaseToYACS(self):
