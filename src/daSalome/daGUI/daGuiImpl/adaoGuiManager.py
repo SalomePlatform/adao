@@ -27,6 +27,7 @@ __author__ = "aribes/gboulant"
 
 import traceback
 from PyQt4.QtCore import QObject
+from PyQt4.QtCore import *        # Import from PyQT
 from PyQt4 import QtGui,QtCore
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
@@ -83,7 +84,6 @@ class AdaoCaseManager(EficasObserver):
     # Value == objet AdaoCase()
     self.cases = {}
 
-
     # Création des deux managers
     self.salome_manager = AdaoGuiUiComponentBuilder()
     self.eficas_manager = AdaoEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
@@ -108,11 +108,23 @@ class AdaoCaseManager(EficasObserver):
     # Cela simplifier grandement le code
     sgPyQt.setViewClosable(self.eficas_viewId, False)
 
+    # On s'abonne au gestionnaire de selection
+    self.selection_manager = sgPyQt.getSelection()
+    QtCore.QObject.connect(self.selection_manager, QtCore.SIGNAL('currentSelectionChanged()'), self.currentSelectionChanged)
+
   def activate(self):
-    self.__dlgEficasWrapper.setEnabled(True)
+    self.eficas_manager.setEnabled(True)
 
   def deactivate(self):
-    self.__dlgEficasWrapper.setEnabled(False)
+    self.eficas_manager.setEnabled(False)
+
+  def currentSelectionChanged(self):
+    adaoLogger.debug("currentSelectionChanged")
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        self.eficas_manager.selectCase(adao_case.eficas_editor)
+        break
 
   def _processEficasTabChanged(self, eficasWrapper, eficasEvent):
     """

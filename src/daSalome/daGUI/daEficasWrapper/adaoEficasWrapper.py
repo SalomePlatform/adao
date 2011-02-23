@@ -65,7 +65,10 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def tabChanged(self, index):
       debug("tabChanged " + str(index))
-      self.notifyObserver(EficasEvent.EVENT_TYPES.TABCHANGED, callbackId=self.viewmanager.dict_editors[index])
+      # This signal is also emit when a new case is created/added
+      # On regarde que le dictionnaire contient l'index
+      if index in self.viewmanager.dict_editors.keys():
+        self.notifyObserver(EficasEvent.EVENT_TYPES.TABCHANGED, callbackId=self.viewmanager.dict_editors[index])
 
     def addJdcInSalome(  self, jdcPath ):
       # On gere nous meme l'etude
@@ -147,18 +150,13 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
     def getOpenFileName(self):
       return str(self.__file_open_name)
 
-    def selectCase(self, callbackId):
+    def selectCase(self, editor):
       rtn = False
-      for editor, myCallbackId in self.__myCallbackId.iteritems():
-        if myCallbackId[0] == callbackId[0]:
-          if myCallbackId[1].GetID() == callbackId[1].GetID():
-            try:
-              for indexEditor in self.viewmanager.dict_editors.keys():
-                if editor is self.viewmanager.dict_editors[indexEditor]:
-                  self.viewmanager.myQtab.setCurrentIndex(indexEditor)
-                  rtn = True
-            except:
-              pass
+      for indexEditor in self.viewmanager.dict_editors.keys():
+        if editor is self.viewmanager.dict_editors[indexEditor]:
+          self.viewmanager.myQtab.setCurrentIndex(indexEditor)
+          rtn = True
+          break
       return rtn
 
     def fileClose(self):
