@@ -49,7 +49,7 @@ class EficasEvent:
     EVENT_TYPES=Enumerate([
         'CLOSE',
         'SAVE',
-        'DESTROY',
+        'CLOSE',
         'OPEN',
         'REOPEN',
         'NEW',

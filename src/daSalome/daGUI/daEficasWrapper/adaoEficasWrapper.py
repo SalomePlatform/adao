@@ -118,6 +118,21 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
           adao_case.eficas_editor = self.viewmanager.dict_editors[index]
           self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN, callbackId=adao_case)
 
+    def adaoFileClose(self, adao_case):
+
+        index = self.viewmanager.myQtab.currentIndex()
+        close_editor = self.viewmanager.dict_editors[index]
+        res = self.viewmanager.handleClose(self)
+        if res != 2: # l utilsateur a annule
+          if close_editor.fichier is None:
+            # Cas fichier vide
+            print "cas fichier vide"
+            self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE, callbackId=close_editor)
+          else:
+            # Cas fichier existant
+            print "cas fichier existant"
+            self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE, callbackId=close_editor)
+
 #######
 #
 # Méthodes auxiliares de gestion du GUI Eficas pour synchronisation

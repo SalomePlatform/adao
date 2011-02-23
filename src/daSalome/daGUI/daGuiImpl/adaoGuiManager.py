@@ -256,6 +256,35 @@ class AdaoCaseManager(EficasObserver):
 
 #######
 #
+# Gestion de la fermeture d'un cas
+# 1: la fonction closeAdaoCase est appelée par le GUI SALOME
+# 2: la fonction _processEficasCloseEvent est appelée par le manager EFICAS
+#
+#######
+
+  def closeAdaoCase(self):
+    adaoLogger.debug("Fermeture d'un cas")
+    # A priori, l'utilisateur s'attend à sauvegarder le cas qui est ouvert
+    # dans le GUI d'Eficas
+    self.harmonizeSelectionFromEficas()
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        self.eficas_manager.adaoFileClose(adao_case)
+        break
+
+  def _processEficasCloseEvent(self, eficasWrapper, eficasEvent):
+    editor = eficasEvent.callbackId
+    # Recuperation du cas
+    adao_case = self.cases[editor]
+    # Suppression de l'objet dans l'étude
+    adaoStudyEditor.removeItem(adao_case.salome_study_id, adao_case.salome_study_item)
+    adaoGuiHelper.refreshObjectBrowser()
+    # Suppression du cas
+    del self.cases[editor]
+
+#######
+#
 # Méthodes secondaires permettant de rediriger les évènements
 # de SALOME et d'Eficas vers les bonnes méthodes de la classe
 #
@@ -266,7 +295,7 @@ class AdaoCaseManager(EficasObserver):
       EficasEvent.EVENT_TYPES.CLOSE      : "_processEficasCloseEvent",
       EficasEvent.EVENT_TYPES.SAVE       : "_processEficasSaveEvent",
       EficasEvent.EVENT_TYPES.NEW        : "_processEficasNewEvent",
-      EficasEvent.EVENT_TYPES.DESTROY    : "_processEficasDestroyEvent",
+      EficasEvent.EVENT_TYPES.CLOSE      : "_processEficasCloseEvent",
       EficasEvent.EVENT_TYPES.OPEN       : "_processEficasOpenEvent",
       EficasEvent.EVENT_TYPES.TABCHANGED : "_processEficasTabChanged",
       EficasEvent.EVENT_TYPES.REOPEN     : "_processEficasReOpenEvent"
@@ -543,7 +572,6 @@ class AdaoGuiActionImpl(EficasObserver):
         EficasEvent.EVENT_TYPES.CLOSE   : "_processEficasCloseEvent",
         EficasEvent.EVENT_TYPES.SAVE    : "_processEficasSaveEvent",
         EficasEvent.EVENT_TYPES.NEW     : "_processEficasNewEvent",
-        EficasEvent.EVENT_TYPES.DESTROY : "_processEficasDestroyEvent",
         EficasEvent.EVENT_TYPES.OPEN    : "_processEficasOpenEvent",
         EficasEvent.EVENT_TYPES.REOPEN  : "_processEficasReOpenEvent"
         }
