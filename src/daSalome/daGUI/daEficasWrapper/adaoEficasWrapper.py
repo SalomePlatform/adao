@@ -44,9 +44,6 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         ADAO_INSTALL_DIR = my_path + "/../daEficas"
         sys.path[:0]=[ADAO_INSTALL_DIR]
 
-        self.__myCallbackId = {}
-        self.__close_editor = None
-        self.__file_open_name = ""
         self.__parent = parent
 
     def init_gui(self):
@@ -54,14 +51,16 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
       self.connect(self.viewmanager.myQtab, SIGNAL('currentChanged(int)'), self.tabChanged)
 
+    def addJdcInSalome(self, jdcPath):
+      debug("addJdcInSalome is called " + str(jdcPath))
+      # On gere nous meme l'etude
+      pass
 
-      # On réouvre tous les fichiers comm
-      # On fait une copie pour ne pas tomber dans une boucle infinie
-      # Deprecated
-      # Normalement on ne ferme plus le GUI donc on ne passe plus par là
-      save_CallbackId =  self.__myCallbackId.copy()
-      for editor, myCallbackId in save_CallbackId.iteritems():
-        self.notifyObserver(EficasEvent.EVENT_TYPES.REOPEN, callbackId=myCallbackId)
+#######
+#
+# Gestion des évènements provenant des widgets QT d'Eficas
+#
+#######
 
     def tabChanged(self, index):
       debug("tabChanged " + str(index))
@@ -70,39 +69,106 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       if index in self.viewmanager.dict_editors.keys():
         self.notifyObserver(EficasEvent.EVENT_TYPES.TABCHANGED, callbackId=self.viewmanager.dict_editors[index])
 
-    def addJdcInSalome(  self, jdcPath ):
-      # On gere nous meme l'etude
-      pass
+#######
+#
+# Méthodes gérant les boutons dans SALOME
+#
+#######
+
+# Rq: Utilisation de la méthode str() pour passer d'un Qstring à un string
 
     def adaofileNew(self, adao_case):
 
-        qtEficas.Appli.fileNew(self)
+      qtEficas.Appli.fileNew(self)
+      index = self.viewmanager.myQtab.currentIndex()
+      adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
+      adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+      self.notifyObserver(EficasEvent.EVENT_TYPES.NEW, callbackId=adao_case)
+
+    def adaoFileSave(self, adao_case):
+
+      ok = qtEficas.Appli.fileSave(self)
+      if ok:
         index = self.viewmanager.myQtab.currentIndex()
-        adao_case.name          = str(self.viewmanager.myQtab.tabText(index)) # Utilisation de str() pour passer d'un Qstring à un string
+        adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
+        adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
         adao_case.eficas_editor = self.viewmanager.dict_editors[index]
-        self.notifyObserver(EficasEvent.EVENT_TYPES.NEW, callbackId=adao_case)
+        self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
+
+    def adaoFileSaveAs(self, adao_case):
+
+      ok = qtEficas.Appli.fileSaveAs(self)
+      if ok:
+        index = self.viewmanager.myQtab.currentIndex()
+        adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
+        adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
+        adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+        self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
+
+    def adaoFileOpen(self, adao_case):
+
+      tab_number = self.viewmanager.myQtab.count()
+      ok = self.viewmanager.handleOpen()
+      if ok:
+        # On regarde si c'est un nouveau editeur
+        if self.viewmanager.myQtab.count() > tab_number:
+          index = self.viewmanager.myQtab.currentIndex()
+          adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
+          adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
+          adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+          self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN, callbackId=adao_case)
+
+#######
+#
+# Méthodes auxiliares de gestion du GUI Eficas pour synchronisation
+# avec la partie GUI de SALOME
+#
+#######
+
+    def selectCase(self, editor):
+      rtn = False
+      for indexEditor in self.viewmanager.dict_editors.keys():
+        if editor is self.viewmanager.dict_editors[indexEditor]:
+          self.viewmanager.myQtab.setCurrentIndex(indexEditor)
+          rtn = True
+          break
+      return rtn
+
+
+
+
+#######
+#
+# Méthodes secondaires permettant de gérer les observeurs du
+# GUI d'Eficas
+#
+#######
+
+    def addObserver(self, observer):
+        """
+        In fact, only one observer may be defined for the moment.
+        """
+        try:
+            observer.processEficasEvent
+        except:
+            raise DevelException("the argument should implement the function processEficasEvent")
+        self.__observer = observer
+
+    def notifyObserver(self, eventType, callbackId=None):
+      eficasEvent = EficasEvent(eventType, callbackId)
+      self.__observer.processEficasEvent(self, eficasEvent)
+
+
+#######
+#
+# Deprecated code
+#
+#######
 
     def openEmptyCase(self, callbackId):
         qtEficas.Appli.fileNew(self)
         self.removeCallbackId(callbackId)
         self.setCallbackId(callbackId)
-
-    def adaoFileSave(self, adao_case):
-
-        ok = qtEficas.Appli.fileSave(self)
-        if ok:
-          index = self.viewmanager.myQtab.currentIndex()
-          adao_case.name          = str(self.viewmanager.myQtab.tabText(index)) # Utilisation de str() pour passer d'un Qstring à un string
-          adao_case.eficas_editor = self.viewmanager.dict_editors[index]
-          adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-          self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
-
-    def fileSaveAs(self):
-        """
-        @overload
-        """
-        qtEficas.Appli.fileSaveAs(self)
-        self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE)
 
     def getCaseName(self):
       if self.__close_editor is None:
@@ -134,30 +200,10 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN)
       self.__file_open_name = ""
 
-    def fileOpen(self):
-        """
-        @overload
-        """
-        fichier = QFileDialog.getOpenFileName(self,
-                                              self.trUtf8('Ouvrir Fichier'),
-                                              self.CONFIGURATION.savedir,
-                                              self.trUtf8('JDC Files (*.comm);;''All Files (*)'))
-        if fichier.isNull(): return
-        self.__file_open_name = fichier
-        self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN)
-        self.__file_open_name = ""
 
     def getOpenFileName(self):
       return str(self.__file_open_name)
 
-    def selectCase(self, editor):
-      rtn = False
-      for indexEditor in self.viewmanager.dict_editors.keys():
-        if editor is self.viewmanager.dict_editors[indexEditor]:
-          self.viewmanager.myQtab.setCurrentIndex(indexEditor)
-          rtn = True
-          break
-      return rtn
 
     def fileClose(self):
         """
@@ -189,52 +235,4 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
           if res==2 : return res   # l utilsateur a annule
         else:
           return 0
-
-    # ==========================================================================
-    # Function for the notification interface between an EficasWrapper an an
-    # EficasObserver.
-
-    # Association de l'objet editor avec le callbackId
-    def setCallbackId(self, callbackId):
-      index = self.viewmanager.myQtab.currentIndex()
-      self.__myCallbackId[self.viewmanager.dict_editors[index]] = callbackId
-
-    def removeCallbackId(self, callbackId):
-      key_to_remove = None
-      print callbackId
-      for k, v in self.__myCallbackId.iteritems():
-        print k, v
-        if v[0] == callbackId[0] and v[1].GetID() == callbackId[1].GetID():
-          key_to_remove = k
-      if key_to_remove is not None:
-        del self.__myCallbackId[key_to_remove]
-      else:
-        print "Oups - cannot find callbackId"
-
-    def getCallbackId(self):
-      if self.__close_editor is None:
-        index = self.viewmanager.myQtab.currentIndex()
-        return self.__myCallbackId[self.viewmanager.dict_editors[index]]
-      else:
-        return self.__myCallbackId[self.__close_editor]
-
-    def addObserver(self, observer):
-        """
-        In fact, only one observer may be defined for the moment.
-        """
-        try:
-            observer.processEficasEvent
-        except:
-            raise DevelException("the argument should implement the function processEficasEvent")
-        self.__observer = observer
-
-    def notifyObserver(self, eventType, callbackId=None):
-      if eventType != EficasEvent.EVENT_TYPES.OPEN:
-        if callbackId is None :
-          eficasEvent = EficasEvent(eventType, self.getCallbackId())
-        else:
-          eficasEvent = EficasEvent(eventType, callbackId)
-      else:
-        eficasEvent = EficasEvent(eventType)
-      self.__observer.processEficasEvent(self, eficasEvent)
 

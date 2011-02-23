@@ -81,7 +81,7 @@ class AdaoCaseManager(EficasObserver):
   def __init__(self):
 
     # Création d'un dictionnaire de cas
-    # Key   == nom du cas
+    # Key   == ref objet editor eficas (on est sur qu'elle est unique, cas duplication)
     # Value == objet AdaoCase()
     self.cases = {}
 
@@ -131,7 +131,7 @@ class AdaoCaseManager(EficasObserver):
 # Gestion de la sélection entre le GUI d'Eficas
 # et l'arbre d'étude de SALOME
 #
-######
+#######
 
   # Depuis l'étude SALOME
   def currentSelectionChanged(self):
@@ -141,7 +141,7 @@ class AdaoCaseManager(EficasObserver):
     """
     adaoLogger.debug("currentSelectionChanged")
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_editor, adao_case in self.cases.iteritems():
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         self.eficas_manager.selectCase(adao_case.eficas_editor)
         break
@@ -153,8 +153,8 @@ class AdaoCaseManager(EficasObserver):
     et la selection dans l'étude SALOME
     """
     editor = eficasEvent.callbackId
-    for case_name, adao_case in self.cases.iteritems():
-      if adao_case.eficas_editor is editor:
+    for case_editor, adao_case in self.cases.iteritems():
+      if case_editor is editor:
         adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
         break
 
@@ -176,7 +176,7 @@ class AdaoCaseManager(EficasObserver):
 # 1: la fonction newAdaoCase est appelée par le GUI SALOME
 # 2: la fonction _processEficasNewEvent est appelée par le manager EFICAS
 #
-######
+#######
 
   def newAdaoCase(self):
     adaoLogger.debug("Création d'un nouveau cas adao")
@@ -194,15 +194,33 @@ class AdaoCaseManager(EficasObserver):
     adao_case.salome_study_id   = salomeStudyId
     adao_case.salome_study_item = salomeStudyItem
     # Ajout du cas
-    self.cases[adao_case.name] = adao_case
+    self.cases[adao_case.eficas_editor] = adao_case
+
+#######
+#
+# Gestion de l'ouverture d'un cas
+# 1: la fonction openAdaoCase est appelée par le GUI SALOME
+# 2: la fonction _processEficasOpenEvent est appelée par le manager EFICAS
+#
+#######
+
+# Rq: l'ouverture d'un cas adao est un cas particulier de la création d'un cas adao
+
+  def openAdaoCase(self):
+    adaoLogger.debug("Ouverture d'un cas adao")
+    self.eficas_manager.adaoFileOpen(AdaoCase())
+
+  def _processEficasOpenEvent(self, eficasWrapper, eficasEvent):
+    self._processEficasNewEvent(eficasWrapper, eficasEvent)
 
 #######
 #
 # Gestion de la sauvegarde d'un cas
 # 1: la fonction saveAdaoCase est appelée par le GUI SALOME
+# 1 bis: la fonction saveasAdaoCase est appelée par le GUI SALOME
 # 2: la fonction _processEficasSaveEvent est appelée par le manager EFICAS
 #
-######
+#######
 
   def saveAdaoCase(self):
     adaoLogger.debug("Sauvegarde du cas s'il y a modification")
@@ -213,6 +231,17 @@ class AdaoCaseManager(EficasObserver):
     for case_name, adao_case in self.cases.iteritems():
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         self.eficas_manager.adaoFileSave(adao_case)
+        break
+
+  def saveasAdaoCase(self):
+    adaoLogger.debug("Sauvegarde du cas s'il y a modification (version save as)")
+    # A priori, l'utilisateur s'attend à sauvegarder le cas qui est ouvert
+    # dans le GUI d'Eficas
+    self.harmonizeSelectionFromEficas()
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        self.eficas_manager.adaoFileSaveAs(adao_case)
         break
 
   def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
@@ -227,10 +256,10 @@ class AdaoCaseManager(EficasObserver):
 
 #######
 #
-# Méthodes secondaire permettant de rediriger les évènements
+# Méthodes secondaires permettant de rediriger les évènements
 # de SALOME et d'Eficas vers les bonnes méthodes de la classe
 #
-######
+#######
 
   # Gestion des évènements venant du manager Eficas
   __processOptions={
@@ -239,8 +268,8 @@ class AdaoCaseManager(EficasObserver):
       EficasEvent.EVENT_TYPES.NEW        : "_processEficasNewEvent",
       EficasEvent.EVENT_TYPES.DESTROY    : "_processEficasDestroyEvent",
       EficasEvent.EVENT_TYPES.OPEN       : "_processEficasOpenEvent",
-      EficasEvent.EVENT_TYPES.REOPEN     : "_processEficasReOpenEvent",
-      EficasEvent.EVENT_TYPES.TABCHANGED : "_processEficasTabChanged"
+      EficasEvent.EVENT_TYPES.TABCHANGED : "_processEficasTabChanged",
+      EficasEvent.EVENT_TYPES.REOPEN     : "_processEficasReOpenEvent"
       }
 
   def processEficasEvent(self, eficasWrapper, eficasEvent):
