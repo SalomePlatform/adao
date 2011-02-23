@@ -50,6 +50,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
       eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
       self.connect(self.viewmanager.myQtab, SIGNAL('currentChanged(int)'), self.tabChanged)
+      self.menubar.hide()
+      self.toolBar.hide()
 
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))
