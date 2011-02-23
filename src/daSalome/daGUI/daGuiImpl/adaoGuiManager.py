@@ -77,6 +77,7 @@ class AdaoCaseManager(EficasObserver):
   Cette classe gére les cas ADAO et coordonne les GUI de SALOME (l'étude)
   et le GUI de l'objet Eficas (héritage du module Eficas)
   """
+
   def __init__(self):
 
     # Création d'un dictionnaire de cas
@@ -112,13 +113,32 @@ class AdaoCaseManager(EficasObserver):
     self.selection_manager = sgPyQt.getSelection()
     QtCore.QObject.connect(self.selection_manager, QtCore.SIGNAL('currentSelectionChanged()'), self.currentSelectionChanged)
 
+######
+#
+# Gestion de l'activation/désactivation du module
+#
+######
+
   def activate(self):
     self.eficas_manager.setEnabled(True)
+    self.harmonizeSelectionFromEficas()
 
   def deactivate(self):
     self.eficas_manager.setEnabled(False)
 
+#######
+#
+# Gestion de la sélection entre le GUI d'Eficas
+# et l'arbre d'étude de SALOME
+#
+######
+
+  # Depuis l'étude SALOME
   def currentSelectionChanged(self):
+    """
+    Cette méthode permet de changer le tab vu dans eficas
+    selon la sélection de l'utilisateur dans l'étude SALOME
+    """
     adaoLogger.debug("currentSelectionChanged")
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.iteritems():
@@ -126,10 +146,11 @@ class AdaoCaseManager(EficasObserver):
         self.eficas_manager.selectCase(adao_case.eficas_editor)
         break
 
+  # Depuis Eficas
   def _processEficasTabChanged(self, eficasWrapper, eficasEvent):
     """
-    Gestion de la synchonisation entre le tab courant et la selection
-    dans l'étude
+    Gestion de la synchonisation entre le tab courant d'Eficas
+    et la selection dans l'étude SALOME
     """
     editor = eficasEvent.callbackId
     for case_name, adao_case in self.cases.iteritems():
@@ -137,9 +158,26 @@ class AdaoCaseManager(EficasObserver):
         adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
         break
 
-  # Création d'un nouveau cas
-  # 1: la fonction newAdaoCase est appelée par le GUI SALOME
-  # 2: la fonction _processEficasNewEvent est appelée par le manager EFICAS
+  # On remet la sélection dans SALOME grâce au tab dans Eficas
+  def harmonizeSelectionFromEficas(self):
+    """
+    Cette méthode permet d'harmoniser la sélection dans l'étude
+    grâce au tab courant d'Eficas
+    """
+    adaoLogger.error("harmonizeSelectionFromEficas NOT YET IMPLEMENTED")
+    if self.cases:
+      pass
+      # 1: Get current tab index in Eficas
+      # 2: sync with SALOME GUI is a tab is opened
+
+#######
+#
+# Gestion de la création d'un nouveau cas
+# 1: la fonction newAdaoCase est appelée par le GUI SALOME
+# 2: la fonction _processEficasNewEvent est appelée par le manager EFICAS
+#
+######
+
   def newAdaoCase(self):
     adaoLogger.debug("Création d'un nouveau cas adao")
     self.eficas_manager.adaofileNew(AdaoCase())
@@ -158,11 +196,19 @@ class AdaoCaseManager(EficasObserver):
     # Ajout du cas
     self.cases[adao_case.name] = adao_case
 
-  # Sauvegarde d'un cas
-  # 1: la fonction saveAdaoCase est appelée par le GUI SALOME
-  # 2: la fonction _processEficasSaveEvent est appelée par le manager EFICAS
+#######
+#
+# Gestion de la sauvegarde d'un cas
+# 1: la fonction saveAdaoCase est appelée par le GUI SALOME
+# 2: la fonction _processEficasSaveEvent est appelée par le manager EFICAS
+#
+######
+
   def saveAdaoCase(self):
     adaoLogger.debug("Sauvegarde du cas s'il y a modification")
+    # A priori, l'utilisateur s'attend à sauvegarder le cas qui est ouvert
+    # dans le GUI d'Eficas
+    self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.iteritems():
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
@@ -178,6 +224,13 @@ class AdaoCaseManager(EficasObserver):
     adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
     # Ajout du cas
     self.cases[adao_case.name] = adao_case
+
+#######
+#
+# Méthodes secondaire permettant de rediriger les évènements
+# de SALOME et d'Eficas vers les bonnes méthodes de la classe
+#
+######
 
   # Gestion des évènements venant du manager Eficas
   __processOptions={
