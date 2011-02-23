@@ -5,9 +5,9 @@
 #include "SALOME_Component.idl"
 #include "DSC_Engines.idl"
 
-module ADAO
+module ADAO_COMPONENT
 {
-  interface ADAO_COMPONENT : Engines::Component, SALOMEDS::Driver
+  interface ADAO_ENGINE : Engines::Component, SALOMEDS::Driver
   {
    /*!
     * Test that the component is ok

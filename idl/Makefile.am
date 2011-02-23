@@ -1,17 +1,17 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-BUILT_SOURCES = ADAOSK.cc 
-IDL_FILES=ADAO.idl
+BUILT_SOURCES = ADAO_COMPONENTSK.cc 
+IDL_FILES=ADAO_COMPONENT.idl
 
-lib_LTLIBRARIES = libADAO.la
+lib_LTLIBRARIES = libADAO_COMPONENT.la
 salomeidl_DATA = $(IDL_FILES) 
-salomepython_DATA = ADAO_idl.py 
-libADAO_la_SOURCES      =
-nodist_libADAO_la_SOURCES = ADAOSK.cc
-nodist_salomeinclude_HEADERS= ADAO.hh 
-libADAO_la_CXXFLAGS     = -I.  $(KERNEL_INCLUDES)
-libADAO_la_LIBADD     = $(KERNEL_LIBS)
+salomepython_DATA = ADAO_COMPONENT_idl.py 
+libADAO_COMPONENT_la_SOURCES      =
+nodist_libADAO_COMPONENT_la_SOURCES = ADAO_COMPONENTSK.cc
+nodist_salomeinclude_HEADERS= ADAO_COMPONENT.hh 
+libADAO_COMPONENT_la_CXXFLAGS     = -I.  $(KERNEL_INCLUDES)
+libADAO_COMPONENT_la_LIBADD     = $(KERNEL_LIBS)
 ##########################################################
 %SK.cc %.hh : %.idl
 	$(OMNIORB_IDL) -bcxx $(IDLCXXFLAGS) $(OMNIORB_IDLCXXFLAGS) $(IDL_INCLUDES) $<
@@ -25,12 +25,12 @@ CLEANFILES = *.hh *SK.cc *.py *.hxx *.cxx
 EXTRA_DIST = $(IDL_FILES)
 
 clean-local:
-	rm -rf ADAO ADAO__POA
+	rm -rf ADAO_COMPONENT ADAO_COMPONENT__POA
 
 install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(salomepythondir)
-	cp -R ADAO ADAO__POA $(DESTDIR)$(salomepythondir)
+	cp -R ADAO_COMPONENT ADAO_COMPONENT__POA $(DESTDIR)$(salomepythondir)
 
 uninstall-local:
-	rm -rf $(DESTDIR)$(salomepythondir)/ADAO
-	rm -rf $(DESTDIR)$(salomepythondir)/ADAO__POA
+	rm -rf $(DESTDIR)$(salomepythondir)/ADAO_COMPONENT
+	rm -rf $(DESTDIR)$(salomepythondir)/ADAO_COMPONENT__POA

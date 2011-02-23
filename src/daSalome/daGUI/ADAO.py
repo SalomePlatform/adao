@@ -17,15 +17,15 @@
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import ADAO__POA
+import ADAO_COMPONENT__POA
 import SALOME_ComponentPy
 import SALOME_DriverPy
 
 from daGuiImpl.adaoLogger import *
 
-class ADAO_ENGINE(ADAO__POA.ADAO_COMPONENT,
-                  SALOME_ComponentPy.SALOME_ComponentPy_i,
-                  SALOME_DriverPy.SALOME_DriverPy_i):
+class ADAO(ADAO_COMPONENT__POA.ADAO_ENGINE,
+           SALOME_ComponentPy.SALOME_ComponentPy_i,
+           SALOME_DriverPy.SALOME_DriverPy_i):
   """
       Pour etre un composant SALOME cette classe Python
       doit avoir le nom du composant et heriter de la
