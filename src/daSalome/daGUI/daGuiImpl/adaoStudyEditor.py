@@ -25,7 +25,6 @@ from enumerate import Enumerate
 from salome.kernel import studyedit
 
 import adaoModuleHelper
-from daGuiImpl.adaoCase import AdaoCase
 
 #
 # ==============================================================================

@@ -91,5 +91,6 @@ def preferenceChanged( section, setting ):
   adaoLogger.debug("preferenceChanged")
   GuiImpl.preferenceChanged( section, setting )
 
-def activeViewChanged(toto, myView):
+def activeViewChanged(myView):
   adaoLogger.debug("activeViewChanged")
+  GuiImpl.activeViewChanged(myView)

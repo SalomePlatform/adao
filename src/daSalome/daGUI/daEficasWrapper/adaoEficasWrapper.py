@@ -84,7 +84,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       qtEficas.Appli.fileNew(self)
       index = self.viewmanager.myQtab.currentIndex()
       adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-      adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+      adao_case.setEditor(self.viewmanager.dict_editors[index])
       self.notifyObserver(EficasEvent.EVENT_TYPES.NEW, callbackId=adao_case)
 
     def adaoFileSave(self, adao_case):
@@ -94,7 +94,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         index = self.viewmanager.myQtab.currentIndex()
         adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
         adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-        adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+        adao_case.setEditor(self.viewmanager.dict_editors[index])
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def adaoFileSaveAs(self, adao_case):
@@ -104,7 +104,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         index = self.viewmanager.myQtab.currentIndex()
         adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
         adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-        adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+        adao_case.setEditor(self.viewmanager.dict_editors[index])
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def adaoFileOpen(self, adao_case):
@@ -117,7 +117,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
           index = self.viewmanager.myQtab.currentIndex()
           adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
           adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-          adao_case.eficas_editor = self.viewmanager.dict_editors[index]
+          adao_case.setEditor(self.viewmanager.dict_editors[index])
           self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN, callbackId=adao_case)
 
     def adaoFileClose(self, adao_case):

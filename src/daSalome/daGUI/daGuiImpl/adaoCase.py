@@ -23,6 +23,11 @@ import subprocess
 import traceback
 import SalomePyQt
 
+import eficasSalome
+from Ihm import CONNECTOR
+import adaoGuiHelper
+import adaoStudyEditor
+
 class AdaoCase:
 
   def __init__(self):
@@ -36,6 +41,21 @@ class AdaoCase:
     self.salome_study_item = None           # Study item object
 
     self.eficas_editor = None               # Editor object from Eficas
+
+  def setEditor(self, editor):
+    if editor is not self.eficas_editor:
+      self.eficas_editor = editor
+      # Connect to the jdc
+      print self.eficas_editor.jdc
+      CONNECTOR.Connect(self.eficas_editor.jdc, "valid", self.editorValidEvent, ())
+
+  # Rq on notera que l'on utilise isvalid dans isOk
+  #    et que isOk appelle editorValidEvent
+  #    il n'y a pas de boucle infini car isvalid n'émet
+  #    son signal que si l'état a changé
+  def editorValidEvent(self):
+    adaoStudyEditor.updateItem(self.salome_study_id, self.salome_study_item, self)
+    adaoGuiHelper.refreshObjectBrowser()
 
   def isOk(self):
     if self.eficas_editor.jdc:

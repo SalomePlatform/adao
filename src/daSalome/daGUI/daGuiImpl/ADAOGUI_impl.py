@@ -131,7 +131,6 @@ def preferenceChanged( section, setting ):
 # called when active view is changed
 # view ID is passed as parameter
 def activeViewChanged( viewID ):
-  print "activeViewChanged", viewID
   pass
 
 # called when active view is cloned
