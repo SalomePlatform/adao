@@ -14,6 +14,7 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(docdir)
 	cp -R $(BUILDDIR)/html/* $(DESTDIR)$(docdir)
 	cp $(SRCDIR)/resources/*.png $(salomeresdir)
+	cp $(SRCDIR)/images/eficas_*.png $(salomeresdir)
 
 uninstall-local:
 	chmod -R +w $(DESTDIR)$(docdir)
