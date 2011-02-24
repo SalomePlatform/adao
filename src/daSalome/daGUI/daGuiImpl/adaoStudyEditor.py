@@ -66,10 +66,15 @@ def addInStudy(salomeStudyId, adaoCase):
     itemValue = adaoCase.filename
     itemType  = ADAO_ITEM_TYPES.ADAO_CASE
 
+    icon = adaoModuleHelper.studyItemPixmapNOk()
+    if adaoCase.isOk():
+      icon = adaoModuleHelper.studyItemPixmapOk()
+
     salomeStudyItem = studyEditor.createItem(
         adaoRootEntry, itemName,
         comment = itemValue,
-        typeId  = itemType)
+        typeId  = itemType,
+        icon    = icon)
 
     return salomeStudyItem
 
@@ -84,9 +89,14 @@ def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
       itemName  = salomeStudyItem.GetName()
       itemValue = adaoCase.get_filename()
 
+    icon = adaoModuleHelper.studyItemPixmapNOk()
+    if adaoCase.isOk():
+      icon = adaoModuleHelper.studyItemPixmapOk()
+
     studyEditor.setItem(salomeStudyItem,
         name    = itemName,
-        comment = itemValue)
+        comment = itemValue,
+        icon    = icon)
 
 def removeItem(salomeStudyId, item):
     """

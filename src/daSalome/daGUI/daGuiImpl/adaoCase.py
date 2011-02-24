@@ -37,6 +37,11 @@ class AdaoCase:
 
     self.eficas_editor = None               # Editor object from Eficas
 
+  def isOk(self):
+    if self.eficas_editor.jdc:
+      return self.eficas_editor.jdc.isvalid()
+    return False
+
   def createYACSFile(self):
     rtn = ""
     if (self.filename == ""):

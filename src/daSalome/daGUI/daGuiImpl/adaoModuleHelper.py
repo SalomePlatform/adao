@@ -91,6 +91,18 @@ def modulePixmap():
     """
     return "ADAO_small.png"
 
+def studyItemPixmapOk():
+    """
+    Get the reference pixmap for items of this module.
+    """
+    return "ADAO_small_vert.png"
+
+def studyItemPixmapNOk():
+    """
+    Get the reference pixmap for items of this module.
+    """
+    return "ADAO_small_rouge.png"
+
 __verbose__ = None
 def verbose():
     global __verbose__

@@ -121,6 +121,7 @@ class AdaoCaseManager(EficasObserver):
 
   def activate(self):
     self.eficas_manager.setEnabled(True)
+    sgPyQt.activateView(self.eficas_viewId)
     self.harmonizeSelectionFromEficas()
 
   def deactivate(self):
