@@ -151,6 +151,13 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
           break
       return rtn
 
+    def getCurrentEditor(self):
+      index = self.viewmanager.myQtab.currentIndex()
+      editor = None
+      if index >= 0:
+        editor = self.viewmanager.dict_editors[index]
+      return editor
+
 
 
 

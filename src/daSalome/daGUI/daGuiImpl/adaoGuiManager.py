@@ -165,11 +165,15 @@ class AdaoCaseManager(EficasObserver):
     Cette méthode permet d'harmoniser la sélection dans l'étude
     grâce au tab courant d'Eficas
     """
-    adaoLogger.error("harmonizeSelectionFromEficas NOT YET IMPLEMENTED")
     if self.cases:
-      pass
       # 1: Get current tab index in Eficas
+      editor = self.eficas_manager.getCurrentEditor()
       # 2: sync with SALOME GUI is a tab is opened
+      if editor:
+        for case_editor, adao_case in self.cases.iteritems():
+          if case_editor is editor:
+            adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
+            break
 
 #######
 #
