@@ -28,7 +28,6 @@ mypkgpython_PYTHON = \
 		     adaoGuiHelper.py \
 		     adaoModuleHelper.py \
 		     adaoStudyEditor.py \
-		     adaoLogger.py \
 		     adaoCase.py
 
 

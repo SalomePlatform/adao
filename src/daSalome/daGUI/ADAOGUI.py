@@ -30,7 +30,7 @@ reasons:
 """
 
 from daGuiImpl import ADAOGUI_impl as GuiImpl
-from daGuiImpl import adaoLogger
+from daUtils import adaoLogger
 
 adaoLogger.debug("Import ADAOGUI")
 

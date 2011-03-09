@@ -39,7 +39,7 @@ from daEficasWrapper.adaoEficasWrapper import AdaoEficasWrapper
 from daUtils.adaoEficasEvent import *
 import adaoGuiHelper
 import adaoStudyEditor
-import adaoLogger
+from daUtils import adaoLogger
 
 __cases__ = {}
 

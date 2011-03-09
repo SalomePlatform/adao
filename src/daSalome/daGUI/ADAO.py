@@ -21,7 +21,7 @@ import ADAO_COMPONENT__POA
 import SALOME_ComponentPy
 import SALOME_DriverPy
 
-from daGuiImpl.adaoLogger import *
+from daUtils.adaoLogger import *
 
 class ADAO(ADAO_COMPONENT__POA.ADAO_ENGINE,
            SALOME_ComponentPy.SALOME_ComponentPy_i,

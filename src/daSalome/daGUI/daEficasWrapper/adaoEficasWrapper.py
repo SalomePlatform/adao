@@ -28,7 +28,7 @@ from PyQt4.QtCore import *        # Import from PyQT
 from PyQt4.QtAssistant import *   # Import from PyQT
 
 from daUtils.adaoEficasEvent import *
-from daGuiImpl.adaoLogger import *
+from daUtils.adaoLogger import *
 
 #
 # ============================================
