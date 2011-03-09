@@ -30,7 +30,7 @@ class DevelException(Exception):
 # Interface of an eficas observer (for implementing the subject/observer pattern)
 # ==============================================================================
 #
-from daGuiImpl.enumerate import Enumerate
+from enumerate import Enumerate
 
 class EficasObserver:
     """

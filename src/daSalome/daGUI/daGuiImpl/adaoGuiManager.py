@@ -32,7 +32,7 @@ from PyQt4 import QtGui,QtCore
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
-from daGuiImpl.enumerate import Enumerate
+from daUtils.enumerate import Enumerate
 from daGuiImpl.adaoCase import AdaoCase
 from daEficasWrapper.adaoEficasWrapper import AdaoEficasWrapper
 

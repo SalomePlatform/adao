@@ -23,5 +23,6 @@ mypkgpythondir =$(salomepythondir)/daUtils
 
 mypkgpython_PYTHON = \
 		     __init__.py \
-		     adaoEficasEvent.py
+		     adaoEficasEvent.py \
+		     enumerate.py
 

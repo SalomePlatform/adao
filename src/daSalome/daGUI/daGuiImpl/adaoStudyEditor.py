@@ -20,7 +20,7 @@
 
 __author__="aribes/gboulant"
 
-from enumerate import Enumerate
+from daUtils.enumerate import Enumerate
 
 from salome.kernel import studyedit
 
