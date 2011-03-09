@@ -128,11 +128,9 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         if res != 2: # l utilsateur a annule
           if close_editor.fichier is None:
             # Cas fichier vide
-            print "cas fichier vide"
             self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE, callbackId=close_editor)
           else:
             # Cas fichier existant
-            print "cas fichier existant"
             self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE, callbackId=close_editor)
 
 #######

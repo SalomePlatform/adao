@@ -46,7 +46,6 @@ class AdaoCase:
     if editor is not self.eficas_editor:
       self.eficas_editor = editor
       # Connect to the jdc
-      print self.eficas_editor.jdc
       CONNECTOR.Connect(self.eficas_editor.jdc, "valid", self.editorValidEvent, ())
 
   # Rq on notera que l'on utilise isvalid dans isOk

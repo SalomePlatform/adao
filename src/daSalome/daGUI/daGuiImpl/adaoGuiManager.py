@@ -275,14 +275,16 @@ class AdaoCaseManager(EficasObserver):
         break
 
   def _processEficasCloseEvent(self, eficasWrapper, eficasEvent):
+    adaoLogger.debug("Destruction d'un cas")
     editor = eficasEvent.callbackId
     # Recuperation du cas
     adao_case = self.cases[editor]
     # Suppression de l'objet dans l'étude
     adaoStudyEditor.removeItem(adao_case.salome_study_id, adao_case.salome_study_item)
-    adaoGuiHelper.refreshObjectBrowser()
     # Suppression du cas
-    del self.cases[editor]
+    self.cases.pop(editor)
+    # Refresh GUI -> appelle currentSelectionChanged()
+    adaoGuiHelper.refreshObjectBrowser()
 
 #######
 #
