@@ -40,7 +40,7 @@ from Accas import *
 
 JdC = JDC_CATA (code = 'ADAO',
                 execmodul = None,
-                regles = ( AU_MOINS_UN ('ASSIM_STUDY')),
+                regles = ( AU_MOINS_UN ('ASSIM_STUDY'), AU_PLUS_UN ('ASSIM_STUDY')),
                )
 """
 
@@ -128,6 +128,8 @@ ASSIM_STUDY = PROC(nom="ASSIM_STUDY",
                    op=None,
                    repetable = "n",
                    STUDY_NAME = SIMP(statut="o", typ = "TXM"),
+                   ALGORITHM_NAME = SIMP(statut="o", typ = "TXM", into=(${algos_names})),
+                   STUDY_REPERTORY = SIMP(statut="f", typ 
                    ALGORITHM  = FACT(statut='o',
                                      regles = ( UN_PARMI (${algos}),),
 ${decl_algos}
@@ -245,6 +247,7 @@ mem_file.write(init_method)
 
 # Final step: Add algorithm and assim_study
 algos = ""
+algos_names = ""
 decl_algos = ""
 decl_opts = ""
 for opt_name in opt_names:
@@ -254,12 +257,14 @@ assim_study_object = daCore.AssimilationStudy.AssimilationStudy()
 algos_list = assim_study_object.get_available_algorithms()
 for algo_name in algos_list:
   logging.debug("An assimilation algorithm is found: " + algo_name)
+  algos_names += "\"" + algo_name + "\", "
   if algo_name == "3DVAR":
     algo_name = "ThreeDVAR"
   algos += "\"" + algo_name + "\", "
   decl_algos += assim_algo.substitute(name = algo_name, decl_opts=decl_opts) + "\n"
 
 mem_file.write(assim_study.substitute(algos=algos,
+                                      algos_names=algos_names,
                                       decl_algos=decl_algos))
 # Write file
 final_file = open(catalog_path + "/" + catalog_name, "wr")
