@@ -40,43 +40,25 @@ from Accas import *
 
 JdC = JDC_CATA (code = 'ADAO',
                 execmodul = None,
-                regles = ( AU_MOINS_UN ('ASSIM_STUDY'), AU_PLUS_UN ('ASSIM_STUDY')),
+                regles = ( AU_MOINS_UN ('ASSIMILATION_STUDY'), AU_PLUS_UN ('ASSIMILATION_STUDY')),
                )
-"""
-
-String_data_bloc = """
-                                     STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
-
-                                                  STRING = SIMP(statut = "o", typ = "TXM"),
-                                                 ),
-"""
-
-Script_data_bloc = """
-                                     SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
-
-                                                  SCRIPT_FILE = SIMP(statut = "o", typ = "Fichier"),
-                                                 ),
-"""
-
-Dict_data_bloc = """
-                                     DICT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
-
-                                                  SCRIPT_FILE = SIMP(statut = "o", typ = "Fichier"),
-                                                 ),
-"""
-
-# Pour l'instant on ne gère qu'un seul script pour toutes les functions
-FunctionDict_data_bloc = """
-                                     FUNCTIONDICT_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
-
-                                                  FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "Fichier"),
-                                                 ),
 """
 
 data_method = """
 def F_${data_name}(statut) : return FACT(statut = statut,
-                                         FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into})),
-${data_bloc}
+                                         FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into}), defaut=${data_default}),
+                                         SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
+
+                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                     ),
+                                         STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
+
+                                                      STRING = SIMP(statut = "o", typ = "TXM"),
+                                                     ),
+                                         FUNCTIONDICT_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
+
+                                                      FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                     ),
                                     )
 """
 
@@ -87,62 +69,51 @@ def F_InitChoice() : return  ("Background",
                               "ObservationError",
                               "ObservationOperator",
                               "AlgorithmParameters",
-                              "Analysis",
+                              "UserPostAnalysis",
                              )
+
 def F_Init(statut) : return FACT(statut = statut,
                                  INIT_FILE = SIMP(statut = "o", typ = "Fichier"),
                                  TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice(),  validators=(VerifExiste(2))),
                                 )
 """
+
 assim_data_method = """
 def F_${assim_name}(statut) : return FACT(statut=statut,
-                                          regles = ( UN_PARMI (${choices})),
+                                          INPUT_TYPE = SIMP(statut="o", typ = "TXM", into=(${choices}), defaut=${default_choice}),
 ${decl_choices}
                                                 )
 """
 
 assim_data_choice = """
-                                                 ${choice_name} = F_${choice_name}("f"),
+                                                 ${choice_name} = BLOC ( condition = " INPUT_TYPE in ( '${choice_name}', ) ",
+                                                 data = F_${choice_name}("o"),
+                                                 ),
 """
 
-assim_opt_choice = """
-                                                 ${choice_name} = F_${choice_name}("f"),
-"""
-
-assim_algo = """
-                                     ${name} = FACT(regles = ( ENSEMBLE ("Background", "BackgroundError", 
-                                                                      "Observation", "ObservationError",
-                                                                      "ObservationOperator")),
-                                                 Background = F_Background("o"),
-                                                 BackgroundError = F_BackgroundError("o"),
-                                                 Observation = F_Observation("o"),
-                                                 ObservationError = F_ObservationError("o"),
-                                                 ObservationOperator = F_ObservationOperator("o"),
-                                                 AlgorithmParameters = F_AlgorithmParameters("f"),
-                                                 Init = F_Init("f"),
-${decl_opts}
-                                                ),
-"""
 assim_study = """
-ASSIM_STUDY = PROC(nom="ASSIM_STUDY",
-                   op=None,
-                   repetable = "n",
-                   STUDY_NAME = SIMP(statut="o", typ = "TXM"),
-                   ALGORITHM_NAME = SIMP(statut="o", typ = "TXM", into=(${algos_names})),
-                   STUDY_REPERTORY = SIMP(statut="f", typ 
-                   ALGORITHM  = FACT(statut='o',
-                                     regles = ( UN_PARMI (${algos}),),
-${decl_algos}
-                                    ),
-                  )
+ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
+                          op=None,
+                          repetable           = "n",
+                          Study_name          = SIMP(statut="o", typ = "TXM"),
+                          Study_repertory     = SIMP(statut="f", typ = "TXM"),
+                          Debug               = SIMP(statut="o", typ = "I", into=(0, 1), defaut=0),
+                          Algorithm           = SIMP(statut="o", typ = "TXM", into=(${algos_names})),
+                          Background          = F_Background("o"),
+                          BackgroundError     = F_BackgroundError("o"),
+                          Observation         = F_Observation("o"),
+                          ObservationError    = F_ObservationError("o"),
+                          ObservationOperator = F_ObservationOperator("o"),
+                          AlgorithmParameters = F_AlgorithmParameters("f"),
+                          UserDataInit        = F_Init("f"),
+                          UserPostAnalysis    = F_Analysis("f")
+                         )
 """
 
 begin_catalog_file = string.Template(begin_catalog_file)
 data_method = string.Template(data_method)
 assim_data_method = string.Template(assim_data_method)
 assim_data_choice = string.Template(assim_data_choice)
-assim_opt_choice = string.Template(assim_opt_choice)
-assim_algo = string.Template(assim_algo)
 assim_study = string.Template(assim_study)
 
 #----------- End of Templates Part ---------------#
@@ -156,6 +127,7 @@ try:
   import daEficas
   import daYacsSchemaCreator
   import daCore.AssimilationStudy
+  import daYacsSchemaCreator.infos_daComposant as infos
 except:
   logging.fatal("Import of ADAO python modules failed !" +
                 "\n add ADAO python installation directory in your PYTHONPATH")
@@ -186,85 +158,76 @@ mem_file = StringIO.StringIO()
 from time import strftime
 mem_file.write(begin_catalog_file.substitute(date=strftime("%Y-%m-%d %H:%M:%S")))
 
-# Step 1: Check basic data input types
-import daYacsSchemaCreator.infos_daComposant as infos
-for basic_type in infos.BasicDataInputs:
-  logging.debug('A basic data input type is found: ' + basic_type)
-  if basic_type + '_data_bloc' not in locals().keys():
-    logging.fatal("Basic data input type not found: " + basic_type)
-    sys.exit(1)
-
-# Step 2: Add data input dict
+# Step 1: A partir des infos, on crée les fonctions qui vont permettre
+# d'entrer les données utilisateur
 for data_input_name in infos.DataTypeDict.keys():
-  logging.debug('A data input is found: ' + data_input_name)
+  logging.debug('A data input Type is found: ' + data_input_name)
   data_name = data_input_name
   data_into = ""
-  data_bloc = ""
+  data_default = ""
 
+  # On récupère les différentes façon d'entrer les données
   for basic_type in infos.DataTypeDict[data_input_name]:
     data_into += "\"" + basic_type + "\", "
-    data_bloc += locals()[basic_type + '_data_bloc'] + "\n"
 
-  mem_file.write(data_method.substitute(data_name = data_name,
-                                        data_into = data_into,
-                                        data_bloc = data_bloc))
+  # On choisit le défault
+  data_default = "\"" + infos.DataTypeDefaultDict[data_input_name] + "\""
 
-# Step 3: Add assimilation algorithm data input
+  mem_file.write(data_method.substitute(data_name    = data_name,
+                                        data_into    = data_into,
+                                        data_default = data_default))
+
+# Step 2: On crée les fonctions qui permettent de rentrer les données des algorithmes
 for assim_data_input_name in infos.AssimDataDict.keys():
   logging.debug("An assimilation algorithm data input is found: " + assim_data_input_name)
   assim_name = assim_data_input_name
   choices = ""
+  default_choice = ""
   decl_choices = ""
   decl_opts = ""
   for choice in infos.AssimDataDict[assim_data_input_name]:
     choices += "\"" + choice + "\", "
     decl_choices += assim_data_choice.substitute(choice_name = choice)
+  default_choice = "\"" + infos.AssimDataDefaultDict[assim_data_input_name] + "\""
 
   mem_file.write(assim_data_method.substitute(assim_name = assim_name,
                                               choices = choices,
-                                              decl_choices = decl_choices))
+                                              decl_choices = decl_choices,
+                                              default_choice=default_choice))
 
-# Step 4: Add optional nodes
+# Step 3: On ajoute les fonctions représentant les options possibles
 opt_names = []
 for opt_name in infos.OptDict.keys():
   logging.debug("An optional node is found: " + opt_name)
   data_name = opt_name
   data_into = ""
-  data_bloc = ""
+  data_default = ""
 
   for choice in infos.OptDict[opt_name]:
     data_into += "\"" + choice + "\", "
-    data_bloc += locals()[choice + '_data_bloc'] + "\n"
+  data_default = "\"" + infos.OptDefaultDict[opt_name] + "\""
 
   mem_file.write(data_method.substitute(data_name = data_name,
                                         data_into = data_into,
-                                        data_bloc = data_bloc))
+                                        data_default = data_default))
 
   opt_names.append(opt_name)
 
-# Step 5: Add init node
+# Step 4: On ajoute la méthode optionnelle init
+# TODO uniformiser avec le step 3
 mem_file.write(init_method)
 
 # Final step: Add algorithm and assim_study
-algos = ""
 algos_names = ""
 decl_algos = ""
-decl_opts = ""
-for opt_name in opt_names:
-  decl_opts += assim_opt_choice.substitute(choice_name = opt_name)
 
 assim_study_object = daCore.AssimilationStudy.AssimilationStudy()
 algos_list = assim_study_object.get_available_algorithms()
 for algo_name in algos_list:
   logging.debug("An assimilation algorithm is found: " + algo_name)
   algos_names += "\"" + algo_name + "\", "
-  if algo_name == "3DVAR":
-    algo_name = "ThreeDVAR"
-  algos += "\"" + algo_name + "\", "
-  decl_algos += assim_algo.substitute(name = algo_name, decl_opts=decl_opts) + "\n"
 
-mem_file.write(assim_study.substitute(algos=algos,
-                                      algos_names=algos_names,
+mem_file.write(assim_study.substitute(algos_names=algos_names,
                                       decl_algos=decl_algos))
 # Write file
 final_file = open(catalog_path + "/" + catalog_name, "wr")

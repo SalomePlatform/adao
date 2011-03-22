@@ -67,6 +67,10 @@ AlgoType["Kalman"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 #AlgoType["Blue"] = "Direct"
 
+
+# Variables qui sont partagés avec le générateur de
+# catalogue Eficas
+
 # Basic data types
 BasicDataInputs = ["String", "Script", "FunctionDict"]
 
@@ -77,6 +81,12 @@ DataTypeDict["Matrix"]   = ["String", "Script"]
 DataTypeDict["Function"] = ["FunctionDict"]
 DataTypeDict["Dict"]     = ["Script"]
 
+DataTypeDefaultDict = {}
+DataTypeDefaultDict["Vector"]   = "Script"
+DataTypeDefaultDict["Matrix"]   = "Script"
+DataTypeDefaultDict["Function"] = "FunctionDict"
+DataTypeDefaultDict["Dict"]     = "Script"
+
 # Assimilation data input
 AssimDataDict = {}
 AssimDataDict["Background"] = ["Vector"]
@@ -86,6 +96,16 @@ AssimDataDict["ObservationError"] = ["Matrix"]
 AssimDataDict["ObservationOperator"] = ["Matrix", "Function"]
 AssimDataDict["AlgorithmParameters"] = ["Dict"]
 
+AssimDataDefaultDict = {}
+AssimDataDefaultDict["Background"]          = "Vector"
+AssimDataDefaultDict["BackgroundError"]     = "Matrix"
+AssimDataDefaultDict["Observation"]         = "Vector"
+AssimDataDefaultDict["ObservationError"]    = "Matrix"
+AssimDataDefaultDict["ObservationOperator"] = "Function"
+AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
+
 # Assimilation optional nodes
 OptDict = {}
 OptDict["Analysis"]   = ["String", "Script"]
+OptDefaultDict = {}
+OptDefaultDict["Analysis"]   = "Script"
