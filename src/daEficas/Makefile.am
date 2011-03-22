@@ -29,4 +29,4 @@ mypkgpython_PYTHON = \
 		     prefs_ADAO.py \
 		     prefs.py
 
-EXTRA_DIST = prefs_ADAO.py.in ADAO_Cata_V0.py
+EXTRA_DIST = prefs_ADAO.py.in
