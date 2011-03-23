@@ -66,6 +66,8 @@ class AdaoGenerator(PythonGenerator):
     """
     clef=""
     for i in obj.get_genealogie() :
+      print obj
+      print obj.get_genealogie()
       clef=clef+"__"+i
     self.dictMCVal[clef]=obj.valeur
 
@@ -187,5 +189,3 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config[\"UserPostAnalysis\"] = Analysis_config \n"
     else:
       raise Exception('From Type unknown', from_type)
-
-

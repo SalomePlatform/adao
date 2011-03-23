@@ -92,6 +92,13 @@ assim_data_choice = """
 """
 
 assim_study = """
+
+def F_variables(statut) : return FACT(statut=statut,
+                                      regles = ( MEME_NOMBRE ('NAMES', 'SIZES')),
+                                      NAMES = SIMP(statut="o", typ="TXM", max="**", validators=NoRepeat()),
+                                      SIZES = SIMP(statut="o", typ="I", val_min=1, max="**")
+                                      )
+
 ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
                           op=None,
                           repetable           = "n",
@@ -106,7 +113,9 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
                           ObservationOperator = F_ObservationOperator("o"),
                           AlgorithmParameters = F_AlgorithmParameters("f"),
                           UserDataInit        = F_Init("f"),
-                          UserPostAnalysis    = F_UserPostAnalysis("f")
+                          UserPostAnalysis    = F_UserPostAnalysis("f"),
+                          InputVariables      = F_variables("o"),
+                          OutputVariables     = F_variables("o")
                          )
 """
 
