@@ -106,7 +106,7 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
                           ObservationOperator = F_ObservationOperator("o"),
                           AlgorithmParameters = F_AlgorithmParameters("f"),
                           UserDataInit        = F_Init("f"),
-                          UserPostAnalysis    = F_Analysis("f")
+                          UserPostAnalysis    = F_UserPostAnalysis("f")
                          )
 """
 
@@ -196,7 +196,6 @@ for assim_data_input_name in infos.AssimDataDict.keys():
                                               default_choice=default_choice))
 
 # Step 3: On ajoute les fonctions représentant les options possibles
-opt_names = []
 for opt_name in infos.OptDict.keys():
   logging.debug("An optional node is found: " + opt_name)
   data_name = opt_name
@@ -210,8 +209,6 @@ for opt_name in infos.OptDict.keys():
   mem_file.write(data_method.substitute(data_name = data_name,
                                         data_into = data_into,
                                         data_default = data_default))
-
-  opt_names.append(opt_name)
 
 # Step 4: On ajoute la méthode optionnelle init
 # TODO uniformiser avec le step 3

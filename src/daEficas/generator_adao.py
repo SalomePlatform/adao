@@ -3,6 +3,7 @@ print "import generator_adao"
 
 from generator.generator_python import PythonGenerator
 import traceback
+import logging
 
 def entryPoint():
    """
@@ -25,22 +26,30 @@ class AdaoGenerator(PythonGenerator):
     self.text_comm = ""
     self.text_da = ""
     self.text_da_status = False
+    self.logger = logging.getLogger('ADAO EFICAS GENERATOR')
+    self.logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+    ch.setFormatter(formatter)
+    self.logger.addHandler(ch)
+
 
   def gener(self,obj,format='brut',config=None):
-    print "AdaoGenerator gener"
+    self.logger.debug("method gener called")
     self.text_comm = PythonGenerator.gener(self, obj, format, config)
-
-    print "Dictionnaire"
-    print self.dictMCVal
+    for key, value in self.dictMCVal.iteritems():
+      self.logger.debug("dictMCVAl %s %s" % (key,value))
 
     try :
       self.text_da_status = False
       self.generate_da()
       self.text_da_status = True
     except:
-      print "Case seems not be correct"
+      self.logger.info("Case is not correct, python command file for YACS schema generation cannot be created")
+      self.logger.debug(self.text_da)
+      self.dictMCVal = {}
       traceback.print_exc()
-      pass
     return self.text_comm
 
   def writeDefault(self, fn):
@@ -63,25 +72,17 @@ class AdaoGenerator(PythonGenerator):
     s=PythonGenerator.generMCSIMP(self,obj)
     return s
 
-  def generMCFACT(self,obj):
-
-   if obj.parent.nom == "ALGORITHM":
-     self.dictMCVal["ALGORITHM_NAME"] = obj.nom
-
-   s=PythonGenerator.generMCFACT(self,obj)
-   return s
-
   def generate_da(self):
 
     self.text_da += "#-*-coding:iso-8859-1-*- \n"
     self.text_da += "study_config = {} \n"
-    self.text_da += "study_config[\"Name\"] = \"" + self.dictMCVal["__ASSIM_STUDY__STUDY_NAME"] + "\"\n"
 
-    if self.dictMCVal["ALGORITHM_NAME"] != "ThreeDVAR":
-      self.text_da += "study_config[\"Algorithm\"] = \"" + self.dictMCVal["ALGORITHM_NAME"] + "\"\n"
-    else:
-      self.text_da += "study_config[\"Algorithm\"] = \"3DVAR\"\n"
-
+    # Extraction de Study_name
+    self.text_da += "study_config[\"Name\"] = \"" + self.dictMCVal["__ASSIMILATION_STUDY__Study_name"] + "\"\n"
+    # Extraction de Debug
+    self.text_da += "study_config[\"Debug\"] = \"" + str(self.dictMCVal["__ASSIMILATION_STUDY__Debug"]) + "\"\n"
+    # Extraction de Algorithm
+    self.text_da += "study_config[\"Algorithm\"] = \"" + self.dictMCVal["__ASSIMILATION_STUDY__Algorithm"] + "\"\n"
 
     self.add_data("Background")
     self.add_data("BackgroundError")
@@ -89,124 +90,74 @@ class AdaoGenerator(PythonGenerator):
     self.add_data("ObservationError")
     self.add_data("ObservationOperator")
 
-    # Optionnel
-    self.add_data("AlgorithmParameters")
-    self.add_analysis()
-    self.add_init()
+    # Parametres optionnels
+
+    # Extraction du Study_repertory
+    if "__ASSIMILATION_STUDY__Study_repertory" in self.dictMCVal.keys():
+      self.text_da += "study_config[\"Repertory\"] = \"" + self.dictMCVal["__ASSIMILATION_STUDY__Study_repertory"] + "\"\n"
+    # Extraction de AlgorithmParameters
+    if "__ASSIMILATION_STUDY__AlgorithmParameters__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_algorithm_parameters()
+    # Extraction de UserPostAnalysis
+    if "__ASSIMILATION_STUDY__UserPostAnalysis__FROM" in self.dictMCVal.keys():
+      self.add_UserPostAnalysis()
+    if "__ASSIMILATION_STUDY__UserDataInit__INIT_FILE" in self.dictMCVal.keys():
+      self.add_init()
 
   def add_data(self, data_name):
-    search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__"
-    back_search_text = search_text + data_name + "__"
 
-    # Data is a Vector
-    search_vector = back_search_text + "Vector"
-    if search_vector + "__FROM" in self.dictMCVal:
-      back_from = self.dictMCVal[search_vector + "__FROM"]
+    # Extraction des données
+    search_text = "__ASSIMILATION_STUDY__" + data_name + "__"
+    data_type = self.dictMCVal[search_text + "INPUT_TYPE"]
+    search_type = search_text + data_type + "__data__"
+    from_type = self.dictMCVal[search_type + "FROM"]
+    data = ""
+    if from_type == "String":
+      data = self.dictMCVal[search_type + "STRING_DATA__STRING"]
+    elif from_type == "Script":
+      data = self.dictMCVal[search_type + "SCRIPT_DATA__SCRIPT_FILE"]
+    elif from_type == "FunctionDict":
+      data = self.dictMCVal[search_type + "FUNCTIONDICT_DATA__FUNCTIONDICT_FILE"]
+    else:
+      raise Exception('From Type unknown', from_type)
 
-      search_string = search_vector + "__STRING_DATA__STRING"
-      search_script = search_vector + "__SCRIPT_DATA__SCRIPT_FILE"
-
-      # Vector is from a string
-      if search_string in self.dictMCVal:
-        back_data = self.dictMCVal[search_string]
-      # Vector is from a script
-      elif search_script in self.dictMCVal:
-        back_data = self.dictMCVal[search_script]
-      else:
-        print "[generator adao] Error cannot found Vector data"
-
+    if from_type == "String" or from_type == "Script":
       self.text_da += data_name + "_config = {} \n"
-      self.text_da += data_name + "_config[\"Type\"] = \"Vector\" \n"
-      self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
-      self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
+      self.text_da += data_name + "_config[\"Type\"] = \"" + data_type + "\" \n"
+      self.text_da += data_name + "_config[\"From\"] = \"" + from_type + "\" \n"
+      self.text_da += data_name + "_config[\"Data\"] = \"" + data      + "\" \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
-      return 1
 
-    # Data is a Matrix
-    search_matrix = back_search_text + "Matrix"
-    if search_matrix + "__FROM" in self.dictMCVal:
-      back_from = self.dictMCVal[search_matrix + "__FROM"]
-
-      search_string = search_matrix + "__STRING_DATA__STRING"
-      search_script = search_matrix + "__SCRIPT_DATA__SCRIPT_FILE"
-
-      # Matrix is from a string
-      if search_string in self.dictMCVal:
-        back_data = self.dictMCVal[search_string]
-      # Matrix is from a script
-      elif search_script in self.dictMCVal:
-        back_data = self.dictMCVal[search_script]
-      else:
-        print "[generator adao] Error cannot found Matrix data"
-
-      self.text_da += data_name + "_config = {} \n"
-      self.text_da += data_name + "_config[\"Type\"] = \"Matrix\" \n"
-      self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
-      self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
-      self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
-      return 1
-
-    # Data is a Dict
-    search_dict = back_search_text + "Dict"
-    if search_dict + "__FROM" in self.dictMCVal:
-      back_from = self.dictMCVal[search_dict + "__FROM"]
-      back_data = self.dictMCVal[search_dict + "__SCRIPT_DATA__SCRIPT_FILE"]
-
-      self.text_da += data_name + "_config = {} \n"
-      self.text_da += data_name + "_config[\"Type\"] = \"Dict\" \n"
-      self.text_da += data_name + "_config[\"From\"] = \"" + back_from + "\" \n"
-      self.text_da += data_name + "_config[\"Data\"] = \"" + back_data + "\" \n"
-      self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
-      return 1
-
-    # Data is a FunctionDict
-    search_function = back_search_text + "Function"
-    if search_function + "__FROM" in self.dictMCVal:
-      back_from = self.dictMCVal[search_function + "__FROM"]
-      back_data = self.dictMCVal[search_function + "__FUNCTIONDICT_DATA__FUNCTIONDICT_FILE"]
-
+    if from_type == "FunctionDict":
       self.text_da += data_name + "_FunctionDict = {} \n"
       self.text_da += data_name + "_FunctionDict[\"Function\"] = [\"Direct\", \"Tangent\", \"Adjoint\"] \n"
       self.text_da += data_name + "_FunctionDict[\"Script\"] = {} \n"
-      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Direct\"] = \"" + back_data + "\" \n"
-      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Tangent\"] = \"" + back_data + "\" \n"
-      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Adjoint\"] = \"" + back_data + "\" \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Direct\"] = \""  + data + "\" \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Tangent\"] = \"" + data + "\" \n"
+      self.text_da += data_name + "_FunctionDict[\"Script\"][\"Adjoint\"] = \"" + data + "\" \n"
       self.text_da += data_name + "_config = {} \n"
       self.text_da += data_name + "_config[\"Type\"] = \"Function\" \n"
       self.text_da += data_name + "_config[\"From\"] = \"FunctionDict\" \n"
       self.text_da += data_name + "_config[\"Data\"] = " + data_name + "_FunctionDict \n"
       self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
-      return 1
 
-  def add_analysis(self):
-    search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__Analysis__"
-    try :
-      ana_from = self.dictMCVal[search_text + "FROM"]
+  def add_algorithm_parameters(self):
 
-      if ana_from == "String":
-        ana_data = self.dictMCVal[search_text + "STRING_DATA__STRING"]
-        self.text_da += "Analysis_config = {} \n"
-        self.text_da += "Analysis_config[\"From\"] = \"String\" \n"
-        self.text_da += "Analysis_config[\"Data\"] = \"\"\"" + ana_data + "\"\"\" \n"
-        self.text_da += "study_config[\"Analysis\"] = Analysis_config \n"
-        pass
-      if ana_from == "Script":
-        ana_data = self.dictMCVal[search_text + "SCRIPT_DATA__SCRIPT_FILE"]
-        self.text_da += "Analysis_config = {} \n"
-        self.text_da += "Analysis_config[\"From\"] = \"Script\" \n"
-        self.text_da += "Analysis_config[\"Data\"] = \"" + ana_data + "\" \n"
-        self.text_da += "study_config[\"Analysis\"] = Analysis_config \n"
-        pass
-    except:
-      pass
+    data_name = "AlgorithmParameters"
+    data_type = "Dict"
+    from_type = "Script"
+    data = self.dictMCVal["__ASSIMILATION_STUDY__AlgorithmParameters__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
+
+    self.text_da += data_name + "_config = {} \n"
+    self.text_da += data_name + "_config[\"Type\"] = \"" + data_type + "\" \n"
+    self.text_da += data_name + "_config[\"From\"] = \"" + from_type + "\" \n"
+    self.text_da += data_name + "_config[\"Data\"] = \"" + data + "\" \n"
+    self.text_da += "study_config[\"" + data_name + "\"] = " + data_name + "_config \n"
 
   def add_init(self):
-    search_text = "__ASSIM_STUDY__ALGORITHM__" + self.dictMCVal["ALGORITHM_NAME"] + "__Init__"
 
-    if search_text + "INIT_FILE" in self.dictMCVal:
-
-      init_file_data = self.dictMCVal[search_text + "INIT_FILE"]
-      init_target_list = self.dictMCVal[search_text + "TARGET_LIST"]
+      init_file_data = self.dictMCVal["__ASSIMILATION_STUDY__UserDataInit__INIT_FILE"]
+      init_target_list = self.dictMCVal["__ASSIMILATION_STUDY__UserDataInit__TARGET_LIST"]
 
       self.text_da += "Init_config = {} \n"
       self.text_da += "Init_config[\"Type\"] = \"Dict\" \n"
@@ -216,5 +167,25 @@ class AdaoGenerator(PythonGenerator):
       for target in init_target_list:
         self.text_da += "\"" + target + "\","
       self.text_da += "] \n"
-      self.text_da += "study_config[\"Init\"] = Init_config \n"
+      self.text_da += "study_config[\"UserDataInit\"] = Init_config \n"
+
+  def add_UserPostAnalysis(self):
+
+    from_type = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__FROM"]
+    data = ""
+    if from_type == "String":
+      data = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__STRING_DATA__STRING"]
+      self.text_da += "Analysis_config = {} \n"
+      self.text_da += "Analysis_config[\"From\"] = \"String\" \n"
+      self.text_da += "Analysis_config[\"Data\"] = \"\"\"" + data + "\"\"\" \n"
+      self.text_da += "study_config[\"UserPostAnalysis\"] = Analysis_config \n"
+    elif from_type == "Script":
+      data = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__SCRIPT_DATA__SCRIPT_FILE"]
+      self.text_da += "Analysis_config = {} \n"
+      self.text_da += "Analysis_config[\"From\"] = \"Script\" \n"
+      self.text_da += "Analysis_config[\"Data\"] = \"" + data + "\" \n"
+      self.text_da += "study_config[\"UserPostAnalysis\"] = Analysis_config \n"
+    else:
+      raise Exception('From Type unknown', from_type)
+
 

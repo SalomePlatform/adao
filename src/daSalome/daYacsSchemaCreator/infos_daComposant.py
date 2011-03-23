@@ -106,6 +106,6 @@ AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 
 # Assimilation optional nodes
 OptDict = {}
-OptDict["Analysis"]   = ["String", "Script"]
+OptDict["UserPostAnalysis"]   = ["String", "Script"]
 OptDefaultDict = {}
-OptDefaultDict["Analysis"]   = "Script"
+OptDefaultDict["UserPostAnalysis"]   = "Script"
