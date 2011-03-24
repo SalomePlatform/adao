@@ -92,6 +92,7 @@ class AdaoGenerator(PythonGenerator):
     self.add_data("ObservationError")
     self.add_data("ObservationOperator")
 
+    self.add_variables()
     # Parametres optionnels
 
     # Extraction du Study_repertory
@@ -189,3 +190,21 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config[\"UserPostAnalysis\"] = Analysis_config \n"
     else:
       raise Exception('From Type unknown', from_type)
+
+  def add_variables(self):
+
+    # Input variables
+    if "__ASSIMILATION_STUDY__InputVariables__NAMES" in self.dictMCVal.keys():
+      pass
+    else:
+      self.text_da += "inputvariables_config = {} \n"
+      self.text_da += "inputvariables_config[\"adao_default\"] = -1 \n"
+      self.text_da += "study_config[\"InputVariables\"] = inputvariables_config \n"
+
+    # Output variables
+    if "__ASSIMILATION_STUDY__OutputVariables__NAMES" in self.dictMCVal.keys():
+      pass
+    else:
+      self.text_da += "variables_config = {} \n"
+      self.text_da += "outputvariables_config[\"adao_default\"] = -1 \n"
+      self.text_da += "study_config[\"OutputVariables\"] = ouputvariables_config \n"
