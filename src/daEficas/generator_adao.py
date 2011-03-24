@@ -34,7 +34,6 @@ class AdaoGenerator(PythonGenerator):
     ch.setFormatter(formatter)
     self.logger.addHandler(ch)
 
-
   def gener(self,obj,format='brut',config=None):
     self.logger.debug("method gener called")
     self.text_comm = PythonGenerator.gener(self, obj, format, config)
@@ -195,7 +194,21 @@ class AdaoGenerator(PythonGenerator):
 
     # Input variables
     if "__ASSIMILATION_STUDY__InputVariables__NAMES" in self.dictMCVal.keys():
-      pass
+      names = []
+      sizes = []
+      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__NAMES"], type("")):
+        names.append(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__NAMES"])
+      else:
+        names = self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__NAMES"]
+      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"], type(1)):
+        sizes.append(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"])
+      else:
+        sizes = self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"]
+
+      self.text_da += "inputvariables_config = {} \n"
+      for name, size in zip(names, sizes):
+        self.text_da += "inputvariables_config[\"%s\"] = %s \n" % (name,size)
+      self.text_da += "study_config[\"InputVariables\"] = inputvariables_config \n"
     else:
       self.text_da += "inputvariables_config = {} \n"
       self.text_da += "inputvariables_config[\"adao_default\"] = -1 \n"
@@ -203,7 +216,21 @@ class AdaoGenerator(PythonGenerator):
 
     # Output variables
     if "__ASSIMILATION_STUDY__OutputVariables__NAMES" in self.dictMCVal.keys():
-      pass
+      names = []
+      sizes = []
+      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__NAMES"], type("")):
+        names.append(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__NAMES"])
+      else:
+        names = self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__NAMES"]
+      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"], type(1)):
+        sizes.append(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"])
+      else:
+        sizes = self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"]
+
+      self.text_da += "outputvariables_config = {} \n"
+      for name, size in zip(names, sizes):
+        self.text_da += "outputvariables_config[\"%s\"] = %s \n" % (name,size)
+      self.text_da += "study_config[\"OutputVariables\"] = outputvariables_config \n"
     else:
       self.text_da += "variables_config = {} \n"
       self.text_da += "outputvariables_config[\"adao_default\"] = -1 \n"
