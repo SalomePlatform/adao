@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from daCore.AssimilationStudy import AssimilationStudy
+from daCore import Logging
 
 class daError(Exception):
   def __init__(self, value):
@@ -10,13 +11,21 @@ class daError(Exception):
 
 class daStudy:
 
-  def __init__(self, name, algorithm):
+  def __init__(self, name, algorithm, debug):
 
     self.ADD = AssimilationStudy(name)
     self.ADD.setControls()
     self.algorithm = algorithm
     self.algorithm_dict = None
     self.Background = None
+
+    self.debug = debug
+    import logging
+    if self.debug:
+      logging.getLogger().setLevel(logging.DEBUG)
+    else:
+      logging.getLogger().setLevel(logging.INFO)
+
 
     # Observation Management
     self.ObservationOperatorType = {}

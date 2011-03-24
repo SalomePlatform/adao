@@ -56,6 +56,10 @@ def create_yacs_proc(study_config):
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
   CAS_node.getInputPort("Name").edInitPy(study_config["Name"])
   CAS_node.getInputPort("Algorithm").edInitPy(study_config["Algorithm"])
+  if study_config["Debug"] == "0":
+    CAS_node.getInputPort("Debug").edInitPy(False)
+  else:
+    CAS_node.getInputPort("Debug").edInitPy(True)
   proc.edAddChild(CAS_node)
 
   # Step 0.5: Find if there is a user init node

@@ -13,10 +13,11 @@ import numpy
 print "Entering in CreateAssimilationStudy"
 print "Name is", Name
 print "Algorithm is", Algorithm
+print "Debug is set to", Debug
 
 # Create Assimilation study
 from daYacsIntegration.daStudy import *
-assim_study = daStudy(Name, Algorithm)
+assim_study = daStudy(Name, Algorithm, Debug)
 
 # Algorithm parameters
 try:
@@ -116,6 +117,7 @@ Study = assim_study
 </code></script>
     <inport name="Name" type="string"/>
     <inport name="Algorithm" type="string"/>
+    <inport name="Debug" type="bool"/>
     <outport name="Study" type="pyobj"/>
   </inline>
 

@@ -187,9 +187,6 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
 
     # Start Assimilation Study
-    import logging
-    logging.getLogger().setLevel(logging.DEBUG)
-
     print "ADD analyze"
     self.ADD.analyze()
 
