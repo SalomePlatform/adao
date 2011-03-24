@@ -61,10 +61,10 @@ def create_yacs_proc(study_config):
   # Step 0.5: Find if there is a user init node
   init_config = {}
   init_config["Target"] = []
-  if "Init" in study_config.keys():
-    init_config = study_config["Init"]
-    factory_init_node = catalogAd._nodeMap["InitUserDataFromScript"]
-    init_node = factory_init_node.cloneNode("InitUserData")
+  if "UserDataInit" in study_config.keys():
+    init_config = study_config["UserDataInit"]
+    factory_init_node = catalogAd._nodeMap["UserDataInitFromScript"]
+    init_node = factory_init_node.cloneNode("UserDataInit")
     init_node.getInputPort("script").edInitPy(init_config["Data"])
     proc.edAddChild(init_node)
 
@@ -169,13 +169,6 @@ def create_yacs_proc(study_config):
   proc.edAddChild(compute_bloc)
   proc.edAddCFLink(CAS_node, compute_bloc)
 
-  if AlgoType[study_config["Algorithm"]] == "Direct":
-    # We don't need to use an optimizer loop
-    factory_execute_node = catalogAd._nodeMap["SimpleExecuteDirectAlgorithm"]
-    execute_node = factory_execute_node.cloneNode("Execute" + study_config["Algorithm"])
-    compute_bloc.edAddChild(execute_node)
-    proc.edAddDFLink(CAS_node.getOutputPort("Study"), execute_node.getInputPort("Study"))
-
   if AlgoType[study_config["Algorithm"]] == "Optim":
     # We use an optimizer loop
     name = "Execute" + study_config["Algorithm"]
@@ -239,11 +232,11 @@ def create_yacs_proc(study_config):
       proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
 
   # Step 4: create post-processing from user configuration
-  if "Analysis" in study_config.keys():
-    analysis_config = study_config["Analysis"]
+  if "UserPostAnalysis" in study_config.keys():
+    analysis_config = study_config["UserPostAnalysis"]
     if analysis_config["From"] == "String":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
-      analysis_node = factory_analysis_node.cloneNode("User Analysis")
+      analysis_node = factory_analysis_node.cloneNode("UsePostAnalysis")
       default_script = analysis_node.getScript()
       final_script = default_script + analysis_config["Data"]
       analysis_node.setScript(final_script)
@@ -255,13 +248,13 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
       # Connect node with InitUserData
-      if "Analysis" in init_config["Target"]:
+      if "UserPostAnalysis" in init_config["Target"]:
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
     elif analysis_config["From"] == "Script":
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
-      analysis_node = factory_analysis_node.cloneNode("User Analysis")
+      analysis_node = factory_analysis_node.cloneNode("UserPostAnalysis")
       default_script = analysis_node.getScript()
       if not os.path.exists(analysis_config["Data"]):
         logging.fatal("Analysis source file does not exists ! :" + str(analysis_config["Data"]))
@@ -282,7 +275,7 @@ def create_yacs_proc(study_config):
       else:
         proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
       # Connect node with InitUserData
-      if "Analysis" in init_config["Target"]:
+      if "UserPostAnalysis" in init_config["Target"]:
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 

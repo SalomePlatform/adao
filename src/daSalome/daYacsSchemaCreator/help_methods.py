@@ -40,7 +40,7 @@ def check_study(study_config):
   if not isinstance(study_config, dict):
     logging.fatal("Study configuration is not a dictionnary")
     sys.exit(1)
-  
+
   # Name
   if "Name" not in study_config:
     logging.fatal("Cannot found Name in the study configuration")
@@ -56,6 +56,10 @@ def check_study(study_config):
                     "\n You can choose between : " + str(AssimAlgos))
       sys.exit(1)
 
+  # Debug
+  if "Debug" not in study_config:
+    study_config["Debug"] = "0"
+
   # Check if all the data is provided
   for key in AlgoDataRequirements[study_config["Algorithm"]]:
     if key not in study_config.keys():
@@ -70,10 +74,10 @@ def check_study(study_config):
       check_data(key, study_config[key])
 
   # Analyse
-  if "Analysis" in study_config.keys():
-    analysis_config = study_config["Analysis"]
+  if "UserPostAnalysis" in study_config.keys():
+    analysis_config = study_config["UserPostAnalysis"]
     if "From" not in analysis_config:
-      logging.fatal("Analysis found but From is not defined in the analysis configuration !")
+      logging.fatal("UserPostAnalysis found but From is not defined in the analysis configuration !")
       sys.exit(1)
     else:
       if analysis_config["From"] not in AnalysisFromList:
