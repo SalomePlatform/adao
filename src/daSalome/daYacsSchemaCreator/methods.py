@@ -51,6 +51,12 @@ def create_yacs_proc(study_config):
   t_pyobj  = proc.getTypeCode("pyobj")
   t_string = proc.getTypeCode("string")
 
+  repertory = False
+  base_repertory = ""
+  if "Repertory" in study_config.keys():
+    base_repertory = study_config["Repertory"]
+    repertory = True
+
   # Step 0: create AssimilationStudyObject
   factory_CAS_node = catalogAd._nodeMap["CreateAssimilationStudy"]
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
@@ -69,7 +75,10 @@ def create_yacs_proc(study_config):
     init_config = study_config["UserDataInit"]
     factory_init_node = catalogAd._nodeMap["UserDataInitFromScript"]
     init_node = factory_init_node.cloneNode("UserDataInit")
-    init_node.getInputPort("script").edInitPy(init_config["Data"])
+    if repertory:
+      init_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(init_config["Data"])))
+    else:
+      init_node.getInputPort("script").edInitPy(init_config["Data"])
     proc.edAddChild(init_node)
 
   # Step 1: get input data from user configuration
@@ -84,7 +93,10 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateDictFromScript"]
         back_node = factory_back_node.cloneNode("Get" + key)
-        back_node.getInputPort("script").edInitPy(data_config["Data"])
+        if repertory:
+          back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        else:
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
         proc.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
@@ -115,7 +127,10 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromScript"]
         back_node = factory_back_node.cloneNode("Get" + key)
-        back_node.getInputPort("script").edInitPy(data_config["Data"])
+        if repertory:
+          back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        else:
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
         proc.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
@@ -148,7 +163,10 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromScript"]
         back_node = factory_back_node.cloneNode("Get" + key)
-        back_node.getInputPort("script").edInitPy(data_config["Data"])
+        if repertory:
+          back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        else:
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
         proc.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
@@ -166,7 +184,10 @@ def create_yacs_proc(study_config):
          for FunctionName in FunctionDict["Function"]:
            port_name = "ObservationOperator" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
 
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
@@ -195,9 +216,8 @@ def create_yacs_proc(study_config):
 
       # We create a new pyscript node
       opt_script_node = runtime.createScriptNode("", "FunctionNode")
-      if not os.path.exists(script_filename):
-        logging.fatal("Function script source file does not exists ! :" + script_filename)
-        sys.exit(1)
+      if repertory:
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
       try:
         script_str= open(script_filename, 'r')
       except:
@@ -260,11 +280,11 @@ def create_yacs_proc(study_config):
       factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
       analysis_node = factory_analysis_node.cloneNode("UserPostAnalysis")
       default_script = analysis_node.getScript()
-      if not os.path.exists(analysis_config["Data"]):
-        logging.fatal("Analysis source file does not exists ! :" + str(analysis_config["Data"]))
-        sys.exit(1)
+      analysis_file_name = analysis_config["Data"]
+      if repertory:
+        analysis_file_name = os.path.join(base_repertory, os.path.basename(analysis_file_name))
       try:
-        analysis_file = open(analysis_config["Data"], 'r')
+        analysis_file = open(analysis_file_name, 'r')
       except:
         logging.fatal("Exception in opening analysis file : " + str(analysis_config["Data"]))
         traceback.print_exc()

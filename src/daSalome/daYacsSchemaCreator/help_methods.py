@@ -20,6 +20,7 @@
 # --
 
 import sys
+import os
 import traceback
 import logging
 
@@ -60,6 +61,17 @@ def check_study(study_config):
   if "Debug" not in study_config:
     study_config["Debug"] = "0"
 
+  # Repertory
+  check_repertory = False
+  repertory = ""
+  if "Repertory" in study_config.keys():
+    repertory = study_config["Repertory"]
+    check_repertory = True
+    if not os.path.isabs(repertory):
+      logging.fatal("Study repertory should be an absolute path")
+      logging.fatal("Repertory provided is %s" % repertory)
+      sys.exit(1)
+
   # Check if all the data is provided
   for key in AlgoDataRequirements[study_config["Algorithm"]]:
     if key not in study_config.keys():
@@ -71,7 +83,11 @@ def check_study(study_config):
   # Data
   for key in study_config.keys():
     if key in AssimData:
-      check_data(key, study_config[key])
+      check_data(key, study_config[key], check_repertory, repertory)
+
+  # UserDataInit
+  if "UserDataInit" in study_config.keys():
+    check_data("UserDataInit", study_config["UserDataInit"], check_repertory, repertory)
 
   # Analyse
   if "UserPostAnalysis" in study_config.keys():
@@ -88,8 +104,18 @@ def check_study(study_config):
       logging.fatal("Analysis found but Data is not defined in the analysis configuration !")
       sys.exit(1)
 
+    if analysis_config["From"] == "Script":
+      check_file_name = ""
+      if repertory_check:
+        check_file_name = os.path.join(repertory, os.path.basename(analysis_config["Data"]))
+      else:
+        check_file_name = analysis_config["Data"]
+      if not os.path.exists(check_file_name):
+        logging.fatal("A script file cannot be found")
+        logging.fatal("File is %s" % check_file_name)
+        sys.exit(1)
 
-def check_data(data_name, data_config):
+def check_data(data_name, data_config, repertory_check=False, repertory=""):
 
   logging.debug("[check_data] " + data_name)
   data_name_data = "Data"
@@ -117,3 +143,27 @@ def check_data(data_name, data_config):
                     + "\n You can have : " + str(FromNumpyList[data_config[data_name_type]]))
       sys.exit(1)
 
+  # Check des fichiers
+  from_type = data_config["From"]
+  if from_type == "Script":
+    check_file_name = ""
+    if repertory_check:
+      check_file_name = os.path.join(repertory, os.path.basename(data_config["Data"]))
+    else:
+      check_file_name = data_config["Data"]
+    if not os.path.exists(check_file_name):
+      logging.fatal("A script file cannot be found")
+      logging.fatal("File is %s" % check_file_name)
+      sys.exit(1)
+  elif from_type == "FunctionDict":
+    FunctionDict = data_config["Data"]
+    for FunctionName in FunctionDict["Function"]:
+      check_file_name = ""
+      if repertory_check:
+        check_file_name = os.path.join(repertory, os.path.basename(FunctionDict["Script"][FunctionName]))
+      else:
+        check_file_name = FunctionDict["Script"][FunctionName]
+      if not os.path.exists(check_file_name):
+        logging.fatal("A script file cannot be found")
+        logging.fatal("File is %s" % check_file_name)
+        sys.exit(1)

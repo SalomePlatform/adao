@@ -42,6 +42,7 @@ AssimType["Observation"] = ["Vector"]
 AssimType["ObservationError"] = ["Matrix"]
 AssimType["ObservationOperator"] = ["Matrix", "Function"]
 AssimType["AlgorithmParameters"] = ["Dict"]
+AssimType["UserDataInit"] = ["Dict"]
 #AssimType["ObservationOperatorAppliedToX"] = ["List"]
 
 FromNumpyList = {}
@@ -95,6 +96,7 @@ AssimDataDict["Observation"] = ["Vector"]
 AssimDataDict["ObservationError"] = ["Matrix"]
 AssimDataDict["ObservationOperator"] = ["Matrix", "Function"]
 AssimDataDict["AlgorithmParameters"] = ["Dict"]
+AssimDataDict["UserDataInit"] = ["Dict"]
 
 AssimDataDefaultDict = {}
 AssimDataDefaultDict["Background"]          = "Vector"
@@ -103,6 +105,7 @@ AssimDataDefaultDict["Observation"]         = "Vector"
 AssimDataDefaultDict["ObservationError"]    = "Matrix"
 AssimDataDefaultDict["ObservationOperator"] = "Function"
 AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
+AssimDataDefaultDict["UserDataInit"]        = "Dict"
 
 # Assimilation optional nodes
 OptDict = {}

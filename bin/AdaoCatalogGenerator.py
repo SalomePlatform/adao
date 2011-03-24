@@ -49,7 +49,7 @@ def F_${data_name}(statut) : return FACT(statut = statut,
                                          FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into}), defaut=${data_default}),
                                          SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
-                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr())),
                                                      ),
                                          STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
 
@@ -57,7 +57,7 @@ def F_${data_name}(statut) : return FACT(statut = statut,
                                                      ),
                                          FUNCTIONDICT_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
 
-                                                      FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "Fichier"),
+                                                      FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr())),
                                                      ),
                                     )
 """
@@ -73,7 +73,7 @@ def F_InitChoice() : return  ("Background",
                              )
 
 def F_Init(statut) : return FACT(statut = statut,
-                                 INIT_FILE = SIMP(statut = "o", typ = "Fichier"),
+                                 INIT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr())),
                                  TARGET_LIST = SIMP(statut = "o", typ = "TXM", min=1, max="**", into=F_InitChoice(),  validators=(VerifExiste(2))),
                                 )
 """
