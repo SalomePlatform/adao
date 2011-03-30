@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 
 import SALOMERuntime
+import pilot
 import pickle
 import numpy
 import threading
@@ -17,6 +18,46 @@ class OptimizerHooks:
     self.sample_counter = 0
     self.counter_lock = threading.Lock()
 
+  def create_sample(self, data, method):
+    sample = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/ParametricInput'))
+
+    # TODO Input, Output VarList
+    inputVarList  = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("string"))
+    outputVarList = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("string"))
+    inputVarList.pushBack("adao_default")
+    outputVarList.pushBack("adao_default")
+    sample.setEltAtRank("inputVarList", inputVarList)
+    sample.setEltAtRank("outputVarList", outputVarList)
+
+    # Les parametres specifiques à ADAO
+    specificParameters = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("SALOME_TYPES/Parameter"))
+    method_name = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+    method_name.setEltAtRank("name", "method")
+    method_name.setEltAtRank("value", method)
+    specificParameters.pushBack(method_name)
+    sample.setEltAtRank("specificParameters", specificParameters)
+
+    # Les données
+    # TODO à faire
+    parameter_1D = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
+    #print data
+    #print data.ndim
+    #print data.shape
+    #print data[:,0]
+    #print data.flatten()
+    #print data.flatten().shape
+    it = data.flat
+    for val in it:
+      print val
+      parameter_1D.pushBack(val)
+    parameter_2D = pilot.SequenceAny_New(parameter_1D.getType())
+    parameter_2D.pushBack(parameter_1D)
+    parameters_3D = pilot.SequenceAny_New(parameter_2D.getType())
+    parameters_3D.pushBack(parameter_2D)
+    sample.setEltAtRank("inputValues", parameters_3D)
+
+    return sample
+
   def Direct(self, X, sync = 1):
     print "Call Direct OptimizerHooks"
     if sync == 1:
@@ -26,11 +67,8 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      computation = {}
-      computation["method"] = "Direct"
-      computation["data"] = X
-      computation = pickle.dumps(computation)
-      self.optim_algo.pool.pushInSample(local_counter, computation)
+      sample = self.create_sample(X, "Direct")
+      self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
       while 1:
@@ -149,7 +187,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     self.runtime = SALOMERuntime.getSALOMERuntime()
 
     # Definission des types d'entres et de sorties pour le code de calcul
-    self.tin  = self.runtime.getTypeCode("pyobj")
+    self.tin  = self.runtime.getTypeCode("SALOME_TYPES/ParametricInput")
     self.tout = self.runtime.getTypeCode("pyobj")
 
     self.optim_hooks = OptimizerHooks(self)
@@ -213,7 +251,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
   def getTCForOut(self):
     return self.tout
   def getTCForAlgoInit(self):
-    return self.tin
+    return self.tout
   def getTCForAlgoResult(self):
     return self.tout
 

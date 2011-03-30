@@ -1,10 +1,14 @@
 import numpy
 import pickle
 
-print computation["method"]
+print computation
+method = ""
+for param in computation["specificParameters"]:
+  if param["name"] == "method":
+    method = param["value"]
+print "Method found is", method
 
 dimension = 300
-
 H  = numpy.matrix(numpy.core.identity(dimension))
 
 def FunctionH( X ):
@@ -13,13 +17,13 @@ def FunctionH( X ):
 def AdjointH( (X, Y) ):
     return H.T * Y
 
-if computation["method"] == "Direct":
+if method == "Direct":
   result = FunctionH(computation["data"])
 
-if computation["method"] == "Tangent":
+if method == "Tangent":
   result = FunctionH(computation["data"])
 
-if computation["method"] == "Adjoint":
+if method == "Adjoint":
   result = AdjointH(computation["data"])
 
 print "Computation end"

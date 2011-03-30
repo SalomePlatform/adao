@@ -40,6 +40,7 @@ def create_yacs_proc(study_config):
   runtime = pilot.getRuntime()
   try:
     catalogAd = runtime.loadCatalog("proc", os.environ["ADAO_ROOT_DIR"] + "/share/salome/resources/adao/ADAOSchemaCatalog.xml")
+    runtime.addCatalog(catalogAd)
   except:
     logging.fatal("Exception in loading DataAssim YACS catalog")
     traceback.print_exc()
@@ -48,9 +49,10 @@ def create_yacs_proc(study_config):
   # Starting creating proc
   proc = runtime.createProc("proc")
   proc.setTypeCode("pyobj", runtime.getTypeCode("pyobj"))
+  proc.setTypeCode("SALOME_TYPES/ParametricInput", catalogAd._typeMap["SALOME_TYPES/ParametricInput"])
   t_pyobj  = proc.getTypeCode("pyobj")
   t_string = proc.getTypeCode("string")
-
+  t_param_input = proc.getTypeCode("SALOME_TYPES/ParametricInput")
   repertory = False
   base_repertory = ""
   if "Repertory" in study_config.keys():
@@ -225,7 +227,7 @@ def create_yacs_proc(study_config):
         traceback.print_exc()
         sys.exit(1)
       opt_script_node.setScript(script_str.read())
-      opt_script_node.edAddInputPort("computation", t_pyobj)
+      opt_script_node.edAddInputPort("computation", t_param_input)
       opt_script_node.edAddOutputPort("result", t_pyobj)
 
       # Add it
