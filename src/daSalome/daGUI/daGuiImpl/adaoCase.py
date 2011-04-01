@@ -66,15 +66,13 @@ class AdaoCase:
     if (self.filename == ""):
       return "You need to save your case to export it"
 
+    self.eficas_editor.modified = True
+    self.eficas_editor.saveFile()
     filename = self.filename[:self.filename.rfind(".")] + '.py'
     if not os.path.exists(filename):
-      # On essaye de le créer une fois
-      self.eficas_editor.modified = True
-      self.eficas_editor.saveFile()
-      if not os.path.exists(filename):
-        msg =  "Cannot find the py file for YACS generation \n"
-        msg += "Is your case correct ? \n"
-        return msg
+      msg =  "Cannot find the py file for YACS generation \n"
+      msg += "Is your case correct ? \n"
+      return msg
 
     if not os.environ.has_key("ADAO_ROOT_DIR"):
       return "Please add ADAO_ROOT_DIR to your environnement"

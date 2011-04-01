@@ -206,6 +206,7 @@ class AdaoGenerator(PythonGenerator):
         sizes = self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"]
 
       self.text_da += "inputvariables_config = {} \n"
+      self.text_da += "inputvariables_config[\"Order\"] = %s \n" % list(names)
       for name, size in zip(names, sizes):
         self.text_da += "inputvariables_config[\"%s\"] = %s \n" % (name,size)
       self.text_da += "study_config[\"InputVariables\"] = inputvariables_config \n"
@@ -228,6 +229,7 @@ class AdaoGenerator(PythonGenerator):
         sizes = self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"]
 
       self.text_da += "outputvariables_config = {} \n"
+      self.text_da += "outputvariables_config[\"Order\"] = %s \n" % list(names)
       for name, size in zip(names, sizes):
         self.text_da += "outputvariables_config[\"%s\"] = %s \n" % (name,size)
       self.text_da += "study_config[\"OutputVariables\"] = outputvariables_config \n"
