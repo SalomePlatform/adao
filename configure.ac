@@ -122,6 +122,7 @@ AC_CONFIG_FILES([
         src/tests/daSalome/Makefile
         src/tests/daSalome/test000_Blue_AnalysisFile.py
         src/tests/daSalome/test017_3DVAR_par_fonction.py
+        src/tests/daSalome/test017.comm
         src/tests/daSalome/test_aster_zzzz159a_init_parameters.py
         src/tests/daSalome/test_aster_zzzz159a.py
         src/tests/daSalome/test_aster_zzzz159a_LBFGSB.py
