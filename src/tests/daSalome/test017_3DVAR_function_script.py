@@ -7,8 +7,6 @@ for param in computation["specificParameters"]:
   if param["name"] == "method":
     method = param["value"]
 print "Method found is", method
-print computation["inputValues"]
-print computation["inputValues"][0][0]
 
 dimension = 300
 H  = numpy.matrix(numpy.core.identity(dimension))
@@ -26,6 +24,6 @@ if method == "Tangent":
   result = FunctionH(numpy.matrix(computation["inputValues"][0][0]).T)
 
 if method == "Adjoint":
-  result = AdjointH(numpy.matrix(computation["inputValues"][0][0]).T)
+  result = AdjointH((numpy.matrix(computation["inputValues"][0][0]).T, numpy.matrix(computation["inputValues"][0][1]).T))
 
 print "Computation end"

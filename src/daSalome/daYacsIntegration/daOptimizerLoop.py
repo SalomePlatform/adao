@@ -39,20 +39,29 @@ class OptimizerHooks:
 
     # Les données
     # TODO à faire
-    parameter_1D = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
     #print data
     #print data.ndim
     #print data.shape
     #print data[:,0]
     #print data.flatten()
     #print data.flatten().shape
-    it = data.flat
-    for val in it:
-      print val
-      parameter_1D.pushBack(val)
+
+    parameter_1D = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
     parameter_2D = pilot.SequenceAny_New(parameter_1D.getType())
-    parameter_2D.pushBack(parameter_1D)
     parameters_3D = pilot.SequenceAny_New(parameter_2D.getType())
+    if isinstance(data, type((1,2))):
+      for dat in data:
+        param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
+        it = dat.flat
+        for val in it:
+          param.pushBack(val)
+        parameter_2D.pushBack(param)
+    else:
+      param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
+      it = data.flat
+      for val in it:
+        param.pushBack(val)
+      parameter_2D.pushBack(param)
     parameters_3D.pushBack(parameter_2D)
     sample.setEltAtRank("inputValues", parameters_3D)
 
@@ -95,7 +104,7 @@ class OptimizerHooks:
             return Y
     else:
       print "sync false is not yet implemented"
-      raise daStudy.daError("sync == false not yet implemented")
+      self.optim_algo.setError("sync == false not yet implemented")
 
   def Tangent(self, X, sync = 1):
     print "Call Tangent OptimizerHooks"
@@ -132,7 +141,7 @@ class OptimizerHooks:
             return Y
     else:
       print "sync false is not yet implemented"
-      raise daStudy.daError("sync == false not yet implemented")
+      self.optim_algo.setError("sync == false not yet implemented")
 
   def Adjoint(self, (X, Y), sync = 1):
     print "Call Adjoint OptimizerHooks"
@@ -143,7 +152,7 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      sample = self.create_sample(Y, "Tangent")
+      sample = self.create_sample((X,Y), "Adjoint")
       self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
@@ -171,7 +180,7 @@ class OptimizerHooks:
             return Z
     else:
       print "sync false is not yet implemented"
-      raise daStudy.daError("sync == false not yet implemented")
+      self.optim_algo.setError("sync == false not yet implemented")
 
 class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
