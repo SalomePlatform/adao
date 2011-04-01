@@ -106,11 +106,8 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      computation = {}
-      computation["method"] = "Tangent"
-      computation["data"] = X
-      computation = pickle.dumps(computation)
-      self.optim_algo.pool.pushInSample(local_counter, computation)
+      sample = self.create_sample(X, "Tangent")
+      self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
       while 1:
@@ -146,11 +143,8 @@ class OptimizerHooks:
       local_counter = self.sample_counter
 
       # 2: Put sample in the job pool
-      computation = {}
-      computation["method"] = "Adjoint"
-      computation["data"] = (X, Y)
-      computation = pickle.dumps(computation)
-      self.optim_algo.pool.pushInSample(local_counter, computation)
+      sample = self.create_sample(Y, "Tangent")
+      self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
       while 1:
