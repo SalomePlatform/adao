@@ -68,10 +68,13 @@ class AdaoCase:
 
     filename = self.filename[:self.filename.rfind(".")] + '.py'
     if not os.path.exists(filename):
-      msg =  "Cannot find the py file for YACS generation \n"
-      msg += "Is your case correct ? \n"
-      msg += "(Try to load: " + filename + ")"
-      return msg
+      # On essaye de le créer une fois
+      self.eficas_editor.modified = True
+      self.eficas_editor.saveFile()
+      if not os.path.exists(filename):
+        msg =  "Cannot find the py file for YACS generation \n"
+        msg += "Is your case correct ? \n"
+        return msg
 
     if not os.environ.has_key("ADAO_ROOT_DIR"):
       return "Please add ADAO_ROOT_DIR to your environnement"
