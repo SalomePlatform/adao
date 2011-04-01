@@ -222,7 +222,7 @@ print "Entering in FakeOptimizerLoopNode"
 result = None
 ]]></code></script>
     <inport name="computation" type="SALOME_TYPES/ParametricInput"/>
-    <outport name="result" type="pyobj"/>
+    <outport name="result" type="SALOME_TYPES/ParametricOutput"/>
   </inline>
 
   <inline name="CreateDictFromScript">

@@ -67,6 +67,20 @@ class OptimizerHooks:
 
     return sample
 
+  def get_data_from_any(self, any_data):
+    error = any_data["returnCode"].getIntValue()
+    if error != 0:
+      self.optim_algo.setError(any_data["errorMessage"].getStringValue())
+
+    data = []
+    outputValues = any_data["outputValues"]
+    for param in outputValues[0]:
+      for i in range(param.size()):
+        data.append(param[i].getDoubleValue())
+
+    matrix = numpy.matrix(data).T
+    return matrix
+
   def Direct(self, X, sync = 1):
     print "Call Direct OptimizerHooks"
     if sync == 1:
@@ -92,15 +106,13 @@ class OptimizerHooks:
           sample_id = self.optim_algo.pool.getCurrentId()
           if sample_id == local_counter:
             # 4: Data is ready
-            matrix_from_pool = self.optim_algo.pool.getOutSample(local_counter).getStringValue()
+            any_data = self.optim_algo.pool.getOutSample(local_counter)
+            Y = self.get_data_from_any(any_data)
 
             # 5: Release lock
             # Have to be done before but need a new implementation
             # of the optimizer loop
             self.counter_lock.release()
-
-            # 6: return results
-            Y = pickle.loads(matrix_from_pool)
             return Y
     else:
       print "sync false is not yet implemented"
@@ -129,15 +141,13 @@ class OptimizerHooks:
           sample_id = self.optim_algo.pool.getCurrentId()
           if sample_id == local_counter:
             # 4: Data is ready
-            matrix_from_pool = self.optim_algo.pool.getOutSample(local_counter).getStringValue()
+            any_data = self.optim_algo.pool.getOutSample(local_counter)
+            Y = self.get_data_from_any(any_data)
 
             # 5: Release lock
             # Have to be done before but need a new implementation
             # of the optimizer loop
             self.counter_lock.release()
-
-            # 6: return results
-            Y = pickle.loads(matrix_from_pool)
             return Y
     else:
       print "sync false is not yet implemented"
@@ -168,15 +178,13 @@ class OptimizerHooks:
           sample_id = self.optim_algo.pool.getCurrentId()
           if sample_id == local_counter:
             # 4: Data is ready
-            matrix_from_pool = self.optim_algo.pool.getOutSample(local_counter).getStringValue()
+            any_data = self.optim_algo.pool.getOutSample(local_counter)
+            Z = self.get_data_from_any(any_data)
 
             # 5: Release lock
             # Have to be done before but need a new implementation
             # of the optimizer loop
             self.counter_lock.release()
-
-            # 6: return results
-            Z = pickle.loads(matrix_from_pool)
             return Z
     else:
       print "sync false is not yet implemented"
@@ -190,8 +198,9 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     self.runtime = SALOMERuntime.getSALOMERuntime()
 
     # Definission des types d'entres et de sorties pour le code de calcul
-    self.tin  = self.runtime.getTypeCode("SALOME_TYPES/ParametricInput")
-    self.tout = self.runtime.getTypeCode("pyobj")
+    self.tin      = self.runtime.getTypeCode("SALOME_TYPES/ParametricInput")
+    self.tout     = self.runtime.getTypeCode("SALOME_TYPES/ParametricOutput")
+    self.pyobject = self.runtime.getTypeCode("pyobj")
 
     self.optim_hooks = OptimizerHooks(self)
 
@@ -254,7 +263,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
   def getTCForOut(self):
     return self.tout
   def getTCForAlgoInit(self):
-    return self.tout
+    return self.pyobject
   def getTCForAlgoResult(self):
-    return self.tout
+    return self.pyobject
 

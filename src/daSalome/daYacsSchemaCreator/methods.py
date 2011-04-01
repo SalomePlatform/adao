@@ -50,9 +50,11 @@ def create_yacs_proc(study_config):
   proc = runtime.createProc("proc")
   proc.setTypeCode("pyobj", runtime.getTypeCode("pyobj"))
   proc.setTypeCode("SALOME_TYPES/ParametricInput", catalogAd._typeMap["SALOME_TYPES/ParametricInput"])
+  proc.setTypeCode("SALOME_TYPES/ParametricOutput", catalogAd._typeMap["SALOME_TYPES/ParametricOutput"])
   t_pyobj  = proc.getTypeCode("pyobj")
   t_string = proc.getTypeCode("string")
-  t_param_input = proc.getTypeCode("SALOME_TYPES/ParametricInput")
+  t_param_input  = proc.getTypeCode("SALOME_TYPES/ParametricInput")
+  t_param_output = proc.getTypeCode("SALOME_TYPES/ParametricOutput")
   repertory = False
   base_repertory = ""
   if "Repertory" in study_config.keys():
@@ -228,7 +230,7 @@ def create_yacs_proc(study_config):
         sys.exit(1)
       opt_script_node.setScript(script_str.read())
       opt_script_node.edAddInputPort("computation", t_param_input)
-      opt_script_node.edAddOutputPort("result", t_pyobj)
+      opt_script_node.edAddOutputPort("result", t_param_output)
 
       # Add it
       computation_bloc = runtime.createBloc("computation_bloc")
