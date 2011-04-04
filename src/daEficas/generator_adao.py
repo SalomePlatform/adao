@@ -212,6 +212,7 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config[\"InputVariables\"] = inputvariables_config \n"
     else:
       self.text_da += "inputvariables_config = {} \n"
+      self.text_da += "inputvariables_config[\"Order\"] =[\"adao_default\"] \n"
       self.text_da += "inputvariables_config[\"adao_default\"] = -1 \n"
       self.text_da += "study_config[\"InputVariables\"] = inputvariables_config \n"
 
@@ -235,5 +236,6 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config[\"OutputVariables\"] = outputvariables_config \n"
     else:
       self.text_da += "outputvariables_config = {} \n"
+      self.text_da += "outputvariables_config[\"Order\"] = [\"adao_default\"] \n"
       self.text_da += "outputvariables_config[\"adao_default\"] = -1 \n"
       self.text_da += "study_config[\"OutputVariables\"] = outputvariables_config \n"
