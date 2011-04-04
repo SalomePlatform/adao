@@ -66,6 +66,11 @@ class AdaoCase:
     if (self.filename == ""):
       return "You need to save your case to export it"
 
+    self.yacs_filename = self.filename[:self.filename.rfind(".")] + '.xml'
+    yacs_filename_backup = self.filename[:self.filename.rfind(".")] + '.xml.back'
+    if os.path.exists(self.yacs_filename):
+      os.rename(self.yacs_filename, yacs_filename_backup)
+
     self.eficas_editor.modified = True
     self.eficas_editor.saveFile()
     filename = self.filename[:self.filename.rfind(".")] + '.py'
@@ -79,7 +84,6 @@ class AdaoCase:
 
     adao_path = os.environ["ADAO_ROOT_DIR"]
     adao_exe = adao_path + "/bin/salome/AdaoYacsSchemaCreator.py"
-    self.yacs_filename = self.filename[:self.filename.rfind(".")] + '.xml'
     args = ["python", adao_exe, filename, self.yacs_filename]
     p = subprocess.Popen(args)
     (stdoutdata, stderrdata) = p.communicate()
