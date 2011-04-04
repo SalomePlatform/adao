@@ -89,6 +89,10 @@ def check_study(study_config):
   if "UserDataInit" in study_config.keys():
     check_data("UserDataInit", study_config["UserDataInit"], check_repertory, repertory)
 
+  # Variables
+  check_variables("InputVariables", study_config)
+  check_variables("OutputVariables", study_config)
+
   # Analyse
   if "UserPostAnalysis" in study_config.keys():
     analysis_config = study_config["UserPostAnalysis"]
@@ -114,6 +118,36 @@ def check_study(study_config):
         logging.fatal("A script file cannot be found")
         logging.fatal("File is %s" % check_file_name)
         sys.exit(1)
+
+def check_variables(name, study_config):
+
+  if name not in study_config.keys():
+    logging.fatal("%s not found in your study configuration!" % name)
+    sys.exit(1)
+
+  variable_config = study_config[name]
+  if "Order" not in variable_config.keys():
+    logging.fatal("Order not found in the %s configuration!" % name)
+    sys.exit(1)
+
+  list_of_variables = variable_config["Order"]
+  if not isinstance(list_of_variables, type([])):
+    logging.fatal("Order sould be a list in the %s configuration!" % name)
+    sys.exit(1)
+  if len(list_of_variables) < 1:
+    logging.fatal("Order should contain one or more names in the %s configuration!" % name)
+    sys.exit(1)
+
+  for var in list_of_variables:
+    if var not in variable_config.keys():
+      logging.fatal("Variable %s not found in the %s configuration!" % name)
+      sys.exit(1)
+    value = variable_config[var]
+    try:
+      value = int(value)
+    except:
+      loggind.fatal("Variable %s value cannot be converted in an integer in the %s configuration!" % name)
+      sys.exit(1)
 
 def check_data(data_name, data_config, repertory_check=False, repertory=""):
 
