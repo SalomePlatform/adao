@@ -2,6 +2,7 @@
 
 from daCore.AssimilationStudy import AssimilationStudy
 from daCore import Logging
+import logging
 
 class daError(Exception):
   def __init__(self, value):
@@ -18,18 +19,28 @@ class daStudy:
     self.algorithm = algorithm
     self.algorithm_dict = None
     self.Background = None
+    self.InputVariables = {}
+    self.OutputVariables = {}
+    self.InputVariablesOrder = []
+    self.OutputVariablesOrder = []
 
     self.debug = debug
-    import logging
     if self.debug:
       logging.getLogger().setLevel(logging.DEBUG)
     else:
       logging.getLogger().setLevel(logging.INFO)
 
-
     # Observation Management
     self.ObservationOperatorType = {}
     self.FunctionObservationOperator = {}
+
+  def setInputVariable(self, name, size):
+    self.InputVariables[name] = size
+    self.InputVariablesOrder.append(name)
+
+  def setOutputVariable(self, name, size):
+    self.OutputVariables[name] = size
+    self.OutputVariablesOrder.append(name)
 
   def setAlgorithmParameters(self, parameters):
     self.algorithm_dict = parameters

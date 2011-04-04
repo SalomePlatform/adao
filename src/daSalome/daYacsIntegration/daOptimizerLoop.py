@@ -24,8 +24,10 @@ class OptimizerHooks:
     # TODO Input, Output VarList
     inputVarList  = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("string"))
     outputVarList = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("string"))
-    inputVarList.pushBack("adao_default")
-    outputVarList.pushBack("adao_default")
+    for var in self.optim_algo.da_study.InputVariables:
+      inputVarList.pushBack(var)
+    for var in self.optim_algo.da_study.OutputVariables:
+      outputVarList.pushBack(var)
     sample.setEltAtRank("inputVarList", inputVarList)
     sample.setEltAtRank("outputVarList", outputVarList)
 
@@ -49,23 +51,49 @@ class OptimizerHooks:
     parameter_1D = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
     parameter_2D = pilot.SequenceAny_New(parameter_1D.getType())
     parameters_3D = pilot.SequenceAny_New(parameter_2D.getType())
+
+    print "Input Data", data
     if isinstance(data, type((1,2))):
-      for dat in data:
-        param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
-        it = dat.flat
-        for val in it:
-          param.pushBack(val)
-        parameter_2D.pushBack(param)
+      self.add_parameters(data[0], parameter_2D)
+      self.add_parameters(data[1], parameter_2D, Output=True)
     else:
-      param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
-      it = data.flat
-      for val in it:
-        param.pushBack(val)
-      parameter_2D.pushBack(param)
+      self.add_parameters(data, parameter_2D)
     parameters_3D.pushBack(parameter_2D)
     sample.setEltAtRank("inputValues", parameters_3D)
-
     return sample
+
+  def add_parameters(self, data, parameter_2D, Output=False):
+    param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
+    elt_list = 0 # index dans la liste des arguments
+    val_number = 0 # nbre dans l'argument courant
+    if not Output:
+      val_end = self.optim_algo.da_study.InputVariables[self.optim_algo.da_study.InputVariablesOrder[elt_list]] # nbr de l'argument courant (-1 == tout)
+    else:
+      val_end = self.optim_algo.da_study.OutputVariables[self.optim_algo.da_study.OutputVariablesOrder[elt_list]] # nbr de l'argument courant (-1 == tout)
+
+    it = data.flat
+    for val in it:
+      param.pushBack(val)
+      val_number += 1
+      # Test si l'argument est ok
+      if val_end != -1:
+        if val_number == val_end:
+          parameter_2D.pushBack(param)
+          param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
+          val_number = 0
+          elt_list += 1
+          if not Output:
+            if elt_list < len(self.optim_algo.da_study.InputVariablesOrder):
+              val_end = self.optim_algo.da_study.InputVariables[self.optim_algo.da_study.InputVariablesOrder[elt_list]]
+            else:
+              break
+          else:
+            if elt_list < len(self.optim_algo.da_study.OutputVariablesOrder):
+              val_end = self.optim_algo.da_study.OutputVariables[self.optim_algo.da_study.OutputVariablesOrder[elt_list]]
+            else:
+              break
+    if val_end == -1:
+      parameter_2D.pushBack(param)
 
   def get_data_from_any(self, any_data):
     error = any_data["returnCode"].getIntValue()

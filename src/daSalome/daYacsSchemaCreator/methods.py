@@ -70,6 +70,23 @@ def create_yacs_proc(study_config):
     CAS_node.getInputPort("Debug").edInitPy(False)
   else:
     CAS_node.getInputPort("Debug").edInitPy(True)
+
+  # Ajout des Variables
+  InputVariablesNames = []
+  InputVariablesSizes = []
+  for var in study_config["InputVariables"]["Order"]:
+    InputVariablesNames.append(var)
+    InputVariablesSizes.append(int(study_config["InputVariables"][var]))
+  CAS_node.getInputPort("InputVariablesNames").edInitPy(InputVariablesNames)
+  CAS_node.getInputPort("InputVariablesSizes").edInitPy(InputVariablesSizes)
+  OutputVariablesNames = []
+  OutputVariablesSizes = []
+  for var in study_config["OutputVariables"]["Order"]:
+    OutputVariablesNames.append(var)
+    OutputVariablesSizes.append(int(study_config["OutputVariables"][var]))
+  CAS_node.getInputPort("OutputVariablesNames").edInitPy(OutputVariablesNames)
+  CAS_node.getInputPort("OutputVariablesSizes").edInitPy(OutputVariablesSizes)
+
   proc.edAddChild(CAS_node)
 
   # Step 0.5: Find if there is a user init node

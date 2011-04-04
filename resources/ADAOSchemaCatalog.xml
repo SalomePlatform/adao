@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
 <proc>
-  
+
   <objref name="computeAD" id="python:computeAD:1.0">
     <base>pyobj</base>
   </objref>
@@ -136,6 +136,11 @@ if ObservationOperatorOk == 0:
     assim_study.setObservationOperatorType("Adjoint", "Function")
     assim_study.setObservationOperator("Adjoint", ObservationOperatorAdjoint)
 
+# Variables
+for name, size in zip(InputVariablesNames, InputVariablesSizes):
+  assim_study.setInputVariable(name, size)
+for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
+  assim_study.setOutputVariable(name, size)
 
 Study = assim_study
 ]]>
@@ -144,6 +149,10 @@ Study = assim_study
     <inport name="Name" type="string"/>
     <inport name="Algorithm" type="string"/>
     <inport name="Debug" type="bool"/>
+    <inport name="InputVariablesNames" type="stringvec"/>
+    <inport name="InputVariablesSizes" type="intvec"/>
+    <inport name="OutputVariablesNames" type="stringvec"/>
+    <inport name="OutputVariablesSizes" type="intvec"/>
     <outport name="Study" type="pyobj"/>
   </inline>
 

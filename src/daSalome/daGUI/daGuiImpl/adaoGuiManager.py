@@ -138,10 +138,11 @@ class AdaoCaseManager(EficasObserver):
     """
     adaoLogger.debug("currentSelectionChanged")
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_editor, adao_case in self.cases.iteritems():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
-        self.eficas_manager.selectCase(adao_case.eficas_editor)
-        break
+    if salomeStudyItem is not None:
+      for case_editor, adao_case in self.cases.iteritems():
+        if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+          self.eficas_manager.selectCase(adao_case.eficas_editor)
+          break
 
   # Depuis Eficas
   def _processEficasTabChanged(self, eficasWrapper, eficasEvent):
