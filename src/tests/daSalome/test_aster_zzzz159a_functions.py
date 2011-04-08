@@ -25,32 +25,47 @@ for param in computation["specificParameters"]:
 # On sait qu'on a trois variables
 input_data = []
 for i in range(3):
-  input_data.append(computation["inputValues"][0][i][0])
+  input_data.append(computation["inputValues"][0][0][i][0])
 
 if method == "Adjoint":
   input_data = (input_data, [])
   for i in range(22):
     if i < 11:
-      input_data[1].append(computation["inputValues"][0][3][i])
+      input_data[1].append(computation["inputValues"][0][0][3][i])
     else:
-      input_data[1].append(computation["inputValues"][0][4][i-11])
-
-if method == "Direct":
-  output_data = Code_Aster.Calcul_Aster_Ponctuel(input_data)
-
-if method == "Tangent":
-  output_data = Code_Aster.Calcul_Aster_Ponctuel(input_data)
-
-if method == "Adjoint":
-  output_data = Code_Aster.Calcul_Aster_Adjoint(input_data)
-
-outputValues = [[[]]]
-for val in output_data:
-  outputValues[0][0].append(val)
+      input_data[1].append(computation["inputValues"][0][0][4][i-11])
 
 result = {}
-result["outputValues"] = outputValues
 result["specificOutputInfos"] = []
 result["returnCode"] = 0
 result["errorMessage"] = ""
+
+outputValues = [[[[]]]]
+if method == "Direct":
+  output_data = Code_Aster.Calcul_Aster_Ponctuel(input_data)
+  outputValues[0][0] = [[],[]]
+  for i in range(22):
+    if i < 11:
+      outputValues[0][0][0].append(output_data[i])
+    else:
+      outputValues[0][0][1].append(output_data[i])
+
+if method == "Tangent":
+  output_data = Code_Aster.Calcul_Aster_Ponctuel(input_data)
+  outputValues[0][0] = [[],[]]
+  for i in range(22):
+    if i < 11:
+      outputValues[0][0][0].append(output_data[i])
+    else:
+      outputValues[0][0][1].append(output_data[i])
+
+if method == "Adjoint":
+  output_data = Code_Aster.Calcul_Aster_Adjoint(input_data)
+  outputValues[0][0] = [[],[],[]]
+  outputValues[0][0][0].append(output_data[0])
+  outputValues[0][0][1].append(output_data[1])
+  outputValues[0][0][2].append(output_data[2])
+
+result["outputValues"] = outputValues
+
 print "Computation end"
