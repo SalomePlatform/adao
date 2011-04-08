@@ -12,6 +12,7 @@ EXTRA_DIST = main.rst intro.rst conf.py
 install-data-local:
 	make html
 	${mkinstalldirs} $(DESTDIR)$(docdir)
+	${mkinstalldirs} $(salomeresdir)
 	cp -R $(BUILDDIR)/html/* $(DESTDIR)$(docdir)
 	cp $(SRCDIR)/resources/*.png $(salomeresdir)
 	cp $(SRCDIR)/images/eficas_*.png $(salomeresdir)

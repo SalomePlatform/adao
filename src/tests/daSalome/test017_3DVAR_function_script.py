@@ -17,20 +17,23 @@ def FunctionH( X ):
 def AdjointH( (X, Y) ):
     return H.T * Y
 
+print computation["inputValues"][0][0][0]
+print computation["inputValues"][0][0][0][0]
+
 if method == "Direct":
-  data = FunctionH(numpy.matrix(computation["inputValues"][0][0]).T)
+  data = FunctionH(numpy.matrix(computation["inputValues"][0][0][0]).T)
 
 if method == "Tangent":
-  data = FunctionH(numpy.matrix(computation["inputValues"][0][0]).T)
+  data = FunctionH(numpy.matrix(computation["inputValues"][0][0][0]).T)
 
 if method == "Adjoint":
-  data = AdjointH((numpy.matrix(computation["inputValues"][0][0]).T, numpy.matrix(computation["inputValues"][0][1]).T))
+  data = AdjointH((numpy.matrix(computation["inputValues"][0][0][0]).T, numpy.matrix(computation["inputValues"][0][0][1]).T))
 
 
-outputValues = [[[]]]
+outputValues = [[[[]]]]
 it = data.flat
 for val in it:
-  outputValues[0][0].append(val)
+  outputValues[0][0][0].append(val)
 
 print outputValues
 

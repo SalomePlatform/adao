@@ -48,21 +48,23 @@ class OptimizerHooks:
     #print data.flatten()
     #print data.flatten().shape
 
-    parameter_1D = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
-    parameter_2D = pilot.SequenceAny_New(parameter_1D.getType())
-    parameters_3D = pilot.SequenceAny_New(parameter_2D.getType())
+    variable          = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
+    variable_sequence = pilot.SequenceAny_New(variable.getType())
+    state_sequence    = pilot.SequenceAny_New(variable_sequence.getType())
+    time_sequence     = pilot.SequenceAny_New(state_sequence.getType())
 
     print "Input Data", data
     if isinstance(data, type((1,2))):
-      self.add_parameters(data[0], parameter_2D)
-      self.add_parameters(data[1], parameter_2D, Output=True)
+      self.add_parameters(data[0], variable_sequence)
+      self.add_parameters(data[1], variable_sequence, Output=True) # Output == Y
     else:
-      self.add_parameters(data, parameter_2D)
-    parameters_3D.pushBack(parameter_2D)
-    sample.setEltAtRank("inputValues", parameters_3D)
+      self.add_parameters(data, variable_sequence)
+    state_sequence.pushBack(variable_sequence)
+    time_sequence.pushBack(state_sequence)
+    sample.setEltAtRank("inputValues", time_sequence)
     return sample
 
-  def add_parameters(self, data, parameter_2D, Output=False):
+  def add_parameters(self, data, variable_sequence, Output=False):
     param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
     elt_list = 0 # index dans la liste des arguments
     val_number = 0 # nbre dans l'argument courant
@@ -78,7 +80,7 @@ class OptimizerHooks:
       # Test si l'argument est ok
       if val_end != -1:
         if val_number == val_end:
-          parameter_2D.pushBack(param)
+          variable_sequence.pushBack(param)
           param = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("double"))
           val_number = 0
           elt_list += 1
@@ -93,7 +95,7 @@ class OptimizerHooks:
             else:
               break
     if val_end == -1:
-      parameter_2D.pushBack(param)
+      variable_sequence.pushBack(param)
 
   def get_data_from_any(self, any_data):
     error = any_data["returnCode"].getIntValue()
@@ -102,9 +104,10 @@ class OptimizerHooks:
 
     data = []
     outputValues = any_data["outputValues"]
-    for param in outputValues[0]:
-      for i in range(param.size()):
-        data.append(param[i].getDoubleValue())
+    print outputValues
+    for variable in outputValues[0][0]:
+      for i in range(variable.size()):
+        data.append(variable[i].getDoubleValue())
 
     matrix = numpy.matrix(data).T
     return matrix
