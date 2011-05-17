@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -34,7 +34,7 @@ __doc__ = """
     simplement cette classe, sans meme récupérer d'objet :
         PathManagement()
 """
-__author__ = "Jean-Philippe ARGAUD - Mars 2008"
+__author__ = "Jean-Philippe ARGAUD"
 
 import os
 

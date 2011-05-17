@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@ __doc__ = """
     Définit des outils de persistence et d'enregistrement de séries de valeurs
     pour analyse ultérieure ou utilisation de calcul.
 """
-__author__ = "Jean-Philippe ARGAUD - Mars 2008"
+__author__ = "Jean-Philippe ARGAUD"
 
 import numpy
 
@@ -132,16 +132,30 @@ class Persistence:
         else:
             return self.__steps
 
-    def valueserie(self, item=None, step=None):
+    def valueserie(self, item=None, step=None, allSteps = False):
         """
         Renvoie par défaut toute la liste des valeurs/objets. Si l'argument
         "step" existe dans la liste des pas de stockage effectués, renvoie la
         valeur stockée à ce pas "step". Si l'argument "item" est correct,
-        renvoie la valeur stockée au numéro "item".
+        renvoie la valeur stockée au numéro "item". Si "allSteps" est vrai,
+        renvoie l'ensemble des valeurs et non pas seulement la première.
         """
         if step is not None and step in self.__steps:
-            index = self.__steps.index(step)
-            return self.__values[index]
+            if allSteps:
+                allIndexes = []
+                searchFrom = 0
+                try:
+                    while self.__steps.index(step,searchFrom) >= 0:
+                        searchFrom = self.__steps.index(step,searchFrom)
+                        allIndexes.append( searchFrom )
+                        searchFrom +=1
+                except ValueError, e:
+                    pass
+                allValues = [self.__values[index] for index in allIndexes]
+                return allValues
+            else:
+                index = self.__steps.index(step)
+                return self.__values[index]
         elif item is not None and item < len(self.__values):
             return self.__values[item]
         else:
@@ -641,6 +655,7 @@ class CompositePersistence:
         #
         # Definition des objets par defaut
         # --------------------------------
+        self.__StoredObjects["Informations"]     = OneNoType("Informations")
         self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
         self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
         self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
@@ -806,6 +821,26 @@ if __name__ == "__main__":
     print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
     print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
     print "Taille \"len\"        :", len(OBJET_DE_TEST)
+    del OBJET_DE_TEST
+    print
+
+    print "======> Un flottant"
+    OBJET_DE_TEST = OneScalar("My float", unit="cm")
+    OBJET_DE_TEST.store( 5., step="azerty")
+    OBJET_DE_TEST.store(-5., step="poiuyt")
+    OBJET_DE_TEST.store( 1., step="azerty")
+    OBJET_DE_TEST.store( 0., step="xxxxxx")
+    OBJET_DE_TEST.store( 5., step="poiuyt")
+    OBJET_DE_TEST.store(-5., step="azerty")
+    OBJET_DE_TEST.store( 1., step="poiuyt")
+    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
+    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
+    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
+    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
+    print "Premier index       :", OBJET_DE_TEST.valueserie( step = "azerty", allSteps = False )
+    print "Valeurs identiques  :", OBJET_DE_TEST.valueserie( step = "azerty", allSteps = True )
+    print "Premier index       :", OBJET_DE_TEST.valueserie( step = "poiuyt", allSteps = False )
+    print "Valeurs identiques  :", OBJET_DE_TEST.valueserie( step = "poiuyt", allSteps = True )
     del OBJET_DE_TEST
     print
 

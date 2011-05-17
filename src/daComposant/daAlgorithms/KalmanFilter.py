@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,15 +18,6 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-__doc__ = """
-    Algorithme de Kalman pour un système discret
-    
-    Remarque : les observations sont exploitées à partir du pas de temps 1, et
-    sont utilisées dans Yo comme rangées selon ces indices. Donc le pas 0 n'est
-    pas utilisé puisque la première étape de Kalman passe de 0 à 1 avec
-    l'observation du pas 1.
-"""
-__author__ = "Jean-Philippe ARGAUD - Septembre 2008"
 
 import logging
 from daCore import BasicObjects, PlatformInfo
@@ -36,12 +27,17 @@ m = PlatformInfo.SystemUsage()
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self)
-        self._name = "KALMAN"
+        self._name = "KALMANFILTER"
         logging.debug("%s Initialisation"%self._name)
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
-        Calcul de l'estimateur de Kalman
+        Calcul de l'estimateur du filtre de Kalman
+
+        Remarque : les observations sont exploitées à partir du pas de temps 1,
+        et sont utilisées dans Yo comme rangées selon ces indices. Donc le pas 0
+        n'est pas utilisé puisque la première étape de Kalman passe de 0 à 1
+        avec l'observation du pas 1.
         """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
