@@ -1,7 +1,7 @@
 .. _section_advanced:
 
 ================================================================================
-Advanced usage of ADAO
+Advanced usage of the ADAO module
 ================================================================================
 
 This section presents advanced methods to use the ADAO module, how to get more
@@ -17,14 +17,15 @@ procedure is the following:
 
 #.      using the SALOME application including ADAO module, launch SALOME with ``./runAppli -k``
 #.      initialise the command line session with: ``./runSession``
+#.      change to the YACS calculation scheme directory to be executed
 #.      execute the export command: ``python ${ADAO_ROOT_DIR}/bin/salome/AdaoYacsSchemaCreator.py <input Python file> <output YACS xml scheme>``
 #.      standard output comes on console, successive executions can be done
-#.	stop SALOME:  ``shutdownSalome.py`` or ``killSalome.py``
+#.	stop SALOME:  ``killSalome.py``
 #.	exit from the session: ``CTRL+D``
 
-Be careful, if the output YACS xml scheme already exists, this command replace
-it without asking the user. The command accepts files with or without path
-specifications.
+Be careful, if the output YACS xml scheme file already exists, this command
+replace it without asking the user. The command accepts files with or without
+path specifications.
 
 It is not necessary to launch and shut down SALOME each time if the application
 is already running.
@@ -44,7 +45,7 @@ The way to do that is as follows:
 #.      change to the YACS calculation scheme directory to be executed
 #.      execute the YACS supervisor:  ``driver <ADAO YACS xml scheme>``
 #.      standard output comes on console, successive executions can be done
-#.	stop SALOME:  ``shutdownSalome.py`` or ``killSalome.py``
+#.	stop SALOME:  ``killSalome.py``
 #.	exit from the session: ``CTRL+D``
 
 It is not necessary to launch and shut down SALOME each time if the application
@@ -53,14 +54,26 @@ is already running.
 Getting more information when running an assimilation calculation
 --------------------------------------------------------------------------------
 
---TODO--
+When running, the ADAO module is logging useful data and messages. There are two
+ways to obtain theses informations.
 
-(Use the logging functionality of the library)
+The first one, and the preferred way, is to use the built-in variable "*Debug*"
+integrated in every "*ASSIMILATION_STUDY*". It is available through the GUI of
+the module. Setting it to "*1*" will send a lot of messages in the log window of
+the YACS scheme execution.
 
+The second one consist in using the "*logging*" native module of Python (see the
+Python documentation http://docs.python.org/library/logging.html for more
+informations on this module). Everywhere in the YACS scheme, mainly through the
+scripts entries, the user can set the logging level in accordance to the needs
+of detailed informations. The different logging levels are: "*DEBUG*", "*INFO*",
+"*WARNING*", "*ERROR*", "*CRITICAL*". All the informations flagged with a
+certain level will be printed for whatever activated level above this particular
+one (included). The easiest way is to change the log level is to write the
+following Python lines::
 
-Complex time or step treatments during an assimilation calculation
---------------------------------------------------------------------------------
+    import logging
+    logging.getLogger().setLevel(logging.DEBUG)
 
---TODO--
-
-(Scheduling input data)
+The standard logging module default level is "*WARNING*", the default level in
+the ADAO module is "*INFO*". 

@@ -4,10 +4,20 @@
 Examples on using the ADAO module
 ================================================================================
 
-This section presents some examples on using the ADAO module in SALOME.
+.. |eficas_new| image:: images/eficas_new.png
+   :align: middle
+.. |eficas_save| image:: images/eficas_save.png
+   :align: middle
+.. |eficas_yacs| image:: images/eficas_yacs.png
+   :align: middle
+
+This section presents some examples on using the ADAO module in SALOME. The
+first one shows how to build a simple data assimilation case defining
+explicitly all the required data through the GUI. The second one shows, on the
+same case, how to define data using external sources through scripts.
 
 Building a simple estimation case with explicit data definition
---------------------------------------------------------------------------------
+---------------------------------------------------------------
 
 This simple example is a demonstration one, and describes how to set a BLUE
 estimation framework in order to get *weighted least square estimated state* of
@@ -26,7 +36,7 @@ state is of value 1 in each direction, so:
 
     ``Yo = [1 1 1]``
 
-The background state, wich represent some *a priori* knowledge or a
+The background state, which represent some *a priori* knowledge or a
 regularization, is of value of 0 in each direction, which is:
 
     ``Xb = [0 0 0]``
@@ -51,8 +61,8 @@ average vector between ``Yo`` and ``Xb``, named the *analysis* and denoted by
     ``Xa = [0.5 0.5 0.5]``
 
 As en extension of this example, one can change the variances for ``B`` or ``R``
-independantly, and the analysis will move to ``Yo`` or ``Xb`` in inverse
-proportion of the variances in ``B`` and ``R``. It is also equivalent to serach
+independently, and the analysis will move to ``Yo`` or ``Xb`` in inverse
+proportion of the variances in ``B`` and ``R``. It is also equivalent to search
 for the analysis thought a BLUE algorithm or a 3DVAR one.
 
 Using the GUI to build the ADAO case
@@ -64,11 +74,9 @@ button or menu of SALOME, and you will see:
   .. _adao_activate2:
   .. image:: images/adao_activate.png
     :align: center
+    :width: 100%
   .. centered::
     **Activating the module ADAO in SALOME**
-
-.. |eficas_new| image:: images/eficas_new.png
-   :align: middle
 
 Choose the "*New*" button in this window. You will directly get the EFICAS
 interface for variables definition, along with the "*Object browser*". You can
@@ -101,19 +109,20 @@ looks like this:
 
 To go further, we need now to generate the YACS scheme from the ADAO case
 definition. In order to do that, right click on the name of the file case in the
-"*Object browser*" window, and choose the "*Export to YACS*" submenu as below:
+"*Object browser*" window, and choose the "*Export to YACS*" sub-menu (or the
+"*Export to YACS*" button |eficas_yacs|) as below:
 
   .. _adao_exporttoyacs:
   .. image:: images/adao_exporttoyacs.png
     :align: center
     :scale: 75%
   .. centered::
-    **"*Export to YACS*" submenu to generate the YACS scheme from the ADAO case**
+    **"Export to YACS" submenu to generate the YACS scheme from the ADAO case**
 
 This command will generate the YACS scheme, activate YACS module in SALOME, and
-open the new scheme in the YACS module GUI [#]. After reordering the nodes by
-using the "*arrange local node*" submenu of the YACS graphical view of the
-scheme, you get the following representation of the generated ADAO scheme:
+open the new scheme in the GUI of the YACS module [#]. After reordering the
+nodes by using the "*arrange local node*" sub-menu of the YACS graphical view of
+the scheme, you get the following representation of the generated ADAO scheme:
 
   .. _yacs_generatedscheme:
   .. image:: images/yacs_generatedscheme.png
@@ -124,17 +133,17 @@ scheme, you get the following representation of the generated ADAO scheme:
 
 After that point, all the modifications, executions and post-processing of the
 data assimilation scheme will be done in YACS. In order to check the result in a
-simple way, we create here a new YACS node by using the "*inline script node*"
-submenu of the YACS graphical view, and we name it "*PostProcessing*".
+simple way, we create here a new YACS node by using the "*in-line script node*"
+sub-menu of the YACS graphical view, and we name it "*PostProcessing*".
 
 This script will retrieve the data assimilation analysis from the
 "*algoResults*" output port of the computation bloc (which gives access to a
 SALOME Python Object), and will print it on the standard output. 
 
-To obtain this, the inline script node need to have an input port of type
-"*pyobj*" named "*results*", that have to be linked graphically to the
-"*algoResults*" output port of the computation bloc. Then the code to fill in
-the script node is::
+To obtain this, the in-line script node need to have an input port of type
+"*pyobj*" named "*results*" for example, that have to be linked graphically to
+the "*algoResults*" output port of the computation bloc. Then the code to fill
+in the script node is::
 
     Xa = results.ADD.get("Analysis").valueserie(-1)
 
@@ -143,10 +152,10 @@ the script node is::
     print
 
 The augmented YACS scheme can be saved (overwriting the generated scheme if the
-simple "*Save*" command or button is used, or with a new name). Then,
+simple "*Save*" command or button are used, or with a new name). Then,
 classically in YACS, it have to be prepared for run, and then executed. After
 completion, the printing on standard output is available in the "*YACS Container
-Log*", obtained throught the right click menu of the "*proc*" window in the YACS
+Log*", obtained through the right click menu of the "*proc*" window in the YACS
 scheme as shown below:
 
   .. _yacs_containerlog:
@@ -156,8 +165,8 @@ scheme as shown below:
   .. centered::
     **YACS menu for Container Log, and dialog window showing the log**
 
-We verify that the result is correct by checking that the log contains the
-following line::
+We verify that the result is correct by checking that the log dialog window
+contains the following line::
 
     Analysis = [0.5, 0.5, 0.5]
 
@@ -166,20 +175,20 @@ as shown in the image above.
 As a simple extension of this example, one can notice that the same problem
 solved with a 3DVAR algorithm gives the same result. This algorithm can be
 chosen at the ADAO case building step, before entering in YACS step. The
-ADAO 3DVAR case will look completly similar to the BLUE algoritmic case, as
+ADAO 3DVAR case will look completely similar to the BLUE algorithmic case, as
 shown by the following figure:
 
-  .. _adao_jdcexample01:
+  .. _adao_jdcexample02:
   .. image:: images/adao_jdcexample02.png
     :align: center
     :width: 100%
   .. centered::
-    **Defining an ADAO 3DVAR case looks completly similar to a BLUE case**
+    **Defining an ADAO 3DVAR case looks completely similar to a BLUE case**
 
-There is only one keyword changing, with "*ThreeDVAR*" instead of "*Blue*".
+There is only one command changing, with "*3DVAR*" value instead of "*Blue*".
 
 Building a simple estimation case with external data definition by functions
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 It is useful to get parts or all of the data from external definition, using
 Python script files to provide access to the data. As an example, we build here
@@ -190,8 +199,8 @@ data form a single one external Python script file.
 First, we write the following script file, using conventional names for the
 desired variables. Here, all the input variables are defined in the script, but
 the user can choose to split the file in several ones, or to mix explicit data
-definition in the ADAO GUI and implicit data definition by external files. This
-script looks like::
+definition in the ADAO GUI and implicit data definition by external files. The
+present script looks like::
 
     #-*-coding:iso-8859-1-*-
     import numpy
@@ -222,12 +231,11 @@ functions, etc. with other names. It shows different ways to define arrays and
 matrices, using list, string (as in Numpy or Octave), Numpy array type or Numpy
 matrix type, and Numpy special functions. All of these syntaxes are valid.
 
-After saving this script somewhere in your path (named here
-"*test003_ADAO_example_scripts.py*" for the example), we use the GUI to build
-the ADAO case. The procedure to fill in the case is similar except that, instead
-of selecting the "*String*" option for the "*FROM*" keyword, we select the
-"*Script*" one. This leads to a "*SCRIPT_DATA/SCRIPT_FILE*" entry in the tree,
-allowing to choose a file as:
+After saving this script somewhere in your path (named here "*script.py*" for
+the example), we use the GUI to build the ADAO case. The procedure to fill in
+the case is similar except that, instead of selecting the "*String*" option for
+the "*FROM*" keyword, we select the "*Script*" one. This leads to a
+"*SCRIPT_DATA/SCRIPT_FILE*" entry in the tree, allowing to choose a file as:
 
   .. _adao_scriptentry01:
   .. image:: images/adao_scriptentry01.png
@@ -239,32 +247,47 @@ allowing to choose a file as:
 Other steps and results are exactly the same as in the `Building a simple
 estimation case with explicit data definition`_ previous example.
 
-In fact, this script methodology allows to retrieve data from inline or previous
+In fact, this script methodology allows to retrieve data from in-line or previous
 calculations, from static files, from database or from stream, all of them
 outside of SALOME. It allows also to modify easily some input data, for example
-debug purpose or for repetitive process. **But be careful, it is not a "safe"
-process, in the sense that erroneous data, or errors in calculations, can be
-directly injected into the YACS scheme execution.**
+for debug purpose or for repetitive execution process, and it is the most
+versatile method in order to parametrize the input data. **But be careful,
+script methodology is not a "safe" procedure, in the sense that erroneous
+data, or errors in calculations, can be directly injected into the YACS scheme
+execution.**
 
 Adding parameters to control the data assimilation algorithm
---------------------------------------------------------------------------------
+------------------------------------------------------------
 
 One can add some optional parameters to control the data assimilation algorithm
 calculation. This is done by using the "*AlgorithmParameters*" keyword in the
-definition of the ADAO case, which is an option of the algorithm. This keyword
-requires a Python dictionary containing some key/value pairs.
+definition of the ADAO case, which is an keyword of the ASSIMILATION_STUDY. This
+keyword requires a Python dictionary, containing some key/value pairs.
 
 For example, with a 3DVAR algorithm, the possible keys are "*Minimizer*",
-"*MaximumNumberOfSteps*", "*Bounds*". Bounds can be given by a list of list of
-pairs of lower/upper bounds for each variable, with possibly ``None`` every time
-there is no bound. If no bounds at all are required on the control variables,
-then one can choose the "BFGS" or "CG" minimisation algorithm for the 3DVAR
-algorithm.
+"*MaximumNumberOfSteps*", and "*Bounds*":
 
-This dictionary has to be defined in an external Python script file, using the
-mandatory variable name "*AlgorithmParameters*" for the dictionary. All the keys
-inside the dictionary are optional, they all have default values, and can exist
-without being used. For example::
+#.   The "*Minimizer*" key allows to choose the optimisation minimizer, the
+     default choice being "LBFGSB", and the possible ones "LBFGSB" (nonlinear
+     constrained minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear
+     constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
+     (nonlinear unconstrained minimizer).
+#.   The "*MaximumNumberOfSteps*" key indicates the maximum number of iterations
+     allowed for iterative optimisation. The default is 15000, which very
+     similar of no limit on iterations. It is then recommended to adapt this
+     parameter to the needs on real problems.
+#.   The "*Bounds*" key allows to define upper and lower bounds for every
+     control variable being optimized. Bounds can be given by a list of list of
+     pairs of lower/upper bounds for each variable, with possibly ``None`` every
+     time there is no bound.
+
+If no bounds at all are required on the control variables, then one can choose
+the "BFGS" or "CG" minimisation algorithm for the 3DVAR algorithm.
+
+This dictionary has to be defined, for example, in an external Python script
+file, using the mandatory variable name "*AlgorithmParameters*" for the
+dictionary. All the keys inside the dictionary are optional, they all have
+default values, and can exist without being used. For example::
 
     #-*-coding:iso-8859-1-*-
     #
@@ -284,7 +307,7 @@ Then the script can be added to the ADAO case, in a file entry describing the
     **Adding parameters to control the algorithm**
 
 Other steps and results are exactly the same as in the `Building a simple
-estimation case with explicit data definition`_ previous example.
+estimation case with explicit data definition`_ previous example. The dictionary
+can also be directly given in the input field associated with the keyword.
 
 .. [#] For more information on YACS, see the the *YACS User Guide* available in the main "*Help*" menu of SALOME GUI.
-

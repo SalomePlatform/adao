@@ -88,16 +88,16 @@ output exactly the observations (assuming that the errors are zero and the model
 exact).
 
 In the simplest case, static, the steps of simulation and of observation can be
-combined into a single operator noted :math:`H` (linear or nonlinear), which
-transforms the input parameters :math:`\mathbf{x}` to results :math:`\mathbf{y}`
-to be compared to observations :math:`\mathbf{y}^o`. Moreover, we use the
-linearized operator :math:`\mathbf{H}` to represent the effect of the full
-operator :math:`H` around a linearization point (and we omit thereafter to
-mention :math:`H` even if it is possible to keep it). In reality, we have already
-indicated that the stochastic nature of variables is essential, coming from the
-fact that model, background and observations are incorrect. We therefore
-introduce errors of observations additively, in the form of a random vector
-:math:`\mathbf{\epsilon}^o` such that:
+combined into a single observation operator noted :math:`H` (linear or
+nonlinear), which transforms the input parameters :math:`\mathbf{x}` to results
+:math:`\mathbf{y}` to be compared to observations :math:`\mathbf{y}^o`.
+Moreover, we use the linearized operator :math:`\mathbf{H}` to represent the
+effect of the full operator :math:`H` around a linearization point (and we omit
+thereafter to mention :math:`H` even if it is possible to keep it). In reality,
+we have already indicated that the stochastic nature of variables is essential,
+coming from the fact that model, background and observations are incorrect. We
+therefore introduce errors of observations additively, in the form of a random
+vector :math:`\mathbf{\epsilon}^o` such that:
 
 .. math:: \mathbf{y}^o = \mathbf{H} \mathbf{x}^t + \mathbf{\epsilon}^o
 
@@ -193,11 +193,11 @@ bibliographical searches.
 
 .. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999, http://www.ecmwf.int/newsevents/training/rcourse_notes/pdf_files/Assim_concepts.pdf
 
-.. [Bocquet04] Bocquet M., *Introduction aux principes et mÃ©thodes de l'assimilation de donnÃ©es en gÃ©ophysique*, Lecture Notes, 2004-2008, http://cerea.enpc.fr/HomePages/bocquet/assim.pdf
+.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2004-2008, http://cerea.enpc.fr/HomePages/bocquet/assim.pdf
 
 .. [Tarantola87] Tarantola A., *Inverse Problem: Theory Methods for Data Fitting and Parameter Estimation*, Elsevier, 1987
 
-.. [Talagrand97] Talagrand O., *Assimilation of Observations, an Introduction*, Journal of the Meteorological Society of Japan, 75(1B), pp. 191-209, 1997
+.. [Talagrand97] Talagrand O., *Assimilation of Observations, an Introduction*, Journal of the Meteorological Society of Japan, 75(1B), pp.191-209, 1997
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
