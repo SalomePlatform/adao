@@ -17,6 +17,10 @@ testsdir             = $(prefix)/tests
 testsdasalomedir     = $(testsdir)/daSalome
 testsplateformedir   = $(testsdir)/daComposant/Plateforme
 
+# Directory for installing samples files
+samplesdir             = $(prefix)/share/salome/adao_samples
+samplesdasalomedir     = $(samplesdir)/daSalome
+
 # Directories for installing admin files
 admlocaldir       = $(prefix)/adm_local
 admlocalunixdir     = $(admlocaldir)/unix

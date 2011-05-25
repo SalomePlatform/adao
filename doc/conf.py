@@ -192,3 +192,5 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+source_encoding = 'iso-8859-15'

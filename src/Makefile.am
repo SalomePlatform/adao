@@ -1,4 +1,4 @@
-SUBDIRS = daComposant tests
+SUBDIRS = daComposant
 
 if SALOME_MODULE
 SUBDIRS += daSalome daEficas

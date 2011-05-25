@@ -118,13 +118,10 @@ AC_CONFIG_FILES([
         src/daSalome/daGUI/daUtils/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
         src/daSalome/daGUI/daEficasWrapper/Makefile
-        src/tests/Makefile
-        src/tests/daSalome/Makefile
-        src/tests/daSalome/test000_Blue_AnalysisFile.py
-        src/tests/daSalome/test017.comm
-        src/tests/daSalome/test_aster_zzzz159a_init_parameters.py
-        src/tests/daSalome/test_aster_zzzz159a_LBFGSB.comm
-        src/tests/daSalome/zzzz159a.export.esclave
+        samples/Makefile
+        samples/daSalome/Makefile
+        samples/daSalome/test003_ADAO_JDC_using_scripts.comm
+        samples/daSalome/test004_ADAO_JDC_using_scripts.comm
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile

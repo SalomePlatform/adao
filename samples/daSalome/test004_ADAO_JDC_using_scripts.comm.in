@@ -1,6 +1,6 @@
 
 ASSIMILATION_STUDY(Study_name='Test',
-                   Study_repertory='@prefix@/examples/daSalome',
+                   Study_repertory='@prefix@/share/salome/adao_samples/daSalome',
                    Debug=0,
                    Algorithm='Blue',
                    Background=_F(INPUT_TYPE='Vector',
