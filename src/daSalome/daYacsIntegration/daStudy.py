@@ -28,7 +28,7 @@ class daStudy:
     if self.debug:
       logging.getLogger().setLevel(logging.DEBUG)
     else:
-      logging.getLogger().setLevel(logging.INFO)
+      logging.getLogger().setLevel(logging.WARNING)
 
     # Observation Management
     self.ObservationOperatorType = {}
