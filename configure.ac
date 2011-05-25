@@ -18,7 +18,7 @@ dnl  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade
 dnl
 dnl  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-AC_INIT(adao, 0.1)
+AC_INIT(ADAO_SRC, [6.3.0])
 AC_CONFIG_AUX_DIR(adm_local)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(adao_config.h)
@@ -103,6 +103,10 @@ AM_CONDITIONAL(SALOME_MODULE, test x$salome_module_ok = xyes)
 
 if test "x$sphinx_ok" = "xno"; then
   AC_MSG_WARN([Sphinx is required for ADAO documentation])
+fi
+
+if test -f a.out; then
+  rm a.out
 fi
 
 AC_CONFIG_FILES([
