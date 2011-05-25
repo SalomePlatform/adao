@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,6 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-__doc__ = """
-    Algorithme de moindre carres pondérés (analyse sans ebauche)
-"""
-__author__ = "Sophie RICCI, Jean-Philippe ARGAUD - Septembre 2008"
 
 import logging
 from daCore import BasicObjects, PlatformInfo
@@ -35,7 +31,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
-        Calcul de l'estimateur au sens des moindres carres sans ebauche
+        Calcul de l'estimateur moindres carrés pondérés linéaires
+        (assimilation variationnelle sans ébauche)
         """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
@@ -56,5 +53,3 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
-
-

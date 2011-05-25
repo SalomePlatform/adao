@@ -26,8 +26,8 @@ come back regularly the section :ref:`section_using`.
 
 In all this documentation, we use standard notations of data assimilation.
 Moreover, vectors are written horizontally or vertically without difference.
-Matrices are written either normally, either with a condensed notation,
-consisting in the use of a "``;``" to separate the rows in a continuous line.
+Matrices are written either normally, or with a condensed notation, consisting
+in the use of a "``;``" to separate the rows in a continuous line.
 
 .. toctree::
    :maxdepth: 2

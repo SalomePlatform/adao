@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -62,12 +62,13 @@ __doc__ = """
     Dans une application, à n'importe quel endroit et autant de fois qu'on veut,
     on peut changer le niveau global de message en utilisant par exemple :
         import logging
-        logging.setLevel(logging.DEBUG)
+        log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
+        log.setLevel(logging.DEBUG)
     
     On rappelle les niveaux (attributs de "logging") et leur ordre :
         NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
 """
-__author__ = "Jean-Philippe ARGAUD - Octobre 2008"
+__author__ = "Jean-Philippe ARGAUD"
 
 import os
 import sys

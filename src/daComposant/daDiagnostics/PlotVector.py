@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,16 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-__doc__ = """
-    Classe pour tracer simplement un vecteur à chaque pas
-"""
-__author__ = "Jean-Philippe ARGAUD - Juillet 2008"
 
-import os.path
 import numpy
 from daCore import BasicObjects
+import os.path
 
 # ==============================================================================
 class ElementaryDiagnostic(BasicObjects.Diagnostic):
+    """
+    Classe pour tracer simplement un vecteur à chaque pas
+    """
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
         BasicObjects.Diagnostic.__init__(self, name, parameters)
         try:

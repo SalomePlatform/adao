@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,6 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-__doc__ = """
-    Algorithme de methode d'ensemble simple
-"""
-__author__ = "Sebastien MASSART, Jean-Philippe ARGAUD - Novembre 2008"
 
 import logging
 from daCore import BasicObjects, PlatformInfo

@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,9 @@ __doc__ = """
     Définit les outils généraux élémentaires.
     
     Ce module est destiné à etre appelée par AssimilationStudy pour constituer
-    les objets élémentaires de l'algorithme.
+    les objets élémentaires de l'étude.
 """
-__author__ = "Jean-Philippe ARGAUD - Mars 2008"
+__author__ = "Jean-Philippe ARGAUD"
 
 import os, sys
 import numpy
@@ -706,6 +706,25 @@ class AssimilationStudy:
                 HookFunction   = HookFunction,
                 )
 
+    # -----------------------------------------------------------
+    def setDebug(self, level=10):
+        """
+        Utiliser par exemple "import logging ; level = logging.DEBUG" avant cet
+        appel pour changer le niveau de verbosité, avec :
+        NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
+        """
+        import logging
+        log = logging.getLogger()
+        log.setLevel( level )
+
+    def unsetDebug(self):
+        """
+        Remet le logger au niveau par défaut
+        """
+        import logging
+        log = logging.getLogger()
+        log.setLevel( logging.WARNING )
+
     def prepare_to_pickle(self):
         self.__algorithmFile = None
         self.__diagnosticFile = None
@@ -762,4 +781,14 @@ if __name__ == "__main__":
         print
         print "Action sur la variable observée, étape :",i
         ADD.get('Analysis').store( [i, i, i] )
+    print
+
+    print "Mise en debug et hors debug"
+    print "Nombre d'analyses  :", ADD.get("Analysis").stepnumber()
+    ADD.setDebug()
+    ADD.analyze()
+    ADD.unsetDebug()
+    print "Nombre d'analyses  :", ADD.get("Analysis").stepnumber()
+    ADD.analyze()
+    print "Nombre d'analyses  :", ADD.get("Analysis").stepnumber()
     print

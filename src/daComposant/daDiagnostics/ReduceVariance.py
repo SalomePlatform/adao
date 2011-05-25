@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,15 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-__doc__ = """
-    Diagnostic sur la reduction de la variance lors de l'analyse
-"""
-__author__ = "Jean-Philippe ARGAUD - Septembre 2008"
 
 import numpy
 from daCore import BasicObjects, Persistence
 
 # ==============================================================================
 class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
+    """
+    Diagnostic sur la reduction de la variance lors de l'analyse
+    """
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
         BasicObjects.Diagnostic.__init__(self, name, parameters)
         Persistence.OneScalar.__init__( self, name, unit, basetype = bool )

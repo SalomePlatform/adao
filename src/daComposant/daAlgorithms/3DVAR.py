@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,6 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-__doc__ = """
-    Algorithme variationnel statique (3D-VAR)
-"""
-__author__ = "Jean-Philippe ARGAUD - Mars 2009"
 
 import logging
 from daCore import BasicObjects, PlatformInfo
@@ -53,6 +49,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         #
+        # Opérateur d'observation
+        # -----------------------
         Hm = H["Direct"].appliedTo
         Ht = H["Adjoint"].appliedInXTo
         #
@@ -122,6 +120,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Paramètres de pilotage
         # ----------------------
+        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps"
         if Parameters.has_key("Bounds") and (type(Parameters["Bounds"]) is type([]) or type(Parameters["Bounds"]) is type(())) and (len(Parameters["Bounds"]) > 0):
             Bounds = Parameters["Bounds"]
         else:
@@ -136,7 +135,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             maxiter = int( Parameters["MaximumNumberOfSteps"] )
         else:
             maxiter = 15000
-        logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, maxiter))
+        logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, str(maxiter)))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------

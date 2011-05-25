@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2010  EDF R&D
+#  Copyright (C) 2008-2011  EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,7 @@ __doc__ = """
     Ce module est destiné à etre appelée par AssimilationStudy pour constituer
     les objets élémentaires de l'algorithme.
 """
-__author__ = "Jean-Philippe ARGAUD - Mars 2008"
+__author__ = "Jean-Philippe ARGAUD"
 
 import numpy
 import Persistence

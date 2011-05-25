@@ -52,7 +52,7 @@ FromNumpyList["Function"] = ["FunctionDict"]
 FromNumpyList["Dict"] = ["Script"]
 
 # -- Infos from daAlgorithms --
-AssimAlgos = ["Blue", "EnsembleBlue", "Kalman", "LinearLeastSquares", "3DVAR"]
+AssimAlgos = ["Blue", "EnsembleBlue", "KalmanFilter", "LinearLeastSquares", "3DVAR"]
 
 AlgoDataRequirements = {}
 AlgoDataRequirements["Blue"] = ["Background", "BackgroundError",
@@ -64,7 +64,7 @@ AlgoType = {}
 AlgoType["Blue"] = "Optim"
 AlgoType["3DVAR"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
-AlgoType["Kalman"] = "Optim"
+AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 #AlgoType["Blue"] = "Direct"
 
