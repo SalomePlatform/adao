@@ -5,7 +5,7 @@ bin_SCRIPTS = AdaoYacsSchemaCreator.py qtEficas_adao_study.py AdaoCatalogGenerat
 EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in AdaoCatalogGenerator.py
 
 install-data-hook:
-	@export PYTHONPATH=${salomepythondir}:${PYTHONPATH} && python $(top_srcdir)/bin/AdaoCatalogGenerator.py ${salomepythondir}/daEficas ADAO_Cata_V0.py
+	@export PYTHONPATH=$(DESTDIR)${salomepythondir}:${PYTHONPATH} && python $(top_srcdir)/bin/AdaoCatalogGenerator.py $(DESTDIR)${salomepythondir}/daEficas ADAO_Cata_V0.py
 
 uninstall-hook:
-	@rm  ${salomepythondir}/daEficas/ADAO_Cata_V0.py
+	@rm  $(DESTDIR)${salomepythondir}/daEficas/ADAO_Cata_V0.py

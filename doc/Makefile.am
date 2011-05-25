@@ -31,15 +31,15 @@ EXTRA_DIST = conf.py advanced.rst  examples.rst  index.rst  intro.rst  theory.rs
 install-data-local:
 	make html
 	${mkinstalldirs} $(DESTDIR)$(docdir)
-	${mkinstalldirs} $(salomeresdir)
+	${mkinstalldirs} $(DESTDIR)$(salomeresdir)
 	cp -R $(BUILDDIR)/html/* $(DESTDIR)$(docdir)
-	cp $(SRCDIR)/resources/*.png $(salomeresdir)
-	cp $(SRCDIR)/images/eficas_*.png $(salomeresdir)
+	cp $(SRCDIR)/resources/*.png $(DESTDIR)$(salomeresdir)
+	cp $(SRCDIR)/images/eficas_*.png $(DESTDIR)$(salomeresdir)
 
 uninstall-local:
 	chmod -R +w $(DESTDIR)$(docdir)
 	rm -rf $(DESTDIR)$(docdir)
-	rm -f $(salomeresdir)/*.png
+	rm -f $(DESTDIR)$(salomeresdir)/*.png
 
 clean-local:
 	-rm -rf $(top_builddir)/doc/build
