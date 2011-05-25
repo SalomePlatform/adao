@@ -7,7 +7,26 @@ PAPER         =
 BUILDDIR      = $(top_builddir)/doc/build
 SRCDIR        = $(top_srcdir)/doc
 
-EXTRA_DIST = main.rst intro.rst conf.py
+EXTRA_DIST = conf.py advanced.rst  examples.rst  index.rst  intro.rst  theory.rst  using.rst \
+	     resources/ADAO.png \
+	     resources/ADAO_small.png \
+	     resources/ADAO_small_rouge.png \
+	     resources/ADAO_small_vert.png \
+	     images/adao_activate.png \
+	     images/adao_jdcexample01.png \
+	     images/adao_scriptentry01.png \
+	     images/adao_viewer.png \
+	     images/eficas_new.png \
+	     images/eficas_save.png \
+	     images/eficas_yacs.png \
+	     images/yacs_generatedscheme.png \
+	     images/adao_exporttoyacs.png \
+	     images/adao_jdcexample02.png \
+	     images/adao_scriptentry02.png \
+	     images/eficas_close.png \
+	     images/eficas_open.png \
+	     images/eficas_saveas.png \
+	     images/yacs_containerlog.png
 
 install-data-local:
 	make html
@@ -20,7 +39,7 @@ install-data-local:
 uninstall-local:
 	chmod -R +w $(DESTDIR)$(docdir)
 	rm -rf $(DESTDIR)$(docdir)
-	rm  $(salomeresdir)/*.png
+	rm -f $(salomeresdir)/*.png
 
 clean-local:
 	-rm -rf $(top_builddir)/doc/build
