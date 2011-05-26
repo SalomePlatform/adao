@@ -122,10 +122,10 @@ AC_CONFIG_FILES([
         src/daSalome/daGUI/daUtils/Makefile
         src/daSalome/daGUI/daGuiImpl/Makefile
         src/daSalome/daGUI/daEficasWrapper/Makefile
-        samples/Makefile
-        samples/daSalome/Makefile
-        samples/daSalome/test003_ADAO_JDC_using_scripts.comm
-        samples/daSalome/test004_ADAO_JDC_using_scripts.comm
+        examples/Makefile
+        examples/daSalome/Makefile
+        examples/daSalome/test003_ADAO_JDC_using_scripts.comm
+        examples/daSalome/test004_ADAO_JDC_using_scripts.comm
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile

@@ -1,6 +1,6 @@
 
 ASSIMILATION_STUDY(Study_name='Test',
-                   Study_repertory='@prefix@/share/salome/adao_samples/daSalome',
+                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
                    Debug=0,
                    Algorithm='3DVAR',
                    Background=_F(INPUT_TYPE='Vector',

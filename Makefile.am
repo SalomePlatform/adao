@@ -9,7 +9,7 @@ endif
 SUBDIRS += src
 
 if SALOME_MODULE
-SUBDIRS += resources bin samples
+SUBDIRS += resources bin examples
 endif
 
 if SPHINX_IS_OK

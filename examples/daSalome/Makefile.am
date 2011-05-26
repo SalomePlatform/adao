@@ -8,7 +8,7 @@ DATA_INST = \
 	    test004_ADAO_JDC_using_scripts.comm \
 	    test004_ADAO_scripts_for_JDC.py
 
-samplesdasalome_DATA = ${DATA_INST}
+examplesdasalome_DATA = ${DATA_INST}
 
 EXTRA_DIST = \
 	     test001_ADAO_JDC_using_strings.comm \

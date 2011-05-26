@@ -27,7 +27,7 @@ class AdaoGenerator(PythonGenerator):
     self.text_da = ""
     self.text_da_status = False
     self.logger = logging.getLogger('ADAO EFICAS GENERATOR')
-    self.logger.setLevel(logging.DEBUG)
+    self.logger.setLevel(logging.INFO)
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
     formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
@@ -65,8 +65,6 @@ class AdaoGenerator(PythonGenerator):
     """
     clef=""
     for i in obj.get_genealogie() :
-      print obj
-      print obj.get_genealogie()
       clef=clef+"__"+i
     self.dictMCVal[clef]=obj.valeur
 
