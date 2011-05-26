@@ -6,7 +6,9 @@ DATA_INST = \
 	    test003_ADAO_JDC_using_scripts.comm \
 	    test003_ADAO_scripts_for_JDC.py \
 	    test004_ADAO_JDC_using_scripts.comm \
-	    test004_ADAO_scripts_for_JDC.py
+	    test004_ADAO_scripts_for_JDC.py \
+	    test005_ADAO_Operators.comm \
+	    test005_ADAO_scripts_for_JDC.py
 
 examplesdasalome_DATA = ${DATA_INST}
 
@@ -16,4 +18,6 @@ EXTRA_DIST = \
 	     test003_ADAO_JDC_using_scripts.comm.in \
 	     test003_ADAO_scripts_for_JDC.py \
 	     test004_ADAO_JDC_using_scripts.comm.in \
-	     test004_ADAO_scripts_for_JDC.py
+	     test004_ADAO_scripts_for_JDC.py \
+	     test005_ADAO_Operators.comm.in \
+	     test005_ADAO_scripts_for_JDC.py

@@ -126,6 +126,7 @@ AC_CONFIG_FILES([
         examples/daSalome/Makefile
         examples/daSalome/test003_ADAO_JDC_using_scripts.comm
         examples/daSalome/test004_ADAO_JDC_using_scripts.comm
+        examples/daSalome/test005_ADAO_Operators.comm
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile
