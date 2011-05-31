@@ -17,3 +17,5 @@ SUBDIRS += doc
 endif
 
 ACLOCAL_AMFLAGS = -I adm_local
+
+EXTRA_DIST = autogen.sh
