@@ -1,4 +1,4 @@
-dnl  Copyright (C) 2010  EDF R&D
+dnl  Copyright (C) 2010-2011  EDF R&D
 dnl
 dnl  This library is free software; you can redistribute it and/or
 dnl  modify it under the terms of the GNU Lesser General Public
