@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='iso-8859-1' ?>
 <!--
   Copyright (C) 2010-2011 EDF R&D
 
@@ -17,9 +18,8 @@
 
   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
   
-  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+  Author: Andre Ribes, andre.ribes@edf.fr, EDF R&D
 -->
-<?xml version='1.0' encoding='iso-8859-1' ?>
 <proc>
 
   <objref name="computeAD" id="python:computeAD:1.0">
