@@ -62,7 +62,7 @@ def create_yacs_proc(study_config):
     repertory = True
 
   # Step 0: create AssimilationStudyObject
-  factory_CAS_node = catalogAd._nodeMap["CreateAssimilationStudy"]
+  factory_CAS_node = catalogAd.getNodeFromNodeMap("CreateAssimilationStudy")
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
   CAS_node.getInputPort("Name").edInitPy(study_config["Name"])
   CAS_node.getInputPort("Algorithm").edInitPy(study_config["Algorithm"])
@@ -94,7 +94,7 @@ def create_yacs_proc(study_config):
   init_config["Target"] = []
   if "UserDataInit" in study_config.keys():
     init_config = study_config["UserDataInit"]
-    factory_init_node = catalogAd._nodeMap["UserDataInitFromScript"]
+    factory_init_node = catalogAd.getNodeFromNodeMap("UserDataInitFromScript")
     init_node = factory_init_node.cloneNode("UserDataInit")
     if repertory:
       init_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(init_config["Data"])))
@@ -112,7 +112,7 @@ def create_yacs_proc(study_config):
 
       if data_config["Type"] == "Dict" and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateDictFromScript"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateDictFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
         if repertory:
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
@@ -130,7 +130,7 @@ def create_yacs_proc(study_config):
 
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromString"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromString")
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
         proc.edAddChild(back_node)
@@ -146,7 +146,7 @@ def create_yacs_proc(study_config):
 
       if data_config["Type"] == "Vector" and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromScript"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
         if repertory:
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
@@ -166,7 +166,7 @@ def create_yacs_proc(study_config):
 
       if data_config["Type"] == "Matrix" and data_config["From"] == "String":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromString"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyMatrixFromString")
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("matrix_in_string").edInitPy(data_config["Data"])
         proc.edAddChild(back_node)
@@ -182,7 +182,7 @@ def create_yacs_proc(study_config):
 
       if data_config["Type"] == "Matrix" and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromScript"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyMatrixFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
         if repertory:
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
@@ -264,7 +264,7 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
 
     else:
-      factory_opt_script_node = catalogAd._nodeMap["FakeOptimizerLoopNode"]
+      factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
       opt_script_node = factory_opt_script_node.cloneNode("FakeFunctionNode")
 
       # Add it
@@ -280,7 +280,7 @@ def create_yacs_proc(study_config):
   if "UserPostAnalysis" in study_config.keys():
     analysis_config = study_config["UserPostAnalysis"]
     if analysis_config["From"] == "String":
-      factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
+      factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
       analysis_node = factory_analysis_node.cloneNode("UsePostAnalysis")
       default_script = analysis_node.getScript()
       final_script = default_script + analysis_config["Data"]
@@ -298,7 +298,7 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
     elif analysis_config["From"] == "Script":
-      factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
+      factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
       analysis_node = factory_analysis_node.cloneNode("UserPostAnalysis")
       default_script = analysis_node.getScript()
       analysis_file_name = analysis_config["Data"]
