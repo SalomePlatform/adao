@@ -110,7 +110,7 @@ def check_study(study_config):
 
     if analysis_config["From"] == "Script":
       check_file_name = ""
-      if repertory_check:
+      if check_repertory:
         check_file_name = os.path.join(repertory, os.path.basename(analysis_config["Data"]))
       else:
         check_file_name = analysis_config["Data"]
