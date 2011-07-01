@@ -18,7 +18,7 @@ dnl  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade
 dnl
 dnl  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-AC_INIT(ADAO_SRC, [6.3.0])
+AC_INIT(ADAO_SRC, [6.3.1])
 AC_CONFIG_AUX_DIR(adm_local)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(adao_config.h)
