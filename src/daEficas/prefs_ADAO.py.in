@@ -28,7 +28,7 @@ print "import des prefs de Adao"
 INSTALLDIR = "@EFICAS_DIR@"
 sys.path[:0]=[INSTALLDIR]
 # positionnee a repin au debut mise a jour dans configuration
-REPINI=os.path.dirname(os.path.abspath(__file__))
+repIni=os.path.dirname(os.path.abspath(__file__))
 
 # initialdir sert comme directory initial des QFileDialog
 initialdir=os.environ["PWD"]
