@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 __doc__ = """
     Définit des outils de persistence et d'enregistrement de séries de valeurs
     pour analyse ultérieure ou utilisation de calcul.
@@ -57,6 +59,8 @@ class Persistence:
         #
         self.__steps    = []
         self.__values   = []
+        self.__tags     = []
+        self.__tagkeys  = {}
         #
         self.__dynamic  = False
         #
@@ -71,7 +75,7 @@ class Persistence:
         else:
             self.__basetype = basetype
 
-    def store(self, value=None, step=None):
+    def store(self, value=None, step=None, tags={}):
         """
         Stocke une valeur à un pas. Une instanciation est faite avec le type de
         base pour stocker l'objet. Si le pas n'est pas fournit, on utilise
@@ -85,6 +89,9 @@ class Persistence:
             self.__steps.append(self.__step)
         #
         self.__values.append(self.__basetype(value))
+        #
+        self.__tags.append(   dict(tags))
+        self.__tagkeys.update(dict(tags))
         #
         if self.__dynamic: self.__replot()
         for hook, parameters, scheduler in self.__dataobservers:
@@ -118,29 +125,33 @@ class Persistence:
         return max( self.shape() )
 
     # ---------------------------------------------------------
-    def stepserie(self, item=None, step=None):
+    def itemserie(self, item=None, step=None, tags=None,
+                        allSteps=False):
         """
-        Renvoie par défaut toute la liste des pas de temps. Si l'argument "step"
-        existe dans la liste des pas de stockage effectués, renvoie ce pas
-        "step". Si l'argument "item" est correct, renvoie le pas stockée au
-        numéro "item".
+        Les "item" sont les index de la liste des pas de "step". Ils sont
+        renvoyés par cette fonction selon les filtres définis par les mots-clés.
+        
+        Les comportements sont les suivants :
+            - Renvoie par défaut toute la liste des index.
+            - Si l'argument "item" est valide, renvoie uniquement cet index.
+            - Si l'argument "step" existe dans la liste des pas de stockage,
+              renvoie le premier index (si allSteps=False) ou tous les index
+              (si allSteps=True) de ce "step" dans les pas de stockage.
+            - Si l'argument "tags" est un dictionnaire correct, renvoie les
+              index des pas caractérisés par toutes les paires "tag/valeur" des
+              tags indiqués, ou rien sinon.
+        
+        Cette méthode est à vocation interne pour simplifier les accès aux pas
+        par la méthode "stepserie", aux attributs par la méthode "tagserie" et
+        aux valeurs par la méthode "valueserie".
         """
-        if step is not None and step in self.__steps:
-            return step
-        elif item is not None and item < len(self.__steps):
-            return self.__steps[item]
-        else:
-            return self.__steps
-
-    def valueserie(self, item=None, step=None, allSteps = False):
-        """
-        Renvoie par défaut toute la liste des valeurs/objets. Si l'argument
-        "step" existe dans la liste des pas de stockage effectués, renvoie la
-        valeur stockée à ce pas "step". Si l'argument "item" est correct,
-        renvoie la valeur stockée au numéro "item". Si "allSteps" est vrai,
-        renvoie l'ensemble des valeurs et non pas seulement la première.
-        """
-        if step is not None and step in self.__steps:
+        #
+        # Cherche l'item demandé
+        if item is not None and item < len(self.__steps):
+            return [item,]
+        #
+        # Cherche le ou les items dont le "step" est demandé
+        elif step is not None and step in self.__steps:
             if allSteps:
                 allIndexes = []
                 searchFrom = 0
@@ -151,16 +162,135 @@ class Persistence:
                         searchFrom +=1
                 except ValueError, e:
                     pass
-                allValues = [self.__values[index] for index in allIndexes]
-                return allValues
+                return allIndexes
             else:
-                index = self.__steps.index(step)
-                return self.__values[index]
-        elif item is not None and item < len(self.__values):
+                return [self.__steps.index(step),]
+        #
+        # Cherche le ou les items dont les "tags" sont demandés
+        elif tags is not None and type(tags) is dict :
+            allIndexes = []
+            for i, attributs in enumerate(self.__tags):           # Boucle sur les attributs de chaque pas
+                selection = True                                  # Booleen permettant de traiter la combinaison "ET" des tags
+                for key in tags.keys():                           # Boucle sur tous les tags de filtrage
+                    if key not in self.__tagkeys.keys(): continue # Passe au suivant s'il n'existe nulle part
+                    if not( key in attributs.keys() and attributs[key] == tags[key] ):
+                        selection = False
+                if selection:
+                    allIndexes.append(i)
+            allIndexes = list(set(allIndexes))
+            allIndexes.sort()
+            return allIndexes
+        #
+        # Renvoie par défaut tous les items valides
+        else:
+            return range(len(self.__steps))
+
+    def stepserie(self, item=None, step=None, tags=None):
+        """
+        Les "step" sont les pas nommés de stockage. Par défaut, s'il ne sont pas
+        définis explicitement, ils sont identiques aux index de stockage. Ils
+        sont renvoyés par cette fonction selon les filtres définis par les
+        mots-clés.
+        
+        Les comportements sont les suivants :
+            - Renvoie par défaut toute la liste des pas.
+            - Si l'argument "item" est valide, renvoie le pas à cet index.
+            - Si l'argument "step" existe dans la liste des pas, le renvoie.
+            - Si l'argument "tags" est un dictionnaire correct, renvoie les pas
+              caractérisés par toutes les paires "tag/valeur" des tags indiqués,
+              ou rien sinon.
+        """
+        if item is not None and item < len(self.__steps):
+            return self.__steps[item]
+        elif step is not None and step in self.__steps:
+            return step
+        elif tags is not None:
+            allIndexes = self.itemserie(tags = tags)
+            return [self.__steps[index] for index in allIndexes]
+        else:
+            return self.__steps
+
+    def valueserie(self, item=None, step=None, tags=None,
+                         allSteps=False):
+        """
+        Les valeurs stockées sont renvoyées par cette fonction selon les filtres
+        définis par les mots-clés.
+        
+        Les comportements sont les suivants :
+            - Renvoie par défaut toute la liste des valeurs.
+            - Si l'argument "item" est valide, renvoie la valeur à cet index.
+            - Si l'argument "step" existe dans la liste des pas de stockage,
+              renvoie la première valeur (si allSteps=False) ou toutes les
+              valeurs (si allSteps=True).
+            - Si l'argument "tags" est un dictionnaire correct, renvoie les
+              valeurs aux pas caractérisés par toutes les paires "tag/valeur"
+              des tags indiqués, ou rien sinon.
+        """
+        if item is not None and item < len(self.__values):
             return self.__values[item]
+        elif step is not None:
+            allIndexes = self.itemserie(step = step, allSteps = allSteps)
+            if allSteps:
+                return [self.__values[index] for index in allIndexes]
+            else:
+                return self.__values[allIndexes[0]]
+        elif tags is not None:
+            allIndexes = self.itemserie(tags = tags)
+            return [self.__values[index] for index in allIndexes]
         else:
             return self.__values
     
+    def tagserie(self, item=None, step=None, tags=None,
+                       allSteps=False, withValues=False,
+                       outputTag=None):
+        """
+        Les "tag" sont les attributs nommés, sous forme de paires "clé/valeur",
+        qu'il est possible d'associer avec chaque pas de stockage. Par défaut,
+        s'il ne sont pas définis explicitement, il n'y en a pas. Ils sont
+        renvoyés par cette fonction selon les filtres définis par les mots-clés.
+        On obtient uniquement la liste des clés de tags avec "withValues=False"
+        ou la liste des paires "clé/valeurs" avec "withValues=True".
+        
+        On peut aussi obtenir les valeurs d'un tag satisfaisant aux conditions
+        de filtrage en "item/step/tags" en donnant le nom du tag dans
+        "outputTag".
+
+        Les comportements sont les suivants :
+            - Renvoie par défaut toute la liste des tags.
+            - Si l'argument "item" est valide, renvoie le tag à cet index.
+            - Si l'argument "step" existe dans la liste des pas de stockage,
+              renvoie les tags du premier pas (si allSteps=False) ou la liste
+              des tags de tous les pas (si allSteps=True).
+            - Si l'argument "tags" est un dictionnaire correct, renvoie les
+              valeurs aux pas caractérisés par toutes les paires "tag/valeur"
+              des tags indiqués, ou rien sinon.
+        """
+        #
+        # Cherche tous les index satisfaisant les conditions
+        allIndexes = self.itemserie(item = item, step = step, tags = tags, allSteps = allSteps)
+        #
+        # Dans le cas où la sortie donne les valeurs d'un "outputTag"
+        if outputTag is not None and type(outputTag) is str :
+            outputValues = []
+            for index in allIndexes:
+                if outputTag in self.__tags[index].keys():
+                    outputValues.append( self.__tags[index][outputTag] )
+            outputValues = list(set(outputValues))
+            outputValues.sort()
+            return outputValues
+        #
+        # Dans le cas où la sortie donne les tags satisfaisants aux conditions
+        else:
+            if withValues:
+                return [self.__tags[index] for index in allIndexes]
+            else:
+                allTags = {}
+                for index in allIndexes:
+                    allTags.update( self.__tags[index] )
+                allKeys = allTags.keys()
+                allKeys.sort()
+                return allKeys
+
     def stepnumber(self):
         """
         Renvoie le nombre de pas de stockage.
@@ -340,7 +470,7 @@ class Persistence:
         i = -1
         for index in indexes:
             self.__g('set title  "'+str(title).encode('ascii','replace')+' (pas '+str(index)+')"')
-            if ( type(steps) is type([]) ) or ( type(steps) is type(numpy.array([])) ):
+            if ( type(steps) is list ) or ( type(steps) is type(numpy.array([])) ):
                 Steps = list(steps)
             else:
                 Steps = range(len(self.__values[index]))
@@ -499,7 +629,7 @@ class Persistence:
             self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
         if ltitle is None:
             ltitle = ""
-        if ( type(steps) is type([]) ) or ( type(steps) is type(numpy.array([])) ):
+        if ( type(steps) is list ) or ( type(steps) is type(numpy.array([])) ):
             Steps = list(steps)
         else:
             Steps = range(len(self.__values[0]))
@@ -640,7 +770,7 @@ class CompositePersistence:
     Des objets par défaut sont prévus, et des objets supplémentaires peuvent
     être ajoutés.
     """
-    def __init__(self, name=""):
+    def __init__(self, name="", defaults=True):
         """
         name : nom courant
         
@@ -655,29 +785,30 @@ class CompositePersistence:
         #
         # Definition des objets par defaut
         # --------------------------------
-        self.__StoredObjects["Informations"]     = OneNoType("Informations")
-        self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
-        self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
-        self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
-        self.__StoredObjects["ObservationError"] = OneMatrix("ObservationError")
-        self.__StoredObjects["Analysis"]         = OneVector("Analysis", basetype=numpy.array)
-        self.__StoredObjects["AnalysisError"]    = OneMatrix("AnalysisError")
-        self.__StoredObjects["Innovation"]       = OneVector("Innovation", basetype=numpy.array)
-        self.__StoredObjects["KalmanGainK"]      = OneMatrix("KalmanGainK")
-        self.__StoredObjects["OperatorH"]        = OneMatrix("OperatorH")
-        self.__StoredObjects["RmsOMA"]           = OneScalar("RmsOMA")
-        self.__StoredObjects["RmsOMB"]           = OneScalar("RmsOMB")
-        self.__StoredObjects["RmsBMA"]           = OneScalar("RmsBMA")
+        if defaults:
+            self.__StoredObjects["Informations"]     = OneNoType("Informations")
+            self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
+            self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
+            self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
+            self.__StoredObjects["ObservationError"] = OneMatrix("ObservationError")
+            self.__StoredObjects["Analysis"]         = OneVector("Analysis", basetype=numpy.array)
+            self.__StoredObjects["AnalysisError"]    = OneMatrix("AnalysisError")
+            self.__StoredObjects["Innovation"]       = OneVector("Innovation", basetype=numpy.array)
+            self.__StoredObjects["KalmanGainK"]      = OneMatrix("KalmanGainK")
+            self.__StoredObjects["OperatorH"]        = OneMatrix("OperatorH")
+            self.__StoredObjects["RmsOMA"]           = OneScalar("RmsOMA")
+            self.__StoredObjects["RmsOMB"]           = OneScalar("RmsOMB")
+            self.__StoredObjects["RmsBMA"]           = OneScalar("RmsBMA")
         #
 
-    def store(self, name=None, value=None, step=None):
+    def store(self, name=None, value=None, step=None, tags={}):
         """
         Stockage d'une valeur "value" pour le "step" dans la variable "name".
         """
         if name is None: raise ValueError("Storable object name is required for storage.")
         if name not in self.__StoredObjects.keys():
             raise ValueError("No such name '%s' exists in storable objects."%name)
-        self.__StoredObjects[name].store( value=value, step=step )
+        self.__StoredObjects[name].store( value=value, step=step, tags=tags )
 
     def add_object(self, name=None, persistenceType=Persistence, basetype=numpy.array ):
         """
@@ -751,20 +882,32 @@ class CompositePersistence:
         return objs
 
     # ---------------------------------------------------------
-    def save_composite(self, filename=None, mode="pickle"):
+    def save_composite(self, filename=None, mode="pickle", compress="gzip"):
         """
         Enregistre l'objet dans le fichier indiqué selon le "mode" demandé,
         et renvoi le nom du fichier
         """
         import os
         if filename is None:
-            filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl"
+            if compress == "gzip":
+                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.gz"
+            elif compress == "bzip2":
+                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.bz2"
+            else:
+                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl"
         else:
             filename = os.path.abspath( filename )
         #
         import cPickle
-        if mode is "pickle":
-            output = open( filename, 'wb')
+        if mode == "pickle":
+            if compress == "gzip":
+                import gzip
+                output = gzip.open( filename, 'wb')
+            elif compress == "bzip2":
+                import bz2
+                output = bz2.BZ2File( filename, 'wb')
+            else:
+                output = open( filename, 'wb')
             cPickle.dump(self, output)
             output.close()
         else:
@@ -772,7 +915,7 @@ class CompositePersistence:
         #
         return filename
 
-    def load_composite(self, filename=None, mode="pickle"):
+    def load_composite(self, filename=None, mode="pickle", compress="gzip"):
         """
         Recharge un objet composite sauvé en fichier
         """
@@ -783,8 +926,15 @@ class CompositePersistence:
             filename = os.path.abspath( filename )
         #
         import cPickle
-        if mode is "pickle":
-            pkl_file = open(filename, 'rb')
+        if mode == "pickle":
+            if compress == "gzip":
+                import gzip
+                pkl_file = gzip.open( filename, 'rb')
+            elif compress == "bzip2":
+                import bz2
+                pkl_file = bz2.BZ2File( filename, 'rb')
+            else:
+                pkl_file = open(filename, 'rb')
             output = cPickle.load(pkl_file)
             for k in output.keys():
                 self[k] = output[k]
@@ -981,7 +1131,7 @@ if __name__ == "__main__":
     print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
     print "--> Ajout d'un objet nouveau, de type vecteur string par pas"
     OBJET_DE_TEST.add_object("ValeursStr", persistenceType=Persistence, basetype=str )
-    OBJET_DE_TEST.store("ValeursStr","c020")
+    OBJET_DE_TEST.store("ValeursStr","IGN3")
     OBJET_DE_TEST.store("ValeursStr","c021")
     print "Les valeurs       :", OBJET_DE_TEST.get_object("ValeursStr").valueserie()
     print "Acces comme dict  :", OBJET_DE_TEST["ValeursStr"].stepserie()
@@ -991,7 +1141,7 @@ if __name__ == "__main__":
     OBJET_DE_TEST.del_object("ValeursVectorielles")
     print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
     print "--> Enregistrement de l'objet complet de Persistence composite"
-    OBJET_DE_TEST.save_composite("composite.pkl")
+    OBJET_DE_TEST.save_composite("composite.pkl", compress="None")
     print
 
     print "======> Affichage graphique d'objets stockés"
@@ -1097,4 +1247,115 @@ if __name__ == "__main__":
         print "Action d'un seul observer sur la variable observée, étape :",i
         D.store( [i, i, i] )
     del OBJET_DE_TEST
+    print
+
+    print "======> Utilisation des tags/attributs et stockage puis récupération de l'ensemble"
+    OBJET_DE_TEST = CompositePersistence("My CompositePersistence", defaults=False)
+    OBJET_DE_TEST.add_object("My ecarts", basetype = numpy.array)
+
+    OBJET_DE_TEST.store( "My ecarts", numpy.arange(1,5),   tags = {"Camp":"Base","Carte":"IGN3","Niveau":1024,"Palier":"Premier"} )
+    OBJET_DE_TEST.store( "My ecarts", numpy.arange(1,5)+1, tags = {"Camp":"Base","Carte":"IGN4","Niveau": 210,"Palier":"Premier"} )
+    OBJET_DE_TEST.store( "My ecarts", numpy.arange(1,5)+2, tags = {"Camp":"Base","Carte":"IGN1","Niveau":1024} )
+    OBJET_DE_TEST.store( "My ecarts", numpy.arange(1,5)+3, tags = {"Camp":"Sommet","Carte":"IGN2","Niveau":4024,"Palier":"Second","FullMap":True} )
+
+    print "Les pas de stockage :", OBJET_DE_TEST["My ecarts"].stepserie()
+    print "Les valeurs         :", OBJET_DE_TEST["My ecarts"].valueserie()
+    print "La 2ème valeur      :", OBJET_DE_TEST["My ecarts"].valueserie(1)
+    print "La dernière valeur  :", OBJET_DE_TEST["My ecarts"].valueserie(-1)
+    print "Liste des attributs :", OBJET_DE_TEST["My ecarts"].tagserie()
+    print "Taille \"shape\"      :", OBJET_DE_TEST["My ecarts"].shape()
+    print "Taille \"len\"        :", len(OBJET_DE_TEST["My ecarts"])
+    print
+
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Palier":"Premier"} )
+    print "Valeurs pour tag    :", OBJET_DE_TEST["My ecarts"].valueserie( tags={"Palier":"Premier"} )
+    print
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Carte":"IGN1"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Niveau":1024} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"Base"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"TOTO"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Toto":"Premier"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Carte":"IGN1"} )
+    print
+
+    print "Combinaison 'ET' de plusieurs Tags"
+    print "Attendu : [0, 1],    trouvé :",OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"Base", "Palier":"Premier"} )
+    print "Attendu : [],        trouvé :",OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"Sommet", "Palier":"Premier"} )
+    # Attention : {"Camp":"Sommet", "Camp":"Base"} == {"Camp":"Base"}
+    print "Attendu : [0, 1, 2], trouvé :",OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"Sommet", "Camp":"Base"} )
+    print "Attendu : [2],       trouvé :",OBJET_DE_TEST["My ecarts"].stepserie( tags={"Carte":"IGN1", "Niveau":1024} )
+    print
+      
+    print "Liste des tags pour le pas (item) 1  :",OBJET_DE_TEST["My ecarts"].tagserie(item = 1)
+    print "Liste des tags pour le pas (item) 2  :",OBJET_DE_TEST["My ecarts"].tagserie(item = 2)
+    print "Comme le step et l'item sont identiques par défaut, on doit avoir la même chose :"
+    print "Liste des tags pour le pas (step) 1  :",OBJET_DE_TEST["My ecarts"].tagserie(step = 1)
+    print "Liste des tags pour le pas (step) 2  :",OBJET_DE_TEST["My ecarts"].tagserie(step = 2)
+    print
+    print "Liste des tags/valeurs pour le pas 1 :",OBJET_DE_TEST["My ecarts"].tagserie(item = 1, withValues=True)
+    print "Liste des tags/valeurs pour le pas 2 :",OBJET_DE_TEST["My ecarts"].tagserie(item = 2, withValues=True)
+    print
+
+    print "Liste des valeurs possibles pour 1 tag donné 'Camp'   :",OBJET_DE_TEST["My ecarts"].tagserie(outputTag="Camp")
+    print "Liste des valeurs possibles pour 1 tag donné 'Toto'   :",OBJET_DE_TEST["My ecarts"].tagserie(outputTag="Toto")
+    print "Liste des valeurs possibles pour 1 tag donné 'Niveau' :",OBJET_DE_TEST["My ecarts"].tagserie(outputTag="Niveau")
+    print
+
+    OBJET_DE_TEST.add_object("My other ecarts", basetype = numpy.array)
+    OBJET_DE_TEST.store( "My other ecarts", numpy.arange(-1,5),   tags = {"Camp":"Base","Carte":"IGN3","Niveau":1024,"Palier":"Premier"} )
+    OBJET_DE_TEST.store( "My other ecarts", numpy.arange(-1,5)+1, tags = {"Camp":"Base","Carte":"IGN4","Niveau": 210,"Palier":"Premier"} )
+    OBJET_DE_TEST.store( "My other ecarts", numpy.arange(-1,5)+2, tags = {"Camp":"Base","Carte":"IGN1","Niveau":1024} )
+    OBJET_DE_TEST.store( "My other ecarts", numpy.arange(-1,5)+3, tags = {"Camp":"Sommet","Carte":"IGN2","Niveau":4024,"Palier":"Second"} )
+
+    print "Objets présents dans le composite :",OBJET_DE_TEST.get_stored_objects()
+    fichier = "composite.pkl.gz"
+    print "Sauvegarde sur \"%s\"..."%fichier
+    OBJET_DE_TEST.save_composite( fichier )
+    print "Effacement de l'objet en memoire"
+    del OBJET_DE_TEST
+    print
+
+    print "Relecture de l'objet sur \"%s\"..."%fichier
+    OBJET_DE_TEST = CompositePersistence("My CompositePersistence bis", defaults=False)
+    OBJET_DE_TEST.load_composite( fichier )
+    print "Objets présents dans le composite :",OBJET_DE_TEST.get_stored_objects()
+    print "Taille des objets contenus :"
+    for name in OBJET_DE_TEST.get_stored_objects():
+        print "  Objet \"%s\" : taille unitaire de %i"%(name,len(OBJET_DE_TEST[name]))
+
+    print
+    print "Les pas de stockage :", OBJET_DE_TEST["My ecarts"].stepserie()
+    print "Les valeurs         :", OBJET_DE_TEST["My ecarts"].valueserie()
+    print "La 2ème valeur      :", OBJET_DE_TEST["My ecarts"].valueserie(1)
+    print "La dernière valeur  :", OBJET_DE_TEST["My ecarts"].valueserie(-1)
+    print "Liste des attributs :", OBJET_DE_TEST["My ecarts"].tagserie()
+    print "Taille \"shape\"      :", OBJET_DE_TEST["My ecarts"].shape()
+    print "Taille \"len\"        :", len(OBJET_DE_TEST["My ecarts"])
+    print
+
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Palier":"Premier"} )
+    print "Valeurs pour tag    :", OBJET_DE_TEST["My ecarts"].valueserie( tags={"Palier":"Premier"} )
+    print
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Carte":"IGN1"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Niveau":1024} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"Base"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Camp":"TOTO"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Toto":"Premier"} )
+    print "Pas pour tag        :", OBJET_DE_TEST["My ecarts"].stepserie( tags={"Carte":"IGN1"} )
+    print
+    print "Attributs                 :", OBJET_DE_TEST["My ecarts"].tagserie()
+    print "Attributs pour tag filtré :", OBJET_DE_TEST["My ecarts"].tagserie( tags={"Camp":"Base"} )
+    print "Attributs pour tag filtré :", OBJET_DE_TEST["My ecarts"].tagserie( tags={"Niveau":4024} )
+    print
+    print "Attributs et valeurs                 :", OBJET_DE_TEST["My ecarts"].tagserie( withValues=True )
+    print "Attributs et valeurs pour tag filtré :", OBJET_DE_TEST["My ecarts"].tagserie( withValues=True, tags={"Camp":"Base"} )
+    print "Attributs et valeurs pour tag filtré :", OBJET_DE_TEST["My ecarts"].tagserie( withValues=True, tags={"Niveau":4024} )
+    print
+    print "Valeur d'attribut pour un tag donné 'BU'           :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Niveau" )
+    print "Valeur d'attribut pour un tag donné 'BU' filtré    :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Niveau", tags={"Camp":"Base"} )
+    print "Valeur d'attribut pour un tag donné 'BU' filtré    :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Niveau", tags={"Palier":"Second"} )
+    print "Valeur d'attribut pour un tag donné 'Camp' filtré  :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Camp", tags={"Palier":"Premier"} )
+    print "Valeur d'attribut pour un tag donné 'Carte' filtré :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Carte", tags={"Palier":"Premier"} )
+    print "Valeur d'attribut pour un tag donné 'Carte' filtré :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Carte", tags={"Palier":"Premier","Niveau":4024} )
+    print "Valeur d'attribut pour un tag donné 'Carte' filtré :", OBJET_DE_TEST["My ecarts"].tagserie( outputTag = "Carte", tags={"Palier":"Premier","Niveau":210} )
     print
