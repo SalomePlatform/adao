@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 __doc__ = """
     Définit les outils généraux élémentaires.
     
@@ -483,13 +485,13 @@ class AssimilationStudy:
         if len(self.__H) > 0 and not(type(self.__H) is type({})) and len(self.__R) > 0 and not( __H_shape[0] == __R_shape[1] ):
             raise ValueError("Shape characteristic of H \"%s\" and R \"%s\" are incompatible"%(__H_shape,__R_shape))
         #
-        if len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
+        if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
             raise ValueError("Shape characteristic of B \"%s\" and Xb \"%s\" are incompatible"%(__B_shape,__Xb_shape))
         #
-        if len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
+        if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
             raise ValueError("Shape characteristic of R \"%s\" and Y \"%s\" are incompatible"%(__R_shape,__Y_shape))
         #
-        if len(self.__M) > 0 and not(type(self.__M) is type({})) and not( __M_shape[1] == max(__Xb_shape) ):
+        if self.__M is not None and len(self.__M) > 0 and not(type(self.__M) is type({})) and not( __M_shape[1] == max(__Xb_shape) ):
             raise ValueError("Shape characteristic of M \"%s\" and X \"%s\" are incompatible"%(__M_shape,__Xb_shape))
         #
         return 1
