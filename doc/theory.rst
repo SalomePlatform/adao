@@ -171,7 +171,7 @@ numerical quality or to take into account computer requirements such as
 calculation size and time.
 
 Going further in the data assimilation framework
-++++++++++++++++++++++++++++++++++++++++++++++++
+------------------------------------------------
 
 To get more information about all the data assimilation techniques, the reader
 can consult introductory documents like [Argaud09], on-line training courses or

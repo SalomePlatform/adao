@@ -20,21 +20,21 @@ Logical procedure to build an ADAO test case
 
 The construction of an ADAO case follows a simple approach to define the set of
 input data, either static or dynamic data, and then generates a complete block
-diagram used in Y. Many variations exist for the definition of input data, but
-the logical sequence remains unchanged.
+diagram used in YACS. Many variations exist for the definition of input data,
+but the logical sequence remains unchanged.
 
 First of all, the user is considered to know the input data needed to set up the
 data assimilation study. These data can be in SALOME or not.
 
-**Basically, the procedure involves the following steps:**
+**Basically, the procedure of using ADAO involves the following steps:**
 
-#.      **Activate the ADAO module and use the editor GUI,**
-#.      **Build and modify the ADAO case and save it,**
-#.      **Export the ADAO case as a YACS scheme,**
-#.      **Modify and supplement the YACS scheme and save it,**
-#.      **Execute the YACS case and obtain the results.**
+#.  **Activate the ADAO module and use the editor GUI,**
+#.  **Build and modify the ADAO case and save it,**
+#.  **Export the ADAO case as a YACS scheme,**
+#.  **Modify and supplement the YACS scheme and save it,**
+#.  **Execute the YACS case and obtain the results.**
 
-Each step will be detailed later in the next section.
+Each step will be detailed in the next section.
 
 Detailed procedure to build an ADAO test case
 ---------------------------------------------
@@ -165,7 +165,7 @@ Execute the YACS case and obtain the results
 
 The YACS scheme is now complete and can be executed. Parametrisation and
 execution of a YACS case is fully compliant with the standard way to deal with a
-YACS scheme, and is described in the *YACS User Guide*.
+YACS scheme, and is described in the *YACS module User's Guide*.
 
 Results can be obtained, through the "*algoResults*" output port, using YACS
 nodes to retrieve all the informations in the "*pyobj*" object, to transform
@@ -315,9 +315,9 @@ The different commands are the following:
 Examples of using these commands are available in the section
 :ref:`section_examples` and in examples files installed with ADAO module.
 
-.. [#] For more information on EFICAS, see the the *EFICAS User Guide* available in the main "*Help*" menu of SALOME GUI.
+.. [#] For more information on EFICAS, see the *EFICAS module* available in SALOME GUI.
 
-.. [#] For more information on YACS, see the the *YACS User Guide* available in the main "*Help*" menu of SALOME GUI.
+.. [#] For more information on YACS, see the *YACS module User's Guide* available in the main "*Help*" menu of SALOME GUI.
 
 .. [#] This intermediary python file can be safely removed after YACS export, but can also be used as described in the section :ref:`section_advanced`.
 
