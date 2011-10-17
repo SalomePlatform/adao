@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 name    = "Data Assimilation Package"
-version = "0.3.0-SP630"
-date    = "lundi 15 octobre 2010, 11:11:11 (UTC+0200)"
+version = "0.4.0-SP640"
+date    = "mardi 11 octobre 2011, 11:11:11 (UTC+0200)"

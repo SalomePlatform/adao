@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 __doc__ = """
     Ce module permet de mettre en place un logging utilisable partout dans
     l'application, par défaut à la console, et si nécessaire dans un fichier.

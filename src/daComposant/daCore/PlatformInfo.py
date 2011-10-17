@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 __doc__ = """
     Informations sur le code et la plateforme, et mise à jour des chemins
     
