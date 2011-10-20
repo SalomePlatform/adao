@@ -120,15 +120,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Paramètres de pilotage
         # ----------------------
-        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps"
+        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps", "ProjectedGradientTolerance", "GradientNormTolerance", "InnerMinimizer"
         if Parameters.has_key("Bounds") and (type(Parameters["Bounds"]) is type([]) or type(Parameters["Bounds"]) is type(())) and (len(Parameters["Bounds"]) > 0):
             Bounds = Parameters["Bounds"]
         else:
             Bounds = None
-        MinimizerList = ["LBFGSB","TNC", "CG", "BFGS"]
+        MinimizerList = ["LBFGSB","TNC", "CG", "NCG", "BFGS"]
         if Parameters.has_key("Minimizer") and (Parameters["Minimizer"] in MinimizerList):
             Minimizer = str( Parameters["Minimizer"] )
         else:
+            logging.warning("%s Minimiseur inconnu ou non fourni, remplacé par la valeur par défaut"%self._name)
             Minimizer = "LBFGSB"
         logging.debug("%s Minimiseur utilisé = %s"%(self._name, Minimizer))
         if Parameters.has_key("MaximumNumberOfSteps") and (Parameters["MaximumNumberOfSteps"] > -1):
@@ -136,6 +137,30 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             maxiter = 15000
         logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, str(maxiter)))
+        if Parameters.has_key("CostDecrementTolerance") and (Parameters["CostDecrementTolerance"] > 0):
+            ftol  = float(Parameters["CostDecrementTolerance"])
+            factr = 1./ftol
+        else:
+            ftol  = 1.e-7
+            factr = 1./ftol
+        logging.debug("%s Diminution relative minimale du cout lors de l'arret = %s"%(self._name, str(1./factr)))
+        if Parameters.has_key("ProjectedGradientTolerance") and (Parameters["ProjectedGradientTolerance"] > -1):
+            pgtol = float(Parameters["ProjectedGradientTolerance"])
+        else:
+            pgtol = -1
+        logging.debug("%s Maximum des composantes du gradient projete lors de l'arret = %s"%(self._name, str(pgtol)))
+        if Parameters.has_key("GradientNormTolerance") and (Parameters["GradientNormTolerance"] > -1):
+            gtol = float(Parameters["GradientNormTolerance"])
+        else:
+            gtol = 1.e-05
+        logging.debug("%s Maximum des composantes du gradient lors de l'arret = %s"%(self._name, str(gtol)))
+        InnerMinimizerList = ["CG", "NCG", "BFGS"]
+        if Parameters.has_key("InnerMinimizer") and (Parameters["InnerMinimizer"] in InnerMinimizerList):
+            InnerMinimizer = str( Parameters["Minimizer"] )
+        else:
+            InnerMinimizer = "BFGS"
+        logging.debug("%s Minimiseur interne utilisé = %s"%(self._name, InnerMinimizer))
+        logging.debug("%s Norme du gradient lors de l'arret = %s"%(self._name, str(gtol)))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -147,12 +172,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 bounds      = Bounds,
                 maxfun      = maxiter,
+                factr       = factr,
+                pgtol       = pgtol,
                 iprint      = iprint,
-                factr       = 1.,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, Informations['funcalls']))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, Informations['warnflag']))
+            nfeval = Informations['funcalls']
+            rc     = Informations['warnflag']
         elif Minimizer == "TNC":
             Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
                 func        = CostFunction,
@@ -161,11 +186,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 bounds      = Bounds,
                 maxfun      = maxiter,
+                pgtol       = pgtol,
+                ftol        = ftol,
                 messages    = message,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, nfeval))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, rc))
         elif Minimizer == "CG":
             Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
                 f           = CostFunction,
@@ -173,12 +197,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 maxiter     = maxiter,
+                gtol        = gtol,
                 disp        = disp,
                 full_output = True,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, nfeval))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, rc))
+        elif Minimizer == "NCG":
+            Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
+                f           = CostFunction,
+                x0          = Xini,
+                fprime      = GradientOfCostFunction,
+                args        = (),
+                maxiter     = maxiter,
+                avextol     = ftol,
+                disp        = disp,
+                full_output = True,
+                )
         elif Minimizer == "BFGS":
             Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
                 f           = CostFunction,
@@ -186,14 +219,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 maxiter     = maxiter,
+                gtol        = gtol,
                 disp        = disp,
                 full_output = True,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, nfeval))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, rc))
         else:
             raise ValueError("Error in Minimizer name: %s"%Minimizer)
+        #
+        # Correction pour pallier a un bug de TNC sur le retour du Minimum
+        # ----------------------------------------------------------------
+        StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie() )
+        MinJ    = self.StoredVariables["CostFunctionJ"].valueserie(step = StepMin)
+        Minimum = self.StoredVariables["CurrentState"].valueserie(step = StepMin)
+        #
+        logging.debug("%s %s Step of min cost  = %s"%(self._name, Minimizer, StepMin))
+        logging.debug("%s %s Minimum cost      = %s"%(self._name, Minimizer, MinJ))
+        logging.debug("%s %s Minimum state     = %s"%(self._name, Minimizer, Minimum))
+        logging.debug("%s %s Nb of F           = %s"%(self._name, Minimizer, nfeval))
+        logging.debug("%s %s RetCode           = %s"%(self._name, Minimizer, rc))
         #
         # Calcul  de l'analyse
         # --------------------
