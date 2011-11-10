@@ -12,7 +12,7 @@ Using the ADAO module
    :align: middle
 
 This section presents the usage of the ADAO module in SALOME. It is complemented
-by advanced usage procedures the section :ref:`section_advanced`, and by some
+by advanced usage procedures the section :ref:`section_advanced`, and by
 examples in the section :ref:`section_examples`.
 
 Logical procedure to build an ADAO test case
@@ -195,7 +195,7 @@ information at the end of the procedure.
 
 All the variables are list of typed values, each item of the list
 corresponding to the value of the variable at a time step or an iteration step
-in the data assimilation optimisation procedure. The variable value at a given
+in the data assimilation optimization procedure. The variable value at a given
 "*i*" step can be obtained by the method "*valueserie(i)*". The last one
 (consisting in the solution of the evaluation problem) can be obtained using the
 step "*-1*" as in a standard list.
@@ -213,114 +213,110 @@ section :ref:`section_theory`.
 The different type-style commands are:
 
 :Dict:
-    Type of an input. This indicates a variable that has to be filled by a
+    *Type of an input*. This indicates a variable that has to be filled by a
     dictionary, usually given as a script.
 
 :Function:
-    Type of an input. This indicates a variable that has to be filled by a
+    *Type of an input*. This indicates a variable that has to be filled by a
     function, usually given as a script.
 
 :Matrix:
-    Type of an input. This indicates a variable that has to be filled by a
+    *Type of an input*. This indicates a variable that has to be filled by a
     matrix, usually given either as a string or as a script.
 
 :String:
-    Type of an input. This indicates a string, such as a name or a literal
+    *Type of an input*. This indicates a string, such as a name or a literal
     representation of a matrix or vector, such as "1 2 ; 3 4".
 
 :Script:
-    Type of an input. This indicates a script given as an external file.
+    *Type of an input*. This indicates a script given as an external file.
 
 :Vector:
-    Type of an input. This indicates a variable that has to be filled by a
+    *Type of an input*. This indicates a variable that has to be filled by a
     vector, usually given either as a string or as a script.
     
 The different commands are the following:
 
 :ASSIM_STUDY:
-    Required command. This is the general command describing an ADAO case. It
+    *Required command*. This is the general command describing an ADAO case. It
     hierarchicaly contains all the other commands.
 
 :Algorithm:
-    Required command. This is a string to indicates the data assimilation
+    *Required command*. This is a string to indicates the data assimilation
     algorithm chosen. The choices are limited and available through the GUI.
     There exists for example: "3DVAR", "Blue", "EnsembleBlue", "KalmanFilter".
 
 :AlgorithmParameters:
-    Optional command. This command allows to add some optional parameters to
+    *Optional command*. This command allows to add some optional parameters to
     control the data assimilation algorithm calculation. It is defined as a
     "*Dict*" type object. 
 
 :Background:
-    Required command. This indicates the backgroud vector used for data
+    *Required command*. This indicates the backgroud vector used for data
     assimilation, previously noted as :math:`\mathbf{x}^b`. It is defined as a
     "*Vector*" type object, that is, given either as a string or as a script.
 
 :BackgroundError:
-    Required command. This indicates the backgroud error covariance matrix,
+    *Required command*. This indicates the backgroud error covariance matrix,
     previously noted as :math:`\mathbf{B}`.It is defined as a "*Matrix*" type
     object, that is, given either as a string or as a script.
 
 :Debug:
-    Required command. This let choose the level of trace and intermediary debug
-    informations.The choices are limited between 0 (for False) and 1 (for True)
-    and available through the GUI.
+    *Required command*. This let choose the level of trace and intermediary
+    debug informations.The choices are limited between 0 (for False) and 1 (for
+    True) and available through the GUI.
 
 :InputVariables:
-    Optional command. This command allows to indicates the name and size of
+    *Optional command*. This command allows to indicates the name and size of
     physical variables that are bundled together in the control vector. This
     information is dedicated to data processed inside of data assimilation
     algorithm.
 
 :Observation:
-    Required command. This indicates the observation vector used for data
+    *Required command*. This indicates the observation vector used for data
     assimilation, previously noted as :math:`\mathbf{y}^o`. It is defined as a
     "*Vector*" type object, that is, given either as a string or as a script.
 
 :ObservationError:
-    Required command. This indicates the observation error covariance matrix,
+    *Required command*. This indicates the observation error covariance matrix,
     previously noted as :math:`\mathbf{R}`.It is defined as a "*Matrix*" type
     object, that is, given either as a string or as a script.
 
 :ObservationOperator:
-    Required command. This indicates the observation operator, previously
+    *Required command*. This indicates the observation operator, previously
     noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}`
     to results :math:`\mathbf{y}` to be compared to observations
     :math:`\mathbf{y}^o`.
 
 :OutputVariables:
-    Optional command. This command allows to indicates the name and size of
+    *Optional command*. This command allows to indicates the name and size of
     physical variables that are bundled together in the output observation
     vector. This information is dedicated to data processed inside of data
     assimilation algorithm.
 
 :Study_name:
-    Required command. This is an open string to describe the study by a name or
-    a sentence.
+    *Required command*. This is an open string to describe the study by a name
+    or a sentence.
 
 :Study_repertory:
-    Optional command. If available, this repertory is used to find all the
+    *Optional command*. If available, this repertory is used to find all the
     script files that can be used to define some other commands by scripts.
 
 :UserDataInit:
-    Optional command. This commands allows to initialise some parameters or data
-    automatically before data assimilation algorithm processing.
+    *Optional command*. This commands allows to initialise some parameters or
+    data automatically before data assimilation algorithm processing.
 
 :UserPostAnalysis:
-    Optional command. This commands allows to process some parameters or data
+    *Optional command*. This commands allows to process some parameters or data
     automatically after data assimilation algorithm processing. It is defined as
     a script or a string, allowing to put simple code directly inside the ADAO
     case.
 
 Examples of using these commands are available in the section
-:ref:`section_examples` and in examples files installed with ADAO module.
+:ref:`section_examples` and in example files installed with ADAO module.
 
 .. [#] For more information on EFICAS, see the *EFICAS module* available in SALOME GUI.
 
 .. [#] For more information on YACS, see the *YACS module User's Guide* available in the main "*Help*" menu of SALOME GUI.
 
 .. [#] This intermediary python file can be safely removed after YACS export, but can also be used as described in the section :ref:`section_advanced`.
-
-.. [Byrd95] Byrd R. H., Lu P., Nocedal J., *A Limited Memory Algorithm for Bound Constrained Optimization*, SIAM Journal on Scientific and Statistical Computing, 16(5), pp.1190-1208, 1995
-
-.. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, Vol 23(4), pp.550-560, 1997

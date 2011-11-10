@@ -271,23 +271,23 @@ definition of the ADAO case, which is an keyword of the ASSIMILATION_STUDY. This
 keyword requires a Python dictionary, containing some key/value pairs.
 
 For example, with a 3DVAR algorithm, the possible keys are "*Minimizer*",
-"*MaximumNumberOfSteps*", "ProjectedGradientTolerance", "GradientNormTolerance"
-and "*Bounds*":
+"*MaximumNumberOfSteps*", "*ProjectedGradientTolerance*",
+"*GradientNormTolerance*" and "*Bounds*":
 
-#.   The "*Minimizer*" key allows to choose the optimisation minimizer. The
+#.   The "*Minimizer*" key allows to choose the optimization minimizer. The
      default choice is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear
      constrained minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear
      constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
      (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer).
 #.   The "*MaximumNumberOfSteps*" key indicates the maximum number of iterations
-     allowed for iterative optimisation. The default is 15000, which very
+     allowed for iterative optimization. The default is 15000, which very
      similar of no limit on iterations. It is then recommended to adapt this
      parameter to the needs on real problems.
-#.   The "ProjectedGradientTolerance" key indicates a limit value, leading to
-     stop successfully the iterative optimisation process when all the components
-     of the projected gradient are under this limit.
-#.   The "GradientNormTolerance" key indicates a limit value, leading to stop
-     successfully the iterative optimisation process when the norm of the
+#.   The "*ProjectedGradientTolerance*" key indicates a limit value, leading to
+     stop successfully the iterative optimization process when all the
+     components of the projected gradient are under this limit.
+#.   The "*GradientNormTolerance*" key indicates a limit value, leading to stop
+     successfully the iterative optimization process when the norm of the
      gradient is under this limit.
 #.   The "*Bounds*" key allows to define upper and lower bounds for every
      control variable being optimized. Bounds can be given by a list of list of
@@ -297,7 +297,7 @@ and "*Bounds*":
 
 If no bounds at all are required on the control variables, then one can choose
 the "BFGS" or "CG" minimisation algorithm for the 3DVAR algorithm. For
-constrained optimisation, the minimizer "LBFGSB" is often more robust, but the
+constrained optimization, the minimizer "LBFGSB" is often more robust, but the
 "TNC" is always more performant.
 
 This dictionary has to be defined, for example, in an external Python script
@@ -465,18 +465,96 @@ of the state. It is here defined in an external file named
 ``"Physical_simulation_functions.py"``, which should contain functions
 conveniently named here ``"FunctionH"`` and ``"AdjointH"``. These functions are
 user ones, representing as programming functions the :math:`\mathbf{H}` operator
-and its adjoint. We suppose these functions are given by the user (a simple
+and its adjoint. We suppose these functions are given by the user. A simple
 skeleton is given in the Python script file ``Physical_simulation_functions.py``
-of the ADAO examples standard directory, not reproduced here).
+of the ADAO examples standard directory. It can be used in the case only the
+non-linear direct physical simulation exists. The script is partly reproduced
+here for convenience::
 
-To operates in ADAO, it is required to define different types of operators: the
-(potentially non-linear) standard observation operator, named ``"Direct"``, its
-linearised approximation, named ``"Tangent"``, and the adjoint operator named
-``"Adjoint"``. The Python script have to retrieve an input parameter, found
-under the key "value", in a variable named ``"specificParameters"`` of the
-SALOME input data and parameters ``"computation"`` dictionary variable. If the
-operator is already linear, the ``"Direct"`` and ``"Tangent"`` functions are the
-same, as it is supposed here. The following example Python script file named
+    #-*-coding:iso-8859-1-*-
+    #
+    def FunctionH( XX ):
+        """ Direct non-linear simulation operator """
+        #
+        # --------------------------------------> EXAMPLE TO BE REMOVED
+        if type(XX) is type(numpy.matrix([])):  # EXAMPLE TO BE REMOVED
+            HX = XX.A1.tolist()                 # EXAMPLE TO BE REMOVED
+        elif type(XX) is type(numpy.array([])): # EXAMPLE TO BE REMOVED
+            HX = numpy.matrix(XX).A1.tolist()   # EXAMPLE TO BE REMOVED
+        else:                                   # EXAMPLE TO BE REMOVED
+            HX = XX                             # EXAMPLE TO BE REMOVED
+        # --------------------------------------> EXAMPLE TO BE REMOVED
+        #
+        return numpy.array( HX )
+    #
+    def TangentH( X, increment = 0.01, centeredDF = False ):
+        """ Tangent operator (Jacobian) calculated by finite differences """
+        #
+        dX  = increment * X.A1
+        #
+        if centeredDF:
+            # 
+            Jacobian  = []
+            for i in range( len(dX) ):
+                X_plus_dXi     = X.A1
+                X_plus_dXi[i]  = X[i] + dX[i]
+                X_moins_dXi    = X.A1
+                X_moins_dXi[i] = X[i] - dX[i]
+                #
+                HX_plus_dXi  = FunctionH( X_plus_dXi )
+                HX_moins_dXi = FunctionH( X_moins_dXi )
+                #
+                HX_Diff = ( HX_plus_dXi - HX_moins_dXi ) / (2.*dX[i])
+                #
+                Jacobian.append( HX_Diff )
+            #
+        else:
+            #
+            HX_plus_dX = []
+            for i in range( len(dX) ):
+                X_plus_dXi    = X.A1
+                X_plus_dXi[i] = X[i] + dX[i]
+                #
+                HX_plus_dXi = FunctionH( X_plus_dXi )
+                #
+                HX_plus_dX.append( HX_plus_dXi )
+            #
+            HX = FunctionH( X )
+            #
+            Jacobian = []
+            for i in range( len(dX) ):
+                Jacobian.append( ( HX_plus_dX[i] - HX ) / dX[i] )
+        #
+        Jacobian = numpy.matrix( Jacobian )
+        #
+        return Jacobian
+    #
+    def AdjointH( (X, Y) ):
+        """ Ajoint operator """
+        #
+        Jacobian = TangentH( X, centeredDF = False )
+        #
+        Y = numpy.asmatrix(Y).flatten().T
+        HtY = numpy.dot(Jacobian, Y)
+        #
+        return HtY.A1
+
+We insist on the fact that these non-linear operator ``"FunctionH"``, tangent
+operator ``"TangentH"`` and adjoint operator ``"AdjointH"`` come from the
+physical knowledge, include the reference physical simulation code and its
+eventual adjoint, and have to be carefully set up by the data assimilation user.
+The errors in or missuses of the operators can not be detected or corrected by
+the data assimilation framework alone.
+
+To operates in the module ADAO, it is required to define for ADAO these
+different types of operators: the (potentially non-linear) standard observation
+operator, named ``"Direct"``, its linearised approximation, named ``"Tangent"``,
+and the adjoint operator named ``"Adjoint"``. The Python script have to retrieve
+an input parameter, found under the key "value", in a variable named
+``"specificParameters"`` of the SALOME input data and parameters
+``"computation"`` dictionary variable. If the operator is already linear, the
+``"Direct"`` and ``"Tangent"`` functions are the same, as it is supposed here.
+The following example Python script file named
 ``Script_ObservationOperator_H.py``, illustrates the case::
 
     #-*-coding:iso-8859-1-*-
