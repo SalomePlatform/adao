@@ -207,8 +207,6 @@ the user can choose to split the file in several ones, or to mix explicit data
 definition in the ADAO GUI and implicit data definition by external files. The
 present script looks like::
 
-    #-*-coding:iso-8859-1-*-
-    #
     import numpy
     #
     # Definition of the Background as a vector
@@ -305,8 +303,6 @@ file, using the mandatory variable name "*AlgorithmParameters*" for the
 dictionary. All the keys inside the dictionary are optional, they all have
 default values, and can exist without being used. For example::
 
-    #-*-coding:iso-8859-1-*-
-    #
     AlgorithmParameters = {
         "Minimizer" : "CG", # Possible choice : "LBFGSB", "TNC", "CG", "BFGS"
         "MaximumNumberOfSteps" : 10,
@@ -339,7 +335,8 @@ previously, all the numerical values of this example are arbitrary.
 The objective is to set up the input and output definitions of a physical case
 by external python scripts, using a general non-linear operator, adding control
 on parameters and so on... The complete framework scripts can be found in the
-ADAO examples standard directory.
+ADAO skeletons examples directory under the name
+"*External_data_definition_by_scripts*".
 
 Experimental set up
 +++++++++++++++++++
@@ -357,7 +354,7 @@ The background state :math:`\mathbf{x}^b`, which represent some *a priori*
 knowledge of the true state, is build as a normal random perturbation of 20% the
 true state :math:`\mathbf{x}^t` for each component, which is:
 
-    ``Xb = Xt + normal(0,20%*Xt)``
+    ``Xb = Xt + normal(0, 20%*Xt)``
 
 To describe the background error covariances matrix :math:`\mathbf{B}`, we make
 as previously the hypothesis of uncorrelated errors (that is, a diagonal matrix,
@@ -401,8 +398,6 @@ We first define the true state :math:`\mathbf{x}^t` and some convenient matrix
 building function, in a Python script file named
 ``Physical_data_and_covariance_matrices.py``::
 
-    #-*-coding:iso-8859-1-*-
-    #
     import numpy
     #
     def True_state():
@@ -426,9 +421,6 @@ perturbation of the true state, adding at the end of the script the definition
 of a *required ADAO variable* in order to export the defined value. It is done
 in a Python script file named ``Script_Background_xb.py``::
 
-    #-*-coding:iso-8859-1-*-
-    #
-    import sys ; sys.path.insert(0,"# INSERT PHYSICAL SCRIPT PATH")
     from Physical_data_and_covariance_matrices import True_state
     import numpy
     #
@@ -447,9 +439,6 @@ In the same way, we define the background error covariance matrix
 background of the true state, using the convenient function already defined. It
 is done in a Python script file named ``Script_BackgroundError_B.py``::
 
-    #-*-coding:iso-8859-1-*-
-    #
-    import sys ; sys.path.insert(0,"# INSERT PHYSICAL SCRIPT PATH")
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
     #
     xt, names = True_state()
@@ -471,8 +460,6 @@ of the ADAO examples standard directory. It can be used in the case only the
 non-linear direct physical simulation exists. The script is partly reproduced
 here for convenience::
 
-    #-*-coding:iso-8859-1-*-
-    #
     def FunctionH( XX ):
         """ Direct non-linear simulation operator """
         #
@@ -557,9 +544,6 @@ an input parameter, found under the key "value", in a variable named
 The following example Python script file named
 ``Script_ObservationOperator_H.py``, illustrates the case::
 
-    #-*-coding:iso-8859-1-*-
-    #
-    import sys ; sys.path.insert(0,"# INSERT PHYSICAL SCRIPT PATH")
     import Physical_simulation_functions
     import numpy, logging
     #
@@ -631,9 +615,6 @@ In this twin experiments framework, the observation :math:`\mathbf{y}^o` and its
 error covariances matrix :math:`\mathbf{R}` can be generated. It is done in two
 Python script files, the first one being named ``Script_Observation_yo.py``::
 
-    #-*-coding:iso-8859-1-*-
-    #
-    import sys ; sys.path.insert(0,"# INSERT PHYSICAL SCRIPT PATH")
     from Physical_data_and_covariance_matrices import True_state
     from Physical_simulation_functions import FunctionH
     #
@@ -647,9 +628,6 @@ Python script files, the first one being named ``Script_Observation_yo.py``::
 
 and the second one named ``Script_ObservationError_R.py``::
 
-    #-*-coding:iso-8859-1-*-
-    #
-    import sys ; sys.path.insert(0,"# INSERT PHYSICAL SCRIPT PATH")
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
     from Physical_simulation_functions import FunctionH
     #
@@ -668,8 +646,6 @@ assimilation algorithm. For example, if we use the standard 3DVAR algorithm, the
 following parameters can be defined in a Python script file named
 ``Script_AlgorithmParameters.py``::
 
-    #-*-coding:iso-8859-1-*-
-    #
     # Creating the required ADAO variable
     # -----------------------------------
     AlgorithmParameters = {
@@ -688,9 +664,6 @@ use a intermediary Python script file in order to extract these results. The
 following example Python script file named ``Script_UserPostAnalysis.py``,
 illustrates the fact::
 
-    #-*-coding:iso-8859-1-*-
-    #
-    import sys ; sys.path.insert(0,"# INSERT PHYSICAL SCRIPT PATH")
     from Physical_data_and_covariance_matrices import True_state
     import numpy
     #
