@@ -1,0 +1,51 @@
+# git ls-files --others --exclude-from=.git/info/exclude
+# Lines that start with '#' are comments.
+# For a project mostly in C, the following would be a good set of
+# exclude patterns (uncomment them if you want to use them):
+# *.[oa]
+# *~
+# On branch V6_main
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+
+COPYING
+INSTALL
+Makefile.in
+aclocal.m4
+adao_config.h.in
+adao_config.h.in~
+adm_local/libtool.m4
+adm_local/ltmain.sh
+adm_local/config.guess
+adm_local/config.sub
+adm_local/depcomp
+adm_local/install-sh
+adm_local/ltoptions.m4
+adm_local/ltsugar.m4
+adm_local/ltversion.m4
+adm_local/lt~obsolete.m4
+adm_local/missing
+adm_local/py-compile
+autom4te.cache/
+bin/Makefile.in
+checkout.log
+configure
+doc/Makefile.in
+examples/Makefile.in
+examples/daSalome/Makefile.in
+idl/Makefile.in
+resources/Makefile.in
+src/Makefile.in
+src/daComposant/Makefile.in
+src/daEficas/Makefile.in
+src/daSalome/Makefile.in
+src/daSalome/daGUI/Makefile.in
+src/daSalome/daGUI/daEficasWrapper/Makefile.in
+src/daSalome/daGUI/daGuiImpl/Makefile.in
+src/daSalome/daGUI/daUtils/Makefile.in
+
+# YAMM specific
+git_diff.log
+git_fetch.log
+update.log
