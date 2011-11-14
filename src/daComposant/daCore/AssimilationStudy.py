@@ -206,7 +206,9 @@ class AssimilationStudy:
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        if (type(asFunction) is type({})) and (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
+        if (type(asFunction) is type({})) and \
+                asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
+                (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
                 self.__H["Direct"]  = Operator( fromMethod = asFunction["Tangent"]  )
             else:
