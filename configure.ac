@@ -18,7 +18,7 @@ dnl  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade
 dnl
 dnl  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-AC_INIT(ADAO_SRC, [6.3.1])
+AC_INIT(ADAO_SRC, [6.4.0])
 AC_CONFIG_AUX_DIR(adm_local)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(adao_config.h)
@@ -127,6 +127,9 @@ AC_CONFIG_FILES([
         examples/daSalome/test003_ADAO_JDC_using_scripts.comm
         examples/daSalome/test004_ADAO_JDC_using_scripts.comm
         examples/daSalome/test005_ADAO_Operators.comm
+        examples/daSkeletons/Makefile
+        examples/daSkeletons/External_data_definition_by_scripts/Makefile
+        examples/daSkeletons/External_data_definition_by_scripts/ADAO_Case.comm
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile

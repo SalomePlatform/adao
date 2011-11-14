@@ -18,5 +18,31 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-SUBDIRS = daSalome daSkeletons
+include $(top_srcdir)/adm_local/make_common_starter.am
+
+DATA_INST = \
+	     ADAO_Case.comm \
+	     Physical_data_and_covariance_matrices.py \
+	     Script_AlgorithmParameters.py \
+	     Script_Background_xb.py \
+	     Script_ObservationOperator_H.py \
+	     Script_UserPostAnalysis.py \
+	     Physical_simulation_functions.py \
+	     Script_BackgroundError_B.py \
+	     Script_ObservationError_R.py \
+	     Script_Observation_yo.py
+
+externaldatadefinition_DATA = ${DATA_INST}
+
+EXTRA_DIST = \
+	     ADAO_Case.comm.in \
+	     Physical_data_and_covariance_matrices.py \
+	     Script_AlgorithmParameters.py \
+	     Script_Background_xb.py \
+	     Script_ObservationOperator_H.py \
+	     Script_UserPostAnalysis.py \
+	     Physical_simulation_functions.py \
+	     Script_BackgroundError_B.py \
+	     Script_ObservationError_R.py \
+	     Script_Observation_yo.py
 

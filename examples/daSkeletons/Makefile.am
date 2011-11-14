@@ -18,5 +18,5 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-SUBDIRS = daSalome daSkeletons
+SUBDIRS = External_data_definition_by_scripts
 
