@@ -30,7 +30,6 @@ __author__ = "Jean-Philippe ARGAUD"
 #
 # ==============================================================================
 #
-import sys, os ; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 import Physical_simulation_functions
 import numpy, logging
 #

@@ -48,3 +48,4 @@ src/daSalome/daGUI/daUtils/Makefile.in
 git_diff.log
 git_fetch.log
 update.log
+binary_archive.log

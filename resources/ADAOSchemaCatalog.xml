@@ -194,8 +194,21 @@ print "Matrix is", matrix
   <inline name="CreateNumpyMatrixFromScript">
     <script><code><![CDATA[
 print "Entering in CreateNumpyMatrixFromScript"
-execfile(script)
 type = "Matrix"
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -217,8 +230,21 @@ print "Vector is", vector
   <inline name="CreateNumpyVectorFromScript">
     <script><code><![CDATA[
 print "Entering in CreateNumpyVectorFromScript"
-execfile(script)
 type = "Vector"
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -259,7 +285,20 @@ result = None
   <inline name="CreateDictFromScript">
     <script><code><![CDATA[
 print "Entering in CreateDictFromScript"
-execfile(script)
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
   </inline>
@@ -267,7 +306,20 @@ execfile(script)
   <inline name="UserDataInitFromScript">
     <script><code><![CDATA[
 print "Entering in UserDataInitFromScript"
-execfile(script)
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="init_data" type="pyobj"/>

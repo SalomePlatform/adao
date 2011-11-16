@@ -119,6 +119,9 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
+        back_node_script = back_node.getScript()
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node.setScript(back_node_script)
         proc.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
@@ -153,6 +156,9 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
+        back_node_script = back_node.getScript()
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node.setScript(back_node_script)
         proc.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
@@ -189,6 +195,9 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
+        back_node_script = back_node.getScript()
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node.setScript(back_node_script)
         proc.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
@@ -245,7 +254,15 @@ def create_yacs_proc(study_config):
         logging.fatal("Exception in opening function script file : " + script_filename)
         traceback.print_exc()
         sys.exit(1)
-      opt_script_node.setScript(script_str.read())
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os \n"
+      if base_repertory != "":
+        node_script += "filepath = \"" + base_repertory + "\"\n"
+      else:
+        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "sys.path.insert(0,os.path.dirname(filepath))\n"
+      node_script += script_str.read()
+      opt_script_node.setScript(node_script)
       opt_script_node.edAddInputPort("computation", t_param_input)
       opt_script_node.edAddOutputPort("result", t_param_output)
 
@@ -310,9 +327,16 @@ def create_yacs_proc(study_config):
         logging.fatal("Exception in opening analysis file : " + str(analysis_config["Data"]))
         traceback.print_exc()
         sys.exit(1)
-      file_text = analysis_file.read()
-      final_script = default_script + file_text
-      analysis_node.setScript(final_script)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os \n"
+      if base_repertory != "":
+        node_script += "filepath = \"" + base_repertory + "\"\n"
+      else:
+        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "sys.path.insert(0,os.path.dirname(filepath))\n"
+      node_script += default_script
+      node_script += analysis_file.read()
+      analysis_node.setScript(node_script)
       proc.edAddChild(analysis_node)
       proc.edAddCFLink(compute_bloc, analysis_node)
       if AlgoType[study_config["Algorithm"]] == "Optim":
