@@ -100,6 +100,9 @@ def create_yacs_proc(study_config):
       init_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(init_config["Data"])))
     else:
       init_node.getInputPort("script").edInitPy(init_config["Data"])
+    init_node_script = init_node.getScript()
+    init_node_script += "init_data = user_script_module.init_data\n"
+    init_node.setScript(init_node_script)
     proc.edAddChild(init_node)
 
   # Step 1: get input data from user configuration
@@ -128,6 +131,9 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         # Connect node with InitUserData
         if key in init_config["Target"]:
+          back_node_script = back_node.getScript()
+          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
           proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
@@ -144,6 +150,9 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
+          back_node_script = back_node.getScript()
+          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
           proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
@@ -167,6 +176,9 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
+          back_node_script = back_node.getScript()
+          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
           proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
@@ -183,6 +195,9 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
+          back_node_script = back_node.getScript()
+          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
           proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
@@ -206,6 +221,9 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
+          back_node_script = back_node.getScript()
+          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
           proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
@@ -277,9 +295,11 @@ def create_yacs_proc(study_config):
 
       # Connect node with InitUserData
       if "ObservationOperator" in init_config["Target"]:
+        opt_node_script = opt_script_node.getScript()
+        opt_node_script = "__builtins__[\"init_data\"] = init_data\n" + opt_node_script
+        opt_script_node.setScript(opt_node_script)
         opt_script_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
-
     else:
       factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
       opt_script_node = factory_opt_script_node.cloneNode("FakeFunctionNode")
@@ -311,6 +331,9 @@ def create_yacs_proc(study_config):
 
       # Connect node with InitUserData
       if "UserPostAnalysis" in init_config["Target"]:
+        node_script = analysis_node.getScript()
+        node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
+        analysis_node.setScript(opt_node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
@@ -345,6 +368,9 @@ def create_yacs_proc(study_config):
         proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
       # Connect node with InitUserData
       if "UserPostAnalysis" in init_config["Target"]:
+        node_script = analysis_node.getScript()
+        node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
+        analysis_node.setScript(opt_node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
