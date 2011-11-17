@@ -19,8 +19,6 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-print "import generator_adao"
-
 from generator.generator_python import PythonGenerator
 import traceback
 import logging
