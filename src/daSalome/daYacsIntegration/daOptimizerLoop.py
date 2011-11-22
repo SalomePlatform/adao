@@ -301,9 +301,9 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
   # Obligatoire ???
   def finish(self):
-    #print "Algorithme finish"
+    pass
   def parseFileToInit(self,fileName):
-    #print "Algorithme parseFileToInit"
+    pass
 
   # Fonctions qui ne changent pas
   def setPool(self,pool):
