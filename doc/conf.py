@@ -58,7 +58,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ADAO'
-copyright = u'2008-2011, EDF R&D, J.-P. Argaud, A. Ribes'
+copyright = u'2008-2011, EDF R&D, J.-P. Argaud'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -193,7 +193,7 @@ latex_font_size = '10pt'
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'ADAO.tex', u'ADAO Documentation',
-   u'Jean-Philippe Argaud, André Ribes', 'manual'),
+   u'Jean-Philippe Argaud', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
