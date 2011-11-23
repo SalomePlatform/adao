@@ -4,7 +4,7 @@ ADAO module documentation
 ================================================================================
 
 The ADAO module provides **data assimilation** features in SALOME context. It is
-based on usage on other SALOME modules, namely YACS and EFICAS, and on an
+based on usage of other SALOME modules, namely YACS and EFICAS, and on an
 extensible generic underlying data assimilation library.
 
 Briefly stated, Data Assimilation is a methodological framework to compute the
