@@ -786,7 +786,7 @@ if __name__ == "__main__":
         print "Action sur la variable observée, étape :",i
         ADD.get('Analysis').store( [i, i, i] )
     print
-    
+
     print "Mise en debug et hors debug"
     print "Nombre d'analyses  :", ADD.get("Analysis").stepnumber()
     ADD.setDebug()
