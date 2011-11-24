@@ -64,10 +64,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(HXb).flatten().T
         #
-        # Calcul du préconditionnement
-        # ----------------------------
-	# Bdemi = numpy.linalg.cholesky(B)
-        #
         # Calcul de l'innovation
         # ----------------------
         d  = Y - HXb
@@ -129,8 +125,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if Parameters.has_key("Minimizer") and (Parameters["Minimizer"] in MinimizerList):
             Minimizer = str( Parameters["Minimizer"] )
         else:
-            logging.warning("%s Minimiseur inconnu ou non fourni, remplacé par la valeur par défaut"%self._name)
             Minimizer = "LBFGSB"
+            logging.warning("%s Unknown or undefined minimizer, replaced by the default one \"%s\""%(self._name,Minimizer))
         logging.debug("%s Minimiseur utilisé = %s"%(self._name, Minimizer))
         if Parameters.has_key("MaximumNumberOfSteps") and (Parameters["MaximumNumberOfSteps"] > -1):
             maxiter = int( Parameters["MaximumNumberOfSteps"] )
