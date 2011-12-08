@@ -74,10 +74,8 @@ def getSelectedItem(salomeStudyId=-100):
     studyEditor = salome.kernel.studyedit.getStudyEditor()
     item = None
     listEntries=salome.sg.getAllSelected()
-    print listEntries
     if len(listEntries) >= 1:
         entry = listEntries[0]
-        print entry
         item = studyEditor.study.FindObjectID( entry )
     return item
 
