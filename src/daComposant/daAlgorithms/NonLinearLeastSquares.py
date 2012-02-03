@@ -39,12 +39,13 @@ else:
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self)
-        self._name = "3DVAR"
+        self._name = "NONLINEARLEASTSQUARES"
         logging.debug("%s Initialisation"%self._name)
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
-        Calcul de l'estimateur 3D-VAR
+        Calcul de l'estimateur moindres carrés pondérés non linéaires
+        (assimilation variationnelle sans ébauche)
         """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
@@ -75,10 +76,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversion appellée dans les fonction-coût et gradient
         # -------------------------------------------------------------------
-        if B is not None:
-            BI = B.I
-        elif Parameters["B_scalar"] is not None:
-            BI = 1.0 / Parameters["B_scalar"]
+        # if B is not None:
+        #     BI = B.I
+        # elif Parameters["B_scalar"] is not None:
+        #     BI = 1.0 / Parameters["B_scalar"]
         #
         if R is not None:
             RI = R.I
@@ -92,7 +93,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.info("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
             _HX = Hm( _X )
             _HX = numpy.asmatrix(_HX).flatten().T
-            Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
+            Jb  = 0.
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
             logging.info("%s CostFunction Jb = %s"%(self._name, Jb))
@@ -109,7 +110,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.info("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
             _HX     = Hm( _X )
             _HX     = numpy.asmatrix(_HX).flatten().T
-            GradJb  = BI * (_X - Xb)
+            GradJb  = 0.
             GradJo  = - Ht( (_X, RI * (Y - _HX)) )
             GradJ   = numpy.asmatrix( GradJb ).flatten().T + numpy.asmatrix( GradJo ).flatten().T
             logging.debug("%s GradientOfCostFunction GradJb = %s"%(self._name, numpy.asmatrix( GradJb ).flatten()))

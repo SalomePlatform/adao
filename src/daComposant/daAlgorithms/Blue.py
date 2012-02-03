@@ -63,6 +63,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de l'innovation et de l'analyse
         # --------------------------------------
+        if Y.size != HXb.size:
+            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+        if max(Y.shape) != max(HXb.shape):
+            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
         logging.debug("%s Innovation d = %s"%(self._name, d))
         Xa = Xb + K*d
