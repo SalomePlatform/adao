@@ -77,6 +77,13 @@ class AssimilationStudy:
         self.__StoredDiagnostics = {}
         self.__StoredInputs      = {}
         #
+        self.__B_scalar = None
+        self.__R_scalar = None
+        self.__Q_scalar = None
+        self.__Parameters["B_scalar"] = None
+        self.__Parameters["R_scalar"] = None
+        self.__Parameters["Q_scalar"] = None
+        #
         # Variables temporaires
         self.__algorithm         = {}
         self.__algorithmFile     = None
@@ -121,17 +128,28 @@ class AssimilationStudy:
         return 0
     
     def setBackgroundError(self,
-            asCovariance = None,
-            toBeStored   = False,
+            asCovariance  = None,
+            asEyeByScalar = None,
+            toBeStored    = False,
             ):
         """
         Permet de définir la covariance des erreurs d'ébauche :
         - asCovariance : entrée des données, comme une matrice compatible avec
           le constructeur de numpy.matrix
+        - asEyeByScalar : entrée des données comme un seul scalaire de variance,
+          multiplicatif d'une matrice de corrélation identité, aucune matrice
+          n'étant donc explicitement à donner
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        self.__B  = numpy.matrix( asCovariance, numpy.float )
+        if asEyeByScalar is not None:
+            self.__B_scalar = float(asEyeByScalar)
+            self.__B        = None
+        else:
+            self.__B_scalar = None
+            self.__B  = numpy.matrix( asCovariance, numpy.float )
+        #
+        self.__Parameters["B_scalar"] = self.__B_scalar
         if toBeStored:
             self.__StoredInputs["BackgroundError"] = self.__B
         return 0
@@ -167,17 +185,28 @@ class AssimilationStudy:
         return 0
 
     def setObservationError(self,
-            asCovariance = None,
-            toBeStored   = False,
+            asCovariance  = None,
+            asEyeByScalar = None,
+            toBeStored    = False,
             ):
         """
         Permet de définir la covariance des erreurs d'observations :
         - asCovariance : entrée des données, comme une matrice compatible avec
           le constructeur de numpy.matrix
+        - asEyeByScalar : entrée des données comme un seul scalaire de variance,
+          multiplicatif d'une matrice de corrélation identité, aucune matrice
+          n'étant donc explicitement à donner
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        self.__R  = numpy.matrix( asCovariance, numpy.float )
+        if asEyeByScalar is not None:
+            self.__R_scalar = float(asEyeByScalar)
+            self.__R        = None
+        else:
+            self.__R_scalar = None
+            self.__R  = numpy.matrix( asCovariance, numpy.float )
+        #
+        self.__Parameters["R_scalar"] = self.__R_scalar
         if toBeStored:
             self.__StoredInputs["ObservationError"] = self.__R
         return 0
@@ -284,17 +313,28 @@ class AssimilationStudy:
         return 0
 
     def setEvolutionError(self,
-            asCovariance = None,
-            toBeStored   = False,
+            asCovariance  = None,
+            asEyeByScalar = None,
+            toBeStored    = False,
             ):
         """
         Permet de définir la covariance des erreurs de modèle :
         - asCovariance : entrée des données, comme une matrice compatible avec
           le constructeur de numpy.matrix
+        - asEyeByScalar : entrée des données comme un seul scalaire de variance,
+          multiplicatif d'une matrice de corrélation identité, aucune matrice
+          n'étant donc explicitement à donner
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        self.__Q  = numpy.matrix( asCovariance, numpy.float )
+        if asEyeByScalar is not None:
+            self.__Q_scalar = float(asEyeByScalar)
+            self.__Q        = None
+        else:
+            self.__Q_scalar = None
+            self.__Q  = numpy.matrix( asCovariance, numpy.float )
+        #
+        self.__Parameters["Q_scalar"] = self.__Q_scalar
         if toBeStored:
             self.__StoredInputs["EvolutionError"] = self.__Q
         return 0
@@ -308,7 +348,7 @@ class AssimilationStudy:
         Permet de définir la valeur initiale du vecteur X contenant toutes les
         variables de contrôle, i.e. les paramètres ou l'état dont on veut
         estimer la valeur pour obtenir les observations. C'est utile pour un
-        algorithme itératif/incrémental
+        algorithme itératif/incrémental.
         - asVector : entrée des données, comme un vecteur compatible avec le
           constructeur de numpy.matrix.
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
@@ -326,7 +366,7 @@ class AssimilationStudy:
         Permet de sélectionner l'algorithme à utiliser pour mener à bien l'étude
         d'assimilation. L'argument est un champ caractère se rapportant au nom
         d'un fichier contenu dans "../daAlgorithms" et réalisant l'opération
-        d'assimilation sur les arguments (Xb,Y,H,R,B,Xa).
+        d'assimilation sur les arguments fixes.
         """
         if choice is None:
             raise ValueError("Error: algorithm choice has to be given")
@@ -365,9 +405,8 @@ class AssimilationStudy:
         dictionnaire.
         """
         if asDico is not None:
-            self.__Parameters = dict( asDico )
-        else:
-            self.__Parameters = {}
+            self.__Parameters.update( dict( asDico ) )
+        #
         self.__StoredInputs["AlgorithmParameters"] = self.__Parameters
         return 0
 
@@ -430,13 +469,19 @@ class AssimilationStudy:
             else:                             __Y_shape = self.__Y.shape()
         else: raise TypeError("Y has no attribute of shape: problem !")
         #
-        if self.__B is None:                  __B_shape = (0,0)
+        if self.__B is None and self.__B_scalar is None:
+            __B_shape = (0,0)
+        elif self.__B is None and self.__B_scalar is not None:
+            __B_shape = (max(__Xb_shape),max(__Xb_shape))
         elif hasattr(self.__B,"shape"):
             if type(self.__B.shape) is tuple: __B_shape = self.__B.shape
             else:                             __B_shape = self.__B.shape()
         else: raise TypeError("B has no attribute of shape: problem !")
         #
-        if self.__R is None:                  __R_shape = (0,0)
+        if self.__R is None and self.__R_scalar is None:
+            __R_shape = (0,0)
+        elif self.__R is None and self.__R_scalar is not None:
+            __R_shape = (max(__Y_shape),max(__Y_shape))
         elif hasattr(self.__R,"shape"):
             if type(self.__R.shape) is tuple: __R_shape = self.__R.shape
             else:                             __R_shape = self.__R.shape()
