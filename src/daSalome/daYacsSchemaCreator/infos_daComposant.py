@@ -112,3 +112,7 @@ OptDict = {}
 OptDict["UserPostAnalysis"]   = ["String", "Script"]
 OptDefaultDict = {}
 OptDefaultDict["UserPostAnalysis"]   = "Script"
+
+
+# Observers
+ObserversList = ["CostFunctionJ","CostFunctionJb","CostFunctionJo","GradientOfCostFunctionJ","GradientOfCostFunctionJb","GradientOfCostFunctionJo","CurrentState","Analysis","Innovation","SigmaObs2","SigmaBck2","OMA","OMB","BMA","CovarianceAPosteriori"]
