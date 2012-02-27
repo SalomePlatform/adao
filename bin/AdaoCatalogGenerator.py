@@ -93,7 +93,7 @@ assim_data_choice = """
 
 observers_choice = """
                                        ${var_name} = BLOC (condition=" '${var_name}' in set(SELECTION) ",
-                                                      FREQUENCY = SIMP(statut = "o", typ = "TXM")
+                                                           Scheduler = SIMP(statut = "f", typ = "TXM")
                                                           ),
 """
 
