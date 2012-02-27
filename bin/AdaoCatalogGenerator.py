@@ -93,7 +93,14 @@ assim_data_choice = """
 
 observers_choice = """
                                        ${var_name} = BLOC (condition=" '${var_name}' in set(SELECTION) ",
-                                                           Scheduler = SIMP(statut = "f", typ = "TXM")
+                                                           Scheduler = SIMP(statut = "f", typ = "TXM"),
+                                                           NodeType  = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("pyscript", "userfile")),
+                                                           PythonScript = BLOC (condition = " NodeType == 'pyscript' ",
+                                                                                Value = SIMP(statut = "o", typ = "TXM")
+                                                                               ),
+                                                           UserFile = BLOC (condition = " NodeType == 'userfile' ",
+                                                                            Value = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()))
+                                                                           )
                                                           ),
 """
 
