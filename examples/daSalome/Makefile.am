@@ -27,6 +27,7 @@ DATA_INST = \
 	    test003_ADAO_scripts_for_JDC.py \
 	    test004_ADAO_JDC_using_scripts.comm \
 	    test004_ADAO_scripts_for_JDC.py \
+	    test004_ADAO_JDC_Observers_using_scripts.comm \
 	    test005_ADAO_Operators.comm \
 	    test005_ADAO_scripts_for_JDC.py \
 	    test003_bis_ADAO_JDC_using_user_data_init.comm \
@@ -42,6 +43,7 @@ EXTRA_DIST = \
 	     test003_ADAO_scripts_for_JDC.py \
 	     test004_ADAO_JDC_using_scripts.comm.in \
 	     test004_ADAO_scripts_for_JDC.py \
+	     test004_ADAO_JDC_Observers_using_scripts.comm.in \
 	     test005_ADAO_Operators.comm.in \
 	     test005_ADAO_scripts_for_JDC.py \
 	     test003_bis_ADAO_JDC_using_user_data_init.comm.in \

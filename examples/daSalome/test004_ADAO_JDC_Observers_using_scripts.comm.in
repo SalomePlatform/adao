@@ -1,0 +1,47 @@
+
+ASSIMILATION_STUDY(Study_name='Test',
+                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
+                   Debug=0,
+                   Algorithm='Blue',
+                   Background=_F(INPUT_TYPE='Vector',
+                                 data=_F(FROM='Script',
+                                         SCRIPT_FILE='test004_ADAO_scripts_for_JDC.py',),),
+                   BackgroundError=_F(INPUT_TYPE='Matrix',
+                                      data=_F(FROM='Script',
+                                              SCRIPT_FILE='test004_ADAO_scripts_for_JDC.py',),),
+                   Observation=_F(INPUT_TYPE='Vector',
+                                  data=_F(FROM='Script',
+                                          SCRIPT_FILE='test004_ADAO_scripts_for_JDC.py',),),
+                   ObservationError=_F(INPUT_TYPE='Matrix',
+                                       data=_F(FROM='Script',
+                                               SCRIPT_FILE='test004_ADAO_scripts_for_JDC.py',),),
+                   ObservationOperator=_F(INPUT_TYPE='Matrix',
+                                          data=_F(FROM='Script',
+                                                  SCRIPT_FILE='test004_ADAO_scripts_for_JDC.py',),),
+                   UserPostAnalysis=_F(FROM='String',
+                                       STRING=
+"""import numpy
+Xa = ADD.get("Analysis").valueserie(-1)
+print
+print "Size of Analysis = %i"%len(Xa)
+print "Min, mean, max   = %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa))
+print
+""",),
+                   Observers=_F(SELECTION='Analysis',
+                                Analysis_data=_F(NodeType='pyscript',
+                                                 Value=
+"""print "  ---> Mise en oeuvre de l'observer : affichage de la valeur courante"
+        print "       var  =",var.valueserie(-1)
+        print "       info =",info
+        #
+        import Gnuplot
+        gp = Gnuplot.Gnuplot()
+        gp('set style data lines')
+        gp('set title  "'+str(info)+'"')
+        gp.plot( Gnuplot.Data( var.valueserie(-1) ) )
+        global numero
+        numero += 1
+        filename = "image_%02i.ps"%numero
+        print "       sauvegarde image \"%s\""%filename
+        gp.hardcopy(filename=filename, color=1)
+""",),),);
