@@ -119,6 +119,51 @@ def check_study(study_config):
         logging.fatal("File is %s" % check_file_name)
         sys.exit(1)
 
+  # Check observers
+  if "Observers" in study_config.keys():
+    for obs_var in study_config["Observers"]:
+      # Check du type
+      if not isinstance(study_config["Observers"][obs_var], type({})):
+        logging.fatal("An observer description has to be a Python dictionary")
+        logging.fatal("Observer is %s" % obs_var)
+        sys.exit(1)
+      if "nodetype" not in study_config["Observers"][obs_var].keys():
+        logging.fatal("An observer description must provide a nodetype")
+        logging.fatal("Observer is %s" % obs_var)
+        sys.exit(1)
+      nodetype = study_config["Observers"][obs_var]["nodetype"]
+      if not isinstance(study_config["Observers"][obs_var]["nodetype"], type("")):
+        logging.fatal("An observer nodetype description must be a string")
+        logging.fatal("Observer is %s" % obs_var)
+        sys.exit(1)
+      if nodetype != "pyscript" and nodetype != "userfile":
+        logging.fatal("An observer nodetype must be equal to 'pyscript' or 'userfile'")
+        logging.fatal("Observer is %s" % obs_var)
+        sys.exit(1)
+      if nodetype == "pyscript":
+        if "pyscript" not in study_config["Observers"][obs_var].keys():
+          logging.fatal("An observer with nodetype pyscript must provide a pyscript")
+          logging.fatal("Observer is %s" % obs_var)
+          sys.exit(1)
+        if not isinstance(study_config["Observers"][obs_var]["pyscript"], type("")):
+          logging.fatal("An observer pyscript description must be a string")
+          logging.fatal("Observer is %s" % obs_var)
+          sys.exit(1)
+      if nodetype == "userfile":
+        if "userfile" not in study_config["Observers"][obs_var].keys():
+          logging.fatal("An observer with nodetype userfileuserfilemust provide a pyscript")
+          logging.fatal("Observer is %s" % obs_var)
+          sys.exit(1)
+        if not isinstance(study_config["Observers"][obs_var]["userfile"], type("")):
+          logging.fatal("An observer userfile description must be a string")
+          logging.fatal("Observer is %s" % obs_var)
+          sys.exit(1)
+      if "scheduler" in study_config["Observers"][obs_var].keys():
+        if not isinstance(study_config["Observers"][obs_var]["scheduler"], type("")):
+          logging.fatal("An observer scheduler description must be a string")
+          logging.fatal("Observer is %s" % obs_var)
+          sys.exit(1)
+
 def check_variables(name, study_config):
 
   if name not in study_config.keys():
