@@ -28,6 +28,7 @@ import threading
 from daCore.AssimilationStudy import AssimilationStudy
 from daYacsIntegration import daStudy
 
+
 class OptimizerHooks:
 
   def __init__(self, optim_algo):
