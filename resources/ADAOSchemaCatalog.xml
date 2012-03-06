@@ -325,4 +325,74 @@ user_script_module = sys.modules[module_name]
     <outport name="init_data" type="pyobj"/>
   </inline>
 
+  <inline name="ReadForSwitchNode">
+    <script><code><![CDATA[
+print "Entering in ReadForSwitch"
+switch_value = -1
+for param in data["specificParameters"]:
+  if param["name"] == "switch_value":
+    switch_value = int(param["value"])
+]]></code></script>
+    <inport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="switch_value" type="int"/>
+  </inline>
+
+  <inline name="ExtractDataNode">
+    <script><code><![CDATA[
+import pickle
+print "Entering in ExtractData"
+var = None
+info = None
+for param in data["specificParameters"]:
+  if param["name"] == "var":
+    var = pickle.loads(param["value"])
+  if param["name"] == "info":
+    info = pickle.loads(param["value"])
+]]></code></script>
+    <inport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="var" type="pyobj"/>
+    <outport name="info" type="pyobj"/>
+  </inline>
+
+  <inline name="ObservationNodeString">
+    <script><code><![CDATA[
+print "Entering in Observation"
+
+]]></code></script>
+    <inport name="var" type="pyobj"/>
+    <inport name="info" type="pyobj"/>
+  </inline>
+
+  <inline name="ObservationNodeFile">
+    <script><code><![CDATA[
+print "Entering in Observation"
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+sys.path.insert(0,filepath)
+# Import script
+__import__(module_name)
+
+]]></code></script>
+    <inport name="var"    type="pyobj"/>
+    <inport name="info"   type="pyobj"/>
+    <inport name="script" type="string"/>
+  </inline>
+
+  <inline name="EndObservationNode">
+    <script><code><![CDATA[
+# Create a fake output object.
+# An observer is always successful.
+output = {}
+output["outputValues"]        = [[[[]]]]
+output["specificOutputInfos"] = []
+output["returnCode"]          = 0
+output["errorMessage"]        = ""
+]]></code></script>
+    <outport name="output" type="SALOME_TYPES/ParametricOutput"/>
+  </inline>
 </proc>

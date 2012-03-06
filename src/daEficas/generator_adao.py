@@ -268,9 +268,12 @@ class AdaoGenerator(PythonGenerator):
         self.add_observer_in_dict(observer, observers)
 
     # Write observers in the python command file
+    number = 1
     self.text_da += "observers = {}\n"
     for observer in observers.keys():
+      number += 1
       self.text_da += "observers[\"" + observer + "\"] = {}\n"
+      self.text_da += "observers[\"" + observer + "\"][\"number\"] = " + str(number) + "\n"
       self.text_da += "observers[\"" + observer + "\"][\"nodetype\"] = \"" + observers[observer]["nodetype"] + "\"\n"
       if observers[observer]["nodetype"] == "pyscript":
         self.text_da += "observers[\"" + observer + "\"][\"pyscript\"] = \"\"\"" + observers[observer]["script"] + "\"\"\"\n"
