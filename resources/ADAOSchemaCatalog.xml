@@ -164,6 +164,16 @@ for name, size in zip(InputVariablesNames, InputVariablesSizes):
 for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
   assim_study.setOutputVariable(name, size)
 
+if has_observers:
+  # Adding observers to the study
+  for observer_name in observers.keys():
+    scheduler = ""
+    info = ""
+    if "scheduler" in observers[observer_name].keys():
+      scheduler = observers[observer_name]["scheduler"]
+    if "info" in observers[observer_name].keys():
+      scheduler = observers[observer_name]["info"]
+    assim_study.addObserver(observer_name, scheduler, info)
 Study = assim_study
 ]]>
 

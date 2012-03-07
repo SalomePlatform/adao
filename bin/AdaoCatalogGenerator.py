@@ -95,6 +95,7 @@ observers_choice = """
                                        ${var_name} = BLOC (condition=" '${var_name}' in set(SELECTION) ",
                                                   ${var_name}_data = FACT(statut = "o",
                                                              Scheduler = SIMP(statut = "f", typ = "TXM"),
+                                                             Info      = SIMP(statut = "f", typ = "TXM"),
                                                              NodeType  = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("pyscript", "userfile")),
                                                              PythonScript = BLOC (condition = " NodeType == 'pyscript' ",
                                                                                   Value = SIMP(statut = "o", typ = "TXM")

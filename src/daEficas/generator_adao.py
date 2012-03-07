@@ -304,3 +304,7 @@ class AdaoGenerator(PythonGenerator):
     scheduler_key_name = observer_eficas_name + "Scheduler"
     if scheduler_key_name in self.dictMCVal.keys():
       observers[observer]["scheduler"] = self.dictMCVal[scheduler_key_name]
+    # Info
+    info_key_name = observer_eficas_name + "Info"
+    if info_key_name in self.dictMCVal.keys():
+      observers[observer]["info"] = self.dictMCVal[info_key_name]

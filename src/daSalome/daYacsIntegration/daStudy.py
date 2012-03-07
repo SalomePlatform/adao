@@ -42,6 +42,7 @@ class daStudy:
     self.OutputVariables = {}
     self.InputVariablesOrder = []
     self.OutputVariablesOrder = []
+    self.observers_dict = {}
 
     self.debug = debug
     if self.debug:
@@ -150,3 +151,10 @@ class daStudy:
     elif self.ObservationOperatorType[Name] == "Function":
       self.FunctionObservationOperator[Name] = ObservationOperator
 
+  def addObserver(self, name, scheduler, info):
+    observers_dict[name] = {}
+    observers_dict[name]["scheduler"] = scheduler
+    observers_dict[name]["info"] = info
+
+  def getObservers(self):
+    return self.observers_dict
