@@ -31,17 +31,17 @@ print
                                 Analysis_data=_F(NodeType='pyscript',
                                                  Value=
 """print "  ---> Mise en oeuvre de l'observer : affichage de la valeur courante"
-        print "       var  =",var.valueserie(-1)
-        print "       info =",info
-        #
-        import Gnuplot
-        gp = Gnuplot.Gnuplot()
-        gp('set style data lines')
-        gp('set title  "'+str(info)+'"')
-        gp.plot( Gnuplot.Data( var.valueserie(-1) ) )
-        global numero
-        numero += 1
-        filename = "image_%02i.ps"%numero
-        print "       sauvegarde image \"%s\""%filename
-        gp.hardcopy(filename=filename, color=1)
+print "       var  =",var.valueserie(-1)
+print "       info =",info
+#
+import Gnuplot
+gp = Gnuplot.Gnuplot()
+gp('set style data lines')
+gp('set title  "'+str(info)+'"')
+gp.plot( Gnuplot.Data( var.valueserie(-1) ) )
+global numero
+numero += 1
+filename = "image_%02i.ps"%numero
+print "       sauvegarde image %s" % filename
+gp.hardcopy(filename=filename, color=1)
 """,),),);
