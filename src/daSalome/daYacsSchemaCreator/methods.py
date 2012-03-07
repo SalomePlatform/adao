@@ -89,6 +89,27 @@ def create_yacs_proc(study_config):
 
   proc.edAddChild(CAS_node)
 
+
+  # Adding an observer init node if an user defines some
+  factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
+  init_observers_node = factory_init_observers_node.cloneNode("SetObservers")
+  if "Observers" in study_config.keys():
+    node_script = init_observers_node.getScript()
+    node_script += "has_observers = True\n"
+    node_script += "observers = " + str(study_config["Observers"]) + "\n"
+    init_observers_node.setScript(node_script)
+    proc.edAddChild(init_observers_node)
+    proc.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    proc.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+  else:
+    node_script = init_observers_node.getScript()
+    node_script += "has_observers = False\n"
+    node_script += "observers = \"\"\n"
+    init_observers_node.setScript(node_script)
+    proc.edAddChild(init_observers_node)
+    proc.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    proc.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+
   # Step 0.5: Find if there is a user init node
   init_config = {}
   init_config["Target"] = []

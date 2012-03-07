@@ -175,6 +175,8 @@ Study = assim_study
     <inport name="InputVariablesSizes" type="intvec"/>
     <inport name="OutputVariablesNames" type="stringvec"/>
     <inport name="OutputVariablesSizes" type="intvec"/>
+    <inport name="has_observers" type="bool"/>
+    <inport name="observers" type="pyobj"/>
     <outport name="Study" type="pyobj"/>
   </inline>
 
@@ -394,5 +396,13 @@ output["returnCode"]          = 0
 output["errorMessage"]        = ""
 ]]></code></script>
     <outport name="output" type="SALOME_TYPES/ParametricOutput"/>
+  </inline>
+
+  <inline name="SetObserversNode">
+    <script><code><![CDATA[
+print "Setting observers"
+]]></code></script>
+    <outport name="has_observers" type="bool"/>
+    <outport name="observers" type="pyobj"/>
   </inline>
 </proc>
