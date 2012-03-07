@@ -152,9 +152,9 @@ class daStudy:
       self.FunctionObservationOperator[Name] = ObservationOperator
 
   def addObserver(self, name, scheduler, info):
-    observers_dict[name] = {}
-    observers_dict[name]["scheduler"] = scheduler
-    observers_dict[name]["info"] = info
+    self.observers_dict[name] = {}
+    self.observers_dict[name]["scheduler"] = scheduler
+    self.observers_dict[name]["info"] = info
 
   def getObservers(self):
     return self.observers_dict

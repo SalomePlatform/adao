@@ -286,6 +286,12 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
       # Set ObservationOperator
       self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
 
+      # Set Observers
+      for observer_name in self.da_study.observers_dict.keys():
+        if observers_dict[observer_name]["scheduler"] != "":
+          self.ADD.setDataObserver(observer_name, HookFunction=self.obs, Scheduler = observers_dict[observer_name]["scheduler"], HookParameters = observer_name)
+        else:
+          self.ADD.setDataObserver(observer_name, HookFunction=self.obs, HookParameters = observer_name)
 
     # Start Assimilation Study
     #print "ADD analyze"
@@ -293,6 +299,11 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
     # Assimilation Study is finished
     self.pool.destroyAll()
+
+  def obs(self, var, info):
+    print "Hook observer called with:"
+    print "var %s" % var
+    print "inof %s" % info
 
   def getAlgoResult(self):
     #print "getAlgoResult"
