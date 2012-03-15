@@ -169,11 +169,12 @@ if has_observers:
   for observer_name in observers.keys():
     scheduler = ""
     info = ""
+    number = str(observers[observer_name]["number"])
     if "scheduler" in observers[observer_name].keys():
       scheduler = observers[observer_name]["scheduler"]
     if "info" in observers[observer_name].keys():
-      scheduler = observers[observer_name]["info"]
-    assim_study.addObserver(observer_name, scheduler, info)
+      info = observers[observer_name]["info"]
+    assim_study.addObserver(observer_name, scheduler, info, number)
 Study = assim_study
 ]]>
 
@@ -353,6 +354,7 @@ for param in data["specificParameters"]:
   <inline name="ExtractDataNode">
     <script><code><![CDATA[
 import pickle
+from daCore.AssimilationStudy import AssimilationStudy
 print "Entering in ExtractData"
 var = None
 info = None
@@ -360,7 +362,7 @@ for param in data["specificParameters"]:
   if param["name"] == "var":
     var = pickle.loads(param["value"])
   if param["name"] == "info":
-    info = pickle.loads(param["value"])
+    info = param["value"]
 ]]></code></script>
     <inport name="data" type="SALOME_TYPES/ParametricInput"/>
     <outport name="var" type="pyobj"/>
@@ -379,15 +381,7 @@ print "Entering in Observation"
   <inline name="ObservationNodeFile">
     <script><code><![CDATA[
 print "Entering in Observation"
-# Get file path and filename
-import sys
-import os
-filepath = os.path.dirname(script)
-filename = os.path.basename(script)
-module_name = os.path.splitext(filename)[0]
-sys.path.insert(0,filepath)
-# Import script
-__import__(module_name)
+execfile(script)
 
 ]]></code></script>
     <inport name="var"    type="pyobj"/>
