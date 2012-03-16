@@ -89,6 +89,27 @@ def create_yacs_proc(study_config):
 
   proc.edAddChild(CAS_node)
 
+
+  # Adding an observer init node if an user defines some
+  factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
+  init_observers_node = factory_init_observers_node.cloneNode("SetObservers")
+  if "Observers" in study_config.keys():
+    node_script = init_observers_node.getScript()
+    node_script += "has_observers = True\n"
+    node_script += "observers = " + str(study_config["Observers"]) + "\n"
+    init_observers_node.setScript(node_script)
+    proc.edAddChild(init_observers_node)
+    proc.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    proc.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+  else:
+    node_script = init_observers_node.getScript()
+    node_script += "has_observers = False\n"
+    node_script += "observers = \"\"\n"
+    init_observers_node.setScript(node_script)
+    proc.edAddChild(init_observers_node)
+    proc.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    proc.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+
   # Step 0.5: Find if there is a user init node
   init_config = {}
   init_config["Target"] = []
@@ -241,77 +262,128 @@ def create_yacs_proc(study_config):
   compute_bloc = runtime.createBloc("compute_bloc")
   proc.edAddChild(compute_bloc)
   proc.edAddCFLink(CAS_node, compute_bloc)
+  # We use an optimizer loop
+  name = "Execute" + study_config["Algorithm"]
+  algLib = "daYacsIntegration.py"
+  factoryName = "AssimilationAlgorithm_asynch"
+  optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
+  compute_bloc.edAddChild(optimizer_node)
+  proc.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
+  # Check if we have a python script for OptimizerLoopNode
+  data_config = study_config["ObservationOperator"]
+  opt_script_node = None
+  if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
+    # Get script
+    FunctionDict = data_config["Data"]
+    script_filename = ""
+    for FunctionName in FunctionDict["Function"]:
+      # We currently support only one file
+      script_filename = FunctionDict["Script"][FunctionName]
+      break
 
-  if AlgoType[study_config["Algorithm"]] == "Optim":
-    # We use an optimizer loop
-    name = "Execute" + study_config["Algorithm"]
-    algLib = "daYacsIntegration.py"
-    factoryName = "AssimilationAlgorithm_asynch"
-    optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
-    compute_bloc.edAddChild(optimizer_node)
-    proc.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
-
-    # Check if we have a python script for OptimizerLoopNode
-    data_config = study_config["ObservationOperator"]
-    if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
-      # Get script
-      FunctionDict = data_config["Data"]
-      script_filename = ""
-      for FunctionName in FunctionDict["Function"]:
-        # We currently support only one file
-        script_filename = FunctionDict["Script"][FunctionName]
-        break
-
-      # We create a new pyscript node
-      opt_script_node = runtime.createScriptNode("", "FunctionNode")
-      if repertory:
-        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
-      try:
-        script_str= open(script_filename, 'r')
-      except:
-        logging.fatal("Exception in opening function script file : " + script_filename)
-        traceback.print_exc()
-        sys.exit(1)
-      node_script  = "#-*-coding:iso-8859-1-*-\n"
-      node_script += "import sys, os \n"
-      if base_repertory != "":
-        node_script += "filepath = \"" + base_repertory + "\"\n"
-      else:
-        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
-      node_script += "sys.path.insert(0,os.path.dirname(filepath))\n"
-      node_script += script_str.read()
-      opt_script_node.setScript(node_script)
-      opt_script_node.edAddInputPort("computation", t_param_input)
-      opt_script_node.edAddOutputPort("result", t_param_output)
-
-      # Add it
-      computation_bloc = runtime.createBloc("computation_bloc")
-      optimizer_node.edSetNode(computation_bloc)
-      computation_bloc.edAddChild(opt_script_node)
-
-      # We connect Optimizer with the script
-      proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
-      proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
-
-      # Connect node with InitUserData
-      if "ObservationOperator" in init_config["Target"]:
-        opt_node_script = opt_script_node.getScript()
-        opt_node_script = "__builtins__[\"init_data\"] = init_data\n" + opt_node_script
-        opt_script_node.setScript(opt_node_script)
-        opt_script_node.edAddInputPort("init_data", t_pyobj)
-        proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
+    # We create a new pyscript node
+    opt_script_node = runtime.createScriptNode("", "FunctionNode")
+    if repertory:
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      logging.fatal("Exception in opening function script file : " + script_filename)
+      traceback.print_exc()
+      sys.exit(1)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os \n"
+    if base_repertory != "":
+      node_script += "filepath = \"" + base_repertory + "\"\n"
     else:
-      factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
-      opt_script_node = factory_opt_script_node.cloneNode("FakeFunctionNode")
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "sys.path.insert(0,os.path.dirname(filepath))\n"
+    node_script += script_str.read()
+    opt_script_node.setScript(node_script)
+    opt_script_node.edAddInputPort("computation", t_param_input)
+    opt_script_node.edAddOutputPort("result", t_param_output)
+  else:
+    factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
+    opt_script_node = factory_opt_script_node.cloneNode("FakeFunctionNode")
 
-      # Add it
-      computation_bloc = runtime.createBloc("computation_bloc")
-      optimizer_node.edSetNode(computation_bloc)
-      computation_bloc.edAddChild(opt_script_node)
+  # Add computation bloc
+  if "Observers" in study_config.keys():
+    execution_bloc = runtime.createBloc("Execution Bloc")
+    optimizer_node.edSetNode(execution_bloc)
 
-      # We connect Optimizer with the script
-      proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
-      proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+    # Add a node that permits to configure the switch
+    factory_read_for_switch_node = catalogAd.getNodeFromNodeMap("ReadForSwitchNode")
+    read_for_switch_node = factory_read_for_switch_node.cloneNode("ReadForSwitch")
+    execution_bloc.edAddChild(read_for_switch_node)
+    proc.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
+
+    # Add a switch
+    switch_node = runtime.createSwitch("Execution Switch")
+    execution_bloc.edAddChild(switch_node)
+    # Connect switch
+    proc.edAddDFLink(read_for_switch_node.getOutputPort("switch_value"), switch_node.edGetConditionPort())
+
+    # First case: always computation bloc
+    computation_bloc = runtime.createBloc("computation_bloc")
+    computation_bloc.edAddChild(opt_script_node)
+    switch_node.edSetNode(1, computation_bloc)
+
+    # We connect Optimizer with the script
+    proc.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_node.getInputPort("computation"))
+    proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+
+    # For each observer add a new bloc in the switch
+    observer_config = study_config["Observers"]
+    for observer_name in observer_config:
+      observer_cfg = observer_config[observer_name]
+      observer_bloc = runtime.createBloc("Observer %s" % observer_name)
+      switch_node.edSetNode(observer_cfg["number"], observer_bloc)
+
+      factory_extract_data_node = catalogAd.getNodeFromNodeMap("ExtractDataNode")
+      extract_data_node = factory_extract_data_node.cloneNode("ExtractData")
+      observer_bloc.edAddChild(extract_data_node)
+      proc.edAddDFLink(read_for_switch_node.getOutputPort("data"), extract_data_node.getInputPort("data"))
+
+      observation_node = None
+      if observer_cfg["nodetype"] == "pyscript":
+        factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeString")
+        observation_node = factory_observation_node.cloneNode("Observation")
+        node_script = observation_node.getScript()
+        node_script += observer_cfg["pyscript"]
+        observation_node.setScript(node_script)
+      else:
+        factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeFile")
+        observation_node = factory_observation_node.cloneNode("Observation")
+        if repertory:
+          observation_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(observer_cfg["userfile"])))
+        else:
+          observation_node.getInputPort("script").edInitPy(observer_cfg["userfile"])
+      observer_bloc.edAddChild(observation_node)
+      proc.edAddDFLink(extract_data_node.getOutputPort("var"), observation_node.getInputPort("var"))
+      proc.edAddDFLink(extract_data_node.getOutputPort("info"), observation_node.getInputPort("info"))
+
+      factory_end_observation_node = catalogAd.getNodeFromNodeMap("EndObservationNode")
+      end_observation_node = factory_end_observation_node.cloneNode("EndObservation")
+      observer_bloc.edAddChild(end_observation_node)
+      proc.edAddCFLink(observation_node, end_observation_node)
+      proc.edAddDFLink(end_observation_node.getOutputPort("output"), optimizer_node.edGetPortForOutPool())
+  else:
+    computation_bloc = runtime.createBloc("computation_bloc")
+    optimizer_node.edSetNode(computation_bloc)
+    computation_bloc.edAddChild(opt_script_node)
+
+    # We connect Optimizer with the script
+    proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
+    proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+  # Connect node with InitUserData
+  if "ObservationOperator" in init_config["Target"]:
+    opt_node_script = opt_script_node.getScript()
+    opt_node_script = "__builtins__[\"init_data\"] = init_data\n" + opt_node_script
+    opt_script_node.setScript(opt_node_script)
+    opt_script_node.edAddInputPort("init_data", t_pyobj)
+    proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
 
   # Step 4: create post-processing from user configuration
   if "UserPostAnalysis" in study_config.keys():

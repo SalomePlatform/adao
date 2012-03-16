@@ -128,6 +128,7 @@ AC_CONFIG_FILES([
         examples/daSalome/test004_ADAO_JDC_using_scripts.comm
         examples/daSalome/test005_ADAO_Operators.comm
         examples/daSalome/test003_bis_ADAO_JDC_using_user_data_init.comm
+        examples/daSalome/test006_Observers.comm
         examples/daSkeletons/Makefile
         examples/daSkeletons/External_data_definition_by_scripts/Makefile
         examples/daSkeletons/External_data_definition_by_scripts/ADAO_Case.comm

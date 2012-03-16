@@ -31,7 +31,12 @@ DATA_INST = \
 	    test005_ADAO_scripts_for_JDC.py \
 	    test003_bis_ADAO_JDC_using_user_data_init.comm \
 	    test003_bis_ADAO_user_data_init.py \
-	    test003_bis_ADAO_scripts_for_JDC.py
+	    test003_bis_ADAO_scripts_for_JDC.py \
+	    test006_Observers.comm \
+	    test006_Observers_observer_with_file.py \
+	    test006_Observers_init.py \
+	    test006_Observers_Observation_Operator.py \
+	    test006_Observers_var.py
 
 examplesdasalome_DATA = ${DATA_INST}
 
@@ -46,4 +51,9 @@ EXTRA_DIST = \
 	     test005_ADAO_scripts_for_JDC.py \
 	     test003_bis_ADAO_JDC_using_user_data_init.comm.in \
 	     test003_bis_ADAO_user_data_init.py \
-	     test003_bis_ADAO_scripts_for_JDC.py
+	     test003_bis_ADAO_scripts_for_JDC.py \
+	     test006_Observers.comm.in \
+	     test006_Observers_observer_with_file.py \
+	     test006_Observers_init.py \
+	     test006_Observers_Observation_Operator.py \
+	     test006_Observers_var.py

@@ -42,6 +42,7 @@ class daStudy:
     self.OutputVariables = {}
     self.InputVariablesOrder = []
     self.OutputVariablesOrder = []
+    self.observers_dict = {}
 
     self.debug = debug
     if self.debug:
@@ -68,6 +69,7 @@ class daStudy:
 
     self.ADD.setAlgorithm(choice=self.algorithm)
     if self.algorithm_dict != None:
+      print self.algorithm_dict
       self.ADD.setAlgorithmParameters(asDico=self.algorithm_dict)
 
   def getAssimilationStudy(self):
@@ -150,3 +152,11 @@ class daStudy:
     elif self.ObservationOperatorType[Name] == "Function":
       self.FunctionObservationOperator[Name] = ObservationOperator
 
+  def addObserver(self, name, scheduler, info, number):
+    self.observers_dict[name] = {}
+    self.observers_dict[name]["scheduler"] = scheduler
+    self.observers_dict[name]["info"] = info
+    self.observers_dict[name]["number"] = number
+
+  def getObservers(self):
+    return self.observers_dict

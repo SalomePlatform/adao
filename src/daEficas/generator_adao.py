@@ -121,6 +121,8 @@ class AdaoGenerator(PythonGenerator):
       self.add_UserPostAnalysis()
     if "__ASSIMILATION_STUDY__UserDataInit__INIT_FILE" in self.dictMCVal.keys():
       self.add_init()
+    if "__ASSIMILATION_STUDY__Observers__SELECTION" in self.dictMCVal.keys():
+      self.add_observers()
 
   def add_data(self, data_name):
 
@@ -140,24 +142,24 @@ class AdaoGenerator(PythonGenerator):
       raise Exception('From Type unknown', from_type)
 
     if from_type == "String" or from_type == "Script":
-      self.text_da += data_name + "_config = {} \n"
-      self.text_da += data_name + "_config['Type'] = '" + data_type + "' \n"
-      self.text_da += data_name + "_config['From'] = '" + from_type + "' \n"
-      self.text_da += data_name + "_config['Data'] = '" + data      + "' \n"
-      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config \n"
+      self.text_da += data_name + "_config = {}\n"
+      self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
+      self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
+      self.text_da += data_name + "_config['Data'] = '" + data      + "'\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
     if from_type == "FunctionDict":
-      self.text_da += data_name + "_FunctionDict = {} \n"
-      self.text_da += data_name + "_FunctionDict['Function'] = ['Direct', 'Tangent', 'Adjoint'] \n"
-      self.text_da += data_name + "_FunctionDict['Script'] = {} \n"
-      self.text_da += data_name + "_FunctionDict['Script']['Direct'] = '"  + data + "' \n"
-      self.text_da += data_name + "_FunctionDict['Script']['Tangent'] = '" + data + "' \n"
-      self.text_da += data_name + "_FunctionDict['Script']['Adjoint'] = '" + data + "' \n"
-      self.text_da += data_name + "_config = {} \n"
-      self.text_da += data_name + "_config['Type'] = 'Function' \n"
-      self.text_da += data_name + "_config['From'] = 'FunctionDict' \n"
-      self.text_da += data_name + "_config['Data'] = " + data_name + "_FunctionDict \n"
-      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config \n"
+      self.text_da += data_name + "_FunctionDict = {}\n"
+      self.text_da += data_name + "_FunctionDict['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"
+      self.text_da += data_name + "_FunctionDict['Script'] = {}\n"
+      self.text_da += data_name + "_FunctionDict['Script']['Direct'] = '"  + data + "'\n"
+      self.text_da += data_name + "_FunctionDict['Script']['Tangent'] = '" + data + "'\n"
+      self.text_da += data_name + "_FunctionDict['Script']['Adjoint'] = '" + data + "'\n"
+      self.text_da += data_name + "_config = {}\n"
+      self.text_da += data_name + "_config['Type'] = 'Function'\n"
+      self.text_da += data_name + "_config['From'] = 'FunctionDict'\n"
+      self.text_da += data_name + "_config['Data'] = " + data_name + "_FunctionDict\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
   def add_algorithm_parameters(self):
 
@@ -167,25 +169,25 @@ class AdaoGenerator(PythonGenerator):
     data = self.dictMCVal["__ASSIMILATION_STUDY__AlgorithmParameters__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
 
     self.text_da += data_name + "_config = {} \n"
-    self.text_da += data_name + "_config['Type'] = '" + data_type + "' \n"
-    self.text_da += data_name + "_config['From'] = '" + from_type + "' \n"
-    self.text_da += data_name + "_config['Data'] = '" + data + "' \n"
-    self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config \n"
+    self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
+    self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
+    self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
+    self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
   def add_init(self):
 
       init_file_data = self.dictMCVal["__ASSIMILATION_STUDY__UserDataInit__INIT_FILE"]
       init_target_list = self.dictMCVal["__ASSIMILATION_STUDY__UserDataInit__TARGET_LIST"]
 
-      self.text_da += "Init_config = {} \n"
-      self.text_da += "Init_config['Type'] = 'Dict' \n"
-      self.text_da += "Init_config['From'] = 'Script' \n"
+      self.text_da += "Init_config = {}\n"
+      self.text_da += "Init_config['Type'] = 'Dict'\n"
+      self.text_da += "Init_config['From'] = 'Script'\n"
       self.text_da += "Init_config['Data'] = '" + init_file_data + "'\n"
       self.text_da += "Init_config['Target'] = ["
       for target in init_target_list:
         self.text_da += "'" + target + "',"
-      self.text_da += "] \n"
-      self.text_da += "study_config['UserDataInit'] = Init_config \n"
+      self.text_da += "]\n"
+      self.text_da += "study_config['UserDataInit'] = Init_config\n"
 
   def add_UserPostAnalysis(self):
 
@@ -193,16 +195,16 @@ class AdaoGenerator(PythonGenerator):
     data = ""
     if from_type == "String":
       data = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__STRING_DATA__STRING"]
-      self.text_da += "Analysis_config = {} \n"
-      self.text_da += "Analysis_config['From'] = 'String' \n"
-      self.text_da += "Analysis_config['Data'] = \"\"\"" + data + "\"\"\" \n"
-      self.text_da += "study_config['UserPostAnalysis'] = Analysis_config \n"
+      self.text_da += "Analysis_config = {}\n"
+      self.text_da += "Analysis_config['From'] = 'String'\n"
+      self.text_da += "Analysis_config['Data'] = \"\"\"" + data + "\"\"\"\n"
+      self.text_da += "study_config['UserPostAnalysis'] = Analysis_config\n"
     elif from_type == "Script":
       data = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__SCRIPT_DATA__SCRIPT_FILE"]
-      self.text_da += "Analysis_config = {} \n"
-      self.text_da += "Analysis_config['From'] = 'Script' \n"
-      self.text_da += "Analysis_config['Data'] = '" + data + "' \n"
-      self.text_da += "study_config['UserPostAnalysis'] = Analysis_config \n"
+      self.text_da += "Analysis_config = {}\n"
+      self.text_da += "Analysis_config['From'] = 'Script'\n"
+      self.text_da += "Analysis_config['Data'] = '" + data + "'\n"
+      self.text_da += "study_config['UserPostAnalysis'] = Analysis_config\n"
     else:
       raise Exception('From Type unknown', from_type)
 
@@ -221,16 +223,16 @@ class AdaoGenerator(PythonGenerator):
       else:
         sizes = self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"]
 
-      self.text_da += "inputvariables_config = {} \n"
-      self.text_da += "inputvariables_config['Order'] = %s \n" % list(names)
+      self.text_da += "inputvariables_config = {}\n"
+      self.text_da += "inputvariables_config['Order'] = %s\n" % list(names)
       for name, size in zip(names, sizes):
-        self.text_da += "inputvariables_config['%s'] = %s \n" % (name,size)
-      self.text_da += "study_config['InputVariables'] = inputvariables_config \n"
+        self.text_da += "inputvariables_config['%s'] = %s\n" % (name,size)
+      self.text_da += "study_config['InputVariables'] = inputvariables_config\n"
     else:
-      self.text_da += "inputvariables_config = {} \n"
-      self.text_da += "inputvariables_config['Order'] =['adao_default'] \n"
-      self.text_da += "inputvariables_config['adao_default'] = -1 \n"
-      self.text_da += "study_config['InputVariables'] = inputvariables_config \n"
+      self.text_da += "inputvariables_config = {}\n"
+      self.text_da += "inputvariables_config['Order'] =['adao_default']\n"
+      self.text_da += "inputvariables_config['adao_default'] = -1\n"
+      self.text_da += "study_config['InputVariables'] = inputvariables_config\n"
 
     # Output variables
     if "__ASSIMILATION_STUDY__OutputVariables__NAMES" in self.dictMCVal.keys():
@@ -245,13 +247,64 @@ class AdaoGenerator(PythonGenerator):
       else:
         sizes = self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"]
 
-      self.text_da += "outputvariables_config = {} \n"
-      self.text_da += "outputvariables_config['Order'] = %s \n" % list(names)
+      self.text_da += "outputvariables_config = {}\n"
+      self.text_da += "outputvariables_config['Order'] = %s\n" % list(names)
       for name, size in zip(names, sizes):
-        self.text_da += "outputvariables_config['%s'] = %s \n" % (name,size)
-      self.text_da += "study_config['OutputVariables'] = outputvariables_config \n"
+        self.text_da += "outputvariables_config['%s'] = %s\n" % (name,size)
+      self.text_da += "study_config['OutputVariables'] = outputvariables_config\n"
     else:
-      self.text_da += "outputvariables_config = {} \n"
-      self.text_da += "outputvariables_config['Order'] = ['adao_default'] \n"
-      self.text_da += "outputvariables_config['adao_default'] = -1 \n"
-      self.text_da += "study_config['OutputVariables'] = outputvariables_config \n"
+      self.text_da += "outputvariables_config = {}\n"
+      self.text_da += "outputvariables_config['Order'] = ['adao_default']\n"
+      self.text_da += "outputvariables_config['adao_default'] = -1\n"
+      self.text_da += "study_config['OutputVariables'] = outputvariables_config\n"
+
+  def add_observers(self):
+    observers = {}
+    observer = self.dictMCVal["__ASSIMILATION_STUDY__Observers__SELECTION"]
+    if isinstance(observer, type("")):
+      self.add_observer_in_dict(observer, observers)
+    else:
+      for observer in self.dictMCVal["__ASSIMILATION_STUDY__Observers__SELECTION"]:
+        self.add_observer_in_dict(observer, observers)
+
+    # Write observers in the python command file
+    number = 1
+    self.text_da += "observers = {}\n"
+    for observer in observers.keys():
+      number += 1
+      self.text_da += "observers[\"" + observer + "\"] = {}\n"
+      self.text_da += "observers[\"" + observer + "\"][\"number\"] = " + str(number) + "\n"
+      self.text_da += "observers[\"" + observer + "\"][\"nodetype\"] = \"" + observers[observer]["nodetype"] + "\"\n"
+      if observers[observer]["nodetype"] == "pyscript":
+        self.text_da += "observers[\"" + observer + "\"][\"pyscript\"] = \"\"\"" + observers[observer]["script"] + "\"\"\"\n"
+      else:
+        self.text_da += "observers[\"" + observer + "\"][\"userfile\"] = \"" + observers[observer]["file"] + "\"\n"
+      if "scheduler" in observers[observer].keys():
+        self.text_da += "observers[\"" + observer + "\"][\"scheduler\"] = \"\"\"" + observers[observer]["scheduler"] + "\"\"\"\n"
+    self.text_da += "study_config['Observers'] = observers\n"
+
+  def add_observer_in_dict(self, observer, observers):
+    """
+      Add observer in the observers dict.
+    """
+    observers[observer] = {}
+    observers[observer]["name"] = observer
+    observer_eficas_name = "__ASSIMILATION_STUDY__Observers__" + observer + "__" + observer + "_data__"
+    # NodeType
+    node_type_key_name = observer_eficas_name + "NodeType"
+    observers[observer]["nodetype"] = self.dictMCVal[node_type_key_name]
+
+    # NodeType script/file
+    if observers[observer]["nodetype"] == "pyscript":
+      observers[observer]["script"] = self.dictMCVal[observer_eficas_name + "PythonScript__Value"]
+    else:
+      observers[observer]["file"] = self.dictMCVal[observer_eficas_name + "UserFile__Value"]
+
+    # Scheduler
+    scheduler_key_name = observer_eficas_name + "Scheduler"
+    if scheduler_key_name in self.dictMCVal.keys():
+      observers[observer]["scheduler"] = self.dictMCVal[scheduler_key_name]
+    # Info
+    info_key_name = observer_eficas_name + "Info"
+    if info_key_name in self.dictMCVal.keys():
+      observers[observer]["info"] = self.dictMCVal[info_key_name]

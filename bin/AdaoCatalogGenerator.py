@@ -91,6 +91,29 @@ assim_data_choice = """
                                                  ),
 """
 
+observers_choice = """
+                                       ${var_name} = BLOC (condition=" '${var_name}' in set(SELECTION) ",
+                                                  ${var_name}_data = FACT(statut = "o",
+                                                             Scheduler = SIMP(statut = "f", typ = "TXM"),
+                                                             Info      = SIMP(statut = "f", typ = "TXM"),
+                                                             NodeType  = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("pyscript", "userfile")),
+                                                             PythonScript = BLOC (condition = " NodeType == 'pyscript' ",
+                                                                                  Value = SIMP(statut = "o", typ = "TXM")
+                                                                                 ),
+                                                             UserFile = BLOC (condition = " NodeType == 'userfile' ",
+                                                                              Value = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()))
+                                                                             )
+                                                                      ),
+                                                          ),
+"""
+
+observers_method = """
+def F_Observers(statut) : return FACT(statut=statut,
+                                      SELECTION = SIMP(statut="o", defaut=[], typ="TXM", max="**", validators=NoRepeat(), into=(${choices})),
+${decl_choices}
+                                     )
+"""
+
 assim_study = """
 
 def F_variables(statut) : return FACT(statut=statut,
@@ -115,7 +138,8 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
                           UserDataInit        = F_Init("f"),
                           UserPostAnalysis    = F_UserPostAnalysis("f"),
                           InputVariables      = F_variables("f"),
-                          OutputVariables     = F_variables("f")
+                          OutputVariables     = F_variables("f"),
+                          Observers           = F_Observers("f")
                          )
 """
 
@@ -124,6 +148,8 @@ data_method = string.Template(data_method)
 assim_data_method = string.Template(assim_data_method)
 assim_data_choice = string.Template(assim_data_choice)
 assim_study = string.Template(assim_study)
+observers_method = string.Template(observers_method)
+observers_choice = string.Template(observers_choice)
 
 #----------- End of Templates Part ---------------#
 
@@ -222,6 +248,13 @@ for opt_name in infos.OptDict.keys():
 # Step 4: On ajoute la méthode optionnelle init
 # TODO uniformiser avec le step 3
 mem_file.write(init_method)
+
+# Step 5: Add observers
+decl_choices = ""
+for obs_var in infos.ObserversList:
+  decl_choices += observers_choice.substitute(var_name=obs_var)
+mem_file.write(observers_method.substitute(choices = infos.ObserversList,
+                                           decl_choices = decl_choices))
 
 # Final step: Add algorithm and assim_study
 algos_names = ""

@@ -102,7 +102,7 @@ class AdaoCase:
     try:
       import libYACS_Swig
       yacs_swig = libYACS_Swig.YACS_Swig()
-      yacs_swig.loadSchema(self.yacs_filename)
+      yacs_swig.loadSchema(self.yacs_filename, 1, 1)
     except:
       msg =  "Please install YACS module, error was: \n"
       msg += traceback.format_exc()

@@ -1,0 +1,51 @@
+
+ASSIMILATION_STUDY(Study_name='test_observers',
+                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
+                   Debug=0,
+                   Algorithm='3DVAR',
+                   Background=_F(INPUT_TYPE='Vector',
+                                 data=_F(FROM='Script',
+                                         SCRIPT_FILE='test006_Observers_var.py',),),
+                   BackgroundError=_F(INPUT_TYPE='Matrix',
+                                      data=_F(FROM='Script',
+                                              SCRIPT_FILE='test006_Observers_var.py',),),
+                   Observation=_F(INPUT_TYPE='Vector',
+                                  data=_F(FROM='Script',
+                                          SCRIPT_FILE='test006_Observers_var.py',),),
+                   ObservationError=_F(INPUT_TYPE='Matrix',
+                                       data=_F(FROM='Script',
+                                               SCRIPT_FILE='test006_Observers_var.py',),),
+                   ObservationOperator=_F(INPUT_TYPE='Function',
+                                          data=_F(FROM='FunctionDict',
+                                                  FUNCTIONDICT_FILE='test006_Observers_Observation_Operator.py',),),
+                   AlgorithmParameters=_F(INPUT_TYPE='Dict',
+                                          data=_F(FROM='Script',
+                                                  SCRIPT_FILE='test006_Observers_var.py',),),
+                   UserDataInit=_F(INIT_FILE='test006_Observers_init.py',
+                                   TARGET_LIST=
+                                   ('Background','BackgroundError','Observation',
+                                                 'ObservationError','AlgorithmParameters',),),
+                   Observers=_F(SELECTION=('CurrentState','CostFunctionJ',),
+                                CostFunctionJ_data=_F(NodeType='pyscript',
+                                                      Value=
+"""print "  ---> observerCost"
+print "       var  =",var.valueserie()
+print "       info =",info
+#
+import Gnuplot
+import os
+try:
+  numero
+except NameError:
+  numero = 0
+gp = Gnuplot.Gnuplot()
+gp('set style data lines')
+gp('set title  "'+str(info)+'"')
+gp.plot( Gnuplot.Data( var.valueserie() ) )
+filename = os.path.join("/tmp", "imageCost_%02i.ps"%numero)
+print "       imageCost %s"%filename
+gp.hardcopy(filename=filename, color=1)
+numero += 1
+""",),
+                                CurrentState_data=_F(NodeType='userfile',
+                                                     Value='test006_Observers_observer_with_file.py',),),);

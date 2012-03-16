@@ -164,6 +164,17 @@ for name, size in zip(InputVariablesNames, InputVariablesSizes):
 for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
   assim_study.setOutputVariable(name, size)
 
+if has_observers:
+  # Adding observers to the study
+  for observer_name in observers.keys():
+    scheduler = ""
+    info = ""
+    number = str(observers[observer_name]["number"])
+    if "scheduler" in observers[observer_name].keys():
+      scheduler = observers[observer_name]["scheduler"]
+    if "info" in observers[observer_name].keys():
+      info = observers[observer_name]["info"]
+    assim_study.addObserver(observer_name, scheduler, info, number)
 Study = assim_study
 ]]>
 
@@ -175,6 +186,8 @@ Study = assim_study
     <inport name="InputVariablesSizes" type="intvec"/>
     <inport name="OutputVariablesNames" type="stringvec"/>
     <inport name="OutputVariablesSizes" type="intvec"/>
+    <inport name="has_observers" type="bool"/>
+    <inport name="observers" type="pyobj"/>
     <outport name="Study" type="pyobj"/>
   </inline>
 
@@ -325,4 +338,75 @@ user_script_module = sys.modules[module_name]
     <outport name="init_data" type="pyobj"/>
   </inline>
 
+  <inline name="ReadForSwitchNode">
+    <script><code><![CDATA[
+print "Entering in ReadForSwitch"
+switch_value = -1
+for param in data["specificParameters"]:
+  if param["name"] == "switch_value":
+    switch_value = int(param["value"])
+]]></code></script>
+    <inport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="switch_value" type="int"/>
+  </inline>
+
+  <inline name="ExtractDataNode">
+    <script><code><![CDATA[
+import pickle
+from daCore.AssimilationStudy import AssimilationStudy
+print "Entering in ExtractData"
+var = None
+info = None
+for param in data["specificParameters"]:
+  if param["name"] == "var":
+    var = pickle.loads(param["value"])
+  if param["name"] == "info":
+    info = param["value"]
+]]></code></script>
+    <inport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="var" type="pyobj"/>
+    <outport name="info" type="pyobj"/>
+  </inline>
+
+  <inline name="ObservationNodeString">
+    <script><code><![CDATA[
+print "Entering in Observation"
+
+]]></code></script>
+    <inport name="var" type="pyobj"/>
+    <inport name="info" type="pyobj"/>
+  </inline>
+
+  <inline name="ObservationNodeFile">
+    <script><code><![CDATA[
+print "Entering in Observation"
+execfile(script)
+
+]]></code></script>
+    <inport name="var"    type="pyobj"/>
+    <inport name="info"   type="pyobj"/>
+    <inport name="script" type="string"/>
+  </inline>
+
+  <inline name="EndObservationNode">
+    <script><code><![CDATA[
+# Create a fake output object.
+# An observer is always successful.
+output = {}
+output["outputValues"]        = [[[[]]]]
+output["specificOutputInfos"] = []
+output["returnCode"]          = 0
+output["errorMessage"]        = ""
+]]></code></script>
+    <outport name="output" type="SALOME_TYPES/ParametricOutput"/>
+  </inline>
+
+  <inline name="SetObserversNode">
+    <script><code><![CDATA[
+print "Setting observers"
+]]></code></script>
+    <outport name="has_observers" type="bool"/>
+    <outport name="observers" type="pyobj"/>
+  </inline>
 </proc>
