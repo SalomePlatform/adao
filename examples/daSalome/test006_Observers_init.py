@@ -20,6 +20,7 @@
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 import numpy
+numpy.random.seed(1000)
 
 def FunctionH( X ):
   return H * X
