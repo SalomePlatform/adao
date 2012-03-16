@@ -4,6 +4,12 @@
 A brief introduction to Data Assimilation
 ================================================================================
 
+.. index:: single: Data Assimilation
+.. index:: single: true state
+.. index:: single: observation
+.. index:: single: a priori
+
+
 **Data Assimilation** is a general framework for computing the optimal estimate
 of the true state of a system, over time if necessary. It uses values obtained
 both from observations and *a priori* models, including information about their
@@ -25,6 +31,8 @@ references allow `Going further in the data assimilation framework`_.
 
 Fields reconstruction or measures interpolation
 -----------------------------------------------
+
+.. index:: single: parameters identification
 
 Fields reconstruction consists in finding, from a restricted set of real
 measures, the physical field which is the most *consistent* with these measures.
@@ -54,6 +62,8 @@ time steps.
 Parameters identification or calibration
 ----------------------------------------
 
+.. index:: single: fields reconstruction
+
 The identification of parameters by data assimilation is a form of calibration
 which uses both the measurement and an *a priori* estimation (called the
 "*background*") of the state that one seeks to identify, as well as a
@@ -74,6 +84,11 @@ function.
 
 Simple description of the data assimilation framework
 -----------------------------------------------------
+
+.. index:: single: background
+.. index:: single: background error covariances
+.. index:: single: observation error covariances
+.. index:: single: covariances
 
 We can write these features in a simple manner. By default, all variables are
 vectors, as there are several parameters to readjust.
@@ -104,7 +119,7 @@ that:
 
 The errors represented here are not only those from observation, but also from
 the simulation. We can always consider that these errors are of zero mean. We
-can then define a matrix :math:`\mathbf{R}` of the observation error covariance
+can then define a matrix :math:`\mathbf{R}` of the observation error covariances
 by:
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]

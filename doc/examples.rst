@@ -266,37 +266,14 @@ Adding parameters to control the data assimilation algorithm
 One can add some optional parameters to control the data assimilation algorithm
 calculation. This is done by using the "*AlgorithmParameters*" keyword in the
 definition of the ADAO case, which is an keyword of the ASSIMILATION_STUDY. This
-keyword requires a Python dictionary, containing some key/value pairs.
-
-For example, with a 3DVAR algorithm, the possible keys are "*Minimizer*",
-"*MaximumNumberOfSteps*", "*ProjectedGradientTolerance*",
-"*GradientNormTolerance*" and "*Bounds*":
-
-#.   The "*Minimizer*" key allows to choose the optimization minimizer. The
-     default choice is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear
-     constrained minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear
-     constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
-     (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer).
-#.   The "*MaximumNumberOfSteps*" key indicates the maximum number of iterations
-     allowed for iterative optimization. The default is 15000, which very
-     similar of no limit on iterations. It is then recommended to adapt this
-     parameter to the needs on real problems.
-#.   The "*ProjectedGradientTolerance*" key indicates a limit value, leading to
-     stop successfully the iterative optimization process when all the
-     components of the projected gradient are under this limit.
-#.   The "*GradientNormTolerance*" key indicates a limit value, leading to stop
-     successfully the iterative optimization process when the norm of the
-     gradient is under this limit.
-#.   The "*Bounds*" key allows to define upper and lower bounds for every
-     control variable being optimized. Bounds can be given by a list of list of
-     pairs of lower/upper bounds for each variable, with possibly ``None`` every
-     time there is no bound. The bounds can always be specified, but they are
-     taken into account only by the constrained minimizers.
+keyword requires a Python dictionary, containing some key/value pairs. The list
+of possible optional parameters are given in the subsection
+:ref:`subsection_algo_options`.
 
 If no bounds at all are required on the control variables, then one can choose
 the "BFGS" or "CG" minimisation algorithm for the 3DVAR algorithm. For
 constrained optimization, the minimizer "LBFGSB" is often more robust, but the
-"TNC" is always more performant.
+"TNC" is sometimes more performant.
 
 This dictionary has to be defined, for example, in an external Python script
 file, using the mandatory variable name "*AlgorithmParameters*" for the

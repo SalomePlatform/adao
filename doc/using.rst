@@ -205,10 +205,13 @@ Reference description of the commands and keywords available through the GUI
 
 Each command or keyword to be defined through the ADAO GUI has some properties.
 The first property is to be a required command, an optional command or a keyword
-describing a type. The second property is to be an "open" variable with a fixed
-type but with any value allowed by the type, or a "restricted" variable, limited
-to some specified values. The mathematical notations are explained in the
-section :ref:`section_theory`.
+describing a type of input. The second property is to be an "open" variable with
+a fixed type but with any value allowed by the type, or a "restricted" variable,
+limited to some specified values. The mathematical notations used afterwards are
+explained in the section :ref:`section_theory`.
+
+List of possible input types
+++++++++++++++++++++++++++++
 
 The different type-style commands are:
 
@@ -235,6 +238,9 @@ The different type-style commands are:
     *Type of an input*. This indicates a variable that has to be filled by a
     vector, usually given either as a string or as a script.
     
+List of commands
+++++++++++++++++
+
 The different commands are the following:
 
 :ASSIM_STUDY:
@@ -244,12 +250,14 @@ The different commands are the following:
 :Algorithm:
     *Required command*. This is a string to indicates the data assimilation
     algorithm chosen. The choices are limited and available through the GUI.
-    There exists for example: "3DVAR", "Blue", "EnsembleBlue", "KalmanFilter".
+    There exists for example: "3DVAR", "Blue"... See below the list of
+    algorithms and associated parameters.
 
 :AlgorithmParameters:
     *Optional command*. This command allows to add some optional parameters to
     control the data assimilation algorithm calculation. It is defined as a
-    "*Dict*" type object. 
+    "*Dict*" type object.  See below the list of algorithms and associated
+    parameters.
 
 :Background:
     *Required command*. This indicates the backgroud vector used for data
@@ -311,6 +319,101 @@ The different commands are the following:
     automatically after data assimilation algorithm processing. It is defined as
     a script or a string, allowing to put simple code directly inside the ADAO
     case.
+
+.. _subsection_algo_options:
+
+List of possible options for the algorithms
++++++++++++++++++++++++++++++++++++++++++++
+
+Each algorithm can be controled using some generic or specific options given
+throught the "*AlgorithmParameters*" optional command, as follows::
+
+    AlgorithmParameters = {
+        "Minimizer" : "CG",
+        "MaximumNumberOfSteps" : 10,
+        }
+
+This section describes the available options by algorithm. If an option is
+specified for an algorithm that doesn't support it, the option is simply left
+unused.
+
+:"Blue":
+    no option
+
+:"LinearLeastSquares":
+    no option
+
+:"3DVAR":
+
+    :Minimizer:
+      This key allows to choose the optimization minimizer. The default choice
+      is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
+      minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear constrained
+      minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
+      unconstrained minimizer), "NCG" (Newton CG minimizer).
+
+    :Bounds:
+      This key allows to define upper and lower bounds for every control
+      variable being optimized. Bounds can be given by a list of list of pairs
+      of lower/upper bounds for each variable, with possibly ``None`` every time
+      there is no bound. The bounds can always be specified, but they are taken
+      into account only by the constrained minimizers.
+
+    :MaximumNumberOfSteps:
+      This key indicates the maximum number of iterations allowed for iterative
+      optimization. The default is 15000, which very similar to no limit on
+      iterations. It is then recommended to adapt this parameter to the needs on
+      real problems. For some algorithms, the effective stopping step can be
+      slightly different due to algorihtm internal control requirements.
+
+    :ProjectedGradientTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when all the components of the projected
+      gradient are under this limit. It is only used for constrained algorithms.
+
+    :GradientNormTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when the norm of the gradient is under this
+      limit. It is only used for non-constrained algorithms.
+
+:"NonLinearLeastSquares":
+
+    :Minimizer:
+      This key allows to choose the optimization minimizer. The default choice
+      is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
+      minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear constrained
+      minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
+      unconstrained minimizer), "NCG" (Newton CG minimizer).
+
+    :Bounds:
+      This key allows to define upper and lower bounds for every control
+      variable being optimized. Bounds can be given by a list of list of pairs
+      of lower/upper bounds for each variable, with possibly ``None`` every time
+      there is no bound. The bounds can always be specified, but they are taken
+      into account only by the constrained minimizers.
+
+    :MaximumNumberOfSteps:
+      This key indicates the maximum number of iterations allowed for iterative
+      optimization. The default is 15000, which very similar to no limit on
+      iterations. It is then recommended to adapt this parameter to the needs on
+      real problems. For some algorithms, the effective stopping step can be
+      slightly different due to algorihtm internal control requirements.
+
+    :ProjectedGradientTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when all the components of the projected
+      gradient are under this limit. It is only used for constrained algorithms.
+
+    :GradientNormTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when the norm of the gradient is under this
+      limit. It is only used for non-constrained algorithms. 
+
+:"EnsembleBlue":
+    no option
+
+:"KalmanFilter":
+    no option
 
 Examples of using these commands are available in the section
 :ref:`section_examples` and in example files installed with ADAO module.
