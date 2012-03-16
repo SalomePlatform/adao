@@ -660,7 +660,7 @@ class Persistence:
         Scheduler      = None,
         ):
         """
-        Méthode d'association à la variable d'un triplet définissant un observer
+        Association à la variable d'un triplet définissant un observer
         
         Le Scheduler attendu est une fréquence, une simple liste d'index ou un
         xrange des index.
@@ -686,7 +686,7 @@ class Persistence:
         HookFunction   = None,
         ):
         """
-        Méthode de suppression d'un observer sur la variable.
+        Suppression d'un observer nommé sur la variable.
         
         On peut donner dans HookFunction la meme fonction que lors de la
         définition, ou un simple string qui est le nom de la fonction.

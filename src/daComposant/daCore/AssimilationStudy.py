@@ -698,7 +698,9 @@ class AssimilationStudy:
             ):
         """
         Permet d'associer un observer à une ou des variables nommées gérées en
-        interne, activable selon des règles définies dans le Scheduler.
+        interne, activable selon des règles définies dans le Scheduler. A chaque
+        pas demandé dans le Scheduler, il effectue la fonction HookFunction avec
+        les arguments (variable persistante VariableName, paramètres HookParameters).
         """
         # 
         if type( self.__algorithm ) is dict:
