@@ -96,11 +96,11 @@ observers_choice = """
                                                   ${var_name}_data = FACT(statut = "o",
                                                              Scheduler = SIMP(statut = "f", typ = "TXM"),
                                                              Info      = SIMP(statut = "f", typ = "TXM"),
-                                                             NodeType  = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("pyscript", "userfile")),
-                                                             PythonScript = BLOC (condition = " NodeType == 'pyscript' ",
+                                                             NodeType  = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("String", "Script")),
+                                                             PythonScript = BLOC (condition = " NodeType == 'String' ",
                                                                                   Value = SIMP(statut = "o", typ = "TXM")
                                                                                  ),
-                                                             UserFile = BLOC (condition = " NodeType == 'userfile' ",
+                                                             UserFile = BLOC (condition = " NodeType == 'Script' ",
                                                                               Value = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()))
                                                                              )
                                                                       ),
@@ -109,7 +109,7 @@ observers_choice = """
 
 observers_method = """
 def F_Observers(statut) : return FACT(statut=statut,
-                                      SELECTION = SIMP(statut="o", defaut=[], typ="TXM", max="**", validators=NoRepeat(), into=(${choices})),
+                                      SELECTION = SIMP(statut="o", defaut=[], typ="TXM", min=0, max="**", validators=NoRepeat(), into=(${choices})),
 ${decl_choices}
                                      )
 """

@@ -275,10 +275,10 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "observers[\"" + observer + "\"] = {}\n"
       self.text_da += "observers[\"" + observer + "\"][\"number\"] = " + str(number) + "\n"
       self.text_da += "observers[\"" + observer + "\"][\"nodetype\"] = \"" + observers[observer]["nodetype"] + "\"\n"
-      if observers[observer]["nodetype"] == "pyscript":
-        self.text_da += "observers[\"" + observer + "\"][\"pyscript\"] = \"\"\"" + observers[observer]["script"] + "\"\"\"\n"
+      if observers[observer]["nodetype"] == "String":
+        self.text_da += "observers[\"" + observer + "\"][\"String\"] = \"\"\"" + observers[observer]["script"] + "\"\"\"\n"
       else:
-        self.text_da += "observers[\"" + observer + "\"][\"userfile\"] = \"" + observers[observer]["file"] + "\"\n"
+        self.text_da += "observers[\"" + observer + "\"][\"Script\"] = \"" + observers[observer]["file"] + "\"\n"
       if "scheduler" in observers[observer].keys():
         self.text_da += "observers[\"" + observer + "\"][\"scheduler\"] = \"\"\"" + observers[observer]["scheduler"] + "\"\"\"\n"
     self.text_da += "study_config['Observers'] = observers\n"
@@ -295,7 +295,7 @@ class AdaoGenerator(PythonGenerator):
     observers[observer]["nodetype"] = self.dictMCVal[node_type_key_name]
 
     # NodeType script/file
-    if observers[observer]["nodetype"] == "pyscript":
+    if observers[observer]["nodetype"] == "String":
       observers[observer]["script"] = self.dictMCVal[observer_eficas_name + "PythonScript__Value"]
     else:
       observers[observer]["file"] = self.dictMCVal[observer_eficas_name + "UserFile__Value"]

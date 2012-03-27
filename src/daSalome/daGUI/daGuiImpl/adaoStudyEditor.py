@@ -86,7 +86,7 @@ def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
       itemValue = adaoCase.filename
     else:
       itemName  = salomeStudyItem.GetName()
-      itemValue = adaoCase.get_filename()
+      itemValue = adaoCase.filename
 
     icon = adaoModuleHelper.studyItemPixmapNOk()
     if adaoCase.isOk():

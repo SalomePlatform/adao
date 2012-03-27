@@ -346,19 +346,19 @@ def create_yacs_proc(study_config):
       proc.edAddDFLink(read_for_switch_node.getOutputPort("data"), extract_data_node.getInputPort("data"))
 
       observation_node = None
-      if observer_cfg["nodetype"] == "pyscript":
+      if observer_cfg["nodetype"] == "String":
         factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeString")
         observation_node = factory_observation_node.cloneNode("Observation")
         node_script = observation_node.getScript()
-        node_script += observer_cfg["pyscript"]
+        node_script += observer_cfg["String"]
         observation_node.setScript(node_script)
       else:
         factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeFile")
         observation_node = factory_observation_node.cloneNode("Observation")
         if repertory:
-          observation_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(observer_cfg["userfile"])))
+          observation_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(observer_cfg["Script"])))
         else:
-          observation_node.getInputPort("script").edInitPy(observer_cfg["userfile"])
+          observation_node.getInputPort("script").edInitPy(observer_cfg["Script"])
       observer_bloc.edAddChild(observation_node)
       proc.edAddDFLink(extract_data_node.getOutputPort("var"), observation_node.getInputPort("var"))
       proc.edAddDFLink(extract_data_node.getOutputPort("info"), observation_node.getInputPort("info"))

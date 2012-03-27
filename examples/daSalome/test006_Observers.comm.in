@@ -26,7 +26,7 @@ ASSIMILATION_STUDY(Study_name='test_observers',
                                    ('Background','BackgroundError','Observation',
                                                  'ObservationError','AlgorithmParameters',),),
                    Observers=_F(SELECTION=('CurrentState','CostFunctionJ',),
-                                CostFunctionJ_data=_F(NodeType='pyscript',
+                                CostFunctionJ_data=_F(NodeType='String',
                                                       Value=
 """print "  ---> observerCost"
 print "       var  =",var.valueserie()
@@ -47,5 +47,5 @@ print "       imageCost %s"%filename
 gp.hardcopy(filename=filename, color=1)
 numero += 1
 """,),
-                                CurrentState_data=_F(NodeType='userfile',
+                                CurrentState_data=_F(NodeType='Script',
                                                      Value='test006_Observers_observer_with_file.py',),),);
