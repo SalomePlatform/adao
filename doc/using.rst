@@ -43,13 +43,13 @@ Activate the ADAO module and use the editor GUI
 +++++++++++++++++++++++++++++++++++++++++++++++
 
 As always for a module, it has to be activated by choosing the appropriate
-module button (or menu) in the toolbar of SALOME. A popup appears, allowing to
-choose between creating a new study, or opening an already existing one:
+module button (or menu) in the toolbar of SALOME. If there is no study loaded, a
+popup appears, allowing to choose between creating a new study, or opening an
+already existing one:
 
   .. _adao_activate1:
   .. image:: images/adao_activate.png
     :align: center
-    :width: 100%
   .. centered::
     **Activating the module ADAO in SALOME**
 
@@ -111,12 +111,12 @@ using the "*Export to YACS*" button |eficas_yacs|, or equivalently choose the
 "*Export to YACS*" entry in the "*ADAO*" main menu, or in the contextual case
 menu in the object browser.
 
-  .. _adao_exporttoyacs:
+  .. _adao_exporttoyacs01:
   .. image:: images/adao_exporttoyacs.png
     :align: center
     :scale: 75%
   .. centered::
-    **"Export to YACS" submenu to generate the YACS scheme from the ADAO case**
+    **"Export to YACS" sub-menu to generate the YACS scheme from the ADAO case**
 
 This will lead to automatically generate an XML file for the YACS scheme, and
 open YACS module on this file. The YACS file will be stored in the same

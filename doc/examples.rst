@@ -1,7 +1,7 @@
 .. _section_examples:
 
 ================================================================================
-Examples on using the ADAO module
+Tutorials on using the ADAO module
 ================================================================================
 
 .. |eficas_new| image:: images/eficas_new.png
@@ -117,7 +117,7 @@ definition. In order to do that, right click on the name of the file case in the
 "*Object browser*" window, and choose the "*Export to YACS*" sub-menu (or the
 "*Export to YACS*" button |eficas_yacs|) as below:
 
-  .. _adao_exporttoyacs:
+  .. _adao_exporttoyacs00:
   .. image:: images/adao_exporttoyacs.png
     :align: center
     :scale: 75%

@@ -1,11 +1,14 @@
-
 ================================================================================
 ADAO module documentation
 ================================================================================
 
+.. image:: images/ADAO_logo.png
+   :align: center
+   :scale: 10%
+
 The ADAO module provides **data assimilation** features in SALOME context. It is
-based on usage of other SALOME modules, namely YACS and EFICAS, and on an
-extensible generic underlying data assimilation library.
+based on usage of other SALOME modules, namely YACS and EFICAS, and on usage of
+a generic underlying data assimilation library.
 
 Briefly stated, Data Assimilation is a methodological framework to compute the
 optimal estimate of the inaccessible true value of a system state over time. It
@@ -30,6 +33,9 @@ without making difference. Matrices are written either normally, or with a
 condensed notation, consisting in the use of a space to separate values and a
 "``;``" to separate the rows, in a continuous line.
 
+Table of contents
+-----------------
+
 .. toctree::
    :maxdepth: 2
 
@@ -41,7 +47,7 @@ condensed notation, consisting in the use of a space to separate values and a
    bibliography
 
 Indices and tables
-================================================================================
+------------------
 
 * :ref:`genindex`
 * :ref:`search`
