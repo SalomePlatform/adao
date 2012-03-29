@@ -52,28 +52,53 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             HXb = Hm * Xb
         HXb = numpy.asmatrix(HXb).flatten().T
         #
-        # Calcul de la matrice de gain dans l'espace le plus petit
-        # --------------------------------------------------------
-        if Y.size <= Xb.size:
-            logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
-            K  = B * Ht * (Hm * B * Ht + R).I
-        else:
-            logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
-            K = (Ht * R.I * Hm + B.I).I * Ht * R.I
+        # Précalcul des inversions de B et R
+        # ----------------------------------
+        if B is not None:
+            BI = B.I
+        elif Parameters["B_scalar"] is not None:
+            BI = 1.0 / Parameters["B_scalar"]
+            B = Parameters["B_scalar"]
+        if R is not None:
+            RI = R.I
+        elif Parameters["R_scalar"] is not None:
+            RI = 1.0 / Parameters["R_scalar"]
+            R = Parameters["R_scalar"]
         #
-        # Calcul de l'innovation et de l'analyse
-        # --------------------------------------
+        # Calcul de l'innovation
+        # ----------------------
         if Y.size != HXb.size:
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
         logging.debug("%s Innovation d = %s"%(self._name, d))
+        #
+        # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
+        # ------------------------------------------------------------------------
+        if Y.size <= Xb.size:
+            logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
+            K  = B * Ht * (Hm * B * Ht + R).I
+        else:
+            logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
+            K = (Ht * RI * Hm + BI).I * Ht * RI
         Xa = Xb + K*d
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
+        # Calcul de la fonction coût
+        # --------------------------
+        Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
+        Jo  = 0.5 * d.T * RI * d
+        J   = float( Jb ) + float( Jo )
+        logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
+        logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
+        logging.debug("%s CostFunction J  = %s"%(self._name, J))
+        #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         self.StoredVariables["Innovation"].store( d.A1 )
+        self.StoredVariables["CostFunctionJb"].store( Jb )
+        self.StoredVariables["CostFunctionJo"].store( Jo )
+        self.StoredVariables["CostFunctionJ" ].store( J )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
         logging.debug("%s Terminé"%self._name)
