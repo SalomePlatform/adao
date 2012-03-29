@@ -89,7 +89,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(x).flatten().T
-            logging.info("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            logging.debug("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
             _HX = Hm( _X )
             _HX = numpy.asmatrix(_HX).flatten().T
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
@@ -106,7 +106,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         def GradientOfCostFunction(x):
             _X      = numpy.asmatrix(x).flatten().T
-            logging.info("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
             _HX     = Hm( _X )
             _HX     = numpy.asmatrix(_HX).flatten().T
             GradJb  = BI * (_X - Xb)
