@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2012 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -137,7 +137,7 @@ class Algorithm:
             - OMA : Observation moins Analysis : Y - Xa
             - OMB : Observation moins Background : Y - Xb
             - AMB : Analysis moins Background : Xa - Xb
-            - CovarianceAPosteriori : matrice A
+            - APosterioriCovariance : matrice A
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
@@ -158,7 +158,7 @@ class Algorithm:
         self.StoredVariables["OMA"]                      = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                      = Persistence.OneVector(name = "OMB")
         self.StoredVariables["BMA"]                      = Persistence.OneVector(name = "BMA")
-        self.StoredVariables["CovarianceAPosteriori"]    = Persistence.OneMatrix(name = "CovarianceAPosteriori")
+        self.StoredVariables["APosterioriCovariance"]    = Persistence.OneMatrix(name = "APosterioriCovariance")
 
     def get(self, key=None):
         """

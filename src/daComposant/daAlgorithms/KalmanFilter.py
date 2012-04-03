@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2012 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -52,6 +52,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Mm = M["Direct"].asMatrix()
         Mt = M["Adjoint"].asMatrix()
         #
+        # Paramètres de pilotage
+        # ----------------------
+        if Parameters.has_key("CalculateAPosterioriCovariance"):
+            CalculateAPosterioriCovariance = bool(Parameters["CalculateAPosterioriCovariance"])
+        else:
+            CalculateAPosterioriCovariance = False
+        logging.debug("%s Calcul de la covariance a posteriori = %s"%(self._name, CalculateAPosterioriCovariance))
+        #
+        # Nombre de pas du Kalman identique au nombre de pas d'observations
+        # -----------------------------------------------------------------
         duration = Y.stepnumber()
         #
         # Initialisation
@@ -59,7 +69,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Xn = Xb
         Pn = B
         self.StoredVariables["Analysis"].store( Xn.A1 )
-        self.StoredVariables["CovarianceAPosteriori"].store( Pn )
+        if CalculateAPosterioriCovariance:
+            self.StoredVariables["APosterioriCovariance"].store( Pn )
         #
         for step in range(duration-1):
             logging.debug("%s Etape de Kalman %i (i.e. %i->%i) sur un total de %i"%(self._name, step+1, step,step+1, duration-1))
@@ -77,8 +88,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Pn = Pn_predicted - K * Hm * Pn_predicted
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )
-            self.StoredVariables["CovarianceAPosteriori"].store( Pn )
             self.StoredVariables["Innovation"].store( d.A1 )
+            if CalculateAPosterioriCovariance:
+                self.StoredVariables["APosterioriCovariance"].store( Pn )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         logging.debug("%s Terminé"%self._name)

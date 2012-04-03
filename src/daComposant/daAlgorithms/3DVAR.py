@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2012 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -127,7 +127,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Paramètres de pilotage
         # ----------------------
-        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps", "ProjectedGradientTolerance", "GradientNormTolerance", "InnerMinimizer"
+        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps", "ProjectedGradientTolerance", "GradientNormTolerance", "InnerMinimizer", "CalculateAPosterioriCovariance"
         if Parameters.has_key("Bounds") and (type(Parameters["Bounds"]) is type([]) or type(Parameters["Bounds"]) is type(())) and (len(Parameters["Bounds"]) > 0):
             Bounds = Parameters["Bounds"]
         else:
@@ -167,6 +167,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             InnerMinimizer = "BFGS"
         logging.debug("%s Minimiseur interne utilisé = %s"%(self._name, InnerMinimizer))
+        if Parameters.has_key("CalculateAPosterioriCovariance"):
+            CalculateAPosterioriCovariance = bool(Parameters["CalculateAPosterioriCovariance"])
+        else:
+            CalculateAPosterioriCovariance = False
+        logging.debug("%s Calcul de la covariance a posteriori = %s"%(self._name, CalculateAPosterioriCovariance))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -251,6 +256,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         self.StoredVariables["Innovation"].store( d.A1 )
+        #
+        # Calcul de la covariance d'analyse
+        # ---------------------------------
+        if CalculateAPosterioriCovariance:
+            Hessienne = []
+            nb = len(Xini)
+            for i in range(nb):
+                ee = numpy.matrix(numpy.zeros(nb)).T
+                ee[i] = 1.
+                Hessienne.append( ( BI*ee + Ht((Xa,RI*Hm(ee))) ).A1 )
+            Hessienne = numpy.matrix( Hessienne )
+            A = Hessienne.I
+            self.StoredVariables["APosterioriCovariance"].store( A )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
         logging.debug("%s Terminé"%self._name)

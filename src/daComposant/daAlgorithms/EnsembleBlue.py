@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2012 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -60,9 +60,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # -----------------------------------------------------------------
         Hm = H["Direct"].asMatrix()
         Ht = H["Adjoint"].asMatrix()
-        
+        #
         K  = B * Ht * (Hm * B * Ht + R).I
-        
+        #
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------
         for iens in range(nb_ens):
