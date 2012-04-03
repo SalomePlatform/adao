@@ -69,7 +69,7 @@ class daStudy:
 
     self.ADD.setAlgorithm(choice=self.algorithm)
     if self.algorithm_dict != None:
-      print self.algorithm_dict
+      logging.debug("ADD.setAlgorithm : "+str(self.algorithm_dict))
       self.ADD.setAlgorithmParameters(asDico=self.algorithm_dict)
 
   def getAssimilationStudy(self):

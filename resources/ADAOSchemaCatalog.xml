@@ -58,10 +58,10 @@
 
 <![CDATA[
 import numpy
-print "Entering in CreateAssimilationStudy"
-print "Name is", Name
-print "Algorithm is", Algorithm
-print "Debug is set to", Debug
+print "Entering in the assimilation study"
+print "Name is set to........:", Name
+print "Algorithm is set to...:", Algorithm
+print "Debug is set to.......:", Debug
 
 # Create Assimilation study
 from daYacsIntegration.daStudy import *
@@ -76,7 +76,7 @@ else:
   assim_study.setAlgorithmParameters(AlgorithmParameters)
 
 # Data
-print "Data entered are:"
+# print "Data entered are:"
 # Background
 try:
   Background
@@ -193,11 +193,11 @@ Study = assim_study
 
   <inline name="CreateNumpyMatrixFromString">
     <script><code><![CDATA[
-print "Entering in CreateNumpyMatrixFromString"
+#print "Entering in CreateNumpyMatrixFromString"
 import numpy
 matrix = numpy.matrix(matrix_in_string)
 type = "Matrix"
-print "Matrix is", matrix
+#print "Matrix is", matrix
 ]]></code></script>
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
@@ -206,7 +206,7 @@ print "Matrix is", matrix
 
   <inline name="CreateNumpyMatrixFromScript">
     <script><code><![CDATA[
-print "Entering in CreateNumpyMatrixFromScript"
+#print "Entering in CreateNumpyMatrixFromScript"
 type = "Matrix"
 
 # Get file path and filename
@@ -229,11 +229,11 @@ user_script_module = sys.modules[module_name]
 
   <inline name="CreateNumpyVectorFromString">
     <script><code><![CDATA[
-print "Entering in CreateNumpyVectorFromString"
+#print "Entering in CreateNumpyVectorFromString"
 import numpy
 vector = numpy.matrix(vector_in_string)
 type = "Vector"
-print "Vector is", vector
+#print "Vector is", vector
 ]]></code></script>
     <inport name="vector_in_string" type="string"/>
     <outport name="vector" type="pyobj"/>
@@ -242,7 +242,7 @@ print "Vector is", vector
 
   <inline name="CreateNumpyVectorFromScript">
     <script><code><![CDATA[
-print "Entering in CreateNumpyVectorFromScript"
+#print "Entering in CreateNumpyVectorFromScript"
 type = "Vector"
 
 # Get file path and filename
@@ -265,7 +265,7 @@ user_script_module = sys.modules[module_name]
 
   <inline name="SimpleExecuteDirectAlgorithm">
     <script><code><![CDATA[
-print "Entering in SimpleExecuteDirectAlgorithm"
+#print "Entering in SimpleExecuteDirectAlgorithm"
 from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 ADD.analyze()
@@ -277,7 +277,7 @@ ADD.analyze()
   <inline name="SimpleUserAnalysis">
     <script><code><![CDATA[
 #-*-coding:iso-8859-1-*-
-print "Entering in SimpleUserAnalysis"
+#print "Entering in SimpleUserAnalysis"
 from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 # User code is below
@@ -288,7 +288,7 @@ ADD = Study.getAssimilationStudy()
 
   <inline name="FakeOptimizerLoopNode">
     <script><code><![CDATA[
-print "Entering in FakeOptimizerLoopNode"
+#print "Entering in FakeOptimizerLoopNode"
 result = None
 ]]></code></script>
     <inport name="computation" type="SALOME_TYPES/ParametricInput"/>
@@ -297,7 +297,7 @@ result = None
 
   <inline name="CreateDictFromScript">
     <script><code><![CDATA[
-print "Entering in CreateDictFromScript"
+#print "Entering in CreateDictFromScript"
 
 # Get file path and filename
 import sys
@@ -318,7 +318,7 @@ user_script_module = sys.modules[module_name]
 
   <inline name="UserDataInitFromScript">
     <script><code><![CDATA[
-print "Entering in UserDataInitFromScript"
+#print "Entering in UserDataInitFromScript"
 
 # Get file path and filename
 import sys
@@ -340,7 +340,7 @@ user_script_module = sys.modules[module_name]
 
   <inline name="ReadForSwitchNode">
     <script><code><![CDATA[
-print "Entering in ReadForSwitch"
+#print "Entering in ReadForSwitch"
 switch_value = -1
 for param in data["specificParameters"]:
   if param["name"] == "switch_value":
@@ -355,7 +355,7 @@ for param in data["specificParameters"]:
     <script><code><![CDATA[
 import pickle
 from daCore.AssimilationStudy import AssimilationStudy
-print "Entering in ExtractData"
+#print "Entering in ExtractData"
 var = None
 info = None
 for param in data["specificParameters"]:
@@ -371,7 +371,7 @@ for param in data["specificParameters"]:
 
   <inline name="ObservationNodeString">
     <script><code><![CDATA[
-print "Entering in Observation"
+#print "Entering in Observation"
 
 ]]></code></script>
     <inport name="var" type="pyobj"/>
@@ -380,7 +380,7 @@ print "Entering in Observation"
 
   <inline name="ObservationNodeFile">
     <script><code><![CDATA[
-print "Entering in Observation"
+#print "Entering in Observation"
 execfile(script)
 
 ]]></code></script>
@@ -404,7 +404,7 @@ output["errorMessage"]        = ""
 
   <inline name="SetObserversNode">
     <script><code><![CDATA[
-print "Setting observers"
+#print "Setting observers"
 ]]></code></script>
     <outport name="has_observers" type="bool"/>
     <outport name="observers" type="pyobj"/>

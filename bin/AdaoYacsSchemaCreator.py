@@ -23,7 +23,7 @@ import sys
 import os
 import traceback
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)-8s %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(levelname)-8s %(message)s')
 
 print "-- Starting AdaoYacsSchemaCreator --"
 

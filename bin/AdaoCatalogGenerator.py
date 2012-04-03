@@ -25,7 +25,7 @@ import sys
 import string
 import StringIO
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 #----------- Templates Part ---------------#
 begin_catalog_file = """

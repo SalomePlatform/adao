@@ -47,7 +47,7 @@ class AdaoGenerator(PythonGenerator):
     self.logger = logging.getLogger('ADAO EFICAS GENERATOR')
     self.logger.setLevel(logging.INFO)
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)
     formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
     ch.setFormatter(formatter)
     self.logger.addHandler(ch)
