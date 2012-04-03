@@ -183,12 +183,19 @@ the main available output variables are the following:
 #.  "Innovation" (automatic): the difference between the observations and the
     control state transformed by the observation operator, noted as
     :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^b`.
+#.  "APosterioriCovariance" (optional): the covariance matrix of the *a
+    posteriori* analysis errors, noted as :math:`\mathbf{A}`.
 #.  "OMB" (optional): the difference between the observations and the
     background, similar to the innovation.
 #.  "BMA" (optional): the difference between the background and the analysis,
     noted as :math:`\mathbf{x}^b - \mathbf{x}^a`.
 #.  "OMA" (optional): the difference between the observations and the analysis,
     noted as :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^a`.
+#.  "CostFunctionJ" (optional): the minimisation function, noted as :math:`J`.
+#.  "CostFunctionJo" (optional): the observation part of the minimisation
+    function, noted as :math:`J^o`.
+#.  "CostFunctionJb" (optional): the background part of the minimisation
+    function, noted as :math:`J^b`.
 
 Input variables are also available as output in order to gather all the
 information at the end of the procedure.
@@ -243,7 +250,7 @@ List of commands
 
 The different commands are the following:
 
-:ASSIM_STUDY:
+:ASSIMILATION_STUDY:
     *Required command*. This is the general command describing an ADAO case. It
     hierarchicaly contains all the other commands.
 
@@ -271,7 +278,7 @@ The different commands are the following:
 
 :Debug:
     *Required command*. This let choose the level of trace and intermediary
-    debug informations.The choices are limited between 0 (for False) and 1 (for
+    debug informations. The choices are limited between 0 (for False) and 1 (for
     True) and available through the GUI.
 
 :InputVariables:
@@ -295,6 +302,13 @@ The different commands are the following:
     noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}`
     to results :math:`\mathbf{y}` to be compared to observations
     :math:`\mathbf{y}^o`.
+
+:Observers:
+    *Optional command*. This command allows to set internal observers, that are
+    functions linked with a particular variable, which will be executed each
+    time this variable is modified. It is a convenient way to monitor interest
+    variables during the data assimilation process, by printing or plotting it,
+    etc.
 
 :OutputVariables:
     *Optional command*. This command allows to indicates the name and size of
@@ -338,7 +352,11 @@ specified for an algorithm that doesn't support it, the option is simply left
 unused.
 
 :"Blue":
-    no option
+
+    :CalculateAPosterioriCovariance:
+      This boolean key allows to enable the calculation and the storage of the
+      covariance matrix of a posteriori anlysis errors. Be careful, this is a
+      numericaly costly step. The default is "False".
 
 :"LinearLeastSquares":
     no option
@@ -366,15 +384,29 @@ unused.
       real problems. For some algorithms, the effective stopping step can be
       slightly different due to algorihtm internal control requirements.
 
+    :CalculateAPosterioriCovariance:
+      This boolean key allows to enable the calculation and the storage of the
+      covariance matrix of a posteriori anlysis errors. Be careful, this is a
+      numericaly costly step. The default is "False".
+
+    :CostDecrementTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when the cost function decreases less than
+      this tolerance at the last step. The default is 10e-7, and it is
+      recommended to adapt it the needs on real problems.
+
     :ProjectedGradientTolerance:
       This key indicates a limit value, leading to stop successfully the
       iterative optimization process when all the components of the projected
       gradient are under this limit. It is only used for constrained algorithms.
+      The default is -1, that is the internal default of each algorithm, and it
+      is not recommended to change it.
 
     :GradientNormTolerance:
       This key indicates a limit value, leading to stop successfully the
       iterative optimization process when the norm of the gradient is under this
-      limit. It is only used for non-constrained algorithms.
+      limit. It is only used for non-constrained algorithms.  The default is
+      10e-5 and it is not recommended to change it.
 
 :"NonLinearLeastSquares":
 
@@ -399,21 +431,34 @@ unused.
       real problems. For some algorithms, the effective stopping step can be
       slightly different due to algorihtm internal control requirements.
 
+    :CostDecrementTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when the cost function decreases less than
+      this tolerance at the last step. The default is 10e-7, and it is
+      recommended to adapt it the needs on real problems.
+
     :ProjectedGradientTolerance:
       This key indicates a limit value, leading to stop successfully the
       iterative optimization process when all the components of the projected
       gradient are under this limit. It is only used for constrained algorithms.
+      The default is -1, that is the internal default of each algorithm, and it
+      is not recommended to change it.
 
     :GradientNormTolerance:
       This key indicates a limit value, leading to stop successfully the
       iterative optimization process when the norm of the gradient is under this
-      limit. It is only used for non-constrained algorithms. 
+      limit. It is only used for non-constrained algorithms.  The default is
+      10e-5 and it is not recommended to change it.
 
 :"EnsembleBlue":
     no option
 
 :"KalmanFilter":
-    no option
+
+    :CalculateAPosterioriCovariance:
+      This boolean key allows to enable the calculation and the storage of the
+      covariance matrix of a posteriori anlysis errors. Be careful, this is a
+      numericaly costly step. The default is "False".
 
 Examples of using these commands are available in the section
 :ref:`section_examples` and in example files installed with ADAO module.
