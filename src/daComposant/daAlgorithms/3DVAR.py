@@ -73,8 +73,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         d  = Y - HXb
         logging.debug("%s Innovation d = %s"%(self._name, d))
         #
-        # Précalcul des inversion appellée dans les fonction-coût et gradient
-        # -------------------------------------------------------------------
+        # Précalcul des inversions de B et R
+        # ----------------------------------
         if B is not None:
             BI = B.I
         elif Parameters["B_scalar"] is not None:
@@ -89,15 +89,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(x).flatten().T
-            logging.info("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            logging.debug("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
             _HX = Hm( _X )
             _HX = numpy.asmatrix(_HX).flatten().T
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            logging.info("%s CostFunction Jb = %s"%(self._name, Jb))
-            logging.info("%s CostFunction Jo = %s"%(self._name, Jo))
-            logging.info("%s CostFunction J  = %s"%(self._name, J))
+            logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
+            logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
+            logging.debug("%s CostFunction J  = %s"%(self._name, J))
             self.StoredVariables["CurrentState"].store( _X.A1 )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
@@ -106,7 +106,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         def GradientOfCostFunction(x):
             _X      = numpy.asmatrix(x).flatten().T
-            logging.info("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
             _HX     = Hm( _X )
             _HX     = numpy.asmatrix(_HX).flatten().T
             GradJb  = BI * (_X - Xb)
