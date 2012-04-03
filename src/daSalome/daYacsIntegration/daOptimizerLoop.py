@@ -53,7 +53,7 @@ class OptimizerHooks:
     method_name.setEltAtRank("name", "method")
     method_name.setEltAtRank("value", method)
     specificParameters.pushBack(method_name)
-    print self.optim_algo.has_observer
+    # print self.optim_algo.has_observer
     if self.optim_algo.has_observer:
       obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
       obs_switch.setEltAtRank("name", "switch_value")
@@ -135,7 +135,7 @@ class OptimizerHooks:
     return matrix
 
   def Direct(self, X, sync = 1):
-    print "Call Direct OptimizerHooks"
+    # print "Call Direct OptimizerHooks"
     if sync == 1:
       # 1: Get a unique sample number
       self.optim_algo.counter_lock.acquire()
@@ -294,24 +294,24 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
       # Set ObservationOperator
       self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
 
-      # Set Observers
-      for observer_name in self.da_study.observers_dict.keys():
-        print "observers %s found" % observer_name
-        self.has_observer = True
-        if self.da_study.observers_dict[observer_name]["scheduler"] != "":
-          self.ADD.setDataObserver(observer_name, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[observer_name]["scheduler"], HookParameters = observer_name)
-        else:
-          self.ADD.setDataObserver(observer_name, HookFunction=self.obs, HookParameters = observer_name)
+    # Set Observers
+    for observer_name in self.da_study.observers_dict.keys():
+      # print "observers %s found" % observer_name
+      self.has_observer = True
+      if self.da_study.observers_dict[observer_name]["scheduler"] != "":
+        self.ADD.setDataObserver(observer_name, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[observer_name]["scheduler"], HookParameters = observer_name)
+      else:
+        self.ADD.setDataObserver(observer_name, HookFunction=self.obs, HookParameters = observer_name)
 
     # Start Assimilation Study
-    print "ADD analyze"
+    print "Launching the analyse\n"
     self.ADD.analyze()
 
     # Assimilation Study is finished
     self.pool.destroyAll()
 
   def obs(self, var, info):
-    print "Call observer %s" % info
+    # print "Call observer %s" % info
     sample = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/ParametricInput'))
 
     # Fake data
