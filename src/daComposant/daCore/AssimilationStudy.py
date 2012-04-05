@@ -123,7 +123,7 @@ class AssimilationStudy:
             if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
                 self.__Xb = Persistence.OneVector("Background", basetype=numpy.matrix)
                 for member in asPersistentVector:
-                    self.__Xb.store( numpy.matrix( numpy.asarray(member).flatten(), numpy.float ).T )
+                    self.__Xb.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
             else:
                 self.__Xb = asPersistentVector
         else:
