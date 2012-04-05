@@ -458,13 +458,6 @@ unused.
       1000. By default, the seed is left uninitialized, and so use the default
       initialization from the computer.
 
-:"KalmanFilter":
-
-    :CalculateAPosterioriCovariance:
-      This boolean key allows to enable the calculation and the storage of the
-      covariance matrix of a posteriori anlysis errors. Be careful, this is a
-      numericaly costly step. The default is "False".
-
 Examples of using these commands are available in the section
 :ref:`section_examples` and in example files installed with ADAO module.
 

@@ -57,7 +57,8 @@
     <script><code>
 
 <![CDATA[
-import numpy
+import numpy, logging
+logging.debug("CREATE Entering in CreateAssimilationStudy")
 print "Entering in the assimilation study"
 print "Name is set to........:", Name
 print "Algorithm is set to...:", Algorithm
@@ -83,8 +84,8 @@ try:
 except NameError:
   pass
 else:
-  #print "Background is", Background
-  #print "BackgroundType is", BackgroundType
+  logging.debug("CREATE Background is %s"%Background)
+  logging.debug("CREATE BackgroundType is %s"%BackgroundType)
   assim_study.setBackgroundType(BackgroundType)
   assim_study.setBackground(Background)
 
@@ -94,8 +95,8 @@ try:
 except NameError:
   pass
 else:
-  #print "BackgroundError is", BackgroundError
-  #print "BackgroundErrorType is", BackgroundErrorType
+  logging.debug("CREATE BackgroundError is %s"%BackgroundError)
+  logging.debug("CREATE BackgroundErrorType is %s"%BackgroundErrorType)
   assim_study.setBackgroundError(BackgroundError)
 
 # Observation
@@ -104,8 +105,8 @@ try:
 except NameError:
   pass
 else:
-  #print "Observation is", Observation
-  #print "ObservationType is", ObservationType
+  logging.debug("CREATE Observation is %s"%Observation)
+  logging.debug("CREATE ObservationType is %s"%ObservationType)
   assim_study.setObservationType(ObservationType)
   assim_study.setObservation(Observation)
 
@@ -115,8 +116,8 @@ try:
 except NameError:
   pass
 else:
-  #print "ObservationError is", ObservationError
-  #print "ObservationErrorType is", ObservationErrorType
+  logging.debug("CREATE ObservationError is %s"%ObservationError)
+  logging.debug("CREATE ObservationErrorType is %s"%ObservationErrorType)
   assim_study.setObservationError(ObservationError)
 
 # ObservationOperator
@@ -126,8 +127,8 @@ try:
 except NameError:
   pass
 else:
-  #print "ObservationOperator is", ObservationOperator
-  #print "ObservationOperatorType is", ObservationOperatorType
+  logging.debug("CREATE ObservationOperator is %s"%ObservationOperator)
+  logging.debug("CREATE ObservationOperatorType is %s"%ObservationOperatorType)
   assim_study.setObservationOperatorType("Matrix", ObservationOperatorType)
   assim_study.setObservationOperator("Matrix", ObservationOperator)
   ObservationOperatorOk = 1
@@ -138,7 +139,7 @@ if ObservationOperatorOk == 0:
   except NameError:
     pass
   else:
-    #print "ObservationOperatorDirect is", ObservationOperatorDirect
+    logging.debug("CREATE ObservationOperatorDirect is %s"%ObservationOperatorDirect)
     assim_study.setObservationOperatorType("Direct", "Function")
     assim_study.setObservationOperator("Direct", ObservationOperatorDirect)
   try:
@@ -146,7 +147,7 @@ if ObservationOperatorOk == 0:
   except NameError:
     pass
   else:
-    #print "ObservationOperatorTangent is", ObservationOperatorTangent
+    logging.debug("CREATE ObservationOperatorTangent is %s"%ObservationOperatorTangent)
     assim_study.setObservationOperatorType("Tangent", "Function")
     assim_study.setObservationOperator("Tangent", ObservationOperatorTangent)
   try:
@@ -154,7 +155,7 @@ if ObservationOperatorOk == 0:
   except NameError:
     pass
   else:
-    #print "ObservationOperatorAdjoint is", ObservationOperatorAdjoint
+    logging.debug("CREATE ObservationOperatorAdjoint is %s"%ObservationOperatorAdjoint)
     assim_study.setObservationOperatorType("Adjoint", "Function")
     assim_study.setObservationOperator("Adjoint", ObservationOperatorAdjoint)
 
@@ -165,6 +166,7 @@ for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
   assim_study.setOutputVariable(name, size)
 
 if has_observers:
+  logging.debug("CREATE Observers is %s"%observers.keys())
   # Adding observers to the study
   for observer_name in observers.keys():
     scheduler = ""
@@ -193,11 +195,11 @@ Study = assim_study
 
   <inline name="CreateNumpyMatrixFromString">
     <script><code><![CDATA[
-#print "Entering in CreateNumpyMatrixFromString"
-import numpy
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyMatrixFromString")
 matrix = numpy.matrix(matrix_in_string)
 type = "Matrix"
-#print "Matrix is", matrix
+logging.debug("CREATE Matrix is %s"%matrix)
 ]]></code></script>
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
@@ -206,7 +208,8 @@ type = "Matrix"
 
   <inline name="CreateNumpyMatrixFromScript">
     <script><code><![CDATA[
-#print "Entering in CreateNumpyMatrixFromScript"
+import logging
+logging.debug("CREATE Entering in CreateNumpyMatrixFromScript")
 type = "Matrix"
 
 # Get file path and filename
@@ -229,11 +232,11 @@ user_script_module = sys.modules[module_name]
 
   <inline name="CreateNumpyVectorFromString">
     <script><code><![CDATA[
-#print "Entering in CreateNumpyVectorFromString"
-import numpy
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyVectorFromString")
 vector = numpy.matrix(vector_in_string)
 type = "Vector"
-#print "Vector is", vector
+logging.debug("Vector is %s"%vector)
 ]]></code></script>
     <inport name="vector_in_string" type="string"/>
     <outport name="vector" type="pyobj"/>
@@ -242,7 +245,8 @@ type = "Vector"
 
   <inline name="CreateNumpyVectorFromScript">
     <script><code><![CDATA[
-#print "Entering in CreateNumpyVectorFromScript"
+import logging
+logging.debug("CREATE Entering in CreateNumpyVectorFromScript")
 type = "Vector"
 
 # Get file path and filename
@@ -265,7 +269,8 @@ user_script_module = sys.modules[module_name]
 
   <inline name="SimpleExecuteDirectAlgorithm">
     <script><code><![CDATA[
-#print "Entering in SimpleExecuteDirectAlgorithm"
+import logging
+logging.debug("EXECUTE Entering in SimpleExecuteDirectAlgorithm")
 from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 ADD.analyze()
@@ -277,7 +282,8 @@ ADD.analyze()
   <inline name="SimpleUserAnalysis">
     <script><code><![CDATA[
 #-*-coding:iso-8859-1-*-
-#print "Entering in SimpleUserAnalysis"
+import logging
+logging.debug("TERMINATE Entering in SimpleUserAnalysis")
 from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 # User code is below
@@ -288,7 +294,8 @@ ADD = Study.getAssimilationStudy()
 
   <inline name="FakeOptimizerLoopNode">
     <script><code><![CDATA[
-#print "Entering in FakeOptimizerLoopNode"
+import logging
+logging.debug("EXECUTE Entering in FakeOptimizerLoopNode")
 result = None
 ]]></code></script>
     <inport name="computation" type="SALOME_TYPES/ParametricInput"/>
@@ -297,7 +304,8 @@ result = None
 
   <inline name="CreateDictFromScript">
     <script><code><![CDATA[
-#print "Entering in CreateDictFromScript"
+import logging
+logging.debug("CREATE Entering in CreateDictFromScript")
 
 # Get file path and filename
 import sys
@@ -318,7 +326,8 @@ user_script_module = sys.modules[module_name]
 
   <inline name="UserDataInitFromScript">
     <script><code><![CDATA[
-#print "Entering in UserDataInitFromScript"
+import logging
+logging.debug("CREATE Entering in UserDataInitFromScript")
 
 # Get file path and filename
 import sys
@@ -340,7 +349,8 @@ user_script_module = sys.modules[module_name]
 
   <inline name="ReadForSwitchNode">
     <script><code><![CDATA[
-#print "Entering in ReadForSwitch"
+import logging
+logging.debug("CREATE Entering in ReadForSwitchNode")
 switch_value = -1
 for param in data["specificParameters"]:
   if param["name"] == "switch_value":
@@ -353,9 +363,10 @@ for param in data["specificParameters"]:
 
   <inline name="ExtractDataNode">
     <script><code><![CDATA[
+import logging
+logging.debug("TERMINATE Entering in ExtractDataNode")
 import pickle
 from daCore.AssimilationStudy import AssimilationStudy
-#print "Entering in ExtractData"
 var = None
 info = None
 for param in data["specificParameters"]:
