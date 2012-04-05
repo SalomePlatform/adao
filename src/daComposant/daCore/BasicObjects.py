@@ -92,7 +92,7 @@ class Operator:
         if self.__Matrix is not None:
             return self.__Matrix
         else:
-            raise ValueError("Matrix form of the operator is not available")
+            raise ValueError("Matrix form of the operator is not available but is required")
 
     def shape(self):
         """

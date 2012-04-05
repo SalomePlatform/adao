@@ -249,8 +249,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s %s Nb of F           = %s"%(self._name, Minimizer, nfeval))
         logging.debug("%s %s RetCode           = %s"%(self._name, Minimizer, rc))
         #
-        # Calcul  de l'analyse
-        # --------------------
+        # Obtention de l'analyse
+        # ----------------------
         Xa = numpy.asmatrix(Minimum).T
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
