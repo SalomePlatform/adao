@@ -120,7 +120,12 @@ class AssimilationStudy:
             else:
                 self.__Xb = numpy.matrix( asVector,    numpy.float ).T
         elif asPersistentVector is not None:
-            self.__Xb = asPersistentVector
+            if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
+                self.__Xb = Persistence.OneVector("Background", basetype=numpy.matrix)
+                for member in asPersistentVector:
+                    self.__Xb.store( numpy.matrix( numpy.asarray(member).flatten(), numpy.float ).T )
+            else:
+                self.__Xb = asPersistentVector
         else:
             raise ValueError("Error: improperly defined background")
         if toBeStored:
@@ -533,7 +538,14 @@ class AssimilationStudy:
             raise ValueError("Shape characteristic of H \"%s\" and R \"%s\" are incompatible"%(__H_shape,__R_shape))
         #
         if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of B \"%s\" and Xb \"%s\" are incompatible"%(__B_shape,__Xb_shape))
+            if self.__StoredInputs["AlgorithmName"] in ["EnsembleBlue",]:
+                asPersistentVector = self.__Xb.reshape((-1,min(__B_shape)))
+                self.__Xb = Persistence.OneVector("Background", basetype=numpy.matrix)
+                for member in asPersistentVector:
+                    self.__Xb.store( numpy.matrix( numpy.asarray(member).flatten(), numpy.float ).T )
+                __Xb_shape = min(__B_shape)
+            else:
+                raise ValueError("Shape characteristic of B \"%s\" and Xb \"%s\" are incompatible"%(__B_shape,__Xb_shape))
         #
         if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
             raise ValueError("Shape characteristic of R \"%s\" and Y \"%s\" are incompatible"%(__R_shape,__Y_shape))

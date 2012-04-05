@@ -451,7 +451,12 @@ unused.
       10e-5 and it is not recommended to change it.
 
 :"EnsembleBlue":
-    no option
+
+    :SetSeed:
+      This key allow to give an integer in order to fix the seed of the random
+      generator used to generate the ensemble. A convenient value is for example
+      1000. By default, the seed is left uninitialized, and so use the default
+      initialization from the computer.
 
 :"KalmanFilter":
 

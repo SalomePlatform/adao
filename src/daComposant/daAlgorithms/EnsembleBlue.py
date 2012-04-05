@@ -42,6 +42,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         #
+        # Paramètres de pilotage
+        # ----------------------
+        # Potentiels : "SetSeed"
+        if Parameters.has_key("SetSeed"):
+            numpy.random.seed(int(Parameters["SetSeed"]))
+            logging.debug("%s Graine fixee pour le generateur aleatoire = %s"%(self._name, int(Parameters["SetSeed"])))
+        else:
+            logging.debug("%s Graine quelconque pour le generateur aleatoire"%(self._name, ))
+        #
         # Nombre d'ensemble pour l'ébauche 
         # --------------------------------
         nb_ens = Xb.stepnumber()
