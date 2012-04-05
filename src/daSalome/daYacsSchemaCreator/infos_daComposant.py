@@ -54,7 +54,7 @@ AssimAlgos = [
     "3DVAR",
     "Blue",
     "EnsembleBlue",
-    "KalmanFilter",
+#     "KalmanFilter", # Removed because EvolutionModel must be available in OptLoop
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     ]
@@ -75,12 +75,12 @@ AlgoDataRequirements["EnsembleBlue"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
-AlgoDataRequirements["KalmanFilter"] = [
-    "Background", "BackgroundError",
-    "Observation", "ObservationError",
-    "EvolutionModel", "EvolutionError",
-    "ObservationOperator",
-    ]
+# AlgoDataRequirements["KalmanFilter"] = [
+#     "Background", "BackgroundError",
+#     "Observation", "ObservationError",
+#     "EvolutionModel", "EvolutionError",
+#     "ObservationOperator",
+#     ]
 AlgoDataRequirements["LinearLeastSquares"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -94,11 +94,9 @@ AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
-AlgoType["KalmanFilter"] = "Optim"
+# AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
-#AlgoType["Blue"] = "Direct"
-
 
 # Variables qui sont partages avec le generateur de
 # catalogue Eficas
