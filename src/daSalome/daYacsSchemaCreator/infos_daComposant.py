@@ -17,7 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Andre Ribes, andre.ribes@edf.fr, EDF R&D
 
 
 # -- Infos pour le parser --
@@ -26,14 +26,11 @@ AnalysisData = {}
 AnalysisFromList = ["String", "Script"]
 
 # -- Infos from daCore --
-#AssimData = ["Background", "BackgroundError",
-#             "Observation", "ObservationError", "ObservationOperator", "ObservationOperatorAppliedToX",
-#             "EvolutionModel", "EvolutionError", "AlgorithmParameters"]
-
 AssimData = ["Background", "BackgroundError",
-             "Observation", "ObservationError", "ObservationOperator",
-             "EvolutionModel", "EvolutionError", "AlgorithmParameters"]
-
+             "Observation", "ObservationError",
+             "EvolutionModel", "EvolutionError",
+             "ObservationOperator",
+             "AlgorithmParameters"]
 
 AssimType = {}
 AssimType["Background"] = ["Vector"]
@@ -43,7 +40,6 @@ AssimType["ObservationError"] = ["Matrix"]
 AssimType["ObservationOperator"] = ["Matrix", "Function"]
 AssimType["AlgorithmParameters"] = ["Dict"]
 AssimType["UserDataInit"] = ["Dict"]
-#AssimType["ObservationOperatorAppliedToX"] = ["List"]
 
 FromNumpyList = {}
 FromNumpyList["Vector"] = ["String", "Script"]
@@ -52,24 +48,57 @@ FromNumpyList["Function"] = ["FunctionDict"]
 FromNumpyList["Dict"] = ["Script"]
 
 # -- Infos from daAlgorithms --
-AssimAlgos = ["Blue", "EnsembleBlue", "KalmanFilter", "LinearLeastSquares", "3DVAR"]
+AssimAlgos = [
+    "3DVAR",
+    "Blue",
+    "EnsembleBlue",
+    "KalmanFilter",
+    "LinearLeastSquares",
+    "NonLinearLeastSquares",
+    ]
 
 AlgoDataRequirements = {}
-AlgoDataRequirements["Blue"] = ["Background", "BackgroundError",
-                                "Observation", "ObservationOperator", "ObservationError"]
+AlgoDataRequirements["3DVAR"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["Blue"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["EnsembleBlue"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["KalmanFilter"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "EvolutionModel", "EvolutionError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["LinearLeastSquares"] = [
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["NonLinearLeastSquares"] = [
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
 
-AlgoDataRequirements["3DVAR"] = ["Background", "BackgroundError",
-                                 "Observation", "ObservationOperator", "ObservationError"]
 AlgoType = {}
-AlgoType["Blue"] = "Optim"
 AlgoType["3DVAR"] = "Optim"
+AlgoType["Blue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
+AlgoType["NonLinearLeastSquares"] = "Optim"
 #AlgoType["Blue"] = "Direct"
 
 
-# Variables qui sont partagés avec le générateur de
+# Variables qui sont partages avec le generateur de
 # catalogue Eficas
 
 # Basic data types
@@ -80,7 +109,7 @@ DataTypeDict = {}
 DataTypeDict["Vector"]   = ["String", "Script"]
 DataTypeDict["Matrix"]   = ["String", "Script"]
 DataTypeDict["Function"] = ["FunctionDict"]
-DataTypeDict["Dict"]     = ["Script"]
+DataTypeDict["Dict"]     = ["String", "Script"]
 
 DataTypeDefaultDict = {}
 DataTypeDefaultDict["Vector"]   = "Script"
@@ -113,6 +142,21 @@ OptDict["UserPostAnalysis"]   = ["String", "Script"]
 OptDefaultDict = {}
 OptDefaultDict["UserPostAnalysis"]   = "Script"
 
-
 # Observers
-ObserversList = ["CostFunctionJ","CostFunctionJb","CostFunctionJo","GradientOfCostFunctionJ","GradientOfCostFunctionJb","GradientOfCostFunctionJo","CurrentState","Analysis","Innovation","SigmaObs2","SigmaBck2","OMA","OMB","BMA","CovarianceAPosteriori"]
+ObserversList = [
+    "Analysis",
+    "CurrentState",
+    "Innovation",
+    "OMA",
+    "OMB",
+    "BMA",
+    "CostFunctionJ",
+    "CostFunctionJb",
+    "CostFunctionJo",
+    "GradientOfCostFunctionJ",
+    "GradientOfCostFunctionJb",
+    "GradientOfCostFunctionJo",
+    "SigmaObs2",
+    "SigmaBck2",
+    "APosterioriCovariance",
+    ]
