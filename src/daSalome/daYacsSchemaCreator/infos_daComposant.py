@@ -44,10 +44,10 @@ AssimType["AlgorithmParameters"] = ["Dict"]
 AssimType["UserDataInit"] = ["Dict"]
 
 FromNumpyList = {}
-FromNumpyList["Vector"] = ["String", "Script"]
-FromNumpyList["Matrix"] = ["String", "Script"]
+FromNumpyList["Vector"]   = ["String", "Script"]
+FromNumpyList["Matrix"]   = ["String", "Script"]
 FromNumpyList["Function"] = ["FunctionDict"]
-FromNumpyList["Dict"] = ["Script"]
+FromNumpyList["Dict"]     = ["Script"]
 
 # -- Infos from daAlgorithms --
 AssimAlgos = [
@@ -111,7 +111,7 @@ DataTypeDict = {}
 DataTypeDict["Vector"]   = ["String", "Script"]
 DataTypeDict["Matrix"]   = ["String", "Script"]
 DataTypeDict["Function"] = ["FunctionDict"]
-DataTypeDict["Dict"]     = ["String", "Script"]
+DataTypeDict["Dict"]     = ["Script"]
 
 DataTypeDefaultDict = {}
 DataTypeDefaultDict["Vector"]   = "Script"
