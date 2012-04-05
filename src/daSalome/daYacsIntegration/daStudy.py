@@ -52,7 +52,10 @@ class daStudy:
 
     # Observation Management
     self.ObservationOperatorType = {}
+    self.EvolutionModelType = {}
     self.FunctionObservationOperator = {}
+
+  #--------------------------------------
 
   def setInputVariable(self, name, size):
     self.InputVariables[name] = size
@@ -62,68 +65,72 @@ class daStudy:
     self.OutputVariables[name] = size
     self.OutputVariablesOrder.append(name)
 
+  #--------------------------------------
+
   def setAlgorithmParameters(self, parameters):
     self.algorithm_dict = parameters
 
-  def initAlgorithm(self):
+  #--------------------------------------
 
+  def initAlgorithm(self):
     self.ADD.setAlgorithm(choice=self.algorithm)
     if self.algorithm_dict != None:
       logging.debug("ADD.setAlgorithm : "+str(self.algorithm_dict))
       self.ADD.setAlgorithmParameters(asDico=self.algorithm_dict)
 
-  def getAssimilationStudy(self):
+  #--------------------------------------
 
+  def getAssimilationStudy(self):
     return self.ADD
 
+  #--------------------------------------
   # Methods to initialize AssimilationStudy
 
   def setBackgroundType(self, Type):
-
     if Type == "Vector":
       self.BackgroundType = Type
     else:
       raise daError("[daStudy::setBackgroundType] Type is unkown : " + Type + " Types are : Vector")
 
   def setBackground(self, Background):
-
     try:
       self.BackgroundType
     except AttributeError:
       raise daError("[daStudy::setBackground] Type is not defined !")
-
     self.Background = Background
-
     if self.BackgroundType == "Vector":
       self.ADD.setBackground(asVector = Background)
 
   def getBackground(self):
     return self.Background
 
-  def setBackgroundError(self, BackgroundError):
+  #--------------------------------------
 
+  def setBackgroundError(self, BackgroundError):
     self.ADD.setBackgroundError(asCovariance = BackgroundError)
 
-  def setObservationType(self, Type):
+  #--------------------------------------
 
+  def setObservationType(self, Type):
     if Type == "Vector":
       self.ObservationType = Type
     else:
       raise daError("[daStudy::setObservationType] Type is unkown : " + Type + " Types are : Vector")
 
   def setObservation(self, Observation):
-
     try:
       self.ObservationType
     except AttributeError:
       raise daError("[daStudy::setObservation] Type is not defined !")
-
     if self.ObservationType == "Vector":
       self.ADD.setObservation(asVector = Observation)
+
+  #--------------------------------------
 
   def setObservationError(self, ObservationError):
     self.ADD.setObservationError(asCovariance = ObservationError)
 
+  #--------------------------------------
 
   def getObservationOperatorType(self, Name):
     rtn = None
@@ -139,18 +146,47 @@ class daStudy:
     elif Type == "Function":
       self.ObservationOperatorType[Name] = Type
     else:
-      raise daError("[daStudy::setObservationOperatorType] Type is unkown : " + Type + " Types are : Matrix")
+      raise daError("[daStudy::setObservationOperatorType] Type is unkown : " + Type + " Types are : Matrix, Function")
 
   def setObservationOperator(self, Name, ObservationOperator):
     try:
       self.ObservationOperatorType[Name]
     except AttributeError:
       raise daError("[daStudy::setObservationOperator] Type is not defined !")
-
     if self.ObservationOperatorType[Name] == "Matrix":
       self.ADD.setObservationOperator(asMatrix = ObservationOperator)
     elif self.ObservationOperatorType[Name] == "Function":
       self.FunctionObservationOperator[Name] = ObservationOperator
+
+  #--------------------------------------
+
+  def getEvolutionModelType(self, Name):
+    rtn = None
+    try:
+      rtn = self.EvolutionModelType[Name]
+    except:
+      pass
+    return rtn
+
+  def setEvolutionModelType(self, Name, Type):
+    if Type == "Matrix":
+      self.EvolutionModelType[Name] = Type
+    elif Type == "Function":
+      self.EvolutionModelType[Name] = Type
+    else:
+      raise daError("[daStudy::setEvolutionModelType] Type is unkown : " + Type + " Types are : Matrix, Function")
+
+  def setEvolutionModel(self, Name, EvolutionModel):
+    try:
+      self.EvolutionModelType[Name]
+    except AttributeError:
+      raise daError("[daStudy::setEvolutionModel] Type is not defined !")
+    if self.EvolutionModelType[Name] == "Matrix":
+      self.ADD.setEvolutionModel(asMatrix = EvolutionModel)
+    elif self.EvolutionModelType[Name] == "Function":
+      self.FunctionEvolutionModel[Name] = EvolutionModel
+
+  #--------------------------------------
 
   def addObserver(self, name, scheduler, info, number):
     self.observers_dict[name] = {}

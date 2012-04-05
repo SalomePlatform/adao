@@ -28,8 +28,8 @@ AnalysisFromList = ["String", "Script"]
 # -- Infos from daCore --
 AssimData = ["Background", "BackgroundError",
              "Observation", "ObservationError",
-             "EvolutionModel", "EvolutionError",
              "ObservationOperator",
+             "EvolutionModel", "EvolutionError",
              "AlgorithmParameters"]
 
 AssimType = {}
@@ -38,6 +38,8 @@ AssimType["BackgroundError"] = ["Matrix"]
 AssimType["Observation"] = ["Vector"]
 AssimType["ObservationError"] = ["Matrix"]
 AssimType["ObservationOperator"] = ["Matrix", "Function"]
+AssimType["EvolutionModel"] = ["Matrix", "Function"]
+AssimType["EvolutionError"] = ["Matrix"]
 AssimType["AlgorithmParameters"] = ["Dict"]
 AssimType["UserDataInit"] = ["Dict"]
 
@@ -124,6 +126,8 @@ AssimDataDict["BackgroundError"] = ["Matrix"]
 AssimDataDict["Observation"] = ["Vector"]
 AssimDataDict["ObservationError"] = ["Matrix"]
 AssimDataDict["ObservationOperator"] = ["Matrix", "Function"]
+AssimDataDict["EvolutionModel"] = ["Matrix", "Function"]
+AssimDataDict["EvolutionError"] = ["Matrix"]
 AssimDataDict["AlgorithmParameters"] = ["Dict"]
 AssimDataDict["UserDataInit"] = ["Dict"]
 
@@ -133,6 +137,8 @@ AssimDataDefaultDict["BackgroundError"]     = "Matrix"
 AssimDataDefaultDict["Observation"]         = "Vector"
 AssimDataDefaultDict["ObservationError"]    = "Matrix"
 AssimDataDefaultDict["ObservationOperator"] = "Function"
+AssimDataDefaultDict["EvolutionModel"]      = "Function"
+AssimDataDefaultDict["EvolutionError"]      = "Matrix"
 AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 AssimDataDefaultDict["UserDataInit"]        = "Dict"
 
