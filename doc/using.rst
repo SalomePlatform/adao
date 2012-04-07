@@ -381,7 +381,7 @@ unused.
       This key indicates the maximum number of iterations allowed for iterative
       optimization. The default is 15000, which very similar to no limit on
       iterations. It is then recommended to adapt this parameter to the needs on
-      real problems. For some algorithms, the effective stopping step can be
+      real problems. For some minimizers, the effective stopping step can be
       slightly different due to algorihtm internal control requirements.
 
     :CalculateAPosterioriCovariance:
@@ -428,7 +428,7 @@ unused.
       This key indicates the maximum number of iterations allowed for iterative
       optimization. The default is 15000, which very similar to no limit on
       iterations. It is then recommended to adapt this parameter to the needs on
-      real problems. For some algorithms, the effective stopping step can be
+      real problems. For some minimizers, the effective stopping step can be
       slightly different due to algorihtm internal control requirements.
 
     :CostDecrementTolerance:
@@ -457,6 +457,29 @@ unused.
       generator used to generate the ensemble. A convenient value is for example
       1000. By default, the seed is left uninitialized, and so use the default
       initialization from the computer.
+
+:"QuantileRegression":
+
+    :Quantile:
+      This key allows to define the real value of the desired quantile, between
+      0 and 1. The default is 0.5, corresponding to the median.
+
+    :Minimizer:
+      This key allows to choose the optimization minimizer. The default choice
+      and only available choice is "MMQR" (Majorize-Minimize for Quantile
+      Regression).
+
+    :MaximumNumberOfSteps:
+      This key indicates the maximum number of iterations allowed for iterative
+      optimization. The default is 15000, which very similar to no limit on
+      iterations. It is then recommended to adapt this parameter to the needs on
+      real problems.
+
+    :CostDecrementTolerance:
+      This key indicates a limit value, leading to stop successfully the
+      iterative optimization process when the cost function or the surrogate
+      decreases less than this tolerance at the last step. The default is 10e-6,
+      and it is recommended to adapt it the needs on real problems.
 
 Examples of using these commands are available in the section
 :ref:`section_examples` and in example files installed with ADAO module.

@@ -57,6 +57,7 @@ AssimAlgos = [
 #     "KalmanFilter", # Removed because EvolutionModel must be available in OptLoop
     "LinearLeastSquares",
     "NonLinearLeastSquares",
+    "QuantileRegression",
     ]
 
 AlgoDataRequirements = {}
@@ -86,7 +87,13 @@ AlgoDataRequirements["LinearLeastSquares"] = [
     "ObservationOperator",
     ]
 AlgoDataRequirements["NonLinearLeastSquares"] = [
+    "Background",
     "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["QuantileRegression"] = [
+    "Background",
+    "Observation",
     "ObservationOperator",
     ]
 
@@ -97,6 +104,7 @@ AlgoType["EnsembleBlue"] = "Optim"
 # AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
+AlgoType["QuantileRegression"] = "Optim"
 
 # Variables qui sont partages avec le generateur de
 # catalogue Eficas

@@ -85,14 +85,16 @@ class Operator:
         else:
             return self.__Method( (xNominal, xValue) )
 
-    def asMatrix(self):
+    def asMatrix(self, ValueForMethodForm = None):
         """
         Permet de renvoyer l'opérateur sous la forme d'une matrice
         """
         if self.__Matrix is not None:
             return self.__Matrix
+        elif ValueForMethodForm is not None:
+            return self.__Method( ValueForMethodForm )
         else:
-            raise ValueError("Matrix form of the operator is not available but is required")
+            raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
 
     def shape(self):
         """
