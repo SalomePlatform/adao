@@ -460,9 +460,9 @@ here for convenience::
             # 
             Jacobian  = []
             for i in range( len(dX) ):
-                X_plus_dXi     = X.A1
+                X_plus_dXi     = numpy.array( X.A1 )
                 X_plus_dXi[i]  = X[i] + dX[i]
-                X_moins_dXi    = X.A1
+                X_moins_dXi    = numpy.array( X.A1 )
                 X_moins_dXi[i] = X[i] - dX[i]
                 #
                 HX_plus_dXi  = FunctionH( X_plus_dXi )
@@ -476,7 +476,7 @@ here for convenience::
             #
             HX_plus_dX = []
             for i in range( len(dX) ):
-                X_plus_dXi    = X.A1
+                X_plus_dXi    = numpy.array( X.A1 )
                 X_plus_dXi[i] = X[i] + dX[i]
                 #
                 HX_plus_dXi = FunctionH( X_plus_dXi )
