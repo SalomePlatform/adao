@@ -9,7 +9,6 @@ A brief introduction to Data Assimilation
 .. index:: single: observation
 .. index:: single: a priori
 
-
 **Data Assimilation** is a general framework for computing the optimal estimate
 of the true state of a system, over time if necessary. It uses values obtained
 both from observations and *a priori* models, including information about their

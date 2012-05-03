@@ -129,6 +129,8 @@ extension replacing the "*.comm*" one [#]_.
 Modify and supplement the YACS scheme and save it
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: Analysis
+
 When the YACS scheme is generated and opened in SALOME through the YACS module
 GUI, you can modify or supplement the scheme like any YACS scheme. It is
 recommended to save the modified scheme with a new name, in order to preserve in
@@ -162,6 +164,16 @@ simple example is given in the section :ref:`section_examples`.
 
 Execute the YACS case and obtain the results
 ++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: Analysis
+.. index:: single: Innovation
+.. index:: single: APosterioriCovariance
+.. index:: single: OMB
+.. index:: single: BMA
+.. index:: single: OMA
+.. index:: single: CostFunctionJ
+.. index:: single: CostFunctionJo
+.. index:: single: CostFunctionJb
 
 The YACS scheme is now complete and can be executed. Parametrisation and
 execution of a YACS case is fully compliant with the standard way to deal with a
@@ -220,6 +232,13 @@ explained in the section :ref:`section_theory`.
 List of possible input types
 ++++++++++++++++++++++++++++
 
+.. index:: single: Dict
+.. index:: single: Function
+.. index:: single: Matrix
+.. index:: single: String
+.. index:: single: Script
+.. index:: single: Vector
+
 The different type-style commands are:
 
 :Dict:
@@ -247,6 +266,23 @@ The different type-style commands are:
     
 List of commands
 ++++++++++++++++
+
+.. index:: single: ASSIMILATION_STUDY
+.. index:: single: Algorithm
+.. index:: single: AlgorithmParameters
+.. index:: single: Background
+.. index:: single: BackgroundError
+.. index:: single: Debug
+.. index:: single: InputVariables
+.. index:: single: Observation
+.. index:: single: ObservationError
+.. index:: single: ObservationOperator
+.. index:: single: Observers
+.. index:: single: OutputVariables
+.. index:: single: Study_name
+.. index:: single: Study_repertory
+.. index:: single: UserDataInit
+.. index:: single: UserPostAnalysis
 
 The different commands are the following:
 
@@ -338,6 +374,24 @@ The different commands are the following:
 
 List of possible options for the algorithms
 +++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: Blue
+.. index:: single: LinearLeastSquares
+.. index:: single: 3DVAR
+.. index:: single: NonLinearLeastSquares
+.. index:: single: EnsembleBlue
+.. index:: single: QuantileRegression
+
+.. index:: single: AlgorithmParameters
+.. index:: single: Minimizer
+.. index:: single: Bounds
+.. index:: single: MaximumNumberOfSteps
+.. index:: single: CalculateAPosterioriCovariance
+.. index:: single: CostDecrementTolerance
+.. index:: single: ProjectedGradientTolerance
+.. index:: single: GradientNormTolerance
+.. index:: single: SetSeed
+.. index:: single: Quantile
 
 Each algorithm can be controled using some generic or specific options given
 throught the "*AlgorithmParameters*" optional command, as follows::
