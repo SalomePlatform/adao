@@ -66,7 +66,7 @@ if method == "Direct":
 if method == "Tangent":
     logging.info("ComputationFunctionNode: Tangent computation")
     Xcurrent = computation["inputValues"][0][0][0]
-    data = FunctionH(numpy.matrix( Xcurrent ).T)
+    data = TangentH(numpy.matrix( Xcurrent ).T)
 #
 if method == "Adjoint":
     logging.info("ComputationFunctionNode: Adjoint computation")
