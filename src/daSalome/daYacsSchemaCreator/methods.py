@@ -405,7 +405,7 @@ def create_yacs_proc(study_config):
       if "UserPostAnalysis" in init_config["Target"]:
         node_script = analysis_node.getScript()
         node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
-        analysis_node.setScript(opt_node_script)
+        analysis_node.setScript(node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
@@ -442,7 +442,7 @@ def create_yacs_proc(study_config):
       if "UserPostAnalysis" in init_config["Target"]:
         node_script = analysis_node.getScript()
         node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
-        analysis_node.setScript(opt_node_script)
+        analysis_node.setScript(node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
         proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
