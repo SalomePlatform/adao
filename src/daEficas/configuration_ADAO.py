@@ -23,7 +23,7 @@
     Ce module sert pour charger les paramètres de configuration d'EFICAS
 """
 # Modules Python
-print "passage dans la surcharge de configuration pour Adao"
+# print "passage dans la surcharge de configuration pour Adao"
 import os, sys, string, types, re
 import traceback
 from PyQt4.QtGui  import *

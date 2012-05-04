@@ -21,7 +21,7 @@
 
 import os, sys
 
-print "import des prefs de Adao"
+# print "import des prefs de Adao"
 
 # Configuration de Eficas
 # INSTALLDIR, REPINI est obligatoire
@@ -34,11 +34,11 @@ repIni=os.path.dirname(os.path.abspath(__file__))
 initialdir=os.environ["PWD"]
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
 
 
-# INSTALLDIR sert � localiser l'installation d'Eficas
+# INSTALLDIR sert a localiser l'installation d'Eficas
 #INSTALLDIR=os.path.join(REPINI,'..')
 
 
