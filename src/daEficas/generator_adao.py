@@ -184,8 +184,11 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "Init_config['From'] = 'Script'\n"
       self.text_da += "Init_config['Data'] = '" + init_file_data + "'\n"
       self.text_da += "Init_config['Target'] = ["
-      for target in init_target_list:
-        self.text_da += "'" + target + "',"
+      if type(init_target_list) is type("str"):
+        self.text_da +=  "'" + init_target_list + "',"
+      else:
+        for target in init_target_list:
+          self.text_da += "'" + target + "',"
       self.text_da += "]\n"
       self.text_da += "study_config['UserDataInit'] = Init_config\n"
 
