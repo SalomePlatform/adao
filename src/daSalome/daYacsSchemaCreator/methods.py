@@ -61,6 +61,10 @@ def create_yacs_proc(study_config):
     base_repertory = study_config["Repertory"]
     repertory = True
 
+  # Create ADAO case bloc
+  ADAO_Case = runtime.createBloc("ADAO_Case_Bloc")
+  proc.edAddChild(ADAO_Case)
+
   # Step 0: create AssimilationStudyObject
   factory_CAS_node = catalogAd.getNodeFromNodeMap("CreateAssimilationStudy")
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
@@ -87,8 +91,7 @@ def create_yacs_proc(study_config):
   CAS_node.getInputPort("OutputVariablesNames").edInitPy(OutputVariablesNames)
   CAS_node.getInputPort("OutputVariablesSizes").edInitPy(OutputVariablesSizes)
 
-  proc.edAddChild(CAS_node)
-
+  ADAO_Case.edAddChild(CAS_node)
 
   # Adding an observer init node if an user defines some
   factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
@@ -98,17 +101,17 @@ def create_yacs_proc(study_config):
     node_script += "has_observers = True\n"
     node_script += "observers = " + str(study_config["Observers"]) + "\n"
     init_observers_node.setScript(node_script)
-    proc.edAddChild(init_observers_node)
-    proc.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
-    proc.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+    ADAO_Case.edAddChild(init_observers_node)
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
   else:
     node_script = init_observers_node.getScript()
     node_script += "has_observers = False\n"
     node_script += "observers = \"\"\n"
     init_observers_node.setScript(node_script)
-    proc.edAddChild(init_observers_node)
-    proc.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
-    proc.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+    ADAO_Case.edAddChild(init_observers_node)
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
 
   # Step 0.5: Find if there is a user init node
   init_config = {}
@@ -124,7 +127,7 @@ def create_yacs_proc(study_config):
     init_node_script = init_node.getScript()
     init_node_script += "init_data = user_script_module.init_data\n"
     init_node.setScript(init_node_script)
-    proc.edAddChild(init_node)
+    ADAO_Case.edAddChild(init_node)
 
   # Step 1: get input data from user configuration
 
@@ -146,36 +149,36 @@ def create_yacs_proc(study_config):
         back_node_script = back_node.getScript()
         back_node_script += key + " = user_script_module." + key + "\n"
         back_node.setScript(back_node_script)
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
-        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         # Connect node with InitUserData
         if key in init_config["Target"]:
           back_node_script = back_node.getScript()
           back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
           back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromString")
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
           back_node_script = back_node.getScript()
           back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
           back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "Script":
         # Create node
@@ -189,38 +192,38 @@ def create_yacs_proc(study_config):
         back_node_script = back_node.getScript()
         back_node_script += key + " = user_script_module." + key + "\n"
         back_node.setScript(back_node_script)
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
           back_node_script = back_node.getScript()
           back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
           back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Matrix" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyMatrixFromString")
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("matrix_in_string").edInitPy(data_config["Data"])
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
           back_node_script = back_node.getScript()
           back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
           back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Matrix" and data_config["From"] == "Script":
         # Create node
@@ -234,19 +237,19 @@ def create_yacs_proc(study_config):
         back_node_script = back_node.getScript()
         back_node_script += key + " = user_script_module." + key + "\n"
         back_node.setScript(back_node_script)
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         # Connect node with InitUserData
         if key in init_config["Target"]:
           back_node_script = back_node.getScript()
           back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
           back_node.setScript(back_node_script)
           back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "ObservationOperator":
          FunctionDict = data_config["Data"]
@@ -260,15 +263,15 @@ def create_yacs_proc(study_config):
 
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
-  proc.edAddChild(compute_bloc)
-  proc.edAddCFLink(CAS_node, compute_bloc)
+  ADAO_Case.edAddChild(compute_bloc)
+  ADAO_Case.edAddCFLink(CAS_node, compute_bloc)
   # We use an optimizer loop
   name = "Execute" + study_config["Algorithm"]
   algLib = "daYacsIntegration.py"
   factoryName = "AssimilationAlgorithm_asynch"
   optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
   compute_bloc.edAddChild(optimizer_node)
-  proc.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
+  ADAO_Case.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
   # Check if we have a python script for OptimizerLoopNode
   data_config = study_config["ObservationOperator"]
   opt_script_node = None
@@ -315,13 +318,13 @@ def create_yacs_proc(study_config):
     factory_read_for_switch_node = catalogAd.getNodeFromNodeMap("ReadForSwitchNode")
     read_for_switch_node = factory_read_for_switch_node.cloneNode("ReadForSwitch")
     execution_bloc.edAddChild(read_for_switch_node)
-    proc.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
+    ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
 
     # Add a switch
     switch_node = runtime.createSwitch("Execution Switch")
     execution_bloc.edAddChild(switch_node)
     # Connect switch
-    proc.edAddDFLink(read_for_switch_node.getOutputPort("switch_value"), switch_node.edGetConditionPort())
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("switch_value"), switch_node.edGetConditionPort())
 
     # First case: always computation bloc
     computation_bloc = runtime.createBloc("computation_bloc")
@@ -329,8 +332,8 @@ def create_yacs_proc(study_config):
     switch_node.edSetNode(1, computation_bloc)
 
     # We connect Optimizer with the script
-    proc.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_node.getInputPort("computation"))
-    proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_node.getInputPort("computation"))
+    ADAO_Case.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
 
 
     # For each observer add a new bloc in the switch
@@ -343,7 +346,7 @@ def create_yacs_proc(study_config):
       factory_extract_data_node = catalogAd.getNodeFromNodeMap("ExtractDataNode")
       extract_data_node = factory_extract_data_node.cloneNode("ExtractData")
       observer_bloc.edAddChild(extract_data_node)
-      proc.edAddDFLink(read_for_switch_node.getOutputPort("data"), extract_data_node.getInputPort("data"))
+      ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), extract_data_node.getInputPort("data"))
 
       observation_node = None
       if observer_cfg["nodetype"] == "String":
@@ -360,22 +363,22 @@ def create_yacs_proc(study_config):
         else:
           observation_node.getInputPort("script").edInitPy(observer_cfg["Script"])
       observer_bloc.edAddChild(observation_node)
-      proc.edAddDFLink(extract_data_node.getOutputPort("var"), observation_node.getInputPort("var"))
-      proc.edAddDFLink(extract_data_node.getOutputPort("info"), observation_node.getInputPort("info"))
+      ADAO_Case.edAddDFLink(extract_data_node.getOutputPort("var"), observation_node.getInputPort("var"))
+      ADAO_Case.edAddDFLink(extract_data_node.getOutputPort("info"), observation_node.getInputPort("info"))
 
       factory_end_observation_node = catalogAd.getNodeFromNodeMap("EndObservationNode")
       end_observation_node = factory_end_observation_node.cloneNode("EndObservation")
       observer_bloc.edAddChild(end_observation_node)
-      proc.edAddCFLink(observation_node, end_observation_node)
-      proc.edAddDFLink(end_observation_node.getOutputPort("output"), optimizer_node.edGetPortForOutPool())
+      ADAO_Case.edAddCFLink(observation_node, end_observation_node)
+      ADAO_Case.edAddDFLink(end_observation_node.getOutputPort("output"), optimizer_node.edGetPortForOutPool())
   else:
     computation_bloc = runtime.createBloc("computation_bloc")
     optimizer_node.edSetNode(computation_bloc)
     computation_bloc.edAddChild(opt_script_node)
 
     # We connect Optimizer with the script
-    proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
-    proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+    ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
+    ADAO_Case.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
 
   # Connect node with InitUserData
   if "ObservationOperator" in init_config["Target"]:
@@ -383,7 +386,7 @@ def create_yacs_proc(study_config):
     opt_node_script = "__builtins__[\"init_data\"] = init_data\n" + opt_node_script
     opt_script_node.setScript(opt_node_script)
     opt_script_node.edAddInputPort("init_data", t_pyobj)
-    proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
+    ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
 
   # Step 4: create post-processing from user configuration
   if "UserPostAnalysis" in study_config.keys():
@@ -394,12 +397,12 @@ def create_yacs_proc(study_config):
       default_script = analysis_node.getScript()
       final_script = default_script + analysis_config["Data"]
       analysis_node.setScript(final_script)
-      proc.edAddChild(analysis_node)
-      proc.edAddCFLink(compute_bloc, analysis_node)
+      ADAO_Case.edAddChild(analysis_node)
+      ADAO_Case.edAddCFLink(compute_bloc, analysis_node)
       if AlgoType[study_config["Algorithm"]] == "Optim":
-        proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
       else:
-        proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
       # Connect node with InitUserData
       if "UserPostAnalysis" in init_config["Target"]:
@@ -407,7 +410,7 @@ def create_yacs_proc(study_config):
         node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
         analysis_node.setScript(node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
-        proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
+        ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
     elif analysis_config["From"] == "Script":
       factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
@@ -432,19 +435,19 @@ def create_yacs_proc(study_config):
       node_script += default_script
       node_script += analysis_file.read()
       analysis_node.setScript(node_script)
-      proc.edAddChild(analysis_node)
-      proc.edAddCFLink(compute_bloc, analysis_node)
+      ADAO_Case.edAddChild(analysis_node)
+      ADAO_Case.edAddCFLink(compute_bloc, analysis_node)
       if AlgoType[study_config["Algorithm"]] == "Optim":
-        proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
       else:
-        proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
       # Connect node with InitUserData
       if "UserPostAnalysis" in init_config["Target"]:
         node_script = analysis_node.getScript()
         node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
         analysis_node.setScript(node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
-        proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
+        ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
       pass
 
