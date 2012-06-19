@@ -21,5 +21,5 @@
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 name    = "Data Assimilation Package"
-version = "0.5.0-SP650"
-date    = "jeudi 29 mars 2012, 11:11:11 (UTC+0200)"
+version = "0.6.0"
+date    = "jeudi 08 juin 2012, 11:11:11 (UTC+0200)"
