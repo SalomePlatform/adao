@@ -135,6 +135,7 @@ class AssimilationStudy:
     def setBackgroundError(self,
             asCovariance  = None,
             asEyeByScalar = None,
+            asEyeByVector = None,
             toBeStored    = False,
             ):
         """
@@ -144,15 +145,23 @@ class AssimilationStudy:
         - asEyeByScalar : entrée des données comme un seul scalaire de variance,
           multiplicatif d'une matrice de corrélation identité, aucune matrice
           n'étant donc explicitement à donner
+        - asEyeByVector : entrée des données comme un seul vecteur de variance,
+          à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
+          n'étant donc explicitement à donner
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
         if asEyeByScalar is not None:
             self.__B_scalar = float(asEyeByScalar)
             self.__B        = None
-        else:
+        elif asEyeByVector is not None:
             self.__B_scalar = None
-            self.__B  = numpy.matrix( asCovariance, numpy.float )
+            self.__B        = numpy.matrix( numpy.diagflat( asEyeByVector ), numpy.float )
+        elif asCovariance is not None:
+            self.__B_scalar = None
+            self.__B        = numpy.matrix( asCovariance, numpy.float )
+        else:
+            raise ValueError("Background error covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix")
         #
         self.__Parameters["B_scalar"] = self.__B_scalar
         if toBeStored:
@@ -192,6 +201,7 @@ class AssimilationStudy:
     def setObservationError(self,
             asCovariance  = None,
             asEyeByScalar = None,
+            asEyeByVector = None,
             toBeStored    = False,
             ):
         """
@@ -201,15 +211,23 @@ class AssimilationStudy:
         - asEyeByScalar : entrée des données comme un seul scalaire de variance,
           multiplicatif d'une matrice de corrélation identité, aucune matrice
           n'étant donc explicitement à donner
+        - asEyeByVector : entrée des données comme un seul vecteur de variance,
+          à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
+          n'étant donc explicitement à donner
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
         if asEyeByScalar is not None:
             self.__R_scalar = float(asEyeByScalar)
             self.__R        = None
-        else:
+        elif asEyeByVector is not None:
             self.__R_scalar = None
-            self.__R  = numpy.matrix( asCovariance, numpy.float )
+            self.__R        = numpy.matrix( numpy.diagflat( asEyeByVector ), numpy.float )
+        elif asCovariance is not None:
+            self.__R_scalar = None
+            self.__R        = numpy.matrix( asCovariance, numpy.float )
+        else:
+            raise ValueError("Observation error covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix")
         #
         self.__Parameters["R_scalar"] = self.__R_scalar
         if toBeStored:
@@ -244,18 +262,18 @@ class AssimilationStudy:
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
-                self.__H["Direct"]  = Operator( fromMethod = asFunction["Tangent"]  )
+                self.__H["Direct"] = Operator( fromMethod = asFunction["Tangent"] )
             else:
                 self.__H["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
             self.__H["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
             self.__H["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
         elif asMatrix is not None:
-            mat = numpy.matrix( asMatrix, numpy.float )
-            self.__H["Direct"]  = Operator( fromMatrix = mat )
-            self.__H["Tangent"] = Operator( fromMatrix = mat )
-            self.__H["Adjoint"] = Operator( fromMatrix = mat.T )
+            matrice = numpy.matrix( asMatrix, numpy.float )
+            self.__H["Direct"]  = Operator( fromMatrix = matrice )
+            self.__H["Tangent"] = Operator( fromMatrix = matrice )
+            self.__H["Adjoint"] = Operator( fromMatrix = matrice.T )
         else:
-            raise ValueError("Error: improperly defined observation operator")
+            raise ValueError("Improperly defined observation operator, it requires at minima either a matrix or a Tangent/Adjoint pair.")
         #
         if appliedToX is not None:
             self.__H["AppliedToX"] = {}
@@ -298,7 +316,9 @@ class AssimilationStudy:
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        if (type(asFunction) is type({})) and (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
+        if (type(asFunction) is type({})) and \
+                asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
+                (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
                 self.__M["Direct"] = Operator( fromMethod = asFunction["Tangent"]  )
             else:
@@ -311,7 +331,7 @@ class AssimilationStudy:
             self.__M["Tangent"] = Operator( fromMatrix = matrice )
             self.__M["Adjoint"] = Operator( fromMatrix = matrice.T )
         else:
-            raise ValueError("Error: improperly defined evolution operator")
+            raise ValueError("Improperly defined evolution operator, it requires at minima either a matrix or a Tangent/Adjoint pair.")
         #
         if toBeStored:
             self.__StoredInputs["EvolutionModel"] = self.__M
@@ -320,6 +340,7 @@ class AssimilationStudy:
     def setEvolutionError(self,
             asCovariance  = None,
             asEyeByScalar = None,
+            asEyeByVector = None,
             toBeStored    = False,
             ):
         """
@@ -329,15 +350,23 @@ class AssimilationStudy:
         - asEyeByScalar : entrée des données comme un seul scalaire de variance,
           multiplicatif d'une matrice de corrélation identité, aucune matrice
           n'étant donc explicitement à donner
+        - asEyeByVector : entrée des données comme un seul vecteur de variance,
+          à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
+          n'étant donc explicitement à donner
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
         if asEyeByScalar is not None:
             self.__Q_scalar = float(asEyeByScalar)
             self.__Q        = None
-        else:
+        elif asEyeByVector is not None:
             self.__Q_scalar = None
-            self.__Q  = numpy.matrix( asCovariance, numpy.float )
+            self.__Q        = numpy.matrix( numpy.diagflat( asEyeByVector ), numpy.float )
+        elif asCovariance is not None:
+            self.__Q_scalar = None
+            self.__Q        = numpy.matrix( asCovariance, numpy.float )
+        else:
+            raise ValueError("Evolution error covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix")
         #
         self.__Parameters["Q_scalar"] = self.__Q_scalar
         if toBeStored:
@@ -401,7 +430,7 @@ class AssimilationStudy:
         # Instancie un objet du type élémentaire du fichier
         # -------------------------------------------------
         self.__algorithm = self.__algorithmFile.ElementaryAlgorithm()
-        self.__StoredInputs["AlgorithmName"] = str(choice)
+        self.__StoredInputs["AlgorithmName"] = self.__algorithmName
         return 0
 
     def setAlgorithmParameters(self, asDico=None):
@@ -414,6 +443,12 @@ class AssimilationStudy:
         #
         self.__StoredInputs["AlgorithmParameters"] = self.__Parameters
         return 0
+    
+    def getAlgorithmParameters(self, noDetails=True):
+        """
+        Renvoie la liste des paramètres requis selon l'algorithme
+        """
+        return self.__algorithm.getRequiredParameters(noDetails)
 
     # -----------------------------------------------------------
     def setDiagnostic(self, choice = None, name = "", unit = "", basetype = None, parameters = {} ):
@@ -823,6 +858,14 @@ if __name__ == "__main__":
     print "Diagnostics types disponibles.................:", ADD.get_available_diagnostics()
     # print " Chemin des diagnostics.....................:", ADD.get_diagnostics_main_path()
     print "Variables disponibles.........................:", ADD.get_available_variables()
+    print
+    
+    print "Paramètres requis par algorithme :"
+    for algo in ADD.get_available_algorithms():
+        tmpADD = AssimilationStudy("Un algorithme")
+        tmpADD.setAlgorithm(choice=algo)
+        print "  %25s : %s"%(algo,tmpADD.getAlgorithmParameters())
+        del tmpADD
     print
 
     ADD.setDiagnostic("RMS", "Ma RMS")

@@ -38,9 +38,46 @@ else:
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "3DVAR"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "3DVAR")
+        self.defineRequiredParameter(
+            name     = "Minimizer",
+            default  = "LBFGSB",
+            typecast = str,
+            message  = "Minimiseur utilisé",
+            listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS"],
+            )
+        self.defineRequiredParameter(
+            name     = "MaximumNumberOfSteps",
+            default  = 15000,
+            typecast = int,
+            message  = "Nombre maximal de pas d'optimisation",
+            minval   = -1,
+            )
+        self.defineRequiredParameter(
+            name     = "CostDecrementTolerance",
+            default  = 1.e-7,
+            typecast = float,
+            message  = "Diminution relative minimale du cout lors de l'arrêt",
+            )
+        self.defineRequiredParameter(
+            name     = "ProjectedGradientTolerance",
+            default  = -1,
+            typecast = float,
+            message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
+            minval   = -1,
+            )
+        self.defineRequiredParameter(
+            name     = "GradientNormTolerance",
+            default  = 1.e-05,
+            typecast = float,
+            message  = "Maximum des composantes du gradient lors de l'arrêt",
+            )
+        self.defineRequiredParameter(
+            name     = "CalculateAPosterioriCovariance",
+            default  = False,
+            typecast = bool,
+            message  = "Calcul de la covariance a posteriori",
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -49,10 +86,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         #
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
+        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+            Bounds = self._parameters["Bounds"]
+            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
+        else:
+            Bounds = None
+        #
         # Opérateur d'observation
         # -----------------------
         Hm = H["Direct"].appliedTo
-        Ht = H["Adjoint"].appliedInXTo
+        Ha = H["Adjoint"].appliedInXTo
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
@@ -77,13 +124,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------------------
         if B is not None:
             BI = B.I
-        elif Parameters["B_scalar"] is not None:
-            BI = 1.0 / Parameters["B_scalar"]
+        elif self._parameters["B_scalar"] is not None:
+            BI = 1.0 / self._parameters["B_scalar"]
+        else:
+            raise ValueError("Background error covariance matrix has to be properly defined!")
         #
         if R is not None:
             RI = R.I
-        elif Parameters["R_scalar"] is not None:
-            RI = 1.0 / Parameters["R_scalar"]
+        elif self._parameters["R_scalar"] is not None:
+            RI = 1.0 / self._parameters["R_scalar"]
+        else:
+            raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
         # Définition de la fonction-coût
         # ------------------------------
@@ -110,7 +161,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             _HX     = Hm( _X )
             _HX     = numpy.asmatrix(_HX).flatten().T
             GradJb  = BI * (_X - Xb)
-            GradJo  = - Ht( (_X, RI * (Y - _HX)) )
+            GradJo  = - Ha( (_X, RI * (Y - _HX)) )
             GradJ   = numpy.asmatrix( GradJb ).flatten().T + numpy.asmatrix( GradJo ).flatten().T
             logging.debug("%s GradientOfCostFunction GradJb = %s"%(self._name, numpy.asmatrix( GradJb ).flatten()))
             logging.debug("%s GradientOfCostFunction GradJo = %s"%(self._name, numpy.asmatrix( GradJo ).flatten()))
@@ -125,117 +176,69 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xini = list(Xb)
         logging.debug("%s Point de démarrage Xini = %s"%(self._name, Xini))
         #
-        # Paramètres de pilotage
-        # ----------------------
-        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps", "ProjectedGradientTolerance", "GradientNormTolerance", "InnerMinimizer", "CalculateAPosterioriCovariance"
-        if Parameters.has_key("Bounds") and (type(Parameters["Bounds"]) is type([]) or type(Parameters["Bounds"]) is type(())) and (len(Parameters["Bounds"]) > 0):
-            Bounds = Parameters["Bounds"]
-        else:
-            Bounds = None
-        MinimizerList = ["LBFGSB","TNC", "CG", "NCG", "BFGS"]
-        if Parameters.has_key("Minimizer") and (Parameters["Minimizer"] in MinimizerList):
-            Minimizer = str( Parameters["Minimizer"] )
-        else:
-            Minimizer = "LBFGSB"
-            logging.warning("%s Unknown or undefined minimizer, replaced by the default one \"%s\""%(self._name,Minimizer))
-        logging.debug("%s Minimiseur utilisé = %s"%(self._name, Minimizer))
-        if Parameters.has_key("MaximumNumberOfSteps") and (Parameters["MaximumNumberOfSteps"] > -1):
-            maxiter = int( Parameters["MaximumNumberOfSteps"] )
-        else:
-            maxiter = 15000
-        logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, str(maxiter)))
-        if Parameters.has_key("CostDecrementTolerance") and (Parameters["CostDecrementTolerance"] > 0):
-            ftol  = float(Parameters["CostDecrementTolerance"])
-            factr = ftol * 1.e14
-        else:
-            ftol  = 1.e-7
-            factr = ftol * 1.e14
-        logging.debug("%s Diminution relative minimale du cout lors de l'arret = %s"%(self._name, str(1./factr)))
-        if Parameters.has_key("ProjectedGradientTolerance") and (Parameters["ProjectedGradientTolerance"] > -1):
-            pgtol = float(Parameters["ProjectedGradientTolerance"])
-        else:
-            pgtol = -1
-        logging.debug("%s Maximum des composantes du gradient projete lors de l'arret = %s"%(self._name, str(pgtol)))
-        if Parameters.has_key("GradientNormTolerance") and (Parameters["GradientNormTolerance"] > -1):
-            gtol = float(Parameters["GradientNormTolerance"])
-        else:
-            gtol = 1.e-05
-        logging.debug("%s Maximum des composantes du gradient lors de l'arret = %s"%(self._name, str(gtol)))
-        InnerMinimizerList = ["CG", "NCG", "BFGS"]
-        if Parameters.has_key("InnerMinimizer") and (Parameters["InnerMinimizer"] in InnerMinimizerList):
-            InnerMinimizer = str( Parameters["InnerMinimizer"] )
-        else:
-            InnerMinimizer = "BFGS"
-        logging.debug("%s Minimiseur interne utilisé = %s"%(self._name, InnerMinimizer))
-        if Parameters.has_key("CalculateAPosterioriCovariance"):
-            CalculateAPosterioriCovariance = bool(Parameters["CalculateAPosterioriCovariance"])
-        else:
-            CalculateAPosterioriCovariance = False
-        logging.debug("%s Calcul de la covariance a posteriori = %s"%(self._name, CalculateAPosterioriCovariance))
-        #
         # Minimisation de la fonctionnelle
         # --------------------------------
-        if Minimizer == "LBFGSB":
+        if self._parameters["Minimizer"] == "LBFGSB":
             Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = Bounds,
-                maxfun      = maxiter-1,
-                factr       = factr,
-                pgtol       = pgtol,
+                maxfun      = self._parameters["MaximumNumberOfSteps"]-1,
+                factr       = self._parameters["CostDecrementTolerance"]*1.e14,
+                pgtol       = self._parameters["ProjectedGradientTolerance"],
                 iprint      = iprint,
                 )
             nfeval = Informations['funcalls']
             rc     = Informations['warnflag']
-        elif Minimizer == "TNC":
+        elif self._parameters["Minimizer"] == "TNC":
             Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = Bounds,
-                maxfun      = maxiter,
-                pgtol       = pgtol,
-                ftol        = ftol,
+                maxfun      = self._parameters["MaximumNumberOfSteps"],
+                pgtol       = self._parameters["ProjectedGradientTolerance"],
+                ftol        = self._parameters["CostDecrementTolerance"],
                 messages    = message,
                 )
-        elif Minimizer == "CG":
+        elif self._parameters["Minimizer"] == "CG":
             Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
                 f           = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = maxiter,
-                gtol        = gtol,
+                maxiter     = self._parameters["MaximumNumberOfSteps"],
+                gtol        = self._parameters["GradientNormTolerance"],
                 disp        = disp,
                 full_output = True,
                 )
-        elif Minimizer == "NCG":
+        elif self._parameters["Minimizer"] == "NCG":
             Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
                 f           = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = maxiter,
-                avextol     = ftol,
+                maxiter     = self._parameters["MaximumNumberOfSteps"],
+                avextol     = self._parameters["CostDecrementTolerance"],
                 disp        = disp,
                 full_output = True,
                 )
-        elif Minimizer == "BFGS":
+        elif self._parameters["Minimizer"] == "BFGS":
             Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
                 f           = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = maxiter,
-                gtol        = gtol,
+                maxiter     = self._parameters["MaximumNumberOfSteps"],
+                gtol        = self._parameters["GradientNormTolerance"],
                 disp        = disp,
                 full_output = True,
                 )
         else:
-            raise ValueError("Error in Minimizer name: %s"%Minimizer)
+            raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         # ----------------------------------------------------------------
@@ -243,11 +246,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         MinJ    = self.StoredVariables["CostFunctionJ"].valueserie(step = StepMin)
         Minimum = self.StoredVariables["CurrentState"].valueserie(step = StepMin)
         #
-        logging.debug("%s %s Step of min cost  = %s"%(self._name, Minimizer, StepMin))
-        logging.debug("%s %s Minimum cost      = %s"%(self._name, Minimizer, MinJ))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, Minimizer, Minimum))
-        logging.debug("%s %s Nb of F           = %s"%(self._name, Minimizer, nfeval))
-        logging.debug("%s %s RetCode           = %s"%(self._name, Minimizer, rc))
+        logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["Minimizer"], StepMin))
+        logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["Minimizer"], MinJ))
+        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["Minimizer"], Minimum))
+        logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["Minimizer"], nfeval))
+        logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["Minimizer"], rc))
         #
         # Obtention de l'analyse
         # ----------------------
@@ -259,13 +262,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
-        if CalculateAPosterioriCovariance:
+        if self._parameters["CalculateAPosterioriCovariance"]:
             Hessienne = []
             nb = len(Xini)
             for i in range(nb):
                 ee = numpy.matrix(numpy.zeros(nb)).T
                 ee[i] = 1.
-                Hessienne.append( ( BI*ee + Ht((Xa,RI*Hm(ee))) ).A1 )
+                Hessienne.append( ( BI*ee + Ha((Xa,RI*Hm(ee))) ).A1 )
             Hessienne = numpy.matrix( Hessienne )
             A = Hessienne.I
             self.StoredVariables["APosterioriCovariance"].store( A )

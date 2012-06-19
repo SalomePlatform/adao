@@ -82,6 +82,6 @@ if __name__ == "__main__":
     D.calculate(vect1,vect2)
     print " Les valeurs de RMS attendues sont les suivantes : [1.0, 1.0, 1.0, 3.0, 0.53162016515553656, 0.73784217096601323]"
     print " Les RMS obtenues................................:", D.valueserie()
-    print " La moyenne......................................:", D.stepmean()
+    print " La moyenne......................................:", D.mean()
     print
 

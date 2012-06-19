@@ -28,9 +28,35 @@ import numpy
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "QUANTILEREGRESSION"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "QUANTILEREGRESSION")
+        self.defineRequiredParameter(
+            name     = "Quantile",
+            default  = 0.5,
+            typecast = float,
+            message  = "Quantile pour la regression de quantile",
+            minval   = 0.,
+            maxval   = 1.,
+            )
+        self.defineRequiredParameter(
+            name     = "Minimizer",
+            default  = "MMQR",
+            typecast = str,
+            message  = "Minimiseur utilisé",
+            listval  = ["MMQR"],
+            )
+        self.defineRequiredParameter(
+            name     = "MaximumNumberOfSteps",
+            default  = 15000,
+            typecast = int,
+            message  = "Nombre maximal de pas d'optimisation",
+            minval   = -1
+            )
+        self.defineRequiredParameter(
+            name     = "CostDecrementTolerance",
+            default  = 1.e-6,
+            typecast = float,
+            message  = "Maximum de variation de la fonction d'estimation lors de l'arrêt",
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -39,10 +65,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         #
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
         # Opérateur d'observation
         # -----------------------
         Hm = H["Direct"].appliedTo
-        Ht = H["Adjoint"].appliedInXTo
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
@@ -96,55 +125,29 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xini = list(Xb)
         logging.debug("%s Point de démarrage Xini = %s"%(self._name, Xini))
         #
-        # Paramètres de pilotage
-        # ----------------------
-        # Potentiels : "Quantile", "Minimizer", "MaximumNumberOfSteps", "CostDecrementTolerance"
-        if Parameters.has_key("Quantile") and (0. <= Parameters["Quantile"] <= 1.):
-            quantile = float(Parameters["Quantile"])
-        else:
-            quantile = 0.5
-        logging.debug("%s Quantile pour la regression de quantile = %s"%(self._name, str(quantile)))
-        MinimizerList = ["MMQR",]
-        if Parameters.has_key("Minimizer") and (Parameters["Minimizer"] in MinimizerList):
-            Minimizer = str( Parameters["Minimizer"] )
-        else:
-            Minimizer = "MMQR"
-            logging.warning("%s Unknown or undefined minimizer, replaced by the default one \"%s\""%(self._name,Minimizer))
-        logging.debug("%s Minimiseur utilisé = %s"%(self._name, Minimizer))
-        if Parameters.has_key("MaximumNumberOfSteps") and (Parameters["MaximumNumberOfSteps"] > -1):
-            maxiter = int( Parameters["MaximumNumberOfSteps"] )
-        else:
-            maxiter = 15000
-        logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, str(maxiter)))
-        if Parameters.has_key("CostDecrementTolerance") and (Parameters["CostDecrementTolerance"] > 0):
-            ftol = float(Parameters["CostDecrementTolerance"])
-        else:
-            ftol = 1.e-06
-        logging.debug("%s Maximum de variation de la fonction d'estimation lors de l'arrêt = %s"%(self._name, str(ftol)))
-        #
         # Minimisation de la fonctionnelle
         # --------------------------------
-        if Minimizer == "MMQR":
+        if self._parameters["Minimizer"] == "MMQR":
             import mmqr
             Minimum, J_optimal, Informations = mmqr.mmqr(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
-                quantile    = quantile,
-                maxfun      = maxiter,
-                toler       = ftol,
+                quantile    = self._parameters["Quantile"],
+                maxfun      = self._parameters["MaximumNumberOfSteps"],
+                toler       = self._parameters["CostDecrementTolerance"],
                 y           = Y,
                 )
             nfeval = Informations[2]
             rc     = Informations[4]
         else:
-            raise ValueError("Error in Minimizer name: %s"%Minimizer)
+            raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        logging.debug("%s %s Step of min cost  = %s"%(self._name, Minimizer, nfeval))
-        logging.debug("%s %s Minimum cost      = %s"%(self._name, Minimizer, J_optimal))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, Minimizer, Minimum))
-        logging.debug("%s %s Nb of F           = %s"%(self._name, Minimizer, nfeval))
-        logging.debug("%s %s RetCode           = %s"%(self._name, Minimizer, rc))
+        logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["Minimizer"], nfeval))
+        logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["Minimizer"], J_optimal))
+        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["Minimizer"], Minimum))
+        logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["Minimizer"], nfeval))
+        logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["Minimizer"], rc))
         #
         # Obtention de l'analyse
         # ----------------------

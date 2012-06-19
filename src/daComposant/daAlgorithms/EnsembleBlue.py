@@ -28,9 +28,12 @@ import numpy
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "ENSEMBLEBLUE"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "ENSEMBLEBLUE")
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None ):
         """
@@ -44,12 +47,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Paramètres de pilotage
         # ----------------------
-        # Potentiels : "SetSeed"
-        if Parameters.has_key("SetSeed"):
-            numpy.random.seed(int(Parameters["SetSeed"]))
-            logging.debug("%s Graine fixee pour le generateur aleatoire = %s"%(self._name, int(Parameters["SetSeed"])))
+        self.setParameters(Parameters)
+        #
+        # Précalcul des inversions de B et R
+        # ----------------------------------
+        if B is not None:
+            BI = B.I
+        elif self._parameters["B_scalar"] is not None:
+            BI = 1.0 / self._parameters["B_scalar"]
+            B = self._parameters["B_scalar"]
         else:
-            logging.debug("%s Graine quelconque pour le generateur aleatoire"%(self._name, ))
+            raise ValueError("Background error covariance matrix has to be properly defined!")
+        #
+        if R is not None:
+            RI = R.I
+        elif self._parameters["R_scalar"] is not None:
+            RI = 1.0 / self._parameters["R_scalar"]
+        else:
+            raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
         # Nombre d'ensemble pour l'ébauche 
         # --------------------------------
@@ -68,9 +83,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
         Hm = H["Direct"].asMatrix()
-        Ht = H["Adjoint"].asMatrix()
+        Ha = H["Adjoint"].asMatrix()
         #
-        K  = B * Ht * (Hm * B * Ht + R).I
+        # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
+        # ------------------------------------------------------------------------
+        if Y.size <= Xb.valueserie(0).size:
+            if self._parameters["R_scalar"] is not None:
+                R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)
+            logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
+            K  = B * Ha * (Hm * B * Ha + R).I
+        else:
+            logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
+            K = (Ha * RI * Hm + BI).I * Ha * RI
         #
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------
@@ -78,8 +102,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             d  = EnsembleY[:,iens] - Hm * Xb.valueserie(iens)
             Xa = Xb.valueserie(iens) + K*d
             
-            self.StoredVariables["Analysis"].store( Xa.A1 )
+            self.StoredVariables["CurrentState"].store( Xa.A1 )
             self.StoredVariables["Innovation"].store( d.A1 )
+        #
+        # Fabrication de l'analyse
+        # ------------------------
+        Members = self.StoredVariables["CurrentState"].valueserie()[-nb_ens:]
+        Xa = numpy.matrix( Members ).mean(axis=0)
+        self.StoredVariables["Analysis"].store( Xa.A1 )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         logging.debug("%s Terminé"%self._name)
@@ -88,5 +118,3 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
-
-        

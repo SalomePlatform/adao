@@ -26,8 +26,7 @@ m = PlatformInfo.SystemUsage()
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "LINEARLEASTSQUARES"
+        BasicObjects.Algorithm.__init__(self, "LINEARLEASTSQUARES")
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -37,15 +36,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         #
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
+        # Opérateur d'observation
+        # -----------------------
         Hm = H["Direct"].asMatrix()
-        Ht = H["Adjoint"].asMatrix()
+        Ha = H["Adjoint"].asMatrix()
         #
         if R is not None:
             RI = R.I
-        elif Parameters["R_scalar"] is not None:
-            RI = 1.0 / Parameters["R_scalar"]
+        elif self._parameters["R_scalar"] is not None:
+            RI = 1.0 / self._parameters["R_scalar"]
+        else:
+            raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
-        K =  (Ht * RI * Hm ).I * Ht * RI
+        K =  (Ha * RI * Hm ).I * Ha * RI
         Xa =  K * Y
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #

@@ -312,20 +312,22 @@ class Persistence:
         return pairs
 
     # ---------------------------------------------------------
-    def mean(self):
+    def means(self):
         """
-        Renvoie la valeur moyenne des données à chaque pas. Il faut que le type
-        de base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, la valeur moyenne des données
+        au pas. Il faut que le type de base soit compatible avec les types
+        élémentaires numpy.
         """
         try:
             return [numpy.matrix(item).mean() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def std(self, ddof=0):
+    def stds(self, ddof=0):
         """
-        Renvoie l'écart-type des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, l'écart-type des données
+        au pas. Il faut que le type de base soit compatible avec les types
+        élémentaires numpy.
         
         ddof : c'est le nombre de degrés de liberté pour le calcul de
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
@@ -338,30 +340,33 @@ class Persistence:
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def sum(self):
+    def sums(self):
         """
-        Renvoie la somme des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, la somme des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
         """
         try:
             return [numpy.matrix(item).sum() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def min(self):
+    def mins(self):
         """
-        Renvoie le minimum des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, le minimum des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
         """
         try:
             return [numpy.matrix(item).min() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def max(self):
+    def maxs(self):
         """
-        Renvoie le maximum des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, la maximum des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
         """
         try:
             return [numpy.matrix(item).max() for item in self.__values]
@@ -501,18 +506,21 @@ class Persistence:
             raw_input('Please press return to continue...\n')
 
     # ---------------------------------------------------------
-    def stepmean(self):
+    def mean(self):
         """
         Renvoie la moyenne sur toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).mean()
+            if self.__basetype in [int, float]:
+                return float( numpy.array(self.__values).mean() )
+            else:
+                return numpy.array(self.__values).mean(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepstd(self, ddof=0):
+    def std(self, ddof=0):
         """
         Renvoie l'écart-type de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
@@ -523,42 +531,42 @@ class Persistence:
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return numpy.matrix(self.__values).std(ddof=ddof)
+                return numpy.array(self.__values).std(ddof=ddof,axis=0)
             else:
-                return numpy.matrix(self.__values).std()
+                return numpy.array(self.__values).std(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepsum(self):
+    def sum(self):
         """
         Renvoie la somme de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).sum()
+            return numpy.array(self.__values).sum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepmin(self):
+    def min(self):
         """
         Renvoie le minimum de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).min()
+            return numpy.array(self.__values).min(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepmax(self):
+    def max(self):
         """
         Renvoie le maximum de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).max()
+            return numpy.array(self.__values).max(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -569,7 +577,7 @@ class Persistence:
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).cumsum(axis=0)
+            return numpy.array(self.__values).cumsum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -957,17 +965,17 @@ if __name__ == "__main__":
     print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
     print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
     print "Valeurs par pas :"
+    print "  La moyenne        :", OBJET_DE_TEST.means()
+    print "  L'écart-type      :", OBJET_DE_TEST.stds()
+    print "  La somme          :", OBJET_DE_TEST.sums()
+    print "  Le minimum        :", OBJET_DE_TEST.mins()
+    print "  Le maximum        :", OBJET_DE_TEST.maxs()
+    print "Valeurs globales :"
     print "  La moyenne        :", OBJET_DE_TEST.mean()
     print "  L'écart-type      :", OBJET_DE_TEST.std()
     print "  La somme          :", OBJET_DE_TEST.sum()
     print "  Le minimum        :", OBJET_DE_TEST.min()
     print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales :"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
     print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
     print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
     print "Taille \"len\"        :", len(OBJET_DE_TEST)
@@ -1004,17 +1012,17 @@ if __name__ == "__main__":
     print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
     print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
     print "Valeurs par pas :"
+    print "  La moyenne        :", OBJET_DE_TEST.means()
+    print "  L'écart-type      :", OBJET_DE_TEST.stds()
+    print "  La somme          :", OBJET_DE_TEST.sums()
+    print "  Le minimum        :", OBJET_DE_TEST.mins()
+    print "  Le maximum        :", OBJET_DE_TEST.maxs()
+    print "Valeurs globales :"
     print "  La moyenne        :", OBJET_DE_TEST.mean()
     print "  L'écart-type      :", OBJET_DE_TEST.std()
     print "  La somme          :", OBJET_DE_TEST.sum()
     print "  Le minimum        :", OBJET_DE_TEST.min()
     print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales :"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
     print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
     print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
     print "Taille \"len\"        :", len(OBJET_DE_TEST)
@@ -1045,17 +1053,17 @@ if __name__ == "__main__":
     print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
     print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
     print "Valeurs par pas :"
+    print "  La moyenne        :", OBJET_DE_TEST.means()
+    print "  L'écart-type      :", OBJET_DE_TEST.stds()
+    print "  La somme          :", OBJET_DE_TEST.sums()
+    print "  Le minimum        :", OBJET_DE_TEST.mins()
+    print "  Le maximum        :", OBJET_DE_TEST.maxs()
+    print "Valeurs globales :"
     print "  La moyenne        :", OBJET_DE_TEST.mean()
     print "  L'écart-type      :", OBJET_DE_TEST.std()
     print "  La somme          :", OBJET_DE_TEST.sum()
     print "  Le minimum        :", OBJET_DE_TEST.min()
     print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales :"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
     print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
     print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
     print "Taille \"len\"        :", len(OBJET_DE_TEST)
@@ -1072,17 +1080,17 @@ if __name__ == "__main__":
     print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
     print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
     print "Valeurs par pas : attention, on peut les calculer car True=1, False=0, mais cela n'a pas de sens"
+    print "  La moyenne        :", OBJET_DE_TEST.means()
+    print "  L'écart-type      :", OBJET_DE_TEST.stds()
+    print "  La somme          :", OBJET_DE_TEST.sums()
+    print "  Le minimum        :", OBJET_DE_TEST.mins()
+    print "  Le maximum        :", OBJET_DE_TEST.maxs()
+    print "Valeurs globales : attention, on peut les calculer car True=1, False=0, mais cela n'a pas de sens"
     print "  La moyenne        :", OBJET_DE_TEST.mean()
     print "  L'écart-type      :", OBJET_DE_TEST.std()
     print "  La somme          :", OBJET_DE_TEST.sum()
     print "  Le minimum        :", OBJET_DE_TEST.min()
     print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales : attention, on peut les calculer car True=1, False=0, mais cela n'a pas de sens"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
     print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
     print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
     print "Taille \"len\"        :", len(OBJET_DE_TEST)

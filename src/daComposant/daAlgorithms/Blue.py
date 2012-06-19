@@ -28,9 +28,13 @@ import numpy
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "BLUE"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "BLUE")
+        self.defineRequiredParameter(
+            name     = "CalculateAPosterioriCovariance",
+            default  = False,
+            typecast = bool,
+            message  = "Calcul de la covariance a posteriori",
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -39,8 +43,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         #
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
+        # Opérateur d'observation
+        # -----------------------
         Hm = H["Direct"].asMatrix()
-        Ht = H["Adjoint"].asMatrix()
+        Ha = H["Adjoint"].asMatrix()
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
@@ -56,14 +66,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------------------
         if B is not None:
             BI = B.I
-        elif Parameters["B_scalar"] is not None:
-            BI = 1.0 / Parameters["B_scalar"]
-            B = Parameters["B_scalar"]
+        elif self._parameters["B_scalar"] is not None:
+            BI = 1.0 / self._parameters["B_scalar"]
+            B = self._parameters["B_scalar"]
+        else:
+            raise ValueError("Background error covariance matrix has to be properly defined!")
+        #
         if R is not None:
             RI = R.I
-        elif Parameters["R_scalar"] is not None:
-            RI = 1.0 / Parameters["R_scalar"]
-            R = Parameters["R_scalar"]
+        elif self._parameters["R_scalar"] is not None:
+            RI = 1.0 / self._parameters["R_scalar"]
+        else:
+            raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
         # Calcul de l'innovation
         # ----------------------
@@ -74,23 +88,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         d  = Y - HXb
         logging.debug("%s Innovation d = %s"%(self._name, d))
         #
-        # Paramètres de pilotage
-        # ----------------------
-        # Potentiels : "CalculateAPosterioriCovariance"
-        if Parameters.has_key("CalculateAPosterioriCovariance"):
-            CalculateAPosterioriCovariance = bool(Parameters["CalculateAPosterioriCovariance"])
-        else:
-            CalculateAPosterioriCovariance = False
-        logging.debug("%s Calcul de la covariance a posteriori = %s"%(self._name, CalculateAPosterioriCovariance))
-        #
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------
         if Y.size <= Xb.size:
+            if self._parameters["R_scalar"] is not None:
+                R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)
             logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
-            K  = B * Ht * (Hm * B * Ht + R).I
+            K  = B * Ha * (Hm * B * Ha + R).I
         else:
             logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
-            K = (Ht * RI * Hm + BI).I * Ht * RI
+            K = (Ha * RI * Hm + BI).I * Ha * RI
         Xa = Xb + K*d
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
@@ -111,11 +118,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
-        if CalculateAPosterioriCovariance:
+        if self._parameters["CalculateAPosterioriCovariance"]:
             A = ( 1.0 -  K * Hm ) * B
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

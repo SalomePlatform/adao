@@ -28,6 +28,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
+import logging
 import numpy
 import Persistence
 
@@ -47,12 +48,18 @@ class Operator:
         if   fromMethod is not None:
             self.__Method = fromMethod
             self.__Matrix = None
+            self.__Type   = "Method"
         elif fromMatrix is not None:
             self.__Method = None
             self.__Matrix = numpy.matrix( fromMatrix, numpy.float )
+            self.__Type   = "Matrix"
         else:
             self.__Method = None
             self.__Matrix = None
+            self.__Type   = None
+
+    def isType(self):
+        return self.__Type
 
     def appliedTo(self, xValue):
         """
@@ -117,7 +124,7 @@ class Algorithm:
     
     Une classe élémentaire d'algorithme doit implémenter la méthode "run".
     """
-    def __init__(self):
+    def __init__(self, name):
         """
         L'initialisation présente permet de fabriquer des variables de stockage
         disponibles de manière générique dans les algorithmes élémentaires. Ces
@@ -143,7 +150,10 @@ class Algorithm:
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
-        self._name = None
+        logging.debug("%s Initialisation"%str(name))
+        self._name = str( name )
+        self._parameters = {}
+        self.__required_parameters = {}
         self.StoredVariables = {}
         #
         self.StoredVariables["CostFunctionJ"]            = Persistence.OneScalar(name = "CostFunctionJ")
@@ -193,6 +203,75 @@ class Algorithm:
         sa forme mathématique la plus naturelle possible.
         """
         raise NotImplementedError("Mathematical assimilation calculation has not been implemented!")
+
+    def defineRequiredParameter(self, name = None, default = None, typecast = None, message = None, minval = None, maxval = None, listval = None):
+        """
+        Permet de définir dans l'algorithme des paramètres requis et leurs
+        caractéristiques par défaut.
+        """
+        if name is None:
+            raise ValueError("A name is mandatory to define a required parameter.")
+        #
+        self.__required_parameters[name] = {
+            "default"  : default,
+            "typecast" : typecast,
+            "minval"   : minval,
+            "maxval"   : maxval,
+            "listval"  : listval,
+            "message"  : message,
+            }
+        logging.debug("%s %s (valeur par défaut = %s)"%(self._name, message, self.setParameterValue(name)))
+
+    def getRequiredParameters(self, noDetails=True):
+        """
+        Renvoie la liste des noms de paramètres requis ou directement le
+        dictionnaire des paramètres requis.
+        """
+        if noDetails:
+            ks = self.__required_parameters.keys()
+            ks.sort()
+            return ks
+        else:
+            return self.__required_parameters
+
+    def setParameterValue(self, name=None, value=None):
+        """
+        Renvoie la valeur d'un paramètre requis de manière contrôlée
+        """
+        default  = self.__required_parameters[name]["default"]
+        typecast = self.__required_parameters[name]["typecast"]
+        minval   = self.__required_parameters[name]["minval"]
+        maxval   = self.__required_parameters[name]["maxval"]
+        listval  = self.__required_parameters[name]["listval"]
+        #
+        if value is None and default is None:
+            __val = None
+        elif value is None and default is not None:
+            if typecast is None: __val = default
+            else:                __val = typecast( default )
+        else:
+            if typecast is None: __val = value
+            else:                __val = typecast( value )
+        #
+        if minval is not None and __val < minval:
+            raise ValueError("The parameter named \"%s\" of value %s can not be less than %s."%(name, __val, minval))
+        if maxval is not None and __val > maxval:
+            raise ValueError("The parameter named \"%s\" of value %s can not be greater than %s."%(name, __val, maxval))
+        if listval is not None and __val not in listval:
+            raise ValueError("The parameter named \"%s\" of value %s has to be in the list %s."%(name, __val, listval))
+        return __val
+
+    def setParameters(self, fromDico={}):
+        """
+        Permet de stocker les paramètres reçus dans le dictionnaire interne.
+        """
+        self._parameters.update( fromDico )
+        for k in self.__required_parameters.keys():
+            if k in fromDico.keys():
+                self._parameters[k] = self.setParameterValue(k,fromDico[k])
+            else:
+                self._parameters[k] = self.setParameterValue(k)
+            logging.debug("%s %s : %s"%(self._name, self.__required_parameters[k]["message"], self._parameters[k]))
 
 # ==============================================================================
 class Diagnostic:
