@@ -38,6 +38,7 @@ class daStudy:
     self.algorithm = algorithm
     self.algorithm_dict = None
     self.Background = None
+    self.CheckingPoint = None
     self.InputVariables = {}
     self.OutputVariables = {}
     self.InputVariablesOrder = []
@@ -103,6 +104,23 @@ class daStudy:
 
   def getBackground(self):
     return self.Background
+
+  #--------------------------------------
+
+  def setCheckingPointType(self, Type):
+    if Type == "Vector":
+      self.CheckingPointType = Type
+    else:
+      raise daError("[daStudy::setCheckingPointType] Type is unkown : " + Type + " Types are : Vector")
+
+  def setCheckingPoint(self, CheckingPoint):
+    try:
+      self.CheckingPointType
+    except AttributeError:
+      raise daError("[daStudy::setCheckingPoint] Type is not defined !")
+    self.CheckingPoint = CheckingPoint
+    if self.CheckingPointType == "Vector":
+      self.ADD.setBackground(asVector = CheckingPoint)
 
   #--------------------------------------
 

@@ -30,7 +30,9 @@ AssimData = ["Background", "BackgroundError",
              "Observation", "ObservationError",
              "ObservationOperator",
              "EvolutionModel", "EvolutionError",
-             "AlgorithmParameters"]
+             "AlgorithmParameters",
+             "CheckingPoint",
+             ]
 
 AssimType = {}
 AssimType["Background"] = ["Vector"]
@@ -42,6 +44,7 @@ AssimType["EvolutionModel"] = ["Matrix", "Function"]
 AssimType["EvolutionError"] = ["Matrix"]
 AssimType["AlgorithmParameters"] = ["Dict"]
 AssimType["UserDataInit"] = ["Dict"]
+AssimType["CheckingPoint"] = ["Vector"]
 
 FromNumpyList = {}
 FromNumpyList["Vector"]   = ["String", "Script"]
@@ -58,6 +61,10 @@ AssimAlgos = [
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     "QuantileRegression",
+    ]
+CheckAlgos = [
+    "GradientTest",
+    "AdjointTest",
     ]
 
 AlgoDataRequirements = {}
@@ -94,6 +101,10 @@ AlgoDataRequirements["NonLinearLeastSquares"] = [
 AlgoDataRequirements["QuantileRegression"] = [
     "Background",
     "Observation",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["GradientTest"] = [
+    "CheckingPoint",
     "ObservationOperator",
     ]
 
@@ -136,6 +147,7 @@ AssimDataDict["EvolutionModel"] = ["Matrix", "Function"]
 AssimDataDict["EvolutionError"] = ["Matrix"]
 AssimDataDict["AlgorithmParameters"] = ["Dict"]
 AssimDataDict["UserDataInit"] = ["Dict"]
+AssimDataDict["CheckingPoint"] = ["Vector"]
 
 AssimDataDefaultDict = {}
 AssimDataDefaultDict["Background"]          = "Vector"
@@ -147,6 +159,7 @@ AssimDataDefaultDict["EvolutionModel"]      = "Function"
 AssimDataDefaultDict["EvolutionError"]      = "Matrix"
 AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 AssimDataDefaultDict["UserDataInit"]        = "Dict"
+AssimDataDefaultDict["CheckingPoint"]       = "Vector"
 
 # Assimilation optional nodes
 OptDict = {}

@@ -90,44 +90,57 @@ class AdaoGenerator(PythonGenerator):
     return s
 
   def generate_da(self):
-
+  
+    if "__CHECKING_STUDY__Study_name" in self.dictMCVal.keys():
+      self.type_of_study = "CHECKING_STUDY"
+    else:
+      self.type_of_study = "ASSIMILATION_STUDY"
+        
     self.text_da += "#-*-coding:iso-8859-1-*- \n"
     self.text_da += "study_config = {} \n"
 
+    # Extraction de Study_type
+    self.text_da += "study_config['StudyType'] = '" + self.type_of_study + "'\n"
     # Extraction de Study_name
-    self.text_da += "study_config['Name'] = '" + self.dictMCVal["__ASSIMILATION_STUDY__Study_name"] + "'\n"
+    self.text_da += "study_config['Name'] = '" + self.dictMCVal["__"+self.type_of_study+"__Study_name"] + "'\n"
     # Extraction de Debug
-    self.text_da += "study_config['Debug'] = '" + str(self.dictMCVal["__ASSIMILATION_STUDY__Debug"]) + "'\n"
+    self.text_da += "study_config['Debug'] = '" + str(self.dictMCVal["__"+self.type_of_study+"__Debug"]) + "'\n"
     # Extraction de Algorithm
-    self.text_da += "study_config['Algorithm'] = '" + self.dictMCVal["__ASSIMILATION_STUDY__Algorithm"] + "'\n"
+    self.text_da += "study_config['Algorithm'] = '" + self.dictMCVal["__"+self.type_of_study+"__Algorithm"] + "'\n"
 
-    self.add_data("Background")
-    self.add_data("BackgroundError")
-    self.add_data("Observation")
-    self.add_data("ObservationError")
+    if "__"+self.type_of_study+"__Background__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("Background")
+    if "__"+self.type_of_study+"__BackgroundError__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("BackgroundError")
+    if "__"+self.type_of_study+"__Observation__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("Observation")
+    if "__"+self.type_of_study+"__ObservationError__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("ObservationError")
+    if "__"+self.type_of_study+"__CheckingPoint__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("CheckingPoint")
     self.add_data("ObservationOperator")
 
     self.add_variables()
     # Parametres optionnels
 
     # Extraction du Study_repertory
-    if "__ASSIMILATION_STUDY__Study_repertory" in self.dictMCVal.keys():
-      self.text_da += "study_config['Repertory'] = '" + self.dictMCVal["__ASSIMILATION_STUDY__Study_repertory"] + "'\n"
+    if "__"+self.type_of_study+"__Study_repertory" in self.dictMCVal.keys():
+      self.text_da += "study_config['Repertory'] = '" + self.dictMCVal["__"+self.type_of_study+"__Study_repertory"] + "'\n"
     # Extraction de AlgorithmParameters
-    if "__ASSIMILATION_STUDY__AlgorithmParameters__INPUT_TYPE" in self.dictMCVal.keys():
+    if "__"+self.type_of_study+"__AlgorithmParameters__INPUT_TYPE" in self.dictMCVal.keys():
       self.add_algorithm_parameters()
     # Extraction de UserPostAnalysis
-    if "__ASSIMILATION_STUDY__UserPostAnalysis__FROM" in self.dictMCVal.keys():
+    if "__"+self.type_of_study+"__UserPostAnalysis__FROM" in self.dictMCVal.keys():
       self.add_UserPostAnalysis()
-    if "__ASSIMILATION_STUDY__UserDataInit__INIT_FILE" in self.dictMCVal.keys():
+    if "__"+self.type_of_study+"__UserDataInit__INIT_FILE" in self.dictMCVal.keys():
       self.add_init()
-    if "__ASSIMILATION_STUDY__Observers__SELECTION" in self.dictMCVal.keys():
+    if "__"+self.type_of_study+"__Observers__SELECTION" in self.dictMCVal.keys():
       self.add_observers()
 
   def add_data(self, data_name):
 
     # Extraction des données
-    search_text = "__ASSIMILATION_STUDY__" + data_name + "__"
+    search_text = "__"+self.type_of_study+"__" + data_name + "__"
     data_type = self.dictMCVal[search_text + "INPUT_TYPE"]
     search_type = search_text + data_type + "__data__"
     from_type = self.dictMCVal[search_type + "FROM"]
@@ -166,7 +179,7 @@ class AdaoGenerator(PythonGenerator):
     data_name = "AlgorithmParameters"
     data_type = "Dict"
     from_type = "Script"
-    data = self.dictMCVal["__ASSIMILATION_STUDY__AlgorithmParameters__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
+    data = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
 
     self.text_da += data_name + "_config = {} \n"
     self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
@@ -176,8 +189,8 @@ class AdaoGenerator(PythonGenerator):
 
   def add_init(self):
 
-      init_file_data = self.dictMCVal["__ASSIMILATION_STUDY__UserDataInit__INIT_FILE"]
-      init_target_list = self.dictMCVal["__ASSIMILATION_STUDY__UserDataInit__TARGET_LIST"]
+      init_file_data = self.dictMCVal["__"+self.type_of_study+"__UserDataInit__INIT_FILE"]
+      init_target_list = self.dictMCVal["__"+self.type_of_study+"__UserDataInit__TARGET_LIST"]
 
       self.text_da += "Init_config = {}\n"
       self.text_da += "Init_config['Type'] = 'Dict'\n"
@@ -194,16 +207,16 @@ class AdaoGenerator(PythonGenerator):
 
   def add_UserPostAnalysis(self):
 
-    from_type = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__FROM"]
+    from_type = self.dictMCVal["__"+self.type_of_study+"__UserPostAnalysis__FROM"]
     data = ""
     if from_type == "String":
-      data = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__STRING_DATA__STRING"]
+      data = self.dictMCVal["__"+self.type_of_study+"__UserPostAnalysis__STRING_DATA__STRING"]
       self.text_da += "Analysis_config = {}\n"
       self.text_da += "Analysis_config['From'] = 'String'\n"
       self.text_da += "Analysis_config['Data'] = \"\"\"" + data + "\"\"\"\n"
       self.text_da += "study_config['UserPostAnalysis'] = Analysis_config\n"
     elif from_type == "Script":
-      data = self.dictMCVal["__ASSIMILATION_STUDY__UserPostAnalysis__SCRIPT_DATA__SCRIPT_FILE"]
+      data = self.dictMCVal["__"+self.type_of_study+"__UserPostAnalysis__SCRIPT_DATA__SCRIPT_FILE"]
       self.text_da += "Analysis_config = {}\n"
       self.text_da += "Analysis_config['From'] = 'Script'\n"
       self.text_da += "Analysis_config['Data'] = '" + data + "'\n"
@@ -214,17 +227,17 @@ class AdaoGenerator(PythonGenerator):
   def add_variables(self):
 
     # Input variables
-    if "__ASSIMILATION_STUDY__InputVariables__NAMES" in self.dictMCVal.keys():
+    if "__"+self.type_of_study+"__InputVariables__NAMES" in self.dictMCVal.keys():
       names = []
       sizes = []
-      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__NAMES"], type("")):
-        names.append(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__NAMES"])
+      if isinstance(self.dictMCVal["__"+self.type_of_study+"__InputVariables__NAMES"], type("")):
+        names.append(self.dictMCVal["__"+self.type_of_study+"__InputVariables__NAMES"])
       else:
-        names = self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__NAMES"]
-      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"], type(1)):
-        sizes.append(self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"])
+        names = self.dictMCVal["__"+self.type_of_study+"__InputVariables__NAMES"]
+      if isinstance(self.dictMCVal["__"+self.type_of_study+"__InputVariables__SIZES"], type(1)):
+        sizes.append(self.dictMCVal["__"+self.type_of_study+"__InputVariables__SIZES"])
       else:
-        sizes = self.dictMCVal["__ASSIMILATION_STUDY__InputVariables__SIZES"]
+        sizes = self.dictMCVal["__"+self.type_of_study+"__InputVariables__SIZES"]
 
       self.text_da += "inputvariables_config = {}\n"
       self.text_da += "inputvariables_config['Order'] = %s\n" % list(names)
@@ -238,17 +251,17 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config['InputVariables'] = inputvariables_config\n"
 
     # Output variables
-    if "__ASSIMILATION_STUDY__OutputVariables__NAMES" in self.dictMCVal.keys():
+    if "__"+self.type_of_study+"__OutputVariables__NAMES" in self.dictMCVal.keys():
       names = []
       sizes = []
-      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__NAMES"], type("")):
-        names.append(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__NAMES"])
+      if isinstance(self.dictMCVal["__"+self.type_of_study+"__OutputVariables__NAMES"], type("")):
+        names.append(self.dictMCVal["__"+self.type_of_study+"__OutputVariables__NAMES"])
       else:
-        names = self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__NAMES"]
-      if isinstance(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"], type(1)):
-        sizes.append(self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"])
+        names = self.dictMCVal["__"+self.type_of_study+"__OutputVariables__NAMES"]
+      if isinstance(self.dictMCVal["__"+self.type_of_study+"__OutputVariables__SIZES"], type(1)):
+        sizes.append(self.dictMCVal["__"+self.type_of_study+"__OutputVariables__SIZES"])
       else:
-        sizes = self.dictMCVal["__ASSIMILATION_STUDY__OutputVariables__SIZES"]
+        sizes = self.dictMCVal["__"+self.type_of_study+"__OutputVariables__SIZES"]
 
       self.text_da += "outputvariables_config = {}\n"
       self.text_da += "outputvariables_config['Order'] = %s\n" % list(names)
@@ -263,11 +276,11 @@ class AdaoGenerator(PythonGenerator):
 
   def add_observers(self):
     observers = {}
-    observer = self.dictMCVal["__ASSIMILATION_STUDY__Observers__SELECTION"]
+    observer = self.dictMCVal["__"+self.type_of_study+"__Observers__SELECTION"]
     if isinstance(observer, type("")):
       self.add_observer_in_dict(observer, observers)
     else:
-      for observer in self.dictMCVal["__ASSIMILATION_STUDY__Observers__SELECTION"]:
+      for observer in self.dictMCVal["__"+self.type_of_study+"__Observers__SELECTION"]:
         self.add_observer_in_dict(observer, observers)
 
     # Write observers in the python command file
@@ -292,7 +305,7 @@ class AdaoGenerator(PythonGenerator):
     """
     observers[observer] = {}
     observers[observer]["name"] = observer
-    observer_eficas_name = "__ASSIMILATION_STUDY__Observers__" + observer + "__" + observer + "_data__"
+    observer_eficas_name = "__"+self.type_of_study+"__Observers__" + observer + "__" + observer + "_data__"
     # NodeType
     node_type_key_name = observer_eficas_name + "NodeType"
     observers[observer]["nodetype"] = self.dictMCVal[node_type_key_name]

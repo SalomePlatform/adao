@@ -78,6 +78,7 @@ else:
 
 # Data
 # print "Data entered are:"
+
 # Background
 try:
   Background
@@ -88,6 +89,17 @@ else:
   logging.debug("CREATE BackgroundType is %s"%BackgroundType)
   assim_study.setBackgroundType(BackgroundType)
   assim_study.setBackground(Background)
+
+# CheckingPoint
+try:
+  CheckingPoint
+except NameError:
+  pass
+else:
+  logging.debug("CREATE CheckingPoint is %s"%CheckingPoint)
+  logging.debug("CREATE CheckingPointType is %s"%CheckingPointType)
+  assim_study.setCheckingPointType(CheckingPointType)
+  assim_study.setCheckingPoint(CheckingPoint)
 
 # BackgroundError
 try:

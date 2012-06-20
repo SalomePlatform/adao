@@ -52,9 +52,9 @@ def check_study(study_config):
     logging.fatal("Cannot found Algorithm in the study configuration")
     sys.exit(1)
   else:
-    if study_config["Algorithm"] not in AssimAlgos:
+    if not (study_config["Algorithm"] in AssimAlgos or study_config["Algorithm"] in CheckAlgos):
       logging.fatal("Algorithm provided is unknow : " + str(study_config["Algorithm"]) +
-                    "\n You can choose between : " + str(AssimAlgos))
+                    "\n You can choose between : " + str(AssimAlgos)+" "+str(CheckAlgos))
       sys.exit(1)
 
   # Debug
