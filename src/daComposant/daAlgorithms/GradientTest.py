@@ -69,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "ResultFile",
-            default  = "",
+            default  = "gradient_result_file",
             typecast = str,
             message  = "Nom de base (hors extension) des fichiers de sauvegarde des résultats",
             )

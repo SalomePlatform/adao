@@ -159,6 +159,8 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
       self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
       self.text_da += data_name + "_config['Data'] = '" + data      + "'\n"
+      if search_text+"Stored" in self.dictMCVal.keys():
+        self.text_da += data_name + "_config['Stored'] = '" +  str(self.dictMCVal[search_text+"Stored"])  + "'\n"
       self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
     if from_type == "FunctionDict":

@@ -81,6 +81,7 @@ def F_Init(statut) : return FACT(statut = statut,
 
 assim_data_method = """
 def F_${assim_name}(statut) : return FACT(statut=statut,
+${storage}
                                           INPUT_TYPE = SIMP(statut="o", typ = "TXM", into=(${choices}), defaut=${default_choice}),
 ${decl_choices}
                                                 )
@@ -232,16 +233,22 @@ for data_input_name in infos.DataTypeDict.keys():
 for assim_data_input_name in infos.AssimDataDict.keys():
   logging.debug("An assimilation algorithm data input is found: " + assim_data_input_name)
   assim_name = assim_data_input_name
+  storage = ""
   choices = ""
   default_choice = ""
   decl_choices = ""
   decl_opts = ""
+  if infos.AssimDataDefaultDict[assim_data_input_name] in infos.StoredAssimData:
+    storage = "                                          Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0),"
   for choice in infos.AssimDataDict[assim_data_input_name]:
     choices += "\"" + choice + "\", "
     decl_choices += assim_data_choice.substitute(choice_name = choice)
+    if choice in infos.StoredAssimData:
+      storage = "                                          Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0),"
   default_choice = "\"" + infos.AssimDataDefaultDict[assim_data_input_name] + "\""
 
   mem_file.write(assim_data_method.substitute(assim_name = assim_name,
+                                              storage = storage,
                                               choices = choices,
                                               decl_choices = decl_choices,
                                               default_choice=default_choice))

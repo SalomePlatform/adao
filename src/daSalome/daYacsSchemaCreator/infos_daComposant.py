@@ -161,6 +161,8 @@ AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 AssimDataDefaultDict["UserDataInit"]        = "Dict"
 AssimDataDefaultDict["CheckingPoint"]       = "Vector"
 
+StoredAssimData = ["Vector", "Matrix"]
+
 # Assimilation optional nodes
 OptDict = {}
 OptDict["UserPostAnalysis"]   = ["String", "Script"]

@@ -87,7 +87,9 @@ except NameError:
 else:
   logging.debug("CREATE Background is %s"%Background)
   logging.debug("CREATE BackgroundType is %s"%BackgroundType)
+  logging.debug("CREATE BackgroundStored is %s"%BackgroundStored)
   assim_study.setBackgroundType(BackgroundType)
+  assim_study.setBackgroundStored(BackgroundStored)
   assim_study.setBackground(Background)
 
 # CheckingPoint
@@ -98,7 +100,9 @@ except NameError:
 else:
   logging.debug("CREATE CheckingPoint is %s"%CheckingPoint)
   logging.debug("CREATE CheckingPointType is %s"%CheckingPointType)
+  logging.debug("CREATE CheckingPointStored is %s"%CheckingPointStored)
   assim_study.setCheckingPointType(CheckingPointType)
+  assim_study.setCheckingPointStored(CheckingPointStored)
   assim_study.setCheckingPoint(CheckingPoint)
 
 # BackgroundError
@@ -108,7 +112,8 @@ except NameError:
   pass
 else:
   logging.debug("CREATE BackgroundError is %s"%BackgroundError)
-  logging.debug("CREATE BackgroundErrorType is %s"%BackgroundErrorType)
+  logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
+  assim_study.setBackgroundErrorStored(BackgroundErrorStored)
   assim_study.setBackgroundError(BackgroundError)
 
 # Observation
@@ -119,7 +124,9 @@ except NameError:
 else:
   logging.debug("CREATE Observation is %s"%Observation)
   logging.debug("CREATE ObservationType is %s"%ObservationType)
+  logging.debug("CREATE ObservationStored is %s"%ObservationStored)
   assim_study.setObservationType(ObservationType)
+  assim_study.setObservationStored(ObservationStored)
   assim_study.setObservation(Observation)
 
 # ObservationError
@@ -129,7 +136,8 @@ except NameError:
   pass
 else:
   logging.debug("CREATE ObservationError is %s"%ObservationError)
-  logging.debug("CREATE ObservationErrorType is %s"%ObservationErrorType)
+  logging.debug("CREATE ObservationErrorStored is %s"%ObservationErrorStored)
+  assim_study.setObservationErrorStored(ObservationErrorStored)
   assim_study.setObservationError(ObservationError)
 
 # ObservationOperator
@@ -216,6 +224,7 @@ logging.debug("CREATE Matrix is %s"%matrix)
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="CreateNumpyMatrixFromScript">
@@ -240,6 +249,7 @@ user_script_module = sys.modules[module_name]
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="CreateNumpyVectorFromString">
@@ -253,6 +263,7 @@ logging.debug("Vector is %s"%vector)
     <inport name="vector_in_string" type="string"/>
     <outport name="vector" type="pyobj"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="CreateNumpyVectorFromScript">
@@ -277,6 +288,7 @@ user_script_module = sys.modules[module_name]
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="SimpleExecuteDirectAlgorithm">

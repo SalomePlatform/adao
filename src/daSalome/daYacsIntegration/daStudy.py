@@ -93,14 +93,21 @@ class daStudy:
     else:
       raise daError("[daStudy::setBackgroundType] Type is unkown : " + Type + " Types are : Vector")
 
+  def setBackgroundStored(self, Stored):
+    if Stored:
+      self.BackgroundStored = True
+    else:
+      self.BackgroundStored = False
+
   def setBackground(self, Background):
     try:
       self.BackgroundType
+      self.BackgroundStored
     except AttributeError:
-      raise daError("[daStudy::setBackground] Type is not defined !")
+      raise daError("[daStudy::setBackground] Type or Storage is not defined !")
     self.Background = Background
     if self.BackgroundType == "Vector":
-      self.ADD.setBackground(asVector = Background)
+      self.ADD.setBackground(asVector = Background, toBeStored = self.BackgroundStored)
 
   def getBackground(self):
     return self.Background
@@ -113,19 +120,36 @@ class daStudy:
     else:
       raise daError("[daStudy::setCheckingPointType] Type is unkown : " + Type + " Types are : Vector")
 
+  def setCheckingPointStored(self, Stored):
+    if Stored:
+      self.CheckingPointStored = True
+    else:
+      self.CheckingPointStored = False
+
   def setCheckingPoint(self, CheckingPoint):
     try:
       self.CheckingPointType
+      self.CheckingPointStored
     except AttributeError:
-      raise daError("[daStudy::setCheckingPoint] Type is not defined !")
+      raise daError("[daStudy::setCheckingPoint] Type or Storage is not defined !")
     self.CheckingPoint = CheckingPoint
     if self.CheckingPointType == "Vector":
-      self.ADD.setBackground(asVector = CheckingPoint)
+      self.ADD.setBackground(asVector = CheckingPoint, toBeStored = self.CheckingPointStored)
 
   #--------------------------------------
 
+  def setBackgroundErrorStored(self, Stored):
+    if Stored:
+      self.BackgroundErrorStored = True
+    else:
+      self.BackgroundErrorStored = False
+
   def setBackgroundError(self, BackgroundError):
-    self.ADD.setBackgroundError(asCovariance = BackgroundError)
+    try:
+      self.BackgroundErrorStored
+    except AttributeError:
+      raise daError("[daStudy::setBackgroundError] Storage is not defined !")
+    self.ADD.setBackgroundError(asCovariance = BackgroundError, toBeStored = self.BackgroundErrorStored)
 
   #--------------------------------------
 
@@ -135,18 +159,35 @@ class daStudy:
     else:
       raise daError("[daStudy::setObservationType] Type is unkown : " + Type + " Types are : Vector")
 
+  def setObservationStored(self, Stored):
+    if Stored:
+      self.ObservationStored = True
+    else:
+      self.ObservationStored = False
+
   def setObservation(self, Observation):
     try:
       self.ObservationType
+      self.ObservationStored
     except AttributeError:
-      raise daError("[daStudy::setObservation] Type is not defined !")
+      raise daError("[daStudy::setObservation] Type or Storage is not defined !")
     if self.ObservationType == "Vector":
-      self.ADD.setObservation(asVector = Observation)
+      self.ADD.setObservation(asVector = Observation, toBeStored = self.ObservationStored)
 
   #--------------------------------------
 
+  def setObservationErrorStored(self, Stored):
+    if Stored:
+      self.ObservationErrorStored = True
+    else:
+      self.ObservationErrorStored = False
+
   def setObservationError(self, ObservationError):
-    self.ADD.setObservationError(asCovariance = ObservationError)
+    try:
+      self.ObservationErrorStored
+    except AttributeError:
+      raise daError("[daStudy::setObservationError] Storage is not defined !")
+    self.ADD.setObservationError(asCovariance = ObservationError, toBeStored = self.ObservationErrorStored)
 
   #--------------------------------------
 
