@@ -108,6 +108,11 @@ AlgoDataRequirements["GradientTest"] = [
     "ObservationOperator",
     ]
 
+AlgoDataRequirements["AdjointTest"] = [
+    "CheckingPoint",
+    "ObservationOperator",
+    ]
+
 AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"

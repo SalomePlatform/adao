@@ -69,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "ResultFile",
-            default  = "gradient_result_file",
+            default  = self._name+"_result_file",
             typecast = str,
             message  = "Nom de base (hors extension) des fichiers de sauvegarde des résultats",
             )
@@ -137,23 +137,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------
         if self._parameters["ResiduFormula"] is "Taylor":
             __doc__ = """
-            On observe le residu issu du développement de Taylor de la fonction H :
+            On observe le residu issu du développement de Taylor de la fonction F :
 
-              R(Alpha) = || H(x+Alpha*dx) - H(x) - Alpha * TangentH_x(dx) ||
+              R(Alpha) = || F(X+Alpha*dX) - F(X) - Alpha * TangentF_X(dX) ||
 
             Ce résidu doit décroître en Alpha**2 selon Alpha.
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. H est le code de calcul.
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         elif self._parameters["ResiduFormula"] is "Norm":
             __doc__ = """
             On observe le residu, qui est une approximation du gradient :
 
-                          || H(X+Alpha*dX) - H(X) ||
+                          || F(X+Alpha*dX) - F(X) ||
               R(Alpha) =  ---------------------------
                                     Alpha
 
             qui doit rester constant jusqu'à ce qu'on atteigne la précision du calcul.
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. H est le code de calcul.
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         else:
             __doc__ = ""
@@ -163,7 +163,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
         msgs += __doc__
         #
-        msg = "  i   Alpha       ||X||    ||H(X)||  ||H(X+dX)||    ||dX||  ||H(X+dX)-H(X)||   ||H(X+dX)-H(X)||/||dX||      R(Alpha)  "
+        msg = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)  "
         nbtirets = len(msg)
         msgs += "\n" + "-"*nbtirets
         msgs += "\n" + msg
@@ -214,7 +214,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Residu = NormedFXsAm
             if Normalisation < 0 : Normalisation = Residu
             #
-            msg = "  %2i  %5.0e   %8.3e   %8.3e   %8.3e   %8.3e   %8.3e      |      %8.3e          |   %8.3e"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu)
+            msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu)
             msgs += "\n" + msg
             #
             self.StoredVariables["CostFunctionJ"].store( Residu )

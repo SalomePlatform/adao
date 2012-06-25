@@ -1,0 +1,13 @@
+
+CHECKING_STUDY(Study_name='Test',
+               Debug=0,
+               Algorithm='AdjointTest',
+               CheckingPoint=_F(Stored=0,
+                                INPUT_TYPE='Vector',
+                                data=_F(FROM='String',
+                                        STRING='1 1 1',),),
+               ObservationOperator=_F(Stored=0,
+                                      INPUT_TYPE='Matrix',
+                                      data=_F(FROM='String',
+                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1 ; 1 0 0 ; 0 1 0 ; 0 0 1',),),);
+#CHECKSUM:f57c937e2c8bbc8e3f96a4b0ab10b907  -:FIN CHECKSUM
