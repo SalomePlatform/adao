@@ -21,39 +21,43 @@
 include $(top_srcdir)/adm_local/make_common_starter.am
 
 DATA_INST = \
-	    test001_ADAO_JDC_using_strings.comm \
-	    test002_ADAO_JDC_using_strings.comm \
-	    test003_ADAO_JDC_using_scripts.comm \
-	    test003_ADAO_scripts_for_JDC.py \
-	    test004_ADAO_JDC_using_scripts.comm \
-	    test004_ADAO_scripts_for_JDC.py \
-	    test005_ADAO_Operators.comm \
-	    test005_ADAO_scripts_for_JDC.py \
-	    test003_bis_ADAO_JDC_using_user_data_init.comm \
-	    test003_bis_ADAO_user_data_init.py \
-	    test003_bis_ADAO_scripts_for_JDC.py \
-	    test006_Observers.comm \
-	    test006_Observers_observer_with_file.py \
-	    test006_Observers_init.py \
-	    test006_Observers_Observation_Operator.py \
-	    test006_Observers_var.py
+	test001_ADAO_JDC_using_strings.comm \
+	test002_ADAO_JDC_using_strings.comm \
+	test003_ADAO_JDC_using_scripts.comm \
+	test003_ADAO_scripts_for_JDC.py \
+	test004_ADAO_JDC_using_scripts.comm \
+	test004_ADAO_scripts_for_JDC.py \
+	test005_ADAO_Operators.comm \
+	test005_ADAO_scripts_for_JDC.py \
+	test003_bis_ADAO_JDC_using_user_data_init.comm \
+	test003_bis_ADAO_user_data_init.py \
+	test003_bis_ADAO_scripts_for_JDC.py \
+	test006_Observers.comm \
+	test006_Observers_observer_with_file.py \
+	test006_Observers_init.py \
+	test006_Observers_Observation_Operator.py \
+	test006_Observers_var.py \
+	test009_ADAO_Simple_GradientTest.comm \
+	test010_ADAO_Simple_AdjointTest.comm
 
 examplesdasalome_DATA = ${DATA_INST}
 
 EXTRA_DIST = \
-	     test001_ADAO_JDC_using_strings.comm \
-	     test002_ADAO_JDC_using_strings.comm \
-	     test003_ADAO_JDC_using_scripts.comm.in \
-	     test003_ADAO_scripts_for_JDC.py \
-	     test004_ADAO_JDC_using_scripts.comm.in \
-	     test004_ADAO_scripts_for_JDC.py \
-	     test005_ADAO_Operators.comm.in \
-	     test005_ADAO_scripts_for_JDC.py \
-	     test003_bis_ADAO_JDC_using_user_data_init.comm.in \
-	     test003_bis_ADAO_user_data_init.py \
-	     test003_bis_ADAO_scripts_for_JDC.py \
-	     test006_Observers.comm.in \
-	     test006_Observers_observer_with_file.py \
-	     test006_Observers_init.py \
-	     test006_Observers_Observation_Operator.py \
-	     test006_Observers_var.py
+	test001_ADAO_JDC_using_strings.comm \
+	test002_ADAO_JDC_using_strings.comm \
+	test003_ADAO_JDC_using_scripts.comm.in \
+	test003_ADAO_scripts_for_JDC.py \
+	test004_ADAO_JDC_using_scripts.comm.in \
+	test004_ADAO_scripts_for_JDC.py \
+	test005_ADAO_Operators.comm.in \
+	test005_ADAO_scripts_for_JDC.py \
+	test003_bis_ADAO_JDC_using_user_data_init.comm.in \
+	test003_bis_ADAO_user_data_init.py \
+	test003_bis_ADAO_scripts_for_JDC.py \
+	test006_Observers.comm.in \
+	test006_Observers_observer_with_file.py \
+	test006_Observers_init.py \
+	test006_Observers_Observation_Operator.py \
+	test006_Observers_var.py \
+	test009_ADAO_Simple_GradientTest.comm \
+	test010_ADAO_Simple_AdjointTest.comm
