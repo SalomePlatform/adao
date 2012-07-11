@@ -827,6 +827,7 @@ class AssimilationStudy:
         self.__algorithmFile = None
         self.__diagnosticFile = None
         self.__H  = {}
+        self.__M  = {}
 
 # ==============================================================================
 if __name__ == "__main__":

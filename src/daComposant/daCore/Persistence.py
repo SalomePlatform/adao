@@ -93,7 +93,7 @@ class Persistence:
         self.__tags.append(   dict(tags))
         self.__tagkeys.update(dict(tags))
         #
-        if self.__dynamic: self.__replot()
+        if self.__dynamic: self.__replots()
         for hook, parameters, scheduler in self.__dataobservers:
             if self.__step in scheduler:
                 hook( self, parameters )
@@ -373,7 +373,7 @@ class Persistence:
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def __preplot(self,
+    def __preplots(self,
             title    = "",
             xlabel   = "",
             ylabel   = "",
@@ -409,7 +409,7 @@ class Persistence:
         self.__ltitle = ltitle
         self.__pause  = pause
 
-    def plot(self, item=None, step=None,
+    def plots(self, item=None, step=None,
             steps    = None,
             title    = "",
             xlabel   = "",
@@ -446,9 +446,9 @@ class Persistence:
                          qui est automatiquement complétée par le numéro du
                          fichier calculé par incrément simple de compteur
             - dynamic  : effectue un affichage des valeurs à chaque stockage
-                         (au-delà du second) La méthode "plot" permet de déclarer
-                         l'affichage dynamique, et c'est la méthode "__replot"
-                         qui est utilisée pour l'effectuer
+                         (au-delà du second). La méthode "plots" permet de
+                         déclarer l'affichage dynamique, et c'est la méthode
+                         "__replots" qui est utilisée pour l'effectuer
             - persist  : booléen indiquant que la fenêtre affichée sera
                          conservée lors du passage au dessin suivant
                          Par défaut, persist = False
@@ -458,7 +458,7 @@ class Persistence:
         """
         import os
         if not self.__dynamic:
-            self.__preplot(title, xlabel, ylabel, ltitle, geometry, persist, pause )
+            self.__preplots(title, xlabel, ylabel, ltitle, geometry, persist, pause )
             if dynamic:
                 self.__dynamic = True
                 if len(self.__values) == 0: return 0
@@ -491,7 +491,7 @@ class Persistence:
             if self.__pause:
                 raw_input('Please press return to continue...\n')
 
-    def __replot(self):
+    def __replots(self):
         """
         Affichage dans le cas du suivi dynamique de la variable
         """
@@ -584,7 +584,7 @@ class Persistence:
     # On pourrait aussi utiliser les autres attributs d'une "matrix", comme
     # "tofile", "min"...
 
-    def stepplot(self,
+    def plot(self,
             steps    = None,
             title    = "",
             xlabel   = "",
@@ -1164,7 +1164,7 @@ if __name__ == "__main__":
     D.store(vect2)
     D.store(vect3)
     print "Affichage graphique de l'ensemble du stockage sur une même image"
-    D.stepplot(
+    D.plot(
         title = "Tous les vecteurs",
         filename="vecteurs.ps",
         xlabel = "Axe X",
@@ -1173,7 +1173,7 @@ if __name__ == "__main__":
     print "Stockage d'un quatrième vecteur de longueur différente"
     D.store(vect4)
     print "Affichage graphique séparé du dernier stockage"
-    D.plot(
+    D.plots(
         item  = 3,
         title = "Vecteurs",
         filename = "vecteur",
@@ -1189,7 +1189,7 @@ if __name__ == "__main__":
     print "======> Affichage graphique dynamique d'objets"
     OBJET_DE_TEST = Persistence("My object", unit="", basetype=float)
     D = OBJET_DE_TEST
-    D.plot(
+    D.plots(
         dynamic = True,
         title   = "Valeur suivie",
         xlabel  = "Pas",

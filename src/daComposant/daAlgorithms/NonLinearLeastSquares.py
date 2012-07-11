@@ -51,7 +51,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
-            minval   = -1
+            minval   = -1,
             )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
@@ -72,6 +72,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = float,
             message  = "Maximum des composantes du gradient lors de l'arrêt",
             )
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -90,6 +96,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
         else:
             Bounds = None
+        #
+        # Correction pour pallier a un bug de TNC sur le retour du Minimum
+        if self._parameters.has_key("Minimizer") is "TNC":
+            self.setParameterValue("StoreInternalVariables",True)
         #
         # Opérateur d'observation
         # -----------------------
@@ -144,7 +154,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
             logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
             logging.debug("%s CostFunction J  = %s"%(self._name, J))
-            self.StoredVariables["CurrentState"].store( _X.A1 )
+            if self._parameters["StoreInternalVariables"]:
+                self.StoredVariables["CurrentState"].store( _X.A1 )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
@@ -235,11 +246,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        # Correction pour pallier a un bug de TNC sur le retour du Minimum
-        # ----------------------------------------------------------------
         StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie() )
         MinJ    = self.StoredVariables["CostFunctionJ"].valueserie(step = StepMin)
-        Minimum = self.StoredVariables["CurrentState"].valueserie(step = StepMin)
+        #
+        # Correction pour pallier a un bug de TNC sur le retour du Minimum
+        # ----------------------------------------------------------------
+        if self._parameters["StoreInternalVariables"]:
+            Minimum = self.StoredVariables["CurrentState"].valueserie(step = StepMin)
         #
         logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["Minimizer"], StepMin))
         logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["Minimizer"], MinJ))
