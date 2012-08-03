@@ -235,7 +235,12 @@ class AssimilationStudy:
         return 0
 
     def setObservationOperator(self,
-            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None},
+            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
+                          "useApproximatedDerivatives":False,
+                          "withCenteredDF"            :False,
+                          "withIncrement"             :0.01,
+                          "withdX"                    :None,
+                         },
             asMatrix   = None,
             appliedToX = None,
             toBeStored = False,
@@ -246,6 +251,11 @@ class AssimilationStudy:
         - si asFunction["Tangent"] et asFunction["Adjoint"] ne sont pas None
           alors on définit l'opérateur à l'aide de fonctions. Si la fonction
           "Direct" n'est pas définie, on prend la fonction "Tangent".
+          Si "useApproximatedDerivatives" est vrai, on utilise une approximation
+          des opérateurs tangents et adjoints. On utilise par défaut des
+          différences finies non centrées ou centrées (si "withCenteredDF" est
+          vrai) avec un incrément multiplicatif "withIncrement" de 1% autour
+          du point courant ou sur le point fixe "withdX".
         - si les fonctions ne sont pas disponibles et si asMatrix n'est pas
           None, alors on définit l'opérateur "Direct" et "Tangent" à l'aide de
           la matrice, et l'opérateur "Adjoint" à l'aide de la transposée. La
@@ -259,6 +269,21 @@ class AssimilationStudy:
           être rendue disponible au même titre que les variables de calcul
         """
         if (type(asFunction) is type({})) and \
+                asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
+                asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
+            if not asFunction.has_key("withCenteredDF"): asFunction["withCenteredDF"] = False
+            if not asFunction.has_key("withIncrement"):  asFunction["withIncrement"]  = 0.01
+            if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
+            from daNumerics.ApproximatedDerivatives import FDApproximation
+            FDA = FDApproximation(
+                FunctionH  = asFunction["Direct"],
+                centeredDF = asFunction["withCenteredDF"],
+                increment  = asFunction["withIncrement"],
+                dX         = asFunction["withdX"] )
+            self.__H["Direct"]  = Operator( fromMethod = FDA.FunctionH )
+            self.__H["Tangent"] = Operator( fromMethod = FDA.TangentH  )
+            self.__H["Adjoint"] = Operator( fromMethod = FDA.AdjointH  )
+        elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
@@ -273,7 +298,7 @@ class AssimilationStudy:
             self.__H["Tangent"] = Operator( fromMatrix = matrice )
             self.__H["Adjoint"] = Operator( fromMatrix = matrice.T )
         else:
-            raise ValueError("Improperly defined observation operator, it requires at minima either a matrix or a Tangent/Adjoint pair.")
+            raise ValueError("Improperly defined observation operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
         if appliedToX is not None:
             self.__H["AppliedToX"] = {}
@@ -297,7 +322,12 @@ class AssimilationStudy:
 
     # -----------------------------------------------------------
     def setEvolutionModel(self,
-            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None},
+            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
+                          "useApproximatedDerivatives":False,
+                          "withCenteredDF"            :False,
+                          "withIncrement"             :0.01,
+                          "withdX"                    :None,
+                         },
             asMatrix   = None,
             Scheduler  = None,
             toBeStored = False,
@@ -308,6 +338,11 @@ class AssimilationStudy:
         - si asFunction["Tangent"] et asFunction["Adjoint"] ne sont pas None
           alors on définit l'opérateur à l'aide de fonctions. Si la fonction
           "Direct" n'est pas définie, on prend la fonction "Tangent".
+          Si "useApproximatedDerivatives" est vrai, on utilise une approximation
+          des opérateurs tangents et adjoints. On utilise par défaut des
+          différences finies non centrées ou centrées (si "withCenteredDF" est
+          vrai) avec un incrément multiplicatif "withIncrement" de 1% autour
+          du point courant ou sur le point fixe "withdX".
         - si les fonctions ne sont pas disponibles et si asMatrix n'est pas
           None, alors on définit l'opérateur "Direct" et "Tangent" à l'aide de
           la matrice, et l'opérateur "Adjoint" à l'aide de la transposée. La
@@ -317,6 +352,21 @@ class AssimilationStudy:
           être rendue disponible au même titre que les variables de calcul
         """
         if (type(asFunction) is type({})) and \
+                asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
+                asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
+            if not asFunction.has_key("withCenteredDF"): asFunction["withCenteredDF"] = False
+            if not asFunction.has_key("withIncrement"):  asFunction["withIncrement"]  = 0.01
+            if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
+            from daNumerics.ApproximatedDerivatives import FDApproximation
+            FDA = FDApproximation(
+                FunctionH  = asFunction["Direct"],
+                centeredDF = asFunction["withCenteredDF"],
+                increment  = asFunction["withIncrement"],
+                dX         = asFunction["withdX"] )
+            self.__H["Direct"]  = Operator( fromMethod = FDA.FunctionH )
+            self.__H["Tangent"] = Operator( fromMethod = FDA.TangentH  )
+            self.__H["Adjoint"] = Operator( fromMethod = FDA.AdjointH  )
+        elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
@@ -331,7 +381,7 @@ class AssimilationStudy:
             self.__M["Tangent"] = Operator( fromMatrix = matrice )
             self.__M["Adjoint"] = Operator( fromMatrix = matrice.T )
         else:
-            raise ValueError("Improperly defined evolution operator, it requires at minima either a matrix or a Tangent/Adjoint pair.")
+            raise ValueError("Improperly defined evolution operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
         if toBeStored:
             self.__StoredInputs["EvolutionModel"] = self.__M
