@@ -40,10 +40,11 @@ def mmqr(
     # Recuperation des donnees et informations initiales
     # --------------------------------------------------
     variables = asmatrix(x0).A1
-    mesures   = asmatrix(asmatrix(y).A1).T
+    mesures   = asmatrix(y).flatten().T
     increment = sys.float_info[0]
     p         = len(variables.flat)
     n         = len(mesures.flat)
+    quantile  = float(quantile)
     #
     # Calcul des parametres du MM
     # ---------------------------
@@ -54,7 +55,7 @@ def mmqr(
     # Calculs d'initialisation
     # ------------------------
     residus  = asmatrix( mesures - func( variables ) ).A1
-    poids    = 1./(epsilon+abs(residus))
+    poids    = asarray( 1./(epsilon+abs(residus)) )
     veps     = 1. - 2. * quantile - residus * poids
     lastsurrogate = -sum(residus*veps) - (1.-2.*quantile)*sum(residus)
     iteration = 0
@@ -64,14 +65,15 @@ def mmqr(
     while (increment > toler) and (iteration < maxfun) :
         iteration += 1
         #
-        Derivees  = fprime(variables)
-        DeriveesT = matrix(Derivees).T
-        M         = - dot( DeriveesT , (array(matrix(p*[poids]).T)*array(Derivees)) )
+        Derivees  = array(fprime(variables))
+        Derivees  = Derivees.reshape(n,p) # Necessaire pour remettre en place la matrice si elle passe par des tuyaux YACS
+        DeriveesT = array(matrix(Derivees).T)
+        M         = - dot( DeriveesT , (array(matrix(p*[poids,]).T)*Derivees) )
         SM        =   dot( DeriveesT , veps ).T
-        step      = linalg.lstsq( M, SM )[0].A1
+        step      = linalg.lstsq( M, SM )[0]
         #
-        variables = asarray(variables) + asarray(step)
-        residus   = ( mesures - func(variables) ).A1
+        variables = variables + step
+        residus   = asmatrix( mesures - func(variables) ).A1
         surrogate = sum(residus**2 * poids) + (4.*quantile-2.) * sum(residus)
         #
         while ( (surrogate > lastsurrogate) and ( max(list(abs(step))) > 1.e-16 ) ) :

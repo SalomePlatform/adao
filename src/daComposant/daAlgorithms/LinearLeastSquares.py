@@ -52,6 +52,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
+        # Calcul de la matrice de gain et de l'analyse
+        # --------------------------------------------
         K =  (Ha * RI * Hm ).I * Ha * RI
         Xa =  K * Y
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))

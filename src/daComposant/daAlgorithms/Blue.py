@@ -88,8 +88,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         d  = Y - HXb
         logging.debug("%s Innovation d = %s"%(self._name, d))
         #
-        # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
-        # ------------------------------------------------------------------------
+        # Calcul de la matrice de gain et de l'analyse
+        # --------------------------------------------
         if Y.size <= Xb.size:
             if self._parameters["R_scalar"] is not None:
                 R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)

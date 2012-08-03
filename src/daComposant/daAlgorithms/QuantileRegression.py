@@ -57,6 +57,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = float,
             message  = "Maximum de variation de la fonction d'estimation lors de l'arrêt",
             )
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -105,7 +111,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
             logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
             logging.debug("%s CostFunction J  = %s"%(self._name, J))
-            self.StoredVariables["CurrentState"].store( _X.A1 )
+            if self._parameters["StoreInternalVariables"]:
+                self.StoredVariables["CurrentState"].store( _X.A1 )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

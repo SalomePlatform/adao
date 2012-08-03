@@ -99,7 +99,7 @@ class Operator:
         if self.__Matrix is not None:
             return self.__Matrix
         elif ValueForMethodForm is not None:
-            return self.__Method( ValueForMethodForm )
+            return self.__Method( (ValueForMethodForm, None) )
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
 
