@@ -324,7 +324,8 @@ def create_yacs_proc(study_config):
       node_script += "filepath = \"" + base_repertory + "\"\n"
     else:
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
-    node_script += "sys.path.insert(0,os.path.dirname(filepath))\n"
+    node_script += "if sys.path.count(os.path.dirname(filepath))==0 or (sys.path.count(os.path.dirname(filepath))>0 and sys.path.index(os.path.dirname(filepath),0,1)>0):\n"
+    node_script += "  sys.path.insert(0,os.path.dirname(filepath))\n"
     node_script += script_str.read()
     opt_script_node.setScript(node_script)
     opt_script_node.edAddInputPort("computation", t_param_input)
@@ -455,7 +456,8 @@ def create_yacs_proc(study_config):
         node_script += "filepath = \"" + base_repertory + "\"\n"
       else:
         node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
-      node_script += "sys.path.insert(0,os.path.dirname(filepath))\n"
+      node_script += "if sys.path.count(os.path.dirname(filepath))==0 or (sys.path.count(os.path.dirname(filepath))>0 and sys.path.index(os.path.dirname(filepath),0,1)>0):\n"
+      node_script += "  sys.path.insert(0,os.path.dirname(filepath))\n"
       node_script += default_script
       node_script += analysis_file.read()
       analysis_node.setScript(node_script)

@@ -42,7 +42,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         # Permet à EFICAS de faire ses import correctement
         my_path = os.path.dirname(os.path.abspath(__file__))
         ADAO_INSTALL_DIR = my_path + "/../daEficas"
-        sys.path[:0]=[ADAO_INSTALL_DIR]
+        sys.path.insert(0,ADAO_INSTALL_DIR)
 
         self.__parent = parent
 

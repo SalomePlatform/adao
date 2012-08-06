@@ -278,7 +278,8 @@ import os
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
-sys.path.insert(0,filepath)
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath,0,1)>0):
+    sys.path.insert(0,filepath)
 
 # Import script
 __import__(module_name)
@@ -337,7 +338,8 @@ import os
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
-sys.path.insert(0,filepath)
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath,0,1)>0):
+    sys.path.insert(0,filepath)
 
 # Import script
 __import__(module_name)

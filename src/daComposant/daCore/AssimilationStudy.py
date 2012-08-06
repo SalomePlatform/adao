@@ -33,6 +33,7 @@ import numpy
 import Logging ; Logging.Logging() # A importer en premier
 import Persistence
 from BasicObjects import Operator
+from PlatformInfo import uniq
 
 # ==============================================================================
 class AssimilationStudy:
@@ -95,7 +96,7 @@ class AssimilationStudy:
         # qui est activée dans Persistence)
         self.__parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         sys.path.insert(0, self.__parent)
-        sys.path = list(set(sys.path)) # Conserve en unique exemplaire chaque chemin
+        sys.path = uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
 
     # ---------------------------------------------------------
     def setBackground(self,
@@ -758,7 +759,7 @@ class AssimilationStudy:
         if not os.path.isfile(os.path.join(asPath,"daAlgorithms","__init__.py")):
             raise ValueError("The given \""+asPath+"/daAlgorithms\" path must contain a file named \"__init__.py\"")
         sys.path.insert(0, os.path.abspath(asPath))
-        sys.path = list(set(sys.path)) # Conserve en unique exemplaire chaque chemin
+        sys.path = uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
         return 1
 
     def get_diagnostics_main_path(self):
@@ -783,7 +784,7 @@ class AssimilationStudy:
         if not os.path.isfile(os.path.join(asPath,"daDiagnostics","__init__.py")):
             raise ValueError("The given \""+asPath+"/daDiagnostics\" path must contain a file named \"__init__.py\"")
         sys.path.insert(0, os.path.abspath(asPath))
-        sys.path = list(set(sys.path)) # Conserve en unique exemplaire chaque chemin
+        sys.path = uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
         return 1
 
     # -----------------------------------------------------------

@@ -84,6 +84,14 @@ class PlatformInfo:
         return "%s %s (%s)"%(version.name,version.version,version.date)
 
 # ==============================================================================
+def uniq(sequence):
+    """
+    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
+    """
+    __seen = set()
+    return [x for x in sequence if x not in __seen and not __seen.add(x)]
+
+# ==============================================================================
 class PathManagement:
     """
     Mise à jour du path système pour les répertoires d'outils
@@ -100,9 +108,9 @@ class PathManagement:
             sys.path.insert(0, v )
         #
         # Conserve en unique exemplaire chaque chemin
-        sys.path = list(set(sys.path))
+        sys.path = uniq( sys.path )
         del parent
-    
+
     def getpaths(self):
         """
         Renvoie le dictionnaire des chemins ajoutés

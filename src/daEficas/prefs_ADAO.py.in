@@ -26,7 +26,7 @@ import os, sys
 # Configuration de Eficas
 # INSTALLDIR, REPINI est obligatoire
 INSTALLDIR = "@EFICAS_DIR@"
-sys.path[:0]=[INSTALLDIR]
+sys.path.insert(0,INSTALLDIR)
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
 
