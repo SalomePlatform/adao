@@ -192,7 +192,13 @@ class AssimilationStudy:
             else:
                 self.__Y = numpy.matrix( asVector,    numpy.float ).T
         elif asPersistentVector is not None:
-            self.__Y = asPersistentVector
+            if type( asPersistentVector ) is list or type( asPersistentVector ) is tuple:
+                from Persistence import OneVector
+                self.__Y = OneVector("Observation", basetype=numpy.array)
+                for y in asPersistentVector:
+                    self.__Y.store( y )
+            else:
+                self.__Y = asPersistentVector
         else:
             raise ValueError("Error: improperly defined observations")
         if toBeStored:
@@ -364,9 +370,9 @@ class AssimilationStudy:
                 centeredDF = asFunction["withCenteredDF"],
                 increment  = asFunction["withIncrement"],
                 dX         = asFunction["withdX"] )
-            self.__H["Direct"]  = Operator( fromMethod = FDA.FunctionH )
-            self.__H["Tangent"] = Operator( fromMethod = FDA.TangentH  )
-            self.__H["Adjoint"] = Operator( fromMethod = FDA.AdjointH  )
+            self.__M["Direct"]  = Operator( fromMethod = FDA.FunctionH )
+            self.__M["Tangent"] = Operator( fromMethod = FDA.TangentH  )
+            self.__M["Adjoint"] = Operator( fromMethod = FDA.AdjointH  )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):

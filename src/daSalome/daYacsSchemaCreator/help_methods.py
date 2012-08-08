@@ -210,7 +210,7 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
     sys.exit(1)
   else:
     if data_config[data_name_type] not in AssimType[data_name]:
-      logging.fatal(data_name_type + " defined in the study configuration does not have a correct type : " + str(data_config[data_name_type]) 
+      logging.fatal(data_name_type + " of " + data_name + " defined in the study configuration does not have a correct type : " + str(data_config[data_name_type]) 
                     + "\n You can have : " + str(AssimType[data_name]))
       sys.exit(1)
   if data_name_from not in data_config:
@@ -218,7 +218,7 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
     sys.exit(1)
   else:
     if data_config[data_name_from] not in FromNumpyList[data_config[data_name_type]]:
-      logging.fatal(data_name_from + " defined in the study configuration does not have a correct value : " + str(data_config[data_name_from]) 
+      logging.fatal(data_name_from + " of " + data_name + " defined in the study configuration does not have a correct value : " + str(data_config[data_name_from]) 
                     + "\n You can have : " + str(FromNumpyList[data_config[data_name_type]]))
       sys.exit(1)
 

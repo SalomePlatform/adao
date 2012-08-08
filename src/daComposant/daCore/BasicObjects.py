@@ -92,13 +92,13 @@ class Operator:
         else:
             return self.__Method( (xNominal, xValue) )
 
-    def asMatrix(self, ValueForMethodForm = None):
+    def asMatrix(self, ValueForMethodForm = "UnknownVoidValue"):
         """
         Permet de renvoyer l'opérateur sous la forme d'une matrice
         """
         if self.__Matrix is not None:
             return self.__Matrix
-        elif ValueForMethodForm is not None:
+        elif ValueForMethodForm is not "UnknownVoidValue": # Ne pas utiliser "None"
             return self.__Method( (ValueForMethodForm, None) )
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")

@@ -31,8 +31,9 @@ from daYacsIntegration import daStudy
 
 class OptimizerHooks:
 
-  def __init__(self, optim_algo):
+  def __init__(self, optim_algo, switch_value=-1):
     self.optim_algo = optim_algo
+    self.switch_value = str(int(switch_value))
 
   def create_sample(self, data, method):
     sample = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/ParametricInput'))
@@ -58,6 +59,11 @@ class OptimizerHooks:
       obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
       obs_switch.setEltAtRank("name", "switch_value")
       obs_switch.setEltAtRank("value", "1")
+      specificParameters.pushBack(obs_switch)
+    if self.optim_algo.has_evolution_model:
+      obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+      obs_switch.setEltAtRank("name", "switch_value")
+      obs_switch.setEltAtRank("value", self.switch_value)
       specificParameters.pushBack(obs_switch)
     sample.setEltAtRank("specificParameters", specificParameters)
 
@@ -95,7 +101,10 @@ class OptimizerHooks:
     else:
       val_end = self.optim_algo.da_study.OutputVariables[self.optim_algo.da_study.OutputVariablesOrder[elt_list]] # nbr de l'argument courant (-1 == tout)
 
-    it = data.flat
+    if data is None:
+        it = []
+    else:
+        it = data.flat
     for val in it:
       param.pushBack(val)
       val_number += 1
@@ -160,18 +169,18 @@ class OptimizerHooks:
           if sample_id == local_counter:
             # 4: Data is ready
             any_data = self.optim_algo.pool.getOutSample(local_counter)
-            Y = self.get_data_from_any(any_data)
+            Z = self.get_data_from_any(any_data)
 
             # 5: Release lock
             # Have to be done before but need a new implementation
             # of the optimizer loop
             self.optim_algo.counter_lock.release()
-            return Y
+            return Z
     else:
       #print "sync false is not yet implemented"
       self.optim_algo.setError("sync == false not yet implemented")
 
-  def Tangent(self, X, sync = 1):
+  def Tangent(self, (X, dX), sync = 1):
     #print "Call Tangent OptimizerHooks"
     if sync == 1:
       # 1: Get a unique sample number
@@ -180,7 +189,7 @@ class OptimizerHooks:
       local_counter = self.optim_algo.sample_counter
 
       # 2: Put sample in the job pool
-      sample = self.create_sample(X, "Tangent")
+      sample = self.create_sample((X,dX) , "Tangent")
       self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
@@ -195,13 +204,13 @@ class OptimizerHooks:
           if sample_id == local_counter:
             # 4: Data is ready
             any_data = self.optim_algo.pool.getOutSample(local_counter)
-            Y = self.get_data_from_any(any_data)
+            Z = self.get_data_from_any(any_data)
 
             # 5: Release lock
             # Have to be done before but need a new implementation
             # of the optimizer loop
             self.optim_algo.counter_lock.release()
-            return Y
+            return Z
     else:
       #print "sync false is not yet implemented"
       self.optim_algo.setError("sync == false not yet implemented")
@@ -250,6 +259,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     SALOMERuntime.OptimizerAlgASync.__init__(self, None)
     self.runtime = SALOMERuntime.getSALOMERuntime()
 
+    self.has_evolution_model = False
     self.has_observer = False
 
     # Gestion du compteur
@@ -261,6 +271,8 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     self.tout     = self.runtime.getTypeCode("SALOME_TYPES/ParametricOutput")
     self.pyobject = self.runtime.getTypeCode("pyobj")
 
+    # Absolument indispensable de définir ainsi "self.optim_hooks"
+    # (sinon on a une "Unknown Exception" sur l'attribut "finish")
     self.optim_hooks = OptimizerHooks(self)
 
   # input vient du port algoinit, input est un Any YACS !
@@ -282,17 +294,34 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     if self.da_study.getObservationOperatorType("Direct") == "Function" or self.da_study.getObservationOperatorType("Tangent") == "Function" or self.da_study.getObservationOperatorType("Adjoint") == "Function" :
       #print "Set Hooks"
       # Use proxy function for YACS
-      self.hooks = OptimizerHooks(self)
+      self.hooksOO = OptimizerHooks(self, switch_value=1)
       direct = tangent = adjoint = None
       if self.da_study.getObservationOperatorType("Direct") == "Function":
-        direct = self.hooks.Direct
+        direct = self.hooksOO.Direct
       if self.da_study.getObservationOperatorType("Tangent") == "Function" :
-        tangent = self.hooks.Tangent
+        tangent = self.hooksOO.Tangent
       if self.da_study.getObservationOperatorType("Adjoint") == "Function" :
-        adjoint = self.hooks.Adjoint
+        adjoint = self.hooksOO.Adjoint
 
       # Set ObservationOperator
       self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+
+    # Check if EvolutionModel is already set
+    if self.da_study.getEvolutionModelType("Direct") == "Function" or self.da_study.getEvolutionModelType("Tangent") == "Function" or self.da_study.getEvolutionModelType("Adjoint") == "Function" :
+      self.has_evolution_model = True
+      #print "Set Hooks"
+      # Use proxy function for YACS
+      self.hooksEM = OptimizerHooks(self, switch_value=2)
+      direct = tangent = adjoint = None
+      if self.da_study.getEvolutionModelType("Direct") == "Function":
+        direct = self.hooksEM.Direct
+      if self.da_study.getEvolutionModelType("Tangent") == "Function" :
+        tangent = self.hooksEM.Tangent
+      if self.da_study.getEvolutionModelType("Adjoint") == "Function" :
+        adjoint = self.hooksEM.Adjoint
+
+      # Set EvolutionModel
+      self.ADD.setEvolutionModel(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
 
     # Set Observers
     for observer_name in self.da_study.observers_dict.keys():

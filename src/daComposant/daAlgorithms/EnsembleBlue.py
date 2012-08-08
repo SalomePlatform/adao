@@ -82,8 +82,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
-        Hm = H["Direct"].asMatrix()
-        Ha = H["Adjoint"].asMatrix()
+        Hm = H["Tangent"].asMatrix(None)
+        Ha = H["Adjoint"].asMatrix(None)
         #
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------

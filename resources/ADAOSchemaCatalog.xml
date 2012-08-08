@@ -140,6 +140,17 @@ else:
   assim_study.setObservationErrorStored(ObservationErrorStored)
   assim_study.setObservationError(ObservationError)
 
+# EvolutionError
+try:
+  EvolutionError
+except NameError:
+  pass
+else:
+  logging.debug("CREATE EvolutionError is %s"%EvolutionError)
+  logging.debug("CREATE EvolutionErrorStored is %s"%EvolutionErrorStored)
+  assim_study.setEvolutionErrorStored(EvolutionErrorStored)
+  assim_study.setEvolutionError(EvolutionError)
+
 # ObservationOperator
 ObservationOperatorOk = 0
 try:
@@ -178,6 +189,45 @@ if ObservationOperatorOk == 0:
     logging.debug("CREATE ObservationOperatorAdjoint is %s"%ObservationOperatorAdjoint)
     assim_study.setObservationOperatorType("Adjoint", "Function")
     assim_study.setObservationOperator("Adjoint", ObservationOperatorAdjoint)
+
+# EvolutionModel
+EvolutionModelOk = 0
+try:
+  EvolutionModel
+except NameError:
+  pass
+else:
+  logging.debug("CREATE EvolutionModel is %s"%EvolutionModel)
+  logging.debug("CREATE EvolutionModelType is %s"%EvolutionModelType)
+  assim_study.setEvolutionModelType("Matrix", EvolutionModelType)
+  assim_study.setEvolutionModel("Matrix", EvolutionModel)
+  EvolutionModelOk = 1
+
+if EvolutionModelOk == 0:
+  try:
+    EvolutionModelDirect
+  except NameError:
+    pass
+  else:
+    logging.debug("CREATE EvolutionModelDirect is %s"%EvolutionModelDirect)
+    assim_study.setEvolutionModelType("Direct", "Function")
+    assim_study.setEvolutionModel("Direct", EvolutionModelDirect)
+  try:
+    EvolutionModelTangent
+  except NameError:
+    pass
+  else:
+    logging.debug("CREATE EvolutionModelTangent is %s"%EvolutionModelTangent)
+    assim_study.setEvolutionModelType("Tangent", "Function")
+    assim_study.setEvolutionModel("Tangent", EvolutionModelTangent)
+  try:
+    EvolutionModelAdjoint
+  except NameError:
+    pass
+  else:
+    logging.debug("CREATE EvolutionModelAdjoint is %s"%EvolutionModelAdjoint)
+    assim_study.setEvolutionModelType("Adjoint", "Function")
+    assim_study.setEvolutionModel("Adjoint", EvolutionModelAdjoint)
 
 # Variables
 for name, size in zip(InputVariablesNames, InputVariablesSizes):
@@ -239,7 +289,8 @@ import os
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
-sys.path.insert(0,filepath)
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath,0,1)>0):
+    sys.path.insert(0,filepath)
 
 # Import script
 __import__(module_name)
@@ -271,6 +322,46 @@ logging.debug("Vector is %s"%vector)
 import logging
 logging.debug("CREATE Entering in CreateNumpyVectorFromScript")
 type = "Vector"
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath,0,1)>0):
+    sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorSerieFromString">
+    <script><code><![CDATA[
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyVectorSerieFromString")
+vector = numpy.matrix(vector_in_string)
+type = "VectorSerie"
+logging.debug("VectorSerie is %s"%vector)
+]]></code></script>
+    <inport name="vector_in_string" type="string"/>
+    <outport name="vector" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorSerieFromScript">
+    <script><code><![CDATA[
+import logging
+logging.debug("CREATE Entering in CreateNumpyVectorSerieFromScript")
+type = "VectorSerie"
 
 # Get file path and filename
 import sys
@@ -361,7 +452,8 @@ import os
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
-sys.path.insert(0,filepath)
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath,0,1)>0):
+    sys.path.insert(0,filepath)
 
 # Import script
 __import__(module_name)
@@ -377,10 +469,12 @@ user_script_module = sys.modules[module_name]
     <script><code><![CDATA[
 import logging
 logging.debug("CREATE Entering in ReadForSwitchNode")
+logging.debug("       with input data : "+str(data["specificParameters"]))
 switch_value = -1
 for param in data["specificParameters"]:
   if param["name"] == "switch_value":
     switch_value = int(param["value"])
+logging.debug("       switching to value : "+str(switch_value))
 ]]></code></script>
     <inport name="data" type="SALOME_TYPES/ParametricInput"/>
     <outport name="data" type="SALOME_TYPES/ParametricInput"/>

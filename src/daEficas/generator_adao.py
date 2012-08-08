@@ -118,7 +118,12 @@ class AdaoGenerator(PythonGenerator):
       self.add_data("ObservationError")
     if "__"+self.type_of_study+"__CheckingPoint__INPUT_TYPE" in self.dictMCVal.keys():
       self.add_data("CheckingPoint")
-    self.add_data("ObservationOperator")
+    if "__"+self.type_of_study+"__ObservationOperator__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("ObservationOperator")
+    if "__"+self.type_of_study+"__EvolutionModel__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("EvolutionModel")
+    if "__"+self.type_of_study+"__EvolutionError__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("EvolutionError")
 
     self.add_variables()
     # Parametres optionnels
@@ -286,7 +291,7 @@ class AdaoGenerator(PythonGenerator):
         self.add_observer_in_dict(observer, observers)
 
     # Write observers in the python command file
-    number = 1
+    number = 2
     self.text_da += "observers = {}\n"
     for observer in observers.keys():
       number += 1

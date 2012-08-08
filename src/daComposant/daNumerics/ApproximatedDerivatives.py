@@ -159,8 +159,8 @@ class FDApproximation:
             #
             # Calcul de la valeur linéarisée de H en X appliqué à dX
             # ------------------------------------------------------
-            dX = numpy.asmatrix(dX).flatten().T
-            HtX = numpy.dot(Jacobienne, dX)
+            _dX = numpy.asmatrix(dX).flatten().T
+            HtX = numpy.dot(Jacobienne, _dX)
             return HtX.A1
 
     # ---------------------------------------------------------
@@ -178,8 +178,8 @@ class FDApproximation:
             #
             # Calcul de la valeur de l'adjoint en X appliqué à Y
             # --------------------------------------------------
-            Y = numpy.asmatrix(Y).flatten().T
-            HaY = numpy.dot(JacobienneT, Y)
+            _Y = numpy.asmatrix(Y).flatten().T
+            HaY = numpy.dot(JacobienneT, _Y)
             return HaY.A1
 
 # ==============================================================================

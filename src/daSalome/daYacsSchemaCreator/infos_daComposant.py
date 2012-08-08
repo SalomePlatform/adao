@@ -35,29 +35,30 @@ AssimData = ["Background", "BackgroundError",
              ]
 
 AssimType = {}
-AssimType["Background"] = ["Vector"]
-AssimType["BackgroundError"] = ["Matrix"]
-AssimType["Observation"] = ["Vector"]
-AssimType["ObservationError"] = ["Matrix"]
+AssimType["Background"]          = ["Vector"]
+AssimType["BackgroundError"]     = ["Matrix"]
+AssimType["Observation"]         = ["Vector", "VectorSerie"]
+AssimType["ObservationError"]    = ["Matrix"]
 AssimType["ObservationOperator"] = ["Matrix", "Function"]
-AssimType["EvolutionModel"] = ["Matrix", "Function"]
-AssimType["EvolutionError"] = ["Matrix"]
+AssimType["EvolutionModel"]      = ["Matrix", "Function"]
+AssimType["EvolutionError"]      = ["Matrix"]
 AssimType["AlgorithmParameters"] = ["Dict"]
-AssimType["UserDataInit"] = ["Dict"]
-AssimType["CheckingPoint"] = ["Vector"]
+AssimType["UserDataInit"]        = ["Dict"]
+AssimType["CheckingPoint"]       = ["Vector"]
 
 FromNumpyList = {}
-FromNumpyList["Vector"]   = ["String", "Script"]
-FromNumpyList["Matrix"]   = ["String", "Script"]
-FromNumpyList["Function"] = ["FunctionDict"]
-FromNumpyList["Dict"]     = ["Script"]
+FromNumpyList["Vector"]      = ["String", "Script"]
+FromNumpyList["VectorSerie"] = ["String", "Script"]
+FromNumpyList["Matrix"]      = ["String", "Script"]
+FromNumpyList["Function"]    = ["FunctionDict"]
+FromNumpyList["Dict"]        = ["Script"]
 
 # -- Infos from daAlgorithms --
 AssimAlgos = [
     "3DVAR",
     "Blue",
     "EnsembleBlue",
-#     "KalmanFilter", # Removed because EvolutionModel must be available in OptLoop
+    "KalmanFilter",
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     "QuantileRegression",
@@ -83,12 +84,12 @@ AlgoDataRequirements["EnsembleBlue"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
-# AlgoDataRequirements["KalmanFilter"] = [
-#     "Background", "BackgroundError",
-#     "Observation", "ObservationError",
-#     "EvolutionModel", "EvolutionError",
-#     "ObservationOperator",
-#     ]
+AlgoDataRequirements["KalmanFilter"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "EvolutionModel", "EvolutionError",
+    "ObservationOperator",
+    ]
 AlgoDataRequirements["LinearLeastSquares"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -117,7 +118,7 @@ AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
-# AlgoType["KalmanFilter"] = "Optim"
+AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
 AlgoType["QuantileRegression"] = "Optim"
@@ -130,29 +131,31 @@ BasicDataInputs = ["String", "Script", "FunctionDict"]
 
 # Data input dict
 DataTypeDict = {}
-DataTypeDict["Vector"]   = ["String", "Script"]
-DataTypeDict["Matrix"]   = ["String", "Script"]
-DataTypeDict["Function"] = ["FunctionDict"]
-DataTypeDict["Dict"]     = ["Script"]
+DataTypeDict["Vector"]      = ["String", "Script"]
+DataTypeDict["VectorSerie"] = ["String", "Script"]
+DataTypeDict["Matrix"]      = ["String", "Script"]
+DataTypeDict["Function"]    = ["FunctionDict"]
+DataTypeDict["Dict"]        = ["Script"]
 
 DataTypeDefaultDict = {}
-DataTypeDefaultDict["Vector"]   = "Script"
-DataTypeDefaultDict["Matrix"]   = "Script"
-DataTypeDefaultDict["Function"] = "FunctionDict"
-DataTypeDefaultDict["Dict"]     = "Script"
+DataTypeDefaultDict["Vector"]      = "Script"
+DataTypeDefaultDict["VectorSerie"] = "Script"
+DataTypeDefaultDict["Matrix"]      = "Script"
+DataTypeDefaultDict["Function"]    = "FunctionDict"
+DataTypeDefaultDict["Dict"]        = "Script"
 
 # Assimilation data input
 AssimDataDict = {}
-AssimDataDict["Background"] = ["Vector"]
-AssimDataDict["BackgroundError"] = ["Matrix"]
-AssimDataDict["Observation"] = ["Vector"]
-AssimDataDict["ObservationError"] = ["Matrix"]
+AssimDataDict["Background"]          = ["Vector"]
+AssimDataDict["BackgroundError"]     = ["Matrix"]
+AssimDataDict["Observation"]         = ["Vector", "VectorSerie"]
+AssimDataDict["ObservationError"]    = ["Matrix"]
 AssimDataDict["ObservationOperator"] = ["Matrix", "Function"]
-AssimDataDict["EvolutionModel"] = ["Matrix", "Function"]
-AssimDataDict["EvolutionError"] = ["Matrix"]
+AssimDataDict["EvolutionModel"]      = ["Matrix", "Function"]
+AssimDataDict["EvolutionError"]      = ["Matrix"]
 AssimDataDict["AlgorithmParameters"] = ["Dict"]
-AssimDataDict["UserDataInit"] = ["Dict"]
-AssimDataDict["CheckingPoint"] = ["Vector"]
+AssimDataDict["UserDataInit"]        = ["Dict"]
+AssimDataDict["CheckingPoint"]       = ["Vector"]
 
 AssimDataDefaultDict = {}
 AssimDataDefaultDict["Background"]          = "Vector"
@@ -166,7 +169,7 @@ AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 AssimDataDefaultDict["UserDataInit"]        = "Dict"
 AssimDataDefaultDict["CheckingPoint"]       = "Vector"
 
-StoredAssimData = ["Vector", "Matrix"]
+StoredAssimData = ["Vector", "VectorSerie", "Matrix"]
 
 # Assimilation optional nodes
 OptDict = {}

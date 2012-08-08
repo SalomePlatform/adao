@@ -42,8 +42,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Direct"].asMatrix()
-        Ha = H["Adjoint"].asMatrix()
+        Hm = H["Tangent"].asMatrix(None)
+        Ha = H["Adjoint"].asMatrix(None)
         #
         if R is not None:
             RI = R.I

@@ -53,8 +53,11 @@ class daStudy:
 
     # Observation Management
     self.ObservationOperatorType = {}
-    self.EvolutionModelType = {}
     self.FunctionObservationOperator = {}
+
+    # Evolution Management
+    self.EvolutionModelType = {}
+    self.FunctionEvolutionModel = {}
 
   #--------------------------------------
 
@@ -91,7 +94,7 @@ class daStudy:
     if Type == "Vector":
       self.BackgroundType = Type
     else:
-      raise daError("[daStudy::setBackgroundType] Type is unkown : " + Type + " Types are : Vector")
+      raise daError("[daStudy::setBackgroundType] Type is unkown : " + Type + ". Types are : Vector")
 
   def setBackgroundStored(self, Stored):
     if Stored:
@@ -118,7 +121,7 @@ class daStudy:
     if Type == "Vector":
       self.CheckingPointType = Type
     else:
-      raise daError("[daStudy::setCheckingPointType] Type is unkown : " + Type + " Types are : Vector")
+      raise daError("[daStudy::setCheckingPointType] Type is unkown : " + Type + ". Types are : Vector")
 
   def setCheckingPointStored(self, Stored):
     if Stored:
@@ -154,10 +157,10 @@ class daStudy:
   #--------------------------------------
 
   def setObservationType(self, Type):
-    if Type == "Vector":
+    if Type == "Vector" or Type == "VectorSerie":
       self.ObservationType = Type
     else:
-      raise daError("[daStudy::setObservationType] Type is unkown : " + Type + " Types are : Vector")
+      raise daError("[daStudy::setObservationType] Type is unkown : " + Type + ". Types are : Vector, VectorSerie")
 
   def setObservationStored(self, Stored):
     if Stored:
@@ -173,6 +176,8 @@ class daStudy:
       raise daError("[daStudy::setObservation] Type or Storage is not defined !")
     if self.ObservationType == "Vector":
       self.ADD.setObservation(asVector = Observation, toBeStored = self.ObservationStored)
+    if self.ObservationType == "VectorSerie":
+      self.ADD.setObservation(asPersistentVector = Observation, toBeStored = self.ObservationStored)
 
   #--------------------------------------
 
@@ -205,7 +210,7 @@ class daStudy:
     elif Type == "Function":
       self.ObservationOperatorType[Name] = Type
     else:
-      raise daError("[daStudy::setObservationOperatorType] Type is unkown : " + Type + " Types are : Matrix, Function")
+      raise daError("[daStudy::setObservationOperatorType] Type is unkown : " + Type + ". Types are : Matrix, Function")
 
   def setObservationOperator(self, Name, ObservationOperator):
     try:
@@ -216,6 +221,21 @@ class daStudy:
       self.ADD.setObservationOperator(asMatrix = ObservationOperator)
     elif self.ObservationOperatorType[Name] == "Function":
       self.FunctionObservationOperator[Name] = ObservationOperator
+
+  #--------------------------------------
+
+  def setEvolutionErrorStored(self, Stored):
+    if Stored:
+      self.EvolutionErrorStored = True
+    else:
+      self.EvolutionErrorStored = False
+
+  def setEvolutionError(self, EvolutionError):
+    try:
+      self.EvolutionErrorStored
+    except AttributeError:
+      raise daError("[daStudy::setEvolutionError] Storage is not defined !")
+    self.ADD.setEvolutionError(asCovariance = EvolutionError, toBeStored = self.EvolutionErrorStored)
 
   #--------------------------------------
 
@@ -233,7 +253,7 @@ class daStudy:
     elif Type == "Function":
       self.EvolutionModelType[Name] = Type
     else:
-      raise daError("[daStudy::setEvolutionModelType] Type is unkown : " + Type + " Types are : Matrix, Function")
+      raise daError("[daStudy::setEvolutionModelType] Type is unkown : " + Type + ". Types are : Matrix, Function")
 
   def setEvolutionModel(self, Name, EvolutionModel):
     try:
