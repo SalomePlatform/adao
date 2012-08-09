@@ -26,7 +26,7 @@ m = PlatformInfo.SystemUsage()
 import numpy
 import scipy.optimize
 
-if logging.getLogger().level < 30:
+if logging.getLogger().level < logging.WARNING:
     iprint  = 1
     message = scipy.optimize.tnc.MSG_ALL
     disp    = 1

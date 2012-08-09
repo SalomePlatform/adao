@@ -119,7 +119,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la covariance d'analyse
         # ---------------------------------
         if self._parameters["CalculateAPosterioriCovariance"]:
-            A = ( 1.0 -  K * Hm ) * B
+            A = B - K * Hm * B
+            if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
+                try:
+                    L = numpy.linalg.cholesky( A )
+                except:
+                    raise ValueError("The BLUE a posteriori covariance matrix A is not symmetric positive-definite. Check your B and R a priori covariances.")
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))

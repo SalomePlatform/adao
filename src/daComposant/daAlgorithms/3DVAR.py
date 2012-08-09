@@ -26,7 +26,7 @@ m = PlatformInfo.SystemUsage()
 import numpy
 import scipy.optimize
 
-if logging.getLogger().level < 30:
+if logging.getLogger().level < logging.WARNING:
     iprint  = 1
     message = scipy.optimize.tnc.MSG_ALL
     disp    = 1
@@ -276,16 +276,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la covariance d'analyse
         # ---------------------------------
         if self._parameters["CalculateAPosterioriCovariance"]:
-            Hessienne = []
+            HessienneI = []
             nb = len(Xini)
             for i in range(nb):
                 _ee    = numpy.matrix(numpy.zeros(nb)).T
                 _ee[i] = 1.
                 _HmEE  = Hm(_ee)
                 _HmEE  = numpy.asmatrix(_HmEE).flatten().T
-                Hessienne.append( ( BI*_ee + Ha((Xa,RI*_HmEE)) ).A1 )
-            Hessienne = numpy.matrix( Hessienne )
-            A = Hessienne.I
+                HessienneI.append( ( BI*_ee + Ha((Xa,RI*_HmEE)) ).A1 )
+            HessienneI = numpy.matrix( HessienneI )
+            A = HessienneI.I
+            if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
+                try:
+                    L = numpy.linalg.cholesky( A )
+                except:
+                    raise ValueError("The 3DVAR a posteriori covariance matrix A is not symmetric positive-definite. Check your B and R a priori covariances.")
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
