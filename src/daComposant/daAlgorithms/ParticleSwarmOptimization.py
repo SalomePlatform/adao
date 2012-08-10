@@ -35,7 +35,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 50,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
-            minval   = -1
+            minval   = 1,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -130,7 +130,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x, QualityMeasure="AugmentedPonderatedLeastSquares"):
             _X  = numpy.asmatrix(x).flatten().T
-            logging.debug("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            logging.debug("%s CostFunction X  = %s"%(self._name, _X.A1))
             _HX = Hm( _X )
             _HX = numpy.asmatrix(_HX).flatten().T
             #
@@ -164,8 +164,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s CostFunction J  = %s"%(self._name, J))
             return J
         #
-        # Paramètres de pilotage
-        # ----------------------
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------
         if type(Xb) is type(numpy.matrix([])):
@@ -223,17 +221,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     if quality < qBest :
                         Best  = numpy.asmatrix(insect).flatten().A1
                         qBest = quality
-            logging.debug("%s Iteration %i : qBest = %.5f, Best = %s"%(self._name, n+1,qBest,numpy.asmatrix(Best.flatten()).A1))
+            logging.debug("%s Iteration %i : qBest = %.5f, Best = %s"%(self._name, n+1,qBest,Best))
             #
             if self._parameters["StoreInternalVariables"]:
-                self.StoredVariables["CurrentState"].store( numpy.asmatrix(Best.flatten()).A1 )
+                self.StoredVariables["CurrentState"].store( Best )
             self.StoredVariables["CostFunctionJb"].store( 0. )
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( qBest )
         #
         logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["QualityCriterion"], self._parameters["MaximumNumberOfSteps"]))
         logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["QualityCriterion"], qBest))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["QualityCriterion"], numpy.asmatrix(Best).flatten().T))
+        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["QualityCriterion"], Best))
         logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["QualityCriterion"], (self._parameters["MaximumNumberOfSteps"]+1)*self._parameters["NumberOfInsects"]+1))
         logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["QualityCriterion"], 0))
         #

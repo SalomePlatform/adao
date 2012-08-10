@@ -262,7 +262,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(Minimum).T
+        Xa = numpy.asmatrix(Minimum).flatten().T
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )

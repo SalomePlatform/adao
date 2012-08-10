@@ -49,7 +49,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
-            minval   = -1
+            minval   = 1,
             )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
@@ -120,7 +120,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         def GradientOfCostFunction(x):
             _X      = numpy.asmatrix(x).flatten().T
-            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, _X.A1))
             Hg = H["Tangent"].asMatrix( _X )
             return Hg
         #
@@ -158,7 +158,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(Minimum).T
+        Xa = numpy.asmatrix(Minimum).flatten().T
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
