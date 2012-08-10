@@ -62,7 +62,7 @@ AssimAlgos = [
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     "QuantileRegression",
-    "Swarm",
+    "ParticleSwarmOptimization",
     ]
 CheckAlgos = [
     "GradientTest",
@@ -100,14 +100,14 @@ AlgoDataRequirements["NonLinearLeastSquares"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
+AlgoDataRequirements["ParticleSwarmOptimization"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
 AlgoDataRequirements["QuantileRegression"] = [
     "Background",
     "Observation",
-    "ObservationOperator",
-    ]
-AlgoDataRequirements["Swarm"] = [
-    "Background", "BackgroundError",
-    "Observation", "ObservationError",
     "ObservationOperator",
     ]
 
@@ -127,8 +127,8 @@ AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
+AlgoType["ParticleSwarmOptimization"] = "Optim"
 AlgoType["QuantileRegression"] = "Optim"
-AlgoType["Swarm"] = "Optim"
 
 # Variables qui sont partages avec le generateur de
 # catalogue Eficas

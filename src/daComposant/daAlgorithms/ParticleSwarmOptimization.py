@@ -29,7 +29,7 @@ import copy
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self, "SWARM")
+        BasicObjects.Algorithm.__init__(self, "PARTICLESWARMOPTIMIZATION")
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
             default  = 50,
@@ -84,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
-        Swarm
+        Calcul de l'estimateur
         """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
@@ -97,10 +97,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             BoxBounds = self._parameters["BoxBounds"]
             logging.debug("%s Prise en compte des bornes d'incréments de paramètres effectuee"%(self._name,))
         else:
-            raise ValueError("Swarm global optimization requires bounds on all variables to be given.")
+            raise ValueError("Particle Swarm Optimization requires bounds on all variables to be given.")
         BoxBounds   = numpy.array(BoxBounds)
         if numpy.isnan(BoxBounds).any():
-            raise ValueError("Swarm global optimization requires bounds on all variables increments to be truly given, \"None\" is not allowed. The actual increments bounds are:\n%s"%BoxBounds)
+            raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given, \"None\" is not allowed. The actual increments bounds are:\n%s"%BoxBounds)
         #
         Phig = float( self._parameters["GroupRecallRate"] )
         Phip = 1. - Phig
@@ -231,11 +231,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( qBest )
         #
-        logging.debug("%s %s Step of min cost  = %s"%(self._name, "SWARM", self._parameters["MaximumNumberOfSteps"]))
-        logging.debug("%s %s Minimum cost      = %s"%(self._name, "SWARM", qBest))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, "SWARM", numpy.asmatrix(Best).flatten().T))
-        logging.debug("%s %s Nb of F           = %s"%(self._name, "SWARM", (self._parameters["MaximumNumberOfSteps"]+1)*self._parameters["NumberOfInsects"]+1))
-        logging.debug("%s %s RetCode           = %s"%(self._name, "SWARM", 0))
+        logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["QualityCriterion"], self._parameters["MaximumNumberOfSteps"]))
+        logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["QualityCriterion"], qBest))
+        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["QualityCriterion"], numpy.asmatrix(Best).flatten().T))
+        logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["QualityCriterion"], (self._parameters["MaximumNumberOfSteps"]+1)*self._parameters["NumberOfInsects"]+1))
+        logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["QualityCriterion"], 0))
         #
         # Obtention de l'analyse
         # ----------------------
