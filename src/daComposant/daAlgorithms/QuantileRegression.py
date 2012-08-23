@@ -18,6 +18,7 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
@@ -69,7 +70,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Calcul des parametres definissant le quantile
         """
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
         # Paramètres de pilotage
         # ----------------------
@@ -164,7 +165,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.StoredVariables["Analysis"].store( Xa.A1 )
         self.StoredVariables["Innovation"].store( d.A1 )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0
