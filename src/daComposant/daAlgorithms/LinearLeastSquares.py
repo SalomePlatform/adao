@@ -18,15 +18,25 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
 
+import numpy
+
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "LINEARLEASTSQUARES")
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["OMA"]
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
@@ -34,7 +44,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         (assimilation variationnelle sans ébauche)
         """
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
         # Paramètres de pilotage
         # ----------------------
@@ -60,21 +70,25 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la fonction coût
         # --------------------------
-        d  = Y - Hm * Xa
+        oma = Y - Hm * Xa
         Jb  = 0.
-        Jo  = 0.5 * d.T * RI * d
+        Jo  = 0.5 * oma.T * RI * oma
         J   = float( Jb ) + float( Jo )
         logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
         logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
         logging.debug("%s CostFunction J  = %s"%(self._name, J))
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
-        self.StoredVariables["Innovation"].store( d.A1 )
         self.StoredVariables["CostFunctionJb"].store( Jb )
         self.StoredVariables["CostFunctionJo"].store( Jo )
         self.StoredVariables["CostFunctionJ" ].store( J )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.asmatrix(oma).flatten().A1 )
+        #
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

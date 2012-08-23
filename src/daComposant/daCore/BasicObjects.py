@@ -254,11 +254,16 @@ class Algorithm:
             else:                __val = typecast( value )
         #
         if minval is not None and __val < minval:
-            raise ValueError("The parameter named \"%s\" of value %s can not be less than %s."%(name, __val, minval))
+            raise ValueError("The parameter named \"%s\" of value \"%s\" can not be less than %s."%(name, __val, minval))
         if maxval is not None and __val > maxval:
-            raise ValueError("The parameter named \"%s\" of value %s can not be greater than %s."%(name, __val, maxval))
-        if listval is not None and __val not in listval:
-            raise ValueError("The parameter named \"%s\" of value %s has to be in the list %s."%(name, __val, listval))
+            raise ValueError("The parameter named \"%s\" of value \"%s\" can not be greater than %s."%(name, __val, maxval))
+        if listval is not None:
+            if typecast is list or typecast is tuple or type(__val) is list or type(__val) is tuple:
+                for v in __val:
+                    if v not in listval:
+                        raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%(v, name, listval))
+            elif __val not in listval:
+                raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%( __val, name,listval))
         return __val
 
     def setParameters(self, fromDico={}):

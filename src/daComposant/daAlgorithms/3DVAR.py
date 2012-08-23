@@ -18,6 +18,7 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
@@ -73,16 +74,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Maximum des composantes du gradient lors de l'arrêt",
             )
         self.defineRequiredParameter(
-            name     = "CalculateAPosterioriCovariance",
-            default  = False,
-            typecast = bool,
-            message  = "Calcul de la covariance a posteriori",
-            )
-        self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2"]
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
@@ -90,7 +92,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Calcul de l'estimateur 3D-VAR
         """
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
         # Paramètres de pilotage
         # ----------------------
@@ -271,11 +273,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
-        self.StoredVariables["Innovation"].store( d.A1 )
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
-        if self._parameters["CalculateAPosterioriCovariance"]:
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             HessienneI = []
             nb = len(Xini)
             for i in range(nb):
@@ -293,7 +294,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     raise ValueError("The 3DVAR a posteriori covariance matrix A is not symmetric positive-definite. Check your B and R a priori covariances.")
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["Innovation"].store( numpy.asmatrix(d).flatten().A1 )
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.asmatrix(Xb - Xa).flatten().A1 )
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.asmatrix(Y - Hm(Xa)).flatten().A1 )
+        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMB"].store( numpy.asmatrix(d).flatten().A1 )
+        if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SigmaObs2"].store( float( (d.T * (Y-Hm(Xa))) / R.trace() ) )
+        #
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

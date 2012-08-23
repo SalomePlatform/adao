@@ -908,7 +908,6 @@ if __name__ == "__main__":
     print "Demi-somme         :", list((numpy.array([0, 1, 2])+numpy.array([0.5, 1.5, 2.5]))/2)
     print "  qui doit être identique à :"
     print "Analyse résultante :", ADD.get("Analysis").valueserie(0)
-    print "Innovation         :", ADD.get("Innovation").valueserie(0)
     print
     
     print "Algorithmes disponibles.......................:", ADD.get_available_algorithms()
