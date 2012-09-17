@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2010-2011 EDF R&D
+# Copyright (C) 2010-2012 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -30,15 +30,19 @@ from PyQt4.QtGui  import *
 
 # Modules Eficas
 from Editeur import utils
+from InterfaceQT4 import configuration
 
 # Classe de base permettant de lire, afficher
-# et sauvegarder les fichiers utilisateurs 
-class CONFIG:
+# et sauvegarder les fichiers utilisateurs
+class CONFIG(configuration.CONFIG_BASE):
 
   def __init__(self,appli,repIni):
 
+    self.labels_eficas = ['lang']
+    configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_ADAO')
+
     self.rep_user = os.environ["HOME"]
-    self.appli   = appli  
+    self.appli   = appli
     self.code    = appli.code
     self.rep_ini = repIni
     self.rep_mat=" " # Compatbilite Aster
