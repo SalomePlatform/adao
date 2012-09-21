@@ -166,7 +166,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
-            return float( J )
+            return J
         #
         def GradientOfCostFunction(x):
             _X      = numpy.asmatrix(x).flatten().T

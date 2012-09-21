@@ -44,6 +44,7 @@ class CONFIG(configuration.CONFIG_BASE):
     self.rep_user = os.environ["HOME"]
     self.appli   = appli
     self.code    = appli.code
+    # self.lang    = "fr"
     self.rep_ini = repIni
     self.rep_mat=" " # Compatbilite Aster
     self.savedir      = self.rep_user
