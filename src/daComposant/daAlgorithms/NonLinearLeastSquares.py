@@ -45,7 +45,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "LBFGSB",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS"],
+            listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS", "LM"],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
@@ -144,8 +144,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if R is not None:
             RI = R.I
+            if self._parameters["Minimizer"] == "LM":
+                RdemiI = numpy.linalg.cholesky(R).I
         elif self._parameters["R_scalar"] is not None:
             RI = 1.0 / self._parameters["R_scalar"]
+            if self._parameters["Minimizer"] == "LM":
+                import math
+                RdemiI = 1.0 / math.sqrt( self._parameters["R_scalar"] )
         else:
             raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
@@ -167,7 +172,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
-            return float( J )
+            return J
         #
         def GradientOfCostFunction(x):
             _X      = numpy.asmatrix(x).flatten().T
@@ -181,6 +186,38 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s GradientOfCostFunction GradJo = %s"%(self._name, numpy.asmatrix( GradJo ).flatten()))
             logging.debug("%s GradientOfCostFunction GradJ  = %s"%(self._name, numpy.asmatrix( GradJ  ).flatten()))
             return GradJ.A1
+        #
+        def CostFunctionLM(x):
+            _X  = numpy.asmatrix(x).flatten().T
+            logging.debug("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _HX = Hm( _X )
+            _HX = numpy.asmatrix(_HX).flatten().T
+            Jb  = 0.
+            Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+            J   = float( Jb ) + float( Jo )
+            logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
+            logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
+            logging.debug("%s CostFunction J  = %s"%(self._name, J))
+            if self._parameters["StoreInternalVariables"]:
+                self.StoredVariables["CurrentState"].store( _X.A1 )
+            self.StoredVariables["CostFunctionJb"].store( Jb )
+            self.StoredVariables["CostFunctionJo"].store( Jo )
+            self.StoredVariables["CostFunctionJ" ].store( J )
+            #
+            return numpy.asmatrix( RdemiI*(Y - _HX) ).flatten().A1
+        #
+        def GradientOfCostFunctionLM(x):
+            _X      = numpy.asmatrix(x).flatten().T
+            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _HX     = Hm( _X )
+            _HX     = numpy.asmatrix(_HX).flatten().T
+            GradJb  = 0.
+            GradJo  = - Ha( (_X, RI * (Y - _HX)) )
+            GradJ   = numpy.asmatrix( GradJb ).flatten().T + numpy.asmatrix( GradJo ).flatten().T
+            logging.debug("%s GradientOfCostFunction GradJb = %s"%(self._name, numpy.asmatrix( GradJb ).flatten()))
+            logging.debug("%s GradientOfCostFunction GradJo = %s"%(self._name, numpy.asmatrix( GradJo ).flatten()))
+            logging.debug("%s GradientOfCostFunction GradJ  = %s"%(self._name, numpy.asmatrix( GradJ  ).flatten()))
+            return - RdemiI*H["Tangent"].asMatrix( _X )
         #
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------
@@ -251,6 +288,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 disp        = disp,
                 full_output = True,
                 )
+        elif self._parameters["Minimizer"] == "LM":
+            Minimum, cov_x, infodict, mesg, rc = scipy.optimize.leastsq(
+                func        = CostFunctionLM,
+                x0          = Xini,
+                Dfun        = GradientOfCostFunctionLM,
+                args        = (),
+                ftol        = self._parameters["CostDecrementTolerance"],
+                maxfev      = self._parameters["MaximumNumberOfSteps"],
+                gtol        = self._parameters["GradientNormTolerance"],
+                full_output = True,
+                )
+            nfeval = infodict['nfev']
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
