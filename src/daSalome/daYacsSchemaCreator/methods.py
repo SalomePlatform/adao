@@ -336,6 +336,46 @@ def create_yacs_proc(study_config):
            else:
              CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
 
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch" and key == "ObservationOperator":
+         ScriptWithSwitch = data_config["Data"]
+         for FunctionName in ScriptWithSwitch["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch" and key == "EvolutionModel":
+         ScriptWithSwitch = data_config["Data"]
+         for FunctionName in ScriptWithSwitch["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions" and key == "ObservationOperator":
+         ScriptWithFunctions = data_config["Data"]
+         for FunctionName in ScriptWithFunctions["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions" and key == "EvolutionModel":
+         ScriptWithFunctions = data_config["Data"]
+         for FunctionName in ScriptWithFunctions["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
   ADAO_Case.edAddChild(compute_bloc)
@@ -382,6 +422,118 @@ def create_yacs_proc(study_config):
     opt_script_nodeOO.setScript(node_script)
     opt_script_nodeOO.edAddInputPort("computation", t_param_input)
     opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
+    # Get script
+    ScriptWithSwitch = data_config["Data"]
+    script_filename = ""
+    for FunctionName in ScriptWithSwitch["Function"]:
+      # We currently support only one file
+      script_filename = ScriptWithSwitch["Script"][FunctionName]
+      break
+
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory:
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      logging.fatal("Exception in opening function script file : " + script_filename)
+      traceback.print_exc()
+      sys.exit(1)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os \n"
+    if base_repertory != "":
+      node_script += "filepath = \"" + base_repertory + "\"\n"
+    else:
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += script_str.read()
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions":
+    # Get script
+    ScriptWithFunctions = data_config["Data"]
+    script_filename = ""
+    for FunctionName in ScriptWithFunctions["Function"]:
+      # We currently support only one file
+      script_filename = ScriptWithFunctions["Script"][FunctionName]
+      break
+
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory:
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      logging.fatal("Exception in opening function script file : " + script_filename)
+      traceback.print_exc()
+      sys.exit(1)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os, numpy, logging\n"
+    if base_repertory != "":
+      node_script += "filepath = \"" + base_repertory + "\"\n"
+    else:
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += """# ==============================================\n"""
+    node_script += script_str.read()
+    node_script += """# ==============================================\n"""
+    node_script += """for param in computation["specificParameters"]:\n"""
+    node_script += """  if param["name"] == "method": method = param["value"]\n"""
+    node_script += """  else:                         method = ""\n"""
+    node_script += """logging.info("ComputationFunctionNode: Found method is \'%s\'"%method)\n"""
+    node_script += """#\n"""
+    node_script += """#\n"""
+    node_script += """if method == "Direct":\n"""
+    node_script += """  try:\n"""
+    node_script += """      DirectOperator\n"""
+    node_script += """  except NameError:\n"""
+    node_script += """      raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
+    node_script += """  logging.info("ComputationFunctionNode: Direct computation")\n"""
+    node_script += """  Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  data = DirectOperator(numpy.matrix( Xcurrent ).T)\n"""
+    node_script += """#\n"""
+    node_script += """if method == "Tangent":\n"""
+    node_script += """  try:\n"""
+    node_script += """    TangentOperator\n"""
+    node_script += """  except NameError:\n"""
+    node_script += """    raise ValueError("ComputationFunctionNode:  TangentOperator not found in the imported user script file")\n"""
+    node_script += """  logging.info("ComputationFunctionNode: Tangent computation")\n"""
+    node_script += """  Xcurrent  = computation["inputValues"][0][0][0]\n"""
+    node_script += """  dXcurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  data = TangentOperator((numpy.matrix( Xcurrent ).T, numpy.matrix( dXcurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """if method == "Adjoint":\n"""
+    node_script += """  try:\n"""
+    node_script += """    AdjointOperator\n"""
+    node_script += """  except NameError:\n"""
+    node_script += """    raise ValueError("ComputationFunctionNode: AdjointOperator not found in the imported user script file")\n"""
+    node_script += """  logging.info("ComputationFunctionNode: Adjoint computation")\n"""
+    node_script += """  Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  Ycurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  data = AdjointOperator((numpy.matrix( Xcurrent ).T, numpy.matrix( Ycurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """logging.info("ComputationFunctionNode: Formatting the output")\n"""
+    node_script += """it = data.flat\n"""
+    node_script += """outputValues = [[[[]]]]\n"""
+    node_script += """for val in it:\n"""
+    node_script += """  outputValues[0][0][0].append(val)\n"""
+    node_script += """#\n"""
+    node_script += """result = {}\n"""
+    node_script += """result["outputValues"]        = outputValues\n"""
+    node_script += """result["specificOutputInfos"] = []\n"""
+    node_script += """result["returnCode"]          = 0\n"""
+    node_script += """result["errorMessage"]        = ""\n"""
+    node_script += """# ==============================================\n"""
+    #
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
   else:
     factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
     opt_script_nodeOO = factory_opt_script_node.cloneNode("FakeFunctionNode")
@@ -418,6 +570,117 @@ def create_yacs_proc(study_config):
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
+      # Get script
+      ScriptWithSwitch = data_config["Data"]
+      script_filename = ""
+      for FunctionName in ScriptWithSwitch["Function"]:
+        # We currently support only one file
+        script_filename = ScriptWithSwitch["Script"][FunctionName]
+        break
+
+      # We create a new pyscript node
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory:
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        logging.fatal("Exception in opening function script file : " + script_filename)
+        traceback.print_exc()
+        sys.exit(1)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os \n"
+      if base_repertory != "":
+        node_script += "filepath = \"" + base_repertory + "\"\n"
+      else:
+        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions":
+      # Get script
+      ScriptWithFunctions = data_config["Data"]
+      script_filename = ""
+      for FunctionName in ScriptWithFunctions["Function"]:
+        # We currently support only one file
+        script_filename = ScriptWithFunctions["Script"][FunctionName]
+        break
+
+      # We create a new pyscript node
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory:
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        logging.fatal("Exception in opening function script file : " + script_filename)
+        traceback.print_exc()
+        sys.exit(1)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os, numpy, logging\n"
+      if base_repertory != "":
+        node_script += "filepath = \"" + base_repertory + "\"\n"
+      else:
+        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      node_script += """# ==============================================\n"""
+      node_script += """for param in computation["specificParameters"]:\n"""
+      node_script += """  if param["name"] == "method": method = param["value"]\n"""
+      node_script += """  else:                         method = ""\n"""
+      node_script += """logging.info("ComputationFunctionNode: Found method is \'%s\'"%method)\n"""
+      node_script += """#\n"""
+      node_script += """#\n"""
+      node_script += """if method == "Direct":\n"""
+      node_script += """  try:\n"""
+      node_script += """    DirectOperator\n"""
+      node_script += """  except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: mandatory DirectOperator not found in the imported user script file")\n"""
+      node_script += """  logging.info("ComputationFunctionNode: Direct computation")\n"""
+      node_script += """  Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  data = DirectOperator(numpy.matrix( Xcurrent ).T)\n"""
+      node_script += """#\n"""
+      node_script += """if method == "Tangent":\n"""
+      node_script += """  try:\n"""
+      node_script += """    TangentOperator\n"""
+      node_script += """  except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: mandatory TangentOperator not found in the imported user script file")\n"""
+      node_script += """  logging.info("ComputationFunctionNode: Tangent computation")\n"""
+      node_script += """  Xcurrent  = computation["inputValues"][0][0][0]\n"""
+      node_script += """  dXcurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  data = TangentOperator((numpy.matrix( Xcurrent ).T, numpy.matrix( dXcurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """if method == "Adjoint":\n"""
+      node_script += """  try:\n"""
+      node_script += """    AdjointOperator\n"""
+      node_script += """  except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: mandatory AdjointOperator not found in the imported user script file")\n"""
+      node_script += """  logging.info("ComputationFunctionNode: Adjoint computation")\n"""
+      node_script += """  Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  Ycurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  data = AdjointOperator((numpy.matrix( Xcurrent ).T, numpy.matrix( Ycurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """logging.info("ComputationFunctionNode: Formatting the output")\n"""
+      node_script += """it = data.flat\n"""
+      node_script += """outputValues = [[[[]]]]\n"""
+      node_script += """for val in it:\n"""
+      node_script += """  outputValues[0][0][0].append(val)\n"""
+      node_script += """#\n"""
+      node_script += """result = {}\n"""
+      node_script += """result["outputValues"]        = outputValues\n"""
+      node_script += """result["specificOutputInfos"] = []\n"""
+      node_script += """result["returnCode"]          = 0\n"""
+      node_script += """result["errorMessage"]        = ""\n"""
+      node_script += """# ==============================================\n"""
+      #
       opt_script_nodeEM.setScript(node_script)
       opt_script_nodeEM.edAddInputPort("computation", t_param_input)
       opt_script_nodeEM.edAddOutputPort("result", t_param_output)

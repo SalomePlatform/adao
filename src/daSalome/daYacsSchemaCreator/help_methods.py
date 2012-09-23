@@ -246,3 +246,27 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
         logging.fatal("A script file cannot be found")
         logging.fatal("File is %s" % check_file_name)
         sys.exit(1)
+  elif from_type == "ScriptWithSwitch":
+    ScriptWithSwitch = data_config["Data"]
+    for FunctionName in ScriptWithSwitch["Function"]:
+      check_file_name = ""
+      if repertory_check:
+        check_file_name = os.path.join(repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName]))
+      else:
+        check_file_name = ScriptWithSwitch["Script"][FunctionName]
+      if not os.path.exists(check_file_name):
+        logging.fatal("A script file cannot be found")
+        logging.fatal("File is %s" % check_file_name)
+        sys.exit(1)
+  elif from_type == "ScriptWithFunctions":
+    ScriptWithFunctions = data_config["Data"]
+    for FunctionName in ScriptWithFunctions["Function"]:
+      check_file_name = ""
+      if repertory_check:
+        check_file_name = os.path.join(repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName]))
+      else:
+        check_file_name = ScriptWithFunctions["Script"][FunctionName]
+      if not os.path.exists(check_file_name):
+        logging.fatal("A script file cannot be found")
+        logging.fatal("File is %s" % check_file_name)
+        sys.exit(1)

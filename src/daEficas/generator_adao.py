@@ -154,6 +154,10 @@ class AdaoGenerator(PythonGenerator):
       data = self.dictMCVal[search_type + "STRING_DATA__STRING"]
     elif from_type == "Script":
       data = self.dictMCVal[search_type + "SCRIPT_DATA__SCRIPT_FILE"]
+    elif from_type == "ScriptWithSwitch":
+      data = self.dictMCVal[search_type + "SCRIPTWITHSWITCH_DATA__SCRIPTWITHSWITCH_FILE"]
+    elif from_type == "ScriptWithFunctions":
+      data = self.dictMCVal[search_type + "SCRIPTWITHFUNCTIONS_DATA__SCRIPTWITHFUNCTIONS_FILE"]
     elif from_type == "FunctionDict":
       data = self.dictMCVal[search_type + "FUNCTIONDICT_DATA__FUNCTIONDICT_FILE"]
     else:
@@ -166,6 +170,32 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_config['Data'] = '" + data      + "'\n"
       if search_text+"Stored" in self.dictMCVal.keys():
         self.text_da += data_name + "_config['Stored'] = '" +  str(self.dictMCVal[search_text+"Stored"])  + "'\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
+
+    if from_type == "ScriptWithSwitch":
+      self.text_da += data_name + "_ScriptWithSwitch = {}\n"
+      self.text_da += data_name + "_ScriptWithSwitch['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"
+      self.text_da += data_name + "_ScriptWithSwitch['Script'] = {}\n"
+      self.text_da += data_name + "_ScriptWithSwitch['Script']['Direct'] = '"  + data + "'\n"
+      self.text_da += data_name + "_ScriptWithSwitch['Script']['Tangent'] = '" + data + "'\n"
+      self.text_da += data_name + "_ScriptWithSwitch['Script']['Adjoint'] = '" + data + "'\n"
+      self.text_da += data_name + "_config = {}\n"
+      self.text_da += data_name + "_config['Type'] = 'Function'\n"
+      self.text_da += data_name + "_config['From'] = 'ScriptWithSwitch'\n"
+      self.text_da += data_name + "_config['Data'] = " + data_name + "_ScriptWithSwitch\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
+
+    if from_type == "ScriptWithFunctions":
+      self.text_da += data_name + "_ScriptWithFunctions = {}\n"
+      self.text_da += data_name + "_ScriptWithFunctions['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"
+      self.text_da += data_name + "_ScriptWithFunctions['Script'] = {}\n"
+      self.text_da += data_name + "_ScriptWithFunctions['Script']['Direct'] = '"  + data + "'\n"
+      self.text_da += data_name + "_ScriptWithFunctions['Script']['Tangent'] = '" + data + "'\n"
+      self.text_da += data_name + "_ScriptWithFunctions['Script']['Adjoint'] = '" + data + "'\n"
+      self.text_da += data_name + "_config = {}\n"
+      self.text_da += data_name + "_config['Type'] = 'Function'\n"
+      self.text_da += data_name + "_config['From'] = 'ScriptWithFunctions'\n"
+      self.text_da += data_name + "_config['Data'] = " + data_name + "_ScriptWithFunctions\n"
       self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
     if from_type == "FunctionDict":

@@ -48,15 +48,23 @@ def F_${data_name}(statut) : return FACT(statut = statut,
                                          FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into}), defaut=${data_default}),
                                          SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
-                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr())),
+                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant la définition d'une variable interne de même nom que le concept parent", ang="Waiting for a script file name, with or without the full path to find it, containing the definition of an internal variable of the same name as the parent concept"),
                                                      ),
                                          STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
 
-                                                      STRING = SIMP(statut = "o", typ = "TXM"),
+                                                      STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements, qui soit valide pour construire un vecteur : une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes, valid to build a vector: a floats serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
+                                                     ),
+                                         SCRIPTWITHFUNCTIONS_DATA = BLOC ( condition = " FROM in ( 'ScriptWithFunctions', ) ",
+
+                                                      SCRIPTWITHFUNCTIONS_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant en variables internes trois fonctions de calcul nommées DirectOperator, TangentOperator et AdjointOperator", ang="Waiting for a script file name, with or without the full path to find it, containing as internal variables three computation functions named DirectOperator, TangentOperator and AdjointOperator"),
+                                                     ),
+                                         SCRIPTWITHSWITCH_DATA = BLOC ( condition = " FROM in ( 'ScriptWithSwitch', ) ",
+
+                                                      SCRIPTWITHSWITCH_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant un switch pour les calculs direct, tangent et adjoint", ang="Waiting for a script file name, with or without the full path to find it, containing a switch for direct, tangent and adjoint computations"),
                                                      ),
                                          FUNCTIONDICT_DATA = BLOC ( condition = " FROM in ( 'FunctionDict', ) ",
 
-                                                      FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr())),
+                                                      FUNCTIONDICT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="OBSOLETE : conservé pour compatibilité avec la version 6.5, sera supprimé dans le futur", ang="OBSOLETE: keeped for compatibility with the 6.5 version, will be removed in the future"),
                                                      ),
                                     )
 """
@@ -239,12 +247,12 @@ for assim_data_input_name in infos.AssimDataDict.keys():
   decl_choices = ""
   decl_opts = ""
   if infos.AssimDataDefaultDict[assim_data_input_name] in infos.StoredAssimData:
-    storage = "                                          Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0),"
+    storage = "                                          Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0, fr=\"Choix de stockage interne ou non du concept parent\", ang=\"Choice of the storage or not of the parent concept\"),"
   for choice in infos.AssimDataDict[assim_data_input_name]:
     choices += "\"" + choice + "\", "
     decl_choices += assim_data_choice.substitute(choice_name = choice)
     if choice in infos.StoredAssimData:
-      storage = "                                          Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0),"
+      storage = "                                          Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0, fr=\"Choix de stockage interne ou non du concept parent\", ang=\"Choice of the storage or not of the parent concept\"),"
   default_choice = "\"" + infos.AssimDataDefaultDict[assim_data_input_name] + "\""
 
   mem_file.write(assim_data_method.substitute(assim_name = assim_name,
