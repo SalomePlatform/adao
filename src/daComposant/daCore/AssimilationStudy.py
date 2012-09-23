@@ -283,13 +283,13 @@ class AssimilationStudy:
             if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
-                FunctionH  = asFunction["Direct"],
+                Function   = asFunction["Direct"],
                 centeredDF = asFunction["withCenteredDF"],
                 increment  = asFunction["withIncrement"],
                 dX         = asFunction["withdX"] )
-            self.__H["Direct"]  = Operator( fromMethod = FDA.FunctionH )
-            self.__H["Tangent"] = Operator( fromMethod = FDA.TangentH  )
-            self.__H["Adjoint"] = Operator( fromMethod = FDA.AdjointH  )
+            self.__H["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
+            self.__H["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
+            self.__H["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
@@ -366,13 +366,13 @@ class AssimilationStudy:
             if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
-                FunctionH  = asFunction["Direct"],
+                Function   = asFunction["Direct"],
                 centeredDF = asFunction["withCenteredDF"],
                 increment  = asFunction["withIncrement"],
                 dX         = asFunction["withdX"] )
-            self.__M["Direct"]  = Operator( fromMethod = FDA.FunctionH )
-            self.__M["Tangent"] = Operator( fromMethod = FDA.TangentH  )
-            self.__M["Adjoint"] = Operator( fromMethod = FDA.AdjointH  )
+            self.__M["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
+            self.__M["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
+            self.__M["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
