@@ -1,4 +1,5 @@
-#-*- coding: utf-8 -*-
+#-*-coding:iso-8859-1-*-
+#
 # Copyright (C) 2010-2012 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,7 +18,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import SALOMERuntime
 import pilot

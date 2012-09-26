@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (C) 2010-2011 EDF R&D
+# Copyright (C) 2010-2012 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,11 +18,10 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
-
+# Author: AndrÃ© Ribes, andre.ribes@edf.fr, EDF R&D
 
 """
-   Ce module sert à lancer EFICAS pour Adao
+   Ce module sert Ã  lancer EFICAS pour Adao
 """
 
 import sys

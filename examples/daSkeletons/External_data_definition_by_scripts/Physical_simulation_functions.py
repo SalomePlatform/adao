@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2012 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -30,16 +30,12 @@ __doc__ = """
     """
 __author__ = "Jean-Philippe ARGAUD"
 #
-# ==============================================================================
-#
 import os, numpy, time
+#
+# ==============================================================================
 #
 def FunctionH( XX ):
     """ Direct non-linear simulation operator """
-    #
-    # NEED TO BE COMPLETED
-    # NEED TO BE COMPLETED
-    # NEED TO BE COMPLETED
     #
     # --------------------------------------> EXAMPLE TO BE REMOVED
     if type(XX) is type(numpy.matrix([])):  # EXAMPLE TO BE REMOVED
@@ -51,43 +47,15 @@ def FunctionH( XX ):
     # --------------------------------------> EXAMPLE TO BE REMOVED
     #
     return numpy.array( HX )
-
-# ==============================================================================
-def TangentH( X, increment = 0.01, centeredDF = False ):
-    """
-    Calcul de l'opérateur tangent comme la Jacobienne par différences finies,
-    c'est-à-dire le gradient de H en X. On utilise des différences finies
-    directionnelles autour du point X.
-    
-    Différences finies centrées :
-    1/ Pour chaque composante i de X, on ajoute et on enlève la perturbation
-       dX[i] à la  composante X[i], pour composer X_plus_dXi et X_moins_dXi, et
-       on calcule les réponses HX_plus_dXi = H( X_plus_dXi ) et HX_moins_dXi =
-       H( X_moins_dXi )
-    2/ On effectue les différences (HX_plus_dXi-HX_moins_dXi) et on divise par
-       le pas 2*dXi
-    3/ Chaque résultat, par composante, devient une colonne de la Jacobienne
-    
-    Différences finies non centrées :
-    1/ Pour chaque composante i de X, on ajoute la perturbation dX[i] à la 
-       composante X[i] pour composer X_plus_dXi, et on calcule la réponse
-       HX_plus_dXi = H( X_plus_dXi )
-    2/ On calcule la valeur centrale HX = H(X)
-    3/ On effectue les différences (HX_plus_dXi-HX) et on divise par
-       le pas dXi
-    4/ Chaque résultat, par composante, devient une colonne de la Jacobienne
-    
-    """
-    print
-    print "  == Calcul de la Jacobienne avec un incrément de %s*X"%increment
+#
+def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
+    """ Tangent operator (Jacobian) calculated by finite differences """
     #
     dX  = increment * X.A1
     #
     if centeredDF:
-        #
-        # Boucle de calcul des colonnes de la Jacobienne
-        # ----------------------------------------------
-        Jacobienne  = []
+        # 
+        Jacobian  = []
         for i in range( len(dX) ):
             X_plus_dXi     = numpy.array( X.A1 )
             X_plus_dXi[i]  = X[i] + dX[i]
@@ -99,12 +67,10 @@ def TangentH( X, increment = 0.01, centeredDF = False ):
             #
             HX_Diff = ( HX_plus_dXi - HX_moins_dXi ) / (2.*dX[i])
             #
-            Jacobienne.append( HX_Diff )
+            Jacobian.append( HX_Diff )
         #
     else:
         #
-        # Boucle de calcul des colonnes de la Jacobienne
-        # ----------------------------------------------
         HX_plus_dX = []
         for i in range( len(dX) ):
             X_plus_dXi    = numpy.array( X.A1 )
@@ -114,35 +80,31 @@ def TangentH( X, increment = 0.01, centeredDF = False ):
             #
             HX_plus_dX.append( HX_plus_dXi )
         #
-        # Calcul de la valeur centrale
-        # ----------------------------
         HX = FunctionH( X )
         #
-        # Calcul effectif de la Jacobienne par différences finies
-        # -------------------------------------------------------
-        Jacobienne = []
+        Jacobian = []
         for i in range( len(dX) ):
-            Jacobienne.append( ( HX_plus_dX[i] - HX ) / dX[i] )
+            Jacobian.append( ( HX_plus_dX[i] - HX ) / dX[i] )
     #
-    Jacobienne = numpy.matrix( Jacobienne )
-    print
-    print "  == Fin du calcul de la Jacobienne"
+    Jacobian = numpy.matrix( Jacobian )
     #
-    return Jacobienne
-
-# ==============================================================================
+    return Jacobian
+#
+def TangentH( X ):
+    """ Tangent operator """
+    _X = numpy.asmatrix(X).flatten().T
+    HtX = self.TangentHMatrix( _X ) * _X
+    return HtX.A1
+#
 def AdjointH( (X, Y) ):
-    """
-    Calcul de l'adjoint à l'aide de la Jacobienne.
-    """
-    Jacobienne = TangentH( X, centeredDF = False )
+    """ Ajoint operator """
     #
-    # Calcul de la valeur de l'adjoint en X appliqué à Y
-    # --------------------------------------------------
+    Jacobian = TangentHMatrix( X, centeredDF = False )
+    #
     Y = numpy.asmatrix(Y).flatten().T
-    HtY = numpy.dot(Jacobienne, Y)
+    HaY = numpy.dot(Jacobian, Y)
     #
-    return HtY.A1
+    return HaY.A1
 
 # ==============================================================================
 if __name__ == "__main__":

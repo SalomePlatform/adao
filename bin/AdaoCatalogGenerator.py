@@ -1,23 +1,22 @@
-#-*- coding:utf-8 -*-
-#  Copyright (C) 2008-2011  EDF R&D
+#-*-coding:iso-8859-1-*-
 #
-#  This library is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public
-#  License as published by the Free Software Foundation; either
-#  version 2.1 of the License.
+# Copyright (C) 2008-2012  EDF R&D
 #
-#  This library is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#  Lesser General Public License for more details.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-#  You should have received a copy of the GNU Lesser General Public
-#  License along with this library; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
-# --
-# Author : AndrÃ© RIBES (EDF R&D)
-# --
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 import traceback
@@ -52,7 +51,7 @@ def F_${data_name}(statut) : return FACT(statut = statut,
                                                      ),
                                          STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
 
-                                                      STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements, qui soit valide pour construire un vecteur : une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes, valid to build a vector: a floats serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
+                                                      STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
                                                      ),
                                          SCRIPTWITHFUNCTIONS_DATA = BLOC ( condition = " FROM in ( 'ScriptWithFunctions', ) ",
 
