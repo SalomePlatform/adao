@@ -82,11 +82,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["BMA", "OMA", "OMB", "Innovation"]
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -130,10 +134,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(x, QualityMeasure="AugmentedPonderatedLeastSquares"):
-            _X  = numpy.asmatrix(x).flatten().T
-            logging.debug("%s CostFunction X  = %s"%(self._name, _X.A1))
+            _X  = numpy.asmatrix(numpy.ravel( x )).T
             _HX = Hm( _X )
-            _HX = numpy.asmatrix(_HX).flatten().T
+            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             #
             if QualityMeasure in ["AugmentedPonderatedLeastSquares","APLS","DA"]:
                 if BI is None or RI is None:
@@ -160,9 +163,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Jo  = numpy.max( numpy.abs(Y - _HX) )
                 J   = float( Jb ) + float( Jo )
             #
-            logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
-            logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
-            logging.debug("%s CostFunction J  = %s"%(self._name, J))
             return J
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -173,7 +173,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xini = list(Xb)
         else:
             Xini = numpy.zeros(len(BoxBounds[:,0]))
-        logging.debug("%s Point de démarrage Xini = %s"%(self._name, Xini))
         #
         # Initialisation des bornes
         # -------------------------
@@ -218,11 +217,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     PosInsect[j,i] = PosInsect[j,i]+VelocityInsect[j,i]
                 quality = CostFunction(insect,self._parameters["QualityCriterion"])
                 if quality < qBestPosInsect[i]:
-                    BestPosInsect[:,i] = numpy.asmatrix(insect).flatten().A1
+                    BestPosInsect[:,i] = numpy.ravel( insect )
                     if quality < qBest :
-                        Best  = numpy.asmatrix(insect).flatten().A1
+                        Best  = numpy.ravel( insect )
                         qBest = quality
-            logging.debug("%s Iteration %i : qBest = %.5f, Best = %s"%(self._name, n+1,qBest,Best))
             #
             if self._parameters["StoreInternalVariables"]:
                 self.StoredVariables["CurrentState"].store( Best )
@@ -230,18 +228,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( qBest )
         #
-        logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["QualityCriterion"], self._parameters["MaximumNumberOfSteps"]))
-        logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["QualityCriterion"], qBest))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["QualityCriterion"], Best))
-        logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["QualityCriterion"], (self._parameters["MaximumNumberOfSteps"]+1)*self._parameters["NumberOfInsects"]+1))
-        logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["QualityCriterion"], 0))
-        #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(Best).flatten().T
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
+        Xa = numpy.asmatrix(numpy.ravel( Best )).T
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
+        #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            d = Y - Hm(Xb)
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.ravel(Y - Hm(Xa)) )
+        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)

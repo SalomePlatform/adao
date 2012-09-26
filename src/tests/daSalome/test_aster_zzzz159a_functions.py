@@ -19,7 +19,6 @@
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 import numpy
-import pickle
 import sys
 
 sys.path.insert(0, init_data['SOURCES_ROOT'])

@@ -50,7 +50,7 @@ class FDApproximation:
         if dX is None:  
             self.__dX     = None
         else:
-            self.__dX     = numpy.asmatrix(dX).flatten().T
+            self.__dX     = numpy.asmatrix(numpy.ravel( dX )).T
 
     # ---------------------------------------------------------
     def TangentMatrix(self, X ):
@@ -82,13 +82,12 @@ class FDApproximation:
         logging.debug("     Incrément de............: %s*X"%float(self.__increment))
         logging.debug("     Approximation centrée...: %s"%(self.__centeredDF))
         #
-        _X = numpy.asmatrix(X).flatten().T
+        _X = numpy.asmatrix(numpy.ravel( X )).T
         #
         if self.__dX is None:
             _dX  = self.__increment * _X
         else:
-            _dX = numpy.asmatrix(self.__dX).flatten().T
-        logging.debug("     Incrément non corrigé...: %s"%(_dX))
+            _dX = numpy.asmatrix(numpy.ravel( self.__dX )).T
         #
         if (_dX == 0.).any():
             moyenne = _dX.mean()
@@ -96,7 +95,6 @@ class FDApproximation:
                 _dX = numpy.where( _dX == 0., float(self.__increment), _dX )
             else:
                 _dX = numpy.where( _dX == 0., moyenne, _dX )
-        logging.debug("     Incrément dX............: %s"%(_dX))
         #
         if self.__centeredDF:
             #
@@ -137,7 +135,7 @@ class FDApproximation:
             # -------------------------------------------------------
             Jacobienne = []
             for i in range( len(_dX) ):
-                Jacobienne.append( numpy.asmatrix(( HX_plus_dX[i] - HX ) / _dX[i]).flatten().A1 )
+                Jacobienne.append( numpy.ravel(( HX_plus_dX[i] - HX ) / _dX[i]) )
         #
         Jacobienne = numpy.matrix( numpy.vstack( Jacobienne ) ).T
         logging.debug("  == Fin du calcul de la Jacobienne")
@@ -159,7 +157,7 @@ class FDApproximation:
             #
             # Calcul de la valeur linéarisée de H en X appliqué à dX
             # ------------------------------------------------------
-            _dX = numpy.asmatrix(dX).flatten().T
+            _dX = numpy.asmatrix(numpy.ravel( dX )).T
             HtX = numpy.dot(Jacobienne, _dX)
             return HtX.A1
 
@@ -178,7 +176,7 @@ class FDApproximation:
             #
             # Calcul de la valeur de l'adjoint en X appliqué à Y
             # --------------------------------------------------
-            _Y = numpy.asmatrix(Y).flatten().T
+            _Y = numpy.asmatrix(numpy.ravel( Y )).T
             HaY = numpy.dot(JacobienneT, _Y)
             return HaY.A1
 

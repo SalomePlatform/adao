@@ -39,10 +39,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur moindres carrés pondérés linéaires
-        (assimilation variationnelle sans ébauche)
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -66,7 +62,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------------------------------
         K =  (Ha * RI * Hm ).I * Ha * RI
         Xa =  K * Y
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
         # Calcul de la fonction coût
         # --------------------------
@@ -74,10 +69,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Jb  = 0.
         Jo  = 0.5 * oma.T * RI * oma
         J   = float( Jb ) + float( Jo )
-        logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
-        logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
-        logging.debug("%s CostFunction J  = %s"%(self._name, J))
-        #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         self.StoredVariables["CostFunctionJb"].store( Jb )
         self.StoredVariables["CostFunctionJo"].store( Jo )
@@ -86,7 +77,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.asmatrix(oma).flatten().A1 )
+            self.StoredVariables["OMA"].store( numpy.ravel(oma) )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)

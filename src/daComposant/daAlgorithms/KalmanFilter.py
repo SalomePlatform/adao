@@ -36,14 +36,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur du filtre de Kalman
-
-        Remarque : les observations sont exploitées à partir du pas de temps 1,
-        et sont utilisées dans Yo comme rangées selon ces indices. Donc le pas 0
-        n'est pas utilisé puisque la première étape de Kalman passe de 0 à 1
-        avec l'observation du pas 1.
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -79,15 +71,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["APosterioriCovariance"].store( Pn )
         #
         for step in range(duration-1):
-            logging.debug("%s Etape de Kalman %i (i.e. %i->%i) sur un total de %i"%(self._name, step+1, step,step+1, duration-1))
-            #
-            # Etape de prédiction
-            # -------------------
             Xn_predicted = Mm * Xn
             Pn_predicted = Mm * Pn * Mt + Q
             #
-            # Etape de correction
-            # -------------------
             d  = Y.valueserie(step+1) - Hm * Xn_predicted
             K  = Pn_predicted * Ha * (Hm * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d

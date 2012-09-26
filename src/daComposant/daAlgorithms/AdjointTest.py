@@ -90,11 +90,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul du point courant
         # -----------------------
-        X       = numpy.asmatrix(Xb).flatten().T
+        X       = numpy.asmatrix(numpy.ravel( Xb )).T
         NormeX  = numpy.linalg.norm( X )
         if Y is None:
-            Y = numpy.asmatrix( Hm( X ) ).flatten().T
-        Y = numpy.asmatrix(Y).flatten().T
+            Y = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
+        Y = numpy.asmatrix(numpy.ravel( Y )).T
         NormeY = numpy.linalg.norm( Y )
         #
         # Fabrication de la direction de  l'incrément dX
@@ -107,7 +107,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 else:
                     dX0.append( numpy.random.normal(0.,X.mean()) )
         else:
-            dX0 = numpy.asmatrix(self._parameters["InitialDirection"]).flatten()
+            dX0 = numpy.asmatrix(numpy.ravel( self._parameters["InitialDirection"] ))
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
@@ -145,8 +145,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Boucle sur les perturbations
         # ----------------------------
         for i,amplitude in enumerate(Perturbations):
-            logging.debug("%s Etape de calcul numéro %i, avec la perturbation %8.3e"%(self._name, i, amplitude))
-            #
             dX          = amplitude * dX0
             NormedX     = numpy.linalg.norm( dX )
             #
@@ -164,7 +162,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Sorties eventuelles
         # -------------------
-        logging.debug("%s Résultats :\n%s"%(self._name, msgs))
         print
         print "Results of adjoint stability check:"
         print msgs

@@ -24,7 +24,7 @@
 # Graphical Statistics, 9, 1, pp.60-77, 2000
 
 import sys, math
-from numpy import sum, array, matrix, dot, linalg, asarray, asmatrix
+from numpy import sum, array, matrix, dot, linalg, asarray, asmatrix, ravel
 
 # ==============================================================================
 def mmqr(
@@ -39,8 +39,8 @@ def mmqr(
     #
     # Recuperation des donnees et informations initiales
     # --------------------------------------------------
-    variables = asmatrix(x0).A1
-    mesures   = asmatrix(y).flatten().T
+    variables = asmatrix(ravel( x0 ))
+    mesures   = asmatrix(ravel( y )).T
     increment = sys.float_info[0]
     p         = len(variables.flat)
     n         = len(mesures.flat)

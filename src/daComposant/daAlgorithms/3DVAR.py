@@ -88,9 +88,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur 3D-VAR
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -116,12 +113,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
         if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            logging.debug("%s Utilisation de HXb"%self._name)
             HXb = H["AppliedToX"]["HXb"]
         else:
-            logging.debug("%s Calcul de Hm(Xb)"%self._name)
             HXb = Hm( Xb )
-        HXb = numpy.asmatrix(HXb).flatten().T
+        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #
         # Calcul de l'innovation
         # ----------------------
@@ -130,7 +125,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
-        logging.debug("%s Innovation d = %s"%(self._name, d))
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -151,16 +145,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(x):
-            _X  = numpy.asmatrix(x).flatten().T
-            logging.debug("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _X  = numpy.asmatrix(numpy.ravel( x )).T
             _HX = Hm( _X )
-            _HX = numpy.asmatrix(_HX).flatten().T
+            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
-            logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
-            logging.debug("%s CostFunction J  = %s"%(self._name, J))
             if self._parameters["StoreInternalVariables"]:
                 self.StoredVariables["CurrentState"].store( _X.A1 )
             self.StoredVariables["CostFunctionJb"].store( Jb )
@@ -169,16 +159,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             return J
         #
         def GradientOfCostFunction(x):
-            _X      = numpy.asmatrix(x).flatten().T
-            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _X      = numpy.asmatrix(numpy.ravel( x )).T
             _HX     = Hm( _X )
-            _HX     = numpy.asmatrix(_HX).flatten().T
+            _HX     = numpy.asmatrix(numpy.ravel( _HX )).T
             GradJb  = BI * (_X - Xb)
             GradJo  = - Ha( (_X, RI * (Y - _HX)) )
-            GradJ   = numpy.asmatrix( GradJb ).flatten().T + numpy.asmatrix( GradJo ).flatten().T
-            logging.debug("%s GradientOfCostFunction GradJb = %s"%(self._name, numpy.asmatrix( GradJb ).flatten()))
-            logging.debug("%s GradientOfCostFunction GradJo = %s"%(self._name, numpy.asmatrix( GradJo ).flatten()))
-            logging.debug("%s GradientOfCostFunction GradJ  = %s"%(self._name, numpy.asmatrix( GradJ  ).flatten()))
+            GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) + numpy.ravel( GradJo ) ).T
             return GradJ.A1
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -187,7 +173,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xini = Xb.A1.tolist()
         else:
             Xini = list(Xb)
-        logging.debug("%s Point de démarrage Xini = %s"%(self._name, Xini))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -261,16 +246,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["StoreInternalVariables"]:
             Minimum = self.StoredVariables["CurrentState"].valueserie(step = StepMin)
         #
-        logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["Minimizer"], StepMin))
-        logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["Minimizer"], MinJ))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["Minimizer"], Minimum))
-        logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["Minimizer"], nfeval))
-        logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["Minimizer"], rc))
-        #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(Minimum).flatten().T
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
+        Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
@@ -283,7 +261,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _ee    = numpy.matrix(numpy.zeros(nb)).T
                 _ee[i] = 1.
                 _HmEE  = Hm(_ee)
-                _HmEE  = numpy.asmatrix(_HmEE).flatten().T
+                _HmEE  = numpy.asmatrix(numpy.ravel( _HmEE )).T
                 HessienneI.append( ( BI*_ee + Ha((Xa,RI*_HmEE)) ).A1 )
             HessienneI = numpy.matrix( HessienneI )
             A = HessienneI.I
@@ -297,13 +275,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["Innovation"].store( numpy.asmatrix(d).flatten().A1 )
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["BMA"].store( numpy.asmatrix(Xb - Xa).flatten().A1 )
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.asmatrix(Y - Hm(Xa)).flatten().A1 )
+            self.StoredVariables["OMA"].store( numpy.ravel(Y - Hm(Xa)) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMB"].store( numpy.asmatrix(d).flatten().A1 )
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SigmaObs2"].store( float( (d.T * (Y-Hm(Xa))) / R.trace() ) )
         #

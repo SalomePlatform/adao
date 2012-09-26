@@ -64,11 +64,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["BMA", "OMA", "OMB", "Innovation"]
+            )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul des parametres definissant le quantile
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -83,12 +87,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
         if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            logging.debug("%s Utilisation de HXb"%self._name)
             HXb = H["AppliedToX"]["HXb"]
         else:
-            logging.debug("%s Calcul de Hm(Xb)"%self._name)
             HXb = Hm( Xb )
-        HXb = numpy.asmatrix(HXb).flatten().T
+        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #
         # Calcul de l'innovation
         # ----------------------
@@ -97,21 +99,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
-        logging.debug("%s Innovation d = %s"%(self._name, d))
         #
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(x):
-            _X  = numpy.asmatrix(x).flatten().T
-            logging.debug("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _X  = numpy.asmatrix(numpy.ravel( x )).T
             _HX = Hm( _X )
-            _HX = numpy.asmatrix(_HX).flatten().T
+            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             Jb  = 0.
             Jo  = 0.
             J   = Jb + Jo
-            logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
-            logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
-            logging.debug("%s CostFunction J  = %s"%(self._name, J))
             if self._parameters["StoreInternalVariables"]:
                 self.StoredVariables["CurrentState"].store( _X.A1 )
             self.StoredVariables["CostFunctionJb"].store( Jb )
@@ -120,8 +117,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             return _HX
         #
         def GradientOfCostFunction(x):
-            _X      = numpy.asmatrix(x).flatten().T
-            logging.debug("%s GradientOfCostFunction X      = %s"%(self._name, _X.A1))
+            _X      = numpy.asmatrix(numpy.ravel( x )).T
             Hg = H["Tangent"].asMatrix( _X )
             return Hg
         #
@@ -131,7 +127,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xini = Xb.A1.tolist()
         else:
             Xini = list(Xb)
-        logging.debug("%s Point de démarrage Xini = %s"%(self._name, Xini))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -151,19 +146,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        logging.debug("%s %s Step of min cost  = %s"%(self._name, self._parameters["Minimizer"], nfeval))
-        logging.debug("%s %s Minimum cost      = %s"%(self._name, self._parameters["Minimizer"], J_optimal))
-        logging.debug("%s %s Minimum state     = %s"%(self._name, self._parameters["Minimizer"], Minimum))
-        logging.debug("%s %s Nb of F           = %s"%(self._name, self._parameters["Minimizer"], nfeval))
-        logging.debug("%s %s RetCode           = %s"%(self._name, self._parameters["Minimizer"], rc))
-        #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(Minimum).flatten().T
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
+        Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
-        self.StoredVariables["Innovation"].store( d.A1 )
+        #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.ravel(Y - Hm(Xa)) )
+        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)

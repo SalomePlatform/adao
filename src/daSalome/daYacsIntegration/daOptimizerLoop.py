@@ -21,7 +21,7 @@
 
 import SALOMERuntime
 import pilot
-import pickle
+import pickle, cPickle
 import numpy
 import threading
 
@@ -181,7 +181,7 @@ class OptimizerHooks:
       self.optim_algo.setError("sync == false not yet implemented")
 
   def Tangent(self, (X, dX), sync = 1):
-    #print "Call Tangent OptimizerHooks"
+    # print "Call Tangent OptimizerHooks"
     if sync == 1:
       # 1: Get a unique sample number
       self.optim_algo.counter_lock.acquire()
@@ -216,7 +216,7 @@ class OptimizerHooks:
       self.optim_algo.setError("sync == false not yet implemented")
 
   def Adjoint(self, (X, Y), sync = 1):
-    #print "Call Adjoint OptimizerHooks"
+    # print "Call Adjoint OptimizerHooks"
     if sync == 1:
       # 1: Get a unique sample number
       self.optim_algo.counter_lock.acquire()
@@ -282,17 +282,17 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # get the daStudy
     #print "[Debug] Input is ", input
     str_da_study = input.getStringValue()
-    self.da_study = pickle.loads(str_da_study)
+    self.da_study = cPickle.loads(str_da_study)
     #print "[Debug] da_study is ", self.da_study
     self.da_study.initAlgorithm()
     self.ADD = self.da_study.getAssimilationStudy()
 
   def startToTakeDecision(self):
-    #print "Algorithme startToTakeDecision"
+    # print "Algorithme startToTakeDecision"
 
     # Check if ObservationOperator is already set
     if self.da_study.getObservationOperatorType("Direct") == "Function" or self.da_study.getObservationOperatorType("Tangent") == "Function" or self.da_study.getObservationOperatorType("Adjoint") == "Function" :
-      #print "Set Hooks"
+      # print "Set Hooks for ObservationOperator"
       # Use proxy function for YACS
       self.hooksOO = OptimizerHooks(self, switch_value=1)
       direct = tangent = adjoint = None
@@ -305,11 +305,13 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
       # Set ObservationOperator
       self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+    # else:
+      # print "Not setting Hooks for ObservationOperator"
 
     # Check if EvolutionModel is already set
     if self.da_study.getEvolutionModelType("Direct") == "Function" or self.da_study.getEvolutionModelType("Tangent") == "Function" or self.da_study.getEvolutionModelType("Adjoint") == "Function" :
       self.has_evolution_model = True
-      #print "Set Hooks"
+      # print "Set Hooks for EvolutionModel"
       # Use proxy function for YACS
       self.hooksEM = OptimizerHooks(self, switch_value=2)
       direct = tangent = adjoint = None
@@ -322,6 +324,8 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
       # Set EvolutionModel
       self.ADD.setEvolutionModel(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+    # else:
+      # print "Not setting Hooks for EvolutionModel"
 
     # Set Observers
     for observer_name in self.da_study.observers_dict.keys():
@@ -376,7 +380,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Remove Data Observer, so you can ...
     var.removeDataObserver(self.obs)
     # Pickle then ...
-    var_str = pickle.dumps(var)
+    var_str = cPickle.dumps(var)
     # Add Again Data Observer
     if self.da_study.observers_dict[info]["scheduler"] != "":
       self.ADD.setDataObserver(info, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[info]["scheduler"], HookParameters = info)
@@ -426,7 +430,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Remove data observers cannot pickle assimilation study object
     for observer_name in self.da_study.observers_dict.keys():
       self.ADD.removeDataObserver(observer_name, self.obs)
-    result = pickle.dumps(self.da_study)
+    result = pickle.dumps(self.da_study) # Careful : pickle is mandatory over cPickle !
     return result
 
   # Obligatoire ???

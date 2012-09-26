@@ -304,6 +304,7 @@ class AssimilationStudy:
             self.__H["Direct"]  = Operator( fromMatrix = matrice )
             self.__H["Tangent"] = Operator( fromMatrix = matrice )
             self.__H["Adjoint"] = Operator( fromMatrix = matrice.T )
+            del matrice
         else:
             raise ValueError("Improperly defined observation operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
@@ -387,6 +388,7 @@ class AssimilationStudy:
             self.__M["Direct"]  = Operator( fromMatrix = matrice )
             self.__M["Tangent"] = Operator( fromMatrix = matrice )
             self.__M["Adjoint"] = Operator( fromMatrix = matrice.T )
+            del matrice
         else:
             raise ValueError("Improperly defined evolution operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
@@ -634,7 +636,7 @@ class AssimilationStudy:
                 asPersistentVector = self.__Xb.reshape((-1,min(__B_shape)))
                 self.__Xb = Persistence.OneVector("Background", basetype=numpy.matrix)
                 for member in asPersistentVector:
-                    self.__Xb.store( numpy.matrix( numpy.asarray(member).flatten(), numpy.float ).T )
+                    self.__Xb.store( numpy.matrix( numpy.ravel(member), numpy.float ).T )
                 __Xb_shape = min(__B_shape)
             else:
                 raise ValueError("Shape characteristic of B \"%s\" and Xb \"%s\" are incompatible"%(__B_shape,__Xb_shape))

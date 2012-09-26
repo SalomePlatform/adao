@@ -39,9 +39,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur BLUE (ou Kalman simple, ou Interpolation Optimale)
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -57,12 +54,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
         if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            logging.debug("%s Utilisation de HXb"%self._name)
             HXb = H["AppliedToX"]["HXb"]
         else:
-            logging.debug("%s Calcul de Hm * Xb"%self._name)
             HXb = Hm * Xb
-        HXb = numpy.asmatrix(HXb).flatten().T
+        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -88,30 +83,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
-        Jb  = 0.
-        Jo  = 0.5 * d.T * RI * d
-        J   = float( Jb ) + float( Jo )
-        logging.debug("%s Innovation d    = %s"%(self._name, d))
-        logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
-        logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
-        logging.debug("%s CostFunction J  = %s"%(self._name, J))
-        #
-        self.StoredVariables["CostFunctionJb"].store( Jb )
-        self.StoredVariables["CostFunctionJo"].store( Jo )
-        self.StoredVariables["CostFunctionJ" ].store( J )
         #
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
         if Y.size <= Xb.size:
             if self._parameters["R_scalar"] is not None:
                 R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)
-            logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
             K  = B * Ha * (Hm * B * Ha + R).I
         else:
-            logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
             K = (Ha * RI * Hm + BI).I * Ha * RI
         Xa = Xb + K*d
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
         # Calcul de la fonction coût
         # --------------------------
@@ -119,11 +100,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
         Jo  = 0.5 * oma.T * RI * oma
         J   = float( Jb ) + float( Jo )
-        logging.debug("%s OMA             = %s"%(self._name, oma))
-        logging.debug("%s CostFunction Jb = %s"%(self._name, Jb))
-        logging.debug("%s CostFunction Jo = %s"%(self._name, Jo))
-        logging.debug("%s CostFunction J  = %s"%(self._name, J))
-        #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         self.StoredVariables["CostFunctionJb"].store( Jb )
         self.StoredVariables["CostFunctionJo"].store( Jo )
@@ -143,13 +119,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["Innovation"].store( numpy.asmatrix(d).flatten().A1 )
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["BMA"].store( numpy.asmatrix(Xb - Xa).flatten().A1 )
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.asmatrix(oma).flatten().A1 )
+            self.StoredVariables["OMA"].store( numpy.ravel(oma) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMB"].store( numpy.asmatrix(d).flatten().A1 )
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SigmaObs2"].store( float( (d.T * (Y-Hm*Xa)) / R.trace() ) )
         if "SigmaBck2" in self._parameters["StoreSupplementaryCalculations"]:

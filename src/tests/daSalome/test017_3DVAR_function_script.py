@@ -19,7 +19,6 @@
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 import numpy
-import pickle
 
 print computation
 method = ""

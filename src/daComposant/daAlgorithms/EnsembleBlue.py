@@ -37,12 +37,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None ):
-        """
-        Calcul d'une estimation BLUE d'ensemble :
-            - génération d'un ensemble d'observations, de même taille que le
-              nombre d'ébauches
-            - calcul de l'estimateur BLUE pour chaque membre de l'ensemble
-        """
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -91,10 +85,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if Y.size <= Xb.valueserie(0).size:
             if self._parameters["R_scalar"] is not None:
                 R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)
-            logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
             K  = B * Ha * (Hm * B * Ha + R).I
         else:
-            logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
             K = (Ha * RI * Hm + BI).I * Ha * RI
         #
         # Calcul du BLUE pour chaque membre de l'ensemble

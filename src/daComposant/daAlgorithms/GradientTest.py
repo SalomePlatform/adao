@@ -108,9 +108,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul du point courant
         # -----------------------
-        X       = numpy.asmatrix(Xb).flatten().T
-        FX      = numpy.asmatrix( Hm( X ) ).flatten().T
-        FX      = numpy.asmatrix(FX).flatten().T
+        X       = numpy.asmatrix(numpy.ravel(    Xb   )).T
+        FX      = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
+        FX      = numpy.asmatrix(numpy.ravel(    FX   )).T
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
         #
@@ -124,7 +124,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 else:
                     dX0.append( numpy.random.normal(0.,X.mean()) )
         else:
-            dX0 = numpy.asmatrix(self._parameters["InitialDirection"]).flatten()
+            dX0 = numpy.ravel( self._parameters["InitialDirection"] )
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
@@ -132,7 +132,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------------------------------
         if self._parameters["ResiduFormula"] is "Taylor":
             GradFxdX = Ht( (X, dX0) )
-            GradFxdX = numpy.asmatrix(GradFxdX).flatten().T
+            GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
         #
         # Entete des resultats
         # --------------------
@@ -181,12 +181,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Boucle sur les perturbations
         # ----------------------------
         for i,amplitude in enumerate(Perturbations):
-            logging.debug("%s Etape de calcul numéro %i, avec la perturbation %8.3e"%(self._name, i, amplitude))
-            #
             dX      = amplitude * dX0
             #
             FX_plus_dX = Hm( X + dX )
-            FX_plus_dX = numpy.asmatrix(FX_plus_dX).flatten().T
+            FX_plus_dX = numpy.asmatrix(numpy.ravel( FX_plus_dX )).T
             #
             NormedX     = numpy.linalg.norm( dX )
             NormeFXdX   = numpy.linalg.norm( FX_plus_dX )
@@ -224,7 +222,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Sorties eventuelles
         # -------------------
-        logging.debug("%s Résultats :\n%s"%(self._name, msgs))
         print
         print "Results of gradient stability check:"
         print msgs
