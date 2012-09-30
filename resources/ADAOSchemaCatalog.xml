@@ -76,8 +76,7 @@ except NameError:
 else:
   assim_study.setAlgorithmParameters(AlgorithmParameters)
 
-# Data
-# print "Data entered are:"
+logging.debug("CREATE Data entered are:")
 
 # Background
 try:
@@ -85,7 +84,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE Background is %s"%Background)
+  logging.debug("CREATE Background is set")
   logging.debug("CREATE BackgroundType is %s"%BackgroundType)
   logging.debug("CREATE BackgroundStored is %s"%BackgroundStored)
   assim_study.setBackgroundType(BackgroundType)
@@ -98,7 +97,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE CheckingPoint is %s"%CheckingPoint)
+  logging.debug("CREATE CheckingPoint is set")
   logging.debug("CREATE CheckingPointType is %s"%CheckingPointType)
   logging.debug("CREATE CheckingPointStored is %s"%CheckingPointStored)
   assim_study.setCheckingPointType(CheckingPointType)
@@ -111,7 +110,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE BackgroundError is %s"%BackgroundError)
+  logging.debug("CREATE BackgroundError is set")
   logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
   assim_study.setBackgroundErrorStored(BackgroundErrorStored)
   assim_study.setBackgroundError(BackgroundError)
@@ -122,7 +121,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE Observation is %s"%Observation)
+  logging.debug("CREATE Observation is set")
   logging.debug("CREATE ObservationType is %s"%ObservationType)
   logging.debug("CREATE ObservationStored is %s"%ObservationStored)
   assim_study.setObservationType(ObservationType)
@@ -135,7 +134,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE ObservationError is %s"%ObservationError)
+  logging.debug("CREATE ObservationError is set")
   logging.debug("CREATE ObservationErrorStored is %s"%ObservationErrorStored)
   assim_study.setObservationErrorStored(ObservationErrorStored)
   assim_study.setObservationError(ObservationError)
@@ -146,7 +145,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE EvolutionError is %s"%EvolutionError)
+  logging.debug("CREATE EvolutionError is set")
   logging.debug("CREATE EvolutionErrorStored is %s"%EvolutionErrorStored)
   assim_study.setEvolutionErrorStored(EvolutionErrorStored)
   assim_study.setEvolutionError(EvolutionError)
@@ -158,7 +157,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE ObservationOperator is %s"%ObservationOperator)
+  logging.debug("CREATE ObservationOperator is set")
   logging.debug("CREATE ObservationOperatorType is %s"%ObservationOperatorType)
   assim_study.setObservationOperatorType("Matrix", ObservationOperatorType)
   assim_study.setObservationOperator("Matrix", ObservationOperator)
@@ -197,7 +196,7 @@ try:
 except NameError:
   pass
 else:
-  logging.debug("CREATE EvolutionModel is %s"%EvolutionModel)
+  logging.debug("CREATE EvolutionModel is set")
   logging.debug("CREATE EvolutionModelType is %s"%EvolutionModelType)
   assim_study.setEvolutionModelType("Matrix", EvolutionModelType)
   assim_study.setEvolutionModel("Matrix", EvolutionModel)
@@ -236,7 +235,7 @@ for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
   assim_study.setOutputVariable(name, size)
 
 if has_observers:
-  logging.debug("CREATE Observers is %s"%observers.keys())
+  logging.debug("CREATE Observers keys are %s"%observers.keys())
   # Adding observers to the study
   for observer_name in observers.keys():
     scheduler = ""
