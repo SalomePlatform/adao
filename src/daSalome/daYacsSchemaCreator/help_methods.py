@@ -17,7 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import sys
 import os
@@ -30,8 +30,7 @@ def check_args(args):
 
   logging.debug("Arguments are :" + str(args))
   if len(args) != 2:
-    logging.fatal("Bad number of arguments: you have to provide two arguments (%d given)" % (len(args)))
-    sys.exit(1)
+    raise ValueError("\n\n Bad number of arguments: you have to provide two arguments (%d given)\n" % (len(args)))
 
 def check_study(study_config):
 
@@ -39,23 +38,19 @@ def check_study(study_config):
 
   # Check study_config
   if not isinstance(study_config, dict):
-    logging.fatal("Study configuration is not a dictionnary")
-    sys.exit(1)
+    raise ValueError("\n\n Study configuration is not a dictionnary!\n")
 
   # Name
   if "Name" not in study_config:
-    logging.fatal("Cannot found Name in the study configuration")
-    sys.exit(1)
+    raise ValueError("\n\n Cannot find Name in the study configuration!\n")
 
   # Algorithm
   if "Algorithm" not in study_config:
-    logging.fatal("Cannot found Algorithm in the study configuration")
-    sys.exit(1)
+    raise ValueError("\n\n Cannot find Algorithm in the study configuration!\n")
   else:
     if not (study_config["Algorithm"] in AssimAlgos or study_config["Algorithm"] in CheckAlgos):
-      logging.fatal("Algorithm provided is unknow : " + str(study_config["Algorithm"]) +
-                    "\n You can choose between : " + str(AssimAlgos)+" "+str(CheckAlgos))
-      sys.exit(1)
+      raise ValueError("\n\n Algorithm provided is unknow : " + str(study_config["Algorithm"]) +
+                         "\n You can choose between : " + str(AssimAlgos)+" "+str(CheckAlgos) + "\n")
 
   # Debug
   if "Debug" not in study_config:
@@ -68,17 +63,15 @@ def check_study(study_config):
     repertory = study_config["Repertory"]
     check_repertory = True
     if not os.path.isabs(repertory):
-      logging.fatal("Study repertory should be an absolute path")
-      logging.fatal("Repertory provided is %s" % repertory)
-      sys.exit(1)
+      raise ValueError("\n\n Study repertory should be an absolute path\n"+
+                           " Repertory provided is %s\n" % repertory)
 
   # Check if all the data is provided
   for key in AlgoDataRequirements[study_config["Algorithm"]]:
     if key not in study_config.keys():
-      logging.fatal("Cannot found " +  key + " in your study configuration !" +
+      raise ValueError("\n\nCannot find " +  key + " in your study configuration !" +
                     "\n This key is mandatory into a study with " + study_config["Algorithm"] + " algorithm." +
-                    "\n " + study_config["Algorithm"] + " requirements are " + str(AlgoDataRequirements[study_config["Algorithm"]]))
-      sys.exit(1)
+                    "\n " + study_config["Algorithm"] + " requirements are " + str(AlgoDataRequirements[study_config["Algorithm"]]) + "\n")
 
   # Data
   for key in study_config.keys():
@@ -97,16 +90,13 @@ def check_study(study_config):
   if "UserPostAnalysis" in study_config.keys():
     analysis_config = study_config["UserPostAnalysis"]
     if "From" not in analysis_config:
-      logging.fatal("UserPostAnalysis found but From is not defined in the analysis configuration !")
-      sys.exit(1)
+      raise ValueError("\n\n UserPostAnalysis found but From is not defined \n in the analysis configuration!\n")
     else:
       if analysis_config["From"] not in AnalysisFromList:
-        logging.fatal("Analysis From defined in the study configuration does not have a correct type : " + str(analysis_config["From"])
-                      + "\n You can have : " + str(AnalysisFromList))
-        sys.exit(1)
+        raise ValueError("\n\n Analysis From defined in the study configuration does not have a correct type : " + str(analysis_config["From"])
+                         + "\n You can have: " + str(AnalysisFromList) + "\n")
     if "Data" not in analysis_config:
-      logging.fatal("Analysis found but Data is not defined in the analysis configuration !")
-      sys.exit(1)
+      raise ValueError("\n\nAnalysis found but Data is not defined in the analysis configuration!\n")
 
     if analysis_config["From"] == "Script":
       check_file_name = ""
@@ -115,84 +105,68 @@ def check_study(study_config):
       else:
         check_file_name = analysis_config["Data"]
       if not os.path.exists(check_file_name):
-        logging.fatal("A script file cannot be found")
-        logging.fatal("File is %s" % check_file_name)
-        sys.exit(1)
+        raise ValueError("\n\n The script file cannot be found for UserPostAnalysis,\n please check its availability.\n"+
+                             " The given user file is:\n %s\n" % check_file_name)
 
   # Check observers
   if "Observers" in study_config.keys():
     for obs_var in study_config["Observers"]:
       # Check du type
       if not isinstance(study_config["Observers"][obs_var], type({})):
-        logging.fatal("An observer description has to be a Python dictionary")
-        logging.fatal("Observer is %s" % obs_var)
-        sys.exit(1)
+        raise ValueError("\n\n An observer description has to be a Python dictionary\n"+
+                             " Observer is %s\n" % obs_var)
       if "nodetype" not in study_config["Observers"][obs_var].keys():
-        logging.fatal("An observer description must provide a nodetype")
-        logging.fatal("Observer is %s" % obs_var)
-        sys.exit(1)
+        raise ValueError("\n\n An observer description must provide a nodetype\n"+
+                             " Observer is %s\n" % obs_var)
       nodetype = study_config["Observers"][obs_var]["nodetype"]
       if not isinstance(study_config["Observers"][obs_var]["nodetype"], type("")):
-        logging.fatal("An observer nodetype description must be a string")
-        logging.fatal("Observer is %s" % obs_var)
-        sys.exit(1)
+        raise ValueError("\n\n An observer nodetype description must be a string\n"+
+                             " Observer is %s\n" % obs_var)
       if nodetype != "String" and nodetype != "Script":
-        logging.fatal("An observer nodetype must be equal to 'String' or 'Script'")
-        logging.fatal("Observer is %s" % obs_var)
-        sys.exit(1)
+        raise ValueError("\n\n An observer nodetype must be equal to 'String' or 'Script'\n"+
+                             " Observer is %s\n" % obs_var)
       if nodetype == "String":
         if "String" not in study_config["Observers"][obs_var].keys():
-          logging.fatal("An observer with nodetype String must provide a String")
-          logging.fatal("Observer is %s" % obs_var)
-          sys.exit(1)
+          raise ValueError("\n\n An observer with nodetype String must provide a String\n"+
+                               " Observer is %s\n" % obs_var)
         if not isinstance(study_config["Observers"][obs_var]["String"], type("")):
-          logging.fatal("An observer String description must be a string")
-          logging.fatal("Observer is %s" % obs_var)
-          sys.exit(1)
+          raise ValueError("\n\n An observer String description must be a string\n"+
+                               " Observer is %s\n" % obs_var)
       if nodetype == "Script":
         if "Script" not in study_config["Observers"][obs_var].keys():
-          logging.fatal("An observer with nodetype Script provide a Script")
-          logging.fatal("Observer is %s" % obs_var)
-          sys.exit(1)
+          raise ValueError("\n\n An observer with nodetype Script provide a Script\n"+
+                               " Observer is %s\n" % obs_var)
         if not isinstance(study_config["Observers"][obs_var]["Script"], type("")):
-          logging.fatal("An observer Script description must be a string")
-          logging.fatal("Observer is %s" % obs_var)
-          sys.exit(1)
+          raise ValueError("\n\n An observer Script description must be a string\n"+
+                               " Observer is %s\n" % obs_var)
       if "scheduler" in study_config["Observers"][obs_var].keys():
         if not isinstance(study_config["Observers"][obs_var]["scheduler"], type("")):
-          logging.fatal("An observer scheduler description must be a string")
-          logging.fatal("Observer is %s" % obs_var)
-          sys.exit(1)
+          raise ValueError("\n\n An observer scheduler description must be a string\n"+
+                              " Observer is %s\n" % obs_var)
 
 def check_variables(name, study_config):
 
   if name not in study_config.keys():
-    logging.fatal("%s not found in your study configuration!" % name)
-    sys.exit(1)
+    raise ValueError("\n\n %s not found in your study configuration!\n" % name)
 
   variable_config = study_config[name]
   if "Order" not in variable_config.keys():
-    logging.fatal("Order not found in the %s configuration!" % name)
-    sys.exit(1)
+    raise ValueError("\n\n Order not found in the %s configuration!\n" % name)
 
   list_of_variables = variable_config["Order"]
   if not isinstance(list_of_variables, type([])):
-    logging.fatal("Order sould be a list in the %s configuration!" % name)
-    sys.exit(1)
+    raise ValueError("\n\n Order sould be a list in the %s configuration!\n" % name)
   if len(list_of_variables) < 1:
-    logging.fatal("Order should contain one or more names in the %s configuration!" % name)
-    sys.exit(1)
+    raise ValueError("\n\nOrder should contain one or more names in the %s configuration!\n" % name)
 
   for var in list_of_variables:
     if var not in variable_config.keys():
-      logging.fatal("Variable %s not found in the %s configuration!" % name)
-      sys.exit(1)
+      raise ValueError("\n\n Variable %s not found in the %s configuration!\n" % name)
     value = variable_config[var]
     try:
       value = int(value)
     except:
-      loggind.fatal("Variable %s value cannot be converted in an integer in the %s configuration!" % name)
-      sys.exit(1)
+      raise ValueError("\n\n Variable %s value cannot be converted in an integer \n in the %s configuration!\n" % name)
 
 def check_data(data_name, data_config, repertory_check=False, repertory=""):
 
@@ -202,25 +176,20 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
   data_name_from = "From"
 
   if data_name_data not in data_config:
-    logging.fatal(data_name +" found but " + data_name_data +" is not defined in the study configuration !")
-    sys.exit(1)
+    raise ValueError("\n\n" + data_name +" found but " + data_name_data +" is not defined in the study configuration !\n")
 
   if data_name_type not in data_config:
-    logging.fatal(data_name +" found but " + data_name_type  +" is not defined in the study configuration !")
-    sys.exit(1)
+    raise ValueError("\n\n" + data_name +" found but " + data_name_type  +" is not defined in the study configuration !\n")
   else:
     if data_config[data_name_type] not in AssimType[data_name]:
-      logging.fatal(data_name_type + " of " + data_name + " defined in the study configuration does not have a correct type : " + str(data_config[data_name_type]) 
-                    + "\n You can have : " + str(AssimType[data_name]))
-      sys.exit(1)
+      raise ValueError("\n\n" + data_name_type + " of " + data_name + " defined in the study configuration does not have a correct type : " + str(data_config[data_name_type]) 
+                    + "\n You can have : " + str(AssimType[data_name]) + "\n")
   if data_name_from not in data_config:
-    logging.fatal(data_name + " found but " + data_name_from + " is not defined in the study configuration !")
-    sys.exit(1)
+    raise ValueError("\n\n" + data_name + " found but " + data_name_from + " is not defined in the study configuration !\n")
   else:
     if data_config[data_name_from] not in FromNumpyList[data_config[data_name_type]]:
-      logging.fatal(data_name_from + " of " + data_name + " defined in the study configuration does not have a correct value : " + str(data_config[data_name_from]) 
-                    + "\n You can have : " + str(FromNumpyList[data_config[data_name_type]]))
-      sys.exit(1)
+      raise ValueError("\n\n" + data_name_from + " of " + data_name + " defined in the study configuration does not have a correct value : " + str(data_config[data_name_from]) 
+                    + "\n You can have : " + str(FromNumpyList[data_config[data_name_type]]) + "\n")
 
   # Check des fichiers
   from_type = data_config["From"]
@@ -231,9 +200,7 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
     else:
       check_file_name = data_config["Data"]
     if not os.path.exists(check_file_name):
-      logging.fatal("A script file cannot be found")
-      logging.fatal("File is %s" % check_file_name)
-      sys.exit(1)
+      raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
   elif from_type == "FunctionDict":
     FunctionDict = data_config["Data"]
     for FunctionName in FunctionDict["Function"]:
@@ -243,9 +210,7 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
       else:
         check_file_name = FunctionDict["Script"][FunctionName]
       if not os.path.exists(check_file_name):
-        logging.fatal("A script file cannot be found")
-        logging.fatal("File is %s" % check_file_name)
-        sys.exit(1)
+        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
   elif from_type == "ScriptWithSwitch":
     ScriptWithSwitch = data_config["Data"]
     for FunctionName in ScriptWithSwitch["Function"]:
@@ -255,9 +220,7 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
       else:
         check_file_name = ScriptWithSwitch["Script"][FunctionName]
       if not os.path.exists(check_file_name):
-        logging.fatal("A script file cannot be found")
-        logging.fatal("File is %s" % check_file_name)
-        sys.exit(1)
+        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
   elif from_type == "ScriptWithFunctions":
     ScriptWithFunctions = data_config["Data"]
     for FunctionName in ScriptWithFunctions["Function"]:
@@ -267,6 +230,4 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
       else:
         check_file_name = ScriptWithFunctions["Script"][FunctionName]
       if not os.path.exists(check_file_name):
-        logging.fatal("A script file cannot be found")
-        logging.fatal("File is %s" % check_file_name)
-        sys.exit(1)
+        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))

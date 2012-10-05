@@ -42,9 +42,7 @@ def create_yacs_proc(study_config):
     catalogAd = runtime.loadCatalog("proc", os.environ["ADAO_ROOT_DIR"] + "/share/salome/resources/adao/ADAOSchemaCatalog.xml")
     runtime.addCatalog(catalogAd)
   except:
-    logging.fatal("Exception in loading DataAssim YACS catalog")
-    traceback.print_exc()
-    sys.exit(1)
+    raise ValueError("Exception in loading ADAO YACS Schema catalog")
 
   # Starting creating proc
   proc = runtime.createProc("proc")
@@ -407,21 +405,17 @@ def create_yacs_proc(study_config):
     try:
       script_str= open(script_filename, 'r')
     except:
-      logging.fatal("Exception in opening function script file : " + script_filename)
-      traceback.print_exc()
-      sys.exit(1)
+      raise ValueError("Exception in opening function script file: " + script_filename)
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os \n"
-    if base_repertory != "":
-      node_script += "filepath = \"" + base_repertory + "\"\n"
-    else:
-      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += script_str.read()
     opt_script_nodeOO.setScript(node_script)
     opt_script_nodeOO.edAddInputPort("computation", t_param_input)
     opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
   elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
     # Get script
     ScriptWithSwitch = data_config["Data"]
@@ -430,7 +424,6 @@ def create_yacs_proc(study_config):
       # We currently support only one file
       script_filename = ScriptWithSwitch["Script"][FunctionName]
       break
-
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
     if repertory:
@@ -438,15 +431,10 @@ def create_yacs_proc(study_config):
     try:
       script_str= open(script_filename, 'r')
     except:
-      logging.fatal("Exception in opening function script file : " + script_filename)
-      traceback.print_exc()
-      sys.exit(1)
+      raise ValueError("Exception in opening function script file: " + script_filename)
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os \n"
-    if base_repertory != "":
-      node_script += "filepath = \"" + base_repertory + "\"\n"
-    else:
-      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += script_str.read()
@@ -469,15 +457,10 @@ def create_yacs_proc(study_config):
     try:
       script_str= open(script_filename, 'r')
     except:
-      logging.fatal("Exception in opening function script file : " + script_filename)
-      traceback.print_exc()
-      sys.exit(1)
+      raise ValueError("Exception in opening function script file: " + script_filename)
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os, numpy, logging\n"
-    if base_repertory != "":
-      node_script += "filepath = \"" + base_repertory + "\"\n"
-    else:
-      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += """# ==============================================\n"""
@@ -561,15 +544,10 @@ def create_yacs_proc(study_config):
       try:
         script_str= open(script_filename, 'r')
       except:
-        logging.fatal("Exception in opening function script file : " + script_filename)
-        traceback.print_exc()
-        sys.exit(1)
+        raise ValueError("Exception in opening function script file: " + script_filename)
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os \n"
-      if base_repertory != "":
-        node_script += "filepath = \"" + base_repertory + "\"\n"
-      else:
-        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
@@ -592,21 +570,17 @@ def create_yacs_proc(study_config):
       try:
         script_str= open(script_filename, 'r')
       except:
-        logging.fatal("Exception in opening function script file : " + script_filename)
-        traceback.print_exc()
-        sys.exit(1)
+        raise ValueError("Exception in opening function script file: " + script_filename)
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os \n"
-      if base_repertory != "":
-        node_script += "filepath = \"" + base_repertory + "\"\n"
-      else:
-        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
       opt_script_nodeEM.setScript(node_script)
       opt_script_nodeEM.edAddInputPort("computation", t_param_input)
       opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+
     elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions":
       # Get script
       ScriptWithFunctions = data_config["Data"]
@@ -615,7 +589,6 @@ def create_yacs_proc(study_config):
         # We currently support only one file
         script_filename = ScriptWithFunctions["Script"][FunctionName]
         break
-
       # We create a new pyscript node
       opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
       if repertory:
@@ -623,15 +596,10 @@ def create_yacs_proc(study_config):
       try:
         script_str= open(script_filename, 'r')
       except:
-        logging.fatal("Exception in opening function script file : " + script_filename)
-        traceback.print_exc()
-        sys.exit(1)
+        raise ValueError("Exception in opening function script file: " + script_filename)
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os, numpy, logging\n"
-      if base_repertory != "":
-        node_script += "filepath = \"" + base_repertory + "\"\n"
-      else:
-        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
@@ -851,15 +819,10 @@ def create_yacs_proc(study_config):
       try:
         analysis_file = open(analysis_file_name, 'r')
       except:
-        logging.fatal("Exception in opening analysis file : " + str(analysis_config["Data"]))
-        traceback.print_exc()
-        sys.exit(1)
+        raise ValueError("Exception in opening analysis file: " + str(analysis_config["Data"]))
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os \n"
-      if base_repertory != "":
-        node_script += "filepath = \"" + base_repertory + "\"\n"
-      else:
-        node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filepath = \"" + os.path.dirname(analysis_file_name) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += default_script
