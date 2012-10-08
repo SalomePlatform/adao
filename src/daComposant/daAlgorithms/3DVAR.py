@@ -255,16 +255,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la covariance d'analyse
         # ---------------------------------
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            Ht = H["Tangent"].asMatrix(ValueForMethodForm = Xa)
+            Ht = Ht.reshape(-1,len(Xa.A1)) # ADAO
             HessienneI = []
             nb = len(Xini)
             for i in range(nb):
                 _ee    = numpy.matrix(numpy.zeros(nb)).T
                 _ee[i] = 1.
-                _HmEE  = Hm(_ee)
-                _HmEE  = numpy.asmatrix(numpy.ravel( _HmEE )).T
-                HessienneI.append( ( BI*_ee + Ha((Xa,RI*_HmEE)) ).A1 )
+                _HtEE  = Ht * _ee
+                _HtEE  = numpy.asmatrix(numpy.ravel( _HtEE )).T
+                HessienneI.append( ( BI*_ee + Ha((Xa,RI*_HtEE)) ).A1 )
             HessienneI = numpy.matrix( HessienneI )
-            A = HessienneI.I
+            if numpy.alltrue(numpy.isfinite( HessienneI )):
+                A = HessienneI.I
+            else:
+                raise ValueError("The 3DVAR a posteriori covariance matrix A can not be calculated. Your problem is perhaps too non-linear?")
             if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
                 try:
                     L = numpy.linalg.cholesky( A )
