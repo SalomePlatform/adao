@@ -84,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2"]
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency"]
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
@@ -266,10 +266,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _HtEE  = numpy.asmatrix(numpy.ravel( _HtEE )).T
                 HessienneI.append( ( BI*_ee + Ha((Xa,RI*_HtEE)) ).A1 )
             HessienneI = numpy.matrix( HessienneI )
-            if numpy.alltrue(numpy.isfinite( HessienneI )):
-                A = HessienneI.I
-            else:
-                raise ValueError("The 3DVAR a posteriori covariance matrix A can not be calculated. Your problem is perhaps too non-linear?")
+            A = HessienneI.I
             if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
                 try:
                     L = numpy.linalg.cholesky( A )
@@ -289,6 +286,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SigmaObs2"].store( float( (d.T * (Y-Hm(Xa))) / R.trace() ) )
+        if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/len(d) ) )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)

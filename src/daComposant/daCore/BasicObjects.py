@@ -141,8 +141,9 @@ class Algorithm:
             - CurrentState : état courant lors d'itérations
             - Analysis : l'analyse
             - Innovation : l'innovation : d = Y - H Xb
-            - SigmaObs2 : correction optimale des erreurs d'observation
-            - SigmaBck2 : correction optimale des erreurs d'ébauche
+            - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
+            - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
+            - MahalanobisConsistency : indicateur de consistance des covariances
             - OMA : Observation moins Analysis : Y - Xa
             - OMB : Observation moins Background : Y - Xb
             - AMB : Analysis moins Background : Xa - Xb
@@ -167,6 +168,7 @@ class Algorithm:
         self.StoredVariables["Innovation"]               = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["SigmaObs2"]                = Persistence.OneScalar(name = "SigmaObs2")
         self.StoredVariables["SigmaBck2"]                = Persistence.OneScalar(name = "SigmaBck2")
+        self.StoredVariables["MahalanobisConsistency"]   = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                      = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                      = Persistence.OneVector(name = "OMB")
         self.StoredVariables["BMA"]                      = Persistence.OneVector(name = "BMA")
