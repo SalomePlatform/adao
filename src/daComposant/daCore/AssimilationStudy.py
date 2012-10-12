@@ -193,8 +193,7 @@ class AssimilationStudy:
                 self.__Y = numpy.matrix( asVector,    numpy.float ).T
         elif asPersistentVector is not None:
             if type( asPersistentVector ) is list or type( asPersistentVector ) is tuple:
-                from Persistence import OneVector
-                self.__Y = OneVector("Observation", basetype=numpy.array)
+                self.__Y = Persistence.OneVector("Observation", basetype=numpy.array)
                 for y in asPersistentVector:
                     self.__Y.store( y )
             else:

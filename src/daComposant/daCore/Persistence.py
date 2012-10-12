@@ -382,7 +382,6 @@ class Persistence:
             persist  = False,
             pause    = True,
             ):
-        import os
         #
         # Vérification de la disponibilité du module Gnuplot
         try:
@@ -497,7 +496,6 @@ class Persistence:
         """
         if self.__dynamic and len(self.__values) < 2: return 0
         #
-        import os
         self.__g('set title  "'+str(self.__title).encode('ascii','replace'))
         Steps = range(len(self.__values))
         self.__g.plot( self.__gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
@@ -621,7 +619,6 @@ class Persistence:
                          attendant un Return
                          Par défaut, pause = True
         """
-        import os
         #
         # Vérification de la disponibilité du module Gnuplot
         try:

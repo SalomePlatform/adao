@@ -97,7 +97,7 @@ class PathManagement:
     Mise à jour du path système pour les répertoires d'outils
     """
     def __init__(self):
-        import os, sys
+        import sys
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         self.__paths = {}
         self.__paths["daExternals"] = os.path.join(parent,"daExternals")
