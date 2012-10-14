@@ -374,6 +374,26 @@ def create_yacs_proc(study_config):
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
 
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction" and key == "ObservationOperator":
+         ScriptWithOneFunction = data_config["Data"]
+         for FunctionName in ScriptWithOneFunction["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction" and key == "EvolutionModel":
+         ScriptWithOneFunction = data_config["Data"]
+         for FunctionName in ScriptWithOneFunction["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory:
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
   ADAO_Case.edAddChild(compute_bloc)
@@ -441,6 +461,7 @@ def create_yacs_proc(study_config):
     opt_script_nodeOO.setScript(node_script)
     opt_script_nodeOO.edAddInputPort("computation", t_param_input)
     opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
   elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions":
     # Get script
     ScriptWithFunctions = data_config["Data"]
@@ -520,6 +541,84 @@ def create_yacs_proc(study_config):
     opt_script_nodeOO.setScript(node_script)
     opt_script_nodeOO.edAddInputPort("computation", t_param_input)
     opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
+  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction":
+    # Get script
+    ScriptWithOneFunction = data_config["Data"]
+    script_filename = ""
+    for FunctionName in ScriptWithOneFunction["Function"]:
+      # We currently support only one file
+      script_filename = ScriptWithOneFunction["Script"][FunctionName]
+      break
+
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory:
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      raise ValueError("Exception in opening function script file: " + script_filename)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os, numpy, logging\n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += """# ==============================================\n"""
+    node_script += script_str.read()
+    node_script += """# ==============================================\n"""
+    node_script += """__method = None\n"""
+    node_script += """for param in computation["specificParameters"]:\n"""
+    node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+    node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
+    node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
+    node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
+    node_script += """#\n"""
+    node_script += """try:\n"""
+    node_script += """    DirectOperator\n"""
+    node_script += """except NameError:\n"""
+    node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
+    node_script += """import ApproximatedDerivatives\n"""
+    node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
+    node_script += """    Function  = DirectOperator,\n"""
+    node_script += """    increment = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+    node_script += """    )\n"""
+    node_script += """#\n"""
+    node_script += """__data = []\n"""
+    node_script += """if __method == "Direct":\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Direct computation")\n"""
+    node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __data = FDA.DirectOperator(numpy.matrix( __Xcurrent ).T)\n"""
+    node_script += """#\n"""
+    node_script += """if __method == "Tangent":\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Tangent computation")\n"""
+    node_script += """  __Xcurrent  = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __dXcurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  __data = FDA.TangentOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __dXcurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """if __method == "Adjoint":\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Adjoint computation")\n"""
+    node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __Ycurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  __data = FDA.AdjointOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ycurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """logging.debug("ComputationFunctionNode: Formatting the output")\n"""
+    node_script += """it = numpy.ravel(__data)\n"""
+    node_script += """outputValues = [[[[]]]]\n"""
+    node_script += """for val in it:\n"""
+    node_script += """  outputValues[0][0][0].append(val)\n"""
+    node_script += """#\n"""
+    node_script += """result = {}\n"""
+    node_script += """result["outputValues"]        = outputValues\n"""
+    node_script += """result["specificOutputInfos"] = []\n"""
+    node_script += """result["returnCode"]          = 0\n"""
+    node_script += """result["errorMessage"]        = ""\n"""
+    node_script += """# ==============================================\n"""
+    #
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
   else:
     factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
     opt_script_nodeOO = factory_opt_script_node.cloneNode("FakeFunctionNode")
@@ -554,6 +653,7 @@ def create_yacs_proc(study_config):
       opt_script_nodeEM.setScript(node_script)
       opt_script_nodeEM.edAddInputPort("computation", t_param_input)
       opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+
     elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
       # Get script
       ScriptWithSwitch = data_config["Data"]
@@ -658,6 +758,82 @@ def create_yacs_proc(study_config):
       opt_script_nodeEM.setScript(node_script)
       opt_script_nodeEM.edAddInputPort("computation", t_param_input)
       opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+
+    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction":
+      # Get script
+      ScriptWithOneFunction = data_config["Data"]
+      script_filename = ""
+      for FunctionName in ScriptWithOneFunction["Function"]:
+        # We currently support only one file
+        script_filename = ScriptWithOneFunction["Script"][FunctionName]
+        break
+      # We create a new pyscript node
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory:
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        raise ValueError("Exception in opening function script file: " + script_filename)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os, numpy, logging\n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      node_script += """# ==============================================\n"""
+      node_script += """__method = None\n"""
+      node_script += """for param in computation["specificParameters"]:\n"""
+      node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+      node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
+      node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
+      node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
+      node_script += """#\n"""
+      node_script += """try:\n"""
+      node_script += """    DirectOperator\n"""
+      node_script += """except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
+      node_script += """import ApproximatedDerivatives\n"""
+      node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
+      node_script += """    Function  = DirectOperator,\n"""
+      node_script += """    increment = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+      node_script += """    )\n"""
+      node_script += """#\n"""
+      node_script += """__data = []\n"""
+      node_script += """if __method == "Direct":\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Direct computation")\n"""
+      node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __data = FDA.DirectOperator(numpy.matrix( __Xcurrent ).T)\n"""
+      node_script += """#\n"""
+      node_script += """if __method == "Tangent":\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Tangent computation")\n"""
+      node_script += """  __Xcurrent  = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __dXcurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  __data = FDA.TangentOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __dXcurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """if __method == "Adjoint":\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Adjoint computation")\n"""
+      node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __Ycurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  __data = FDA.AdjointOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ycurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """logging.debug("ComputationFunctionNode: Formatting the output")\n"""
+      node_script += """it = numpy.ravel(__data)\n"""
+      node_script += """outputValues = [[[[]]]]\n"""
+      node_script += """for val in it:\n"""
+      node_script += """  outputValues[0][0][0].append(val)\n"""
+      node_script += """#\n"""
+      node_script += """result = {}\n"""
+      node_script += """result["outputValues"]        = outputValues\n"""
+      node_script += """result["specificOutputInfos"] = []\n"""
+      node_script += """result["returnCode"]          = 0\n"""
+      node_script += """result["errorMessage"]        = ""\n"""
+      node_script += """# ==============================================\n"""
+      #
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+
     else:
       factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
       opt_script_nodeEM = factory_opt_script_node.cloneNode("FakeFunctionNode")

@@ -158,6 +158,8 @@ class AdaoGenerator(PythonGenerator):
       data = self.dictMCVal[search_type + "SCRIPTWITHSWITCH_DATA__SCRIPTWITHSWITCH_FILE"]
     elif from_type == "ScriptWithFunctions":
       data = self.dictMCVal[search_type + "SCRIPTWITHFUNCTIONS_DATA__SCRIPTWITHFUNCTIONS_FILE"]
+    elif from_type == "ScriptWithOneFunction":
+      data = self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__SCRIPTWITHONEFUNCTION_FILE"]
     elif from_type == "FunctionDict":
       data = self.dictMCVal[search_type + "FUNCTIONDICT_DATA__FUNCTIONDICT_FILE"]
     else:
@@ -196,6 +198,20 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_config['Type'] = 'Function'\n"
       self.text_da += data_name + "_config['From'] = 'ScriptWithFunctions'\n"
       self.text_da += data_name + "_config['Data'] = " + data_name + "_ScriptWithFunctions\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
+
+    if from_type == "ScriptWithOneFunction":
+      self.text_da += data_name + "_ScriptWithOneFunction = {}\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['Script'] = {}\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['Script']['Direct'] = '"  + data + "'\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['Script']['Tangent'] = '" + data + "'\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['Script']['Adjoint'] = '" + data + "'\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['DifferentialIncrement'] = " + str(float(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__DifferentialIncrement"])) + "\n"
+      self.text_da += data_name + "_config = {}\n"
+      self.text_da += data_name + "_config['Type'] = 'Function'\n"
+      self.text_da += data_name + "_config['From'] = 'ScriptWithOneFunction'\n"
+      self.text_da += data_name + "_config['Data'] = " + data_name + "_ScriptWithOneFunction\n"
       self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
     if from_type == "FunctionDict":

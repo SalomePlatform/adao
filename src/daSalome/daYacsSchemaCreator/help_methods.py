@@ -231,3 +231,13 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
         check_file_name = ScriptWithFunctions["Script"][FunctionName]
       if not os.path.exists(check_file_name):
         raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
+  elif from_type == "ScriptWithOneFunction":
+    ScriptWithOneFunction = data_config["Data"]
+    for FunctionName in ScriptWithOneFunction["Function"]:
+      check_file_name = ""
+      if repertory_check:
+        check_file_name = os.path.join(repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName]))
+      else:
+        check_file_name = ScriptWithOneFunction["Script"][FunctionName]
+      if not os.path.exists(check_file_name):
+        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
