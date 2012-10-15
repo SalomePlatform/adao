@@ -258,7 +258,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Ht = H["Tangent"].asMatrix(ValueForMethodForm = Xa)
             Ht = Ht.reshape(-1,len(Xa.A1)) # ADAO
             HessienneI = []
-            nb = len(Xini)
+            nb = len(Xa.A1)
             for i in range(nb):
                 _ee    = numpy.matrix(numpy.zeros(nb)).T
                 _ee[i] = 1.
@@ -267,6 +267,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 HessienneI.append( ( BI*_ee + Ha((Xa,RI*_HtEE)) ).A1 )
             HessienneI = numpy.matrix( HessienneI )
             A = HessienneI.I
+            if min(A.shape) != max(A.shape):
+                raise ValueError("The 3DVAR a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator."%str(A.shape))
             if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
                 try:
                     L = numpy.linalg.cholesky( A )

@@ -109,6 +109,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             A = B - K * Hm * B
+            if min(A.shape) != max(A.shape):
+                raise ValueError("The 3DVAR a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator."%str(A.shape))
             if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
                 try:
                     L = numpy.linalg.cholesky( A )
