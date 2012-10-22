@@ -21,9 +21,10 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Définit les outils généraux élémentaires.
+    Classe principale pour la préparation, la réalisation et la restitution de
+    calculs d'assimilation de données.
     
-    Ce module est destiné à etre appelée par AssimilationStudy pour constituer
+    Ce module est destiné à être appelé par AssimilationStudy pour constituer
     les objets élémentaires de l'étude.
 """
 __author__ = "Jean-Philippe ARGAUD"

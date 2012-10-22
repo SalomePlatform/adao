@@ -283,9 +283,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.ravel(Y - Hm(Xa)) )
+            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(Hm(Xa)) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
