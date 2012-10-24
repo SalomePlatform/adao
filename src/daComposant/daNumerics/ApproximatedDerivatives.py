@@ -41,7 +41,7 @@ class FDApproximation:
     centrées si le booléen "centeredDF" est vrai.
     """
     def __init__(self, Function = None, centeredDF = False, increment = 0.01, dX = None):
-        self.DirectOperator = Function
+        self.__userFunction = Function
         self.__centeredDF = bool(centeredDF)
         if float(increment) <> 0.:
             self.__increment  = float(increment)
@@ -51,6 +51,15 @@ class FDApproximation:
             self.__dX     = None
         else:
             self.__dX     = numpy.asmatrix(numpy.ravel( dX )).T
+
+    # ---------------------------------------------------------
+    def DirectOperator(self, X ):
+        """
+        Calcul du direct à l'aide de la fonction fournie.
+        """
+        _X = numpy.asmatrix(numpy.ravel( X )).T
+        _HX  = self.__userFunction( _X )
+        return numpy.ravel( _HX )
 
     # ---------------------------------------------------------
     def TangentMatrix(self, X ):
@@ -100,85 +109,85 @@ class FDApproximation:
             #
             # Boucle de calcul des colonnes de la Jacobienne
             # ----------------------------------------------
-            Jacobienne  = []
+            _Jacobienne  = []
             for i in range( len(_dX) ):
-                X_plus_dXi     = numpy.array( _X.A1, dtype=float )
-                X_plus_dXi[i]  = _X[i] + _dX[i]
-                X_moins_dXi    = numpy.array( _X.A1, dtype=float )
-                X_moins_dXi[i] = _X[i] - _dX[i]
+                _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                _X_plus_dXi[i]  = _X[i] + _dX[i]
+                _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
+                _X_moins_dXi[i] = _X[i] - _dX[i]
                 #
-                HX_plus_dXi  = self.DirectOperator( X_plus_dXi )
-                HX_moins_dXi = self.DirectOperator( X_moins_dXi )
+                _HX_plus_dXi  = self.DirectOperator( _X_plus_dXi )
+                _HX_moins_dXi = self.DirectOperator( _X_moins_dXi )
                 #
-                HX_Diff = ( HX_plus_dXi - HX_moins_dXi ) / (2.*_dX[i])
+                _HX_Diff = numpy.ravel( _HX_plus_dXi - _HX_moins_dXi ) / (2.*_dX[i])
                 #
-                Jacobienne.append( HX_Diff )
+                _Jacobienne.append( _HX_Diff )
             #
         else:
             #
             # Boucle de calcul des colonnes de la Jacobienne
             # ----------------------------------------------
-            HX_plus_dX = []
+            _HX_plus_dX = []
             for i in range( len(_dX) ):
-                X_plus_dXi    = numpy.array( _X.A1, dtype=float )
-                X_plus_dXi[i] = _X[i] + _dX[i]
+                _X_plus_dXi    = numpy.array( _X.A1, dtype=float )
+                _X_plus_dXi[i] = _X[i] + _dX[i]
                 #
-                HX_plus_dXi = self.DirectOperator( X_plus_dXi )
+                _HX_plus_dXi = self.DirectOperator( _X_plus_dXi )
                 #
-                HX_plus_dX.append( HX_plus_dXi )
+                _HX_plus_dX.append( _HX_plus_dXi )
             #
             # Calcul de la valeur centrale
             # ----------------------------
-            HX = self.DirectOperator( _X )
+            _HX = self.DirectOperator( _X )
             #
             # Calcul effectif de la Jacobienne par différences finies
             # -------------------------------------------------------
-            Jacobienne = []
+            _Jacobienne = []
             for i in range( len(_dX) ):
-                Jacobienne.append( numpy.ravel(( HX_plus_dX[i] - HX ) / _dX[i]) )
+                _Jacobienne.append( numpy.ravel(( _HX_plus_dX[i] - _HX ) / _dX[i]) )
         #
-        Jacobienne = numpy.matrix( numpy.vstack( Jacobienne ) ).T
+        _Jacobienne = numpy.matrix( numpy.vstack( _Jacobienne ) ).T
         logging.debug("  == Fin du calcul de la Jacobienne")
         #
-        return Jacobienne
+        return _Jacobienne
 
     # ---------------------------------------------------------
     def TangentOperator(self, (X, dX) ):
         """
         Calcul du tangent à l'aide de la Jacobienne.
         """
-        Jacobienne = self.TangentMatrix( X )
+        _Jacobienne = self.TangentMatrix( X )
         if dX is None or len(dX) == 0:
             #
             # Calcul de la forme matricielle si le second argument est None
             # -------------------------------------------------------------
-            return Jacobienne
+            return _Jacobienne
         else:
             #
             # Calcul de la valeur linéarisée de H en X appliqué à dX
             # ------------------------------------------------------
             _dX = numpy.asmatrix(numpy.ravel( dX )).T
-            HtX = numpy.dot(Jacobienne, _dX)
-            return HtX.A1
+            _HtX = numpy.dot(_Jacobienne, _dX)
+            return _HtX.A1
 
     # ---------------------------------------------------------
     def AdjointOperator(self, (X, Y) ):
         """
         Calcul de l'adjoint à l'aide de la Jacobienne.
         """
-        JacobienneT = self.TangentMatrix( X ).T
+        _JacobienneT = self.TangentMatrix( X ).T
         if Y is None or len(Y) == 0:
             #
             # Calcul de la forme matricielle si le second argument est None
             # -------------------------------------------------------------
-            return JacobienneT
+            return _JacobienneT
         else:
             #
             # Calcul de la valeur de l'adjoint en X appliqué à Y
             # --------------------------------------------------
             _Y = numpy.asmatrix(numpy.ravel( Y )).T
-            HaY = numpy.dot(JacobienneT, _Y)
-            return HaY.A1
+            _HaY = numpy.dot(_JacobienneT, _Y)
+            return _HaY.A1
 
 # ==============================================================================
 #
@@ -221,7 +230,6 @@ if __name__ == "__main__":
     print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(3,3+2*len(X0))) )
     print
     del FDA
- 
     FDA = FDApproximation( test1, centeredDF=True )
     print "H(X)       =",   FDA.DirectOperator( X0 )
     print "Tg matrice =\n", FDA.TangentMatrix( X0 )
@@ -230,6 +238,8 @@ if __name__ == "__main__":
     print
     del FDA
 
+    print "=============="
+    print
     X0 = range(5)
  
     FDA = FDApproximation( test1 )
@@ -239,3 +249,49 @@ if __name__ == "__main__":
     print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
     print
     del FDA
+    FDA = FDApproximation( test1, centeredDF=True )
+    print "H(X)       =",   FDA.DirectOperator( X0 )
+    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
+    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
+    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
+    print
+    del FDA
+
+    print "=============="
+    print
+    X0 = numpy.arange(3)
+ 
+    FDA = FDApproximation( test1 )
+    print "H(X)       =",   FDA.DirectOperator( X0 )
+    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
+    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
+    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
+    print
+    del FDA
+    FDA = FDApproximation( test1, centeredDF=True )
+    print "H(X)       =",   FDA.DirectOperator( X0 )
+    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
+    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
+    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
+    print
+    del FDA
+
+    print "=============="
+    print
+    X0 = numpy.asmatrix(numpy.arange(4)).T
+ 
+    FDA = FDApproximation( test1 )
+    print "H(X)       =",   FDA.DirectOperator( X0 )
+    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
+    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
+    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
+    print
+    del FDA
+    FDA = FDApproximation( test1, centeredDF=True )
+    print "H(X)       =",   FDA.DirectOperator( X0 )
+    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
+    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
+    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
+    print
+    del FDA
+
