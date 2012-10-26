@@ -50,7 +50,7 @@ FromNumpyList = {}
 FromNumpyList["Vector"]      = ["String", "Script"]
 FromNumpyList["VectorSerie"] = ["String", "Script"]
 FromNumpyList["Matrix"]      = ["String", "Script"]
-FromNumpyList["Function"]    = ["ScriptWithFunctions", "ScriptWithOneFunction", "ScriptWithSwitch", "FunctionDict"]
+FromNumpyList["Function"]    = ["ScriptWithOneFunction", "ScriptWithFunctions", "ScriptWithSwitch", "FunctionDict"]
 FromNumpyList["Dict"]        = ["Script"]
 
 # -- Infos from daAlgorithms --
@@ -134,21 +134,21 @@ AlgoType["QuantileRegression"] = "Optim"
 # catalogue Eficas
 
 # Basic data types
-BasicDataInputs = ["String", "Script", "ScriptWithFunctions", "ScriptWithOneFunction", "ScriptWithSwitch", "FunctionDict"]
+BasicDataInputs = ["String", "Script", "ScriptWithOneFunction", "ScriptWithFunctions", "ScriptWithSwitch", "FunctionDict"]
 
 # Data input dict
 DataTypeDict = {}
 DataTypeDict["Vector"]      = ["String", "Script"]
 DataTypeDict["VectorSerie"] = ["String", "Script"]
 DataTypeDict["Matrix"]      = ["String", "Script"]
-DataTypeDict["Function"]    = ["ScriptWithFunctions", "ScriptWithOneFunction", "ScriptWithSwitch", "FunctionDict"]
+DataTypeDict["Function"]    = ["ScriptWithOneFunction", "ScriptWithFunctions", "ScriptWithSwitch", "FunctionDict"]
 DataTypeDict["Dict"]        = ["Script"]
 
 DataTypeDefaultDict = {}
 DataTypeDefaultDict["Vector"]      = "Script"
 DataTypeDefaultDict["VectorSerie"] = "Script"
 DataTypeDefaultDict["Matrix"]      = "Script"
-DataTypeDefaultDict["Function"]    = "ScriptWithFunctions"
+DataTypeDefaultDict["Function"]    = "ScriptWithOneFunction"
 DataTypeDefaultDict["Dict"]        = "Script"
 
 # Assimilation data input
