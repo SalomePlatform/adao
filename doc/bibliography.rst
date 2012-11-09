@@ -20,6 +20,12 @@ Bibliography
 
 .. [Talagrand97] Talagrand O., *Assimilation of Observations, an Introduction*, Journal of the Meteorological Society of Japan, 75(1B), pp.191-209, 1997
 
-.. [WikipediaDA] Wikipedia/Data_assimilation: http://en.wikipedia.org/wiki/Data_assimilation
+.. [WikipediaDA] Wikipedia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
+
+.. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
+
+.. [WikipediaPSO] Wikipedia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
+
+.. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
 
 .. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, Vol 23(4), pp.550-560, 1997

@@ -451,7 +451,7 @@ here for convenience::
         #
         return numpy.array( HX )
     #
-    def TangentH( X, increment = 0.01, centeredDF = False ):
+    def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
         """ Tangent operator (Jacobian) calculated by finite differences """
         #
         dX  = increment * X.A1
@@ -493,15 +493,21 @@ here for convenience::
         #
         return Jacobian
     #
+    def TangentH( X ):
+        """ Tangent operator """
+        _X = numpy.asmatrix(X).flatten().T
+        HtX = self.TangentHMatrix( _X ) * _X
+        return HtX.A1
+    #
     def AdjointH( (X, Y) ):
         """ Ajoint operator """
         #
-        Jacobian = TangentH( X, centeredDF = False )
+        Jacobian = TangentHMatrix( X, centeredDF = False )
         #
         Y = numpy.asmatrix(Y).flatten().T
-        HtY = numpy.dot(Jacobian, Y)
+        HaY = numpy.dot(Jacobian, Y)
         #
-        return HtY.A1
+        return HaY.A1
 
 We insist on the fact that these non-linear operator ``"FunctionH"``, tangent
 operator ``"TangentH"`` and adjoint operator ``"AdjointH"`` come from the
@@ -517,8 +523,8 @@ and the adjoint operator named ``"Adjoint"``. The Python script have to retrieve
 an input parameter, found under the key "value", in a variable named
 ``"specificParameters"`` of the SALOME input data and parameters
 ``"computation"`` dictionary variable. If the operator is already linear, the
-``"Direct"`` and ``"Tangent"`` functions are the same, as it is supposed here.
-The following example Python script file named
+``"Direct"`` and ``"Tangent"`` functions are the same, as it can be supposed
+here. The following example Python script file named
 ``Script_ObservationOperator_H.py``, illustrates the case::
 
     import Physical_simulation_functions
@@ -545,6 +551,7 @@ The following example Python script file named
     # ----------------------------------------------------------
     logging.info("ComputationFunctionNode: Loading operator functions")
     FunctionH = Physical_simulation_functions.FunctionH
+    TangentH  = Physical_simulation_functions.TangentH
     AdjointH  = Physical_simulation_functions.AdjointH
     #
     # Executing the possible computations

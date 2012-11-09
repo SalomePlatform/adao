@@ -168,9 +168,9 @@ Execute the YACS case and obtain the results
 .. index:: single: Analysis
 .. index:: single: Innovation
 .. index:: single: APosterioriCovariance
-.. index:: single: OMB
-.. index:: single: BMA
-.. index:: single: OMA
+.. index:: single: OMB (Observation minus Background)
+.. index:: single: BMA (Background minus Analysis)
+.. index:: single: OMA (Observation minus Analysis)
 .. index:: single: CostFunctionJ
 .. index:: single: CostFunctionJo
 .. index:: single: CostFunctionJb
@@ -420,7 +420,7 @@ unused.
     :Minimizer:
       This key allows to choose the optimization minimizer. The default choice
       is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
-      minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear constrained
+      minimizer, see [Byrd95]_ and [Zhu97]_), "TNC" (nonlinear constrained
       minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
       unconstrained minimizer), "NCG" (Newton CG minimizer).
 
@@ -467,7 +467,7 @@ unused.
     :Minimizer:
       This key allows to choose the optimization minimizer. The default choice
       is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
-      minimizer, see [Byrd95] and [Zhu97]), "TNC" (nonlinear constrained
+      minimizer, see [Byrd95]_ and [Zhu97]_), "TNC" (nonlinear constrained
       minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
       unconstrained minimizer), "NCG" (Newton CG minimizer).
 
