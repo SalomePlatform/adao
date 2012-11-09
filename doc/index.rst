@@ -15,21 +15,23 @@ optimal estimate of the inaccessible true value of a system state over time. It
 uses information coming from experimental measurements or observations, and from
 numerical *a priori* models, including information about their errors. Parts of
 the framework are also known under the names of *parameter estimation*, *inverse
-problems*, *bayesian estimation*, *optimal interpolation*, etc. More details can
+problems*, *Bayesian estimation*, *optimal interpolation*, etc. More details can
 be found in the section :ref:`section_theory`.
 
-The documentation of this module is divided in parts. The first one is an
-introduction. The second part briefly introduces data assimilation and concepts.
-The third part describes how to use the module ADAO. The fourth part gives
-examples on ADAO usage. Users interested in quick use of the module can jump to
-this fourth section :ref:`section_examples`, but a valuable use of the module
-requires to read and come back regularly to the third one :ref:`section_using`.
-The last part focuses on advanced usages of the module, how to get more
-information, or how to use it by scripting, without the graphical user interface
-(GUI). 
+The documentation of this module is divided in parts. The first one
+:ref:`section_intro` is an introduction. The second part :ref:`section_theory`
+briefly introduces data assimilation, optimization and concepts. The third part
+:ref:`section_using` describes how to use the module ADAO. The fourth part
+:ref:`section_reference` gives a detailed description of all the ADAO commands
+and keywords. The fifth part :ref:`section_examples` gives examples on ADAO
+usage. Users interested in quick use of the module can jump to this section, but
+a valuable use of the module requires to read and come back regularly to the
+third and fourth ones. The last part :ref:`section_advanced` focuses on advanced
+usages of the module, how to get more information, or how to use it by
+scripting, without the graphical user interface (GUI). 
 
 In all this documentation, we use standard notations of linear algebra, data
-assimilation (as described in [Ide97]) and optimization. In particular, vectors
+assimilation (as described in [Ide97]_) and optimization. In particular, vectors
 are written horizontally or vertically without making difference. Matrices are
 written either normally, or with a condensed notation, consisting in the use of
 a space to separate values and a "``;``" to separate the rows, in a continuous
@@ -44,6 +46,7 @@ Table of contents
    intro
    theory
    using
+   reference
    examples
    advanced
    bibliography
