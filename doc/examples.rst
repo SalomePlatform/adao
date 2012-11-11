@@ -10,6 +10,9 @@ Tutorials on using the ADAO module
 .. |eficas_save| image:: images/eficas_save.png
    :align: middle
    :scale: 50%
+.. |eficas_saveas| image:: images/eficas_saveas.png
+   :align: middle
+   :scale: 50%
 .. |eficas_yacs| image:: images/eficas_yacs.png
    :align: middle
    :scale: 50%
