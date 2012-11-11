@@ -29,10 +29,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
         self.defineRequiredParameter(
-            name     = "CalculateAPosterioriCovariance",
-            default  = False,
-            typecast = bool,
-            message  = "Calcul de la covariance a posteriori",
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "Innovation"]
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
@@ -67,7 +68,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Xn = Xb
         Pn = B
         self.StoredVariables["Analysis"].store( Xn.A1 )
-        if self._parameters["CalculateAPosterioriCovariance"]:
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["APosterioriCovariance"].store( Pn )
         #
         for step in range(duration-1):
@@ -80,8 +81,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Pn = Pn_predicted - K * Hm * Pn_predicted
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )
-            self.StoredVariables["Innovation"].store( d.A1 )
-            if self._parameters["CalculateAPosterioriCovariance"]:
+            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
+            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
