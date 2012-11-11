@@ -26,11 +26,11 @@ Building a simple estimation case with explicit data definition
 ---------------------------------------------------------------
 
 This simple example is a demonstration one, and describes how to set a BLUE
-estimation framework in order to get *weighted least square estimated state* of
-a system from an observation of the state and from an *a priori* knowledge (or
-background) of this state. In other words, we look for the weighted middle
-between the observation and the background vectors. All the numerical values of
-this example are arbitrary.
+estimation framework in order to get *ponderated (or fully weighted) least
+square estimated state* of a system from an observation of the state and from an
+*a priori* knowledge (or background) of this state. In other words, we look for
+the weighted middle between the observation and the background vectors. All the
+numerical values of this example are arbitrary.
 
 Experimental set up
 +++++++++++++++++++
@@ -160,11 +160,15 @@ in the script node is::
     print
 
 The augmented YACS scheme can be saved (overwriting the generated scheme if the
-simple "*Save*" command or button are used, or with a new name). Then,
-classically in YACS, it have to be prepared for run, and then executed. After
-completion, the printing on standard output is available in the "*YACS Container
-Log*", obtained through the right click menu of the "*proc*" window in the YACS
-scheme as shown below:
+simple "*Save*" command or button are used, or with a new name). Ideally, the
+implementation of such post-processing procedure can be done in YACS to test,
+and then entirely saved in one script that can be integrated in the ADAO case by
+using the keyword "*UserPostAnalysis*".
+
+Then, classically in YACS, it have to be prepared for run, and then executed.
+After completion, the printing on standard output is available in the "*YACS
+Container Log*", obtained through the right click menu of the "*proc*" window in
+the YACS scheme as shown below:
 
   .. _yacs_containerlog:
   .. image:: images/yacs_containerlog.png
@@ -236,7 +240,7 @@ The names of the Python variables above are mandatory, in order to define the
 right variables, but the Python script can be bigger and define classes,
 functions, etc. with other names. It shows different ways to define arrays and
 matrices, using list, string (as in Numpy or Octave), Numpy array type or Numpy
-matrix type, and Numpy special functions. All of these syntaxes are valid.
+matrix type, and Numpy special functions. All of these syntax are valid.
 
 After saving this script somewhere in your path (named here "*script.py*" for
 the example), we use the GUI to build the ADAO case. The procedure to fill in
@@ -341,7 +345,7 @@ as previously the hypothesis of uncorrelated errors (that is, a diagonal matrix,
 of size 3x3 because :math:`\mathbf{x}^b` is of lenght 3) and to have the same
 variance of 0.1 for all variables. We get:
 
-    ``B = 0.1 * diagonal( lenght(Xb) )``
+    ``B = 0.1 * diagonal( length(Xb) )``
 
 We suppose that there exist an observation operator :math:`\mathbf{H}`, which
 can be non linear. In real calibration procedure or inverse problems, the
@@ -435,10 +439,7 @@ of the state. It is here defined in an external file named
 conveniently named here ``"FunctionH"`` and ``"AdjointH"``. These functions are
 user ones, representing as programming functions the :math:`\mathbf{H}` operator
 and its adjoint. We suppose these functions are given by the user. A simple
-skeleton is given in the Python script file ``Physical_simulation_functions.py``
-of the ADAO examples standard directory. It can be used in the case only the
-non-linear direct physical simulation exists. The script is partly reproduced
-here for convenience::
+skeleton is given here for convenience::
 
     def FunctionH( XX ):
         """ Direct non-linear simulation operator """
@@ -453,64 +454,9 @@ here for convenience::
         # --------------------------------------> EXAMPLE TO BE REMOVED
         #
         return numpy.array( HX )
-    #
-    def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
-        """ Tangent operator (Jacobian) calculated by finite differences """
-        #
-        dX  = increment * X.A1
-        #
-        if centeredDF:
-            # 
-            Jacobian  = []
-            for i in range( len(dX) ):
-                X_plus_dXi     = numpy.array( X.A1 )
-                X_plus_dXi[i]  = X[i] + dX[i]
-                X_moins_dXi    = numpy.array( X.A1 )
-                X_moins_dXi[i] = X[i] - dX[i]
-                #
-                HX_plus_dXi  = FunctionH( X_plus_dXi )
-                HX_moins_dXi = FunctionH( X_moins_dXi )
-                #
-                HX_Diff = ( HX_plus_dXi - HX_moins_dXi ) / (2.*dX[i])
-                #
-                Jacobian.append( HX_Diff )
-            #
-        else:
-            #
-            HX_plus_dX = []
-            for i in range( len(dX) ):
-                X_plus_dXi    = numpy.array( X.A1 )
-                X_plus_dXi[i] = X[i] + dX[i]
-                #
-                HX_plus_dXi = FunctionH( X_plus_dXi )
-                #
-                HX_plus_dX.append( HX_plus_dXi )
-            #
-            HX = FunctionH( X )
-            #
-            Jacobian = []
-            for i in range( len(dX) ):
-                Jacobian.append( ( HX_plus_dX[i] - HX ) / dX[i] )
-        #
-        Jacobian = numpy.matrix( Jacobian )
-        #
-        return Jacobian
-    #
-    def TangentH( X ):
-        """ Tangent operator """
-        _X = numpy.asmatrix(X).flatten().T
-        HtX = self.TangentHMatrix( _X ) * _X
-        return HtX.A1
-    #
-    def AdjointH( (X, Y) ):
-        """ Ajoint operator """
-        #
-        Jacobian = TangentHMatrix( X, centeredDF = False )
-        #
-        Y = numpy.asmatrix(Y).flatten().T
-        HaY = numpy.dot(Jacobian, Y)
-        #
-        return HaY.A1
+
+We does not need the operators ``"TangentH"`` and ``"AdjointH"`` because they
+will be approximated using ADAO capabilities.
 
 We insist on the fact that these non-linear operator ``"FunctionH"``, tangent
 operator ``"TangentH"`` and adjoint operator ``"AdjointH"`` come from the
@@ -518,85 +464,6 @@ physical knowledge, include the reference physical simulation code and its
 eventual adjoint, and have to be carefully set up by the data assimilation user.
 The errors in or missuses of the operators can not be detected or corrected by
 the data assimilation framework alone.
-
-To operates in the module ADAO, it is required to define for ADAO these
-different types of operators: the (potentially non-linear) standard observation
-operator, named ``"Direct"``, its linearised approximation, named ``"Tangent"``,
-and the adjoint operator named ``"Adjoint"``. The Python script have to retrieve
-an input parameter, found under the key "value", in a variable named
-``"specificParameters"`` of the SALOME input data and parameters
-``"computation"`` dictionary variable. If the operator is already linear, the
-``"Direct"`` and ``"Tangent"`` functions are the same, as it can be supposed
-here. The following example Python script file named
-``Script_ObservationOperator_H.py``, illustrates the case::
-
-    import Physical_simulation_functions
-    import numpy, logging
-    #
-    # -----------------------------------------------------------------------
-    # SALOME input data and parameters: all information are the required input
-    # variable "computation", containing for example:
-    #      {'inputValues': [[[[0.0, 0.0, 0.0]]]],
-    #       'inputVarList': ['adao_default'],
-    #       'outputVarList': ['adao_default'],
-    #       'specificParameters': [{'name': 'method', 'value': 'Direct'}]}
-    # -----------------------------------------------------------------------
-    #
-    # Recovering the type of computation: "Direct", "Tangent" or "Adjoint"
-    # --------------------------------------------------------------------
-    method = ""
-    for param in computation["specificParameters"]:
-        if param["name"] == "method":
-            method = param["value"]
-    logging.info("ComputationFunctionNode: Found method is \'%s\'"%method)
-    #
-    # Loading the H operator functions from external definitions
-    # ----------------------------------------------------------
-    logging.info("ComputationFunctionNode: Loading operator functions")
-    FunctionH = Physical_simulation_functions.FunctionH
-    TangentH  = Physical_simulation_functions.TangentH
-    AdjointH  = Physical_simulation_functions.AdjointH
-    #
-    # Executing the possible computations
-    # -----------------------------------
-    if method == "Direct":
-        logging.info("ComputationFunctionNode: Direct computation")
-        Xcurrent = computation["inputValues"][0][0][0]
-        data = FunctionH(numpy.matrix( Xcurrent ).T)
-    #
-    if method == "Tangent":
-        logging.info("ComputationFunctionNode: Tangent computation")
-        Xcurrent = computation["inputValues"][0][0][0]
-        data = TangentH(numpy.matrix( Xcurrent ).T)
-    #
-    if method == "Adjoint":
-        logging.info("ComputationFunctionNode: Adjoint computation")
-        Xcurrent = computation["inputValues"][0][0][0]
-        Ycurrent = computation["inputValues"][0][0][1]
-        data = AdjointH((numpy.matrix( Xcurrent ).T, numpy.matrix( Ycurrent ).T))
-    #
-    # Formatting the output
-    # ---------------------
-    logging.info("ComputationFunctionNode: Formatting the output")
-    it = data.flat
-    outputValues = [[[[]]]]
-    for val in it:
-      outputValues[0][0][0].append(val)
-    #
-    # Creating the required ADAO variable
-    # -----------------------------------
-    result = {}
-    result["outputValues"]        = outputValues
-    result["specificOutputInfos"] = []
-    result["returnCode"]          = 0
-    result["errorMessage"]        = ""
-
-As output, this script has to define a nested list variable, as shown above with
-the ``"outputValues"`` variable, where the nested levels describe the different
-variables included in the state, then the different possible states at the same
-time, then the different time steps. In this case, because there is only one
-time step and one state, and all the variables are stored together, we only set
-the most inner level of the lists.
 
 In this twin experiments framework, the observation :math:`\mathbf{y}^o` and its
 error covariances matrix :math:`\mathbf{R}` can be generated. It is done in two
@@ -646,7 +513,7 @@ following parameters can be defined in a Python script file named
     }
 
 Finally, it is common to post-process the results, retrieving them after the
-data assimilation phase in order to analyse, print or show them. It requires to
+data assimilation phase in order to analyze, print or show them. It requires to
 use a intermediary Python script file in order to extract these results. The
 following example Python script file named ``Script_UserPostAnalysis.py``,
 illustrates the fact::
@@ -678,7 +545,6 @@ listed here:
 #.      ``Script_BackgroundError_B.py``
 #.      ``Script_Background_xb.py``
 #.      ``Script_ObservationError_R.py``
-#.      ``Script_ObservationOperator_H.py``
 #.      ``Script_Observation_yo.py``
 #.      ``Script_UserPostAnalysis.py``
 
@@ -697,7 +563,9 @@ definition by Python script files. It is entirely similar to the method
 described in the `Building a simple estimation case with external data
 definition by scripts`_ previous section. For each variable to be defined, we
 select the "*Script*" option of the "*FROM*" keyword, which leads to a
-"*SCRIPT_DATA/SCRIPT_FILE*" entry in the tree.
+"*SCRIPT_DATA/SCRIPT_FILE*" entry in the tree. For the "*ObservationOperator*"
+keyword, we choose the "*ScriptWithOneFunction*" form and keep the default
+differential increment.
 
 The other steps to build the ADAO case are exactly the same as in the `Building
 a simple estimation case with explicit data definition`_ previous section.

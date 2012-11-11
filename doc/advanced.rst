@@ -16,12 +16,12 @@ Converting and executing an ADAO command file (JDC) using a shell script
 It is possible to convert and execute an ADAO command file (JDC, or ".comm"
 file) automatically by using a template script containing all the required
 steps. The user has to know where are the main SALOME scripts, and in particular
-the ``runAppli`` one. The directory in which this script resides is symbolicaly
+the ``runAppli`` one. The directory in which this script resides is symbolically
 named ``<SALOME MAIN INSTALLATION DIR>`` and has to be replaced by the good one
 in the template.
 
 When an ADAO command file is build by the ADAO GUI editor and saved, if it is
-named for example "AdaoStudy1.comm", then a compagnon file named "AdaoStudy1.py"
+named for example "AdaoStudy1.comm", then a companion file named "AdaoStudy1.py"
 is automatically created in the same directory. It is named ``<ADAO Python
 file>`` in the template, and it is converted to YACS as an ``<ADAO YACS xml
 scheme>``. After that, it can be executed in console mode using the standard
@@ -97,34 +97,36 @@ to avoid weird difficulties::
         print p.getErrorReport()
 
 This method allows for example to edit the YACS XML scheme in TUI, or to gather
-results for futher use.
+results for further use.
 
-Getting informations on special variables during the ADAO calculation in YACS
+Getting information on special variables during the ADAO calculation in YACS
 -----------------------------------------------------------------------------
 
 Some special variables, used during calculations, can be monitored during the
 ADAO calculation in YACS. These variables can be printed, plotted, saved, etc.
 This can be done using "*observers*", that are scripts associated with one
 variable. In order to use this feature, one has to build scripts using as
-standard inputs (available in the namespace) the variable ``var``. This variable
-is to be used in the same way as for the final ADD object.
+standard inputs (available in the namespace) the variables ``var`` and ``info``.
+The variable ``var`` is to be used in the same way as for the final ADD object,
+that is as a list object through its "*valueserie*" method.
 
 As an example, here is one very simple script used to print the value of one
 monitored variable::
 
-    print "    ---> Value =",var.valueserie(-1)
+    print "    --->",info," Value =",var.valueserie(-1)
 
 Stored in a python file, this script can be associated to each variable
 available in the "*SELECTION*" keyword of the "*Observers*" command:
 "*Analysis*", "*CurrentState*", "*CostFunction*"... The current value of the
 variable will be printed at each step of the optimization or assimilation
-algorithm.
+algorithm. The observers can embed plotting capabilities, storage, printing,
+etc.
 
 Getting more information when running a calculation
 ---------------------------------------------------
 
 When running, useful data and messages are logged. There are two ways to obtain
-theses informations.
+theses information.
 
 The first one, and the preferred way, is to use the built-in variable "*Debug*"
 available in every ADAO case. It is available through the GUI of the module.

@@ -33,7 +33,7 @@ input data, and then generates a complete executable block diagram used in YACS.
 Many variations exist for the definition of input data, but the logical sequence
 remains unchanged.
 
-First of all, the user is considered to know its personnal input data needed to
+First of all, the user is considered to know its personal input data needed to
 set up the data assimilation study. These data can already be available in
 SALOME or not.
 
@@ -42,13 +42,13 @@ SALOME or not.
 #.  **Activate the ADAO module and use the editor GUI,**
 #.  **Build and/or modify the ADAO case and save it,**
 #.  **Export the ADAO case as a YACS scheme,**
-#.  **Modify and supplement the YACS scheme and save it,**
+#.  **Supplement and modify the YACS scheme and save it,**
 #.  **Execute the YACS case and obtain the results.**
 
 Each step will be detailed in the next section.
 
-STEP: Activate the ADAO module and use the editor GUI
------------------------------------------------------
+STEP 1: Activate the ADAO module and use the editor GUI
+-------------------------------------------------------
 
 As always for a module, it has to be activated by choosing the appropriate
 module button (or menu) in the toolbar of SALOME. If there is no SALOME study
@@ -73,11 +73,11 @@ create a new ADAO case, and you will see:
   .. centered::
     **The EFICAS editor for cases definition in module ADAO**
 
-STEP: Build and modify the ADAO case and save it
-------------------------------------------------
+STEP 2: Build and modify the ADAO case and save it
+--------------------------------------------------
 
-To build a case using EFICAS, you have to go through a series of substeps, by
-selecting, at each substep, a keyword and then filling in its value.
+To build a case using EFICAS, you have to go through a series of sub-steps, by
+selecting, at each sub-step, a keyword and then filling in its value.
 
 The structured editor indicates hierarchical types, values or keywords allowed.
 Incomplete or incorrect keywords are identified by a visual error red flag.
@@ -87,7 +87,7 @@ are contextually provided in the editor reserved places.
 
 A new case is set up with the minimal list of commands. All the mandatory
 commands or keywords are already present, none of them can be suppressed.
-Optionnal keywords can be added by choosing them in a list of suggestions of
+Optional keywords can be added by choosing them in a list of suggestions of
 allowed ones for the main command, for example the "*ASSIMILATION_STUDY*"
 command. As an example, one can add an "*AlgorithmParameters*" keyword, as
 described in the last part of the section :ref:`section_examples`.
@@ -111,8 +111,8 @@ used for JDC EFICAS files. This will generate a pair of files describing the
 ADAO case, with the same base name, the first one being completed by a "*.comm*"
 extension and the second one by a "*.py*" extension [#]_.
 
-STEP: Export the ADAO case as a YACS scheme
--------------------------------------------
+STEP 3: Export the ADAO case as a YACS scheme
+---------------------------------------------
 
 When the ADAO case is completed, you have to export it as a YACS scheme [#]_ in
 order to execute the data assimilation calculation. This can be easily done by
@@ -131,10 +131,10 @@ This will lead to automatically generate a YACS scheme, and open the YACS module
 on this scheme. The YACS file, associated with the scheme, will be stored in the
 same directory and with the same base name as the ADAO saved case, only changing
 its extension to "*.xml*". Be careful, *if the XML file name already exist, it
-will be overwriten without prompting for replacing the file*.
+will be overwritten without prompting for replacing the file*.
 
-STEP: Supplement and modify the YACS scheme and save it
--------------------------------------------------------
+STEP 4: Supplement and modify the YACS scheme and save it
+---------------------------------------------------------
 
 .. index:: single: Analysis
 
@@ -146,10 +146,10 @@ calculation schemes. It is recommended to save the modified scheme with a new
 name, in order to preserve the XML file in the case you re-export the ADAO case
 to YACS.
 
-The main supplement needed in the YACS scheme is a postprocessing step. The
+The main supplement needed in the YACS scheme is a post-processing step. The
 evaluation of the results has to be done in the physical context of the
-simulation used by the data assimilation procedure. The postprocessing can be
-provided throught the "*UserPostAnalysis*" ADAO keyword as a script, or can be
+simulation used by the data assimilation procedure. The post-processing can be
+provided through the "*UserPostAnalysis*" ADAO keyword as a script, or can be
 build as YACS nodes using all SALOME possibilities.
 
 The YACS scheme has an "*algoResults*" output port of the computation bloc,
@@ -157,14 +157,14 @@ which gives access to a "*pyobj*" named hereafter "*ADD*", containing all the
 processing results. These results can be obtained by retrieving the named
 variables stored along the calculation. The main is the "*Analysis*" one, that
 can be obtained by the python command (for example in an in-line script node or
-a script provided throught the "*UserPostAnalysis*" keyword)::
+a script provided through the "*UserPostAnalysis*" keyword)::
 
     ADD = algoResults.getAssimilationStudy()
     Analysis = ADD.get("Analysis").valueserie()
 
 "*Analysis*" is a complex object, similar to a list of values calculated at each
 step of data assimilation calculation. In order to get and print the optimal
-data assimilation state evaluation, in script provided throught the
+data assimilation state evaluation, in script provided through the
 "*UserPostAnalysis*" keyword, one can use::
 
     Xa = ADD.get("Analysis").valueserie(-1)
@@ -176,13 +176,13 @@ assimilation or optimization evaluation problem, noted as :math:`\mathbf{x}^a`
 in the section :ref:`section_theory`.
 
 Such command can be used to print results, or to convert these ones to
-structures that can be used in the native or external SALOME postprocessing. A
+structures that can be used in the native or external SALOME post-processing. A
 simple example is given in the section :ref:`section_examples`.
 
-STEP: Execute the YACS case and obtain the results
---------------------------------------------------
+STEP 5: Execute the YACS case and obtain the results
+----------------------------------------------------
 
-The YACS scheme is now complete and can be executed. Parametrisation and
+The YACS scheme is now complete and can be executed. Parametrization and
 execution of a YACS case is fully compliant with the standard way to deal with a
 YACS scheme, and is described in the *YACS module User's Guide*.
 
