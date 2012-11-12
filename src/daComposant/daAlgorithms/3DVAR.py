@@ -176,6 +176,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
+        n0 = self.StoredVariables["CostFunctionJ"].stepnumber()
+        #
         if self._parameters["Minimizer"] == "LBFGSB":
             Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
                 func        = CostFunction,
@@ -238,7 +240,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie() )
+        StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie()[n0:] )
         MinJ    = self.StoredVariables["CostFunctionJ"].valueserie(step = StepMin)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
