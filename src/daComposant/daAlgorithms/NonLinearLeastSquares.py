@@ -88,7 +88,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        #
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -206,7 +205,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
-        n0 = self.StoredVariables["CostFunctionJ"].stepnumber()
+        nbPreviousSteps = self.StoredVariables["CostFunctionJ"].stepnumber()
         #
         if self._parameters["Minimizer"] == "LBFGSB":
             Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
@@ -282,7 +281,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie()[n0:] )
+        StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie()[nbPreviousSteps:] ) + nbPreviousSteps
         MinJ    = self.StoredVariables["CostFunctionJ"].valueserie(step = StepMin)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
@@ -301,9 +300,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.ravel(Y - Hm(Xa)) )
+            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(Hm(Xa)) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         #
