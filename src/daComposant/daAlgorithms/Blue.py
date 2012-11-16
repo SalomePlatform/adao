@@ -110,12 +110,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             A = B - K * Hm * B
             if min(A.shape) != max(A.shape):
-                raise ValueError("The 3DVAR a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator."%str(A.shape))
+                raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
+            if (numpy.diag(A) < 0).any():
+                raise ValueError("The %s a posteriori covariance matrix A has at least one negative value on its diagonal. There is an error in the observation operator, please check it."%(self._name,))
             if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
                 try:
                     L = numpy.linalg.cholesky( A )
                 except:
-                    raise ValueError("The BLUE a posteriori covariance matrix A is not symmetric positive-definite. Check your B and R a priori covariances.")
+                    raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
         # Calculs et/ou stockages supplémentaires
@@ -129,11 +131,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["SigmaObs2"].store( float( (d.T * (Y-Hm*Xa)) / R.trace() ) )
+            if R is not None:
+                TraceR = R.trace()
+            elif self._parameters["R_scalar"] is not None:
+                TraceR =  float(self._parameters["R_scalar"]*Y.size)
+            self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(oma)).T)) ) / TraceR )
         if "SigmaBck2" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SigmaBck2"].store( float( (d.T * Hm * (Xa - Xb))/(Hm * B * Hm.T).trace() ) )
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/len(d) ) )
+            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)

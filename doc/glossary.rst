@@ -44,16 +44,16 @@ Glossary
    SigmaBck2
       Keyword to indicate the Desroziers-Ivanov parameter measuring the
       background part consistency of the data assimilation optimal state
-      estimation.
+      estimation. It can be compared to 1.
 
    SigmaObs2
       Keyword to indicate the Desroziers-Ivanov parameter measuring the
       observation part consistency of the data assimilation optimal state
-      estimation.
+      estimation. It can be compared to 1.
 
    MahalanobisConsistency
       Keyword to indicate the Mahalanobis parameter measuring the consistency of
-      the data assimilation optimal state estimation.
+      the data assimilation optimal state estimation. It can be compared to 1.
 
    analysis
       The optimal state estimation through a data assimilation or optimization

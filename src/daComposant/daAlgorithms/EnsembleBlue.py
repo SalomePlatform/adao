@@ -69,8 +69,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # de la diagonale de R
         # --------------------------------------------------------------------
         DiagonaleR = numpy.diag(R)
-        EnsembleY = numpy.zeros([len(Y),nb_ens])
-        for npar in range(len(DiagonaleR)) : 
+        EnsembleY = numpy.zeros([Y.size,nb_ens])
+        for npar in range(DiagonaleR.size) : 
             bruit = numpy.random.normal(0,DiagonaleR[npar],nb_ens)
             EnsembleY[npar,:] = Y[npar] + bruit
         EnsembleY = numpy.matrix(EnsembleY)
@@ -84,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------------------------------------------------
         if Y.size <= Xb.valueserie(0).size:
             if self._parameters["R_scalar"] is not None:
-                R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)
+                R = self._parameters["R_scalar"] * numpy.eye(Y.size, dtype=numpy.float)
             K  = B * Ha * (Hm * B * Ha + R).I
         else:
             K = (Ha * RI * Hm + BI).I * Ha * RI
