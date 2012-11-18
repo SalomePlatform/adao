@@ -354,10 +354,10 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
     recommended to adapt it the needs on real problems.
 
   ProjectedGradientTolerance
-    This key indicates a limit value, leading to stop successfully the
-    iterative optimization process when all the components of the projected
-    gradient are under this limit. It is only used for constrained algorithms.
-    The default is -1, that is the internal default of each algorithm, and it
+    This key indicates a limit value, leading to stop successfully the iterative
+    optimization process when all the components of the projected gradient are
+    under this limit. It is only used for constrained algorithms. The default is
+    -1, that is the internal default of each algorithm (generally 1.e-5), and it
     is not recommended to change it.
 
   GradientNormTolerance
@@ -410,10 +410,10 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
     recommended to adapt it the needs on real problems.
 
   ProjectedGradientTolerance
-    This key indicates a limit value, leading to stop successfully the
-    iterative optimization process when all the components of the projected
-    gradient are under this limit. It is only used for constrained algorithms.
-    The default is -1, that is the internal default of each algorithm, and it
+    This key indicates a limit value, leading to stop successfully the iterative
+    optimization process when all the components of the projected gradient are
+    under this limit. It is only used for constrained algorithms. The default is
+    -1, that is the internal default of each algorithm (generally 1.e-5), and it
     is not recommended to change it.
 
   GradientNormTolerance
