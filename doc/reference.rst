@@ -350,21 +350,21 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the cost function decreases less than
-    this tolerance at the last step. The default is 10e-7, and it is
-    recommended to adapt it the needs on real problems.
+    this tolerance at the last step. The default is 1.e-7, and it is
+    recommended to adapt it to the needs on real problems.
 
   ProjectedGradientTolerance
     This key indicates a limit value, leading to stop successfully the iterative
     optimization process when all the components of the projected gradient are
-    under this limit. It is only used for constrained algorithms. The default is
-    -1, that is the internal default of each algorithm (generally 1.e-5), and it
+    under this limit. It is only used for constrained minimizers. The default is
+    -1, that is the internal default of each minimizer (generally 1.e-5), and it
     is not recommended to change it.
 
   GradientNormTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the norm of the gradient is under this
-    limit. It is only used for non-constrained algorithms.  The default is
-    10e-5 and it is not recommended to change it.
+    limit. It is only used for non-constrained minimizers.  The default is
+    1.e-5 and it is not recommended to change it.
 
   StoreInternalVariables
     This boolean key allows to store default internal variables, mainly the
@@ -406,21 +406,21 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the cost function decreases less than
-    this tolerance at the last step. The default is 10e-7, and it is
-    recommended to adapt it the needs on real problems.
+    this tolerance at the last step. The default is 1.e-7, and it is
+    recommended to adapt it to the needs on real problems.
 
   ProjectedGradientTolerance
     This key indicates a limit value, leading to stop successfully the iterative
     optimization process when all the components of the projected gradient are
-    under this limit. It is only used for constrained algorithms. The default is
-    -1, that is the internal default of each algorithm (generally 1.e-5), and it
+    under this limit. It is only used for constrained minimizers. The default is
+    -1, that is the internal default of each minimizer (generally 1.e-5), and it
     is not recommended to change it.
 
   GradientNormTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the norm of the gradient is under this
-    limit. It is only used for non-constrained algorithms.  The default is
-    10e-5 and it is not recommended to change it.
+    limit. It is only used for non-constrained minimizers.  The default is
+    1.e-5 and it is not recommended to change it.
 
   StoreInternalVariables
     This boolean key allows to store default internal variables, mainly the
@@ -519,8 +519,8 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the cost function or the surrogate
-    decreases less than this tolerance at the last step. The default is 10e-6,
-    and it is recommended to adapt it the needs on real problems.
+    decreases less than this tolerance at the last step. The default is 1.e-6,
+    and it is recommended to adapt it to the needs on real problems.
 
   StoreInternalVariables
     This boolean key allows to store default internal variables, mainly the
