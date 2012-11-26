@@ -98,6 +98,28 @@ class Persistence:
             if self.__step in scheduler:
                 hook( self, parameters )
 
+    def pop(self, item=None, step=None):
+        """
+        Retire une valeur enregistree. Par defaut, retire par le numero d'item,
+        sinon cherche le step demande et le retire s'il existe. Sans argument,
+        retire le dernier objet enregistre.
+        Attention, la liste des cles "tagkeys" n'est pas mise a jour.
+        """
+        if item is not None:
+            index = int(item)
+            self.__steps.pop(index)
+            self.__values.pop(index)
+            self.__tags.pop(index)
+        elif step is not None:
+            index = int(self.__steps.index(int(step)))
+            self.__steps.pop(index)
+            self.__values.pop(index)
+            self.__tags.pop(index)
+        else:
+            self.__steps.pop()
+            self.__values.pop()
+            self.__tags.pop()
+
     def shape(self):
         """
         Renvoie la taille sous forme numpy du dernier objet stocké. Si c'est un
@@ -1116,6 +1138,10 @@ if __name__ == "__main__":
     print "Les pas de stockage :", OBJET_DE_TEST.keys()
     print "Les valeurs         :", OBJET_DE_TEST.values()
     print "Les paires          :", OBJET_DE_TEST.items()
+    OBJET_DE_TEST.pop(step=1)
+    print "Les valeurs sans la 1:", OBJET_DE_TEST.values()
+    OBJET_DE_TEST.pop(item=2)
+    print "Les valeurs sans la 2:", OBJET_DE_TEST.values()
     del OBJET_DE_TEST
     print
 
