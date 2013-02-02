@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*-coding:iso-8859-1-*-
 #  Copyright (C) 2010-2012 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ import eficasSalome               # Import from EFICAS_SRC
 from InterfaceQT4 import qtEficas # Import from Eficas
 from PyQt4.QtGui  import *        # Import from PyQT
 from PyQt4.QtCore import *        # Import from PyQT
-from PyQt4.QtAssistant import *   # Import from PyQT
+# from PyQt4.QtAssistant import *   # Import from PyQT
 
 from daUtils.adaoEficasEvent import *
 from daUtils.adaoLogger import *
@@ -39,7 +39,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def __init__(self, parent):
         # Configuration de l'installation
-        # Permet Ã  EFICAS de faire ses import correctement
+        # Permet à EFICAS de faire ses import correctement
         my_path = os.path.dirname(os.path.abspath(__file__))
         ADAO_INSTALL_DIR = my_path + "/../daEficas"
         sys.path.insert(0,ADAO_INSTALL_DIR)
@@ -60,7 +60,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# Gestion des Ã©vÃ¨nements provenant des widgets QT d'Eficas
+# Gestion des évènements provenant des widgets QT d'Eficas
 #
 #######
 
@@ -73,11 +73,11 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# MÃ©thodes gÃ©rant les boutons dans SALOME
+# Méthodes gérant les boutons dans SALOME
 #
 #######
 
-# Rq: Utilisation de la mÃ©thode str() pour passer d'un Qstring Ã  un string
+# Rq: Utilisation de la méthode str() pour passer d'un Qstring à un string
 
     def adaofileNew(self, adao_case):
 
@@ -135,7 +135,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# MÃ©thodes auxiliares de gestion du GUI Eficas pour synchronisation
+# Méthodes auxiliares de gestion du GUI Eficas pour synchronisation
 # avec la partie GUI de SALOME
 #
 #######
@@ -161,7 +161,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# MÃ©thodes secondaires permettant de gÃ©rer les observeurs du
+# Méthodes secondaires permettant de gérer les observeurs du
 # GUI d'Eficas
 #
 #######
