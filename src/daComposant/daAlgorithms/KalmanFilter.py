@@ -23,6 +23,7 @@
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
+import numpy
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -36,7 +37,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["APosterioriCovariance", "Innovation"]
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -44,20 +45,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateur d'observation
-        # -----------------------
-        Hm = H["Tangent"].asMatrix(None)
-        Ha = H["Adjoint"].asMatrix(None)
-        #
+        # Opérateurs
+        # ----------
         if B is None:
             raise ValueError("Background error covariance matrix has to be properly defined!")
         if R is None:
             raise ValueError("Observation error covariance matrix has to be properly defined!")
+        Hm = HO["Tangent"].asMatrix(None)
+        Ha = HO["Adjoint"].asMatrix(None)
         #
-        # Opérateur d'évolution
-        # ---------------------
-        Mm = M["Tangent"].asMatrix(None)
-        Mt = M["Adjoint"].asMatrix(None)
+        Mm = EM["Tangent"].asMatrix(None)
+        Mt = EM["Adjoint"].asMatrix(None)
+        #
+        if CM is not None and U is not None:
+            Cm = CM["Tangent"].asMatrix(None)
         #
         # Nombre de pas du Kalman identique au nombre de pas d'observations
         # -----------------------------------------------------------------
@@ -72,10 +73,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["APosterioriCovariance"].store( Pn )
         #
         for step in range(duration-1):
-            Xn_predicted = Mm * Xn
+            if CM is not None and U is not None:
+                if hasattr(U,"store") and len(U)>1:
+                    Xn_predicted = Mm * Xn + Cm * numpy.asmatrix(numpy.ravel( U[step] )).T
+                elif hasattr(U,"store") and len(U)==1:
+                    Xn_predicted = Mm * Xn + Cm * numpy.asmatrix(numpy.ravel( U[0] )).T
+                else:
+                    Xn_predicted = Mm * Xn + Cm * numpy.asmatrix(numpy.ravel( U )).T
+            else:
+                Xn_predicted = Mm * Xn
             Pn_predicted = Mm * Pn * Mt + Q
             #
-            d  = Y.valueserie(step+1) - Hm * Xn_predicted
+            d  = numpy.asmatrix(numpy.ravel( Y[step+1] )).T - Hm * Xn_predicted
             K  = Pn_predicted * Ha * (Hm * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d
             Pn = Pn_predicted - K * Hm * Pn_predicted

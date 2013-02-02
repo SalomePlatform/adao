@@ -87,7 +87,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency"]
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -107,13 +107,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Direct"].appliedTo
-        Ha = H["Adjoint"].appliedInXTo
+        Hm = HO["Direct"].appliedTo
+        Ha = HO["Adjoint"].appliedInXTo
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            HXb = H["AppliedToX"]["HXb"]
+        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+            HXb = HO["AppliedToX"]["HXb"]
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
@@ -240,13 +240,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        StepMin = numpy.argmin( self.StoredVariables["CostFunctionJ"].valueserie()[nbPreviousSteps:] ) + nbPreviousSteps
-        MinJ    = self.StoredVariables["CostFunctionJ"].valueserie(step = StepMin)
+        IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+        MinJ     = self.StoredVariables["CostFunctionJ"][IndexMin]
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         # ----------------------------------------------------------------
         if self._parameters["StoreInternalVariables"]:
-            Minimum = self.StoredVariables["CurrentState"].valueserie(step = StepMin)
+            Minimum = self.StoredVariables["CurrentState"][IndexMin]
         #
         # Obtention de l'analyse
         # ----------------------
@@ -257,9 +257,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la covariance d'analyse
         # ---------------------------------
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
-            HtM = H["Tangent"].asMatrix(ValueForMethodForm = Xa)
+            HtM = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
             HtM = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
-            HaM = H["Adjoint"].asMatrix(ValueForMethodForm = Xa)
+            HaM = HO["Adjoint"].asMatrix(ValueForMethodForm = Xa)
             HaM = HaM.reshape(Xa.size,Y.size) # ADAO & check shape
             HessienneI = []
             nb = Xa.size

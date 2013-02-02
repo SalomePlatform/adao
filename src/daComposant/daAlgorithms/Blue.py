@@ -38,7 +38,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency"]
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -48,13 +48,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Tangent"].asMatrix(None)
-        Ha = H["Adjoint"].asMatrix(None)
+        Hm = HO["Tangent"].asMatrix(None)
+        Ha = HO["Adjoint"].asMatrix(None)
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            HXb = H["AppliedToX"]["HXb"]
+        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+            HXb = HO["AppliedToX"]["HXb"]
         else:
             HXb = Hm * Xb
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T

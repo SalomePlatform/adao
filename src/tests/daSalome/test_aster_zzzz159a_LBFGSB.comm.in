@@ -37,15 +37,15 @@ ASSIMILATION_STUDY(Study_name='aster_zzzz159a_LBFGSB',
                                        STRING=
 """import numpy
 import os
-xa = ADD.get("Analysis").valueserie(0)
-Innovation = ADD.get("Innovation").valueserie(0)
+xa = ADD.get("Analysis")[0]
+Innovation = ADD.get("Innovation")[0]
 A = []
-J = ADD.get("CostFunctionJ").valueserie()
+J = ADD.get("CostFunctionJ")[:]
 ADD.setDiagnostic("PlotVectors", "J")
 MonPlot = ADD.get("J")
 if os.path.isfile("recherche_xx_Fonctionnelles.ps"):
   os.remove("recherche_xx_Fonctionnelles.ps")
-MonPlot.calculate([J,ADD.get("CostFunctionJb").valueserie(),ADD.get("CostFunctionJo").valueserie()],
+MonPlot.calculate([J,ADD.get("CostFunctionJb")[:],ADD.get("CostFunctionJo")[:]],
     title = "Fonctionnelles J, Jb et Jo",
     ltitle = ["J","Jb","Jo"],
     xlabel = "Pas", ylabel = "Valeur",

@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print " La variance de OMA est de...........................:", x2.var()
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
-    if not D.valueserie(0) :
+    if not D[0] :
             print " Résultat : l'analyse NE RÉDUIT PAS la variance"
     else :
             print " Résultat : l'analyse RÉDUIT la variance"
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     print " La variance de OMA est de...........................:", x2.var()
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
-    if not D.valueserie(1) :
+    if not D[1] :
             print " Résultat : l'analyse NE RÉDUIT PAS la variance"
     else :
             print " Résultat : l'analyse RÉDUIT la variance"

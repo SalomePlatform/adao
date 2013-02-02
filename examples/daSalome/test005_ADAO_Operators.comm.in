@@ -27,7 +27,7 @@ ASSIMILATION_STUDY(Study_name='Test',
                                        STRING=
 """import numpy
 Xb = Study.getBackground()
-Xa = ADD.get("Analysis").valueserie(-1)
+Xa = ADD.get("Analysis")[-1]
 print
 print "Size of Background...........= %i"%len(Xb.A1)
 print "Size of Analysis.............= %i"%len(Xa)

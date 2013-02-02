@@ -108,12 +108,12 @@ This can be done using "*observers*", that are scripts associated with one
 variable. In order to use this feature, one has to build scripts using as
 standard inputs (available in the namespace) the variables ``var`` and ``info``.
 The variable ``var`` is to be used in the same way as for the final ADD object,
-that is as a list object through its "*valueserie*" method.
+that is as a list/tuple object.
 
 As an example, here is one very simple script used to print the value of one
 monitored variable::
 
-    print "    --->",info," Value =",var.valueserie(-1)
+    print "    --->",info," Value =",var[-1]
 
 Stored in a python file, this script can be associated to each variable
 available in the "*SELECTION*" keyword of the "*Observers*" command:

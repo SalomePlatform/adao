@@ -36,7 +36,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Graine fixée pour le générateur aléatoire",
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None ):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -77,12 +77,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
-        Hm = H["Tangent"].asMatrix(None)
-        Ha = H["Adjoint"].asMatrix(None)
+        Hm = HO["Tangent"].asMatrix(None)
+        Ha = HO["Adjoint"].asMatrix(None)
         #
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------
-        if Y.size <= Xb.valueserie(0).size:
+        if Y.size <= Xb[0].size:
             if self._parameters["R_scalar"] is not None:
                 R = self._parameters["R_scalar"] * numpy.eye(Y.size, dtype=numpy.float)
             K  = B * Ha * (Hm * B * Ha + R).I
@@ -92,15 +92,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------
         for iens in range(nb_ens):
-            d  = EnsembleY[:,iens] - Hm * Xb.valueserie(iens)
-            Xa = Xb.valueserie(iens) + K*d
+            d  = EnsembleY[:,iens] - Hm * Xb[iens]
+            Xa = Xb[iens] + K*d
             
             self.StoredVariables["CurrentState"].store( Xa.A1 )
             self.StoredVariables["Innovation"].store( d.A1 )
         #
         # Fabrication de l'analyse
         # ------------------------
-        Members = self.StoredVariables["CurrentState"].valueserie()[-nb_ens:]
+        Members = self.StoredVariables["CurrentState"][-nb_ens:]
         Xa = numpy.matrix( Members ).mean(axis=0)
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #

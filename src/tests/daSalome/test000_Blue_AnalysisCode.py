@@ -17,7 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: AndrÃ© Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy
 precision = 1.e-13
@@ -25,13 +25,13 @@ precision = 1.e-13
 Xa = ADD.get("Analysis")
 print
 print "    Nombre d'analyses  :",Xa.stepnumber()
-print "    Analyse rÃ©sultante :",Xa.valueserie(0)
+print "    Analyse résultante :",Xa[0]
 #
-# VÃ©rification du rÃ©sultat
+# Vérification du résultat
 # ------------------------
-if max(numpy.array(Xa.valueserie(0))-numpy.array([0.25, 1.25, 2.25])) > precision:
-  raise ValueError("RÃ©sultat du test erronÃ©")
+if max(numpy.array(Xa[0])-numpy.array([0.25, 1.25, 2.25])) > precision:
+  raise ValueError("Résultat du test erroné")
 else:
-  print "    Test correct, erreur maximale infÃ©rieure Ã  %s"%precision
+  print "    Test correct, erreur maximale inférieure à %s"%precision
   print
 

@@ -153,7 +153,7 @@ To obtain this, the in-line script node need to have an input port of type
 the "*algoResults*" output port of the computation bloc. Then the code to fill
 in the script node is::
 
-    Xa = results.ADD.get("Analysis").valueserie(-1)
+    Xa = results.ADD.get("Analysis")[-1]
 
     print
     print "Analysis =",Xa
@@ -522,9 +522,9 @@ illustrates the fact::
     import numpy
     #
     xt, names   = True_state()
-    xa          = ADD.get("Analysis").valueserie(-1)
-    x_series    = ADD.get("CurrentState").valueserie()
-    J           = ADD.get("CostFunctionJ").valueserie()
+    xa          = ADD.get("Analysis")[-1]
+    x_series    = ADD.get("CurrentState")[:]
+    J           = ADD.get("CostFunctionJ")[:]
     #
     # Verifying the results by printing
     # ---------------------------------

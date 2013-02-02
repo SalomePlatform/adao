@@ -38,7 +38,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["OMA"]
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -48,8 +48,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Tangent"].asMatrix(None)
-        Ha = H["Adjoint"].asMatrix(None)
+        Hm = HO["Tangent"].asMatrix(None)
+        Ha = HO["Adjoint"].asMatrix(None)
         #
         if R is not None:
             RI = R.I

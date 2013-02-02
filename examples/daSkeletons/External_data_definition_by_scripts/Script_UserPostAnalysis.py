@@ -34,9 +34,9 @@ from Physical_data_and_covariance_matrices import True_state
 import numpy
 #
 xt, names   = True_state()
-xa          = ADD.get("Analysis").valueserie(-1)
-x_series    = ADD.get("CurrentState").valueserie()
-J           = ADD.get("CostFunctionJ").valueserie()
+xa          = ADD.get("Analysis")[-1]
+x_series    = ADD.get("CurrentState")[:]
+J           = ADD.get("CostFunctionJ")[:]
 #
 # Verifying the results by printing
 # ---------------------------------

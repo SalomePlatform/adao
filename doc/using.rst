@@ -159,15 +159,14 @@ variables stored along the calculation. The main is the "*Analysis*" one, that
 can be obtained by the python command (for example in an in-line script node or
 a script provided through the "*UserPostAnalysis*" keyword)::
 
-    ADD = algoResults.getAssimilationStudy()
-    Analysis = ADD.get("Analysis").valueserie()
+    Analysis = ADD.get("Analysis")[:]
 
 "*Analysis*" is a complex object, similar to a list of values calculated at each
 step of data assimilation calculation. In order to get and print the optimal
 data assimilation state evaluation, in script provided through the
 "*UserPostAnalysis*" keyword, one can use::
 
-    Xa = ADD.get("Analysis").valueserie(-1)
+    Xa = ADD.get("Analysis")[-1]
     print "Optimal state:", Xa
     print
 

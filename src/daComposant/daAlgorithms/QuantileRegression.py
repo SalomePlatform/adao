@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["BMA", "OMA", "OMB", "Innovation"]
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -82,12 +82,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Direct"].appliedTo
+        Hm = HO["Direct"].appliedTo
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            HXb = H["AppliedToX"]["HXb"]
+        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+            HXb = HO["AppliedToX"]["HXb"]
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
@@ -118,7 +118,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         def GradientOfCostFunction(x):
             _X      = numpy.asmatrix(numpy.ravel( x )).T
-            Hg = H["Tangent"].asMatrix( _X )
+            Hg = HO["Tangent"].asMatrix( _X )
             return Hg
         #
         # Point de démarrage de l'optimisation : Xini = Xb

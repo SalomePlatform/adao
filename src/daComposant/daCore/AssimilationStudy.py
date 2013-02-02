@@ -66,13 +66,15 @@ class AssimilationStudy:
         de covariance est B.
         """
         self.__name = str(name)
-        self.__Xb = None
-        self.__Y  = None
-        self.__B  = None
-        self.__R  = None
-        self.__Q  = None
-        self.__H  = {}
-        self.__M  = {}
+        self.__Xb  = None
+        self.__Y   = None
+        self.__U   = None
+        self.__B   = None
+        self.__R   = None
+        self.__Q   = None
+        self.__HO  = {}
+        self.__EM  = {}
+        self.__CM  = {}
         #
         self.__X  = Persistence.OneVector()
         self.__Parameters        = {}
@@ -129,7 +131,7 @@ class AssimilationStudy:
             else:
                 self.__Xb = asPersistentVector
         else:
-            raise ValueError("Error: improperly defined background")
+            raise ValueError("Error: improperly defined background, it requires at minima either a vector, a list/tuple of vectors or a persistent object")
         if toBeStored:
            self.__StoredInputs["Background"] = self.__Xb
         return 0
@@ -200,7 +202,7 @@ class AssimilationStudy:
             else:
                 self.__Y = asPersistentVector
         else:
-            raise ValueError("Error: improperly defined observations")
+            raise ValueError("Error: improperly defined observations, it requires at minima either a vector, a list/tuple of vectors or a persistent object")
         if toBeStored:
             self.__StoredInputs["Observation"] = self.__Y
         return 0
@@ -287,45 +289,45 @@ class AssimilationStudy:
                 centeredDF = asFunction["withCenteredDF"],
                 increment  = asFunction["withIncrement"],
                 dX         = asFunction["withdX"] )
-            self.__H["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
-            self.__H["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
-            self.__H["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
+            self.__HO["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
+            self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
+            self.__HO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
-                self.__H["Direct"] = Operator( fromMethod = asFunction["Tangent"] )
+                self.__HO["Direct"] = Operator( fromMethod = asFunction["Tangent"] )
             else:
-                self.__H["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
-            self.__H["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
-            self.__H["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
+                self.__HO["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
+            self.__HO["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
+            self.__HO["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
         elif asMatrix is not None:
             matrice = numpy.matrix( asMatrix, numpy.float )
-            self.__H["Direct"]  = Operator( fromMatrix = matrice )
-            self.__H["Tangent"] = Operator( fromMatrix = matrice )
-            self.__H["Adjoint"] = Operator( fromMatrix = matrice.T )
+            self.__HO["Direct"]  = Operator( fromMatrix = matrice )
+            self.__HO["Tangent"] = Operator( fromMatrix = matrice )
+            self.__HO["Adjoint"] = Operator( fromMatrix = matrice.T )
             del matrice
         else:
             raise ValueError("Improperly defined observation operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
         if appliedToX is not None:
-            self.__H["AppliedToX"] = {}
+            self.__HO["AppliedToX"] = {}
             if type(appliedToX) is not dict:
                 raise ValueError("Error: observation operator defined by \"appliedToX\" need a dictionary as argument.")
             for key in appliedToX.keys():
                 if type( appliedToX[key] ) is type( numpy.matrix([]) ):
                     # Pour le cas où l'on a une vraie matrice
-                    self.__H["AppliedToX"][key] = numpy.matrix( appliedToX[key].A1, numpy.float ).T
+                    self.__HO["AppliedToX"][key] = numpy.matrix( appliedToX[key].A1, numpy.float ).T
                 elif type( appliedToX[key] ) is type( numpy.array([]) ) and len(appliedToX[key].shape) > 1:
                     # Pour le cas où l'on a un vecteur représenté en array avec 2 dimensions
-                    self.__H["AppliedToX"][key] = numpy.matrix( appliedToX[key].reshape(len(appliedToX[key]),), numpy.float ).T
+                    self.__HO["AppliedToX"][key] = numpy.matrix( appliedToX[key].reshape(len(appliedToX[key]),), numpy.float ).T
                 else:
-                    self.__H["AppliedToX"][key] = numpy.matrix( appliedToX[key],    numpy.float ).T
+                    self.__HO["AppliedToX"][key] = numpy.matrix( appliedToX[key],    numpy.float ).T
         else:
-            self.__H["AppliedToX"] = None
+            self.__HO["AppliedToX"] = None
         #
         if toBeStored:
-            self.__StoredInputs["ObservationOperator"] = self.__H
+            self.__StoredInputs["ObservationOperator"] = self.__HO
         return 0
 
     # -----------------------------------------------------------
@@ -371,29 +373,29 @@ class AssimilationStudy:
                 centeredDF = asFunction["withCenteredDF"],
                 increment  = asFunction["withIncrement"],
                 dX         = asFunction["withdX"] )
-            self.__M["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
-            self.__M["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
-            self.__M["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
+            self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
+            self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
+            self.__EM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
-                self.__M["Direct"] = Operator( fromMethod = asFunction["Tangent"]  )
+                self.__EM["Direct"] = Operator( fromMethod = asFunction["Tangent"]  )
             else:
-                self.__M["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
-            self.__M["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
-            self.__M["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
+                self.__EM["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
+            self.__EM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
+            self.__EM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
         elif asMatrix is not None:
             matrice = numpy.matrix( asMatrix, numpy.float )
-            self.__M["Direct"]  = Operator( fromMatrix = matrice )
-            self.__M["Tangent"] = Operator( fromMatrix = matrice )
-            self.__M["Adjoint"] = Operator( fromMatrix = matrice.T )
+            self.__EM["Direct"]  = Operator( fromMatrix = matrice )
+            self.__EM["Tangent"] = Operator( fromMatrix = matrice )
+            self.__EM["Adjoint"] = Operator( fromMatrix = matrice.T )
             del matrice
         else:
-            raise ValueError("Improperly defined evolution operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
+            raise ValueError("Improperly defined evolution model, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
         if toBeStored:
-            self.__StoredInputs["EvolutionModel"] = self.__M
+            self.__StoredInputs["EvolutionModel"] = self.__EM
         return 0
 
     def setEvolutionError(self,
@@ -430,6 +432,108 @@ class AssimilationStudy:
         self.__Parameters["Q_scalar"] = self.__Q_scalar
         if toBeStored:
             self.__StoredInputs["EvolutionError"] = self.__Q
+        return 0
+
+    # -----------------------------------------------------------
+    def setControlModel(self,
+            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
+                          "useApproximatedDerivatives":False,
+                          "withCenteredDF"            :False,
+                          "withIncrement"             :0.01,
+                          "withdX"                    :None,
+                         },
+            asMatrix   = None,
+            Scheduler  = None,
+            toBeStored = False,
+            ):
+        """
+        Permet de définir un opérateur de controle C. L'ordre de priorité des
+        définitions et leur sens sont les suivants :
+        - si asFunction["Tangent"] et asFunction["Adjoint"] ne sont pas None
+          alors on définit l'opérateur à l'aide de fonctions. Si la fonction
+          "Direct" n'est pas définie, on prend la fonction "Tangent".
+          Si "useApproximatedDerivatives" est vrai, on utilise une approximation
+          des opérateurs tangents et adjoints. On utilise par défaut des
+          différences finies non centrées ou centrées (si "withCenteredDF" est
+          vrai) avec un incrément multiplicatif "withIncrement" de 1% autour
+          du point courant ou sur le point fixe "withdX".
+        - si les fonctions ne sont pas disponibles et si asMatrix n'est pas
+          None, alors on définit l'opérateur "Direct" et "Tangent" à l'aide de
+          la matrice, et l'opérateur "Adjoint" à l'aide de la transposée. La
+          matrice fournie doit être sous une forme compatible avec le
+          constructeur de numpy.matrix.
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
+        """
+        if (type(asFunction) is type({})) and \
+                asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
+                asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
+            if not asFunction.has_key("withCenteredDF"): asFunction["withCenteredDF"] = False
+            if not asFunction.has_key("withIncrement"):  asFunction["withIncrement"]  = 0.01
+            if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
+            from daNumerics.ApproximatedDerivatives import FDApproximation
+            FDA = FDApproximation(
+                Function   = asFunction["Direct"],
+                centeredDF = asFunction["withCenteredDF"],
+                increment  = asFunction["withIncrement"],
+                dX         = asFunction["withdX"] )
+            self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
+            self.__CM["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
+            self.__CM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
+        elif (type(asFunction) is type({})) and \
+                asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
+                (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
+            if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
+                self.__CM["Direct"] = Operator( fromMethod = asFunction["Tangent"]  )
+            else:
+                self.__CM["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
+            self.__CM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
+            self.__CM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
+        elif asMatrix is not None:
+            matrice = numpy.matrix( asMatrix, numpy.float )
+            self.__CM["Direct"]  = Operator( fromMatrix = matrice )
+            self.__CM["Tangent"] = Operator( fromMatrix = matrice )
+            self.__CM["Adjoint"] = Operator( fromMatrix = matrice.T )
+            del matrice
+        else:
+            raise ValueError("Improperly defined input control model, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
+        #
+        if toBeStored:
+            self.__StoredInputs["ControlModel"] = self.__CM
+        return 0
+
+    def setControlInput(self,
+            asVector           = None,
+            asPersistentVector = None,
+            Scheduler          = None,
+            toBeStored         = False,
+            ):
+        """
+        Permet de définir le controle en entree :
+        - asVector : entrée des données, comme un vecteur compatible avec le
+          constructeur de numpy.matrix
+        - asPersistentVector : entrée des données, comme un vecteur de type
+          persistent contruit avec la classe ad-hoc "Persistence"
+        - Scheduler est le contrôle temporel des données disponibles
+        - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
+          être rendue disponible au même titre que les variables de calcul
+        """
+        if asVector is not None:
+            if isinstance(asVector,numpy.matrix):
+                self.__U = numpy.matrix( asVector.A1, numpy.float ).T
+            else:
+                self.__U = numpy.matrix( asVector,    numpy.float ).T
+        elif asPersistentVector is not None:
+            if isinstance(asPersistentVector,list) or isinstance( asPersistentVector,tuple):
+                self.__U = Persistence.OneVector("ControlInput", basetype=numpy.array)
+                for y in asPersistentVector:
+                    self.__U.store( y )
+            else:
+                self.__U = asPersistentVector
+        else:
+            raise ValueError("Error: improperly defined control input, it requires at minima either a vector, a list/tuple of vectors or a persistent object")
+        if toBeStored:
+            self.__StoredInputs["ControlInput"] = self.__U
         return 0
 
     # -----------------------------------------------------------
@@ -568,6 +672,12 @@ class AssimilationStudy:
             else:                             __Y_shape = self.__Y.shape()
         else: raise TypeError("Y has no attribute of shape: problem !")
         #
+        if self.__U is None:                  __U_shape = (0,)
+        elif hasattr(self.__U,"shape"):
+            if type(self.__U.shape) is tuple: __U_shape = self.__U.shape
+            else:                             __U_shape = self.__U.shape()
+        else: raise TypeError("U has no attribute of shape: problem !")
+        #
         if self.__B is None and self.__B_scalar is None:
             __B_shape = (0,0)
         elif self.__B is None and self.__B_scalar is not None:
@@ -592,19 +702,26 @@ class AssimilationStudy:
             else:                             __Q_shape = self.__Q.shape()
         else: raise TypeError("Q has no attribute of shape: problem !")
         #
-        if len(self.__H) == 0:                          __H_shape = (0,0)
-        elif type(self.__H) is type({}):                __H_shape = (0,0)
-        elif hasattr(self.__H["Direct"],"shape"):
-            if type(self.__H["Direct"].shape) is tuple: __H_shape = self.__H["Direct"].shape
-            else:                                       __H_shape = self.__H["Direct"].shape()
+        if len(self.__HO) == 0:                          __HO_shape = (0,0)
+        elif type(self.__HO) is type({}):                __HO_shape = (0,0)
+        elif hasattr(self.__HO["Direct"],"shape"):
+            if type(self.__HO["Direct"].shape) is tuple: __HO_shape = self.__HO["Direct"].shape
+            else:                                       __HO_shape = self.__HO["Direct"].shape()
         else: raise TypeError("H has no attribute of shape: problem !")
         #
-        if len(self.__M) == 0:                          __M_shape = (0,0)
-        elif type(self.__M) is type({}):                __M_shape = (0,0)
-        elif hasattr(self.__M["Direct"],"shape"):
-            if type(self.__M["Direct"].shape) is tuple: __M_shape = self.__M["Direct"].shape
-            else:                                       __M_shape = self.__M["Direct"].shape()
-        else: raise TypeError("M has no attribute of shape: problem !")
+        if len(self.__EM) == 0:                          __EM_shape = (0,0)
+        elif type(self.__EM) is type({}):                __EM_shape = (0,0)
+        elif hasattr(self.__EM["Direct"],"shape"):
+            if type(self.__EM["Direct"].shape) is tuple: __EM_shape = self.__EM["Direct"].shape
+            else:                                       __EM_shape = self.__EM["Direct"].shape()
+        else: raise TypeError("EM has no attribute of shape: problem !")
+        #
+        if len(self.__CM) == 0:                          __CM_shape = (0,0)
+        elif type(self.__CM) is type({}):                __CM_shape = (0,0)
+        elif hasattr(self.__CM["Direct"],"shape"):
+            if type(self.__CM["Direct"].shape) is tuple: __CM_shape = self.__CM["Direct"].shape
+            else:                                       __CM_shape = self.__CM["Direct"].shape()
+        else: raise TypeError("CM has no attribute of shape: problem !")
         #
         # Vérification des conditions
         # ---------------------------
@@ -619,17 +736,17 @@ class AssimilationStudy:
             raise ValueError("Shape characteristic of R is incorrect: \"%s\""%(__R_shape,))
         if not( min(__Q_shape) == max(__Q_shape) ):
             raise ValueError("Shape characteristic of Q is incorrect: \"%s\""%(__Q_shape,))
-        if not( min(__M_shape) == max(__M_shape) ):
-            raise ValueError("Shape characteristic of M is incorrect: \"%s\""%(__M_shape,))
+        if not( min(__EM_shape) == max(__EM_shape) ):
+            raise ValueError("Shape characteristic of EM is incorrect: \"%s\""%(__EM_shape,))
         #
-        if len(self.__H) > 0 and not(type(self.__H) is type({})) and not( __H_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of H \"%s\" and X \"%s\" are incompatible"%(__H_shape,__Xb_shape))
-        if len(self.__H) > 0 and not(type(self.__H) is type({})) and not( __H_shape[0] == max(__Y_shape) ):
-            raise ValueError("Shape characteristic of H \"%s\" and Y \"%s\" are incompatible"%(__H_shape,__Y_shape))
-        if len(self.__H) > 0 and not(type(self.__H) is type({})) and len(self.__B) > 0 and not( __H_shape[1] == __B_shape[0] ):
-            raise ValueError("Shape characteristic of H \"%s\" and B \"%s\" are incompatible"%(__H_shape,__B_shape))
-        if len(self.__H) > 0 and not(type(self.__H) is type({})) and len(self.__R) > 0 and not( __H_shape[0] == __R_shape[1] ):
-            raise ValueError("Shape characteristic of H \"%s\" and R \"%s\" are incompatible"%(__H_shape,__R_shape))
+        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and not( __HO_shape[1] == max(__Xb_shape) ):
+            raise ValueError("Shape characteristic of H \"%s\" and X \"%s\" are incompatible"%(__HO_shape,__Xb_shape))
+        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and not( __HO_shape[0] == max(__Y_shape) ):
+            raise ValueError("Shape characteristic of H \"%s\" and Y \"%s\" are incompatible"%(__HO_shape,__Y_shape))
+        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and len(self.__B) > 0 and not( __HO_shape[1] == __B_shape[0] ):
+            raise ValueError("Shape characteristic of H \"%s\" and B \"%s\" are incompatible"%(__HO_shape,__B_shape))
+        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and len(self.__R) > 0 and not( __HO_shape[0] == __R_shape[1] ):
+            raise ValueError("Shape characteristic of H \"%s\" and R \"%s\" are incompatible"%(__HO_shape,__R_shape))
         #
         if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
             if self.__StoredInputs["AlgorithmName"] in ["EnsembleBlue",]:
@@ -644,8 +761,11 @@ class AssimilationStudy:
         if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
             raise ValueError("Shape characteristic of R \"%s\" and Y \"%s\" are incompatible"%(__R_shape,__Y_shape))
         #
-        if self.__M is not None and len(self.__M) > 0 and not(type(self.__M) is type({})) and not( __M_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of M \"%s\" and X \"%s\" are incompatible"%(__M_shape,__Xb_shape))
+        if self.__EM is not None and len(self.__EM) > 0 and not(type(self.__EM) is type({})) and not( __EM_shape[1] == max(__Xb_shape) ):
+            raise ValueError("Shape characteristic of EM \"%s\" and X \"%s\" are incompatible"%(__EM_shape,__Xb_shape))
+        #
+        if self.__CM is not None and len(self.__CM) > 0 and not(type(self.__CM) is type({})) and not( __CM_shape[1] == max(__U_shape) ):
+            raise ValueError("Shape characteristic of CM \"%s\" and U \"%s\" are incompatible"%(__CM_shape,__U_shape))
         #
         return 1
 
@@ -664,8 +784,10 @@ class AssimilationStudy:
         self.__algorithm.run(
             Xb         = self.__Xb,
             Y          = self.__Y,
-            H          = self.__H,
-            M          = self.__M,
+            U          = self.__U,
+            HO         = self.__HO,
+            EM         = self.__EM,
+            CM         = self.__CM,
             R          = self.__R,
             B          = self.__B,
             Q          = self.__Q,
@@ -885,8 +1007,9 @@ class AssimilationStudy:
     def prepare_to_pickle(self):
         self.__algorithmFile = None
         self.__diagnosticFile = None
-        self.__H  = {}
-        self.__M  = {}
+        self.__HO  = {}
+        self.__EM  = {}
+        self.__CM  = {}
 
 # ==============================================================================
 if __name__ == "__main__":
@@ -909,7 +1032,7 @@ if __name__ == "__main__":
     print "Observation        :", [0.5, 1.5, 2.5]
     print "Demi-somme         :", list((numpy.array([0, 1, 2])+numpy.array([0.5, 1.5, 2.5]))/2)
     print "  qui doit être identique à :"
-    print "Analyse résultante :", ADD.get("Analysis").valueserie(0)
+    print "Analyse résultante :", ADD.get("Analysis")[0]
     print
     
     print "Algorithmes disponibles.......................:", ADD.get_available_algorithms()
@@ -937,7 +1060,7 @@ if __name__ == "__main__":
     print "Exemple de mise en place d'un observeur :"
     def obs(var=None,info=None):
         print "  ---> Mise en oeuvre de l'observer"
-        print "       var  =",var.valueserie(-1)
+        print "       var  =",var[-1]
         print "       info =",info
     ADD.setDataObserver( 'Analysis', HookFunction=obs, Scheduler = [2, 4], HookParameters = "Second observer")
     # Attention, il faut décaler le stockage de 1 pour suivre le pas interne

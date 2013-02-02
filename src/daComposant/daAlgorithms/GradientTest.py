@@ -87,7 +87,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Label de la courbe tracée dans la figure",
             )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -97,9 +97,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Direct"].appliedTo
+        Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] is "Taylor":
-            Ht = H["Tangent"].appliedInXTo
+            Ht = HO["Tangent"].appliedInXTo
         #
         # Construction des perturbations
         # ------------------------------
@@ -231,7 +231,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             f.write(msgs)
             f.close()
             #
-            Residus = self.StoredVariables["CostFunctionJ"].valueserie()[-len(Perturbations):]
+            Residus = self.StoredVariables["CostFunctionJ"][-len(Perturbations):]
             if self._parameters["ResiduFormula"] is "Taylor":
                 PerturbationsCarre = [ 10**(2*i) for i in xrange(-len(NormesdFXGdX)+1,1) ]
                 PerturbationsCarre.reverse()

@@ -1,5 +1,5 @@
 print "  ---> observerState"
-print "       var  =",var.valueserie(-1)
+print "       var  =",var[-1]
 print "       info =",info
 #
 import Gnuplot
@@ -13,7 +13,7 @@ except NameError:
 gp = Gnuplot.Gnuplot()
 gp('set style data lines')
 gp('set title  "'+str(info)+'"')
-gp.plot( Gnuplot.Data( var.valueserie(-1) ) )
+gp.plot( Gnuplot.Data( var[-1] ) )
 
 filename = os.path.join("/tmp", "imageState_%02i.ps"%numero)
 print "       imageState \"%s\""%filename

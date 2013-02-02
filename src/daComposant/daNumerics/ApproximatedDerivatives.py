@@ -91,6 +91,9 @@ class FDApproximation:
         logging.debug("     Incrément de............: %s*X"%float(self.__increment))
         logging.debug("     Approximation centrée...: %s"%(self.__centeredDF))
         #
+        if X is None or len(X)==0:
+            raise ValueError("Nominal point X for approximate derivatives can not be None or void.")
+        #
         _X = numpy.asmatrix(numpy.ravel( X )).T
         #
         if self.__dX is None:
