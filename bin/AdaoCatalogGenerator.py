@@ -47,11 +47,11 @@ def F_${data_name}(statut) : return FACT(statut = statut,
                                          FROM = SIMP(statut = "o", typ = "TXM", into=(${data_into}), defaut=${data_default}),
                                          SCRIPT_DATA = BLOC ( condition = " FROM in ( 'Script', ) ",
 
-                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant la définition d'une variable interne de même nom que le concept parent", ang="Waiting for a script file name, with or without the full path to find it, containing the definition of an internal variable of the same name as the parent concept"),
+                                                      SCRIPT_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant si nécessaire la définition d'une variable interne de même nom que le concept parent", ang="Waiting for a script file name, with or without the full path to find it, containing if necessary the definition of an internal variable of the same name as the parent concept"),
                                                      ),
                                          STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
 
-                                                      STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
+                                                      STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
                                                      ),
                                          SCRIPTWITHFUNCTIONS_DATA = BLOC ( condition = " FROM in ( 'ScriptWithFunctions', ) ",
 
@@ -222,26 +222,26 @@ mem_file = StringIO.StringIO()
 from time import strftime
 mem_file.write(begin_catalog_file.substitute(date=strftime("%Y-%m-%d %H:%M:%S")))
 
-# Step 1: A partir des infos, on crÃ©e les fonctions qui vont permettre
-# d'entrer les donnÃ©es utilisateur
+# Step 1: A partir des infos, on cree les fonctions qui vont permettre
+# d'entrer les donnees utilisateur
 for data_input_name in infos.DataTypeDict.keys():
   logging.debug('A data input Type is found: ' + data_input_name)
   data_name = data_input_name
   data_into = ""
   data_default = ""
 
-  # On rÃ©cupÃ¨re les diffÃ©rentes faÃ§on d'entrer les donnÃ©es
+  # On recupere les differentes facon d'entrer les donnees
   for basic_type in infos.DataTypeDict[data_input_name]:
     data_into += "\"" + basic_type + "\", "
 
-  # On choisit le dÃ©fault
+  # On choisit le default
   data_default = "\"" + infos.DataTypeDefaultDict[data_input_name] + "\""
 
   mem_file.write(data_method.substitute(data_name    = data_name,
                                         data_into    = data_into,
                                         data_default = data_default))
 
-# Step 2: On crÃ©e les fonctions qui permettent de rentrer les donnÃ©es des algorithmes
+# Step 2: On cree les fonctions qui permettent de rentrer les donnees des algorithmes
 for assim_data_input_name in infos.AssimDataDict.keys():
   logging.debug("An assimilation algorithm data input is found: " + assim_data_input_name)
   assim_name = assim_data_input_name
@@ -265,7 +265,7 @@ for assim_data_input_name in infos.AssimDataDict.keys():
                                               decl_choices = decl_choices,
                                               default_choice=default_choice))
 
-# Step 3: On ajoute les fonctions reprÃ©sentant les options possibles
+# Step 3: On ajoute les fonctions representant les options possibles
 for opt_name in infos.OptDict.keys():
   logging.debug("An optional node is found: " + opt_name)
   data_name = opt_name
@@ -280,7 +280,7 @@ for opt_name in infos.OptDict.keys():
                                         data_into = data_into,
                                         data_default = data_default))
 
-# Step 4: On ajoute la mÃ©thode optionnelle init
+# Step 4: On ajoute la methode optionnelle init
 # TODO uniformiser avec le step 3
 mem_file.write(init_method)
 
