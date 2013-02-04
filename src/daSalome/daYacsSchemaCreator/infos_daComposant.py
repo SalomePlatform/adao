@@ -31,7 +31,7 @@ AssimData = ["Background", "BackgroundError",
              "ObservationOperator",
              "EvolutionModel", "EvolutionError",
              "AlgorithmParameters",
-             "CheckingPoint",
+             "CheckingPoint", "ControlInput",
              ]
 
 AssimType = {}
@@ -45,6 +45,7 @@ AssimType["EvolutionError"]      = ["Matrix"]
 AssimType["AlgorithmParameters"] = ["Dict"]
 AssimType["UserDataInit"]        = ["Dict"]
 AssimType["CheckingPoint"]       = ["Vector"]
+AssimType["ControlInput"]        = ["Vector", "VectorSerie"]
 
 FromNumpyList = {}
 FromNumpyList["Vector"]      = ["String", "Script"]
@@ -59,6 +60,7 @@ AssimAlgos = [
     "Blue",
     "EnsembleBlue",
     "KalmanFilter",
+    "ExtendedKalmanFilter",
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     "QuantileRegression",
@@ -88,8 +90,15 @@ AlgoDataRequirements["EnsembleBlue"] = [
 AlgoDataRequirements["KalmanFilter"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
-    "EvolutionModel", "EvolutionError",
     "ObservationOperator",
+    "EvolutionModel", "EvolutionError",
+    ]
+AlgoDataRequirements["ExtendedKalmanFilter"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    "EvolutionModel", "EvolutionError",
+    "ControlInput",
     ]
 AlgoDataRequirements["LinearLeastSquares"] = [
     "Observation", "ObservationError",
@@ -125,6 +134,7 @@ AlgoType["3DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
+AlgoType["ExtendedKalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
 AlgoType["ParticleSwarmOptimization"] = "Optim"
@@ -163,6 +173,7 @@ AssimDataDict["EvolutionError"]      = ["Matrix"]
 AssimDataDict["AlgorithmParameters"] = ["Dict"]
 AssimDataDict["UserDataInit"]        = ["Dict"]
 AssimDataDict["CheckingPoint"]       = ["Vector"]
+AssimDataDict["ControlInput"]        = ["Vector", "VectorSerie"]
 
 AssimDataDefaultDict = {}
 AssimDataDefaultDict["Background"]          = "Vector"
@@ -175,6 +186,7 @@ AssimDataDefaultDict["EvolutionError"]      = "Matrix"
 AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 AssimDataDefaultDict["UserDataInit"]        = "Dict"
 AssimDataDefaultDict["CheckingPoint"]       = "Vector"
+AssimDataDefaultDict["ControlInput"]        = "Vector"
 
 StoredAssimData = ["Vector", "VectorSerie", "Matrix"]
 

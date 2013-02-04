@@ -157,6 +157,31 @@ class daStudy:
 
   #--------------------------------------
 
+  def setControlInputType(self, Type):
+    if Type == "Vector" or Type == "VectorSerie":
+      self.ControlInputType = Type
+    else:
+      raise daError("[daStudy::setControlInputType] Type is unkown : " + Type + ". Types are : Vector, VectorSerie")
+
+  def setControlInputStored(self, Stored):
+    if Stored:
+      self.ControlInputStored = True
+    else:
+      self.ControlInputStored = False
+
+  def setControlInput(self, ControlInput):
+    try:
+      self.ControlInputType
+      self.ControlInputStored
+    except AttributeError:
+      raise daError("[daStudy::setControlInput] Type or Storage is not defined !")
+    if self.ControlInputType == "Vector":
+      self.ADD.setControlInput(asVector = ControlInput, toBeStored = self.ControlInputStored)
+    if self.ControlInputType == "VectorSerie":
+      self.ADD.setControlInput(asPersistentVector = ControlInput, toBeStored = self.ControlInputStored)
+
+  #--------------------------------------
+
   def setObservationType(self, Type):
     if Type == "Vector" or Type == "VectorSerie":
       self.ObservationType = Type

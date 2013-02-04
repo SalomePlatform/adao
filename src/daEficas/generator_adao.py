@@ -124,6 +124,8 @@ class AdaoGenerator(PythonGenerator):
       self.add_data("EvolutionModel")
     if "__"+self.type_of_study+"__EvolutionError__INPUT_TYPE" in self.dictMCVal.keys():
       self.add_data("EvolutionError")
+    if "__"+self.type_of_study+"__ControlInput__INPUT_TYPE" in self.dictMCVal.keys():
+      self.add_data("ControlInput")
 
     self.add_variables()
     # Parametres optionnels

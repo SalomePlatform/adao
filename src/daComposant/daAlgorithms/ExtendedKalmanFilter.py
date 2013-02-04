@@ -28,7 +28,7 @@ import numpy
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
+        BasicObjects.Algorithm.__init__(self, "EXTENDEDKALMANFILTER")
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -52,16 +52,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if R is None:
             raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
-        Ht = HO["Tangent"].asMatrix(None)
-        Ha = HO["Adjoint"].asMatrix(None)
+        H = HO["Direct"].appliedTo
         #
-        Mt = EM["Tangent"].asMatrix(None)
-        Ma = EM["Adjoint"].asMatrix(None)
-        #
-        if CM is not None and CM.has_key("Tangent") and U is not None:
-            Cm = CM["Tangent"].asMatrix(None)
-        else:
-            Cm = None
+        M = EM["Direct"].appliedTo
         #
         # Nombre de pas du Kalman identique au nombre de pas d'observations
         # -----------------------------------------------------------------
@@ -78,22 +71,30 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         for step in range(duration-1):
             Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
             #
-            if Cm is not None:
+            Ht = HO["Tangent"].asMatrix(ValueForMethodForm = Xn)
+            Ht = Ht.reshape(Ynpu.size,Xn.size) # ADAO & check shape
+            Ha = HO["Adjoint"].asMatrix(ValueForMethodForm = Xn)
+            Ha = Ha.reshape(Xn.size,Ynpu.size) # ADAO & check shape
+            #
+            Mt = EM["Tangent"].asMatrix(ValueForMethodForm = Xn)
+            Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
+            Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = Xn)
+            Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
+            #
+            if U is not None:
                 if hasattr(U,"store") and len(U)>1:
                     Un = numpy.asmatrix(numpy.ravel( U[step] )).T
                 elif hasattr(U,"store") and len(U)==1:
                     Un = numpy.asmatrix(numpy.ravel( U[0] )).T
                 else:
                     Un = numpy.asmatrix(numpy.ravel( U )).T
-                #
-                Xn_predicted = Mt * Xn + Cm * Un
             else:
                 Un = None
-                #
-                Xn_predicted = Mt * Xn
+            #
+            Xn_predicted = M( (Xn, Un) )
             Pn_predicted = Mt * Pn * Ma + Q
             #
-            d  = Ynpu - Ht * Xn_predicted
+            d  = Ynpu - H( Xn_predicted )
             K  = Pn_predicted * Ha * (Ht * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d
             Pn = Pn_predicted - K * Ht * Pn_predicted

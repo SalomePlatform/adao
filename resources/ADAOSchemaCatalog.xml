@@ -104,16 +104,18 @@ else:
   assim_study.setCheckingPointStored(CheckingPointStored)
   assim_study.setCheckingPoint(CheckingPoint)
 
-# BackgroundError
+# ControlInput
 try:
-  BackgroundError
+  ControlInput
 except NameError:
   pass
 else:
-  logging.debug("CREATE BackgroundError is set")
-  logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
-  assim_study.setBackgroundErrorStored(BackgroundErrorStored)
-  assim_study.setBackgroundError(BackgroundError)
+  logging.debug("CREATE ControlInput is set")
+  logging.debug("CREATE ControlInputType is %s"%ControlInputType)
+  logging.debug("CREATE ControlInputStored is %s"%ControlInputStored)
+  assim_study.setControlInputType(ControlInputType)
+  assim_study.setControlInputStored(ControlInputStored)
+  assim_study.setControlInput(ControlInput)
 
 # Observation
 try:
@@ -127,6 +129,17 @@ else:
   assim_study.setObservationType(ObservationType)
   assim_study.setObservationStored(ObservationStored)
   assim_study.setObservation(Observation)
+
+# BackgroundError
+try:
+  BackgroundError
+except NameError:
+  pass
+else:
+  logging.debug("CREATE BackgroundError is set")
+  logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
+  assim_study.setBackgroundErrorStored(BackgroundErrorStored)
+  assim_study.setBackgroundError(BackgroundError)
 
 # ObservationError
 try:
@@ -346,7 +359,8 @@ user_script_module = sys.modules[module_name]
     <script><code><![CDATA[
 import numpy, logging
 logging.debug("CREATE Entering in CreateNumpyVectorSerieFromString")
-vector = numpy.matrix(vector_in_string)
+vector_in_list = eval(str(vector_in_string),{},{})
+vector = numpy.matrix(vector_in_list)
 type = "VectorSerie"
 logging.debug("VectorSerie is %s"%vector)
 ]]></code></script>

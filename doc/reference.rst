@@ -74,6 +74,7 @@ List of commands and keywords for an ADAO calculation case
 .. index:: single: AlgorithmParameters
 .. index:: single: Background
 .. index:: single: BackgroundError
+.. index:: single: ControlInput
 .. index:: single: Debug
 .. index:: single: EvolutionError
 .. index:: single: EvolutionModel
@@ -104,14 +105,14 @@ following:
     optimization algorithm chosen. The choices are limited and available through
     the GUI. There exists for example "3DVAR", "Blue"... See below the list of
     algorithms and associated parameters in the following subsection `Options
-    for algorithms`_.
+    and required commands for algorithms`_.
 
 **AlgorithmParameters**
     *Optional command*. This command allows to add some optional parameters to
     control the data assimilation or optimization algorithm. It is defined as a
     "*Dict*" type object, that is, given as a script. See below the list of
     algorithms and associated parameters in the following subsection `Options
-    for algorithms`_.
+    and required commands for algorithms`_.
 
 **Background**
     *Required command*. This indicates the background or initial vector used,
@@ -122,6 +123,13 @@ following:
     *Required command*. This indicates the background error covariance matrix,
     previously noted as :math:`\mathbf{B}`. It is defined as a "*Matrix*" type
     object, that is, given either as a string or as a script.
+
+**ControlInput**
+    *Optional command*. This indicates the control vector used to force the
+    evolution model at each step, usually noted as :math:`\mathbf{U}`. It is
+    defined as a "*Vector*" or a *VectorSerie* type object, that is, given
+    either as a string or as a script. When there is no control, it has to be a
+    void string ''.
 
 **Debug**
     *Required command*. This define the level of trace and intermediary debug
@@ -138,7 +146,8 @@ following:
     noted :math:`M`, which describes a step of evolution. It is defined as a
     "*Function*" type object, that is, given as a script. Different functional
     forms can be used, as described in the following subsection `Requirements
-    for functions describing an operator`_.
+    for functions describing an operator`_. If there is some control :math:`U`,
+    the operator has to be applied to a pair :math:`(X,U)`.
 
 **InputVariables**
     *Optional command*. This command allows to indicates the name and size of
@@ -148,8 +157,8 @@ following:
 **Observation**
     *Required command*. This indicates the observation vector used for data
     assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" type object, that is, given either as a string or
-    as a script.
+    is defined as a "*Vector*" or a *VectorSerie* type object, that is, given
+    either as a string or as a script.
 
 **ObservationError**
     *Required command*. This indicates the observation error covariance matrix,
@@ -223,14 +232,14 @@ commands are the following:
     optimization algorithm chosen. The choices are limited and available through
     the GUI. There exists for example "3DVAR", "Blue"... See below the list of
     algorithms and associated parameters in the following subsection `Options
-    for algorithms`_.
+    and required commands for algorithms`_.
 
 **AlgorithmParameters**
     *Optional command*. This command allows to add some optional parameters to
     control the data assimilation or optimization algorithm. It is defined as a
     "*Dict*" type object, that is, given as a script. See below the list of
     algorithms and associated parameters in the following subsection `Options
-    for algorithms`_.
+    and required commands for algorithms`_.
 
 **CheckingPoint**
     *Required command*. This indicates the vector used,
@@ -263,13 +272,14 @@ commands are the following:
     *Optional command*. This commands allows to initialize some parameters or
     data automatically before data assimilation algorithm processing.
 
-Options for algorithms
-----------------------
+Options and required commands for algorithms
+--------------------------------------------
 
 .. index:: single: 3DVAR
 .. index:: single: Blue
 .. index:: single: EnsembleBlue
 .. index:: single: KalmanFilter
+.. index:: single: ExtendedKalmanFilter
 .. index:: single: LinearLeastSquares
 .. index:: single: NonLinearLeastSquares
 .. index:: single: ParticleSwarmOptimization
@@ -303,9 +313,16 @@ through the "*AlgorithmParameters*" optional command, as follows for example::
 This section describes the available options algorithm by algorithm. If an
 option is specified for an algorithm that doesn't support it, the option is
 simply left unused. The meaning of the acronyms or particular names can be found
-in the :ref:`genindex` or the :ref:`section_glossary`.
+in the :ref:`genindex` or the :ref:`section_glossary`. In addition, for each
+algorithm, the required commands are given, being described in `List of commands
+and keywords for an ADAO calculation case`_.
 
 **"Blue"**
+
+  *Required commands*
+    *"Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator"*
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
@@ -317,6 +334,10 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
 
 **"LinearLeastSquares"**
 
+  *Required commands*
+    *"Observation", "ObservationError",
+    "ObservationOperator"*
+
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
@@ -325,6 +346,11 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
     list: ["OMA"].
 
 **"3DVAR"**
+
+  *Required commands*
+    *"Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator"*
 
   Minimizer
     This key allows to choose the optimization minimizer. The default choice
@@ -382,6 +408,11 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
 
 **"NonLinearLeastSquares"**
 
+  *Required commands*
+    *"Background",
+    "Observation", "ObservationError",
+    "ObservationOperator"*
+
   Minimizer
     This key allows to choose the optimization minimizer. The default choice
     is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
@@ -437,6 +468,11 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
 
 **"EnsembleBlue"**
 
+  *Required commands*
+    *"Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator"*
+
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
     generator used to generate the ensemble. A convenient value is for example
@@ -444,6 +480,28 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
     initialization from the computer.
 
 **"KalmanFilter"**
+
+  *Required commands*
+    *"Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    "EvolutionModel", "EvolutionError"*
+
+  StoreSupplementaryCalculations
+     This list indicates the names of the supplementary variables that can be
+     available at the end of the algorithm. It involves potentially costly
+     calculations. The default is a void list, none of these variables being
+     calculated and stored by default. The possible names are in the following
+     list: ["APosterioriCovariance", "Innovation"].
+
+**"ExtendedKalmanFilter"**
+
+  *Required commands*
+    *"Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    "EvolutionModel", "EvolutionError",
+    "ControlInput"*
 
   StoreSupplementaryCalculations
      This list indicates the names of the supplementary variables that can be
@@ -453,6 +511,11 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
      list: ["APosterioriCovariance", "Innovation"].
 
 **"ParticleSwarmOptimization"**
+
+  *Required commands*
+    *"Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator"*
 
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
@@ -501,6 +564,11 @@ in the :ref:`genindex` or the :ref:`section_glossary`.
 
 **"QuantileRegression"**
 
+  *Required commands*
+    *"Background",
+    "Observation",
+    "ObservationOperator"*
+
   Quantile
     This key allows to define the real value of the desired quantile, between
     0 and 1. The default is 0.5, corresponding to the median.
@@ -541,7 +609,9 @@ Requirements for functions describing an operator
 The operators for observation and evolution are required to implement the data
 assimilation or optimization procedures. They include the physical simulation
 numerical simulations, but also the filtering and restriction to compare the
-simulation to observation.
+simulation to observation. The evolution operator is considered here in its
+incremental form, representing the transition between two successive states, and
+is then similar to the observation operator.
 
 Schematically, an operator has to give a output solution given the input
 parameters. Part of the input parameters can be modified during the optimization
@@ -598,11 +668,11 @@ Second functional form: using "*ScriptWithFunctions*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The second one consist in providing directly the three associated operators
-:math:`H`, :math:`\mathbf{H}` and :math:`\mathbf{H}^*`. This is done by using the
-keyword "*ScriptWithFunctions*" for the description of the chosen operator in
-the ADAO GUI. The user have to provide three functions in one script, with three
-mandatory names "*DirectOperator*", "*TangentOperator*" and "*AdjointOperator*".
-For example, the script can follow the template::
+:math:`H`, :math:`\mathbf{H}` and :math:`\mathbf{H}^*`. This is done by using
+the keyword "*ScriptWithFunctions*" for the description of the chosen operator
+in the ADAO GUI. The user have to provide three functions in one script, with
+three mandatory names "*DirectOperator*", "*TangentOperator*" and
+"*AdjointOperator*". For example, the script can follow the template::
 
     def DirectOperator( X ):
         """ Direct non-linear simulation operator """
@@ -697,3 +767,29 @@ Here is the switch template::
     result["errorMessage"]        = ""
 
 All various modifications could be done from this template hypothesis.
+
+Special case of controled evolution operator
+++++++++++++++++++++++++++++++++++++++++++++
+
+In some cases, the evolution operator is required to be controled by an external
+input control, given a priori. In this case, the generic form of the incremental
+evolution model is slightly modified as follows:
+
+.. math:: \mathbf{y} = H( \mathbf{x}, \mathbf{u})
+
+where :math:`\mathbf{u}` is the control over one state increment. In this case,
+the direct evolution operator has to be applied to a pair of variables
+:math:`(X,U)`. Schematically, the evolution operator has to be set as::
+
+    def DirectOperator( (X, U) ):
+        """ Direct non-linear simulation operator """
+        ...
+        ...
+        ...
+        return something like X(n+1)
+
+The tangent and adjoint operators have the same signature as previously, noting
+that the derivatives has to be done only against :math:`\mathbf{x}` partially.
+In such a case with explicit control, only the second functional form (using
+"*ScriptWithFunctions*") and third functional form (using "*ScriptWithSwitch*")
+can be used.

@@ -195,10 +195,10 @@ class AssimilationStudy:
             else:
                 self.__Y = numpy.matrix( asVector,    numpy.float ).T
         elif asPersistentVector is not None:
-            if type( asPersistentVector ) is list or type( asPersistentVector ) is tuple:
-                self.__Y = Persistence.OneVector("Observation", basetype=numpy.array)
-                for y in asPersistentVector:
-                    self.__Y.store( y )
+            if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
+                self.__Y = Persistence.OneVector("Observation", basetype=numpy.matrix)
+                for member in asPersistentVector:
+                    self.__Y.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
             else:
                 self.__Y = asPersistentVector
         else:
@@ -524,10 +524,10 @@ class AssimilationStudy:
             else:
                 self.__U = numpy.matrix( asVector,    numpy.float ).T
         elif asPersistentVector is not None:
-            if isinstance(asPersistentVector,list) or isinstance( asPersistentVector,tuple):
-                self.__U = Persistence.OneVector("ControlInput", basetype=numpy.array)
-                for y in asPersistentVector:
-                    self.__U.store( y )
+            if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
+                self.__U = Persistence.OneVector("ControlInput", basetype=numpy.matrix)
+                for member in asPersistentVector:
+                    self.__U.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
             else:
                 self.__U = asPersistentVector
         else:
