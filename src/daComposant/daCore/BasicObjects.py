@@ -74,6 +74,23 @@ class Operator:
         else:
             return self.__Method( xValue )
 
+    def appliedControledFormTo(self, (xValue, uValue) ):
+        """
+        Permet de restituer le résultat de l'application de l'opérateur à une
+        paire (xValue, uValue). Cette méthode se contente d'appliquer, son
+        argument devant a priori être du bon type. Si la uValue est None,
+        on suppose que l'opérateur ne s'applique qu'à xValue.
+        Arguments :
+        - xValue : argument X adapté pour appliquer l'opérateur
+        - uValue : argument U adapté pour appliquer l'opérateur
+        """
+        if self.__Matrix is not None:
+            return self.__Matrix * xValue
+        elif uValue is not None:
+            return self.__Method( (xValue, uValue) )
+        else:
+            return self.__Method( xValue )
+
     def appliedInXTo(self, (xNominal, xValue) ):
         """
         Permet de restituer le résultat de l'application de l'opérateur à un
