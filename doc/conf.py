@@ -269,7 +269,7 @@ epub_copyright = u'2008-2012, Jean-Philippe ARGAUD'
 # would mean that specific document would be compressed
 # regardless of the global pdf_compressed setting.
 pdf_documents = [
-    ('contents', u'ADAO', u'ADAO', u'Jean-Philippe ARGAUD'),
+    ('contents', u'ADAO', u'ADAO', u'Jean-Philippe ARGAUD', dict(pdf_compressed = True)),
 ]
 # A comma-separated list of custom stylesheets. Example:
 pdf_stylesheets = ['sphinx','kerning','a4']
@@ -277,6 +277,7 @@ pdf_stylesheets = ['sphinx','kerning','a4']
 # Use True/False or 1/0
 # Example: compressed=True
 #pdf_compressed = False
+pdf_compressed = True
 # A colon-separated list of folders to search for fonts. Example:
 # pdf_font_path = ['/usr/share/fonts', '/usr/share/texmf-dist/fonts/']
 # Language to be used for hyphenation support
