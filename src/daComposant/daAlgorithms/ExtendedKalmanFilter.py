@@ -61,7 +61,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         H = HO["Direct"].appliedControledFormTo
         #
-        M = EM["Direct"].appliedControledFormTo
+        if self._parameters["EstimationType"] == "State":
+            M = EM["Direct"].appliedControledFormTo
         #
         # Nombre de pas du Kalman identique au nombre de pas d'observations
         # -----------------------------------------------------------------
@@ -102,10 +103,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Ha = HO["Adjoint"].asMatrix(ValueForMethodForm = Xn)
             Ha = Ha.reshape(Xn.size,Ynpu.size) # ADAO & check shape
             #
-            Mt = EM["Tangent"].asMatrix(ValueForMethodForm = Xn)
-            Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
-            Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = Xn)
-            Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
+            if self._parameters["EstimationType"] == "State":
+                Mt = EM["Tangent"].asMatrix(ValueForMethodForm = Xn)
+                Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
+                Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = Xn)
+                Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
             #
             if U is not None:
                 if hasattr(U,"store") and len(U)>1:
@@ -119,14 +121,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["EstimationType"] == "State":
                 Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, Un) ) )).T
-            else:
-                Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, None) ) )).T
-            Pn_predicted = Mt * Pn * Ma + Q
+                Pn_predicted = Mt * Pn * Ma + Q
+            elif self._parameters["EstimationType"] == "Parameters":
+                # Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, None) ) )).T
+                # Pn_predicted = Mt * Pn * Ma + Q
+                # --- > Par principe, M = Id, Q = 0
+                Xn_predicted = Xn
+                Pn_predicted = Pn
             #
             if self._parameters["EstimationType"] == "Parameters":
                 d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, Un) ) )).T
-            else:
+            elif self._parameters["EstimationType"] == "State":
                 d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, None) ) )).T
+            #
             K  = Pn_predicted * Ha * (Ht * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d
             Pn = Pn_predicted - K * Ht * Pn_predicted

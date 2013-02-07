@@ -48,8 +48,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = HO["Tangent"].asMatrix(None)
-        Ha = HO["Adjoint"].asMatrix(None)
+        Hm = HO["Tangent"].asMatrix(Xb)
+        Ha = HO["Adjoint"].asMatrix(Xb)
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------

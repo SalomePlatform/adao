@@ -59,14 +59,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if R is None:
             raise ValueError("Observation error covariance matrix has to be properly defined!")
         #
-        Ht = HO["Tangent"].asMatrix(None)
-        Ha = HO["Adjoint"].asMatrix(None)
+        Ht = HO["Tangent"].asMatrix(Xb)
+        Ha = HO["Adjoint"].asMatrix(Xb)
         #
-        Mt = EM["Tangent"].asMatrix(None)
-        Ma = EM["Adjoint"].asMatrix(None)
+        if self._parameters["EstimationType"] == "State":
+            Mt = EM["Tangent"].asMatrix(Xb)
+            Ma = EM["Adjoint"].asMatrix(Xb)
         #
         if CM is not None and CM.has_key("Tangent") and U is not None:
-            Cm = CM["Tangent"].asMatrix(None)
+            Cm = CM["Tangent"].asMatrix(Xb)
         else:
             Cm = None
         #
@@ -113,14 +114,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["EstimationType"] == "State" and Cm is not None and Un is not None:
                 Xn_predicted = Mt * Xn + Cm * Un
-            else:
+                Pn_predicted = Mt * Pn * Ma + Q
+            elif self._parameters["EstimationType"] == "State" and (Cm is None or Un is None):
                 Xn_predicted = Mt * Xn
-            Pn_predicted = Mt * Pn * Ma + Q
+                Pn_predicted = Mt * Pn * Ma + Q
+            elif self._parameters["EstimationType"] == "Parameters":
+                # Xn_predicted = Mt * Xn
+                # Pn_predicted = Mt * Pn * Ma + Q
+                # --- > Par principe, M = Id, Q = 0
+                Xn_predicted = Xn
+                Pn_predicted = Pn
             #
             if self._parameters["EstimationType"] == "Parameters" and Cm is not None and Un is not None:
                 d  = Ynpu - Ht * Xn_predicted - Cm * Un
             else:
                 d  = Ynpu - Ht * Xn_predicted
+            #
             K  = Pn_predicted * Ha * (Ht * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d
             Pn = Pn_predicted - K * Ht * Pn_predicted
