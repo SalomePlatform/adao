@@ -399,12 +399,12 @@ and keywords for an ADAO calculation case`_.
     "False".
 
   StoreSupplementaryCalculations
-     This list indicates the names of the supplementary variables that can be
-     available at the end of the algorithm. It involves potentially costly
-     calculations. The default is a void list, none of these variables being
-     calculated and stored by default. The possible names are in the following
-     list: ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation",
-     "SigmaObs2", "MahalanobisConsistency"].
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations. The default is a void list, none of these variables being
+    calculated and stored by default. The possible names are in the following
+    list: ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation",
+    "SigmaObs2", "MahalanobisConsistency"].
 
 **"NonLinearLeastSquares"**
 
@@ -460,11 +460,11 @@ and keywords for an ADAO calculation case`_.
     "False".
 
   StoreSupplementaryCalculations
-     This list indicates the names of the supplementary variables that can be
-     available at the end of the algorithm. It involves potentially costly
-     calculations. The default is a void list, none of these variables being
-     calculated and stored by default. The possible names are in the following
-     list: ["BMA", "OMA", "OMB", "Innovation"].
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations. The default is a void list, none of these variables being
+    calculated and stored by default. The possible names are in the following
+    list: ["BMA", "OMA", "OMB", "Innovation"].
 
 **"EnsembleBlue"**
 
@@ -487,12 +487,17 @@ and keywords for an ADAO calculation case`_.
     "ObservationOperator",
     "EvolutionModel", "EvolutionError"*
 
+  EstimationType
+    This key allows to choose the type of estimation to be performed. It can be
+    either state-estimation, named "State", or parameter-estimation, named
+    "Parameters". The default choice is "Parameters".
+
   StoreSupplementaryCalculations
-     This list indicates the names of the supplementary variables that can be
-     available at the end of the algorithm. It involves potentially costly
-     calculations. The default is a void list, none of these variables being
-     calculated and stored by default. The possible names are in the following
-     list: ["APosterioriCovariance", "Innovation"].
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations. The default is a void list, none of these variables being
+    calculated and stored by default. The possible names are in the following
+    list: ["APosterioriCovariance", "CostFunctionJ", "Innovation"].
 
 **"ExtendedKalmanFilter"**
 
@@ -503,12 +508,17 @@ and keywords for an ADAO calculation case`_.
     "EvolutionModel", "EvolutionError",
     "ControlInput"*
 
+  EstimationType
+    This key allows to choose the type of estimation to be performed. It can be
+    either state-estimation, named "State", or parameter-estimation, named
+    "Parameters". The default choice is "Parameters".
+
   StoreSupplementaryCalculations
-     This list indicates the names of the supplementary variables that can be
-     available at the end of the algorithm. It involves potentially costly
-     calculations. The default is a void list, none of these variables being
-     calculated and stored by default. The possible names are in the following
-     list: ["APosterioriCovariance", "Innovation"].
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations. The default is a void list, none of these variables being
+    calculated and stored by default. The possible names are in the following
+    list: ["APosterioriCovariance", "CostFunctionJ", "Innovation"].
 
 **"ParticleSwarmOptimization"**
 
@@ -556,11 +566,11 @@ and keywords for an ADAO calculation case`_.
     "False".
 
   StoreSupplementaryCalculations
-     This list indicates the names of the supplementary variables that can be
-     available at the end of the algorithm. It involves potentially costly
-     calculations. The default is a void list, none of these variables being
-     calculated and stored by default. The possible names are in the following
-     list: ["BMA", "OMA", "OMB", "Innovation"].
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations. The default is a void list, none of these variables being
+    calculated and stored by default. The possible names are in the following
+    list: ["BMA", "OMA", "OMB", "Innovation"].
 
 **"QuantileRegression"**
 
@@ -597,11 +607,11 @@ and keywords for an ADAO calculation case`_.
     "False".
 
   StoreSupplementaryCalculations
-     This list indicates the names of the supplementary variables that can be
-     available at the end of the algorithm. It involves potentially costly
-     calculations. The default is a void list, none of these variables being
-     calculated and stored by default. The possible names are in the following
-     list: ["BMA", "OMA", "OMB", "Innovation"].
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations. The default is a void list, none of these variables being
+    calculated and stored by default. The possible names are in the following
+    list: ["BMA", "OMA", "OMB", "Innovation"].
 
 Requirements for functions describing an operator
 -------------------------------------------------
