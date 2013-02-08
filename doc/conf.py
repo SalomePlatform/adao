@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2008-2012 EDF R&D
+# Copyright (C) 2008-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 #
 # ADAO documentation build configuration file, created by
@@ -58,7 +58,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ADAO'
-copyright = u'2008-2012, Jean-Philippe ARGAUD'
+copyright = u'2008-2013, Jean-Philippe ARGAUD'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -221,7 +221,7 @@ source_encoding = 'iso-8859-15'
 epub_title = u'ADAO'
 epub_author = u'Jean-Philippe ARGAUD'
 epub_publisher = u'Jean-Philippe ARGAUD'
-epub_copyright = u'2008-2012, Jean-Philippe ARGAUD'
+epub_copyright = u'2008-2013, Jean-Philippe ARGAUD'
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.
