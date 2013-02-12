@@ -102,7 +102,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Bounds = None
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
-        if self._parameters.has_key("Minimizer") is "TNC":
+        if self._parameters.has_key("Minimizer") == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
         # Opérateur d'observation
