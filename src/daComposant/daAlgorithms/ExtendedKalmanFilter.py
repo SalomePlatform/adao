@@ -34,7 +34,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "CostFunctionJ", "Innovation"]
+            listval  = ["APosterioriCovariance", "BMA", "Innovation"]
             )
         self.defineRequiredParameter(
             name     = "EstimationType",
@@ -42,6 +42,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
             listval  = ["State", "Parameters"],
+            )
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -51,6 +57,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Paramètres de pilotage
         # ----------------------
         self.setParameters(Parameters)
+        #
+        if self._parameters["EstimationType"] == "Parameters":
+            self._parameters["StoreInternalVariables"] = True
         #
         # Opérateurs
         # ----------
@@ -73,7 +82,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._parameters["StoreInternalVariables"]:
             if B is not None:
                 BI = B.I
             elif self._parameters["B_scalar"] is not None:
@@ -88,9 +97,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------
         Xn = Xb
         Pn = B
+        #
         self.StoredVariables["Analysis"].store( Xn.A1 )
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["APosterioriCovariance"].store( Pn )
+            covarianceXa = Pn
+        Xa               = Xn
+        previousJMinimum = numpy.finfo(float).max
         #
         for step in range(duration-1):
             if hasattr(Y,"store"):
@@ -139,18 +152,36 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Pn = Pn_predicted - K * Ht * Pn_predicted
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )
-            #
-            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
             if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
-            if "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"]:
+            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
+            if self._parameters["StoreInternalVariables"]:
                 Jb  = 0.5 * (Xn - Xb).T * BI * (Xn - Xb)
                 Jo  = 0.5 * d.T * RI * d
                 J   = float( Jb ) + float( Jo )
+                self.StoredVariables["CurrentState"].store( Xn.A1 )
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )
+                if J < previousJMinimum:
+                    previousJMinimum  = J
+                    Xa                = Xn
+                    if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                        covarianceXa  = Pn
+            else:
+                Xa = Xn
+            #
+        #
+        # Stockage supplementaire de l'optimum en estimation de parametres
+        # ----------------------------------------------------------------
+        if self._parameters["EstimationType"] == "Parameters":
+            self.StoredVariables["Analysis"].store( Xa.A1 )
+            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
+        #
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
