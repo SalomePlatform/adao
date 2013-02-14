@@ -128,23 +128,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 Un = None
             #
-            if self._parameters["EstimationType"] == "State" and Cm is not None and Un is not None:
-                Xn_predicted = Mt * Xn + Cm * Un
-                Pn_predicted = Mt * Pn * Ma + Q
-            elif self._parameters["EstimationType"] == "State" and (Cm is None or Un is None):
+            if self._parameters["EstimationType"] == "State":
                 Xn_predicted = Mt * Xn
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                    Xn_predicted = Xn_predicted + Cm * Un
                 Pn_predicted = Mt * Pn * Ma + Q
             elif self._parameters["EstimationType"] == "Parameters":
-                # Xn_predicted = Mt * Xn
-                # Pn_predicted = Mt * Pn * Ma + Q
                 # --- > Par principe, M = Id, Q = 0
                 Xn_predicted = Xn
                 Pn_predicted = Pn
             #
-            if self._parameters["EstimationType"] == "Parameters" and Cm is not None and Un is not None:
-                d  = Ynpu - Ht * Xn_predicted - Cm * Un
-            else:
+            if self._parameters["EstimationType"] == "State":
                 d  = Ynpu - Ht * Xn_predicted
+            elif self._parameters["EstimationType"] == "Parameters":
+                d  = Ynpu - Ht * Xn_predicted
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
+                    d = d - Cm * Un
             #
             K  = Pn_predicted * Ha * (Ht * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d

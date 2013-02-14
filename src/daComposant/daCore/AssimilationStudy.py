@@ -32,6 +32,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import os, sys
 import numpy
 import Logging ; Logging.Logging() # A importer en premier
+import scipy.optimize # Import preventif car son abscence a de l'effet
 import Persistence
 from BasicObjects import Operator
 from PlatformInfo import uniq
