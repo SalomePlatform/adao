@@ -44,6 +44,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
+            name     = "ConstrainedBy",
+            default  = "EstimateProjection",
+            typecast = str,
+            message  = "Estimation d'etat ou de parametres",
+            listval  = ["EstimateProjection"],
+            )
+        self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
@@ -58,6 +65,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
+        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+            Bounds = self._parameters["Bounds"]
+            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
+        else:
+            Bounds = None
         if self._parameters["EstimationType"] == "Parameters":
             self._parameters["StoreInternalVariables"] = True
         #
@@ -72,6 +84,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if self._parameters["EstimationType"] == "State":
             M = EM["Direct"].appliedControledFormTo
+        #
+        if CM is not None and CM.has_key("Tangent") and U is not None:
+            Cm = CM["Tangent"].asMatrix(Xb)
+        else:
+            Cm = None
         #
         # Nombre de pas du Kalman identique au nombre de pas d'observations
         # -----------------------------------------------------------------
@@ -134,18 +151,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["EstimationType"] == "State":
                 Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, Un) ) )).T
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                    Xn_predicted = Xn_predicted + Cm * Un
                 Pn_predicted = Mt * Pn * Ma + Q
             elif self._parameters["EstimationType"] == "Parameters":
-                # Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, None) ) )).T
-                # Pn_predicted = Mt * Pn * Ma + Q
                 # --- > Par principe, M = Id, Q = 0
                 Xn_predicted = Xn
                 Pn_predicted = Pn
             #
-            if self._parameters["EstimationType"] == "Parameters":
-                d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, Un) ) )).T
-            elif self._parameters["EstimationType"] == "State":
+            if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+                Xn_predicted = numpy.max(numpy.hstack((Xn_predicted,numpy.asmatrix(Bounds)[:,0])),axis=1)
+                Xn_predicted = numpy.min(numpy.hstack((Xn_predicted,numpy.asmatrix(Bounds)[:,1])),axis=1)
+            #
+            if self._parameters["EstimationType"] == "State":
                 d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, None) ) )).T
+            elif self._parameters["EstimationType"] == "Parameters":
+                d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, Un) ) )).T
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
+                    d = d - Cm * Un
             #
             K  = Pn_predicted * Ha * (Ht * Pn_predicted * Ha + R).I
             Xn = Xn_predicted + K * d
