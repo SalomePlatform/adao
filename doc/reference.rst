@@ -146,8 +146,9 @@ following:
     noted :math:`M`, which describes a step of evolution. It is defined as a
     "*Function*" type object, that is, given as a script. Different functional
     forms can be used, as described in the following subsection `Requirements
-    for functions describing an operator`_. If there is some control :math:`U`,
-    the operator has to be applied to a pair :math:`(X,U)`.
+    for functions describing an operator`_. If there is some control :math:`U`
+    included in the evolution model, the operator has to be applied to a pair
+    :math:`(X,U)`.
 
 **InputVariables**
     *Optional command*. This command allows to indicates the name and size of
@@ -172,7 +173,8 @@ following:
     :math:`\mathbf{y}^o`. It is defined as a "*Function*" type object, that is,
     given as a script. Different functional forms can be used, as described in
     the following subsection `Requirements for functions describing an
-    operator`_.
+    operator`_. If there is some control :math:`U` included in the observation,
+    the operator has to be applied to a pair :math:`(X,U)`.
 
 **Observers**
     *Optional command*. This command allows to set internal observers, that are
@@ -314,8 +316,8 @@ This section describes the available options algorithm by algorithm. If an
 option is specified for an algorithm that doesn't support it, the option is
 simply left unused. The meaning of the acronyms or particular names can be found
 in the :ref:`genindex` or the :ref:`section_glossary`. In addition, for each
-algorithm, the required commands are given, being described in `List of commands
-and keywords for an ADAO calculation case`_.
+algorithm, the required commands/keywords are given, being described in `List of
+commands and keywords for an ADAO calculation case`_.
 
 **"Blue"**
 
@@ -485,19 +487,20 @@ and keywords for an ADAO calculation case`_.
     *"Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
-    "EvolutionModel", "EvolutionError"*
+    "EvolutionModel", "EvolutionError",
+    "ControlInput"*
 
-  EstimationType
+  EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
     either state-estimation, named "State", or parameter-estimation, named
-    "Parameters". The default choice is "Parameters".
+    "Parameters". The default choice is "State".
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations. The default is a void list, none of these variables being
     calculated and stored by default. The possible names are in the following
-    list: ["APosterioriCovariance", "CostFunctionJ", "Innovation"].
+    list: ["APosterioriCovariance", "BMA", "Innovation"].
 
 **"ExtendedKalmanFilter"**
 
@@ -508,17 +511,28 @@ and keywords for an ADAO calculation case`_.
     "EvolutionModel", "EvolutionError",
     "ControlInput"*
 
-  EstimationType
+  Bounds
+    This key allows to define upper and lower bounds for every control variable
+    being optimized. Bounds can be given by a list of list of pairs of
+    lower/upper bounds for each variable, with extreme values every time there
+    is no bound. The bounds can always be specified, but they are taken into
+    account only by the constrained minimizers.
+
+  ConstrainedBy
+    This key allows to define the method to take bounds into account. The
+    possible methods are in the following list: ["EstimateProjection"].
+
+  EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
     either state-estimation, named "State", or parameter-estimation, named
-    "Parameters". The default choice is "Parameters".
+    "Parameters". The default choice is "State".
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations. The default is a void list, none of these variables being
     calculated and stored by default. The possible names are in the following
-    list: ["APosterioriCovariance", "CostFunctionJ", "Innovation"].
+    list: ["APosterioriCovariance", "BMA", "Innovation"].
 
 **"ParticleSwarmOptimization"**
 
@@ -629,13 +643,13 @@ procedure. So the mathematical representation of such a process is a function.
 It was briefly described in the section :ref:`section_theory` and is generalized
 here by the relation:
 
-.. math:: \mathbf{y} = H( \mathbf{x} )
+.. math:: \mathbf{y} = O( \mathbf{x} )
 
 between the pseudo-observations :math:`\mathbf{y}` and the parameters
-:math:`\mathbf{x}` using the observation operator :math:`H`. The same functional
-representation can be used for the linear tangent model :math:`\mathbf{H}` of
-:math:`H` and its adjoint :math:`\mathbf{H}^*`, also required by some data
-assimilation or optimization algorithms.
+:math:`\mathbf{x}` using the observation or evolution operator :math:`O`. The
+same functional representation can be used for the linear tangent model
+:math:`\mathbf{O}` of :math:`O` and its adjoint :math:`\mathbf{O}^*`, also
+required by some data assimilation or optimization algorithms.
 
 Then, **to describe completely an operator, the user has only to provide a
 function that fully and only realize the functional operation**.
@@ -664,7 +678,7 @@ template::
         ...
         ...
         ...
-        return Y=H(X)
+        return Y=O(X)
 
 In this case, the user can also provide a value for the differential increment,
 using through the GUI the keyword "*DifferentialIncrement*", which has a default
@@ -678,7 +692,7 @@ Second functional form: using "*ScriptWithFunctions*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The second one consist in providing directly the three associated operators
-:math:`H`, :math:`\mathbf{H}` and :math:`\mathbf{H}^*`. This is done by using
+:math:`O`, :math:`\mathbf{O}` and :math:`\mathbf{O}^*`. This is done by using
 the keyword "*ScriptWithFunctions*" for the description of the chosen operator
 in the ADAO GUI. The user have to provide three functions in one script, with
 three mandatory names "*DirectOperator*", "*TangentOperator*" and
@@ -743,26 +757,26 @@ Here is the switch template::
     logging.info("Found method is \'%s\'"%method)
     #
     logging.info("Loading operator functions")
-    FunctionH = Physical_simulation_functions.DirectOperator
-    TangentH  = Physical_simulation_functions.TangentOperator
-    AdjointH  = Physical_simulation_functions.AdjointOperator
+    Function = Physical_simulation_functions.DirectOperator
+    Tangent  = Physical_simulation_functions.TangentOperator
+    Adjoint  = Physical_simulation_functions.AdjointOperator
     #
     logging.info("Executing the possible computations")
     data = []
     if method == "Direct":
         logging.info("Direct computation")
         Xcurrent = computation["inputValues"][0][0][0]
-        data = FunctionH(numpy.matrix( Xcurrent ).T)
+        data = Function(numpy.matrix( Xcurrent ).T)
     if method == "Tangent":
         logging.info("Tangent computation")
         Xcurrent  = computation["inputValues"][0][0][0]
         dXcurrent = computation["inputValues"][0][0][1]
-        data = TangentH(numpy.matrix(Xcurrent).T, numpy.matrix(dXcurrent).T)
+        data = Tangent(numpy.matrix(Xcurrent).T, numpy.matrix(dXcurrent).T)
     if method == "Adjoint":
         logging.info("Adjoint computation")
         Xcurrent = computation["inputValues"][0][0][0]
         Ycurrent = computation["inputValues"][0][0][1]
-        data = AdjointH((numpy.matrix(Xcurrent).T, numpy.matrix(Ycurrent).T))
+        data = Adjoint((numpy.matrix(Xcurrent).T, numpy.matrix(Ycurrent).T))
     #
     logging.info("Formatting the output")
     it = numpy.ravel(data)
@@ -781,25 +795,25 @@ All various modifications could be done from this template hypothesis.
 Special case of controled evolution operator
 ++++++++++++++++++++++++++++++++++++++++++++
 
-In some cases, the evolution operator is required to be controled by an external
-input control, given a priori. In this case, the generic form of the incremental
-evolution model is slightly modified as follows:
+In some cases, the evolution or the observation operators are required to be
+controled by an external input control, given a priori. In this case, the
+generic form of the incremental evolution model is slightly modified as follows:
 
-.. math:: \mathbf{y} = H( \mathbf{x}, \mathbf{u})
+.. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
 where :math:`\mathbf{u}` is the control over one state increment. In this case,
-the direct evolution operator has to be applied to a pair of variables
-:math:`(X,U)`. Schematically, the evolution operator has to be set as::
+the direct operator has to be applied to a pair of variables :math:`(X,U)`.
+Schematically, the operator has to be set as::
 
     def DirectOperator( (X, U) ):
         """ Direct non-linear simulation operator """
         ...
         ...
         ...
-        return something like X(n+1)
+        return something like X(n+1) or Y(n+1)
 
 The tangent and adjoint operators have the same signature as previously, noting
-that the derivatives has to be done only against :math:`\mathbf{x}` partially.
+that the derivatives has to be done only partially against :math:`\mathbf{x}`.
 In such a case with explicit control, only the second functional form (using
 "*ScriptWithFunctions*") and third functional form (using "*ScriptWithSwitch*")
 can be used.

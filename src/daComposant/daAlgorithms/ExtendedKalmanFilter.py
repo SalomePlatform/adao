@@ -37,7 +37,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["APosterioriCovariance", "BMA", "Innovation"]
             )
         self.defineRequiredParameter(
-            name     = "EstimationType",
+            name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
@@ -70,7 +70,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
         else:
             Bounds = None
-        if self._parameters["EstimationType"] == "Parameters":
+        if self._parameters["EstimationOf"] == "Parameters":
             self._parameters["StoreInternalVariables"] = True
         #
         # Opérateurs
@@ -82,7 +82,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         H = HO["Direct"].appliedControledFormTo
         #
-        if self._parameters["EstimationType"] == "State":
+        if self._parameters["EstimationOf"] == "State":
             M = EM["Direct"].appliedControledFormTo
         #
         if CM is not None and CM.has_key("Tangent") and U is not None:
@@ -133,7 +133,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Ha = HO["Adjoint"].asMatrix(ValueForMethodForm = Xn)
             Ha = Ha.reshape(Xn.size,Ynpu.size) # ADAO & check shape
             #
-            if self._parameters["EstimationType"] == "State":
+            if self._parameters["EstimationOf"] == "State":
                 Mt = EM["Tangent"].asMatrix(ValueForMethodForm = Xn)
                 Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
                 Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = Xn)
@@ -149,12 +149,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 Un = None
             #
-            if self._parameters["EstimationType"] == "State":
+            if self._parameters["EstimationOf"] == "State":
                 Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, Un) ) )).T
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Xn_predicted = Xn_predicted + Cm * Un
                 Pn_predicted = Mt * Pn * Ma + Q
-            elif self._parameters["EstimationType"] == "Parameters":
+            elif self._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 Xn_predicted = Xn
                 Pn_predicted = Pn
@@ -163,9 +163,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Xn_predicted = numpy.max(numpy.hstack((Xn_predicted,numpy.asmatrix(Bounds)[:,0])),axis=1)
                 Xn_predicted = numpy.min(numpy.hstack((Xn_predicted,numpy.asmatrix(Bounds)[:,1])),axis=1)
             #
-            if self._parameters["EstimationType"] == "State":
+            if self._parameters["EstimationOf"] == "State":
                 d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, None) ) )).T
-            elif self._parameters["EstimationType"] == "Parameters":
+            elif self._parameters["EstimationOf"] == "Parameters":
                 d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, Un) ) )).T
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                     d = d - Cm * Un
@@ -198,7 +198,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Stockage supplementaire de l'optimum en estimation de parametres
         # ----------------------------------------------------------------
-        if self._parameters["EstimationType"] == "Parameters":
+        if self._parameters["EstimationOf"] == "Parameters":
             self.StoredVariables["Analysis"].store( Xa.A1 )
             if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXa )

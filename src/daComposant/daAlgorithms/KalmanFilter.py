@@ -37,7 +37,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["APosterioriCovariance", "BMA", "Innovation"]
             )
         self.defineRequiredParameter(
-            name     = "EstimationType",
+            name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
@@ -58,7 +58,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
-        if self._parameters["EstimationType"] == "Parameters":
+        if self._parameters["EstimationOf"] == "Parameters":
             self._parameters["StoreInternalVariables"] = True
         #
         # Opérateurs
@@ -71,7 +71,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ht = HO["Tangent"].asMatrix(Xb)
         Ha = HO["Adjoint"].asMatrix(Xb)
         #
-        if self._parameters["EstimationType"] == "State":
+        if self._parameters["EstimationOf"] == "State":
             Mt = EM["Tangent"].asMatrix(Xb)
             Ma = EM["Adjoint"].asMatrix(Xb)
         #
@@ -128,19 +128,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 Un = None
             #
-            if self._parameters["EstimationType"] == "State":
+            if self._parameters["EstimationOf"] == "State":
                 Xn_predicted = Mt * Xn
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Xn_predicted = Xn_predicted + Cm * Un
                 Pn_predicted = Mt * Pn * Ma + Q
-            elif self._parameters["EstimationType"] == "Parameters":
+            elif self._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 Xn_predicted = Xn
                 Pn_predicted = Pn
             #
-            if self._parameters["EstimationType"] == "State":
+            if self._parameters["EstimationOf"] == "State":
                 d  = Ynpu - Ht * Xn_predicted
-            elif self._parameters["EstimationType"] == "Parameters":
+            elif self._parameters["EstimationOf"] == "Parameters":
                 d  = Ynpu - Ht * Xn_predicted
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                     d = d - Cm * Un
@@ -173,7 +173,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Stockage supplementaire de l'optimum en estimation de parametres
         # ----------------------------------------------------------------
-        if self._parameters["EstimationType"] == "Parameters":
+        if self._parameters["EstimationOf"] == "Parameters":
             self.StoredVariables["Analysis"].store( Xa.A1 )
             if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
