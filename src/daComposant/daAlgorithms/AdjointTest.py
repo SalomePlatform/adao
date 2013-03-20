@@ -129,9 +129,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             __doc__ = ""
         #
-        msgs  = "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-        msgs += "             " + self._parameters["ResultTitle"] + "\n"
-        msgs += "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+        if len(self._parameters["ResultTitle"]) > 0:
+            msgs  = "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs += "             " + self._parameters["ResultTitle"] + "\n"
+            msgs += "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+        else:
+            msgs  = ""
         msgs += __doc__
         #
         msg = "  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)  "
