@@ -67,6 +67,7 @@ AssimAlgos = [
     "ParticleSwarmOptimization",
     ]
 CheckAlgos = [
+    "FunctionTest",
     "GradientTest",
     "AdjointTest",
     ]
@@ -120,6 +121,10 @@ AlgoDataRequirements["QuantileRegression"] = [
     "ObservationOperator",
     ]
 
+AlgoDataRequirements["FunctionTest"] = [
+    "CheckingPoint",
+    "ObservationOperator",
+    ]
 AlgoDataRequirements["GradientTest"] = [
     "CheckingPoint",
     "ObservationOperator",
