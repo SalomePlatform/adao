@@ -435,13 +435,13 @@ is done in a Python script file named ``Script_BackgroundError_B.py``::
 
 To continue, we need the observation operator :math:`\mathbf{H}` as a function
 of the state. It is here defined in an external file named
-``"Physical_simulation_functions.py"``, which should contain functions
-conveniently named here ``"FunctionH"`` and ``"AdjointH"``. These functions are
-user ones, representing as programming functions the :math:`\mathbf{H}` operator
-and its adjoint. We suppose these functions are given by the user. A simple
-skeleton is given here for convenience::
+``"Physical_simulation_functions.py"``, which should contain one function
+conveniently named here ``"DirectOperator"``. This function is user one,
+representing as programming function the :math:`\mathbf{H}` operator. We suppose
+this function is then given by the user. A simple skeleton is given here for
+convenience::
 
-    def FunctionH( XX ):
+    def DirectOperator( XX ):
         """ Direct non-linear simulation operator """
         #
         # --------------------------------------> EXAMPLE TO BE REMOVED
@@ -455,26 +455,26 @@ skeleton is given here for convenience::
         #
         return numpy.array( HX )
 
-We does not need the operators ``"TangentH"`` and ``"AdjointH"`` because they
-will be approximated using ADAO capabilities.
+We does not need the operators ``"TangentOperator"`` and ``"AdjointOperator"``
+because they will be approximated using ADAO capabilities.
 
-We insist on the fact that these non-linear operator ``"FunctionH"``, tangent
-operator ``"TangentH"`` and adjoint operator ``"AdjointH"`` come from the
-physical knowledge, include the reference physical simulation code and its
-eventual adjoint, and have to be carefully set up by the data assimilation user.
-The errors in or missuses of the operators can not be detected or corrected by
-the data assimilation framework alone.
+We insist on the fact that these non-linear operator ``"DirectOperator"``,
+tangent operator ``"TangentOperator"`` and adjoint operator
+``"AdjointOperator"`` come from the physical knowledge, include the reference
+physical simulation code and its eventual adjoint, and have to be carefully set
+up by the data assimilation user. The errors in or missuses of the operators can
+not be detected or corrected by the data assimilation framework alone.
 
 In this twin experiments framework, the observation :math:`\mathbf{y}^o` and its
 error covariances matrix :math:`\mathbf{R}` can be generated. It is done in two
 Python script files, the first one being named ``Script_Observation_yo.py``::
 
     from Physical_data_and_covariance_matrices import True_state
-    from Physical_simulation_functions import FunctionH
+    from Physical_simulation_functions import DirectOperator
     #
     xt, noms = True_state()
     #
-    yo = FunctionH( xt )
+    yo = DirectOperator( xt )
     #
     # Creating the required ADAO variable
     # -----------------------------------
@@ -483,11 +483,11 @@ Python script files, the first one being named ``Script_Observation_yo.py``::
 and the second one named ``Script_ObservationError_R.py``::
 
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
-    from Physical_simulation_functions import FunctionH
+    from Physical_simulation_functions import DirectOperator
     #
     xt, names = True_state()
     #
-    yo = FunctionH( xt )
+    yo = DirectOperator( xt )
     #
     R  = 0.0001 * Simple_Matrix( size = len(yo) )
     #
