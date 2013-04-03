@@ -22,4 +22,4 @@
 
 name    = "Data Assimilation Package"
 version = "0.7.0"
-date    = "mercredi 12 décembre 2012, 12:12:12 (UTC+0100)"
+date    = "mardi 30 avril 2013, 12:12:12 (UTC+0100)"
