@@ -39,7 +39,7 @@ class CONFIG(configuration.CONFIG_BASE):
   def __init__(self,appli,repIni):
 
     self.labels_eficas = ['lang']
-    configuration.CONFIG_BASE.__init__(self,appli,repIni,'.Eficas_ADAO')
+    configuration.CONFIG_BASE.__init__(self,appli,repIni)
 
     self.rep_user = os.environ["HOME"]
     self.appli   = appli
