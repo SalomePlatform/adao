@@ -14,11 +14,11 @@ Converting and executing an ADAO command file (JDC) using a shell script
 ------------------------------------------------------------------------
 
 It is possible to convert and execute an ADAO command file (JDC, or ".comm"
-file) automatically by using a template script containing all the required
-steps. The user has to know where are the main SALOME scripts, and in particular
-the ``runAppli`` one. The directory in which this script resides is symbolically
-named ``<SALOME MAIN INSTALLATION DIR>`` and has to be replaced by the good one
-in the template.
+file, which resides in ``<ADAO JDC file directory>``) automatically by using a
+template script containing all the required steps. The user has to know where
+are the main SALOME scripts, and in particular the ``runAppli`` one. The
+directory in which this script resides is symbolically named ``<SALOME main
+installation dir>`` and has to be replaced by the good one in the template.
 
 When an ADAO command file is build by the ADAO GUI editor and saved, if it is
 named for example "AdaoStudy1.comm", then a companion file named "AdaoStudy1.py"
@@ -27,23 +27,26 @@ file>`` in the template, and it is converted to YACS as an ``<ADAO YACS xml
 scheme>``. After that, it can be executed in console mode using the standard
 YACS console command (see YACS documentation for more information).
 
-In the example, we choose also to start and stop the SALOME application server
-in the same script, which is not necessary, but useful to avoid stalling SALOME
-sessions.
+In the example, we choose to start and stop the SALOME application server in the
+same script, which is not necessary, but useful to avoid stalling SALOME
+sessions. We choose also to remove the ``<ADAO YACS xml scheme>`` because it is
+a generated one. You only need to replace the text between these symbols
+``<...>`` to use it.
 
 The template of the shell script is the following::
 
     #!/bin/bash
-    <SALOME MAIN INSTALLATION DIR>/runAppli -k -t
-    <SALOME MAIN INSTALLATION DIR>/runSession python \
-        ${ADAO_ROOT_DIR}/bin/salome/AdaoYacsSchemaCreator.py \
-        <ADAO Python file> <ADAO YACS xml scheme>
-    <SALOME MAIN INSTALLATION DIR>/runSession driver \
-        <ADAO YACS xml scheme>
-    <SALOME MAIN INSTALLATION DIR>/runSession killSalome.py
+    export USERDIR=<ADAO JDC file directory>
+    export SALOMEDIR=<SALOME main installation directory>
+    $SALOMEDIR/runAppli -k -t
+    $SALOMEDIR/runSession python \
+        $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py \
+        $USERDIR/<ADAO Python file> $USERDIR/<ADAO YACS xml scheme>
+    $SALOMEDIR/runSession driver $USERDIR/<ADAO YACS xml scheme>
+    $SALOMEDIR/runSession killSalome.py
+    rm -f $USERDIR/ADAO_Case.xml
 
-Standard output and errors come on console, successive executions can be done if
-the SALOME server is already running.
+Standard output and errors come on console.
 
 Running an ADAO calculation scheme in YACS using a TUI user mode
 ----------------------------------------------------------------
