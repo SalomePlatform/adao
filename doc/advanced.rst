@@ -156,3 +156,58 @@ It is also recommended to include in the simulation code some logging or debug
 mechanisms and use them in conjunction with the two previous methods. But be
 careful not to store too big variables because it cost time, whatever logging
 level is chosen.
+
+Switching from a version of ADAO to a newer one
+-----------------------------------------------
+
+The ADAO module and cases are identified as versions, with "Major", "Minor" and
+"Revision" characteristics. A particular version is numbered as
+"Major.Minor.Revision".
+
+Each version of the ADAO module can read ADAO case files of the previous minor
+version. In general, it can also read ADAO case files of all the previous minor
+versions for one major branch. In general also, an ADAO case file for one
+version can not be read by a previous minor or major version.
+
+Switching from 6.6 to 7.2
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case file. The upgrade procedure
+is to read the old ADAO case file with the new SALOME/ADAO module, and save it
+with a new name.
+
+There is one incompatibility introduced for the post-processing or observer
+script files. The old syntax to call a result object, such as the "*Analysis*"
+one in a script provided through the "*UserPostAnalysis*" keyword), was for
+example::
+
+    Analysis = ADD.get("Analysis").valueserie(-1)
+    Analysis = ADD.get("Analysis").valueserie()
+
+The new syntax is entirely similar to the classical one of a list/tuple object::
+
+    Analysis = ADD.get("Analysis")[-1]
+    Analysis = ADD.get("Analysis")[:]
+
+The post-processing scripts has to be modified.
+
+Switching from 6.5 to 6.6
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case file or the accompanying
+scripts. The upgrade procedure is to read the old ADAO case file with the new
+SALOME/ADAO module, and save it with a new name.
+
+Switching from 6.4 to 6.5
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case file or the accompanying
+scripts. The upgrade procedure is to read the old ADAO case file with the new
+SALOME/ADAO module, and save it with a new name.
+
+Switching from 6.3 to 6.4
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case file or the accompanying
+scripts. The upgrade procedure is to read the old ADAO case file with the new
+SALOME/ADAO module, and save it with a new name.
