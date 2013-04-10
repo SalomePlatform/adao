@@ -62,11 +62,12 @@ logging.debug("CREATE Entering in CreateAssimilationStudy")
 print "Entering in the assimilation study"
 print "Name is set to........:", Name
 print "Algorithm is set to...:", Algorithm
-print "Debug is set to.......:", Debug
 
 # Create Assimilation study
 from daYacsIntegration.daStudy import *
 assim_study = daStudy(Name, Algorithm, Debug)
+
+logging.debug("CREATE Data entered are:")
 
 # Algorithm parameters
 try:
@@ -74,9 +75,8 @@ try:
 except NameError:
   pass
 else:
+  logging.debug("CREATE AlgorithmParameters is %s"%AlgorithmParameters)
   assim_study.setAlgorithmParameters(AlgorithmParameters)
-
-logging.debug("CREATE Data entered are:")
 
 # Background
 try:
