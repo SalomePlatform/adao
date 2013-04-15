@@ -199,7 +199,6 @@ menu). As an example, the output of the above simple case is the following::
    Entering in the assimilation study
    Name is set to........: Test
    Algorithm is set to...: Blue
-   Debug is set to.......: False
    Launching the analyse
 
    Optimal state: [0.5, 0.5, 0.5]

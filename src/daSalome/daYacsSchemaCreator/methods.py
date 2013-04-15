@@ -429,6 +429,7 @@ def create_yacs_proc(study_config):
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os \n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += script_str.read()
@@ -455,6 +456,7 @@ def create_yacs_proc(study_config):
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os \n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += script_str.read()
@@ -482,6 +484,7 @@ def create_yacs_proc(study_config):
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os, numpy, logging\n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += """# ==============================================\n"""
@@ -561,6 +564,7 @@ def create_yacs_proc(study_config):
     node_script  = "#-*-coding:iso-8859-1-*-\n"
     node_script += "import sys, os, numpy, logging\n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += """# ==============================================\n"""
@@ -645,6 +649,7 @@ def create_yacs_proc(study_config):
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os \n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
@@ -672,6 +677,7 @@ def create_yacs_proc(study_config):
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os \n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
@@ -698,6 +704,7 @@ def create_yacs_proc(study_config):
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os, numpy, logging\n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
@@ -779,6 +786,7 @@ def create_yacs_proc(study_config):
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os, numpy, logging\n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
@@ -1001,6 +1009,7 @@ def create_yacs_proc(study_config):
       node_script  = "#-*-coding:iso-8859-1-*-\n"
       node_script += "import sys, os \n"
       node_script += "filepath = \"" + os.path.dirname(analysis_file_name) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(analysis_file_name) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += default_script
