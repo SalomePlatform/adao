@@ -194,9 +194,14 @@ The post-processing scripts has to be modified.
 Switching from 6.5 to 6.6
 +++++++++++++++++++++++++
 
-There is no known incompatibility for the ADAO case file or the accompanying
-scripts. The upgrade procedure is to read the old ADAO case file with the new
-SALOME/ADAO module, and save it with a new name.
+There is no known incompatibility for the ADAO case file. The upgrade procedure
+is to read the old ADAO case file with the new SALOME/ADAO module, and save it
+with a new name.
+
+There is one incompatibility introduced for the designation of operators used to
+for the observation operator. The new mandatory names are "*DirectOperator*",
+"*TangentOperator*" and "*AdjointOperator*", as described in the last subsection
+of the chapter :ref:`section_reference`.
 
 Switching from 6.4 to 6.5
 +++++++++++++++++++++++++

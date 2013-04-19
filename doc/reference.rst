@@ -797,7 +797,11 @@ value of 1%. This coefficient will be used in the finite difference
 approximation to build the tangent and adjoint operators.
 
 This first operator definition allow easily to test the functional form before
-its use in an ADAO case, reducing the complexity of implementation.
+its use in an ADAO case, greatly reducing the complexity of implementation.
+
+**Important warning:** the name "*DirectOperator*" is mandatory, and the type of
+the X argument can be either a python list, a numpy array or a numpy 1D-matrix.
+The user has to treat these cases in his script.
 
 Second functional form: using "*ScriptWithFunctions*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -830,9 +834,14 @@ three mandatory names "*DirectOperator*", "*TangentOperator*" and
         ...
         return something like X
 
-Another time, this second perator definition allow easily to test the functional
-forms before their use in an ADAO case, greatly reducing the complexity of
+Another time, this second operator definition allow easily to test the
+functional forms before their use in an ADAO case, reducing the complexity of
 implementation.
+
+**Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
+"*AdjointOperator*" are mandatory, and the type of the X, Y, dX arguments can be
+either a python list, a numpy array or a numpy 1D-matrix. The user has to treat
+these cases in his script.
 
 Third functional form: using "*ScriptWithSwitch*"
 +++++++++++++++++++++++++++++++++++++++++++++++++
