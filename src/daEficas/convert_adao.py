@@ -19,7 +19,7 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-print "import convert_adao"
+# print "import convert_adao"
 
 import convert.parseur_python
 from convert.convert_python import *

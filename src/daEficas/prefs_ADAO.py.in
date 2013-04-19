@@ -36,22 +36,3 @@ initialdir=os.environ["PWD"]
 encoding='iso-8859-1'
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
-
-
-# INSTALLDIR sert a localiser l'installation d'Eficas
-#INSTALLDIR=os.path.join(REPINI,'..')
-
-
-
-# Acces a la documentation
-#rep_cata        = INSTALLDIR
-#path_doc        = os.path.join(rep_cata,'Doc')
-#exec_acrobat    = "/usr/bin/xpdf"
-#savedir         = os.environ['HOME']
-
-
-# OpenTURNS Python module
-#OpenTURNS_path="/local00/home/dutka/OpenTURNS/trunk-cmake/build-autotools/install/lib/python2.4/site-packages"
-# Choix des catalogues
-#sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
-

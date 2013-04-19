@@ -22,9 +22,9 @@ import sys
 import os
 import traceback
 import logging
-logging.basicConfig(level=logging.INFO, format='%(levelname)-8s %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(message)s')
 
-print "-- Starting AdaoYacsSchemaCreator --"
+logging.debug("-- Starting AdaoYacsSchemaCreator --")
 
 # Check some basics variables
 if "ADAO_ROOT_DIR" not in os.environ:

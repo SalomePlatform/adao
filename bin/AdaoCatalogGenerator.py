@@ -24,7 +24,7 @@ import sys
 import string
 import StringIO
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 #----------- Templates Part ---------------#
 begin_catalog_file = """# -*- coding: utf-8 -*-
