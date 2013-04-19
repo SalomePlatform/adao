@@ -275,7 +275,7 @@ calculation. This is done by using the "*AlgorithmParameters*" keyword in the
 definition of the ADAO case, which is an keyword of the ASSIMILATION_STUDY. This
 keyword requires a Python dictionary, containing some key/value pairs. The list
 of possible optional parameters are given in the subsection
-:ref:`subsection_algo_options`.
+:ref:`section_reference`.
 
 If no bounds at all are required on the control variables, then one can choose
 the "BFGS" or "CG" minimisation algorithm for the 3DVAR algorithm. For

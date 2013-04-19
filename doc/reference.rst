@@ -66,8 +66,11 @@ contain a variable or a method that has the same name as the one to be filled.
 In other words, when importing the script in a YACS Python node, it must create
 a variable of the good name in the current namespace.
 
+Reference description for ADAO calculation cases
+------------------------------------------------
+
 List of commands and keywords for an ADAO calculation case
-----------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: ASSIMILATION_STUDY
 .. index:: single: Algorithm
@@ -105,14 +108,14 @@ following:
     optimization algorithm chosen. The choices are limited and available through
     the GUI. There exists for example "3DVAR", "Blue"... See below the list of
     algorithms and associated parameters in the following subsection `Options
-    and required commands for algorithms`_.
+    and required commands for calculation algorithms`_.
 
 **AlgorithmParameters**
     *Optional command*. This command allows to add some optional parameters to
     control the data assimilation or optimization algorithm. It is defined as a
     "*Dict*" type object, that is, given as a script. See below the list of
     algorithms and associated parameters in the following subsection `Options
-    and required commands for algorithms`_.
+    and required commands for calculation algorithms`_.
 
 **Background**
     *Required command*. This indicates the background or initial vector used,
@@ -206,76 +209,8 @@ following:
     a script or a string, allowing to put post-processing code directly inside
     the ADAO case.
 
-List of commands and keywords for an ADAO checking case
--------------------------------------------------------
-
-.. index:: single: CHECKING_STUDY
-.. index:: single: Algorithm
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: Debug
-.. index:: single: ObservationOperator
-.. index:: single: Study_name
-.. index:: single: Study_repertory
-.. index:: single: UserDataInit
-
-The second set of commands is related to the description of a checking case,
-that is a procedure to check required properties on information somewhere else
-by a calculation case. The terms are ordered in alphabetical order, except the
-first, which describes choice between calculation or checking. The different
-commands are the following:
-
-**CHECKING_STUDY**
-    *Required command*. This is the general command describing the checking
-    case. It hierarchically contains all the other commands.
-
-**Algorithm**
-    *Required command*. This is a string to indicate the data assimilation or
-    optimization algorithm chosen. The choices are limited and available through
-    the GUI. There exists for example "3DVAR", "Blue"... See below the list of
-    algorithms and associated parameters in the following subsection `Options
-    and required commands for algorithms`_.
-
-**AlgorithmParameters**
-    *Optional command*. This command allows to add some optional parameters to
-    control the data assimilation or optimization algorithm. It is defined as a
-    "*Dict*" type object, that is, given as a script. See below the list of
-    algorithms and associated parameters in the following subsection `Options
-    and required commands for algorithms`_.
-
-**CheckingPoint**
-    *Required command*. This indicates the vector used,
-    previously noted as :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type
-    object, that is, given either as a string or as a script.
-
-**Debug**
-    *Required command*. This define the level of trace and intermediary debug
-    information. The choices are limited between 0 (for False) and 1 (for
-    True).
-
-**ObservationOperator**
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. It is defined as a "*Function*" type object, that is,
-    given as a script. Different functional forms can be used, as described in
-    the following subsection `Requirements for functions describing an
-    operator`_.
-
-**Study_name**
-    *Required command*. This is an open string to describe the study by a name
-    or a sentence.
-
-**Study_repertory**
-    *Optional command*. If available, this repertory is used to find all the
-    script files that can be used to define some other commands by scripts.
-
-**UserDataInit**
-    *Optional command*. This commands allows to initialize some parameters or
-    data automatically before data assimilation algorithm processing.
-
-Options and required commands for algorithms
---------------------------------------------
+Options and required commands for calculation algorithms
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: 3DVAR
 .. index:: single: Blue
@@ -626,6 +561,182 @@ commands and keywords for an ADAO calculation case`_.
     calculations. The default is a void list, none of these variables being
     calculated and stored by default. The possible names are in the following
     list: ["BMA", "OMA", "OMB", "Innovation"].
+
+Reference description for ADAO checking cases
+---------------------------------------------
+
+List of commands and keywords for an ADAO checking case
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: CHECKING_STUDY
+.. index:: single: Algorithm
+.. index:: single: AlgorithmParameters
+.. index:: single: CheckingPoint
+.. index:: single: Debug
+.. index:: single: ObservationOperator
+.. index:: single: Study_name
+.. index:: single: Study_repertory
+.. index:: single: UserDataInit
+
+The second set of commands is related to the description of a checking case,
+that is a procedure to check required properties on information somewhere else
+by a calculation case. The terms are ordered in alphabetical order, except the
+first, which describes choice between calculation or checking. The different
+commands are the following:
+
+**CHECKING_STUDY**
+    *Required command*. This is the general command describing the checking
+    case. It hierarchically contains all the other commands.
+
+**Algorithm**
+    *Required command*. This is a string to indicate the data assimilation or
+    optimization algorithm chosen. The choices are limited and available through
+    the GUI. There exists for example "FunctionTest", "AdjointTest"... See below
+    the list of algorithms and associated parameters in the following subsection
+    `Options and required commands for checking algorithms`_.
+
+**AlgorithmParameters**
+    *Optional command*. This command allows to add some optional parameters to
+    control the data assimilation or optimization algorithm. It is defined as a
+    "*Dict*" type object, that is, given as a script. See below the list of
+    algorithms and associated parameters in the following subsection `Options
+    and required commands for checking algorithms`_.
+
+**CheckingPoint**
+    *Required command*. This indicates the vector used,
+    previously noted as :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type
+    object, that is, given either as a string or as a script.
+
+**Debug**
+    *Required command*. This define the level of trace and intermediary debug
+    information. The choices are limited between 0 (for False) and 1 (for
+    True).
+
+**ObservationOperator**
+    *Required command*. This indicates the observation operator, previously
+    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
+    results :math:`\mathbf{y}` to be compared to observations
+    :math:`\mathbf{y}^o`. It is defined as a "*Function*" type object, that is,
+    given as a script. Different functional forms can be used, as described in
+    the following subsection `Requirements for functions describing an
+    operator`_.
+
+**Study_name**
+    *Required command*. This is an open string to describe the study by a name
+    or a sentence.
+
+**Study_repertory**
+    *Optional command*. If available, this repertory is used to find all the
+    script files that can be used to define some other commands by scripts.
+
+**UserDataInit**
+    *Optional command*. This commands allows to initialize some parameters or
+    data automatically before data assimilation algorithm processing.
+
+Options and required commands for checking algorithms
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: AdjointTest
+.. index:: single: FunctionTest
+.. index:: single: GradientTest
+
+.. index:: single: AlgorithmParameters
+.. index:: single: AmplitudeOfInitialDirection
+.. index:: single: EpsilonMinimumExponent
+.. index:: single: InitialDirection
+.. index:: single: ResiduFormula
+.. index:: single: SetSeed
+
+We recall that each algorithm can be controlled using some generic or specific
+options given through the "*AlgorithmParameters*" optional command, as follows
+for example::
+
+    AlgorithmParameters = {
+        "AmplitudeOfInitialDirection" : 1,
+        "EpsilonMinimumExponent" : -8,
+        }
+
+If an option is specified for an algorithm that doesn't support it, the option
+is simply left unused. The meaning of the acronyms or particular names can be
+found in the :ref:`genindex` or the :ref:`section_glossary`. In addition, for
+each algorithm, the required commands/keywords are given, being described in
+`List of commands and keywords for an ADAO checking case`_.
+
+**"AdjointTest"**
+
+  *Required commands*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  AmplitudeOfInitialDirection
+    This key indicates the scaling of the initial perturbation build as a vector
+    used for the directional derivative around the nominal checking point. The
+    default is 1, that means no scaling.
+
+  EpsilonMinimumExponent
+    This key indicates the minimal exponent value of the power of 10 coefficient
+    to be used to decrease the increment multiplier. The default is -8, and it
+    has to be between 0 and -20. For example, its default value leads to
+    calculate the residue of the scalar product formula with a fixed increment
+    multiplied from 1.e0 to 1.e-8.
+
+  InitialDirection
+    This key indicates the vector direction used for the directional derivative
+    around the nominal checking point. It has to be a vector. If not specified,
+    this direction defaults to a random perturbation around zero of the same
+    vector size than the checking point.
+
+  SetSeed
+    This key allow to give an integer in order to fix the seed of the random
+    generator used to generate the ensemble. A convenient value is for example
+    1000. By default, the seed is left uninitialized, and so use the default
+    initialization from the computer.
+
+**"FunctionTest"**
+
+  *Required commands*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  No option
+
+**"GradientTest"**
+
+  *Required commands*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  AmplitudeOfInitialDirection
+    This key indicates the scaling of the initial perturbation build as a vector
+    used for the directional derivative around the nominal checking point. The
+    default is 1, that means no scaling.
+
+  EpsilonMinimumExponent
+    This key indicates the minimal exponent value of the power of 10 coefficient
+    to be used to decrease the increment multiplier. The default is -8, and it
+    has to be between 0 and -20. For example, its default value leads to
+    calculate the residue of the scalar product formula with a fixed increment
+    multiplied from 1.e0 to 1.e-8.
+
+  InitialDirection
+    This key indicates the vector direction used for the directional derivative
+    around the nominal checking point. It has to be a vector. If not specified,
+    this direction defaults to a random perturbation around zero of the same
+    vector size than the checking point.
+
+  ResiduFormula
+    This key indicates the residue formula that has to be used for the test. The
+    default choice is "Taylor", and the possible ones are "Taylor" (residue of
+    the Taylor development of the operator, which has to decrease with the power
+    of 2 in perturbation) and "Norm" (residue obtained by taking the norm of the
+    Taylor development at zero order approximation, which approximate the
+    gradient, and which has to remain constant).
+  
+  SetSeed
+    This key allow to give an integer in order to fix the seed of the random
+    generator used to generate the ensemble. A convenient value is for example
+    1000. By default, the seed is left uninitialized, and so use the default
+    initialization from the computer.
 
 Requirements for functions describing an operator
 -------------------------------------------------
