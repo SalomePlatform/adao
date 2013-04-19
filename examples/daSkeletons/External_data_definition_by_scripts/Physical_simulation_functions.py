@@ -34,7 +34,7 @@ import os, numpy, time
 #
 # ==============================================================================
 #
-def FunctionH( XX ):
+def DirectOperator( XX ):
     """ Direct non-linear simulation operator """
     #
     # --------------------------------------> EXAMPLE TO BE REMOVED
@@ -62,8 +62,8 @@ def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
             X_moins_dXi    = numpy.array( X.A1 )
             X_moins_dXi[i] = X[i] - dX[i]
             #
-            HX_plus_dXi  = FunctionH( X_plus_dXi )
-            HX_moins_dXi = FunctionH( X_moins_dXi )
+            HX_plus_dXi  = DirectOperator( X_plus_dXi )
+            HX_moins_dXi = DirectOperator( X_moins_dXi )
             #
             HX_Diff = ( HX_plus_dXi - HX_moins_dXi ) / (2.*dX[i])
             #
@@ -76,11 +76,11 @@ def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
             X_plus_dXi    = numpy.array( X.A1 )
             X_plus_dXi[i] = X[i] + dX[i]
             #
-            HX_plus_dXi = FunctionH( X_plus_dXi )
+            HX_plus_dXi = DirectOperator( X_plus_dXi )
             #
             HX_plus_dX.append( HX_plus_dXi )
         #
-        HX = FunctionH( X )
+        HX = DirectOperator( X )
         #
         Jacobian = []
         for i in range( len(dX) ):
@@ -90,13 +90,13 @@ def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
     #
     return Jacobian
 #
-def TangentH( X ):
+def TangentOperator( X ):
     """ Tangent operator """
     _X = numpy.asmatrix(X).flatten().T
     HtX = self.TangentHMatrix( _X ) * _X
     return HtX.A1
 #
-def AdjointH( (X, Y) ):
+def AdjointOperator( (X, Y) ):
     """ Ajoint operator """
     #
     Jacobian = TangentHMatrix( X, centeredDF = False )
@@ -116,6 +116,6 @@ if __name__ == "__main__":
     from Physical_data_and_covariance_matrices import True_state
     X0, noms = True_state()
  
-    FX = FunctionH( X0 )
+    FX = DirectOperator( X0 )
     print "FX =", FX
     print

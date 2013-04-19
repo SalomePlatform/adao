@@ -53,27 +53,27 @@ logging.info("ComputationFunctionNode: Found method is \'%s\'"%method)
 # Loading the H operator functions from external definitions
 # ----------------------------------------------------------
 logging.info("ComputationFunctionNode: Loading operator functions")
-FunctionH = Physical_simulation_functions.FunctionH
-TangentH  = Physical_simulation_functions.TangentH
-AdjointH  = Physical_simulation_functions.AdjointH
+DirectOperator = Physical_simulation_functions.DirectOperator
+TangentOperator  = Physical_simulation_functions.TangentOperator
+AdjointOperator  = Physical_simulation_functions.AdjointOperator
 #
 # Executing the possible computations
 # -----------------------------------
 if method == "Direct":
     logging.info("ComputationFunctionNode: Direct computation")
     Xcurrent = computation["inputValues"][0][0][0]
-    data = FunctionH(numpy.matrix( Xcurrent ).T)
+    data = DirectOperator(numpy.matrix( Xcurrent ).T)
 #
 if method == "Tangent":
     logging.info("ComputationFunctionNode: Tangent computation")
     Xcurrent = computation["inputValues"][0][0][0]
-    data = TangentH(numpy.matrix( Xcurrent ).T)
+    data = TangentOperator(numpy.matrix( Xcurrent ).T)
 #
 if method == "Adjoint":
     logging.info("ComputationFunctionNode: Adjoint computation")
     Xcurrent = computation["inputValues"][0][0][0]
     Ycurrent = computation["inputValues"][0][0][1]
-    data = AdjointH((numpy.matrix( Xcurrent ).T, numpy.matrix( Ycurrent ).T))
+    data = AdjointOperator((numpy.matrix( Xcurrent ).T, numpy.matrix( Ycurrent ).T))
 #
 # Formatting the output
 # ---------------------
