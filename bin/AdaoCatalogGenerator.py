@@ -61,6 +61,7 @@ def F_${data_name}(statut) : return FACT(statut = statut,
 
                                                       SCRIPTWITHONEFUNCTION_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()), fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant en variable interne une seule fonction de calcul nommée DirectOperator", ang="Waiting for a script file name, with or without the full path to find it, containing as internal variable only one function named DirectOperator"),
                                                       DifferentialIncrement = SIMP(statut="o", typ = "R", val_min=0, val_max=1, defaut=0.01, fr="Incrément de la perturbation dX pour calculer la dérivée, construite en multipliant X par l'incrément en évitant les valeurs nulles", ang="Increment of dX perturbation to calculate the derivative, build multiplying X by the increment avoiding null values"),
+                                                      CenteredFiniteDifference = SIMP(statut="o", typ = "I", into=(0, 1), defaut=0, fr="Formulation centrée (1) ou décentrée (0) pour la méthode des différences finies", ang="Centered (1) or uncentered (0) formulation for the finite difference method"),
                                                      ),
                                          SCRIPTWITHSWITCH_DATA = BLOC ( condition = " FROM in ( 'ScriptWithSwitch', ) ",
 

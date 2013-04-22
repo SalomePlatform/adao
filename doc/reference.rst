@@ -777,6 +777,11 @@ representation.
 First functional form: using "*ScriptWithOneFunction*"
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: ScriptWithOneFunction
+.. index:: single: DirectOperator
+.. index:: single: DifferentialIncrement
+.. index:: single: CenteredFiniteDifference
+
 The first one consist in providing only one potentially non-linear function, and
 to approximate the tangent and the adjoint operators. This is done by using the
 keyword "*ScriptWithOneFunction*" for the description of the chosen operator in
@@ -794,7 +799,11 @@ template::
 In this case, the user can also provide a value for the differential increment,
 using through the GUI the keyword "*DifferentialIncrement*", which has a default
 value of 1%. This coefficient will be used in the finite difference
-approximation to build the tangent and adjoint operators.
+approximation to build the tangent and adjoint operators. The finite difference
+approximation order can also be chosen through the GUI, using the keyword
+"*CenteredFiniteDifference*", with 0 for an uncentered schema of first order,
+and with 1 for a centered schema of second order (of twice the first order
+computational cost). The keyword has a default value of 0.
 
 This first operator definition allow easily to test the functional form before
 its use in an ADAO case, greatly reducing the complexity of implementation.
@@ -805,6 +814,11 @@ The user has to treat these cases in his script.
 
 Second functional form: using "*ScriptWithFunctions*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: ScriptWithFunctions
+.. index:: single: DirectOperator
+.. index:: single: TangentOperator
+.. index:: single: AdjointOperator
 
 The second one consist in providing directly the three associated operators
 :math:`O`, :math:`\mathbf{O}` and :math:`\mathbf{O}^*`. This is done by using
@@ -845,6 +859,11 @@ these cases in his script.
 
 Third functional form: using "*ScriptWithSwitch*"
 +++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: ScriptWithSwitch
+.. index:: single: DirectOperator
+.. index:: single: TangentOperator
+.. index:: single: AdjointOperator
 
 This third form give more possibilities to control the execution of the three
 functions representing the operator, allowing advanced usage and control over

@@ -583,8 +583,9 @@ def create_yacs_proc(study_config):
     node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
     node_script += """import ApproximatedDerivatives\n"""
     node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
-    node_script += """    Function  = DirectOperator,\n"""
-    node_script += """    increment = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+    node_script += """    Function   = DirectOperator,\n"""
+    node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+    node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
     node_script += """    )\n"""
     node_script += """#\n"""
     node_script += """__data = []\n"""
@@ -804,8 +805,9 @@ def create_yacs_proc(study_config):
       node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
       node_script += """import ApproximatedDerivatives\n"""
       node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
-      node_script += """    Function  = DirectOperator,\n"""
-      node_script += """    increment = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+      node_script += """    Function   = DirectOperator,\n"""
+      node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+      node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
       node_script += """    )\n"""
       node_script += """#\n"""
       node_script += """__data = []\n"""

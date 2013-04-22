@@ -68,7 +68,7 @@ class FDApproximation:
         c'est-à-dire le gradient de H en X. On utilise des différences finies
         directionnelles autour du point X. X est un numpy.matrix.
         
-        Différences finies centrées :
+        Différences finies centrées (approximation d'ordre 2):
         1/ Pour chaque composante i de X, on ajoute et on enlève la perturbation
            dX[i] à la  composante X[i], pour composer X_plus_dXi et X_moins_dXi, et
            on calcule les réponses HX_plus_dXi = H( X_plus_dXi ) et HX_moins_dXi =
@@ -77,7 +77,7 @@ class FDApproximation:
            le pas 2*dXi
         3/ Chaque résultat, par composante, devient une colonne de la Jacobienne
         
-        Différences finies non centrées :
+        Différences finies non centrées (approximation d'ordre 1):
         1/ Pour chaque composante i de X, on ajoute la perturbation dX[i] à la 
            composante X[i] pour composer X_plus_dXi, et on calcule la réponse
            HX_plus_dXi = H( X_plus_dXi )

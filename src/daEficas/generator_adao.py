@@ -210,6 +210,7 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_ScriptWithOneFunction['Script']['Tangent'] = '" + data + "'\n"
       self.text_da += data_name + "_ScriptWithOneFunction['Script']['Adjoint'] = '" + data + "'\n"
       self.text_da += data_name + "_ScriptWithOneFunction['DifferentialIncrement'] = " + str(float(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__DifferentialIncrement"])) + "\n"
+      self.text_da += data_name + "_ScriptWithOneFunction['CenteredFiniteDifference'] = " + str(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__CenteredFiniteDifference"]) + "\n"
       self.text_da += data_name + "_config = {}\n"
       self.text_da += data_name + "_config['Type'] = 'Function'\n"
       self.text_da += data_name + "_config['From'] = 'ScriptWithOneFunction'\n"
