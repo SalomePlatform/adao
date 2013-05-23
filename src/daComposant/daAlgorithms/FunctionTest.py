@@ -45,8 +45,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateur d'observation
-        # -----------------------
+        # Opérateur
+        # ---------
         Hm = HO["Direct"].appliedTo
         #
         # Calcul du point nominal

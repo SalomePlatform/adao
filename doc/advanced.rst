@@ -44,7 +44,7 @@ The template of the shell script is the following::
         $USERDIR/<ADAO Python file> $USERDIR/<ADAO YACS xml scheme>
     $SALOMEDIR/runSession driver $USERDIR/<ADAO YACS xml scheme>
     $SALOMEDIR/runSession killSalome.py
-    rm -f $USERDIR/ADAO_Case.xml
+    rm -f $USERDIR/<ADAO YACS xml scheme>
 
 Standard output and errors come on console.
 

@@ -95,8 +95,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateur d'observation
-        # -----------------------
+        # Opérateurs
+        # ----------
         Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] is "Taylor":
             Ht = HO["Tangent"].appliedInXTo
@@ -110,7 +110,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # -----------------------
         X       = numpy.asmatrix(numpy.ravel(    Xb   )).T
         FX      = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
-        FX      = numpy.asmatrix(numpy.ravel(    FX   )).T
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
         #
@@ -142,7 +141,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
               R(Alpha) = || F(X+Alpha*dX) - F(X) - Alpha * TangentF_X(dX) ||
 
-            Ce résidu doit décroître en Alpha**2 selon Alpha.
+            Si F n'est pas linéaire, ce résidu doit décroître en Alpha**2 selon Alpha.
+            Si F est linéaire, le résidu décroit en Alpha à partir de l'erreur faite
+            sur le terme TangentF_X.
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         elif self._parameters["ResiduFormula"] is "Norm":

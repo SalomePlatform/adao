@@ -77,8 +77,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateur d'observation
-        # -----------------------
+        # Opérateurs
+        # ----------
         Hm = HO["Direct"].appliedTo
         Ht = HO["Tangent"].appliedInXTo
         Ha = HO["Adjoint"].appliedInXTo
