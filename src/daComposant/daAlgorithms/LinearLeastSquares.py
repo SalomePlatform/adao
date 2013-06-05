@@ -31,6 +31,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "LINEARLEASTSQUARES")
         self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
@@ -49,7 +55,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Opérateur d'observation
         # -----------------------
         Hm = HO["Tangent"].asMatrix(None)
+        Hm = Hm.reshape(Y.size,-1) # ADAO & check shape
         Ha = HO["Adjoint"].asMatrix(None)
+        Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
         #
         if R is not None:
             RI = R.I
@@ -62,17 +70,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------------------------------
         K =  (Ha * RI * Hm ).I * Ha * RI
         Xa =  K * Y
+        self.StoredVariables["Analysis"].store( Xa.A1 )
         #
         # Calcul de la fonction coût
         # --------------------------
-        oma = Y - Hm * Xa
-        Jb  = 0.
-        Jo  = 0.5 * oma.T * RI * oma
-        J   = float( Jb ) + float( Jo )
-        self.StoredVariables["Analysis"].store( Xa.A1 )
-        self.StoredVariables["CostFunctionJb"].store( Jb )
-        self.StoredVariables["CostFunctionJo"].store( Jo )
-        self.StoredVariables["CostFunctionJ" ].store( J )
+        if self._parameters["StoreInternalVariables"] or "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            oma = Y - Hm * Xa
+        if self._parameters["StoreInternalVariables"]:
+            Jb  = 0.
+            Jo  = 0.5 * oma.T * RI * oma
+            J   = float( Jb ) + float( Jo )
+            self.StoredVariables["CostFunctionJb"].store( Jb )
+            self.StoredVariables["CostFunctionJo"].store( Jo )
+            self.StoredVariables["CostFunctionJ" ].store( J )
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
