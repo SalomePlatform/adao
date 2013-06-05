@@ -68,6 +68,7 @@ AssimAlgos = [
     ]
 CheckAlgos = [
     "FunctionTest",
+    "LinearityTest",
     "GradientTest",
     "AdjointTest",
     ]
@@ -122,6 +123,10 @@ AlgoDataRequirements["QuantileRegression"] = [
     ]
 
 AlgoDataRequirements["FunctionTest"] = [
+    "CheckingPoint",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["LinearityTest"] = [
     "CheckingPoint",
     "ObservationOperator",
     ]
