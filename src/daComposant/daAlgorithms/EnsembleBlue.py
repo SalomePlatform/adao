@@ -78,7 +78,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
         Hm = HO["Tangent"].asMatrix(None)
+        Hm = Hm.reshape(Y.size,Xb[0].size) # ADAO & check shape
         Ha = HO["Adjoint"].asMatrix(None)
+        Ha = Ha.reshape(Xb[0].size,Y.size) # ADAO & check shape
         #
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------

@@ -152,6 +152,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if self._parameters["EstimationOf"] == "State":
                 Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, Un) ) )).T
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                    Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                     Xn_predicted = Xn_predicted + Cm * Un
                 Pn_predicted = Mt * Pn * Ma + Q
             elif self._parameters["EstimationOf"] == "Parameters":
