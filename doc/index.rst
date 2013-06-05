@@ -4,7 +4,7 @@ ADAO module documentation
 
 .. image:: images/ADAO_logo.png
    :align: center
-   :scale: 10%
+   :width: 20%
 
 The ADAO module provides **data assimilation and optimization** features in
 SALOME context. It is based on usage of other SALOME modules, namely YACS and
@@ -49,6 +49,7 @@ Table of contents
    reference
    examples
    advanced
+   licence
    bibliography
 
 Indices and tables

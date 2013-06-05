@@ -16,6 +16,8 @@ Bibliography
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
+.. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
+
 .. [Tarantola87] Tarantola A., *Inverse Problem: Theory Methods for Data Fitting and Parameter Estimation*, Elsevier, 1987
 
 .. [Talagrand97] Talagrand O., *Assimilation of Observations, an Introduction*, Journal of the Meteorological Society of Japan, 75(1B), pp.191-209, 1997
