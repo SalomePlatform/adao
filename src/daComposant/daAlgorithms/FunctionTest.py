@@ -63,7 +63,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         msg  = "===> Information before launching:\n"
         msg += "     -----------------------------\n"
-        msg += "     Characteristics of input parameter Xb, internally converted:\n"
+        msg += "     Characteristics of input parameter X, internally converted:\n"
         msg += "       Type...............: %s\n"%type( Xn )
         msg += "       Lenght of vector...: %i\n"%max(numpy.matrix( Xn ).shape)
         msg += "       Minimum value......: %.5e\n"%numpy.min( Xn )
@@ -75,14 +75,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         CUR_LEVEL = logging.getLogger().getEffectiveLevel()
         logging.getLogger().setLevel(logging.DEBUG)
-        print("===> Launching direct operator evaluation, activating debug\n")
+        print(  "===> Launching direct operator evaluation, activating debug\n")
         Y = Hm( Xn )
-        print("===> End of direct operator evaluation, deactivating debug\n")
+        print("\n===> End of direct operator evaluation, deactivating debug\n")
         logging.getLogger().setLevel(CUR_LEVEL)
         #
         msg  = "===> Information after launching:\n"
         msg += "     ----------------------------\n"
-        msg += "     Characteristics of output parameter Y to compare to observation:\n"
+        msg += "     Characteristics of output parameter Y, to compare to observation:\n"
         msg += "       Type...............: %s\n"%type( Y )
         msg += "       Lenght of vector...: %i\n"%max(numpy.matrix( Y ).shape)
         msg += "       Minimum value......: %.5e\n"%numpy.min( Y )

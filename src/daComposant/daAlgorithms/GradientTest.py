@@ -25,6 +25,7 @@ from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
 
 import numpy
+import math
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -137,18 +138,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------
         if self._parameters["ResiduFormula"] is "Taylor":
             __doc__ = """
-            On observe le residu issu du développement de Taylor de la fonction F :
+            On observe le residu issu du développement de Taylor de la fonction F,
+            normalisée par la valeur au point nominal :
 
-              R(Alpha) = || F(X+Alpha*dX) - F(X) - Alpha * TangentF_X(dX) ||
+                         || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
+              R(Alpha) = ----------------------------------------------------
+                                         || F(X) ||
 
-            Si F n'est pas linéaire, ce résidu doit décroître en Alpha**2 selon Alpha.
-            Si F est linéaire, le résidu décroit en Alpha à partir de l'erreur faite
-            sur le terme TangentF_X.
+            Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
+            cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
+            de la décroissance quadratique et que F n'est pas linéaire.
+            
+            Si le résidu décroit et que la décroissance se fait en Alpha selon Alpha,
+            jusqu'à un certain seuil aprés lequel le résidu est faible et constant, cela
+            signifie que F est linéaire et que le résidu décroit à partir de l'erreur
+            faite dans le calcul du terme GradientF_X.
+            
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         elif self._parameters["ResiduFormula"] is "Norm":
             __doc__ = """
-            On observe le residu, qui est une approximation du gradient :
+            On observe le residu, qui est basé sur une approximation du gradient :
 
                           || F(X+Alpha*dX) - F(X) ||
               R(Alpha) =  ---------------------------
@@ -168,7 +178,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs  = ""
         msgs += __doc__
         #
-        msg = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)  "
+        msg = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
         nbtirets = len(msg)
         msgs += "\n" + "-"*nbtirets
         msgs += "\n" + msg
@@ -212,12 +222,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NormesdFXsAm.append( NormedFXsAm )
             #
             if self._parameters["ResiduFormula"] is "Taylor":
-                Residu = NormedFXGdX
+                Residu = NormedFXGdX / NormeFX
             elif self._parameters["ResiduFormula"] is "Norm":
                 Residu = NormedFXsAm
             if Normalisation < 0 : Normalisation = Residu
             #
-            msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu)
+            msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu,math.log10(max(1.e-99,Residu)))
             msgs += "\n" + msg
             #
             self.StoredVariables["CostFunctionJ"].store( Residu )
