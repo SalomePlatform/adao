@@ -666,6 +666,7 @@ Options and required commands for checking algorithms
 .. index:: single: AdjointTest
 .. index:: single: FunctionTest
 .. index:: single: GradientTest
+.. index:: single: LinearityTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -758,6 +759,48 @@ each algorithm, the required commands/keywords are given, being described in
     of 2 in perturbation) and "Norm" (residue obtained by taking the norm of the
     Taylor development at zero order approximation, which approximate the
     gradient, and which has to remain constant).
+  
+  SetSeed
+    This key allow to give an integer in order to fix the seed of the random
+    generator used to generate the ensemble. A convenient value is for example
+    1000. By default, the seed is left uninitialized, and so use the default
+    initialization from the computer.
+
+**"LinearityTest"**
+
+  *Required commands*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  AmplitudeOfInitialDirection
+    This key indicates the scaling of the initial perturbation build as a vector
+    used for the directional derivative around the nominal checking point. The
+    default is 1, that means no scaling.
+
+  EpsilonMinimumExponent
+    This key indicates the minimal exponent value of the power of 10 coefficient
+    to be used to decrease the increment multiplier. The default is -8, and it
+    has to be between 0 and -20. For example, its default value leads to
+    calculate the residue of the scalar product formula with a fixed increment
+    multiplied from 1.e0 to 1.e-8.
+
+  InitialDirection
+    This key indicates the vector direction used for the directional derivative
+    around the nominal checking point. It has to be a vector. If not specified,
+    this direction defaults to a random perturbation around zero of the same
+    vector size than the checking point.
+
+  ResiduFormula
+    This key indicates the residue formula that has to be used for the test. The
+    default choice is "CenteredDL", and the possible ones are "CenteredDL"
+    (residue of the difference between the function at nominal point and the
+    values with positive and negative increments, which has to stay very small),
+    "Taylor" (residue of the Taylor development of the operator normalized by
+    the nominal value, which has to stay very small), "NominalTaylor" (residue
+    of the order 1 approximations of the operator, normalized to the nominal
+    point, which has to stay close to 1), and "NominalTaylorRMS" (residue of the
+    order 1 approximations of the operator, normalized by RMS to the nominal
+    point, which has to stay close to 0).
   
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
