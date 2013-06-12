@@ -27,6 +27,8 @@ List of possible input types
 .. index:: single: Dict
 .. index:: single: Function
 .. index:: single: Matrix
+.. index:: single: ScalarSparseMatrix
+.. index:: single: DiagonalSparseMatrix
 .. index:: single: String
 .. index:: single: Script
 .. index:: single: Vector
@@ -46,13 +48,23 @@ different pseudo-types are:
     This indicates a variable that has to be filled by a matrix, usually given
     either as a string or as a script.
 
-**String**
-    This indicates a string giving a literal representation of a matrix, a
-    vector or a vector serie, such as "1 2 ; 3 4" for a square 2x2 matrix.
+**ScalarSparseMatrix**
+    This indicates a variable that has to be filled by a unique number, which
+    will be used to multiply an identity matrix, usually given either as a
+    string or as a script.
+
+**DiagonalSparseMatrix**
+    This indicates a variable that has to be filled by a vector, which will be
+    over the diagonal of an identity matrix, usually given either as a string or
+    as a script.
 
 **Script**
     This indicates a script given as an external file. It can be described by a
     full absolute path name or only by the file name without path.
+
+**String**
+    This indicates a string giving a literal representation of a matrix, a
+    vector or a vector serie, such as "1 2 ; 3 4" for a square 2x2 matrix.
 
 **Vector**
     This indicates a variable that has to be filled by a vector, usually given
@@ -125,7 +137,8 @@ following:
 **BackgroundError**
     *Required command*. This indicates the background error covariance matrix,
     previously noted as :math:`\mathbf{B}`. It is defined as a "*Matrix*" type
-    object, that is, given either as a string or as a script.
+    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
+    type object, that is, given either as a string or as a script.
 
 **ControlInput**
     *Optional command*. This indicates the control vector used to force the
@@ -142,7 +155,8 @@ following:
 **EvolutionError**
     *Optional command*. This indicates the evolution error covariance matrix,
     usually noted as :math:`\mathbf{Q}`. It is defined as a "*Matrix*" type
-    object, that is, given either as a string or as a script.
+    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
+    type object, that is, given either as a string or as a script.
 
 **EvolutionModel**
     *Optional command*. This indicates the evolution model operator, usually
@@ -167,7 +181,8 @@ following:
 **ObservationError**
     *Required command*. This indicates the observation error covariance matrix,
     previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, that is, given either as a string or as a script.
+    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
+    type object, that is, given either as a string or as a script.
 
 **ObservationOperator**
     *Required command*. This indicates the observation operator, previously

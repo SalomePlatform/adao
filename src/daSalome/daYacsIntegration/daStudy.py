@@ -95,7 +95,7 @@ class daStudy:
     if Type == "Vector":
       self.BackgroundType = Type
     else:
-      raise daError("[daStudy::setBackgroundType] Type is unkown : " + Type + ". Types are : Vector")
+      raise daError("[daStudy::setBackgroundType] The following type is unkown : %s. Authorized types are : Vector"%(Type,))
 
   def setBackgroundStored(self, Stored):
     if Stored:
@@ -122,7 +122,7 @@ class daStudy:
     if Type == "Vector":
       self.CheckingPointType = Type
     else:
-      raise daError("[daStudy::setCheckingPointType] Type is unkown : " + Type + ". Types are : Vector")
+      raise daError("[daStudy::setCheckingPointType] The following type is unkown : %s. Authorized types are : Vector"%(Type,))
 
   def setCheckingPointStored(self, Stored):
     if Stored:
@@ -142,6 +142,12 @@ class daStudy:
 
   #--------------------------------------
 
+  def setBackgroundErrorType(self, Type):
+    if Type in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"):
+      self.BackgroundErrorType = Type
+    else:
+      raise daError("[daStudy::setBackgroundErrorType] The following type is unkown : %s. Authorized types are : Matrix, ScalarSparseMatrix, DiagonalSparseMatrix"%(Type,))
+
   def setBackgroundErrorStored(self, Stored):
     if Stored:
       self.BackgroundErrorStored = True
@@ -150,18 +156,24 @@ class daStudy:
 
   def setBackgroundError(self, BackgroundError):
     try:
+      self.BackgroundErrorType
       self.BackgroundErrorStored
     except AttributeError:
-      raise daError("[daStudy::setBackgroundError] Storage is not defined !")
-    self.ADD.setBackgroundError(asCovariance = BackgroundError, toBeStored = self.BackgroundErrorStored)
+      raise daError("[daStudy::setBackgroundError] Type or Storage is not defined !")
+    if self.BackgroundErrorType == "Matrix":
+      self.ADD.setBackgroundError(asCovariance  = BackgroundError, toBeStored = self.BackgroundErrorStored)
+    if self.BackgroundErrorType == "ScalarSparseMatrix":
+      self.ADD.setBackgroundError(asEyeByScalar = BackgroundError, toBeStored = self.BackgroundErrorStored)
+    if self.BackgroundErrorType == "DiagonalSparseMatrix":
+      self.ADD.setBackgroundError(asEyeByVector = BackgroundError, toBeStored = self.BackgroundErrorStored)
 
   #--------------------------------------
 
   def setControlInputType(self, Type):
-    if Type == "Vector" or Type == "VectorSerie":
+    if Type in ("Vector", "VectorSerie"):
       self.ControlInputType = Type
     else:
-      raise daError("[daStudy::setControlInputType] Type is unkown : " + Type + ". Types are : Vector, VectorSerie")
+      raise daError("[daStudy::setControlInputType] The following type is unkown : %s. Authorized types are : Vector, VectorSerie"%(Type,))
 
   def setControlInputStored(self, Stored):
     if Stored:
@@ -183,10 +195,10 @@ class daStudy:
   #--------------------------------------
 
   def setObservationType(self, Type):
-    if Type == "Vector" or Type == "VectorSerie":
+    if Type in ("Vector", "VectorSerie"):
       self.ObservationType = Type
     else:
-      raise daError("[daStudy::setObservationType] Type is unkown : " + Type + ". Types are : Vector, VectorSerie")
+      raise daError("[daStudy::setObservationType] The following type is unkown : %s. Authorized types are : Vector, VectorSerie"%(Type,))
 
   def setObservationStored(self, Stored):
     if Stored:
@@ -207,6 +219,12 @@ class daStudy:
 
   #--------------------------------------
 
+  def setObservationErrorType(self, Type):
+    if Type in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"):
+      self.ObservationErrorType = Type
+    else:
+      raise daError("[daStudy::setObservationErrorType] The following type is unkown : %s. Authorized types are : Matrix, ScalarSparseMatrix, DiagonalSparseMatrix"%(Type,))
+
   def setObservationErrorStored(self, Stored):
     if Stored:
       self.ObservationErrorStored = True
@@ -215,10 +233,16 @@ class daStudy:
 
   def setObservationError(self, ObservationError):
     try:
+      self.ObservationErrorType
       self.ObservationErrorStored
     except AttributeError:
-      raise daError("[daStudy::setObservationError] Storage is not defined !")
-    self.ADD.setObservationError(asCovariance = ObservationError, toBeStored = self.ObservationErrorStored)
+      raise daError("[daStudy::setObservationError] Type or Storage is not defined !")
+    if self.ObservationErrorType == "Matrix":
+      self.ADD.setObservationError(asCovariance  = ObservationError, toBeStored = self.ObservationErrorStored)
+    if self.ObservationErrorType == "ScalarSparseMatrix":
+      self.ADD.setObservationError(asEyeByScalar = ObservationError, toBeStored = self.ObservationErrorStored)
+    if self.ObservationErrorType == "DiagonalSparseMatrix":
+      self.ADD.setObservationError(asEyeByVector = ObservationError, toBeStored = self.ObservationErrorStored)
 
   #--------------------------------------
 
@@ -231,12 +255,10 @@ class daStudy:
     return rtn
 
   def setObservationOperatorType(self, Name, Type):
-    if Type == "Matrix":
-      self.ObservationOperatorType[Name] = Type
-    elif Type == "Function":
+    if Type in ("Matrix", "Function"):
       self.ObservationOperatorType[Name] = Type
     else:
-      raise daError("[daStudy::setObservationOperatorType] Type is unkown : " + Type + ". Types are : Matrix, Function")
+      raise daError("[daStudy::setObservationOperatorType] The following type is unkown : %s. Authorized types are : Matrix, Function"%(Type,))
 
   def setObservationOperator(self, Name, ObservationOperator):
     try:
@@ -250,6 +272,12 @@ class daStudy:
 
   #--------------------------------------
 
+  def setEvolutionErrorType(self, Type):
+    if Type in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"):
+      self.EvolutionErrorType = Type
+    else:
+      raise daError("[daStudy::setEvolutionErrorType] The following type is unkown : %s. Authorized types are : Matrix, ScalarSparseMatrix, DiagonalSparseMatrix"%(Type,))
+
   def setEvolutionErrorStored(self, Stored):
     if Stored:
       self.EvolutionErrorStored = True
@@ -258,10 +286,16 @@ class daStudy:
 
   def setEvolutionError(self, EvolutionError):
     try:
+      self.EvolutionErrorType
       self.EvolutionErrorStored
     except AttributeError:
-      raise daError("[daStudy::setEvolutionError] Storage is not defined !")
-    self.ADD.setEvolutionError(asCovariance = EvolutionError, toBeStored = self.EvolutionErrorStored)
+      raise daError("[daStudy::setEvolutionError] Type or Storage is not defined !")
+    if self.EvolutionErrorType == "Matrix":
+      self.ADD.setEvolutionError(asCovariance  = EvolutionError, toBeStored = self.EvolutionErrorStored)
+    if self.EvolutionErrorType == "ScalarSparseMatrix":
+      self.ADD.setEvolutionError(asEyeByScalar = EvolutionError, toBeStored = self.EvolutionErrorStored)
+    if self.EvolutionErrorType == "DiagonalSparseMatrix":
+      self.ADD.setEvolutionError(asEyeByVector = EvolutionError, toBeStored = self.EvolutionErrorStored)
 
   #--------------------------------------
 
@@ -274,12 +308,10 @@ class daStudy:
     return rtn
 
   def setEvolutionModelType(self, Name, Type):
-    if Type == "Matrix":
-      self.EvolutionModelType[Name] = Type
-    elif Type == "Function":
+    if Type in ("Matrix", "Function"):
       self.EvolutionModelType[Name] = Type
     else:
-      raise daError("[daStudy::setEvolutionModelType] Type is unkown : " + Type + ". Types are : Matrix, Function")
+      raise daError("[daStudy::setEvolutionModelType] The following type is unkown : %s. Authorized types are : Matrix, Function"%(Type,))
 
   def setEvolutionModel(self, Name, EvolutionModel):
     try:

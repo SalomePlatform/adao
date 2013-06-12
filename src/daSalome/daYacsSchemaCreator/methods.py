@@ -263,9 +263,9 @@ def create_yacs_proc(study_config):
           ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
         back_node.setScript(back_node_script)
 
-      if data_config["Type"] == "Matrix" and data_config["From"] == "String":
+      if data_config["Type"] in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix") and data_config["From"] == "String":
         # Create node
-        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyMatrixFromString")
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpy%sFromString"%(data_config["Type"],))
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("matrix_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
@@ -285,9 +285,9 @@ def create_yacs_proc(study_config):
           ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
         back_node.setScript(back_node_script)
 
-      if data_config["Type"] == "Matrix" and data_config["From"] == "Script":
+      if data_config["Type"] in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix") and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyMatrixFromScript")
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpy%sFromScript"%(data_config["Type"],))
         back_node = factory_back_node.cloneNode("Get" + key)
         if repertory:
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))

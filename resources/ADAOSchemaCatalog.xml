@@ -137,7 +137,9 @@ except NameError:
   pass
 else:
   logging.debug("CREATE BackgroundError is set")
+  logging.debug("CREATE BackgroundErrorType is %s"%BackgroundErrorType)
   logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
+  assim_study.setBackgroundErrorType(BackgroundErrorType)
   assim_study.setBackgroundErrorStored(BackgroundErrorStored)
   assim_study.setBackgroundError(BackgroundError)
 
@@ -148,7 +150,9 @@ except NameError:
   pass
 else:
   logging.debug("CREATE ObservationError is set")
+  logging.debug("CREATE ObservationErrorType is %s"%ObservationErrorType)
   logging.debug("CREATE ObservationErrorStored is %s"%ObservationErrorStored)
+  assim_study.setObservationErrorType(ObservationErrorType)
   assim_study.setObservationErrorStored(ObservationErrorStored)
   assim_study.setObservationError(ObservationError)
 
@@ -289,11 +293,91 @@ logging.debug("CREATE Matrix is %s"%matrix)
     <outport name="stored" type="bool"/>
   </inline>
 
+  <inline name="CreateNumpyScalarSparseMatrixFromString">
+    <script><code><![CDATA[
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromString")
+matrix = numpy.matrix(matrix_in_string)
+type = "ScalarSparseMatrix"
+logging.debug("CREATE ScalarSparseMatrix is %s"%matrix)
+]]></code></script>
+    <inport name="matrix_in_string" type="string"/>
+    <outport name="matrix" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyDiagonalSparseMatrixFromString">
+    <script><code><![CDATA[
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromString")
+matrix = numpy.matrix(matrix_in_string)
+type = "DiagonalSparseMatrix"
+logging.debug("CREATE DiagonalSparseMatrix is %s"%matrix)
+]]></code></script>
+    <inport name="matrix_in_string" type="string"/>
+    <outport name="matrix" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
   <inline name="CreateNumpyMatrixFromScript">
     <script><code><![CDATA[
 import logging
 logging.debug("CREATE Entering in CreateNumpyMatrixFromScript")
 type = "Matrix"
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyScalarSparseMatrixFromScript">
+    <script><code><![CDATA[
+import logging
+logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromScript")
+type = "ScalarSparseMatrix"
+
+# Get file path and filename
+import sys
+import os
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
+# Import script
+__import__(module_name)
+user_script_module = sys.modules[module_name]
+
+# Get Data from script
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyDiagonalSparseMatrixFromScript">
+    <script><code><![CDATA[
+import logging
+logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromScript")
+type = "DiagonalSparseMatrix"
 
 # Get file path and filename
 import sys
