@@ -47,7 +47,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ConstrainedBy",
             default  = "EstimateProjection",
             typecast = str,
-            message  = "Estimation d'etat ou de parametres",
+            message  = "Prise en compte des contraintes",
             listval  = ["EstimateProjection"],
             )
         self.defineRequiredParameter(

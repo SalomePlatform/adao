@@ -87,9 +87,9 @@ class FDApproximation:
         4/ Chaque résultat, par composante, devient une colonne de la Jacobienne
         
         """
-        logging.debug("  == Calcul de la Jacobienne")
-        logging.debug("     Incrément de............: %s*X"%float(self.__increment))
-        logging.debug("     Approximation centrée...: %s"%(self.__centeredDF))
+        logging.debug("FDA Calcul de la Jacobienne")
+        logging.debug("FDA   Incrément de............: %s*X"%float(self.__increment))
+        logging.debug("FDA   Approximation centrée...: %s"%(self.__centeredDF))
         #
         if X is None or len(X)==0:
             raise ValueError("Nominal point X for approximate derivatives can not be None or void.")
@@ -110,47 +110,35 @@ class FDApproximation:
         #
         if self.__centeredDF:
             #
-            # Boucle de calcul des colonnes de la Jacobienne
-            # ----------------------------------------------
             _Jacobienne  = []
             for i in range( len(_dX) ):
+                _dXi            = _dX[i]
                 _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
-                _X_plus_dXi[i]  = _X[i] + _dX[i]
+                _X_plus_dXi[i]  = _X[i] + _dXi
                 _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
-                _X_moins_dXi[i] = _X[i] - _dX[i]
+                _X_moins_dXi[i] = _X[i] - _dXi
                 #
-                _HX_plus_dXi  = self.DirectOperator( _X_plus_dXi )
-                _HX_moins_dXi = self.DirectOperator( _X_moins_dXi )
+                _HX_plus_dXi    = self.DirectOperator( _X_plus_dXi )
+                _HX_moins_dXi   = self.DirectOperator( _X_moins_dXi )
                 #
-                _HX_Diff = numpy.ravel( _HX_plus_dXi - _HX_moins_dXi ) / (2.*_dX[i])
-                #
-                _Jacobienne.append( _HX_Diff )
+                _Jacobienne.append( numpy.ravel( _HX_plus_dXi - _HX_moins_dXi ) / (2.*_dXi) )
             #
         else:
             #
-            # Boucle de calcul des colonnes de la Jacobienne
-            # ----------------------------------------------
-            _HX_plus_dX = []
+            _Jacobienne  = []
+            _HX = self.DirectOperator( _X )
             for i in range( len(_dX) ):
-                _X_plus_dXi    = numpy.array( _X.A1, dtype=float )
-                _X_plus_dXi[i] = _X[i] + _dX[i]
+                _dXi            = _dX[i]
+                _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                _X_plus_dXi[i]  = _X[i] + _dXi
                 #
                 _HX_plus_dXi = self.DirectOperator( _X_plus_dXi )
                 #
-                _HX_plus_dX.append( _HX_plus_dXi )
+                _Jacobienne.append( numpy.ravel(( _HX_plus_dXi - _HX ) / _dXi) )
             #
-            # Calcul de la valeur centrale
-            # ----------------------------
-            _HX = self.DirectOperator( _X )
-            #
-            # Calcul effectif de la Jacobienne par différences finies
-            # -------------------------------------------------------
-            _Jacobienne = []
-            for i in range( len(_dX) ):
-                _Jacobienne.append( numpy.ravel(( _HX_plus_dX[i] - _HX ) / _dX[i]) )
         #
         _Jacobienne = numpy.matrix( numpy.vstack( _Jacobienne ) ).T
-        logging.debug("  == Fin du calcul de la Jacobienne")
+        logging.debug("FDA Fin du calcul de la Jacobienne")
         #
         return _Jacobienne
 
