@@ -163,7 +163,9 @@ except NameError:
   pass
 else:
   logging.debug("CREATE EvolutionError is set")
+  logging.debug("CREATE EvolutionErrorType is %s"%EvolutionErrorType)
   logging.debug("CREATE EvolutionErrorStored is %s"%EvolutionErrorStored)
+  assim_study.setEvolutionErrorType(EvolutionErrorType)
   assim_study.setEvolutionErrorStored(EvolutionErrorStored)
   assim_study.setEvolutionError(EvolutionError)
 
