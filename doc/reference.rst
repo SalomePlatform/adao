@@ -197,9 +197,9 @@ following:
 **Observers**
     *Optional command*. This command allows to set internal observers, that are
     functions linked with a particular variable, which will be executed each
-    time this variable is modified. It is a convenient way to monitor interest
-    variables during the data assimilation or optimization process, by printing
-    or plotting it, etc.
+    time this variable is modified. It is a convenient way to monitor variables
+    of interest during the data assimilation or optimization process, by
+    printing or plotting it, etc.
 
 **OutputVariables**
     *Optional command*. This command allows to indicates the name and size of
