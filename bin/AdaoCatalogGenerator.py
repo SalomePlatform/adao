@@ -108,18 +108,30 @@ assim_data_choice = """
 
 observers_choice = """
                                        ${var_name} = BLOC (condition=" '${var_name}' in set(SELECTION) ",
-                                                  ${var_name}_data = FACT(statut = "o",
-                                                             Scheduler = SIMP(statut = "f", typ = "TXM"),
-                                                             Info      = SIMP(statut = "f", typ = "TXM"),
-                                                             NodeType  = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("String", "Script")),
-                                                             PythonScript = BLOC (condition = " NodeType == 'String' ",
-                                                                                  Value = SIMP(statut = "o", typ = "TXM")
-                                                                                 ),
-                                                             UserFile = BLOC (condition = " NodeType == 'Script' ",
-                                                                              Value = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()))
-                                                                             )
-                                                                      ),
-                                                          ),
+                                           ${var_name}_data = FACT(statut = "o",
+                                               Scheduler    = SIMP(statut = "f", typ = "TXM"),
+                                               Info         = SIMP(statut = "f", typ = "TXM"),
+                                               NodeType     = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("String", "Script", "Template")),
+                                               PythonScript = BLOC (condition = " NodeType == 'String' ",
+                                                   Value = SIMP(statut = "o", typ = "TXM")
+                                               ),
+                                               UserFile = BLOC (condition = " NodeType == 'Script' ",
+                                                   Value = SIMP(statut = "o", typ = "FichierNoAbs", validators=(OnlyStr()))
+                                               ),
+                                               ObserverTemplate =  BLOC (condition = " NodeType == 'Template' ",
+                                                   Template = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "", into=("ValuePrinter", "ValueGnuPlotter", "ValueSerieGnuPlotter")),
+                                                   ValuePrinter = BLOC (condition = " Template == 'ValuePrinter' ",
+                                                       ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print info,var[-1]" ),
+                                                   ),
+                                                   ValueGnuPlotter = BLOC (condition = " Template == 'ValueGnuPlotter' ",
+                                                       ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import Gnuplot\\nglobal gp\\ntry:\\n    gp('set style data lines')\\nexcept:\\n    gp = Gnuplot.Gnuplot(persist=1)\\n    gp('set style data lines')\\ngp('set title  \\"'+str(info)+'\\"')\\ngp.plot( Gnuplot.Data( var[-1], with_='lines lw 2' ) )" ),
+                                                   ),
+                                                   ValueSerieGnuPlotter = BLOC (condition = " Template == 'ValueSerieGnuPlotter' ",
+                                                       ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import Gnuplot\\nglobal gp\\ntry:\\n    gp('set style data lines')\\nexcept:\\n    gp = Gnuplot.Gnuplot(persist=1)\\n    gp('set style data lines')\\ngp('set title  \\"'+str(info)+'\\"')\\ngp.plot( Gnuplot.Data( var[:], with_='lines lw 2' ) )" ),
+                                                   ),
+                                               ),
+                                           ),
+                                       ),
 """
 
 observers_method = """

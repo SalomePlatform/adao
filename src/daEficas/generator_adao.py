@@ -349,6 +349,9 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "observers[\"" + observer + "\"][\"nodetype\"] = \"" + observers[observer]["nodetype"] + "\"\n"
       if observers[observer]["nodetype"] == "String":
         self.text_da += "observers[\"" + observer + "\"][\"String\"] = \"\"\"" + observers[observer]["script"] + "\"\"\"\n"
+      elif observers[observer]["nodetype"] == "Template":
+        self.text_da += "observers[\"" + observer + "\"][\"String\"] = \"\"\"" + observers[observer]["script"] + "\"\"\"\n"
+        self.text_da += "observers[\"" + observer + "\"][\"Template\"] = \"\"\"" + observers[observer]["template"] + "\"\"\"\n"
       else:
         self.text_da += "observers[\"" + observer + "\"][\"Script\"] = \"" + observers[observer]["file"] + "\"\n"
       if "scheduler" in observers[observer].keys():
@@ -371,6 +374,11 @@ class AdaoGenerator(PythonGenerator):
     # NodeType script/file
     if observers[observer]["nodetype"] == "String":
       observers[observer]["script"] = self.dictMCVal[observer_eficas_name + "PythonScript__Value"]
+    elif observers[observer]["nodetype"] == "Template":
+      observers[observer]["nodetype"] = "String"
+      observer_template_key = observer_eficas_name + "ObserverTemplate__"
+      observers[observer]["template"] = self.dictMCVal[observer_template_key + "Template"]
+      observers[observer]["script"]   = self.dictMCVal[observer_template_key + observers[observer]["template"] + "__ValueTemplate"]
     else:
       observers[observer]["file"] = self.dictMCVal[observer_eficas_name + "UserFile__Value"]
 

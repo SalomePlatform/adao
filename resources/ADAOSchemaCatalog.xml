@@ -586,20 +586,13 @@ for param in data["specificParameters"]:
   </inline>
 
   <inline name="ObservationNodeString">
-    <script><code><![CDATA[
-#print "Entering in Observation"
-
-]]></code></script>
+    <script><code><![CDATA[]]></code></script>
     <inport name="var" type="pyobj"/>
     <inport name="info" type="pyobj"/>
   </inline>
 
   <inline name="ObservationNodeFile">
-    <script><code><![CDATA[
-#print "Entering in Observation"
-execfile(script)
-
-]]></code></script>
+    <script><code><![CDATA[execfile(script)]]></code></script>
     <inport name="var"    type="pyobj"/>
     <inport name="info"   type="pyobj"/>
     <inport name="script" type="string"/>
