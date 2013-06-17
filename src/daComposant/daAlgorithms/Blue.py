@@ -96,11 +96,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------------------------------
         if Y.size <= Xb.size:
             if self._parameters["R_scalar"] is not None:
-                R = self._parameters["R_scalar"] * numpy.eye(len(Y), dtype=numpy.float)
-            K  = B * Ha * (Hm * B * Ha + R).I
+                R = self._parameters["R_scalar"] * numpy.eye(Y.size, dtype=numpy.float)
+            if Y.size > 100: # len(R)
+                _A = Hm * B * Ha + R
+                _u = numpy.linalg.solve( _A , d )
+                Xa = Xb + B * Ha * _u
+            else:
+                K  = B * Ha * (Hm * B * Ha + R).I
+                Xa = Xb + K*d
         else:
-            K = (Ha * RI * Hm + BI).I * Ha * RI
-        Xa = Xb + K*d
+            if Y.size > 100: # len(R)
+                _A = Ha * RI * Hm + BI
+                _u = numpy.linalg.solve( _A , Ha * RI * d )
+                Xa = Xb + _u
+            else:
+                K = (Ha * RI * Hm + BI).I * Ha * RI
+                Xa = Xb + K*d
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
         # Calcul de la fonction coût
