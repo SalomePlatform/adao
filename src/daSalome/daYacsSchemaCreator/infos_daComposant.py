@@ -208,9 +208,9 @@ StoredAssimData = ["Vector", "VectorSerie", "Matrix", "ScalarSparseMatrix", "Dia
 
 # Assimilation optional nodes
 OptDict = {}
-OptDict["UserPostAnalysis"]   = ["String", "Script"]
+OptDict["UserPostAnalysis"]   = ["String", "Script", "Template"]
 OptDefaultDict = {}
-OptDefaultDict["UserPostAnalysis"]   = "Script"
+OptDefaultDict["UserPostAnalysis"]   = "Template"
 
 # Observers
 ObserversList = [

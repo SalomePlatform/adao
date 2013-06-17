@@ -277,6 +277,13 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "Analysis_config['From'] = 'Script'\n"
       self.text_da += "Analysis_config['Data'] = '" + data + "'\n"
       self.text_da += "study_config['UserPostAnalysis'] = Analysis_config\n"
+    elif from_type == "Template":
+      tmpl = self.dictMCVal["__"+self.type_of_study+"__UserPostAnalysis__TEMPLATE_DATA__Template"]
+      data = self.dictMCVal["__"+self.type_of_study+"__UserPostAnalysis__TEMPLATE_DATA__%s__ValueTemplate"%tmpl]
+      self.text_da += "Analysis_config = {}\n"
+      self.text_da += "Analysis_config['From'] = 'String'\n"
+      self.text_da += "Analysis_config['Data'] = \"\"\"" + data + "\"\"\"\n"
+      self.text_da += "study_config['UserPostAnalysis'] = Analysis_config\n"
     else:
       raise Exception('From Type unknown', from_type)
 
