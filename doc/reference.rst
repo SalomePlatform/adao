@@ -199,7 +199,8 @@ following:
     functions linked with a particular variable, which will be executed each
     time this variable is modified. It is a convenient way to monitor variables
     of interest during the data assimilation or optimization process, by
-    printing or plotting it, etc.
+    printing or plotting it, etc. Common templates are provided to help the user
+    to start or to quickly make his case.
 
 **OutputVariables**
     *Optional command*. This command allows to indicates the name and size of
@@ -222,7 +223,8 @@ following:
     *Optional command*. This commands allows to process some parameters or data
     automatically after data assimilation algorithm processing. It is defined as
     a script or a string, allowing to put post-processing code directly inside
-    the ADAO case.
+    the ADAO case. Common templates are provided to help the user to start or
+    to quickly make his case.
 
 Options and required commands for calculation algorithms
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++

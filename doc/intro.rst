@@ -14,7 +14,11 @@ used throught YACS integration of ADAO.
 
 Its main objective is to *facilitate the use of various standard data
 assimilation or optimization methods*, while remaining easy to use and providing
-a path to help the implementation. The module covers a wide variety of practical
-applications in a robust way, allowing real engineering applications but also
-quick experimental setup to be performed. Its methodological and numerical
-scalability gives way to extend the application domain.
+a path to help the implementation. For an end user, having already gathered his
+physical input information, it's a matter of "point\&click" to build an ADAO
+valid case and to evaluate it.
+
+The module covers a wide variety of practical applications in a robust way,
+allowing real engineering applications but also quick experimental setup to be
+performed. Its methodological and numerical scalability gives way to extend the
+application domain.

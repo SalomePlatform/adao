@@ -149,8 +149,8 @@ to YACS.
 The main supplement needed in the YACS scheme is a post-processing step. The
 evaluation of the results has to be done in the physical context of the
 simulation used by the data assimilation procedure. The post-processing can be
-provided through the "*UserPostAnalysis*" ADAO keyword as a script, or can be
-build as YACS nodes using all SALOME possibilities.
+provided through the "*UserPostAnalysis*" ADAO keyword as a script or a string,
+by templates, or can be build as YACS nodes using all SALOME possibilities.
 
 The YACS scheme has an "*algoResults*" output port of the computation bloc,
 which gives access to a "*pyobj*" named hereafter "*ADD*", containing all the
