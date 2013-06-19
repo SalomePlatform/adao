@@ -136,9 +136,6 @@ class SystemUsage:
         'B':     1.0, 'kB': 1024.0, 'mB': 1024.0*1024.0,
                       'KB': 1024.0, 'MB': 1024.0*1024.0,
              }
-    _max_mem = 0
-    _max_rss = 0
-    _max_sta = 0
     #
     def _VmA(self, VmKey, unit):
         try:
@@ -190,34 +187,24 @@ class SystemUsage:
         return mem / self._scale[unit]
     #
     def getUsedMemory(self, unit="o"):
-        "Renvoie la mémoire totale utilisée en octets"
-        mem = self._VmB('VmSize:', unit)
-        self._max_mem = max(self._max_mem, mem)
-        return mem
-    #
-    def getUsedResident(self, unit="o"):
         "Renvoie la mémoire résidente utilisée en octets"
-        mem = self._VmB('VmRSS:', unit)
-        self._max_rss = max(self._max_rss, mem)
-        return mem
+        return self._VmB('VmRSS:', unit)
+    #
+    def getVirtualMemory(self, unit="o"):
+        "Renvoie la mémoire totale utilisée en octets"
+        return self._VmB('VmSize:', unit)
     #
     def getUsedStacksize(self, unit="o"):
         "Renvoie la taille du stack utilisé en octets"
-        mem = self._VmB('VmStk:', unit)
-        self._max_sta = max(self._max_sta, mem)
-        return mem
+        return self._VmB('VmStk:', unit)
     #
-    def getMaxUsedMemory(self):
-        "Renvoie la mémoire totale maximale mesurée"
-        return self._max_mem
-    #
-    def getMaxUsedResident(self):
+    def getMaxUsedMemory(self, unit="o"):
         "Renvoie la mémoire résidente maximale mesurée"
-        return self._max_rss
+        return self._VmB('VmHWM:', unit)
     #
-    def getMaxUsedStacksize(self):
-        "Renvoie la mémoire du stack maximale mesurée"
-        return self._max_sta
+    def getMaxVirtualMemory(self, unit="o"):
+        "Renvoie la mémoire totale maximale mesurée"
+        return self._VmB('VmPeak:', unit)
 
 # ==============================================================================
 if __name__ == "__main__":
@@ -248,8 +235,8 @@ if __name__ == "__main__":
     print "  - mémoire swap......: %4.1f Mo"%m.getAvailableSwapMemory("Mo")
     print "  - utilisable........: %4.1f Mo"%m.getUsableMemory("Mo")
     print "L'usage mémoire de cette exécution est le suivant :"
-    print "  - mémoire totale....: %4.1f Mo"%m.getUsedMemory("Mo")
-    print "  - mémoire résidente.: %4.1f Mo"%m.getUsedResident("Mo")
+    print "  - mémoire résidente.: %4.1f Mo"%m.getUsedMemory("Mo")
+    print "  - mémoire virtuelle.: %4.1f Mo"%m.getVirtualMemory("Mo")
     print "  - taille de stack...: %4.1f Mo"%m.getUsedStacksize("Mo")
     print "Création d'un objet range(1000000) et mesure mémoire"
     x = range(1000000)
@@ -258,7 +245,6 @@ if __name__ == "__main__":
     del x
     print "  - mémoire totale....: %4.1f Mo"%m.getUsedMemory("Mo")
     print "L'usage mémoire maximal de cette exécution est le suivant :"
-    print "  - mémoire totale....: %4.1f Mo"%m.getMaxUsedMemory()
-    print "  - mémoire résidente.: %4.1f Mo"%m.getMaxUsedResident()
-    print "  - taille de stack...: %4.1f Mo"%m.getMaxUsedStacksize()
+    print "  - mémoire résidente.: %4.1f Mo"%m.getMaxUsedMemory("Mo")
+    print "  - mémoire virtuelle.: %4.1f Mo"%m.getMaxVirtualMemory("Mo")
     print
