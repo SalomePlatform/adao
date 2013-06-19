@@ -50,17 +50,15 @@ class AssimilationStudy:
         élémentaire. Ces variables sont ensuite disponibles pour implémenter un
         algorithme élémentaire particulier.
 
-        Background............: vecteur Xb
-        Observation...........: vecteur Y (potentiellement temporel)
-            d'observations
-        State.................: vecteur d'état dont une partie est le vecteur de
-            contrôle. Cette information n'est utile que si l'on veut faire des
-            calculs sur l'état complet, mais elle n'est pas indispensable pour
-            l'assimilation.
-        Control...............: vecteur X contenant toutes les variables de
-            contrôle, i.e. les paramètres ou l'état dont on veut estimer la
-            valeur pour obtenir les observations
-        ObservationOperator...: opérateur d'observation H
+        - Background : vecteur Xb
+        - Observation : vecteur Y (potentiellement temporel) d'observations
+        - State : vecteur d'état dont une partie est le vecteur de contrôle.
+          Cette information n'est utile que si l'on veut faire des calculs sur
+          l'état complet, mais elle n'est pas indispensable pour l'assimilation.
+        - Control : vecteur X contenant toutes les variables de contrôle, i.e.
+          les paramètres ou l'état dont on veut estimer la valeur pour obtenir
+          les observations
+        - ObservationOperator...: opérateur d'observation H
 
         Les observations présentent une erreur dont la matrice de covariance est
         R. L'ébauche du vecteur de contrôle présente une erreur dont la matrice
@@ -245,12 +243,7 @@ class AssimilationStudy:
         return 0
 
     def setObservationOperator(self,
-            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
-                          "useApproximatedDerivatives":False,
-                          "withCenteredDF"            :False,
-                          "withIncrement"             :0.01,
-                          "withdX"                    :None,
-                         },
+            asFunction = None,
             asMatrix   = None,
             appliedToX = None,
             toBeStored = False,
@@ -277,19 +270,37 @@ class AssimilationStudy:
           L'opérateur doit néanmoins déjà avoir été défini comme d'habitude.
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
+        L'argument "asFunction" peut prendre la forme complète suivante, avec
+        les valeurs par défaut standards :
+          asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
+                        "useApproximatedDerivatives":False,
+                        "withCenteredDF"            :False,
+                        "withIncrement"             :0.01,
+                        "withdX"                    :None,
+                        "withAvoidingRedundancy"    :True,
+                        "withToleranceInRedundancy" :1.e-15,
+                        "withLenghtOfRedundancy"    :-1,
+                       }
         """
         if (type(asFunction) is type({})) and \
                 asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
                 asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
-            if not asFunction.has_key("withCenteredDF"): asFunction["withCenteredDF"] = False
-            if not asFunction.has_key("withIncrement"):  asFunction["withIncrement"]  = 0.01
-            if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
+            if not asFunction.has_key("withCenteredDF"):            asFunction["withCenteredDF"]            = False
+            if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
+            if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
+            if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
+            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-15
+            if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
-                Function   = asFunction["Direct"],
-                centeredDF = asFunction["withCenteredDF"],
-                increment  = asFunction["withIncrement"],
-                dX         = asFunction["withdX"] )
+                Function              = asFunction["Direct"],
+                centeredDF            = asFunction["withCenteredDF"],
+                increment             = asFunction["withIncrement"],
+                dX                    = asFunction["withdX"],
+                avoidingRedundancy    = asFunction["withAvoidingRedundancy"],
+                toleranceInRedundancy = asFunction["withToleranceInRedundancy"],
+                lenghtOfRedundancy    = asFunction["withLenghtOfRedundancy"],
+                )
             self.__HO["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
             self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
             self.__HO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
@@ -333,12 +344,7 @@ class AssimilationStudy:
 
     # -----------------------------------------------------------
     def setEvolutionModel(self,
-            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
-                          "useApproximatedDerivatives":False,
-                          "withCenteredDF"            :False,
-                          "withIncrement"             :0.01,
-                          "withdX"                    :None,
-                         },
+            asFunction = None,
             asMatrix   = None,
             Scheduler  = None,
             toBeStored = False,
@@ -361,19 +367,37 @@ class AssimilationStudy:
           constructeur de numpy.matrix.
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
+        L'argument "asFunction" peut prendre la forme complète suivante, avec
+        les valeurs par défaut standards :
+          asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
+                        "useApproximatedDerivatives":False,
+                        "withCenteredDF"            :False,
+                        "withIncrement"             :0.01,
+                        "withdX"                    :None,
+                        "withAvoidingRedundancy"    :True,
+                        "withToleranceInRedundancy" :1.e-15,
+                        "withLenghtOfRedundancy"    :-1,
+                       }
         """
         if (type(asFunction) is type({})) and \
                 asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
                 asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
-            if not asFunction.has_key("withCenteredDF"): asFunction["withCenteredDF"] = False
-            if not asFunction.has_key("withIncrement"):  asFunction["withIncrement"]  = 0.01
-            if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
+            if not asFunction.has_key("withCenteredDF"):            asFunction["withCenteredDF"]            = False
+            if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
+            if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
+            if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
+            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-15
+            if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
-                Function   = asFunction["Direct"],
-                centeredDF = asFunction["withCenteredDF"],
-                increment  = asFunction["withIncrement"],
-                dX         = asFunction["withdX"] )
+                Function              = asFunction["Direct"],
+                centeredDF            = asFunction["withCenteredDF"],
+                increment             = asFunction["withIncrement"],
+                dX                    = asFunction["withdX"],
+                avoidingRedundancy    = asFunction["withAvoidingRedundancy"],
+                toleranceInRedundancy = asFunction["withToleranceInRedundancy"],
+                lenghtOfRedundancy    = asFunction["withLenghtOfRedundancy"],
+                )
             self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
             self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
             self.__EM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
