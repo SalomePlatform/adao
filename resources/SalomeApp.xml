@@ -34,6 +34,6 @@
   </section>
   <section name="adao_help">
     <parameter name="sub_menu"     value="%1 module"/>
-    <parameter name="User's Guide" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/index.html"/>
+    <parameter name="User's Guide" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/en/index.html"/>
   </section>
 </document>
