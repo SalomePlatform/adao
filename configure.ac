@@ -16,9 +16,9 @@ dnl  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 dnl
 dnl  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 dnl
-dnl  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+dnl  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-AC_INIT(ADAO_SRC, [6.6.0])
+AC_INIT(ADAO_SRC, [7.2.0])
 AC_CONFIG_AUX_DIR(adm_local)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(adao_config.h)
@@ -135,5 +135,6 @@ AC_CONFIG_FILES([
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile
+        doc/en/Makefile
         ])
 AC_OUTPUT
