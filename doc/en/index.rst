@@ -28,7 +28,8 @@ usage. Users interested in quick use of the module can jump to this section, but
 a valuable use of the module requires to read and come back regularly to the
 third and fourth ones. The last part :ref:`section_advanced` focuses on advanced
 usages of the module, how to get more information, or how to use it by
-scripting, without the graphical user interface (GUI). 
+scripting, without the graphical user interface (GUI). And be sure to read the
+part :ref:`section_licence` to respect the module requirements.
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization. In particular, vectors
