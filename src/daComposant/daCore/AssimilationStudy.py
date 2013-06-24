@@ -278,7 +278,7 @@ class AssimilationStudy:
                         "withIncrement"             :0.01,
                         "withdX"                    :None,
                         "withAvoidingRedundancy"    :True,
-                        "withToleranceInRedundancy" :1.e-15,
+                        "withToleranceInRedundancy" :1.e-18,
                         "withLenghtOfRedundancy"    :-1,
                        }
         """
@@ -289,7 +289,7 @@ class AssimilationStudy:
             if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
             if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
             if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
-            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-15
+            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
             if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
@@ -375,7 +375,7 @@ class AssimilationStudy:
                         "withIncrement"             :0.01,
                         "withdX"                    :None,
                         "withAvoidingRedundancy"    :True,
-                        "withToleranceInRedundancy" :1.e-15,
+                        "withToleranceInRedundancy" :1.e-18,
                         "withLenghtOfRedundancy"    :-1,
                        }
         """
@@ -386,7 +386,7 @@ class AssimilationStudy:
             if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
             if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
             if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
-            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-15
+            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
             if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(

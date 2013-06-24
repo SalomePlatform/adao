@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import os, numpy, time
+import os, numpy, time, copy
 import logging
 # logging.getLogger().setLevel(logging.DEBUG)
 
@@ -46,7 +46,7 @@ class FDApproximation:
             increment             = 0.01,
             dX                    = None,
             avoidingRedundancy    = True,
-            toleranceInRedundancy = 1.e-15,
+            toleranceInRedundancy = 1.e-18,
             lenghtOfRedundancy    = -1,
             ):
         self.__userFunction = Function
@@ -54,7 +54,8 @@ class FDApproximation:
         if avoidingRedundancy:
             self.__avoidRC = True
             self.__tolerBP = float(toleranceInRedundancy)
-            self.__lenghtR = int(lenghtOfRedundancy)
+            self.__lenghtRH = int(lenghtOfRedundancy)
+            self.__lenghtRJ = int(lenghtOfRedundancy)
             self.__listDPCP = [] # Direct Operator Previous Calculated Points
             self.__listDPCR = [] # Direct Operator Previous Calculated Results
             self.__listDPCN = [] # Direct Operator Previous Calculated Point Norms
@@ -79,13 +80,13 @@ class FDApproximation:
 
     # ---------------------------------------------------------
     def __doublon__(self, e, l, n, v=""):
-        __ac, __i = False, -1
+        __ac, __iac = False, -1
         for i in xrange(len(l)-1,-1,-1):
             if numpy.linalg.norm(e - l[i]) < self.__tolerBP * n[i]:
-                __ac, __i = True, i
-                if v is not None: logging.debug("FDA Cas%s déja calculé, récupération du doublon"%v)
+                __ac, __iac = True, i
+                if v is not None: logging.debug("FDA Cas%s déja calculé, récupération du doublon %i"%(v,__iac))
                 break
-        return __ac, __i
+        return __ac, __iac
 
     # ---------------------------------------------------------
     def DirectOperator(self, X ):
@@ -99,22 +100,23 @@ class FDApproximation:
             __alreadyCalculated, __i = self.__doublon__(_X, self.__listDPCP, self.__listDPCN, " H")
         #
         if __alreadyCalculated:
-            logging.debug("FDA Calcul DirectOperator (par récupération)")
+            logging.debug("FDA Calcul DirectOperator (par récupération du doublon %i)"%__i)
             _HX = self.__listDPCR[__i]
         else:
             logging.debug("FDA Calcul DirectOperator (explicite)")
-            _HX  = self.__userFunction( _X )
+            _HX = numpy.ravel(self.__userFunction( _X ))
             if self.__avoidRC:
-                if self.__lenghtR < 0: self.__lenghtR = 2 * _X.size
-                if len(self.__listDPCP) > self.__lenghtR:
+                if self.__lenghtRH < 0: self.__lenghtRH = 2 * _X.size
+                if len(self.__listDPCP) > self.__lenghtRH:
+                    logging.debug("FDA Réduction de la liste de H à la taille %i"%self.__lenghtRH)
                     self.__listDPCP.pop(0)
                     self.__listDPCR.pop(0)
                     self.__listDPCN.pop(0)
-                self.__listDPCP.append( _X )
-                self.__listDPCR.append( _HX )
+                self.__listDPCP.append( copy.copy(_X) )
+                self.__listDPCR.append( copy.copy(_HX) )
                 self.__listDPCN.append( numpy.linalg.norm(_X) )
         #
-        return numpy.ravel( _HX )
+        return _HX
 
     # ---------------------------------------------------------
     def TangentMatrix(self, X ):
@@ -169,9 +171,10 @@ class FDApproximation:
             __bidon, __alreadyCalculatedI = self.__doublon__(_dX, self.__listJPCI, self.__listJPIN, None)
             if __alreadyCalculatedP == __alreadyCalculatedI > -1:
                 __alreadyCalculated, __i = True, __alreadyCalculatedP
+                logging.debug("FDA Cas J déja calculé, récupération du doublon %i"%__i)
         #
         if __alreadyCalculated:
-            logging.debug("FDA   Calcul Jacobienne (par récupération)")
+            logging.debug("FDA   Calcul Jacobienne (par récupération du doublon %i)"%__i)
             _Jacobienne = self.__listJPCR[__i]
         else:
             logging.debug("FDA   Calcul Jacobienne (explicite)")
@@ -206,16 +209,17 @@ class FDApproximation:
             #
             _Jacobienne = numpy.matrix( numpy.vstack( _Jacobienne ) ).T
             if self.__avoidRC:
-                if self.__lenghtR < 0: self.__lenghtR = 2 * _X.size
-                if len(self.__listJPCP) > self.__lenghtR:
+                if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
+                if len(self.__listJPCP) > self.__lenghtRJ:
+                    logging.debug("FDA Réduction de la liste de J à la taille %i"%self.__lenghtRJ)
                     self.__listJPCP.pop(0)
                     self.__listJPCI.pop(0)
                     self.__listJPCR.pop(0)
                     self.__listJPPN.pop(0)
                     self.__listJPIN.pop(0)
-                self.__listJPCP.append( _X )
-                self.__listJPCI.append( _dX )
-                self.__listJPCR.append( _Jacobienne )
+                self.__listJPCP.append( copy.copy(_X) )
+                self.__listJPCI.append( copy.copy(_dX) )
+                self.__listJPCR.append( copy.copy(_Jacobienne) )
                 self.__listJPPN.append( numpy.linalg.norm(_X) )
                 self.__listJPIN.append( numpy.linalg.norm(_Jacobienne) )
         #
