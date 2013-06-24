@@ -92,30 +92,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
-        # Paramètres de pilotage
-        # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateurs
-        # ----------
         Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] is "Taylor":
             Ht = HO["Tangent"].appliedInXTo
         #
-        # Construction des perturbations
-        # ------------------------------
+        # ----------
         Perturbations = [ 10**i for i in xrange(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        # Calcul du point courant
-        # -----------------------
         X       = numpy.asmatrix(numpy.ravel(    Xb   )).T
         FX      = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
         #
-        # Fabrication de la direction de  l'incrément dX
-        # ----------------------------------------------
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
             for v in X.A1:
@@ -128,14 +119,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        # Calcul du gradient au point courant X pour l'incrément dX
-        # ---------------------------------------------------------
         if self._parameters["ResiduFormula"] is "Taylor":
             GradFxdX = Ht( (X, dX0) )
             GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
         #
-        # Entete des resultats
-        # --------------------
+        # ----------
         if self._parameters["ResiduFormula"] is "Taylor":
             __doc__ = """
             On observe le residu issu du développement de Taylor de la fonction F,
@@ -192,8 +180,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         NormesdFXsAm = []
         NormesdFXGdX = []
         #
-        # Boucle sur les perturbations
-        # ----------------------------
+        # ----------
         for i,amplitude in enumerate(Perturbations):
             dX      = amplitude * dX0
             #
@@ -234,8 +221,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += "\n" + "-"*nbtirets
         msgs += "\n"
         #
-        # Sorties eventuelles
-        # -------------------
+        # ----------
         print
         print "Results of gradient stability check:"
         print msgs

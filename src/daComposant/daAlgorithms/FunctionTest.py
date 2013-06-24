@@ -36,25 +36,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Titre du tableau et de la figure",
             )
+        self.defineRequiredParameter(
+            name     = "SetDebug",
+            default  = True,
+            typecast = bool,
+            message  = "Activation du mode debug lors de l'exécution",
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
-        # Paramètres de pilotage
-        # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateur
-        # ---------
         Hm = HO["Direct"].appliedTo
         #
-        # Calcul du point nominal
-        # -----------------------
         Xn = numpy.asmatrix(numpy.ravel( Xb )).T
         #
-        # Test
-        # ----
+        # ----------
         if len(self._parameters["ResultTitle"]) > 0:
             msg  = "     ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
             msg += "        " + self._parameters["ResultTitle"] + "\n"
@@ -73,12 +72,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msg += "       L2 norm of vector..: %.5e\n"%numpy.linalg.norm( Xn )
         print(msg)
         #
-        CUR_LEVEL = logging.getLogger().getEffectiveLevel()
-        logging.getLogger().setLevel(logging.DEBUG)
-        print(  "===> Launching direct operator evaluation, activating debug\n")
+        if self._parameters["SetDebug"]:
+            CUR_LEVEL = logging.getLogger().getEffectiveLevel()
+            logging.getLogger().setLevel(logging.DEBUG)
+            print("===> Beginning of evaluation, activating debug\n")
+        else:
+            print("===> Beginning of evaluation, without activating debug\n")
+        print("     %s\n"%("-"*75,))
+        #
+        print("===> Launching direct operator evaluation\n")
         Y = Hm( Xn )
-        print("\n===> End of direct operator evaluation, deactivating debug\n")
-        logging.getLogger().setLevel(CUR_LEVEL)
+        print("\n===> End of direct operator evaluation\n")
         #
         msg  = "===> Information after launching:\n"
         msg += "     ----------------------------\n"
@@ -91,6 +95,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msg += "       Standard error.....: %.5e\n"%numpy.std( Y )
         msg += "       L2 norm of vector..: %.5e\n"%numpy.linalg.norm( Y )
         print(msg)
+        #
+        print("     %s\n"%("-"*75,))
+        if self._parameters["SetDebug"]:
+            print("===> End evaluation, deactivating debug if necessary\n")
+            logging.getLogger().setLevel(CUR_LEVEL)
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)

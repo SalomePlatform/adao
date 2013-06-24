@@ -73,23 +73,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
-        # Paramètres de pilotage
-        # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateurs
-        # ----------
         Hm = HO["Direct"].appliedTo
         Ht = HO["Tangent"].appliedInXTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        # Construction des perturbations
-        # ------------------------------
+        # ----------
         Perturbations = [ 10**i for i in xrange(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        # Calcul du point courant
-        # -----------------------
         X       = numpy.asmatrix(numpy.ravel( Xb )).T
         NormeX  = numpy.linalg.norm( X )
         if Y is None:
@@ -97,8 +90,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Y = numpy.asmatrix(numpy.ravel( Y )).T
         NormeY = numpy.linalg.norm( Y )
         #
-        # Fabrication de la direction de  l'incrément dX
-        # ----------------------------------------------
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
             for v in X.A1:
@@ -111,11 +102,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        # Utilisation de F(X) si aucune observation n'est donnee
-        # ------------------------------------------------------
-        #
-        # Entete des resultats
-        # --------------------
+        # ----------
         if self._parameters["ResiduFormula"] is "ScalarProduct":
             __doc__ = """
             On observe le residu qui est la difference de deux produits scalaires :
@@ -145,8 +132,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Normalisation= -1
         #
-        # Boucle sur les perturbations
-        # ----------------------------
+        # ----------
         for i,amplitude in enumerate(Perturbations):
             dX          = amplitude * dX0
             NormedX     = numpy.linalg.norm( dX )
@@ -163,8 +149,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += "\n" + "-"*nbtirets
         msgs += "\n"
         #
-        # Sorties eventuelles
-        # -------------------
+        # ----------
         print
         print "Results of adjoint stability check:"
         print msgs
