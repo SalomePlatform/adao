@@ -669,6 +669,7 @@ Options and required commands for checking algorithms
 .. index:: single: FunctionTest
 .. index:: single: GradientTest
 .. index:: single: LinearityTest
+.. index:: single: FunctionRepetitionTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -728,7 +729,23 @@ each algorithm, the required commands/keywords are given, being described in
     *"CheckingPoint",
     "ObservationOperator"*
 
-  No option
+  SetDebug
+    This key requires the activation, or not, of the debug mode during the
+    function evaluation. The default is True, the choices are True of False.
+
+**"FunctionRepetitionTest"**
+
+  *Required commands*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  NumberOfRepetition
+    This key indicates the number of time to repeat the function evaluation. The
+    default is 2.
+  
+  SetDebug
+    This key requires the activation, or not, of the debug mode during the
+    function evaluation. The default is True, the choices are True of False.
 
 **"GradientTest"**
 
