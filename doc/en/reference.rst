@@ -739,9 +739,13 @@ each algorithm, the required commands/keywords are given, being described in
     *"CheckingPoint",
     "ObservationOperator"*
 
+  NumberOfPrintedDigits
+    This key indicates the number of digits of precision for floating point
+    printed output. The default is 8, with a minimum of 0.
+
   NumberOfRepetition
     This key indicates the number of time to repeat the function evaluation. The
-    default is 2.
+    default is 2, with a minimum of 1.
   
   SetDebug
     This key requires the activation, or not, of the debug mode during the

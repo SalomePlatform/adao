@@ -62,7 +62,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         msg  = "===> Information before launching:\n"
         msg += "     -----------------------------\n"
-        msg += "     Characteristics of input parameter X, internally converted:\n"
+        msg += "     Characteristics of input vector X, internally converted:\n"
         msg += "       Type...............: %s\n"%type( Xn )
         msg += "       Lenght of vector...: %i\n"%max(numpy.matrix( Xn ).shape)
         msg += "       Minimum value......: %.5e\n"%numpy.min( Xn )
@@ -86,7 +86,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         msg  = "===> Information after launching:\n"
         msg += "     ----------------------------\n"
-        msg += "     Characteristics of output parameter Y, to compare to observation:\n"
+        msg += "     Characteristics of output vector Y, to compare to observation:\n"
         msg += "       Type...............: %s\n"%type( Y )
         msg += "       Lenght of vector...: %i\n"%max(numpy.matrix( Y ).shape)
         msg += "       Minimum value......: %.5e\n"%numpy.min( Y )
