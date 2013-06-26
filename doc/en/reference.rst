@@ -669,7 +669,6 @@ Options and required commands for checking algorithms
 .. index:: single: FunctionTest
 .. index:: single: GradientTest
 .. index:: single: LinearityTest
-.. index:: single: FunctionRepetitionTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -729,23 +728,13 @@ each algorithm, the required commands/keywords are given, being described in
     *"CheckingPoint",
     "ObservationOperator"*
 
-  SetDebug
-    This key requires the activation, or not, of the debug mode during the
-    function evaluation. The default is True, the choices are True of False.
-
-**"FunctionRepetitionTest"**
-
-  *Required commands*
-    *"CheckingPoint",
-    "ObservationOperator"*
-
   NumberOfPrintedDigits
     This key indicates the number of digits of precision for floating point
-    printed output. The default is 8, with a minimum of 0.
+    printed output. The default is 5, with a minimum of 0.
 
   NumberOfRepetition
     This key indicates the number of time to repeat the function evaluation. The
-    default is 2, with a minimum of 1.
+    default is 1.
   
   SetDebug
     This key requires the activation, or not, of the debug mode during the
