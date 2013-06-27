@@ -34,7 +34,7 @@ import numpy
 import Logging ; Logging.Logging() # A importer en premier
 import scipy.optimize
 import Persistence
-from BasicObjects import Operator
+from BasicObjects import Operator, Covariance
 from PlatformInfo import uniq
 
 # ==============================================================================
@@ -79,13 +79,6 @@ class AssimilationStudy:
         self.__Parameters        = {}
         self.__StoredDiagnostics = {}
         self.__StoredInputs      = {}
-        #
-        self.__B_scalar = None
-        self.__R_scalar = None
-        self.__Q_scalar = None
-        self.__Parameters["B_scalar"] = None
-        self.__Parameters["R_scalar"] = None
-        self.__Parameters["Q_scalar"] = None
         #
         # Variables temporaires
         self.__algorithm         = {}
@@ -154,19 +147,12 @@ class AssimilationStudy:
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        if asEyeByScalar is not None:
-            self.__B_scalar = float(asEyeByScalar)
-            self.__B        = None
-        elif asEyeByVector is not None:
-            self.__B_scalar = None
-            self.__B        = numpy.matrix( numpy.diagflat( asEyeByVector ), numpy.float )
-        elif asCovariance is not None:
-            self.__B_scalar = None
-            self.__B        = numpy.matrix( asCovariance, numpy.float )
-        else:
-            raise ValueError("Background error covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix")
-        #
-        self.__Parameters["B_scalar"] = self.__B_scalar
+        self.__B = Covariance(
+            name          = "BackgroundError",
+            asCovariance  = asCovariance,
+            asEyeByScalar = asEyeByScalar,
+            asEyeByVector = asEyeByVector,
+            )
         if toBeStored:
             self.__StoredInputs["BackgroundError"] = self.__B
         return 0
@@ -225,19 +211,12 @@ class AssimilationStudy:
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        if asEyeByScalar is not None:
-            self.__R_scalar = float(asEyeByScalar)
-            self.__R        = None
-        elif asEyeByVector is not None:
-            self.__R_scalar = None
-            self.__R        = numpy.matrix( numpy.diagflat( asEyeByVector ), numpy.float )
-        elif asCovariance is not None:
-            self.__R_scalar = None
-            self.__R        = numpy.matrix( asCovariance, numpy.float )
-        else:
-            raise ValueError("Observation error covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix")
-        #
-        self.__Parameters["R_scalar"] = self.__R_scalar
+        self.__R = Covariance(
+            name          = "ObservationError",
+            asCovariance  = asCovariance,
+            asEyeByScalar = asEyeByScalar,
+            asEyeByVector = asEyeByVector,
+            )
         if toBeStored:
             self.__StoredInputs["ObservationError"] = self.__R
         return 0
@@ -442,19 +421,12 @@ class AssimilationStudy:
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
-        if asEyeByScalar is not None:
-            self.__Q_scalar = float(asEyeByScalar)
-            self.__Q        = None
-        elif asEyeByVector is not None:
-            self.__Q_scalar = None
-            self.__Q        = numpy.matrix( numpy.diagflat( asEyeByVector ), numpy.float )
-        elif asCovariance is not None:
-            self.__Q_scalar = None
-            self.__Q        = numpy.matrix( asCovariance, numpy.float )
-        else:
-            raise ValueError("Evolution error covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix")
-        #
-        self.__Parameters["Q_scalar"] = self.__Q_scalar
+        self.__Q = Covariance(
+            name          = "ObservationError",
+            asCovariance  = asCovariance,
+            asEyeByScalar = asEyeByScalar,
+            asEyeByVector = asEyeByVector,
+            )
         if toBeStored:
             self.__StoredInputs["EvolutionError"] = self.__Q
         return 0
@@ -686,36 +658,33 @@ class AssimilationStudy:
         des matrices s'il y en a.
         """
         if self.__Xb is None:                  __Xb_shape = (0,)
+        elif hasattr(self.__Xb,"size"):        __Xb_shape = (self.__Xb.size,)
         elif hasattr(self.__Xb,"shape"):
             if type(self.__Xb.shape) is tuple: __Xb_shape = self.__Xb.shape
             else:                              __Xb_shape = self.__Xb.shape()
         else: raise TypeError("Xb has no attribute of shape: problem !")
         #
         if self.__Y is None:                  __Y_shape = (0,)
+        elif hasattr(self.__Y,"size"):        __Y_shape = (self.__Y.size,)
         elif hasattr(self.__Y,"shape"):
             if type(self.__Y.shape) is tuple: __Y_shape = self.__Y.shape
             else:                             __Y_shape = self.__Y.shape()
         else: raise TypeError("Y has no attribute of shape: problem !")
         #
         if self.__U is None:                  __U_shape = (0,)
+        elif hasattr(self.__U,"size"):        __U_shape = (self.__U.size,)
         elif hasattr(self.__U,"shape"):
             if type(self.__U.shape) is tuple: __U_shape = self.__U.shape
             else:                             __U_shape = self.__U.shape()
         else: raise TypeError("U has no attribute of shape: problem !")
         #
-        if self.__B is None and self.__B_scalar is None:
-            __B_shape = (0,0)
-        elif self.__B is None and self.__B_scalar is not None:
-            __B_shape = (max(__Xb_shape),max(__Xb_shape))
+        if self.__B is None:                  __B_shape = (0,0)
         elif hasattr(self.__B,"shape"):
             if type(self.__B.shape) is tuple: __B_shape = self.__B.shape
             else:                             __B_shape = self.__B.shape()
         else: raise TypeError("B has no attribute of shape: problem !")
         #
-        if self.__R is None and self.__R_scalar is None:
-            __R_shape = (0,0)
-        elif self.__R is None and self.__R_scalar is not None:
-            __R_shape = (max(__Y_shape),max(__Y_shape))
+        if self.__R is None:                  __R_shape = (0,0)
         elif hasattr(self.__R,"shape"):
             if type(self.__R.shape) is tuple: __R_shape = self.__R.shape
             else:                             __R_shape = self.__R.shape()

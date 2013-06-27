@@ -69,20 +69,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if B is not None:
-            BI = B.I
-        elif self._parameters["B_scalar"] is not None:
-            BI = 1.0 / self._parameters["B_scalar"]
-            B = self._parameters["B_scalar"]
-        else:
-            raise ValueError("Background error covariance matrix has to be properly defined!")
-        #
-        if R is not None:
-            RI = R.I
-        elif self._parameters["R_scalar"] is not None:
-            RI = 1.0 / self._parameters["R_scalar"]
-        else:
-            raise ValueError("Observation error covariance matrix has to be properly defined!")
+        BI = B.getI()
+        RI = R.getI()
         #
         # Calcul de l'innovation
         # ----------------------
@@ -95,22 +83,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
         if Y.size <= Xb.size:
-            if self._parameters["R_scalar"] is not None:
-                R = self._parameters["R_scalar"] * numpy.eye(Y.size, dtype=numpy.float)
             if Y.size > 100: # len(R)
-                _A = Hm * B * Ha + R
+                _A = R + Hm * B * Ha
                 _u = numpy.linalg.solve( _A , d )
                 Xa = Xb + B * Ha * _u
             else:
-                K  = B * Ha * (Hm * B * Ha + R).I
+                K  = B * Ha * (R + Hm * B * Ha).I
                 Xa = Xb + K*d
         else:
             if Y.size > 100: # len(R)
-                _A = Ha * RI * Hm + BI
+                _A = BI + Ha * RI * Hm
                 _u = numpy.linalg.solve( _A , Ha * RI * d )
                 Xa = Xb + _u
             else:
-                K = (Ha * RI * Hm + BI).I * Ha * RI
+                K = (BI + Ha * RI * Hm).I * Ha * RI
                 Xa = Xb + K*d
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
@@ -152,10 +138,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
-            if R is not None:
-                TraceR = R.trace()
-            elif self._parameters["R_scalar"] is not None:
-                TraceR =  float(self._parameters["R_scalar"]*Y.size)
+            TraceR = R.trace(Y.size)
             self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(oma)).T)) ) / TraceR )
         if "SigmaBck2" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SigmaBck2"].store( float( (d.T * Hm * (Xa - Xb))/(Hm * B * Hm.T).trace() ) )

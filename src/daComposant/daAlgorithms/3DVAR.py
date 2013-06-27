@@ -128,19 +128,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if B is not None:
-            BI = B.I
-        elif self._parameters["B_scalar"] is not None:
-            BI = 1.0 / self._parameters["B_scalar"]
-        else:
-            raise ValueError("Background error covariance matrix has to be properly defined!")
-        #
-        if R is not None:
-            RI = R.I
-        elif self._parameters["R_scalar"] is not None:
-            RI = 1.0 / self._parameters["R_scalar"]
-        else:
-            raise ValueError("Observation error covariance matrix has to be properly defined!")
+        BI = B.getI()
+        RI = R.getI()
         #
         # Définition de la fonction-coût
         # ------------------------------
@@ -268,7 +257,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _ee[i] = 1.
                 _HtEE  = numpy.dot(HtM,_ee)
                 _HtEE  = numpy.asmatrix(numpy.ravel( _HtEE )).T
-                HessienneI.append( numpy.ravel( numpy.dot(BI,_ee) + numpy.dot(HaM,numpy.dot(RI,_HtEE)) ) )
+                HessienneI.append( numpy.ravel( BI*_ee + HaM * (RI * _HtEE) ) )
             HessienneI = numpy.matrix( HessienneI )
             A = HessienneI.I
             if min(A.shape) != max(A.shape):
@@ -293,10 +282,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
-            if R is not None:
-                TraceR = R.trace()
-            elif self._parameters["R_scalar"] is not None:
-                TraceR =  float(self._parameters["R_scalar"]*Y.size)
+            TraceR = R.trace(Y.size)
             self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(Y)).T-numpy.asmatrix(numpy.ravel(Hm(Xa))).T)) ) / TraceR )
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )

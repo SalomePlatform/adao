@@ -117,19 +117,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if B is not None:
-            BI = B.I
-        elif self._parameters["B_scalar"] is not None:
-            BI = 1.0 / self._parameters["B_scalar"]
-        else:
-            BI = None
-        #
-        if R is not None:
-            RI = R.I
-        elif self._parameters["R_scalar"] is not None:
-            RI = 1.0 / self._parameters["R_scalar"]
-        else:
-            RI = None
+        BI = B.getI()
+        RI = R.getI()
         #
         # Définition de la fonction-coût
         # ------------------------------

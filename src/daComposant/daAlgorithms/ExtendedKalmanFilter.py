@@ -100,15 +100,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Précalcul des inversions de B et R
         # ----------------------------------
         if self._parameters["StoreInternalVariables"]:
-            if B is not None:
-                BI = B.I
-            elif self._parameters["B_scalar"] is not None:
-                BI = 1.0 / self._parameters["B_scalar"]
-            #
-            if R is not None:
-                RI = R.I
-            elif self._parameters["R_scalar"] is not None:
-                RI = 1.0 / self._parameters["R_scalar"]
+            BI = B.getI()
+            RI = R.getI()
         #
         # Initialisation
         # --------------
@@ -154,7 +147,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                     Xn_predicted = Xn_predicted + Cm * Un
-                Pn_predicted = Mt * Pn * Ma + Q
+                Pn_predicted = Q + Mt * Pn * Ma
             elif self._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 Xn_predicted = Xn
@@ -171,7 +164,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                     d = d - Cm * Un
             #
-            K  = Pn_predicted * Ha * (Ht * Pn_predicted * Ha + R).I
+            K  = Pn_predicted * Ha * (R + Ht * Pn_predicted * Ha).I
             Xn = Xn_predicted + K * d
             Pn = Pn_predicted - K * Ht * Pn_predicted
             #

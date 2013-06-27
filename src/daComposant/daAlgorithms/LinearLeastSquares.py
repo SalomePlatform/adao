@@ -59,12 +59,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ha = HO["Adjoint"].asMatrix(None)
         Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
         #
-        if R is not None:
-            RI = R.I
-        elif self._parameters["R_scalar"] is not None:
-            RI = 1.0 / self._parameters["R_scalar"]
-        else:
-            raise ValueError("Observation error covariance matrix has to be properly defined!")
+        RI = R.getI()
         #
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------

@@ -46,31 +46,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if B is not None:
-            BI = B.I
-        elif self._parameters["B_scalar"] is not None:
-            BI = 1.0 / self._parameters["B_scalar"]
-            B = self._parameters["B_scalar"]
-        else:
-            raise ValueError("Background error covariance matrix has to be properly defined!")
+        BI = B.getI()
+        RI = R.getI()
         #
-        if R is not None:
-            RI = R.I
-        elif self._parameters["R_scalar"] is not None:
-            RI = 1.0 / self._parameters["R_scalar"]
-        else:
-            raise ValueError("Observation error covariance matrix has to be properly defined!")
-        #
-        # Nombre d'ensemble pour l'ébauche 
+        # Nombre d'ensemble pour l'ébauche
         # --------------------------------
         nb_ens = Xb.stepnumber()
         #
         # Construction de l'ensemble des observations, par génération a partir
         # de la diagonale de R
         # --------------------------------------------------------------------
-        DiagonaleR = numpy.diag(R)
+        DiagonaleR = R.diag(Y.size)
         EnsembleY = numpy.zeros([Y.size,nb_ens])
-        for npar in range(DiagonaleR.size) : 
+        for npar in range(DiagonaleR.size):
             bruit = numpy.random.normal(0,DiagonaleR[npar],nb_ens)
             EnsembleY[npar,:] = Y[npar] + bruit
         EnsembleY = numpy.matrix(EnsembleY)
@@ -85,11 +73,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------
         if Y.size <= Xb[0].size:
-            if self._parameters["R_scalar"] is not None:
-                R = self._parameters["R_scalar"] * numpy.eye(Y.size, dtype=numpy.float)
-            K  = B * Ha * (Hm * B * Ha + R).I
+            K  = B * Ha * (R + Hm * B * Ha).I
         else:
-            K = (Ha * RI * Hm + BI).I * Ha * RI
+            K = (BI + Ha * RI * Hm).I * Ha * RI
         #
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------

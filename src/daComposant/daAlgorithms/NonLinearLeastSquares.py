@@ -128,24 +128,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        # if B is not None:
-        #     BI = B.I
-        # elif self._parameters["B_scalar"] is not None:
-        #     BI = 1.0 / self._parameters["B_scalar"]
-        # else:
-        #     raise ValueError("Background error covariance matrix has to be properly defined!")
-        #
-        if R is not None:
-            RI = R.I
-            if self._parameters["Minimizer"] == "LM":
-                RdemiI = numpy.linalg.cholesky(R).I
-        elif self._parameters["R_scalar"] is not None:
-            RI = 1.0 / self._parameters["R_scalar"]
-            if self._parameters["Minimizer"] == "LM":
-                import math
-                RdemiI = 1.0 / math.sqrt( self._parameters["R_scalar"] )
-        else:
-            raise ValueError("Observation error covariance matrix has to be properly defined!")
+        RI = R.getI()
+        if self._parameters["Minimizer"] == "LM":
+            RdemiI = R.choleskyI()
         #
         # Définition de la fonction-coût
         # ------------------------------
@@ -282,7 +267,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
         IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
-        MinJ    = self.StoredVariables["CostFunctionJ"][IndexMin]
+        MinJ     = self.StoredVariables["CostFunctionJ"][IndexMin]
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         # ----------------------------------------------------------------

@@ -116,7 +116,7 @@ class Operator:
         if self.__Matrix is not None:
             return self.__Matrix
         elif ValueForMethodForm is not "UnknownVoidValue": # Ne pas utiliser "None"
-            return self.__Method( (ValueForMethodForm, None) )
+            return numpy.matrix( self.__Method( (ValueForMethodForm, None) ) )
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
 
@@ -329,6 +329,216 @@ class Diagnostic:
         Active la formule de calcul avec les arguments correctement rangés
         """
         raise NotImplementedError("Diagnostic activation method has not been implemented!")
+
+# ==============================================================================
+class Covariance:
+    """
+    Classe générale d'interface de type covariance
+    """
+    def __init__(self,
+            name          = "GenericCovariance",
+            asCovariance  = None,
+            asEyeByScalar = None,
+            asEyeByVector = None,
+            ):
+        """
+        Permet de définir une covariance :
+        - asCovariance : entrée des données, comme une matrice compatible avec
+          le constructeur de numpy.matrix
+        - asEyeByScalar : entrée des données comme un seul scalaire de variance,
+          multiplicatif d'une matrice de corrélation identité, aucune matrice
+          n'étant donc explicitement à donner
+        - asEyeByVector : entrée des données comme un seul vecteur de variance,
+          à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
+          n'étant donc explicitement à donner
+        """
+        self.__name       = str(name)
+        #
+        self.__B          = None
+        self.__is_scalar  = False
+        self.__is_vector  = False
+        self.__is_matrix  = False
+        if asEyeByScalar is not None:
+            self.__is_scalar = True
+            self.__B         = float(asEyeByScalar)
+            self.shape       = (0,0)
+            self.size        = 0
+        elif asEyeByVector is not None:
+            self.__is_vector = True
+            self.__B         = numpy.array( numpy.ravel( asEyeByVector ), float )
+            self.shape       = (self.__B.size,self.__B.size)
+            self.size        = self.__B.size**2
+        elif asCovariance is not None:
+            self.__is_matrix = True
+            self.__B         = numpy.matrix( asCovariance, float )
+            self.shape       = self.__B.shape
+            self.size        = self.__B.size
+        else:
+            pass
+            # raise ValueError("The %s covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix."%self.__name)
+        #
+        self.__validate()
+    
+    def __validate(self):
+        if self.ismatrix() and min(self.shape) != max(self.shape):
+            raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name,self.shape))
+        if self.isscalar() and self.__B <= 0:
+            raise ValueError("The %s covariance matrix is not positive-definite. Please check your scalar input %s."%(self.__name,self.__B_scalar))
+        if self.isvector() and (self.__B <= 0).any():
+            raise ValueError("The %s covariance matrix is not positive-definite. Please check your vector input."%(self.__name,))
+        if self.ismatrix() and logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
+            try:
+                L = numpy.linalg.cholesky( self.__B )
+            except:
+                raise ValueError("The %s covariance matrix is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
+        
+    def isscalar(self):
+        return self.__is_scalar
+    
+    def isvector(self):
+        return self.__is_vector
+    
+    def ismatrix(self):
+        return self.__is_matrix
+    
+    def getI(self):
+        if   self.ismatrix():
+            return Covariance(self.__name+"I", asCovariance  = self.__B.I )
+        elif self.isvector():
+            return Covariance(self.__name+"I", asEyeByVector = 1. / self.__B )
+        elif self.isscalar():
+            return Covariance(self.__name+"I", asEyeByScalar = 1. / self.__B )
+        else:
+            return None
+    
+    def getT(self):
+        if   self.ismatrix():
+            return Covariance(self.__name+"T", asCovariance  = self.__B.T )
+        elif self.isvector():
+            return Covariance(self.__name+"T", asEyeByVector = self.__B )
+        elif self.isscalar():
+            return Covariance(self.__name+"T", asEyeByScalar = self.__B )
+    
+    def cholesky(self):
+        if   self.ismatrix():
+            return Covariance(self.__name+"C", asCovariance  = numpy.linalg.cholesky(self.__B) )
+        elif self.isvector():
+            return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__B ) )
+        elif self.isscalar():
+            return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__B ) )
+    
+    def choleskyI(self):
+        if   self.ismatrix():
+            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.cholesky(self.__B).I )
+        elif self.isvector():
+            return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__B ) )
+        elif self.isscalar():
+            return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__B ) )
+    
+    def diag(self, msize=None):
+        if   self.ismatrix():
+            return numpy.diag(self.__B)
+        elif self.isvector():
+            return self.__B
+        elif self.isscalar():
+            if msize is None:
+                raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
+            else:
+                return self.__B * numpy.ones(int(msize))
+    
+    def trace(self, msize=None):
+        if   self.ismatrix():
+            return numpy.trace(self.__B)
+        elif self.isvector():
+            return float(numpy.sum(self.__B))
+        elif self.isscalar():
+            if msize is None:
+                raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
+            else:
+                return self.__B * int(msize)
+    
+    def __repr__(self):
+        return repr(self.__B)
+    
+    def __str__(self):
+        return str(self.__B)
+    
+    def __add__(self, other):
+        if   self.ismatrix():
+            return self.__B + numpy.asmatrix(other)
+        elif self.isvector() or self.isscalar():
+            _A = numpy.asarray(other)
+            _A.reshape(_A.size)[::_A.shape[1]+1] += self.__B
+            return numpy.asmatrix(_A)
+
+    def __radd__(self, other):
+        raise NotImplementedError("%s covariance matrix __radd__ method not available for %s type!"%(self.__name,type(other)))
+
+    def __sub__(self, other):
+        if   self.ismatrix():
+            return self.__B - numpy.asmatrix(other)
+        elif self.isvector() or self.isscalar():
+            _A = numpy.asarray(other)
+            _A.reshape(_A.size)[::_A.shape[1]+1] = self.__B - _A.reshape(_A.size)[::_A.shape[1]+1]
+            return numpy.asmatrix(_A)
+
+    def __rsub__(self, other):
+        raise NotImplementedError("%s covariance matrix __rsub__ method not available for %s type!"%(self.__name,type(other)))
+
+    def __neg__(self):
+        return - self.__B
+    
+    def __mul__(self, other):
+        if   self.ismatrix() and isinstance(other,numpy.matrix):
+            return self.__B * other
+        elif self.ismatrix() and (isinstance(other,numpy.ndarray) \
+                               or isinstance(other,list) \
+                               or isinstance(other,tuple)):
+            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+                return self.__B * numpy.asmatrix(numpy.ravel(other)).T
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+                return self.__B * numpy.asmatrix(other)
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asmatrix(other).shape,self.__name))
+        elif self.isvector() and (isinstance(other,numpy.matrix) \
+                               or isinstance(other,numpy.ndarray) \
+                               or isinstance(other,list) \
+                               or isinstance(other,tuple)):
+            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+                return numpy.asmatrix(self.__B * numpy.ravel(other)).T
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+                return numpy.asmatrix((self.__B * (numpy.asarray(other).transpose())).transpose())
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
+        elif self.isscalar() and isinstance(other,numpy.matrix):
+            return self.__B * other
+        elif self.isscalar() and (isinstance(other,numpy.ndarray) \
+                               or isinstance(other,list) \
+                               or isinstance(other,tuple)):
+            if len(numpy.asarray(other).shape) == 1 or numpy.asarray(other).shape[1] == 1 or numpy.asarray(other).shape[0] == 1:
+                return self.__B * numpy.asmatrix(numpy.ravel(other)).T
+            else:
+                return self.__B * numpy.asmatrix(other)
+        else:
+            raise NotImplementedError("%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
+
+    def __rmul__(self, other):
+        if self.ismatrix() and isinstance(other,numpy.matrix):
+            return other * self.__B
+        elif self.isvector() and isinstance(other,numpy.matrix):
+            if numpy.ravel(other).size == self.shape[0]: # Vecteur
+                return numpy.asmatrix(numpy.ravel(other) * self.__B)
+            elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
+                return numpy.asmatrix(numpy.array(other) * self.__B)
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
+        elif self.isscalar() and isinstance(other,numpy.matrix):
+            return other * self.__B
+        else:
+            raise NotImplementedError("%s covariance matrix __rmul__ method not available for %s type!"%(self.__name,type(other)))
+
+    def __len__(self):
+        return self.shape[0]
 
 # ==============================================================================
 if __name__ == "__main__":
