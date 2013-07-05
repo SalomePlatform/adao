@@ -60,6 +60,7 @@ FromNumpyList["Dict"]                 = ["Script"]
 AssimAlgos = [
     "3DVAR",
     "Blue",
+    "ExtendedBlue",
     "EnsembleBlue",
     "KalmanFilter",
     "ExtendedKalmanFilter",
@@ -82,6 +83,11 @@ AlgoDataRequirements["3DVAR"] = [
     "ObservationOperator",
     ]
 AlgoDataRequirements["Blue"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["ExtendedBlue"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -144,6 +150,7 @@ AlgoDataRequirements["AdjointTest"] = [
 AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
+AlgoType["ExtendedBlue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
 AlgoType["ExtendedKalmanFilter"] = "Optim"
