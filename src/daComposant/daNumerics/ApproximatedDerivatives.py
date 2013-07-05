@@ -108,7 +108,7 @@ class FDApproximation:
             if self.__avoidRC:
                 if self.__lenghtRH < 0: self.__lenghtRH = 2 * _X.size
                 if len(self.__listDPCP) > self.__lenghtRH:
-                    logging.debug("FDA Réduction de la liste de H à la taille %i"%self.__lenghtRH)
+                    logging.debug("FDA Réduction de la liste de H à %i éléments"%self.__lenghtRH)
                     self.__listDPCP.pop(0)
                     self.__listDPCR.pop(0)
                     self.__listDPCN.pop(0)
@@ -211,7 +211,7 @@ class FDApproximation:
             if self.__avoidRC:
                 if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
                 if len(self.__listJPCP) > self.__lenghtRJ:
-                    logging.debug("FDA Réduction de la liste de J à la taille %i"%self.__lenghtRJ)
+                    logging.debug("FDA Réduction de la liste de J à %i éléments"%self.__lenghtRJ)
                     self.__listJPCP.pop(0)
                     self.__listJPCI.pop(0)
                     self.__listJPCR.pop(0)

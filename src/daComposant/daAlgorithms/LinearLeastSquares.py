@@ -63,7 +63,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
-        K =  (Ha * RI * Hm ).I * Ha * RI
+        K = (Ha * RI * Hm).I * Ha * RI
         Xa =  K * Y
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
