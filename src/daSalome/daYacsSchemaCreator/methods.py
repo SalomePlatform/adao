@@ -161,6 +161,28 @@ def create_yacs_proc(study_config):
           back_node.edAddInputPort("init_data", t_pyobj)
           ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
+      if data_config["Type"] == "Dict" and data_config["From"] == "String":
+        # Create node
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateDictFromString")
+        back_node = factory_back_node.cloneNode("Get" + key)
+        back_node.getInputPort("dict_in_string").edInitPy(data_config["Data"])
+        back_node.edAddOutputPort(key, t_pyobj)
+        back_node_script = back_node.getScript()
+        back_node_script += key + " = dict(dico)\n"
+        back_node_script += "logging.debug(\"Dict is %ss\"%s%s)"%("%","%",key)
+        back_node.setScript(back_node_script)
+        ADAO_Case.edAddChild(back_node)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        # Connect node with InitUserData
+        if key in init_config["Target"]:
+          back_node_script = back_node.getScript()
+          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.setScript(back_node_script)
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromString")

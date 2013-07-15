@@ -54,7 +54,7 @@ FromNumpyList["Matrix"]               = ["String", "Script"]
 FromNumpyList["ScalarSparseMatrix"]   = ["String", "Script"]
 FromNumpyList["DiagonalSparseMatrix"] = ["String", "Script"]
 FromNumpyList["Function"]             = ["ScriptWithOneFunction", "ScriptWithFunctions", "ScriptWithSwitch", "FunctionDict"]
-FromNumpyList["Dict"]                 = ["Script"]
+FromNumpyList["Dict"]                 = ["String", "Script"]
 
 # -- Infos from daAlgorithms --
 AssimAlgos = [
@@ -173,7 +173,7 @@ DataTypeDict["Matrix"]               = ["String", "Script"]
 DataTypeDict["ScalarSparseMatrix"]   = ["String", "Script"]
 DataTypeDict["DiagonalSparseMatrix"] = ["String", "Script"]
 DataTypeDict["Function"]             = ["ScriptWithOneFunction", "ScriptWithFunctions", "ScriptWithSwitch", "FunctionDict"]
-DataTypeDict["Dict"]                 = ["Script"]
+DataTypeDict["Dict"]                 = ["String", "Script"]
 
 DataTypeDefaultDict = {}
 DataTypeDefaultDict["Vector"]               = "Script"

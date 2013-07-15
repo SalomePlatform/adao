@@ -38,7 +38,7 @@ different pseudo-types are:
 
 **Dict**
     This indicates a variable that has to be filled by a dictionary, usually
-    given as a script.
+    given either as a string or as a script.
 
 **Function**
     This indicates a variable that has to be filled by a function, usually given

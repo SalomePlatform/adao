@@ -507,6 +507,15 @@ result = None
     <outport name="result" type="SALOME_TYPES/ParametricOutput"/>
   </inline>
 
+  <inline name="CreateDictFromString">
+    <script><code><![CDATA[
+import logging, sys, os
+logging.debug("CREATE Entering in CreateDictFromString")
+dico = eval(dict_in_string)
+]]></code></script>
+    <inport name="dict_in_string" type="string"/>
+  </inline>
+
   <inline name="CreateDictFromScript">
     <script><code><![CDATA[
 import logging, sys, os
