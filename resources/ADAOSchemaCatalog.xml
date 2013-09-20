@@ -330,6 +330,11 @@ logging.debug("CREATE Entering in CreateNumpyMatrixFromScript")
 type = "Matrix"
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
@@ -354,6 +359,11 @@ logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromScript")
 type = "ScalarSparseMatrix"
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
@@ -378,6 +388,11 @@ logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromScript")
 type = "DiagonalSparseMatrix"
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
@@ -416,6 +431,11 @@ logging.debug("CREATE Entering in CreateNumpyVectorFromScript")
 type = "Vector"
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
@@ -455,6 +475,11 @@ logging.debug("CREATE Entering in CreateNumpyVectorSerieFromScript")
 type = "VectorSerie"
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
@@ -522,6 +547,11 @@ import logging, sys, os
 logging.debug("CREATE Entering in CreateDictFromScript")
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]
@@ -543,6 +573,11 @@ import logging, sys, os
 logging.debug("CREATE Entering in UserDataInitFromScript")
 
 # Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
 filepath = os.path.dirname(script)
 filename = os.path.basename(script)
 module_name = os.path.splitext(filename)[0]

@@ -119,8 +119,12 @@ def create_yacs_proc(study_config):
     init_config = study_config["UserDataInit"]
     factory_init_node = catalogAd.getNodeFromNodeMap("UserDataInitFromScript")
     init_node = factory_init_node.cloneNode("UserDataInit")
-    if repertory:
+    if repertory and not os.path.exists(init_config["Data"]):
       init_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(init_config["Data"])))
+    elif repertory and os.path.exists(init_config["Data"]):
+      init_node.getInputPort("script").edInitPy(init_config["Data"])
+      init_node.edAddInputPort("studydir", t_string)
+      init_node.getInputPort("studydir").edInitPy(base_repertory)
     else:
       init_node.getInputPort("script").edInitPy(init_config["Data"])
     init_node_script = init_node.getScript()
@@ -141,8 +145,12 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateDictFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
@@ -209,8 +217,12 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
@@ -260,8 +272,12 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorSerieFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
@@ -311,8 +327,12 @@ def create_yacs_proc(study_config):
         # Create node
         factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpy%sFromScript"%(data_config["Type"],))
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
@@ -341,8 +361,14 @@ def create_yacs_proc(study_config):
          for FunctionName in FunctionDict["Function"]:
            port_name = "ObservationOperator" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(FunctionDict["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
+           elif repertory and os.path.exists(FunctionDict["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
 
@@ -351,8 +377,14 @@ def create_yacs_proc(study_config):
          for FunctionName in FunctionDict["Function"]:
            port_name = "EvolutionModel" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(FunctionDict["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
+           elif repertory and os.path.exists(FunctionDict["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
 
@@ -361,8 +393,14 @@ def create_yacs_proc(study_config):
          for FunctionName in ScriptWithSwitch["Function"]:
            port_name = "ObservationOperator" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
 
@@ -371,8 +409,14 @@ def create_yacs_proc(study_config):
          for FunctionName in ScriptWithSwitch["Function"]:
            port_name = "EvolutionModel" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
 
@@ -381,8 +425,14 @@ def create_yacs_proc(study_config):
          for FunctionName in ScriptWithFunctions["Function"]:
            port_name = "ObservationOperator" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
 
@@ -391,8 +441,14 @@ def create_yacs_proc(study_config):
          for FunctionName in ScriptWithFunctions["Function"]:
            port_name = "EvolutionModel" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
 
@@ -401,8 +457,14 @@ def create_yacs_proc(study_config):
          for FunctionName in ScriptWithOneFunction["Function"]:
            port_name = "ObservationOperator" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
 
@@ -411,8 +473,14 @@ def create_yacs_proc(study_config):
          for FunctionName in ScriptWithOneFunction["Function"]:
            port_name = "EvolutionModel" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
 
@@ -442,7 +510,7 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if repertory:
+    if repertory and not os.path.exists(script_filename):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
       script_str= open(script_filename, 'r')
@@ -469,7 +537,7 @@ def create_yacs_proc(study_config):
       break
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if repertory:
+    if repertory and not os.path.exists(script_filename):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
       script_str= open(script_filename, 'r')
@@ -497,7 +565,7 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if repertory:
+    if repertory and not os.path.exists(script_filename):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
       script_str= open(script_filename, 'r')
@@ -577,7 +645,7 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if repertory:
+    if repertory and not os.path.exists(script_filename):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
       script_str= open(script_filename, 'r')
@@ -663,7 +731,7 @@ def create_yacs_proc(study_config):
 
       # We create a new pyscript node
       opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
-      if repertory:
+      if repertory and not os.path.exists(script_filename):
         script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
       try:
         script_str= open(script_filename, 'r')
@@ -691,7 +759,7 @@ def create_yacs_proc(study_config):
 
       # We create a new pyscript node
       opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
-      if repertory:
+      if repertory and not os.path.exists(script_filename):
         script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
       try:
         script_str= open(script_filename, 'r')
@@ -718,7 +786,7 @@ def create_yacs_proc(study_config):
         break
       # We create a new pyscript node
       opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
-      if repertory:
+      if repertory and not os.path.exists(script_filename):
         script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
       try:
         script_str= open(script_filename, 'r')
@@ -800,7 +868,7 @@ def create_yacs_proc(study_config):
         break
       # We create a new pyscript node
       opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
-      if repertory:
+      if repertory and not os.path.exists(script_filename):
         script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
       try:
         script_str= open(script_filename, 'r')
@@ -930,8 +998,12 @@ def create_yacs_proc(study_config):
       else:
         factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeFile")
         observation_node = factory_observation_node.cloneNode("Observation")
-        if repertory:
+        if repertory and not os.path.exists(observer_cfg["Script"]):
           observation_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(observer_cfg["Script"])))
+        elif repertory and os.path.exists(observer_cfg["Script"]):
+          observation_node.getInputPort("script").edInitPy(observer_cfg["Script"])
+          observation_node.edAddInputPort("studydir", t_string)
+          observation_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           observation_node.getInputPort("script").edInitPy(observer_cfg["Script"])
       observer_bloc.edAddChild(observation_node)
@@ -1024,7 +1096,7 @@ def create_yacs_proc(study_config):
       analysis_node = factory_analysis_node.cloneNode("UserPostAnalysis")
       default_script = analysis_node.getScript()
       analysis_file_name = analysis_config["Data"]
-      if repertory:
+      if repertory and not os.path.exists(analysis_file_name):
         analysis_file_name = os.path.join(base_repertory, os.path.basename(analysis_file_name))
       try:
         analysis_file = open(analysis_file_name, 'r')
