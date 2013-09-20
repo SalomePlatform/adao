@@ -54,7 +54,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateur d'observation
         # -----------------------
-        H  = HO["Direct"].appliedTo
         Hm = HO["Tangent"].asMatrix(Xb)
         Hm = Hm.reshape(Y.size,Xb.size) # ADAO & check shape
         Ha = HO["Adjoint"].asMatrix(Xb)
@@ -65,6 +64,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
             HXb = HO["AppliedToX"]["HXb"]
         else:
+            H  = HO["Direct"].appliedTo
             HXb = H( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #

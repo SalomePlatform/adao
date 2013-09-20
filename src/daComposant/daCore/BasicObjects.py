@@ -360,12 +360,12 @@ class Covariance:
         self.__is_matrix  = False
         if asEyeByScalar is not None:
             self.__is_scalar = True
-            self.__B         = float(asEyeByScalar)
+            self.__B         = numpy.abs( float(asEyeByScalar) )
             self.shape       = (0,0)
             self.size        = 0
         elif asEyeByVector is not None:
             self.__is_vector = True
-            self.__B         = numpy.array( numpy.ravel( asEyeByVector ), float )
+            self.__B         = numpy.abs( numpy.array( numpy.ravel( asEyeByVector ), float ) )
             self.shape       = (self.__B.size,self.__B.size)
             self.size        = self.__B.size**2
         elif asCovariance is not None:
