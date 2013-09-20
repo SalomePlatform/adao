@@ -60,7 +60,9 @@ different pseudo-types are:
 
 **Script**
     This indicates a script given as an external file. It can be described by a
-    full absolute path name or only by the file name without path.
+    full absolute path name or only by the file name without path. If the file
+    is given only by a file name without path, and if a study directory is also
+    indicated, the file is searched in the given directory.
 
 **String**
     This indicates a string giving a literal representation of a matrix, a
@@ -212,8 +214,9 @@ following:
     or a sentence.
 
 **Study_repertory**
-    *Optional command*. If available, this repertory is used to find all the
-    script files that can be used to define some other commands by scripts.
+    *Optional command*. If available, this directory is used as base name for
+    calculation, and used to find all the script files, given by name without
+    path, that can be used to define some other commands by scripts.
 
 **UserDataInit**
     *Optional command*. This commands allows to initialize some parameters or
@@ -875,8 +878,16 @@ calls and methods. If the algorithm requires the 3 aspects of the operator
 (direct form, tangent form and adjoint form), the user has to give the 3
 functions or to approximate them.
 
-There are 3 practical methods for the user to provide the operator functional
-representation.
+There are 3 practical methods for the user to provide an operator functional
+representation. These methods are chosen in the "*FROM*"  field of each operator
+having a "*Function*" value as "*INPUT_TYPE*", as shown by the following figure:
+
+  .. eficas_operator_function:
+  .. image:: images/eficas_operator_function.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Choosing an operator functional representation**
 
 First functional form: using "*ScriptWithOneFunction*"
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1060,3 +1071,112 @@ that the derivatives has to be done only partially against :math:`\mathbf{x}`.
 In such a case with explicit control, only the second functional form (using
 "*ScriptWithFunctions*") and third functional form (using "*ScriptWithSwitch*")
 can be used.
+
+Requirements to describe covariance matrices
+--------------------------------------------
+
+Multiple covariance matrices are required to implement the data assimilation or
+optimization procedures. The main ones are  the background error covariance
+matrix, noted as :math:`\mathbf{B}` and the observation error covariance matrix,
+noted as :math:`\mathbf{R}`. Such a matrix is required to be a squared symetric
+semi-definite positive matrix.
+
+There are 3 practical methods for the user to provide a covariance matrix. These
+methods are chosen as the "*INPUT_TYPE*" of each defined covariance matrix, as
+shown by the following figure:
+
+  .. eficas_covariance_matrix:
+  .. image:: images/eficas_covariance_matrix.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Choosing covariance matrix representation**
+
+First matrix form: using "*Matrix*" representation
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: Matrix
+.. index:: single: BackgroundError
+.. index:: single: EvolutionError
+.. index:: single: ObservationError
+
+This first form is the default and more general one. The covariance matrix
+:math:`\mathbf{M}` has to be fully specified. Even if the matrix is symetric by
+nature, the entire :math:`\mathbf{M}` matrix has to be given.
+
+.. math:: \mathbf{M} =  \begin{pmatrix}
+    m_{11} & m_{12} & \cdots   & m_{1n} \\
+    m_{21} & m_{22} & \cdots   & m_{2n} \\
+    \vdots & \vdots & \vdots   & \vdots \\
+    m_{n1} & \cdots & m_{nn-1} & m_{nn}
+    \end{pmatrix}
+
+It can be either a Python Numpy array or a matrix, or a list of lists of values
+(that is, a list of rows). For example, a simple diagonal unitary background error
+covariance matrix :math:`\mathbf{B}` can be described in a python script as::
+
+    BackgroundError = numpy.eye(...)
+
+ou::
+
+    BackgroundError = [[1, 0 ... 0], [0, 1 ... 0] ... [0, 0 ... 1]]
+
+Second matrix form: using "*ScalarSparseMatrix*" representation
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: ScalarSparseMatrix
+.. index:: single: BackgroundError
+.. index:: single: EvolutionError
+.. index:: single: ObservationError
+
+On the opposite, this second form is a very simplified method to provide a
+matrix. The covariance matrix :math:`\mathbf{M}` is supposed to be a positive
+multiple of the identity matrix. The matrix can then be specified only by this
+multiplier:
+
+.. math:: \mathbf{M} =  m \times \begin{pmatrix}
+    1       & 0      & \cdots   & 0      \\
+    0       & 1      & \cdots   & 0      \\
+    \vdots  & \vdots & \vdots   & \vdots \\
+    0       & \cdots & 0        & 1
+    \end{pmatrix}
+
+The multiplier :math:`m` has to be a floating point or integer positive value
+(if it is negative, which is impossible, converted to positive value). For example, a simple diagonal unitary background error
+covariance matrix :math:`\mathbf{B}` can be described in a python script as::
+
+    BackgroundError = 1.
+
+or, better, by a "*String*" directly in the ADAO case.
+
+Third matrix form: using "*DiagonalSparseMatrix*" representation
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: DiagonalSparseMatrix
+.. index:: single: BackgroundError
+.. index:: single: EvolutionError
+.. index:: single: ObservationError
+
+This third form is also a simplified method to provide a matrix, but a little
+more powerful. The covariance matrix :math:`\mathbf{M}` is already supposed to
+be diagonal, but the user has to specify all the positive diagonal values. The
+matrix can then be specified only by a vector :math:`\mathbf{V}` which will be
+set on a diagonal matrix:
+
+.. math:: \mathbf{M} =  \begin{pmatrix}
+    v_{1}  & 0      & \cdots   & 0      \\
+    0      & v_{2}  & \cdots   & 0      \\
+    \vdots & \vdots & \vdots   & \vdots \\
+    0      & \cdots & 0        & v_{n}
+    \end{pmatrix}
+
+It can be either a Python Numpy array or a matrix, or a list or a list of list
+of positive values (if some are negative, which is impossible, converted to
+positive values). For example, a simple diagonal unitary background error
+covariance matrix :math:`\mathbf{B}` can be described in a python script as::
+
+    BackgroundError = [1, 1 ... 1]
+
+ou::
+
+    BackgroundError = numpy.ones(...)
