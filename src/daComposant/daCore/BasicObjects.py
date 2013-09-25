@@ -446,6 +446,17 @@ class Covariance:
             else:
                 return self.__B * numpy.ones(int(msize))
     
+    def asfullmatrix(self, msize=None):
+        if   self.ismatrix():
+            return self.__B
+        elif self.isvector():
+            return numpy.matrix( numpy.diag(self.__B), float )
+        elif self.isscalar():
+            if msize is None:
+                raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
+            else:
+                return numpy.matrix( self.__B * numpy.eye(int(msize)), float )
+    
     def trace(self, msize=None):
         if   self.ismatrix():
             return numpy.trace(self.__B)
