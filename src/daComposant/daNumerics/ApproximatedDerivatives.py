@@ -1,24 +1,24 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2013 EDF R&D
+# Copyright (C) 2008-2013 EDF R&D
 #
-#  This library is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU Lesser General Public
-#  License as published by the Free Software Foundation; either
-#  version 2.1 of the License.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License.
 #
-#  This library is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#  Lesser General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
 #
-#  You should have received a copy of the GNU Lesser General Public
-#  License along with this library; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-#  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
     Définit les versions approximées des opérateurs tangents et adjoints.
@@ -266,108 +266,5 @@ class FDApproximation:
             return _HaY.A1
 
 # ==============================================================================
-#
-def test1( XX ):
-    """ Direct non-linear simulation operator """
-    #
-    # NEED TO BE COMPLETED
-    # NEED TO BE COMPLETED
-    # NEED TO BE COMPLETED
-    #
-    # --------------------------------------> # EXAMPLE TO BE REMOVED
-    # Example of Identity operator            # EXAMPLE TO BE REMOVED
-    if type(XX) is type(numpy.matrix([])):    # EXAMPLE TO BE REMOVED
-        HX = XX.A1.tolist()                   # EXAMPLE TO BE REMOVED
-    elif type(XX) is type(numpy.array([])):   # EXAMPLE TO BE REMOVED
-        HX = numpy.matrix(XX).A1.tolist()     # EXAMPLE TO BE REMOVED
-    else:                                     # EXAMPLE TO BE REMOVED
-        HX = XX                               # EXAMPLE TO BE REMOVED
-    #                                         # EXAMPLE TO BE REMOVED
-    HHX = []                                  # EXAMPLE TO BE REMOVED
-    HHX.extend( HX )                          # EXAMPLE TO BE REMOVED
-    HHX.extend( HX )                          # EXAMPLE TO BE REMOVED
-    # --------------------------------------> # EXAMPLE TO BE REMOVED
-    #
-    return numpy.array( HHX )
-
-# ==============================================================================
 if __name__ == "__main__":
-
-    print
-    print "AUTODIAGNOSTIC"
-    print "=============="
-    
-    X0 = [1, 2, 3]
- 
-    FDA = FDApproximation( test1 )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(3,3+2*len(X0))) )
-    print
-    del FDA
-    FDA = FDApproximation( test1, centeredDF=True )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(3,3+2*len(X0))) )
-    print
-    del FDA
-
-    print "=============="
-    print
-    X0 = range(5)
- 
-    FDA = FDApproximation( test1 )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
-    print
-    del FDA
-    FDA = FDApproximation( test1, centeredDF=True )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
-    print
-    del FDA
-
-    print "=============="
-    print
-    X0 = numpy.arange(3)
- 
-    FDA = FDApproximation( test1 )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
-    print
-    del FDA
-    FDA = FDApproximation( test1, centeredDF=True )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
-    print
-    del FDA
-
-    print "=============="
-    print
-    X0 = numpy.asmatrix(numpy.arange(4)).T
- 
-    FDA = FDApproximation( test1 )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
-    print
-    del FDA
-    FDA = FDApproximation( test1, centeredDF=True )
-    print "H(X)       =",   FDA.DirectOperator( X0 )
-    print "Tg matrice =\n", FDA.TangentMatrix( X0 )
-    print "Tg(X)      =",   FDA.TangentOperator( (X0, X0) )
-    print "Ad((X,Y))  =",   FDA.AdjointOperator( (X0,range(7,7+2*len(X0))) )
-    print
-    del FDA
-
+    print '\n AUTODIAGNOSTIC \n'

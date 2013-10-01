@@ -141,25 +141,3 @@ class Logging:
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
-    import os.path
-
-    l = Logging(level = logging.NOTSET)
-    
-    logging.info("Message numéro 1 uniquement disponible sur console")
-    
-    l.setLogfile(level = logging.WARNING)
-    if not os.path.isfile(LOGFILE):
-        raise ValueError("Le fichier de log \"%s\" n'a pas pu être créé."%LOGFILE)
-    
-    logging.info("Message numéro 2 uniquement disponible sur console")
-    logging.warning("Message numéro 3 conjointement disponible sur console et fichier")
-    
-    l.setLogfileLevel(logging.INFO)
-    
-    logging.info("Message numéro 4 conjointement disponible sur console et fichier")
-    
-    print
-    print " Le logging a été correctement initialisé. Le fichier suivant"
-    print "   %s"%os.path.basename(LOGFILE)
-    print " a été correctement créé, et peut être effacé après vérification."
-    print
