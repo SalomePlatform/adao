@@ -30,11 +30,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "EXTENDEDKALMANFILTER")
         self.defineRequiredParameter(
-            name     = "StoreSupplementaryCalculations",
-            default  = [],
-            typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "Innovation"]
+            name     = "ConstrainedBy",
+            default  = "EstimateProjection",
+            typecast = str,
+            message  = "Prise en compte des contraintes",
+            listval  = ["EstimateProjection"],
             )
         self.defineRequiredParameter(
             name     = "EstimationOf",
@@ -44,17 +44,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
-            name     = "ConstrainedBy",
-            default  = "EstimateProjection",
-            typecast = str,
-            message  = "Prise en compte des contraintes",
-            listval  = ["EstimateProjection"],
-            )
-        self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "BMA", "Innovation"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

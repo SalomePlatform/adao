@@ -30,13 +30,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
         self.defineRequiredParameter(
-            name     = "StoreSupplementaryCalculations",
-            default  = [],
-            typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "Innovation"]
-            )
-        self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
@@ -48,6 +41,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "BMA", "Innovation"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
