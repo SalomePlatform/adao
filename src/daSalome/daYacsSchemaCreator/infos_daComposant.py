@@ -64,6 +64,7 @@ AssimAlgos = [
     "EnsembleBlue",
     "KalmanFilter",
     "ExtendedKalmanFilter",
+    "UnscentedKalmanFilter",
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     "QuantileRegression",
@@ -100,15 +101,16 @@ AlgoDataRequirements["EnsembleBlue"] = [
 AlgoDataRequirements["KalmanFilter"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
-    "ObservationOperator",
-    "EvolutionModel", "EvolutionError",
     ]
 AlgoDataRequirements["ExtendedKalmanFilter"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
-    "EvolutionModel", "EvolutionError",
-    "ControlInput",
+    ]
+AlgoDataRequirements["UnscentedKalmanFilter"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
     ]
 AlgoDataRequirements["LinearLeastSquares"] = [
     "Observation", "ObservationError",
@@ -154,6 +156,7 @@ AlgoType["ExtendedBlue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
 AlgoType["ExtendedKalmanFilter"] = "Optim"
+AlgoType["UnscentedKalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
 AlgoType["ParticleSwarmOptimization"] = "Optim"
