@@ -40,6 +40,7 @@ AlgorithmParameters = {
         [ 0., 4. ],              # Bound on the second parameter
         [ 0., None ],            # Bound on the third parameter
         ],
+    "StoreInternalVariables":True,
 }
 #
 # ==============================================================================

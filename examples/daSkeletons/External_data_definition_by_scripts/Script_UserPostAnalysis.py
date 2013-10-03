@@ -32,6 +32,7 @@ __author__ = "Jean-Philippe ARGAUD"
 #
 from Physical_data_and_covariance_matrices import True_state
 import numpy
+numpy.set_printoptions(precision=4)
 #
 xt, names   = True_state()
 xa          = ADD.get("Analysis")[-1]
@@ -41,11 +42,14 @@ J           = ADD.get("CostFunctionJ")[:]
 # Verifying the results by printing
 # ---------------------------------
 print
-print "xt = %s"%xt
-print "xa = %s"%numpy.array(xa)
+print "obs = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Observation").A1]))
+print
+print "xb  = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Background").A1]))
+print "xt  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xt)]))
+print "xa  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xa)]))
 print
 for i in range( len(x_series) ):
-    print "Step %2i : J = %.5e  et  X = %s"%(i, J[i], x_series[i])
+    print "Step %2i : J = %.4e     X = [%s]"%(i, J[i], ", ".join(["%.4f"%v for v in x_series[i]]))
 print
 #
 # ==============================================================================

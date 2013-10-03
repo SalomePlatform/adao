@@ -9,5 +9,8 @@ CHECKING_STUDY(Study_name='Test',
                ObservationOperator=_F(Stored=0,
                                       INPUT_TYPE='Matrix',
                                       data=_F(FROM='String',
-                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1 ; 1 0 0 ; 0 1 0 ; 0 0 1',),),);
-#CHECKSUM:68032af53e12f34f4d709332ef02b294  -:FIN CHECKSUM
+                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1 ; 1 0 0 ; 0 1 0 ; 0 0 1',),),
+               AlgorithmParameters=_F(INPUT_TYPE='Dict',
+                                      data=_F(FROM='String',
+                                              STRING='{ "SetSeed" : 1000 }',),),);
+#CHECKSUM:b61b9cb1c617749ecfcf3fbfa3fadde1  -:FIN CHECKSUM

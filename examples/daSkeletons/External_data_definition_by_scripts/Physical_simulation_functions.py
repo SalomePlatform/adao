@@ -47,64 +47,12 @@ def DirectOperator( XX ):
     # --------------------------------------> EXAMPLE TO BE REMOVED
     #
     return numpy.array( HX )
-#
-def TangentHMatrix( X, increment = 0.01, centeredDF = False ):
-    """ Tangent operator (Jacobian) calculated by finite differences """
-    #
-    dX  = increment * X.A1
-    #
-    if centeredDF:
-        # 
-        Jacobian  = []
-        for i in range( len(dX) ):
-            X_plus_dXi     = numpy.array( X.A1 )
-            X_plus_dXi[i]  = X[i] + dX[i]
-            X_moins_dXi    = numpy.array( X.A1 )
-            X_moins_dXi[i] = X[i] - dX[i]
-            #
-            HX_plus_dXi  = DirectOperator( X_plus_dXi )
-            HX_moins_dXi = DirectOperator( X_moins_dXi )
-            #
-            HX_Diff = ( HX_plus_dXi - HX_moins_dXi ) / (2.*dX[i])
-            #
-            Jacobian.append( HX_Diff )
-        #
-    else:
-        #
-        HX_plus_dX = []
-        for i in range( len(dX) ):
-            X_plus_dXi    = numpy.array( X.A1 )
-            X_plus_dXi[i] = X[i] + dX[i]
-            #
-            HX_plus_dXi = DirectOperator( X_plus_dXi )
-            #
-            HX_plus_dX.append( HX_plus_dXi )
-        #
-        HX = DirectOperator( X )
-        #
-        Jacobian = []
-        for i in range( len(dX) ):
-            Jacobian.append( ( HX_plus_dX[i] - HX ) / dX[i] )
-    #
-    Jacobian = numpy.matrix( Jacobian )
-    #
-    return Jacobian
-#
-def TangentOperator( X ):
-    """ Tangent operator """
-    _X = numpy.asmatrix(X).flatten().T
-    HtX = self.TangentHMatrix( _X ) * _X
-    return HtX.A1
-#
-def AdjointOperator( (X, Y) ):
-    """ Ajoint operator """
-    #
-    Jacobian = TangentHMatrix( X, centeredDF = False )
-    #
-    Y = numpy.asmatrix(Y).flatten().T
-    HaY = numpy.dot(Jacobian, Y)
-    #
-    return HaY.A1
+
+# ==============================================================================
+from ApproximatedDerivatives import FDApproximation
+FDA = FDApproximation( DirectOperator )
+TangentOperator = FDA.TangentOperator
+AdjointOperator = FDA.AdjointOperator
 
 # ==============================================================================
 if __name__ == "__main__":

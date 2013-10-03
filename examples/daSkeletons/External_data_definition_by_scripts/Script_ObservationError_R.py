@@ -32,11 +32,11 @@ __author__ = "Jean-Philippe ARGAUD"
 #
 import sys, os ; sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
-from Physical_simulation_functions import FunctionH
+from Physical_simulation_functions import DirectOperator
 #
 xt, names = True_state()
 #
-yo = FunctionH( xt )
+yo = DirectOperator( xt )
 #
 R  = 0.0001 * Simple_Matrix( size = len(yo) )
 #

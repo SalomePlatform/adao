@@ -21,4 +21,11 @@ ASSIMILATION_STUDY(Study_name='Test',
                    ObservationOperator=_F(Stored=0,
                                           INPUT_TYPE='Matrix',
                                           data=_F(FROM='String',
-                                                  STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),);
+                                                  STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),
+                   UserPostAnalysis=_F(FROM='Template',
+                                       Template='AnalysisPrinter',
+                                       ValueTemplate=
+                                                  """import numpy
+xa=numpy.ravel(ADD.get('Analysis')[-1])
+print 'Analysis:',xa""",),);
+#CHECKSUM:17bc9d8f671d897f163b094a1e21d53f  -:FIN CHECKSUM

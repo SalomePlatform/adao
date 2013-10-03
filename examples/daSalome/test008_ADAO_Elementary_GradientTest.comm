@@ -1,7 +1,8 @@
 
-CHECKING_STUDY(Study_name='Test',
+CHECKING_STUDY(Study_name='Elementary gradient test',
+               Study_repertory='/home/ahbhhjp/ADAO',
                Debug=0,
-               Algorithm='AdjointTest',
+               Algorithm='GradientTest',
                CheckingPoint=_F(Stored=0,
                                 INPUT_TYPE='Vector',
                                 data=_F(FROM='String',
@@ -9,8 +10,8 @@ CHECKING_STUDY(Study_name='Test',
                ObservationOperator=_F(Stored=0,
                                       INPUT_TYPE='Matrix',
                                       data=_F(FROM='String',
-                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1 ; 1 0 0 ; 0 1 0 ; 0 0 1',),),
+                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),
                AlgorithmParameters=_F(INPUT_TYPE='Dict',
                                       data=_F(FROM='String',
                                               STRING='{ "SetSeed" : 1000 }',),),);
-#CHECKSUM:66b339da11b97e97e44e775a4cdb1824  -:FIN CHECKSUM
+#CHECKSUM:195fb2032d0dcb0cb5668d4084352fb0  -:FIN CHECKSUM

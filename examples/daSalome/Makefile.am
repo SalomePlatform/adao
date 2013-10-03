@@ -37,6 +37,7 @@ DATA_INST = \
 	test006_Observers_init.py \
 	test006_Observers_Observation_Operator.py \
 	test006_Observers_var.py \
+        test008_ADAO_Elementary_GradientTest.comm \
 	test009_ADAO_Simple_GradientTest.comm \
 	test010_ADAO_Simple_AdjointTest.comm
 
@@ -59,5 +60,6 @@ EXTRA_DIST = \
 	test006_Observers_init.py \
 	test006_Observers_Observation_Operator.py \
 	test006_Observers_var.py \
+        test008_ADAO_Elementary_GradientTest.comm \
 	test009_ADAO_Simple_GradientTest.comm \
 	test010_ADAO_Simple_AdjointTest.comm
