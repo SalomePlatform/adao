@@ -128,6 +128,7 @@ def create_yacs_proc(study_config):
     else:
       init_node.getInputPort("script").edInitPy(init_config["Data"])
     init_node_script = init_node.getScript()
+    init_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
     init_node_script += "init_data = user_script_module.init_data\n"
     init_node.setScript(init_node_script)
     ADAO_Case.edAddChild(init_node)
@@ -154,20 +155,20 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
         back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
         back_node_script += key + " = user_script_module." + key + "\n"
         back_node.setScript(back_node_script)
-        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script = back_node.getScript()
-          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.setScript(back_node_script)
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Dict" and data_config["From"] == "String":
         # Create node
@@ -175,21 +176,20 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("dict_in_string").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
         back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
         back_node_script += key + " = dict(dico)\n"
         back_node_script += "logging.debug(\"Dict is %ss\"%s%s)"%("%","%",key)
         back_node.setScript(back_node_script)
-        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script = back_node.getScript()
-          back_node_script = "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.setScript(back_node_script)
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
@@ -197,6 +197,15 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
@@ -204,14 +213,6 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
-        back_node_script = back_node.getScript()
-        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
-        back_node.setScript(back_node_script)
 
       if data_config["Type"] == "Vector" and data_config["From"] == "Script":
         # Create node
@@ -226,10 +227,18 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
-        back_node_script = back_node.getScript()
-        back_node_script += key + " = user_script_module." + key + "\n"
-        back_node.setScript(back_node_script)
         ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
@@ -237,14 +246,6 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
-        back_node_script = back_node.getScript()
-        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
-        back_node.setScript(back_node_script)
 
       if data_config["Type"] == "VectorSerie" and data_config["From"] == "String":
         # Create node
@@ -252,6 +253,15 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
@@ -259,14 +269,6 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
-        back_node_script = back_node.getScript()
-        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
-        back_node.setScript(back_node_script)
 
       if data_config["Type"] == "VectorSerie" and data_config["From"] == "Script":
         # Create node
@@ -281,10 +283,18 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
-        back_node_script = back_node.getScript()
-        back_node_script += key + " = user_script_module." + key + "\n"
-        back_node.setScript(back_node_script)
         ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
@@ -292,14 +302,6 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
-        back_node_script = back_node.getScript()
-        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
-        back_node.setScript(back_node_script)
 
       if data_config["Type"] in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix") and data_config["From"] == "String":
         # Create node
@@ -307,6 +309,15 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("matrix_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
@@ -314,14 +325,6 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
-        back_node_script = back_node.getScript()
-        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
-        back_node.setScript(back_node_script)
 
       if data_config["Type"] in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix") and data_config["From"] == "Script":
         # Create node
@@ -336,11 +339,18 @@ def create_yacs_proc(study_config):
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
         back_node_script = back_node.getScript()
         back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
         back_node_script += key + " = user_script_module." + key + "\n"
         back_node.setScript(back_node_script)
-        ADAO_Case.edAddChild(back_node)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
@@ -348,13 +358,6 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node_script = back_node.getScript()
-          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
-          back_node.setScript(back_node_script)
-          back_node.edAddInputPort("init_data", t_pyobj)
-          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
 
       if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "ObservationOperator":
          FunctionDict = data_config["Data"]

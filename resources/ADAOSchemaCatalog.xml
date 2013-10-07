@@ -341,11 +341,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -370,11 +365,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -399,11 +389,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -442,11 +427,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -486,11 +466,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
@@ -558,11 +533,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
   </inline>
@@ -584,11 +554,6 @@ module_name = os.path.splitext(filename)[0]
 if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
     sys.path.insert(0,filepath)
 
-# Import script
-__import__(module_name)
-user_script_module = sys.modules[module_name]
-
-# Get Data from script
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="init_data" type="pyobj"/>
