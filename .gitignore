@@ -14,6 +14,7 @@ Makefile.in
 aclocal.m4
 adao_config.h.in
 adao_config.h.in~
+adm_local/compile
 adm_local/libtool.m4
 adm_local/ltmain.sh
 adm_local/config.guess
