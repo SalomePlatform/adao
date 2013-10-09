@@ -28,4 +28,3 @@ ASSIMILATION_STUDY(Study_name='Test',
                                                   """import numpy
 xa=numpy.ravel(ADD.get('Analysis')[-1])
 print 'Analysis:',xa""",),);
-#CHECKSUM:05af4155253fa5540d31e30d50b2b2b3  -:FIN CHECKSUM

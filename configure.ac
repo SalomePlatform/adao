@@ -125,10 +125,15 @@ AC_CONFIG_FILES([
         examples/Makefile
         examples/daSalome/Makefile
         examples/daSalome/test003_ADAO_JDC_using_scripts.comm
-        examples/daSalome/test004_ADAO_JDC_using_scripts.comm
-        examples/daSalome/test005_ADAO_Operators.comm
+        examples/daSalome/test003_ADAO_JDC_using_scripts.py
         examples/daSalome/test003_bis_ADAO_JDC_using_user_data_init.comm
+        examples/daSalome/test003_bis_ADAO_JDC_using_user_data_init.py
+        examples/daSalome/test004_ADAO_JDC_using_scripts.comm
+        examples/daSalome/test004_ADAO_JDC_using_scripts.py
+        examples/daSalome/test005_ADAO_Operators.comm
+        examples/daSalome/test005_ADAO_Operators.py
         examples/daSalome/test006_Observers.comm
+        examples/daSalome/test006_Observers.py
         examples/daSkeletons/Makefile
         examples/daSkeletons/External_data_definition_by_scripts/Makefile
         examples/daSkeletons/External_data_definition_by_scripts/ADAO_Case.comm

@@ -13,4 +13,3 @@ CHECKING_STUDY(Study_name='Test',
                AlgorithmParameters=_F(INPUT_TYPE='Dict',
                                       data=_F(FROM='String',
                                               STRING='{ "SetSeed" : 1000 }',),),);
-#CHECKSUM:66b339da11b97e97e44e775a4cdb1824  -:FIN CHECKSUM

@@ -1,0 +1,91 @@
+#-*-coding:iso-8859-1-*- 
+study_config = {} 
+study_config['StudyType'] = 'ASSIMILATION_STUDY'
+study_config['Name'] = 'test_observers'
+study_config['Debug'] = '0'
+study_config['Algorithm'] = '3DVAR'
+Background_config = {}
+Background_config['Type'] = 'Vector'
+Background_config['From'] = 'Script'
+Background_config['Data'] = 'test006_Observers_var.py'
+Background_config['Stored'] = '0'
+study_config['Background'] = Background_config
+BackgroundError_config = {}
+BackgroundError_config['Type'] = 'Matrix'
+BackgroundError_config['From'] = 'Script'
+BackgroundError_config['Data'] = 'test006_Observers_var.py'
+BackgroundError_config['Stored'] = '0'
+study_config['BackgroundError'] = BackgroundError_config
+Observation_config = {}
+Observation_config['Type'] = 'Vector'
+Observation_config['From'] = 'Script'
+Observation_config['Data'] = 'test006_Observers_var.py'
+Observation_config['Stored'] = '0'
+study_config['Observation'] = Observation_config
+ObservationError_config = {}
+ObservationError_config['Type'] = 'Matrix'
+ObservationError_config['From'] = 'Script'
+ObservationError_config['Data'] = 'test006_Observers_var.py'
+ObservationError_config['Stored'] = '0'
+study_config['ObservationError'] = ObservationError_config
+ObservationOperator_FunctionDict = {}
+ObservationOperator_FunctionDict['Function'] = ['Direct', 'Tangent', 'Adjoint']
+ObservationOperator_FunctionDict['Script'] = {}
+ObservationOperator_FunctionDict['Script']['Direct'] = 'test006_Observers_Observation_Operator.py'
+ObservationOperator_FunctionDict['Script']['Tangent'] = 'test006_Observers_Observation_Operator.py'
+ObservationOperator_FunctionDict['Script']['Adjoint'] = 'test006_Observers_Observation_Operator.py'
+ObservationOperator_config = {}
+ObservationOperator_config['Type'] = 'Function'
+ObservationOperator_config['From'] = 'FunctionDict'
+ObservationOperator_config['Data'] = ObservationOperator_FunctionDict
+study_config['ObservationOperator'] = ObservationOperator_config
+inputvariables_config = {}
+inputvariables_config['Order'] =['adao_default']
+inputvariables_config['adao_default'] = -1
+study_config['InputVariables'] = inputvariables_config
+outputvariables_config = {}
+outputvariables_config['Order'] = ['adao_default']
+outputvariables_config['adao_default'] = -1
+study_config['OutputVariables'] = outputvariables_config
+study_config['Repertory'] = '@prefix@/share/salome/adao_examples/daSalome'
+AlgorithmParameters_config = {} 
+AlgorithmParameters_config['Type'] = 'Dict'
+AlgorithmParameters_config['From'] = 'Script'
+AlgorithmParameters_config['Data'] = 'test006_Observers_var.py'
+study_config['AlgorithmParameters'] = AlgorithmParameters_config
+Init_config = {}
+Init_config['Type'] = 'Dict'
+Init_config['From'] = 'Script'
+Init_config['Data'] = 'test006_Observers_init.py'
+Init_config['Target'] = ['Background','BackgroundError','Observation','ObservationError','AlgorithmParameters',]
+study_config['UserDataInit'] = Init_config
+observers = {}
+observers["CostFunctionJ"] = {}
+observers["CostFunctionJ"]["number"] = 3
+observers["CostFunctionJ"]["nodetype"] = "String"
+observers["CostFunctionJ"]["String"] = """print "  ---> observerCost"
+print "       var  =",var[:]
+print "       info =",info
+#
+import Gnuplot
+import os
+try:
+  numero
+except NameError:
+  numero = 0
+gp = Gnuplot.Gnuplot()
+gp('set style data lines')
+gp('set title  "'+str(info)+'"')
+gp.plot( Gnuplot.Data( var[:] ) )
+filename = os.path.join("/tmp", "imageCost_%02i.ps"%numero)
+print "       imageCost %s"%filename
+gp.hardcopy(filename=filename, color=1)
+numero += 1
+"""
+observers["CostFunctionJ"]["info"] = """CostFunctionJ"""
+observers["CurrentState"] = {}
+observers["CurrentState"]["number"] = 4
+observers["CurrentState"]["nodetype"] = "Script"
+observers["CurrentState"]["Script"] = "test006_Observers_observer_with_file.py"
+observers["CurrentState"]["info"] = """CurrentState"""
+study_config['Observers'] = observers

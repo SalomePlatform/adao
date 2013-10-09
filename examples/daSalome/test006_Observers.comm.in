@@ -16,7 +16,7 @@ ASSIMILATION_STUDY(Study_name='test_observers',
                                   data=_F(FROM='Script',
                                           SCRIPT_FILE='test006_Observers_var.py',),),
                    ObservationError=_F(Stored=0,
-                                  INPUT_TYPE='Matrix',
+                                       INPUT_TYPE='Matrix',
                                        data=_F(FROM='Script',
                                                SCRIPT_FILE='test006_Observers_var.py',),),
                    ObservationOperator=_F(Stored=0,
@@ -31,7 +31,11 @@ ASSIMILATION_STUDY(Study_name='test_observers',
                                    ('Background','BackgroundError','Observation',
                                                  'ObservationError','AlgorithmParameters',),),
                    Observers=_F(SELECTION=('CurrentState','CostFunctionJ',),
-                                CostFunctionJ_data=_F(NodeType='String',
+                                CurrentState_data=_F(Info='CurrentState',
+                                                     NodeType='Script',
+                                                     Value='test006_Observers_observer_with_file.py',),
+                                CostFunctionJ_data=_F(Info='CostFunctionJ',
+                                                      NodeType='String',
                                                       Value=
 """print "  ---> observerCost"
 print "       var  =",var[:]
@@ -51,6 +55,4 @@ filename = os.path.join("/tmp", "imageCost_%02i.ps"%numero)
 print "       imageCost %s"%filename
 gp.hardcopy(filename=filename, color=1)
 numero += 1
-""",),
-                                CurrentState_data=_F(NodeType='Script',
-                                                     Value='test006_Observers_observer_with_file.py',),),);
+""",),),);
