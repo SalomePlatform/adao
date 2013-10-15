@@ -37,26 +37,26 @@ Each ADAO variable has a pseudo-type to help filling it and validation. The
 different pseudo-types are:
 
 **Dict**
-    This indicates a variable that has to be filled by a dictionary, usually
-    given either as a string or as a script.
+    This indicates a variable that has to be filled by a Python dictionary
+    ``{"key":"value...}``, usually given either as a string or as a script file.
 
 **Function**
-    This indicates a variable that has to be filled by a function, usually given
-    as a script or a component method.
+    This indicates a variable that has to be filled by a Python function,
+    usually given as a script file or a component method.
 
 **Matrix**
     This indicates a variable that has to be filled by a matrix, usually given
-    either as a string or as a script.
+    either as a string or as a script file.
 
 **ScalarSparseMatrix**
-    This indicates a variable that has to be filled by a unique number, which
-    will be used to multiply an identity matrix, usually given either as a
-    string or as a script.
+    This indicates a variable that has to be filled by a unique number (which
+    will be used to multiply an identity matrix), usually given either as a
+    string or as a script file.
 
 **DiagonalSparseMatrix**
-    This indicates a variable that has to be filled by a vector, which will be
-    over the diagonal of an identity matrix, usually given either as a string or
-    as a script.
+    This indicates a variable that has to be filled by a vector (which will be
+    used to replace the diagonal of an identity matrix), usually given either as
+    a string or as a script file.
 
 **Script**
     This indicates a script given as an external file. It can be described by a
@@ -66,19 +66,21 @@ different pseudo-types are:
 
 **String**
     This indicates a string giving a literal representation of a matrix, a
-    vector or a vector serie, such as "1 2 ; 3 4" for a square 2x2 matrix.
+    vector or a vector serie, such as "1 2 ; 3 4" or "[[1,2],[3,4]]" for a
+    square 2x2 matrix.
 
 **Vector**
     This indicates a variable that has to be filled by a vector, usually given
-    either as a string or as a script.
+    either as a string or as a script file.
 
-**VectorSerie** This indicates a variable that has to be filled by a list of
-    vectors, usually given either as a string or as a script.
+**VectorSerie**
+    This indicates a variable that has to be filled by a list of
+    vectors, usually given either as a string or as a script file.
 
 When a command or keyword can be filled by a script file name, the script has to
 contain a variable or a method that has the same name as the one to be filled.
 In other words, when importing the script in a YACS Python node, it must create
-a variable of the good name in the current namespace.
+a variable of the good name in the current namespace of the node.
 
 Reference description for ADAO calculation cases
 ------------------------------------------------
@@ -121,33 +123,32 @@ following:
     *Required command*. This is a string to indicate the data assimilation or
     optimization algorithm chosen. The choices are limited and available through
     the GUI. There exists for example "3DVAR", "Blue"... See below the list of
-    algorithms and associated parameters in the following subsection `Options
+    algorithms and associated parameters in the following subsection `Optional
     and required commands for calculation algorithms`_.
 
 **AlgorithmParameters**
     *Optional command*. This command allows to add some optional parameters to
-    control the data assimilation or optimization algorithm. It is defined as a
-    "*Dict*" type object, that is, given as a script. See below the list of
-    algorithms and associated parameters in the following subsection `Options
-    and required commands for calculation algorithms`_.
+    control the data assimilation or optimization algorithm. Its value is
+    defined as a "*Dict*" type object. See below the list of algorithms and
+    associated parameters in the following subsection `Optional and required
+    commands for calculation algorithms`_.
 
 **Background**
     *Required command*. This indicates the background or initial vector used,
-    previously noted as :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type
-    object, that is, given either as a string or as a script.
+    previously noted as :math:`\mathbf{x}^b`. Its value is defined as a
+    "*Vector*" type object.
 
 **BackgroundError**
     *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object, that is, given either as a string or as a script.
+    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
+    type object, a "*ScalarSparseMatrix*" type object, or a
+    "*DiagonalSparseMatrix*" type object.
 
 **ControlInput**
     *Optional command*. This indicates the control vector used to force the
-    evolution model at each step, usually noted as :math:`\mathbf{U}`. It is
-    defined as a "*Vector*" or a *VectorSerie* type object, that is, given
-    either as a string or as a script. When there is no control, it has to be a
-    void string ''.
+    evolution model at each step, usually noted as :math:`\mathbf{U}`. Its value
+    is defined as a "*Vector*" or a *VectorSerie* type object. When there is no
+    control, it has to be a void string ''.
 
 **Debug**
     *Required command*. This define the level of trace and intermediary debug
@@ -158,43 +159,41 @@ following:
     *Optional command*. This indicates the evolution error covariance matrix,
     usually noted as :math:`\mathbf{Q}`. It is defined as a "*Matrix*" type
     object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object, that is, given either as a string or as a script.
+    type object.
 
 **EvolutionModel**
     *Optional command*. This indicates the evolution model operator, usually
-    noted :math:`M`, which describes a step of evolution. It is defined as a
-    "*Function*" type object, that is, given as a script. Different functional
-    forms can be used, as described in the following subsection `Requirements
-    for functions describing an operator`_. If there is some control :math:`U`
-    included in the evolution model, the operator has to be applied to a pair
-    :math:`(X,U)`.
+    noted :math:`M`, which describes an elementary step of evolution. Its value
+    is defined as a "*Function*" type object. Different functional forms can be
+    used, as described in the following subsection `Requirements for functions
+    describing an operator`_. If there is some control :math:`U` included in the
+    evolution model, the operator has to be applied to a pair :math:`(X,U)`.
 
 **InputVariables**
     *Optional command*. This command allows to indicates the name and size of
-    physical variables that are bundled together in the control vector. This
+    physical variables that are bundled together in the state vector. This
     information is dedicated to data processed inside an algorithm.
 
 **Observation**
     *Required command*. This indicates the observation vector used for data
     assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object, that is, given
-    either as a string or as a script.
+    is defined as a "*Vector*" or a *VectorSerie* type object.
 
 **ObservationError**
     *Required command*. This indicates the observation error covariance matrix,
     previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
     object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object, that is, given either as a string or as a script.
+    type object.
 
 **ObservationOperator**
     *Required command*. This indicates the observation operator, previously
     noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
     results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. It is defined as a "*Function*" type object, that is,
-    given as a script. Different functional forms can be used, as described in
-    the following subsection `Requirements for functions describing an
-    operator`_. If there is some control :math:`U` included in the observation,
-    the operator has to be applied to a pair :math:`(X,U)`.
+    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object.
+    Different functional forms can be used, as described in the following
+    subsection `Requirements for functions describing an operator`_. If there is
+    some control :math:`U` included in the observation, the operator has to be
+    applied to a pair :math:`(X,U)`.
 
 **Observers**
     *Optional command*. This command allows to set internal observers, that are
@@ -210,8 +209,8 @@ following:
     vector. This information is dedicated to data processed inside an algorithm.
 
 **Study_name**
-    *Required command*. This is an open string to describe the study by a name
-    or a sentence.
+    *Required command*. This is an open string to describe the ADAO study by a
+    name or a sentence.
 
 **Study_repertory**
     *Optional command*. If available, this directory is used as base name for
@@ -220,17 +219,19 @@ following:
 
 **UserDataInit**
     *Optional command*. This commands allows to initialize some parameters or
-    data automatically before data assimilation algorithm processing.
+    data automatically before data assimilation or optimisation algorithm input
+    processing. It indicates a script file name to be executed before entering
+    in initialization phase of chosen variables.
 
 **UserPostAnalysis**
     *Optional command*. This commands allows to process some parameters or data
-    automatically after data assimilation algorithm processing. It is defined as
-    a script or a string, allowing to put post-processing code directly inside
-    the ADAO case. Common templates are provided to help the user to start or
-    to quickly make his case.
+    automatically after data assimilation or optimization algorithm processing.
+    Its value is defined as a script file or a string, allowing to put
+    post-processing code directly inside the ADAO case. Common templates are
+    provided to help the user to start or to quickly make his case.
 
-Options and required commands for calculation algorithms
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Optional and required commands for calculation algorithms
+++++++++--++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: 3DVAR
 .. index:: single: Blue
@@ -260,8 +261,9 @@ Options and required commands for calculation algorithms
 .. index:: single: StoreSupplementaryCalculations
 .. index:: single: SwarmVelocity
 
-Each algorithm can be controlled using some generic or specific options given
-through the "*AlgorithmParameters*" optional command, as follows for example::
+Each algorithm can be controlled using some generic or specific options, given
+through the "*AlgorithmParameters*" optional command in a script file or a
+sring, as follows for example in a file::
 
     AlgorithmParameters = {
         "Minimizer" : "LBFGSB",
@@ -269,12 +271,13 @@ through the "*AlgorithmParameters*" optional command, as follows for example::
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 
-This section describes the available options algorithm by algorithm. If an
-option is specified for an algorithm that doesn't support it, the option is
-simply left unused. The meaning of the acronyms or particular names can be found
-in the :ref:`genindex` or the :ref:`section_glossary`. In addition, for each
-algorithm, the required commands/keywords are given, being described in `List of
-commands and keywords for an ADAO calculation case`_.
+This section describes the available options algorithm by algorithm. In
+addition, for each algorithm, the required commands/keywords are given, being
+described in `List of commands and keywords for an ADAO calculation case`_. If
+an option is specified by the user for an algorithm that doesn't support it, the
+option is simply left unused and don't stop the treatment. The meaning of the
+acronyms or particular names can be found in the :ref:`genindex` or the
+:ref:`section_glossary`.
 
 **"Blue"**
 
@@ -349,12 +352,13 @@ commands and keywords for an ADAO calculation case`_.
     is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
     minimizer, see [Byrd95]_ and [Zhu97]_), "TNC" (nonlinear constrained
     minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
-    unconstrained minimizer), "NCG" (Newton CG minimizer).
+    unconstrained minimizer), "NCG" (Newton CG minimizer). It is recommended to
+    stay with the default.
 
   Bounds
-    This key allows to define upper and lower bounds for every control
-    variable being optimized. Bounds can be given by a list of list of pairs
-    of lower/upper bounds for each variable, with possibly ``None`` every time
+    This key allows to define upper and lower bounds for every state variable
+    being optimized. Bounds can be given by a list of list of pairs of
+    lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
     into account only by the constrained minimizers.
 
@@ -363,7 +367,8 @@ commands and keywords for an ADAO calculation case`_.
     optimization. The default is 15000, which is very similar to no limit on
     iterations. It is then recommended to adapt this parameter to the needs on
     real problems. For some minimizers, the effective stopping step can be
-    slightly different due to algorithm internal control requirements.
+    slightly different of the limit due to algorithm internal control
+    requirements.
 
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
@@ -406,16 +411,17 @@ commands and keywords for an ADAO calculation case`_.
     "ObservationOperator"*
 
   Minimizer
-    This key allows to choose the optimization minimizer. The default choice
-    is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
+    This key allows to choose the optimization minimizer. The default choice is
+    "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
     minimizer, see [Byrd95]_ and [Zhu97]_), "TNC" (nonlinear constrained
     minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
-    unconstrained minimizer), "NCG" (Newton CG minimizer).
+    unconstrained minimizer), "NCG" (Newton CG minimizer). It is recommended to
+    stay with the default.
 
   Bounds
-    This key allows to define upper and lower bounds for every control
-    variable being optimized. Bounds can be given by a list of list of pairs
-    of lower/upper bounds for each variable, with possibly ``None`` every time
+    This key allows to define upper and lower bounds for every state variable
+    being optimized. Bounds can be given by a list of list of pairs of
+    lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
     into account only by the constrained minimizers.
 
@@ -480,8 +486,8 @@ commands and keywords for an ADAO calculation case`_.
 
   EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
-    either state-estimation, named "State", or parameter-estimation, named
-    "Parameters". The default choice is "State".
+    either state-estimation, with a value of "State", or parameter-estimation,
+    with a value of "Parameters". The default choice is "State".
 
   StoreInternalVariables
     This boolean key allows to store default internal variables, mainly the
@@ -504,7 +510,7 @@ commands and keywords for an ADAO calculation case`_.
     "ObservationOperator"*
 
   Bounds
-    This key allows to define upper and lower bounds for every control variable
+    This key allows to define upper and lower bounds for every state variable
     being optimized. Bounds can be given by a list of list of pairs of
     lower/upper bounds for each variable, with extreme values every time there
     is no bound. The bounds can always be specified, but they are taken into
@@ -516,8 +522,8 @@ commands and keywords for an ADAO calculation case`_.
 
   EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
-    either state-estimation, named "State", or parameter-estimation, named
-    "Parameters". The default choice is "State".
+    either state-estimation, with a value of "State", or parameter-estimation,
+    with a value of "Parameters". The default choice is "State".
 
   StoreInternalVariables
     This boolean key allows to store default internal variables, mainly the
@@ -540,7 +546,7 @@ commands and keywords for an ADAO calculation case`_.
     "ObservationOperator"*
 
   Bounds
-    This key allows to define upper and lower bounds for every control variable
+    This key allows to define upper and lower bounds for every state variable
     being optimized. Bounds can be given by a list of list of pairs of
     lower/upper bounds for each variable, with extreme values every time there
     is no bound. The bounds can always be specified, but they are taken into
@@ -552,12 +558,12 @@ commands and keywords for an ADAO calculation case`_.
 
   EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
-    either state-estimation, named "State", or parameter-estimation, named
-    "Parameters". The default choice is "State".
+    either state-estimation, with a value of "State", or parameter-estimation,
+    with a value of "Parameters". The default choice is "State".
   
   Alpha, Beta, Kappa, Reconditioner
     These keys are internal scaling parameters. "Alpha" requires a value between
-    1.e-4 and 1. "Beta" has an optimal value of 2 for gaussian priori
+    1.e-4 and 1. "Beta" has an optimal value of 2 for gaussian *a priori*
     distribution. "Kappa" requires an integer value, and the right default is
     obtained by setting it to 0. "Reconditioner" requires a value between 1.e-3
     and 10, it defaults to 1.
@@ -695,11 +701,11 @@ commands are the following:
     case. It hierarchically contains all the other commands.
 
 **Algorithm**
-    *Required command*. This is a string to indicate the data assimilation or
-    optimization algorithm chosen. The choices are limited and available through
-    the GUI. There exists for example "FunctionTest", "AdjointTest"... See below
-    the list of algorithms and associated parameters in the following subsection
-    `Options and required commands for checking algorithms`_.
+    *Required command*. This is a string to indicate the test algorithm chosen.
+    The choices are limited and available through the GUI. There exists for
+    example "FunctionTest", "AdjointTest"... See below the list of algorithms
+    and associated parameters in the following subsection `Optional and required
+    commands for checking algorithms`_.
 
 **AlgorithmParameters**
     *Optional command*. This command allows to add some optional parameters to
@@ -709,9 +715,8 @@ commands are the following:
     and required commands for checking algorithms`_.
 
 **CheckingPoint**
-    *Required command*. This indicates the vector used,
-    previously noted as :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type
-    object, that is, given either as a string or as a script.
+    *Required command*. This indicates the vector used, previously noted as
+    :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
 
 **Debug**
     *Required command*. This define the level of trace and intermediary debug
@@ -722,24 +727,26 @@ commands are the following:
     *Required command*. This indicates the observation operator, previously
     noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
     results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. It is defined as a "*Function*" type object, that is,
-    given as a script. Different functional forms can be used, as described in
-    the following subsection `Requirements for functions describing an
-    operator`_.
+    :math:`\mathbf{y}^o`. It is defined as a "*Function*" type object. Different
+    functional forms can be used, as described in the following subsection
+    `Requirements for functions describing an operator`_. If there is some
+    control :math:`U` included in the observation, the operator has to be
+    applied to a pair :math:`(X,U)`.
 
 **Study_name**
     *Required command*. This is an open string to describe the study by a name
     or a sentence.
 
 **Study_repertory**
-    *Optional command*. If available, this repertory is used to find all the
-    script files that can be used to define some other commands by scripts.
+    *Optional command*. If available, this directory is used as base name for
+    calculation, and used to find all the script files, given by name without
+    path, that can be used to define some other commands by scripts.
 
 **UserDataInit**
     *Optional command*. This commands allows to initialize some parameters or
     data automatically before data assimilation algorithm processing.
 
-Options and required commands for checking algorithms
+Optional and required commands for checking algorithms
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: AdjointTest
@@ -755,7 +762,7 @@ Options and required commands for checking algorithms
 .. index:: single: SetSeed
 
 We recall that each algorithm can be controlled using some generic or specific
-options given through the "*AlgorithmParameters*" optional command, as follows
+options, given through the "*AlgorithmParameters*" optional command, as follows
 for example::
 
     AlgorithmParameters = {
@@ -763,11 +770,12 @@ for example::
         "EpsilonMinimumExponent" : -8,
         }
 
-If an option is specified for an algorithm that doesn't support it, the option
-is simply left unused. The meaning of the acronyms or particular names can be
-found in the :ref:`genindex` or the :ref:`section_glossary`. In addition, for
-each algorithm, the required commands/keywords are given, being described in
-`List of commands and keywords for an ADAO checking case`_.
+If an option is specified by the user for an algorithm that doesn't support it,
+the option is simply left unused and don't stop the treatment. The meaning of
+the acronyms or particular names can be found in the :ref:`genindex` or the
+:ref:`section_glossary`. In addition, for each algorithm, the required
+commands/keywords are given, being described in `List of commands and keywords
+for an ADAO checking case`_.
 
 **"AdjointTest"**
 
@@ -784,8 +792,8 @@ each algorithm, the required commands/keywords are given, being described in
     This key indicates the minimal exponent value of the power of 10 coefficient
     to be used to decrease the increment multiplier. The default is -8, and it
     has to be between 0 and -20. For example, its default value leads to
-    calculate the residue of the scalar product formula with a fixed increment
-    multiplied from 1.e0 to 1.e-8.
+    calculate the residue of the formula with a fixed increment multiplied from
+    1.e0 to 1.e-8.
 
   InitialDirection
     This key indicates the vector direction used for the directional derivative
@@ -815,7 +823,8 @@ each algorithm, the required commands/keywords are given, being described in
   
   SetDebug
     This key requires the activation, or not, of the debug mode during the
-    function evaluation. The default is True, the choices are True of False.
+    function evaluation. The default is "True", the choices are "True" or
+    "False".
 
 **"GradientTest"**
 
@@ -844,10 +853,10 @@ each algorithm, the required commands/keywords are given, being described in
   ResiduFormula
     This key indicates the residue formula that has to be used for the test. The
     default choice is "Taylor", and the possible ones are "Taylor" (residue of
-    the Taylor development of the operator, which has to decrease with the power
-    of 2 in perturbation) and "Norm" (residue obtained by taking the norm of the
-    Taylor development at zero order approximation, which approximate the
-    gradient, and which has to remain constant).
+    the Taylor development of the operator, which has to decrease with the
+    square power of the perturbation) and "Norm" (residue obtained by taking the
+    norm of the Taylor development at zero order approximation, which
+    approximate the gradient, and which has to remain constant).
   
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
@@ -901,8 +910,8 @@ Requirements for functions describing an operator
 -------------------------------------------------
 
 The operators for observation and evolution are required to implement the data
-assimilation or optimization procedures. They include the physical simulation
-numerical simulations, but also the filtering and restriction to compare the
+assimilation or optimization procedures. They include the physical simulation by
+numerical calculations, but also the filtering and restriction to compare the
 simulation to observation. The evolution operator is considered here in its
 incremental form, representing the transition between two successive states, and
 is then similar to the observation operator.
@@ -963,21 +972,22 @@ template::
         ...
         return Y=O(X)
 
-In this case, the user can also provide a value for the differential increment,
-using through the GUI the keyword "*DifferentialIncrement*", which has a default
-value of 1%. This coefficient will be used in the finite difference
-approximation to build the tangent and adjoint operators. The finite difference
-approximation order can also be chosen through the GUI, using the keyword
-"*CenteredFiniteDifference*", with 0 for an uncentered schema of first order,
-and with 1 for a centered schema of second order (of twice the first order
-computational cost). The keyword has a default value of 0.
+In this case, the user has also provide a value for the differential increment
+(or keep the devault value), using through the GUI the keyword
+"*DifferentialIncrement*", which has a default value of 1%. This coefficient
+will be used in the finite difference approximation to build the tangent and
+adjoint operators. The finite difference approximation order can also be chosen
+through the GUI, using the keyword "*CenteredFiniteDifference*", with 0 for an
+uncentered schema of first order (which is the default value), and with 1 for a
+centered schema of second order (of twice the first order computational cost).
 
-This first operator definition allow easily to test the functional form before
-its use in an ADAO case, greatly reducing the complexity of implementation.
+This first operator definition form allows easily to test the functional form
+before its use in an ADAO case, greatly reducing the complexity of
+operator implementation.
 
 **Important warning:** the name "*DirectOperator*" is mandatory, and the type of
-the X argument can be either a python list, a numpy array or a numpy 1D-matrix.
-The user has to treat these cases in his script.
+the ``X`` argument can be either a list, a numpy array or a numpy 1D-matrix. The
+user has to treat these cases in his function.
 
 Second functional form: using "*ScriptWithFunctions*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -986,6 +996,10 @@ Second functional form: using "*ScriptWithFunctions*"
 .. index:: single: DirectOperator
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
+
+**In general, it is recommended to use the first functionnal form rather than
+the second one. A small performance improvement is not a good reason to use a
+detailled implementation as this second functional form.**
 
 The second one consist in providing directly the three associated operators
 :math:`O`, :math:`\mathbf{O}` and :math:`\mathbf{O}^*`. This is done by using
@@ -1017,12 +1031,17 @@ three mandatory names "*DirectOperator*", "*TangentOperator*" and
 
 Another time, this second operator definition allow easily to test the
 functional forms before their use in an ADAO case, reducing the complexity of
-implementation.
+operator implementation.
+
+For some algorithms, it is required that the tangent and adjoint functions can
+return the matrix equivalent to the linear operator. In this case, when
+respectivly the ``dX`` or the ``Y`` arguments are ``None``, the user has to
+return the associated matrix.
 
 **Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
-"*AdjointOperator*" are mandatory, and the type of the X, Y, dX arguments can be
-either a python list, a numpy array or a numpy 1D-matrix. The user has to treat
-these cases in his script.
+"*AdjointOperator*" are mandatory, and the type of the ``X``, Y``, ``dX``
+arguments can be either a python list, a numpy array or a numpy 1D-matrix. The
+user has to treat these cases in his script.
 
 Third functional form: using "*ScriptWithSwitch*"
 +++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1031,6 +1050,11 @@ Third functional form: using "*ScriptWithSwitch*"
 .. index:: single: DirectOperator
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
+
+**It is recommended not to use this third functional form without a solid
+numerical or physical reason. A performance improvement is not a good reason to
+use the implementation complexity of this third functional form. Only an
+inability to use the first or second forms justifies the use of the third.**
 
 This third form give more possibilities to control the execution of the three
 functions representing the operator, allowing advanced usage and control over
@@ -1042,11 +1066,8 @@ example, use other approximations for the tangent and adjoint codes, or
 introduce more complexity in the argument treatment of the functions. But it
 will be far more complicated to implement and debug.
 
-**It is recommended not to use this third functional form without a solid
-numerical or physical reason.**
-
 If, however, you want to use this third form, we recommend using the following
-template for the switch. It requires an external script or code named
+template for the switch. It requires an external script or code named here
 "*Physical_simulation_functions.py*", containing three functions named
 "*DirectOperator*", "*TangentOperator*" and "*AdjointOperator*" as previously.
 Here is the switch template::
@@ -1098,12 +1119,12 @@ Here is the switch template::
 
 All various modifications could be done from this template hypothesis.
 
-Special case of controled evolution operator
-++++++++++++++++++++++++++++++++++++++++++++
+Special case of controled evolution or observation operator
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-In some cases, the evolution or the observation operators are required to be
-controled by an external input control, given a priori. In this case, the
-generic form of the incremental evolution model is slightly modified as follows:
+In some cases, the evolution or the observation operator is required to be
+controled by an external input control, given *a priori*. In this case, the
+generic form of the incremental model is slightly modified as follows:
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
@@ -1128,14 +1149,14 @@ Requirements to describe covariance matrices
 --------------------------------------------
 
 Multiple covariance matrices are required to implement the data assimilation or
-optimization procedures. The main ones are  the background error covariance
-matrix, noted as :math:`\mathbf{B}` and the observation error covariance matrix,
+optimization procedures. The main ones are the background error covariance
+matrix, noted as :math:`\mathbf{B}`, and the observation error covariance matrix,
 noted as :math:`\mathbf{R}`. Such a matrix is required to be a squared symetric
 semi-definite positive matrix.
 
 There are 3 practical methods for the user to provide a covariance matrix. These
-methods are chosen as the "*INPUT_TYPE*" of each defined covariance matrix, as
-shown by the following figure:
+methods are chosen by the "*INPUT_TYPE*" keyword of each defined covariance
+matrix, as shown by the following figure:
 
   .. eficas_covariance_matrix:
   .. image:: images/eficas_covariance_matrix.png
@@ -1164,14 +1185,15 @@ nature, the entire :math:`\mathbf{M}` matrix has to be given.
     \end{pmatrix}
 
 It can be either a Python Numpy array or a matrix, or a list of lists of values
-(that is, a list of rows). For example, a simple diagonal unitary background error
-covariance matrix :math:`\mathbf{B}` can be described in a python script as::
-
-    BackgroundError = numpy.eye(...)
-
-ou::
+(that is, a list of rows). For example, a simple diagonal unitary background
+error covariance matrix :math:`\mathbf{B}` can be described in a Python script
+file as::
 
     BackgroundError = [[1, 0 ... 0], [0, 1 ... 0] ... [0, 0 ... 1]]
+
+or::
+
+    BackgroundError = numpy.eye(...)
 
 Second matrix form: using "*ScalarSparseMatrix*" representation
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1183,8 +1205,8 @@ Second matrix form: using "*ScalarSparseMatrix*" representation
 
 On the opposite, this second form is a very simplified method to provide a
 matrix. The covariance matrix :math:`\mathbf{M}` is supposed to be a positive
-multiple of the identity matrix. The matrix can then be specified only by this
-multiplier:
+multiple of the identity matrix. This matrix can then be specified only by the
+multiplier :math:`m`:
 
 .. math:: \mathbf{M} =  m \times \begin{pmatrix}
     1       & 0      & \cdots   & 0      \\
@@ -1194,8 +1216,9 @@ multiplier:
     \end{pmatrix}
 
 The multiplier :math:`m` has to be a floating point or integer positive value
-(if it is negative, which is impossible, converted to positive value). For example, a simple diagonal unitary background error
-covariance matrix :math:`\mathbf{B}` can be described in a python script as::
+(if it is negative, which is impossible, it is converted to positive value). For
+example, a simple diagonal unitary background error covariance matrix
+:math:`\mathbf{B}` can be described in a python script file as::
 
     BackgroundError = 1.
 
@@ -1210,10 +1233,10 @@ Third matrix form: using "*DiagonalSparseMatrix*" representation
 .. index:: single: ObservationError
 
 This third form is also a simplified method to provide a matrix, but a little
-more powerful. The covariance matrix :math:`\mathbf{M}` is already supposed to
-be diagonal, but the user has to specify all the positive diagonal values. The
-matrix can then be specified only by a vector :math:`\mathbf{V}` which will be
-set on a diagonal matrix:
+more powerful than the second one. The covariance matrix :math:`\mathbf{M}` is
+already supposed to be diagonal, but the user has to specify all the positive
+diagonal values. The matrix can then be specified only by a vector
+:math:`\mathbf{V}` which will be set on a diagonal matrix:
 
 .. math:: \mathbf{M} =  \begin{pmatrix}
     v_{1}  & 0      & \cdots   & 0      \\
@@ -1223,12 +1246,13 @@ set on a diagonal matrix:
     \end{pmatrix}
 
 It can be either a Python Numpy array or a matrix, or a list or a list of list
-of positive values (if some are negative, which is impossible, converted to
-positive values). For example, a simple diagonal unitary background error
-covariance matrix :math:`\mathbf{B}` can be described in a python script as::
+of positive values (in all cases, if some are negative, which is impossible,
+they are converted to positive values). For example, a simple diagonal unitary
+background error covariance matrix :math:`\mathbf{B}` can be described in a
+python script file as::
 
     BackgroundError = [1, 1 ... 1]
 
-ou::
+or::
 
     BackgroundError = numpy.ones(...)

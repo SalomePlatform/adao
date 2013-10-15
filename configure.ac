@@ -141,5 +141,6 @@ AC_CONFIG_FILES([
         bin/qtEficas_adao_study.py
         doc/Makefile
         doc/en/Makefile
+        doc/fr/Makefile
         ])
 AC_OUTPUT
