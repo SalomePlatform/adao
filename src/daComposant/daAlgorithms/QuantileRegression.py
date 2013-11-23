@@ -80,6 +80,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
+        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+            Bounds = self._parameters["Bounds"]
+            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
+        else:
+            Bounds = None
+        #
         # Opérateur d'observation
         # -----------------------
         Hm = HO["Direct"].appliedTo
@@ -136,6 +142,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
+                bounds      = Bounds,
                 quantile    = self._parameters["Quantile"],
                 maxfun      = self._parameters["MaximumNumberOfSteps"],
                 toler       = self._parameters["CostDecrementTolerance"],

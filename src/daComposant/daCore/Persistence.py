@@ -657,7 +657,7 @@ class OneVector(Persistence):
     hypothèse par pas. Pour éviter les confusions, ne pas utiliser la classe
     "OneVector" pour des données hétérogènes, mais bien "OneList".
     """
-    def __init__(self, name="", unit="", basetype = list):
+    def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
 
 class OneMatrix(Persistence):
@@ -684,7 +684,7 @@ class OneNoType(Persistence):
     Classe définissant le stockage d'un objet sans modification (cast) de type.
     Attention, selon le véritable type de l'objet stocké à chaque pas, les
     opérations arithmétiques à base de numpy peuvent être invalides ou donner
-    des résultats inatendus. Cette classe n'est donc à utiliser qu'à bon escient
+    des résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
     volontairement, et pas du tout par défaut.
     """
     def __init__(self, name="", unit="", basetype = NoType):

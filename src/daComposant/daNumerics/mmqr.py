@@ -28,13 +28,15 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import sys, math
-from numpy import sum, array, matrix, dot, linalg, asarray, asmatrix, ravel
+from numpy import array, matrix, asarray, asmatrix
+from numpy import sum, dot, linalg, ravel, max, min, hstack, argmin, argmax
 
 # ==============================================================================
 def mmqr(
         func     = None,
         x0       = None,
         fprime   = None,
+        bounds   = None,
         quantile = 0.5,
         maxfun   = 15000,
         toler    = 1.e-06,
@@ -58,7 +60,7 @@ def mmqr(
     #
     # Calculs d'initialisation
     # ------------------------
-    residus  = asmatrix( mesures - func( variables ) ).A1
+    residus  = ravel( mesures - func( variables ) )
     poids    = asarray( 1./(epsilon+abs(residus)) )
     veps     = 1. - 2. * quantile - residus * poids
     lastsurrogate = -sum(residus*veps) - (1.-2.*quantile)*sum(residus)
@@ -72,18 +74,22 @@ def mmqr(
         Derivees  = array(fprime(variables))
         Derivees  = Derivees.reshape(n,p) # Necessaire pour remettre en place la matrice si elle passe par des tuyaux YACS
         DeriveesT = array(matrix(Derivees).T)
-        M         = - dot( DeriveesT , (array(matrix(p*[poids,]).T)*Derivees) )
+        M         =   dot( DeriveesT , (array(matrix(p*[poids,]).T)*Derivees) )
         SM        =   dot( DeriveesT , veps ).T
-        step      = linalg.lstsq( M, SM )[0]
+        step      = - linalg.lstsq( M, SM )[0]
         #
         variables = variables + step
-        residus   = asmatrix( mesures - func(variables) ).A1
+        if bounds is not None:
+            while( (variables < ravel(asmatrix(bounds)[:,0])).any() or (variables > ravel(asmatrix(bounds)[:,1])).any() ):
+                step      = step/2.
+                variables = variables - step
+        residus   = ravel( mesures - func(variables) )
         surrogate = sum(residus**2 * poids) + (4.*quantile-2.) * sum(residus)
         #
         while ( (surrogate > lastsurrogate) and ( max(list(abs(step))) > 1.e-16 ) ) :
             step      = step/2.
             variables = variables - step
-            residus   = ( mesures-func(variables) ).A1
+            residus   = ravel( mesures-func(variables) )
             surrogate = sum(residus**2 * poids) + (4.*quantile-2.) * sum(residus)
         #
         increment     = lastsurrogate-surrogate
