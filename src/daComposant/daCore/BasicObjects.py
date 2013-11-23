@@ -190,6 +190,7 @@ class Algorithm:
         self.StoredVariables["OMB"]                      = Persistence.OneVector(name = "OMB")
         self.StoredVariables["BMA"]                      = Persistence.OneVector(name = "BMA")
         self.StoredVariables["APosterioriCovariance"]    = Persistence.OneMatrix(name = "APosterioriCovariance")
+        self.StoredVariables["SimulationQuantiles"]      = Persistence.OneMatrix(name = "SimulationQuantiles")
 
     def get(self, key=None):
         """

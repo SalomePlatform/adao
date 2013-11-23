@@ -41,7 +41,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency"]
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles"]
+            )
+        self.defineRequiredParameter(
+            name     = "Quantiles",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des valeurs de quantiles",
+            )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
+        self.defineRequiredParameter(
+            name     = "NumberOfSamplesForQuantiles",
+            default  = 100,
+            typecast = int,
+            message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
+            minval   = 1,
+            )
+        self.defineRequiredParameter(
+            name     = "SimulationForQuantiles",
+            default  = "Linear",
+            typecast = str,
+            message  = "Type de simulation pour l'estimation des quantiles",
+            listval  = ["Linear", "NonLinear"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -102,9 +127,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la fonction coût
         # --------------------------
-        if self._parameters["StoreInternalVariables"] or "OMA" in self._parameters["StoreSupplementaryCalculations"] or "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
-            oma = Y - Hm * Xa
-        if self._parameters["StoreInternalVariables"] or "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._parameters["StoreInternalVariables"] or \
+           "OMA" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or \
+           "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            HXa = Hm * Xa
+            oma = Y - HXa
+        if self._parameters["StoreInternalVariables"] or \
+           "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
             Jo  = 0.5 * oma.T * RI * oma
             J   = float( Jb ) + float( Jo )
@@ -114,7 +145,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
-        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
             A = B - K * Hm * B
             if min(A.shape) != max(A.shape):
                 raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
@@ -144,6 +176,30 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["SigmaBck2"].store( float( (d.T * Hm * (Xa - Xb))/(Hm * B * Hm.T).trace() ) )
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
+        if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            Qtls = self._parameters["Quantiles"]
+            nech = self._parameters["NumberOfSamplesForQuantiles"]
+            YfQ  = None
+            for i in range(nech):
+                if self._parameters["SimulationForQuantiles"] == "Linear":
+                    dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
+                    dYr = numpy.matrix(numpy.ravel( Hm * dXr )).T
+                    Yr = HXa + dYr
+                elif self._parameters["SimulationForQuantiles"] == "NonLinear":
+                    Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
+                    Yr = numpy.matrix(numpy.ravel( Hm * Xr )).T
+                if YfQ is None:
+                    YfQ = Yr
+                else:
+                    YfQ = numpy.hstack((YfQ,Yr))
+            YfQ.sort(axis=-1)
+            YQ = None
+            for quantile in Qtls:
+                if not (0. <= quantile <= 1.): continue
+                indice = int(nech * quantile - 1./nech)
+                if YQ is None: YQ = YfQ[:,indice]
+                else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
+            self.StoredVariables["SimulationQuantiles"].store( YQ )
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
