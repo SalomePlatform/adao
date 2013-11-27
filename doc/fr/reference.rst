@@ -1203,7 +1203,7 @@ Exigences pour décrire les matrices de covariance
 -------------------------------------------------
 
 De multiples matrices de covariance sont nécessaires pour mettre en oeuvre des
-procédures d'assimilation des données ou d'optimisation. Les principales sont la
+procédures d'assimilation de données ou d'optimisation. Les principales sont la
 matrice de covariance des erreurs d'ébauche, notée :math:`\mathbf{B}`, et la
 matrice de covariance des erreurs d'observation, notée :math:`\mathbf{R}`. Une
 telle matrice doit être une matrice carré symétrique semi-définie positive.

@@ -35,7 +35,7 @@ dans la section pour `Approfondir l'estimation d'état par des méthodes
 d'optimisation`_, mais elles sont beaucoup plus générale et peuvent être
 utilisés sans les concepts d'assimilation de données.
 
-Deux types principaux d'applications existent en l'assimilation des données, qui
+Deux types principaux d'applications existent en l'assimilation de données, qui
 sont couvert par le même formalisme : l'**identification de paramètres** et la
 **reconstruction de champs**. Avant d'introduire la `Description simple du cadre
 méthodologique de l'assimilation de données`_ dans une prochaine section, nous
