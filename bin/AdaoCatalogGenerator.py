@@ -24,6 +24,8 @@ import sys
 import string
 import StringIO
 
+import module_version
+
 logging.basicConfig(level=logging.WARNING)
 
 #----------- Templates Part ---------------#
@@ -36,11 +38,12 @@ begin_catalog_file = """# -*- coding: utf-8 -*-
 import Accas
 from Accas import *
 
-JdC = JDC_CATA (code = 'ADAO',
+JdC = JDC_CATA (code = '%s',
                 execmodul = None,
                 regles = ( AU_MOINS_UN ('ASSIMILATION_STUDY','CHECKING_STUDY'), AU_PLUS_UN ('ASSIMILATION_STUDY','CHECKING_STUDY')),
                )
-"""
+VERSION_CATALOGUE='%s'
+"""%(module_version.name,module_version.version)
 
 data_method = """
 def F_${data_name}(statut) : return FACT(statut = statut,
@@ -181,7 +184,7 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
                           repetable           = "n",
                           Study_name          = SIMP(statut="o", typ = "TXM", defaut="ADAO Calculation Case"),
                           Study_repertory     = SIMP(statut="f", typ = "Repertoire", min=1, max=1),
-                          Debug               = SIMP(statut="o", typ = "I", into=(0, 1), defaut=0),
+                          Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
                           Algorithm           = SIMP(statut="o", typ = "TXM", into=(${algos_names})),
                           Background          = F_Background("o"),
                           BackgroundError     = F_BackgroundError("o"),
@@ -204,7 +207,7 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
                           repetable           = "n",
                           Study_name          = SIMP(statut="o", typ = "TXM", defaut="ADAO Checking Case"),
                           Study_repertory     = SIMP(statut="f", typ = "Repertoire", min=1, max=1),
-                          Debug               = SIMP(statut="o", typ = "I", into=(0, 1), defaut=0),
+                          Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
                           Algorithm           = SIMP(statut="o", typ = "TXM", into=(${check_names})),
                           CheckingPoint       = F_CheckingPoint("o"),
                           ObservationOperator = F_ObservationOperator("o"),

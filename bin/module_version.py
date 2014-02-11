@@ -1,6 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Copyright (C) 2010-2013 EDF R&D
+#-*-coding:iso-8859-1-*-
+#
+# Copyright (C) 2008-2014 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,23 +18,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-"""
-   Ce module sert a lancer EFICAS pour Adao
-"""
-
-import sys
-# Configuration de l'installation
-INSTALLDIR = "@EFICAS_DIR@"
-sys.path.insert(0,INSTALLDIR)
-ADAO_INSTALL_DIR = "@PYTHON_SITE@/salome/daEficas"
-sys.path.insert(0,ADAO_INSTALL_DIR)
-
-# Configuration
-import prefs
-import prefs_ADAO
-
-# Modules Eficas
-from InterfaceQT4 import eficas_go
-eficas_go.lance_eficas(code=prefs.code)
+name    = "ADAO"
+version = "V7_main"
+date    = ""
