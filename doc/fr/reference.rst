@@ -161,7 +161,7 @@ le calcul ou la vérification. Les différentes commandes sont les suivantes:
     être une chaîne vide ''.
 
 **Debug**
-    *Commande obligatoire*. Elle définit le niveau de sorties et d'informations
+    *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
     intermédiaires de débogage. Les choix sont limités entre 0 (pour False) and
     1 (pour True).
 
@@ -757,7 +757,7 @@ vérification. Les différentes commandes sont les suivantes:
     :math:`\mathbf{x}`. Sa valeur est définie comme un objet de type "*Vector*".
 
 **Debug**
-    *Commande obligatoire*. Elle définit le niveau de sorties et d'informations
+    *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
     intermédiaires de débogage. Les choix sont limités entre 0 (pour False) et
     1 (pour True).
 

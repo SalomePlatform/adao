@@ -104,7 +104,10 @@ class AdaoGenerator(PythonGenerator):
     # Extraction de Study_name
     self.text_da += "study_config['Name'] = '" + self.dictMCVal["__"+self.type_of_study+"__Study_name"] + "'\n"
     # Extraction de Debug
-    self.text_da += "study_config['Debug'] = '" + str(self.dictMCVal["__"+self.type_of_study+"__Debug"]) + "'\n"
+    if "__"+self.type_of_study+"__Debug" in self.dictMCVal.keys():
+      self.text_da += "study_config['Debug'] = '" + str(self.dictMCVal["__"+self.type_of_study+"__Debug"]) + "'\n"
+    else:
+      self.text_da += "study_config['Debug'] = '0'\n"
     # Extraction de Algorithm
     self.text_da += "study_config['Algorithm'] = '" + self.dictMCVal["__"+self.type_of_study+"__Algorithm"] + "'\n"
 

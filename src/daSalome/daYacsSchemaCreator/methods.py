@@ -69,10 +69,10 @@ def create_yacs_proc(study_config):
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
   CAS_node.getInputPort("Name").edInitPy(study_config["Name"])
   CAS_node.getInputPort("Algorithm").edInitPy(study_config["Algorithm"])
-  if study_config["Debug"] == "0":
-    CAS_node.getInputPort("Debug").edInitPy(False)
-  else:
+  if study_config.has_key("Debug") and study_config["Debug"] == "1":
     CAS_node.getInputPort("Debug").edInitPy(True)
+  else:
+    CAS_node.getInputPort("Debug").edInitPy(False)
 
   # Ajout des Variables
   InputVariablesNames = []
