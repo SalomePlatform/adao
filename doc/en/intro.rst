@@ -12,10 +12,10 @@ study. Calculation or simulation modules have to provide one or more specific
 calling methods in order to be callable in the SALOME/ADAO framework, and all
 the SALOME modules can be used throught YACS integration of ADAO.
 
-Its main objective is to *facilitate the use of various standard data
-assimilation or optimization methods*, while remaining easy to use and providing
-a path to help the implementation. For an end user, having already gathered his
-physical input information, it's a matter of "point\&click" to build an ADAO
+Its main objective is to **facilitate the use of various standard data
+assimilation or optimization methods, while remaining easy to use and providing
+a path to help the implementation**. For an end user, having already gathered
+his physical input information, it's a matter of "point\&click" to build an ADAO
 valid case and to evaluate it.
 
 The module covers a wide variety of practical applications, in a robust way,

@@ -271,6 +271,11 @@ sring, as follows for example in a file::
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 
+To give the "*AlgorithmParameters*" values by string, one must enclose a
+standard dictionnary definition between simple quotes, as for example::
+
+    '{"Minimizer":"LBFGSB","MaximumNumberOfSteps":25}'
+
 This section describes the available options algorithm by algorithm. In
 addition, for each algorithm, the required commands/keywords are given, being
 described in `List of commands and keywords for an ADAO calculation case`_. If
@@ -747,7 +752,7 @@ commands are the following:
     data automatically before data assimilation algorithm processing.
 
 Optional and required commands for checking algorithms
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: AdjointTest
 .. index:: single: FunctionTest
@@ -929,6 +934,11 @@ between the pseudo-observations :math:`\mathbf{y}` and the parameters
 same functional representation can be used for the linear tangent model
 :math:`\mathbf{O}` of :math:`O` and its adjoint :math:`\mathbf{O}^*`, also
 required by some data assimilation or optimization algorithms.
+
+On input and output of these operators, the :math:`\mathbf{x}` and
+:math:`\mathbf{y}` variables or their increments are mathematically vectors,
+and they are given as non-orented vectors (of type list or Numpy array) or
+oriented ones (of type Numpy matrix).
 
 Then, **to describe completely an operator, the user has only to provide a
 function that fully and only realize the functional operation**.
@@ -1137,7 +1147,7 @@ Schematically, the operator has to be set as::
         ...
         ...
         ...
-        return something like X(n+1) or Y(n+1)
+        return something like X(n+1) (evolution) or Y(n+1) (observation)
 
 The tangent and adjoint operators have the same signature as previously, noting
 that the derivatives has to be done only partially against :math:`\mathbf{x}`.
@@ -1205,8 +1215,8 @@ Second matrix form: using "*ScalarSparseMatrix*" representation
 
 On the opposite, this second form is a very simplified method to provide a
 matrix. The covariance matrix :math:`\mathbf{M}` is supposed to be a positive
-multiple of the identity matrix. This matrix can then be specified only by the
-multiplier :math:`m`:
+multiple of the identity matrix. This matrix can then be specified in a unique
+way by the multiplier :math:`m`:
 
 .. math:: \mathbf{M} =  m \times \begin{pmatrix}
     1       & 0      & \cdots   & 0      \\
@@ -1216,9 +1226,10 @@ multiplier :math:`m`:
     \end{pmatrix}
 
 The multiplier :math:`m` has to be a floating point or integer positive value
-(if it is negative, which is impossible, it is converted to positive value). For
-example, a simple diagonal unitary background error covariance matrix
-:math:`\mathbf{B}` can be described in a python script file as::
+(if it is negative, which is impossible for a positive covariance matrix, it is
+converted to positive value). For example, a simple diagonal unitary background
+error covariance matrix :math:`\mathbf{B}` can be described in a python script
+file as::
 
     BackgroundError = 1.
 

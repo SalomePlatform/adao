@@ -18,24 +18,22 @@ expérimentales, ou observations, et de modèles numériques *a priori*, y compris
 des informations sur leurs erreurs. Certaines des méthodes incluses dans ce
 cadre sont également connues sous les noms  d'*estimation des paramètres*, de
 *problèmes inverses*, d'*estimation bayésienne*, d'*interpolation optimale*,
-etc. De plus amples détails peuvent être trouvés dans la section
+etc. De plus amples détails peuvent être trouvés dans la partie
 :ref:`section_theory`.
 
-La documentation de ce module est divisée en plusieurs parties. La première
-:ref:`section_intro` est une introduction. La deuxième partie
-:ref:`section_theory` présente brièvement l'assimilation de données,
-l'optimisation et les concepts. La troisième partie :ref:`section_using`
-explique comment utiliser le module ADAO. La quatrième partie
-:ref:`section_reference` donne une description détaillée de toutes les commandes
-ADAO et des mots-clés. La cinquième partie :ref:`section_examples` donne des
-exemples sur l'utilisation d'ADAO. Les utilisateurs intéressés par une
-accès rapide au module peuvent sauter cette section, mais un usage utile
+La documentation de ce module est divisée en plusieurs parties. La première est
+une :ref:`section_intro`. La seconde partie présente :ref:`section_theory`, et à
+leurs concepts. La troisième partie explique comment :ref:`section_using`.  La
+quatrième partie présente des exemples d'utilisation sous la forme de
+:ref:`section_examples`.  La cinquième partie détaille la
+:ref:`section_reference`. Les utilisateurs intéressés par un accès rapide au
+module peuvent s'arrêter avant la lecture de cette partie, mais un usage utile
 du module nécessite de lire et de revenir régulièrement aux troisième et
-quatrième parties. La dernière partie :ref:`section_advanced` se focalise sur
-des usages avancés du module, sur l'obtention de plus de renseignements, ou sur
-l'usage par scripting, sans interface utilisateur graphique (GUI). Enfin,
-n'oubliez pas de lire la partie :ref:`section_licence` pour respecter les
-exigences de licence du module.
+cinquième parties. La dernière partie se focalise sur des
+:ref:`section_advanced`, sur l'obtention de renseignements supplémentaires, ou
+sur l'usage par scripts, sans interface utilisateur graphique (GUI). Enfin, pour
+respecter les exigences de licence du module, n'oubliez pas de lire la partie
+:ref:`section_licence`.
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
@@ -54,10 +52,11 @@ Table des matières
    intro
    theory
    using
-   reference
    examples
+   reference
    advanced
    licence
+   glossary
    bibliography
 
 Index et tables
@@ -65,4 +64,4 @@ Index et tables
 
 * :ref:`genindex`
 * :ref:`search`
-* :ref:`section_glossary`
+.. * :ref:`section_glossary`

@@ -42,13 +42,15 @@ Fields reconstruction or measures interpolation
 
 .. index:: single: fields reconstruction
 .. index:: single: measures interpolation
+.. index:: single: fields interpolation
 
-Fields reconstruction consists in finding, from a restricted set of real
-measures, the physical field which is the most *consistent* with these measures.
+**Fields reconstruction (or interpolation)** consists in finding, from a
+restricted set of real measures, the physical field which is the most
+*consistent* with these measures.
 
-This consistency is to understand in terms of interpolation, that is to say that
-the field we want to reconstruct, using data assimilation on measures, has to
-fit at best the measures, while remaining constrained by the overall field
+This *consistency* is to understand in terms of interpolation, that is to say
+that the field we want to reconstruct, using data assimilation on measures, has
+to fit at best the measures, while remaining constrained by the overall field
 calculation. The calculation is thus an *a priori* estimation of the field that
 we seek to identify.
 
@@ -72,20 +74,23 @@ Parameters identification, models adjustment, calibration
 ---------------------------------------------------------
 
 .. index:: single: parameters identification
+.. index:: single: parameters adjustment
 .. index:: single: models adjustment
 .. index:: single: calibration
 .. index:: single: background
 .. index:: single: regularization
+.. index:: single: inverse problems
 
-The identification of parameters by data assimilation is a form of state
-calibration which uses both the physical measurement and an *a priori*
-parameters estimation (called the "*background*") of the state that one seeks to
-identify, as well as a characterization of their errors. From this point of
-view, it uses all available information on the physical system (even if
+The **identification (or adjustment) of parameters** by data assimilation is a
+form of state calibration which uses both the physical measurement and an *a
+priori* parameters estimation (called the "*background*") of the state that one
+seeks to identify, as well as a characterization of their errors. From this
+point of view, it uses all available information on the physical system (even if
 assumptions about errors are relatively restrictive) to find the "*optimal
 estimation*" from the true state. We note, in terms of optimization, that the
-background realizes a mathematical regularization of the main problem of
-parameters identification.
+background realizes a "*regularization*", in a mathematical meaning, of the main
+problem of parameters identification. One can also use the terms "*inverse
+problems*" to refer to this process.
 
 In practice, the two observed gaps "*calculation-background*" and
 "*calculation-measures*" are combined to build the calibration correction of
@@ -127,22 +132,25 @@ are zero and the model is exact) as output.
 In the simplest case, which is static, the steps of simulation and of
 observation can be combined into a single observation operator noted :math:`H`
 (linear or nonlinear). It transforms the input parameters :math:`\mathbf{x}` to
-results :math:`\mathbf{y}` to be directly compared to observations
-:math:`\mathbf{y}^o`. Moreover, we use the linearized operator
-:math:`\mathbf{H}` to represent the effect of the full operator :math:`H` around
-a linearization point (and we omit thereafter to mention :math:`H` even if it is
-possible to keep it). In reality, we have already indicated that the stochastic
-nature of variables is essential, coming from the fact that model, background
-and observations are all incorrect. We therefore introduce errors of
-observations additively, in the form of a random vector
-:math:`\mathbf{\epsilon}^o` such that:
+results :math:`\mathbf{y}`, to be directly compared to observations
+:math:`\mathbf{y}^o`:
+
+.. math:: \mathbf{y} = H(\mathbf{x})
+
+Moreover, we use the linearized operator :math:`\mathbf{H}` to represent the
+effect of the full operator :math:`H` around a linearization point (and we omit
+thereafter to mention :math:`H` even if it is possible to keep it). In reality,
+we have already indicated that the stochastic nature of variables is essential,
+coming from the fact that model, background and observations are all incorrect.
+We therefore introduce errors of observations additively, in the form of a
+random vector :math:`\mathbf{\epsilon}^o` such that:
 
 .. math:: \mathbf{y}^o = \mathbf{H} \mathbf{x}^t + \mathbf{\epsilon}^o
 
 The errors represented here are not only those from observation, but also from
-the simulation. We can always consider that these errors are of zero mean. We
-can then define a matrix :math:`\mathbf{R}` of the observation error covariances
-by:
+the simulation. We can always consider that these errors are of zero mean.
+Noting :math:`E[.]` the classical mathematical expectation, we can then define a
+matrix :math:`\mathbf{R}` of the observation error covariances by:
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
@@ -168,18 +176,19 @@ minimize the following function :math:`J`:
 
 .. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-which is usually designed as the "*3D-VAR*" function. Since :math:`\mathbf{B}`
-and :math:`\mathbf{R}` covariance matrices are proportional to the variances of
-errors, their presence in both terms of the function :math:`J` can effectively
-weight the differences by confidence in the background or observations errors.
-The parameters vector :math:`\mathbf{x}` realizing the minimum of this function
-therefore constitute the analysis :math:`\mathbf{x}^a`. It is at this level that
-we have to use the full panoply of function minimization methods otherwise known
-in optimization (see also section `Going further in the state estimation by
-optimization methods`_). Depending on the size of the parameters vector
-:math:`\mathbf{x}` to identify, and of the availability of gradient or Hessian
-of :math:`J`, it is appropriate to adapt the chosen optimization method
-(gradient, Newton, quasi-Newton...).
+which is usually designed as the "*3D-VAR*" function (see for example
+[Talagrand97]_). Since :math:`\mathbf{B}` and :math:`\mathbf{R}` covariance
+matrices are proportional to the variances of errors, their presence in both
+terms of the function :math:`J` can effectively weight the differences by
+confidence in the background or observations errors. The parameters vector
+:math:`\mathbf{x}` realizing the minimum of this function therefore constitute
+the analysis :math:`\mathbf{x}^a`. It is at this level that we have to use the
+full panoply of function minimization methods otherwise known in optimization
+(see also section `Going further in the state estimation by optimization
+methods`_). Depending on the size of the parameters vector :math:`\mathbf{x}` to
+identify, and of the availability of gradient or Hessian of :math:`J`, it is
+appropriate to adapt the chosen optimization method (gradient, Newton,
+quasi-Newton...).
 
 In **assimilation by filtering**, in this simple case usually referred to as
 "*BLUE*" (for "*Best Linear Unbiased Estimator*"), the :math:`\mathbf{x}^a`
@@ -197,9 +206,9 @@ covariance matrices in the following form:
 The advantage of filtering is to explicitly calculate the gain, to produce then
 the *a posteriori* covariance analysis matrix.
 
-In this simple static case, we can show, under the assumption of Gaussian error
-distributions, that the two *variational* and *filtering* approaches are
-equivalent.
+In this simple static case, we can show, under an assumption of Gaussian error
+distributions (very little restrictive in practice), that the two *variational*
+and *filtering* approaches give the same solution.
 
 It is indicated here that these methods of "*3D-VAR*" and "*BLUE*" may be
 extended to dynamic problems, called respectively "*4D-VAR*" and "*Kalman
@@ -223,10 +232,10 @@ Going further in the data assimilation framework
 .. index:: single: data smoothing
 
 To get more information about the data assimilation techniques, the reader can
-consult introductory documents like [Argaud09]_, on-line training courses or
-lectures like [Bouttier99]_ and [Bocquet04]_ (along with other materials coming
-from geosciences applications), or general documents like [Talagrand97]_,
-[Tarantola87]_, [Kalnay03]_, [Ide97]_ and [WikipediaDA]_.
+consult introductory documents like [Talagrand97]_ or [Argaud09]_, on-line
+training courses or lectures like [Bouttier99]_ and [Bocquet04]_ (along with
+other materials coming from geosciences applications), or general documents like
+[Talagrand97]_, [Tarantola87]_, [Kalnay03]_, [Ide97]_ and [WikipediaDA]_.
 
 Note that data assimilation is not restricted to meteorology or geo-sciences,
 but is widely used in other scientific domains. There are several fields in
@@ -253,8 +262,8 @@ which is named the "*3D-VAR*" function. It can be seen as a *least squares
 minimization* extented form, obtained by adding a regularizing term using
 :math:`\mathbf{x}-\mathbf{x}^b`, and by weighting the differences using
 :math:`\mathbf{B}` and :math:`\mathbf{R}` the two covariance matrices. The
-minimization of the :math:`J` function leads to the *best* `\mathbf{x}` state
-estimation.
+minimization of the :math:`J` function leads to the *best* :math:`\mathbf{x}`
+state estimation.
 
 State estimation possibilities extension, by using more explicitly optimization
 methods and their properties, can be imagined in two ways.

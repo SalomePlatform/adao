@@ -290,6 +290,12 @@ qui suit dans un fichier::
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 
+Pour donner les valeurs de la commande "*AlgorithmParameters*" par une chaîne de
+caractères, on doit utiliser des guillemets simples pour fournir une définition
+standard de dictionnaire, comme par exemple::
+
+    '{"Minimizer":"LBFGSB","MaximumNumberOfSteps":25}'
+
 Cette section décrit les options disponibles algorithme par algorithme. De plus,
 pour chaque algorithme, les commandes/mots-clés obligatoires sont indiqués. Si
 une option est spécifiée par l'utilisateur pour un algorithme qui ne la supporte
@@ -975,6 +981,10 @@ modèle linéaire tangent :math:`\mathbf{O}` de :math:`O` et son adjoint
 :math:`\mathbf{O}^*`, qui sont aussi requis par certains algorithmes
 d'assimilation de données ou d'optimisation.
 
+En entrée et en sortie de ces opérateurs, les variables :math:`\mathbf{x}` et
+:math:`\mathbf{y}` ou leurs incréments sont mathématiquement des vecteurs, et
+ils sont donc passés comme des vecteurs non-orientés (de type liste ou vecteur
+Numpy) ou orientés (de type matrice Numpy).
 
 Ensuite, **pour décrire complètement un opérateur, l'utilisateur n'a qu'à
 fournir une fonction qui réalise uniquement l'opération fonctionnelle de manière
@@ -1014,7 +1024,7 @@ la fonction dans un script, avec un nom obligatoire "*DirectOperator*". Par
 exemple, le script peut suivre le modèle suivant::
 
     def DirectOperator( X ):
-        """ Direct non-linear simulation operator """
+        """ Opérateur direct de simulation non-linéaire """
         ...
         ...
         ...
@@ -1035,7 +1045,7 @@ forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la
 complexité de l'implémentation de l'opérateur.
 
 **Avertissement important :** le nom "*DirectOperator*" est obligatoire, et le
-type de l'argument X peut être une liste, un vecteur ou une matrice Numpy 1D.
+type de l'argument X peut être une liste, un vecteur ou une matrice Numpy.
 L'utilisateur doit traiter ces cas dans sa fonction.
 
 Seconde forme fonctionnelle : utiliser "*ScriptWithFunctions*"
@@ -1060,25 +1070,25 @@ dans un script, avec trois noms obligatoires "*DirectOperator*",
 le squelette suivant::
 
     def DirectOperator( X ):
-        """ Direct non-linear simulation operator """
+        """ Opérateur direct de simulation non-linéaire """
         ...
         ...
         ...
-        return something like Y
+        return quelque chose comme Y
 
     def TangentOperator( (X, dX) ):
-        """ Tangent linear operator, around X, applied to dX """
+        """ Opérateur linéaire tangent, autour de X, appliqué à dX """
         ...
         ...
         ...
-        return something like Y
+        return quelque chose comme Y
 
     def AdjointOperator( (X, Y) ):
-        """ Adjoint operator, around X, applied to Y """
+        """ Opérateur adjoint, autour de X, appliqué à Y """
         ...
         ...
         ...
-        return something like X
+        return quelque chose comme X
 
 Un nouvelle fois, cette seconde définition d'opérateur permet aisément de tester
 les formes fonctionnelles avant de les utiliser dans le cas ADAO, réduisant la
@@ -1090,9 +1100,9 @@ respectivement, les arguments ``dX`` ou ``Y`` valent ``None``, l'utilisateur
 doit renvoyer la matrice associée.
 
 **Avertissement important :** les noms "*DirectOperator*", "*TangentOperator*"
-et "*AdjointOperator*" sont obligatoires, et le type des arguments ``X``, Y``,
-``dX`` peut être une liste, un vecteur ou une matrice Numpy 1D. L'utilisateur
-doit traiter ces cas dans ses fonctions.
+et "*AdjointOperator*" sont obligatoires, et le type des arguments ``X``,
+``Y``, ``dX`` peut être une liste, un vecteur ou une matrice Numpy.
+L'utilisateur doit traiter ces cas dans ses fonctions.
 
 Troisième forme fonctionnelle : utiliser "*ScriptWithSwitch*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1187,11 +1197,11 @@ l'opérateur direct doit être appliqué à une paire de variables :math:`(X,U)`.
 Schématiquement, l'opérateur doit être constuit comme suit::
 
     def DirectOperator( (X, U) ):
-        """ Direct non-linear simulation operator """
+        """ Opérateur direct de simulation non-linéaire """
         ...
         ...
         ...
-        return something like X(n+1) or Y(n+1)
+        return quelque chose comme X(n+1) (évolution) ou Y(n+1) (observation)
 
 Les opérateurs tangent et adjoint ont la même signature que précédemment, en
 notant que les dérivées doivent être faites seulement partiellement par rapport
@@ -1262,7 +1272,7 @@ Seconde forme matricielle : utiliser la représentation "*ScalarSparseMatrix*"
 Au contraire, la seconde forme matricielle est une méthode très simplifiée pour
 définir une matrice. La matrice de covariance :math:`\mathbf{M}` est supposée
 être un multiple positif de la matrice identité. Cette matrice peut alors être
-spécifiée uniquement par le multiplicateur :math:`m`:
+spécifiée de manière unique par le multiplicateur :math:`m`:
 
 .. math:: \mathbf{M} =  m \times \begin{pmatrix}
     1       & 0      & \cdots   & 0      \\
@@ -1271,11 +1281,11 @@ spécifiée uniquement par le multiplicateur :math:`m`:
     0       & \cdots & 0        & 1
     \end{pmatrix}
 
-Le multiplicateur :math:`m` doit être un nombre réel ou entier positif (s'il est
-négatif, ce qui est impossible, il est convertit en nombre positif). Par
-exemple, une matrice simple diagonale unitaire de covariances des erreurs
-d'ébauche :math:`\mathbf{B}` peut être décrite dans un fichier de script Python
-par::
+Le multiplicateur :math:`m` doit être un nombre réel ou entier positif (s'il
+est négatif, ce qui est impossible car une matrice de covariance est positive,
+il est convertit en nombre positif). Par exemple, une simple matrice diagonale
+unitaire de covariances des erreurs d'ébauche :math:`\mathbf{B}` peut être
+décrite dans un fichier de script Python par::
 
     BackgroundError = 1.
 

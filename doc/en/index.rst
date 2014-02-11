@@ -18,18 +18,16 @@ the framework are also known under the names of *parameter estimation*, *inverse
 problems*, *Bayesian estimation*, *optimal interpolation*, etc. More details can
 be found in the section :ref:`section_theory`.
 
-The documentation of this module is divided in parts. The first one
-:ref:`section_intro` is an introduction. The second part :ref:`section_theory`
-briefly introduces data assimilation, optimization and concepts. The third part
-:ref:`section_using` describes how to use the module ADAO. The fourth part
-:ref:`section_reference` gives a detailed description of all the ADAO commands
-and keywords. The fifth part :ref:`section_examples` gives examples on ADAO
-usage. Users interested in quick use of the module can jump to this section, but
-a valuable use of the module requires to read and come back regularly to the
-third and fourth ones. The last part :ref:`section_advanced` focuses on advanced
-usages of the module, how to get more information, or how to use it by
-scripting, without the graphical user interface (GUI). And be sure to read the
-part :ref:`section_licence` to respect the module requirements.
+The documentation of this module is divided in parts. The first one is an
+:ref:`section_intro`. The second part introduces :ref:`section_theory`, and
+their concepts. The third part describes :ref:`section_using`. The fourth part
+gives examples on ADAO usage as :ref:`section_examples`. The fifth part gives a
+detailed :ref:`section_reference`. Users interested in quick use of the module
+can stop reading before this fifth part, but a valuable use of the module
+requires to read and come back regularly to the third and fifth ones. The last
+part focuses on :ref:`section_advanced`, how to get more information, or how to
+use it by scripting, without the graphical user interface (GUI). And, to respect
+the module requirements, be sure to read the part :ref:`section_licence`.
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization. In particular, vectors
@@ -47,10 +45,11 @@ Table of contents
    intro
    theory
    using
-   reference
    examples
+   reference
    advanced
    licence
+   glossary
    bibliography
 
 Indices and tables
@@ -58,4 +57,4 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
-* :ref:`section_glossary`
+.. * :ref:`section_glossary`

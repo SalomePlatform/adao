@@ -77,7 +77,10 @@ STEP 2: Build and modify the ADAO case, and save it
 ---------------------------------------------------
 
 To build a case using EFICAS, you have to go through a series of sub-steps, by
-selecting, at each sub-step, a keyword and then filling in its value.
+selecting, at each sub-step, a keyword and then filling in its value. It is
+noted that it is in this step that is needed, among other things, to define the
+call to the simulation code used in observation or evolution operators
+describing the problem [#]_.
 
 The structured editor indicates hierarchical types, values or keywords allowed.
 Incomplete or incorrect keywords are identified by a visual error red flag.
@@ -212,6 +215,8 @@ The execution can also be done using a shell script, as described in the section
 :ref:`section_advanced`.
 
 .. [#] For more information on EFICAS, see the *EFICAS module* available in SALOME platform.
+
+.. [#] The use of physical simulation code in the data assimilation elementary operators is illustrated or described in the following main parts.
 
 .. [#] For more information on YACS, see the *YACS module User's Guide* available in the main "*Help*" menu of SALOME platform.
 

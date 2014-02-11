@@ -81,7 +81,9 @@ le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
 
 Pour construire un cas en utilisant EFICAS, on doit passer par une série de
 sous-étapes, en choisissant, à chaque étape, un mot-clé puis en remplissant ses
-valeurs.
+valeurs. On note que c'est dans cette étape qu'il faut, entre autres, définir
+l'**appel au code de simulation** utilisé dans les opérateurs d'observation ou
+d'évolution décrivant le problème [#]_.
 
 L'éditeur structuré indique des types hiérarchiques, des valeurs ou des
 mots-clés autorisés. Les mots-clés incomplets ou incorrects sont identifiés par
@@ -226,6 +228,8 @@ L'exécution peut aussi être conduite en utilisant un script de commandes shell,
 comme décrit dans la section :ref:`section_advanced`.
 
 .. [#] Pour de plus amples informations sur EFICAS, voir le *module EFICAS* et son aide disponible dans l'environnement SALOME.
+
+.. [#] L'utilisation du code de simulation physique dans les opérateurs de base de l'assimilation de données est illustrée ou décrite dans les parties principales qui suivent.
 
 .. [#] Pour de plus amples informations sur YACS, voir le *Guide utilisateur du module YACS* disponible dans le menu principal *Aide* de l'environnement SALOME.
 

@@ -200,7 +200,7 @@ fenêtre "*proc*" du schéma YACS comme montré ci-dessous:
     **Menu YACS de la fenêtre de sortie, et boite de dialogue montrant la sortie**
 
 On vérifie que le résultat est correct en observant si la fenêtre de sortie
-contient la ligne suivante:
+contient la ligne suivante::
 
     Analysis = [0.5, 0.5, 0.5]
 
@@ -314,7 +314,7 @@ Le dictionnaire doit être défini, par exemple, dans un fichiers externe de
 script Python, en utilisant le nom obligatoire de variable
 "*AlgorithmParameters*" pour le dictionnaire. Toutes les clés dans le
 dictionnaire sont optionnelles, elles disposent toutes d'une valeur par défaut,
-et elles peuvent être présentes sans être utiles. Par exemple:
+et elles peuvent être présentes sans être utiles. Par exemple::
 
     AlgorithmParameters = {
         "Minimizer" : "CG", # Choix possible : "LBFGSB", "TNC", "CG", "BFGS"
@@ -585,8 +585,8 @@ données ou d'optimisation. L'exemple suivant de fichier script Python, nommé
         print "Etape %2i : J = %.5e  et  X = %s"%(i, J[i], x_series[i])
     print
 
-Finalement, on obtient la description de l'ensemble des conditions d'expériences
-à travers un ensemble de fichiers listés ici:
+Finalement, on obtient la description de l'ensemble des conditions
+d'expériences à travers la série de fichiers listée ici:
 
 #.      ``Physical_data_and_covariance_matrices.py``
 #.      ``Physical_simulation_functions.py``

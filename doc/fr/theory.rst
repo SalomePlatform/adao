@@ -5,7 +5,7 @@ Une brève introduction à l'Assimilation de Données et à l'Optimisation
 ================================================================================
 
 .. index:: single: Data Assimilation
-.. index:: single: Assimilation de données
+.. index:: single: assimilation de données
 .. index:: single: état vrai
 .. index:: single: observation
 .. index:: single: a priori
@@ -35,26 +35,27 @@ dans la section pour `Approfondir l'estimation d'état par des méthodes
 d'optimisation`_, mais elles sont beaucoup plus générale et peuvent être
 utilisés sans les concepts d'assimilation de données.
 
-Deux types principaux d'applications existent en l'assimilation de données, qui
-sont couvert par le même formalisme : l'**identification de paramètres** et la
+Deux types principaux d'applications existent en assimilation de données, qui
+sont couverts par le même formalisme : l'**identification de paramètres** et la
 **reconstruction de champs**. Avant d'introduire la `Description simple du cadre
 méthodologique de l'assimilation de données`_ dans une prochaine section, nous
 décrivons brièvement ces deux types d'applications. A la fin de ce chapitre,
 quelques références permettent d'`Approfondir le cadre méthodologique de
 l'assimilation de données`_ et d'`Approfondir l'estimation d'état par des
 méthodes d'optimisation`_.
- 
+
 Reconstruction de champs ou interpolation de données
 ----------------------------------------------------
 
 .. index:: single: reconstruction de champs
 .. index:: single: interpolation de données
+.. index:: single: interpolation de champs
 
-La reconstruction de champs consiste à trouver, à partir d'un nombre restreint
-de mesures réelles, le champs physique qui est le plus *consistant* avec ces
-mesures.
+La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
+partir d'un nombre restreint de mesures réelles, le champs physique qui est le
+plus *cohérent* avec ces mesures.
 
-La consistance est à comprendre en termes d'interpolation, c'est-à-dire que le
+La *cohérence* est à comprendre en termes d'interpolation, c'est-à-dire que le
 champ que l'on cherche à reconstruire, en utilisant de l'assimilation de données
 sur les mesures, doit s'adapter au mieux aux mesures, tout en restant contraint
 par la simulation globale du champ. Le champ calculé est donc une estimation *a
@@ -73,29 +74,33 @@ plus, ces variables sont contraintes par les équations d'évolution de
 l'atmosphère, qui indiquent par exemple que la pression en un point ne peut pas
 prendre une valeur quelconque indépendamment de la valeur au même point à un
 temps précédent. On doit donc faire la reconstruction d'un champ en tout point
-de l'espace, de manière "consistante" avec les équations d'évolution et avec les
+de l'espace, de manière "cohérente" avec les équations d'évolution et avec les
 mesures aux précédents pas de temps.
 
 Identification de paramètres, ajustement de modèles, calibration
 ----------------------------------------------------------------
 
 .. index:: single: identification de paramètres
+.. index:: single: ajustement de paramètres
 .. index:: single: ajustement de modèles
 .. index:: single: calibration
 .. index:: single: ébauche
 .. index:: single: régularisation
+.. index:: single: problèmes inverses
 
-L'identification de paramètres par assimilation de données est une forme de
-calibration d'état qui utilise simultanément les mesures physiques et une
-estimation *a priori* des paramètres (appelée l'"*ébauche*") d'état que l'on
-cherche à identifier, ainsi qu'une caractérisation de leurs erreurs. De ce point
-de vue, cette démarche utilise toutes les informations disponibles sur le
-système physique (même si les hypothèses sur les erreurs sont relativement
-restrictives) pour trouver l'"*estimation optimale*" de l'état vrai. On peut
-noter, en termes d'optimisation, que l'ébauche réalise la régularisation
-mathématique du problème principal d'identification de paramètres.
+L'**identification (ou l'ajustement) de paramètres** par assimilation de données
+est une forme de calibration d'état qui utilise simultanément les mesures
+physiques et une estimation *a priori* des paramètres (appelée l'"*ébauche*")
+d'état que l'on cherche à identifier, ainsi qu'une caractérisation de leurs
+erreurs. De ce point de vue, cette démarche utilise toutes les informations
+disponibles sur le système physique (même si les hypothèses sur les erreurs sont
+relativement restrictives) pour trouver l'"*estimation optimale*" de l'état
+vrai. On peut noter, en termes d'optimisation, que l'ébauche réalise la
+"*régularisation*", au sens mathématique, du problème principal d'identification
+de paramètres. On peut aussi désigner cette démarche comme une résolution de
+type "*problèmes inverses*".
 
-En pratique, les deux incrément observés "*calculs-ébauche*" et
+En pratique, les deux écarts (ou incréments) observés "*calculs-ébauche*" et
 "*calculs-mesures*" sont combinés pour construire la correction de calibration
 des paramètres ou des conditions initiales. L'ajout de ces deux incréments
 requiert une pondération relative, qui est choisie pour refléter la confiance
@@ -135,23 +140,27 @@ toutes les erreurs soient nulles et que le modèle soit exact) en sortie.
 
 Dans le cas le plus simple, qui est statique, les étapes de simulation et
 d'observation peuvent être combinées en un unique opérateur d'observation noté
-:math:`H` (linéaire ou non-linéaire). Il transforme les paramètres
-:math:`\mathbf{x}` en entrée en résultats :math:`\mathbf{y}` qui peuvent être
-directement comparés aux observations :math:`\mathbf{y}^o`. De plus, on utilise
-l'opérateur linéarisé :math:`\mathbf{H}` pour représenter l'effet de l'opérateur
-complet :math:`H` autour d'un point de linéarisation (et on omettra ensuite de
-mentionner :math:`H` même si l'on peut le conserver). En réalité, on a déjà
-indiqué que la nature stochastique des variables est essentielle, provenant du
-fait que le modèle, l'ébauche et les observations sont tous incorrects. On
-introduit donc des erreurs d'observations additives, sous la forme d'un vecteur
-aléatoire :math:`\mathbf{\epsilon}^o` tel que :
+:math:`H` (linéaire ou non-linéaire). Il transforme formellement les paramètres
+:math:`\mathbf{x}` en entrée en résultats :math:`\mathbf{y}`, qui peuvent être
+directement comparés aux observations :math:`\mathbf{y}^o` :
+
+.. math:: \mathbf{y} = H(\mathbf{x})
+
+De plus, on utilise l'opérateur linéarisé :math:`\mathbf{H}` pour représenter
+l'effet de l'opérateur complet :math:`H` autour d'un point de linéarisation (et
+on omettra ensuite de mentionner :math:`H` même si l'on peut le conserver). En
+réalité, on a déjà indiqué que la nature stochastique des variables est
+essentielle, provenant du fait que le modèle, l'ébauche et les observations sont
+tous incorrects. On introduit donc des erreurs d'observations additives, sous la
+forme d'un vecteur aléatoire :math:`\mathbf{\epsilon}^o` tel que :
 
 .. math:: \mathbf{y}^o = \mathbf{H} \mathbf{x}^t + \mathbf{\epsilon}^o
 
 Les erreurs représentées ici ne sont pas uniquement celles des observations, ce
 sont aussi celles de la simulation. On peut toujours considérer que ces erreurs
-sont de moyenne nulle. On peut alors définir une matrice :math:`\mathbf{R}` des
-covariances d'erreurs d'observation par :
+sont de moyenne nulle. En notant :math:`E[.]` l'espérance mathématique
+classique, on peut alors définir une matrice :math:`\mathbf{R}` des covariances
+d'erreurs d'observation par :
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
@@ -177,19 +186,19 @@ classiquement à minimiser la fonction :math:`J` suivante :
 
 .. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-qui est usuellement désignée comme la fonctionnelle "*3D-VAR*". Comme les
-matrices de covariance :math:`\mathbf{B}` et :math:`\mathbf{R}` sont
-proportionnelles aux variances d'erreurs, leur présente dans les deux termes de
-la fonctionnelle :math:`J` permet effectivement de pondérer les différences par
-la confiance dans les erreurs d'ébauche ou d'observations. Le vecteur
-:math:`\mathbf{x}` des paramètres réalisant le minimum de cette fonction
-constitue ainsi l'analyse :math:`\mathbf{x}^a`. C'est à ce niveau que l'on doit
-utiliser tout la panoplie des méthodes de minimisation de fonctions connues par
-ailleurs en optimisation (voir aussi la section `Approfondir l'estimation d'état
-par des méthodes d'optimisation`_). Selon la taille du vecteur
-:math:`\mathbf{x}` des paramètres à identifier, et la disponibilité du gradient
-ou de la hessienne de :math:`J`, il est judicieux d'adapter la méthode
-d'optimisation choisie (gradient, Newton, quasi-Newton...).
+qui est usuellement désignée comme la fonctionnelle "*3D-VAR*" (voir par exemple
+[Talagrand97]_). Comme les matrices de covariance :math:`\mathbf{B}` et
+:math:`\mathbf{R}` sont proportionnelles aux variances d'erreurs, leur présence
+dans les deux termes de la fonctionnelle :math:`J` permet effectivement de
+pondérer les différences par la confiance dans les erreurs d'ébauche ou
+d'observations. Le vecteur :math:`\mathbf{x}` des paramètres réalisant le
+minimum de cette fonction constitue ainsi l'analyse :math:`\mathbf{x}^a`. C'est
+à ce niveau que l'on doit utiliser toute la panoplie des méthodes de
+minimisation de fonctions connues par ailleurs en optimisation (voir aussi la
+section `Approfondir l'estimation d'état par des méthodes d'optimisation`_).
+Selon la taille du vecteur :math:`\mathbf{x}` des paramètres à identifier, et la
+disponibilité du gradient ou de la hessienne de :math:`J`, il est judicieux
+d'adapter la méthode d'optimisation choisie (gradient, Newton, quasi-Newton...).
 
 En **assimilation par filtrage**, dans ce cas simple usuellement dénommé
 "*BLUE*" (pour "*Best Linear Unbiased Estimator*"), l'analyse
@@ -208,8 +217,8 @@ L'avantage du filtrage est le calcul explicite du gain, pour produire ensuite la
 matrice *a posteriori* de covariance d'analyse.
 
 Dans ce cas statique simple, on peut montrer, sous une hypothèse de
-distributions gaussiennes d'erreurs, que les deux approches *variationnelle* et
-*de filtrage* sont équivalentes.
+distributions gaussiennes d'erreurs (très peu restrictive en pratique), que les
+deux approches *variationnelle* et *de filtrage* donnent la même solution.
 
 On indique que ces méthodes de "*3D-VAR*" et de "*BLUE*" peuvent être étendues à
 des problèmes dynamiques, sous les noms respectifs de "*4D-VAR*" et de "*filtre
@@ -233,11 +242,11 @@ Approfondir le cadre méthodologique de l'assimilation de données
 .. index:: single: méthodes de lissage
 
 Pour obtenir de plus amples informations sur les techniques d'assimilation de
-données, le lecteur pour consulter les documents introductifs comme [Argaud09]_,
-des supports de formations ou de cours comme [Bouttier99]_ et [Bocquet04]_
-(ainsi que d'autres documents issus des applications des géosciences), ou des
-documents généraux comme [Talagrand97]_, [Tarantola87]_, [Kalnay03]_, [Ide97]_
-et [WikipediaDA]_.
+données, le lecteur peut consulter les documents introductifs comme
+[Talagrand97]_ ou [Argaud09]_, des supports de formations ou de cours comme
+[Bouttier99]_ et [Bocquet04]_ (ainsi que d'autres documents issus des
+applications des géosciences), ou des documents généraux comme [Talagrand97]_,
+[Tarantola87]_, [Kalnay03]_, [Ide97]_ et [WikipediaDA]_.
 
 On note que l'assimilation de données n'est pas limitée à la météorologie ou aux
 géo-sciences, mais est largement utilisée dans d'autres domaines scientifiques.
@@ -267,7 +276,7 @@ forme étendue d'une *minimisation moindres carrés*, obtenue en ajoutant un terme
 de régularisation utilisant :math:`\mathbf{x}-\mathbf{x}^b`, et en pondérant les
 différences par les deux matrices de covariances :math:`\mathbf{B}` et
 :math:`\mathbf{R}`. La minimisation de la fonctionnelle :math:`J` conduit à la
-*meilleure* estimation de l'état `\mathbf{x}`.
+*meilleure* estimation de l'état :math:`\mathbf{x}`.
 
 Les possibilités d'extension de cette estimation d'état, en utilisant de manière
 plus explicite des méthodes d'optimisation et leurs propriétés, peuvent être
