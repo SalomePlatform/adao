@@ -57,4 +57,5 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
+
 .. * :ref:`section_glossary`

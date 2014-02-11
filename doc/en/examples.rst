@@ -210,8 +210,8 @@ shown by the following figure:
 There is only one command changing, with "*3DVAR*" value in the "*Algorithm*"
 field instead of "*Blue*".
 
-Building a estimation case with external data definition by scripts
--------------------------------------------------------------------
+Building an estimation case with external data definition by scripts
+--------------------------------------------------------------------
 
 It is useful to get parts or all of the data from external definition, using
 Python script files to provide access to the data. As an example, we build here
@@ -577,9 +577,9 @@ Building the case with external data definition by scripts
 
 All these scripts can then be used to define the ADAO case with external data
 definition by Python script files. It is entirely similar to the method
-described in the `Building a simple estimation case with external data
-definition by scripts`_ previous section. For each variable to be defined, we
-select the "*Script*" option of the "*FROM*" keyword, which leads to a
+described in the `Building an estimation case with external data definition by
+scripts`_ previous section. For each variable to be defined, we select the
+"*Script*" option of the "*FROM*" keyword, which leads to a
 "*SCRIPT_DATA/SCRIPT_FILE*" entry in the tree. For the "*ObservationOperator*"
 keyword, we choose the "*ScriptWithOneFunction*" form and keep the default
 differential increment.

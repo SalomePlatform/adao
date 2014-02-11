@@ -231,7 +231,7 @@ following:
     provided to help the user to start or to quickly make his case.
 
 Optional and required commands for calculation algorithms
-++++++++--++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: 3DVAR
 .. index:: single: Blue
@@ -712,12 +712,12 @@ commands are the following:
     and associated parameters in the following subsection `Optional and required
     commands for checking algorithms`_.
 
-**AlgorithmParameters**
-    *Optional command*. This command allows to add some optional parameters to
-    control the data assimilation or optimization algorithm. It is defined as a
-    "*Dict*" type object, that is, given as a script. See below the list of
-    algorithms and associated parameters in the following subsection `Options
-    and required commands for checking algorithms`_.
+**AlgorithmParameters** *Optional command*. This command allows to add some
+    optional parameters to control the data assimilation or optimization
+    algorithm. It is defined as a "*Dict*" type object, that is, given as a
+    script. See below the list of algorithms and associated parameters in the
+    following subsection `Optional and required commands for checking
+    algorithms`_.
 
 **CheckingPoint**
     *Required command*. This indicates the vector used, previously noted as
