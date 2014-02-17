@@ -85,7 +85,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Opérateurs
         # ----------
         Hm = HO["Direct"].appliedTo
-        if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NotNominalTaylor", "NominalTaylorRMS", "NotNominalTaylorRMS"]:
+        if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
             Ht = HO["Tangent"].appliedInXTo
         #
         # Construction des perturbations
@@ -116,20 +116,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul du gradient au point courant X pour l'incrément dX
         # ---------------------------------------------------------
-        if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NotNominalTaylor", "NominalTaylorRMS", "NotNominalTaylorRMS"]:
+        if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
             GradFxdX = Ht( (Xn, dX0) )
             GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
         #
         # Entete des resultats
         # --------------------
-        marge =  12*" "
-        if self._parameters["ResiduFormula"] is "CenteredDL":
-            entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   log( R )  "
-            __doc__ = """
+        __marge =  12*" "
+        if self._parameters["ResiduFormula"] == "CenteredDL":
+            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   log( R )  "
+            __msgdoc = """
             On observe le residu provenant de la différence centrée des valeurs de F
             au point nominal et aux points perturbés, normalisée par la valeur au
             point nominal :
-            
+
                          || F(X+Alpha*dX) + F(X-Alpha*dX) - 2*F(X) ||
               R(Alpha) = --------------------------------------------
                                          || F(X) ||
@@ -144,12 +144,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
             cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
             de la décroissance quadratique.
-            
+
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
-        if self._parameters["ResiduFormula"] is "Taylor":
-            entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   log( R )  "
-            __doc__ = """
+        if self._parameters["ResiduFormula"] == "Taylor":
+            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   log( R )  "
+            __msgdoc = """
             On observe le residu issu du développement de Taylor de la fonction F,
             normalisée par la valeur au point nominal :
 
@@ -167,12 +167,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
             cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
             de la décroissance.
-            
+
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
-        if self._parameters["ResiduFormula"] is "NominalTaylor":
-            entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
-            __doc__ = """
+        if self._parameters["ResiduFormula"] == "NominalTaylor":
+            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
+            __msgdoc = """
             On observe le residu obtenu à partir de deux approximations d'ordre 1 de F(X),
             normalisées par la valeur au point nominal :
 
@@ -181,18 +181,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 || F(X-Alpha*dX) + Alpha * F(dX) || / || F(X) ||,
               )
 
-            S'il reste constamment égal à 1 à moins de 2 ou 3 pourcents prés, c'est
-            que l'hypothèse de linéarité de F est vérifiée.
-            
+            S'il reste constamment égal à 1 à moins de 2 ou 3 pourcents prés (c'est-à-dire
+            que |R-1| reste égal à 2 ou 3 pourcents), c'est que l'hypothèse de linéarité
+            de F est vérifiée.
+
             S'il est égal à 1 sur une partie seulement du domaine de variation de
             l'incrément Alpha, c'est sur cette partie que l'hypothèse de linéarité de F
             est vérifiée.
-            
+
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
-        if self._parameters["ResiduFormula"] is "NominalTaylorRMS":
-            entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
-            __doc__ = """
+        if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
+            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
+            __msgdoc = """
             On observe le residu obtenu à partir de deux approximations d'ordre 1 de F(X),
             normalisées par la valeur au point nominal :
 
@@ -203,33 +204,34 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
             S'il reste constamment égal à 0 à moins de 1 ou 2 pourcents prés, c'est
             que l'hypothèse de linéarité de F est vérifiée.
-            
+
             S'il est égal à 0 sur une partie seulement du domaine de variation de
             l'incrément Alpha, c'est sur cette partie que l'hypothèse de linéarité de F
             est vérifiée.
-            
+
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += marge + "   " + self._parameters["ResultTitle"] + "\n"
-            msgs += marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs  = "\n"
+            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
+            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
         else:
             msgs  = ""
-        msgs += __doc__
+        msgs += __msgdoc
         #
-        nbtirets = len(entete)
-        msgs += "\n" + marge + "-"*nbtirets
-        msgs += "\n" + marge + entete
-        msgs += "\n" + marge + "-"*nbtirets
+        __nbtirets = len(__entete)
+        msgs += "\n" + __marge + "-"*__nbtirets
+        msgs += "\n" + __marge + __entete
+        msgs += "\n" + __marge + "-"*__nbtirets
         #
         # Boucle sur les perturbations
         # ----------------------------
         for i,amplitude in enumerate(Perturbations):
             dX      = amplitude * dX0
             #
-            if self._parameters["ResiduFormula"] is "CenteredDL":
+            if self._parameters["ResiduFormula"] == "CenteredDL":
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
                 #
@@ -237,18 +239,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 #
                 self.StoredVariables["CostFunctionJ"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,Residu,math.log10(max(1.e-99,Residu)))
-                msgs += "\n" + marge + msg
+                msgs += "\n" + __marge + msg
             #
-            if self._parameters["ResiduFormula"] is "Taylor":
+            if self._parameters["ResiduFormula"] == "Taylor":
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 #
                 Residu = numpy.linalg.norm( FX_plus_dX - FX - amplitude * GradFxdX ) / NormeFX
                 #
                 self.StoredVariables["CostFunctionJ"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,Residu,math.log10(max(1.e-99,Residu)))
-                msgs += "\n" + marge + msg
+                msgs += "\n" + __marge + msg
             #
-            if self._parameters["ResiduFormula"] is "NominalTaylor":
+            if self._parameters["ResiduFormula"] == "NominalTaylor":
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
                 FdX         = numpy.asmatrix(numpy.ravel( Hm( dX ) )).T
@@ -260,9 +262,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 #
                 self.StoredVariables["CostFunctionJ"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100*abs(Residu-1),"%")
-                msgs += "\n" + marge + msg
+                msgs += "\n" + __marge + msg
             #
-            if self._parameters["ResiduFormula"] is "NominalTaylorRMS":
+            if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
                 FdX         = numpy.asmatrix(numpy.ravel( Hm( dX ) )).T
@@ -274,15 +276,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 #
                 self.StoredVariables["CostFunctionJ"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100*Residu,"%")
-                msgs += "\n" + marge + msg
+                msgs += "\n" + __marge + msg
         #
-        msgs += "\n" + marge + "-"*nbtirets
+        msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n"
         #
         # Sorties eventuelles
         # -------------------
         print
-        print "Results of linearity check by \"%s\" formula:\n"%self._parameters["ResiduFormula"]
+        print "Results of linearity check by \"%s\" formula:"%self._parameters["ResiduFormula"]
         print msgs
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))

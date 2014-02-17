@@ -102,33 +102,34 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        # ----------
-        if self._parameters["ResiduFormula"] is "ScalarProduct":
-            __doc__ = """
+        # Entete des resultats
+        # --------------------
+        __marge =  12*" "
+        if self._parameters["ResiduFormula"] == "ScalarProduct":
+            __entete = "  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)  "
+            __msgdoc = """
             On observe le residu qui est la difference de deux produits scalaires :
-            
+
               R(Alpha) = | < TangentF_X(dX) , Y > - < dX , AdjointF_X(Y) > |
-            
+
             qui doit rester constamment egal zero a la precision du calcul.
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             Y doit etre dans l'image de F. S'il n'est pas donne, on prend Y = F(X).
             """
-        else:
-            __doc__ = ""
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += "             " + self._parameters["ResultTitle"] + "\n"
-            msgs += "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs  = "\n"
+            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
+            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
         else:
             msgs  = ""
-        msgs += __doc__
+        msgs += __msgdoc
         #
-        msg = "  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)  "
-        nbtirets = len(msg)
-        msgs += "\n" + "-"*nbtirets
-        msgs += "\n" + msg
-        msgs += "\n" + "-"*nbtirets
+        __nbtirets = len(__entete)
+        msgs += "\n" + __marge + "-"*__nbtirets
+        msgs += "\n" + __marge + __entete
+        msgs += "\n" + __marge + "-"*__nbtirets
         #
         Normalisation= -1
         #
@@ -143,15 +144,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Residu = abs(float(numpy.dot( TangentFXdX.A1 , Y.A1 ) - numpy.dot( dX.A1 , AdjointFXY.A1 )))
             #
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   |  %9.3e"%(i,amplitude,NormeX,NormeY,NormedX,Residu)
-            msgs += "\n" + msg
+            msgs += "\n" + __marge + msg
             #
             self.StoredVariables["CostFunctionJ"].store( Residu )
-        msgs += "\n" + "-"*nbtirets
+        #
+        msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n"
         #
-        # ----------
+        # Sorties eventuelles
+        # -------------------
         print
-        print "Results of adjoint stability check:"
+        print "Results of adjoint check by \"%s\" formula:"%self._parameters["ResiduFormula"]
         print msgs
         #
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))

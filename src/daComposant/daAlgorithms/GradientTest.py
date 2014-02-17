@@ -95,7 +95,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.setParameters(Parameters)
         #
         Hm = HO["Direct"].appliedTo
-        if self._parameters["ResiduFormula"] is "Taylor":
+        if self._parameters["ResiduFormula"] == "Taylor":
             Ht = HO["Tangent"].appliedInXTo
         #
         # ----------
@@ -119,13 +119,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        if self._parameters["ResiduFormula"] is "Taylor":
+        if self._parameters["ResiduFormula"] == "Taylor":
             GradFxdX = Ht( (X, dX0) )
             GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
         #
-        # ----------
-        if self._parameters["ResiduFormula"] is "Taylor":
-            __doc__ = """
+        # Entete des resultats
+        # --------------------
+        __marge =  12*" "
+        if self._parameters["ResiduFormula"] == "Taylor":
+            __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __msgdoc = """
             On observe le residu issu du développement de Taylor de la fonction F,
             normalisée par la valeur au point nominal :
 
@@ -136,16 +139,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
             cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
             de la décroissance quadratique et que F n'est pas linéaire.
-            
+
             Si le résidu décroit et que la décroissance se fait en Alpha selon Alpha,
             jusqu'à un certain seuil aprés lequel le résidu est faible et constant, cela
             signifie que F est linéaire et que le résidu décroit à partir de l'erreur
             faite dans le calcul du terme GradientF_X.
-            
+
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
-        elif self._parameters["ResiduFormula"] is "Norm":
-            __doc__ = """
+        if self._parameters["ResiduFormula"] == "Norm":
+            __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __msgdoc = """
             On observe le residu, qui est basé sur une approximation du gradient :
 
                           || F(X+Alpha*dX) - F(X) ||
@@ -153,25 +157,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                                     Alpha
 
             qui doit rester constant jusqu'à ce qu'on atteigne la précision du calcul.
+
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
-        else:
-            __doc__ = ""
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += "             " + self._parameters["ResultTitle"] + "\n"
-            msgs += "         ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs  = "\n"
+            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
+            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
         else:
             msgs  = ""
-        msgs += __doc__
+        msgs += __msgdoc
         #
-        msg = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
-        nbtirets = len(msg)
-        msgs += "\n" + "-"*nbtirets
-        msgs += "\n" + msg
-        msgs += "\n" + "-"*nbtirets
+        __nbtirets = len(__entete)
+        msgs += "\n" + __marge + "-"*__nbtirets
+        msgs += "\n" + __marge + __entete
+        msgs += "\n" + __marge + "-"*__nbtirets
         #
+        # Boucle sur les perturbations
+        # ----------------------------
         Normalisation= -1
         NormesdX     = []
         NormesFXdX   = []
@@ -180,7 +185,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         NormesdFXsAm = []
         NormesdFXGdX = []
         #
-        # ----------
         for i,amplitude in enumerate(Perturbations):
             dX      = amplitude * dX0
             #
@@ -192,7 +196,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NormedFX    = numpy.linalg.norm( FX_plus_dX - FX )
             NormedFXsdX = NormedFX/NormedX
             # Residu Taylor
-            if self._parameters["ResiduFormula"] is "Taylor":
+            if self._parameters["ResiduFormula"] == "Taylor":
                 NormedFXGdX = numpy.linalg.norm( FX_plus_dX - FX - amplitude * GradFxdX )
             # Residu Norm
             NormedFXsAm = NormedFX/amplitude
@@ -203,27 +207,28 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NormesdX.append(     NormedX     )
             NormesFXdX.append(   NormeFXdX   )
             NormesdFX.append(    NormedFX    )
-            if self._parameters["ResiduFormula"] is "Taylor":
+            if self._parameters["ResiduFormula"] == "Taylor":
                 NormesdFXGdX.append( NormedFXGdX )
             NormesdFXsdX.append( NormedFXsdX )
             NormesdFXsAm.append( NormedFXsAm )
             #
-            if self._parameters["ResiduFormula"] is "Taylor":
+            if self._parameters["ResiduFormula"] == "Taylor":
                 Residu = NormedFXGdX / NormeFX
-            elif self._parameters["ResiduFormula"] is "Norm":
+            elif self._parameters["ResiduFormula"] == "Norm":
                 Residu = NormedFXsAm
             if Normalisation < 0 : Normalisation = Residu
             #
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu,math.log10(max(1.e-99,Residu)))
-            msgs += "\n" + msg
+            msgs += "\n" + __marge + msg
             #
             self.StoredVariables["CostFunctionJ"].store( Residu )
-        msgs += "\n" + "-"*nbtirets
+        #
+        msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n"
         #
         # ----------
         print
-        print "Results of gradient stability check:"
+        print "Results of gradient check by \"%s\" formula:"%self._parameters["ResiduFormula"]
         print msgs
         #
         if self._parameters["PlotAndSave"]:
@@ -232,7 +237,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             f.close()
             #
             Residus = self.StoredVariables["CostFunctionJ"][-len(Perturbations):]
-            if self._parameters["ResiduFormula"] is "Taylor":
+            if self._parameters["ResiduFormula"] == "Taylor":
                 PerturbationsCarre = [ 10**(2*i) for i in xrange(-len(NormesdFXGdX)+1,1) ]
                 PerturbationsCarre.reverse()
                 dessiner(
@@ -246,7 +251,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     YRef     = PerturbationsCarre,
                     normdY0  = numpy.log10( NormesdFX[0] ),
                     )
-            elif self._parameters["ResiduFormula"] is "Norm":
+            elif self._parameters["ResiduFormula"] == "Norm":
                 dessiner(
                     Perturbations, 
                     Residus,
@@ -316,7 +321,7 @@ def dessiner(
             pass
         __g.replot( __gnuplot.Data( steps, valuesRef, title="Reference", with_='lines lw 1' ) )
     #
-    if filename is not "":
+    if filename != "":
         __g.hardcopy( filename, color=1)
     if pause:
         raw_input('Please press return to continue...\n')
