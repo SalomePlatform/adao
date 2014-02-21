@@ -662,85 +662,85 @@ class AssimilationStudy:
         elif hasattr(self.__Xb,"shape"):
             if type(self.__Xb.shape) is tuple: __Xb_shape = self.__Xb.shape
             else:                              __Xb_shape = self.__Xb.shape()
-        else: raise TypeError("Xb has no attribute of shape: problem !")
+        else: raise TypeError("The background (Xb) has no attribute of shape: problem !")
         #
         if self.__Y is None:                  __Y_shape = (0,)
         elif hasattr(self.__Y,"size"):        __Y_shape = (self.__Y.size,)
         elif hasattr(self.__Y,"shape"):
             if type(self.__Y.shape) is tuple: __Y_shape = self.__Y.shape
             else:                             __Y_shape = self.__Y.shape()
-        else: raise TypeError("Y has no attribute of shape: problem !")
+        else: raise TypeError("The observation (Y) has no attribute of shape: problem !")
         #
         if self.__U is None:                  __U_shape = (0,)
         elif hasattr(self.__U,"size"):        __U_shape = (self.__U.size,)
         elif hasattr(self.__U,"shape"):
             if type(self.__U.shape) is tuple: __U_shape = self.__U.shape
             else:                             __U_shape = self.__U.shape()
-        else: raise TypeError("U has no attribute of shape: problem !")
+        else: raise TypeError("The control (U) has no attribute of shape: problem !")
         #
         if self.__B is None:                  __B_shape = (0,0)
         elif hasattr(self.__B,"shape"):
             if type(self.__B.shape) is tuple: __B_shape = self.__B.shape
             else:                             __B_shape = self.__B.shape()
-        else: raise TypeError("B has no attribute of shape: problem !")
+        else: raise TypeError("The a priori errors covariance matrix (B) has no attribute of shape: problem !")
         #
         if self.__R is None:                  __R_shape = (0,0)
         elif hasattr(self.__R,"shape"):
             if type(self.__R.shape) is tuple: __R_shape = self.__R.shape
             else:                             __R_shape = self.__R.shape()
-        else: raise TypeError("R has no attribute of shape: problem !")
+        else: raise TypeError("The observation errors covariance matrix (R) has no attribute of shape: problem !")
         #
         if self.__Q is None:                  __Q_shape = (0,0)
         elif hasattr(self.__Q,"shape"):
             if type(self.__Q.shape) is tuple: __Q_shape = self.__Q.shape
             else:                             __Q_shape = self.__Q.shape()
-        else: raise TypeError("Q has no attribute of shape: problem !")
+        else: raise TypeError("The evolution errors covariance matrix (Q) has no attribute of shape: problem !")
         #
         if len(self.__HO) == 0:                          __HO_shape = (0,0)
         elif type(self.__HO) is type({}):                __HO_shape = (0,0)
         elif hasattr(self.__HO["Direct"],"shape"):
             if type(self.__HO["Direct"].shape) is tuple: __HO_shape = self.__HO["Direct"].shape
-            else:                                       __HO_shape = self.__HO["Direct"].shape()
-        else: raise TypeError("H has no attribute of shape: problem !")
+            else:                                        __HO_shape = self.__HO["Direct"].shape()
+        else: raise TypeError("The observation operator (H) has no attribute of shape: problem !")
         #
         if len(self.__EM) == 0:                          __EM_shape = (0,0)
         elif type(self.__EM) is type({}):                __EM_shape = (0,0)
         elif hasattr(self.__EM["Direct"],"shape"):
             if type(self.__EM["Direct"].shape) is tuple: __EM_shape = self.__EM["Direct"].shape
-            else:                                       __EM_shape = self.__EM["Direct"].shape()
-        else: raise TypeError("EM has no attribute of shape: problem !")
+            else:                                        __EM_shape = self.__EM["Direct"].shape()
+        else: raise TypeError("The evolution model (EM) has no attribute of shape: problem !")
         #
         if len(self.__CM) == 0:                          __CM_shape = (0,0)
         elif type(self.__CM) is type({}):                __CM_shape = (0,0)
         elif hasattr(self.__CM["Direct"],"shape"):
             if type(self.__CM["Direct"].shape) is tuple: __CM_shape = self.__CM["Direct"].shape
-            else:                                       __CM_shape = self.__CM["Direct"].shape()
-        else: raise TypeError("CM has no attribute of shape: problem !")
+            else:                                        __CM_shape = self.__CM["Direct"].shape()
+        else: raise TypeError("The control model (CM) has no attribute of shape: problem !")
         #
         # Vérification des conditions
         # ---------------------------
         if not( len(__Xb_shape) == 1 or min(__Xb_shape) == 1 ):
-            raise ValueError("Shape characteristic of Xb is incorrect: \"%s\""%(__Xb_shape,))
+            raise ValueError("Shape characteristic of background (Xb) is incorrect: \"%s\"."%(__Xb_shape,))
         if not( len(__Y_shape) == 1 or min(__Y_shape) == 1 ):
-            raise ValueError("Shape characteristic of Y is incorrect: \"%s\""%(__Y_shape,))
+            raise ValueError("Shape characteristic of observation (Y) is incorrect: \"%s\"."%(__Y_shape,))
         #
         if not( min(__B_shape) == max(__B_shape) ):
-            raise ValueError("Shape characteristic of B is incorrect: \"%s\""%(__B_shape,))
+            raise ValueError("Shape characteristic of a priori errors covariance matrix (B) is incorrect: \"%s\"."%(__B_shape,))
         if not( min(__R_shape) == max(__R_shape) ):
-            raise ValueError("Shape characteristic of R is incorrect: \"%s\""%(__R_shape,))
+            raise ValueError("Shape characteristic of observation errors covariance matrix (R) is incorrect: \"%s\"."%(__R_shape,))
         if not( min(__Q_shape) == max(__Q_shape) ):
-            raise ValueError("Shape characteristic of Q is incorrect: \"%s\""%(__Q_shape,))
+            raise ValueError("Shape characteristic of evolution errors covariance matrix (Q) is incorrect: \"%s\"."%(__Q_shape,))
         if not( min(__EM_shape) == max(__EM_shape) ):
-            raise ValueError("Shape characteristic of EM is incorrect: \"%s\""%(__EM_shape,))
+            raise ValueError("Shape characteristic of evolution operator (EM) is incorrect: \"%s\"."%(__EM_shape,))
         #
         if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and not( __HO_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of H \"%s\" and X \"%s\" are incompatible"%(__HO_shape,__Xb_shape))
+            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and state (X) \"%s\" are incompatible."%(__HO_shape,__Xb_shape))
         if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and not( __HO_shape[0] == max(__Y_shape) ):
-            raise ValueError("Shape characteristic of H \"%s\" and Y \"%s\" are incompatible"%(__HO_shape,__Y_shape))
+            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and observation (Y) \"%s\" are incompatible."%(__HO_shape,__Y_shape))
         if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and len(self.__B) > 0 and not( __HO_shape[1] == __B_shape[0] ):
-            raise ValueError("Shape characteristic of H \"%s\" and B \"%s\" are incompatible"%(__HO_shape,__B_shape))
+            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and a priori errors covariance matrix (B) \"%s\" are incompatible."%(__HO_shape,__B_shape))
         if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and len(self.__R) > 0 and not( __HO_shape[0] == __R_shape[1] ):
-            raise ValueError("Shape characteristic of H \"%s\" and R \"%s\" are incompatible"%(__HO_shape,__R_shape))
+            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and observation errors covariance matrix (R) \"%s\" are incompatible."%(__HO_shape,__R_shape))
         #
         if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
             if self.__StoredInputs["AlgorithmName"] in ["EnsembleBlue",]:
@@ -750,16 +750,22 @@ class AssimilationStudy:
                     self.__Xb.store( numpy.matrix( numpy.ravel(member), numpy.float ).T )
                 __Xb_shape = min(__B_shape)
             else:
-                raise ValueError("Shape characteristic of B \"%s\" and Xb \"%s\" are incompatible"%(__B_shape,__Xb_shape))
+                raise ValueError("Shape characteristic of a priori errors covariance matrix (B) \"%s\" and background (Xb) \"%s\" are incompatible."%(__B_shape,__Xb_shape))
         #
         if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
-            raise ValueError("Shape characteristic of R \"%s\" and Y \"%s\" are incompatible"%(__R_shape,__Y_shape))
+            raise ValueError("Shape characteristic of observation errors covariance matrix (R) \"%s\" and observation (Y) \"%s\" are incompatible."%(__R_shape,__Y_shape))
         #
         if self.__EM is not None and len(self.__EM) > 0 and not(type(self.__EM) is type({})) and not( __EM_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of EM \"%s\" and X \"%s\" are incompatible"%(__EM_shape,__Xb_shape))
+            raise ValueError("Shape characteristic of evolution model (EM) \"%s\" and state (X) \"%s\" are incompatible."%(__EM_shape,__Xb_shape))
         #
         if self.__CM is not None and len(self.__CM) > 0 and not(type(self.__CM) is type({})) and not( __CM_shape[1] == max(__U_shape) ):
-            raise ValueError("Shape characteristic of CM \"%s\" and U \"%s\" are incompatible"%(__CM_shape,__U_shape))
+            raise ValueError("Shape characteristic of control model (CM) \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape,__U_shape))
+        #
+        if self.__StoredInputs.has_key("AlgorithmParameters") \
+            and self.__StoredInputs["AlgorithmParameters"].has_key("Bounds") \
+            and (type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) \
+            and (len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) != max(__Xb_shape)):
+            raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself."%(len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]),max(__Xb_shape)))
         #
         return 1
 

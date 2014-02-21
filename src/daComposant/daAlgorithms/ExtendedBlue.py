@@ -148,6 +148,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            if   (Y.size <= Xb.size) and (Y.size > 100): K  = B * Ha * (R + Hm * B * Ha).I
+            elif (Y.size >  Xb.size) and (Y.size > 100): K = (BI + Ha * RI * Hm).I * Ha * RI
+            else:                                        pass # K deja calcule
             A = B - K * Hm * B
             if min(A.shape) != max(A.shape):
                 raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
@@ -204,6 +207,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )
         #
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls()[0],HO["Tangent"].nbcalls()[0],HO["Adjoint"].nbcalls()[0]))
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #

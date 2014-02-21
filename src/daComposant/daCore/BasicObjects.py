@@ -45,6 +45,7 @@ class Operator:
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
         """
+        self.__NbCallsAsMatrix, self.__NbCallsAsMethod = 0, 0
         if   fromMethod is not None:
             self.__Method = fromMethod
             self.__Matrix = None
@@ -70,8 +71,10 @@ class Operator:
         - xValue : argument adapté pour appliquer l'opérateur
         """
         if self.__Matrix is not None:
+            self.__NbCallsAsMatrix += 1
             return self.__Matrix * xValue
         else:
+            self.__NbCallsAsMethod += 1
             return self.__Method( xValue )
 
     def appliedControledFormTo(self, (xValue, uValue) ):
@@ -85,10 +88,13 @@ class Operator:
         - uValue : argument U adapté pour appliquer l'opérateur
         """
         if self.__Matrix is not None:
+            self.__NbCallsAsMatrix += 1
             return self.__Matrix * xValue
         elif uValue is not None:
+            self.__NbCallsAsMethod += 1
             return self.__Method( (xValue, uValue) )
         else:
+            self.__NbCallsAsMethod += 1
             return self.__Method( xValue )
 
     def appliedInXTo(self, (xNominal, xValue) ):
@@ -105,8 +111,10 @@ class Operator:
         - xValue : argument adapté pour appliquer l'opérateur
         """
         if self.__Matrix is not None:
+            self.__NbCallsAsMatrix += 1
             return self.__Matrix * xValue
         else:
+            self.__NbCallsAsMethod += 1
             return self.__Method( (xNominal, xValue) )
 
     def asMatrix(self, ValueForMethodForm = "UnknownVoidValue"):
@@ -114,8 +122,10 @@ class Operator:
         Permet de renvoyer l'opérateur sous la forme d'une matrice
         """
         if self.__Matrix is not None:
+            self.__NbCallsAsMatrix += 1
             return self.__Matrix
         elif ValueForMethodForm is not "UnknownVoidValue": # Ne pas utiliser "None"
+            self.__NbCallsAsMethod += 1
             return numpy.matrix( self.__Method( (ValueForMethodForm, None) ) )
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
@@ -129,6 +139,12 @@ class Operator:
             return self.__Matrix.shape
         else:
             raise ValueError("Matrix form of the operator is not available, nor the shape")
+
+    def nbcalls(self):
+        """
+        Renvoie le nombre d'évaluations de l'opérateurs (total, matrice, méthode)
+        """
+        return (self.__NbCallsAsMatrix+self.__NbCallsAsMethod,self.__NbCallsAsMatrix,self.__NbCallsAsMethod)
 
 # ==============================================================================
 class Algorithm:
