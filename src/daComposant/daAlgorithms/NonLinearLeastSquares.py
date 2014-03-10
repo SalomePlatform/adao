@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2013 EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -23,18 +23,7 @@
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
-
-import numpy
-import scipy.optimize
-
-if logging.getLogger().level < logging.WARNING:
-    iprint  = 1
-    message = scipy.optimize.tnc.MSG_ALL
-    disp    = 1
-else:
-    iprint  = -1
-    message = scipy.optimize.tnc.MSG_NONE
-    disp    = 0
+import numpy, scipy.optimize
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -88,6 +77,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
+        if logging.getLogger().level < logging.WARNING:
+            self.__iprint, self.__disp = 1, 1
+            self.__message = scipy.optimize.tnc.MSG_ALL
+        else:
+            self.__iprint, self.__disp = -1, 0
+            self.__message = scipy.optimize.tnc.MSG_NONE
+        #
         logging.debug("%s Lancement"%self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
@@ -202,7 +198,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 maxfun      = self._parameters["MaximumNumberOfSteps"]-1,
                 factr       = self._parameters["CostDecrementTolerance"]*1.e14,
                 pgtol       = self._parameters["ProjectedGradientTolerance"],
-                iprint      = iprint,
+                iprint      = self.__iprint,
                 )
             nfeval = Informations['funcalls']
             rc     = Informations['warnflag']
@@ -216,7 +212,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 maxfun      = self._parameters["MaximumNumberOfSteps"],
                 pgtol       = self._parameters["ProjectedGradientTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],
-                messages    = message,
+                messages    = self.__message,
                 )
         elif self._parameters["Minimizer"] == "CG":
             Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
@@ -226,7 +222,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 maxiter     = self._parameters["MaximumNumberOfSteps"],
                 gtol        = self._parameters["GradientNormTolerance"],
-                disp        = disp,
+                disp        = self.__disp,
                 full_output = True,
                 )
         elif self._parameters["Minimizer"] == "NCG":
@@ -237,7 +233,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 maxiter     = self._parameters["MaximumNumberOfSteps"],
                 avextol     = self._parameters["CostDecrementTolerance"],
-                disp        = disp,
+                disp        = self.__disp,
                 full_output = True,
                 )
         elif self._parameters["Minimizer"] == "BFGS":
@@ -248,7 +244,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 maxiter     = self._parameters["MaximumNumberOfSteps"],
                 gtol        = self._parameters["GradientNormTolerance"],
-                disp        = disp,
+                disp        = self.__disp,
                 full_output = True,
                 )
         elif self._parameters["Minimizer"] == "LM":
