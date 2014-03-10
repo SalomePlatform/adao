@@ -27,21 +27,21 @@ __doc__ = """
     Il doit être appelé en premier dans AssimilationStudy (mais pas directement
     dans les applications utilisateurs), en l'important et en instanciant un
     objet :
-        import Logging ; Logging.Logging()
+        import ExtendedLogging ; ExtendedLogging.ExtendedLogging()
 
     Par défaut, seuls les messages du niveau WARNING ou au-delà sont disponibles
     (donc les simples messages d'info ne sont pas disponibles), ce que l'on peut
     changer à l'instanciation avec le mot-clé "level" :
-        import Logging ; Logging.Logging(level=20)
+        import ExtendedLogging ; ExtendedLogging.ExtendedLogging(level=20)
 
     On peut éventuellement demander à l'objet de sortir aussi les messages dans
     un fichier (noms par défaut : AssimilationStudy.log, niveau NOTSET) :
-        import Logging ; Logging.Logging().setLogfile()
+        import ExtendedLogging ; ExtendedLogging.ExtendedLogging().setLogfile()
 
     Si on veut changer le nom du fichier ou le niveau global de message, il faut
     récupérer l'instance et appliquer les méthodes :
-        import Logging
-        log = Logging.Logging()
+        import ExtendedLogging
+        log = ExtendedLogging.ExtendedLogging()
         import logging
         log.setLevel(logging.DEBUG)
         log.setLogfile(filename="toto.log", filemode="a", level=logging.WARNING)
@@ -80,7 +80,7 @@ from PlatformInfo import PlatformInfo
 LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
 
 # ==============================================================================
-class Logging:
+class ExtendedLogging:
     def __init__(self, level=logging.WARNING):
         """
         Initialise un logging à la console pour TOUS les niveaux de messages.
@@ -134,7 +134,7 @@ class Logging:
     
     def getLevel(self):
         """
-        Renvoie le niveau de Logging sous forme texte
+        Renvoie le niveau de logging sous forme texte
         """
         return logging.getLevelName( logging.getLogger().getEffectiveLevel() )
 
