@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2008-2013 EDF R&D
+# Copyright (C) 2008-2014 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -31,8 +31,11 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import os, sys
 import numpy
-import Logging ; Logging.Logging() # A importer en premier
-import scipy.optimize
+import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
+try:
+    import scipy.optimize
+except:
+    pass
 import Persistence
 from BasicObjects import Operator, Covariance
 from PlatformInfo import uniq

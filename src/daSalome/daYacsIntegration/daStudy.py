@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 from daCore.AssimilationStudy import AssimilationStudy
-from daCore import Logging
+#from daCore import Logging
 import logging
 
 class daError(Exception):
