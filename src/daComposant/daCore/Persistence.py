@@ -76,7 +76,7 @@ class Persistence:
         """
         if value is None: raise ValueError("Value argument required")
         #
-        self.__values.append(self.__basetype(value))
+        self.__values.append(copy.copy(self.__basetype(value)))
         self.__tags.append(kwargs)
         #
         if self.__dynamic: self.__replots()

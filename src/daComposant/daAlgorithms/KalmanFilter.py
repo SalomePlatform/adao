@@ -152,7 +152,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Jb  = 0.5 * (Xn - Xb).T * BI * (Xn - Xb)
                 Jo  = 0.5 * d.T * RI * d
                 J   = float( Jb ) + float( Jo )
-                self.StoredVariables["CurrentState"].store( Xn.A1 )
+                self.StoredVariables["CurrentState"].store( Xn )
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )

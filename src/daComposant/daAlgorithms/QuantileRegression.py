@@ -115,7 +115,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jo  = 0.
             J   = Jb + Jo
             if self._parameters["StoreInternalVariables"]:
-                self.StoredVariables["CurrentState"].store( _X.A1 )
+                self.StoredVariables["CurrentState"].store( _X )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

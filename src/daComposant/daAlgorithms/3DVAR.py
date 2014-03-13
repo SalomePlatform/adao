@@ -162,7 +162,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
             if self._parameters["StoreInternalVariables"]:
-                self.StoredVariables["CurrentState"].store( _X.A1 )
+                self.StoredVariables["CurrentState"].store( _X )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

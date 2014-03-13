@@ -81,8 +81,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         for iens in range(nb_ens):
             d  = EnsembleY[:,iens] - Hm * Xb[iens]
             Xa = Xb[iens] + K*d
-            
-            self.StoredVariables["CurrentState"].store( Xa.A1 )
+            self.StoredVariables["CurrentState"].store( Xa )
             self.StoredVariables["Innovation"].store( d.A1 )
         #
         # Fabrication de l'analyse
