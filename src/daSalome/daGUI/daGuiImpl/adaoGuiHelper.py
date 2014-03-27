@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  Copyright (C) 2010 EDF R&D
+#  Copyright (C) 2010-2013 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -45,17 +45,7 @@ def getActiveStudyId():
     This function returns the id of the active study. The concept of active study
     makes sens only in the GUI context.
     """
-    return __sgPyQt.getStudyId()
-
-
-def getActiveStudy():
-    """
-    This function returns the active study reference. The concept of active study
-    makes sens only in the GUI context.
-    """
-    studyId = getActiveStudyId()()
-    study = adaoModuleHelper.getStudyManager().GetStudyByID( studyId )
-    return study
+    return salome.sg.getActiveStudyId()
 
 def refreshObjectBrowser():
     """
@@ -70,7 +60,7 @@ def selectItem(salomeStudyItem):
     salome.sg.ClearIObjects()
     salome.sg.AddIObject(salomeStudyItem)
 
-def getSelectedItem(salomeStudyId=getActiveStudyId()):
+def getSelectedItem(salomeStudyId=-100):
     """
     Get the current selection. If more than one item are selected, the
     only first is considered. The object is return (not the id).
@@ -79,14 +69,14 @@ def getSelectedItem(salomeStudyId=getActiveStudyId()):
     if salome.sg is None:
         raise Exception("GuiHelper.getSelectedItem can't be used without the GUI context")
 
-    salomeStudy = adaoModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
-
+    if salomeStudyId != -100:
+      studyEditor = salome.kernel.studyedit.getStudyEditor(salomeStudyId)
+    studyEditor = salome.kernel.studyedit.getStudyEditor()
     item = None
     listEntries=salome.sg.getAllSelected()
     if len(listEntries) >= 1:
         entry = listEntries[0]
-        item = salomeStudy.FindObjectID( entry )
-
+        item = studyEditor.study.FindObjectID( entry )
     return item
 
 def getAllSelected(salomeStudyId):

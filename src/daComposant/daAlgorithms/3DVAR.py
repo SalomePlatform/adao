@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,96 +18,163 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
-
-import numpy
-import scipy.optimize
-
-if logging.getLogger().level < 30:
-    iprint  = 1
-    message = scipy.optimize.tnc.MSG_ALL
-    disp    = 1
-else:
-    iprint  = -1
-    message = scipy.optimize.tnc.MSG_NONE
-    disp    = 0
+import numpy, scipy.optimize
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "3DVAR"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "3DVAR")
+        self.defineRequiredParameter(
+            name     = "Minimizer",
+            default  = "LBFGSB",
+            typecast = str,
+            message  = "Minimiseur utilisé",
+            listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS"],
+            )
+        self.defineRequiredParameter(
+            name     = "MaximumNumberOfSteps",
+            default  = 15000,
+            typecast = int,
+            message  = "Nombre maximal de pas d'optimisation",
+            minval   = -1,
+            )
+        self.defineRequiredParameter(
+            name     = "CostDecrementTolerance",
+            default  = 1.e-7,
+            typecast = float,
+            message  = "Diminution relative minimale du cout lors de l'arrêt",
+            )
+        self.defineRequiredParameter(
+            name     = "ProjectedGradientTolerance",
+            default  = -1,
+            typecast = float,
+            message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
+            minval   = -1,
+            )
+        self.defineRequiredParameter(
+            name     = "GradientNormTolerance",
+            default  = 1.e-05,
+            typecast = float,
+            message  = "Maximum des composantes du gradient lors de l'arrêt",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles"]
+            )
+        self.defineRequiredParameter(
+            name     = "Quantiles",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des valeurs de quantiles",
+            )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
+        self.defineRequiredParameter(
+            name     = "NumberOfSamplesForQuantiles",
+            default  = 100,
+            typecast = int,
+            message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
+            minval   = 1,
+            )
+        self.defineRequiredParameter(
+            name     = "SimulationForQuantiles",
+            default  = "Linear",
+            typecast = str,
+            message  = "Type de simulation pour l'estimation des quantiles",
+            listval  = ["Linear", "NonLinear"]
+            )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur 3D-VAR
-        """
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
+        if logging.getLogger().level < logging.WARNING:
+            self.__iprint, self.__disp = 1, 1
+            self.__message = scipy.optimize.tnc.MSG_ALL
+        else:
+            self.__iprint, self.__disp = -1, 0
+            self.__message = scipy.optimize.tnc.MSG_NONE
+        #
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
+        #
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
+        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+            Bounds = self._parameters["Bounds"]
+            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
+        else:
+            Bounds = None
+        #
+        # Correction pour pallier a un bug de TNC sur le retour du Minimum
+        if self._parameters.has_key("Minimizer") == "TNC":
+            self.setParameterValue("StoreInternalVariables",True)
         #
         # Opérateur d'observation
         # -----------------------
-        Hm = H["Direct"].appliedTo
-        Ht = H["Adjoint"].appliedInXTo
+        Hm = HO["Direct"].appliedTo
+        Ha = HO["Adjoint"].appliedInXTo
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            logging.debug("%s Utilisation de HXb"%self._name)
-            HXb = H["AppliedToX"]["HXb"]
+        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+            HXb = HO["AppliedToX"]["HXb"]
         else:
-            logging.debug("%s Calcul de Hm(Xb)"%self._name)
             HXb = Hm( Xb )
-        HXb = numpy.asmatrix(HXb).flatten().T
-        #
-        # Calcul du préconditionnement
-        # ----------------------------
-	# Bdemi = numpy.linalg.cholesky(B)
+        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #
         # Calcul de l'innovation
         # ----------------------
+        if Y.size != HXb.size:
+            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+        if max(Y.shape) != max(HXb.shape):
+            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
-        logging.debug("%s Innovation d = %s"%(self._name, d))
         #
-        # Précalcul des inversion appellée dans les fonction-coût et gradient
-        # -------------------------------------------------------------------
-        BI = B.I
-        RI = R.I
+        # Précalcul des inversions de B et R
+        # ----------------------------------
+        BI = B.getI()
+        RI = R.getI()
         #
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(x):
-            _X  = numpy.asmatrix(x).flatten().T
-            logging.info("%s CostFunction X  = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _X  = numpy.asmatrix(numpy.ravel( x )).T
             _HX = Hm( _X )
-            _HX = numpy.asmatrix(_HX).flatten().T
+            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            logging.info("%s CostFunction Jb = %s"%(self._name, Jb))
-            logging.info("%s CostFunction Jo = %s"%(self._name, Jo))
-            logging.info("%s CostFunction J  = %s"%(self._name, J))
-            self.StoredVariables["CurrentState"].store( _X.A1 )
+            if self._parameters["StoreInternalVariables"]:
+                self.StoredVariables["CurrentState"].store( _X )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
-            return float( J )
+            return J
         #
         def GradientOfCostFunction(x):
-            _X      = numpy.asmatrix(x).flatten().T
-            logging.info("%s GradientOfCostFunction X      = %s"%(self._name, numpy.asmatrix( _X ).flatten()))
+            _X      = numpy.asmatrix(numpy.ravel( x )).T
             _HX     = Hm( _X )
-            _HX     = numpy.asmatrix(_HX).flatten().T
+            _HX     = numpy.asmatrix(numpy.ravel( _HX )).T
             GradJb  = BI * (_X - Xb)
-            GradJo  = - Ht( (_X, RI * (Y - _HX)) )
-            GradJ   = numpy.asmatrix( GradJb ).flatten().T + numpy.asmatrix( GradJo ).flatten().T
-            logging.debug("%s GradientOfCostFunction GradJb = %s"%(self._name, numpy.asmatrix( GradJb ).flatten()))
-            logging.debug("%s GradientOfCostFunction GradJo = %s"%(self._name, numpy.asmatrix( GradJo ).flatten()))
-            logging.debug("%s GradientOfCostFunction GradJ  = %s"%(self._name, numpy.asmatrix( GradJ  ).flatten()))
+            GradJo  = - Ha( (_X, RI * (Y - _HX)) )
+            GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) + numpy.ravel( GradJo ) ).T
             return GradJ.A1
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -116,94 +183,164 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xini = Xb.A1.tolist()
         else:
             Xini = list(Xb)
-        logging.debug("%s Point de démarrage Xini = %s"%(self._name, Xini))
-        #
-        # Paramètres de pilotage
-        # ----------------------
-        # Potentiels : "Bounds", "Minimizer", "MaximumNumberOfSteps"
-        if Parameters.has_key("Bounds") and (type(Parameters["Bounds"]) is type([]) or type(Parameters["Bounds"]) is type(())) and (len(Parameters["Bounds"]) > 0):
-            Bounds = Parameters["Bounds"]
-        else:
-            Bounds = None
-        MinimizerList = ["LBFGSB","TNC", "CG", "BFGS"]
-        if Parameters.has_key("Minimizer") and (Parameters["Minimizer"] in MinimizerList):
-            Minimizer = str( Parameters["Minimizer"] )
-        else:
-            Minimizer = "LBFGSB"
-        logging.debug("%s Minimiseur utilisé = %s"%(self._name, Minimizer))
-        if Parameters.has_key("MaximumNumberOfSteps") and (Parameters["MaximumNumberOfSteps"] > -1):
-            maxiter = int( Parameters["MaximumNumberOfSteps"] )
-        else:
-            maxiter = 15000
-        logging.debug("%s Nombre maximal de pas d'optimisation = %s"%(self._name, str(maxiter)))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
-        if Minimizer == "LBFGSB":
+        nbPreviousSteps = self.StoredVariables["CostFunctionJ"].stepnumber()
+        #
+        if self._parameters["Minimizer"] == "LBFGSB":
             Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = Bounds,
-                maxfun      = maxiter,
-                iprint      = iprint,
-                factr       = 1.,
+                maxfun      = self._parameters["MaximumNumberOfSteps"]-1,
+                factr       = self._parameters["CostDecrementTolerance"]*1.e14,
+                pgtol       = self._parameters["ProjectedGradientTolerance"],
+                iprint      = self.__iprint,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, Informations['funcalls']))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, Informations['warnflag']))
-        elif Minimizer == "TNC":
+            nfeval = Informations['funcalls']
+            rc     = Informations['warnflag']
+        elif self._parameters["Minimizer"] == "TNC":
             Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = Bounds,
-                maxfun      = maxiter,
-                messages    = message,
+                maxfun      = self._parameters["MaximumNumberOfSteps"],
+                pgtol       = self._parameters["ProjectedGradientTolerance"],
+                ftol        = self._parameters["CostDecrementTolerance"],
+                messages    = self.__message,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, nfeval))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, rc))
-        elif Minimizer == "CG":
+        elif self._parameters["Minimizer"] == "CG":
             Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
                 f           = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = maxiter,
-                disp        = disp,
+                maxiter     = self._parameters["MaximumNumberOfSteps"],
+                gtol        = self._parameters["GradientNormTolerance"],
+                disp        = self.__disp,
                 full_output = True,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, nfeval))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, rc))
-        elif Minimizer == "BFGS":
+        elif self._parameters["Minimizer"] == "NCG":
+            Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
+                f           = CostFunction,
+                x0          = Xini,
+                fprime      = GradientOfCostFunction,
+                args        = (),
+                maxiter     = self._parameters["MaximumNumberOfSteps"],
+                avextol     = self._parameters["CostDecrementTolerance"],
+                disp        = self.__disp,
+                full_output = True,
+                )
+        elif self._parameters["Minimizer"] == "BFGS":
             Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
                 f           = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = maxiter,
-                disp        = disp,
+                maxiter     = self._parameters["MaximumNumberOfSteps"],
+                gtol        = self._parameters["GradientNormTolerance"],
+                disp        = self.__disp,
                 full_output = True,
                 )
-            logging.debug("%s %s Minimum = %s"%(self._name, Minimizer, Minimum))
-            logging.debug("%s %s Nb of F = %s"%(self._name, Minimizer, nfeval))
-            logging.debug("%s %s RetCode = %s"%(self._name, Minimizer, rc))
         else:
-            raise ValueError("Error in Minimizer name: %s"%Minimizer)
+            raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
-        # Calcul  de l'analyse
-        # --------------------
-        Xa = numpy.asmatrix(Minimum).T
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
+        IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+        MinJ     = self.StoredVariables["CostFunctionJ"][IndexMin]
+        #
+        # Correction pour pallier a un bug de TNC sur le retour du Minimum
+        # ----------------------------------------------------------------
+        if self._parameters["StoreInternalVariables"]:
+            Minimum = self.StoredVariables["CurrentState"][IndexMin]
+        #
+        # Obtention de l'analyse
+        # ----------------------
+        Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
-        self.StoredVariables["Innovation"].store( d.A1 )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
+        if  "OMA"                   in self._parameters["StoreSupplementaryCalculations"] or \
+            "SigmaObs2"             in self._parameters["StoreSupplementaryCalculations"] or \
+            "SimulationQuantiles"   in self._parameters["StoreSupplementaryCalculations"]:
+            HXa = Hm(Xa)
+        #
+        # Calcul de la covariance d'analyse
+        # ---------------------------------
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            HtM = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
+            HtM = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
+            HaM = HO["Adjoint"].asMatrix(ValueForMethodForm = Xa)
+            HaM = HaM.reshape(Xa.size,Y.size) # ADAO & check shape
+            HessienneI = []
+            nb = Xa.size
+            for i in range(nb):
+                _ee    = numpy.matrix(numpy.zeros(nb)).T
+                _ee[i] = 1.
+                _HtEE  = numpy.dot(HtM,_ee)
+                _HtEE  = numpy.asmatrix(numpy.ravel( _HtEE )).T
+                HessienneI.append( numpy.ravel( BI*_ee + HaM * (RI * _HtEE) ) )
+            HessienneI = numpy.matrix( HessienneI )
+            A = HessienneI.I
+            if min(A.shape) != max(A.shape):
+                raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
+            if (numpy.diag(A) < 0).any():
+                raise ValueError("The %s a posteriori covariance matrix A has at least one negative value on its diagonal. There is an error in the observation operator, please check it."%(self._name,))
+            if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
+                try:
+                    L = numpy.linalg.cholesky( A )
+                except:
+                    raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
+            self.StoredVariables["APosterioriCovariance"].store( A )
+        #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
+        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+        if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
+            TraceR = R.trace(Y.size)
+            self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(Y)).T-numpy.asmatrix(numpy.ravel(HXa)).T)) ) / TraceR )
+        if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
+        if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            Qtls = self._parameters["Quantiles"]
+            nech = self._parameters["NumberOfSamplesForQuantiles"]
+            HXa  = numpy.matrix(numpy.ravel( HXa )).T
+            YfQ  = None
+            for i in range(nech):
+                if self._parameters["SimulationForQuantiles"] == "Linear":
+                    dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
+                    dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
+                    Yr = HXa + dYr
+                elif self._parameters["SimulationForQuantiles"] == "NonLinear":
+                    Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
+                    Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
+                if YfQ is None:
+                    YfQ = Yr
+                else:
+                    YfQ = numpy.hstack((YfQ,Yr))
+            YfQ.sort(axis=-1)
+            YQ = None
+            for quantile in Qtls:
+                if not (0. <= quantile <= 1.): continue
+                indice = int(nech * quantile - 1./nech)
+                if YQ is None: YQ = YfQ[:,indice]
+                else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
+            self.StoredVariables["SimulationQuantiles"].store( YQ )
+        #
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls()[0],HO["Tangent"].nbcalls()[0],HO["Adjoint"].nbcalls()[0]))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

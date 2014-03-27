@@ -1,5 +1,6 @@
 #-*-coding:iso-8859-1-*-
-#  Copyright (C) 2008-2011  EDF R&D
+#
+#  Copyright (C) 2010-2013 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public
@@ -15,17 +16,15 @@
 #  License along with this library; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# --
-# Author : AndrÃ© RIBES (EDF R&D)
-# --
+#  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 import sys
 import os
 import traceback
 import logging
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)-8s %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(message)s')
 
-print "-- Starting AdaoYacsSchemaCreator --"
+logging.debug("-- Starting AdaoYacsSchemaCreator --")
 
 # Check some basics variables
 if "ADAO_ROOT_DIR" not in os.environ:

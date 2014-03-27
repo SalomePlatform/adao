@@ -1,0 +1,245 @@
+#-*-coding:iso-8859-1-*-
+#
+#  Copyright (C) 2008-2014 EDF R&D
+#
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License.
+#
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+#
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
+import logging
+from daCore import BasicObjects, PlatformInfo
+m = PlatformInfo.SystemUsage()
+import numpy, copy
+
+# ==============================================================================
+class ElementaryAlgorithm(BasicObjects.Algorithm):
+    def __init__(self):
+        BasicObjects.Algorithm.__init__(self, "PARTICLESWARMOPTIMIZATION")
+        self.defineRequiredParameter(
+            name     = "MaximumNumberOfSteps",
+            default  = 50,
+            typecast = int,
+            message  = "Nombre maximal de pas d'optimisation",
+            minval   = 1,
+            )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
+        self.defineRequiredParameter(
+            name     = "NumberOfInsects",
+            default  = 100,
+            typecast = int,
+            message  = "Nombre d'insectes dans l'essaim",
+            minval   = -1,
+            )
+        self.defineRequiredParameter(
+            name     = "SwarmVelocity",
+            default  = 1.,
+            typecast = float,
+            message  = "Vitesse de groupe imposée par l'essaim",
+            minval   = 0.,
+            )
+        self.defineRequiredParameter(
+            name     = "GroupRecallRate",
+            default  = 0.5,
+            typecast = float,
+            message  = "Taux de rappel au meilleur insecte du groupe (entre 0 et 1)",
+            minval   = 0.,
+            maxval   = 1.,
+            )
+        self.defineRequiredParameter(
+            name     = "QualityCriterion",
+            default  = "AugmentedPonderatedLeastSquares",
+            typecast = str,
+            message  = "Critère de qualité utilisé",
+            listval  = ["AugmentedPonderatedLeastSquares","APLS","DA",
+                        "PonderatedLeastSquares","PLS",
+                        "LeastSquares","LS","L2",
+                        "AbsoluteValue","L1",
+                        "MaximumError","ME"],
+            )
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["BMA", "OMA", "OMB", "Innovation"]
+            )
+
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
+        logging.debug("%s Lancement"%self._name)
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
+        #
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
+        if self._parameters.has_key("BoxBounds") and (type(self._parameters["BoxBounds"]) is type([]) or type(self._parameters["BoxBounds"]) is type(())) and (len(self._parameters["BoxBounds"]) > 0):
+            BoxBounds = self._parameters["BoxBounds"]
+            logging.debug("%s Prise en compte des bornes d'incréments de paramètres effectuee"%(self._name,))
+        else:
+            raise ValueError("Particle Swarm Optimization requires bounds on all variables to be given.")
+        BoxBounds   = numpy.array(BoxBounds)
+        if numpy.isnan(BoxBounds).any():
+            raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given, \"None\" is not allowed. The actual increments bounds are:\n%s"%BoxBounds)
+        #
+        Phig = float( self._parameters["GroupRecallRate"] )
+        Phip = 1. - Phig
+        logging.debug("%s Taux de rappel au meilleur insecte du groupe (entre 0 et 1) = %s et à la meilleure position précédente (son complémentaire à 1) = %s"%(self._name, str(Phig), str(Phip)))
+        #
+        # Opérateur d'observation
+        # -----------------------
+        Hm = HO["Direct"].appliedTo
+        #
+        # Précalcul des inversions de B et R
+        # ----------------------------------
+        BI = B.getI()
+        RI = R.getI()
+        #
+        # Définition de la fonction-coût
+        # ------------------------------
+        def CostFunction(x, QualityMeasure="AugmentedPonderatedLeastSquares"):
+            _X  = numpy.asmatrix(numpy.ravel( x )).T
+            _HX = Hm( _X )
+            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            #
+            if QualityMeasure in ["AugmentedPonderatedLeastSquares","APLS","DA"]:
+                if BI is None or RI is None:
+                    raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
+                Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
+                Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+                J   = float( Jb ) + float( Jo )
+            elif QualityMeasure in ["PonderatedLeastSquares","PLS"]:
+                if RI is None:
+                    raise ValueError("Observation error covariance matrix has to be properly defined!")
+                Jb  = 0.
+                Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+                J   = float( Jb ) + float( Jo )
+            elif QualityMeasure in ["LeastSquares","LS","L2"]:
+                Jb  = 0.
+                Jo  = 0.5 * (Y - _HX).T * (Y - _HX)
+                J   = float( Jb ) + float( Jo )
+            elif QualityMeasure in ["AbsoluteValue","L1"]:
+                Jb  = 0.
+                Jo  = numpy.sum( numpy.abs(Y - _HX) )
+                J   = float( Jb ) + float( Jo )
+            elif QualityMeasure in ["MaximumError","ME"]:
+                Jb  = 0.
+                Jo  = numpy.max( numpy.abs(Y - _HX) )
+                J   = float( Jb ) + float( Jo )
+            #
+            return J
+        #
+        # Point de démarrage de l'optimisation : Xini = Xb
+        # ------------------------------------
+        if type(Xb) is type(numpy.matrix([])):
+            Xini = Xb.A1.tolist()
+        elif Xb is not None:
+            Xini = list(Xb)
+        else:
+            Xini = numpy.zeros(len(BoxBounds[:,0]))
+        #
+        # Initialisation des bornes
+        # -------------------------
+        SpaceUp  = BoxBounds[:,1] + Xini
+        Spacelow = BoxBounds[:,0] + Xini
+        nbparam  = len(SpaceUp)
+        #
+        # Initialisation de l'essaim
+        # --------------------------
+        LimitVelocity = numpy.abs(SpaceUp-Spacelow)
+        #
+        PosInsect = []
+        VelocityInsect = []
+        for i in range(nbparam) :
+            PosInsect.append(numpy.random.uniform(low=Spacelow[i], high=SpaceUp[i], size=self._parameters["NumberOfInsects"]))
+            VelocityInsect.append(numpy.random.uniform(low=-LimitVelocity[i], high=LimitVelocity[i], size=self._parameters["NumberOfInsects"]))
+        VelocityInsect = numpy.matrix(VelocityInsect)
+        PosInsect = numpy.matrix(PosInsect)
+        #
+        BestPosInsect = numpy.array(PosInsect)
+        qBestPosInsect = []
+        Best = copy.copy(Spacelow)
+        qBest = CostFunction(Best,self._parameters["QualityCriterion"])
+        #
+        for i in range(self._parameters["NumberOfInsects"]):
+            insect  = numpy.array(PosInsect[:,i].A1)
+            quality = CostFunction(insect,self._parameters["QualityCriterion"])
+            qBestPosInsect.append(quality)
+            if quality < qBest:
+                Best  = insect
+                qBest = quality
+        #
+        # Minimisation de la fonctionnelle
+        # --------------------------------
+        for n in range(self._parameters["MaximumNumberOfSteps"]):
+            for i in range(self._parameters["NumberOfInsects"]) :
+                insect  = PosInsect[:,i]
+                rp = numpy.random.uniform(size=nbparam)
+                rg = numpy.random.uniform(size=nbparam)
+                for j in range(nbparam) :
+                    VelocityInsect[j,i] = self._parameters["SwarmVelocity"]*VelocityInsect[j,i] +  Phip*rp[j]*(BestPosInsect[j,i]-PosInsect[j,i]) +  Phig*rg[j]*(Best[j]-PosInsect[j,i])
+                    PosInsect[j,i] = PosInsect[j,i]+VelocityInsect[j,i]
+                quality = CostFunction(insect,self._parameters["QualityCriterion"])
+                if quality < qBestPosInsect[i]:
+                    BestPosInsect[:,i] = numpy.ravel( insect )
+                    if quality < qBest :
+                        Best  = numpy.ravel( insect )
+                        qBest = quality
+            #
+            if self._parameters["StoreInternalVariables"]:
+                self.StoredVariables["CurrentState"].store( Best )
+            self.StoredVariables["CostFunctionJb"].store( 0. )
+            self.StoredVariables["CostFunctionJo"].store( 0. )
+            self.StoredVariables["CostFunctionJ" ].store( qBest )
+        #
+        # Obtention de l'analyse
+        # ----------------------
+        Xa = numpy.asmatrix(numpy.ravel( Best )).T
+        #
+        self.StoredVariables["Analysis"].store( Xa.A1 )
+        #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            d = Y - Hm(Xb)
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.ravel(Y - Hm(Xa)) )
+        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+        #
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls()[0],HO["Tangent"].nbcalls()[0],HO["Adjoint"].nbcalls()[0]))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
+        logging.debug("%s Terminé"%self._name)
+        #
+        return 0
+
+# ==============================================================================
+if __name__ == "__main__":
+    print '\n AUTODIAGNOSTIC \n'

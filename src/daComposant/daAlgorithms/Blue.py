@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,60 +18,190 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
-
 import numpy
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "BLUE"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "BLUE")
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles"]
+            )
+        self.defineRequiredParameter(
+            name     = "Quantiles",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des valeurs de quantiles",
+            )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
+        self.defineRequiredParameter(
+            name     = "NumberOfSamplesForQuantiles",
+            default  = 100,
+            typecast = int,
+            message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
+            minval   = 1,
+            )
+        self.defineRequiredParameter(
+            name     = "SimulationForQuantiles",
+            default  = "Linear",
+            typecast = str,
+            message  = "Type de simulation pour l'estimation des quantiles",
+            listval  = ["Linear", "NonLinear"]
+            )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur BLUE (ou Kalman simple, ou Interpolation Optimale)
-        """
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
-        Hm = H["Direct"].asMatrix()
-        Ht = H["Adjoint"].asMatrix()
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
+        #
+        # Opérateur d'observation
+        # -----------------------
+        Hm = HO["Tangent"].asMatrix(Xb)
+        Hm = Hm.reshape(Y.size,Xb.size) # ADAO & check shape
+        Ha = HO["Adjoint"].asMatrix(Xb)
+        Ha = Ha.reshape(Xb.size,Y.size) # ADAO & check shape
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if H["AppliedToX"] is not None and H["AppliedToX"].has_key("HXb"):
-            logging.debug("%s Utilisation de HXb"%self._name)
-            HXb = H["AppliedToX"]["HXb"]
+        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+            HXb = HO["AppliedToX"]["HXb"]
         else:
-            logging.debug("%s Calcul de Hm * Xb"%self._name)
             HXb = Hm * Xb
-        HXb = numpy.asmatrix(HXb).flatten().T
+        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #
-        # Calcul de la matrice de gain dans l'espace le plus petit
-        # --------------------------------------------------------
-        if Y.size <= Xb.size:
-            logging.debug("%s Calcul de K dans l'espace des observations"%self._name)
-            K  = B * Ht * (Hm * B * Ht + R).I
-        else:
-            logging.debug("%s Calcul de K dans l'espace d'ébauche"%self._name)
-            K = (Ht * R.I * Hm + B.I).I * Ht * R.I
+        # Précalcul des inversions de B et R
+        # ----------------------------------
+        BI = B.getI()
+        RI = R.getI()
         #
-        # Calcul de l'innovation et de l'analyse
-        # --------------------------------------
+        # Calcul de l'innovation
+        # ----------------------
+        if Y.size != HXb.size:
+            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+        if max(Y.shape) != max(HXb.shape):
+            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
-        logging.debug("%s Innovation d = %s"%(self._name, d))
-        Xa = Xb + K*d
-        logging.debug("%s Analyse Xa = %s"%(self._name, Xa))
         #
+        # Calcul de la matrice de gain et de l'analyse
+        # --------------------------------------------
+        if Y.size <= Xb.size:
+            if Y.size > 100: # len(R)
+                _A = R + Hm * B * Ha
+                _u = numpy.linalg.solve( _A , d )
+                Xa = Xb + B * Ha * _u
+            else:
+                K  = B * Ha * (R + Hm * B * Ha).I
+                Xa = Xb + K*d
+        else:
+            if Y.size > 100: # len(R)
+                _A = BI + Ha * RI * Hm
+                _u = numpy.linalg.solve( _A , Ha * RI * d )
+                Xa = Xb + _u
+            else:
+                K = (BI + Ha * RI * Hm).I * Ha * RI
+                Xa = Xb + K*d
         self.StoredVariables["Analysis"].store( Xa.A1 )
-        self.StoredVariables["Innovation"].store( d.A1 )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("MB")))
+        # Calcul de la fonction coût
+        # --------------------------
+        if self._parameters["StoreInternalVariables"] or \
+           "OMA" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or \
+           "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            HXa = Hm * Xa
+            oma = Y - HXa
+        if self._parameters["StoreInternalVariables"] or \
+           "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+            Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
+            Jo  = 0.5 * oma.T * RI * oma
+            J   = float( Jb ) + float( Jo )
+            self.StoredVariables["CostFunctionJb"].store( Jb )
+            self.StoredVariables["CostFunctionJo"].store( Jo )
+            self.StoredVariables["CostFunctionJ" ].store( J )
+        #
+        # Calcul de la covariance d'analyse
+        # ---------------------------------
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            A = B - K * Hm * B
+            if min(A.shape) != max(A.shape):
+                raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
+            if (numpy.diag(A) < 0).any():
+                raise ValueError("The %s a posteriori covariance matrix A has at least one negative value on its diagonal. There is an error in the observation operator, please check it."%(self._name,))
+            if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
+                try:
+                    L = numpy.linalg.cholesky( A )
+                except:
+                    raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
+            self.StoredVariables["APosterioriCovariance"].store( A )
+        #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+        if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
+            TraceR = R.trace(Y.size)
+            self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(oma)).T)) ) / TraceR )
+        if "SigmaBck2" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SigmaBck2"].store( float( (d.T * Hm * (Xa - Xb))/(Hm * B * Hm.T).trace() ) )
+        if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
+        if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+            Qtls = self._parameters["Quantiles"]
+            nech = self._parameters["NumberOfSamplesForQuantiles"]
+            YfQ  = None
+            for i in range(nech):
+                if self._parameters["SimulationForQuantiles"] == "Linear":
+                    dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
+                    dYr = numpy.matrix(numpy.ravel( Hm * dXr )).T
+                    Yr = HXa + dYr
+                elif self._parameters["SimulationForQuantiles"] == "NonLinear":
+                    Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
+                    Yr = numpy.matrix(numpy.ravel( Hm * Xr )).T
+                if YfQ is None:
+                    YfQ = Yr
+                else:
+                    YfQ = numpy.hstack((YfQ,Yr))
+            YfQ.sort(axis=-1)
+            YQ = None
+            for quantile in Qtls:
+                if not (0. <= quantile <= 1.): continue
+                indice = int(nech * quantile - 1./nech)
+                if YQ is None: YQ = YfQ[:,indice]
+                else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
+            self.StoredVariables["SimulationQuantiles"].store( YQ )
+        #
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls()[0],HO["Tangent"].nbcalls()[0],HO["Adjoint"].nbcalls()[0]))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

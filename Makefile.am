@@ -36,6 +36,7 @@ if SPHINX_IS_OK
 SUBDIRS += doc
 endif
 
-ACLOCAL_AMFLAGS = -I adm_local
+ACLOCAL_AMFLAGS = -I adm_local \
+                  -I ${KERNEL_ROOT_DIR}/salome_adm/unix/config_files
 
 EXTRA_DIST = autogen.sh

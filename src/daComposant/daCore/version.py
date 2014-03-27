@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 name    = "Data Assimilation Package"
-version = "0.3.0-SP630"
-date    = "lundi 15 octobre 2010, 11:11:11 (UTC+0200)"
+version = "0.8.0"
+date    = "jeudi 30 novembre 2013, 12:12:12 (UTC+0100)"

@@ -1,0 +1,15 @@
+
+CHECKING_STUDY(Study_name='Test',
+               Debug=0,
+               Algorithm='GradientTest',
+               CheckingPoint=_F(Stored=0,
+                                INPUT_TYPE='Vector',
+                                data=_F(FROM='String',
+                                        STRING='1 1 1',),),
+               ObservationOperator=_F(Stored=0,
+                                      INPUT_TYPE='Matrix',
+                                      data=_F(FROM='String',
+                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1 ; 1 0 0 ; 0 1 0 ; 0 0 1',),),
+               AlgorithmParameters=_F(INPUT_TYPE='Dict',
+                                      data=_F(FROM='String',
+                                              STRING='{ "SetSeed" : 1000 }',),),);

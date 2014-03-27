@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,69 +18,165 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
+import numpy
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "KALMANFILTER"
-        logging.debug("%s Initialisation"%self._name)
+        BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
+        self.defineRequiredParameter(
+            name     = "EstimationOf",
+            default  = "State",
+            typecast = str,
+            message  = "Estimation d'etat ou de parametres",
+            listval  = ["State", "Parameters"],
+            )
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["APosterioriCovariance", "BMA", "Innovation"]
+            )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur du filtre de Kalman
-
-        Remarque : les observations sont exploitées à partir du pas de temps 1,
-        et sont utilisées dans Yo comme rangées selon ces indices. Donc le pas 0
-        n'est pas utilisé puisque la première étape de Kalman passe de 0 à 1
-        avec l'observation du pas 1.
-        """
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
-        # Opérateur d'observation
-        # -----------------------
-        Hm = H["Direct"].asMatrix()
-        Ht = H["Adjoint"].asMatrix()
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
         #
-        # Opérateur d'évolution
-        # ---------------------
-        Mm = M["Direct"].asMatrix()
-        Mt = M["Adjoint"].asMatrix()
+        if self._parameters["EstimationOf"] == "Parameters":
+            self._parameters["StoreInternalVariables"] = True
         #
-        duration = Y.stepnumber()
+        # Opérateurs
+        # ----------
+        if B is None:
+            raise ValueError("Background error covariance matrix has to be properly defined!")
+        if R is None:
+            raise ValueError("Observation error covariance matrix has to be properly defined!")
+        #
+        Ht = HO["Tangent"].asMatrix(Xb)
+        Ha = HO["Adjoint"].asMatrix(Xb)
+        #
+        if self._parameters["EstimationOf"] == "State":
+            Mt = EM["Tangent"].asMatrix(Xb)
+            Ma = EM["Adjoint"].asMatrix(Xb)
+        #
+        if CM is not None and CM.has_key("Tangent") and U is not None:
+            Cm = CM["Tangent"].asMatrix(Xb)
+        else:
+            Cm = None
+        #
+        # Nombre de pas du Kalman identique au nombre de pas d'observations
+        # -----------------------------------------------------------------
+        if hasattr(Y,"stepnumber"):
+            duration = Y.stepnumber()
+        else:
+            duration = 2
+        #
+        # Précalcul des inversions de B et R
+        # ----------------------------------
+        if self._parameters["StoreInternalVariables"]:
+            BI = B.getI()
+            RI = R.getI()
         #
         # Initialisation
         # --------------
         Xn = Xb
         Pn = B
+        #
         self.StoredVariables["Analysis"].store( Xn.A1 )
-        self.StoredVariables["CovarianceAPosteriori"].store( Pn )
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["APosterioriCovariance"].store( Pn )
+            covarianceXa = Pn
+        Xa               = Xn
+        previousJMinimum = numpy.finfo(float).max
         #
         for step in range(duration-1):
-            logging.debug("%s Etape de Kalman %i (i.e. %i->%i) sur un total de %i"%(self._name, step+1, step,step+1, duration-1))
+            if hasattr(Y,"store"):
+                Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+            else:
+                Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
             #
-            # Etape de prédiction
-            # -------------------
-            Xn_predicted = Mm * Xn
-            Pn_predicted = Mm * Pn * Mt + Q
+            if U is not None:
+                if hasattr(U,"store") and len(U)>1:
+                    Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                elif hasattr(U,"store") and len(U)==1:
+                    Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                else:
+                    Un = numpy.asmatrix(numpy.ravel( U )).T
+            else:
+                Un = None
             #
-            # Etape de correction
-            # -------------------
-            d  = Y.valueserie(step+1) - Hm * Xn_predicted
-            K  = Pn_predicted * Ht * (Hm * Pn_predicted * Ht + R).I
-            Xn = Xn_predicted + K * d
-            Pn = Pn_predicted - K * Hm * Pn_predicted
+            if self._parameters["EstimationOf"] == "State":
+                Xn_predicted = Mt * Xn
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                    Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
+                    Xn_predicted = Xn_predicted + Cm * Un
+                Pn_predicted = Q + Mt * Pn * Ma
+            elif self._parameters["EstimationOf"] == "Parameters":
+                # --- > Par principe, M = Id, Q = 0
+                Xn_predicted = Xn
+                Pn_predicted = Pn
+            #
+            if self._parameters["EstimationOf"] == "State":
+                d  = Ynpu - Ht * Xn_predicted
+            elif self._parameters["EstimationOf"] == "Parameters":
+                d  = Ynpu - Ht * Xn_predicted
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
+                    d = d - Cm * Un
+            #
+            Kn = Pn_predicted * Ha * (R + Ht * Pn_predicted * Ha).I
+            Xn = Xn_predicted + Kn * d
+            Pn = Pn_predicted - Kn * Ht * Pn_predicted
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )
-            self.StoredVariables["CovarianceAPosteriori"].store( Pn )
-            self.StoredVariables["Innovation"].store( d.A1 )
+            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["APosterioriCovariance"].store( Pn )
+            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
+            if self._parameters["StoreInternalVariables"]:
+                Jb  = 0.5 * (Xn - Xb).T * BI * (Xn - Xb)
+                Jo  = 0.5 * d.T * RI * d
+                J   = float( Jb ) + float( Jo )
+                self.StoredVariables["CurrentState"].store( Xn )
+                self.StoredVariables["CostFunctionJb"].store( Jb )
+                self.StoredVariables["CostFunctionJo"].store( Jo )
+                self.StoredVariables["CostFunctionJ" ].store( J )
+                if J < previousJMinimum:
+                    previousJMinimum  = J
+                    Xa                = Xn
+                    if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                        covarianceXa  = Pn
+            else:
+                Xa = Xn
+            #
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        # Stockage supplementaire de l'optimum en estimation de parametres
+        # ----------------------------------------------------------------
+        if self._parameters["EstimationOf"] == "Parameters":
+            self.StoredVariables["Analysis"].store( Xa.A1 )
+            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
+        #
+        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+        #
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls()[0],HO["Tangent"].nbcalls()[0],HO["Adjoint"].nbcalls()[0]))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

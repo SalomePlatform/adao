@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,8 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 __doc__ = """
     Informations sur le code et la plateforme, et mise à jour des chemins
     
@@ -82,12 +84,20 @@ class PlatformInfo:
         return "%s %s (%s)"%(version.name,version.version,version.date)
 
 # ==============================================================================
+def uniq(sequence):
+    """
+    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
+    """
+    __seen = set()
+    return [x for x in sequence if x not in __seen and not __seen.add(x)]
+
+# ==============================================================================
 class PathManagement:
     """
     Mise à jour du path système pour les répertoires d'outils
     """
     def __init__(self):
-        import os, sys
+        import sys
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         self.__paths = {}
         self.__paths["daExternals"] = os.path.join(parent,"daExternals")
@@ -98,9 +108,9 @@ class PathManagement:
             sys.path.insert(0, v )
         #
         # Conserve en unique exemplaire chaque chemin
-        sys.path = list(set(sys.path))
+        sys.path = uniq( sys.path )
         del parent
-    
+
     def getpaths(self):
         """
         Renvoie le dictionnaire des chemins ajoutés
@@ -120,16 +130,12 @@ class SystemUsage:
     _proc_status = '/proc/%d/status' % os.getpid()
     _memo_status = '/proc/meminfo'
     _scale = {
-        'o': 1.0,
-        'ko': 1024.0, 'mo': 1024.0*1024.0,
-        'Ko': 1024.0, 'Mo': 1024.0*1024.0,
-        'B':     1.0,
-        'kB': 1024.0, 'mB': 1024.0*1024.0,
-        'KB': 1024.0, 'MB': 1024.0*1024.0,
+                      'K' : 1024.0, 'M' : 1024.0*1024.0,
+        'o':     1.0, 'ko': 1024.0, 'mo': 1024.0*1024.0,
+                      'Ko': 1024.0, 'Mo': 1024.0*1024.0,
+        'B':     1.0, 'kB': 1024.0, 'mB': 1024.0*1024.0,
+                      'KB': 1024.0, 'MB': 1024.0*1024.0,
              }
-    _max_mem = 0
-    _max_rss = 0
-    _max_sta = 0
     #
     def _VmA(self, VmKey, unit):
         try:
@@ -181,75 +187,25 @@ class SystemUsage:
         return mem / self._scale[unit]
     #
     def getUsedMemory(self, unit="o"):
-        "Renvoie la mémoire totale utilisée en octets"
-        mem = self._VmB('VmSize:', unit)
-        self._max_mem = max(self._max_mem, mem)
-        return mem
-    #
-    def getUsedResident(self, unit="o"):
         "Renvoie la mémoire résidente utilisée en octets"
-        mem = self._VmB('VmRSS:', unit)
-        self._max_rss = max(self._max_rss, mem)
-        return mem
+        return self._VmB('VmRSS:', unit)
+    #
+    def getVirtualMemory(self, unit="o"):
+        "Renvoie la mémoire totale utilisée en octets"
+        return self._VmB('VmSize:', unit)
     #
     def getUsedStacksize(self, unit="o"):
         "Renvoie la taille du stack utilisé en octets"
-        mem = self._VmB('VmStk:', unit)
-        self._max_sta = max(self._max_sta, mem)
-        return mem
+        return self._VmB('VmStk:', unit)
     #
-    def getMaxUsedMemory(self):
-        "Renvoie la mémoire totale maximale mesurée"
-        return self._max_mem
-    #
-    def getMaxUsedResident(self):
+    def getMaxUsedMemory(self, unit="o"):
         "Renvoie la mémoire résidente maximale mesurée"
-        return self._max_rss
+        return self._VmB('VmHWM:', unit)
     #
-    def getMaxUsedStacksize(self):
-        "Renvoie la mémoire du stack maximale mesurée"
-        return self._max_sta
+    def getMaxVirtualMemory(self, unit="o"):
+        "Renvoie la mémoire totale maximale mesurée"
+        return self._VmB('VmPeak:', unit)
 
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
-
-    print PlatformInfo()
-    print
-    p = PlatformInfo()
-    print "Les caractéristiques détaillées des applications et outils sont :"
-    print "  - Application.......:",p.getName()
-    print "  - Version...........:",p.getVersion()
-    print "  - Date Application..:",p.getDate()
-    print "  - Python............:",p.getPythonVersion()
-    print "  - Numpy.............:",p.getNumpyVersion()
-    print "  - Scipy.............:",p.getScipyVersion()
-    print
-    
-    p = PathManagement()
-    print "Les chemins ajoutés au système pour des outils :"
-    for k,v in p.getpaths().items():
-        print "  %12s : %s"%(k,os.path.basename(v))
-    print
-
-    m = SystemUsage()
-    print "La mémoire disponible est la suivante :"
-    print "  - mémoire totale....: %4.1f Mo"%m.getAvailableMemory("Mo")
-    print "  - mémoire physique..: %4.1f Mo"%m.getAvailablePhysicalMemory("Mo")
-    print "  - mémoire swap......: %4.1f Mo"%m.getAvailableSwapMemory("Mo")
-    print "  - utilisable........: %4.1f Mo"%m.getUsableMemory("Mo")
-    print "L'usage mémoire de cette exécution est le suivant :"
-    print "  - mémoire totale....: %4.1f Mo"%m.getUsedMemory("Mo")
-    print "  - mémoire résidente.: %4.1f Mo"%m.getUsedResident("Mo")
-    print "  - taille de stack...: %4.1f Mo"%m.getUsedStacksize("Mo")
-    print "Création d'un objet range(1000000) et mesure mémoire"
-    x = range(1000000)
-    print "  - mémoire totale....: %4.1f Mo"%m.getUsedMemory("Mo")
-    print "Destruction de l'objet et mesure mémoire"
-    del x
-    print "  - mémoire totale....: %4.1f Mo"%m.getUsedMemory("Mo")
-    print "L'usage mémoire maximal de cette exécution est le suivant :"
-    print "  - mémoire totale....: %4.1f Mo"%m.getMaxUsedMemory()
-    print "  - mémoire résidente.: %4.1f Mo"%m.getMaxUsedResident()
-    print "  - taille de stack...: %4.1f Mo"%m.getMaxUsedStacksize()
-    print

@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,13 +18,15 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
 __doc__ = """
     Définit des outils de persistence et d'enregistrement de séries de valeurs
     pour analyse ultérieure ou utilisation de calcul.
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy
+import numpy, copy
 
 from PlatformInfo import PathManagement ; PathManagement()
 
@@ -43,20 +45,17 @@ class Persistence:
         La gestion interne des données est exclusivement basée sur les variables
         initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
         objets comme des attributs) :
-        __step   : numérotation par défaut du pas courant
         __basetype : le type de base de chaque valeur, sous la forme d'un type
                      permettant l'instanciation ou le casting Python 
-        __steps  : les pas de stockage. Par défaut, c'est __step
         __values : les valeurs de stockage. Par défaut, c'est None
         """
         self.__name = str(name)
         self.__unit = str(unit)
         #
-        self.__step     = -1
         self.__basetype = basetype
         #
-        self.__steps    = []
-        self.__values   = []
+        self.__values = []
+        self.__tags   = []
         #
         self.__dynamic  = False
         #
@@ -71,26 +70,34 @@ class Persistence:
         else:
             self.__basetype = basetype
 
-    def store(self, value=None, step=None):
+    def store(self, value=None, **kwargs):
         """
-        Stocke une valeur à un pas. Une instanciation est faite avec le type de
-        base pour stocker l'objet. Si le pas n'est pas fournit, on utilise
-        l'étape de stockage comme valeur de pas.
+        Stocke une valeur avec ses informations de filtrage.
         """
         if value is None: raise ValueError("Value argument required")
-        self.__step += 1
-        if step is not None:
-            self.__steps.append(step)
-        else:
-            self.__steps.append(self.__step)
         #
-        self.__values.append(self.__basetype(value))
+        self.__values.append(copy.copy(self.__basetype(value)))
+        self.__tags.append(kwargs)
         #
-        if self.__dynamic: self.__replot()
+        if self.__dynamic: self.__replots()
+        __step = len(self.__values) - 1
         for hook, parameters, scheduler in self.__dataobservers:
-            if self.__step in scheduler:
+            if __step in scheduler:
                 hook( self, parameters )
 
+    def pop(self, item=None):
+        """
+        Retire une valeur enregistree par son index de stockage. Sans argument,
+        retire le dernier objet enregistre.
+        """
+        if item is not None:
+            __index = int(item)
+            self.__values.pop(__index)
+            self.__tags.pop(__index)
+        else:
+            self.__values.pop()
+            self.__tags.pop()
+    
     def shape(self):
         """
         Renvoie la taille sous forme numpy du dernier objet stocké. Si c'est un
@@ -99,7 +106,7 @@ class Persistence:
         longueur. Par défaut, renvoie 1.
         """
         if len(self.__values) > 0:
-            if self.__basetype in [numpy.matrix, numpy.array]:
+            if self.__basetype in [numpy.matrix, numpy.array, numpy.ravel]:
                 return self.__values[-1].shape
             elif self.__basetype in [int, float]:
                 return (1,)
@@ -110,92 +117,141 @@ class Persistence:
         else:
             raise ValueError("Object has no shape before its first storage")
 
-    def __len__(self):
-        """
-        Renvoie le nombre d'éléments dans un séquence ou la plus grande
-        dimension d'une matrice
-        """
-        return max( self.shape() )
-
     # ---------------------------------------------------------
-    def stepserie(self, item=None, step=None):
-        """
-        Renvoie par défaut toute la liste des pas de temps. Si l'argument "step"
-        existe dans la liste des pas de stockage effectués, renvoie ce pas
-        "step". Si l'argument "item" est correct, renvoie le pas stockée au
-        numéro "item".
-        """
-        if step is not None and step in self.__steps:
-            return step
-        elif item is not None and item < len(self.__steps):
-            return self.__steps[item]
-        else:
-            return self.__steps
-
-    def valueserie(self, item=None, step=None, allSteps = False):
-        """
-        Renvoie par défaut toute la liste des valeurs/objets. Si l'argument
-        "step" existe dans la liste des pas de stockage effectués, renvoie la
-        valeur stockée à ce pas "step". Si l'argument "item" est correct,
-        renvoie la valeur stockée au numéro "item". Si "allSteps" est vrai,
-        renvoie l'ensemble des valeurs et non pas seulement la première.
-        """
-        if step is not None and step in self.__steps:
-            if allSteps:
-                allIndexes = []
-                searchFrom = 0
-                try:
-                    while self.__steps.index(step,searchFrom) >= 0:
-                        searchFrom = self.__steps.index(step,searchFrom)
-                        allIndexes.append( searchFrom )
-                        searchFrom +=1
-                except ValueError, e:
-                    pass
-                allValues = [self.__values[index] for index in allIndexes]
-                return allValues
-            else:
-                index = self.__steps.index(step)
-                return self.__values[index]
-        elif item is not None and item < len(self.__values):
-            return self.__values[item]
-        else:
-            return self.__values
+    def __str__(self):
+        msg  = "   Index        Value   Tags\n"
+        for i,v in enumerate(self.__values):
+            msg += "  i=%05i  %10s   %s\n"%(i,v,self.__tags[i])
+        return msg
     
+    def __len__(self):
+        return len(self.__values)
+    
+    def __getitem__(self, index=None ):
+        return copy.copy(self.__values[index])
+    
+    def count(self, value):
+        return self.__values.count(value)
+    
+    def index(self, value, start=0, stop=None):
+        if stop is None : stop = len(self.__values)
+        return self.__values.index(value, start, stop)
+
+    # ---------------------------------------------------------
+    def __filteredIndexes(self, **kwargs):
+        __indexOfFilteredItems = range(len(self.__tags))
+        __filteringKwTags = kwargs.keys()
+        if len(__filteringKwTags) > 0:
+            for tagKey in __filteringKwTags:
+                __tmp = []
+                for i in __indexOfFilteredItems:
+                    if self.__tags[i].has_key(tagKey):
+                        if self.__tags[i][tagKey] == kwargs[tagKey]:
+                            __tmp.append( i )
+                        elif isinstance(kwargs[tagKey],(list,tuple)) and self.__tags[i][tagKey] in kwargs[tagKey]:
+                            __tmp.append( i )
+                __indexOfFilteredItems = __tmp
+                if len(__indexOfFilteredItems) == 0: break
+        return __indexOfFilteredItems
+
+    # ---------------------------------------------------------
+    def values(self, **kwargs):
+        __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+        return [self.__values[i] for i in __indexOfFilteredItems]
+
+    def keys(self, keyword=None , **kwargs):
+        __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+        __keys = []
+        for i in __indexOfFilteredItems:
+            if self.__tags[i].has_key( keyword ):
+                __keys.append( self.__tags[i][keyword] )
+            else:
+                __keys.append( None )
+        return __keys
+
+    def items(self, keyword=None , **kwargs):
+        __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+        __pairs = []
+        for i in __indexOfFilteredItems:
+            if self.__tags[i].has_key( keyword ):
+                __pairs.append( [self.__tags[i][keyword], self.__values[i]] )
+            else:
+                __pairs.append( [None, self.__values[i]] )
+        return __pairs
+
+    def tagkeys(self):
+        __allKeys = []
+        for dicotags in self.__tags:
+            __allKeys.extend( dicotags.keys() )
+        __allKeys = list(set(__allKeys))
+        __allKeys.sort()
+        return __allKeys
+
+    # def valueserie(self, item=None, allSteps=True, **kwargs):
+    #     if item is not None:
+    #         return self.__values[item]
+    #     else:
+    #         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+    #         if not allSteps and len(__indexOfFilteredItems) > 0:
+    #             return self.__values[__indexOfFilteredItems[0]]
+    #         else:
+    #             return [self.__values[i] for i in __indexOfFilteredItems]
+
+    def tagserie(self, item=None, withValues=False, outputTag=None, **kwargs):
+        if item is None:
+            __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+        else:
+            __indexOfFilteredItems = [item,]
+        #
+        # Dans le cas où la sortie donne les valeurs d'un "outputTag"
+        if outputTag is not None and type(outputTag) is str :
+            outputValues = []
+            for index in __indexOfFilteredItems:
+                if outputTag in self.__tags[index].keys():
+                    outputValues.append( self.__tags[index][outputTag] )
+            outputValues = list(set(outputValues))
+            outputValues.sort()
+            return outputValues
+        #
+        # Dans le cas où la sortie donne les tags satisfaisants aux conditions
+        else:
+            if withValues:
+                return [self.__tags[index] for index in __indexOfFilteredItems]
+            else:
+                allTags = {}
+                for index in __indexOfFilteredItems:
+                    allTags.update( self.__tags[index] )
+                allKeys = allTags.keys()
+                allKeys.sort()
+                return allKeys
+
+    # ---------------------------------------------------------
+    # Pour compatibilite
     def stepnumber(self):
-        """
-        Renvoie le nombre de pas de stockage.
-        """
-        return len(self.__steps)
+        return len(self.__values)
+
+    # Pour compatibilite
+    def stepserie(self, **kwargs):
+        __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+        return __indexOfFilteredItems
 
     # ---------------------------------------------------------
-    # Méthodes d'accès de type dictionnaire
-    def keys(self):
-        return self.stepserie()
-
-    def values(self):
-        return self.valueserie()
-
-    def items(self):
-        pairs = []
-        for i in xrange(self.stepnumber()):
-            pairs.append( (self.stepserie(item=i), self.valueserie(item=i)) )
-        return pairs
-
-    # ---------------------------------------------------------
-    def mean(self):
+    def means(self):
         """
-        Renvoie la valeur moyenne des données à chaque pas. Il faut que le type
-        de base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, la valeur moyenne des données
+        au pas. Il faut que le type de base soit compatible avec les types
+        élémentaires numpy.
         """
         try:
             return [numpy.matrix(item).mean() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def std(self, ddof=0):
+    def stds(self, ddof=0):
         """
-        Renvoie l'écart-type des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, l'écart-type des données
+        au pas. Il faut que le type de base soit compatible avec les types
+        élémentaires numpy.
         
         ddof : c'est le nombre de degrés de liberté pour le calcul de
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
@@ -208,37 +264,40 @@ class Persistence:
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def sum(self):
+    def sums(self):
         """
-        Renvoie la somme des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, la somme des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
         """
         try:
             return [numpy.matrix(item).sum() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def min(self):
+    def mins(self):
         """
-        Renvoie le minimum des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, le minimum des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
         """
         try:
             return [numpy.matrix(item).min() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def max(self):
+    def maxs(self):
         """
-        Renvoie le maximum des données à chaque pas. Il faut que le type de
-        base soit compatible avec les types élémentaires numpy.
+        Renvoie la série, contenant à chaque pas, la maximum des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
         """
         try:
             return [numpy.matrix(item).max() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def __preplot(self,
+    def __preplots(self,
             title    = "",
             xlabel   = "",
             ylabel   = "",
@@ -247,7 +306,6 @@ class Persistence:
             persist  = False,
             pause    = True,
             ):
-        import os
         #
         # Vérification de la disponibilité du module Gnuplot
         try:
@@ -274,7 +332,7 @@ class Persistence:
         self.__ltitle = ltitle
         self.__pause  = pause
 
-    def plot(self, item=None, step=None,
+    def plots(self, item=None, step=None,
             steps    = None,
             title    = "",
             xlabel   = "",
@@ -311,9 +369,9 @@ class Persistence:
                          qui est automatiquement complétée par le numéro du
                          fichier calculé par incrément simple de compteur
             - dynamic  : effectue un affichage des valeurs à chaque stockage
-                         (au-delà du second) La méthode "plot" permet de déclarer
-                         l'affichage dynamique, et c'est la méthode "__replot"
-                         qui est utilisée pour l'effectuer
+                         (au-delà du second). La méthode "plots" permet de
+                         déclarer l'affichage dynamique, et c'est la méthode
+                         "__replots" qui est utilisée pour l'effectuer
             - persist  : booléen indiquant que la fenêtre affichée sera
                          conservée lors du passage au dessin suivant
                          Par défaut, persist = False
@@ -323,15 +381,15 @@ class Persistence:
         """
         import os
         if not self.__dynamic:
-            self.__preplot(title, xlabel, ylabel, ltitle, geometry, persist, pause )
+            self.__preplots(title, xlabel, ylabel, ltitle, geometry, persist, pause )
             if dynamic:
                 self.__dynamic = True
                 if len(self.__values) == 0: return 0
         #
         # Tracé du ou des vecteurs demandés
         indexes = []
-        if step is not None and step in self.__steps:
-            indexes.append(self.__steps.index(step))
+        if step is not None and step < len(self.__values):
+            indexes.append(step)
         elif item is not None and item < len(self.__values):
             indexes.append(item)
         else:
@@ -340,7 +398,7 @@ class Persistence:
         i = -1
         for index in indexes:
             self.__g('set title  "'+str(title).encode('ascii','replace')+' (pas '+str(index)+')"')
-            if ( type(steps) is type([]) ) or ( type(steps) is type(numpy.array([])) ):
+            if ( type(steps) is list ) or ( type(steps) is type(numpy.array([])) ):
                 Steps = list(steps)
             else:
                 Steps = range(len(self.__values[index]))
@@ -356,13 +414,12 @@ class Persistence:
             if self.__pause:
                 raw_input('Please press return to continue...\n')
 
-    def __replot(self):
+    def __replots(self):
         """
         Affichage dans le cas du suivi dynamique de la variable
         """
         if self.__dynamic and len(self.__values) < 2: return 0
         #
-        import os
         self.__g('set title  "'+str(self.__title).encode('ascii','replace'))
         Steps = range(len(self.__values))
         self.__g.plot( self.__gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
@@ -371,18 +428,21 @@ class Persistence:
             raw_input('Please press return to continue...\n')
 
     # ---------------------------------------------------------
-    def stepmean(self):
+    def mean(self):
         """
         Renvoie la moyenne sur toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).mean()
+            if self.__basetype in [int, float]:
+                return float( numpy.array(self.__values).mean() )
+            else:
+                return numpy.array(self.__values).mean(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepstd(self, ddof=0):
+    def std(self, ddof=0):
         """
         Renvoie l'écart-type de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
@@ -393,42 +453,42 @@ class Persistence:
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return numpy.matrix(self.__values).std(ddof=ddof)
+                return numpy.array(self.__values).std(ddof=ddof,axis=0)
             else:
-                return numpy.matrix(self.__values).std()
+                return numpy.array(self.__values).std(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepsum(self):
+    def sum(self):
         """
         Renvoie la somme de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).sum()
+            return numpy.array(self.__values).sum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepmin(self):
+    def min(self):
         """
         Renvoie le minimum de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).min()
+            return numpy.array(self.__values).min(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
-    def stepmax(self):
+    def max(self):
         """
         Renvoie le maximum de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).max()
+            return numpy.array(self.__values).max(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -439,14 +499,14 @@ class Persistence:
         les types élémentaires numpy.
         """
         try:
-            return numpy.matrix(self.__values).cumsum(axis=0)
+            return numpy.array(self.__values).cumsum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
     # On pourrait aussi utiliser les autres attributs d'une "matrix", comme
     # "tofile", "min"...
 
-    def stepplot(self,
+    def plot(self,
             steps    = None,
             title    = "",
             xlabel   = "",
@@ -483,7 +543,6 @@ class Persistence:
                          attendant un Return
                          Par défaut, pause = True
         """
-        import os
         #
         # Vérification de la disponibilité du module Gnuplot
         try:
@@ -499,7 +558,7 @@ class Persistence:
             self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
         if ltitle is None:
             ltitle = ""
-        if ( type(steps) is type([]) ) or ( type(steps) is type(numpy.array([])) ):
+        if ( type(steps) is list ) or ( type(steps) is type(numpy.array([])) ):
             Steps = list(steps)
         else:
             Steps = range(len(self.__values[0]))
@@ -530,7 +589,7 @@ class Persistence:
         Scheduler      = None,
         ):
         """
-        Méthode d'association à la variable d'un triplet définissant un observer
+        Association à la variable d'un triplet définissant un observer
         
         Le Scheduler attendu est une fréquence, une simple liste d'index ou un
         xrange des index.
@@ -556,7 +615,7 @@ class Persistence:
         HookFunction   = None,
         ):
         """
-        Méthode de suppression d'un observer sur la variable.
+        Suppression d'un observer nommé sur la variable.
         
         On peut donner dans HookFunction la meme fonction que lors de la
         définition, ou un simple string qui est le nom de la fonction.
@@ -598,7 +657,7 @@ class OneVector(Persistence):
     hypothèse par pas. Pour éviter les confusions, ne pas utiliser la classe
     "OneVector" pour des données hétérogènes, mais bien "OneList".
     """
-    def __init__(self, name="", unit="", basetype = list):
+    def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
 
 class OneMatrix(Persistence):
@@ -625,7 +684,7 @@ class OneNoType(Persistence):
     Classe définissant le stockage d'un objet sans modification (cast) de type.
     Attention, selon le véritable type de l'objet stocké à chaque pas, les
     opérations arithmétiques à base de numpy peuvent être invalides ou donner
-    des résultats inatendus. Cette classe n'est donc à utiliser qu'à bon escient
+    des résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
     volontairement, et pas du tout par défaut.
     """
     def __init__(self, name="", unit="", basetype = NoType):
@@ -640,7 +699,7 @@ class CompositePersistence:
     Des objets par défaut sont prévus, et des objets supplémentaires peuvent
     être ajoutés.
     """
-    def __init__(self, name=""):
+    def __init__(self, name="", defaults=True):
         """
         name : nom courant
         
@@ -655,31 +714,32 @@ class CompositePersistence:
         #
         # Definition des objets par defaut
         # --------------------------------
-        self.__StoredObjects["Informations"]     = OneNoType("Informations")
-        self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
-        self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
-        self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
-        self.__StoredObjects["ObservationError"] = OneMatrix("ObservationError")
-        self.__StoredObjects["Analysis"]         = OneVector("Analysis", basetype=numpy.array)
-        self.__StoredObjects["AnalysisError"]    = OneMatrix("AnalysisError")
-        self.__StoredObjects["Innovation"]       = OneVector("Innovation", basetype=numpy.array)
-        self.__StoredObjects["KalmanGainK"]      = OneMatrix("KalmanGainK")
-        self.__StoredObjects["OperatorH"]        = OneMatrix("OperatorH")
-        self.__StoredObjects["RmsOMA"]           = OneScalar("RmsOMA")
-        self.__StoredObjects["RmsOMB"]           = OneScalar("RmsOMB")
-        self.__StoredObjects["RmsBMA"]           = OneScalar("RmsBMA")
+        if defaults:
+            self.__StoredObjects["Informations"]     = OneNoType("Informations")
+            self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
+            self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
+            self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
+            self.__StoredObjects["ObservationError"] = OneMatrix("ObservationError")
+            self.__StoredObjects["Analysis"]         = OneVector("Analysis", basetype=numpy.array)
+            self.__StoredObjects["AnalysisError"]    = OneMatrix("AnalysisError")
+            self.__StoredObjects["Innovation"]       = OneVector("Innovation", basetype=numpy.array)
+            self.__StoredObjects["KalmanGainK"]      = OneMatrix("KalmanGainK")
+            self.__StoredObjects["OperatorH"]        = OneMatrix("OperatorH")
+            self.__StoredObjects["RmsOMA"]           = OneScalar("RmsOMA")
+            self.__StoredObjects["RmsOMB"]           = OneScalar("RmsOMB")
+            self.__StoredObjects["RmsBMA"]           = OneScalar("RmsBMA")
         #
 
-    def store(self, name=None, value=None, step=None):
+    def store(self, name=None, value=None, **kwargs):
         """
         Stockage d'une valeur "value" pour le "step" dans la variable "name".
         """
         if name is None: raise ValueError("Storable object name is required for storage.")
         if name not in self.__StoredObjects.keys():
             raise ValueError("No such name '%s' exists in storable objects."%name)
-        self.__StoredObjects[name].store( value=value, step=step )
+        self.__StoredObjects[name].store( value=value, **kwargs )
 
-    def add_object(self, name=None, persistenceType=Persistence, basetype=numpy.array ):
+    def add_object(self, name=None, persistenceType=Persistence, basetype=None ):
         """
         Ajoute dans les objets stockables un nouvel objet défini par son nom, son
         type de Persistence et son type de base à chaque pas.
@@ -687,7 +747,10 @@ class CompositePersistence:
         if name is None: raise ValueError("Object name is required for adding an object.")
         if name in self.__StoredObjects.keys():
             raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
-        self.__StoredObjects[name] = persistenceType( name=str(name), basetype=basetype )
+        if basetype is None:
+            self.__StoredObjects[name] = persistenceType( name=str(name) )
+        else:
+            self.__StoredObjects[name] = persistenceType( name=str(name), basetype=basetype )
 
     def get_object(self, name=None ):
         """
@@ -751,20 +814,32 @@ class CompositePersistence:
         return objs
 
     # ---------------------------------------------------------
-    def save_composite(self, filename=None, mode="pickle"):
+    def save_composite(self, filename=None, mode="pickle", compress="gzip"):
         """
         Enregistre l'objet dans le fichier indiqué selon le "mode" demandé,
         et renvoi le nom du fichier
         """
         import os
         if filename is None:
-            filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl"
+            if compress == "gzip":
+                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.gz"
+            elif compress == "bzip2":
+                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.bz2"
+            else:
+                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl"
         else:
             filename = os.path.abspath( filename )
         #
         import cPickle
-        if mode is "pickle":
-            output = open( filename, 'wb')
+        if mode == "pickle":
+            if compress == "gzip":
+                import gzip
+                output = gzip.open( filename, 'wb')
+            elif compress == "bzip2":
+                import bz2
+                output = bz2.BZ2File( filename, 'wb')
+            else:
+                output = open( filename, 'wb')
             cPickle.dump(self, output)
             output.close()
         else:
@@ -772,7 +847,7 @@ class CompositePersistence:
         #
         return filename
 
-    def load_composite(self, filename=None, mode="pickle"):
+    def load_composite(self, filename=None, mode="pickle", compress="gzip"):
         """
         Recharge un objet composite sauvé en fichier
         """
@@ -783,8 +858,15 @@ class CompositePersistence:
             filename = os.path.abspath( filename )
         #
         import cPickle
-        if mode is "pickle":
-            pkl_file = open(filename, 'rb')
+        if mode == "pickle":
+            if compress == "gzip":
+                import gzip
+                pkl_file = gzip.open( filename, 'rb')
+            elif compress == "bzip2":
+                import bz2
+                pkl_file = bz2.BZ2File( filename, 'rb')
+            else:
+                pkl_file = open(filename, 'rb')
             output = cPickle.load(pkl_file)
             for k in output.keys():
                 self[k] = output[k]
@@ -796,305 +878,3 @@ class CompositePersistence:
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
-
-    print "======> Un flottant"
-    OBJET_DE_TEST = OneScalar("My float", unit="cm")
-    OBJET_DE_TEST.store( 5.)
-    OBJET_DE_TEST.store(-5.)
-    OBJET_DE_TEST.store( 1.)
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Valeurs par pas :"
-    print "  La moyenne        :", OBJET_DE_TEST.mean()
-    print "  L'écart-type      :", OBJET_DE_TEST.std()
-    print "  La somme          :", OBJET_DE_TEST.sum()
-    print "  Le minimum        :", OBJET_DE_TEST.min()
-    print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales :"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
-    print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
-    print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Un flottant"
-    OBJET_DE_TEST = OneScalar("My float", unit="cm")
-    OBJET_DE_TEST.store( 5., step="azerty")
-    OBJET_DE_TEST.store(-5., step="poiuyt")
-    OBJET_DE_TEST.store( 1., step="azerty")
-    OBJET_DE_TEST.store( 0., step="xxxxxx")
-    OBJET_DE_TEST.store( 5., step="poiuyt")
-    OBJET_DE_TEST.store(-5., step="azerty")
-    OBJET_DE_TEST.store( 1., step="poiuyt")
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Premier index       :", OBJET_DE_TEST.valueserie( step = "azerty", allSteps = False )
-    print "Valeurs identiques  :", OBJET_DE_TEST.valueserie( step = "azerty", allSteps = True )
-    print "Premier index       :", OBJET_DE_TEST.valueserie( step = "poiuyt", allSteps = False )
-    print "Valeurs identiques  :", OBJET_DE_TEST.valueserie( step = "poiuyt", allSteps = True )
-    del OBJET_DE_TEST
-    print
-
-    print "======> Un entier"
-    OBJET_DE_TEST = OneScalar("My int", unit="cm", basetype=int)
-    OBJET_DE_TEST.store( 5 )
-    OBJET_DE_TEST.store(-5 )
-    OBJET_DE_TEST.store( 1.)
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Valeurs par pas :"
-    print "  La moyenne        :", OBJET_DE_TEST.mean()
-    print "  L'écart-type      :", OBJET_DE_TEST.std()
-    print "  La somme          :", OBJET_DE_TEST.sum()
-    print "  Le minimum        :", OBJET_DE_TEST.min()
-    print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales :"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
-    print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
-    print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Un booléen"
-    OBJET_DE_TEST = OneScalar("My bool", unit="", basetype=bool)
-    OBJET_DE_TEST.store( True  )
-    OBJET_DE_TEST.store( False )
-    OBJET_DE_TEST.store( True  )
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Un vecteur de flottants"
-    OBJET_DE_TEST = OneVector("My float vector", unit="cm")
-    OBJET_DE_TEST.store( (5 , -5) )
-    OBJET_DE_TEST.store( (-5, 5 ) )
-    OBJET_DE_TEST.store( (1., 1.) )
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Valeurs par pas :"
-    print "  La moyenne        :", OBJET_DE_TEST.mean()
-    print "  L'écart-type      :", OBJET_DE_TEST.std()
-    print "  La somme          :", OBJET_DE_TEST.sum()
-    print "  Le minimum        :", OBJET_DE_TEST.min()
-    print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales :"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
-    print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
-    print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Une liste hétérogène"
-    OBJET_DE_TEST = OneList("My list", unit="bool/cm")
-    OBJET_DE_TEST.store( (True , -5) )
-    OBJET_DE_TEST.store( (False,  5 ) )
-    OBJET_DE_TEST.store( (True ,  1.) )
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Valeurs par pas : attention, on peut les calculer car True=1, False=0, mais cela n'a pas de sens"
-    print "  La moyenne        :", OBJET_DE_TEST.mean()
-    print "  L'écart-type      :", OBJET_DE_TEST.std()
-    print "  La somme          :", OBJET_DE_TEST.sum()
-    print "  Le minimum        :", OBJET_DE_TEST.min()
-    print "  Le maximum        :", OBJET_DE_TEST.max()
-    print "Valeurs globales : attention, on peut les calculer car True=1, False=0, mais cela n'a pas de sens"
-    print "  La moyenne        :", OBJET_DE_TEST.stepmean()
-    print "  L'écart-type      :", OBJET_DE_TEST.stepstd()
-    print "  La somme          :", OBJET_DE_TEST.stepsum()
-    print "  Le minimum        :", OBJET_DE_TEST.stepmin()
-    print "  Le maximum        :", OBJET_DE_TEST.stepmax()
-    print "  La somme cumulée  :", OBJET_DE_TEST.cumsum()
-    print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Utilisation directe de la classe Persistence"
-    OBJET_DE_TEST = Persistence("My object", unit="", basetype=int )
-    OBJET_DE_TEST.store( 1  )
-    OBJET_DE_TEST.store( 3 )
-    OBJET_DE_TEST.store( 7  )
-    print "Les pas de stockage :", OBJET_DE_TEST.stepserie()
-    print "Les valeurs         :", OBJET_DE_TEST.valueserie()
-    print "La 2ème valeur      :", OBJET_DE_TEST.valueserie(1)
-    print "La dernière valeur  :", OBJET_DE_TEST.valueserie(-1)
-    print "Taille \"shape\"      :", OBJET_DE_TEST.shape()
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Utilisation des méthodes d'accès de type dictionnaire"
-    OBJET_DE_TEST = OneScalar("My int", unit="cm", basetype=int)
-    for i in range(5):
-        OBJET_DE_TEST.store( 7+i )
-    print "Taille \"len\"        :", len(OBJET_DE_TEST)
-    print "Les pas de stockage :", OBJET_DE_TEST.keys()
-    print "Les valeurs         :", OBJET_DE_TEST.values()
-    print "Les paires          :", OBJET_DE_TEST.items()
-    del OBJET_DE_TEST
-    print
-
-    print "======> Persistence composite"
-    OBJET_DE_TEST = CompositePersistence("My CompositePersistence")
-    print "Objets stockables :", OBJET_DE_TEST.get_stored_objects()
-    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
-    print "--> Stockage d'une valeur de Background"
-    OBJET_DE_TEST.store("Background",numpy.zeros(5))
-    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
-    print "--> Ajout d'un objet nouveau par defaut, de type vecteur numpy par pas"
-    OBJET_DE_TEST.add_object("ValeursVectorielles")
-    OBJET_DE_TEST.store("ValeursVectorielles",numpy.zeros(5))
-    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
-    print "--> Ajout d'un objet nouveau de type liste par pas"
-    OBJET_DE_TEST.add_object("ValeursList", persistenceType=OneList )
-    OBJET_DE_TEST.store("ValeursList",range(5))
-    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
-    print "--> Ajout d'un objet nouveau, de type vecteur string par pas"
-    OBJET_DE_TEST.add_object("ValeursStr", persistenceType=Persistence, basetype=str )
-    OBJET_DE_TEST.store("ValeursStr","c020")
-    OBJET_DE_TEST.store("ValeursStr","c021")
-    print "Les valeurs       :", OBJET_DE_TEST.get_object("ValeursStr").valueserie()
-    print "Acces comme dict  :", OBJET_DE_TEST["ValeursStr"].stepserie()
-    print "Acces comme dict  :", OBJET_DE_TEST["ValeursStr"].valueserie()
-    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
-    print "--> Suppression d'un objet"
-    OBJET_DE_TEST.del_object("ValeursVectorielles")
-    print "Objets actifs     :", OBJET_DE_TEST.get_stored_objects( hideVoidObjects = True )
-    print "--> Enregistrement de l'objet complet de Persistence composite"
-    OBJET_DE_TEST.save_composite("composite.pkl")
-    print
-
-    print "======> Affichage graphique d'objets stockés"
-    OBJET_DE_TEST = Persistence("My object", unit="", basetype=numpy.array)
-    D = OBJET_DE_TEST
-    vect1 = [1, 2, 1, 2, 1]
-    vect2 = [-3, -3, 0, -3, -3]
-    vect3 = [-1, 1, -5, 1, -1]
-    vect4 = 100*[0.29, 0.97, 0.73, 0.01, 0.20]
-    print "Stockage de 3 vecteurs de longueur identique"
-    D.store(vect1)
-    D.store(vect2)
-    D.store(vect3)
-    print "Affichage graphique de l'ensemble du stockage sur une même image"
-    D.stepplot(
-        title = "Tous les vecteurs",
-        filename="vecteurs.ps",
-        xlabel = "Axe X",
-        ylabel = "Axe Y",
-        pause = False )
-    print "Stockage d'un quatrième vecteur de longueur différente"
-    D.store(vect4)
-    print "Affichage graphique séparé du dernier stockage"
-    D.plot(
-        item  = 3,
-        title = "Vecteurs",
-        filename = "vecteur",
-        xlabel = "Axe X",
-        ylabel = "Axe Y",
-        pause = False )
-    print "Les images ont été stockées en fichiers Postscript"
-    print "Taille \"shape\" du dernier objet stocké",OBJET_DE_TEST.shape()
-    print "Taille \"len\" du dernier objet stocké",len(OBJET_DE_TEST)
-    del OBJET_DE_TEST
-    print
-
-    print "======> Affichage graphique dynamique d'objets"
-    OBJET_DE_TEST = Persistence("My object", unit="", basetype=float)
-    D = OBJET_DE_TEST
-    D.plot(
-        dynamic = True,
-        title   = "Valeur suivie",
-        xlabel  = "Pas",
-        ylabel  = "Valeur",
-        pause   = False,
-        )
-    for i in range(1,11):
-        D.store( i*i )
-    print "Taille \"shape\" du dernier objet stocké",OBJET_DE_TEST.shape()
-    print "Taille \"len\" du dernier objet stocké",len(OBJET_DE_TEST)
-    print "Nombre d'objets stockés",OBJET_DE_TEST.stepnumber()
-    del OBJET_DE_TEST
-    print
-
-    print "======> Affectation simple d'observateurs dynamiques"
-    def obs(var=None,info=None):
-        print "  ---> Mise en oeuvre de l'observer"
-        print "       var  =",var.valueserie(-1)
-        print "       info =",info
-    OBJET_DE_TEST = Persistence("My object", unit="", basetype=list)
-    D = OBJET_DE_TEST
-    D.setDataObserver( HookFunction = obs )
-    for i in range(5):
-        # print
-        print "Action de 1 observer sur la variable observée, étape :",i
-        D.store( [i, i, i] )
-    del OBJET_DE_TEST
-    print
-
-    print "======> Affectation multiple d'observateurs dynamiques"
-    def obs(var=None,info=None):
-        print "  ---> Mise en oeuvre de l'observer"
-        print "       var  =",var.valueserie(-1)
-        print "       info =",info
-    def obs_bis(var=None,info=None):
-        print "  ---> Mise en oeuvre de l'observer"
-        print "       var  =",var.valueserie(-1)
-        print "       info =",info
-    OBJET_DE_TEST = Persistence("My object", unit="", basetype=list)
-    D = OBJET_DE_TEST
-    D.setDataObserver(
-        HookFunction   = obs,
-        Scheduler      = [2, 4],
-        HookParameters = "Premier observer",
-        )
-    D.setDataObserver(
-        HookFunction   = obs,
-        Scheduler      = xrange(1,3),
-        HookParameters = "Second observer",
-        )
-    D.setDataObserver(
-        HookFunction   = obs_bis,
-        Scheduler      = range(1,3)+range(7,9),
-        HookParameters = "Troisième observer",
-        )
-    for i in range(5):
-        print "Action de 3 observers sur la variable observée, étape :",i
-        D.store( [i, i, i] )
-    D.removeDataObserver(
-        HookFunction   = obs,
-        )
-    for i in range(5,10):
-        print "Action d'un seul observer sur la variable observée, étape :",i
-        D.store( [i, i, i] )
-    del OBJET_DE_TEST
-    print

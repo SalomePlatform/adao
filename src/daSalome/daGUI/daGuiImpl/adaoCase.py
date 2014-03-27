@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  Copyright (C) 2010 EDF R&D
+#  Copyright (C) 2010-2013 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -64,7 +64,7 @@ class AdaoCase:
   def createYACSFile(self):
     rtn = ""
     if (self.filename == ""):
-      return "You need to save your case to export it"
+      return "You need to save your case to export it."
 
     self.yacs_filename = self.filename[:self.filename.rfind(".")] + '.xml'
     yacs_filename_backup = self.filename[:self.filename.rfind(".")] + '.xml.back'
@@ -75,12 +75,12 @@ class AdaoCase:
     self.eficas_editor.saveFile()
     filename = self.filename[:self.filename.rfind(".")] + '.py'
     if not os.path.exists(filename):
-      msg =  "Cannot find the py file for YACS generation \n"
-      msg += "Is your case correct ? \n"
+      msg =  "Cannot find the COMM associated python file for YACS\n"
+      msg += "generation. Is your case correct?\n"
       return msg
 
     if not os.environ.has_key("ADAO_ROOT_DIR"):
-      return "Please add ADAO_ROOT_DIR to your environnement"
+      return "Please add ADAO_ROOT_DIR to your environnement."
 
     adao_path = os.environ["ADAO_ROOT_DIR"]
     adao_exe = adao_path + "/bin/salome/AdaoYacsSchemaCreator.py"
@@ -88,8 +88,9 @@ class AdaoCase:
     p = subprocess.Popen(args)
     (stdoutdata, stderrdata) = p.communicate()
     if not os.path.exists(self.yacs_filename):
-      msg  = "An error occured during the execution of AdaoYacsSchemaCreator.py \n"
-      msg += "See erros details in your terminal \n"
+      msg  = "An error occured during the execution of the ADAO YACS Schema\n"
+      msg += "Creator. If SALOME is launched by command line, see errors\n"
+      msg += "details in your terminal.\n"
       return msg
     return rtn
 
@@ -102,7 +103,7 @@ class AdaoCase:
     try:
       import libYACS_Swig
       yacs_swig = libYACS_Swig.YACS_Swig()
-      yacs_swig.loadSchema(self.yacs_filename)
+      yacs_swig.loadSchema(self.yacs_filename, 1, 1)
     except:
       msg =  "Please install YACS module, error was: \n"
       msg += traceback.format_exc()

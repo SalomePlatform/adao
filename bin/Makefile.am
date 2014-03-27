@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2011 EDF R&D
+# Copyright (C) 2010-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,9 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-bin_SCRIPTS = AdaoYacsSchemaCreator.py qtEficas_adao_study.py AdaoCatalogGenerator.py
+bin_SCRIPTS = AdaoYacsSchemaCreator.py qtEficas_adao_study.py # AdaoCatalogGenerator.py module_version.py
 
-EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in AdaoCatalogGenerator.py
+EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in # AdaoCatalogGenerator.py module_version.py
 
 install-data-hook:
 	@export PYTHONPATH=$(DESTDIR)${salomepythondir}:${PYTHONPATH} && python $(top_srcdir)/bin/AdaoCatalogGenerator.py $(DESTDIR)${salomepythondir}/daEficas ADAO_Cata_V0.py

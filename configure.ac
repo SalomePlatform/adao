@@ -16,9 +16,9 @@ dnl  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 dnl
 dnl  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 dnl
-dnl  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+dnl  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-AC_INIT(ADAO_SRC, [6.3.0])
+AC_INIT(ADAO_SRC, [7.2.0])
 AC_CONFIG_AUX_DIR(adm_local)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(adao_config.h)
@@ -125,10 +125,22 @@ AC_CONFIG_FILES([
         examples/Makefile
         examples/daSalome/Makefile
         examples/daSalome/test003_ADAO_JDC_using_scripts.comm
+        examples/daSalome/test003_ADAO_JDC_using_scripts.py
+        examples/daSalome/test003_bis_ADAO_JDC_using_user_data_init.comm
+        examples/daSalome/test003_bis_ADAO_JDC_using_user_data_init.py
         examples/daSalome/test004_ADAO_JDC_using_scripts.comm
+        examples/daSalome/test004_ADAO_JDC_using_scripts.py
         examples/daSalome/test005_ADAO_Operators.comm
+        examples/daSalome/test005_ADAO_Operators.py
+        examples/daSalome/test006_Observers.comm
+        examples/daSalome/test006_Observers.py
+        examples/daSkeletons/Makefile
+        examples/daSkeletons/External_data_definition_by_scripts/Makefile
+        examples/daSkeletons/External_data_definition_by_scripts/ADAO_Case.comm
         bin/Makefile
         bin/qtEficas_adao_study.py
         doc/Makefile
+        doc/en/Makefile
+        doc/fr/Makefile
         ])
 AC_OUTPUT

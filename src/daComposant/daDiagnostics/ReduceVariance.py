@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011 EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print " La variance de OMA est de...........................:", x2.var()
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
-    if not D.valueserie(0) :
+    if not D[0] :
             print " Résultat : l'analyse NE RÉDUIT PAS la variance"
     else :
             print " Résultat : l'analyse RÉDUIT la variance"
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     print " La variance de OMA est de...........................:", x2.var()
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
-    if not D.valueserie(1) :
+    if not D[1] :
             print " Résultat : l'analyse NE RÉDUIT PAS la variance"
     else :
             print " Résultat : l'analyse RÉDUIT la variance"

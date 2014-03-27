@@ -1,5 +1,6 @@
-#-*- coding: utf-8 -*-
-# Copyright (C) 2010-2011 EDF R&D
+#-*-coding:iso-8859-1-*-
+#
+# Copyright (C) 2010-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,25 +18,23 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import SALOMERuntime
 import pilot
-import pickle
+import pickle, cPickle
 import numpy
 import threading
 
 from daCore.AssimilationStudy import AssimilationStudy
 from daYacsIntegration import daStudy
 
+
 class OptimizerHooks:
 
-  def __init__(self, optim_algo):
+  def __init__(self, optim_algo, switch_value=-1):
     self.optim_algo = optim_algo
-
-    # Gestion du compteur
-    self.sample_counter = 0
-    self.counter_lock = threading.Lock()
+    self.switch_value = str(int(switch_value))
 
   def create_sample(self, data, method):
     sample = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/ParametricInput'))
@@ -56,6 +55,17 @@ class OptimizerHooks:
     method_name.setEltAtRank("name", "method")
     method_name.setEltAtRank("value", method)
     specificParameters.pushBack(method_name)
+    # print self.optim_algo.has_observer
+    if self.optim_algo.has_observer:
+      obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+      obs_switch.setEltAtRank("name", "switch_value")
+      obs_switch.setEltAtRank("value", "1")
+      specificParameters.pushBack(obs_switch)
+    if self.optim_algo.has_evolution_model:
+      obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+      obs_switch.setEltAtRank("name", "switch_value")
+      obs_switch.setEltAtRank("value", self.switch_value)
+      specificParameters.pushBack(obs_switch)
     sample.setEltAtRank("specificParameters", specificParameters)
 
     # Les données
@@ -72,7 +82,7 @@ class OptimizerHooks:
     state_sequence    = pilot.SequenceAny_New(variable_sequence.getType())
     time_sequence     = pilot.SequenceAny_New(state_sequence.getType())
 
-    print "Input Data", data
+    #print "Input Data", data
     if isinstance(data, type((1,2))):
       self.add_parameters(data[0], variable_sequence)
       self.add_parameters(data[1], variable_sequence, Output=True) # Output == Y
@@ -92,7 +102,10 @@ class OptimizerHooks:
     else:
       val_end = self.optim_algo.da_study.OutputVariables[self.optim_algo.da_study.OutputVariablesOrder[elt_list]] # nbr de l'argument courant (-1 == tout)
 
-    it = data.flat
+    if data is None:
+        it = []
+    else:
+        it = data.flat
     for val in it:
       param.pushBack(val)
       val_number += 1
@@ -123,7 +136,7 @@ class OptimizerHooks:
 
     data = []
     outputValues = any_data["outputValues"]
-    print outputValues
+    #print outputValues
     for variable in outputValues[0][0]:
       for i in range(variable.size()):
         data.append(variable[i].getDoubleValue())
@@ -132,12 +145,12 @@ class OptimizerHooks:
     return matrix
 
   def Direct(self, X, sync = 1):
-    print "Call Direct OptimizerHooks"
+    # print "Call Direct OptimizerHooks"
     if sync == 1:
       # 1: Get a unique sample number
-      self.counter_lock.acquire()
-      self.sample_counter += 1
-      local_counter = self.sample_counter
+      self.optim_algo.counter_lock.acquire()
+      self.optim_algo.sample_counter += 1
+      local_counter = self.optim_algo.sample_counter
 
       # 2: Put sample in the job pool
       sample = self.create_sample(X, "Direct")
@@ -145,81 +158,9 @@ class OptimizerHooks:
 
       # 3: Wait
       while 1:
-        print "waiting"
+        #print "waiting"
         self.optim_algo.signalMasterAndWait()
-        print "signal"
-        if self.optim_algo.isTerminationRequested():
-          self.optim_algo.pool.destroyAll()
-          return
-        else:
-          # Get current Id
-          sample_id = self.optim_algo.pool.getCurrentId()
-          if sample_id == local_counter:
-            # 4: Data is ready
-            any_data = self.optim_algo.pool.getOutSample(local_counter)
-            Y = self.get_data_from_any(any_data)
-
-            # 5: Release lock
-            # Have to be done before but need a new implementation
-            # of the optimizer loop
-            self.counter_lock.release()
-            return Y
-    else:
-      print "sync false is not yet implemented"
-      self.optim_algo.setError("sync == false not yet implemented")
-
-  def Tangent(self, X, sync = 1):
-    print "Call Tangent OptimizerHooks"
-    if sync == 1:
-      # 1: Get a unique sample number
-      self.counter_lock.acquire()
-      self.sample_counter += 1
-      local_counter = self.sample_counter
-
-      # 2: Put sample in the job pool
-      sample = self.create_sample(X, "Tangent")
-      self.optim_algo.pool.pushInSample(local_counter, sample)
-
-      # 3: Wait
-      while 1:
-        self.optim_algo.signalMasterAndWait()
-        if self.optim_algo.isTerminationRequested():
-          self.optim_algo.pool.destroyAll()
-          return
-        else:
-          # Get current Id
-          sample_id = self.optim_algo.pool.getCurrentId()
-          if sample_id == local_counter:
-            # 4: Data is ready
-            any_data = self.optim_algo.pool.getOutSample(local_counter)
-            Y = self.get_data_from_any(any_data)
-
-            # 5: Release lock
-            # Have to be done before but need a new implementation
-            # of the optimizer loop
-            self.counter_lock.release()
-            return Y
-    else:
-      print "sync false is not yet implemented"
-      self.optim_algo.setError("sync == false not yet implemented")
-
-  def Adjoint(self, (X, Y), sync = 1):
-    print "Call Adjoint OptimizerHooks"
-    if sync == 1:
-      # 1: Get a unique sample number
-      self.counter_lock.acquire()
-      self.sample_counter += 1
-      local_counter = self.sample_counter
-
-      # 2: Put sample in the job pool
-      sample = self.create_sample((X,Y), "Adjoint")
-      self.optim_algo.pool.pushInSample(local_counter, sample)
-
-      # 3: Wait
-      while 1:
-        print "waiting"
-        self.optim_algo.signalMasterAndWait()
-        print "signal"
+        #print "signal"
         if self.optim_algo.isTerminationRequested():
           self.optim_algo.pool.destroyAll()
           return
@@ -234,10 +175,82 @@ class OptimizerHooks:
             # 5: Release lock
             # Have to be done before but need a new implementation
             # of the optimizer loop
-            self.counter_lock.release()
+            self.optim_algo.counter_lock.release()
             return Z
     else:
-      print "sync false is not yet implemented"
+      #print "sync false is not yet implemented"
+      self.optim_algo.setError("sync == false not yet implemented")
+
+  def Tangent(self, (X, dX), sync = 1):
+    # print "Call Tangent OptimizerHooks"
+    if sync == 1:
+      # 1: Get a unique sample number
+      self.optim_algo.counter_lock.acquire()
+      self.optim_algo.sample_counter += 1
+      local_counter = self.optim_algo.sample_counter
+
+      # 2: Put sample in the job pool
+      sample = self.create_sample((X,dX) , "Tangent")
+      self.optim_algo.pool.pushInSample(local_counter, sample)
+
+      # 3: Wait
+      while 1:
+        self.optim_algo.signalMasterAndWait()
+        if self.optim_algo.isTerminationRequested():
+          self.optim_algo.pool.destroyAll()
+          return
+        else:
+          # Get current Id
+          sample_id = self.optim_algo.pool.getCurrentId()
+          if sample_id == local_counter:
+            # 4: Data is ready
+            any_data = self.optim_algo.pool.getOutSample(local_counter)
+            Z = self.get_data_from_any(any_data)
+
+            # 5: Release lock
+            # Have to be done before but need a new implementation
+            # of the optimizer loop
+            self.optim_algo.counter_lock.release()
+            return Z
+    else:
+      #print "sync false is not yet implemented"
+      self.optim_algo.setError("sync == false not yet implemented")
+
+  def Adjoint(self, (X, Y), sync = 1):
+    # print "Call Adjoint OptimizerHooks"
+    if sync == 1:
+      # 1: Get a unique sample number
+      self.optim_algo.counter_lock.acquire()
+      self.optim_algo.sample_counter += 1
+      local_counter = self.optim_algo.sample_counter
+
+      # 2: Put sample in the job pool
+      sample = self.create_sample((X,Y), "Adjoint")
+      self.optim_algo.pool.pushInSample(local_counter, sample)
+
+      # 3: Wait
+      while 1:
+        #print "waiting"
+        self.optim_algo.signalMasterAndWait()
+        #print "signal"
+        if self.optim_algo.isTerminationRequested():
+          self.optim_algo.pool.destroyAll()
+          return
+        else:
+          # Get current Id
+          sample_id = self.optim_algo.pool.getCurrentId()
+          if sample_id == local_counter:
+            # 4: Data is ready
+            any_data = self.optim_algo.pool.getOutSample(local_counter)
+            Z = self.get_data_from_any(any_data)
+
+            # 5: Release lock
+            # Have to be done before but need a new implementation
+            # of the optimizer loop
+            self.optim_algo.counter_lock.release()
+            return Z
+    else:
+      #print "sync false is not yet implemented"
       self.optim_algo.setError("sync == false not yet implemented")
 
 class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
@@ -247,63 +260,185 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     SALOMERuntime.OptimizerAlgASync.__init__(self, None)
     self.runtime = SALOMERuntime.getSALOMERuntime()
 
+    self.has_evolution_model = False
+    self.has_observer = False
+
+    # Gestion du compteur
+    self.sample_counter = 0
+    self.counter_lock = threading.Lock()
+
     # Definission des types d'entres et de sorties pour le code de calcul
     self.tin      = self.runtime.getTypeCode("SALOME_TYPES/ParametricInput")
     self.tout     = self.runtime.getTypeCode("SALOME_TYPES/ParametricOutput")
     self.pyobject = self.runtime.getTypeCode("pyobj")
 
+    # Absolument indispensable de d�finir ainsi "self.optim_hooks"
+    # (sinon on a une "Unknown Exception" sur l'attribut "finish")
     self.optim_hooks = OptimizerHooks(self)
 
   # input vient du port algoinit, input est un Any YACS !
   def initialize(self,input):
-    print "Algorithme initialize"
+    #print "Algorithme initialize"
 
     # get the daStudy
     #print "[Debug] Input is ", input
     str_da_study = input.getStringValue()
-    self.da_study = pickle.loads(str_da_study)
+    self.da_study = cPickle.loads(str_da_study)
     #print "[Debug] da_study is ", self.da_study
     self.da_study.initAlgorithm()
     self.ADD = self.da_study.getAssimilationStudy()
 
   def startToTakeDecision(self):
-    print "Algorithme startToTakeDecision"
+    # print "Algorithme startToTakeDecision"
 
     # Check if ObservationOperator is already set
     if self.da_study.getObservationOperatorType("Direct") == "Function" or self.da_study.getObservationOperatorType("Tangent") == "Function" or self.da_study.getObservationOperatorType("Adjoint") == "Function" :
-      print "Set Hooks"
+      # print "Set Hooks for ObservationOperator"
       # Use proxy function for YACS
-      self.hooks = OptimizerHooks(self)
+      self.hooksOO = OptimizerHooks(self, switch_value=1)
       direct = tangent = adjoint = None
       if self.da_study.getObservationOperatorType("Direct") == "Function":
-        direct = self.hooks.Direct
+        direct = self.hooksOO.Direct
       if self.da_study.getObservationOperatorType("Tangent") == "Function" :
-        tangent = self.hooks.Tangent
+        tangent = self.hooksOO.Tangent
       if self.da_study.getObservationOperatorType("Adjoint") == "Function" :
-        adjoint = self.hooks.Adjoint
+        adjoint = self.hooksOO.Adjoint
 
       # Set ObservationOperator
       self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+    # else:
+      # print "Not setting Hooks for ObservationOperator"
 
+    # Check if EvolutionModel is already set
+    if self.da_study.getEvolutionModelType("Direct") == "Function" or self.da_study.getEvolutionModelType("Tangent") == "Function" or self.da_study.getEvolutionModelType("Adjoint") == "Function" :
+      self.has_evolution_model = True
+      # print "Set Hooks for EvolutionModel"
+      # Use proxy function for YACS
+      self.hooksEM = OptimizerHooks(self, switch_value=2)
+      direct = tangent = adjoint = None
+      if self.da_study.getEvolutionModelType("Direct") == "Function":
+        direct = self.hooksEM.Direct
+      if self.da_study.getEvolutionModelType("Tangent") == "Function" :
+        tangent = self.hooksEM.Tangent
+      if self.da_study.getEvolutionModelType("Adjoint") == "Function" :
+        adjoint = self.hooksEM.Adjoint
+
+      # Set EvolutionModel
+      self.ADD.setEvolutionModel(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+    # else:
+      # print "Not setting Hooks for EvolutionModel"
+
+    # Set Observers
+    for observer_name in self.da_study.observers_dict.keys():
+      # print "observers %s found" % observer_name
+      self.has_observer = True
+      if self.da_study.observers_dict[observer_name]["scheduler"] != "":
+        self.ADD.setDataObserver(observer_name, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[observer_name]["scheduler"], HookParameters = observer_name)
+      else:
+        self.ADD.setDataObserver(observer_name, HookFunction=self.obs, HookParameters = observer_name)
 
     # Start Assimilation Study
-    print "ADD analyze"
+    print "Launching the analyse\n"
     self.ADD.analyze()
 
     # Assimilation Study is finished
     self.pool.destroyAll()
 
+  def obs(self, var, info):
+    # print "Call observer %s" % info
+    sample = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/ParametricInput'))
+
+    # Fake data
+    inputVarList  = pilot.SequenceAny_New(self.runtime.getTypeCode("string"))
+    outputVarList = pilot.SequenceAny_New(self.runtime.getTypeCode("string"))
+    inputVarList.pushBack("a")
+    outputVarList.pushBack("a")
+    sample.setEltAtRank("inputVarList", inputVarList)
+    sample.setEltAtRank("outputVarList", outputVarList)
+    variable          = pilot.SequenceAny_New(self.runtime.getTypeCode("double"))
+    variable_sequence = pilot.SequenceAny_New(variable.getType())
+    state_sequence    = pilot.SequenceAny_New(variable_sequence.getType())
+    time_sequence     = pilot.SequenceAny_New(state_sequence.getType())
+    variable.pushBack(1.0)
+    variable_sequence.pushBack(variable)
+    state_sequence.pushBack(variable_sequence)
+    time_sequence.pushBack(state_sequence)
+    sample.setEltAtRank("inputValues", time_sequence)
+
+    # Add observer values in specific parameters
+    specificParameters = pilot.SequenceAny_New(self.runtime.getTypeCode("SALOME_TYPES/Parameter"))
+
+    # Switch Value
+    obs_switch = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+    obs_switch.setEltAtRank("name", "switch_value")
+    obs_switch.setEltAtRank("value", self.da_study.observers_dict[info]["number"])
+    specificParameters.pushBack(obs_switch)
+
+    # Var
+    var_struct = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+    var_struct.setEltAtRank("name", "var")
+
+    # Remove Data Observer, so you can ...
+    var.removeDataObserver(self.obs)
+    # Pickle then ...
+    var_str = cPickle.dumps(var)
+    # Add Again Data Observer
+    if self.da_study.observers_dict[info]["scheduler"] != "":
+      self.ADD.setDataObserver(info, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[info]["scheduler"], HookParameters = info)
+    else:
+      self.ADD.setDataObserver(info, HookFunction=self.obs, HookParameters = info)
+    var_struct.setEltAtRank("value", var_str)
+    specificParameters.pushBack(var_struct)
+
+    # Info
+    info_struct = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/Parameter'))
+    info_struct.setEltAtRank("name", "info")
+    info_struct.setEltAtRank("value", self.da_study.observers_dict[info]["info"])
+    specificParameters.pushBack(info_struct)
+
+    sample.setEltAtRank("specificParameters", specificParameters)
+
+    self.counter_lock.acquire()
+    self.sample_counter += 1
+    local_counter = self.sample_counter
+    self.pool.pushInSample(local_counter, sample)
+
+    # Wait
+    import sys, traceback
+    try:
+      while 1:
+        self.signalMasterAndWait()
+        if self.isTerminationRequested():
+          self.pool.destroyAll()
+        else:
+          # Get current Id
+          sample_id = self.pool.getCurrentId()
+          if sample_id == local_counter:
+            # 5: Release lock
+            # Have to be done before but need a new implementation
+            # of the optimizer loop
+            self.counter_lock.release()
+            break
+    except:
+      print "Exception in user code:"
+      print '-'*60
+      traceback.print_exc(file=sys.stdout)
+      print '-'*60
+
   def getAlgoResult(self):
-    print "getAlgoResult"
+    #print "getAlgoResult"
     self.ADD.prepare_to_pickle()
-    result = pickle.dumps(self.da_study)
+    # Remove data observers cannot pickle assimilation study object
+    for observer_name in self.da_study.observers_dict.keys():
+      self.ADD.removeDataObserver(observer_name, self.obs)
+    result = pickle.dumps(self.da_study) # Careful : pickle is mandatory over cPickle !
     return result
 
   # Obligatoire ???
   def finish(self):
-    print "Algorithme finish"
+    pass
   def parseFileToInit(self,fileName):
-    print "Algorithme parseFileToInit"
+    pass
 
   # Fonctions qui ne changent pas
   def setPool(self,pool):

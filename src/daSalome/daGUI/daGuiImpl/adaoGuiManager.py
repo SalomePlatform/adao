@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  Copyright (C) 2010 EDF R&D
+#  Copyright (C) 2010-2013 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -373,19 +373,19 @@ class AdaoGuiUiComponentBuilder:
         # create toolbar
         tid = sgPyQt.createTool( "ADAO" )
 
-        a = sgPyQt.createAction( UI_ELT_IDS.NEW_ADAOCASE_ID, "New case", "New case", "Create a new adao case", "eficas_new.png" )
+        a = sgPyQt.createAction( UI_ELT_IDS.NEW_ADAOCASE_ID, "New case", "New case", "Create a new ADAO case", "eficas_new.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
-        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_ADAOCASE_ID, "Open case", "Open case", "Open an adao case", "eficas_open.png" )
+        a = sgPyQt.createAction( UI_ELT_IDS.OPEN_ADAOCASE_ID, "Open case", "Open case", "Open an ADAO case", "eficas_open.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
-        a = sgPyQt.createAction( UI_ELT_IDS.SAVE_ADAOCASE_ID, "Save case", "Save case", "Save an adao case", "eficas_save.png" )
+        a = sgPyQt.createAction( UI_ELT_IDS.SAVE_ADAOCASE_ID, "Save case", "Save case", "Save an ADAO case", "eficas_save.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
-        a = sgPyQt.createAction( UI_ELT_IDS.SAVE_AS_ADAOCASE_ID, "Save as case", "Save as case", "Save an adao case as", "eficas_saveas.png" )
+        a = sgPyQt.createAction( UI_ELT_IDS.SAVE_AS_ADAOCASE_ID, "Save as case", "Save as case", "Save an ADAO case as", "eficas_saveas.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
-        a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an adao case", "eficas_close.png" )
+        a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an ADAO case", "eficas_close.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.YACS_EXPORT_ID, "Export to YACS", "Export to YACS", "Generate a YACS graph executing this case", "eficas_yacs.png" )

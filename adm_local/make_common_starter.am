@@ -37,8 +37,10 @@ testsdasalomedir     = $(testsdir)/daSalome
 testsplateformedir   = $(testsdir)/daComposant/Plateforme
 
 # Directory for installing examples files
-examplesdir             = $(prefix)/share/salome/adao_examples
-examplesdasalomedir     = $(examplesdir)/daSalome
+examplesdir               = $(prefix)/share/salome/adao_examples
+examplesdasalomedir       = $(examplesdir)/daSalome
+examplesdaskeletonsdir    = $(examplesdir)/daSkeletons
+externaldatadefinitiondir = $(examplesdaskeletonsdir)/External_data_definition_by_scripts
 
 # Directories for installing admin files
 admlocaldir       = $(prefix)/adm_local

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-# Copyright (C) 2010-2011 EDF R&D
+# Copyright (C) 2010-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -42,9 +42,7 @@ def create_yacs_proc(study_config):
     catalogAd = runtime.loadCatalog("proc", os.environ["ADAO_ROOT_DIR"] + "/share/salome/resources/adao/ADAOSchemaCatalog.xml")
     runtime.addCatalog(catalogAd)
   except:
-    logging.fatal("Exception in loading DataAssim YACS catalog")
-    traceback.print_exc()
-    sys.exit(1)
+    raise ValueError("Exception in loading ADAO YACS Schema catalog")
 
   # Starting creating proc
   proc = runtime.createProc("proc")
@@ -53,6 +51,7 @@ def create_yacs_proc(study_config):
   proc.setTypeCode("SALOME_TYPES/ParametricOutput", catalogAd._typeMap["SALOME_TYPES/ParametricOutput"])
   t_pyobj  = proc.getTypeCode("pyobj")
   t_string = proc.getTypeCode("string")
+  t_bool = proc.getTypeCode("bool")
   t_param_input  = proc.getTypeCode("SALOME_TYPES/ParametricInput")
   t_param_output = proc.getTypeCode("SALOME_TYPES/ParametricOutput")
   repertory = False
@@ -61,15 +60,19 @@ def create_yacs_proc(study_config):
     base_repertory = study_config["Repertory"]
     repertory = True
 
+  # Create ADAO case bloc
+  ADAO_Case = runtime.createBloc("ADAO_Case_Bloc")
+  proc.edAddChild(ADAO_Case)
+
   # Step 0: create AssimilationStudyObject
-  factory_CAS_node = catalogAd._nodeMap["CreateAssimilationStudy"]
+  factory_CAS_node = catalogAd.getNodeFromNodeMap("CreateAssimilationStudy")
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
   CAS_node.getInputPort("Name").edInitPy(study_config["Name"])
   CAS_node.getInputPort("Algorithm").edInitPy(study_config["Algorithm"])
-  if study_config["Debug"] == "0":
-    CAS_node.getInputPort("Debug").edInitPy(False)
-  else:
+  if study_config.has_key("Debug") and study_config["Debug"] == "1":
     CAS_node.getInputPort("Debug").edInitPy(True)
+  else:
+    CAS_node.getInputPort("Debug").edInitPy(False)
 
   # Ajout des Variables
   InputVariablesNames = []
@@ -87,20 +90,48 @@ def create_yacs_proc(study_config):
   CAS_node.getInputPort("OutputVariablesNames").edInitPy(OutputVariablesNames)
   CAS_node.getInputPort("OutputVariablesSizes").edInitPy(OutputVariablesSizes)
 
-  proc.edAddChild(CAS_node)
+  ADAO_Case.edAddChild(CAS_node)
+
+  # Adding an observer init node if an user defines some
+  factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
+  init_observers_node = factory_init_observers_node.cloneNode("SetObservers")
+  if "Observers" in study_config.keys():
+    node_script = init_observers_node.getScript()
+    node_script += "has_observers = True\n"
+    node_script += "observers = " + str(study_config["Observers"]) + "\n"
+    init_observers_node.setScript(node_script)
+    ADAO_Case.edAddChild(init_observers_node)
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+  else:
+    node_script = init_observers_node.getScript()
+    node_script += "has_observers = False\n"
+    node_script += "observers = \"\"\n"
+    init_observers_node.setScript(node_script)
+    ADAO_Case.edAddChild(init_observers_node)
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
+    ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
 
   # Step 0.5: Find if there is a user init node
   init_config = {}
   init_config["Target"] = []
   if "UserDataInit" in study_config.keys():
     init_config = study_config["UserDataInit"]
-    factory_init_node = catalogAd._nodeMap["UserDataInitFromScript"]
+    factory_init_node = catalogAd.getNodeFromNodeMap("UserDataInitFromScript")
     init_node = factory_init_node.cloneNode("UserDataInit")
-    if repertory:
+    if repertory and not os.path.exists(init_config["Data"]):
       init_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(init_config["Data"])))
+    elif repertory and os.path.exists(init_config["Data"]):
+      init_node.getInputPort("script").edInitPy(init_config["Data"])
+      init_node.edAddInputPort("studydir", t_string)
+      init_node.getInputPort("studydir").edInitPy(base_repertory)
     else:
       init_node.getInputPort("script").edInitPy(init_config["Data"])
-    proc.edAddChild(init_node)
+    init_node_script = init_node.getScript()
+    init_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+    init_node_script += "init_data = user_script_module.init_data\n"
+    init_node.setScript(init_node_script)
+    ADAO_Case.edAddChild(init_node)
 
   # Step 1: get input data from user configuration
 
@@ -109,123 +140,589 @@ def create_yacs_proc(study_config):
       data_config = study_config[key]
 
       key_type = key + "Type"
+      key_stored = key + "Stored"
 
       if data_config["Type"] == "Dict" and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateDictFromScript"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateDictFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
-        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        # Connect node with InitUserData
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+
+      if data_config["Type"] == "Dict" and data_config["From"] == "String":
+        # Create node
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateDictFromString")
+        back_node = factory_back_node.cloneNode("Get" + key)
+        back_node.getInputPort("dict_in_string").edInitPy(data_config["Data"])
+        back_node.edAddOutputPort(key, t_pyobj)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
         if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
           back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += key + " = dict(dico)\n"
+        back_node_script += "logging.debug(\"Dict is %ss\"%s%s)"%("%","%",key)
+        back_node.setScript(back_node_script)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "String":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromString"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromString")
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        CAS_node.edAddInputPort(key_stored, t_bool)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
 
       if data_config["Type"] == "Vector" and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyVectorFromScript"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorFromScript")
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        CAS_node.edAddInputPort(key_stored, t_bool)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
 
-      if data_config["Type"] == "Matrix" and data_config["From"] == "String":
+      if data_config["Type"] == "VectorSerie" and data_config["From"] == "String":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromString"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorSerieFromString")
+        back_node = factory_back_node.cloneNode("Get" + key)
+        back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n" + back_node_script
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node.setScript(back_node_script)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        CAS_node.edAddInputPort(key_type, t_string)
+        CAS_node.edAddInputPort(key_stored, t_bool)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("vector"), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
+
+      if data_config["Type"] == "VectorSerie" and data_config["From"] == "Script":
+        # Create node
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpyVectorSerieFromScript")
+        back_node = factory_back_node.cloneNode("Get" + key)
+        if repertory and not os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
+        else:
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+        back_node.edAddOutputPort(key, t_pyobj)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        back_node.setScript(back_node_script)
+        # Connect node with CreateAssimilationStudy
+        CAS_node.edAddInputPort(key, t_pyobj)
+        CAS_node.edAddInputPort(key_type, t_string)
+        CAS_node.edAddInputPort(key_stored, t_bool)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
+
+      if data_config["Type"] in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix") and data_config["From"] == "String":
+        # Create node
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpy%sFromString"%(data_config["Type"],))
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("matrix_in_string").edInitPy(data_config["Data"])
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        CAS_node.edAddInputPort(key_stored, t_bool)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("matrix"), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
 
-      if data_config["Type"] == "Matrix" and data_config["From"] == "Script":
+      if data_config["Type"] in ("Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix") and data_config["From"] == "Script":
         # Create node
-        factory_back_node = catalogAd._nodeMap["CreateNumpyMatrixFromScript"]
+        factory_back_node = catalogAd.getNodeFromNodeMap("CreateNumpy%sFromScript"%(data_config["Type"],))
         back_node = factory_back_node.cloneNode("Get" + key)
-        if repertory:
+        if repertory and not os.path.exists(data_config["Data"]):
           back_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(data_config["Data"])))
+        elif repertory and os.path.exists(data_config["Data"]):
+          back_node.getInputPort("script").edInitPy(data_config["Data"])
+          back_node.edAddInputPort("studydir", t_string)
+          back_node.getInputPort("studydir").edInitPy(base_repertory)
         else:
           back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
-        proc.edAddChild(back_node)
+        ADAO_Case.edAddChild(back_node)
+        # Set content of the node
+        back_node_script = back_node.getScript()
+        back_node_script += "stored = " + str(data_config["Stored"]) + "\n"
+        if key in init_config["Target"]:
+          # Connect node with InitUserData
+          back_node_script += "__builtins__[\"init_data\"] = init_data\n"
+          back_node.edAddInputPort("init_data", t_pyobj)
+          ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
+        back_node_script += key + " = user_script_module." + key + "\n"
+        back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
         CAS_node.edAddInputPort(key_type, t_string)
-        proc.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
-        proc.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
-        # Connect node with InitUserData
-        if key in init_config["Target"]:
-          back_node.edAddInputPort("init_data", t_pyobj)
-          proc.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
+        CAS_node.edAddInputPort(key_stored, t_bool)
+        ADAO_Case.edAddDFLink(back_node.getOutputPort(key), CAS_node.getInputPort(key))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
+        ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
 
       if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "ObservationOperator":
          FunctionDict = data_config["Data"]
          for FunctionName in FunctionDict["Function"]:
            port_name = "ObservationOperator" + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory:
+           if repertory and not os.path.exists(FunctionDict["Script"][FunctionName]):
              CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
+           elif repertory and os.path.exists(FunctionDict["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
            else:
              CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
 
+      if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "EvolutionModel":
+         FunctionDict = data_config["Data"]
+         for FunctionName in FunctionDict["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(FunctionDict["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
+           elif repertory and os.path.exists(FunctionDict["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch" and key == "ObservationOperator":
+         ScriptWithSwitch = data_config["Data"]
+         for FunctionName in ScriptWithSwitch["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch" and key == "EvolutionModel":
+         ScriptWithSwitch = data_config["Data"]
+         for FunctionName in ScriptWithSwitch["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions" and key == "ObservationOperator":
+         ScriptWithFunctions = data_config["Data"]
+         for FunctionName in ScriptWithFunctions["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions" and key == "EvolutionModel":
+         ScriptWithFunctions = data_config["Data"]
+         for FunctionName in ScriptWithFunctions["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction" and key == "ObservationOperator":
+         ScriptWithOneFunction = data_config["Data"]
+         for FunctionName in ScriptWithOneFunction["Function"]:
+           port_name = "ObservationOperator" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+
+      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction" and key == "EvolutionModel":
+         ScriptWithOneFunction = data_config["Data"]
+         for FunctionName in ScriptWithOneFunction["Function"]:
+           port_name = "EvolutionModel" + FunctionName
+           CAS_node.edAddInputPort(port_name, t_string)
+           if repertory and not os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
+           elif repertory and os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+             try:
+               CAS_node.edAddInputPort("studydir", t_string)
+               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
+             except: pass
+           else:
+             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
-  proc.edAddChild(compute_bloc)
-  proc.edAddCFLink(CAS_node, compute_bloc)
+  ADAO_Case.edAddChild(compute_bloc)
+  ADAO_Case.edAddCFLink(CAS_node, compute_bloc)
+  # We use an optimizer loop
+  name = "Execute" + study_config["Algorithm"]
+  algLib = "daYacsIntegration.py"
+  factoryName = "AssimilationAlgorithm_asynch"
+  optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
+  compute_bloc.edAddChild(optimizer_node)
+  ADAO_Case.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
 
-  if AlgoType[study_config["Algorithm"]] == "Optim":
-    # We use an optimizer loop
-    name = "Execute" + study_config["Algorithm"]
-    algLib = "daYacsIntegration.py"
-    factoryName = "AssimilationAlgorithm_asynch"
-    optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
-    compute_bloc.edAddChild(optimizer_node)
-    proc.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
+  # Check if we have a python script for OptimizerLoopNode
+  data_config = study_config["ObservationOperator"]
+  opt_script_nodeOO = None
+  if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
+    # Get script
+    FunctionDict = data_config["Data"]
+    script_filename = ""
+    for FunctionName in FunctionDict["Function"]:
+      # We currently support only one file
+      script_filename = FunctionDict["Script"][FunctionName]
+      break
 
-    # Check if we have a python script for OptimizerLoopNode
-    data_config = study_config["ObservationOperator"]
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory and not os.path.exists(script_filename):
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      raise ValueError("Exception in opening function script file: " + script_filename)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os \n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += script_str.read()
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
+  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
+    # Get script
+    ScriptWithSwitch = data_config["Data"]
+    script_filename = ""
+    for FunctionName in ScriptWithSwitch["Function"]:
+      # We currently support only one file
+      script_filename = ScriptWithSwitch["Script"][FunctionName]
+      break
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory and not os.path.exists(script_filename):
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      raise ValueError("Exception in opening function script file: " + script_filename)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os \n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += script_str.read()
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
+  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions":
+    # Get script
+    ScriptWithFunctions = data_config["Data"]
+    script_filename = ""
+    for FunctionName in ScriptWithFunctions["Function"]:
+      # We currently support only one file
+      script_filename = ScriptWithFunctions["Script"][FunctionName]
+      break
+
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory and not os.path.exists(script_filename):
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      raise ValueError("Exception in opening function script file: " + script_filename)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os, numpy, logging\n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += """# ==============================================\n"""
+    node_script += script_str.read()
+    node_script += """# ==============================================\n"""
+    node_script += """__method = None\n"""
+    node_script += """for param in computation["specificParameters"]:\n"""
+    node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+    node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
+    node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
+    node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
+    node_script += """#\n"""
+    node_script += """#\n"""
+    node_script += """__data = []\n"""
+    node_script += """if __method == "Direct":\n"""
+    node_script += """  try:\n"""
+    node_script += """      DirectOperator\n"""
+    node_script += """  except NameError:\n"""
+    node_script += """      raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Direct computation")\n"""
+    node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __data = DirectOperator(numpy.matrix( __Xcurrent ).T)\n"""
+    node_script += """#\n"""
+    node_script += """if __method == "Tangent":\n"""
+    node_script += """  try:\n"""
+    node_script += """    TangentOperator\n"""
+    node_script += """  except NameError:\n"""
+    node_script += """    raise ValueError("ComputationFunctionNode:  TangentOperator not found in the imported user script file")\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Tangent computation")\n"""
+    node_script += """  __Xcurrent  = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __dXcurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  __data = TangentOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __dXcurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """if __method == "Adjoint":\n"""
+    node_script += """  try:\n"""
+    node_script += """    AdjointOperator\n"""
+    node_script += """  except NameError:\n"""
+    node_script += """    raise ValueError("ComputationFunctionNode: AdjointOperator not found in the imported user script file")\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Adjoint computation")\n"""
+    node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __Ycurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  __data = AdjointOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ycurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """logging.debug("ComputationFunctionNode: Formatting the output")\n"""
+    node_script += """__it = 1.*numpy.ravel(__data)\n"""
+    node_script += """outputValues = [[[[]]]]\n"""
+    node_script += """outputValues[0][0][0] = list(__it)\n"""
+    node_script += """#\n"""
+    node_script += """result = {}\n"""
+    node_script += """result["outputValues"]        = outputValues\n"""
+    node_script += """result["specificOutputInfos"] = []\n"""
+    node_script += """result["returnCode"]          = 0\n"""
+    node_script += """result["errorMessage"]        = ""\n"""
+    node_script += """# ==============================================\n"""
+    #
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
+  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction":
+    # Get script
+    ScriptWithOneFunction = data_config["Data"]
+    script_filename = ""
+    for FunctionName in ScriptWithOneFunction["Function"]:
+      # We currently support only one file
+      script_filename = ScriptWithOneFunction["Script"][FunctionName]
+      break
+
+    # We create a new pyscript node
+    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if repertory and not os.path.exists(script_filename):
+      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+    try:
+      script_str= open(script_filename, 'r')
+    except:
+      raise ValueError("Exception in opening function script file: " + script_filename)
+    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script += "import sys, os, numpy, logging\n"
+    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+    node_script += "  sys.path.insert(0,filepath)\n"
+    node_script += """# ==============================================\n"""
+    node_script += script_str.read()
+    node_script += """# ==============================================\n"""
+    node_script += """__method = None\n"""
+    node_script += """for param in computation["specificParameters"]:\n"""
+    node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+    node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
+    node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
+    node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
+    node_script += """#\n"""
+    node_script += """try:\n"""
+    node_script += """    DirectOperator\n"""
+    node_script += """except NameError:\n"""
+    node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
+    node_script += """import ApproximatedDerivatives\n"""
+    node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
+    node_script += """    Function   = DirectOperator,\n"""
+    node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+    node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
+    node_script += """    )\n"""
+    node_script += """#\n"""
+    node_script += """__data = []\n"""
+    node_script += """if __method == "Direct":\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Direct computation")\n"""
+    node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __data = FDA.DirectOperator(numpy.matrix( __Xcurrent ).T)\n"""
+    node_script += """#\n"""
+    node_script += """if __method == "Tangent":\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Tangent computation")\n"""
+    node_script += """  __Xcurrent  = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __dXcurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  __data = FDA.TangentOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __dXcurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """if __method == "Adjoint":\n"""
+    node_script += """  logging.debug("ComputationFunctionNode: Adjoint computation")\n"""
+    node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+    node_script += """  __Ycurrent = computation["inputValues"][0][0][1]\n"""
+    node_script += """  __data = FDA.AdjointOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ycurrent ).T))\n"""
+    node_script += """#\n"""
+    node_script += """logging.debug("ComputationFunctionNode: Formatting the output")\n"""
+    node_script += """__it = 1.*numpy.ravel(__data)\n"""
+    node_script += """outputValues = [[[[]]]]\n"""
+    node_script += """outputValues[0][0][0] = list(__it)\n"""
+    node_script += """#\n"""
+    node_script += """result = {}\n"""
+    node_script += """result["outputValues"]        = outputValues\n"""
+    node_script += """result["specificOutputInfos"] = []\n"""
+    node_script += """result["returnCode"]          = 0\n"""
+    node_script += """result["errorMessage"]        = ""\n"""
+    node_script += """# ==============================================\n"""
+    #
+    opt_script_nodeOO.setScript(node_script)
+    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
+    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
+
+  else:
+    factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
+    opt_script_nodeOO = factory_opt_script_node.cloneNode("FakeFunctionNode")
+
+  # Check if we have a python script for OptimizerLoopNode
+  if "EvolutionModel" in study_config.keys():
+    data_config = study_config["EvolutionModel"]
+    opt_script_nodeEM = None
     if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
       # Get script
       FunctionDict = data_config["Data"]
@@ -236,93 +733,400 @@ def create_yacs_proc(study_config):
         break
 
       # We create a new pyscript node
-      opt_script_node = runtime.createScriptNode("", "FunctionNode")
-      if repertory:
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory and not os.path.exists(script_filename):
         script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
       try:
         script_str= open(script_filename, 'r')
       except:
-        logging.fatal("Exception in opening function script file : " + script_filename)
-        traceback.print_exc()
-        sys.exit(1)
-      opt_script_node.setScript(script_str.read())
-      opt_script_node.edAddInputPort("computation", t_param_input)
-      opt_script_node.edAddOutputPort("result", t_param_output)
+        raise ValueError("Exception in opening function script file: " + script_filename)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os \n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
 
-      # Add it
-      computation_bloc = runtime.createBloc("computation_bloc")
-      optimizer_node.edSetNode(computation_bloc)
-      computation_bloc.edAddChild(opt_script_node)
+    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
+      # Get script
+      ScriptWithSwitch = data_config["Data"]
+      script_filename = ""
+      for FunctionName in ScriptWithSwitch["Function"]:
+        # We currently support only one file
+        script_filename = ScriptWithSwitch["Script"][FunctionName]
+        break
 
-      # We connect Optimizer with the script
-      proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
-      proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+      # We create a new pyscript node
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory and not os.path.exists(script_filename):
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        raise ValueError("Exception in opening function script file: " + script_filename)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os \n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
 
-      # Connect node with InitUserData
-      if "ObservationOperator" in init_config["Target"]:
-        opt_script_node.edAddInputPort("init_data", t_pyobj)
-        proc.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_node.getInputPort("init_data"))
+    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions":
+      # Get script
+      ScriptWithFunctions = data_config["Data"]
+      script_filename = ""
+      for FunctionName in ScriptWithFunctions["Function"]:
+        # We currently support only one file
+        script_filename = ScriptWithFunctions["Script"][FunctionName]
+        break
+      # We create a new pyscript node
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory and not os.path.exists(script_filename):
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        raise ValueError("Exception in opening function script file: " + script_filename)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os, numpy, logging\n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      node_script += """# ==============================================\n"""
+      node_script += """__method = None\n"""
+      node_script += """for param in computation["specificParameters"]:\n"""
+      node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+      node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
+      node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
+      node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
+      node_script += """#\n"""
+      node_script += """#\n"""
+      node_script += """__data = []\n"""
+      node_script += """if __method == "Direct":\n"""
+      node_script += """  try:\n"""
+      node_script += """    DirectOperator\n"""
+      node_script += """  except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: mandatory DirectOperator not found in the imported user script file")\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Direct computation")\n"""
+      node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  if len(computation["inputValues"][0][0]) == 2:\n"""
+      node_script += """    __Ucurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """    __data = DirectOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ucurrent ).T))\n"""
+      node_script += """  else:\n"""
+      node_script += """    __data = DirectOperator(numpy.matrix( __Xcurrent ).T)\n"""
+      node_script += """#\n"""
+      node_script += """if __method == "Tangent":\n"""
+      node_script += """  try:\n"""
+      node_script += """    TangentOperator\n"""
+      node_script += """  except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: mandatory TangentOperator not found in the imported user script file")\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Tangent computation")\n"""
+      node_script += """  __Xcurrent  = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __dXcurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  __data = TangentOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __dXcurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """if __method == "Adjoint":\n"""
+      node_script += """  try:\n"""
+      node_script += """    AdjointOperator\n"""
+      node_script += """  except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: mandatory AdjointOperator not found in the imported user script file")\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Adjoint computation")\n"""
+      node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __Ycurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  __data = AdjointOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ycurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """logging.debug("ComputationFunctionNode: Formatting the output")\n"""
+      node_script += """__it = 1.*numpy.ravel(__data)\n"""
+      node_script += """outputValues = [[[[]]]]\n"""
+      node_script += """outputValues[0][0][0] = list(__it)\n"""
+      node_script += """#\n"""
+      node_script += """result = {}\n"""
+      node_script += """result["outputValues"]        = outputValues\n"""
+      node_script += """result["specificOutputInfos"] = []\n"""
+      node_script += """result["returnCode"]          = 0\n"""
+      node_script += """result["errorMessage"]        = ""\n"""
+      node_script += """# ==============================================\n"""
+      #
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
+
+    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction":
+      # Get script
+      ScriptWithOneFunction = data_config["Data"]
+      script_filename = ""
+      for FunctionName in ScriptWithOneFunction["Function"]:
+        # We currently support only one file
+        script_filename = ScriptWithOneFunction["Script"][FunctionName]
+        break
+      # We create a new pyscript node
+      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
+      if repertory and not os.path.exists(script_filename):
+        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
+      try:
+        script_str= open(script_filename, 'r')
+      except:
+        raise ValueError("Exception in opening function script file: " + script_filename)
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os, numpy, logging\n"
+      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += script_str.read()
+      node_script += """# ==============================================\n"""
+      node_script += """__method = None\n"""
+      node_script += """for param in computation["specificParameters"]:\n"""
+      node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+      node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
+      node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
+      node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
+      node_script += """#\n"""
+      node_script += """try:\n"""
+      node_script += """    DirectOperator\n"""
+      node_script += """except NameError:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
+      node_script += """import ApproximatedDerivatives\n"""
+      node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
+      node_script += """    Function   = DirectOperator,\n"""
+      node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
+      node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
+      node_script += """    )\n"""
+      node_script += """#\n"""
+      node_script += """__data = []\n"""
+      node_script += """if __method == "Direct":\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Direct computation")\n"""
+      node_script += """  if len(computation["inputValues"][0][0]) == 2:\n"""
+      node_script += """    raise ValueError("ComputationFunctionNode: you have to build explicitly the controled evolution model and its tangent and adjoint operators, instead of using approximate derivative.")"""
+      node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __data = FDA.DirectOperator(numpy.matrix( __Xcurrent ).T)\n"""
+      node_script += """#\n"""
+      node_script += """if __method == "Tangent":\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Tangent computation")\n"""
+      node_script += """  __Xcurrent  = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __dXcurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  __data = FDA.TangentOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __dXcurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """if __method == "Adjoint":\n"""
+      node_script += """  logging.debug("ComputationFunctionNode: Adjoint computation")\n"""
+      node_script += """  __Xcurrent = computation["inputValues"][0][0][0]\n"""
+      node_script += """  __Ycurrent = computation["inputValues"][0][0][1]\n"""
+      node_script += """  __data = FDA.AdjointOperator((numpy.matrix( __Xcurrent ).T, numpy.matrix( __Ycurrent ).T))\n"""
+      node_script += """#\n"""
+      node_script += """logging.debug("ComputationFunctionNode: Formatting the output")\n"""
+      node_script += """__it = 1.*numpy.ravel(__data)\n"""
+      node_script += """outputValues = [[[[]]]]\n"""
+      node_script += """outputValues[0][0][0] = list(__it)\n"""
+      node_script += """#\n"""
+      node_script += """result = {}\n"""
+      node_script += """result["outputValues"]        = outputValues\n"""
+      node_script += """result["specificOutputInfos"] = []\n"""
+      node_script += """result["returnCode"]          = 0\n"""
+      node_script += """result["errorMessage"]        = ""\n"""
+      node_script += """# ==============================================\n"""
+      #
+      opt_script_nodeEM.setScript(node_script)
+      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
+      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
 
     else:
-      factory_opt_script_node = catalogAd._nodeMap["FakeOptimizerLoopNode"]
-      opt_script_node = factory_opt_script_node.cloneNode("FakeFunctionNode")
+      factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
+      opt_script_nodeEM = factory_opt_script_node.cloneNode("FakeFunctionNode")
 
-      # Add it
-      computation_bloc = runtime.createBloc("computation_bloc")
-      optimizer_node.edSetNode(computation_bloc)
-      computation_bloc.edAddChild(opt_script_node)
+  # Add computation bloc
+  if "Observers" in study_config.keys():
+    execution_bloc = runtime.createBloc("Execution Bloc")
+    optimizer_node.edSetNode(execution_bloc)
 
-      # We connect Optimizer with the script
-      proc.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_node.getInputPort("computation"))
-      proc.edAddDFLink(opt_script_node.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+    # Add a node that permits to configure the switch
+    factory_read_for_switch_node = catalogAd.getNodeFromNodeMap("ReadForSwitchNode")
+    read_for_switch_node = factory_read_for_switch_node.cloneNode("ReadForSwitch")
+    execution_bloc.edAddChild(read_for_switch_node)
+    ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
+
+    # Add a switch
+    switch_node = runtime.createSwitch("Execution Switch")
+    execution_bloc.edAddChild(switch_node)
+    # Connect switch
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("switch_value"), switch_node.edGetConditionPort())
+
+    # First case: computation bloc
+    computation_blocOO = runtime.createBloc("computation_blocOO")
+    computation_blocOO.edAddChild(opt_script_nodeOO)
+    switch_node.edSetNode(1, computation_blocOO)
+
+    # We connect with the script
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_nodeOO.getInputPort("computation"))
+    ADAO_Case.edAddDFLink(opt_script_nodeOO.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+    # Second case: evolution bloc
+    if "EvolutionModel" in study_config.keys():
+      computation_blocEM = runtime.createBloc("computation_blocEM")
+      computation_blocEM.edAddChild(opt_script_nodeEM)
+      switch_node.edSetNode(2, computation_blocEM)
+
+      # We connect with the script
+      ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_nodeEM.getInputPort("computation"))
+      ADAO_Case.edAddDFLink(opt_script_nodeEM.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+    # For each observer add a new bloc in the switch
+    observer_config = study_config["Observers"]
+    for observer_name in observer_config:
+      observer_cfg = observer_config[observer_name]
+      observer_bloc = runtime.createBloc("Observer %s" % observer_name)
+      switch_node.edSetNode(observer_cfg["number"], observer_bloc)
+
+      factory_extract_data_node = catalogAd.getNodeFromNodeMap("ExtractDataNode")
+      extract_data_node = factory_extract_data_node.cloneNode("ExtractData")
+      observer_bloc.edAddChild(extract_data_node)
+      ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), extract_data_node.getInputPort("data"))
+
+      observation_node = None
+      if observer_cfg["nodetype"] == "String":
+        factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeString")
+        observation_node = factory_observation_node.cloneNode("Observation")
+        node_script = observation_node.getScript()
+        node_script += observer_cfg["String"]
+        observation_node.setScript(node_script)
+      else:
+        factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeFile")
+        observation_node = factory_observation_node.cloneNode("Observation")
+        if repertory and not os.path.exists(observer_cfg["Script"]):
+          observation_node.getInputPort("script").edInitPy(os.path.join(base_repertory, os.path.basename(observer_cfg["Script"])))
+        elif repertory and os.path.exists(observer_cfg["Script"]):
+          observation_node.getInputPort("script").edInitPy(observer_cfg["Script"])
+          observation_node.edAddInputPort("studydir", t_string)
+          observation_node.getInputPort("studydir").edInitPy(base_repertory)
+        else:
+          observation_node.getInputPort("script").edInitPy(observer_cfg["Script"])
+      observer_bloc.edAddChild(observation_node)
+      ADAO_Case.edAddDFLink(extract_data_node.getOutputPort("var"), observation_node.getInputPort("var"))
+      ADAO_Case.edAddDFLink(extract_data_node.getOutputPort("info"), observation_node.getInputPort("info"))
+
+      factory_end_observation_node = catalogAd.getNodeFromNodeMap("EndObservationNode")
+      end_observation_node = factory_end_observation_node.cloneNode("EndObservation")
+      observer_bloc.edAddChild(end_observation_node)
+      ADAO_Case.edAddCFLink(observation_node, end_observation_node)
+      ADAO_Case.edAddDFLink(end_observation_node.getOutputPort("output"), optimizer_node.edGetPortForOutPool())
+
+  elif "EvolutionModel" in study_config.keys():
+    execution_bloc = runtime.createBloc("Execution Bloc")
+    optimizer_node.edSetNode(execution_bloc)
+
+    # Add a node that permits to configure the switch
+    factory_read_for_switch_node = catalogAd.getNodeFromNodeMap("ReadForSwitchNode")
+    read_for_switch_node = factory_read_for_switch_node.cloneNode("ReadForSwitch")
+    execution_bloc.edAddChild(read_for_switch_node)
+    ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
+
+    # Add a switch
+    switch_node = runtime.createSwitch("Execution Switch")
+    execution_bloc.edAddChild(switch_node)
+    # Connect switch
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("switch_value"), switch_node.edGetConditionPort())
+
+    # First case: computation bloc
+    computation_blocOO = runtime.createBloc("computation_blocOO")
+    computation_blocOO.edAddChild(opt_script_nodeOO)
+    switch_node.edSetNode(1, computation_blocOO)
+
+    # We connect with the script
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_nodeOO.getInputPort("computation"))
+    ADAO_Case.edAddDFLink(opt_script_nodeOO.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+    # Second case: evolution bloc
+    computation_blocEM = runtime.createBloc("computation_blocEM")
+    computation_blocEM.edAddChild(opt_script_nodeEM)
+    switch_node.edSetNode(2, computation_blocEM)
+
+    # We connect with the script
+    ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), opt_script_nodeEM.getInputPort("computation"))
+    ADAO_Case.edAddDFLink(opt_script_nodeEM.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+  else:
+    computation_blocOO = runtime.createBloc("computation_blocOO")
+    optimizer_node.edSetNode(computation_blocOO)
+    computation_blocOO.edAddChild(opt_script_nodeOO)
+
+    # We connect Optimizer with the script
+    ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), opt_script_nodeOO.getInputPort("computation"))
+    ADAO_Case.edAddDFLink(opt_script_nodeOO.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
+
+  # Connect node with InitUserData
+  if "ObservationOperator" in init_config["Target"]:
+    opt_node_script = opt_script_nodeOO.getScript()
+    opt_node_script = "__builtins__[\"init_data\"] = init_data\n" + opt_node_script
+    opt_script_nodeOO.setScript(opt_node_script)
+    opt_script_nodeOO.edAddInputPort("init_data", t_pyobj)
+    ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_nodeOO.getInputPort("init_data"))
 
   # Step 4: create post-processing from user configuration
   if "UserPostAnalysis" in study_config.keys():
     analysis_config = study_config["UserPostAnalysis"]
     if analysis_config["From"] == "String":
-      factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
+      factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
       analysis_node = factory_analysis_node.cloneNode("UsePostAnalysis")
       default_script = analysis_node.getScript()
       final_script = default_script + analysis_config["Data"]
       analysis_node.setScript(final_script)
-      proc.edAddChild(analysis_node)
-      proc.edAddCFLink(compute_bloc, analysis_node)
+      ADAO_Case.edAddChild(analysis_node)
+      ADAO_Case.edAddCFLink(compute_bloc, analysis_node)
       if AlgoType[study_config["Algorithm"]] == "Optim":
-        proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
       else:
-        proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
 
       # Connect node with InitUserData
       if "UserPostAnalysis" in init_config["Target"]:
+        node_script = analysis_node.getScript()
+        node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
+        analysis_node.setScript(node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
-        proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
+        ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
     elif analysis_config["From"] == "Script":
-      factory_analysis_node = catalogAd._nodeMap["SimpleUserAnalysis"]
+      factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
       analysis_node = factory_analysis_node.cloneNode("UserPostAnalysis")
       default_script = analysis_node.getScript()
       analysis_file_name = analysis_config["Data"]
-      if repertory:
+      if repertory and not os.path.exists(analysis_file_name):
         analysis_file_name = os.path.join(base_repertory, os.path.basename(analysis_file_name))
       try:
         analysis_file = open(analysis_file_name, 'r')
       except:
-        logging.fatal("Exception in opening analysis file : " + str(analysis_config["Data"]))
-        traceback.print_exc()
-        sys.exit(1)
-      file_text = analysis_file.read()
-      final_script = default_script + file_text
-      analysis_node.setScript(final_script)
-      proc.edAddChild(analysis_node)
-      proc.edAddCFLink(compute_bloc, analysis_node)
+        raise ValueError("Exception in opening analysis file: " + str(analysis_config["Data"]))
+      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script += "import sys, os \n"
+      node_script += "filepath = \"" + os.path.dirname(analysis_file_name) + "\"\n"
+      node_script += "filename = \"" + os.path.basename(analysis_file_name) + "\"\n"
+      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
+      node_script += "  sys.path.insert(0,filepath)\n"
+      node_script += default_script
+      node_script += analysis_file.read()
+      analysis_node.setScript(node_script)
+      ADAO_Case.edAddChild(analysis_node)
+      ADAO_Case.edAddCFLink(compute_bloc, analysis_node)
       if AlgoType[study_config["Algorithm"]] == "Optim":
-        proc.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(optimizer_node.edGetAlgoResultPort(), analysis_node.getInputPort("Study"))
       else:
-        proc.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
+        ADAO_Case.edAddDFLink(execute_node.getOutputPort("Study"), analysis_node.getInputPort("Study"))
       # Connect node with InitUserData
       if "UserPostAnalysis" in init_config["Target"]:
+        node_script = analysis_node.getScript()
+        node_script = "__builtins__[\"init_data\"] = init_data\n" + node_script
+        analysis_node.setScript(node_script)
         analysis_node.edAddInputPort("init_data", t_pyobj)
-        proc.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
+        ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), analysis_node.getInputPort("init_data"))
 
       pass
 

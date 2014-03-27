@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011  EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -18,34 +18,73 @@
 #
 #  See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+#  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
 from daCore import BasicObjects, PlatformInfo
 m = PlatformInfo.SystemUsage()
+import numpy
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self)
-        self._name = "LINEARLEASTSQUARES"
+        BasicObjects.Algorithm.__init__(self, "LINEARLEASTSQUARES")
+        self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["OMA"]
+            )
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
-        """
-        Calcul de l'estimateur moindres carrés pondérés linéaires
-        (assimilation variationnelle sans ébauche)
-        """
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         #
-        Hm = H["Direct"].asMatrix()
-        Ht = H["Adjoint"].asMatrix()
+        # Paramètres de pilotage
+        # ----------------------
+        self.setParameters(Parameters)
         #
-        K =  (Ht * R.I * Hm ).I * Ht * R.I
+        # Opérateur d'observation
+        # -----------------------
+        Hm = HO["Tangent"].asMatrix(None)
+        Hm = Hm.reshape(Y.size,-1) # ADAO & check shape
+        Ha = HO["Adjoint"].asMatrix(None)
+        Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
+        #
+        RI = R.getI()
+        #
+        # Calcul de la matrice de gain et de l'analyse
+        # --------------------------------------------
+        K = (Ha * RI * Hm).I * Ha * RI
         Xa =  K * Y
-        #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("Mo")))
+        # Calcul de la fonction coût
+        # --------------------------
+        if self._parameters["StoreInternalVariables"] or "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            oma = Y - Hm * Xa
+        if self._parameters["StoreInternalVariables"]:
+            Jb  = 0.
+            Jo  = 0.5 * oma.T * RI * oma
+            J   = float( Jb ) + float( Jo )
+            self.StoredVariables["CostFunctionJb"].store( Jb )
+            self.StoredVariables["CostFunctionJo"].store( Jo )
+            self.StoredVariables["CostFunctionJ" ].store( J )
+        #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+        #
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls()[0],HO["Tangent"].nbcalls()[0],HO["Adjoint"].nbcalls()[0]))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
         return 0

@@ -1,0 +1,35 @@
+
+ASSIMILATION_STUDY(Study_name='Test',
+                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
+                   Debug=0,
+                   Algorithm='3DVAR',
+                   Background=_F(Stored=0,
+                                 INPUT_TYPE='Vector',
+                                 data=_F(FROM='Script',
+                                         SCRIPT_FILE='test003_bis_ADAO_scripts_for_JDC.py',),),
+                   BackgroundError=_F(Stored=0,
+                                      INPUT_TYPE='Matrix',
+                                      data=_F(FROM='Script',
+                                              SCRIPT_FILE='test003_bis_ADAO_scripts_for_JDC.py',),),
+                   Observation=_F(Stored=0,
+                                  INPUT_TYPE='Vector',
+                                  data=_F(FROM='Script',
+                                          SCRIPT_FILE='test003_bis_ADAO_scripts_for_JDC.py',),),
+                   ObservationError=_F(Stored=0,
+                                       INPUT_TYPE='Matrix',
+                                       data=_F(FROM='Script',
+                                               SCRIPT_FILE='test003_bis_ADAO_scripts_for_JDC.py',),),
+                   ObservationOperator=_F(Stored=0,
+                                          INPUT_TYPE='Matrix',
+                                          data=_F(FROM='Script',
+                                                  SCRIPT_FILE='test003_bis_ADAO_scripts_for_JDC.py',),),
+                   UserDataInit=_F(INIT_FILE='test003_bis_ADAO_user_data_init.py',
+                                   TARGET_LIST=
+                                   ('Background','BackgroundError','Observation',
+                                                 'ObservationError','ObservationOperator',),),
+                   UserPostAnalysis=_F(FROM='Template',
+                                       Template='AnalysisPrinter',
+                                       ValueTemplate=
+                                                  """import numpy
+xa=numpy.ravel(ADD.get('Analysis')[-1])
+print 'Analysis:',xa""",),);

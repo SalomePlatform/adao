@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-# Copyright (C) 2008-2011 EDF R&D
+# Copyright (C) 2010-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -33,13 +33,10 @@ def create_schema(config_file, yacs_schema_filename):
   try:
     execfile(config_file)
   except:
-    logging.fatal("Exception in loading " + config_file)
-    traceback.print_exc()
-    sys.exit(1)
+    raise ValueError("\n\n Exception in loading %s"%config_file)
 
   if "study_config" not in locals():
-    logging.fatal("Cannot found study_config in " + str(config_file))
-    sys.exit(1)
+    raise ValueError("\n\n Cannot found study_config in %s\n"%str(config_file))
   else:
     globals()['study_config'] = locals()['study_config']
 

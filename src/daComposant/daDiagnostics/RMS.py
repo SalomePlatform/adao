@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-#  Copyright (C) 2008-2011 EDF R&D
+#  Copyright (C) 2008-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     vect2 = [0,0,0,0,0,0,0,0,0,0]
     D.calculate(vect1,vect2)
     print " Les valeurs de RMS attendues sont les suivantes : [1.0, 1.0, 1.0, 3.0, 0.53162016515553656, 0.73784217096601323]"
-    print " Les RMS obtenues................................:", D.valueserie()
-    print " La moyenne......................................:", D.stepmean()
+    print " Les RMS obtenues................................:", D[:]
+    print " La moyenne......................................:", D.mean()
     print
 

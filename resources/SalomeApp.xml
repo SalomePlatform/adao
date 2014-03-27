@@ -1,5 +1,5 @@
 <!--
-  Copyright (C) 2010-2011 EDF R&D
+  Copyright (C) 2010-2013 EDF R&D
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
 
   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
   
-  Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 -->
 <document>
   <section name="ADAO">
@@ -26,6 +26,7 @@
     <parameter name="icon"          value="ADAO.png"/>
     <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
+    <parameter name="version"       value="7_main"/>
   </section>
   <section name="resources">
     <!-- Module resources -->
@@ -33,6 +34,7 @@
   </section>
   <section name="adao_help">
     <parameter name="sub_menu"     value="%1 module"/>
-    <parameter name="User's Guide" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/index.html"/>
+    <parameter name="(EN) User's Guide" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/en/index.html"/>
+    <parameter name="(FR) Guide de l'utilisateur" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/fr/index.html"/>
   </section>
 </document>

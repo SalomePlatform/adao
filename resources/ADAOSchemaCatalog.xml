@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
 <!--
-  Copyright (C) 2010-2011 EDF R&D
+  Copyright (C) 2010-2013 EDF R&D
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,7 @@
 
   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
   
-  Author: Andre Ribes, andre.ribes@edf.fr, EDF R&D
+  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 -->
 <proc>
 
@@ -57,15 +57,17 @@
     <script><code>
 
 <![CDATA[
-import numpy
-print "Entering in CreateAssimilationStudy"
-print "Name is", Name
-print "Algorithm is", Algorithm
-print "Debug is set to", Debug
+import numpy, logging
+logging.debug("CREATE Entering in CreateAssimilationStudy")
+print "Entering in the assimilation study"
+print "Name is set to........:", Name
+print "Algorithm is set to...:", Algorithm
 
 # Create Assimilation study
 from daYacsIntegration.daStudy import *
 assim_study = daStudy(Name, Algorithm, Debug)
+
+logging.debug("CREATE Data entered are:")
 
 # Algorithm parameters
 try:
@@ -73,30 +75,47 @@ try:
 except NameError:
   pass
 else:
+  logging.debug("CREATE AlgorithmParameters is %s"%AlgorithmParameters)
   assim_study.setAlgorithmParameters(AlgorithmParameters)
 
-# Data
-print "Data entered are:"
 # Background
 try:
   Background
 except NameError:
   pass
 else:
-  #print "Background is", Background
-  #print "BackgroundType is", BackgroundType
+  logging.debug("CREATE Background is set")
+  logging.debug("CREATE BackgroundType is %s"%BackgroundType)
+  logging.debug("CREATE BackgroundStored is %s"%BackgroundStored)
   assim_study.setBackgroundType(BackgroundType)
+  assim_study.setBackgroundStored(BackgroundStored)
   assim_study.setBackground(Background)
 
-# BackgroundError
+# CheckingPoint
 try:
-  BackgroundError
+  CheckingPoint
 except NameError:
   pass
 else:
-  #print "BackgroundError is", BackgroundError
-  #print "BackgroundErrorType is", BackgroundErrorType
-  assim_study.setBackgroundError(BackgroundError)
+  logging.debug("CREATE CheckingPoint is set")
+  logging.debug("CREATE CheckingPointType is %s"%CheckingPointType)
+  logging.debug("CREATE CheckingPointStored is %s"%CheckingPointStored)
+  assim_study.setCheckingPointType(CheckingPointType)
+  assim_study.setCheckingPointStored(CheckingPointStored)
+  assim_study.setCheckingPoint(CheckingPoint)
+
+# ControlInput
+try:
+  ControlInput
+except NameError:
+  pass
+else:
+  logging.debug("CREATE ControlInput is set")
+  logging.debug("CREATE ControlInputType is %s"%ControlInputType)
+  logging.debug("CREATE ControlInputStored is %s"%ControlInputStored)
+  assim_study.setControlInputType(ControlInputType)
+  assim_study.setControlInputStored(ControlInputStored)
+  assim_study.setControlInput(ControlInput)
 
 # Observation
 try:
@@ -104,10 +123,25 @@ try:
 except NameError:
   pass
 else:
-  #print "Observation is", Observation
-  #print "ObservationType is", ObservationType
+  logging.debug("CREATE Observation is set")
+  logging.debug("CREATE ObservationType is %s"%ObservationType)
+  logging.debug("CREATE ObservationStored is %s"%ObservationStored)
   assim_study.setObservationType(ObservationType)
+  assim_study.setObservationStored(ObservationStored)
   assim_study.setObservation(Observation)
+
+# BackgroundError
+try:
+  BackgroundError
+except NameError:
+  pass
+else:
+  logging.debug("CREATE BackgroundError is set")
+  logging.debug("CREATE BackgroundErrorType is %s"%BackgroundErrorType)
+  logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
+  assim_study.setBackgroundErrorType(BackgroundErrorType)
+  assim_study.setBackgroundErrorStored(BackgroundErrorStored)
+  assim_study.setBackgroundError(BackgroundError)
 
 # ObservationError
 try:
@@ -115,9 +149,25 @@ try:
 except NameError:
   pass
 else:
-  #print "ObservationError is", ObservationError
-  #print "ObservationErrorType is", ObservationErrorType
+  logging.debug("CREATE ObservationError is set")
+  logging.debug("CREATE ObservationErrorType is %s"%ObservationErrorType)
+  logging.debug("CREATE ObservationErrorStored is %s"%ObservationErrorStored)
+  assim_study.setObservationErrorType(ObservationErrorType)
+  assim_study.setObservationErrorStored(ObservationErrorStored)
   assim_study.setObservationError(ObservationError)
+
+# EvolutionError
+try:
+  EvolutionError
+except NameError:
+  pass
+else:
+  logging.debug("CREATE EvolutionError is set")
+  logging.debug("CREATE EvolutionErrorType is %s"%EvolutionErrorType)
+  logging.debug("CREATE EvolutionErrorStored is %s"%EvolutionErrorStored)
+  assim_study.setEvolutionErrorType(EvolutionErrorType)
+  assim_study.setEvolutionErrorStored(EvolutionErrorStored)
+  assim_study.setEvolutionError(EvolutionError)
 
 # ObservationOperator
 ObservationOperatorOk = 0
@@ -126,8 +176,8 @@ try:
 except NameError:
   pass
 else:
-  #print "ObservationOperator is", ObservationOperator
-  #print "ObservationOperatorType is", ObservationOperatorType
+  logging.debug("CREATE ObservationOperator is set")
+  logging.debug("CREATE ObservationOperatorType is %s"%ObservationOperatorType)
   assim_study.setObservationOperatorType("Matrix", ObservationOperatorType)
   assim_study.setObservationOperator("Matrix", ObservationOperator)
   ObservationOperatorOk = 1
@@ -138,7 +188,7 @@ if ObservationOperatorOk == 0:
   except NameError:
     pass
   else:
-    #print "ObservationOperatorDirect is", ObservationOperatorDirect
+    logging.debug("CREATE ObservationOperatorDirect is %s"%ObservationOperatorDirect)
     assim_study.setObservationOperatorType("Direct", "Function")
     assim_study.setObservationOperator("Direct", ObservationOperatorDirect)
   try:
@@ -146,7 +196,7 @@ if ObservationOperatorOk == 0:
   except NameError:
     pass
   else:
-    #print "ObservationOperatorTangent is", ObservationOperatorTangent
+    logging.debug("CREATE ObservationOperatorTangent is %s"%ObservationOperatorTangent)
     assim_study.setObservationOperatorType("Tangent", "Function")
     assim_study.setObservationOperator("Tangent", ObservationOperatorTangent)
   try:
@@ -154,9 +204,48 @@ if ObservationOperatorOk == 0:
   except NameError:
     pass
   else:
-    #print "ObservationOperatorAdjoint is", ObservationOperatorAdjoint
+    logging.debug("CREATE ObservationOperatorAdjoint is %s"%ObservationOperatorAdjoint)
     assim_study.setObservationOperatorType("Adjoint", "Function")
     assim_study.setObservationOperator("Adjoint", ObservationOperatorAdjoint)
+
+# EvolutionModel
+EvolutionModelOk = 0
+try:
+  EvolutionModel
+except NameError:
+  pass
+else:
+  logging.debug("CREATE EvolutionModel is set")
+  logging.debug("CREATE EvolutionModelType is %s"%EvolutionModelType)
+  assim_study.setEvolutionModelType("Matrix", EvolutionModelType)
+  assim_study.setEvolutionModel("Matrix", EvolutionModel)
+  EvolutionModelOk = 1
+
+if EvolutionModelOk == 0:
+  try:
+    EvolutionModelDirect
+  except NameError:
+    pass
+  else:
+    logging.debug("CREATE EvolutionModelDirect is %s"%EvolutionModelDirect)
+    assim_study.setEvolutionModelType("Direct", "Function")
+    assim_study.setEvolutionModel("Direct", EvolutionModelDirect)
+  try:
+    EvolutionModelTangent
+  except NameError:
+    pass
+  else:
+    logging.debug("CREATE EvolutionModelTangent is %s"%EvolutionModelTangent)
+    assim_study.setEvolutionModelType("Tangent", "Function")
+    assim_study.setEvolutionModel("Tangent", EvolutionModelTangent)
+  try:
+    EvolutionModelAdjoint
+  except NameError:
+    pass
+  else:
+    logging.debug("CREATE EvolutionModelAdjoint is %s"%EvolutionModelAdjoint)
+    assim_study.setEvolutionModelType("Adjoint", "Function")
+    assim_study.setEvolutionModel("Adjoint", EvolutionModelAdjoint)
 
 # Variables
 for name, size in zip(InputVariablesNames, InputVariablesSizes):
@@ -164,6 +253,18 @@ for name, size in zip(InputVariablesNames, InputVariablesSizes):
 for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
   assim_study.setOutputVariable(name, size)
 
+if has_observers:
+  logging.debug("CREATE Observers keys are %s"%observers.keys())
+  # Adding observers to the study
+  for observer_name in observers.keys():
+    scheduler = ""
+    info = ""
+    number = str(observers[observer_name]["number"])
+    if "scheduler" in observers[observer_name].keys():
+      scheduler = observers[observer_name]["scheduler"]
+    if "info" in observers[observer_name].keys():
+      info = observers[observer_name]["info"]
+    assim_study.addObserver(observer_name, scheduler, info, number)
 Study = assim_study
 ]]>
 
@@ -175,58 +276,206 @@ Study = assim_study
     <inport name="InputVariablesSizes" type="intvec"/>
     <inport name="OutputVariablesNames" type="stringvec"/>
     <inport name="OutputVariablesSizes" type="intvec"/>
+    <inport name="has_observers" type="bool"/>
+    <inport name="observers" type="pyobj"/>
     <outport name="Study" type="pyobj"/>
   </inline>
 
   <inline name="CreateNumpyMatrixFromString">
     <script><code><![CDATA[
-print "Entering in CreateNumpyMatrixFromString"
-import numpy
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyMatrixFromString")
 matrix = numpy.matrix(matrix_in_string)
 type = "Matrix"
-print "Matrix is", matrix
+logging.debug("CREATE Matrix is %s"%matrix)
 ]]></code></script>
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyScalarSparseMatrixFromString">
+    <script><code><![CDATA[
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromString")
+matrix = numpy.matrix(matrix_in_string)
+type = "ScalarSparseMatrix"
+logging.debug("CREATE ScalarSparseMatrix is %s"%matrix)
+]]></code></script>
+    <inport name="matrix_in_string" type="string"/>
+    <outport name="matrix" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyDiagonalSparseMatrixFromString">
+    <script><code><![CDATA[
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromString")
+matrix = numpy.matrix(matrix_in_string)
+type = "DiagonalSparseMatrix"
+logging.debug("CREATE DiagonalSparseMatrix is %s"%matrix)
+]]></code></script>
+    <inport name="matrix_in_string" type="string"/>
+    <outport name="matrix" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="CreateNumpyMatrixFromScript">
     <script><code><![CDATA[
-print "Entering in CreateNumpyMatrixFromScript"
-execfile(script)
+import logging, sys, os
+logging.debug("CREATE Entering in CreateNumpyMatrixFromScript")
 type = "Matrix"
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyScalarSparseMatrixFromScript">
+    <script><code><![CDATA[
+import logging, sys, os
+logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromScript")
+type = "ScalarSparseMatrix"
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyDiagonalSparseMatrixFromScript">
+    <script><code><![CDATA[
+import logging, sys, os
+logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromScript")
+type = "DiagonalSparseMatrix"
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="CreateNumpyVectorFromString">
     <script><code><![CDATA[
-print "Entering in CreateNumpyVectorFromString"
-import numpy
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyVectorFromString")
 vector = numpy.matrix(vector_in_string)
 type = "Vector"
-print "Vector is", vector
+logging.debug("Vector is %s"%vector)
 ]]></code></script>
     <inport name="vector_in_string" type="string"/>
     <outport name="vector" type="pyobj"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="CreateNumpyVectorFromScript">
     <script><code><![CDATA[
-print "Entering in CreateNumpyVectorFromScript"
-execfile(script)
+import logging, sys, os
+logging.debug("CREATE Entering in CreateNumpyVectorFromScript")
 type = "Vector"
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorSerieFromString">
+    <script><code><![CDATA[
+import numpy, logging
+logging.debug("CREATE Entering in CreateNumpyVectorSerieFromString")
+vector_in_list = eval(str(vector_in_string),{},{})
+vector = numpy.matrix(vector_in_list)
+type = "VectorSerie"
+logging.debug("VectorSerie is %s"%vector)
+]]></code></script>
+    <inport name="vector_in_string" type="string"/>
+    <outport name="vector" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorSerieFromScript">
+    <script><code><![CDATA[
+import logging, sys, os
+logging.debug("CREATE Entering in CreateNumpyVectorSerieFromScript")
+type = "VectorSerie"
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
+]]></code></script>
+    <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
   </inline>
 
   <inline name="SimpleExecuteDirectAlgorithm">
     <script><code><![CDATA[
-print "Entering in SimpleExecuteDirectAlgorithm"
+import logging
+logging.debug("EXECUTE Entering in SimpleExecuteDirectAlgorithm")
 from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 ADD.analyze()
@@ -238,7 +487,8 @@ ADD.analyze()
   <inline name="SimpleUserAnalysis">
     <script><code><![CDATA[
 #-*-coding:iso-8859-1-*-
-print "Entering in SimpleUserAnalysis"
+import logging
+logging.debug("TERMINATE Entering in SimpleUserAnalysis")
 from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 # User code is below
@@ -249,28 +499,132 @@ ADD = Study.getAssimilationStudy()
 
   <inline name="FakeOptimizerLoopNode">
     <script><code><![CDATA[
-print "Entering in FakeOptimizerLoopNode"
+import logging
+logging.debug("EXECUTE Entering in FakeOptimizerLoopNode")
 result = None
 ]]></code></script>
     <inport name="computation" type="SALOME_TYPES/ParametricInput"/>
     <outport name="result" type="SALOME_TYPES/ParametricOutput"/>
   </inline>
 
+  <inline name="CreateDictFromString">
+    <script><code><![CDATA[
+import logging, sys, os
+logging.debug("CREATE Entering in CreateDictFromString")
+dico = eval(dict_in_string)
+]]></code></script>
+    <inport name="dict_in_string" type="string"/>
+  </inline>
+
   <inline name="CreateDictFromScript">
     <script><code><![CDATA[
-print "Entering in CreateDictFromScript"
-execfile(script)
+import logging, sys, os
+logging.debug("CREATE Entering in CreateDictFromScript")
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
 ]]></code></script>
     <inport name="script" type="string"/>
   </inline>
 
   <inline name="UserDataInitFromScript">
     <script><code><![CDATA[
-print "Entering in UserDataInitFromScript"
-execfile(script)
+import logging, sys, os
+logging.debug("CREATE Entering in UserDataInitFromScript")
+
+# Get file path and filename
+try:
+    if sys.path.count(studydir)==0 or (sys.path.count(studydir)>0 and sys.path.index(studydir)>0):
+        sys.path.insert(0,studydir)
+except:
+    pass
+filepath = os.path.dirname(script)
+filename = os.path.basename(script)
+module_name = os.path.splitext(filename)[0]
+if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):
+    sys.path.insert(0,filepath)
+
 ]]></code></script>
     <inport name="script" type="string"/>
     <outport name="init_data" type="pyobj"/>
   </inline>
 
+  <inline name="ReadForSwitchNode">
+    <script><code><![CDATA[
+import logging
+logging.debug("CREATE Entering in ReadForSwitchNode")
+logging.debug("       with input data : "+str(data["specificParameters"]))
+switch_value = -1
+for param in data["specificParameters"]:
+  if param["name"] == "switch_value":
+    switch_value = int(param["value"])
+logging.debug("       switching to value : "+str(switch_value))
+]]></code></script>
+    <inport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="switch_value" type="int"/>
+  </inline>
+
+  <inline name="ExtractDataNode">
+    <script><code><![CDATA[
+import logging
+logging.debug("TERMINATE Entering in ExtractDataNode")
+import cPickle
+from daCore.AssimilationStudy import AssimilationStudy
+var = None
+info = None
+for param in data["specificParameters"]:
+  if param["name"] == "var":
+    var = cPickle.loads(param["value"])
+  if param["name"] == "info":
+    info = param["value"]
+]]></code></script>
+    <inport name="data" type="SALOME_TYPES/ParametricInput"/>
+    <outport name="var" type="pyobj"/>
+    <outport name="info" type="pyobj"/>
+  </inline>
+
+  <inline name="ObservationNodeString">
+    <script><code><![CDATA[]]></code></script>
+    <inport name="var" type="pyobj"/>
+    <inport name="info" type="pyobj"/>
+  </inline>
+
+  <inline name="ObservationNodeFile">
+    <script><code><![CDATA[execfile(script)]]></code></script>
+    <inport name="var"    type="pyobj"/>
+    <inport name="info"   type="pyobj"/>
+    <inport name="script" type="string"/>
+  </inline>
+
+  <inline name="EndObservationNode">
+    <script><code><![CDATA[
+# Create a fake output object.
+# An observer is always successful.
+output = {}
+output["outputValues"]        = [[[[]]]]
+output["specificOutputInfos"] = []
+output["returnCode"]          = 0
+output["errorMessage"]        = ""
+]]></code></script>
+    <outport name="output" type="SALOME_TYPES/ParametricOutput"/>
+  </inline>
+
+  <inline name="SetObserversNode">
+    <script><code><![CDATA[
+#print "Setting observers"
+]]></code></script>
+    <outport name="has_observers" type="bool"/>
+    <outport name="observers" type="pyobj"/>
+  </inline>
 </proc>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2010-2011 EDF R&D
+# Copyright (C) 2010-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,37 +21,18 @@
 
 import os, sys
 
-print "import des prefs de Adao"
+# print "import des prefs de Adao"
 
 # Configuration de Eficas
 # INSTALLDIR, REPINI est obligatoire
 INSTALLDIR = "@EFICAS_DIR@"
-sys.path[:0]=[INSTALLDIR]
+sys.path.insert(0,INSTALLDIR)
 # positionnee a repin au debut mise a jour dans configuration
-REPINI=os.path.dirname(os.path.abspath(__file__))
+repIni=os.path.dirname(os.path.abspath(__file__))
 
 # initialdir sert comme directory initial des QFileDialog
 initialdir=os.environ["PWD"]
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
-# lang indique la langue utilisée pour les chaines d'aide : fr ou ang
+# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
-
-
-# INSTALLDIR sert � localiser l'installation d'Eficas
-#INSTALLDIR=os.path.join(REPINI,'..')
-
-
-
-# Acces a la documentation
-#rep_cata        = INSTALLDIR
-#path_doc        = os.path.join(rep_cata,'Doc')
-#exec_acrobat    = "/usr/bin/xpdf"
-#savedir         = os.environ['HOME']
-
-
-# OpenTURNS Python module
-#OpenTURNS_path="/local00/home/dutka/OpenTURNS/trunk-cmake/build-autotools/install/lib/python2.4/site-packages"
-# Choix des catalogues
-#sys.path[:0]=[INSTALLDIR, OpenTURNS_path]
-

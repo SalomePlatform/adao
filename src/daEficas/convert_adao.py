@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2010-2011 EDF R&D
+# Copyright (C) 2010-2013 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-print "import convert_adao"
+# print "import convert_adao"
 
 import convert.parseur_python
 from convert.convert_python import *
