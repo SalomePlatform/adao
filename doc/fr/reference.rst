@@ -374,11 +374,11 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
   Minimizer
     Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
     défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
-    linéaire sous contraintes, see [Byrd95]_ and [Zhu97]_), "TNC" (minimisation
-    non linéaire sous contraintes), "CG" (minimisation non linéaire sans
-    contraintes), "BFGS" (minimisation non linéaire sans contraintes), "NCG"
-    (minimisation de type gradient conjugué de Newton). On conseille de
-    conserver la valeur par défaut.
+    linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
+    (minimisation non linéaire sous contraintes), "CG" (minimisation non
+    linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
+    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). On
+    conseille de conserver la valeur par défaut.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour
@@ -440,11 +440,11 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
   Minimizer
     Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
     défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
-    linéaire sous contraintes, voir [Byrd95]_ and [Zhu97]_), "TNC" (minimisation
-    non linéaire sous contraintes), "CG" (minimisation non linéaire sans
-    contraintes), "BFGS" (minimisation non linéaire sans contraintes), "NCG"
-    (minimisation de type gradient conjugué de Newton). On conseille de
-    conserver la valeur par défaut.
+    linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
+    (minimisation non linéaire sous contraintes), "CG" (minimisation non
+    linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
+    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). On
+    conseille de conserver la valeur par défaut.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour

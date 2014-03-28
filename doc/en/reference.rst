@@ -353,12 +353,12 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     "ObservationOperator"*
 
   Minimizer
-    This key allows to choose the optimization minimizer. The default choice
-    is "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
-    minimizer, see [Byrd95]_ and [Zhu97]_), "TNC" (nonlinear constrained
-    minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
-    unconstrained minimizer), "NCG" (Newton CG minimizer). It is recommended to
-    stay with the default.
+    This key allows to choose the optimization minimizer. The default choice is
+    "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
+    minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
+    constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
+    (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
+    recommended to stay with the default.
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
@@ -418,10 +418,10 @@ acronyms or particular names can be found in the :ref:`genindex` or the
   Minimizer
     This key allows to choose the optimization minimizer. The default choice is
     "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
-    minimizer, see [Byrd95]_ and [Zhu97]_), "TNC" (nonlinear constrained
-    minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS" (nonlinear
-    unconstrained minimizer), "NCG" (Newton CG minimizer). It is recommended to
-    stay with the default.
+    minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
+    constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
+    (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
+    recommended to stay with the default.
 
   Bounds
     This key allows to define upper and lower bounds for every state variable

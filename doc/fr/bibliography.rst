@@ -16,6 +16,8 @@ Bibliographie
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
+.. [Morales11] Morales J.L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, Vol 38(1), 2011
+
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 
 .. [Tarantola87] Tarantola A., *Inverse Problem: Theory Methods for Data Fitting and Parameter Estimation*, Elsevier, 1987
