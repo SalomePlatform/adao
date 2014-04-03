@@ -37,6 +37,9 @@ class Operator:
     """
     Classe générale d'interface de type opérateur
     """
+    NbCallsAsMatrix = 0
+    NbCallsAsMethod = 0
+    #
     def __init__(self, fromMethod=None, fromMatrix=None):
         """
         On construit un objet de ce type en fournissant à l'aide de l'un des
@@ -71,10 +74,10 @@ class Operator:
         - xValue : argument adapté pour appliquer l'opérateur
         """
         if self.__Matrix is not None:
-            self.__NbCallsAsMatrix += 1
+            self.__addOneMatrixCall()
             return self.__Matrix * xValue
         else:
-            self.__NbCallsAsMethod += 1
+            self.__addOneMethodCall()
             return self.__Method( xValue )
 
     def appliedControledFormTo(self, (xValue, uValue) ):
@@ -88,13 +91,13 @@ class Operator:
         - uValue : argument U adapté pour appliquer l'opérateur
         """
         if self.__Matrix is not None:
-            self.__NbCallsAsMatrix += 1
+            self.__addOneMatrixCall()
             return self.__Matrix * xValue
         elif uValue is not None:
-            self.__NbCallsAsMethod += 1
+            self.__addOneMethodCall()
             return self.__Method( (xValue, uValue) )
         else:
-            self.__NbCallsAsMethod += 1
+            self.__addOneMethodCall()
             return self.__Method( xValue )
 
     def appliedInXTo(self, (xNominal, xValue) ):
@@ -111,10 +114,10 @@ class Operator:
         - xValue : argument adapté pour appliquer l'opérateur
         """
         if self.__Matrix is not None:
-            self.__NbCallsAsMatrix += 1
+            self.__addOneMatrixCall()
             return self.__Matrix * xValue
         else:
-            self.__NbCallsAsMethod += 1
+            self.__addOneMethodCall()
             return self.__Method( (xNominal, xValue) )
 
     def asMatrix(self, ValueForMethodForm = "UnknownVoidValue"):
@@ -122,10 +125,10 @@ class Operator:
         Permet de renvoyer l'opérateur sous la forme d'une matrice
         """
         if self.__Matrix is not None:
-            self.__NbCallsAsMatrix += 1
+            self.__addOneMatrixCall()
             return self.__Matrix
         elif ValueForMethodForm is not "UnknownVoidValue": # Ne pas utiliser "None"
-            self.__NbCallsAsMethod += 1
+            self.__addOneMethodCall()
             return numpy.matrix( self.__Method( (ValueForMethodForm, None) ) )
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
@@ -140,11 +143,28 @@ class Operator:
         else:
             raise ValueError("Matrix form of the operator is not available, nor the shape")
 
-    def nbcalls(self):
+    def nbcalls(self, which=None):
         """
-        Renvoie le nombre d'évaluations de l'opérateurs (total, matrice, méthode)
+        Renvoie les nombres d'évaluations de l'opérateur
         """
-        return (self.__NbCallsAsMatrix+self.__NbCallsAsMethod,self.__NbCallsAsMatrix,self.__NbCallsAsMethod)
+        __nbcalls = (
+            self.__NbCallsAsMatrix+self.__NbCallsAsMethod,
+            self.__NbCallsAsMatrix,
+            self.__NbCallsAsMethod,
+            Operator.NbCallsAsMatrix+Operator.NbCallsAsMethod,
+            Operator.NbCallsAsMatrix,
+            Operator.NbCallsAsMethod,
+            )
+        if which is None: return __nbcalls
+        else:             return __nbcalls[which]
+
+    def __addOneMatrixCall(self):
+        self.__NbCallsAsMatrix   += 1 # Decompte local
+        Operator.NbCallsAsMatrix += 1 # Decompte global
+
+    def __addOneMethodCall(self):
+        self.__NbCallsAsMethod   += 1 # Decompte local
+        Operator.NbCallsAsMethod += 1 # Decompte global
 
 # ==============================================================================
 class Algorithm:
