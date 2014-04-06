@@ -25,8 +25,9 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import os, numpy, time, copy
+import os, numpy, time, copy, types, sys
 import logging
+from daCore.BasicObjects import Operator
 # logging.getLogger().setLevel(logging.DEBUG)
 
 # ==============================================================================
@@ -49,7 +50,8 @@ class FDApproximation:
             toleranceInRedundancy = 1.e-18,
             lenghtOfRedundancy    = -1,
             ):
-        self.__userFunction = Function
+        self.__userOperator = Operator( fromMethod = Function )
+        self.__userFunction = self.__userOperator.appliedTo
         self.__centeredDF = bool(centeredDF)
         if avoidingRedundancy:
             self.__avoidRC = True
@@ -79,7 +81,7 @@ class FDApproximation:
             logging.debug("FDA Tolerance de determination des doublons : %.2e"%self.__tolerBP)
 
     # ---------------------------------------------------------
-    def __doublon__(self, e, l, n, v=""):
+    def __doublon__(self, e, l, n, v=None):
         __ac, __iac = False, -1
         for i in xrange(len(l)-1,-1,-1):
             if numpy.linalg.norm(e - l[i]) < self.__tolerBP * n[i]:

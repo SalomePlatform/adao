@@ -28,9 +28,60 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import logging
+import logging, copy
 import numpy
 import Persistence
+
+# ==============================================================================
+class CacheManager:
+    """
+    Classe générale de gestion d'un cache de calculs
+    """
+    def __init__(self,
+            toleranceInRedundancy = 1.e-18,
+            lenghtOfRedundancy    = -1,
+            ):
+        """
+        
+        """
+        self.__tolerBP  = float(toleranceInRedundancy)
+        self.__lenghtOR = int(lenghtOfRedundancy)
+        self.clearCache()
+
+    def clearCache(self):
+        self.__listOPCP = [] # Operator Previous Calculated Points
+        self.__listOPCR = [] # Operator Previous Calculated Results
+        self.__listOPCN = [] # Operator Previous Calculated Point Norms
+        self.__ac       = False
+        self.__iac      = -1
+
+    def wasCalculatedIn(self, xValue, info="" ):
+        self.__ac, self.__iac = False, -1
+        for i in xrange(len(self.__listOPCP)-1,-1,-1):
+            if xValue.size != self.__listOPCP[i].size:
+                continue
+            if numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCP[i]) < self.__tolerBP * self.__listOPCN[i]:
+                self.__ac, self.__iac = True, i
+                break
+        return self.__ac
+
+    def getValueInX(self, info="" ):
+        if self.__ac and (-1 < self.__iac < len(self.__listOPCR)):
+            __HX = self.__listOPCR[self.__iac]
+            self.__ac, self.__iac = False, -1
+            return __HX
+        else:
+            raise ValueError("CM Cas%s non encore disponible, vérifier au préalable son existence"%info)
+
+    def storeValueInX(self, xValue, HxValue ):
+        if self.__lenghtOR < 0: self.__lenghtOR = 2 * xValue.size + 2
+        if len(self.__listOPCP) > self.__lenghtOR:
+            self.__listOPCP.pop(0)
+            self.__listOPCR.pop(0)
+            self.__listOPCN.pop(0)
+        self.__listOPCP.append( copy.copy(numpy.ravel(xValue)) )
+        self.__listOPCR.append( copy.copy(HxValue) )
+        self.__listOPCN.append( numpy.linalg.norm(xValue) )
 
 # ==============================================================================
 class Operator:
@@ -39,8 +90,10 @@ class Operator:
     """
     NbCallsAsMatrix = 0
     NbCallsAsMethod = 0
+    NbCallsOfCached = 0
+    CM = CacheManager()
     #
-    def __init__(self, fromMethod=None, fromMatrix=None):
+    def __init__(self, fromMethod=None, fromMatrix=None, avoidingRedundancy = True):
         """
         On construit un objet de ce type en fournissant à l'aide de l'un des
         deux mots-clé, soit une fonction python, soit matrice.
@@ -48,7 +101,8 @@ class Operator:
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
         """
-        self.__NbCallsAsMatrix, self.__NbCallsAsMethod = 0, 0
+        self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
+        self.__AvoidRC = bool( avoidingRedundancy )
         if   fromMethod is not None:
             self.__Method = fromMethod
             self.__Matrix = None
@@ -73,12 +127,25 @@ class Operator:
         Arguments :
         - xValue : argument adapté pour appliquer l'opérateur
         """
-        if self.__Matrix is not None:
-            self.__addOneMatrixCall()
-            return self.__Matrix * xValue
+        if self.__AvoidRC and Operator.CM.wasCalculatedIn(xValue):
+            __alreadyCalculated = True
         else:
-            self.__addOneMethodCall()
-            return self.__Method( xValue )
+            __alreadyCalculated = False
+        #
+        if __alreadyCalculated:
+            self.__addOneCacheCall()
+            HxValue = Operator.CM.getValueInX()
+        else:
+            if self.__Matrix is not None:
+                self.__addOneMatrixCall()
+                HxValue = self.__Matrix * xValue
+            else:
+                self.__addOneMethodCall()
+                HxValue = self.__Method( xValue )
+            if self.__AvoidRC:
+                Operator.CM.storeValueInX(xValue,HxValue)
+        #
+        return HxValue
 
     def appliedControledFormTo(self, (xValue, uValue) ):
         """
@@ -151,9 +218,11 @@ class Operator:
             self.__NbCallsAsMatrix+self.__NbCallsAsMethod,
             self.__NbCallsAsMatrix,
             self.__NbCallsAsMethod,
+            self.__NbCallsOfCached,
             Operator.NbCallsAsMatrix+Operator.NbCallsAsMethod,
             Operator.NbCallsAsMatrix,
             Operator.NbCallsAsMethod,
+            Operator.NbCallsOfCached,
             )
         if which is None: return __nbcalls
         else:             return __nbcalls[which]
@@ -165,6 +234,10 @@ class Operator:
     def __addOneMethodCall(self):
         self.__NbCallsAsMethod   += 1 # Decompte local
         Operator.NbCallsAsMethod += 1 # Decompte global
+
+    def __addOneCacheCall(self):
+        self.__NbCallsOfCached   += 1 # Decompte local
+        Operator.NbCallsOfCached += 1 # Decompte global
 
 # ==============================================================================
 class Algorithm:
