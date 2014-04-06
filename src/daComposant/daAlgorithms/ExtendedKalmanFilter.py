@@ -200,7 +200,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         #
-        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint : %i/%i/%i"%(self._name, HO["Direct"].nbcalls(0),HO["Tangent"].nbcalls(0),HO["Adjoint"].nbcalls(0)))
+        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i"%(self._name, HO["Direct"].nbcalls(0),HO["Tangent"].nbcalls(0),HO["Adjoint"].nbcalls(0)))
+        logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i"%(self._name, HO["Direct"].nbcalls(3),HO["Tangent"].nbcalls(3),HO["Adjoint"].nbcalls(3)))
         logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
         logging.debug("%s Terminé"%self._name)
         #
