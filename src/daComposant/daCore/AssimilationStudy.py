@@ -262,6 +262,8 @@ class AssimilationStudy:
                         "withAvoidingRedundancy"    :True,
                         "withToleranceInRedundancy" :1.e-18,
                         "withLenghtOfRedundancy"    :-1,
+                        "withmpEnabled"             :False,
+                        "withmpWorkers"             :None,
                        }
         """
         if (type(asFunction) is type({})) and \
@@ -273,6 +275,8 @@ class AssimilationStudy:
             if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
             if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
             if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
+            if not asFunction.has_key("withmpEnabled"):             asFunction["withmpEnabled"]             = False
+            if not asFunction.has_key("withmpWorkers"):             asFunction["withmpWorkers"]             = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = asFunction["Direct"],
@@ -282,6 +286,8 @@ class AssimilationStudy:
                 avoidingRedundancy    = asFunction["withAvoidingRedundancy"],
                 toleranceInRedundancy = asFunction["withToleranceInRedundancy"],
                 lenghtOfRedundancy    = asFunction["withLenghtOfRedundancy"],
+                mpEnabled             = asFunction["withmpEnabled"],
+                mpWorkers             = asFunction["withmpWorkers"],
                 )
             self.__HO["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
             self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
@@ -359,6 +365,8 @@ class AssimilationStudy:
                         "withAvoidingRedundancy"    :True,
                         "withToleranceInRedundancy" :1.e-18,
                         "withLenghtOfRedundancy"    :-1,
+                        "withmpEnabled"             :False,
+                        "withmpWorkers"             :None,
                        }
         """
         if (type(asFunction) is type({})) and \
@@ -370,6 +378,8 @@ class AssimilationStudy:
             if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
             if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
             if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
+            if not asFunction.has_key("withmpEnabled"):             asFunction["withmpEnabled"]             = False
+            if not asFunction.has_key("withmpWorkers"):             asFunction["withmpWorkers"]             = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = asFunction["Direct"],
@@ -379,6 +389,8 @@ class AssimilationStudy:
                 avoidingRedundancy    = asFunction["withAvoidingRedundancy"],
                 toleranceInRedundancy = asFunction["withToleranceInRedundancy"],
                 lenghtOfRedundancy    = asFunction["withLenghtOfRedundancy"],
+                mpEnabled             = asFunction["withmpEnabled"],
+                mpWorkers             = asFunction["withmpWorkers"],
                 )
             self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
             self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
@@ -782,6 +794,7 @@ class AssimilationStudy:
         dans la variable de type dictionnaire "StoredVariables", qui contient en
         particulier des objets de Persistence pour les analyses, OMA...
         """
+        Operator.CM.clearCache()
         self.shape_validate()
         #
         self.__algorithm.run(

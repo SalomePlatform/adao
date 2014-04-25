@@ -49,39 +49,33 @@ class CacheManager:
         self.clearCache()
 
     def clearCache(self):
-        self.__listOPCP = [] # Operator Previous Calculated Points
-        self.__listOPCR = [] # Operator Previous Calculated Results
-        self.__listOPCN = [] # Operator Previous Calculated Point Norms
-        self.__ac       = False
-        self.__iac      = -1
+        self.__listOPCV = [] # Operator Previous Calculated Points, Results, Point Norms
+        # logging.debug("CM Tolerance de determination des doublons : %.2e"%self.__tolerBP)
 
     def wasCalculatedIn(self, xValue, info="" ):
-        self.__ac, self.__iac = False, -1
-        for i in xrange(len(self.__listOPCP)-1,-1,-1):
-            if xValue.size != self.__listOPCP[i].size:
+        __alc = False
+        __HxV = None
+        for i in xrange(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
+            if xValue.size != self.__listOPCV[i][0].size:
+                # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé"%(xValue.shape,i,self.__listOPCP[i].shape))
                 continue
-            if numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCP[i]) < self.__tolerBP * self.__listOPCN[i]:
-                self.__ac, self.__iac = True, i
+            if numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCV[i][0]) < self.__tolerBP * self.__listOPCV[i][2]:
+                __alc  = True
+                __HxV = self.__listOPCV[i][1]
+                # logging.debug("CM Cas%s déja calculé, portant le numéro %i"%(info,i))
                 break
-        return self.__ac
-
-    def getValueInX(self, info="" ):
-        if self.__ac and (-1 < self.__iac < len(self.__listOPCR)):
-            __HX = self.__listOPCR[self.__iac]
-            self.__ac, self.__iac = False, -1
-            return __HX
-        else:
-            raise ValueError("CM Cas%s non encore disponible, vérifier au préalable son existence"%info)
+        return __alc, __HxV
 
     def storeValueInX(self, xValue, HxValue ):
         if self.__lenghtOR < 0: self.__lenghtOR = 2 * xValue.size + 2
-        if len(self.__listOPCP) > self.__lenghtOR:
-            self.__listOPCP.pop(0)
-            self.__listOPCR.pop(0)
-            self.__listOPCN.pop(0)
-        self.__listOPCP.append( copy.copy(numpy.ravel(xValue)) )
-        self.__listOPCR.append( copy.copy(HxValue) )
-        self.__listOPCN.append( numpy.linalg.norm(xValue) )
+        while len(self.__listOPCV) > self.__lenghtOR:
+            # logging.debug("CM Réduction de la liste des cas à %i éléments par suppression du premier"%self.__lenghtOR)
+            self.__listOPCV.pop(0)
+        self.__listOPCV.append( (
+            copy.copy(numpy.ravel(xValue)),
+            copy.copy(HxValue),
+            numpy.linalg.norm(xValue),
+            ) )
 
 # ==============================================================================
 class Operator:
@@ -127,14 +121,14 @@ class Operator:
         Arguments :
         - xValue : argument adapté pour appliquer l'opérateur
         """
-        if self.__AvoidRC and Operator.CM.wasCalculatedIn(xValue):
-            __alreadyCalculated = True
+        if self.__AvoidRC:
+            __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xValue)
         else:
             __alreadyCalculated = False
         #
         if __alreadyCalculated:
             self.__addOneCacheCall()
-            HxValue = Operator.CM.getValueInX()
+            HxValue = __HxV
         else:
             if self.__Matrix is not None:
                 self.__addOneMatrixCall()

@@ -49,6 +49,8 @@ class FDApproximation:
             avoidingRedundancy    = True,
             toleranceInRedundancy = 1.e-18,
             lenghtOfRedundancy    = -1,
+            mpEnabled             = False,
+            mpWorkers             = None,
             ):
         self.__userOperator = Operator( fromMethod = Function )
         self.__userFunction = self.__userOperator.appliedTo
@@ -56,11 +58,7 @@ class FDApproximation:
         if avoidingRedundancy:
             self.__avoidRC = True
             self.__tolerBP = float(toleranceInRedundancy)
-            self.__lenghtRH = int(lenghtOfRedundancy)
             self.__lenghtRJ = int(lenghtOfRedundancy)
-            self.__listDPCP = [] # Direct Operator Previous Calculated Points
-            self.__listDPCR = [] # Direct Operator Previous Calculated Results
-            self.__listDPCN = [] # Direct Operator Previous Calculated Point Norms
             self.__listJPCP = [] # Jacobian Previous Calculated Points
             self.__listJPCI = [] # Jacobian Previous Calculated Increment
             self.__listJPCR = [] # Jacobian Previous Calculated Results
@@ -95,28 +93,9 @@ class FDApproximation:
         """
         Calcul du direct à l'aide de la fonction fournie.
         """
+        logging.debug("FDA Calcul DirectOperator (explicite)")
         _X = numpy.asmatrix(numpy.ravel( X )).T
-        #
-        __alreadyCalculated = False
-        if self.__avoidRC:
-            __alreadyCalculated, __i = self.__doublon__(_X, self.__listDPCP, self.__listDPCN, " H")
-        #
-        if __alreadyCalculated:
-            logging.debug("FDA Calcul DirectOperator (par récupération du doublon %i)"%__i)
-            _HX = self.__listDPCR[__i]
-        else:
-            logging.debug("FDA Calcul DirectOperator (explicite)")
-            _HX = numpy.ravel(self.__userFunction( _X ))
-            if self.__avoidRC:
-                if self.__lenghtRH < 0: self.__lenghtRH = 2 * _X.size
-                if len(self.__listDPCP) > self.__lenghtRH:
-                    logging.debug("FDA Réduction de la liste de H à %i éléments"%self.__lenghtRH)
-                    self.__listDPCP.pop(0)
-                    self.__listDPCR.pop(0)
-                    self.__listDPCN.pop(0)
-                self.__listDPCP.append( copy.copy(_X) )
-                self.__listDPCR.append( copy.copy(_HX) )
-                self.__listDPCN.append( numpy.linalg.norm(_X) )
+        _HX = numpy.ravel(self.__userFunction( _X ))
         #
         return _HX
 
@@ -212,8 +191,7 @@ class FDApproximation:
             _Jacobienne = numpy.matrix( numpy.vstack( _Jacobienne ) ).T
             if self.__avoidRC:
                 if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
-                if len(self.__listJPCP) > self.__lenghtRJ:
-                    logging.debug("FDA Réduction de la liste de J à %i éléments"%self.__lenghtRJ)
+                while len(self.__listJPCP) > self.__lenghtRJ:
                     self.__listJPCP.pop(0)
                     self.__listJPCI.pop(0)
                     self.__listJPCR.pop(0)
