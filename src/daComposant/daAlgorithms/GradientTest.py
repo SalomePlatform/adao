@@ -127,7 +127,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["ResiduFormula"] == "Taylor":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
             __msgdoc = """
-            On observe le residu issu du développement de Taylor de la fonction F,
+            On observe le résidu issu du développement de Taylor de la fonction F,
             normalisée par la valeur au point nominal :
 
                          || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
@@ -148,13 +148,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["ResiduFormula"] == "Norm":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
             __msgdoc = """
-            On observe le residu, qui est basé sur une approximation du gradient :
+            On observe le résidu, qui est basé sur une approximation du gradient :
 
                           || F(X+Alpha*dX) - F(X) ||
               R(Alpha) =  ---------------------------
                                     Alpha
 
-            qui doit rester constant jusqu'à ce qu'on atteigne la précision du calcul.
+            qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """

@@ -122,9 +122,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------
         __marge =  12*" "
         if self._parameters["ResiduFormula"] == "CenteredDL":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   log( R )  "
+            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
             __msgdoc = """
-            On observe le residu provenant de la différence centrée des valeurs de F
+            On observe le résidu provenant de la différence centrée des valeurs de F
             au point nominal et aux points perturbés, normalisée par la valeur au
             point nominal :
 
@@ -140,15 +140,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             de F n'est pas vérifiée.
 
             Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
-            cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
+            cela signifie que le gradient est calculable jusqu'à la précision d'arrêt
             de la décroissance quadratique.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   log( R )  "
+            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
             __msgdoc = """
-            On observe le residu issu du développement de Taylor de la fonction F,
+            On observe le résidu issu du développement de Taylor de la fonction F,
             normalisée par la valeur au point nominal :
 
                          || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
@@ -164,14 +164,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
             Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
             cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
-            de la décroissance.
+            de la décroissance quadratique.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
         if self._parameters["ResiduFormula"] == "NominalTaylor":
             __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
             __msgdoc = """
-            On observe le residu obtenu à partir de deux approximations d'ordre 1 de F(X),
+            On observe le résidu obtenu à partir de deux approximations d'ordre 1 de F(X),
             normalisées par la valeur au point nominal :
 
               R(Alpha) = max(
@@ -192,7 +192,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
             __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
             __msgdoc = """
-            On observe le residu obtenu à partir de deux approximations d'ordre 1 de F(X),
+            On observe le résidu obtenu à partir de deux approximations d'ordre 1 de F(X),
             normalisées par la valeur au point nominal :
 
               R(Alpha) = max(
@@ -259,7 +259,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     )
                 #
                 self.StoredVariables["CostFunctionJ"].store( Residu )
-                msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100*abs(Residu-1),"%")
+                msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100.*abs(Residu-1.),"%")
                 msgs += "\n" + __marge + msg
             #
             if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
@@ -273,7 +273,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     )
                 #
                 self.StoredVariables["CostFunctionJ"].store( Residu )
-                msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100*Residu,"%")
+                msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100.*Residu,"%")
                 msgs += "\n" + __marge + msg
         #
         msgs += "\n" + __marge + "-"*__nbtirets
