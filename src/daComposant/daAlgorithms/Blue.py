@@ -21,8 +21,7 @@
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
-from daCore import BasicObjects, PlatformInfo
-m = PlatformInfo.SystemUsage()
+from daCore import BasicObjects
 import numpy
 
 # ==============================================================================
@@ -69,8 +68,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
+        self._pre_run()
         #
         # Paramètres de pilotage
         # ----------------------
@@ -200,11 +198,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )
         #
-        logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i"%(self._name, HO["Direct"].nbcalls(0),HO["Tangent"].nbcalls(0),HO["Adjoint"].nbcalls(0)))
-        logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i"%(self._name, HO["Direct"].nbcalls(3),HO["Tangent"].nbcalls(3),HO["Adjoint"].nbcalls(3)))
-        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, m.getUsedMemory("M")))
-        logging.debug("%s Terminé"%self._name)
-        #
+        self._post_run(HO)
         return 0
 
 # ==============================================================================

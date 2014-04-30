@@ -31,6 +31,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import logging, copy
 import numpy
 import Persistence
+import PlatformInfo
 
 # ==============================================================================
 class CacheManager:
@@ -272,6 +273,8 @@ class Algorithm:
         l'algorithme élémentaire qui va hériter de cette classe
         """
         logging.debug("%s Initialisation"%str(name))
+        self._m = PlatformInfo.SystemUsage()
+        #
         self._name = str( name )
         self._parameters = {}
         self.__required_parameters = {}
@@ -294,6 +297,19 @@ class Algorithm:
         self.StoredVariables["BMA"]                      = Persistence.OneVector(name = "BMA")
         self.StoredVariables["APosterioriCovariance"]    = Persistence.OneMatrix(name = "APosterioriCovariance")
         self.StoredVariables["SimulationQuantiles"]      = Persistence.OneMatrix(name = "SimulationQuantiles")
+
+    def _pre_run(self):
+        logging.debug("%s Lancement"%self._name)
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, self._m.getUsedMemory("M")))
+        return 0
+
+    def _post_run(self,_oH=None):
+        if _oH is not None:
+            logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i"%(self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0)))
+            logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i"%(self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3)))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mo"%(self._name, self._m.getUsedMemory("M")))
+        logging.debug("%s Terminé"%self._name)
+        return 0
 
     def get(self, key=None):
         """
