@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  Copyright (C) 2010-2013 EDF R&D
+#  Copyright (C) 2010-2014 EDF R&D
 #
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
