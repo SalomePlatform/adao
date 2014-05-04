@@ -31,7 +31,17 @@ from daCore.BasicObjects import Operator
 # logging.getLogger().setLevel(logging.DEBUG)
 
 # ==============================================================================
-class FDApproximation:
+def ExecuteFunction( (X, funcrepr) ):
+    __X = numpy.asmatrix(numpy.ravel( X )).T
+    __sys_path_tmp = sys.path ; sys.path.insert(0,funcrepr["__userFunction__path"])
+    __module = __import__(funcrepr["__userFunction__modl"], globals(), locals(), [])
+    __fonction = getattr(__module,funcrepr["__userFunction__name"])
+    sys.path = __sys_path_tmp ; del __sys_path_tmp
+    __HX  = __fonction( __X )
+    return numpy.ravel( __HX )
+
+# ==============================================================================
+class FDApproximation(object):
     """
     Cette classe sert d'interface pour définir les opérateurs approximés. A la
     création d'un objet, en fournissant une fonction "Function", on obtient un
@@ -52,8 +62,52 @@ class FDApproximation:
             mpEnabled             = False,
             mpWorkers             = None,
             ):
-        self.__userOperator = Operator( fromMethod = Function )
-        self.__userFunction = self.__userOperator.appliedTo
+        if mpEnabled:
+            try:
+                import multiprocessing
+                self.__mpEnabled = True
+            except ImportError:
+                self.__mpEnabled = False
+        else:
+            self.__mpEnabled = False
+        self.__mpWorkers = mpWorkers
+        logging.debug("FDA Calculs en multiprocessing : %s (nombre de processus : %s)"%(self.__mpEnabled,self.__mpWorkers))
+        #
+        if self.__mpEnabled:
+            if isinstance(Function,types.FunctionType):
+                logging.debug("FDA Calculs en multiprocessing : FunctionType")
+                self.__userFunction__name = Function.__name__
+                try:
+                    mod = os.path.join(Function.__globals__['filepath'],Function.__globals__['filename'])
+                except:
+                    mod = os.path.abspath(Function.__globals__['__file__'])
+                if not os.path.isfile(mod):
+                    raise ImportError("No user defined function or method found with the name %s"%(mod,))
+                self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
+                self.__userFunction__path = os.path.dirname(mod)
+                del mod
+                self.__userOperator = Operator( fromMethod = Function )
+                self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
+            elif isinstance(Function,types.MethodType):
+                logging.debug("FDA Calculs en multiprocessing : MethodType")
+                self.__userFunction__name = Function.__name__
+                try:
+                    mod = os.path.join(Function.__globals__['filepath'],Function.__globals__['filename'])
+                except:
+                    mod = os.path.abspath(Function.im_func.__globals__['__file__'])
+                if not os.path.isfile(mod):
+                    raise ImportError("No user defined function or method found with the name %s"%(mod,))
+                self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
+                self.__userFunction__path = os.path.dirname(mod)
+                del mod
+                self.__userOperator = Operator( fromMethod = Function )
+                self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
+            else:
+                raise TypeError("User defined function or method has to be provided for finite differences approximation.")
+        else:
+            self.__userOperator = Operator( fromMethod = Function )
+            self.__userFunction = self.__userOperator.appliedTo
+        #
         self.__centeredDF = bool(centeredDF)
         if avoidingRedundancy:
             self.__avoidRC = True
@@ -161,31 +215,85 @@ class FDApproximation:
             logging.debug("FDA   Calcul Jacobienne (explicite)")
             if self.__centeredDF:
                 #
-                _Jacobienne  = []
-                for i in range( _dX.size ):
-                    _dXi            = _dX[i]
-                    _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
-                    _X_plus_dXi[i]  = _X[i] + _dXi
-                    _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
-                    _X_moins_dXi[i] = _X[i] - _dXi
+                if self.__mpEnabled:
+                    funcrepr = {
+                        "__userFunction__path" : self.__userFunction__path,
+                        "__userFunction__modl" : self.__userFunction__modl,
+                        "__userFunction__name" : self.__userFunction__name,
+                    }
+                    _jobs = []
+                    for i in range( len(_dX) ):
+                        _dXi            = _dX[i]
+                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi[i]  = _X[i] + _dXi
+                        _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_moins_dXi[i] = _X[i] - _dXi
+                        #
+                        _jobs.append( (_X_plus_dXi,  funcrepr) )
+                        _jobs.append( (_X_moins_dXi, funcrepr) )
                     #
-                    _HX_plus_dXi    = self.DirectOperator( _X_plus_dXi )
-                    _HX_moins_dXi   = self.DirectOperator( _X_moins_dXi )
+                    import multiprocessing
+                    self.__pool = multiprocessing.Pool(self.__mpWorkers)
+                    _HX_plusmoins_dX = self.__pool.map( ExecuteFunction, _jobs )
+                    self.__pool.close()
+                    self.__pool.join()
                     #
-                    _Jacobienne.append( numpy.ravel( _HX_plus_dXi - _HX_moins_dXi ) / (2.*_dXi) )
+                    _Jacobienne  = []
+                    for i in range( len(_dX) ):
+                        _Jacobienne.append( numpy.ravel( _HX_plusmoins_dX[2*i] - _HX_plusmoins_dX[2*i+1] ) / (2.*_dX[i]) )
+                else:
+                    _Jacobienne  = []
+                    for i in range( _dX.size ):
+                        _dXi            = _dX[i]
+                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi[i]  = _X[i] + _dXi
+                        _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_moins_dXi[i] = _X[i] - _dXi
+                        #
+                        _HX_plus_dXi    = self.DirectOperator( _X_plus_dXi )
+                        _HX_moins_dXi   = self.DirectOperator( _X_moins_dXi )
+                        #
+                        _Jacobienne.append( numpy.ravel( _HX_plus_dXi - _HX_moins_dXi ) / (2.*_dXi) )
                 #
             else:
                 #
-                _Jacobienne  = []
-                _HX = self.DirectOperator( _X )
-                for i in range( _dX.size ):
-                    _dXi            = _dX[i]
-                    _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
-                    _X_plus_dXi[i]  = _X[i] + _dXi
+                if self.__mpEnabled:
+                    _HX_plus_dX = []
+                    funcrepr = {
+                        "__userFunction__path" : self.__userFunction__path,
+                        "__userFunction__modl" : self.__userFunction__modl,
+                        "__userFunction__name" : self.__userFunction__name,
+                    }
+                    _jobs = []
+                    _jobs.append( (_X.A1, funcrepr) )
+                    for i in range( len(_dX) ):
+                        _X_plus_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi[i] = _X[i] + _dX[i]
+                        #
+                        _jobs.append( (_X_plus_dXi, funcrepr) )
                     #
-                    _HX_plus_dXi = self.DirectOperator( _X_plus_dXi )
+                    import multiprocessing
+                    self.__pool = multiprocessing.Pool(self.__mpWorkers)
+                    _HX_plus_dX = self.__pool.map( ExecuteFunction, _jobs )
+                    self.__pool.close()
+                    self.__pool.join()
                     #
-                    _Jacobienne.append( numpy.ravel(( _HX_plus_dXi - _HX ) / _dXi) )
+                    _HX = _HX_plus_dX.pop(0)
+                    #
+                    _Jacobienne = []
+                    for i in range( len(_dX) ):
+                        _Jacobienne.append( numpy.ravel(( _HX_plus_dX[i] - _HX ) / _dX[i]) )
+                else:
+                    _Jacobienne  = []
+                    _HX = self.DirectOperator( _X )
+                    for i in range( _dX.size ):
+                        _dXi            = _dX[i]
+                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi[i]  = _X[i] + _dXi
+                        #
+                        _HX_plus_dXi = self.DirectOperator( _X_plus_dXi )
+                        #
+                        _Jacobienne.append( numpy.ravel(( _HX_plus_dXi - _HX ) / _dXi) )
                 #
             #
             _Jacobienne = numpy.matrix( numpy.vstack( _Jacobienne ) ).T
