@@ -190,19 +190,26 @@ commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'une
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
 
+Passer de la version 7.3 à la 7.4
++++++++++++++++++++++++++++++++++
+
+Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
+procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+
 Passer de la version 7.2 à la 7.3
 +++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
-avec le nouveau module SALOME/ADAO, et de l'enregistrer avec un nouveau nom.
+avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
 Passer de la version 6.6 à la 7.2
 +++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et de l'enregistrer avec un nouveau nom.
+le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
 Il y a une incompatibilité introduite dans les fichiers de script de
 post-processing ou d'observers. L'ancienne syntaxe pour interroger un objet
@@ -225,7 +232,7 @@ Passer de la version 6.5 à la 6.6
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et de l'enregistrer avec un nouveau nom.
+le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
 Il y a une incompatibilité introduite dans la dénomination des opérateurs
 élémentaires utilisés pour l'opérateur d'observation par script. Les nouveaux
@@ -238,11 +245,11 @@ Passer de la version 6.4 à la 6.5
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et de l'enregistrer avec un nouveau nom.
+le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
 Passer de la version 6.3 à la 6.4
 +++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et de l'enregistrer avec un nouveau nom.
+le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.

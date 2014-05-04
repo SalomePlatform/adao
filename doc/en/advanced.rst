@@ -178,6 +178,14 @@ is not guaranteed for all the commands or keywords. In general also, an ADAO
 case file for one version can not be read by a previous minor or major version
 of the ADAO module.
 
+Switching from 7.3 to 7.4
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case files. The upgrade procedure
+is to read the old ADAO case file with the new SALOME/ADAO module, and save it
+with a new name.
+
+
 Switching from 7.2 to 7.3
 +++++++++++++++++++++++++
 
