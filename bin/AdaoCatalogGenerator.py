@@ -214,6 +214,7 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
                           ObservationOperator = F_ObservationOperator("o"),
                           AlgorithmParameters = F_AlgorithmParameters("f"),
                           UserDataInit        = F_Init("f"),
+                          Observers           = F_Observers("f")
                          )
 """
 

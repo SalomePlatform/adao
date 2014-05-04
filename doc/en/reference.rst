@@ -758,6 +758,7 @@ Optional and required commands for checking algorithms
 .. index:: single: FunctionTest
 .. index:: single: GradientTest
 .. index:: single: LinearityTest
+.. index:: single: ObserverTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -910,6 +911,18 @@ for an ADAO checking case`_.
     generator used to generate the ensemble. A convenient value is for example
     1000. By default, the seed is left uninitialized, and so use the default
     initialization from the computer.
+
+**"ObserverTest"**
+
+  *Required commands*
+    *"Observers"*
+  
+  *Tip for this command:*
+    Because *"CheckingPoint"* and *"ObservationOperator"* are required commands
+    for ALL checking algorithms in the interface, you have to provide a value
+    for them, despite the fact that these commands are not required for
+    *"ObserverTest"*, and will not be used. The easiest way is to give "1" as a
+    STRING for both, *"ObservationOperator"* having to be of type *Matrix*.
 
 Requirements for functions describing an operator
 -------------------------------------------------

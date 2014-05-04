@@ -795,6 +795,7 @@ Commandes optionnelles et requises pour les algorithmes de vérification
 .. index:: single: FunctionTest
 .. index:: single: GradientTest
 .. index:: single: LinearityTest
+.. index:: single: ObserverTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -954,6 +955,19 @@ commandes et mots-clés pour un cas de vérification ADAO`_.
     générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
     par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
     utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+**"ObserverTest"**
+
+  *Commandes obligatoires*
+    *"Observers"*
+    
+  *Astuce pour cette commande :*
+    Comme les commandes *"CheckingPoint"* et *"ObservationOperator"* sont
+    requises pour TOUS les algorithmes de vérification dans l'interface, vous
+    devez fournir une valeur, malgré le fait que ces commandes ne sont pas
+    requises pour *"ObserverTest"*, et ne seront pas utilisées. La manière la
+    plus simple est de donner "1" comme un STRING pour les deux,
+    l'*"ObservationOperator"* devant être de type *Matrix*.
 
 Exigences pour les fonctions décrivant un opérateur
 ---------------------------------------------------
