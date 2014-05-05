@@ -146,8 +146,8 @@ The second one consist in using the "*logging*" native module of Python (see the
 Python documentation http://docs.python.org/library/logging.html for more
 information on this module). Everywhere in the YACS scheme, mainly through the
 scripts entries, the user can set the logging level in accordance to the needs
-of detailed informations. The different logging levels are: "*DEBUG*", "*INFO*",
-"*WARNING*", "*ERROR*", "*CRITICAL*". All the informations flagged with a
+of detailed information. The different logging levels are: "*DEBUG*", "*INFO*",
+"*WARNING*", "*ERROR*", "*CRITICAL*". All the information flagged with a
 certain level will be printed for whatever activated level above this particular
 one (included). The easiest way is to change the log level by using the
 following Python lines::
@@ -162,6 +162,53 @@ It is also recommended to include some logging or debug mechanisms in the
 simulation code, and use them in conjunction with the two previous methods. But
 be careful not to store too big variables because it cost time, whatever logging
 level is chosen (that is, even if these variables are not printed).
+
+Accelerating numerical derivatives calculations by using a parallel mode
+------------------------------------------------------------------------
+
+When setting an operator, as described in :ref:`section_reference`, the user can
+choose a functional form "*ScriptWithOneFunction*". This form explicitly leads
+to approximate the tangent and adjoint operators by a finite differences
+calculation. It requires several calls to the direct operator (user defined
+function), at least as many times as the dimension of the state vector. This are
+these calls that can potentially be executed in parallel.
+
+Under some conditions, it is then possible to accelerate the numerical
+derivatives calculations by using a parallel mode for the finite differences
+approximation. When setting up an ADAO case, it is done by adding the optional
+sub-command "*EnableMultiProcessing*", set to "1", for the
+"*SCRIPTWITHONEFUNCTION*" command in the operator definition. The parallel mode
+will only use local resources (both multi-cores or multi-processors) of the
+computer on which SALOME is running, requiring as many resources as available.
+By default, this parallel mode is disabled ("*EnableMultiProcessing=0*").
+
+The main conditions to perform parallel calculations come from the user defined
+function, that represents the direct operator. This function has at least to be
+"thread safe" to be executed in Python parallel environment (notions out of
+scope of this paragraph). It is not obvious to give general rules, so it's
+recommended, for the user who enable this internal parallelism, to carefully
+verify his function and the obtained results.
+
+From a user point of view, some conditions, that have to be met to set up
+parallel calculations for tangent and the adjoint operators approximations, are
+the following ones:
+
+#. The dimension of the state vector is more than 2 or 3.
+#. Unitary calculation of user defined direct function "last for long time", that is, more than few minutes.
+#. The user defined direct function doesn't already use parallelism (or parallel execution is disabled in the user calculation).
+#. The user defined direct function doesn't requires read/write access to common resources, mainly stored data or memory capacities.
+
+If these conditions are satisfied, the user can choose to enable the internal
+parallelism for the numerical derivative calculations. Despite the simplicity of
+activating, by setting one variable only, the user is urged to verify the
+results of its calculations. One must at least doing them one time with
+parallelism enabled, and an another time with parallelism disabled, to compare
+the results. If it does fail somewhere, you have to know that this parallel
+scheme is working for complex codes, like *Code_Aster* in *SalomeMeca*
+[SalomeMeca]_ for example. So check your operator function before and during
+enabling parallelism...
+
+**In case of doubt, it is recommended NOT TO ACTIVATE this parallelism.**
 
 Switching from a version of ADAO to a newer one
 -----------------------------------------------

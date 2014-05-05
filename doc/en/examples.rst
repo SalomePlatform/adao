@@ -22,7 +22,7 @@ first one shows how to build a simple data assimilation case defining explicitly
 all the required input data through the GUI. The second one shows, on the same
 case, how to define input data using external sources through scripts. We
 describe here always Python scripts because they can be directly inserted in
-YACS script nodes, but external files can use other langages.
+YACS script nodes, but external files can use other languages.
 
 The mathematical notations used afterward are explained in the section
 :ref:`section_theory`.
@@ -31,10 +31,10 @@ Building an estimation case with explicit data definition
 ---------------------------------------------------------
 
 This simple example is a demonstration one, and describes how to set a BLUE
-estimation framework in order to get *ponderated (or fully weighted) least
-square estimated state* of a system from an observation of the state and from an
-*a priori* knowledge (or background) of this state. In other words, we look for
-the weighted middle between the observation and the background vectors. All the
+estimation framework in order to get the *fully weighted least square estimated
+state* of a system from an observation of the state and from an *a priori*
+knowledge (or background) of this state. In other words, we look for the
+weighted middle between the observation and the background vectors. All the
 numerical values of this example are arbitrary.
 
 Experimental setup
@@ -42,7 +42,7 @@ Experimental setup
 
 We choose to operate in a 3-dimensional space. 3D is chosen in order to restrict
 the size of numerical object to explicitly enter by the user, but the problem is
-not dependant of the dimension and can be set in dimension 10, 100, 1000... The
+not dependent of the dimension and can be set in dimension 10, 100, 1000... The
 observation :math:`\mathbf{y}^o` is of value 1 in each direction, so::
 
     Yo = [1 1 1]
@@ -279,7 +279,8 @@ some input data, for example for debug purpose or for repetitive execution
 process, and it is the most versatile method in order to parametrize the input
 data. **But be careful, script methodology is not a "safe" procedure, in the
 sense that erroneous data, or errors in calculations, can be directly injected
-into the YACS scheme execution.**
+into the YACS scheme execution. The user have to carefully verify the content of
+his scripts.**
 
 Adding parameters to control the data assimilation algorithm
 ------------------------------------------------------------
@@ -302,10 +303,10 @@ default values, and can exist without being used. For example::
         }
 
 If no bounds at all are required on the control variables, then one can choose
-the "*BFGS*" or "*CG*" minimisation algorithm for all the variational data
+the "*BFGS*" or "*CG*" minimization algorithm for all the variational data
 assimilation or optimization algorithms. For constrained optimization, the
 minimizer "*LBFGSB*" is often more robust, but the "*TNC*" is sometimes more
-performant.
+effective.
 
 Then the script can be added to the ADAO case, in a file entry describing the
 "*AlgorithmParameters*" keyword, as follows:
@@ -379,13 +380,13 @@ and, with an arbitrary standard deviation of 1% on each error component::
 
     R = 0.0001 * diagonal( lenght(Yo) )
 
-All the informations required for estimation by data assimilation are then
+All the information required for estimation by data assimilation are then
 defined.
 
 Skeletons of the scripts describing the setup
 +++++++++++++++++++++++++++++++++++++++++++++
 
-We give here the essential parts of each script used afterwards to build the
+We give here the essential parts of each script used afterward to build the
 ADAO case. Remember that using these scripts in real Python files requires to
 correctly define the path to imported modules or codes (even if the module is in
 the same directory that the importing Python file. We indicate the path
@@ -471,7 +472,7 @@ convenience::
         #
         return numpy.array( HX )
 
-We does not need the linear compagnion operators ``"TangentOperator"`` and
+We does not need the linear companion operators ``"TangentOperator"`` and
 ``"AdjointOperator"`` because they will be approximated using ADAO capabilities.
 
 We insist on the fact that these non-linear operator ``"DirectOperator"``,
@@ -532,7 +533,7 @@ the following parameters can be defined in a Python script file named
 Finally, it is common to post-process the results, retrieving them after the
 data assimilation phase in order to analyze, print or show them. It requires to
 use a intermediary Python script file in order to extract these results at the
-end of the adata assimilation or optimization process. The following example
+end of the a data assimilation or optimization process. The following example
 Python script file, named ``Script_UserPostAnalysis.py``, illustrates the fact::
 
     from Physical_data_and_covariance_matrices import True_state

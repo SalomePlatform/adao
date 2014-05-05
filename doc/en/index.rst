@@ -27,7 +27,7 @@ can stop reading before this fifth part, but a valuable use of the module
 requires to read and come back regularly to the third and fifth ones. The last
 part focuses on :ref:`section_advanced`, how to get more information, or how to
 use it by scripting, without the graphical user interface (GUI). And, to respect
-the module requirements, be sure to read the part :ref:`section_licence`.
+the module requirements, be sure to read the part :ref:`section_license`.
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization. In particular, vectors
@@ -48,7 +48,7 @@ Table of contents
    examples
    reference
    advanced
-   licence
+   license
    glossary
    bibliography
 

@@ -64,7 +64,7 @@ exemple simple. Comme décrit dans la documentation, un schéma XML peut être
 chargé en python. On donne ici une séquence complète de commandes pour tester la
 validité du schéma avant de l'exécuter, ajoutant des lignes supplémentaires
 initiales pour charger de manière explicite le catalogue de types pour éviter
-des difficultés obscures::
+d'obscures difficultés::
 
     #-*-coding:iso-8859-1-*-
     import pilot
@@ -107,7 +107,7 @@ des difficultés obscures::
         print p.getErrorReport()
 
 Cette démarche permet par exemple d'éditer le schéma YACS XML en mode texte TUI,
-ou pour rassembler les résultats pour un usage ultérieur.
+ou de rassembler les résultats pour un usage ultérieur.
 
 Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO en YACS
 --------------------------------------------------------------------------------------
@@ -173,6 +173,57 @@ conjonction avec les deux méthodes précédentes. Néanmoins, il convient d'être
 prudent dans le stockage de "grosses" variables car cela coûte du temps,
 quel que soit le niveau de surveillance choisi (c'est-à-dire même si ces
 variables ne sont pas affichées).
+
+Accélérer les calculs de dérivées numériques en utilisant un mode parallèle
+---------------------------------------------------------------------------
+
+Lors de la définition d'un opérateur, comme décrit dans la chapitre
+:ref:`section_reference`, l'utilisateur peut choisir la forme fonctionnelle
+"*ScriptWithOneFunction*". Cette forme conduit explicitement à approximer les
+opérateurs tangent et adjoint par un calcul par différences finies. Il requiert
+de nombreux appels à l'opérateur direct (fonction définie par l'utilisateur), au
+moins autant de fois que la dimension du vecteur d'état. Ce sont ces appels qui
+peuvent être potentiellement exécutés en parallèle.
+
+Sous certaines conditions, il est alors possible d'accélérer les calculs de
+dérivées numériques en utilisant un mode parallèle pour l'approximation par
+différences finies. Lors de la définition d'un cas ADAO, c'est effectué en
+ajoutant le mot-clé optionnel "*EnableMultiProcessing*", mis à "1", de la
+commande "*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur. Le mode
+parallèle utilise uniquement des ressources locales (à la fois multi-coeurs ou
+multi-processeurs) de l'ordinateur sur lequel SALOME est en train de tourner,
+demandant autant de ressources que disponible. Par défaut, ce mode parallèle est
+désactivé ("*EnableMultiProcessing=0*").
+
+Les principales conditions pour réaliser ces calculs parallèles viennent de la
+fonction définie par l'utilisateur, qui représente l'opérateur direct. Cette
+fonction doit au moins être "thread safe" pour être exécutée dans un
+environnement Python parallèle (notions au-delà du cadre de ce paragraphe). Il
+n'est pas évident de donner des règles générales, donc il est recommandé, à
+l'utilisateur qui active ce parallélisme interne, de vérifier soigneusement sa
+fonction et les résultats obtenus.
+
+D'un point de vue utilisateur, certaines conditions, qui doivent être réunies
+pour mettre en place des calculs parallèles pour les approximations des
+opérateurs tangent et adjoint, sont les suivantes :
+
+#. La dimension du vecteur d'état est supérieure à 2 ou 3.
+#. Le calcul unitaire de la fonction utilisateur directe "dure un certain temps", c'est-à-dire plus que quelques minutes.
+#. La fonction utilisateur directe n'utilise pas déjà du parallélisme (ou l'exécution parallèle est désactivée dans le calcul de l'utilisateur).
+#. La fonction utilisateur directe ne nécessite pas d'accès en lecture/écriture de ressources communes, principalement des données stockées ou des espaces mémoire.
+
+Si ces conditions sont satisfaites, l'utilisateur peut choisir d'activer le
+parallélisme interne pour le calcul des dérivées numériques. Malgré la
+simplicité d'activation, obtenue en définissant une variable seulement,
+l'utilisateur est fortement invité à vérifier les résultats de ses calculs. Il
+faut au moins les effectuer une fois avec le parallélisme activé, et une autre
+fois avec le parallélisme désactivé, pour comparer les résultats. Si cette mise
+en oeuvre échoue à un moment ou à un autre, il faut savoir que ce schéma de
+parallélisme fonctionne pour des codes complexes, comme *Code_Aster* dans
+*SalomeMeca* [SalomeMeca]_ par exemple. Donc vérifiez votre fonction d'opérateur
+avant et pendant l'activation du parallélisme...
+
+**En cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.**
 
 Passer d'une version d'ADAO à une nouvelle
 ------------------------------------------

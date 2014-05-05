@@ -298,7 +298,8 @@ des données d'entrée, par exemple à des fin de débogage ou pour des traitements
 répétitifs, et c'est la méthode la plus polyvalente pour paramétrer les données
 d'entrée. **Mais attention, la méthodologie par scripts n'est pas une procédure
 "sûre", en ce sens que des données erronées ou des erreurs dans les calculs,
-peuvent être directement introduites dans l'exécution du schéma YACS.**
+peuvent être directement introduites dans l'exécution du schéma YACS.
+L'utilisateur doit vérifier avec attention le contenu de ses scripts.**
 
 Ajout de paramètres pour contrôler l'algorithme d'assimilation de données
 -------------------------------------------------------------------------
@@ -324,7 +325,7 @@ et elles peuvent être présentes sans être utiles. Par exemple::
 Si aucune borne n'est requise sur les variables de contrôle, alors on peut
 choisir les algorithmes de minimisation "*BFGS*" ou "*CG*" pour tous les
 algorithmes variationnels d'assimilation de données ou d'optimisation. Pour
-l'optimisation sous contraintes, le minimiseur "*LBFGSB*" est souvent plus
+l'optimisation sous contraintes, l'algorithme "*LBFGSB*" est bien souvent plus
 robuste, mais le "*TNC*" est parfois plus performant.
 
 Ensuite le script peut être ajouté au cas ADAO, dans une entrée de type fichier

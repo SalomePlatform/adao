@@ -66,7 +66,7 @@ different pseudo-types are:
 
 **String**
     This indicates a string giving a literal representation of a matrix, a
-    vector or a vector serie, such as "1 2 ; 3 4" or "[[1,2],[3,4]]" for a
+    vector or a vector series, such as "1 2 ; 3 4" or "[[1,2],[3,4]]" for a
     square 2x2 matrix.
 
 **Vector**
@@ -219,7 +219,7 @@ following:
 
 **UserDataInit**
     *Optional command*. This commands allows to initialize some parameters or
-    data automatically before data assimilation or optimisation algorithm input
+    data automatically before data assimilation or optimization algorithm input
     processing. It indicates a script file name to be executed before entering
     in initialization phase of chosen variables.
 
@@ -263,7 +263,7 @@ Optional and required commands for calculation algorithms
 
 Each algorithm can be controlled using some generic or specific options, given
 through the "*AlgorithmParameters*" optional command in a script file or a
-sring, as follows for example in a file::
+string, as follows for example in a file::
 
     AlgorithmParameters = {
         "Minimizer" : "LBFGSB",
@@ -272,7 +272,7 @@ sring, as follows for example in a file::
         }
 
 To give the "*AlgorithmParameters*" values by string, one must enclose a
-standard dictionnary definition between simple quotes, as for example::
+standard dictionary definition between simple quotes, as for example::
 
     '{"Minimizer":"LBFGSB","MaximumNumberOfSteps":25}'
 
@@ -292,7 +292,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     "ObservationOperator"*
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -313,7 +313,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     "ObservationOperator"*
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -333,7 +333,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     "ObservationOperator"*
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -365,13 +365,13 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     being optimized. Bounds can be given by a list of list of pairs of
     lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
-    into account only by the constrained minimizers.
+    into account only by the constrained optimizers.
 
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
     optimization. The default is 15000, which is very similar to no limit on
     iterations. It is then recommended to adapt this parameter to the needs on
-    real problems. For some minimizers, the effective stopping step can be
+    real problems. For some optimizers, the effective stopping step can be
     slightly different of the limit due to algorithm internal control
     requirements.
 
@@ -384,18 +384,18 @@ acronyms or particular names can be found in the :ref:`genindex` or the
   ProjectedGradientTolerance
     This key indicates a limit value, leading to stop successfully the iterative
     optimization process when all the components of the projected gradient are
-    under this limit. It is only used for constrained minimizers. The default is
+    under this limit. It is only used for constrained optimizers. The default is
     -1, that is the internal default of each minimizer (generally 1.e-5), and it
     is not recommended to change it.
 
   GradientNormTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the norm of the gradient is under this
-    limit. It is only used for non-constrained minimizers.  The default is
+    limit. It is only used for non-constrained optimizers.  The default is
     1.e-5 and it is not recommended to change it.
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -428,13 +428,13 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     being optimized. Bounds can be given by a list of list of pairs of
     lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
-    into account only by the constrained minimizers.
+    into account only by the constrained optimizers.
 
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
     optimization. The default is 15000, which is very similar to no limit on
     iterations. It is then recommended to adapt this parameter to the needs on
-    real problems. For some minimizers, the effective stopping step can be
+    real problems. For some optimizers, the effective stopping step can be
     slightly different due to algorithm internal control requirements.
 
   CostDecrementTolerance
@@ -446,18 +446,18 @@ acronyms or particular names can be found in the :ref:`genindex` or the
   ProjectedGradientTolerance
     This key indicates a limit value, leading to stop successfully the iterative
     optimization process when all the components of the projected gradient are
-    under this limit. It is only used for constrained minimizers. The default is
+    under this limit. It is only used for constrained optimizers. The default is
     -1, that is the internal default of each minimizer (generally 1.e-5), and it
     is not recommended to change it.
 
   GradientNormTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the norm of the gradient is under this
-    limit. It is only used for non-constrained minimizers.  The default is
+    limit. It is only used for non-constrained optimizers.  The default is
     1.e-5 and it is not recommended to change it.
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -495,7 +495,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     with a value of "Parameters". The default choice is "State".
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -519,7 +519,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     being optimized. Bounds can be given by a list of list of pairs of
     lower/upper bounds for each variable, with extreme values every time there
     is no bound. The bounds can always be specified, but they are taken into
-    account only by the constrained minimizers.
+    account only by the constrained optimizers.
 
   ConstrainedBy
     This key allows to define the method to take bounds into account. The
@@ -531,7 +531,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     with a value of "Parameters". The default choice is "State".
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -555,7 +555,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     being optimized. Bounds can be given by a list of list of pairs of
     lower/upper bounds for each variable, with extreme values every time there
     is no bound. The bounds can always be specified, but they are taken into
-    account only by the constrained minimizers.
+    account only by the constrained optimizers.
 
   ConstrainedBy
     This key allows to define the method to take bounds into account. The
@@ -568,13 +568,13 @@ acronyms or particular names can be found in the :ref:`genindex` or the
   
   Alpha, Beta, Kappa, Reconditioner
     These keys are internal scaling parameters. "Alpha" requires a value between
-    1.e-4 and 1. "Beta" has an optimal value of 2 for gaussian *a priori*
+    1.e-4 and 1. "Beta" has an optimal value of 2 for Gaussian *a priori*
     distribution. "Kappa" requires an integer value, and the right default is
     obtained by setting it to 0. "Reconditioner" requires a value between 1.e-3
     and 10, it defaults to 1.
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -613,7 +613,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
   QualityCriterion
     This key indicates the quality criterion, minimized to find the optimal
     state estimate. The default is the usual data assimilation criterion named
-    "DA", the augmented ponderated least squares. The possible criteria has to
+    "DA", the augmented weighted least squares. The possible criteria has to
     be in the following list, where the equivalent names are indicated by "=":
     ["AugmentedPonderatedLeastSquares"="APLS"="DA",
     "PonderatedLeastSquares"="PLS", "LeastSquares"="LS"="L2",
@@ -626,7 +626,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     initialization from the computer.
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -667,7 +667,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     and it is recommended to adapt it to the needs on real problems.
 
   StoreInternalVariables
-    This boolean key allows to store default internal variables, mainly the
+    This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
@@ -990,7 +990,7 @@ required by some data assimilation or optimization algorithms.
 
 On input and output of these operators, the :math:`\mathbf{x}` and
 :math:`\mathbf{y}` variables or their increments are mathematically vectors,
-and they are given as non-orented vectors (of type list or Numpy array) or
+and they are given as non-oriented vectors (of type list or Numpy array) or
 oriented ones (of type Numpy matrix).
 
 Then, **to describe completely an operator, the user has only to provide a
@@ -1036,10 +1036,10 @@ template::
         return Y=O(X)
 
 In this case, the user has also provide a value for the differential increment
-(or keep the devault value), using through the GUI the keyword
+(or keep the default value), using through the GUI the keyword
 "*DifferentialIncrement*", which has a default value of 1%. This coefficient
-will be used in the finite difference approximation to build the tangent and
-adjoint operators. The finite difference approximation order can also be chosen
+will be used in the finite differences approximation to build the tangent and
+adjoint operators. The finite differences approximation order can also be chosen
 through the GUI, using the keyword "*CenteredFiniteDifference*", with 0 for an
 uncentered schema of first order (which is the default value), and with 1 for a
 centered schema of second order (of twice the first order computational cost).
@@ -1060,9 +1060,9 @@ Second functional form: using "*ScriptWithFunctions*"
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
 
-**In general, it is recommended to use the first functionnal form rather than
+**In general, it is recommended to use the first functional form rather than
 the second one. A small performance improvement is not a good reason to use a
-detailled implementation as this second functional form.**
+detailed implementation as this second functional form.**
 
 The second one consist in providing directly the three associated operators
 :math:`O`, :math:`\mathbf{O}` and :math:`\mathbf{O}^*`. This is done by using
@@ -1098,7 +1098,7 @@ operator implementation.
 
 For some algorithms, it is required that the tangent and adjoint functions can
 return the matrix equivalent to the linear operator. In this case, when
-respectivly the ``dX`` or the ``Y`` arguments are ``None``, the user has to
+respectively the ``dX`` or the ``Y`` arguments are ``None``, the user has to
 return the associated matrix.
 
 **Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
@@ -1186,7 +1186,7 @@ Special case of controled evolution or observation operator
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In some cases, the evolution or the observation operator is required to be
-controled by an external input control, given *a priori*. In this case, the
+controlled by an external input control, given *a priori*. In this case, the
 generic form of the incremental model is slightly modified as follows:
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
@@ -1237,7 +1237,7 @@ First matrix form: using "*Matrix*" representation
 .. index:: single: ObservationError
 
 This first form is the default and more general one. The covariance matrix
-:math:`\mathbf{M}` has to be fully specified. Even if the matrix is symetric by
+:math:`\mathbf{M}` has to be fully specified. Even if the matrix is symmetric by
 nature, the entire :math:`\mathbf{M}` matrix has to be given.
 
 .. math:: \mathbf{M} =  \begin{pmatrix}

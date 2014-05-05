@@ -10,7 +10,7 @@ The ADAO module provides interface to some standard algorithms of data
 assimilation or optimization, and allows integration of their use in a SALOME
 study. Calculation or simulation modules have to provide one or more specific
 calling methods in order to be callable in the SALOME/ADAO framework, and all
-the SALOME modules can be used throught YACS integration of ADAO.
+the SALOME modules can be used through YACS integration of ADAO.
 
 Its main objective is to **facilitate the use of various standard data
 assimilation or optimization methods, while remaining easy to use and providing

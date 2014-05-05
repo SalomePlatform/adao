@@ -33,7 +33,7 @@ cinquième parties. La dernière partie se focalise sur des
 :ref:`section_advanced`, sur l'obtention de renseignements supplémentaires, ou
 sur l'usage par scripts, sans interface utilisateur graphique (GUI). Enfin, pour
 respecter les exigences de licence du module, n'oubliez pas de lire la partie
-:ref:`section_licence`.
+:ref:`section_license`.
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
@@ -55,7 +55,7 @@ Table des matières
    examples
    reference
    advanced
-   licence
+   license
    glossary
    bibliography
 
