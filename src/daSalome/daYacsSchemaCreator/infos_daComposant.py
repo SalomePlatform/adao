@@ -76,6 +76,7 @@ CheckAlgos = [
     "GradientTest",
     "AdjointTest",
     "ObserverTest",
+    "TangentTest",
     ]
 
 AlgoDataRequirements = {}
@@ -151,6 +152,10 @@ AlgoDataRequirements["AdjointTest"] = [
     ]
 AlgoDataRequirements["ObserverTest"] = [
     "Observers",
+    ]
+AlgoDataRequirements["TangentTest"] = [
+    "CheckingPoint",
+    "ObservationOperator",
     ]
 
 AlgoType = {}

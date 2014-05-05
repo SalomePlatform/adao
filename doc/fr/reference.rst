@@ -796,6 +796,7 @@ Commandes optionnelles et requises pour les algorithmes de vérification
 .. index:: single: GradientTest
 .. index:: single: LinearityTest
 .. index:: single: ObserverTest
+.. index:: single: TangentTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -968,6 +969,38 @@ commandes et mots-clés pour un cas de vérification ADAO`_.
     requises pour *"ObserverTest"*, et ne seront pas utilisées. La manière la
     plus simple est de donner "1" comme un STRING pour les deux,
     l'*"ObservationOperator"* devant être de type *Matrix*.
+
+**"TangentTest"**
+
+  *Commandes obligatoires*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  AmplitudeOfInitialDirection
+    Cette clé indique la mise à l'échelle de la perturbation initiale construite
+    comme un vecteur utilisé pour la dérivée directionnelle autour du point
+    nominal de vérification. La valeur par défaut est de 1, ce qui signifie pas
+    de mise à l'échelle.
+
+  EpsilonMinimumExponent
+    Cette clé indique la valeur de l'exposant minimal du coefficient en
+    puissance de 10 qui doit être utilisé pour faire décroître le multiplicateur
+    de l'incrément. La valeur par défaut est de -8, et elle doit être entre 0 et
+    -20. Par exemple, la valeur par défaut conduit à calculer le résidu de la
+    formule avec un incrément fixe multiplié par 1.e0 jusqu'à 1.e-8.
+
+  InitialDirection
+    Cette clé indique la direction vectorielle utilisée pour la dérivée
+    directionnelle autour du point nominal de vérification. Cela doit être un
+    vecteur. Si elle n'est pas spécifiée, la direction par défaut est une
+    perturbation par défaut autour de zero de la même taille vectorielle que le
+    point de vérification.
+
+  SetSeed
+    Cette clé permet de donner un nombre entier pour fixer la graine du
+    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
+    utilise ainsi l'initialisation par défaut de l'ordinateur.
 
 Exigences pour les fonctions décrivant un opérateur
 ---------------------------------------------------

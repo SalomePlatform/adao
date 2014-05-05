@@ -759,6 +759,7 @@ Optional and required commands for checking algorithms
 .. index:: single: GradientTest
 .. index:: single: LinearityTest
 .. index:: single: ObserverTest
+.. index:: single: TangentTest
 
 .. index:: single: AlgorithmParameters
 .. index:: single: AmplitudeOfInitialDirection
@@ -923,6 +924,36 @@ for an ADAO checking case`_.
     for them, despite the fact that these commands are not required for
     *"ObserverTest"*, and will not be used. The easiest way is to give "1" as a
     STRING for both, *"ObservationOperator"* having to be of type *Matrix*.
+
+**"TangentTest"**
+
+  *Required commands*
+    *"CheckingPoint",
+    "ObservationOperator"*
+
+  AmplitudeOfInitialDirection
+    This key indicates the scaling of the initial perturbation build as a vector
+    used for the directional derivative around the nominal checking point. The
+    default is 1, that means no scaling.
+
+  EpsilonMinimumExponent
+    This key indicates the minimal exponent value of the power of 10 coefficient
+    to be used to decrease the increment multiplier. The default is -8, and it
+    has to be between 0 and -20. For example, its default value leads to
+    calculate the residue of the scalar product formula with a fixed increment
+    multiplied from 1.e0 to 1.e-8.
+
+  InitialDirection
+    This key indicates the vector direction used for the directional derivative
+    around the nominal checking point. It has to be a vector. If not specified,
+    this direction defaults to a random perturbation around zero of the same
+    vector size than the checking point.
+
+  SetSeed
+    This key allow to give an integer in order to fix the seed of the random
+    generator used to generate the ensemble. A convenient value is for example
+    1000. By default, the seed is left uninitialized, and so use the default
+    initialization from the computer.
 
 Requirements for functions describing an operator
 -------------------------------------------------
