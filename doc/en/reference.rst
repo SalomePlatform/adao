@@ -720,8 +720,9 @@ commands are the following:
     algorithms`_.
 
 **CheckingPoint**
-    *Required command*. This indicates the vector used, previously noted as
-    :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
+    *Required command*. This indicates the vector used as the state around which
+    to perform the required check, noted :math:`\mathbf{x}` and similar to the
+    background :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
 
 **Debug**
     *Optional command*. This define the level of trace and intermediary debug
@@ -737,6 +738,14 @@ commands are the following:
     `Requirements for functions describing an operator`_. If there is some
     control :math:`U` included in the observation, the operator has to be
     applied to a pair :math:`(X,U)`.
+
+**Observers**
+    *Optional command*. This command allows to set internal observers, that are
+    functions linked with a particular variable, which will be executed each
+    time this variable is modified. It is a convenient way to monitor variables
+    of interest during the data assimilation or optimization process, by
+    printing or plotting it, etc. Common templates are provided to help the user
+    to start or to quickly make his case.
 
 **Study_name**
     *Required command*. This is an open string to describe the study by a name

@@ -753,8 +753,10 @@ vérification. Les différentes commandes sont les suivantes:
     optionnelles et requises pour les algorithmes de vérification`_.
 
 **CheckingPoint**
-    *Commande obligatoire*. Elle définit le vecteur utilisé, noté précédemment
-    :math:`\mathbf{x}`. Sa valeur est définie comme un objet de type "*Vector*".
+    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
+    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
+    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
+    "*Vector*".
 
 **Debug**
     *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
@@ -770,6 +772,15 @@ vérification. Les différentes commandes sont les suivantes:
     comme décrit dans la sous-section suivante `Exigences pour les fonctions
     décrivant un opérateur`_. Si un contrôle :math:`U` est inclus dans le modèle
     d'observation, l'opérateur doit être appliqué à une paire :math:`(X,U)`.
+
+**Observers**
+    *Commande optionnelle*. Elle permet de définir des observateurs internes,
+    qui sont des fonctions liées à une variable particulière, qui sont exécutées
+    chaque fois que cette variable est modifiée. C'est une manière pratique de
+    suivre des variables d'intérêt durant le processus d'assimilation de données
+    ou d'optimisation, en l'affichant ou en la traçant, etc. Des exemples
+    courants (squelettes) sont fournis pour aider l'utilisateur ou pour
+    faciliter l'élaboration d'un cas.
 
 **Study_name**
     *Commande obligatoire*. C'est une chaîne de caractères quelconque pour
