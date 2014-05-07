@@ -164,10 +164,11 @@ following:
 **EvolutionModel**
     *Optional command*. This indicates the evolution model operator, usually
     noted :math:`M`, which describes an elementary step of evolution. Its value
-    is defined as a "*Function*" type object. Different functional forms can be
-    used, as described in the following subsection `Requirements for functions
-    describing an operator`_. If there is some control :math:`U` included in the
-    evolution model, the operator has to be applied to a pair :math:`(X,U)`.
+    is defined as a "*Function*" type object or a "*Matrix*" type one. In the
+    case of "*Function*" type, different functional forms can be used, as
+    described in the following subsection `Requirements for functions describing
+    an operator`_. If there is some control :math:`U` included in the evolution
+    model, the operator has to be applied to a pair :math:`(X,U)`.
 
 **InputVariables**
     *Optional command*. This command allows to indicates the name and size of
@@ -189,10 +190,11 @@ following:
     *Required command*. This indicates the observation operator, previously
     noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
     results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object.
-    Different functional forms can be used, as described in the following
-    subsection `Requirements for functions describing an operator`_. If there is
-    some control :math:`U` included in the observation, the operator has to be
+    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
+    a "*Matrix*" type one. In the case of "*Function*" type, different
+    functional forms can be used, as described in the following subsection
+    `Requirements for functions describing an operator`_. If there is some
+    control :math:`U` included in the observation, the operator has to be
     applied to a pair :math:`(X,U)`.
 
 **Observers**

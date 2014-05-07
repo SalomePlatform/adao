@@ -174,7 +174,8 @@ le calcul ou la vérification. Les différentes commandes sont les suivantes:
 **EvolutionModel**
     *Commande optionnelle*. Elle indique l'opérateur d'évolution du modèle,
     usuellement noté :math:`M`, qui décrit un pas élémentaire d'évolution. Sa
-    valeur est définie comme un objet de type "*Function*". Différentes formes
+    valeur est définie comme un objet de type "*Function*" ou de type
+    "*Matrix*". Dans le cas du type "*Function*", différentes formes
     fonctionnelles peuvent être utilisées, comme décrit dans la sous-section
     suivante `Exigences pour les fonctions décrivant un opérateur`_. Si un
     contrôle :math:`U` est inclus dans le modèle d'évolution, l'opérateur doit
@@ -202,10 +203,11 @@ le calcul ou la vérification. Les différentes commandes sont les suivantes:
     *Commande obligatoire*. Elle indique l'opérateur d'observation, notée
     précédemment :math:`H`, qui transforme les paramètres d'entrée
     :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`.  Sa valeur est définie comme un objet de
-    type "*Function*". Différentes formes fonctionnelles peuvent être utilisées,
-    comme décrit dans la sous-section suivante `Exigences pour les fonctions
-    décrivant un opérateur`_. Si un contrôle :math:`U` est inclus dans le modèle
+    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
+    type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
+    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
+    la sous-section suivante `Exigences pour les fonctions décrivant un
+    opérateur`_. Si un contrôle :math:`U` est inclus dans le modèle
     d'observation, l'opérateur doit être appliqué à une paire :math:`(X,U)`.
 
 **Observers**
