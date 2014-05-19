@@ -110,12 +110,15 @@ Liste des commandes et mots-clés pour un cas de calcul ADAO
 .. index:: single: Observation
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
+.. index:: single: Observer
 .. index:: single: Observers
+.. index:: single: Observer Template
 .. index:: single: OutputVariables
 .. index:: single: Study_name
 .. index:: single: Study_repertory
 .. index:: single: UserDataInit
 .. index:: single: UserPostAnalysis
+.. index:: single: UserPostAnalysis Template
 
 La première série de commandes est liée à la description d'un cas de calcul, qui
 est une procédure d'*Assimilation de Données* ou d'*Optimisation*. Les termes
@@ -379,8 +382,8 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
     linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
     (minimisation non linéaire sous contraintes), "CG" (minimisation non
     linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
-    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). On
-    conseille de conserver la valeur par défaut.
+    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). Il
+    est fortement conseillé de conserver la valeur par défaut.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour
@@ -445,8 +448,8 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
     linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
     (minimisation non linéaire sous contraintes), "CG" (minimisation non
     linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
-    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). On
-    conseille de conserver la valeur par défaut.
+    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). Il
+    est fortement conseillé de conserver la valeur par défaut.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour

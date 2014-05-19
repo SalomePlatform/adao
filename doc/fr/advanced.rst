@@ -112,6 +112,10 @@ ou de rassembler les résultats pour un usage ultérieur.
 Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO en YACS
 --------------------------------------------------------------------------------------
 
+.. index:: single: Observer
+.. index:: single: Observers
+.. index:: single: Observer Template
+
 Certaines variables spéciales internes à l'optimisation, utilisées au cours des
 calculs, peuvent être surveillées durant un calcul ADAO en YACS. Ces variables
 peuvent être affichées, tracées, enregistrées, etc. C'est réalisable en

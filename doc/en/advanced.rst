@@ -106,6 +106,10 @@ results for further use.
 Getting information on special variables during the ADAO calculation in YACS
 -----------------------------------------------------------------------------
 
+.. index:: single: Observer
+.. index:: single: Observers
+.. index:: single: Observer Template
+
 Some special internal optimization variables, used during calculations, can be
 monitored during the ADAO calculation in YACS. These variables can be printed,
 plotted, saved, etc. This can be done using "*observers*", that are scripts,

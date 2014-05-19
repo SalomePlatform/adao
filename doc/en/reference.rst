@@ -101,12 +101,15 @@ List of commands and keywords for an ADAO calculation case
 .. index:: single: Observation
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
+.. index:: single: Observer
 .. index:: single: Observers
+.. index:: single: Observer Template
 .. index:: single: OutputVariables
 .. index:: single: Study_name
 .. index:: single: Study_repertory
 .. index:: single: UserDataInit
 .. index:: single: UserPostAnalysis
+.. index:: single: UserPostAnalysis Template
 
 The first set of commands is related to the description of a calculation case,
 that is a *Data Assimilation* procedure or an *Optimization* procedure. The
@@ -360,7 +363,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
     constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
     (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
-    recommended to stay with the default.
+    strongly recommended to stay with the default.
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
@@ -423,7 +426,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
     minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
     constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
     (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
-    recommended to stay with the default.
+    strongly recommended to stay with the default.
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
