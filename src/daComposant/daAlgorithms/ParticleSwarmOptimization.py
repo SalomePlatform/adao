@@ -64,11 +64,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
-            default  = "AugmentedPonderatedLeastSquares",
+            default  = "AugmentedWeightedLeastSquares",
             typecast = str,
             message  = "Critère de qualité utilisé",
-            listval  = ["AugmentedPonderatedLeastSquares","APLS","DA",
-                        "PonderatedLeastSquares","PLS",
+            listval  = ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA",
+                        "WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS",
                         "LeastSquares","LS","L2",
                         "AbsoluteValue","L1",
                         "MaximumError","ME"],
@@ -118,18 +118,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Définition de la fonction-coût
         # ------------------------------
-        def CostFunction(x, QualityMeasure="AugmentedPonderatedLeastSquares"):
+        def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             #
-            if QualityMeasure in ["AugmentedPonderatedLeastSquares","APLS","DA"]:
+            if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA"]:
                 if BI is None or RI is None:
                     raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
                 Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
                 J   = float( Jb ) + float( Jo )
-            elif QualityMeasure in ["PonderatedLeastSquares","PLS"]:
+            elif QualityMeasure in ["WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS"]:
                 if RI is None:
                     raise ValueError("Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.
@@ -162,24 +162,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Initialisation des bornes
         # -------------------------
         SpaceUp  = BoxBounds[:,1] + Xini
-        Spacelow = BoxBounds[:,0] + Xini
+        SpaceLow = BoxBounds[:,0] + Xini
         nbparam  = len(SpaceUp)
         #
         # Initialisation de l'essaim
         # --------------------------
-        LimitVelocity = numpy.abs(SpaceUp-Spacelow)
+        LimitVelocity = numpy.abs(SpaceUp-SpaceLow)
         #
         PosInsect = []
         VelocityInsect = []
         for i in range(nbparam) :
-            PosInsect.append(numpy.random.uniform(low=Spacelow[i], high=SpaceUp[i], size=self._parameters["NumberOfInsects"]))
+            PosInsect.append(numpy.random.uniform(low=SpaceLow[i], high=SpaceUp[i], size=self._parameters["NumberOfInsects"]))
             VelocityInsect.append(numpy.random.uniform(low=-LimitVelocity[i], high=LimitVelocity[i], size=self._parameters["NumberOfInsects"]))
         VelocityInsect = numpy.matrix(VelocityInsect)
         PosInsect = numpy.matrix(PosInsect)
         #
         BestPosInsect = numpy.array(PosInsect)
         qBestPosInsect = []
-        Best = copy.copy(Spacelow)
+        Best = copy.copy(SpaceLow)
         qBest = CostFunction(Best,self._parameters["QualityCriterion"])
         #
         for i in range(self._parameters["NumberOfInsects"]):

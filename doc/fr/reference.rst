@@ -387,7 +387,7 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour
-    chaque variable d'état optimisée. Les bornes peuvent être données par une
+    chaque variable d'état optimisée. Les bornes doivent être données par une
     liste de liste de paires de bornes inférieure/supérieure pour chaque
     variable, avec une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les
     bornes peuvent toujours être spécifiées, mais seuls les optimiseurs sous
@@ -453,7 +453,7 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour
-    chaque variable d'état optimisée. Les bornes peuvent être données par une
+    chaque variable d'état optimisée. Les bornes doivent être données par une
     liste de liste de paires de bornes inférieure/supérieure pour chaque
     variable, avec une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les
     bornes peuvent toujours être spécifiées, mais seuls les optimiseurs sous
@@ -548,11 +548,10 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    variable d'état optimisée. Les bornes peuvent être données par une liste de
+    variable d'état optimisée. Les bornes doivent être données par une liste de
     liste de paires de bornes inférieure/supérieure pour chaque variable, avec
-    une valeur extrême chaque fois qu'il n'y a pas de borne. Les bornes peuvent
-    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
-    prennent en compte.
+    une valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas
+    une valeur autorisée lorsqu'il n'y a pas de borne).
 
   ConstrainedBy
     Cette clé permet de définir la méthode pour prendre en compte les bornes. Les
@@ -585,11 +584,10 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
 
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    variable d'état optimisée. Les bornes peuvent être données par une liste de
+    variable d'état optimisée. Les bornes doivent être données par une liste de
     liste de paires de bornes inférieure/supérieure pour chaque variable, avec
-    une valeur extrême chaque fois qu'il n'y a pas de borne. Les bornes peuvent
-    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
-    prennent en compte.
+    une valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas
+    une valeur autorisée lorsqu'il n'y a pas de borne).
 
   ConstrainedBy
     Cette clé permet de définir la méthode pour prendre en compte les bornes. Les
@@ -651,10 +649,18 @@ trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
     l'estimation optimale de l'état. Le défaut est le critère usuel de
     l'assimilation de données nommé "DA", qui est le critère de moindres carrés
     pondérés augmentés. Les critères possibles sont dans la liste suivante, dans
-    laquelle les noms équivalents sont indiqués par "=" :
-    ["AugmentedPonderatedLeastSquares"="APLS"="DA",
-    "PonderatedLeastSquares"="PLS", "LeastSquares"="LS"="L2",
-    "AbsoluteValue"="L1", "MaximumError"="ME"]
+    laquelle les noms équivalents sont indiqués par un signe "=" :
+    ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
+    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1",  "MaximumError"="ME"]
+
+  BoxBounds
+    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
+    incrément de  variable d'état optimisée (et non pas chaque variable d'état
+    elle-même). Les bornes doivent être données par une liste de liste de paires
+    de bornes inférieure/supérieure pour chaque incrément de variable, avec une
+    valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas une
+    valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
+    n'y a pas de valeurs par défaut.
 
   SetSeed
     Cette clé permet de donner un nombre entier pour fixer la graine du
@@ -829,6 +835,12 @@ génériques ou particulières, données à travers la commande optionnelle
         "AmplitudeOfInitialDirection" : 1,
         "EpsilonMinimumExponent" : -8,
         }
+
+Pour donner les valeurs de la commande "*AlgorithmParameters*" par une chaîne de
+caractères, on doit utiliser des guillemets simples pour fournir une définition
+standard de dictionnaire, comme par exemple::
+
+    '{"AmplitudeOfInitialDirection" : 1, "EpsilonMinimumExponent" : -8}'
 
 Si une option est spécifiée par l'utilisateur pour un algorithme qui ne la
 supporte pas, cette option est simplement laissée inutilisée et ne bloque pas le

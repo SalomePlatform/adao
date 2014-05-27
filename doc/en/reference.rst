@@ -367,7 +367,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds can be given by a list of list of pairs of
+    being optimized. Bounds have to be given by a list of list of pairs of
     lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
     into account only by the constrained optimizers.
@@ -430,7 +430,7 @@ acronyms or particular names can be found in the :ref:`genindex` or the
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds can be given by a list of list of pairs of
+    being optimized. Bounds have to be given by a list of list of pairs of
     lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
     into account only by the constrained optimizers.
@@ -521,10 +521,9 @@ acronyms or particular names can be found in the :ref:`genindex` or the
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds can be given by a list of list of pairs of
+    being optimized. Bounds have to be given by a list of list of pairs of
     lower/upper bounds for each variable, with extreme values every time there
-    is no bound. The bounds can always be specified, but they are taken into
-    account only by the constrained optimizers.
+    is no bound (``None`` is not allowed when there is no bound).
 
   ConstrainedBy
     This key allows to define the method to take bounds into account. The
@@ -557,10 +556,9 @@ acronyms or particular names can be found in the :ref:`genindex` or the
 
   Bounds
     This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds can be given by a list of list of pairs of
+    being optimized. Bounds have to be given by a list of list of pairs of
     lower/upper bounds for each variable, with extreme values every time there
-    is no bound. The bounds can always be specified, but they are taken into
-    account only by the constrained optimizers.
+    is no bound (``None`` is not allowed when there is no bound).
 
   ConstrainedBy
     This key allows to define the method to take bounds into account. The
@@ -618,11 +616,19 @@ acronyms or particular names can be found in the :ref:`genindex` or the
   QualityCriterion
     This key indicates the quality criterion, minimized to find the optimal
     state estimate. The default is the usual data assimilation criterion named
-    "DA", the augmented weighted least squares. The possible criteria has to
-    be in the following list, where the equivalent names are indicated by "=":
-    ["AugmentedPonderatedLeastSquares"="APLS"="DA",
-    "PonderatedLeastSquares"="PLS", "LeastSquares"="LS"="L2",
+    "DA", the augmented weighted least squares. The possible criteria has to be
+    in the following list, where the equivalent names are indicated by the sign
+    "=": ["AugmentedWeightedLeastSquares"="AWLS"="DA",
+    "WeightedLeastSquares"="WLS", "LeastSquares"="LS"="L2",
     "AbsoluteValue"="L1", "MaximumError"="ME"]
+  
+  BoxBounds
+    This key allows to define upper and lower bounds for *increments* on every
+    state variable being optimized (and not on state variables themselves).
+    Bounds have to be given by a list of list of pairs of lower/upper bounds for
+    each increment on variable, with extreme values every time there is no bound
+    (``None`` is not allowed when there is no bound). This key is required and
+    there is no default values.
 
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
@@ -790,6 +796,11 @@ for example::
         "AmplitudeOfInitialDirection" : 1,
         "EpsilonMinimumExponent" : -8,
         }
+
+To give the "*AlgorithmParameters*" values by string, one must enclose a
+standard dictionary definition between simple quotes, as for example::
+
+    '{"AmplitudeOfInitialDirection" : 1, "EpsilonMinimumExponent" : -8}'
 
 If an option is specified by the user for an algorithm that doesn't support it,
 the option is simply left unused and don't stop the treatment. The meaning of
