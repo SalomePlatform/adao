@@ -109,7 +109,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
               R(Alpha) = | < TangentF_X(dX) , Y > - < dX , AdjointF_X(Y) > |
 
-            qui doit rester constamment egal zero a la precision du calcul.
+            qui doit rester constamment egal a zero a la precision du calcul.
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             Y doit etre dans l'image de F. S'il n'est pas donne, on prend Y = F(X).
             """

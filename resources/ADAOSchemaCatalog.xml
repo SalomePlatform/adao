@@ -489,7 +489,6 @@ ADD.analyze()
 #-*-coding:iso-8859-1-*-
 import logging
 logging.debug("TERMINATE Entering in SimpleUserAnalysis")
-from daYacsIntegration.daStudy import *
 ADD = Study.getAssimilationStudy()
 # User code is below
 

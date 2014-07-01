@@ -27,7 +27,7 @@ import numpy, math
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self, "FUNCTIONTEST")
+        BasicObjects.Algorithm.__init__(self, "LINEARITYTEST")
         self.defineRequiredParameter(
             name     = "ResiduFormula",
             default  = "CenteredDL",

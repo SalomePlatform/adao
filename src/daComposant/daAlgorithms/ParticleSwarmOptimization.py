@@ -128,26 +128,28 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
                 Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
-                J   = float( Jb ) + float( Jo )
             elif QualityMeasure in ["WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS"]:
                 if RI is None:
                     raise ValueError("Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.
                 Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
-                J   = float( Jb ) + float( Jo )
             elif QualityMeasure in ["LeastSquares","LS","L2"]:
                 Jb  = 0.
                 Jo  = 0.5 * (Y - _HX).T * (Y - _HX)
-                J   = float( Jb ) + float( Jo )
             elif QualityMeasure in ["AbsoluteValue","L1"]:
                 Jb  = 0.
                 Jo  = numpy.sum( numpy.abs(Y - _HX) )
-                J   = float( Jb ) + float( Jo )
             elif QualityMeasure in ["MaximumError","ME"]:
                 Jb  = 0.
                 Jo  = numpy.max( numpy.abs(Y - _HX) )
-                J   = float( Jb ) + float( Jo )
             #
+            J   = float( Jb ) + float( Jo )
+            #
+            if self._parameters["StoreInternalVariables"]:
+                self.StoredVariables["CurrentState"].store( _X )
+            self.StoredVariables["CostFunctionJb"].store( Jb )
+            self.StoredVariables["CostFunctionJo"].store( Jo )
+            self.StoredVariables["CostFunctionJ" ].store( J )
             return J
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -183,18 +185,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         qBest = CostFunction(Best,self._parameters["QualityCriterion"])
         #
         for i in range(self._parameters["NumberOfInsects"]):
-            insect  = numpy.array(PosInsect[:,i].A1)
+            insect  = numpy.ravel(PosInsect[:,i])
             quality = CostFunction(insect,self._parameters["QualityCriterion"])
             qBestPosInsect.append(quality)
             if quality < qBest:
-                Best  = insect
-                qBest = quality
+                Best  = copy.copy( insect )
+                qBest = copy.copy( quality )
+        logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(Best), str(qBest)))
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
         for n in range(self._parameters["MaximumNumberOfSteps"]):
             for i in range(self._parameters["NumberOfInsects"]) :
-                insect  = PosInsect[:,i]
+                insect  = numpy.ravel(PosInsect[:,i])
                 rp = numpy.random.uniform(size=nbparam)
                 rg = numpy.random.uniform(size=nbparam)
                 for j in range(nbparam) :
@@ -202,10 +205,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     PosInsect[j,i] = PosInsect[j,i]+VelocityInsect[j,i]
                 quality = CostFunction(insect,self._parameters["QualityCriterion"])
                 if quality < qBestPosInsect[i]:
-                    BestPosInsect[:,i] = numpy.ravel( insect )
+                    BestPosInsect[:,i] = copy.copy( insect )
+                    qBestPosInsect[i]  = copy.copy( quality )
                     if quality < qBest :
-                        Best  = numpy.ravel( insect )
-                        qBest = quality
+                        Best  = copy.copy( insect )
+                        qBest = copy.copy( quality )
+            logging.debug("%s Etape %i, Insecte = %s, Qualité = %s"%(self._name, n, str(Best), str(qBest)))
             #
             if self._parameters["StoreInternalVariables"]:
                 self.StoredVariables["CurrentState"].store( Best )

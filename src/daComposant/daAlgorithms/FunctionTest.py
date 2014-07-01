@@ -62,7 +62,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Hm = HO["Direct"].appliedTo
         #
-        Xn = numpy.asmatrix(numpy.ravel( Xb )).T
+        Xn = copy.copy( Xb )
         #
         # ----------
         _p = self._parameters["NumberOfPrintedDigits"]
@@ -99,22 +99,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 print("===> Repetition step number %i on a total of %i\n"%(i+1,self._parameters["NumberOfRepetition"]))
             print("===> Launching direct operator evaluation\n")
             #
-            Y = Hm( Xn )
+            Yn = Hm( Xn )
             #
             print("\n===> End of direct operator evaluation\n")
             #
             msg  = ("===> Information after evaluation:\n")
-            msg += ("\n     Characteristics of output vector Y, to compare to other calculations:\n")
-            msg += ("       Type...............: %s\n")%type( Y )
-            msg += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Y ).shape)
-            msg += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Y )
-            msg += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Y )
-            msg += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Y )
-            msg += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Y )
-            msg += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Y )
+            msg += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
+            msg += ("       Type...............: %s\n")%type( Yn )
+            msg += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Yn ).shape)
+            msg += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Yn )
+            msg += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Yn )
+            msg += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Yn )
+            msg += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn )
+            msg += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
             print(msg)
             #
-            Ys.append( copy.copy( numpy.ravel(Y) ) )
+            Ys.append( copy.copy( numpy.ravel(
+                Yn
+                ) ) )
         #
         print("     %s\n"%("-"*75,))
         if self._parameters["SetDebug"]:
