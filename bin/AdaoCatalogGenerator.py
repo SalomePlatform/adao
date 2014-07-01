@@ -197,7 +197,7 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
                           ControlInput        = F_ControlInput("f"),
                           AlgorithmParameters = F_AlgorithmParameters("f"),
                           UserDataInit        = F_Init("f"),
-                          UserPostAnalysis    = F_UserPostAnalysis("f"),
+                          UserPostAnalysis    = F_UserPostAnalysis("o"),
                           InputVariables      = F_variables("f"),
                           OutputVariables     = F_variables("f"),
                           Observers           = F_Observers("f")
