@@ -35,7 +35,7 @@ AssimData = ["Background", "BackgroundError",
              ]
 
 AssimType = {}
-AssimType["Background"]          = ["Vector"]
+AssimType["Background"]          = ["Vector", "VectorSerie"]
 AssimType["BackgroundError"]     = ["Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"]
 AssimType["Observation"]         = ["Vector", "VectorSerie"]
 AssimType["ObservationError"]    = ["Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"]
@@ -198,7 +198,7 @@ DataTypeDefaultDict["Dict"]                 = "Script"
 
 # Assimilation data input
 AssimDataDict = {}
-AssimDataDict["Background"]          = ["Vector"]
+AssimDataDict["Background"]          = ["Vector", "VectorSerie"]
 AssimDataDict["BackgroundError"]     = ["Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"]
 AssimDataDict["Observation"]         = ["Vector", "VectorSerie"]
 AssimDataDict["ObservationError"]    = ["Matrix", "ScalarSparseMatrix", "DiagonalSparseMatrix"]
