@@ -1,3 +1,28 @@
+..
+   Copyright (C) 2008-2014 EDF R&D
+
+   This file is part of SALOME ADAO module.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+
+   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+
+   Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
+.. _section_home:
+
 ================================================================================
 Documentation ADAO
 ================================================================================
@@ -25,7 +50,7 @@ La documentation de ce module est divisée en plusieurs parties. La première est
 une :ref:`section_intro`. La seconde partie présente :ref:`section_theory`, et à
 leurs concepts. La troisième partie explique comment :ref:`section_using`.  La
 quatrième partie présente des exemples d'utilisation sous la forme de
-:ref:`section_examples`.  La cinquième partie détaille la
+:ref:`section_examples`. La cinquième partie détaille la
 :ref:`section_reference`. Les utilisateurs intéressés par un accès rapide au
 module peuvent s'arrêter avant la lecture de cette partie, mais un usage utile
 du module nécessite de lire et de revenir régulièrement aux troisième et
@@ -53,8 +78,8 @@ Table des matières
    theory
    using
    examples
-   reference
    advanced
+   reference
    license
    glossary
    bibliography
