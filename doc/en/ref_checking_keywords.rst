@@ -30,7 +30,10 @@ List of commands and keywords for an ADAO checking case
 .. index:: single: Algorithm
 .. index:: single: AlgorithmParameters
 .. index:: single: CheckingPoint
+.. index:: single: BackgroundError
 .. index:: single: Debug
+.. index:: single: Observation
+.. index:: single: ObservationError
 .. index:: single: ObservationOperator
 .. index:: single: Observer
 .. index:: single: Observers
@@ -68,10 +71,27 @@ The different commands are the following:
     to perform the required check, noted :math:`\mathbf{x}` and similar to the
     background :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
 
+  BackgroundError
+    *Required command*. This indicates the background error covariance matrix,
+    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
+    type object, a "*ScalarSparseMatrix*" type object, or a
+    "*DiagonalSparseMatrix*" type object.
+
   Debug
     *Optional command*. This define the level of trace and intermediary debug
     information. The choices are limited between 0 (for False) and 1 (for
     True).
+
+  Observation
+    *Required command*. This indicates the observation vector used for data
+    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
+    is defined as a "*Vector*" or a *VectorSerie* type object.
+
+  ObservationError
+    *Required command*. This indicates the observation error covariance matrix,
+    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
+    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
+    type object.
 
   ObservationOperator
     *Required command*. This indicates the observation operator, previously

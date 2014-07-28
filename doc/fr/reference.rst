@@ -116,3 +116,4 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
    ref_algorithm_LinearityTest
    ref_algorithm_ObserverTest
    ref_algorithm_TangentTest
+   ref_algorithm_SamplingTest

@@ -77,6 +77,7 @@ CheckAlgos = [
     "AdjointTest",
     "ObserverTest",
     "TangentTest",
+    "SamplingTest",
     ]
 
 AlgoDataRequirements = {}
@@ -155,6 +156,11 @@ AlgoDataRequirements["ObserverTest"] = [
     ]
 AlgoDataRequirements["TangentTest"] = [
     "CheckingPoint",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["SamplingTest"] = [
+    "CheckingPoint", "BackgroundError",
+    "Observation", "ObservationError",
     "ObservationOperator",
     ]
 
@@ -236,6 +242,7 @@ ObserversList = [
     "Analysis",
     "CurrentState",
     "Innovation",
+    "ObservedState",
     "OMA",
     "OMB",
     "BMA",

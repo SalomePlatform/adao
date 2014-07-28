@@ -30,7 +30,10 @@ Liste des commandes et mots-clés pour un cas de vérification
 .. index:: single: Algorithm
 .. index:: single: AlgorithmParameters
 .. index:: single: CheckingPoint
+.. index:: single: BackgroundError
 .. index:: single: Debug
+.. index:: single: Observation
+.. index:: single: ObservationError
 .. index:: single: ObservationOperator
 .. index:: single: Observer
 .. index:: single: Observers
@@ -70,10 +73,28 @@ Les différentes commandes sont les suivantes:
     l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
     "*Vector*".
 
+  BackgroundError
+    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
+    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
+    type "*DiagonalSparseMatrix*".
+
   Debug
     *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
     intermédiaires de débogage. Les choix sont limités entre 0 (pour False) et
     1 (pour True).
+
+  Observation
+    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
+    assimilation de données ou en optimisation, et noté précédemment
+    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    ou de type "*VectorSerie*".
+
+  ObservationError
+    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
+    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
+    type "*DiagonalSparseMatrix*".
 
   ObservationOperator
     *Commande obligatoire*. Elle indique l'opérateur d'observation, noté

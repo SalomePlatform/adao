@@ -113,3 +113,4 @@ The mathematical notations used afterward are explained in the section
    ref_algorithm_LinearityTest
    ref_algorithm_ObserverTest
    ref_algorithm_TangentTest
+   ref_algorithm_SamplingTest
