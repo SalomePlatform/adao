@@ -117,6 +117,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Ys.append( copy.copy( numpy.ravel(
                 Yn
                 ) ) )
+        # ----------
         #
         print("     %s\n"%("-"*75,))
         if self._parameters["SetDebug"]:

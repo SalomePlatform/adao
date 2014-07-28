@@ -20,9 +20,9 @@
 #
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-__doc__ = """
+"""
     Définit les outils généraux élémentaires.
-    
+
     Ce module est destiné à etre appelée par AssimilationStudy pour constituer
     les objets élémentaires de l'algorithme.
 """
@@ -43,7 +43,7 @@ class CacheManager:
             lenghtOfRedundancy    = -1,
             ):
         """
-        
+        Les caractéristiques de tolérance peuvent être modifées à la création.
         """
         self.__tolerBP  = float(toleranceInRedundancy)
         self.__lenghtOR = int(lenghtOfRedundancy)
@@ -53,7 +53,7 @@ class CacheManager:
         self.__listOPCV = [] # Operator Previous Calculated Points, Results, Point Norms
         # logging.debug("CM Tolerance de determination des doublons : %.2e"%self.__tolerBP)
 
-    def wasCalculatedIn(self, xValue, info="" ):
+    def wasCalculatedIn(self, xValue ): #, info="" ):
         __alc = False
         __HxV = None
         for i in xrange(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
@@ -238,11 +238,11 @@ class Operator:
 class Algorithm:
     """
     Classe générale d'interface de type algorithme
-    
+
     Elle donne un cadre pour l'écriture d'une classe élémentaire d'algorithme
     d'assimilation, en fournissant un container (dictionnaire) de variables
     persistantes initialisées, et des méthodes d'accès à ces variables stockées.
-    
+
     Une classe élémentaire d'algorithme doit implémenter la méthode "run".
     """
     def __init__(self, name):
@@ -251,7 +251,7 @@ class Algorithm:
         disponibles de manière générique dans les algorithmes élémentaires. Ces
         variables de stockage sont ensuite conservées dans un dictionnaire
         interne à l'objet, mais auquel on accède par la méthode "get".
-        
+
         Les variables prévues sont :
             - CostFunctionJ  : fonction-cout globale, somme des deux parties suivantes
             - CostFunctionJb : partie ébauche ou background de la fonction-cout
@@ -260,8 +260,9 @@ class Algorithm:
             - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-cout
             - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-cout
             - CurrentState : état courant lors d'itérations
-            - Analysis : l'analyse
-            - Innovation : l'innovation : d = Y - H Xb
+            - Analysis : l'analyse Xa
+            - ObservedState : l'état observé H(X)
+            - Innovation : l'innovation : d = Y - H(X)
             - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
             - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
             - MahalanobisConsistency : indicateur de consistance des covariances
@@ -288,6 +289,7 @@ class Algorithm:
         self.StoredVariables["GradientOfCostFunctionJo"] = Persistence.OneVector(name = "GradientOfCostFunctionJo")
         self.StoredVariables["CurrentState"]             = Persistence.OneVector(name = "CurrentState")
         self.StoredVariables["Analysis"]                 = Persistence.OneVector(name = "Analysis")
+        self.StoredVariables["ObservedState"]            = Persistence.OneVector(name = "ObservedState")
         self.StoredVariables["Innovation"]               = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["SigmaObs2"]                = Persistence.OneScalar(name = "SigmaObs2")
         self.StoredVariables["SigmaBck2"]                = Persistence.OneScalar(name = "SigmaBck2")
@@ -421,11 +423,11 @@ class Algorithm:
 class Diagnostic:
     """
     Classe générale d'interface de type diagnostic
-        
+
     Ce template s'utilise de la manière suivante : il sert de classe "patron" en
     même temps que l'une des classes de persistance, comme "OneScalar" par
     exemple.
-    
+
     Une classe élémentaire de diagnostic doit implémenter ses deux méthodes, la
     méthode "_formula" pour écrire explicitement et proprement la formule pour
     l'écriture mathématique du calcul du diagnostic (méthode interne non
@@ -498,7 +500,7 @@ class Covariance:
             # raise ValueError("The %s covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix."%self.__name)
         #
         self.__validate()
-    
+
     def __validate(self):
         if self.ismatrix() and min(self.shape) != max(self.shape):
             raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name,self.shape))
@@ -511,16 +513,16 @@ class Covariance:
                 L = numpy.linalg.cholesky( self.__B )
             except:
                 raise ValueError("The %s covariance matrix is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
-        
+
     def isscalar(self):
         return self.__is_scalar
-    
+
     def isvector(self):
         return self.__is_vector
-    
+
     def ismatrix(self):
         return self.__is_matrix
-    
+
     def getI(self):
         if   self.ismatrix():
             return Covariance(self.__name+"I", asCovariance  = self.__B.I )
@@ -530,7 +532,7 @@ class Covariance:
             return Covariance(self.__name+"I", asEyeByScalar = 1. / self.__B )
         else:
             return None
-    
+
     def getT(self):
         if   self.ismatrix():
             return Covariance(self.__name+"T", asCovariance  = self.__B.T )
@@ -538,7 +540,7 @@ class Covariance:
             return Covariance(self.__name+"T", asEyeByVector = self.__B )
         elif self.isscalar():
             return Covariance(self.__name+"T", asEyeByScalar = self.__B )
-    
+
     def cholesky(self):
         if   self.ismatrix():
             return Covariance(self.__name+"C", asCovariance  = numpy.linalg.cholesky(self.__B) )
@@ -546,7 +548,7 @@ class Covariance:
             return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__B ) )
         elif self.isscalar():
             return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__B ) )
-    
+
     def choleskyI(self):
         if   self.ismatrix():
             return Covariance(self.__name+"H", asCovariance  = numpy.linalg.cholesky(self.__B).I )
@@ -554,7 +556,7 @@ class Covariance:
             return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__B ) )
         elif self.isscalar():
             return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__B ) )
-    
+
     def diag(self, msize=None):
         if   self.ismatrix():
             return numpy.diag(self.__B)
@@ -565,7 +567,7 @@ class Covariance:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
                 return self.__B * numpy.ones(int(msize))
-    
+
     def asfullmatrix(self, msize=None):
         if   self.ismatrix():
             return self.__B
@@ -576,7 +578,7 @@ class Covariance:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
                 return numpy.matrix( self.__B * numpy.eye(int(msize)), float )
-    
+
     def trace(self, msize=None):
         if   self.ismatrix():
             return numpy.trace(self.__B)
@@ -587,13 +589,13 @@ class Covariance:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
                 return self.__B * int(msize)
-    
+
     def __repr__(self):
         return repr(self.__B)
-    
+
     def __str__(self):
         return str(self.__B)
-    
+
     def __add__(self, other):
         if   self.ismatrix():
             return self.__B + numpy.asmatrix(other)
@@ -618,7 +620,7 @@ class Covariance:
 
     def __neg__(self):
         return - self.__B
-    
+
     def __mul__(self, other):
         if   self.ismatrix() and isinstance(other,numpy.matrix):
             return self.__B * other

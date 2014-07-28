@@ -147,9 +147,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["StoreInternalVariables"]:
                 self.StoredVariables["CurrentState"].store( _X )
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
+                self.StoredVariables["CostFunctionJb"].store( Jb )
+                self.StoredVariables["CostFunctionJo"].store( Jo )
+                self.StoredVariables["CostFunctionJ" ].store( J )
             return J
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -192,6 +192,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Best  = copy.copy( insect )
                 qBest = copy.copy( quality )
         logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(Best), str(qBest)))
+        #
+        if self._parameters["StoreInternalVariables"]:
+            self.StoredVariables["CurrentState"].store( Best )
+        self.StoredVariables["CostFunctionJb"].store( 0. )
+        self.StoredVariables["CostFunctionJo"].store( 0. )
+        self.StoredVariables["CostFunctionJ" ].store( qBest )
         #
         # Minimisation de la fonctionnelle
         # --------------------------------

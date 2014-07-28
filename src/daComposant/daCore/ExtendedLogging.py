@@ -20,10 +20,10 @@
 #
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-__doc__ = """
+"""
     Ce module permet de mettre en place un logging utilisable partout dans
     l'application, par défaut à la console, et si nécessaire dans un fichier.
-    
+
     Il doit être appelé en premier dans AssimilationStudy (mais pas directement
     dans les applications utilisateurs), en l'important et en instanciant un
     objet :
@@ -47,7 +47,7 @@ __doc__ = """
         log.setLogfile(filename="toto.log", filemode="a", level=logging.WARNING)
     et on change éventuellement le niveau avec :
         log.setLogfileLevel(logging.INFO)
-    
+
     Ensuite, n'importe où dans les applications, il suffit d'utiliser le module
     "logging" (avec un petit "l") :
         import logging
@@ -66,7 +66,7 @@ __doc__ = """
         import logging
         log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
         log.setLevel(logging.DEBUG)
-    
+
     On rappelle les niveaux (attributs de "logging") et leur ordre :
         NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
 """
@@ -110,7 +110,7 @@ class ExtendedLogging:
 #         Permet de changer globalement le niveau des messages disponibles.
 #         """
 #         logging.getLogger().setLevel(level)
-# 
+#
     def setLogfile(self, filename=LOGFILE, filemode="w", level=logging.NOTSET):
         """
         Permet de disposer des messages dans un fichier EN PLUS de la console.
@@ -131,7 +131,7 @@ class ExtendedLogging:
         pris en compte que s'il est supérieur au niveau global.
         """
         self.__logfile.setLevel(level)
-    
+
     def getLevel(self):
         """
         Renvoie le niveau de logging sous forme texte

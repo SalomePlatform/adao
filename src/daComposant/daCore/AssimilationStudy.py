@@ -20,10 +20,10 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-__doc__ = """
+"""
     Classe principale pour la préparation, la réalisation et la restitution de
     calculs d'assimilation de données.
-    
+
     Ce module est destiné à être appelé par AssimilationStudy pour constituer
     les objets élémentaires de l'étude.
 """
@@ -32,10 +32,12 @@ __author__ = "Jean-Philippe ARGAUD"
 import os, sys
 import numpy
 import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
+import logging
 try:
     import scipy.optimize
-except:
-    pass
+    logging.debug("Succeed initial import of scipy.optimize with Scipy %s", scipy.version.version)
+except ImportError:
+    logging.debug("Fail initial import of scipy.optimize")
 import Persistence
 from BasicObjects import Operator, Covariance
 from PlatformInfo import uniq
@@ -128,9 +130,9 @@ class AssimilationStudy:
         else:
             raise ValueError("Error: improperly defined background, it requires at minima either a vector, a list/tuple of vectors or a persistent object")
         if toBeStored:
-           self.__StoredInputs["Background"] = self.__Xb
+            self.__StoredInputs["Background"] = self.__Xb
         return 0
-    
+
     def setBackgroundError(self,
             asCovariance  = None,
             asEyeByScalar = None,
@@ -618,7 +620,7 @@ class AssimilationStudy:
         #
         self.__StoredInputs["AlgorithmParameters"] = self.__Parameters
         return 0
-    
+
     def getAlgorithmParameters(self, noDetails=True):
         """
         Renvoie la liste des paramètres requis selon l'algorithme
@@ -778,9 +780,10 @@ class AssimilationStudy:
         #
         if self.__StoredInputs.has_key("AlgorithmParameters") \
             and self.__StoredInputs["AlgorithmParameters"].has_key("Bounds") \
-            and (type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) \
+            and (type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type([]) or type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type(())) \
             and (len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) != max(__Xb_shape)):
-            raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself."%(len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]),max(__Xb_shape)))
+            raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself." \
+                %(len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]),max(__Xb_shape)))
         #
         return 1
 
@@ -788,7 +791,7 @@ class AssimilationStudy:
     def analyze(self):
         """
         Permet de lancer le calcul d'assimilation.
-        
+
         Le nom de la méthode à activer est toujours "run". Les paramètres en
         arguments de la méthode sont fixés. En sortie, on obtient les résultats
         dans la variable de type dictionnaire "StoredVariables", qui contient en
@@ -833,7 +836,7 @@ class AssimilationStudy:
             allvariables.update( self.__StoredDiagnostics )
             allvariables.update( self.__StoredInputs )
             return allvariables
-    
+
     def get_available_variables(self):
         """
         Renvoie les variables potentiellement utilisables pour l'étude,
@@ -851,7 +854,7 @@ class AssimilationStudy:
                 variables.extend( self.__StoredInputs.keys() )
             variables.sort()
             return variables
-    
+
     def get_available_algorithms(self):
         """
         Renvoie la liste des algorithmes potentiellement utilisables, identifiés
@@ -866,7 +869,7 @@ class AssimilationStudy:
                         files.append(root)
         files.sort()
         return files
-        
+
     def get_available_diagnostics(self):
         """
         Renvoie la liste des diagnostics potentiellement utilisables, identifiés
@@ -894,7 +897,7 @@ class AssimilationStudy:
         """
         Ajoute au chemin de recherche des algorithmes un répertoire dans lequel
         se trouve un sous-répertoire "daAlgorithms"
-        
+
         Remarque : si le chemin a déjà été ajouté pour les diagnostics, il n'est
         pas indispensable de le rajouter ici.
         """
@@ -919,7 +922,7 @@ class AssimilationStudy:
         """
         Ajoute au chemin de recherche des algorithmes un répertoire dans lequel
         se trouve un sous-répertoire "daDiagnostics"
-        
+
         Remarque : si le chemin a déjà été ajouté pour les algorithmes, il n'est
         pas indispensable de le rajouter ici.
         """
@@ -946,7 +949,7 @@ class AssimilationStudy:
         pas demandé dans le Scheduler, il effectue la fonction HookFunction avec
         les arguments (variable persistante VariableName, paramètres HookParameters).
         """
-        # 
+        #
         if type( self.__algorithm ) is dict:
             raise ValueError("No observer can be build before choosing an algorithm.")
         #
@@ -964,12 +967,12 @@ class AssimilationStudy:
         for n in VariableNames:
             if not self.__algorithm.has_key( n ):
                 raise ValueError("An observer requires to be set on a variable named %s which does not exist."%n)
-        else:
-            self.__algorithm.StoredVariables[ n ].setDataObserver(
-                Scheduler      = Scheduler,
-                HookFunction   = HookFunction,
-                HookParameters = HookParameters,
-                )
+            else:
+                self.__algorithm.StoredVariables[ n ].setDataObserver(
+                    Scheduler      = Scheduler,
+                    HookFunction   = HookFunction,
+                    HookParameters = HookParameters,
+                    )
 
     def removeDataObserver(self,
             VariableName   = None,
@@ -978,7 +981,7 @@ class AssimilationStudy:
         """
         Permet de retirer un observer à une ou des variable nommée.
         """
-        # 
+        #
         if type( self.__algorithm ) is dict:
             raise ValueError("No observer can be removed before choosing an algorithm.")
         #
@@ -996,10 +999,10 @@ class AssimilationStudy:
         for n in VariableNames:
             if not self.__algorithm.has_key( n ):
                 raise ValueError("An observer requires to be removed on a variable named %s which does not exist."%n)
-        else:
-            self.__algorithm.StoredVariables[ n ].removeDataObserver(
-                HookFunction   = HookFunction,
-                )
+            else:
+                self.__algorithm.StoredVariables[ n ].removeDataObserver(
+                    HookFunction   = HookFunction,
+                    )
 
     # -----------------------------------------------------------
     def setDebug(self, level=10):
@@ -1008,7 +1011,6 @@ class AssimilationStudy:
         appel pour changer le niveau de verbosité, avec :
         NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
         """
-        import logging
         log = logging.getLogger()
         log.setLevel( level )
 
@@ -1016,11 +1018,13 @@ class AssimilationStudy:
         """
         Remet le logger au niveau par défaut
         """
-        import logging
         log = logging.getLogger()
         log.setLevel( logging.WARNING )
 
     def prepare_to_pickle(self):
+        """
+        Retire les variables non pickelisables
+        """
         self.__algorithmFile = None
         self.__diagnosticFile = None
         self.__HO  = {}
