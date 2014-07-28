@@ -96,9 +96,9 @@ The options of the algorithm are the following:
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
-    calculations. The default is a void list, none of these variables being
-    calculated and stored by default. The possible names are in the following
-    list: ["OMA"].
+    calculations or memory consumptions. The default is a void list, none of
+    these variables being calculated and stored by default. The possible names
+    are in the following list: ["OMA"].
 
 *Tips for this algorithm:*
 

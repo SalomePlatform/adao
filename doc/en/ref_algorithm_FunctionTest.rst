@@ -64,9 +64,9 @@ following:
     :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
     a "*Matrix*" type one. In the case of "*Function*" type, different
     functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control
-    :math:`U` included in the observation, the operator has to be applied to a
-    pair :math:`(X,U)`.
+    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
+    included in the observation, the operator has to be applied to a pair
+    :math:`(X,U)`.
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. In particular, the

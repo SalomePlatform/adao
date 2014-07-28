@@ -98,9 +98,9 @@ Les options de l'algorithme sont les suivantes:
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs coûteux. La valeur par défaut est une liste vide, aucune de ces
-    variables n'étant calculée et stockée par défaut. Les noms possibles sont
-    dans la liste suivante : ["OMA"].
+    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    possibles sont dans la liste suivante : ["OMA"].
 
 *Astuce pour cet algorithme :*
 
