@@ -299,7 +299,9 @@ forme étendue d'une *minimisation moindres carrés*, obtenue en ajoutant un terme
 de régularisation utilisant :math:`\mathbf{x}-\mathbf{x}^b`, et en pondérant les
 différences par les deux matrices de covariances :math:`\mathbf{B}` et
 :math:`\mathbf{R}`. La minimisation de la fonctionnelle :math:`J` conduit à la
-*meilleure* estimation de l'état :math:`\mathbf{x}`.
+*meilleure* estimation de l'état :math:`\mathbf{x}`. Pour obtenir plus
+d'informations sur ces notions, on se reportera aux ouvrages généraux de
+référence comme [Tarantola87]_.
 
 Les possibilités d'extension de cette estimation d'état, en utilisant de manière
 plus explicite des méthodes d'optimisation et leurs propriétés, peuvent être

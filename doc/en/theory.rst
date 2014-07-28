@@ -286,7 +286,8 @@ minimization* extented form, obtained by adding a regularizing term using
 :math:`\mathbf{x}-\mathbf{x}^b`, and by weighting the differences using
 :math:`\mathbf{B}` and :math:`\mathbf{R}` the two covariance matrices. The
 minimization of the :math:`J` function leads to the *best* :math:`\mathbf{x}`
-state estimation.
+state estimation. To get more information about these notions, one can consult
+reference general documents like [Tarantola87]_.
 
 State estimation possibilities extension, by using more explicitly optimization
 methods and their properties, can be imagined in two ways.
