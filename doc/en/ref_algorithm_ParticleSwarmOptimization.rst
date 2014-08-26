@@ -34,8 +34,9 @@ This algorithm realizes an estimation of the state of a dynamic system by a
 particle swarm.
 
 This is an optimization method allowing for global minimum search of a general
-function of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`, with or without
-weights.
+error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
+with or without weights. The default error function is the augmented weighted
+least squares function, classicaly used in data assimilation.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++

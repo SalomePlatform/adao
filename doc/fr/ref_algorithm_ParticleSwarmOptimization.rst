@@ -34,8 +34,10 @@ Cet algorithme réalise une estimation de l'état d'un système dynamique par un
 essaim particulaire.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
-fonctionnelle quelconque de type :math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`,
-avec ou sans pondérations.
+fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
+:math:`L^{\infty}`, avec ou sans pondérations. La fonctionnelle d'erreur par
+défaut est celle de moindres carrés pondérés augmentés, classiquement utilisée
+en assimilation de données.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
