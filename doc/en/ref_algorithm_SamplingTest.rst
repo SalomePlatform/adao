@@ -31,11 +31,14 @@ Description
 +++++++++++
 
 This algorithm allows to calculate the values, linked to a :math:`\mathbf{x}`
-state, of the data assimilation error function :math:`J` and of the observation
-operator, for an priori given states sample. This is a useful algorithm to test
-the sensitivity, of the error function :math:`J` in particular, to the state
-:math:`\mathbf{x}` variations. When a state is not observable, a *"NaN"* value
-is returned.
+state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
+:math:`L^{\infty}`, with or without weights, and of the observation operator,
+for an priori given states sample. The default error function is the augmented
+weighted least squares function, classicaly used in data assimilation.
+
+This is a useful algorithm to test the sensitivity, of the error function
+:math:`J` in particular, to the state :math:`\mathbf{x}` variations. When a
+state is not observable, a *"NaN"* value is returned.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
 the form of hypercubes.
@@ -51,6 +54,7 @@ Optional and required commands
 .. index:: single: SampleAsnUplet
 .. index:: single: SampleAsExplicitHyperCube
 .. index:: single: SampleAsMinMaxStepHyperCube
+.. index:: single: QualityCriterion
 .. index:: single: SetDebug
 .. index:: single: StoreSupplementaryCalculations
 
@@ -117,6 +121,16 @@ The options of the algorithm are the following:
     list of the same size than the one of the state. The bounds are included.
 
     Example : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
+
+  QualityCriterion
+    This key indicates the quality criterion, used to find the state estimate.
+    The default is the usual data assimilation criterion named "DA", the
+    augmented weighted least squares. The possible criteria has to be in the
+    following list, where the equivalent names are indicated by the sign "=":
+    ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
+    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1", "MaximumError"="ME"].
+
+    Example : ``{"QualityCriterion":"DA"}``
 
   SetDebug
     This key requires the activation, or not, of the debug mode during the

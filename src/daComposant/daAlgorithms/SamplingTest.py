@@ -47,6 +47,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable par un triplet [min,max,step]",
             )
         self.defineRequiredParameter(
+            name     = "QualityCriterion",
+            default  = "AugmentedWeightedLeastSquares",
+            typecast = str,
+            message  = "Critère de qualité utilisé",
+            listval  = ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA",
+                        "WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS",
+                        "LeastSquares","LS","L2",
+                        "AbsoluteValue","L1",
+                        "MaximumError","ME"],
+            )
+        self.defineRequiredParameter(
             name     = "SetDebug",
             default  = False,
             typecast = bool,
@@ -90,7 +101,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------
         BI = B.getI()
         RI = R.getI()
-        def CostFunction(x,HmX):
+        def CostFunction(x,HmX, QualityMeasure="AugmentedWeightedLeastSquares"):
             if numpy.any(numpy.isnan(HmX)):
                 _X  = numpy.nan
                 _HX = numpy.nan
@@ -98,8 +109,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 _X  = numpy.asmatrix(numpy.ravel( x )).T
                 _HX = numpy.asmatrix(numpy.ravel( HmX )).T
-                Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
-                Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+                if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA"]:
+                    if BI is None or RI is None:
+                        raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
+                    Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
+                    Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+                elif QualityMeasure in ["WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS"]:
+                    if RI is None:
+                        raise ValueError("Observation error covariance matrix has to be properly defined!")
+                    Jb  = 0.
+                    Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+                elif QualityMeasure in ["LeastSquares","LS","L2"]:
+                    Jb  = 0.
+                    Jo  = 0.5 * (Y - _HX).T * (Y - _HX)
+                elif QualityMeasure in ["AbsoluteValue","L1"]:
+                    Jb  = 0.
+                    Jo  = numpy.sum( numpy.abs(Y - _HX) )
+                elif QualityMeasure in ["MaximumError","ME"]:
+                    Jb  = 0.
+                    Jo  = numpy.max( numpy.abs(Y - _HX) )
+                #
                 J   = float( Jb ) + float( Jo )
             if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
@@ -128,7 +157,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             except:
                 Yn = numpy.nan
             #
-            J, Jb, Jo = CostFunction(__Xn,Yn)
+            J, Jb, Jo = CostFunction(__Xn,Yn,self._parameters["QualityCriterion"])
         # ----------
         #
         if self._parameters["SetDebug"]:

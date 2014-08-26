@@ -31,11 +31,15 @@ Description
 +++++++++++
 
 Cet algorithme permet d'établir les valeurs, liées à un état :math:`\mathbf{x}`,
-de la fonctionnelle d'erreur d'assimilation de données :math:`J` et de
-l'opérateur d'observation, pour un échantillon d'états donné a priori. C'est un
-algorithme utile pour tester la sensibilité, de la fonctionnelle :math:`J` en
-particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque un état n'est
-pas observable, une value *"NaN"* est retournée.
+d'une fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`,
+:math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations, et de l'opérateur
+d'observation, pour un échantillon d'états donné a priori. La fonctionnelle
+d'erreur par défaut est celle de moindres carrés pondérés augmentés,
+classiquement utilisée en assimilation de données.
+
+C'est un algorithme utile pour tester la sensibilité, de la fonctionnelle
+:math:`J` en particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque
+un état n'est pas observable, une value *"NaN"* est retournée.
 
 L'échantillon des états :math:`\mathbf{x}` peut être fourni explicitement ou
 sous la forme d'hypercubes.
@@ -51,6 +55,7 @@ Commandes requises et optionnelles
 .. index:: single: SampleAsnUplet
 .. index:: single: SampleAsExplicitHyperCube
 .. index:: single: SampleAsMinMaxStepHyperCube
+.. index:: single: QualityCriterion
 .. index:: single: SetDebug
 .. index:: single: StoreSupplementaryCalculations
 
@@ -122,6 +127,17 @@ Les options de l'algorithme sont les suivantes:
     l'état. Les bornes sont incluses.
 
     Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état à 2 dimensions
+
+  QualityCriterion
+    Cette clé indique le critère de qualité, qui est utilisé pour trouver
+    l'estimation de l'état. Le défaut est le critère usuel de l'assimilation de
+    données nommé "DA", qui est le critère de moindres carrés pondérés
+    augmentés. Les critères possibles sont dans la liste suivante, dans laquelle
+    les noms équivalents sont indiqués par un signe "=" :
+    ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
+    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1",  "MaximumError"="ME"].
+
+    Exemple : ``{"QualityCriterion":"DA"}``
 
   SetDebug
     Cette clé requiert l'activation, ou pas, du mode de débogage durant
