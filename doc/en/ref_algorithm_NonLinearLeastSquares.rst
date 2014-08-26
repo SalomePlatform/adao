@@ -104,12 +104,16 @@ The options of the algorithm are the following:
     (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
     strongly recommended to stay with the default.
 
+    Example : ``{"Minimizer":"LBFGSB"}``
+
   Bounds
     This key allows to define upper and lower bounds for every state variable
     being optimized. Bounds have to be given by a list of list of pairs of
     lower/upper bounds for each variable, with possibly ``None`` every time
     there is no bound. The bounds can always be specified, but they are taken
     into account only by the constrained optimizers.
+
+    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
@@ -118,11 +122,15 @@ The options of the algorithm are the following:
     real problems. For some optimizers, the effective stopping step can be
     slightly different due to algorithm internal control requirements.
 
+    Example : ``{"MaximumNumberOfSteps":100}``
+
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the cost function decreases less than
     this tolerance at the last step. The default is 1.e-7, and it is
     recommended to adapt it to the needs on real problems.
+
+    Example : ``{"CostDecrementTolerance":1.e-7}``
 
   ProjectedGradientTolerance
     This key indicates a limit value, leading to stop successfully the iterative
@@ -131,11 +139,15 @@ The options of the algorithm are the following:
     -1, that is the internal default of each minimizer (generally 1.e-5), and it
     is not recommended to change it.
 
+    Example : ``{"ProjectedGradientTolerance":-1}``
+
   GradientNormTolerance
     This key indicates a limit value, leading to stop successfully the
     iterative optimization process when the norm of the gradient is under this
     limit. It is only used for non-constrained optimizers.  The default is
     1.e-5 and it is not recommended to change it.
+
+    Example : ``{"GradientNormTolerance":1.e-5}``
 
   StoreInternalVariables
     This Boolean key allows to store default internal variables, mainly the
@@ -143,12 +155,16 @@ The options of the algorithm are the following:
     a numerically costly choice in certain calculation cases. The default is
     "False".
 
+    Example : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["BMA", "OMA", "OMB", "Innovation"].
+
+    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 *Tips for this algorithm:*
 

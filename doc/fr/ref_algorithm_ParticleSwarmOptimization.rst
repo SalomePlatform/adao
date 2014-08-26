@@ -106,18 +106,26 @@ Les options de l'algorithme sont les suivantes:
     itérative. Le défaut est 50, qui est une limite arbitraire. Il est ainsi
     recommandé d'adapter ce paramètre aux besoins pour des problèmes réels.
 
+    Exemple : ``{"MaximumNumberOfSteps":100}``
+
   NumberOfInsects
     Cette clé indique le nombre d'insectes ou de particules dans l'essaim. La
     valeur par défaut est 100, qui est une valeur par défaut usuelle pour cet
     algorithme.
 
+    Exemple : ``{"NumberOfInsects":100}``
+
   SwarmVelocity
     Cette clé indique la part de la vitesse d'insecte qui est imposée par
     l'essaim. C'est une valeur réelle positive. Le défaut est de 1.
 
+    Exemple : ``{"SwarmVelocity":1.}``
+
   GroupRecallRate
     Cette clé indique le taux de rappel vers le meilleur insecte de l'essaim.
     C'est une valeur réelle comprise entre 0 et 1. Le défaut est de 0.5.
+
+    Exemple : ``{"GroupRecallRate":0.5}``
 
   QualityCriterion
     Cette clé indique le critère de qualité, qui est minimisé pour trouver
@@ -126,7 +134,9 @@ Les options de l'algorithme sont les suivantes:
     pondérés augmentés. Les critères possibles sont dans la liste suivante, dans
     laquelle les noms équivalents sont indiqués par un signe "=" :
     ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
-    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1",  "MaximumError"="ME"]
+    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1",  "MaximumError"="ME"].
+
+    Exemple : ``{"QualityCriterion":"DA"}``
 
   BoxBounds
     Cette clé permet de définir des bornes supérieure et inférieure pour chaque
@@ -137,11 +147,15 @@ Les options de l'algorithme sont les suivantes:
     valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
     n'y a pas de valeurs par défaut.
 
+    Exemple : ``{"BoxBounds":[[-0.5,0.5],[0.01,2.],[0.,1.e99],[-1.e99,1.e99]]}``
+
   SetSeed
     Cette clé permet de donner un nombre entier pour fixer la graine du
     générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
     par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
     utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+    Exemple : ``{"SetSeed":1000}``
 
   StoreInternalVariables
     Cette clé booléenne permet de stocker les variables internes par défaut,
@@ -149,12 +163,16 @@ Les options de l'algorithme sont les suivantes:
     peut être un choix numériquement coûteux dans certains cas de calculs. La
     valeur par défaut est "False".
 
+    Exemple : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["BMA", "OMA", "OMB", "Innovation"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 Voir aussi
 ++++++++++

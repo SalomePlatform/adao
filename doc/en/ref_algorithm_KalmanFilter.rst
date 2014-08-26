@@ -103,11 +103,15 @@ The options of the algorithm are the following:
     either state-estimation, with a value of "State", or parameter-estimation,
     with a value of "Parameters". The default choice is "State".
 
+    Example : ``{"EstimationOf":"Parameters"}``
+
   StoreInternalVariables
     This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
+
+    Example : ``{"StoreInternalVariables":True}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
@@ -115,6 +119,8 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCovariance", "BMA", "Innovation"].
+
+    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 See also
 ++++++++

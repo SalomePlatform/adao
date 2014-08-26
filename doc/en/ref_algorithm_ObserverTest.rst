@@ -24,8 +24,8 @@
 .. index:: single: ObserverTest
 .. _section_ref_algorithm_ObserverTest:
 
-Checking algorithm "ObserverTest"
----------------------------------
+Checking algorithm "*ObserverTest*"
+-----------------------------------
 
 Description
 +++++++++++

@@ -105,22 +105,30 @@ Les options de l'algorithme sont les suivantes:
     Cette clé décrit les points de calcul sous la forme d'une liste de n-uplets,
     chaque n-uplet étant un état.
 
+    Exemple : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` pour 3 points dans un espace d'état de dimension 4
+
   SampleAsExplicitHyperCube
     Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
     donne la liste des échantillonages de chaque variable comme une liste. C'est
     donc une liste de listes, chacune étant de taille potentiellement
     différente.
 
+    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` pour un espace d'état à 2 dimensions
+
   SampleAsMinMaxStepHyperCube
     Cette clé décrit les points de calcul sous la forme d'un hyper-cube dont on
     donne la liste des échantillonages de chaque variable par un triplet
     *[min,max,step]*. C'est donc une liste de la même taille que celle de
-    l'état.
+    l'état. Les bornes sont incluses.
+
+    Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état à 2 dimensions
 
   SetDebug
     Cette clé requiert l'activation, ou pas, du mode de débogage durant
     l'évaluation de la fonction. La valeur par défaut est "True", les choix sont
     "True" ou "False".
+
+    Exemple : ``{"SetDebug":False}``
 
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
@@ -129,6 +137,8 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["CostFunctionJ", "CurrentState",
     "Innovation", "ObservedState"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "ObservedState"]}``
 
 Voir aussi
 ++++++++++

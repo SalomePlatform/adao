@@ -104,6 +104,8 @@ The options of the algorithm are the following:
     a numerically costly choice in certain calculation cases. The default is
     "False".
 
+    Example : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
@@ -111,6 +113,8 @@ The options of the algorithm are the following:
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCovariance", "BMA", "OMA", "OMB",
     "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency"].
+
+    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 See also
 ++++++++

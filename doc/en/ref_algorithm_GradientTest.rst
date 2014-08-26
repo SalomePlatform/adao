@@ -103,6 +103,8 @@ The options of the algorithm are the following:
     used for the directional derivative around the nominal checking point. The
     default is 1, that means no scaling.
 
+    Example : ``{"AmplitudeOfInitialDirection":0.5}``
+
   EpsilonMinimumExponent
     This key indicates the minimal exponent value of the power of 10 coefficient
     to be used to decrease the increment multiplier. The default is -8, and it
@@ -110,11 +112,15 @@ The options of the algorithm are the following:
     calculate the residue of the scalar product formula with a fixed increment
     multiplied from 1.e0 to 1.e-8.
 
+    Example : ``{"EpsilonMinimumExponent":-12}``
+
   InitialDirection
     This key indicates the vector direction used for the directional derivative
     around the nominal checking point. It has to be a vector. If not specified,
     this direction defaults to a random perturbation around zero of the same
     vector size than the checking point.
+
+    Example : ``{"InitialDirection":[0.1,0.1,100.,3}``
 
   ResiduFormula
     This key indicates the residue formula that has to be used for the test. The
@@ -123,12 +129,16 @@ The options of the algorithm are the following:
     square power of the perturbation) and "Norm" (residue obtained by taking the
     norm of the Taylor development at zero order approximation, which
     approximate the gradient, and which has to remain constant).
-  
+
+    Example : ``{"ResiduFormula":"Taylor"}``
+
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
     generator used to generate the ensemble. A convenient value is for example
     1000. By default, the seed is left uninitialized, and so use the default
     initialization from the computer.
+
+    Example : ``{"SetSeed":1000}``
 
 See also
 ++++++++

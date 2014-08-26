@@ -103,15 +103,15 @@ The options of the algorithm are the following:
     lower/upper bounds for each variable, with extreme values every time there
     is no bound (``None`` is not allowed when there is no bound).
 
-  ConstrainedBy
-    This key allows to define the method to take bounds into account. The
-    possible methods are in the following list: ["EstimateProjection"].
+    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
 
   EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
     either state-estimation, with a value of "State", or parameter-estimation,
     with a value of "Parameters". The default choice is "State".
-  
+
+    Example : ``{"EstimationOf":"Parameters"}``
+
   Alpha, Beta, Kappa, Reconditioner
     These keys are internal scaling parameters. "Alpha" requires a value between
     1.e-4 and 1. "Beta" has an optimal value of 2 for Gaussian *a priori*
@@ -119,11 +119,15 @@ The options of the algorithm are the following:
     obtained by setting it to 0. "Reconditioner" requires a value between 1.e-3
     and 10, it defaults to 1.
 
+    Example : ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
+
   StoreInternalVariables
     This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
+
+    Example : ``{"StoreInternalVariables":True}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
@@ -131,6 +135,8 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCovariance", "BMA", "Innovation"].
+
+    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 See also
 ++++++++

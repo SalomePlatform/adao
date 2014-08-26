@@ -100,6 +100,8 @@ The options of the algorithm are the following:
     1000. By default, the seed is left uninitialized, and so use the default
     initialization from the computer.
 
+    Example : ``{"SetSeed":1000}``
+
 See also
 ++++++++
 

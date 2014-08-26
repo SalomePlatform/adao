@@ -105,11 +105,15 @@ Les options de l'algorithme sont les suivantes:
     soit une estimation de l'état, avec la valeur "State", ou une estimation de
     paramètres, avec la valeur "Parameters". Le choix par défaut est "State".
 
+    Exemple : ``{"EstimationOf":"Parameters"}``
+
   StoreInternalVariables
     Cette clé booléenne permet de stocker les variables internes par défaut,
     principalement l'état courant lors d'un processus itératif. Attention, cela
     peut être un choix numériquement coûteux dans certains cas de calculs. La
     valeur par défaut est "False".
+
+    Exemple : ``{"StoreInternalVariables":True}``
 
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
@@ -118,6 +122,8 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
     "Innovation"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 Voir aussi
 ++++++++++

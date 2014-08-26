@@ -154,6 +154,8 @@ Les options de l'algorithme sont les suivantes:
     nominal de vérification. La valeur par défaut est de 1, ce qui signifie pas
     de mise à l'échelle.
 
+    Exemple : ``{"AmplitudeOfInitialDirection":0.5}``
+
   EpsilonMinimumExponent
     Cette clé indique la valeur de l'exposant minimal du coefficient en
     puissance de 10 qui doit être utilisé pour faire décroître le multiplicateur
@@ -161,12 +163,16 @@ Les options de l'algorithme sont les suivantes:
     -20. Par exemple, la valeur par défaut conduit à calculer le résidu de la
     formule avec un incrément fixe multiplié par 1.e0 jusqu'à 1.e-8.
 
+    Exemple : ``{"EpsilonMinimumExponent":-12}``
+
   InitialDirection
     Cette clé indique la direction vectorielle utilisée pour la dérivée
     directionnelle autour du point nominal de vérification. Cela doit être un
     vecteur. Si elle n'est pas spécifiée, la direction par défaut est une
     perturbation par défaut autour de zéro de la même taille vectorielle que le
     point de vérification.
+
+    Exemple : ``{"InitialDirection":[0.1,0.1,100.,3}``
 
   ResiduFormula
     Cette clé indique la formule de résidu qui doit être utilisée pour le test.
@@ -181,11 +187,15 @@ Les options de l'algorithme sont les suivantes:
     normalisé par l'écart quadratique moyen (RMS) au point nominal, qui doit
     rester proche de 0).
 
+    Exemple : ``{"ResiduFormula":"CenteredDL"}``
+
   SetSeed
     Cette clé permet de donner un nombre entier pour fixer la graine du
     générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
     par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
     utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+    Exemple : ``{"SetSeed":1000}``
 
 Voir aussi
 ++++++++++

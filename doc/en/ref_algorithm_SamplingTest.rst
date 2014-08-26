@@ -24,8 +24,8 @@
 .. index:: single: SamplingTest
 .. _section_ref_algorithm_SamplingTest:
 
-Checking algorithm "SamplingTest"
----------------------------------
+Checking algorithm "*SamplingTest*"
+-----------------------------------
 
 Description
 +++++++++++
@@ -102,20 +102,28 @@ The options of the algorithm are the following:
     This key describes the calculations points as a list of n-uplets, each
     n-uplet being a state.
 
+    Example : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` for 3 points in a state space of dimension 4
+
   SampleAsExplicitHyperCube
     This key describes the calculations points as an hypercube, from which one
     gives the list of sampling of each variable as a list. That is then a list
     of lists, each of them being potentially of different size.
 
+    Example : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` for a state space of dimension 2
+
   SampleAsMinMaxStepHyperCube
     This key describes the calculations points as an hypercube from which one
     the sampling of each variable by a triplet *[min,max,step]*. That is then a
-    list of the same size then the one of the state.
+    list of the same size than the one of the state. The bounds are included.
+
+    Example : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
 
   SetDebug
     This key requires the activation, or not, of the debug mode during the
     function evaluation. The default is "True", the choices are "True" or
     "False".
+
+    Example : ``{"SetDebug":False}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
@@ -124,6 +132,8 @@ The options of the algorithm are the following:
     these variables being calculated and stored by default. The possible names
     are in the following list: ["CostFunctionJ", "CurrentState", "Innovation",
     "ObservedState"].
+
+    Example : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "ObservedState"]}``
 
 See also
 ++++++++

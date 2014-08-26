@@ -86,11 +86,15 @@ Les options de l'algorithme sont les suivantes:
     Cette clé permet de définir la valeur réelle du quantile recherché, entre 0
     et 1. La valeur par défaut est 0.5, correspondant à la médiane.
 
+    Exemple : ``{"Quantile":0.5}``
+
   MaximumNumberOfSteps
     Cette clé indique le nombre maximum d'itérations possibles en optimisation
     itérative. Le défaut est 15000, qui est très similaire à une absence de
     limite sur les itérations. Il est ainsi recommandé d'adapter ce paramètre
     aux besoins pour des problèmes réels.
+
+    Exemple : ``{"MaximumNumberOfSteps":100}``
 
   CostDecrementTolerance
     Cette clé indique une valeur limite, conduisant à arrêter le processus
@@ -98,11 +102,15 @@ Les options de l'algorithme sont les suivantes:
     tolérance au dernier pas. Le défaut est de 1.e-6, et il est recommandé de
     l'adapter aux besoins pour des problèmes réels.
 
+    Exemple : ``{"CostDecrementTolerance":1.e-7}``
+
   StoreInternalVariables
     Cette clé booléenne permet de stocker les variables internes par défaut,
     principalement l'état courant lors d'un processus itératif. Attention, cela
     peut être un choix numériquement coûteux dans certains cas de calculs. La
     valeur par défaut est "False".
+
+    Exemple : ``{"StoreInternalVariables":True}``
 
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
@@ -110,6 +118,8 @@ Les options de l'algorithme sont les suivantes:
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["BMA", "OMA", "OMB", "Innovation"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 *Astuce pour cet algorithme :*
 

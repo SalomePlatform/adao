@@ -111,13 +111,17 @@ Les options de l'algorithme sont les suivantes:
     contraintes), "NCG" (minimisation de type gradient conjugué de Newton). Il
     est fortement conseillé de conserver la valeur par défaut.
 
+    Exemple : ``{"Minimizer":"LBFGSB"}``
+
   Bounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour
-    chaque variable d'état optimisée. Les bornes doivent être données par une
-    liste de liste de paires de bornes inférieure/supérieure pour chaque
-    variable, avec une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les
-    bornes peuvent toujours être spécifiées, mais seuls les optimiseurs sous
-    contraintes les prennent en compte.
+    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
+    variable d'état optimisée. Les bornes doivent être données par une liste de
+    liste de paires de bornes inférieure/supérieure pour chaque variable, avec
+    une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les bornes peuvent
+    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
+    prennent en compte.
+
+    Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   MaximumNumberOfSteps
     Cette clé indique le nombre maximum d'itérations possibles en optimisation
@@ -127,11 +131,15 @@ Les options de l'algorithme sont les suivantes:
     de pas effectif d'arrêt peut être légèrement différent de la limite à cause
     d'exigences de contrôle interne de l'algorithme.
 
+    Exemple : ``{"MaximumNumberOfSteps":100}``
+
   CostDecrementTolerance
     Cette clé indique une valeur limite, conduisant à arrêter le processus
     itératif d'optimisation lorsque la fonction coût décroît moins que cette
     tolérance au dernier pas. Le défaut est de 1.e-7, et il est recommandé
     de l'adapter aux besoins pour des problèmes réels.
+
+    Exemple : ``{"CostDecrementTolerance":1.e-7}``
 
   ProjectedGradientTolerance
     Cette clé indique une valeur limite, conduisant à arrêter le processus
@@ -141,11 +149,15 @@ Les options de l'algorithme sont les suivantes:
     interne de chaque optimiseur (usuellement 1.e-5), et il n'est pas recommandé
     de le changer.
 
+    Exemple : ``{"ProjectedGradientTolerance":-1}``
+
   GradientNormTolerance
     Cette clé indique une valeur limite, conduisant à arrêter le processus
     itératif d'optimisation lorsque la norme du gradient est en dessous de cette
     limite. C'est utilisé uniquement par les optimiseurs sans contraintes. Le
     défaut est 1.e-5 et il n'est pas recommandé de le changer.
+
+    Exemple : ``{"GradientNormTolerance":1.e-5}``
 
   StoreInternalVariables
     Cette clé booléenne permet de stocker les variables internes par défaut,
@@ -153,13 +165,17 @@ Les options de l'algorithme sont les suivantes:
     peut être un choix numériquement coûteux dans certains cas de calculs. La
     valeur par défaut est "False".
 
+    Exemple : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide, aucune de ces
-    variables n'étant calculée et stockée par défaut. Les noms possibles sont
-    dans la liste suivante : ["APosterioriCovariance", "BMA", "OMA", "OMB",
-    "Innovation", "SigmaObs2", "MahalanobisConsistency"].
+    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
+    "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 Voir aussi
 ++++++++++

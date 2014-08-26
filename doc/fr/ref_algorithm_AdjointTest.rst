@@ -88,12 +88,16 @@ Les options de l'algorithme sont les suivantes:
     nominal de vérification. La valeur par défaut est de 1, ce qui signifie pas
     de mise à l'échelle.
 
+    Exemple : ``{"AmplitudeOfInitialDirection":0.5}``
+
   EpsilonMinimumExponent
     Cette clé indique la valeur de l'exposant minimal du coefficient en
     puissance de 10 qui doit être utilisé pour faire décroître le multiplicateur
     de l'incrément. La valeur par défaut est de -8, et elle doit être entre 0 et
     -20. Par exemple, la valeur par défaut conduit à calculer le résidu de la
     formule avec un incrément fixe multiplié par 1.e0 jusqu'à 1.e-8.
+
+    Exemple : ``{"EpsilonMinimumExponent":-12}``
 
   InitialDirection
     Cette clé indique la direction vectorielle utilisée pour la dérivée
@@ -102,11 +106,15 @@ Les options de l'algorithme sont les suivantes:
     perturbation par défaut autour de zéro de la même taille vectorielle que le
     point de vérification.
 
+    Exemple : ``{"InitialDirection":[0.1,0.1,100.,3}``
+
   SetSeed
     Cette clé permet de donner un nombre entier pour fixer la graine du
     générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
     par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
     utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+    Exemple : ``{"SetSeed":1000}``
 
 Voir aussi
 ++++++++++

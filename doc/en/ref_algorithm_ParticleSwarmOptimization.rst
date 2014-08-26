@@ -104,17 +104,25 @@ The options of the algorithm are the following:
     optimization. The default is 50, which is an arbitrary limit. It is then
     recommended to adapt this parameter to the needs on real problems.
 
+    Example : ``{"MaximumNumberOfSteps":100}``
+
   NumberOfInsects
     This key indicates the number of insects or particles in the swarm. The
     default is 100, which is a usual default for this algorithm.
+
+    Example : ``{"NumberOfInsects":100}``
 
   SwarmVelocity
     This key indicates the part of the insect velocity which is imposed by the 
     swarm. It is a positive floating point value. The default value is 1.
 
+    Example : ``{"SwarmVelocity":1.}``
+
   GroupRecallRate
     This key indicates the recall rate at the best swarm insect. It is a
     floating point value between 0 and 1. The default value is 0.5.
+
+    Example : ``{"GroupRecallRate":0.5}``
 
   QualityCriterion
     This key indicates the quality criterion, minimized to find the optimal
@@ -123,8 +131,10 @@ The options of the algorithm are the following:
     in the following list, where the equivalent names are indicated by the sign
     "=": ["AugmentedWeightedLeastSquares"="AWLS"="DA",
     "WeightedLeastSquares"="WLS", "LeastSquares"="LS"="L2",
-    "AbsoluteValue"="L1", "MaximumError"="ME"]
-  
+    "AbsoluteValue"="L1", "MaximumError"="ME"].
+
+    Example : ``{"QualityCriterion":"DA"}``
+
   BoxBounds
     This key allows to define upper and lower bounds for *increments* on every
     state variable being optimized (and not on state variables themselves).
@@ -133,11 +143,15 @@ The options of the algorithm are the following:
     (``None`` is not allowed when there is no bound). This key is required and
     there is no default values.
 
+    Example : ``{"BoxBounds":[[-0.5,0.5],[0.01,2.],[0.,1.e99],[-1.e99,1.e99]]}``
+
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
     generator used to generate the ensemble. A convenient value is for example
     1000. By default, the seed is left uninitialized, and so use the default
     initialization from the computer.
+
+    Example : ``{"SetSeed":1000}``
 
   StoreInternalVariables
     This Boolean key allows to store default internal variables, mainly the
@@ -145,12 +159,16 @@ The options of the algorithm are the following:
     a numerically costly choice in certain calculation cases. The default is
     "False".
 
+    Example : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["BMA", "OMA", "OMB", "Innovation"].
+
+    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 See also
 ++++++++

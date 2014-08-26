@@ -84,11 +84,15 @@ The options of the algorithm are the following:
     This key allows to define the real value of the desired quantile, between
     0 and 1. The default is 0.5, corresponding to the median.
 
+    Example : ``{"Quantile":0.5}``
+
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
     optimization. The default is 15000, which is very similar to no limit on
     iterations. It is then recommended to adapt this parameter to the needs on
     real problems.
+
+    Example : ``{"MaximumNumberOfSteps":100}``
 
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
@@ -96,11 +100,15 @@ The options of the algorithm are the following:
     decreases less than this tolerance at the last step. The default is 1.e-6,
     and it is recommended to adapt it to the needs on real problems.
 
+    Example : ``{"CostDecrementTolerance":1.e-7}``
+
   StoreInternalVariables
     This Boolean key allows to store default internal variables, mainly the
     current state during iterative optimization process. Be careful, this can be
     a numerically costly choice in certain calculation cases. The default is
     "False".
+
+    Example : ``{"StoreInternalVariables":True}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
@@ -108,6 +116,8 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["BMA", "OMA", "OMB", "Innovation"].
+
+    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 *Tips for this algorithm:*
 

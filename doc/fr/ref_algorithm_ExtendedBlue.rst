@@ -104,6 +104,8 @@ Les options de l'algorithme sont les suivantes:
     peut être un choix numériquement coûteux dans certains cas de calculs. La
     valeur par défaut est "False".
 
+    Exemple : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
@@ -112,6 +114,8 @@ Les options de l'algorithme sont les suivantes:
     possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
     "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2",
     "MahalanobisConsistency"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 Voir aussi
 ++++++++++

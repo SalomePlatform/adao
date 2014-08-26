@@ -100,7 +100,9 @@ Les options de l'algorithme sont les suivantes:
     Cette clé permet de donner un nombre entier pour fixer la graine du
     générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
     par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
-    utilise ainsi l'initialisation de l'ordinateur.
+    utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+    Exemple : ``{"SetSeed":1000}``
 
 Voir aussi
 ++++++++++

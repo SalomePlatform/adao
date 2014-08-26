@@ -93,12 +93,16 @@ The options of the algorithm are the following:
     a numerically costly choice in certain calculation cases. The default is
     "False".
 
+    Example : ``{"StoreInternalVariables":True}``
+
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["OMA"].
+
+    Example : ``{"StoreSupplementaryCalculations":["OMA"]}``
 
 *Tips for this algorithm:*
 

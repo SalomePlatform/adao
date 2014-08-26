@@ -106,14 +106,14 @@ Les options de l'algorithme sont les suivantes:
     une valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas
     une valeur autorisée lorsqu'il n'y a pas de borne).
 
-  ConstrainedBy
-    Cette clé permet de définir la méthode pour prendre en compte les bornes. Les
-    méthodes possibles sont dans la liste suivante : ["EstimateProjection"].
+    Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
 
   EstimationOf
     Cette clé permet de choisir le type d'estimation à réaliser. Cela peut être
     soit une estimation de l'état, avec la valeur "State", ou une estimation de
     paramètres, avec la valeur "Parameters". Le choix par défaut est "State".
+
+    Exemple : ``{"EstimationOf":"Parameters"}``
 
   Alpha, Beta, Kappa, Reconditioner
     Ces clés sont des paramètres de mise à l'échelle interne. "Alpha" requiert
@@ -123,11 +123,15 @@ Les options de l'algorithme sont les suivantes:
     "Reconditioner" requiert une valeur comprise entre 1.e-3 et 10, son défaut
     étant 1.
 
+    Exemple : ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
+
   StoreInternalVariables
     Cette clé booléenne permet de stocker les variables internes par défaut,
     principalement l'état courant lors d'un processus itératif. Attention, cela
     peut être un choix numériquement coûteux dans certains cas de calculs. La
     valeur par défaut est "False".
+
+    Exemple : ``{"StoreInternalVariables":True}``
 
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
@@ -136,6 +140,8 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
     "Innovation"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
 Voir aussi
 ++++++++++

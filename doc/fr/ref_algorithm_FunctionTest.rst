@@ -84,14 +84,20 @@ Les options de l'algorithme sont les suivantes:
     Cette clé indique le nombre de décimales de précision pour les affichages de
     valeurs réelles. La valeur par défaut est 5, avec un minimum de 0.
 
+    Exemple : ``{"NumberOfPrintedDigits":5}``
+
   NumberOfRepetition
     Cette clé indique le nombre de fois où répéter l'évaluation de la fonction.
     La valeur par défaut est 1.
-  
+
+    Exemple : ``{"NumberOfRepetition":3}``
+
   SetDebug
     Cette clé requiert l'activation, ou pas, du mode de débogage durant
     l'évaluation de la fonction. La valeur par défaut est "True", les choix sont
     "True" ou "False".
+
+    Exemple : ``{"SetDebug":False}``
 
 Voir aussi
 ++++++++++

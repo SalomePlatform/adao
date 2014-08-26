@@ -24,8 +24,8 @@
 .. index:: single: FunctionTest
 .. _section_ref_algorithm_FunctionTest:
 
-Checking algorithm "FunctionTest"
----------------------------------
+Checking algorithm "*FunctionTest*"
+-----------------------------------
 
 Description
 +++++++++++
@@ -80,14 +80,20 @@ The options of the algorithm are the following:
     This key indicates the number of digits of precision for floating point
     printed output. The default is 5, with a minimum of 0.
 
+    Example : ``{"NumberOfPrintedDigits":5}``
+
   NumberOfRepetition
     This key indicates the number of time to repeat the function evaluation. The
     default is 1.
-  
+
+    Example : ``{"NumberOfRepetition":3}``
+
   SetDebug
     This key requires the activation, or not, of the debug mode during the
     function evaluation. The default is "True", the choices are "True" or
     "False".
+
+    Example : ``{"SetDebug":False}``
 
 See also
 ++++++++
