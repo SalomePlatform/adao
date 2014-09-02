@@ -223,7 +223,8 @@ the following ones:
 #. The dimension of the state vector is more than 2 or 3.
 #. Unitary calculation of user defined direct function "last for long time", that is, more than few minutes.
 #. The user defined direct function doesn't already use parallelism (or parallel execution is disabled in the user calculation).
-#. The user defined direct function doesn't requires read/write access to common resources, mainly stored data or memory capacities.
+#. The user defined direct function avoids read/write access to common resources, mainly stored data, output files or memory capacities.
+#. The observers added by the user avoid read/write access to common resources, such as files or memory.
 
 If these conditions are satisfied, the user can choose to enable the internal
 parallelism for the numerical derivative calculations. Despite the simplicity of
@@ -232,8 +233,8 @@ results of its calculations. One must at least doing them one time with
 parallelism enabled, and an another time with parallelism disabled, to compare
 the results. If it does fail somewhere, you have to know that this parallel
 scheme is working for complex codes, like *Code_Aster* in *SalomeMeca*
-[SalomeMeca]_ for example. So check your operator function before and during
-enabling parallelism...
+[SalomeMeca]_ for example. So, if it does not work in your case, check your
+operator function before and during enabling parallelism...
 
 **In case of doubt, it is recommended NOT TO ACTIVATE this parallelism.**
 
@@ -252,13 +253,19 @@ is not guaranteed for all the commands or keywords. In general also, an ADAO
 case file for one version can not be read by a previous minor or major version
 of the ADAO module.
 
-Switching from 7.3 to 7.4
+Switching from 7.4 to 7.5
 +++++++++++++++++++++++++
 
 There is no known incompatibility for the ADAO case files. The upgrade procedure
 is to read the old ADAO case file with the new SALOME/ADAO module, and save it
 with a new name.
 
+Switching from 7.3 to 7.4
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case files. The upgrade procedure
+is to read the old ADAO case file with the new SALOME/ADAO module, and save it
+with a new name.
 
 Switching from 7.2 to 7.3
 +++++++++++++++++++++++++

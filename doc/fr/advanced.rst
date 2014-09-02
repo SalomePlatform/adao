@@ -237,7 +237,8 @@ opérateurs tangent et adjoint, sont les suivantes :
 #. La dimension du vecteur d'état est supérieure à 2 ou 3.
 #. Le calcul unitaire de la fonction utilisateur directe "dure un certain temps", c'est-à-dire plus que quelques minutes.
 #. La fonction utilisateur directe n'utilise pas déjà du parallélisme (ou l'exécution parallèle est désactivée dans le calcul de l'utilisateur).
-#. La fonction utilisateur directe ne nécessite pas d'accès en lecture/écriture de ressources communes, principalement des données stockées ou des espaces mémoire.
+#. La fonction utilisateur directe n'effectue pas d'accès en lecture/écriture à des ressources communes, principalement des données stockées, des fichiers de sortie ou des espaces mémoire.
+#. Les observers ajoutés par l'utilisateur n'effectuent pas d'accès en lecture/écriture à des ressources communes, comme des fichiers ou des espaces mémoire.
 
 Si ces conditions sont satisfaites, l'utilisateur peut choisir d'activer le
 parallélisme interne pour le calcul des dérivées numériques. Malgré la
@@ -247,8 +248,9 @@ faut au moins les effectuer une fois avec le parallélisme activé, et une autre
 fois avec le parallélisme désactivé, pour comparer les résultats. Si cette mise
 en oeuvre échoue à un moment ou à un autre, il faut savoir que ce schéma de
 parallélisme fonctionne pour des codes complexes, comme *Code_Aster* dans
-*SalomeMeca* [SalomeMeca]_ par exemple. Donc vérifiez votre fonction d'opérateur
-avant et pendant l'activation du parallélisme...
+*SalomeMeca* [SalomeMeca]_ par exemple. Donc, si cela ne marche pas dans votre
+cas, vérifiez bien votre fonction d'opérateur avant et pendant l'activation du
+parallélisme...
 
 **En cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.**
 
@@ -267,6 +269,13 @@ d'une branche majeure, mais ce n'est pas obligatoirement vrai pour toutes les
 commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'une
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
+
+Passer de la version 7.4 à la 7.5
++++++++++++++++++++++++++++++++++
+
+Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
+procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
 Passer de la version 7.3 à la 7.4
 +++++++++++++++++++++++++++++++++
