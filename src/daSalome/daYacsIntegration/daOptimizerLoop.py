@@ -283,7 +283,10 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # get the daStudy
     #print "[Debug] Input is ", input
     str_da_study = input.getStringValue()
-    self.da_study = cPickle.loads(str_da_study)
+    try:
+        self.da_study = cPickle.loads(str_da_study)
+    except ValueError as e:
+        raise ValueError("\n\n  Handling internal error in study exchange (message: \"%s\").\n  The case is probably too big (bigger than the physical plus the virtual memory available).\n  Try if possible to store the covariance matrices in sparse format.\n"%(str(e),))
     #print "[Debug] da_study is ", self.da_study
     self.da_study.initAlgorithm()
     self.ADD = self.da_study.getAssimilationStudy()
