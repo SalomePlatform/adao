@@ -36,12 +36,14 @@ state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
 for an priori given states sample. The default error function is the augmented
 weighted least squares function, classicaly used in data assimilation.
 
-This is a useful algorithm to test the sensitivity, of the error function
-:math:`J` in particular, to the state :math:`\mathbf{x}` variations. When a
-state is not observable, a *"NaN"* value is returned.
+It is useful to test the sensitivity, of the error function :math:`J`, in
+particular, to the state :math:`\mathbf{x}` variations. When a state is not
+observable, a *"NaN"* value is returned.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
-the form of hypercubes.
+the form of hyper-cubes, explicit or sampled. Be careful to the size of the
+hyper-cube (and then to the number of calculations) that can be reached, it can
+be big very quickly.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -54,8 +56,10 @@ Optional and required commands
 .. index:: single: SampleAsnUplet
 .. index:: single: SampleAsExplicitHyperCube
 .. index:: single: SampleAsMinMaxStepHyperCube
+.. index:: single: SampleAsIndependantRandomVariables
 .. index:: single: QualityCriterion
 .. index:: single: SetDebug
+.. index:: single: SetSeed
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -109,18 +113,31 @@ The options of the algorithm are the following:
     Example : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` for 3 points in a state space of dimension 4
 
   SampleAsExplicitHyperCube
-    This key describes the calculations points as an hypercube, from which one
-    gives the list of sampling of each variable as a list. That is then a list
-    of lists, each of them being potentially of different size.
+    This key describes the calculations points as an hyper-cube, from a given
+    list of explicit sampling of each variable as a list. That is then a list of
+    lists, each of them being potentially of different size.
 
     Example : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` for a state space of dimension 2
 
   SampleAsMinMaxStepHyperCube
-    This key describes the calculations points as an hypercube from which one
-    the sampling of each variable by a triplet *[min,max,step]*. That is then a
-    list of the same size than the one of the state. The bounds are included.
+    This key describes the calculations points as an hyper-cube, from a given
+    list of implicit sampling of each variable by a triplet *[min,max,step]*.
+    That is then a list of the same size than the one of the state. The bounds
+    are included.
 
     Example : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
+
+  SampleAsIndependantRandomVariables
+    This key describes the calculations points as an hyper-cube, for which the
+    points on each axis come from a independant random sampling of the axis
+    variable, under the specification of the distribution, its parameters and
+    the number of points in the sample, as a list ``['distribution',
+    [parametres], nombre]`` for each axis. The possible distributions are
+    'normal' of parameters (mean,std), 'lognormal' of parameters (mean,sigma),
+    'uniform' of parameters (low,high), or 'weibull' of parameter (shape). That
+    is then a list of the same size than the one of the state.
+
+    Example : ``{"SampleAsIndependantRandomVariables":[['normal',[0.,1.],3],['uniform',[-2,2],4]]`` for a state space of dimension 2
 
   QualityCriterion
     This key indicates the quality criterion, used to find the state estimate.
@@ -138,6 +155,14 @@ The options of the algorithm are the following:
     "False".
 
     Example : ``{"SetDebug":False}``
+
+  SetSeed
+    This key allow to give an integer in order to fix the seed of the random
+    generator used to generate the ensemble. A convenient value is for example
+    1000. By default, the seed is left uninitialized, and so use the default
+    initialization from the computer.
+
+    Example : ``{"SetSeed":1000}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be

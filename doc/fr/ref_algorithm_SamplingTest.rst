@@ -37,12 +37,14 @@ d'observation, pour un échantillon d'états donné a priori. La fonctionnelle
 d'erreur par défaut est celle de moindres carrés pondérés augmentés,
 classiquement utilisée en assimilation de données.
 
-C'est un algorithme utile pour tester la sensibilité, de la fonctionnelle
-:math:`J` en particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque
-un état n'est pas observable, une value *"NaN"* est retournée.
+Il est utile pour tester la sensibilité, de la fonctionnelle :math:`J`, en
+particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque un état n'est
+pas observable, une valeur *"NaN"* est retournée.
 
 L'échantillon des états :math:`\mathbf{x}` peut être fourni explicitement ou
-sous la forme d'hypercubes.
+sous la forme d'hyper-cubes, explicites ou échantillonnés. Attention à la taille
+de l'hyper-cube (et donc au nombre de calculs) qu'il est possible d'atteindre,
+elle peut rapidement devenir importante.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -55,8 +57,10 @@ Commandes requises et optionnelles
 .. index:: single: SampleAsnUplet
 .. index:: single: SampleAsExplicitHyperCube
 .. index:: single: SampleAsMinMaxStepHyperCube
+.. index:: single: SampleAsIndependantRandomVariables
 .. index:: single: QualityCriterion
 .. index:: single: SetDebug
+.. index:: single: SetSeed
 .. index:: single: StoreSupplementaryCalculations
 
 Les commandes requises générales, disponibles dans l'interface en édition, sont
@@ -114,19 +118,32 @@ Les options de l'algorithme sont les suivantes:
 
   SampleAsExplicitHyperCube
     Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
-    donne la liste des échantillonages de chaque variable comme une liste. C'est
-    donc une liste de listes, chacune étant de taille potentiellement
-    différente.
+    donne la liste des échantillonnages explicites de chaque variable comme une
+    liste. C'est donc une liste de listes, chacune étant de taille
+    potentiellement différente.
 
-    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` pour un espace d'état à 2 dimensions
+    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` pour un espace d'état de dimension 2
 
   SampleAsMinMaxStepHyperCube
-    Cette clé décrit les points de calcul sous la forme d'un hyper-cube dont on
-    donne la liste des échantillonages de chaque variable par un triplet
-    *[min,max,step]*. C'est donc une liste de la même taille que celle de
-    l'état. Les bornes sont incluses.
+    Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
+    donne la liste des échantillonnages implicites de chaque variable par un
+    triplet *[min,max,step]*. C'est donc une liste de la même taille que celle
+    de l'état. Les bornes sont incluses.
 
-    Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état à 2 dimensions
+    Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état de dimension 2
+
+  SampleAsIndependantRandomVariables
+    Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont
+    les points sur chaque axe proviennent de l'échantillonnage aléatoire
+    indépendant de la variable d'axe, selon la spécification de la
+    distribution, de ses paramètres et du nombre de points de l'échantillon,
+    sous la forme d'une liste ``['distribution', [parametres], nombre]`` pour
+    chaque axe. Les distributions possibles sont 'normal' de paramètres
+    (mean,std), 'lognormal' de paramètres (mean,sigma), 'uniform' de paramètres
+    (low,high), ou 'weibull' de paramètre (shape). C'est donc une liste de la
+    même taille que celle de l'état.
+    
+    Exemple : ``{"SampleAsIndependantRandomVariables":[['normal',[0.,1.],3],['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
 
   QualityCriterion
     Cette clé indique le critère de qualité, qui est utilisé pour trouver
@@ -145,6 +162,14 @@ Les options de l'algorithme sont les suivantes:
     "True" ou "False".
 
     Exemple : ``{"SetDebug":False}``
+
+  SetSeed
+    Cette clé permet de donner un nombre entier pour fixer la graine du
+    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
+    utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+    Exemple : ``{"SetSeed":1000}``
 
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être

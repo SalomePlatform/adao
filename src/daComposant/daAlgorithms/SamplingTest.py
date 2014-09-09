@@ -31,20 +31,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SampleAsnUplet",
             default  = [],
-            typecast = list,
+            typecast = tuple,
             message  = "Points de calcul définis par une liste de n-uplet",
             )
         self.defineRequiredParameter(
             name     = "SampleAsExplicitHyperCube",
             default  = [],
-            typecast = list,
+            typecast = tuple,
             message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable comme une liste",
             )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxStepHyperCube",
             default  = [],
-            typecast = list,
+            typecast = tuple,
             message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable par un triplet [min,max,step]",
+            )
+        self.defineRequiredParameter(
+            name     = "SampleAsIndependantRandomVariables",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
             )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
@@ -70,6 +76,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = ["CostFunctionJ","CurrentState","Innovation","ObservedState"]
             )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -92,9 +103,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             coordinatesList = []
             for i,dim in enumerate(self._parameters["SampleAsMinMaxStepHyperCube"]):
                 if len(dim) != 3:
-                    raise ValueError("For dimension %i, the variable definition %s is incorrect, it should be [min,max,step]."%(i,dim))
+                    raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be [min,max,step]."%(i,dim))
                 else:
                     coordinatesList.append(numpy.linspace(*dim))
+            sampleList = itertools.product(*coordinatesList)
+        elif len(self._parameters["SampleAsIndependantRandomVariables"]) > 0:
+            coordinatesList = []
+            for i,dim in enumerate(self._parameters["SampleAsIndependantRandomVariables"]):
+                if len(dim) != 3:
+                    raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be ('distribution',(parameters),length) with distribution in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]."%(i,dim))
+                elif not( str(dim[0]) in ['normal','lognormal','uniform','weibull'] and hasattr(numpy.random,dim[0]) ):
+                    raise ValueError("For dimension %i, the distribution name \"%s\" is not allowed, please choose in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]"%(i,dim[0]))
+                else:
+                    distribution = getattr(numpy.random,str(dim[0]),'normal')
+                    parameters   = dim[1]
+                    coordinatesList.append(distribution(*dim[1], size=max(1,int(dim[2]))))
             sampleList = itertools.product(*coordinatesList)
         else:
             sampleList = iter([Xn,])
