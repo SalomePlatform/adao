@@ -32,8 +32,8 @@ matrix, noted as :math:`\mathbf{B}`, and the observation error covariance matrix
 noted as :math:`\mathbf{R}`. Such a matrix is required to be a squared symmetric
 semi-definite positive matrix.
 
-There are 3 practical methods for the user to provide a covariance matrix. These
-methods are chosen by the "*INPUT_TYPE*" keyword of each defined covariance
+There are 3 practical methods for the user to provide a covariance matrix. The
+method is chosen by the "*INPUT_TYPE*" keyword of each defined covariance
 matrix, as shown by the following figure:
 
   .. eficas_covariance_matrix:

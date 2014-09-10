@@ -33,8 +33,8 @@ matrice de covariance des erreurs d'observation, notée :math:`\mathbf{R}`. Une
 telle matrice doit être une matrice carré symétrique semi-définie positive.
 
 Il y a 3 méthodes pratiques pour l'utilisateur pour fournir une matrice de
-covariance. Ces méthodes sont choisies à l'aide du mot-clé "*INPUT_TYPE*" de
-chaque matrice de covariance, comme montré dans la figure qui suit :
+covariance. La méthode est choisie à l'aide du mot-clé "*INPUT_TYPE*" de chaque
+matrice de covariance, comme montré dans la figure qui suit :
 
   .. eficas_covariance_matrix:
   .. image:: images/eficas_covariance_matrix.png
