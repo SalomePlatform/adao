@@ -231,6 +231,7 @@ class AssimilationStudy:
             asMatrix   = None,
             appliedToX = None,
             toBeStored = False,
+            avoidRC    = True,
             ):
         """
         Permet de définir un opérateur d'observation H. L'ordre de priorité des
@@ -291,23 +292,23 @@ class AssimilationStudy:
                 mpEnabled             = asFunction["withmpEnabled"],
                 mpWorkers             = asFunction["withmpWorkers"],
                 )
-            self.__HO["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
-            self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
-            self.__HO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
+            self.__HO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
+            self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
+            self.__HO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
-                self.__HO["Direct"] = Operator( fromMethod = asFunction["Tangent"] )
+                self.__HO["Direct"] = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             else:
-                self.__HO["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
-            self.__HO["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
-            self.__HO["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
+                self.__HO["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC  )
+            self.__HO["Tangent"]    = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
+            self.__HO["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"], avoidingRedundancy = avoidRC )
         elif asMatrix is not None:
             matrice = numpy.matrix( asMatrix, numpy.float )
-            self.__HO["Direct"]  = Operator( fromMatrix = matrice )
-            self.__HO["Tangent"] = Operator( fromMatrix = matrice )
-            self.__HO["Adjoint"] = Operator( fromMatrix = matrice.T )
+            self.__HO["Direct"]  = Operator( fromMatrix = matrice,   avoidingRedundancy = avoidRC )
+            self.__HO["Tangent"] = Operator( fromMatrix = matrice,   avoidingRedundancy = avoidRC )
+            self.__HO["Adjoint"] = Operator( fromMatrix = matrice.T, avoidingRedundancy = avoidRC )
             del matrice
         else:
             raise ValueError("Improperly defined observation operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
@@ -338,6 +339,7 @@ class AssimilationStudy:
             asMatrix   = None,
             Scheduler  = None,
             toBeStored = False,
+            avoidRC    = True,
             ):
         """
         Permet de définir un opérateur d'évolution M. L'ordre de priorité des
@@ -394,23 +396,23 @@ class AssimilationStudy:
                 mpEnabled             = asFunction["withmpEnabled"],
                 mpWorkers             = asFunction["withmpWorkers"],
                 )
-            self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
-            self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
-            self.__EM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
+            self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC  )
+            self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
+            self.__EM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
-                self.__EM["Direct"] = Operator( fromMethod = asFunction["Tangent"]  )
+                self.__EM["Direct"] = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             else:
-                self.__EM["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
-            self.__EM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
-            self.__EM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
+                self.__EM["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC )
+            self.__EM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
+            self.__EM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"], avoidingRedundancy = avoidRC )
         elif asMatrix is not None:
             matrice = numpy.matrix( asMatrix, numpy.float )
-            self.__EM["Direct"]  = Operator( fromMatrix = matrice )
-            self.__EM["Tangent"] = Operator( fromMatrix = matrice )
-            self.__EM["Adjoint"] = Operator( fromMatrix = matrice.T )
+            self.__EM["Direct"]  = Operator( fromMatrix = matrice,   avoidingRedundancy = avoidRC )
+            self.__EM["Tangent"] = Operator( fromMatrix = matrice,   avoidingRedundancy = avoidRC )
+            self.__EM["Adjoint"] = Operator( fromMatrix = matrice.T, avoidingRedundancy = avoidRC )
             del matrice
         else:
             raise ValueError("Improperly defined evolution model, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
@@ -439,7 +441,7 @@ class AssimilationStudy:
           être rendue disponible au même titre que les variables de calcul
         """
         self.__Q = Covariance(
-            name          = "ObservationError",
+            name          = "EvolutionError",
             asCovariance  = asCovariance,
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
@@ -459,6 +461,7 @@ class AssimilationStudy:
             asMatrix   = None,
             Scheduler  = None,
             toBeStored = False,
+            avoidRC    = True,
             ):
         """
         Permet de définir un opérateur de controle C. L'ordre de priorité des
@@ -491,23 +494,23 @@ class AssimilationStudy:
                 centeredDF = asFunction["withCenteredDF"],
                 increment  = asFunction["withIncrement"],
                 dX         = asFunction["withdX"] )
-            self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator  )
-            self.__CM["Tangent"] = Operator( fromMethod = FDA.TangentOperator )
-            self.__CM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator )
+            self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC  )
+            self.__CM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
+            self.__CM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
         elif (type(asFunction) is type({})) and \
                 asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
-                self.__CM["Direct"] = Operator( fromMethod = asFunction["Tangent"]  )
+                self.__CM["Direct"] = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             else:
-                self.__CM["Direct"] = Operator( fromMethod = asFunction["Direct"]  )
-            self.__CM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"] )
-            self.__CM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"] )
+                self.__CM["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC  )
+            self.__CM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
+            self.__CM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"], avoidingRedundancy = avoidRC )
         elif asMatrix is not None:
             matrice = numpy.matrix( asMatrix, numpy.float )
-            self.__CM["Direct"]  = Operator( fromMatrix = matrice )
-            self.__CM["Tangent"] = Operator( fromMatrix = matrice )
-            self.__CM["Adjoint"] = Operator( fromMatrix = matrice.T )
+            self.__CM["Direct"]  = Operator( fromMatrix = matrice,   avoidingRedundancy = avoidRC )
+            self.__CM["Tangent"] = Operator( fromMatrix = matrice,   avoidingRedundancy = avoidRC )
+            self.__CM["Adjoint"] = Operator( fromMatrix = matrice.T, avoidingRedundancy = avoidRC )
             del matrice
         else:
             raise ValueError("Improperly defined input control model, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")

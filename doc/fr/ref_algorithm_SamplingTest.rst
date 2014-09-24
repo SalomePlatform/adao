@@ -42,9 +42,12 @@ particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque un état n'est
 pas observable, une valeur *"NaN"* est retournée.
 
 L'échantillon des états :math:`\mathbf{x}` peut être fourni explicitement ou
-sous la forme d'hyper-cubes, explicites ou échantillonnés. Attention à la taille
-de l'hyper-cube (et donc au nombre de calculs) qu'il est possible d'atteindre,
-elle peut rapidement devenir importante.
+sous la forme d'hyper-cubes, explicites ou échantillonnés selon des lois
+courantes. Attention à la taille de l'hyper-cube (et donc au nombre de calculs)
+qu'il est possible d'atteindre, elle peut rapidement devenir importante.
+
+Pour effectuer un échantillonage distribué ou plus complexe, voir d'autres
+modules disponibles dans SALOME : PARAMETRIC ou OPENTURNS.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -186,3 +189,7 @@ Voir aussi
 
 Références vers d'autres sections :
   - :ref:`section_ref_algorithm_FunctionTest`
+
+Références vers d'autres modules SALOME :
+  - PARAMETRIC, voir le *Guide utilisateur du module PARAMETRIC* dans le menu principal *Aide* de l'environnement SALOME
+  - OPENTURNS, voir le *Guide utilisateur du module OPENTURNS* dans le menu principal *Aide* de l'environnement SALOME

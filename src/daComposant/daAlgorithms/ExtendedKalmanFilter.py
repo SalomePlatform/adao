@@ -88,8 +88,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             Cm = None
         #
-        # Nombre de pas du Kalman identique au nombre de pas d'observations
-        # -----------------------------------------------------------------
+        # Nombre de pas identique au nombre de pas d'observations
+        # -------------------------------------------------------
         if hasattr(Y,"stepnumber"):
             duration = Y.stepnumber()
         else:

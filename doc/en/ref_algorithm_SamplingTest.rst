@@ -41,9 +41,12 @@ particular, to the state :math:`\mathbf{x}` variations. When a state is not
 observable, a *"NaN"* value is returned.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
-the form of hyper-cubes, explicit or sampled. Be careful to the size of the
-hyper-cube (and then to the number of calculations) that can be reached, it can
-be big very quickly.
+the form of hyper-cubes, explicit or sampled using classic distributions. Be
+careful to the size of the hyper-cube (and then to the number of calculations)
+that can be reached, it can be big very quickly.
+
+To perform distributed or complex sampling, see other modules available in
+SALOME : PARAMETRIC or OPENTURNS.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -179,3 +182,7 @@ See also
 
 References to other sections:
   - :ref:`section_ref_algorithm_FunctionTest`
+
+References to other SALOME modules:
+  - PARAMETRIC, see the *User guide of PARAMETRIC module* in the main "*Help*" menu of SALOME platform
+  - OPENTURNS, see the *User guide of OPENTURNS module* in the main "*Help*" menu of SALOME platform

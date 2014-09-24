@@ -123,8 +123,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters.has_key("Minimizer") == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
-        # Opérateur d'observation
-        # -----------------------
+        # Opérateurs
+        # ----------
         Hm = HO["Direct"].appliedTo
         Ha = HO["Adjoint"].appliedInXTo
         #
