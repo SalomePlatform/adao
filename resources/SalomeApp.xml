@@ -26,15 +26,15 @@
     <parameter name="icon"          value="ADAO.png"/>
     <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
-    <parameter name="version"       value="7.4.0"/>
+    <parameter name="version"       value="7.5.0"/>
   </section>
   <section name="resources">
     <!-- Module resources -->
     <parameter name="ADAO" value="${ADAO_ROOT_DIR}/share/salome/resources/adao"/>
   </section>
   <section name="adao_help">
-    <parameter name="sub_menu"     value="%1 module"/>
-    <parameter name="(EN) User's Guide" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/en/index.html"/>
+    <parameter name="sub_menu"                    value="%1 module"/>
+    <parameter name="(EN) User's Guide"           value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/en/index.html"/>
     <parameter name="(FR) Guide de l'utilisateur" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/fr/index.html"/>
   </section>
 </document>
