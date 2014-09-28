@@ -40,7 +40,7 @@ It is possible to convert and execute an ADAO command file (JDC, or ".comm/.py"
 files pair, which resides in ``<ADAO JDC file directory>``) automatically by
 using a template shell script containing all the required steps. The user has to
 know where are the main SALOME launching files, and in particular the
-``runAppli`` one. The directory in which this script resides is symbolically
+``salome`` one. The directory in which this script resides is symbolically
 named ``<SALOME main installation dir>`` and has to be replaced by the good one
 in the shell file template.
 
@@ -62,12 +62,12 @@ The template of the shell script is the following::
     #!/bin/bash
     export USERDIR=<ADAO JDC file directory>
     export SALOMEDIR=<SALOME main installation directory>
-    $SALOMEDIR/runAppli -k -t
-    $SALOMEDIR/runSession python \
+    $SALOMEDIR/salome start -k -t
+    $SALOMEDIR/salome shell python \
         $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py \
         $USERDIR/<ADAO Python file> $USERDIR/<ADAO YACS xml scheme>
-    $SALOMEDIR/runSession driver $USERDIR/<ADAO YACS xml scheme>
-    $SALOMEDIR/runSession killSalome.py
+    $SALOMEDIR/salome shell driver $USERDIR/<ADAO YACS xml scheme>
+    $SALOMEDIR/salome shell killSalome.py
     rm -f $USERDIR/<ADAO YACS xml scheme>
 
 Standard output and errors come on console.
@@ -161,6 +161,8 @@ printing, statistical treatment, etc.
 Getting more information when running a calculation
 ---------------------------------------------------
 
+.. index:: single: Logging
+
 When running a calculation, useful data and messages are logged. There are two
 ways to obtain theses information.
 
@@ -192,6 +194,8 @@ level is chosen (that is, even if these variables are not printed).
 
 Accelerating numerical derivatives calculations by using a parallel mode
 ------------------------------------------------------------------------
+
+.. index:: single: EnableMultiProcessing
 
 When setting an operator, as described in :ref:`section_reference`, the user can
 choose a functional form "*ScriptWithOneFunction*". This form explicitly leads
@@ -240,6 +244,8 @@ operator function before and during enabling parallelism...
 
 Switching from a version of ADAO to a newer one
 -----------------------------------------------
+
+.. index:: single: Version
 
 The ADAO module and its ".comm" case files are identified by versions, with
 "Major", "Minor" and "Revision" characteristics. A particular version is

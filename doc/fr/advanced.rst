@@ -41,7 +41,7 @@ paire de fichiers ".comm/.py", qui se trouvent dans le répertoire ``<Répertoire
 du fichier JDC ADAO>``) automatiquement en utilisant un script de commandes
 shell "type" contenant toutes les étapes requises. L'utilisateur doit savoir où
 se trouvent les principaux fichiers de lancement de SALOME, et en particulier le
-fichier ``runAppli``. Le répertoire dans lequel ce fichier réside est
+fichier ``salome``. Le répertoire dans lequel ce fichier réside est
 symboliquement nommé ``<Répertoire principal d'installation de SALOME>`` et doit
 être remplacé par le bon dans le modèle "type" de fichier shell.
 
@@ -66,12 +66,12 @@ Le modèle "type" de ce script de commandes shell est le suivant::
     #!/bin/bash
     export USERDIR=<Répertoire du fichier JDC ADAO>
     export SALOMEDIR=<Répertoire principal d'installation de SALOME>
-    $SALOMEDIR/runAppli -k -t
-    $SALOMEDIR/runSession python \
+    $SALOMEDIR/salome start -k -t
+    $SALOMEDIR/salome shell python \
         $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py \
         $USERDIR/<Fichier Python ADAO> $USERDIR/<Schéma xml YACS ADAO>
-    $SALOMEDIR/runSession driver $USERDIR/<Schéma xml YACS ADAO>
-    $SALOMEDIR/runSession killSalome.py
+    $SALOMEDIR/salome shell driver $USERDIR/<Schéma xml YACS ADAO>
+    $SALOMEDIR/salome shell killSalome.py
     rm -f $USERDIR/<Schéma xml YACS ADAO>
 
 Les sorties standard et d'erreur se font à la console.
@@ -169,6 +169,8 @@ graphique, de stockage, d'affichage complexe, de traitement statistique, etc.
 Obtenir plus d'information lors du déroulement d'un calcul
 ----------------------------------------------------------
 
+.. index:: single: Logging
+
 Lors du déroulement d'un calcul, des données et messages utiles sont
 disponibles. Il y a deux manières d'obtenir ces informations.
 
@@ -203,6 +205,8 @@ variables ne sont pas affichées).
 
 Accélérer les calculs de dérivées numériques en utilisant un mode parallèle
 ---------------------------------------------------------------------------
+
+.. index:: single: EnableMultiProcessing
 
 Lors de la définition d'un opérateur, comme décrit dans la chapitre
 :ref:`section_reference`, l'utilisateur peut choisir la forme fonctionnelle
@@ -256,6 +260,8 @@ parallélisme...
 
 Passer d'une version d'ADAO à une nouvelle
 ------------------------------------------
+
+.. index:: single: Version
 
 Le module ADAO et ses fichiers de cas ".comm" sont identifiés par des versions,
 avec des caractéristiques "Major", "Minor" et "Revision". Une version

@@ -139,9 +139,12 @@ Simple description of the data assimilation methodological framework
 .. index:: single: background error covariances
 .. index:: single: observation error covariances
 .. index:: single: covariances
+.. index:: single: 3DVAR
+.. index:: single: Blue
 
 We can write these features in a simple manner. By default, all variables are
-vectors, as there are several parameters to readjust.
+vectors, as there are several parameters to readjust, or a discrete field to
+reconstruct.
 
 According to standard notations in data assimilation, we note
 :math:`\mathbf{x}^a` the optimal parameters that is to be determined by
@@ -317,9 +320,9 @@ example, we can cite *absolute error value*, *maximum error value*, etc. These
 error measures are not differentiables, but some optimization methods can deal
 with:  heuristics and meta-heuristics for real-valued problem, etc. As
 previously, the main drawback remain a greater numerical cost to find state
-estimates, and no guarantee of convergence in finite time. Here, we point also
-the following methods as it is available in the ADAO module: *Particle swarm
-optimization* [WikipediaPSO]_.
+estimates, and no guarantee of convergence in finite time. Here again, we only
+point the following methods as it is available in the ADAO module: *Particle
+swarm optimization* [WikipediaPSO]_.
 
 The reader interested in the subject of optimization can look at [WikipediaMO]_
 as a general entry point.

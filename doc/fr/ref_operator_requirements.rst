@@ -200,7 +200,7 @@ démarche sera plus difficile à implémenter et à déboguer.
 Toutefois, si vous souhaitez utiliser cette troisième forme, on recommande de se
 baser sur le modèle suivant pour le script d'aiguillage. Il nécessite un fichier
 script ou un code externe nommé ici "*Physical_simulation_functions.py*",
-contenant trois fonctions nommées "*DirectOperator*", "*TangentOperator*" and
+contenant trois fonctions nommées "*DirectOperator*", "*TangentOperator*" et
 "*AdjointOperator*" comme précédemment. Voici le squelette d'aiguillage::
 
     import Physical_simulation_functions

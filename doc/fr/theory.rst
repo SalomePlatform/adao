@@ -148,9 +148,12 @@ Description simple du cadre méthodologique de l'assimilation de données
 .. index:: single: covariances d'erreurs d'ébauche
 .. index:: single: covariances d'erreurs d'observation
 .. index:: single: covariances
+.. index:: single: 3DVAR
+.. index:: single: Blue
 
 On peut décrire ces démarches de manière simple. Par défaut, toutes les
-variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster.
+variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster, ou un
+champ discretisé à reconstruire.
 
 Selon les notations standard en assimilation de données, on note
 :math:`\mathbf{x}^a` les paramètres optimaux qui doivent être déterminés par
@@ -325,7 +328,7 @@ principal désavantage de ces méthodes est un coût numérique souvent bien
 supérieur pour trouver les estimations d'états, et pas de garantie de
 convergence en temps fini. Ici, on ne mentionne que des méthodes qui sont
 disponibles dans le module ADAO : la *régression de quantile (Quantile
-Regression)* [WikipediaQR]_ and l'*optimisation par essaim de particules
+Regression)* [WikipediaQR]_ et l'*optimisation par essaim de particules
 (Particle Swarm Optimization)* [WikipediaPSO]_.
 
 En second lieu, les méthodes d'optimisation cherchent usuellement à minimiser
@@ -340,7 +343,7 @@ certaines méthodes d'optimisation peuvent les traiter: heuristiques et
 méta-heuristiques pour les problèmes à valeurs réelles, etc. Comme précédemment,
 le principal désavantage de ces méthodes est un coût numérique souvent bien
 supérieur pour trouver les estimations d'états, et pas de garantie de
-convergence en temps fini. Ici, on ne mentionne encore que des méthodes qui sont
+convergence en temps fini. Ici encore, on ne mentionne que des méthodes qui sont
 disponibles dans le module ADAO : l'*optimisation par essaim de particules
 (Particle Swarm Optimization)* [WikipediaPSO]_.
 
