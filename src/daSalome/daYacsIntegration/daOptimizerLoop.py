@@ -342,7 +342,10 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 
     # Start Assimilation Study
     print "Launching the analyse\n"
-    self.ADD.analyze()
+    try:
+        self.ADD.analyze()
+    except Exception as e:
+        raise ValueError("during analyse, the following error occurs:\n\n%s\n\nSee also the potential messages, which can show the origin of the above error, in the YACS GUI or in the launching terminal."%(str(e),))
 
     # Assimilation Study is finished
     self.pool.destroyAll()
