@@ -276,6 +276,8 @@ class AdaoCaseManager(EficasObserver):
         break
 
   def _processEficasCloseEvent(self, eficasWrapper, eficasEvent):
+    from Extensions.param2 import originalMath
+    originalMath.toOriginal()
     adaoLogger.debug("Destruction d'un cas")
     editor = eficasEvent.callbackId
     # Recuperation du cas
