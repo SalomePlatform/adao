@@ -202,6 +202,9 @@ DataTypeDefaultDict["DiagonalSparseMatrix"] = "String"
 DataTypeDefaultDict["Function"]             = "ScriptWithOneFunction"
 DataTypeDefaultDict["Dict"]                 = "Script"
 
+DataSValueDefaultDict = {}
+DataSValueDefaultDict["ScalarSparseMatrix"]   = "1."
+
 # Assimilation data input
 AssimDataDict = {}
 AssimDataDict["Background"]          = ["Vector", "VectorSerie"]
@@ -218,12 +221,12 @@ AssimDataDict["ControlInput"]        = ["Vector", "VectorSerie"]
 
 AssimDataDefaultDict = {}
 AssimDataDefaultDict["Background"]          = "Vector"
-AssimDataDefaultDict["BackgroundError"]     = "Matrix"
+AssimDataDefaultDict["BackgroundError"]     = "ScalarSparseMatrix"
 AssimDataDefaultDict["Observation"]         = "Vector"
-AssimDataDefaultDict["ObservationError"]    = "Matrix"
+AssimDataDefaultDict["ObservationError"]    = "ScalarSparseMatrix"
 AssimDataDefaultDict["ObservationOperator"] = "Function"
 AssimDataDefaultDict["EvolutionModel"]      = "Function"
-AssimDataDefaultDict["EvolutionError"]      = "Matrix"
+AssimDataDefaultDict["EvolutionError"]      = "ScalarSparseMatrix"
 AssimDataDefaultDict["AlgorithmParameters"] = "Dict"
 AssimDataDefaultDict["UserDataInit"]        = "Dict"
 AssimDataDefaultDict["CheckingPoint"]       = "Vector"

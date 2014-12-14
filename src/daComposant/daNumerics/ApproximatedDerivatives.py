@@ -184,7 +184,7 @@ class FDApproximation(object):
         logging.debug("FDA   Approximation centrée...: %s"%(self.__centeredDF))
         #
         if X is None or len(X)==0:
-            raise ValueError("Nominal point X for approximate derivatives can not be None or void.")
+            raise ValueError("Nominal point X for approximate derivatives can not be None or void (X=%s)."%(str(X),))
         #
         _X = numpy.asmatrix(numpy.ravel( X )).T
         #

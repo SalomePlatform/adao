@@ -54,7 +54,7 @@ def F_${data_name}(statut) : return FACT(statut = statut,
                                                      ),
                                          STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
 
-                                                      STRING = SIMP(statut = "o", typ = "TXM", fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
+                                                      STRING = SIMP(statut = "o", typ = "TXM", ${ms_default} fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
                                                      ),
                                          SCRIPTWITHFUNCTIONS_DATA = BLOC ( condition = " FROM in ( 'ScriptWithFunctions', ) ",
 
@@ -278,6 +278,7 @@ for data_input_name in infos.DataTypeDict.keys():
   data_name = data_input_name
   data_into = ""
   data_default = ""
+  ms_default = ""
 
   # On recupere les differentes facon d'entrer les donnees
   for basic_type in infos.DataTypeDict[data_input_name]:
@@ -285,10 +286,13 @@ for data_input_name in infos.DataTypeDict.keys():
 
   # On choisit le default
   data_default = "\"" + infos.DataTypeDefaultDict[data_input_name] + "\""
+  if infos.DataSValueDefaultDict.has_key(data_input_name):
+    ms_default = "defaut=\"" + infos.DataSValueDefaultDict[data_input_name] + "\","
 
   mem_file.write(data_method.substitute(data_name    = data_name,
                                         data_into    = data_into,
-                                        data_default = data_default))
+                                        data_default = data_default,
+                                        ms_default   = ms_default))
 
 # Step 2: On cree les fonctions qui permettent de rentrer les donnees des algorithmes
 for assim_data_input_name in infos.AssimDataDict.keys():
@@ -320,14 +324,20 @@ for opt_name in infos.OptDict.keys():
   data_name = opt_name
   data_into = ""
   data_default = ""
+  ms_default = ""
 
   for choice in infos.OptDict[opt_name]:
     data_into += "\"" + choice + "\", "
-  data_default = "\"" + infos.OptDefaultDict[opt_name] + "\""
 
-  mem_file.write(data_method.substitute(data_name = data_name,
-                                        data_into = data_into,
-                                        data_default = data_default))
+  # On choisit le default
+  data_default = "\"" + infos.OptDefaultDict[opt_name] + "\""
+  if infos.DataSValueDefaultDict.has_key(opt_name):
+    ms_default = "defaut=\"" + infos.DataSValueDefaultDict[opt_name] + "\","
+
+  mem_file.write(data_method.substitute(data_name    = data_name,
+                                        data_into    = data_into,
+                                        data_default = data_default,
+                                        ms_default   = ms_default))
 
 # Step 4: On ajoute la methode optionnelle init
 # TODO uniformiser avec le step 3
