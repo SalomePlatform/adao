@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2008-2014 EDF R&D
+# Copyright (C) 2008-2015 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -60,7 +60,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'%s'%module_version.name
-copyright = u'2008-2014, Jean-Philippe ARGAUD'
+copyright = u'2008-%s, Jean-Philippe ARGAUD'%module_version.year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -222,10 +222,10 @@ source_encoding = 'iso-8859-15'
 # -- Options for Epub output ---------------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'ADAO'
+epub_title = project
 epub_author = u'Jean-Philippe ARGAUD'
 epub_publisher = u'Jean-Philippe ARGAUD'
-epub_copyright = u'2008-2014, Jean-Philippe ARGAUD'
+epub_copyright = copyright
 
 # The language of the text. It defaults to the language option
 # or en if the language is not set.

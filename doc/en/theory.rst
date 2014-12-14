@@ -108,15 +108,16 @@ The **identification (or adjustment) of parameters** by data assimilation is a
 form of state calibration which uses both the physical measurement and an *a
 priori* parameters estimation (called the "*background*") of the state that one
 seeks to identify, as well as a characterization of their errors. From this
-point of view, it uses all available information on the physical system (even if
-assumptions about errors are relatively restrictive) to find the "*optimal
+point of view, it uses all available information on the physical system, with
+restrictive yet realistic assumptions about errors, to find the "*optimal
 estimation*" from the true state. We note, in terms of optimization, that the
-background realizes a "*regularization*", in a mathematical meaning, of the main
-problem of parameters identification. One can also use the terms "*inverse
-problems*" to refer to this process.
+background realizes a "*regularization*", in the mathematical meaning of
+Tikhonov [[Tikhonov77]_ [WikipediaTI]_, of the main problem of parameters
+identification. One can also use the term "*inverse problem*" to refer to this
+process.
 
-In practice, the two observed gaps "*calculation-background*" and
-"*calculation-measures*" are combined to build the calibration correction of
+In practice, the two observed gaps "*calculation-measures*" and
+"*calculation-background*" are combined to build the calibration correction of
 parameters or initial conditions. The addition of these two gaps requires a
 relative weight, which is chosen to reflect the trust we give to each piece of
 information. This confidence is depicted by the covariance of the errors on the
@@ -176,45 +177,47 @@ random vector :math:`\mathbf{\epsilon}^o` such that:
 The errors represented here are not only those from observation, but also from
 the simulation. We can always consider that these errors are of zero mean.
 Noting :math:`E[.]` the classical mathematical expectation, we can then define a
-matrix :math:`\mathbf{R}` of the observation error covariances by:
+matrix :math:`\mathbf{R}` of the observation error covariances by the
+expression:
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
-The background can also be written as a function of the true value, by
-introducing the error vector :math:`\mathbf{\epsilon}^b` such that:
+The background can also be written formally as a function of the true value, by
+introducing the errors vector :math:`\mathbf{\epsilon}^b` such that:
 
 .. math:: \mathbf{x}^b = \mathbf{x}^t + \mathbf{\epsilon}^b
 
-where errors are also assumed of zero mean, in the same manner as for
-observations. We define the :math:`\mathbf{B}` matrix of background error
-covariances by:
+The errors :math:`\mathbf{\epsilon}^b` are also assumed of zero mean, in the
+same manner as for observations. We define the :math:`\mathbf{B}` matrix of
+background error covariances by:
 
 .. math:: \mathbf{B} = E[\mathbf{\epsilon}^b.{\mathbf{\epsilon}^b}^T]
 
 The optimal estimation of the true parameters :math:`\mathbf{x}^t`, given the
 background :math:`\mathbf{x}^b` and the observations :math:`\mathbf{y}^o`, is
 then the "*analysis*" :math:`\mathbf{x}^a` and comes from the minimisation of an
-error function (in variational assimilation) or from the filtering correction (in
-assimilation by filtering).
+error function, explicit in variational assimilation, or from the filtering
+correction in assimilation by filtering.
 
 In **variational assimilation**, in a static case, one classically attempts to
 minimize the following function :math:`J`:
 
-.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
+.. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-which is usually designed as the "*3D-VAR*" function (see for example
-[Talagrand97]_). Since :math:`\mathbf{B}` and :math:`\mathbf{R}` covariance
-matrices are proportional to the variances of errors, their presence in both
-terms of the function :math:`J` can effectively weight the differences by
-confidence in the background or observations errors. The parameters vector
-:math:`\mathbf{x}` realizing the minimum of this function therefore constitute
-the analysis :math:`\mathbf{x}^a`. It is at this level that we have to use the
-full panoply of function minimization methods otherwise known in optimization
-(see also section `Going further in the state estimation by optimization
-methods`_). Depending on the size of the parameters vector :math:`\mathbf{x}` to
-identify, and of the availability of gradient or Hessian of :math:`J`, it is
-appropriate to adapt the chosen optimization method (gradient, Newton,
-quasi-Newton...).
+:math:`J` is classically designed as the "*3D-VAR*" functional in data
+assimlation (see for example [Talagrand97]_) or as the generalized Tikhonov
+regularization functional in optimization (see for example [WikipediaTI]_).
+Since :math:`\mathbf{B}` and :math:`\mathbf{R}` covariance matrices are
+proportional to the variances of errors, their presence in both terms of the
+function :math:`J` can effectively weight the gap terms by the confidence in the
+background or observations errors. The parameters vector :math:`\mathbf{x}`
+realizing the minimum of this function therefore constitute the analysis
+:math:`\mathbf{x}^a`. It is at this level that we have to use the full panoply
+of function minimization methods otherwise known in optimization (see also
+section `Going further in the state estimation by optimization methods`_).
+Depending on the size of the parameters vector :math:`\mathbf{x}` to identify,
+and of the availability of gradient or Hessian of :math:`J`, it is appropriate
+to adapt the chosen optimization method (gradient, Newton, quasi-Newton...).
 
 In **assimilation by filtering**, in this simple case usually referred to as
 "*BLUE*" (for "*Best Linear Unbiased Estimator*"), the :math:`\mathbf{x}^a`
@@ -261,7 +264,8 @@ To get more information about the data assimilation techniques, the reader can
 consult introductory documents like [Talagrand97]_ or [Argaud09]_, on-line
 training courses or lectures like [Bouttier99]_ and [Bocquet04]_ (along with
 other materials coming from geosciences applications), or general documents like
-[Talagrand97]_, [Tarantola87]_, [Kalnay03]_, [Ide97]_ and [WikipediaDA]_.
+[Talagrand97]_, [Tarantola87]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ and
+[WikipediaDA]_.
 
 Note that data assimilation is not restricted to meteorology or geo-sciences,
 but is widely used in other scientific domains. There are several fields in

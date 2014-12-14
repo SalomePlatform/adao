@@ -116,15 +116,15 @@ est une forme de calibration d'état qui utilise simultanément les mesures
 physiques et une estimation *a priori* des paramètres (appelée l'"*ébauche*")
 d'état que l'on cherche à identifier, ainsi qu'une caractérisation de leurs
 erreurs. De ce point de vue, cette démarche utilise toutes les informations
-disponibles sur le système physique (même si les hypothèses sur les erreurs sont
-relativement restrictives) pour trouver l'"*estimation optimale*" de l'état
+disponibles sur le système physique, avec des hypothèses restrictives mais
+réalistes sur les erreurs, pour trouver l'"*estimation optimale*" de l'état
 vrai. On peut noter, en termes d'optimisation, que l'ébauche réalise la
-"*régularisation*", au sens mathématique, du problème principal d'identification
-de paramètres. On peut aussi désigner cette démarche comme une résolution de
-type "*problèmes inverses*".
+"*régularisation*", au sens mathématique de Tikhonov [Tikhonov77]_
+[WikipediaTI]_, du problème principal d'identification de paramètres. On peut
+aussi désigner cette démarche comme une résolution de type "*problème inverse*".
 
-En pratique, les deux écarts (ou incréments) observés "*calculs-ébauche*" et
-"*calculs-mesures*" sont combinés pour construire la correction de calibration
+En pratique, les deux écarts (ou incréments) observés "*calculs-mesures*" et
+"*calculs-ébauche*" sont combinés pour construire la correction de calibration
 des paramètres ou des conditions initiales. L'ajout de ces deux incréments
 requiert une pondération relative, qui est choisie pour refléter la confiance
 que l'on donne à chaque information utilisée. Cette confiance est représentée
@@ -155,7 +155,7 @@ On peut décrire ces démarches de manière simple. Par défaut, toutes les
 variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster, ou un
 champ discretisé à reconstruire.
 
-Selon les notations standard en assimilation de données, on note
+Selon les notations standards en assimilation de données, on note
 :math:`\mathbf{x}^a` les paramètres optimaux qui doivent être déterminés par
 calibration, :math:`\mathbf{y}^o` les observations (ou les mesures
 expérimentales) auxquelles on doit comparer les sorties de simulation,
@@ -186,37 +186,40 @@ Les erreurs représentées ici ne sont pas uniquement celles des observations, ce
 sont aussi celles de la simulation. On peut toujours considérer que ces erreurs
 sont de moyenne nulle. En notant :math:`E[.]` l'espérance mathématique
 classique, on peut alors définir une matrice :math:`\mathbf{R}` des covariances
-d'erreurs d'observation par :
+d'erreurs d'observation par l'expression :
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
-L'ébauche peut aussi être écrite comme une fonction de la valeur vraie, en
-introduisant le vecteur d'erreurs :math:`\mathbf{\epsilon}^b` tel que :
+L'ébauche peut aussi être écrite formellement comme une fonction de la valeur
+vraie, en introduisant le vecteur d'erreurs :math:`\mathbf{\epsilon}^b` tel que
+:
 
 .. math:: \mathbf{x}^b = \mathbf{x}^t + \mathbf{\epsilon}^b
 
-où les erreurs sont aussi supposées de moyenne nulle, de la même manière que
-pour les observations. On définit la matrice :math:`\mathbf{B}` des covariances
-d'erreurs d'ébauche par :
+Les erreurs :math:`\mathbf{\epsilon}^b` sont aussi supposées de moyenne nulle,
+de la même manière que pour les observations. On définit la matrice
+:math:`\mathbf{B}` des covariances d'erreurs d'ébauche par :
 
 .. math:: \mathbf{B} = E[\mathbf{\epsilon}^b.{\mathbf{\epsilon}^b}^T]
 
 L'estimation optimale des paramètres vrais :math:`\mathbf{x}^t`, étant donné
 l'ébauche :math:`\mathbf{x}^b` et les observations :math:`\mathbf{y}^o`, est
 ainsi l'"*analyse*" :math:`\mathbf{x}^a` et provient de la minimisation d'une
-fonction d'erreur (en assimilation variationnelle) ou d'une correction de
-filtrage (en assimilation par filtrage).
+fonction d'erreur, explicite en assimilation variationnelle, ou d'une correction
+de filtrage en assimilation par filtrage.
 
 En **assimilation variationnelle**, dans un cas statique, on cherche
 classiquement à minimiser la fonction :math:`J` suivante :
 
-.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
+.. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-qui est usuellement désignée comme la fonctionnelle "*3D-VAR*" (voir par exemple
-[Talagrand97]_). Comme les matrices de covariance :math:`\mathbf{B}` et
-:math:`\mathbf{R}` sont proportionnelles aux variances d'erreurs, leur présence
-dans les deux termes de la fonctionnelle :math:`J` permet effectivement de
-pondérer les différences par la confiance dans les erreurs d'ébauche ou
+:math:`J` est classiquement désignée comme la fonctionnelle "*3D-VAR*" en
+assimilation de données (voir par exemple [Talagrand97]_) ou comme la
+fonctionnelle de régularisation de Tikhonov généralisée en optimisation (voir
+par exemple [WikipediaTI]_). Comme les matrices de covariance :math:`\mathbf{B}`
+et :math:`\mathbf{R}` sont proportionnelles aux variances d'erreurs, leur
+présence dans les deux termes de la fonctionnelle :math:`J` permet effectivement
+de pondérer les termes d'écarts par la confiance dans les erreurs d'ébauche ou
 d'observations. Le vecteur :math:`\mathbf{x}` des paramètres réalisant le
 minimum de cette fonction constitue ainsi l'analyse :math:`\mathbf{x}^a`. C'est
 à ce niveau que l'on doit utiliser toute la panoplie des méthodes de
@@ -272,7 +275,7 @@ données, le lecteur peut consulter les documents introductifs comme
 [Talagrand97]_ ou [Argaud09]_, des supports de formations ou de cours comme
 [Bouttier99]_ et [Bocquet04]_ (ainsi que d'autres documents issus des
 applications des géosciences), ou des documents généraux comme [Talagrand97]_,
-[Tarantola87]_, [Kalnay03]_, [Ide97]_ et [WikipediaDA]_.
+[Tarantola87]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ et [WikipediaDA]_.
 
 On note que l'assimilation de données n'est pas limitée à la météorologie ou aux
 géo-sciences, mais est largement utilisée dans d'autres domaines scientifiques.

@@ -57,6 +57,8 @@ Bibliographie
 
 .. [Talagrand97] Talagrand O., *Assimilation of Observations, an Introduction*, Journal of the Meteorological Society of Japan, 75(1B), pp.191-209, 1997
 
+.. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
+
 .. [WikipediaDA] Wikipedia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
 
 .. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
@@ -64,6 +66,8 @@ Bibliographie
 .. [WikipediaPSO] Wikipedia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
 
 .. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
+
+.. [WikipediaTI] Wikipedia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
 
 .. [WikipediaUKF] Wikipedia, *Unscented Kalman filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
 

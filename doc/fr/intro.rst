@@ -36,7 +36,7 @@ une ou plusieurs méthodes d'appel spécifiques afin d'être appelable dans le
 cadre SALOME/ADAO, et tous les modules SALOME peuvent être utilisés grace à
 l'intégration dans YACS de ADAO.
 
-Son principal objectif est de **faciliter l'usage de diverses méthodes standards
+Son principal objectif est de **permettre l'usage de diverses méthodes standards
 d'assimilation de données ou d'optimisation, tout en restant facile à utiliser
 et en fournissant une démarche pour aider à la mise en oeuvre**. Pour
 l'utilisateur final, qui a préalablement recueilli les informations sur son
