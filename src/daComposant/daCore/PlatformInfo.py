@@ -75,6 +75,22 @@ class PlatformInfo:
         import scipy.version
         return scipy.version.version
 
+    def getMatplotlibVersion(self):
+        "Retourne la version de matplotlib utilisée"
+        try:
+            import matplotlib
+            return matplotlib.__version__
+        except:
+            return "0.0.0"
+
+    def getGnuplotVersion(self):
+        "Retourne la version de gnuplotpy utilisée"
+        try:
+            import Gnuplot
+            return Gnuplot.__version__
+        except:
+            return "0.0"
+
     def getCurrentMemorySize(self):
         "Retourne la taille mémoire courante utilisée"
         return 1
@@ -124,17 +140,14 @@ class SystemUsage:
     """
     #
     # Le module resource renvoie 0 pour les tailles mémoire. On utilise donc
-    # plutôt : http://code.activestate.com/recipes/286222/ et les infos de
-    # http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/en-US/Reference_Guide/s2-proc-meminfo.html
+    # plutôt : http://code.activestate.com/recipes/286222/ et Wikipedia
     #
     _proc_status = '/proc/%d/status' % os.getpid()
     _memo_status = '/proc/meminfo'
     _scale = {
-                      'K' : 1024.0, 'M' : 1024.0*1024.0,
-        'o':     1.0, 'ko': 1024.0, 'mo': 1024.0*1024.0,
-                      'Ko': 1024.0, 'Mo': 1024.0*1024.0,
-        'B':     1.0, 'kB': 1024.0, 'mB': 1024.0*1024.0,
-                      'KB': 1024.0, 'MB': 1024.0*1024.0,
+        'o':     1.0, 'ko' : 1.e3,   'Mo' : 1.e6,          'Go' : 1.e9,                 # Multiples SI de l'octet
+                      'kio': 1024.0, 'Mio': 1024.0*1024.0, 'Gio': 1024.0*1024.0*1024.0, # Multiples binaires de l'octet
+        'B':     1.0, 'kB' : 1024.0, 'MB' : 1024.0*1024.0, 'GB' : 1024.0*1024.0*1024.0, # Multiples binaires du byte=octet
              }
     #
     def _VmA(self, VmKey, unit):
