@@ -432,11 +432,10 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
       print '-'*60
 
   def getAlgoResult(self):
-    #print "getAlgoResult"
-    self.ADD.prepare_to_pickle()
-    # Remove data observers cannot pickle assimilation study object
+    # Remove data observers, required to pickle assimilation study object
     for observer_name in self.da_study.observers_dict.keys():
       self.ADD.removeDataObserver(observer_name, self.obs)
+    self.ADD.prepare_to_pickle()
     result = pickle.dumps(self.da_study) # Careful : pickle is mandatory over cPickle !
     return result
 

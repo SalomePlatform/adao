@@ -1024,15 +1024,29 @@ class AssimilationStudy:
         log = logging.getLogger()
         log.setLevel( logging.WARNING )
 
+    def __dir__(self):
+        # return set(self.__dict__.keys() + dir(self.__class__))
+        return ['get', '__doc__', '__init__', '__module__']
+
     def prepare_to_pickle(self):
         """
         Retire les variables non pickelisables
         """
-        self.__algorithmFile = None
-        self.__diagnosticFile = None
-        self.__HO  = {}
-        self.__EM  = {}
-        self.__CM  = {}
+        del self.__B
+        del self.__CM # non pickelisable
+        del self.__EM # non pickelisable
+        del self.__HO # non pickelisable
+        del self.__Parameters
+        del self.__Q
+        del self.__R
+        del self.__U
+        del self.__X
+        del self.__Xb
+        del self.__Y
+        del self.__algorithmFile # non pickelisable
+        del self.__algorithmName
+        del self.__diagnosticFile # non pickelisable
+        self.__class__.__doc__ = ""
 
 # ==============================================================================
 if __name__ == "__main__":
