@@ -51,6 +51,10 @@ Optional and required commands
 .. index:: single: ObservationOperator
 .. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
+.. index:: single: Quantiles
+.. index:: single: SetSeed
+.. index:: single: NumberOfSamplesForQuantiles
+.. index:: single: SimulationForQuantiles
 
 The general required commands, available in the editing user interface, are the
 following:
@@ -110,9 +114,48 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCovariance", "BMA", "OMA", "OMB",
-    "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency"].
+    "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency",
+    "SimulationQuantiles"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+
+  Quantiles
+    This list indicates the values of quantile, between 0 and 1, to be estimated
+    by simulation around the optimal state. The sampling uses a multivariate
+    gaussian random sampling, directed by the *a posteriori* covariance matrix.
+    This option is useful only if the supplementary calculation
+    "SimulationQuantiles" has been chosen. The default is a void list.
+
+    Example : ``{"Quantiles":[0.1,0.9]}``
+
+  SetSeed
+    This key allow to give an integer in order to fix the seed of the random
+    generator used to generate the ensemble. A convenient value is for example
+    1000. By default, the seed is left uninitialized, and so use the default
+    initialization from the computer.
+
+    Example : ``{"SetSeed":1000}``
+
+  NumberOfSamplesForQuantiles
+    This key indicates the number of simulation to be done in order to estimate
+    the quantiles. This option is useful only if the supplementary calculation
+    "SimulationQuantiles" has been chosen. The default is 100, which is often
+    sufficient for correct estimation of common quantiles at 5%, 10%, 90% or
+    95%.
+
+    Example : ``{"NumberOfSamplesForQuantiles":100}``
+
+  SimulationForQuantiles
+    This key indicates the type of simulation, linear (with the tangent
+    observation operator applied to perturbation increments around the optimal
+    state) or non-linear (with standard observation operator applied to
+    perturbated states), one want to do for each perturbation. It changes mainly
+    the time of each elementary calculation, usually longer in non-linear than
+    in linear. This option is useful only if the supplementary calculation
+    "SimulationQuantiles" has been chosen. The default value is "Linear", and
+    the possible choices are "Linear" and "NonLinear".
+
+    Example : ``{"SimulationForQuantiles":"Linear"}``
 
 See also
 ++++++++

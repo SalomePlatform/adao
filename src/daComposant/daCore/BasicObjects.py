@@ -394,9 +394,9 @@ class Algorithm:
             if typecast is None: __val = value
             else:                __val = typecast( value )
         #
-        if minval is not None and __val < minval:
+        if minval is not None and (numpy.array(__val) < minval).any():
             raise ValueError("The parameter named \"%s\" of value \"%s\" can not be less than %s."%(name, __val, minval))
-        if maxval is not None and __val > maxval:
+        if maxval is not None and (numpy.array(__val) > maxval).any():
             raise ValueError("The parameter named \"%s\" of value \"%s\" can not be greater than %s."%(name, __val, maxval))
         if listval is not None:
             if typecast is list or typecast is tuple or type(__val) is list or type(__val) is tuple:

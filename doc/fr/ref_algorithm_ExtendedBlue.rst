@@ -51,6 +51,10 @@ Commandes requises et optionnelles
 .. index:: single: ObservationOperator
 .. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
+.. index:: single: Quantiles
+.. index:: single: SetSeed
+.. index:: single: NumberOfSamplesForQuantiles
+.. index:: single: SimulationForQuantiles
 
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
@@ -113,9 +117,47 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
     "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2",
-    "MahalanobisConsistency"].
+    "MahalanobisConsistency", "SimulationQuantiles"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+
+  Quantiles
+    Cette liste indique les valeurs de quantile, entre 0 et 1, à estimer par
+    simulation autour de l'état optimal. L'échantillonnage utilise des tirages
+    aléatoires gaussiens multivariés, dirigés par la matrice de covariance a
+    posteriori. Cette option n'est utile que si le calcul supplémentaire
+    "SimulationQuantiles" a été choisi. La valeur par défaut est une liste vide.
+
+    Exemple : ``{"Quantiles":[0.1,0.9]}``
+
+  SetSeed
+    Cette clé permet de donner un nombre entier pour fixer la graine du
+    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
+    utilise ainsi l'initialisation par défaut de l'ordinateur.
+
+    Exemple : ``{"SetSeed":1000}``
+
+  NumberOfSamplesForQuantiles
+    Cette clé indique le nombre de simulations effectuées pour estimer les
+    quantiles. Cette option n'est utile que si le calcul supplémentaire
+    "SimulationQuantiles" a été choisi. Le défaut est 100, ce qui suffit souvent
+    pour une estimation correcte de quantiles courants à 5%, 10%, 90% ou 95%.
+
+    Exemple : ``{"NumberOfSamplesForQuantiles":100}``
+
+  SimulationForQuantiles
+    Cette clé indique le type de simulation, linéaire (avec l'opérateur
+    d'observation tangent appliqué sur des incréments de perturbations autour de
+    l'état optimal) ou non-linéaire (avec l'opérateur d'observation standard
+    appliqué aux états perturbés), que l'on veut faire pour chaque perturbation.
+    Cela change essentiellement le temps de chaque simulation élémentaire,
+    usuellement plus long en non-linéaire qu'en linéaire. Cette option n'est
+    utile que si le calcul supplémentaire "SimulationQuantiles" a été choisi. La
+    valeur par défaut est "Linear", et les choix possibles sont "Linear" et
+    "NonLinear".
+
+    Exemple : ``{"SimulationForQuantiles":"Linear"}``
 
 Voir aussi
 ++++++++++

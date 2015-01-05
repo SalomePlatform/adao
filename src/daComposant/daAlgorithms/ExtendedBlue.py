@@ -46,6 +46,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste des valeurs de quantiles",
+            minval   = 0.,
+            maxval   = 1.,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
