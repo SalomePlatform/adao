@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2008-2014 EDF R&D
+# Copyright (C) 2008-2015 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
