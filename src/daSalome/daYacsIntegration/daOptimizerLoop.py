@@ -1,6 +1,8 @@
 #-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2010-2014 EDF R&D
+# Copyright (C) 2008-2015 EDF R&D
+#
+# This file is part of SALOME ADAO module
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -289,7 +291,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
         raise ValueError("\n\n  Handling internal error in study exchange (message: \"%s\").\n  The case is probably too big (bigger than the physical plus the virtual memory available).\n  Try if possible to store the covariance matrices in sparse format.\n"%(str(e),))
     #print "[Debug] da_study is ", self.da_study
     self.da_study.initAlgorithm()
-    self.ADD = self.da_study.getAssimilationStudy()
+    self.ADD = self.da_study.getResults()
 
   def startToTakeDecision(self):
     # print "Algorithme startToTakeDecision"

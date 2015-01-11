@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2014 EDF R&D
+   Copyright (C) 2008-2015 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -113,8 +113,8 @@ forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la
 complexité de l'implémentation de l'opérateur.
 
 **Avertissement important :** le nom "*DirectOperator*" est obligatoire, et le
-type de l'argument X peut être une liste, un vecteur ou une matrice Numpy.
-L'utilisateur doit traiter ces cas dans sa fonction.
+type de l'argument ``X`` peut être une liste, un vecteur ou une matrice Numpy.
+La fonction utilisateur doit accepter et traiter tous ces cas.
 
 Seconde forme fonctionnelle : utiliser "*ScriptWithFunctions*"
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -170,7 +170,7 @@ doit renvoyer la matrice associée.
 **Avertissement important :** les noms "*DirectOperator*", "*TangentOperator*"
 et "*AdjointOperator*" sont obligatoires, et le type des arguments ``X``,
 ``Y``, ``dX`` peut être une liste, un vecteur ou une matrice Numpy.
-L'utilisateur doit traiter ces cas dans ses fonctions.
+La fonction utilisateur doit accepter et traiter tous ces cas.
 
 Troisième forme fonctionnelle : utiliser "*ScriptWithSwitch*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -260,9 +260,9 @@ forme générique du modèle incrémental est légèrement modifié comme suit:
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
-où :math:`\mathbf{u}` est le contrôle sur l'incrément d'état. Dans ce cas,
+où :math:`\mathbf{u}` est le contrôle sur l'incrément d'état. En effet,
 l'opérateur direct doit être appliqué à une paire de variables :math:`(X,U)`.
-Schématiquement, l'opérateur doit être constuit comme suit::
+Schématiquement, l'opérateur doit être construit comme suit::
 
     def DirectOperator( (X, U) ):
         """ Opérateur direct de simulation non-linéaire """

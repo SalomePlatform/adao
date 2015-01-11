@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2014 EDF R&D
+   Copyright (C) 2008-2015 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -109,7 +109,7 @@ operator implementation.
 
 **Important warning:** the name "*DirectOperator*" is mandatory, and the type of
 the ``X`` argument can be either a list, a numpy array or a numpy 1D-matrix. The
-user has to treat these cases in his function.
+user function has to accept and treat all these cases.
 
 Second functional form: using "*ScriptWithFunctions*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -250,8 +250,8 @@ generic form of the incremental model is slightly modified as follows:
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
-where :math:`\mathbf{u}` is the control over one state increment. In this case,
-the direct operator has to be applied to a pair of variables :math:`(X,U)`.
+where :math:`\mathbf{u}` is the control over one state increment. In fact, the
+direct operator has to be applied to a pair of variables :math:`(X,U)`.
 Schematically, the operator has to be set as::
 
     def DirectOperator( (X, U) ):

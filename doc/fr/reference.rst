@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2014 EDF R&D
+   Copyright (C) 2008-2015 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -45,13 +45,13 @@ l'aide de l'interface graphique sont automatiquement correctes.
 .. _section_reference_entry:
 
 ========================================================================================
-**[DocR]** Entrées générales, fonctions et matrices
+**[DocR]** Entrées et sorties générales, fonctions et matrices
 ========================================================================================
 
-Cette section décrit de manière générale les différents types d'entrées
-possibles, et les formes fonctionnelles ou matricielles que l'on peut utiliser.
-Les notations mathématiques utilisées sont expliquées dans la section
-:ref:`section_theory`.
+Cette section décrit de manière générale les différentes possibilités de types
+d'entrées et de variables de sortie, et les formes fonctionnelles ou
+matricielles que l'on peut utiliser. Les notations mathématiques utilisées sont
+expliquées dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -60,6 +60,7 @@ Les notations mathématiques utilisées sont expliquées dans la section
    ref_options_AlgorithmParameters
    ref_operator_requirements
    ref_covariance_requirements
+   ref_output_variables
 
 .. _section_reference_assimilation:
 

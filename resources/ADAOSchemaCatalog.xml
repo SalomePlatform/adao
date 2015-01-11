@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
 <!--
-  Copyright (C) 2010-2014 EDF R&D
+  Copyright (C) 2008-2015 EDF R&D
+
+  This file is part of SALOME ADAO module
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -477,7 +479,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
 import logging
 logging.debug("EXECUTE Entering in SimpleExecuteDirectAlgorithm")
 from daYacsIntegration.daStudy import *
-ADD = Study.getAssimilationStudy()
+ADD = Study.getResults()
 ADD.analyze()
 ]]></code></script>
     <inport name="Study" type="pyobj"/>
@@ -489,7 +491,7 @@ ADD.analyze()
 #-*-coding:iso-8859-1-*-
 import logging
 logging.debug("TERMINATE Entering in SimpleUserAnalysis")
-ADD = Study.getAssimilationStudy()
+ADD = Study.getResults()
 # User code is below
 
 ]]></code></script>

@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2014 EDF R&D
+   Copyright (C) 2008-2015 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -44,12 +44,13 @@ are automatically correct.
 .. _section_reference_entry:
 
 ========================================================================================
-**[DocR]** General entries, functions and matrices
+**[DocR]** General entries and outputs, functions and matrices
 ========================================================================================
 
-This section describes in general the different possible entry types, and the
-functional or matrix forms that can be used. The mathematical notations used
-afterwards are explained in the section :ref:`section_theory`.
+This section describes in general the different possibilities of entry types and
+output variables, and the functional or matrix forms that can be used. The
+mathematical notations used afterwards are explained in the section
+:ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -58,6 +59,7 @@ afterwards are explained in the section :ref:`section_theory`.
    ref_options_AlgorithmParameters
    ref_operator_requirements
    ref_covariance_requirements
+   ref_output_variables
 
 .. _section_reference_assimilation:
 
