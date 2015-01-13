@@ -123,6 +123,67 @@ The options of the algorithm are the following:
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
+Information and variables available at the end of the algorithm
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+At the output, after executing the algorithm, there are variables and
+information originating from the calculation. The description of
+:ref:`section_ref_output_variables` show the way to obtain them by the method
+named ``get`` of the variable "*ADD*" of the post-processing. The input
+variables, available to the user at the output in order to facilitate the
+writing of post-processing procedures, are described in the
+:ref:`subsection_r_o_v_Inventaire`.
+
+The unconditional outputs of the algorithm are the following:
+
+  Analysis
+    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
+    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
+
+    Example : ``Xa = ADD.get("Analysis")[-1]``
+
+The conditional outputs of the algorithm are the following:
+
+  APosterioriCovariance
+    *List of matrices*. Each element is an *a posteriori* error covariance
+    matrix :math:`\mathbf{A}*` of the optimal state.
+
+    Example : ``A = ADD.get("APosterioriCovariance")[-1]``
+
+  BMA
+    *List of vectors*. Each element is a vector of difference between the
+    background and the optimal state.
+
+    Example : ``bma = ADD.get("BMA")[-1]``
+
+  CostFunctionJ
+    *List of values*. Each element is a value of the error function :math:`J`.
+
+    Example : ``J = ADD.get("CostFunctionJ")[:]``
+
+  CostFunctionJb
+    *List of values*. Each element is a value of the error function :math:`J^b`,
+    that is of the background difference part.
+
+    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
+
+  CostFunctionJo
+    *List of values*. Each element is a value of the error function :math:`J^o`,
+    that is of the observation difference part.
+
+    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
+
+  CurrentState
+    *List of vectors*. Each element is a usual state vector used during the
+    optimization algorithm procedure.
+
+    Example : ``Xs = ADD.get("CurrentState")[:]``
+
+  Innovation
+    *List of vectors*. Each element is an innovation vector, which is in static
+    the difference between the optimal and the background, and in dynamic the
+    evolution increment.
+
 See also
 ++++++++
 

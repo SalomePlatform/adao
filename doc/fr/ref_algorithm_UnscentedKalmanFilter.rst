@@ -143,6 +143,71 @@ Les options de l'algorithme sont les suivantes:
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
+Informations et variables disponibles à la fin de l'algorithme
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+En sortie, après exécution de l'algorithme, on dispose d'informations et de
+variables issues du calcul. La description des
+:ref:`section_ref_output_variables` indique la manière de les obtenir par la
+méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
+l'écriture des procédures de post-processing, sont décrites dans
+l':ref:`subsection_r_o_v_Inventaire`.
+
+Les sorties non conditionnelles de l'algorithme sont les suivantes:
+
+  Analysis
+    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
+    en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
+    données.
+
+    Exemple : ``Xa = ADD.get("Analysis")[-1]``
+
+Les sorties conditionnelles de l'algorithme sont les suivantes:
+
+  APosterioriCovariance
+    *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
+    covariances des erreurs *a posteriori* de l'état optimal.
+
+    Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
+
+  BMA
+    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
+    l'ébauche et l'état optimal.
+
+    Exemple : ``bma = ADD.get("BMA")[-1]``
+
+  CostFunctionJ
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J`.
+
+    Exemple : ``J = ADD.get("CostFunctionJ")[:]``
+
+  CostFunctionJb
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+
+    Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
+
+  CostFunctionJo
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+
+    Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
+
+  CurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
+    au cours du déroulement de l'algorithme d'optimisation.
+
+    Exemple : ``Xs = ADD.get("CurrentState")[:]``
+
+  Innovation
+    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
+    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
+    d'évolution.
+
+    Exemple : ``d = ADD.get("Innovation")[-1]``
+
 Voir aussi
 ++++++++++
 

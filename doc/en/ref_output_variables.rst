@@ -23,6 +23,209 @@
 
 .. _section_ref_output_variables:
 
-Variables and informations available in output
-----------------------------------------------
+Variables and informations available at the output
+--------------------------------------------------
 
+How to obtain information available at the output
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: UserPostAnalysis
+.. index:: single: algoResults
+.. index:: single: get
+
+At the output, after executing data assimilation, optimization or checking
+study, there are variables and information originating from the calculation. The
+obtaining of this information is then carried out in a standardized way using
+the post-processing step of calculation.
+
+The step is easily identified by the user into its ADAO definition case (by the
+keyword "*UserPostAnalysis*") or in its YACS execution scheme (by nodes or
+blocks located after the calculation block, and graphically connected to the
+output port "*algoResults*" of the calculation block):
+
+#. In the case where the user defines the post-processing in his ADAO case, it uses an external script file or commands in the field type "*String*" or "*Template*". The script it provides has a fixed variable "*ADD*" in the namespace.
+#. In the case where the user defines the post-processing in its YACS scheme by a Python node located after the block of calculation, it should add a input port of type "*pyobj*" named for example "*Study*", graphically connected to the output port "*algoResults*" of the calculation block. The Python post-processing node must then start with ``ADD = Study.getResults()``.
+
+
+In all cases, the post-processing of the user has in the namespace a variable
+whose name is "*ADD*", and whose only available method is named ``get``. The
+arguments of this method are an output information name, as described in the
+:ref:`subsection_r_o_v_Inventaire`.
+
+For example, to have the optimal state after a data assimilation or optimization
+calculation, one use the following call::
+
+    ADD.get("Analysis")
+
+This call returns a list of values of the requested notion (or, in the case of
+input variables that are by nature only a unique specimen, the value itself).
+One can then request a particular item in the list by the standard list commands
+(especially ``[-1]`` for the last, and ``[:]`` for all items).
+
+Cross compliance of the information available at the output
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: StoreInternalVariables
+.. index:: single: AlgorithmParameters
+.. index:: single: Stored
+
+The availability of information after the calculation is conditioned by the fact
+that they have been calculated or requested.
+
+Each algorithm does not necessarily provide the same information, and not
+necessarily for example uses the same intermediate quantities. Thus, there is
+information that are always present such as the optimal state resulting from the
+calculation. The other information are only present for certain algorithms
+and/or if they have been requested before the execution of the calculation.
+
+It is recalled that the user can request additional information during the
+preparation of its ADAO case, using option "*StoreInternalVariables*" each
+algorithm through the optional control "*AlgorithmParameters*" of ADAO case.
+Reference will be made to the :ref:`section_ref_options_AlgorithmParameters` for
+the proper use of this command, and to the description of each algorithm for
+the information available by algorithm. One can also ask to keep some input
+information by changing the boolean "* * Stored" associated with it in the
+edition of the ADAO case.
+
+.. _subsection_r_o_v_Inventaire:
+
+Inventory of potentially available information at the output
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The set of potentially available information at the output is listed here
+regardless of algorithms, for inventory.
+
+The optimal state is an information that is always naturally available after an
+optimization or a data assimilation calculation. It is indicated by the
+following keywords:
+
+  Analysis
+    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
+    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
+
+    Example : ``Xa = ADD.get("Analysis")[-1]``
+
+The following variables are input variables.  They are made available to the
+user at the output in order to facilitate the writing of post-processing
+procedures, and are conditioned by a user request using a boolean "*Stored*"
+at the input.
+
+  Background
+    *Vector*, whose availability is conditioned by "*Stored*" at the input. It
+    is the background vector :math:`\mathbf{x}^b`.
+
+    Example : ``Xb = ADD.get("Background")``
+
+  BackgroundError
+    *Matrix*, whose availability is conditioned by "*Stored*" at the input. It
+    is the matrix :math:`\mathbf{B}` of *a priori* background errors
+    covariances.
+
+    Example : ``B = ADD.get("BackgroundError")``
+
+  EvolutionError
+    *Matrix*, whose availability is conditioned by "*Stored*" at the input. It
+    is the matrix :math:`\mathbf{M}` of *a priori* evolution errors covariances.
+
+    Example : ``M = ADD.get("EvolutionError")``
+
+  Observation
+    *Vector*, whose availability is conditioned by "*Stored*" at the input. It
+    is the observation vector :math:`\mathbf{y}^o`.
+
+    Example : ``Yo = ADD.get("Observation")``
+
+  ObservationError
+    *Matrix*, whose availability is conditioned by "*Stored*" at the input. It
+    is the matrix :math:`\mathbf{R}` of *a priori* observation errors
+    covariances.
+
+    Example : ``R = ADD.get("ObservationError")``
+
+All other information are conditioned by the algorithm and/or the user requests
+of availability. They are the following, in alphabetical order:
+
+  APosterioriCovariance
+    *List of matrices*. Each element is an *a posteriori* error covariance
+    matrix :math:`\mathbf{A}*` of the optimal state.
+
+    Example : ``A = ADD.get("APosterioriCovariance")[-1]``
+
+  BMA
+    *List of vectors*. Each element is a vector of difference between the
+    background and the optimal state.
+
+    Example : ``bma = ADD.get("BMA")[-1]``
+
+  CostFunctionJ
+    *List of values*. Each element is a value of the error function :math:`J`.
+
+    Example : ``J = ADD.get("CostFunctionJ")[:]``
+
+  CostFunctionJb
+    *List of values*. Each element is a value of the error function :math:`J^b`,
+    that is of the background difference part.
+
+    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
+
+  CostFunctionJo
+    *List of values*. Each element is a value of the error function :math:`J^o`,
+    that is of the observation difference part.
+
+    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
+
+  CurrentState
+    *List of vectors*. Each element is a usual state vector used during the
+    optimization algorithm procedure.
+
+    Example : ``Xs = ADD.get("CurrentState")[:]``
+
+  Innovation
+    *List of vectors*. Each element is an innovation vector, which is in static
+    the difference between the optimal and the background, and in dynamic the
+    evolution increment.
+
+    Example : ``d = ADD.get("Innovation")[-1]``
+
+  MahalanobisConsistency
+    *List of values*. Each element is a value of the Mahalanobis quality
+    indicator.
+
+    Example : ``m = ADD.get("MahalanobisConsistency")[-1]``
+
+  ObservedState
+    *List of vectors*. Each element is an observed state vector, that is, in the
+    observation space.
+
+    Example : ``Ys = ADD.get("ObservedState")[-1]``
+
+  OMA
+    *List of vectors*. Each element is a vector of difference between the
+    observation and the optimal state in the observation space.
+
+    Example : ``oma = ADD.get("OMA")[-1]``
+
+  OMB
+    *List of vectors*. Each element is a vector of difference between the
+    observation and the background state in the observation space.
+
+    Example : ``omb = ADD.get("OMB")[-1]``
+
+  SigmaBck2
+    *List of values*. Each element is a value of the quality indicator
+    :math:`(\sigma^b)^2` of the background part.
+
+    Example : ``sb2 = ADD.get("SigmaBck")[-1]``
+
+  SigmaObs2
+    *List of values*. Each element is a value of the quality indicator
+    :math:`(\sigma^o)^2` of the observation part.
+
+    Example : ``so2 = ADD.get("SigmaObs")[-1]``
+
+  SimulationQuantiles
+    *List of vectors*. Each element is a vector corresponding to the observed
+    state which realize the required quantile, in the same order than the
+    quantiles required by the user.
+
+    Example : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
