@@ -192,17 +192,20 @@ simulation code, and use them in conjunction with the two previous methods. But
 be careful not to store too big variables because it cost time, whatever logging
 level is chosen (that is, even if these variables are not printed).
 
+.. _subsection_ref_parallel_df:
+
 Accelerating numerical derivatives calculations by using a parallel mode
 ------------------------------------------------------------------------
 
 .. index:: single: EnableMultiProcessing
 
-When setting an operator, as described in :ref:`section_reference`, the user can
-choose a functional form "*ScriptWithOneFunction*". This form explicitly leads
-to approximate the tangent and adjoint operators by a finite differences
-calculation. It requires several calls to the direct operator (user defined
-function), at least as many times as the dimension of the state vector. This are
-these calls that can potentially be executed in parallel.
+When setting an operator, as described in
+:ref:`section_ref_operator_requirements`, the user can choose a functional form
+"*ScriptWithOneFunction*". This form explicitly leads to approximate the tangent
+and adjoint operators by a finite differences calculation. It requires several
+calls to the direct operator (user defined function), at least as many times as
+the dimension of the state vector. This are these calls that can potentially be
+executed in parallel.
 
 Under some conditions, it is then possible to accelerate the numerical
 derivatives calculations by using a parallel mode for the finite differences

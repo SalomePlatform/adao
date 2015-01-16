@@ -107,10 +107,13 @@ différences finies peut aussi être choisi à travers l'interface, en utilisant le
 mot-clé "*CenteredFiniteDifference*", avec 0 pour un schéma non centré du
 premier ordre (qui est la valeur par défaut), et avec 1 pour un schéma centré du
 second ordre (qui coûte numériquement deux fois plus cher que le premier ordre).
+Si nécessaire et si possible, on peut :ref:`subsection_ref_parallel_df`.
 
 Cette première forme de définition de l'opérateur permet aisément de tester la
 forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la
-complexité de l'implémentation de l'opérateur.
+complexité de l'implémentation de l'opérateur. On peut ainsi utiliser
+l'algorithme ADAO de vérification "*FunctionTest*" (voir la section sur
+l':ref:`section_ref_algorithm_FunctionTest`) pour ce test.
 
 **Avertissement important :** le nom "*DirectOperator*" est obligatoire, et le
 type de l'argument ``X`` peut être une liste, un vecteur ou une matrice Numpy.

@@ -203,18 +203,20 @@ prudent dans le stockage de "grosses" variables car cela coûte du temps,
 quel que soit le niveau de surveillance choisi (c'est-à-dire même si ces
 variables ne sont pas affichées).
 
+.. _subsection_ref_parallel_df:
+
 Accélérer les calculs de dérivées numériques en utilisant un mode parallèle
 ---------------------------------------------------------------------------
 
 .. index:: single: EnableMultiProcessing
 
-Lors de la définition d'un opérateur, comme décrit dans la chapitre
-:ref:`section_reference`, l'utilisateur peut choisir la forme fonctionnelle
-"*ScriptWithOneFunction*". Cette forme conduit explicitement à approximer les
-opérateurs tangent et adjoint par un calcul par différences finies. Il requiert
-de nombreux appels à l'opérateur direct (fonction définie par l'utilisateur), au
-moins autant de fois que la dimension du vecteur d'état. Ce sont ces appels qui
-peuvent être potentiellement exécutés en parallèle.
+Lors de la définition d'un opérateur, comme décrit dans le chapitre des
+:ref:`section_ref_operator_requirements`, l'utilisateur peut choisir la forme
+fonctionnelle "*ScriptWithOneFunction*". Cette forme conduit explicitement à
+approximer les opérateurs tangent et adjoint par un calcul par différences
+finies. Il requiert de nombreux appels à l'opérateur direct (fonction définie
+par l'utilisateur), au moins autant de fois que la dimension du vecteur d'état.
+Ce sont ces appels qui peuvent être potentiellement exécutés en parallèle.
 
 Sous certaines conditions, il est alors possible d'accélérer les calculs de
 dérivées numériques en utilisant un mode parallèle pour l'approximation par

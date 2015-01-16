@@ -102,10 +102,13 @@ adjoint operators. The finite differences approximation order can also be chosen
 through the GUI, using the keyword "*CenteredFiniteDifference*", with 0 for an
 uncentered schema of first order (which is the default value), and with 1 for a
 centered schema of second order (of twice the first order computational cost).
+If necessary and if possible, :ref:`subsection_ref_parallel_df` can be used.
 
 This first operator definition form allows easily to test the functional form
-before its use in an ADAO case, greatly reducing the complexity of
-operator implementation.
+before its use in an ADAO case, greatly reducing the complexity of operator
+implementation. One can then use the "*FunctionTest*" ADAO checking algorithm
+(see the section on the :ref:`section_ref_algorithm_FunctionTest`) for this
+test.
 
 **Important warning:** the name "*DirectOperator*" is mandatory, and the type of
 the ``X`` argument can be either a list, a numpy array or a numpy 1D-matrix. The
