@@ -29,9 +29,9 @@ Bibliography
 
 .. [Argaud09] Argaud J.-P., Bouriquet B., Hunt J., *Data Assimilation from Operational and Industrial Applications to Complex Systems*, Mathematics Today, pp.150-152, October 2009
 
-.. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999, http://www.ecmwf.int/newsevents/training/rcourse_notes/pdf_files/Assim_concepts.pdf
+.. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999, http://www.ecmwf.int/sites/default/files/Data%20assimilation%20concepts%20and%20methods.pdf
 
-.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2004-2008, http://cerea.enpc.fr/HomePages/bocquet/assim.pdf
+.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014, http://cerea.enpc.fr/HomePages/bocquet/Doc/assim-mb.pdf 
 
 .. [Buchinsky98] Buchinsky M., *Recent Advances in Quantile Regression Models: A Practical Guidline for Empirical Research*, Journal of Human Resources, 33(1), pp.88-126, 1998
 

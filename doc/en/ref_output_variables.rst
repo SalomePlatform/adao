@@ -26,12 +26,14 @@
 Variables and informations available at the output
 --------------------------------------------------
 
-How to obtain information available at the output
-+++++++++++++++++++++++++++++++++++++++++++++++++
+How to obtain the information available at the output
++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: UserPostAnalysis
 .. index:: single: algoResults
+.. index:: single: getResults
 .. index:: single: get
+.. index:: single: ADD
 
 At the output, after executing data assimilation, optimization or checking
 study, there are variables and information originating from the calculation. The
@@ -46,10 +48,10 @@ output port "*algoResults*" of the calculation block):
 #. In the case where the user defines the post-processing in his ADAO case, it uses an external script file or commands in the field type "*String*" or "*Template*". The script it provides has a fixed variable "*ADD*" in the namespace.
 #. In the case where the user defines the post-processing in its YACS scheme by a Python node located after the block of calculation, it should add a input port of type "*pyobj*" named for example "*Study*", graphically connected to the output port "*algoResults*" of the calculation block. The Python post-processing node must then start with ``ADD = Study.getResults()``.
 
-
-In all cases, the post-processing of the user has in the namespace a variable
-whose name is "*ADD*", and whose only available method is named ``get``. The
-arguments of this method are an output information name, as described in the
+Templates are given hereafter as :ref:`subsection_r_o_v_Template`. In all cases,
+the post-processing of the user has in the namespace a variable whose name is
+"*ADD*", and whose only available method is named ``get``. The arguments of this
+method are an output information name, as described in the
 :ref:`subsection_r_o_v_Inventaire`.
 
 For example, to have the optimal state after a data assimilation or optimization
@@ -61,6 +63,72 @@ This call returns a list of values of the requested notion (or, in the case of
 input variables that are by nature only a unique specimen, the value itself).
 One can then request a particular item in the list by the standard list commands
 (especially ``[-1]`` for the last, and ``[:]`` for all items).
+
+.. _subsection_r_o_v_Template:
+
+Examples of Python scripts to obtain or treat the outputs
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: Template
+.. index:: single: AnalysisPrinter
+.. index:: single: AnalysisSaver
+.. index:: single: AnalysisPrinterAndSaver
+
+These examples present Python commands or scripts which allow to obtain or to
+treat the ouput of an algorithm run. To help the user, they are directly
+available in the user interface, when building the ADAO case in EFICAS, in the
+"*Template*" type fields. In an equivalent way, these commands can be integrated
+in an external user script (and inserted in the ADAO case by a "*Script*" type
+input) or can exist as a string, including line feeds (and inserted in the ADAO
+case by a "*String*" type input). Lot of variants can be build from these
+simple examples, the main objective beeing to help the user to elaborate the
+exact procedure he needs in output.
+
+The first example (named "*AnalysisPrinter*" in the inputs of type 
+"*Template*") consists in printing, in the standard log output, the value of the
+analysis or the optimal state, noted as :math:`\mathbf{x}^a` in the section
+:ref:`section_theory`. It is realized by the commands::
+
+    import numpy
+    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    print 'Analysis:',xa"
+
+The ``numpy.ravel`` function is here to be sure that the ``xa`` variable will
+contain a real unidimensional vector, whatever the previoux computing choices
+are.
+
+A second example (named "*AnalysisSaver*" in the inputs of type  "*Template*")
+consists in saving on file the value of the analysis or the optimal state
+:math:`\mathbf{x}^a`. It is realized by the commands::
+
+    import numpy
+    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    f='/tmp/analysis.txt'
+    print 'Analysis saved in "%s"'%f
+    numpy.savetxt(f,xa)"
+
+The chosen recording file is a text one named ``/tmp/analysis.txt``.
+
+It is easy to combine these two examples by building a third one (named
+"*AnalysisPrinterAndSaver*" in the inputs of type  "*Template*"). It consists in
+simultaneously printing in the standard log output and in saving on file the
+value of :math:`\mathbf{x}^a`. It is realized by the commands::
+
+    import numpy
+    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    print 'Analysis:',xa
+    f='/tmp/analysis.txt'
+    print 'Analysis saved in "%s"'%f
+    numpy.savetxt(f,xa)
+
+To facilitate these examples extension for user needs, we recall that all the
+SALOME functions are available at the same level than these commands. The user
+can for example request for graphical representation with the PARAVIS [#]_ or
+other modules, for computating operations driven by YACS [#]_ or an another
+module, etc.
+
+Other usage examples are also given for :ref:`section_u_step4` of the
+:ref:`section_using` section, or in part :ref:`section_examples`.
 
 Cross compliance of the information available at the output
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -223,9 +291,25 @@ of availability. They are the following, in alphabetical order:
 
     Example : ``so2 = ADD.get("SigmaObs")[-1]``
 
+  SimulatedObservationAtBackground
+    *List of vectors*. Each element is a vector of observation simulated from
+    the background :math:`\mathbf{x}^b`.
+
+    Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the analysis or optimal state :math:`\mathbf{x}^a`.
+
+    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+
   SimulationQuantiles
     *List of vectors*. Each element is a vector corresponding to the observed
     state which realize the required quantile, in the same order than the
     quantiles required by the user.
 
     Example : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
+
+.. [#] For more information on PARAVIS, see the *PARAVIS module* and its integrated help available from the main menu *Help* of the SALOME platform.
+
+.. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.

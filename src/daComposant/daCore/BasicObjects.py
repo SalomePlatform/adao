@@ -261,6 +261,8 @@ class Algorithm:
             - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-cout
             - CurrentState : état courant lors d'itérations
             - Analysis : l'analyse Xa
+            - SimulatedObservationAtBackground : l'état observé H(Xb) à l'ébauche
+            - SimulatedObservationAtOptimum : l'état observé H(Xa) à l'optimum
             - ObservedState : l'état observé H(X)
             - Innovation : l'innovation : d = Y - H(X)
             - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
@@ -281,24 +283,26 @@ class Algorithm:
         self.__required_parameters = {}
         self.StoredVariables = {}
         #
-        self.StoredVariables["CostFunctionJ"]            = Persistence.OneScalar(name = "CostFunctionJ")
-        self.StoredVariables["CostFunctionJb"]           = Persistence.OneScalar(name = "CostFunctionJb")
-        self.StoredVariables["CostFunctionJo"]           = Persistence.OneScalar(name = "CostFunctionJo")
-        self.StoredVariables["GradientOfCostFunctionJ"]  = Persistence.OneVector(name = "GradientOfCostFunctionJ")
-        self.StoredVariables["GradientOfCostFunctionJb"] = Persistence.OneVector(name = "GradientOfCostFunctionJb")
-        self.StoredVariables["GradientOfCostFunctionJo"] = Persistence.OneVector(name = "GradientOfCostFunctionJo")
-        self.StoredVariables["CurrentState"]             = Persistence.OneVector(name = "CurrentState")
-        self.StoredVariables["Analysis"]                 = Persistence.OneVector(name = "Analysis")
-        self.StoredVariables["ObservedState"]            = Persistence.OneVector(name = "ObservedState")
-        self.StoredVariables["Innovation"]               = Persistence.OneVector(name = "Innovation")
-        self.StoredVariables["SigmaObs2"]                = Persistence.OneScalar(name = "SigmaObs2")
-        self.StoredVariables["SigmaBck2"]                = Persistence.OneScalar(name = "SigmaBck2")
-        self.StoredVariables["MahalanobisConsistency"]   = Persistence.OneScalar(name = "MahalanobisConsistency")
-        self.StoredVariables["OMA"]                      = Persistence.OneVector(name = "OMA")
-        self.StoredVariables["OMB"]                      = Persistence.OneVector(name = "OMB")
-        self.StoredVariables["BMA"]                      = Persistence.OneVector(name = "BMA")
-        self.StoredVariables["APosterioriCovariance"]    = Persistence.OneMatrix(name = "APosterioriCovariance")
-        self.StoredVariables["SimulationQuantiles"]      = Persistence.OneMatrix(name = "SimulationQuantiles")
+        self.StoredVariables["CostFunctionJ"]                    = Persistence.OneScalar(name = "CostFunctionJ")
+        self.StoredVariables["CostFunctionJb"]                   = Persistence.OneScalar(name = "CostFunctionJb")
+        self.StoredVariables["CostFunctionJo"]                   = Persistence.OneScalar(name = "CostFunctionJo")
+        self.StoredVariables["GradientOfCostFunctionJ"]          = Persistence.OneVector(name = "GradientOfCostFunctionJ")
+        self.StoredVariables["GradientOfCostFunctionJb"]         = Persistence.OneVector(name = "GradientOfCostFunctionJb")
+        self.StoredVariables["GradientOfCostFunctionJo"]         = Persistence.OneVector(name = "GradientOfCostFunctionJo")
+        self.StoredVariables["CurrentState"]                     = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["Analysis"]                         = Persistence.OneVector(name = "Analysis")
+        self.StoredVariables["SimulatedObservationAtBackground"] = Persistence.OneVector(name = "SimulatedObservationAtBackground")
+        self.StoredVariables["SimulatedObservationAtOptimum"]    = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
+        self.StoredVariables["ObservedState"]                    = Persistence.OneVector(name = "ObservedState")
+        self.StoredVariables["Innovation"]                       = Persistence.OneVector(name = "Innovation")
+        self.StoredVariables["SigmaObs2"]                        = Persistence.OneScalar(name = "SigmaObs2")
+        self.StoredVariables["SigmaBck2"]                        = Persistence.OneScalar(name = "SigmaBck2")
+        self.StoredVariables["MahalanobisConsistency"]           = Persistence.OneScalar(name = "MahalanobisConsistency")
+        self.StoredVariables["OMA"]                              = Persistence.OneVector(name = "OMA")
+        self.StoredVariables["OMB"]                              = Persistence.OneVector(name = "OMB")
+        self.StoredVariables["BMA"]                              = Persistence.OneVector(name = "BMA")
+        self.StoredVariables["APosterioriCovariance"]            = Persistence.OneMatrix(name = "APosterioriCovariance")
+        self.StoredVariables["SimulationQuantiles"]              = Persistence.OneMatrix(name = "SimulationQuantiles")
 
     def _pre_run(self):
         logging.debug("%s Lancement"%self._name)
@@ -462,6 +466,7 @@ class Covariance:
             asCovariance  = None,
             asEyeByScalar = None,
             asEyeByVector = None,
+            asCovObject   = None,
             ):
         """
         Permet de définir une covariance :
@@ -473,28 +478,47 @@ class Covariance:
         - asEyeByVector : entrée des données comme un seul vecteur de variance,
           à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
           n'étant donc explicitement à donner
+        - asCovObject : entrée des données comme un objet python, qui a les
+          methodes obligatoires "getT", "getI", "diag", "trace", "__add__",
+          "__sub__", "__neg__", "__mul__", "__rmul__" et facultatives "shape",
+          "size", "cholesky", "choleskyI", "asfullmatrix", "__repr__", "__str__"
         """
         self.__name       = str(name)
         #
-        self.__B          = None
+        self.__C          = None
         self.__is_scalar  = False
         self.__is_vector  = False
         self.__is_matrix  = False
+        self.__is_object  = False
         if asEyeByScalar is not None:
             self.__is_scalar = True
-            self.__B         = numpy.abs( float(asEyeByScalar) )
+            self.__C         = numpy.abs( float(asEyeByScalar) )
             self.shape       = (0,0)
             self.size        = 0
         elif asEyeByVector is not None:
             self.__is_vector = True
-            self.__B         = numpy.abs( numpy.array( numpy.ravel( asEyeByVector ), float ) )
-            self.shape       = (self.__B.size,self.__B.size)
-            self.size        = self.__B.size**2
+            self.__C         = numpy.abs( numpy.array( numpy.ravel( asEyeByVector ), float ) )
+            self.shape       = (self.__C.size,self.__C.size)
+            self.size        = self.__C.size**2
         elif asCovariance is not None:
             self.__is_matrix = True
-            self.__B         = numpy.matrix( asCovariance, float )
-            self.shape       = self.__B.shape
-            self.size        = self.__B.size
+            self.__C         = numpy.matrix( asCovariance, float )
+            self.shape       = self.__C.shape
+            self.size        = self.__C.size
+        elif asCovObject is not None:
+            self.__is_object = True
+            self.__C         = asCovObject
+            for at in ("getT","getI","diag","trace","__add__","__sub__","__neg__","__mul__","__rmul__"):
+                if not hasattr(self.__C,at):
+                    raise ValueError("The matrix given for %s as an object has no attribute \"%s\". Please check your object input."%(self.__name,at))
+            if hasattr(self.__C,"shape"):
+                self.shape       = self.__C.shape
+            else:
+                self.shape       = (0,0)
+            if hasattr(self.__C,"size"):
+                self.size        = self.__C.size
+            else:
+                self.size        = 0
         else:
             pass
             # raise ValueError("The %s covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix."%self.__name)
@@ -504,13 +528,15 @@ class Covariance:
     def __validate(self):
         if self.ismatrix() and min(self.shape) != max(self.shape):
             raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name,self.shape))
-        if self.isscalar() and self.__B <= 0:
-            raise ValueError("The %s covariance matrix is not positive-definite. Please check your scalar input %s."%(self.__name,self.__B_scalar))
-        if self.isvector() and (self.__B <= 0).any():
-            raise ValueError("The %s covariance matrix is not positive-definite. Please check your vector input."%(self.__name,))
+        if self.isobject() and min(self.shape) != max(self.shape):
+            raise ValueError("The matrix given for \"%s\" is not a square one, its shape is %s. Please check your object input."%(self.__name,self.shape))
+        if self.isscalar() and self.__C <= 0:
+            raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your scalar input %s."%(self.__name,self.__C))
+        if self.isvector() and (self.__C <= 0).any():
+            raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your vector input."%(self.__name,))
         if self.ismatrix() and logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
             try:
-                L = numpy.linalg.cholesky( self.__B )
+                L = numpy.linalg.cholesky( self.__C )
             except:
                 raise ValueError("The %s covariance matrix is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
 
@@ -523,114 +549,131 @@ class Covariance:
     def ismatrix(self):
         return self.__is_matrix
 
+    def isobject(self):
+        return self.__is_object
+
     def getI(self):
         if   self.ismatrix():
-            return Covariance(self.__name+"I", asCovariance  = self.__B.I )
+            return Covariance(self.__name+"I", asCovariance  = self.__C.I )
         elif self.isvector():
-            return Covariance(self.__name+"I", asEyeByVector = 1. / self.__B )
+            return Covariance(self.__name+"I", asEyeByVector = 1. / self.__C )
         elif self.isscalar():
-            return Covariance(self.__name+"I", asEyeByScalar = 1. / self.__B )
+            return Covariance(self.__name+"I", asEyeByScalar = 1. / self.__C )
+        elif self.isobject():
+            return Covariance(self.__name+"I", asCovObject   = self.__C.getI() )
         else:
-            return None
+            return None # Indispensable
 
     def getT(self):
         if   self.ismatrix():
-            return Covariance(self.__name+"T", asCovariance  = self.__B.T )
+            return Covariance(self.__name+"T", asCovariance  = self.__C.T )
         elif self.isvector():
-            return Covariance(self.__name+"T", asEyeByVector = self.__B )
+            return Covariance(self.__name+"T", asEyeByVector = self.__C )
         elif self.isscalar():
-            return Covariance(self.__name+"T", asEyeByScalar = self.__B )
+            return Covariance(self.__name+"T", asEyeByScalar = self.__C )
+        elif self.isobject():
+            return Covariance(self.__name+"T", asCovObject   = self.__C.getT() )
 
     def cholesky(self):
         if   self.ismatrix():
-            return Covariance(self.__name+"C", asCovariance  = numpy.linalg.cholesky(self.__B) )
+            return Covariance(self.__name+"C", asCovariance  = numpy.linalg.cholesky(self.__C) )
         elif self.isvector():
-            return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__B ) )
+            return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__C ) )
         elif self.isscalar():
-            return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__B ) )
+            return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C,"cholesky"):
+            return Covariance(self.__name+"C", asCovObject   = self.__C.cholesky() )
 
     def choleskyI(self):
         if   self.ismatrix():
-            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.cholesky(self.__B).I )
+            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.cholesky(self.__C).I )
         elif self.isvector():
-            return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__B ) )
+            return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
         elif self.isscalar():
-            return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__B ) )
+            return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C,"choleskyI"):
+            return Covariance(self.__name+"H", asCovObject   = self.__C.choleskyI() )
 
     def diag(self, msize=None):
         if   self.ismatrix():
-            return numpy.diag(self.__B)
+            return numpy.diag(self.__C)
         elif self.isvector():
-            return self.__B
+            return self.__C
         elif self.isscalar():
             if msize is None:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
-                return self.__B * numpy.ones(int(msize))
+                return self.__C * numpy.ones(int(msize))
+        elif self.isobject():
+            return self.__C.diag()
 
     def asfullmatrix(self, msize=None):
         if   self.ismatrix():
-            return self.__B
+            return self.__C
         elif self.isvector():
-            return numpy.matrix( numpy.diag(self.__B), float )
+            return numpy.matrix( numpy.diag(self.__C), float )
         elif self.isscalar():
             if msize is None:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
-                return numpy.matrix( self.__B * numpy.eye(int(msize)), float )
+                return numpy.matrix( self.__C * numpy.eye(int(msize)), float )
+        elif self.isobject() and hasattr(self.__C,"asfullmatrix"):
+            return self.__C.asfullmatrix()
 
     def trace(self, msize=None):
         if   self.ismatrix():
-            return numpy.trace(self.__B)
+            return numpy.trace(self.__C)
         elif self.isvector():
-            return float(numpy.sum(self.__B))
+            return float(numpy.sum(self.__C))
         elif self.isscalar():
             if msize is None:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
-                return self.__B * int(msize)
+                return self.__C * int(msize)
+        elif self.isobject():
+            return self.__C.trace()
 
     def __repr__(self):
-        return repr(self.__B)
+        return repr(self.__C)
 
     def __str__(self):
-        return str(self.__B)
+        return str(self.__C)
 
     def __add__(self, other):
-        if   self.ismatrix():
-            return self.__B + numpy.asmatrix(other)
+        if   self.ismatrix() or self.isobject():
+            return self.__C + numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
             _A = numpy.asarray(other)
-            _A.reshape(_A.size)[::_A.shape[1]+1] += self.__B
+            _A.reshape(_A.size)[::_A.shape[1]+1] += self.__C
             return numpy.asmatrix(_A)
 
     def __radd__(self, other):
         raise NotImplementedError("%s covariance matrix __radd__ method not available for %s type!"%(self.__name,type(other)))
 
     def __sub__(self, other):
-        if   self.ismatrix():
-            return self.__B - numpy.asmatrix(other)
+        if   self.ismatrix() or self.isobject():
+            return self.__C - numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
             _A = numpy.asarray(other)
-            _A.reshape(_A.size)[::_A.shape[1]+1] = self.__B - _A.reshape(_A.size)[::_A.shape[1]+1]
+            _A.reshape(_A.size)[::_A.shape[1]+1] = self.__C - _A.reshape(_A.size)[::_A.shape[1]+1]
             return numpy.asmatrix(_A)
 
     def __rsub__(self, other):
         raise NotImplementedError("%s covariance matrix __rsub__ method not available for %s type!"%(self.__name,type(other)))
 
     def __neg__(self):
-        return - self.__B
+        return - self.__C
 
     def __mul__(self, other):
         if   self.ismatrix() and isinstance(other,numpy.matrix):
-            return self.__B * other
+            return self.__C * other
         elif self.ismatrix() and (isinstance(other,numpy.ndarray) \
                                or isinstance(other,list) \
                                or isinstance(other,tuple)):
             if numpy.ravel(other).size == self.shape[1]: # Vecteur
-                return self.__B * numpy.asmatrix(numpy.ravel(other)).T
+                return self.__C * numpy.asmatrix(numpy.ravel(other)).T
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
-                return self.__B * numpy.asmatrix(other)
+                return self.__C * numpy.asmatrix(other)
             else:
                 raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asmatrix(other).shape,self.__name))
         elif self.isvector() and (isinstance(other,numpy.matrix) \
@@ -638,35 +681,39 @@ class Covariance:
                                or isinstance(other,list) \
                                or isinstance(other,tuple)):
             if numpy.ravel(other).size == self.shape[1]: # Vecteur
-                return numpy.asmatrix(self.__B * numpy.ravel(other)).T
+                return numpy.asmatrix(self.__C * numpy.ravel(other)).T
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
-                return numpy.asmatrix((self.__B * (numpy.asarray(other).transpose())).transpose())
+                return numpy.asmatrix((self.__C * (numpy.asarray(other).transpose())).transpose())
             else:
                 raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
-            return self.__B * other
+            return self.__C * other
         elif self.isscalar() and (isinstance(other,numpy.ndarray) \
                                or isinstance(other,list) \
                                or isinstance(other,tuple)):
             if len(numpy.asarray(other).shape) == 1 or numpy.asarray(other).shape[1] == 1 or numpy.asarray(other).shape[0] == 1:
-                return self.__B * numpy.asmatrix(numpy.ravel(other)).T
+                return self.__C * numpy.asmatrix(numpy.ravel(other)).T
             else:
-                return self.__B * numpy.asmatrix(other)
+                return self.__C * numpy.asmatrix(other)
+        elif self.isobject():
+            return self.__C.__mul__(other)
         else:
             raise NotImplementedError("%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __rmul__(self, other):
         if self.ismatrix() and isinstance(other,numpy.matrix):
-            return other * self.__B
+            return other * self.__C
         elif self.isvector() and isinstance(other,numpy.matrix):
             if numpy.ravel(other).size == self.shape[0]: # Vecteur
-                return numpy.asmatrix(numpy.ravel(other) * self.__B)
+                return numpy.asmatrix(numpy.ravel(other) * self.__C)
             elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
-                return numpy.asmatrix(numpy.array(other) * self.__B)
+                return numpy.asmatrix(numpy.array(other) * self.__C)
             else:
                 raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
-            return other * self.__B
+            return other * self.__C
+        elif self.isobject():
+            return self.__C.__rmul__(other)
         else:
             raise NotImplementedError("%s covariance matrix __rmul__ method not available for %s type!"%(self.__name,type(other)))
 

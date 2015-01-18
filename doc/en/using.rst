@@ -70,6 +70,8 @@ SALOME or not.
 
 Each step will be detailed in the next section.
 
+.. _section_u_step1:
+
 STEP 1: Activate the ADAO module and use the editor GUI
 -------------------------------------------------------
 
@@ -95,6 +97,8 @@ create a new ADAO case, and you will see:
     :width: 100%
   .. centered::
     **The EFICAS editor for cases definition in module ADAO**
+
+.. _section_u_step2:
 
 STEP 2: Build and modify the ADAO case, and save it
 ---------------------------------------------------
@@ -137,6 +141,8 @@ used for JDC EFICAS files. This will generate a pair of files describing the
 ADAO case, with the same base name, the first one being completed by a "*.comm*"
 extension and the second one by a "*.py*" extension [#]_.
 
+.. _section_u_step3:
+
 STEP 3: Export the ADAO case as a YACS scheme
 ---------------------------------------------
 
@@ -159,6 +165,8 @@ same directory and with the same base name as the ADAO saved case, only changing
 its extension to "*.xml*". Be careful, *if the XML file name already exist, the
 file will be overwritten without prompting for replacing the XML file*.
 
+.. _section_u_step4:
+
 STEP 4: Supplement and modify the YACS scheme, and save it
 ----------------------------------------------------------
 
@@ -177,9 +185,11 @@ evaluation of the results has to be done in the physical context of the
 simulation used by the data assimilation procedure. The post-processing can be
 provided through the "*UserPostAnalysis*" ADAO keyword as a script or a string,
 by templates, or can be build as YACS nodes. These two ways of building the
-post-processing can use all the SALOME possibilities.
+post-processing can use all the SALOME possibilities. See the part describing
+:ref:`section_ref_output_variables`, or the help for each algorithm, for the
+full description of these elements.
 
-In details, the YACS scheme has an "*algoResults*" output port of the
+In practice, the YACS scheme has an "*algoResults*" output port of the
 computation bloc, which gives access to an object of type "*pyobj*" named
 hereafter "*ADD*", containing all the calculation results. These results can be
 obtained by retrieving the named variables stored along the calculation. The
@@ -205,6 +215,8 @@ data assimilation or optimization evaluation problem, noted as
 Such method can be used to print results, or to convert these ones to
 structures that can be used in the native or external SALOME post-processing. A
 simple example is given in the section :ref:`section_examples`.
+
+.. _section_u_step5:
 
 STEP 5: Execute the YACS case and obtain the results
 ----------------------------------------------------
@@ -237,10 +249,10 @@ shown in the "*YACS Container Log*".
 The execution can also be done using a shell script, as described in the section
 :ref:`section_advanced`.
 
-.. [#] For more information on EFICAS, see the *EFICAS module* available in SALOME platform.
+.. [#] For more information on EFICAS, see the *EFICAS module* and its integrated help available from the main menu *Help* of the SALOME platform.
 
 .. [#] The use of physical simulation code in the data assimilation elementary operators is illustrated or described in the following main parts.
 
-.. [#] For more information on YACS, see the *YACS module User's Guide* available in the main "*Help*" menu of SALOME platform.
+.. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.
 
 .. [#] This intermediary python file can also be used as described in the section :ref:`section_advanced`.

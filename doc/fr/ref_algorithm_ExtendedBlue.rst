@@ -248,6 +248,18 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``so2 = ADD.get("SigmaObs")[-1]``
 
+  SimulatedObservationAtBackground
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'ébauche :math:`\mathbf{x}^b`.
+
+    Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtOptimum
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
+
+    Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+
   SimulationQuantiles
     *Liste de vecteurs*. Chaque élément est un vecteur correspondant à l'état
     observé qui réalise le quantile demandé, dans le même ordre que les

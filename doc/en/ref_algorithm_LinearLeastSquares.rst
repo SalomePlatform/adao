@@ -155,6 +155,12 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``oma = ADD.get("OMA")[-1]``
 
+  SimulatedObservationAtOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the analysis or optimal state :math:`\mathbf{x}^a`.
+
+    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+
 See also
 ++++++++
 

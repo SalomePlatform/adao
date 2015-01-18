@@ -160,6 +160,12 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``oma = ADD.get("OMA")[-1]``
 
+  SimulatedObservationAtOptimum
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
+
+    Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+
 Voir aussi
 ++++++++++
 

@@ -55,7 +55,7 @@ GPL), as stated here and in the source files::
     See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
 In addition, we expect that all publications describing work using this
-software, or all commercial products using it, quote at least one of the
+software, or all commercial or not products using it, quote at least one of the
 references given below:
 
     * *ADAO, a SALOME module for Data Assimilation and Optimization*,

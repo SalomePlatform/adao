@@ -39,7 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["OMA"]
+            listval  = ["OMA", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -66,8 +66,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la fonction coût
         # --------------------------
-        if self._parameters["StoreInternalVariables"] or "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            oma = Y - Hm * Xa
+        if self._parameters["StoreInternalVariables"] or \
+           "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            HXa = Hm * Xa
+            oma = Y - HXa
         if self._parameters["StoreInternalVariables"]:
             Jb  = 0.
             Jo  = 0.5 * oma.T * RI * oma
@@ -80,6 +83,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------------
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
         self._post_run(HO)
         return 0

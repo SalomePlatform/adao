@@ -636,4 +636,4 @@ The state at the first step is the randomly generated background state
 available in the "*YACS Container Log*" window, obtained through the right click
 menu of the "*proc*" window in the YACS executed scheme.
 
-.. [#] For more information on YACS, see the *YACS module User's Guide* available in the main "*Help*" menu of SALOME platform.
+.. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.

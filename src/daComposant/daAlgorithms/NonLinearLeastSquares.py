@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "OMA", "OMB", "Innovation"]
+            listval  = ["BMA", "OMA", "OMB", "Innovation", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -98,8 +98,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters.has_key("Minimizer") == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
-        # Opérateur d'observation
-        # -----------------------
+        # Opérateurs
+        # ----------
         Hm = HO["Direct"].appliedTo
         Ha = HO["Adjoint"].appliedInXTo
         #
@@ -273,6 +273,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
+        if "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            HXa = Hm(Xa)
+        #
+        #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
@@ -280,9 +285,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(Hm(Xa)) )
+            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
+        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
         self._post_run(HO)
         return 0

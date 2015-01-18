@@ -72,6 +72,8 @@ suivantes:**
 
 Chaque étape est détaillée dans la section suivante.
 
+.. _section_u_step1:
+
 ÉTAPE 1 : Activer le module ADAO et utiliser l'interface graphique d'édition (GUI)
 ----------------------------------------------------------------------------------
 
@@ -98,6 +100,8 @@ le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
     :width: 100%
   .. centered::
     **L'éditeur EFICAS pour la définition des cas dans le module ADAO**
+
+.. _section_u_step2:
 
 ÉTAPE 2 : Créer et modifier le cas ADAO, et l'enregistrer
 ---------------------------------------------------------
@@ -144,6 +148,8 @@ JDC d'EFICAS. Cette action va générer une paire de fichiers décrivant le cas
 ADAO, avec le même nom de base, le premier présentant une extension "*.comm*" et
 le second une extension "*.py*" [#]_.
 
+.. _section_u_step3:
+
 ÉTAPE 3 : Exporter le cas ADAO comme un schéma YACS
 ---------------------------------------------------
 
@@ -168,6 +174,8 @@ changeant simplement son extension en "*.xml*". Attention, *si le nom de fichier
 XML existe déjà, le fichier est écrasé sans avertissement sur le remplacement du
 fichier XML*.
 
+.. _section_u_step4:
+
 ÉTAPE 4 : Compléter et modifier le schéma YACS, et l'enregistrer
 ----------------------------------------------------------------
 
@@ -187,10 +195,12 @@ post-processing peut être fournit à travers le mot-clé "*UserPostAnalysis*"
 d'ADAO sous la forme d'un fichier de script ou d'une chaîne de caractères, par
 des patrons ("templates"), ou peut être construit comme des noeuds YACS. Ces
 deux manières de construire le post-processing peuvent utiliser toutes les
-capacités de SALOME.
+capacités de SALOME. On se reportera à la partie traitant des
+:ref:`section_ref_output_variables`, ou à l'aide de chaque algorithme, pour la
+description complète de ces éléments.
 
-Dans le détail, le schéma YACS dispose d'un port de sortie "*algoResults*" dans
-le bloc de calcul, qui donne accès à un objet de type "*pyobj*" nommé ci-aprés
+En pratique, le schéma YACS dispose d'un port de sortie "*algoResults*" dans le
+bloc de calcul, qui donne accès à un objet de type "*pyobj*" nommé ci-aprés
 "*ADD*", qui contient tous les résultats de calcul. Ces résultats peuvent être
 obtenus en récupérant les variables nommées stockées au cours des calculs.
 L'information principale est la variable "*Analysis*", qui peut être obtenue par
@@ -216,6 +226,8 @@ Une telle méthode peut être utilisée pour imprimer les résultats, ou pour les
 convertir dans des structures qui peuvent être nécessaires à un post-processing
 natif ou externe à SALOME. Un exemple simple est disponible dans la section
 :ref:`section_examples`.
+
+.. _section_u_step5:
 
 ÉTAPE 5 : Exécuter le schéma YACS et obtenir les résultats
 ----------------------------------------------------------
@@ -250,10 +262,10 @@ présentée dans la "*fenêtre de sortie de YACS*".
 L'exécution peut aussi être conduite en utilisant un script de commandes shell,
 comme décrit dans la section :ref:`section_advanced`.
 
-.. [#] Pour de plus amples informations sur EFICAS, voir le *module EFICAS* et son aide disponible dans l'environnement SALOME.
+.. [#] Pour de plus amples informations sur EFICAS, voir le *module EFICAS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 
 .. [#] L'utilisation du code de simulation physique dans les opérateurs de base de l'assimilation de données est illustrée ou décrite dans les parties principales qui suivent.
 
-.. [#] Pour de plus amples informations sur YACS, voir le *Guide utilisateur du module YACS* disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 
 .. [#] Ce fichier python intermédiaire peut aussi être utilisé comme décrit dans la section :ref:`section_advanced`.

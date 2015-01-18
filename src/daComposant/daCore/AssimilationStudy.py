@@ -137,6 +137,7 @@ class AssimilationStudy:
             asCovariance  = None,
             asEyeByScalar = None,
             asEyeByVector = None,
+            asCovObject   = None,
             toBeStored    = False,
             ):
         """
@@ -149,6 +150,8 @@ class AssimilationStudy:
         - asEyeByVector : entrée des données comme un seul vecteur de variance,
           à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
           n'étant donc explicitement à donner
+        - asCovObject : entrée des données comme un objet ayant des méthodes
+          particulieres de type matriciel
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
@@ -157,6 +160,7 @@ class AssimilationStudy:
             asCovariance  = asCovariance,
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
+            asCovObject   = asCovObject,
             )
         if toBeStored:
             self.__StoredInputs["BackgroundError"] = self.__B
@@ -201,6 +205,7 @@ class AssimilationStudy:
             asCovariance  = None,
             asEyeByScalar = None,
             asEyeByVector = None,
+            asCovObject   = None,
             toBeStored    = False,
             ):
         """
@@ -213,6 +218,8 @@ class AssimilationStudy:
         - asEyeByVector : entrée des données comme un seul vecteur de variance,
           à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
           n'étant donc explicitement à donner
+        - asCovObject : entrée des données comme un objet ayant des méthodes
+          particulieres de type matriciel
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
@@ -221,6 +228,7 @@ class AssimilationStudy:
             asCovariance  = asCovariance,
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
+            asCovObject   = asCovObject,
             )
         if toBeStored:
             self.__StoredInputs["ObservationError"] = self.__R
@@ -425,6 +433,7 @@ class AssimilationStudy:
             asCovariance  = None,
             asEyeByScalar = None,
             asEyeByVector = None,
+            asCovObject   = None,
             toBeStored    = False,
             ):
         """
@@ -437,6 +446,8 @@ class AssimilationStudy:
         - asEyeByVector : entrée des données comme un seul vecteur de variance,
           à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
           n'étant donc explicitement à donner
+        - asCovObject : entrée des données comme un objet ayant des méthodes
+          particulieres de type matriciel
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
         """
@@ -445,6 +456,7 @@ class AssimilationStudy:
             asCovariance  = asCovariance,
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
+            asCovObject   = asCovObject,
             )
         if toBeStored:
             self.__StoredInputs["EvolutionError"] = self.__Q

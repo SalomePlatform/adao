@@ -640,10 +640,10 @@ class Persistence:
 # ==============================================================================
 class OneScalar(Persistence):
     """
-    Classe définissant le stockage d'une valeur unique réelle (float) par pas
-    
+    Classe définissant le stockage d'une valeur unique réelle (float) par pas.
+
     Le type de base peut être changé par la méthode "basetype", mais il faut que
-    le nouveau type de base soit compatible avec les types par éléments de 
+    le nouveau type de base soit compatible avec les types par éléments de
     numpy. On peut même utiliser cette classe pour stocker des vecteurs/listes
     ou des matrices comme dans les classes suivantes, mais c'est déconseillé
     pour conserver une signification claire des noms.
@@ -653,26 +653,24 @@ class OneScalar(Persistence):
 
 class OneVector(Persistence):
     """
-    Classe définissant le stockage d'une liste (list) de valeurs homogènes par
-    hypothèse par pas. Pour éviter les confusions, ne pas utiliser la classe
-    "OneVector" pour des données hétérogènes, mais bien "OneList".
+    Classe de stockage d'une liste de valeurs numériques homogènes par pas. Ne
+    pas utiliser cette classe pour des données hétérogènes, mais "OneList".
     """
     def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
 
 class OneMatrix(Persistence):
     """
-    Classe définissant le stockage d'une matrice de valeurs (numpy.matrix) par
-    pas
+    Classe de stockage d'une matrice de valeurs (numpy.matrix) par pas.
     """
     def __init__(self, name="", unit="", basetype = numpy.matrix):
         Persistence.__init__(self, name, unit, basetype)
 
 class OneList(Persistence):
     """
-    Classe définissant le stockage d'une liste de valeurs potentiellement
-    hétérogènes (list) par pas. Pour éviter les confusions, ne pas utiliser la
-    classe "OneVector" pour des données hétérogènes, mais bien "OneList".
+    Classe de stockage d'une liste de valeurs hétérogènes (list) par pas. Ne pas
+    utiliser cette classe pour des données numériques homogènes, mais
+    "OneVector".
     """
     def __init__(self, name="", unit="", basetype = list):
         Persistence.__init__(self, name, unit, basetype)
@@ -681,10 +679,10 @@ def NoType( value ): return value
 
 class OneNoType(Persistence):
     """
-    Classe définissant le stockage d'un objet sans modification (cast) de type.
-    Attention, selon le véritable type de l'objet stocké à chaque pas, les
-    opérations arithmétiques à base de numpy peuvent être invalides ou donner
-    des résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
+    Classe de stockage d'un objet sans modification (cast) de type. Attention,
+    selon le véritable type de l'objet stocké à chaque pas, les opérations
+    arithmétiques à base de numpy peuvent être invalides ou donner des résultats
+    inattendus. Cette classe n'est donc à utiliser qu'à bon escient
     volontairement, et pas du tout par défaut.
     """
     def __init__(self, name="", unit="", basetype = NoType):

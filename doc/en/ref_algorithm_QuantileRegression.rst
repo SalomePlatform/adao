@@ -195,6 +195,18 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``omb = ADD.get("OMB")[-1]``
 
+  SimulatedObservationAtBackground
+    *List of vectors*. Each element is a vector of observation simulated from
+    the background :math:`\mathbf{x}^b`.
+
+    Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the analysis or optimal state :math:`\mathbf{x}^a`.
+
+    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+
 See also
 ++++++++
 

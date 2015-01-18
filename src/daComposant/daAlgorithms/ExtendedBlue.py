@@ -39,7 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles"]
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -128,10 +128,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la fonction coût
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
-           "OMA" in self._parameters["StoreSupplementaryCalculations"] or \
-           "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or \
-           "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+           "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
+           "SigmaObs2"                     in self._parameters["StoreSupplementaryCalculations"] or \
+           "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles"           in self._parameters["StoreSupplementaryCalculations"]:
             HXa  = numpy.matrix(numpy.ravel( H( Xa ) )).T
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
@@ -205,6 +206,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if YQ is None: YQ = YfQ[:,indice]
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )
+        if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
         self._post_run(HO)
         return 0

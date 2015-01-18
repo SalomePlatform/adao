@@ -671,4 +671,4 @@ aléatoirement. Au cours du calcul, ces affichages sur la sortie standard sont
 disponibles dans la fenêtre "*fenêtre de sortie de YACS*", que l'on obtient par
 clic droit sur la fenêtre "*proc*" du schéma YACS exécuté.
 
-.. [#] Pour de plus amples informations sur YACS, voir le *Guide utilisateur du module YACS* disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
