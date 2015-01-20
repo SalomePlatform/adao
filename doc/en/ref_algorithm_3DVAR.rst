@@ -306,6 +306,12 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
+  SimulatedObservationAtCurrentState
+    *List of vectors*. Each element is an observed vector at the current state,
+    that is, in the observation space.
+
+    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+
   SimulatedObservationAtOptimum
     *List of vectors*. Each element is a vector of observation simulated from
     the analysis or optimal state :math:`\mathbf{x}^a`.

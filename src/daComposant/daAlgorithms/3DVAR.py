@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtOptimum"]
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -162,6 +162,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             J   = float( Jb ) + float( Jo )
             if self._parameters["StoreInternalVariables"]:
                 self.StoredVariables["CurrentState"].store( _X )
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

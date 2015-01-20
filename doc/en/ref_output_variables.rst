@@ -261,12 +261,6 @@ of availability. They are the following, in alphabetical order:
 
     Example : ``m = ADD.get("MahalanobisConsistency")[-1]``
 
-  ObservedState
-    *List of vectors*. Each element is an observed state vector, that is, in the
-    observation space.
-
-    Example : ``Ys = ADD.get("ObservedState")[-1]``
-
   OMA
     *List of vectors*. Each element is a vector of difference between the
     observation and the optimal state in the observation space.
@@ -296,6 +290,12 @@ of availability. They are the following, in alphabetical order:
     the background :math:`\mathbf{x}^b`.
 
     Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *List of vectors*. Each element is an observed vector at the current state,
+    that is, in the observation space.
+
+    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
     *List of vectors*. Each element is a vector of observation simulated from

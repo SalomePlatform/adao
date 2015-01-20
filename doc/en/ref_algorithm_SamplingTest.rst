@@ -173,9 +173,9 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["CostFunctionJ", "CurrentState", "Innovation",
-    "ObservedState"].
+    "SimulatedObservationAtCurrentState"].
 
-    Example : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "ObservedState"]}``
+    Example : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
 See also
 ++++++++

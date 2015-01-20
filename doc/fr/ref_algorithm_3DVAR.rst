@@ -315,6 +315,12 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
+  SimulatedObservationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,
+    c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+
   SimulatedObservationAtOptimum
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
     partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.

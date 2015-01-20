@@ -74,7 +74,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["CostFunctionJ","CurrentState","Innovation","ObservedState"]
+            listval  = ["CostFunctionJ","CurrentState","Innovation","SimulatedObservationAtCurrentState"]
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -157,8 +157,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["CurrentState"].store( _X )
             if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["Innovation"].store( Y - _HX )
-            if "ObservedState" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["ObservedState"].store( _HX )
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

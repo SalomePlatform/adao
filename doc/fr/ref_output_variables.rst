@@ -270,12 +270,6 @@ alphabétique:
 
     Exemple : ``m = ADD.get("MahalanobisConsistency")[-1]``
 
-  ObservedState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état observé,
-    c'est-à-dire dans l'espace des observations.
-
-    Exemple : ``Ys = ADD.get("ObservedState")[-1]``
-
   OMA
     *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
     l'observation et l'état optimal dans l'espace des observations.
@@ -305,6 +299,12 @@ alphabétique:
     partir de l'ébauche :math:`\mathbf{x}^b`.
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,
+    c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à

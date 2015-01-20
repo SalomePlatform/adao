@@ -180,9 +180,9 @@ Les options de l'algorithme sont les suivantes:
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["CostFunctionJ", "CurrentState",
-    "Innovation", "ObservedState"].
+    "Innovation", "SimulatedObservationAtCurrentState"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "ObservedState"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
 Voir aussi
 ++++++++++

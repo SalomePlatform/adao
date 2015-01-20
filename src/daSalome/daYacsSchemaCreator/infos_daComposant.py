@@ -247,7 +247,7 @@ ObserversList = [
     "Analysis",
     "CurrentState",
     "Innovation",
-    "ObservedState",
+    "SimulatedObservationAtCurrentState",
     "OMA",
     "OMB",
     "BMA",
