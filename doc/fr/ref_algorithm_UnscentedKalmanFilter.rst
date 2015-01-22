@@ -50,7 +50,6 @@ Commandes requises et optionnelles
 .. index:: single: Beta
 .. index:: single: Kappa
 .. index:: single: Reconditioner
-.. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
 
 Les commandes requises générales, disponibles dans l'interface en édition, sont
@@ -125,21 +124,13 @@ Les options de l'algorithme sont les suivantes:
 
     Exemple : ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
 
-  StoreInternalVariables
-    Cette clé booléenne permet de stocker les variables internes par défaut,
-    principalement l'état courant lors d'un processus itératif. Attention, cela
-    peut être un choix numériquement coûteux dans certains cas de calculs. La
-    valeur par défaut est "False".
-
-    Exemple : ``{"StoreInternalVariables":True}``
-
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
-    "Innovation"].
+    "CostFunctionJ", "CurrentState", "Innovation"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 

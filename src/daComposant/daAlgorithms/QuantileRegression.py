@@ -67,7 +67,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "OMA", "OMB", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -112,7 +112,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jb  = 0.
             Jo  = 0.
             J   = Jb + Jo
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )

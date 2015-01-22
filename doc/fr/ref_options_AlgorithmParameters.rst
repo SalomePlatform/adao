@@ -57,7 +57,7 @@ suit :
 Dans le champs de saisie, il faut utiliser des guillemets simples pour une
 définition standard de dictionnaire, comme par exemple::
 
-    '{"StoreInternalVariables":True,"MaximumNumberOfSteps":25}'
+    '{"MaximumNumberOfSteps":25,"SetSeed":1000}'
 
 C'est la manière recommandée pour définir des paramètres algorithmiques.
 
@@ -79,7 +79,6 @@ Ce fichier script Python externe doit définir alors une variable au nom imposé
 "*AlgorithmParameters*", à la manière de l'exemple qui suit::
 
     AlgorithmParameters = {
-        "StoreInternalVariables" : True,
         "MaximumNumberOfSteps" : 25,
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }

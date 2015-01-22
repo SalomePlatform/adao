@@ -45,7 +45,6 @@ Optional and required commands
 .. index:: single: Minimizer
 .. index:: single: MaximumNumberOfSteps
 .. index:: single: CostDecrementTolerance
-.. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -102,20 +101,14 @@ The options of the algorithm are the following:
 
     Example : ``{"CostDecrementTolerance":1.e-7}``
 
-  StoreInternalVariables
-    This Boolean key allows to store default internal variables, mainly the
-    current state during iterative optimization process. Be careful, this can be
-    a numerically costly choice in certain calculation cases. The default is
-    "False".
-
-    Example : ``{"StoreInternalVariables":True}``
-
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["BMA", "OMA", "OMB", "Innovation"].
+    are in the following list: ["BMA", "CostFunctionJ", "CurrentState", "OMA",
+    "OMB", "Innovation", "SimulatedObservationAtBackground",
+    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 

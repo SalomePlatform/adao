@@ -137,7 +137,6 @@ la partie :ref:`section_using`, ou en partie :ref:`section_examples`.
 Conditionnalité des informations disponibles en sortie
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: StoreInternalVariables
 .. index:: single: AlgorithmParameters
 .. index:: single: Stored
 
@@ -151,9 +150,8 @@ calcul. Les autres informations ne sont présentes que pour certains algorithmes
 et/ou que si elles ont été réclamées avant l'exécution du calcul.
 
 On rappelle que l'utilisateur peut réclamer des informations supplémentaires
-lors de l'établissement de son cas ADAO, en utilisant l'option
-"*StoreInternalVariables*" de chaque algorithme à travers la commande
-optionnelle "*AlgorithmParameters*" du cas ADAO. On se reportera à la
+lors de l'établissement de son cas ADAO, en utilisant la commande optionnelle
+"*AlgorithmParameters*" du cas ADAO. On se reportera à la
 :ref:`section_ref_options_AlgorithmParameters` pour le bon usage de cette
 commande, et à la description de chaque algorithme pour les informations
 disponibles par algorithme. On peut aussi demander à conserver certaines

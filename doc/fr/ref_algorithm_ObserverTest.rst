@@ -46,7 +46,7 @@ Commandes requises et optionnelles
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
 
-  Observers  
+  Observers
     *Commande obligatoire*. Elle permet de définir des observateurs internes,
     qui sont des fonctions liées à une variable particulière, qui sont exécutées
     chaque fois que cette variable est modifiée. C'est une manière pratique de

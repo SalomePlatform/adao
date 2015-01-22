@@ -84,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "OMA", "OMB", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -145,13 +145,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             J   = float( Jb ) + float( Jo )
             #
-            if self._parameters["StoreInternalVariables"]:
-                self.StoredVariables["CurrentState"].store( _X )
-                self.StoredVariables["CostFunctionJb"].store( Jb )
-                self.StoredVariables["CostFunctionJo"].store( Jo )
-                self.StoredVariables["CostFunctionJ" ].store( J )
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             return J
         #
         # Point de démarrage de l'optimisation : Xini = Xb
@@ -195,7 +188,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 qBest = copy.copy( quality )
         logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(Best), str(qBest)))
         #
-        if self._parameters["StoreInternalVariables"]:
+        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["CurrentState"].store( Best )
         self.StoredVariables["CostFunctionJb"].store( 0. )
         self.StoredVariables["CostFunctionJo"].store( 0. )
@@ -220,8 +213,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                         qBest = copy.copy( quality )
             logging.debug("%s Etape %i, Insecte = %s, Qualité = %s"%(self._name, n, str(Best), str(qBest)))
             #
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( Best )
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                _HmX = Hm( numpy.asmatrix(numpy.ravel( Best )).T )
+                _HmX = numpy.asmatrix(numpy.ravel( _HmX )).T
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HmX )
             self.StoredVariables["CostFunctionJb"].store( 0. )
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( qBest )
@@ -246,9 +243,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["OMA"].store( numpy.ravel(Y - HXa) )
+            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:

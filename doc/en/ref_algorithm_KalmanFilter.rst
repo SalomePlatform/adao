@@ -51,7 +51,6 @@ Optional and required commands
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
 .. index:: single: EstimationOf
-.. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -105,20 +104,13 @@ The options of the algorithm are the following:
 
     Example : ``{"EstimationOf":"Parameters"}``
 
-  StoreInternalVariables
-    This Boolean key allows to store default internal variables, mainly the
-    current state during iterative optimization process. Be careful, this can be
-    a numerically costly choice in certain calculation cases. The default is
-    "False".
-
-    Example : ``{"StoreInternalVariables":True}``
-
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCovariance", "BMA", "Innovation"].
+    are in the following list: ["APosterioriCovariance", "BMA", "CostFunctionJ",
+    "CurrentState", "Innovation"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
@@ -182,6 +174,8 @@ The conditional outputs of the algorithm are the following:
     *List of vectors*. Each element is an innovation vector, which is in static
     the difference between the optimal and the background, and in dynamic the
     evolution increment.
+
+    Exemple : ``d = ADD.get("Innovation")[-1]``
 
 See also
 ++++++++

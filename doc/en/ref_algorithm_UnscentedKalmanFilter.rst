@@ -50,7 +50,6 @@ Optional and required commands
 .. index:: single: Beta
 .. index:: single: Kappa
 .. index:: single: Reconditioner
-.. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -121,20 +120,13 @@ The options of the algorithm are the following:
 
     Example : ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
 
-  StoreInternalVariables
-    This Boolean key allows to store default internal variables, mainly the
-    current state during iterative optimization process. Be careful, this can be
-    a numerically costly choice in certain calculation cases. The default is
-    "False".
-
-    Example : ``{"StoreInternalVariables":True}``
-
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCovariance", "BMA", "Innovation"].
+    are in the following list: ["APosterioriCovariance", "BMA", "CostFunctionJ",
+    "CurrentState", "Innovation"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 

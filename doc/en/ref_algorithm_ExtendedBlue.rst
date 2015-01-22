@@ -49,7 +49,6 @@ Optional and required commands
 .. index:: single: Observation
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
-.. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
 .. index:: single: Quantiles
 .. index:: single: SetSeed
@@ -100,22 +99,15 @@ described hereafter, of the algorithm. See
 
 The options of the algorithm are the following:
 
-  StoreInternalVariables
-    This Boolean key allows to store default internal variables, mainly the
-    current state during iterative optimization process. Be careful, this can be
-    a numerically costly choice in certain calculation cases. The default is
-    "False".
-
-    Example : ``{"StoreInternalVariables":True}``
-
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCovariance", "BMA", "OMA", "OMB",
-    "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency",
-    "SimulationQuantiles"].
+    are in the following list: ["APosterioriCovariance", "BMA",
+    "CostFunctionJ", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2",
+    "MahalanobisConsistency", "SimulatedObservationAtBackground",
+    "SimulatedObservationAtOptimum", "SimulationQuantiles"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
@@ -244,13 +236,6 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``so2 = ADD.get("SigmaObs")[-1]``
 
-  SimulationQuantiles
-    *List of vectors*. Each element is a vector corresponding to the observed
-    state which realize the required quantile, in the same order than the
-    quantiles required by the user.
-
-    Example : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
-
   SimulatedObservationAtBackground
     *List of vectors*. Each element is a vector of observation simulated from
     the background :math:`\mathbf{x}^b`.
@@ -262,6 +247,13 @@ The conditional outputs of the algorithm are the following:
     the analysis or optimal state :math:`\mathbf{x}^a`.
 
     Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+
+  SimulationQuantiles
+    *List of vectors*. Each element is a vector corresponding to the observed
+    state which realize the required quantile, in the same order than the
+    quantiles required by the user.
+
+    Example : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
 
 See also
 ++++++++

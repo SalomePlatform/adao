@@ -155,7 +155,7 @@ Les options de l'algorithme sont les suivantes:
     augmentés. Les critères possibles sont dans la liste suivante, dans laquelle
     les noms équivalents sont indiqués par un signe "=" :
     ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
-    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1",  "MaximumError"="ME"].
+    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1", "MaximumError"="ME"].
 
     Exemple : ``{"QualityCriterion":"DA"}``
 

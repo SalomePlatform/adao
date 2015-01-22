@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "OMA", "OMB", "Innovation", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -134,7 +134,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jb  = 0.
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
@@ -159,7 +159,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jb  = 0.
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
@@ -266,7 +266,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         # ----------------------------------------------------------------
-        if self._parameters["StoreInternalVariables"]:
+        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             Minimum = self.StoredVariables["CurrentState"][IndexMin]
         #
         # Obtention de l'analyse

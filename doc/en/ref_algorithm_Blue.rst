@@ -51,7 +51,6 @@ Optional and required commands
 .. index:: single: Observation
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
-.. index:: single: StoreInternalVariables
 .. index:: single: StoreSupplementaryCalculations
 .. index:: single: Quantiles
 .. index:: single: SetSeed
@@ -102,22 +101,15 @@ described hereafter, of the algorithm. See
 
 The options of the algorithm are the following:
 
-  StoreInternalVariables
-    This Boolean key allows to store default internal variables, mainly the
-    current state during iterative optimization process. Be careful, this can be
-    a numerically costly choice in certain calculation cases. The default is
-    "False".
-
-    Example : ``{"StoreInternalVariables":True}``
-
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCovariance", "BMA", "OMA", "OMB",
-    "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency",
-    "SimulationQuantiles"].
+    are in the following list: ["APosterioriCovariance", "BMA", "CostFunctionJ",
+    "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2",
+    "MahalanobisConsistency", "SimulatedObservationAtBackground",
+    "SimulatedObservationAtOptimum", "SimulationQuantiles"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 

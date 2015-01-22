@@ -56,7 +56,7 @@ in the EFICAS graphical interface, the user selects this type in the keyword
 In the entry, one must enclose a standard dictionary definition between simple
 quotes, as for example::
 
-    '{"StoreInternalVariables":True,"MaximumNumberOfSteps":25}'
+    '{"MaximumNumberOfSteps":25,"SetSeed":1000}'
 
 It is the recommended way to define algorithmic parameters.
 
@@ -78,7 +78,6 @@ This external Python script file has then to define a variable with the required
 name "*AlgorithmParameters*", as in the following example::
 
     AlgorithmParameters = {
-        "StoreInternalVariables" : True,
         "MaximumNumberOfSteps" : 25,
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }

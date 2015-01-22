@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -160,7 +160,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
@@ -256,7 +256,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         # ----------------------------------------------------------------
-        if self._parameters["StoreInternalVariables"]:
+        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             Minimum = self.StoredVariables["CurrentState"][IndexMin]
         #
         # Obtention de l'analyse

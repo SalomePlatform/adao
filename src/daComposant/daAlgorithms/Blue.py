@@ -39,7 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtOptimum"]
+            listval  = ["APosterioriCovariance", "BMA", "OMA", "OMB", "CostFunctionJ", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -127,6 +127,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la fonction coût
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
+           "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
            "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
            "SigmaObs2"                     in self._parameters["StoreSupplementaryCalculations"] or \
            "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"] or \
@@ -135,7 +136,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             HXa = Hm * Xa
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
-           "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+           "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
+           "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"]:
             Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
             Jo  = 0.5 * oma.T * RI * oma
             J   = float( Jb ) + float( Jo )
