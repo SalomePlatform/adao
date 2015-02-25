@@ -361,133 +361,21 @@ def create_yacs_proc(study_config):
         ADAO_Case.edAddDFLink(back_node.getOutputPort("type"), CAS_node.getInputPort(key_type))
         ADAO_Case.edAddDFLink(back_node.getOutputPort("stored"), CAS_node.getInputPort(key_stored))
 
-      if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "ObservationOperator":
-         FunctionDict = data_config["Data"]
-         for FunctionName in FunctionDict["Function"]:
-           port_name = "ObservationOperator" + FunctionName
+      if data_config["Type"] == "Function" and (key == "ObservationOperator" or key == "EvolutionModel"):
+         TheData = data_config["Data"]
+         for FunctionName in TheData["Function"]:
+           port_name = key + FunctionName
            CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(FunctionDict["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
-           elif repertory and os.path.exists(FunctionDict["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
+           if repertory and not os.path.exists(TheData["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(TheData["Script"][FunctionName])))
+           elif repertory and os.path.exists(TheData["Script"][FunctionName]):
+             CAS_node.getInputPort(port_name).edInitPy(TheData["Script"][FunctionName])
              try:
                CAS_node.edAddInputPort("studydir", t_string)
                CAS_node.getInputPort("studydir").edInitPy(base_repertory)
              except: pass
            else:
-             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict" and key == "EvolutionModel":
-         FunctionDict = data_config["Data"]
-         for FunctionName in FunctionDict["Function"]:
-           port_name = "EvolutionModel" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(FunctionDict["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(FunctionDict["Script"][FunctionName])))
-           elif repertory and os.path.exists(FunctionDict["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(FunctionDict["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch" and key == "ObservationOperator":
-         ScriptWithSwitch = data_config["Data"]
-         for FunctionName in ScriptWithSwitch["Function"]:
-           port_name = "ObservationOperator" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
-           elif repertory and os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch" and key == "EvolutionModel":
-         ScriptWithSwitch = data_config["Data"]
-         for FunctionName in ScriptWithSwitch["Function"]:
-           port_name = "EvolutionModel" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName])))
-           elif repertory and os.path.exists(ScriptWithSwitch["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithSwitch["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions" and key == "ObservationOperator":
-         ScriptWithFunctions = data_config["Data"]
-         for FunctionName in ScriptWithFunctions["Function"]:
-           port_name = "ObservationOperator" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
-           elif repertory and os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithFunctions" and key == "EvolutionModel":
-         ScriptWithFunctions = data_config["Data"]
-         for FunctionName in ScriptWithFunctions["Function"]:
-           port_name = "EvolutionModel" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName])))
-           elif repertory and os.path.exists(ScriptWithFunctions["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithFunctions["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction" and key == "ObservationOperator":
-         ScriptWithOneFunction = data_config["Data"]
-         for FunctionName in ScriptWithOneFunction["Function"]:
-           port_name = "ObservationOperator" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
-           elif repertory and os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
-
-      if data_config["Type"] == "Function" and data_config["From"] == "ScriptWithOneFunction" and key == "EvolutionModel":
-         ScriptWithOneFunction = data_config["Data"]
-         for FunctionName in ScriptWithOneFunction["Function"]:
-           port_name = "EvolutionModel" + FunctionName
-           CAS_node.edAddInputPort(port_name, t_string)
-           if repertory and not os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(os.path.join(base_repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName])))
-           elif repertory and os.path.exists(ScriptWithOneFunction["Script"][FunctionName]):
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
-             try:
-               CAS_node.edAddInputPort("studydir", t_string)
-               CAS_node.getInputPort("studydir").edInitPy(base_repertory)
-             except: pass
-           else:
-             CAS_node.getInputPort(port_name).edInitPy(ScriptWithOneFunction["Script"][FunctionName])
+             CAS_node.getInputPort(port_name).edInitPy(TheData["Script"][FunctionName])
 
   # Step 3: create compute bloc
   compute_bloc = runtime.createBloc("compute_bloc")
@@ -504,41 +392,13 @@ def create_yacs_proc(study_config):
   # Check if we have a python script for OptimizerLoopNode
   data_config = study_config["ObservationOperator"]
   opt_script_nodeOO = None
-  if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
+  if data_config["Type"] == "Function" and (data_config["From"] == "ScriptWithSwitch" or data_config["From"] == "FunctionDict"):
     # Get script
-    FunctionDict = data_config["Data"]
+    TheData = data_config["Data"]
     script_filename = ""
-    for FunctionName in FunctionDict["Function"]:
+    for FunctionName in TheData["Function"]:
       # We currently support only one file
-      script_filename = FunctionDict["Script"][FunctionName]
-      break
-
-    # We create a new pyscript node
-    opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if repertory and not os.path.exists(script_filename):
-      script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
-    try:
-      script_str= open(script_filename, 'r')
-    except:
-      raise ValueError("Exception in opening function script file: " + script_filename)
-    node_script  = "#-*-coding:iso-8859-1-*-\n"
-    node_script += "import sys, os \n"
-    node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
-    node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
-    node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
-    node_script += "  sys.path.insert(0,filepath)\n"
-    node_script += script_str.read()
-    opt_script_nodeOO.setScript(node_script)
-    opt_script_nodeOO.edAddInputPort("computation", t_param_input)
-    opt_script_nodeOO.edAddOutputPort("result", t_param_output)
-
-  elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
-    # Get script
-    ScriptWithSwitch = data_config["Data"]
-    script_filename = ""
-    for FunctionName in ScriptWithSwitch["Function"]:
-      # We currently support only one file
-      script_filename = ScriptWithSwitch["Script"][FunctionName]
+      script_filename = TheData["Script"][FunctionName]
       break
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
@@ -727,43 +587,14 @@ def create_yacs_proc(study_config):
   if "EvolutionModel" in study_config.keys():
     data_config = study_config["EvolutionModel"]
     opt_script_nodeEM = None
-    if data_config["Type"] == "Function" and data_config["From"] == "FunctionDict":
+    if data_config["Type"] == "Function" and (data_config["From"] == "ScriptWithSwitch" or data_config["From"] == "FunctionDict"):
       # Get script
-      FunctionDict = data_config["Data"]
+      TheData = data_config["Data"]
       script_filename = ""
-      for FunctionName in FunctionDict["Function"]:
+      for FunctionName in TheData["Function"]:
         # We currently support only one file
-        script_filename = FunctionDict["Script"][FunctionName]
+        script_filename = TheData["Script"][FunctionName]
         break
-
-      # We create a new pyscript node
-      opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
-      if repertory and not os.path.exists(script_filename):
-        script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
-      try:
-        script_str= open(script_filename, 'r')
-      except:
-        raise ValueError("Exception in opening function script file: " + script_filename)
-      node_script  = "#-*-coding:iso-8859-1-*-\n"
-      node_script += "import sys, os \n"
-      node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
-      node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
-      node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
-      node_script += "  sys.path.insert(0,filepath)\n"
-      node_script += script_str.read()
-      opt_script_nodeEM.setScript(node_script)
-      opt_script_nodeEM.edAddInputPort("computation", t_param_input)
-      opt_script_nodeEM.edAddOutputPort("result", t_param_output)
-
-    elif data_config["Type"] == "Function" and data_config["From"] == "ScriptWithSwitch":
-      # Get script
-      ScriptWithSwitch = data_config["Data"]
-      script_filename = ""
-      for FunctionName in ScriptWithSwitch["Function"]:
-        # We currently support only one file
-        script_filename = ScriptWithSwitch["Script"][FunctionName]
-        break
-
       # We create a new pyscript node
       opt_script_nodeEM = runtime.createScriptNode("", "FunctionNodeEM")
       if repertory and not os.path.exists(script_filename):

@@ -1,3 +1,4 @@
+#
 # Copyright (C) 2008-2015 EDF R&D
 #
 # This file is part of SALOME ADAO module

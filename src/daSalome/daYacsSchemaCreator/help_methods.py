@@ -199,35 +199,11 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
       check_file_name = os.path.join(repertory, os.path.basename(data_config["Data"]))
     if not os.path.exists(check_file_name):
       raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
-  elif from_type == "FunctionDict":
-    FunctionDict = data_config["Data"]
-    for FunctionName in FunctionDict["Function"]:
-      check_file_name = FunctionDict["Script"][FunctionName]
+  elif (from_type == "FunctionDict" or from_type == "ScriptWithSwitch" or from_type == "ScriptWithFunctions" or from_type == "ScriptWithOneFunction"):
+    TheData = data_config["Data"]
+    for FunctionName in TheData["Function"]:
+      check_file_name = TheData["Script"][FunctionName]
       if repertory_check and not os.path.exists(check_file_name):
-        check_file_name = os.path.join(repertory, os.path.basename(FunctionDict["Script"][FunctionName]))
-      if not os.path.exists(check_file_name):
-        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
-  elif from_type == "ScriptWithSwitch":
-    ScriptWithSwitch = data_config["Data"]
-    for FunctionName in ScriptWithSwitch["Function"]:
-      check_file_name = ScriptWithSwitch["Script"][FunctionName]
-      if repertory_check and not os.path.exists(check_file_name):
-        check_file_name = os.path.join(repertory, os.path.basename(ScriptWithSwitch["Script"][FunctionName]))
-      if not os.path.exists(check_file_name):
-        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
-  elif from_type == "ScriptWithFunctions":
-    ScriptWithFunctions = data_config["Data"]
-    for FunctionName in ScriptWithFunctions["Function"]:
-      check_file_name = ScriptWithFunctions["Script"][FunctionName]
-      if repertory_check and not os.path.exists(check_file_name):
-        check_file_name = os.path.join(repertory, os.path.basename(ScriptWithFunctions["Script"][FunctionName]))
-      if not os.path.exists(check_file_name):
-        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
-  elif from_type == "ScriptWithOneFunction":
-    ScriptWithOneFunction = data_config["Data"]
-    for FunctionName in ScriptWithOneFunction["Function"]:
-      check_file_name = ScriptWithOneFunction["Script"][FunctionName]
-      if repertory_check and not os.path.exists(check_file_name):
-        check_file_name = os.path.join(repertory, os.path.basename(ScriptWithOneFunction["Script"][FunctionName]))
+        check_file_name = os.path.join(repertory, os.path.basename(TheData["Script"][FunctionName]))
       if not os.path.exists(check_file_name):
         raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))

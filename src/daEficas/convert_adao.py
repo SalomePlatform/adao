@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2015 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -19,7 +20,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 # print "import convert_adao"
 
@@ -27,15 +28,15 @@ import convert.parseur_python
 from convert.convert_python import *
 
 def entryPoint():
-   """
-       Retourne les informations nécessaires pour le chargeur de plugins
-       Ces informations sont retournées dans un dictionnaire
-   """
-   return {
+    """
+    Retourne les informations nécessaires pour le chargeur de plugins
+    Ces informations sont retournées dans un dictionnaire
+    """
+    return {
         # Le nom du plugin
-          'name' : 'adao',
+        'name' : 'ADAO',
         # La factory pour créer une instance du plugin
-          'factory' : PythonParser,
-          }
+        'factory' : PythonParser,
+        }
 
 
