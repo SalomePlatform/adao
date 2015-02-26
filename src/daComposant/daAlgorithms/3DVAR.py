@@ -101,6 +101,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Type de simulation pour l'estimation des quantiles",
             listval  = ["Linear", "NonLinear"]
             )
+        self.defineRequiredParameter( # Pas de type
+            name     = "Bounds",
+            message  = "Liste des valeurs de bornes",
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()

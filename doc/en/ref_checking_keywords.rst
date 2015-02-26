@@ -38,8 +38,8 @@ List of commands and keywords for an ADAO checking case
 .. index:: single: Observer
 .. index:: single: Observers
 .. index:: single: Observer Template
-.. index:: single: Study_name
-.. index:: single: Study_repertory
+.. index:: single: StudyName
+.. index:: single: StudyRepertory
 .. index:: single: UserDataInit
 
 This set of commands is related to the description of a checking case, that is a
@@ -112,11 +112,11 @@ The different commands are the following:
     printing or plotting it, etc. Common templates are provided to help the user
     to start or to quickly make his case.
 
-  Study_name
+  StudyName
     *Required command*. This is an open string to describe the ADAO study by a
     name or a sentence.
 
-  Study_repertory
+  StudyRepertory
     *Optional command*. If available, this directory is used as base name for
     calculation, and used to find all the script files, given by name without
     path, that can be used to define some other commands by scripts.

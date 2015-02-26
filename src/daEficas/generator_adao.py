@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2015 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -93,7 +94,7 @@ class AdaoGenerator(PythonGenerator):
 
   def generate_da(self):
   
-    if "__CHECKING_STUDY__Study_name" in self.dictMCVal.keys():
+    if "__CHECKING_STUDY__StudyName" in self.dictMCVal.keys():
       self.type_of_study = "CHECKING_STUDY"
     else:
       self.type_of_study = "ASSIMILATION_STUDY"
@@ -103,15 +104,20 @@ class AdaoGenerator(PythonGenerator):
 
     # Extraction de Study_type
     self.text_da += "study_config['StudyType'] = '" + self.type_of_study + "'\n"
-    # Extraction de Study_name
-    self.text_da += "study_config['Name'] = '" + self.dictMCVal["__"+self.type_of_study+"__Study_name"] + "'\n"
+    # Extraction de StudyName
+    self.text_da += "study_config['Name'] = '" + self.dictMCVal["__"+self.type_of_study+"__StudyName"] + "'\n"
     # Extraction de Debug
     if "__"+self.type_of_study+"__Debug" in self.dictMCVal.keys():
       self.text_da += "study_config['Debug'] = '" + str(self.dictMCVal["__"+self.type_of_study+"__Debug"]) + "'\n"
     else:
       self.text_da += "study_config['Debug'] = '0'\n"
-    # Extraction de Algorithm
-    self.text_da += "study_config['Algorithm'] = '" + self.dictMCVal["__"+self.type_of_study+"__Algorithm"] + "'\n"
+
+    # Extraction de Algorithm et de ses parametres
+    if "__"+self.type_of_study+"__AlgorithmChoices__Algorithm" in self.dictMCVal.keys():
+      self.text_da += "study_config['Algorithm'] = '" + self.dictMCVal["__"+self.type_of_study+"__AlgorithmChoices__Algorithm"] + "'\n"
+      self.add_AlgorithmChoices()
+    elif "__"+self.type_of_study+"__Algorithm" in self.dictMCVal.keys():
+      self.text_da += "study_config['Algorithm'] = '" + self.dictMCVal["__"+self.type_of_study+"__Algorithm"] + "'\n"
 
     if "__"+self.type_of_study+"__Background__INPUT_TYPE" in self.dictMCVal.keys():
       self.add_data("Background")
@@ -135,9 +141,9 @@ class AdaoGenerator(PythonGenerator):
     self.add_variables()
     # Parametres optionnels
 
-    # Extraction du Study_repertory
-    if "__"+self.type_of_study+"__Study_repertory" in self.dictMCVal.keys():
-      self.text_da += "study_config['Repertory'] = '" + self.dictMCVal["__"+self.type_of_study+"__Study_repertory"] + "'\n"
+    # Extraction du StudyRepertory
+    if "__"+self.type_of_study+"__StudyRepertory" in self.dictMCVal.keys():
+      self.text_da += "study_config['Repertory'] = '" + self.dictMCVal["__"+self.type_of_study+"__StudyRepertory"] + "'\n"
     # Extraction de AlgorithmParameters
     if "__"+self.type_of_study+"__AlgorithmParameters__INPUT_TYPE" in self.dictMCVal.keys():
       self.add_algorithm_parameters()
@@ -302,6 +308,47 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "study_config['UserPostAnalysis'] = Analysis_config\n"
     else:
       raise Exception('From Type unknown', from_type)
+
+  def add_AlgorithmChoices(self):
+
+    if not self.dictMCVal.has_key("__"+self.type_of_study+"__AlgorithmChoices__Parameters"): return
+
+    data_name = "AlgorithmParameters"
+    data_type = "Dict"
+    para_type = self.dictMCVal["__"+self.type_of_study+"__AlgorithmChoices__Parameters"]
+    if para_type == "Defaults":
+        from_type = para_type
+    elif para_type == "Dict":
+        from_type = self.dictMCVal["__"+self.type_of_study+"__AlgorithmChoices__Dict__data__FROM"]
+
+    if from_type == "Script":
+      data = self.dictMCVal["__"+self.type_of_study+"__AlgorithmChoices__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
+      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
+      self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
+      self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
+    elif from_type == "String":
+      data = self.dictMCVal["__"+self.type_of_study+"__AlgorithmChoices__Dict__data__STRING_DATA__STRING"]
+      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
+      self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
+      self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
+    elif from_type == "Defaults":
+      base = "__"+self.type_of_study+"__AlgorithmChoices__Parameters"
+      keys = [k for k in self.dictMCVal.keys() if base in k]
+      keys.remove(base)
+      keys = [k.replace(base,'') for k in keys]
+      data  = '{'
+      for k in keys:
+        data += '"%s":"%s",'%(k.split('__')[-1],self.dictMCVal[base+k])
+      data += '}'
+      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
+      self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
+      self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
+      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
   def add_variables(self):
 

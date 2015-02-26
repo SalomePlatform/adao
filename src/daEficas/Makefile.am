@@ -26,11 +26,14 @@ include $(top_srcdir)/adm_local/make_common_starter.am
 mypkgpythondir =$(salomepythondir)/daEficas
 
 mypkgpython_PYTHON = \
-		     configuration_ADAO.py \
-		     convert_adao.py \
-		     generator_adao.py \
-		     __init__.py \
-		     prefs_ADAO.py \
-		     prefs.py
+		configuration_ADAO.py \
+		convert_adao.py \
+		generator_adao.py \
+		__init__.py \
+		prefs_ADAO.py \
+		prefs.py \
+		traduitADAOV7_4_0ToV7_6_0.py \
+		traduitADAOV7_5_0ToV7_6_0.py \
+		traduitADAOV7_5_1ToV7_6_0.py
 
 EXTRA_DIST = prefs_ADAO.py.in

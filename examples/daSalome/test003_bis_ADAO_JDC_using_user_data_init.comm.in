@@ -1,8 +1,7 @@
 
-ASSIMILATION_STUDY(Study_name='Test',
-                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
-                   Debug=0,
-                   Algorithm='3DVAR',
+ASSIMILATION_STUDY(StudyName='Test',
+                   StudyRepertory='@prefix@/share/salome/adao_examples/daSalome',
+                   AlgorithmChoices=_F(Algorithm='3DVAR',),
                    Background=_F(Stored=0,
                                  INPUT_TYPE='Vector',
                                  data=_F(FROM='Script',
@@ -33,3 +32,4 @@ ASSIMILATION_STUDY(Study_name='Test',
                                                   """import numpy
 xa=numpy.ravel(ADD.get('Analysis')[-1])
 print 'Analysis:',xa""",),);
+#VERSION_CATALOGUE:V7_6_0:FIN VERSION_CATALOGUE

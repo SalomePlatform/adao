@@ -1,8 +1,10 @@
 
-ASSIMILATION_STUDY(Study_name='test_observers',
-                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
-                   Debug=0,
-                   Algorithm='3DVAR',
+ASSIMILATION_STUDY(StudyName='test_observers',
+                   StudyRepertory='@prefix@/share/salome/adao_examples/daSalome',
+                   AlgorithmChoices=_F(Algorithm='3DVAR',
+                                       Parameters='Dict',
+                                       data=_F(FROM='Script',
+                                               SCRIPT_FILE='test006_Observers_var.py',),),
                    Background=_F(Stored=0,
                                  INPUT_TYPE='Vector',
                                  data=_F(FROM='Script',
@@ -23,13 +25,14 @@ ASSIMILATION_STUDY(Study_name='test_observers',
                                           INPUT_TYPE='Function',
                                           data=_F(FROM='FunctionDict',
                                                   FUNCTIONDICT_FILE='test006_Observers_Observation_Operator.py',),),
-                   AlgorithmParameters=_F(INPUT_TYPE='Dict',
-                                          data=_F(FROM='Script',
-                                                  SCRIPT_FILE='test006_Observers_var.py',),),
                    UserDataInit=_F(INIT_FILE='test006_Observers_init.py',
-                                   TARGET_LIST=
-                                   ('Background','BackgroundError','Observation',
-                                                 'ObservationError','AlgorithmParameters',),),
+                                   TARGET_LIST=('Background','BackgroundError','Observation','ObservationError',),),
+                   UserPostAnalysis=_F(FROM='Template',
+                                       Template='AnalysisPrinter',
+                                       ValueTemplate=
+                                                  """import numpy
+xa=numpy.ravel(ADD.get('Analysis')[-1])
+print 'Analysis:',xa""",),
                    Observers=_F(SELECTION=('CurrentState','CostFunctionJ',),
                                 CurrentState_data=_F(Info='CurrentState',
                                                      NodeType='Script',
@@ -56,3 +59,4 @@ print "       imageCost %s"%filename
 gp.hardcopy(filename=filename, color=1)
 numero += 1
 """,),),);
+#VERSION_CATALOGUE:V7_6_0:FIN VERSION_CATALOGUE

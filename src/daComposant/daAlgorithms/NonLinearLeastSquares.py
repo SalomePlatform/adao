@@ -74,6 +74,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
+        self.defineRequiredParameter( # Pas de type
+            name     = "Bounds",
+            message  = "Liste des valeurs de bornes",
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()

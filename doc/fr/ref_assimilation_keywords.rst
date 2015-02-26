@@ -43,8 +43,8 @@ Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'opti
 .. index:: single: Observers
 .. index:: single: Observer Template
 .. index:: single: OutputVariables
-.. index:: single: Study_name
-.. index:: single: Study_repertory
+.. index:: single: StudyName
+.. index:: single: StudyRepertory
 .. index:: single: UserDataInit
 .. index:: single: UserPostAnalysis
 .. index:: single: UserPostAnalysis Template
@@ -158,11 +158,11 @@ Les différentes commandes sont les suivantes:
     Cette information est destinée à être utilisée dans le traitement
     algorithmique interne des données.
 
-  Study_name
+  StudyName
     *Commande obligatoire*. C'est une chaîne de caractères quelconque pour
     décrire l'étude ADAO par un nom ou une déclaration.
 
-  Study_repertory
+  StudyRepertory
     *Commande optionnelle*. S'il existe, ce répertoire est utilisé comme base
     pour les calculs, et il est utilisé pour trouver les fichiers de script,
     donnés par nom sans répertoire, qui peuvent être utilisés pour définir

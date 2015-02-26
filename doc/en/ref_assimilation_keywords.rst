@@ -43,8 +43,8 @@ List of commands and keywords for an ADAO calculation case
 .. index:: single: Observers
 .. index:: single: Observer Template
 .. index:: single: OutputVariables
-.. index:: single: Study_name
-.. index:: single: Study_repertory
+.. index:: single: StudyName
+.. index:: single: StudyRepertory
 .. index:: single: UserDataInit
 .. index:: single: UserPostAnalysis
 .. index:: single: UserPostAnalysis Template
@@ -151,11 +151,11 @@ The different commands are the following:
     physical variables that are bundled together in the output observation
     vector. This information is dedicated to data processed inside an algorithm.
 
-  Study_name
+  StudyName
     *Required command*. This is an open string to describe the ADAO study by a
     name or a sentence.
 
-  Study_repertory
+  StudyRepertory
     *Optional command*. If available, this directory is used as base name for
     calculation, and used to find all the script files, given by name without
     path, that can be used to define some other commands by scripts.

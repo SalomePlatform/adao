@@ -1,8 +1,7 @@
 
-ASSIMILATION_STUDY(Study_name='Test',
-                   Study_repertory='@prefix@/share/salome/adao_examples/daSalome',
-                   Debug=0,
-                   Algorithm='Blue',
+ASSIMILATION_STUDY(StudyName='Test',
+                   StudyRepertory='@prefix@/share/salome/adao_examples/daSalome',
+                   AlgorithmChoices=_F(Algorithm='Blue',),
                    Background=_F(Stored=0,
                                  INPUT_TYPE='Vector',
                                  data=_F(FROM='Script',
@@ -32,3 +31,4 @@ print "Size of Analysis = %i"%len(Xa)
 print "Min, mean, max   = %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa))
 print
 """,),);
+#VERSION_CATALOGUE:V7_6_0:FIN VERSION_CATALOGUE
