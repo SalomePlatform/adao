@@ -1,6 +1,6 @@
 
 CHECKING_STUDY(StudyName='Elementary gradient test',
-               AlgorithmChoices=_F(Algorithm='GradientTest',
+               AlgorithmParameters=_F(Algorithm='GradientTest',
                                    Parameters='Dict',
                                    data=_F(FROM='String',
                                            STRING='{ "SetSeed" : 1000 }',),),
@@ -13,4 +13,4 @@ CHECKING_STUDY(StudyName='Elementary gradient test',
                                       data=_F(FROM='String',
                                               STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),);
 #VERSION_CATALOGUE:V7_6_0:FIN VERSION_CATALOGUE
-#CHECKSUM:1b2edbf93b6252687f4a9dc33dc25dc0  -:FIN CHECKSUM
+

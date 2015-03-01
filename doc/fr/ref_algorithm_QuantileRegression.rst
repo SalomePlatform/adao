@@ -38,6 +38,7 @@ déterminer les paramètres de modèles satisfaisant aux conditions de quantiles.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: Background
 .. index:: single: Observation
 .. index:: single: ObservationOperator
@@ -73,10 +74,10 @@ les suivantes:
     appliqué à une paire :math:`(X,U)`.
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. En particulier,
-la commande optionnelle "*AlgorithmParameters*" permet d'indiquer les options
+sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
+paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les options
 particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_AlgorithmParameters` pour le bon usage de cette
+:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:

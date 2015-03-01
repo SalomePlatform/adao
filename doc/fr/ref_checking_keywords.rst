@@ -53,19 +53,17 @@ Les différentes commandes sont les suivantes:
     *Commande obligatoire*. C'est la commande générale qui décrit le cas de
     vérification. Elle contient hiérarchiquement toutes les autres commandes.
 
-  Algorithm
-    *Commande obligatoire*. C'est une chaîne de caractère qui indique
-    l'algorithme de test choisi. Les choix sont limités et disponibles à travers
-    l'interface graphique. Il existe par exemple "FunctionTest",
-    "AdjointTest"... Voir plus loin la liste des algorithmes et des paramètres
-    associés, chacun décrit par une sous-section.
-
   AlgorithmParameters
-    *Commande optionnelle*. Elle permet d'ajouter des paramètres optionnels pour
-    contrôler l'algorithme d'assimilation de données ou d'optimisation. Sa
-    valeur est définie comme un objet de type "*Dict*". Voir la
-    :ref:`section_ref_options_AlgorithmParameters` pour l'usage correct de cette
-    commande.
+    *Commande obligatoire*. Elle définit l'algorithme de test choisi par le
+    mot-clé "*Algorithm*", et ses éventuels paramètres optionnels. Les choix
+    d'algorithmes sont disponibles à travers l'interface graphique. Il existe
+    par exemple le "FunctionTest", le "GradientTest"... Chaque algorithme est
+    défini, plus loin, par une sous-section spécifique. De manière facultative,
+    la commande permet aussi d'ajouter des paramètres pour contrôler
+    l'algorithme. Leurs valeurs sont définies explicitement ou dans un objet de
+    type "*Dict*". On se reportera à la
+    :ref:`section_ref_options_Algorithm_Parameters` pour l'usage détaillé de
+    cette partie de la commande.
 
   CheckingPoint
     *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour

@@ -22,30 +22,61 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: AlgorithmParameters
-.. _section_ref_options_AlgorithmParameters:
+.. index:: single: Parameters
+.. index:: single: Defaults
+.. _section_ref_options_Algorithm_Parameters:
 
-Description des options d'un algorithme par "*AlgorithmParameters*"
--------------------------------------------------------------------
+Description des options d'un algorithme dans "*AlgorithmParameters*"
+-----------------------------------------------------------------
 
-Chaque algorithme peut être contrôlé en utilisant des options particulières,
-données à travers la commande optionnelle "*AlgorithmParameters*".
+Chaque algorithme peut être contrôlé en utilisant des options ou des paramètres
+particuliers. Ils sont donnés à travers la commande optionnelle "*Parameters*"
+incluse dans la commande obligatoire "*AlgorithmParameters*".
 
-Il y a 2 méthodes pratiques pour l'utilisateur pour fournir ces options. La
-méthode est choisie à l'aide du mot-clé "*FROM*", inclus dans l'entrée
-"*AlgorithmParameters*" dans EFICAS.
+Il y a 3 méthodes pratiques pour l'utilisateur pour fournir ces options. La
+méthode est déterminée de la manière suivante dans EFICAS :
 
-Si une option est spécifiée par l'utilisateur pour un algorithme qui ne la
-supporte pas, cette option est simplement laissée inutilisée et ne bloque pas le
-traitement. La signification des acronymes ou des noms particuliers peut être
-trouvée dans l':ref:`genindex` ou dans le :ref:`section_glossary`.
+#. premièrement à l'aide du mot-clé "*Parameters*" dans la commande "*AlgorithmParameters*", qui permet de choisir entre "*Defaults*" (utilisation de mots-clés explicites pré-remplis par les valeurs par défaut des paramètres) et "*Dict*" (utilisation d'un dictionnaire pour renseigner les mots-clés nécessaires),
+#. puis deuxièmement, uniquement dans le cas "*Dict*" de "*Parameters*", par le mot-clé "*FROM*" inclus qui permet de choisir entre une entrée par chaîne de caractères ou une entrée par fichier de script Python.
 
-Première méthode : utiliser une chaîne de caractères dans EFICAS
+Si une option ou un paramètre est spécifié par l'utilisateur pour un algorithme
+qui ne la supporte pas, cette option est simplement laissée inutilisée et ne
+bloque pas le traitement. La signification des acronymes ou des noms
+particuliers peut être trouvée dans l':ref:`genindex` ou dans le
+:ref:`section_glossary`.
+
+Première méthode : utiliser les mots-clés explicites pré-remplis
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Pour donner les valeurs de la commande "*AlgorithmParameters*" par une chaîne de
-caractères, directement dans l'interface graphique EFICAS, l'utilisateur
-sélectionne ce type dans le mot-clé "*FROM*", comme montré dans la figure qui
-suit :
+Pour donner les valeurs des paramètres par les mots-clés explicites pré-remplis,
+directement dans l'interface graphique EFICAS, l'utilisateur sélectionne le type
+"*Defaults*" dans le mot-clé "*Parameters*", puis les mots-clés dans la liste
+prévue "*Parameters[Algo]*" qui apparaît, associée à l'algorithme choisi, comme
+montré dans la figure qui suit :
+
+  .. adao_algopar_defaults:
+  .. image:: images/adao_algopar_defaults.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Utiliser les mots-clés explicites pré-remplis pour les paramètres algorithmiques**
+
+Chaque paramètre est optionnel, et il présente sa valeur par défaut lorsqu'il
+est sélectionné par l'utilisateur. On peut alors modifier sa valeur, ou la
+renseigner dans le cas de listes par exemple.
+
+C'est la manière recommandée pour modifier uniquement une partie des paramètres
+algorithmiques de manière sûre. Cette méthode ne permet de définir que les
+paramètres autorisés pour un algorithme donné, et les valeurs définies ne sont
+pas conservées si l'utilisateur change d'algorithme.
+
+Seconde méthode : utiliser une chaîne de caractères dans EFICAS
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Pour donner les valeurs des paramètres par une chaîne de caractères, directement
+dans l'interface graphique EFICAS, l'utilisateur sélectionne le type "*Dict*"
+dans le mot-clé "*Parameters*", puis le type "*String*" dans le mot-clé "*FROM*"
+de la commande "*Dict*" qui apparaît, comme montré dans la figure qui suit :
 
   .. adao_algopar_string:
   .. image:: images/adao_algopar_string.png
@@ -59,14 +90,19 @@ définition standard de dictionnaire, comme par exemple::
 
     '{"MaximumNumberOfSteps":25,"SetSeed":1000}'
 
-C'est la manière recommandée pour définir des paramètres algorithmiques.
+C'est la manière recommandée pour définir des paramètres algorithmiques. Cette
+méthode permet en particulier de conserver des options ou des paramètres pour
+d'autres algorithmes que celui que l'on utilise au moment présent. Cela facilite
+le changement d'algorithme ou la conservation de valeurs par défaut différentes
+des défauts standards.
 
-Seconde méthode : utiliser un fichier de script Python externe
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Troisième méthode : utiliser un fichier de script Python externe
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Pour donner les valeurs de la commande "*AlgorithmParameters*" par un fichier de
-script Python externe, l'utilisateur sélectionne dans EFICAS ce type dans le
-mot-clé "*FROM*", comme montré dans la figure qui suit :
+Pour donner les valeurs des paramètres par un fichier de script Python externe,
+l'utilisateur sélectionne dans EFICAS le type "*Dict*" dans le mot-clé
+"*Parameters*", puis le type "*Script*" dans le mot-clé "*FROM*" de la commande
+"*Dict*" qui apparaît, comme montré dans la figure qui suit :
 
   .. :adao_algopar_script
   .. image:: images/adao_algopar_script.png
@@ -83,4 +119,6 @@ Ce fichier script Python externe doit définir alors une variable au nom imposé
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 
-Le fichier peut aussi contenir d'autres commandes Python.
+Le fichier peut aussi contenir d'autres commandes Python. Cette méthode permet
+aussi, comme la précédente, de conserver des options ou des paramètres pour
+d'autres algorithmes que celui que l'on utilise.

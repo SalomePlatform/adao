@@ -39,6 +39,7 @@ l'interface.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: CheckingPoint
 .. index:: single: ObservationOperator
 .. index:: single: Observers

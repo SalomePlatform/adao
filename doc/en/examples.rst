@@ -309,11 +309,12 @@ Adding parameters to control the data assimilation algorithm
 ------------------------------------------------------------
 
 One can add some optional parameters to control the data assimilation algorithm
-calculation. This is done by using the "*AlgorithmParameters*" keyword in the
-definition of the ADAO case, which is an keyword of the "*ASSIMILATION_STUDY*"
-general command. This keyword requires a Python dictionary, containing some
-key/value pairs. The list of possible optional parameters are given in the
-subsection :ref:`section_reference`.
+calculation. This is done by using optional parameters in the
+"*AlgorithmParameters*" command of the ADAO case definition, which is a keyword of
+the "*ASSIMILATION_STUDY*" general command. This keyword requires an explicit
+definition of the values or a Python dictionary, containing some key/value
+pairs. The list of possible optional parameters are given in the section
+:ref:`section_reference` and its subsections.
 
 This dictionary has to be defined, for example, in an external Python script
 file, using the mandatory variable name "*AlgorithmParameters*" for the

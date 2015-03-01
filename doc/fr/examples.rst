@@ -328,11 +328,12 @@ Ajout de paramètres pour contrôler l'algorithme d'assimilation de données
 -------------------------------------------------------------------------
 
 On peut ajouter des paramètres optionnels pour contrôler le calcul de
-l'algorithme d'assimilation de données. Ceci se fait en utilisant le mot-clé
-"*AlgorithmParameters*" dans la définition du cas ADAO, qui est un mot-clé de la
-commande générale "*ASSIMILATION_STUDY*". Ce mot-clé nécessite un dictionnaire
-Python, contenant des paires clé/valeur. La liste des paramètres optionnels
-possibles sont donnés dans la section :ref:`section_reference`.
+l'algorithme d'assimilation de données. Ceci se fait en utilisant les paramètres
+optionnels dans la commande "*AlgorithmParameters*" de la définition du cas ADAO,
+qui est un mot-clé de la commande générale "*ASSIMILATION_STUDY*". Ce mot-clé
+nécessite une définition explicite des valeurs ou un dictionnaire Python,
+contenant des paires clé/valeur. La liste des paramètres optionnels possibles
+sont donnés dans la section :ref:`section_reference` et ses sous-sections.
 
 Le dictionnaire doit être défini, par exemple, dans un fichiers externe de
 script Python, en utilisant le nom obligatoire de variable

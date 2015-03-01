@@ -119,8 +119,8 @@ A new case is set up with the minimal list of commands. All the mandatory
 commands or keywords are already present, none of them can be suppressed.
 Optional keywords can be added by choosing them in a list of suggestions of
 allowed ones for the main command, for example the "*ASSIMILATION_STUDY*"
-command. As an example, one can add an "*AlgorithmParameters*" keyword, as
-described in the last part of the section :ref:`section_examples`.
+command. As an example, one can add parameters in the "*AlgorithmParameters*"
+keyword, as described in the last part of the section :ref:`section_examples`.
 
 At the end, when all fields or keywords have been correctly defined, each line
 of the commands tree must have a green flag. This indicates that the whole case

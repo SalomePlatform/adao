@@ -63,6 +63,7 @@ which has to remain stable until the calculation precision is reached.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: CheckingPoint
 .. index:: single: ObservationOperator
 .. index:: single: AmplitudeOfInitialDirection
@@ -91,10 +92,11 @@ following:
     pair :math:`(X,U)`.
 
 The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. In particular, the
-optional command "*AlgorithmParameters*" allows to choose the specific options,
+indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
+of the command "*AlgorithmParameters*" allow to choose the specific options,
 described hereafter, of the algorithm. See
-:ref:`section_ref_options_AlgorithmParameters` for the good use of this command.
+:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
+command.
 
 The options of the algorithm are the following:
 

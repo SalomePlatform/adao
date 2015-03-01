@@ -70,13 +70,12 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
     # ==========================================================================
 
     for command in atraiter:
-        # Renomme le MC ou en insere un nouveau s'il n'existe pas ensuite
-        renameMotCle(jdc, command, "AlgorithmParameters", "AlgorithmChoices")
-        chercheOperInsereFacteurSiRegle(jdc, command, "AlgorithmChoices",((("AlgorithmChoices",),"nexistepasMCFParmi"),))
+        # Insere le MC s'il n'existe pas
+        chercheOperInsereFacteurSiRegle(jdc, command, "AlgorithmParameters",((("AlgorithmParameters",),"nexistepasMCFParmi"),))
         # Deplace le MC
-        moveMotClefInOperToFact(jdc, command, "Algorithm", "AlgorithmChoices")
+        moveMotClefInOperToFact(jdc, command, "Algorithm", "AlgorithmParameters")
         # Renomme le MC
-        renameMotCleInFact(jdc, command, "AlgorithmChoices", "INPUT_TYPE", "Parameters")
+        renameMotCleInFact(jdc, command, "AlgorithmParameters", "INPUT_TYPE", "Parameters")
         # Renomme le MC
         renameMotCle(jdc, command, "Study_name", "StudyName")
         renameMotCle(jdc, command, "Study_repertory", "StudyRepertory")

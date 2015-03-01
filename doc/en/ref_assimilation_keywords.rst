@@ -61,18 +61,16 @@ The different commands are the following:
     assimilation or optimization case. It hierarchically contains all the other
     commands.
 
-  Algorithm
-    *Required command*. This is a string to indicate the data assimilation or
-    optimization algorithm chosen. The choices are limited and available through
-    the GUI. There exists for example "3DVAR", "Blue"... See below the list of
-    algorithms and associated parameters, each described by a subsection.
-
   AlgorithmParameters
-    *Optional command*. This command allows to add some optional parameters to
-    control the data assimilation or optimization algorithm. Its value is
-    defined as a "*Dict*" type object. See the section
-    :ref:`section_ref_options_AlgorithmParameters` for for the correct use of
-    this command.
+    *Required command*. This indicates the data assimilation or optimization
+    algorithm chosen by the keyword "*Algorithm*", and its potential optional
+    parameters. The algorithm choices are available through the GUI. There
+    exists for example "3DVAR", "Blue"... Each algorithm is defined, below, by a
+    specific subsection. Optionaly, the command allows also to add some
+    parameters to control the algorithm. Their values are defined either
+    explicitly or in a "*Dict*" type object. See the
+    :ref:`section_ref_options_Algorithm_Parameters` for the detailed use of this
+    command part.
 
   Background
     *Required command*. This indicates the background or initial vector used,

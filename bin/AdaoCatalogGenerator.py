@@ -192,7 +192,7 @@ def F_Observers(statut) : return FACT(
 """
 
 algo_choices = """
-def F_AlgorithmChoices(statut,algos_names) : return FACT(
+def F_AlgorithmParameters(statut,algos_names) : return FACT(
     statut = statut,
     Algorithm = SIMP(statut="o", typ = "TXM", into = algos_names ),
     Parameters = SIMP(statut="f", typ = "TXM", into=("Defaults", "Dict") ),
@@ -222,7 +222,7 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
     StudyName           = SIMP(statut="o", typ = "TXM", defaut="ADAO Calculation Case"),
     StudyRepertory      = SIMP(statut="f", typ = "Repertoire", min=1, max=1),
     Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
-    AlgorithmChoices    = F_AlgorithmChoices("o",(${algos_names})),
+    AlgorithmParameters = F_AlgorithmParameters("o",(${algos_names})),
     Background          = F_Background("o"),
     BackgroundError     = F_BackgroundError("o"),
     Observation         = F_Observation("o"),
@@ -244,7 +244,7 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
     StudyName           = SIMP(statut="o", typ = "TXM", defaut="ADAO Checking Case"),
     StudyRepertory      = SIMP(statut="f", typ = "Repertoire", min=1, max=1),
     Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
-    AlgorithmChoices    = F_AlgorithmChoices("o",(${check_names})),
+    AlgorithmParameters = F_AlgorithmParameters("o",(${check_names})),
     CheckingPoint       = F_CheckingPoint("o"),
     BackgroundError     = F_BackgroundError("f"),
     Observation         = F_Observation("f"),

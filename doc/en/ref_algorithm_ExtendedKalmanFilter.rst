@@ -36,6 +36,7 @@ extended Kalman Filter, using a non-linear calculation of the state.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: Background
 .. index:: single: BackgroundError
 .. index:: single: Observation
@@ -83,10 +84,11 @@ following:
     :math:`(X,U)`.
 
 The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. In particular, the
-optional command "*AlgorithmParameters*" allows to choose the specific options,
+indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
+of the command "*AlgorithmParameters*" allows to choose the specific options,
 described hereafter, of the algorithm. See
-:ref:`section_ref_options_AlgorithmParameters` for the good use of this command.
+:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
+command.
 
 The options of the algorithm are the following:
 

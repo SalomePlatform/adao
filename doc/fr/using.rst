@@ -124,8 +124,8 @@ commandes ou les mots-clés obligatoires sont déjà présents, aucun d'eux ne peut
 être supprimé. Des mots-clés optionnels peuvent être ajoutés en les choisissant
 dans une liste de suggestions de ceux autorisés pour la commande principale, par
 exemple la commande "*ASSIMILATION_STUDY*". À titre d'exemple, on peut ajouter
-un mot-clé "*AlgorithmParameters*", comme décrit dans la dernière partie de la
-section :ref:`section_examples`.
+des paramètres dans le mot-clé "*AlgorithmParameters*", comme décrit dans la
+dernière partie de la section :ref:`section_examples`.
 
 A la fin de ces actions, lorsque tous les champs ou les mots-clés ont été
 correctement définis, chaque ligne de l'arborescence des commandes doit

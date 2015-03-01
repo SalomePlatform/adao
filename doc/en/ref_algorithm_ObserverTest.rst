@@ -38,6 +38,7 @@ explicitly associated with the *observer* in the interface.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: CheckingPoint
 .. index:: single: ObservationOperator
 .. index:: single: Observers

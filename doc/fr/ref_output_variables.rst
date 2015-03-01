@@ -152,7 +152,7 @@ et/ou que si elles ont été réclamées avant l'exécution du calcul.
 On rappelle que l'utilisateur peut réclamer des informations supplémentaires
 lors de l'établissement de son cas ADAO, en utilisant la commande optionnelle
 "*AlgorithmParameters*" du cas ADAO. On se reportera à la
-:ref:`section_ref_options_AlgorithmParameters` pour le bon usage de cette
+:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande, et à la description de chaque algorithme pour les informations
 disponibles par algorithme. On peut aussi demander à conserver certaines
 informations en entrée en changeant le booléen "*Stored*" qui lui est associé

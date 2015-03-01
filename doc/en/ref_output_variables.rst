@@ -146,9 +146,9 @@ calculation. The other information are only present for certain algorithms
 and/or if they have been requested before the execution of the calculation.
 
 It is recalled that the user can request additional information during the
-preparation of its ADAO case, using the optional control "*AlgorithmParameters*"
-of ADAO case. Reference will be made to the
-:ref:`section_ref_options_AlgorithmParameters` for the proper use of this
+preparation of its ADAO case, using the optional control "*AlgorithmParameters*" of
+ADAO case. Reference will be made to the
+:ref:`section_ref_options_Algorithm_Parameters` for the proper use of this
 command, and to the description of each algorithm for the information available
 by algorithm. One can also ask to keep some input information by changing the
 boolean "* * Stored" associated with it in the edition of the ADAO case.

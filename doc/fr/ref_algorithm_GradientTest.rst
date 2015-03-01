@@ -67,6 +67,7 @@ qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: CheckingPoint
 .. index:: single: ObservationOperator
 .. index:: single: AmplitudeOfInitialDirection
@@ -96,10 +97,10 @@ les suivantes:
     paire :math:`(X,U)`.
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_checking_keywords`. En particulier, la
-commande optionnelle "*AlgorithmParameters*" permet d'indiquer les options
+sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
+paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les options
 particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_AlgorithmParameters` pour le bon usage de cette
+:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
