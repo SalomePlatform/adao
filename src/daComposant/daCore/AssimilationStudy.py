@@ -28,6 +28,7 @@
     les objets élémentaires de l'étude.
 """
 __author__ = "Jean-Philippe ARGAUD"
+__all__ = ["AssimilationStudy"]
 
 import os, sys
 import numpy

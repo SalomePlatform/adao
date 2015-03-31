@@ -95,8 +95,8 @@ Les options de l'algorithme sont les suivantes:
 
   SetDebug
     Cette clé requiert l'activation, ou pas, du mode de débogage durant
-    l'évaluation de la fonction. La valeur par défaut est "True", les choix sont
-    "True" ou "False".
+    l'évaluation de la fonction. La valeur par défaut est "False", les choix
+    sont "True" ou "False".
 
     Exemple : ``{"SetDebug":False}``
 

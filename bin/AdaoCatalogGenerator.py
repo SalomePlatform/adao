@@ -417,7 +417,7 @@ for algo in all_names:
     par_keys.sort()
     algo_parameters = ""
     for pn in par_keys:
-        if pn in ("StoreInternalVariables",): continue
+        if pn in ("StoreInternalVariables",): continue # Cles a supprimer
         pt = par_dict[pn]["typecast"]
         pd = par_dict[pn]["default"]
         pm = par_dict[pn]["message"]

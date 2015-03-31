@@ -20,11 +20,12 @@
 #
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-__doc__ = """
+"""
     Définit des outils de persistence et d'enregistrement de séries de valeurs
     pour analyse ultérieure ou utilisation de calcul.
 """
 __author__ = "Jean-Philippe ARGAUD"
+__all__ = []
 
 import numpy, copy
 

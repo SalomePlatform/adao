@@ -92,7 +92,7 @@ The options of the algorithm are the following:
 
   SetDebug
     This key requires the activation, or not, of the debug mode during the
-    function evaluation. The default is "True", the choices are "True" or
+    function evaluation. The default is "False", the choices are "True" or
     "False".
 
     Example : ``{"SetDebug":False}``

@@ -20,9 +20,9 @@
 #
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-__doc__ = """
+"""
     Informations sur le code et la plateforme, et mise à jour des chemins
-    
+
     La classe "PlatformInfo" permet de récupérer les informations générales sur
     le code et la plateforme sous forme de strings, ou d'afficher directement
     les informations disponibles par les méthodes. L'impression directe d'un
@@ -37,6 +37,7 @@ __doc__ = """
         PathManagement()
 """
 __author__ = "Jean-Philippe ARGAUD"
+__all__ = []
 
 import os
 

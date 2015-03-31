@@ -46,19 +46,23 @@ cadre sont également connues sous les noms  d'*estimation des paramètres*, de
 etc. De plus amples détails peuvent être trouvés dans la partie
 :ref:`section_theory`.
 
-La documentation de ce module est divisée en plusieurs parties. La première est
-une :ref:`section_intro`. La seconde partie présente :ref:`section_theory`, et à
-leurs concepts. La troisième partie explique comment :ref:`section_using`.  La
-quatrième partie présente des exemples d'utilisation sous la forme de
-:ref:`section_examples`. La cinquième partie détaille la
-:ref:`section_reference`. Les utilisateurs intéressés par un accès rapide au
-module peuvent s'arrêter avant la lecture de cette partie, mais un usage utile
-du module nécessite de lire et de revenir régulièrement aux troisième et
-cinquième parties. La dernière partie se focalise sur des
-:ref:`section_advanced`, sur l'obtention de renseignements supplémentaires, ou
-sur l'usage par scripts, sans interface utilisateur graphique (GUI). Enfin, pour
-respecter les exigences de licence du module, n'oubliez pas de lire la partie
-:ref:`section_license`.
+La documentation de ce module est divisée en plusieurs grandes catégories,
+relatives à la documentation théorique (indiquée dans le titre par **[DocT]**),
+à la documentation utilisateur (indiquée dans le titre par **[DocU]**), et à la
+documentation de référence (indiquée dans le titre par **[DocR]**). La seconde
+partie présente :ref:`section_theory`, et à leurs concepts. Pour un utilisateur,
+la troisième partie explique comment :ref:`section_using`, et la quatrième
+partie présente des exemples d'utilisation sous la forme de
+:ref:`section_examples`. Les utilisateurs intéressés par un accès rapide au
+module peuvent s'arrêter avant la lecture de la suite, mais un usage utile du
+module nécessite de lire et de revenir régulièrement aux troisième et septième
+parties. Les cinquième et la sixième parties indiquent les
+:ref:`section_advanced`, avec l'obtention de renseignements supplémentaires ou
+l'usage par scripts d'exécution sans interface utilisateur graphique (GUI), et
+une :ref:`section_tui` du module. La septième partie détaille la
+:ref:`section_reference`, avec trois sous-parties principales qui suivent.
+Enfin, pour respecter les exigences de licence du module, n'oubliez pas de lire
+la partie :ref:`section_license`.
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
@@ -79,6 +83,7 @@ Table des matières
    using
    examples
    advanced
+   tui
    reference
    license
    glossary

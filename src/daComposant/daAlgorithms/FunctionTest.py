@@ -50,7 +50,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "SetDebug",
-            default  = True,
+            default  = False,
             typecast = bool,
             message  = "Activation du mode debug lors de l'exécution",
             )

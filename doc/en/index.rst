@@ -43,16 +43,20 @@ the framework are also known under the names of *parameter estimation*, *inverse
 problems*, *Bayesian estimation*, *optimal interpolation*, etc. More details can
 be found in the section :ref:`section_theory`.
 
-The documentation of this module is divided in parts. The first one is an
-:ref:`section_intro`. The second part introduces :ref:`section_theory`, and
-their concepts. The third part describes :ref:`section_using`. The fourth part
-gives examples on ADAO usage as :ref:`section_examples`. The fifth part gives a
-detailed :ref:`section_reference`. Users interested in quick use of the module
-can stop reading before this fifth part, but a valuable use of the module
-requires to read and come back regularly to the third and fifth ones. The last
-part focuses on :ref:`section_advanced`, how to get more information, or how to
-use it by scripting, without the graphical user interface (GUI). And, to respect
-the module requirements, be sure to read the part :ref:`section_license`.
+The documentation for this module is divided into several major categories,
+related to the theoretical documentation (indicated in the title by **[DocT]**),
+to the user documentation (indicated in the title by **[DocU]**), and to the
+reference documentation (indicated in the title by **[DocR]**). The second part
+introduces :ref:`section_theory`, and their concepts. The third part describes
+:ref:`section_using`, and the fourth part gives examples on ADAO usage as
+:ref:`section_examples`. Users interested in quick use of the module can stop
+before reading the rest, but a valuable use of the module requires to read and
+come back regularly to the third and seventh parts. The fifth and sixth parts
+indicate :ref:`section_advanced`, with obtaining additional information or the
+use of non-GUI execution scripting, and a :ref:`section_tui` of the module. The
+seventh part gives a detailed :ref:`section_reference`, with three main
+sub-parts following. And, to respect the module requirements, be sure to read
+the part :ref:`section_license`.
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization. In particular, vectors
@@ -72,6 +76,7 @@ Table of contents
    using
    examples
    advanced
+   tui
    reference
    license
    glossary

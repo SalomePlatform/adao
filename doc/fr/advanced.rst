@@ -30,7 +30,7 @@
 Cette section présente des méthodes avancées d'usage du module ADAO, comment
 obtenir plus d'information lors d'un calcul, ou comment l'utiliser sans
 l'interface graphique (GUI). Cela nécessite de savoir comment trouver les
-fichiers ou les commandes incuses dans l'installation complète de SALOME. Tous
+fichiers ou les commandes incluses dans l'installation complète de SALOME. Tous
 les noms à remplacer par l'utilisateur sont indiqués par la syntaxe ``<...>``.
 
 Convertir et exécuter un fichier de commandes ADAO (JDC) par l'intermédiaire d'un script shell
@@ -258,7 +258,9 @@ parallélisme fonctionne pour des codes complexes, comme *Code_Aster* dans
 cas, vérifiez bien votre fonction d'opérateur avant et pendant l'activation du
 parallélisme...
 
-**En cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.**
+.. warning::
+
+  en cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.
 
 Passer d'une version d'ADAO à une nouvelle
 ------------------------------------------

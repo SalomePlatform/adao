@@ -27,6 +27,7 @@
     les objets élémentaires de l'algorithme.
 """
 __author__ = "Jean-Philippe ARGAUD"
+__all__ = []
 
 import logging, copy
 import numpy
@@ -497,7 +498,7 @@ class Covariance:
             self.size        = 0
         elif asEyeByVector is not None:
             self.__is_vector = True
-            self.__C         = numpy.abs( numpy.array( numpy.ravel( asEyeByVector ), float ) )
+            self.__C         = numpy.abs( numpy.array( numpy.ravel( numpy.matrix(asEyeByVector, float ) ) ) )
             self.shape       = (self.__C.size,self.__C.size)
             self.size        = self.__C.size**2
         elif asCovariance is not None:
