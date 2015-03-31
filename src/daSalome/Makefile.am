@@ -22,6 +22,8 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
+salomepython_PYTHON= adaoBuilder.py
+
 SUBDIRS= daGUI
 
 EXTRA_DIST = daYacsSchemaCreator daYacsIntegration
@@ -32,9 +34,10 @@ install-data-local:
 	${mkinstalldirs} $(DESTDIR)$(salomepythondir)
 	cp -R $(DIR)daYacsSchemaCreator $(DESTDIR)$(salomepythondir)
 	cp -R $(DIR)daYacsIntegration $(DESTDIR)$(salomepythondir)
+	cp    $(DIR)adaoBuilder.py $(DESTDIR)$(salomepythondir)
 
 uninstall-local:
 	chmod -R +w $(DESTDIR)$(salomepythondir)
 	rm -rf $(DESTDIR)$(salomepythondir)/daYacsSchemaCreator
 	rm -rf $(DESTDIR)$(salomepythondir)/daYacsIntegration
-
+	rm     $(DESTDIR)$(salomepythondir)/adaoBuilder.py
