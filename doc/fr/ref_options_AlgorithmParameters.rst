@@ -27,14 +27,15 @@
 .. _section_ref_options_Algorithm_Parameters:
 
 Description des options d'un algorithme dans "*AlgorithmParameters*"
------------------------------------------------------------------
+--------------------------------------------------------------------
 
 Chaque algorithme peut être contrôlé en utilisant des options ou des paramètres
 particuliers. Ils sont donnés à travers la commande optionnelle "*Parameters*"
 incluse dans la commande obligatoire "*AlgorithmParameters*".
 
 Il y a 3 méthodes pratiques pour l'utilisateur pour fournir ces options. La
-méthode est déterminée de la manière suivante dans EFICAS :
+méthode est déterminée de la manière suivante dans l'interface graphique
+d'édition :
 
 #. premièrement à l'aide du mot-clé "*Parameters*" dans la commande "*AlgorithmParameters*", qui permet de choisir entre "*Defaults*" (utilisation de mots-clés explicites pré-remplis par les valeurs par défaut des paramètres) et "*Dict*" (utilisation d'un dictionnaire pour renseigner les mots-clés nécessaires),
 #. puis deuxièmement, uniquement dans le cas "*Dict*" de "*Parameters*", par le mot-clé "*FROM*" inclus qui permet de choisir entre une entrée par chaîne de caractères ou une entrée par fichier de script Python.
@@ -49,7 +50,7 @@ Première méthode : utiliser les mots-clés explicites pré-remplis
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour donner les valeurs des paramètres par les mots-clés explicites pré-remplis,
-directement dans l'interface graphique EFICAS, l'utilisateur sélectionne le type
+directement dans l'interface graphique, l'utilisateur sélectionne le type
 "*Defaults*" dans le mot-clé "*Parameters*", puis les mots-clés dans la liste
 prévue "*Parameters[Algo]*" qui apparaît, associée à l'algorithme choisi, comme
 montré dans la figure qui suit :
@@ -70,13 +71,13 @@ algorithmiques de manière sûre. Cette méthode ne permet de définir que les
 paramètres autorisés pour un algorithme donné, et les valeurs définies ne sont
 pas conservées si l'utilisateur change d'algorithme.
 
-Seconde méthode : utiliser une chaîne de caractères dans EFICAS
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Seconde méthode : utiliser une chaîne de caractères dans l'interface graphique
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour donner les valeurs des paramètres par une chaîne de caractères, directement
-dans l'interface graphique EFICAS, l'utilisateur sélectionne le type "*Dict*"
-dans le mot-clé "*Parameters*", puis le type "*String*" dans le mot-clé "*FROM*"
-de la commande "*Dict*" qui apparaît, comme montré dans la figure qui suit :
+dans l'interface graphique, l'utilisateur sélectionne le type "*Dict*" dans le
+mot-clé "*Parameters*", puis le type "*String*" dans le mot-clé "*FROM*" de la
+commande "*Dict*" qui apparaît, comme montré dans la figure qui suit :
 
   .. adao_algopar_string:
   .. image:: images/adao_algopar_string.png
@@ -100,9 +101,9 @@ Troisième méthode : utiliser un fichier de script Python externe
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour donner les valeurs des paramètres par un fichier de script Python externe,
-l'utilisateur sélectionne dans EFICAS le type "*Dict*" dans le mot-clé
-"*Parameters*", puis le type "*Script*" dans le mot-clé "*FROM*" de la commande
-"*Dict*" qui apparaît, comme montré dans la figure qui suit :
+l'utilisateur sélectionne dans l'interface graphique le type "*Dict*" dans le
+mot-clé "*Parameters*", puis le type "*Script*" dans le mot-clé "*FROM*" de la
+commande "*Dict*" qui apparaît, comme montré dans la figure qui suit :
 
   .. :adao_algopar_script
   .. image:: images/adao_algopar_script.png

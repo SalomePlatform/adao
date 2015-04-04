@@ -44,7 +44,7 @@ know where are the main SALOME launching files, and in particular the
 named ``<SALOME main installation dir>`` and has to be replaced by the good one
 in the shell file template.
 
-When an ADAO command file is build by the ADAO GUI EFICAS editor and saved, if
+When an ADAO command file is build by the ADAO graphical editor and saved, if
 it is named for example "AdaoStudy1.comm", then a companion file named
 "AdaoStudy1.py" is automatically created in the same directory. It is named
 ``<ADAO Python file>`` in the template, and it is converted to YACS as an
@@ -126,6 +126,8 @@ to avoid weird difficulties::
 This method allows for example to edit the YACS XML scheme in TUI, or to gather
 results for further use.
 
+.. _section_advanced_observer:
+
 Getting information on special variables during the ADAO calculation in YACS
 -----------------------------------------------------------------------------
 
@@ -141,8 +143,8 @@ build scripts using as standard inputs (e.g. available in the namespace) the
 variables ``var`` and ``info``. The variable ``var`` is to be used in the same
 way as for the final ADD object, that is as a list/tuple object.
 
-Some templates are available when editing the ADAO case in EFICAS editor. These
-simple scripts can be customized by the user, either at the EFICAS edition
+Some templates are available when editing the ADAO case in graphical editor.
+These simple scripts can be customized by the user, either at the EFICAS edition
 stage, or at the YACS edition stage, to improve the tuning of the ADAO
 calculation in YACS.
 
@@ -243,7 +245,9 @@ scheme is working for complex codes, like *Code_Aster* in *SalomeMeca*
 [SalomeMeca]_ for example. So, if it does not work in your case, check your
 operator function before and during enabling parallelism...
 
-**In case of doubt, it is recommended NOT TO ACTIVATE this parallelism.**
+.. warning::
+
+  in case of doubt, it is recommended NOT TO ACTIVATE this parallelism.
 
 Switching from a version of ADAO to a newer one
 -----------------------------------------------

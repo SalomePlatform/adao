@@ -46,13 +46,13 @@ symboliquement nommé ``<Répertoire principal d'installation de SALOME>`` et doit
 être remplacé par le bon dans le modèle "type" de fichier shell.
 
 Lorsqu'un fichier de commande ADAO est construit par l'interface d'édition
-EFICAS d'ADAO et est enregistré, s'il est nommé par exemple "EtudeAdao1.comm",
-alors un fichier compagnon nommé "EtudeAdao1.py" est automatiquement créé dans
-la même répertoire. Il est nommé ``<Fichier Python ADAO>`` dans le modèle
-"type", et il est converti vers YACS comme un ``<Schéma xml YACS ADAO>``.
-Ensuite, il peut être exécuté en mode console en utilisant la commande standard
-en mode console de YACS (voir la documentation YACS pour de plus amples
-informations).
+graphique d'ADAO et est enregistré, s'il est nommé par exemple
+"EtudeAdao1.comm", alors un fichier compagnon nommé "EtudeAdao1.py" est
+automatiquement créé dans la même répertoire. Il est nommé ``<Fichier Python
+ADAO>`` dans le modèle "type", et il est converti vers YACS comme un ``<Schéma
+xml YACS ADAO>``. Ensuite, il peut être exécuté en mode console en utilisant la
+commande standard en mode console de YACS (voir la documentation YACS pour de
+plus amples informations).
 
 Dans l'exemple, on choisit de démarrer et arrêter le serveur d'application
 SALOME dans le même script, ce qui n'est pas nécessaire, mais utile pour éviter
@@ -132,6 +132,8 @@ d'obscures difficultés::
 Cette démarche permet par exemple d'éditer le schéma YACS XML en mode texte TUI,
 ou de rassembler les résultats pour un usage ultérieur.
 
+.. _section_advanced_observer:
+
 Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO en YACS
 --------------------------------------------------------------------------------------
 
@@ -150,9 +152,9 @@ de la même manière que l'objet final ADD, c'est-à-dire comme un objet de type
 liste/tuple.
 
 Des modèles ("templates") sont disponibles lors de l'édition le cas ADAO dans
-l'éditeur EFICAS. Ces scripts simples peuvent être adaptés par l'utilisateur,
-soit dans l'étape EFICAS, ou dans l'étape d'édition YACS, pour améliorer
-l'adaptation du calcul ADAO dans YACS.
+l'éditeur graphique. Ces scripts simples peuvent être adaptés par l'utilisateur,
+soit dans l'étape d'édition EFICAS, ou dans l'étape d'édition YACS, pour
+améliorer l'adaptation du calcul ADAO dans YACS.
 
 A titre d'exemple, voici un script trés simple (similaire au modèle
 "*ValuePrinter*") utilisable pour afficher la valeur d'une variable surveillée::

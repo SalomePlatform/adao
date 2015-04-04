@@ -244,8 +244,10 @@ Here is the switch template::
 
 All various modifications could be done from this template hypothesis.
 
-Special case of controlled evolution or observation operator
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_control:
+
+Special case of controled evolution or observation operator
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In some cases, the evolution or the observation operator is required to be
 controlled by an external input control, given *a priori*. In this case, the

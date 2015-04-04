@@ -254,6 +254,8 @@ contenant trois fonctions nommées "*DirectOperator*", "*TangentOperator*" et
 Toutes les modifications envisageables peuvent être faites à partir de cette
 hypothèse de squelette.
 
+.. _section_ref_operator_control:
+
 Cas spécial d'un opérateur d'évolution avec contrôle
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
