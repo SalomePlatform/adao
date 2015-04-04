@@ -155,9 +155,8 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCovariance", "BMA",
-    "CostFunctionJ", "CurrentState", "OMA", "OMB", "Innovation", "SigmaObs2",
-    "MahalanobisConsistency", "SimulatedObservationAtCurrentState",
+    are in the following list: ["BMA", "CostFunctionJ", "CurrentState", "OMA",
+    "OMB", "Innovation", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``

@@ -115,8 +115,10 @@ Les options de l'algorithme sont les suivantes:
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["APosterioriCovariance", "BMA",
-    "CostFunctionJ", "CurrentState", "Innovation"].
+    possibles sont dans la liste suivante : ["APosterioriCorrelations",
+    "APosterioriCovariance", "APosterioriStandardDeviations",
+    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState",
+    "Innovation"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
@@ -142,11 +144,29 @@ Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
+  APosterioriCorrelations
+    *Liste de matrices*. Chaque élément est une matrice de corrélation des
+    erreurs *a posteriori* de l'état optimal.
+
+    Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
+
   APosterioriCovariance
     *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
     covariances des erreurs *a posteriori* de l'état optimal.
 
     Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
+
+  APosterioriStandardDeviations
+    *Liste de matrices*. Chaque élément est une matrice d'écart-types des
+    erreurs *a posteriori* de l'état optimal.
+
+    Exemple : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
+
+  APosterioriVariances
+    *Liste de matrices*. Chaque élément est une matrice de variances des erreurs
+    *a posteriori* de l'état optimal.
+
+    Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
     *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre

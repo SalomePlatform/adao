@@ -163,11 +163,12 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCovariance", "BMA", "CostFunctionJ",
-    "CurrentState", "OMA", "OMB", "Innovation", "SigmaObs2",
-    "MahalanobisConsistency", "SimulatedObservationAtBackground",
-    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
-    "SimulationQuantiles"].
+    are in the following list: ["APosterioriCorrelations",
+    "APosterioriCovariance", "APosterioriStandardDeviations",
+    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState", "OMA",
+    "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum", "SimulationQuantiles"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
 
@@ -247,11 +248,29 @@ The unconditional outputs of the algorithm are the following:
 
 The conditional outputs of the algorithm are the following:
 
+  APosterioriCorrelations
+    *List of matrices*. Each element is an *a posteriori* error correlation
+    matrix of the optimal state.
+
+    Example : ``C = ADD.get("APosterioriCorrelations")[-1]``
+
   APosterioriCovariance
     *List of matrices*. Each element is an *a posteriori* error covariance
     matrix :math:`\mathbf{A}*` of the optimal state.
 
     Example : ``A = ADD.get("APosterioriCovariance")[-1]``
+
+  APosterioriStandardDeviations
+    *List of matrices*. Each element is an *a posteriori* error standard
+    deviation matrix of the optimal state.
+
+    Example : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
+
+  APosterioriVariances
+    *List of matrices*. Each element is an *a posteriori* error variance matrix
+    of the optimal state.
+
+    Example : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
     *List of vectors*. Each element is a vector of difference between the

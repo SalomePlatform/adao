@@ -29,7 +29,7 @@ ADAO documentation
 
 .. image:: images/ADAO_logo.png
    :align: center
-   :width: 20%
+   :alt: ADAO logo
 
 The ADAO module provides **data assimilation and optimization** features in
 SALOME context. It is based on usage of other SALOME modules, namely YACS and
@@ -51,12 +51,12 @@ introduces :ref:`section_theory`, and their concepts. The third part describes
 :ref:`section_using`, and the fourth part gives examples on ADAO usage as
 :ref:`section_examples`. Users interested in quick use of the module can stop
 before reading the rest, but a valuable use of the module requires to read and
-come back regularly to the third and seventh parts. The fifth and sixth parts
-indicate :ref:`section_advanced`, with obtaining additional information or the
-use of non-GUI execution scripting, and a :ref:`section_tui` of the module. The
-seventh part gives a detailed :ref:`section_reference`, with three main
-sub-parts following. And, to respect the module requirements, be sure to read
-the part :ref:`section_license`.
+come back regularly to the third and seventh parts. The fifth part indicate
+:ref:`section_advanced`, with obtaining additional information or the use of
+non-GUI execution scripting. The next part gives a detailed
+:ref:`section_reference`, with four main sub-parts following, the last one
+giving a :ref:`section_tui` of the module. And, to respect the module
+requirements, be sure to read the part :ref:`section_license`.
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization. In particular, vectors
@@ -76,8 +76,8 @@ Table of contents
    using
    examples
    advanced
-   tui
    reference
+   tui
    license
    glossary
    bibliography

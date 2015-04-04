@@ -543,6 +543,8 @@ def create_yacs_proc(study_config):
     node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
     if 'EnableMultiProcessing' in ScriptWithOneFunction.keys():
         node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableMultiProcessing'])
+    if 'NumberOfProcesses' in ScriptWithOneFunction.keys():
+        node_script += """    mpWorkers  = %s,\n"""%str(ScriptWithOneFunction['NumberOfProcesses'])
     node_script += """    )\n"""
     node_script += """#\n"""
     node_script += """__data = []\n"""
@@ -738,6 +740,8 @@ def create_yacs_proc(study_config):
       node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
       if 'EnableMultiProcessing' in ScriptWithOneFunction.keys():
           node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableMultiProcessing'])
+      if 'NumberOfProcesses' in ScriptWithOneFunction.keys():
+          node_script += """    mpWorkers  = %s,\n"""%str(ScriptWithOneFunction['NumberOfProcesses'])
       node_script += """    )\n"""
       node_script += """#\n"""
       node_script += """__data = []\n"""

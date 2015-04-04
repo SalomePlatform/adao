@@ -52,6 +52,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.StoredVariables["CostFunctionJ" ].store( 3. )
         #
         self.StoredVariables["APosterioriCovariance"].store( numpy.diag(__Xa) )
+        self.StoredVariables["APosterioriVariances"].store( __Xa )
+        self.StoredVariables["APosterioriStandardDeviations"].store( __Xa )
+        self.StoredVariables["APosterioriCorrelations"].store( numpy.diag(__Xa) )
         self.StoredVariables["BMA"].store( __Xb - __Xa )
         self.StoredVariables["OMA"].store( __YY )
         self.StoredVariables["OMB"].store( __YY )

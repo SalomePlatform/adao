@@ -71,6 +71,8 @@ class FDApproximation(object):
         else:
             self.__mpEnabled = False
         self.__mpWorkers = mpWorkers
+        if self.__mpWorkers is not None and self.__mpWorkers < 1:
+            self.__mpWorkers = None
         logging.debug("FDA Calculs en multiprocessing : %s (nombre de processus : %s)"%(self.__mpEnabled,self.__mpWorkers))
         #
         if self.__mpEnabled:

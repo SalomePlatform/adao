@@ -29,7 +29,7 @@ Documentation ADAO
 
 .. image:: images/ADAO_logo.png
    :align: center
-   :width: 20%
+   :alt: Logo ADAO
 
 Le module ADAO fournit des fonctionnalités d'**assimilation de données et
 d'optimisation** dans un contexte SALOME. Il est basé sur l'utilisation d'autres
@@ -56,13 +56,13 @@ partie présente des exemples d'utilisation sous la forme de
 :ref:`section_examples`. Les utilisateurs intéressés par un accès rapide au
 module peuvent s'arrêter avant la lecture de la suite, mais un usage utile du
 module nécessite de lire et de revenir régulièrement aux troisième et septième
-parties. Les cinquième et la sixième parties indiquent les
-:ref:`section_advanced`, avec l'obtention de renseignements supplémentaires ou
-l'usage par scripts d'exécution sans interface utilisateur graphique (GUI), et
-une :ref:`section_tui` du module. La septième partie détaille la
-:ref:`section_reference`, avec trois sous-parties principales qui suivent.
-Enfin, pour respecter les exigences de licence du module, n'oubliez pas de lire
-la partie :ref:`section_license`.
+parties. La cinquième partie indique les :ref:`section_advanced`, avec
+l'obtention de renseignements supplémentaires ou l'usage par scripts d'exécution
+sans interface utilisateur graphique (GUI). La partie suivante détaille la
+:ref:`section_reference`, avec quatre sous-parties principales qui suivent, la
+dernière sous-partie décrivant une :ref:`section_tui` du module. Enfin, pour
+respecter les exigences de licence du module, n'oubliez pas de lire la partie
+:ref:`section_license`.
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
@@ -83,8 +83,8 @@ Table des matières
    using
    examples
    advanced
-   tui
    reference
+   tui
    license
    glossary
    bibliography

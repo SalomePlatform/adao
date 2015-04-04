@@ -259,5 +259,8 @@ ObserversList = [
     "GradientOfCostFunctionJo",
     "SigmaObs2",
     "SigmaBck2",
+    "APosterioriCorrelations",
     "APosterioriCovariance",
+    "APosterioriStandardDeviations",
+    "APosterioriVariances",
     ]

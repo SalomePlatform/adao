@@ -273,6 +273,9 @@ class Algorithm:
             - OMB : Observation moins Background : Y - Xb
             - AMB : Analysis moins Background : Xa - Xb
             - APosterioriCovariance : matrice A
+            - APosterioriVariances : variances de la matrice A
+            - APosterioriStandardDeviations : écart-types de la matrice A
+            - APosterioriCorrelations : correlations de la matrice A
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
@@ -303,6 +306,9 @@ class Algorithm:
         self.StoredVariables["OMB"]                                = Persistence.OneVector(name = "OMB")
         self.StoredVariables["BMA"]                                = Persistence.OneVector(name = "BMA")
         self.StoredVariables["APosterioriCovariance"]              = Persistence.OneMatrix(name = "APosterioriCovariance")
+        self.StoredVariables["APosterioriVariances"]               = Persistence.OneVector(name = "APosterioriVariances")
+        self.StoredVariables["APosterioriStandardDeviations"]      = Persistence.OneVector(name = "APosterioriStandardDeviations")
+        self.StoredVariables["APosterioriCorrelations"]            = Persistence.OneMatrix(name = "APosterioriCorrelations")
         self.StoredVariables["SimulationQuantiles"]                = Persistence.OneMatrix(name = "SimulationQuantiles")
 
     def _pre_run(self):
@@ -311,6 +317,17 @@ class Algorithm:
         return 0
 
     def _post_run(self,_oH=None):
+        if self._parameters.has_key("StoreSupplementaryCalculations") and \
+            "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            for _A in self.StoredVariables["APosterioriCovariance"]:
+                if "APosterioriVariances" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["APosterioriVariances"].store( numpy.diag(_A) )
+                if "APosterioriStandardDeviations" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["APosterioriStandardDeviations"].store( numpy.sqrt(numpy.diag(_A)) )
+                if "APosterioriCorrelations" in self._parameters["StoreSupplementaryCalculations"]:
+                    _EI = numpy.diag(1./numpy.sqrt(numpy.diag(_A)))
+                    _C = numpy.dot(_EI, numpy.dot(_A, _EI))
+                    self.StoredVariables["APosterioriCorrelations"].store( _C )
         if _oH is not None:
             logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i"%(self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0)))
             logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i"%(self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3)))

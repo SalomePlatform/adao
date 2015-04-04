@@ -105,7 +105,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if len(dim) != 3:
                     raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be [min,max,step]."%(i,dim))
                 else:
-                    coordinatesList.append(numpy.linspace(*dim))
+                    coordinatesList.append(numpy.linspace(dim[0],dim[1],1+int(float(dim[1])-float(dim[0])/float(dim[2]))))
             sampleList = itertools.product(*coordinatesList)
         elif len(self._parameters["SampleAsIndependantRandomVariables"]) > 0:
             coordinatesList = []

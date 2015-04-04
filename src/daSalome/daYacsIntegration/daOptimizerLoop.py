@@ -349,7 +349,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     except Exception as e:
         if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
         else: msg = ""
-        raise ValueError("during analyse, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the YACS GUI or in the launching terminal."%(str(e),msg))
+        raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the YACS GUI or in the launching terminal."%(str(e),msg))
 
     # Assimilation Study is finished
     self.pool.destroyAll()
