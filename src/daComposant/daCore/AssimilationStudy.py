@@ -494,19 +494,43 @@ class AssimilationStudy:
           constructeur de numpy.matrix.
         - toBeStored : booléen indiquant si la donnée d'entrée est sauvée pour
           être rendue disponible au même titre que les variables de calcul
+        L'argument "asFunction" peut prendre la forme complète suivante, avec
+        les valeurs par défaut standards :
+          asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
+                        "useApproximatedDerivatives":False,
+                        "withCenteredDF"            :False,
+                        "withIncrement"             :0.01,
+                        "withdX"                    :None,
+                        "withAvoidingRedundancy"    :True,
+                        "withToleranceInRedundancy" :1.e-18,
+                        "withLenghtOfRedundancy"    :-1,
+                        "withmpEnabled"             :False,
+                        "withmpWorkers"             :None,
+                       }
         """
         if (type(asFunction) is type({})) and \
                 asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
                 asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
-            if not asFunction.has_key("withCenteredDF"): asFunction["withCenteredDF"] = False
-            if not asFunction.has_key("withIncrement"):  asFunction["withIncrement"]  = 0.01
-            if not asFunction.has_key("withdX"):         asFunction["withdX"]         = None
+            if not asFunction.has_key("withCenteredDF"):            asFunction["withCenteredDF"]            = False
+            if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
+            if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
+            if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
+            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
+            if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
+            if not asFunction.has_key("withmpEnabled"):             asFunction["withmpEnabled"]             = False
+            if not asFunction.has_key("withmpWorkers"):             asFunction["withmpWorkers"]             = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
-                Function   = asFunction["Direct"],
-                centeredDF = asFunction["withCenteredDF"],
-                increment  = asFunction["withIncrement"],
-                dX         = asFunction["withdX"] )
+                Function              = asFunction["Direct"],
+                centeredDF            = asFunction["withCenteredDF"],
+                increment             = asFunction["withIncrement"],
+                dX                    = asFunction["withdX"],
+                avoidingRedundancy    = asFunction["withAvoidingRedundancy"],
+                toleranceInRedundancy = asFunction["withToleranceInRedundancy"],
+                lenghtOfRedundancy    = asFunction["withLenghtOfRedundancy"],
+                mpEnabled             = asFunction["withmpEnabled"],
+                mpWorkers             = asFunction["withmpWorkers"],
+                )
             self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC  )
             self.__CM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__CM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )

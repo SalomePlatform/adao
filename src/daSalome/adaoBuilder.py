@@ -24,17 +24,19 @@
     Interface de scripting pour une étude ADAO
 """
 __author__ = "Jean-Philippe ARGAUD"
-__all__ = ["NewPy"]
+__all__ = ["New"]
 
 from daCore import AssimilationStudy
 
-class NewPy(object):
+class New(object):
     """
     Creation TUI d'un cas ADAO sans lien avec YACS
     """
     def __init__(self, name = ""):
         self.__adaoStudy = AssimilationStudy.AssimilationStudy( name )
         self.__dumper = _DumpLogger(name)
+
+    # -----------------------------------------------------------
 
     def set(
             self,
@@ -44,33 +46,51 @@ class NewPy(object):
             DirectFunction       = None,
             Info                 = None,
             Matrix               = None,
-            Variable             = None,
             Parameters           = None,
             ScalarSparseMatrix   = None,
-            String               = None,
             Stored               = False,
+            String               = None,
             Template             = None,
             ThreeFunctions       = None,
+            Variable             = None,
             Vector               = None,
-            VectorSerie          = None):
+            VectorSerie          = None
+            ):
         "Interface unique de définition de variables d'entrées par argument"
         self.__dumper.register("set",dir(),locals(),None,True)
         try:
-            if   Concept == "AlgorithmParameters":
-                self.setAlgorithmParameters(Algorithm,Parameters)
-            elif Concept == "Background":
+            if   Concept == "Background":
                 self.setBackground(Vector,VectorSerie,Stored)
-            elif Concept == "Observation":
-                self.setObservation(Vector,VectorSerie,Stored)
             elif Concept == "BackgroundError":
                 self.setBackgroundError(Matrix,ScalarSparseMatrix,
                                         DiagonalSparseMatrix,Stored)
+            elif Concept == "CheckingPoint":
+                self.setCheckingPoint(Vector,VectorSerie,Stored)
+            elif Concept == "ControlModel":
+                self.setControlModel(Matrix,DirectFunction,
+                                     ThreeFunctions,Parameters,Stored)
+            elif Concept == "ControlInput":
+                self.setControlInput(Vector,VectorSerie,Stored)
+            elif Concept == "EvolutionError":
+                self.setEvolutionError(Matrix,ScalarSparseMatrix,
+                                       DiagonalSparseMatrix,Stored)
+            elif Concept == "EvolutionModel":
+                self.setEvolutionModel(Matrix,DirectFunction,
+                                       ThreeFunctions,Parameters,Stored)
+            elif Concept == "Observation":
+                self.setObservation(Vector,VectorSerie,Stored)
             elif Concept == "ObservationError":
                 self.setObservationError(Matrix,ScalarSparseMatrix,
                                          DiagonalSparseMatrix,Stored)
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(Matrix,DirectFunction,
                                             ThreeFunctions,Parameters,Stored)
+            elif Concept == "AlgorithmParameters":
+                self.setAlgorithmParameters(Algorithm,Parameters)
+            elif Concept == "Debug":
+                self.setDebug()
+            elif Concept == "NoDebug":
+                self.setNoDebug()
             elif Concept == "Observer":
                 self.setObserver(Variable,Template,String,Info)
             else:
@@ -80,20 +100,12 @@ class NewPy(object):
             else: msg = ""
             raise ValueError("during settings, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
 
-    def setAlgorithmParameters(
-            self,
-            Algorithm  = None,
-            Parameters = None):
-        "Définition d'une entrée de calcul"
-        self.__dumper.register("setAlgorithmParameters", dir(), locals())
-        self.__adaoStudy.setAlgorithm( choice = Algorithm )
-        self.__adaoStudy.setAlgorithmParameters( asDico = Parameters )
+    # -----------------------------------------------------------
 
     def setBackground(
             self,
             Vector         = None,
             VectorSerie    = None,
-            # Script = None, # Nom du script contenant une variable Vector/VectorSerie
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setBackground", dir(), locals())
@@ -105,28 +117,11 @@ class NewPy(object):
             toBeStored         = Stored,
             )
 
-    def setObservation(
-            self,
-            Vector         = None,
-            VectorSerie    = None,
-            # Script = None, # Nom du script contenant une variable nommée
-            Stored         = False):
-        "Définition d'une entrée de calcul"
-        self.__dumper.register("setObservation", dir(), locals())
-        __Vector, __PersistentVector = Vector, VectorSerie
-        #
-        self.__adaoStudy.setObservation(
-            asVector           = __Vector,
-            asPersistentVector = __PersistentVector,
-            toBeStored         = Stored,
-            )
-
     def setBackgroundError(
             self,
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
-            # Script       = None, # Nom du script contenant une variable nommée
             Stored               = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setBackgroundError", dir(), locals())
@@ -139,12 +134,153 @@ class NewPy(object):
             toBeStored    = Stored,
             )
 
+    def setCheckingPoint(
+            self,
+            Vector         = None,
+            VectorSerie    = None,
+            Stored         = False):
+        "Définition d'une entrée de vérification"
+        self.__dumper.register("setCheckingPoint", dir(), locals())
+        __Vector, __PersistentVector = Vector, VectorSerie
+        #
+        self.__adaoStudy.setBackground(
+            asVector           = __Vector,
+            asPersistentVector = __PersistentVector,
+            toBeStored         = Stored,
+            )
+
+    def setControlModel(
+            self,
+            Matrix         = None,
+            DirectFunction = None,
+            ThreeFunctions = None,
+            Parameters     = None,
+            Stored         = False):
+        "Définition d'une entrée de calcul"
+        self.__dumper.register("setControlModel", dir(), locals())
+        __Parameters = {}
+        if Parameters is not None and type(Parameters) == type({}):
+            if DirectFunction is not None:
+                __Parameters["useApproximatedDerivatives"] = True
+            if Parameters.has_key("DifferentialIncrement"):
+                __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
+            if Parameters.has_key("CenteredFiniteDifference"):
+                __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
+        __Matrix = Matrix
+        if DirectFunction is not None:
+            __Function = { "Direct":DirectFunction }
+            __Function.update(__Parameters)
+        elif ThreeFunctions is not None:
+            if (type(ThreeFunctions) is not type({})) or \
+                not ThreeFunctions.has_key("Direct") or \
+                not ThreeFunctions.has_key("Tangent") or \
+                not ThreeFunctions.has_key("Adjoint"):
+                raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
+            __Function = ThreeFunctions
+            __Function.update(__Parameters)
+        else:
+            __Function = None
+        #
+        self.__adaoStudy.setControlModel(
+            asFunction = __Function,
+            asMatrix   = __Matrix,
+            toBeStored = Stored,
+            )
+
+    def setControlInput(
+            self,
+            Vector         = None,
+            VectorSerie    = None,
+            Stored         = False):
+        "Définition d'une entrée de calcul"
+        self.__dumper.register("setControlInput", dir(), locals())
+        __Vector, __PersistentVector = Vector, VectorSerie
+        #
+        self.__adaoStudy.setControlInput(
+            asVector           = __Vector,
+            asPersistentVector = __PersistentVector,
+            toBeStored         = Stored,
+            )
+
+    def setEvolutionError(
+            self,
+            Matrix               = None,
+            ScalarSparseMatrix   = None,
+            DiagonalSparseMatrix = None,
+            Stored               = False):
+        "Définition d'une entrée de calcul"
+        self.__dumper.register("setEvolutionError", dir(), locals())
+        __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
+        #
+        self.__adaoStudy.setEvolutionError(
+            asCovariance  = __Covariance,
+            asEyeByScalar = __Scalar,
+            asEyeByVector = __Vector,
+            toBeStored    = Stored,
+            )
+
+    def setEvolutionModel(
+            self,
+            Matrix         = None,
+            DirectFunction = None,
+            ThreeFunctions = None,
+            Parameters     = None,
+            Stored         = False):
+        "Définition d'une entrée de calcul"
+        self.__dumper.register("setEvolutionModel", dir(), locals())
+        __Parameters = {}
+        if Parameters is not None and type(Parameters) == type({}):
+            if DirectFunction is not None:
+                __Parameters["useApproximatedDerivatives"] = True
+            if Parameters.has_key("DifferentialIncrement"):
+                __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
+            if Parameters.has_key("CenteredFiniteDifference"):
+                __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
+            if Parameters.has_key("EnableMultiProcessing"):
+                __Parameters["withmpEnabled"] = Parameters["EnableMultiProcessing"]
+            if Parameters.has_key("NumberOfProcesses"):
+                __Parameters["withmpWorkers"] = Parameters["NumberOfProcesses"]
+        __Matrix = Matrix
+        if DirectFunction is not None:
+            __Function = { "Direct":DirectFunction }
+            __Function.update(__Parameters)
+        elif ThreeFunctions is not None:
+            if (type(ThreeFunctions) is not type({})) or \
+                not ThreeFunctions.has_key("Direct") or \
+                not ThreeFunctions.has_key("Tangent") or \
+                not ThreeFunctions.has_key("Adjoint"):
+                raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
+            __Function = ThreeFunctions
+            __Function.update(__Parameters)
+        else:
+            __Function = None
+        #
+        self.__adaoStudy.setEvolutionModel(
+            asFunction = __Function,
+            asMatrix   = __Matrix,
+            toBeStored = Stored,
+            )
+
+    def setObservation(
+            self,
+            Vector         = None,
+            VectorSerie    = None,
+            Stored         = False):
+        "Définition d'une entrée de calcul"
+        self.__dumper.register("setObservation", dir(), locals())
+        __Vector, __PersistentVector = Vector, VectorSerie
+        #
+        self.__adaoStudy.setObservation(
+            asVector           = __Vector,
+            asPersistentVector = __PersistentVector,
+            toBeStored         = Stored,
+            )
+
     def setObservationError(
             self,
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
-            # Script       = None, # Nom du script contenant une variable nommée
             Stored               = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setObservationError", dir(), locals())
@@ -163,17 +299,21 @@ class NewPy(object):
             DirectFunction = None,
             ThreeFunctions = None,
             Parameters     = None,
-            # MatrixAsScript         = None, # Nom du script contenant une variable nommée
-            # DirectFunctionAsScript = None, # Nom du script contenant une variable nommée
-            # ThreeFunctionsAsScript = None, # Nom du script contenant une variable nommée
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setObservationOperator", dir(), locals())
         __Parameters = {}
         if Parameters is not None and type(Parameters) == type({}):
-            for par in ("useApproximatedDerivatives", "withCenteredDF", "withIncrement", "withmpEnabled", "withmpWorkers"):
-                if Parameters.has_key(par):
-                    __Parameters[par] = Parameters[par]
+            if DirectFunction is not None:
+                __Parameters["useApproximatedDerivatives"] = True
+            if Parameters.has_key("DifferentialIncrement"):
+                __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
+            if Parameters.has_key("CenteredFiniteDifference"):
+                __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
+            if Parameters.has_key("EnableMultiProcessing"):
+                __Parameters["withmpEnabled"] = Parameters["EnableMultiProcessing"]
+            if Parameters.has_key("NumberOfProcesses"):
+                __Parameters["withmpWorkers"] = Parameters["NumberOfProcesses"]
         __Matrix = Matrix
         if DirectFunction is not None:
             __Function = { "Direct":DirectFunction }
@@ -195,20 +335,26 @@ class NewPy(object):
             toBeStored = Stored,
             )
 
-    def analyze(self):
-        "Lancement du calcul"
-        self.__dumper.register("analyze", dir(), locals())
-        try:
-            self.__adaoStudy.analyze()
-        except Exception as e:
-            if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
-            else: msg = ""
-            raise ValueError("during analyse, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
+    # -----------------------------------------------------------
 
-    def get(self, Variable=None):
-        "Récupération d'une sortie du calcul"
-        self.__dumper.register("get",dir(),locals(),Variable)
-        return self.__adaoStudy.get(Variable)
+    def setAlgorithmParameters(
+            self,
+            Algorithm  = None,
+            Parameters = None):
+        "Définition d'un paramétrage du calcul"
+        self.__dumper.register("setAlgorithmParameters", dir(), locals())
+        self.__adaoStudy.setAlgorithm( choice = Algorithm )
+        self.__adaoStudy.setAlgorithmParameters( asDico = Parameters )
+
+    def setDebug(self):
+        "Définition d'un paramétrage du calcul"
+        self.__dumper.register("setDebug",dir(),locals())
+        return self.__adaoStudy.setDebug()
+
+    def setNoDebug(self):
+        "Définition d'un paramétrage du calcul"
+        self.__dumper.register("setNoDebug",dir(),locals())
+        return self.__adaoStudy.unsetDebug()
 
     def setObserver(
             self,
@@ -216,7 +362,7 @@ class NewPy(object):
             Template = None,
             String   = None,
             Info     = None):
-        "Définition d'un observateur du calcul"
+        "Définition d'un paramétrage du calcul"
         self.__dumper.register("setObserver", dir(), locals())
         if Variable is None:
             raise ValueError("setting an observer has to be done over a variable name, not over None.")
@@ -256,96 +402,40 @@ class NewPy(object):
             HookParameters = __Info,
             )
 
+    # -----------------------------------------------------------
+
+    def executePythonScheme(self):
+        "Lancement du calcul"
+        self.__dumper.register("executePythonScheme", dir(), locals())
+        try:
+            self.__adaoStudy.analyze()
+        except Exception as e:
+            if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
+            else: msg = ""
+            raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
+    execute = executePythonScheme
+
+    def executeYACSScheme(self, File=None):
+        "Lancement du calcul"
+        self.__dumper.register("executeYACSScheme", dir(), locals())
+        raise NotImplementedError()
+
+    # -----------------------------------------------------------
+
+    def get(self, Concept=None):
+        "Récupération d'une sortie du calcul"
+        self.__dumper.register("get",dir(),locals(),Concept)
+        return self.__adaoStudy.get(Concept)
+
     def dumpNormalizedCommands(self):
         "Récupération de la liste des commandes de création d'un cas"
         return self.__dumper.dump()
 
-#     def __dir__(self):
-#         # return set(self.__dict__.keys() + dir(self.__class__))
-#         return [
-#             'AlgorithmParameters',
-#             'Background',
-#             'BackgroundError',
-#             'ControlInput',
-#             'ControlModel',
-#             'Controls',
-#             'Debug',
-#             'EvolutionError',
-#             'EvolutionModel',
-#             'InputVariables',
-#             'Observation',
-#             'ObservationError',
-#             'ObservationOperator',
-#             'Observers',
-#             'OutputVariables',
-#             'StudyName',
-#             'StudyRepertory',
-#             'UserDataInit',
-#             'UserPostAnalysis',
-#             '__doc__',
-#             '__init__',
-#             '__module__',
-#             'analyze',
-#             'get',
-#             'prepare_to_pickle',
-#             'saveAsEFICASFile',
-#             ]
-#
 #     def UserPostAnalysis(self):
-#         raise NotImplementedError()
-#
-#     def Controls(self):
-#         raise NotImplementedError()
-#
-#     def StudyName(self):
 #         raise NotImplementedError()
 #
 #     def StudyRepertory(self):
 #         raise NotImplementedError()
-#
-#     def Debug(self):
-#         raise NotImplementedError()
-#
-#     def EvolutionModel(self):
-#         raise NotImplementedError()
-#
-#     def EvolutionError(self):
-#         raise NotImplementedError()
-#
-#     def ControlModel(self):
-#         raise NotImplementedError()
-#
-#     def ControlInput(self):
-#         raise NotImplementedError()
-#
-#     def UserDataInit(self):
-#         raise NotImplementedError()
-#
-#     def InputVariables(self):
-#         raise NotImplementedError()
-#
-#     def OutputVariables(self):
-#         raise NotImplementedError()
-#
-#     def prepare_to_pickle(self):
-#         raise NotImplementedError()
-#
-#     def saveAsEFICASFile(self):
-#         raise NotImplementedError()
-#
-# class NewFromYacsTemplate():
-#     """
-#     Creation TUI d'un cas ADAO à l'aide d'un cas YACS pré-existant
-#     """
-#     def __init__(self, salome_Study = None, name = ""):
-#         raise NotImplementedError(NewFromYacsTemplate.__doc__)
-#
-# class NewYacs():
-#     """
-#     Creation TUI d'un cas ADAO de type YACS
-#     """
-#     def __init__(self, salome_Study = None, name = ""):
-#         raise NotImplementedError(NewYacs.__doc__)
 
 class _DumpLogger(object):
     """
@@ -358,7 +448,7 @@ class _DumpLogger(object):
         self.__logSerie.append("#\n# Python script for ADAO\n#")
         self.__logSerie.append("from numpy import *")
         self.__logSerie.append("import adaoBuilder")
-        self.__logSerie.append("%s = adaoBuilder.NewPy('%s')"%(__objname,__name))
+        self.__logSerie.append("%s = adaoBuilder.New('%s')"%(__objname,__name))
         self.__switchoff = False
     def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Enregistrement d'une commande individuelle"
