@@ -117,10 +117,7 @@ class AssimilationStudy:
           être rendue disponible au même titre que les variables de calcul
         """
         if asVector is not None:
-            if type( asVector ) is type( numpy.matrix([]) ):
-                self.__Xb = numpy.matrix( asVector.A1, numpy.float ).T
-            else:
-                self.__Xb = numpy.matrix( asVector,    numpy.float ).T
+            self.__Xb = numpy.matrix( numpy.ravel(numpy.matrix(asVector)), numpy.float ).T
         elif asPersistentVector is not None:
             if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
                 self.__Xb = Persistence.OneVector("Background", basetype=numpy.matrix)
@@ -185,10 +182,7 @@ class AssimilationStudy:
           être rendue disponible au même titre que les variables de calcul
         """
         if asVector is not None:
-            if type( asVector ) is type( numpy.matrix([]) ):
-                self.__Y = numpy.matrix( asVector.A1, numpy.float ).T
-            else:
-                self.__Y = numpy.matrix( asVector,    numpy.float ).T
+            self.__Y = numpy.matrix( numpy.ravel(numpy.matrix(asVector)), numpy.float ).T
         elif asPersistentVector is not None:
             if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
                 self.__Y = Persistence.OneVector("Observation", basetype=numpy.matrix)
@@ -573,10 +567,7 @@ class AssimilationStudy:
           être rendue disponible au même titre que les variables de calcul
         """
         if asVector is not None:
-            if isinstance(asVector,numpy.matrix):
-                self.__U = numpy.matrix( asVector.A1, numpy.float ).T
-            else:
-                self.__U = numpy.matrix( asVector,    numpy.float ).T
+            self.__U = numpy.matrix( numpy.ravel(numpy.matrix(asVector)), numpy.float ).T
         elif asPersistentVector is not None:
             if type(asPersistentVector) in [type([]),type(()),type(numpy.array([])),type(numpy.matrix([]))]:
                 self.__U = Persistence.OneVector("ControlInput", basetype=numpy.matrix)

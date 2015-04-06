@@ -26,6 +26,7 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["New"]
 
+import os
 from daCore import AssimilationStudy
 
 class New(object):
@@ -43,11 +44,12 @@ class New(object):
             Concept              = None,
             Algorithm            = None,
             DiagonalSparseMatrix = None,
-            DirectFunction       = None,
             Info                 = None,
             Matrix               = None,
+            OneFunction          = None,
             Parameters           = None,
             ScalarSparseMatrix   = None,
+            Script               = None,
             Stored               = False,
             String               = None,
             Template             = None,
@@ -60,31 +62,31 @@ class New(object):
         self.__dumper.register("set",dir(),locals(),None,True)
         try:
             if   Concept == "Background":
-                self.setBackground(Vector,VectorSerie,Stored)
+                self.setBackground(Vector,VectorSerie,Script,Stored)
             elif Concept == "BackgroundError":
                 self.setBackgroundError(Matrix,ScalarSparseMatrix,
-                                        DiagonalSparseMatrix,Stored)
+                                        DiagonalSparseMatrix,Script,Stored)
             elif Concept == "CheckingPoint":
-                self.setCheckingPoint(Vector,VectorSerie,Stored)
+                self.setCheckingPoint(Vector,VectorSerie,Script,Stored)
             elif Concept == "ControlModel":
-                self.setControlModel(Matrix,DirectFunction,
-                                     ThreeFunctions,Parameters,Stored)
+                self.setControlModel(Matrix,OneFunction,ThreeFunctions,
+                                     Parameters,Script,Stored)
             elif Concept == "ControlInput":
-                self.setControlInput(Vector,VectorSerie,Stored)
+                self.setControlInput(Vector,VectorSerie,Script,Stored)
             elif Concept == "EvolutionError":
                 self.setEvolutionError(Matrix,ScalarSparseMatrix,
-                                       DiagonalSparseMatrix,Stored)
+                                       DiagonalSparseMatrix,Script,Stored)
             elif Concept == "EvolutionModel":
-                self.setEvolutionModel(Matrix,DirectFunction,
-                                       ThreeFunctions,Parameters,Stored)
+                self.setEvolutionModel(Matrix,OneFunction,ThreeFunctions,
+                                       Parameters,Script,Stored)
             elif Concept == "Observation":
-                self.setObservation(Vector,VectorSerie,Stored)
+                self.setObservation(Vector,VectorSerie,Script,Stored)
             elif Concept == "ObservationError":
                 self.setObservationError(Matrix,ScalarSparseMatrix,
-                                         DiagonalSparseMatrix,Stored)
+                                         DiagonalSparseMatrix,Script,Stored)
             elif Concept == "ObservationOperator":
-                self.setObservationOperator(Matrix,DirectFunction,
-                                            ThreeFunctions,Parameters,Stored)
+                self.setObservationOperator(Matrix,OneFunction,ThreeFunctions,
+                                            Parameters,Script,Stored)
             elif Concept == "AlgorithmParameters":
                 self.setAlgorithmParameters(Algorithm,Parameters)
             elif Concept == "Debug":
@@ -106,10 +108,18 @@ class New(object):
             self,
             Vector         = None,
             VectorSerie    = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setBackground", dir(), locals())
-        __Vector, __PersistentVector = Vector, VectorSerie
+        if Script is not None:
+            __Vector, __PersistentVector = None, None
+            if VectorSerie:
+                __PersistentVector = _ImportFromScript(Script).getvalue( "Background" )
+            else:
+                __Vector = _ImportFromScript(Script).getvalue( "Background" )
+        else:
+            __Vector, __PersistentVector = Vector, VectorSerie
         #
         self.__adaoStudy.setBackground(
             asVector           = __Vector,
@@ -122,10 +132,20 @@ class New(object):
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
+            Script               = None,
             Stored               = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setBackgroundError", dir(), locals())
-        __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
+        if Script is not None:
+            __Covariance, __Scalar, __Vector = None, None, None
+            if ScalarSparseMatrix:
+                __Scalar = _ImportFromScript(Script).getvalue( "BackgroundError" )
+            elif DiagonalSparseMatrix:
+                __Vector = _ImportFromScript(Script).getvalue( "BackgroundError" )
+            else:
+                __Covariance = _ImportFromScript(Script).getvalue( "BackgroundError" )
+        else:
+            __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
         #
         self.__adaoStudy.setBackgroundError(
             asCovariance  = __Covariance,
@@ -138,10 +158,18 @@ class New(object):
             self,
             Vector         = None,
             VectorSerie    = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de vérification"
         self.__dumper.register("setCheckingPoint", dir(), locals())
-        __Vector, __PersistentVector = Vector, VectorSerie
+        if Script is not None:
+            __Vector, __PersistentVector = None, None
+            if VectorSerie:
+                __PersistentVector = _ImportFromScript(Script).getvalue( "CheckingPoint" )
+            else:
+                __Vector = _ImportFromScript(Script).getvalue( "CheckingPoint" )
+        else:
+            __Vector, __PersistentVector = Vector, VectorSerie
         #
         self.__adaoStudy.setBackground(
             asVector           = __Vector,
@@ -152,34 +180,51 @@ class New(object):
     def setControlModel(
             self,
             Matrix         = None,
-            DirectFunction = None,
+            OneFunction    = None,
             ThreeFunctions = None,
             Parameters     = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setControlModel", dir(), locals())
         __Parameters = {}
         if Parameters is not None and type(Parameters) == type({}):
-            if DirectFunction is not None:
-                __Parameters["useApproximatedDerivatives"] = True
             if Parameters.has_key("DifferentialIncrement"):
                 __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
             if Parameters.has_key("CenteredFiniteDifference"):
                 __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
-        __Matrix = Matrix
-        if DirectFunction is not None:
-            __Function = { "Direct":DirectFunction }
-            __Function.update(__Parameters)
-        elif ThreeFunctions is not None:
-            if (type(ThreeFunctions) is not type({})) or \
-                not ThreeFunctions.has_key("Direct") or \
-                not ThreeFunctions.has_key("Tangent") or \
-                not ThreeFunctions.has_key("Adjoint"):
-                raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
-            __Function = ThreeFunctions
-            __Function.update(__Parameters)
+        if Script is not None:
+            __Matrix, __Function = None, None
+            if Matrix:
+                __Matrix = _ImportFromScript(Script).getvalue( "ObservationOperator" )
+            elif OneFunction:
+                __Function = { "Direct":_ImportFromScript(Script).getvalue( "DirectOperator" ) }
+                __Function.update({"useApproximatedDerivatives":True})
+                __Function.update(__Parameters)
+            elif ThreeFunctions:
+                __Function = {
+                    "Direct" :_ImportFromScript(Script).getvalue( "DirectOperator" ),
+                    "Tangent":_ImportFromScript(Script).getvalue( "TangentOperator" ),
+                    "Adjoint":_ImportFromScript(Script).getvalue( "AdjointOperator" ),
+                    }
+                __Function.update(__Parameters)
+        
         else:
-            __Function = None
+            __Matrix = Matrix
+            if OneFunction is not None:
+                __Function = { "Direct":OneFunction }
+                __Function.update({"useApproximatedDerivatives":True})
+                __Function.update(__Parameters)
+            elif ThreeFunctions is not None:
+                if (type(ThreeFunctions) is not type({})) or \
+                    not ThreeFunctions.has_key("Direct") or \
+                    not ThreeFunctions.has_key("Tangent") or \
+                    not ThreeFunctions.has_key("Adjoint"):
+                    raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
+                __Function = ThreeFunctions
+                __Function.update(__Parameters)
+            else:
+                __Function = None
         #
         self.__adaoStudy.setControlModel(
             asFunction = __Function,
@@ -191,10 +236,18 @@ class New(object):
             self,
             Vector         = None,
             VectorSerie    = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setControlInput", dir(), locals())
-        __Vector, __PersistentVector = Vector, VectorSerie
+        if Script is not None:
+            __Vector, __PersistentVector = None, None
+            if VectorSerie:
+                __PersistentVector = _ImportFromScript(Script).getvalue( "ControlInput" )
+            else:
+                __Vector = _ImportFromScript(Script).getvalue( "ControlInput" )
+        else:
+            __Vector, __PersistentVector = Vector, VectorSerie
         #
         self.__adaoStudy.setControlInput(
             asVector           = __Vector,
@@ -207,10 +260,20 @@ class New(object):
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
+            Script               = None,
             Stored               = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setEvolutionError", dir(), locals())
-        __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
+        if Script is not None:
+            __Covariance, __Scalar, __Vector = None, None, None
+            if ScalarSparseMatrix:
+                __Scalar = _ImportFromScript(Script).getvalue( "EvolutionError" )
+            elif DiagonalSparseMatrix:
+                __Vector = _ImportFromScript(Script).getvalue( "EvolutionError" )
+            else:
+                __Covariance = _ImportFromScript(Script).getvalue( "EvolutionError" )
+        else:
+            __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
         #
         self.__adaoStudy.setEvolutionError(
             asCovariance  = __Covariance,
@@ -222,16 +285,15 @@ class New(object):
     def setEvolutionModel(
             self,
             Matrix         = None,
-            DirectFunction = None,
+            OneFunction    = None,
             ThreeFunctions = None,
             Parameters     = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setEvolutionModel", dir(), locals())
         __Parameters = {}
         if Parameters is not None and type(Parameters) == type({}):
-            if DirectFunction is not None:
-                __Parameters["useApproximatedDerivatives"] = True
             if Parameters.has_key("DifferentialIncrement"):
                 __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
             if Parameters.has_key("CenteredFiniteDifference"):
@@ -240,20 +302,38 @@ class New(object):
                 __Parameters["withmpEnabled"] = Parameters["EnableMultiProcessing"]
             if Parameters.has_key("NumberOfProcesses"):
                 __Parameters["withmpWorkers"] = Parameters["NumberOfProcesses"]
-        __Matrix = Matrix
-        if DirectFunction is not None:
-            __Function = { "Direct":DirectFunction }
-            __Function.update(__Parameters)
-        elif ThreeFunctions is not None:
-            if (type(ThreeFunctions) is not type({})) or \
-                not ThreeFunctions.has_key("Direct") or \
-                not ThreeFunctions.has_key("Tangent") or \
-                not ThreeFunctions.has_key("Adjoint"):
-                raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
-            __Function = ThreeFunctions
-            __Function.update(__Parameters)
+        if Script is not None:
+            __Matrix, __Function = None, None
+            if Matrix:
+                __Matrix = _ImportFromScript(Script).getvalue( "ObservationOperator" )
+            elif OneFunction:
+                __Function = { "Direct":_ImportFromScript(Script).getvalue( "DirectOperator" ) }
+                __Function.update({"useApproximatedDerivatives":True})
+                __Function.update(__Parameters)
+            elif ThreeFunctions:
+                __Function = {
+                    "Direct" :_ImportFromScript(Script).getvalue( "DirectOperator" ),
+                    "Tangent":_ImportFromScript(Script).getvalue( "TangentOperator" ),
+                    "Adjoint":_ImportFromScript(Script).getvalue( "AdjointOperator" ),
+                    }
+                __Function.update(__Parameters)
+        
         else:
-            __Function = None
+            __Matrix = Matrix
+            if OneFunction is not None:
+                __Function = { "Direct":OneFunction }
+                __Function.update({"useApproximatedDerivatives":True})
+                __Function.update(__Parameters)
+            elif ThreeFunctions is not None:
+                if (type(ThreeFunctions) is not type({})) or \
+                    not ThreeFunctions.has_key("Direct") or \
+                    not ThreeFunctions.has_key("Tangent") or \
+                    not ThreeFunctions.has_key("Adjoint"):
+                    raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
+                __Function = ThreeFunctions
+                __Function.update(__Parameters)
+            else:
+                __Function = None
         #
         self.__adaoStudy.setEvolutionModel(
             asFunction = __Function,
@@ -265,10 +345,18 @@ class New(object):
             self,
             Vector         = None,
             VectorSerie    = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setObservation", dir(), locals())
-        __Vector, __PersistentVector = Vector, VectorSerie
+        if Script is not None:
+            __Vector, __PersistentVector = None, None
+            if VectorSerie:
+                __PersistentVector = _ImportFromScript(Script).getvalue( "Observation" )
+            else:
+                __Vector = _ImportFromScript(Script).getvalue( "Observation" )
+        else:
+            __Vector, __PersistentVector = Vector, VectorSerie
         #
         self.__adaoStudy.setObservation(
             asVector           = __Vector,
@@ -281,10 +369,20 @@ class New(object):
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
+            Script               = None,
             Stored               = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setObservationError", dir(), locals())
-        __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
+        if Script is not None:
+            __Covariance, __Scalar, __Vector = None, None, None
+            if ScalarSparseMatrix:
+                __Scalar = _ImportFromScript(Script).getvalue( "ObservationError" )
+            elif DiagonalSparseMatrix:
+                __Vector = _ImportFromScript(Script).getvalue( "ObservationError" )
+            else:
+                __Covariance = _ImportFromScript(Script).getvalue( "ObservationError" )
+        else:
+            __Covariance, __Scalar, __Vector = Matrix, ScalarSparseMatrix, DiagonalSparseMatrix
         #
         self.__adaoStudy.setObservationError(
             asCovariance  = __Covariance,
@@ -296,16 +394,15 @@ class New(object):
     def setObservationOperator(
             self,
             Matrix         = None,
-            DirectFunction = None,
+            OneFunction    = None,
             ThreeFunctions = None,
             Parameters     = None,
+            Script         = None,
             Stored         = False):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setObservationOperator", dir(), locals())
         __Parameters = {}
         if Parameters is not None and type(Parameters) == type({}):
-            if DirectFunction is not None:
-                __Parameters["useApproximatedDerivatives"] = True
             if Parameters.has_key("DifferentialIncrement"):
                 __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
             if Parameters.has_key("CenteredFiniteDifference"):
@@ -314,20 +411,38 @@ class New(object):
                 __Parameters["withmpEnabled"] = Parameters["EnableMultiProcessing"]
             if Parameters.has_key("NumberOfProcesses"):
                 __Parameters["withmpWorkers"] = Parameters["NumberOfProcesses"]
-        __Matrix = Matrix
-        if DirectFunction is not None:
-            __Function = { "Direct":DirectFunction }
-            __Function.update(__Parameters)
-        elif ThreeFunctions is not None:
-            if (type(ThreeFunctions) is not type({})) or \
-                not ThreeFunctions.has_key("Direct") or \
-                not ThreeFunctions.has_key("Tangent") or \
-                not ThreeFunctions.has_key("Adjoint"):
-                raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
-            __Function = ThreeFunctions
-            __Function.update(__Parameters)
+        if Script is not None:
+            __Matrix, __Function = None, None
+            if Matrix:
+                __Matrix = _ImportFromScript(Script).getvalue( "ObservationOperator" )
+            elif OneFunction:
+                __Function = { "Direct":_ImportFromScript(Script).getvalue( "DirectOperator" ) }
+                __Function.update({"useApproximatedDerivatives":True})
+                __Function.update(__Parameters)
+            elif ThreeFunctions:
+                __Function = {
+                    "Direct" :_ImportFromScript(Script).getvalue( "DirectOperator" ),
+                    "Tangent":_ImportFromScript(Script).getvalue( "TangentOperator" ),
+                    "Adjoint":_ImportFromScript(Script).getvalue( "AdjointOperator" ),
+                    }
+                __Function.update(__Parameters)
+        
         else:
-            __Function = None
+            __Matrix = Matrix
+            if OneFunction is not None:
+                __Function = { "Direct":OneFunction }
+                __Function.update({"useApproximatedDerivatives":True})
+                __Function.update(__Parameters)
+            elif ThreeFunctions is not None:
+                if (type(ThreeFunctions) is not type({})) or \
+                    not ThreeFunctions.has_key("Direct") or \
+                    not ThreeFunctions.has_key("Tangent") or \
+                    not ThreeFunctions.has_key("Adjoint"):
+                    raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint") 
+                __Function = ThreeFunctions
+                __Function.update(__Parameters)
+            else:
+                __Function = None
         #
         self.__adaoStudy.setObservationOperator(
             asFunction = __Function,
@@ -413,6 +528,7 @@ class New(object):
             if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
             raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
+
     execute = executePythonScheme
 
     def executeYACSScheme(self, File=None):
@@ -468,12 +584,12 @@ class _DumpLogger(object):
                 self.__switchoff = True
         if not __switchoff:
             self.__switchoff = False
-    def dump(self,filename=None):
+    def dump(self,__filename=None):
         "Restitution de la liste des commandes de création d'un cas"
-        if filename is None:
+        if __filename is None:
             return "\n".join(self.__logSerie)
         else:
-            fid = open(filename,"w")
+            fid = open(__filename,"w")
             fid.writelines(self.__logSerie)
             fid.close()
 
@@ -489,6 +605,27 @@ class _ObserverF(object):
     def getfunc(self):
         "Restitution du pointeur de fonction dans l'objet"
         return self.func
+
+class _ImportFromScript(object):
+    """
+    Obtention d'une variable nommée depuis un fichier script importé
+    """
+    def __init__(self, __filename=None):
+        "Verifie l'existence et importe le script"
+        __filename = __filename.rstrip(".py")
+        if __filename is None:
+            raise ValueError("The name of the file containing the variable to be imported has to be specified.")
+        if not os.path.isfile(str(__filename)+".py"):
+            raise ValueError("The file containing the variable to be imported doesn't seem to exist. The given file name is:\n  \"%s\""%__filename)
+        self.__scriptfile = __import__(__filename, globals(), locals(), [])
+    def getvalue(self, __varname=None ):
+        "Renvoie la variable demandee"
+        if __varname is None:
+            raise ValueError("The name of the variable to be imported has to be specified.")
+        if not hasattr(self.__scriptfile, __varname):
+            raise ValueError("The imported script file doesn't contain the specified variable \"%s\"."%__varname)
+        else:
+            return getattr(self.__scriptfile, __varname)
 
 # ==============================================================================
 if __name__ == "__main__":

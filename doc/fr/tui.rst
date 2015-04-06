@@ -128,18 +128,19 @@ suivante pour un opérateur de :math:`\mathbf{R}^3` sur lui-même::
 
 Dans le cas beaucoup plus courant d'un opérateur non-linéaire, il doit être
 préalablement disponible sous la forme d'une fonction Python connue dans
-l'espace de nommage courant. L'exemple suivant montre une fonction (qui réalise
-ici le même opérateur linéaire que ci-dessus) et l'enregistre dans le cas ADAO::
+l'espace de nommage courant. L'exemple suivant montre une fonction
+``simulation`` (qui réalise ici le même opérateur linéaire que ci-dessus) et
+l'enregistre dans le cas ADAO::
 
-    def fonction(x):
+    def simulation(x):
         import numpy
         __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
         __H = numpy.matrix("1 0 0;0 2 0;0 0 3")
         return __H * __x
     #
     case.set( 'ObservationOperator',
-        DirectFunction = fonction,
-        Parameters = {"useApproximatedDerivatives":True},
+        OneFunction = simulation,
+        Parameters  = {"DifferentialIncrement":0.01},
         )
 
 Pour connaître les résultats intermédiaire ou finaux du calcul du cas, on peut
@@ -289,112 +290,138 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setBackground
 
-**setBackground** (*Vector , VectorSerie , Stored*)
+**setBackground** (*Vector, VectorSerie, Script, Stored*)
     Cette commande permet de définir l'ébauche :math:`\mathbf{x}^b`. Selon les
-    algorithmes, on peut définir un vecteur simple par "*Vector*", ou une liste
-    de vecteurs par "*VectorSerie*".
+    algorithmes, on peut le définir comme un vecteur simple par "*Vector*", ou
+    comme une liste de vecteurs par "*VectorSerie*". Si on le définit par un
+    script dans "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
+    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
 
 .. index:: single: setBackgroundError
 
-**setBackgroundError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Stored*)
+**setBackgroundError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
     Cette commande permet de définir la matrice :math:`\mathbf{B}` des
     covariance des erreurs d'ébauche. La matrice peut être définie de manière
     complète par "*Matrix*", ou de manière parcimonieuse comme une matrice
     diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
     vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
+    Si on la définit par un script dans "*Script*", la matrice est de type
+    "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
+    selon que l'une de ces variables est placée à "*True*".
 
 .. index:: single: setCheckingPoint
 
-**setCheckingPoint** (*Vector, VectorSerie, Stored*)
+**setCheckingPoint** (*Vector, VectorSerie, Script, Stored*)
     Cette commande permet de définir un point courant :math:`\mathbf{x}` utilisé
-    pour un algorithme de vérification. Selon les algorithmes, on peut définir
-    un vecteur simple par "Vector", ou une liste de vecteurs par "VectorSerie".
+    pour un algorithme de vérification. Selon les algorithmes, on peut le
+    définir comme un vecteur simple par "*Vector*", ou comme une liste de
+    vecteurs par "*VectorSerie*". Si on le définit par un script dans
+    "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
+    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
 
 .. index:: single: setControlModel
 
-**setControlModel** (*Matrix, DirectFunction, ThreeFunctions, Parameters, Stored*)
+**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
     Cette commande permet de définir l'opérateur de contrôle :math:`O`, qui
     décrit un contrôle d'entrée linéaire externe de l'opérateur d'évolution ou
     d'observation. On se reportera :ref:`section_ref_operator_control`. Sa
     valeur est définie comme un objet de type fonction ou de type "*Matrix*".
     Dans le cas d'une fonction, différentes formes fonctionnelles peuvent être
     utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`, et entrées par "*DirectFunction*"
-    ou "*ThreeFunctions*". Les paramètres de contrôle de l'approximation
-    numérique de l'opérateur adjoint, dans le cas "*DirectFunction*", peuvent
-    être renseignés par un dictionnaire dans "*Parameters*". Les entrées
-    potentielles de ce dictionnaire de paramètres sont
-    "*DifferentialIncrement*", "*CenteredFiniteDifference*",
-    "*EnableMultiProcessing*", "*NumberOfProcesses*" (similaires à celles de
-    l'interface graphique).
+    :ref:`section_ref_operator_requirements`, et entrées par "*OneFunction*" ou
+    "*ThreeFunctions*". Dans le cas d'une définition par "*Script*", l'opérateur
+    est de type "*Matrix*", "*OneFunction*" ou "*ThreeFunctions*" selon que
+    l'une de ces variables est placée à "*True*". Les paramètres de contrôle de
+    l'approximation numérique de l'opérateur adjoint, dans le cas
+    "*OneFunction*", peuvent être renseignés par un dictionnaire dans
+    "*Parameters*". Les entrées potentielles de ce dictionnaire de paramètres
+    sont "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similaires à
+    celles de l'interface graphique).
 
 .. index:: single: setControlInput
 
-**setControlInput** (*Vector, VectorSerie, Stored*)
+**setControlInput** (*Vector, VectorSerie, Script, Stored*)
     Cette commande permet de définir le vecteur de contrôle :math:`\mathbf{u}`.
-    Selon les algorithmes, on peut définir un vecteur simple par "Vector", ou
-    une liste de vecteurs par "VectorSerie".
+    Selon les algorithmes, on peut le définir comme un vecteur simple par
+    "*Vector*", ou comme une liste de vecteurs par "*VectorSerie*". Si on le
+    définit par un script dans "*Script*", le vecteur est de type "*Vector*"
+    (par défaut) ou "*VectorSerie*" selon que l'une de ces variables est placée
+    à "*True*".
 
 .. index:: single: setEvolutionError
 
-**setEvolutionError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Stored*)
+**setEvolutionError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
     Cette commande permet de définir la matrice :math:`\mathbf{Q}` des
     covariance des erreurs d'évolution. La matrice peut être définie de manière
     complète par "*Matrix*", ou de manière parcimonieuse comme une matrice
     diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
     vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
+    Si on la définit par un script dans "*Script*", la matrice est de type
+    "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
+    selon que l'une de ces variables est placée à "*True*".
 
 .. index:: single: setEvolutionModel
 
-**setEvolutionModel** (*Matrix, DirectFunction, ThreeFunctions, Parameters, Stored*)
+**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
     Cette commande permet de définir l'opérateur d'evolution :math:`M`, qui
     décrit un pas élémentaire d'évolution. Sa valeur est définie comme un objet
     de type fonction ou de type "*Matrix*". Dans le cas d'une fonction,
     différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
     la section :ref:`section_ref_operator_requirements`, et entrées par
-    "*DirectFunction*" ou "*ThreeFunctions*". Les paramètres de contrôle de
-    l'approximation numérique de l'opérateur adjoint, dans le cas
-    "*DirectFunction*", peuvent être renseignés par un dictionnaire dans
-    "*Parameters*". Les entrées potentielles de ce dictionnaire de paramètres
-    sont "*DifferentialIncrement*", "*CenteredFiniteDifference*",
-    "*EnableMultiProcessing*", "*NumberOfProcesses*" (similaires à celles de
-    l'interface graphique).
+    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
+    "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
+    "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
+    Les paramètres de contrôle de l'approximation numérique de l'opérateur
+    adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
+    dictionnaire dans "*Parameters*". Les entrées potentielles de ce
+    dictionnaire de paramètres sont "*DifferentialIncrement*",
+    "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
+    "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
 
 .. index:: single: setObservation
 
-**setObservation** (*Vector, VectorSerie, Stored*)
+**setObservation** (*Vector, VectorSerie, Script, Stored*)
     Cette commande permet de définir le vecteur d'observation
-    :math:`\mathbf{y}^o`. Selon les cas, on peut définir un vecteur simple par
-    "Vector", ou une liste de vecteurs par "VectorSerie".
+    :math:`\mathbf{y}^o`. Selon les algorithmes, on peut le définir comme un
+    vecteur simple par "*Vector*", ou comme une liste de vecteurs par
+    "*VectorSerie*". Si on le définit par un script dans "*Script*", le vecteur
+    est de type "*Vector*" (par défaut) ou "*VectorSerie*" selon que l'une de
+    ces variables est placée à "*True*".
 
 .. index:: single: setObservationError
 
-**setObservationError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Stored*)
+**setObservationError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
     Cette commande permet de définir la matrice :math:`\mathbf{R}` des
     covariance des erreurs d'observation. La matrice peut être définie de
     manière complète par "*Matrix*", ou de manière parcimonieuse comme une
     matrice diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
     vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
+    Si on la définit par un script dans "*Script*", la matrice est de type
+    "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
+    selon que l'une de ces variables est placée à "*True*".
 
 .. index:: single: setObservationOperator
 
-**setObservationOperator** (*Matrix, DirectFunction, ThreeFunctions, Parameters, Stored*)
+**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
     Cette commande permet de définir l'opérateur d'observation :math:`H`, qui
     transforme les paramètres d'entrée :math:`\mathbf{x}` en résultats
     :math:`\mathbf{y}` qui sont à comparer aux observations
     :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type fonction
     ou de type "*Matrix*". Dans le cas d'une fonction, différentes formes
     fonctionnelles peuvent être utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`, et entrées par "*DirectFunction*"
-    ou "*ThreeFunctions*". Les paramètres de contrôle de l'approximation
-    numérique de l'opérateur adjoint, dans le cas "*DirectFunction*", peuvent
-    être renseignés par un dictionnaire dans "*Parameters*". Les entrées
-    potentielles de ce dictionnaire de paramètres sont "*DifferentialIncrement*",
-    "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
-    "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
+    :ref:`section_ref_operator_requirements`, et entrées par "*OneFunction*" ou
+    "*ThreeFunctions*". Dans le cas d'une définition par "*Script*", l'opérateur
+    est de type "*Matrix*", "*OneFunction*" ou "*ThreeFunctions*" selon que
+    l'une de ces variables est placée à "*True*". Les paramètres de contrôle de
+    l'approximation numérique de l'opérateur adjoint, dans le cas
+    "*OneFunction*", peuvent être renseignés par un dictionnaire dans
+    "*Parameters*". Les entrées potentielles de ce dictionnaire de paramètres
+    sont "*DifferentialIncrement*", "*CenteredFiniteDifference*",
+    "*EnableMultiProcessing*", "*NumberOfProcesses*" (similaires à celles de
+    l'interface graphique).
 
 .. index:: single: set
 
@@ -403,7 +430,8 @@ Les commandes disponibles sont les suivantes :
     commandes de ce paragraphe. Son premier argument est le nom du concept à
     définir (par exemple "*Background*" ou "*ObservationOperator*"), sur lequel
     s'applique ensuite les arguments qui suivent, qui sont les mêmes que dans
-    les commandes individuelles ci-dessus.
+    les commandes individuelles précédentes. Lors de l'usage de cette commande,
+    il est indispensable de nommer les arguments (par exemple "*Vector=...*").
 
 Paramétrer le calcul, les sorties, etc.
 +++++++++++++++++++++++++++++++++++++++
@@ -488,8 +516,134 @@ Obtenir séparément les résultats de calcul
     fois aux :ref:`section_ref_output_variables` et aux documentations
     individuelles des algorithmes.
 
-.. Exemples plus avancés de cas de calcul TUI ADAO
-.. -----------------------------------------------
+Exemples plus avancés de cas de calcul TUI ADAO
+-----------------------------------------------
+
+On propose ici des exemples plus complets de cas de calcul TUI ADAO, en donnant
+l'objectif de l'exemple et un jeu de commandes qui permet de parvenir à cet
+objectif.
+
+Exploitation indépendante des résultats d'un cas de calcul
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+L'objectif est d'effectuer en TUI la mise en données d'un cas de calcul ADAO,
+son exécution, puis la récupération des résultats pour ensuite enchaîner sur une
+exploitation indépendante de ces résultats (cette dernière n'étant pas décrite
+ici, puisque dépendante de l'utilisateur).
+
+Les hypothèses du cas utilisateur sont les suivantes. On suppose :
+
+#.      que l'on veut recaler 3 paramètres ``alpha``, ``beta`` et ``gamma`` dans un domaine borné,
+#.      que l'on dispose d'observations nommées ``observations``,
+#.      que l'utilisateur dispose en Python d'une fonction de simulation physique appellée ``simulation`` préalablement testée, qui transforme les 3 paramètres en résultats similaires aux observations,
+#.      que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
+
+Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne par
+exemple les entrées suivantes, parfaitement arbitraires, en construisant les
+observations par simulation pour se placer dans un cas d'expériences jumelles::
+
+    #
+    # Construction artificielle d'un exemple de données utilisateur
+    # -------------------------------------------------------------
+    alpha = 5.
+    beta = 7
+    gamma = 9.0
+    #
+    alphamin, alphamax = 0., 10.
+    betamin,  betamax  = 3, 13
+    gammamin, gammamax = 1.5, 15.5
+    #
+    def simulation(x):
+        import numpy
+        __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
+        __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
+        return __H * __x
+    #
+    # Observations obtenues par simulation
+    # ------------------------------------
+    observations = simulation((2, 3, 4))
+
+Le jeu de commandes que l'on peut utiliser est le suivant::
+
+    import numpy
+    import adaoBuilder
+    #
+    # Mise en forme des entrées
+    # -------------------------
+    Xb = (alpha, beta, gamma)
+    Bounds = (
+        (alphamin, alphamax),
+        (betamin,  betamax ),
+        (gammamin, gammamax))
+    #
+    # TUI ADAO
+    # --------
+    case = adaoBuilder.New()
+    case.set( 'AlgorithmParameters',
+        Algorithm = '3DVAR',
+        Parameters = {
+            "Bounds":Bounds,
+            "MaximumNumberOfSteps":100,
+            "StoreSupplementaryCalculations":[
+                "CostFunctionJ",
+                "CurrentState",
+                "SimulatedObservationAtOptimum",
+                ],
+            }
+        )
+    case.set( 'Background', Vector = numpy.array(Xb), Stored = True )
+    case.set( 'Observation', Vector = numpy.array(observations) )
+    case.set( 'BackgroundError', ScalarSparseMatrix = 1.0e10 )
+    case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
+    case.set( 'ObservationOperator',
+        OneFunction = simulation,
+        Parameters  = {"DifferentialIncrement":0.0001},
+        )
+    case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
+    case.execute()
+    #
+    # Exploitation indépendante
+    # -------------------------
+    Xbackground   = case.get("Background")
+    Xoptimum      = case.get("Analysis")[-1]
+    FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
+    J_values      = case.get("CostFunctionJ")[:]
+    print
+    print "Nombre d'itérations internes...: %i"%len(J_values)
+    print "Etat initial...................:",numpy.ravel(Xbackground)
+    print "Etat optimal...................:",numpy.ravel(Xoptimum)
+    print "Simulation à l'état optimal....:",numpy.ravel(FX_at_optimum)
+    print
+
+L'exécution de jeu de commandes donne le résultat suivant::
+
+    CurrentState [ 5.  7.  9.]
+    CurrentState [ 0.   3.   1.5]
+    CurrentState [ 1.40006418  3.86705307  3.7061137 ]
+    CurrentState [ 1.42580231  3.68474804  3.81008738]
+    CurrentState [ 1.60220353  3.0677108   4.06146069]
+    CurrentState [ 1.72517855  3.03296953  4.04915706]
+    CurrentState [ 2.00010755  3.          4.00055409]
+    CurrentState [ 1.99995528  3.          3.99996367]
+    CurrentState [ 2.00000007  3.          4.00000011]
+    CurrentState [ 2.  3.  4.]
+
+    Nombre d'itérations internes...: 10
+    Etat initial...................: [ 5.  7.  9.]
+    Etat optimal...................: [ 2.  3.  4.]
+    Simulation à l'état optimal....: [  2.   6.  12.  20.]
+
+Comme il se doit en expériences jumelles, on constate que l'on retouve bien les
+paramètres qui ont servi à construire artificiellement les observations.
+
+.. Réconciliation de courbes à l'aide de MedCoupling
+.. +++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Utilisation de fonctions de surveillance de type "observer"
+.. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Suivre d'un recalage à l'aide de MatPlotLib
+.. +++++++++++++++++++++++++++++++++++++++++++
 
 .. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
 .. -----------------------------------------------------------------------------
