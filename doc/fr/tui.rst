@@ -438,12 +438,15 @@ Paramétrer le calcul, les sorties, etc.
 
 .. index:: single: setAlgorithmParameters
 
-**setAlgorithmParameters** (*Algorithm, Parameters*)
+**setAlgorithmParameters** (*Algorithm, Parameters, Script*)
     Cette commande permet de choisir l'algorithme de calcul ou de vérification
     par l'argument "*Algorithm*" sous la forme d'un nom d'algorithme (on se
     reportera utilement aux listes des :ref:`section_reference_assimilation` et
     des :ref:`section_reference_checking`), et de définir les paramètres de
-    calcul par l'argument "*Parameters*".
+    calcul par l'argument "*Parameters*". Dans le cas d'une définition par
+    "*Script*", le fichier indiqué doit contenir les deux variables
+    "*Algorithm*" et "*Parameters*" (ou "*AlgorithmParameters*" de manière
+    équivalente).
 
 .. index:: single: setDebug
 
@@ -459,7 +462,7 @@ Paramétrer le calcul, les sorties, etc.
 
 .. index:: single: setObserver
 
-**setObserver** (*Variable, Template, String, Info*)
+**setObserver** (*Variable, Template, String, Script, Info*)
     Cette commande permet de définir un observer sur une variable courante ou
     finale du calcul.  On se reportera à la description de la manière
     d':ref:`section_advanced_observer`, et à la :ref:`section_reference` pour
@@ -470,7 +473,9 @@ Paramétrer le calcul, les sorties, etc.
     "*ValuePrinter*", "*ValueSeriePrinter*", "*ValueSaver*",
     "*ValueSerieSaver*", "*ValuePrinterAndSaver*",
     "*ValueSeriePrinterAndSaver*", "*ValueGnuPlotter*",
-    "*ValueSerieGnuPlotter*".
+    "*ValueSerieGnuPlotter*". Dans le cas d'une définition par "*Script*", le
+    fichier indiqué doit contenir uniquement le corps de la fonction, comme
+    décrit dans la manière d':ref:`section_advanced_observer`.
 
 Effectuer le calcul 
 +++++++++++++++++++

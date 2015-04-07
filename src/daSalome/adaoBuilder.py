@@ -88,13 +88,13 @@ class New(object):
                 self.setObservationOperator(Matrix,OneFunction,ThreeFunctions,
                                             Parameters,Script,Stored)
             elif Concept == "AlgorithmParameters":
-                self.setAlgorithmParameters(Algorithm,Parameters)
+                self.setAlgorithmParameters(Algorithm,Parameters,Script)
             elif Concept == "Debug":
                 self.setDebug()
             elif Concept == "NoDebug":
                 self.setNoDebug()
             elif Concept == "Observer":
-                self.setObserver(Variable,Template,String,Info)
+                self.setObserver(Variable,Template,String,Script,Info)
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
         except Exception as e:
@@ -208,7 +208,6 @@ class New(object):
                     "Adjoint":_ImportFromScript(Script).getvalue( "AdjointOperator" ),
                     }
                 __Function.update(__Parameters)
-        
         else:
             __Matrix = Matrix
             if OneFunction is not None:
@@ -317,7 +316,6 @@ class New(object):
                     "Adjoint":_ImportFromScript(Script).getvalue( "AdjointOperator" ),
                     }
                 __Function.update(__Parameters)
-        
         else:
             __Matrix = Matrix
             if OneFunction is not None:
@@ -426,7 +424,6 @@ class New(object):
                     "Adjoint":_ImportFromScript(Script).getvalue( "AdjointOperator" ),
                     }
                 __Function.update(__Parameters)
-        
         else:
             __Matrix = Matrix
             if OneFunction is not None:
@@ -455,11 +452,18 @@ class New(object):
     def setAlgorithmParameters(
             self,
             Algorithm  = None,
-            Parameters = None):
+            Parameters = None,
+            Script     = None):
         "Définition d'un paramétrage du calcul"
         self.__dumper.register("setAlgorithmParameters", dir(), locals())
-        self.__adaoStudy.setAlgorithm( choice = Algorithm )
-        self.__adaoStudy.setAlgorithmParameters( asDico = Parameters )
+        if Script is not None:
+            __Algorithm  = _ImportFromScript(Script).getvalue( "Algorithm" )
+            __Parameters = _ImportFromScript(Script).getvalue( "AlgorithmParameters", "Parameters" )
+        else:
+            __Algorithm  = Algorithm
+            __Parameters = Parameters
+        self.__adaoStudy.setAlgorithm( choice = __Algorithm )
+        self.__adaoStudy.setAlgorithmParameters( asDico = __Parameters )
 
     def setDebug(self):
         "Définition d'un paramétrage du calcul"
@@ -476,6 +480,7 @@ class New(object):
             Variable = None,
             Template = None,
             String   = None,
+            Script   = None,
             Info     = None):
         "Définition d'un paramétrage du calcul"
         self.__dumper.register("setObserver", dir(), locals())
@@ -507,6 +512,8 @@ class New(object):
                 __FunctionText = r"import Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( var[-1], with_='lines lw 2' ) )"
             if Template == "ValueSerieGnuPlotter":
                 __FunctionText = r"import Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( var[:], with_='lines lw 2' ) )"
+        elif Script is not None:
+            __FunctionText = _ImportFromScript(Script).getstring()
         else:
             __FunctionText = ""
         __Function = _ObserverF(__FunctionText)
@@ -618,14 +625,22 @@ class _ImportFromScript(object):
         if not os.path.isfile(str(__filename)+".py"):
             raise ValueError("The file containing the variable to be imported doesn't seem to exist. The given file name is:\n  \"%s\""%__filename)
         self.__scriptfile = __import__(__filename, globals(), locals(), [])
-    def getvalue(self, __varname=None ):
+        self.__scriptstring = open(__filename+".py",'r').read()
+    def getvalue(self, __varname=None, __synonym=None ):
         "Renvoie la variable demandee"
         if __varname is None:
             raise ValueError("The name of the variable to be imported has to be specified.")
         if not hasattr(self.__scriptfile, __varname):
-            raise ValueError("The imported script file doesn't contain the specified variable \"%s\"."%__varname)
+            if __synonym is None:
+                raise ValueError("The imported script file doesn't contain the specified variable \"%s\"."%__varname)
+            elif not hasattr(self.__scriptfile, __synonym):
+                raise ValueError("The imported script file doesn't contain the specified variable \"%s\"."%__synonym)
+            else:
+                return getattr(self.__scriptfile, __synonym)
         else:
             return getattr(self.__scriptfile, __varname)
+    def getstring(self):
+        return self.__scriptstring
 
 # ==============================================================================
 if __name__ == "__main__":
