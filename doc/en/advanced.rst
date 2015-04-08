@@ -60,13 +60,11 @@ between these symbols ``<...>``.
 The template of the shell script is the following::
 
     #!/bin/bash
-    export USERDIR=<ADAO JDC file directory>
-    export SALOMEDIR=<SALOME main installation directory>
+    USERDIR=<ADAO JDC file directory>
+    SALOMEDIR=<SALOME main installation directory>
     $SALOMEDIR/salome start -k -t
-    $SALOMEDIR/salome shell python \
-        $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py \
-        $USERDIR/<ADAO Python file> $USERDIR/<ADAO YACS xml scheme>
-    $SALOMEDIR/salome shell driver $USERDIR/<ADAO YACS xml scheme>
+    $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py $USERDIR/<ADAO Python file> $USERDIR/<ADAO YACS xml scheme>"
+    $SALOMEDIR/salome shell -- "driver $USERDIR/<ADAO YACS xml scheme>"
     $SALOMEDIR/salome shell killSalome.py
     rm -f $USERDIR/<ADAO YACS xml scheme>
 

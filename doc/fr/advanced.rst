@@ -64,13 +64,11 @@ script a seulement besoin de remplacer le texte contenu entre les symboles
 Le modèle "type" de ce script de commandes shell est le suivant::
 
     #!/bin/bash
-    export USERDIR=<Répertoire du fichier JDC ADAO>
-    export SALOMEDIR=<Répertoire principal d'installation de SALOME>
+    USERDIR=<Répertoire du fichier JDC ADAO>
+    SALOMEDIR=<Répertoire principal d'installation de SALOME>
     $SALOMEDIR/salome start -k -t
-    $SALOMEDIR/salome shell python \
-        $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py \
-        $USERDIR/<Fichier Python ADAO> $USERDIR/<Schéma xml YACS ADAO>
-    $SALOMEDIR/salome shell driver $USERDIR/<Schéma xml YACS ADAO>
+    $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py $USERDIR/<Fichier Python ADAO> $USERDIR/<Schéma xml YACS ADAO>"
+    $SALOMEDIR/salome shell -- "driver $USERDIR/<Schéma xml YACS ADAO>"
     $SALOMEDIR/salome shell killSalome.py
     rm -f $USERDIR/<Schéma xml YACS ADAO>
 
