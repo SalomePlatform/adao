@@ -282,6 +282,15 @@ commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'une
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
 
+Passer de la version 7.5 à la 7.6
++++++++++++++++++++++++++++++++++
+
+Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
+procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
+le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom. Cette
+procédure effectue automatiquement les modifications requises dans
+l'arborescence de stockage du fichier de cas ADAO.
+
 Passer de la version 7.4 à la 7.5
 +++++++++++++++++++++++++++++++++
 
