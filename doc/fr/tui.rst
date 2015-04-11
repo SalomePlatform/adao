@@ -42,7 +42,8 @@ l'interface graphique (GUI). Dans le cas où l'on désire réaliser à la main le
 cas de calcul TUI, on recommande de bien s'appuyer sur l'ensemble de la
 documentation du module ADAO, et de se reporter si nécessaire à l'interface
 graphique (GUI), pour disposer de l'ensemble des éléments permettant de
-renseigner correctement les commandes.
+renseigner correctement les commandes. Les notions générales et termes utilisés
+ici sont définis dans :ref:`section_theory`.
 
 .. _subsection_tui_creating:
 
@@ -59,7 +60,7 @@ de cas de calcul ADAO. Toutes les données sont explicitement définies dans le
 corps du script pour faciliter la lecture. L'ensemble des commandes est le
 suivant::
 
-    from numpy import *
+    from numpy import array
     import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -71,9 +72,9 @@ suivant::
     case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
     case.execute()
 
-Le résultat de l'exécution de ces commandes dans SALOME (dans le shell SALOME,
-dans la console Python de l'interface, ou par le menu d'exécution d'un script)
-est le suivant::
+Le résultat de l'exécution de ces commandes dans SALOME (que ce soit par la
+commande "*shell*" de SALOME, dans la console Python de l'interface, ou par le
+menu d'exécution d'un script) est le suivant::
 
     Analysis [ 0.25000264  0.79999797  0.94999939]
 
@@ -88,13 +89,13 @@ L'initialisation et la création d'une étude se fait par les commandes suivantes,
 le nom ``case`` de l'objet du cas de calcul TUI ADAO étant quelconque, au choix
 de l'utilisateur::
 
-    from numpy import *
+    from numpy import array
     import adaoBuilder
     case = adaoBuilder.New()
 
-Il est recommandé d'importer par principe le module ``numpy``, sous cette forme
-particulière ``from ... import *``, pour faciliter ensuite son usage dans les
-commandes elle-mêmes.
+Il est recommandé d'importer par principe le module ``numpy`` ou ses
+constructeurs particuliers comme celui d'``array``, pour faciliter ensuite son
+usage dans les commandes elle-mêmes.
 
 Ensuite, le cas doit être construit par une préparation et un enregistrement des
 données définissant l'étude. L'ordre de ces commande n'a pas d'importance, il
@@ -102,9 +103,10 @@ suffit que les concepts requis par l'algorithme utilisé soient présentes. On se
 reportera à :ref:`section_reference` et à ses sous-parties pour avoir le détail
 des commandes par algorithme. Ici, on définit successivement l'algorithme
 d'assimilation de données ou d'optimisation choisi et ses paramètres, puis
-l'ébauche :math:`\mathbf{x}^b` et sa covariance d'erreurs :math:`\mathbf{B}`, et
-enfin l'observation :math:`\mathbf{y}^o` et sa covariance d'erreurs
-:math:`\mathbf{R}`::
+l'ébauche :math:`\mathbf{x}^b` (nommée ``Background``) et sa covariance
+d'erreurs :math:`\mathbf{B}` (nommée ``BackgroundError``), et enfin
+l'observation :math:`\mathbf{y}^o` (nommée ``Observation``) et sa covariance
+d'erreurs :math:`\mathbf{R}` (nommée ``ObservationError``)::
 
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     #
@@ -115,7 +117,8 @@ enfin l'observation :math:`\mathbf{y}^o` et sa covariance d'erreurs
     case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
 
 On remarque que l'on peut donner en entrée des quantités vectorielles des objets
-de type ``list``, ``tuple``, ``array`` ou ``matrix`` de Numpy.
+de type ``list``, ``tuple``, ``array`` ou ``matrix`` de Numpy. Dans ces deux
+derniers cas, il faut simplement importer Numpy avant.
 
 On doit ensuite définir les opérateurs :math:`H` d'observation et éventuellement
 :math:`M` d'évolution. Dans tous les cas, linéaire ou non-linéaire, on peut les
@@ -126,14 +129,20 @@ suivante pour un opérateur de :math:`\mathbf{R}^3` sur lui-même::
 
     case.ObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
 
-Dans le cas beaucoup plus courant d'un opérateur non-linéaire, il doit être
-préalablement disponible sous la forme d'une fonction Python connue dans
-l'espace de nommage courant. L'exemple suivant montre une fonction
-``simulation`` (qui réalise ici le même opérateur linéaire que ci-dessus) et
-l'enregistre dans le cas ADAO::
+Dans le cas beaucoup plus courant d'un opérateur non-linéaire de
+:math:`\mathbf{R}^n` dans  :math:`\mathbf{R}^p`, il doit être préalablement
+disponible sous la forme d'une fonction Python, connue dans l'espace de nommage
+courant, qui prend en entrée un vecteur ``numpy`` (ou une liste ordonnée) de
+taille :math:`n` et qui restitue en sortie un vecteur ``numpy`` de taille
+:math:`p`. Lorsque seul l'opérateur non-linéaire est défini par l'argument
+"*OneFunction*", son adjoint est directement établi de manière numérique et il
+est paramétrable par l'argument "*Parameters*". L'exemple suivant montre une
+fonction ``simulation`` (qui réalise ici le même opérateur linéaire que
+ci-dessus) et l'enregistre dans le cas ADAO::
 
+    import numpy
     def simulation(x):
-        import numpy
+        "Fonction de simulation H pour effectuer Y=H(X)"
         __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
         __H = numpy.matrix("1 0 0;0 2 0;0 0 3")
         return __H * __x
@@ -144,11 +153,11 @@ l'enregistre dans le cas ADAO::
         )
 
 Pour connaître les résultats intermédiaire ou finaux du calcul du cas, on peut
-ajouter des observers, qui permettent d'associer l'exécution d'un script à une
-variable interne ou finale du calcul. On se reportera à la description de la
+ajouter des "*observer*", qui permettent d'associer l'exécution d'un script à
+une variable interne ou finale du calcul. On se reportera à la description de la
 manière d':ref:`section_advanced_observer`, et à la :ref:`section_reference`
 pour savoir quelles sont les quantités observables. Cette association
-d'observers avec une quantité existante se fait de manière similaire à la
+d'"*observer*" avec une quantité existante se fait de manière similaire à la
 définition des données du calcul::
 
     case.set( 'Observer', Variable="Analysis", Template="ValuePrinter" )
@@ -198,7 +207,7 @@ de manière plus riche, pour enchaîner sur des post-traitements après le calcul
 en TUI.
 
 Les variables de résultats de calcul, ou les variables internes issues de
-l'optimisation sont disponible à travers la méthode ``get`` du cas de calcul TUI
+l'optimisation sont disponibles à travers la méthode ``get`` du cas de calcul TUI
 ADAO, qui renvoie un objet de type liste de la variable demandée. On se
 reportera aux :ref:`section_ref_output_variables` pour une description détaillée
 sur ce sujet.
@@ -208,10 +217,10 @@ le nombre d'itérations de l'optimisation et la valeur optimale ainsi que sa
 taille::
 
     print
-    print "    Nombre d'iterations :",len(case.get("CostFunctionJ"))
+    print "    Nombre d'iterations :", len(case.get("CostFunctionJ"))
     Xa = case.get("Analysis")
-    print "    Analyse optimale  :",Xa[-1]
-    print "    Taille de l'analyse :",len(Xa[-1])
+    print "    Analyse optimale  :", Xa[-1]
+    print "    Taille de l'analyse :", len(Xa[-1])
     print
 
 Ces lignes peuvent être très simplement additionnées à l'exemple initial de cas
@@ -559,6 +568,7 @@ observations par simulation pour se placer dans un cas d'expériences jumelles::
     gammamin, gammamax = 1.5, 15.5
     #
     def simulation(x):
+        "Fonction de simulation H pour effectuer Y=H(X)"
         import numpy
         __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
         __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
@@ -584,7 +594,8 @@ Le jeu de commandes que l'on peut utiliser est le suivant::
     # TUI ADAO
     # --------
     case = adaoBuilder.New()
-    case.set( 'AlgorithmParameters',
+    case.set(
+        'AlgorithmParameters',
         Algorithm = '3DVAR',
         Parameters = {
             "Bounds":Bounds,
@@ -600,7 +611,8 @@ Le jeu de commandes que l'on peut utiliser est le suivant::
     case.set( 'Observation', Vector = numpy.array(observations) )
     case.set( 'BackgroundError', ScalarSparseMatrix = 1.0e10 )
     case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
-    case.set( 'ObservationOperator',
+    case.set(
+        'ObservationOperator',
         OneFunction = simulation,
         Parameters  = {"DifferentialIncrement":0.0001},
         )

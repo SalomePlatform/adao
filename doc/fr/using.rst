@@ -259,7 +259,7 @@ simple ci-dessus est de la forme suivante::
 
 présentée dans la "*fenêtre de sortie de YACS*".
 
-L'exécution peut aussi être conduite en utilisant un script de commandes shell,
+L'exécution peut aussi être conduite en utilisant un script de commandes Shell,
 comme décrit dans la section :ref:`section_advanced`.
 
 .. [#] Pour de plus amples informations sur EFICAS, voir le *module EFICAS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.

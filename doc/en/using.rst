@@ -233,8 +233,8 @@ using breakpoints, etc.
 The standard output will be pushed into the "*YACS Container Log*", obtained
 through the right click menu of the "*proc*" window in the YACS GUI. The errors
 are shown either in the "*YACS Container Log*", or at the command line in the
-shell window (if SALOME has been launched by its explicit command, and not by a
-menu or a desktop icon). As an example, the output of the above simple case is
+terminal window (if SALOME has been launched by its explicit command, and not by
+a menu or a desktop icon). As an example, the output of the above simple case is
 of the following form::
 
    Entering in the assimilation study
@@ -246,7 +246,7 @@ of the following form::
 
 shown in the "*YACS Container Log*".
 
-The execution can also be done using a shell script, as described in the section
+The execution can also be done using a Shell script, as described in the section
 :ref:`section_advanced`.
 
 .. [#] For more information on EFICAS, see the *EFICAS module* and its integrated help available from the main menu *Help* of the SALOME platform.

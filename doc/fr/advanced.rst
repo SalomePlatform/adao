@@ -33,46 +33,107 @@ l'interface graphique (GUI). Cela nécessite de savoir comment trouver les
 fichiers ou les commandes incluses dans l'installation complète de SALOME. Tous
 les noms à remplacer par l'utilisateur sont indiqués par la syntaxe ``<...>``.
 
-Convertir et exécuter un fichier de commandes ADAO (JDC) par l'intermédiaire d'un script shell
+Convertir et exécuter un fichier de commandes ADAO (JDC) par l'intermédiaire d'un script Shell
 ----------------------------------------------------------------------------------------------
 
 Il est possible de convertir et exécuter une fichier de commandes ADAO (JDC, ou
 paire de fichiers ".comm/.py", qui se trouvent dans le répertoire ``<Répertoire
 du fichier JDC ADAO>``) automatiquement en utilisant un script de commandes
-shell "type" contenant toutes les étapes requises. L'utilisateur doit savoir où
-se trouvent les principaux fichiers de lancement de SALOME, et en particulier le
-fichier ``salome``. Le répertoire dans lequel ce fichier réside est
-symboliquement nommé ``<Répertoire principal d'installation de SALOME>`` et doit
-être remplacé par le bon dans le modèle "type" de fichier shell.
+Shell "type" contenant toutes les étapes requises. Si la commande principale de
+lancement de SALOME, nommée ``salome``, n'est pas couramment accessible dans un
+terminal courant, l'utilisateur doit savoir où se trouvent les principaux
+fichiers de lancement de SALOME, et en particulier ce fichier ``salome``. Le
+répertoire dans lequel ce fichier réside est symboliquement nommé ``<Répertoire
+principal d'installation de SALOME>`` et doit être remplacé par le bon dans le
+modèle "type" de fichier Shell.
 
 Lorsqu'un fichier de commande ADAO est construit par l'interface d'édition
 graphique d'ADAO et est enregistré, s'il est nommé par exemple
 "EtudeAdao1.comm", alors un fichier compagnon nommé "EtudeAdao1.py" est
 automatiquement créé dans la même répertoire. Il est nommé ``<Fichier Python
 ADAO>`` dans le modèle "type", et il est converti vers YACS comme un ``<Schéma
-xml YACS ADAO>``. Ensuite, il peut être exécuté en mode console en utilisant la
-commande standard en mode console de YACS (voir la documentation YACS pour de
-plus amples informations).
+xml YACS ADAO>`` sous la forme d'un fichier en ".xml" nommé "EtudeAdao1.xml".
+Ensuite, ce dernier peut être exécuté en mode console en utilisant l'ordre
+standard du mode console de YACS (voir la documentation YACS pour de plus amples
+informations).
 
-Dans l'exemple, on choisit de démarrer et arrêter le serveur d'application
-SALOME dans le même script, ce qui n'est pas nécessaire, mais utile pour éviter
-des sessions SALOME en attente. On choisit aussi de supprimer le fichier de
-``<Schéma xml YACS ADAO>`` car c'est un fichier généré. L'utilisateur de ce
-script a seulement besoin de remplacer le texte contenu entre les symboles
-``<...>``
+Dans tous les exemples de fichiers de commandes Shell de lancement, on choisit
+de démarrer et arrêter le serveur d'application SALOME dans le même script. Ce
+n'est pas indispensable, mais c'est utile pour éviter des sessions SALOME en
+attente.
 
-Le modèle "type" de ce script de commandes shell est le suivant::
+L'exemple le plus simple consiste uniquement à lancer l'exécution d'un schéma
+YACS donné, qui a préalablement été généré par l'utilisateur en interface
+graphique. Dans ce cas, en ayant pris soin de remplacer les textes contenus
+entre les symboles ``<...>``, il suffit d'enregistrer le script de commandes
+Shell suivant::
 
     #!/bin/bash
-    USERDIR=<Répertoire du fichier JDC ADAO>
-    SALOMEDIR=<Répertoire principal d'installation de SALOME>
+    USERDIR="<Répertoire du fichier JDC ADAO>"
+    SALOMEDIR="<Répertoire principal d'installation de SALOME>"
     $SALOMEDIR/salome start -k -t
-    $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py $USERDIR/<Fichier Python ADAO> $USERDIR/<Schéma xml YACS ADAO>"
     $SALOMEDIR/salome shell -- "driver $USERDIR/<Schéma xml YACS ADAO>"
     $SALOMEDIR/salome shell killSalome.py
-    rm -f $USERDIR/<Schéma xml YACS ADAO>
 
-Les sorties standard et d'erreur se font à la console.
+Il faut ensuite le rendre exécutable pour l'exécuter.
+
+Un exemple une peu plus complet consiste à lancer l'exécution d'un schéma YACS
+indiqué par l'utilisateur, en ayant préalablement vérifié sa disponibilité. Pour
+cela, en remplaçant le texte ``<Répertoire principal d'installation de
+SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
+
+    #!/bin/bash
+    if (test $# != 1)
+    then
+      echo -e "\nUsage: $0 <Schéma xml YACS ADAO>\n"
+      exit
+    else
+      USERFILE="$1"
+    fi
+    if (test ! -e $USERFILE)
+    then
+      echo -e "\nErreur : le fichier XML nommé $USERFILE n'existe pas.\n"
+      exit
+    else
+      SALOMEDIR="<Répertoire principal d'installation de SALOME>"
+      $SALOMEDIR/salome start -k -t
+      $SALOMEDIR/salome shell -- "driver $USERFILE"
+      $SALOMEDIR/salome shell killSalome.py
+    fi
+
+Un autre exemple de script consiste à ajouter la conversion du fichier de
+commandes ADAO (JDC, ou paire de fichiers ".comm/.py") en un schéma YACS associé
+(fichier ".xml"). A la fin du script, on choisit aussi de supprimer le fichier
+de ``<Schéma xml YACS ADAO>`` car c'est un fichier généré. Pour cela, en ayant
+bien pris soin de remplacer le texte ``<Répertoire principal d'installation de
+SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
+
+    #!/bin/bash
+    if (test $# != 1)
+    then
+      echo -e "\nUsage: $0 <Schéma xml YACS ADAO>\n"
+      exit
+    else
+      D=`dirname $1`
+      F=`basename -s .comm $1`
+      F=`basename -s .py $F`
+      USERFILE="$D/$F"
+    fi
+    if (test ! -e $USERFILE.py)
+    then
+      echo -e "\nErreur : le fichier PY nommé $USERFILE.py n'existe pas.\n"
+      exit
+    else
+      SALOMEDIR="<Répertoire principal d'installation de SALOME>"
+      $SALOMEDIR/salome start -k -t
+      $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py $USERFILE.py $USERFILE.xml"
+      $SALOMEDIR/salome shell -- "driver $USERFILE.xml"
+      $SALOMEDIR/salome shell killSalome.py
+      rm -f $USERFILE.xml
+    fi
+
+Dans tous les cas, les sorties standard et d'erreur se font dans le terminal de
+lancement.
 
 Exécuter un schéma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI)
 ------------------------------------------------------------------------------
@@ -136,13 +197,12 @@ Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO e
 --------------------------------------------------------------------------------------
 
 .. index:: single: Observer
-.. index:: single: Observers
 .. index:: single: Observer Template
 
 Certaines variables spéciales internes à l'optimisation, utilisées au cours des
 calculs, peuvent être surveillées durant un calcul ADAO en YACS. Ces variables
 peuvent être affichées, tracées, enregistrées, etc. C'est réalisable en
-utilisant des "*observers*", qui sont des scripts, chacun associé à une
+utilisant des "*observer*", qui sont des scripts, chacun associé à une
 variable. Pour pouvoir utiliser cette capacité, l'utilisateur doit construire
 des scripts disposant en entrée standard (i.e. disponible dans l'espace de
 nommage) des variables ``var`` et ``info``. La variable ``var`` est à utiliser
@@ -154,7 +214,7 @@ l'éditeur graphique. Ces scripts simples peuvent être adaptés par l'utilisateur,
 soit dans l'étape d'édition EFICAS, ou dans l'étape d'édition YACS, pour
 améliorer l'adaptation du calcul ADAO dans YACS.
 
-A titre d'exemple, voici un script trés simple (similaire au modèle
+A titre d'exemple, voici un script très simple (similaire au modèle
 "*ValuePrinter*") utilisable pour afficher la valeur d'une variable surveillée::
 
     print "    --->",info," Value =",var[-1]
@@ -163,7 +223,7 @@ Stocké comme un fichier Python, ce script peut être associé à chaque variable
 présente dans le mot-clé "*SELECTION*" de la commande "*Observers*":
 "*Analysis*", "*CurrentState*", "*CostFunction*"... La valeur courante de la
 variable sera affichée à chaque étape de l'algorithme d'optimisation ou
-d'assimilation. Les "*observers*" peuvent inclure des capacités d'affichage
+d'assimilation. Les "*observer*" peuvent inclure des capacités d'affichage
 graphique, de stockage, d'affichage complexe, de traitement statistique, etc.
 
 Obtenir plus d'information lors du déroulement d'un calcul
@@ -244,7 +304,7 @@ opérateurs tangent et adjoint, sont les suivantes :
 #. Le calcul unitaire de la fonction utilisateur directe "dure un certain temps", c'est-à-dire plus que quelques minutes.
 #. La fonction utilisateur directe n'utilise pas déjà du parallélisme (ou l'exécution parallèle est désactivée dans le calcul de l'utilisateur).
 #. La fonction utilisateur directe n'effectue pas d'accès en lecture/écriture à des ressources communes, principalement des données stockées, des fichiers de sortie ou des espaces mémoire.
-#. Les observers ajoutés par l'utilisateur n'effectuent pas d'accès en lecture/écriture à des ressources communes, comme des fichiers ou des espaces mémoire.
+#. Les "*observer*" ajoutés par l'utilisateur n'effectuent pas d'accès en lecture/écriture à des ressources communes, comme des fichiers ou des espaces mémoire.
 
 Si ces conditions sont satisfaites, l'utilisateur peut choisir d'activer le
 parallélisme interne pour le calcul des dérivées numériques. Malgré la

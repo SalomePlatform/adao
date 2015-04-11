@@ -31,10 +31,10 @@ from daCore import AssimilationStudy
 
 class New(object):
     """
-    Creation TUI d'un cas ADAO sans lien avec YACS
+    Creation TUI d'un cas ADAO
     """
     def __init__(self, name = ""):
-        self.__adaoStudy = AssimilationStudy.AssimilationStudy( name )
+        self.__adaoStudy = AssimilationStudy.AssimilationStudy(name)
         self.__dumper = _DumpLogger(name)
 
     # -----------------------------------------------------------
@@ -550,36 +550,33 @@ class New(object):
         self.__dumper.register("get",dir(),locals(),Concept)
         return self.__adaoStudy.get(Concept)
 
-    def dumpNormalizedCommands(self):
-        "Récupération de la liste des commandes de création d'un cas"
-        return self.__dumper.dump()
+    def dumpNormalizedCommands(self, filename=None):
+        "Récupération de la liste des commandes du cas"
+        return self.__dumper.dump(filename)
 
-#     def UserPostAnalysis(self):
-#         raise NotImplementedError()
-#
-#     def StudyRepertory(self):
-#         raise NotImplementedError()
+    def __dir__(self):
+        return ['set', 'get', 'execute', '__doc__', '__init__', '__module__']
 
 class _DumpLogger(object):
     """
     Conservation des commandes de création d'un cas
     """
-    def __init__(self,__name="",__objname="case"):
+    def __init__(self, __name="", __objname="case"):
+        self.__name     = str(__name)
+        self.__objname  = str(__objname)
         self.__logSerie = []
-        # self.__logSerie.append("#-*-coding:iso-8859-1-*-\n#")
-        # self.__logSerie.append("# Copyright (C) 2008-2015 EDF R&D\n#")
-        self.__logSerie.append("#\n# Python script for ADAO\n#")
-        self.__logSerie.append("from numpy import *")
-        self.__logSerie.append("import adaoBuilder")
-        self.__logSerie.append("%s = adaoBuilder.New('%s')"%(__objname,__name))
         self.__switchoff = False
+        self.__logSerie.append("#\n# Python script for ADAO TUI\n#")
+        self.__logSerie.append("from numpy import array, matrix")
+        self.__logSerie.append("import adaoBuilder")
+        self.__logSerie.append("%s = adaoBuilder.New('%s')"%(self.__objname, self.__name))
     def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Enregistrement d'une commande individuelle"
         if __command is not None and __keys is not None and __local is not None and not self.__switchoff:
             __text  = ""
             if __pre is not None:
                 __text += "%s = "%__pre
-            __text += "case.%s( "%str(__command)
+            __text += "%s.%s( "%(self.__objname,str(__command))
             __keys.remove("self")
             for k in __keys:
                 __v = __local[k]
@@ -591,14 +588,14 @@ class _DumpLogger(object):
                 self.__switchoff = True
         if not __switchoff:
             self.__switchoff = False
-    def dump(self,__filename=None):
+    def dump(self, __filename=None):
         "Restitution de la liste des commandes de création d'un cas"
-        if __filename is None:
-            return "\n".join(self.__logSerie)
-        else:
+        __text = "\n".join(self.__logSerie)
+        if __filename is not None:
             fid = open(__filename,"w")
-            fid.writelines(self.__logSerie)
+            fid.write(__text)
             fid.close()
+        return __text
 
 class _ObserverF(object):
     """
