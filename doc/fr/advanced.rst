@@ -138,15 +138,15 @@ lancement.
 Exécuter un schéma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI)
 ------------------------------------------------------------------------------
 
-Cette section décrit comment exécuter en mode TUI (Text User Interface) un
-schéma de calcul YACS, obtenu par la fonction "*Exporter vers YACS*" d'ADAO.
-Cela utilise le mode texte standard de YACS, qui est rapidement rappelé ici
-(voir la documentation YACS pour de plus amples informations) à travers un
-exemple simple. Comme décrit dans la documentation, un schéma XML peut être
-chargé en python. On donne ici une séquence complète de commandes pour tester la
-validité du schéma avant de l'exécuter, ajoutant des lignes supplémentaires
-initiales pour charger de manière explicite le catalogue de types pour éviter
-d'obscures difficultés::
+Cette section décrit comment exécuter en mode TUI (Text User Interface) YACS un
+schéma de calcul YACS, obtenu dans l'interface graphique par la fonction
+"*Exporter vers YACS*" d'ADAO. Cela utilise le mode texte standard de YACS, qui
+est rapidement rappelé ici (voir la documentation YACS pour de plus amples
+informations) à travers un exemple simple. Comme décrit dans la documentation,
+un schéma XML peut être chargé en python. On donne ici une séquence complète de
+commandes pour tester la validité du schéma avant de l'exécuter, ajoutant des
+lignes supplémentaires initiales pour charger de manière explicite le catalogue
+de types pour éviter d'obscures difficultés::
 
     #-*-coding:iso-8859-1-*-
     import pilot
@@ -321,6 +321,10 @@ parallélisme...
 .. warning::
 
   en cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.
+
+On rappelle aussi qu'il faut choisir dans YACS un container par défaut de type
+"*multi*" pour le lancement du schéma, pour permettre une exécution
+véritablement parallèle.
 
 Passer d'une version d'ADAO à une nouvelle
 ------------------------------------------

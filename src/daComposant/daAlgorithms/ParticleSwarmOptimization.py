@@ -87,8 +87,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
-            name     = "Bounds",
-            message  = "Liste des valeurs de bornes",
+            name     = "BoxBounds",
+            message  = "Liste des valeurs de bornes d'incréments de paramètres",
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

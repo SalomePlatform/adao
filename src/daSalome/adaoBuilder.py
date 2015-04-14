@@ -56,8 +56,7 @@ class New(object):
             ThreeFunctions       = None,
             Variable             = None,
             Vector               = None,
-            VectorSerie          = None
-            ):
+            VectorSerie          = None):
         "Interface unique de définition de variables d'entrées par argument"
         self.__dumper.register("set",dir(),locals(),None,True)
         try:
@@ -435,7 +434,7 @@ class New(object):
                     not ThreeFunctions.has_key("Direct") or \
                     not ThreeFunctions.has_key("Tangent") or \
                     not ThreeFunctions.has_key("Adjoint"):
-                    raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint") 
+                    raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
                 __Function = ThreeFunctions
                 __Function.update(__Parameters)
             else:
@@ -637,6 +636,7 @@ class _ImportFromScript(object):
         else:
             return getattr(self.__scriptfile, __varname)
     def getstring(self):
+        "Renvoie le script complet"
         return self.__scriptstring
 
 # ==============================================================================

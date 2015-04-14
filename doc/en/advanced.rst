@@ -131,14 +131,14 @@ In all cases, the standard output and errors come in the launching terminal.
 Running an ADAO calculation scheme in YACS using a TUI user mode
 ----------------------------------------------------------------
 
-This section describes how to execute in TUI (Text User Interface) mode a YACS
-calculation scheme, obtained using the ADAO "Export to YACS" function. It uses
-the standard YACS TUI mode, which is briefly recalled here (see YACS
-documentation for more information) through a simple example. As described in
-documentation, a XML scheme can be loaded in a Python. We give here a whole
-sequence of command lines to test the validity of the scheme before executing
-it, adding some initial supplementary ones to explicitly load the types catalog
-to avoid weird difficulties::
+This section describes how to execute in TUI (Text User Interface) YACS mode a
+YACS calculation scheme, obtained in the graphical interface by using the ADAO
+"Export to YACS" function. It uses the standard YACS TUI mode, which is briefly
+recalled here (see YACS documentation for more information) through a simple
+example. As described in documentation, a XML scheme can be loaded in a Python.
+We give here a whole sequence of command lines to test the validity of the
+scheme before executing it, adding some initial supplementary ones to explicitly
+load the types catalog to avoid weird difficulties::
 
     import pilot
     import SALOMERuntime
@@ -303,6 +303,9 @@ operator function before and during enabling parallelism...
 .. warning::
 
   in case of doubt, it is recommended NOT TO ACTIVATE this parallelism.
+
+It is also recalled that one have to choose the type "*multi*" for the default
+container in order to launch the scheme, to allow a really parallel execution.
 
 Switching from a version of ADAO to a newer one
 -----------------------------------------------

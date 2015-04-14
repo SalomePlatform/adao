@@ -498,16 +498,16 @@ Effectuer le calcul
     nécessaire du parallélisme interne des algorithmes dans ADAO et du
     parallélisme interne du ou des codes de simulation utilisé.
 
-.. index:: single: generateYACSscheme
-
-**executeYACSScheme** (*File*)
-    Cete commande génère le schéma YACS [YACS]_ du cas de calcul dans le fichier
-    requis "*File*", et en lance l'exécution dans l'interpréteur YACS, comme on
-    peut le réaliser en utilisant l'éditeur standard de cas ADAO. Les sorties
-    standard et d'erreur sont celles de l'interpréteur YACS. On dispose si
-    nécessaire du parallélisme de noeuds et blocs dans YACS, du parallélisme
-    interne des algorithmes dans ADAO et du parallélisme interne du ou des codes
-    de simulation utilisé.
+.. .. index:: single: generateYACSscheme
+.. 
+.. **executeYACSScheme** (*File*)
+..     Cete commande génère le schéma YACS [YACS]_ du cas de calcul dans le fichier
+..     requis "*File*", et en lance l'exécution dans l'interpréteur YACS, comme on
+..     peut le réaliser en utilisant l'éditeur standard de cas ADAO. Les sorties
+..     standard et d'erreur sont celles de l'interpréteur YACS. On dispose si
+..     nécessaire du parallélisme de noeuds et blocs dans YACS, du parallélisme
+..     interne des algorithmes dans ADAO et du parallélisme interne du ou des codes
+..     de simulation utilisé.
 
 .. index:: single: execute
 
