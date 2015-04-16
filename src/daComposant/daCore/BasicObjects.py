@@ -92,10 +92,11 @@ class Operator:
     def __init__(self, fromMethod=None, fromMatrix=None, avoidingRedundancy = True):
         """
         On construit un objet de ce type en fournissant à l'aide de l'un des
-        deux mots-clé, soit une fonction python, soit matrice.
+        deux mots-clé, soit une fonction python, soit une matrice.
         Arguments :
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
+        - avoidingRedundancy : évite ou pas les calculs redondants
         """
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
         self.__AvoidRC = bool( avoidingRedundancy )

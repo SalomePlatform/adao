@@ -319,11 +319,20 @@ class AdaoGenerator(PythonGenerator):
       keys = [k.replace(base,'') for k in keys]
       data  = '{'
       for k in keys:
-        data += '"%s":"%s",'%(k.split('__')[-1],self.dictMCVal[base+k])
+        key = k.split('__')[-1]
+        val = self.dictMCVal[base+k]
+        # print key," = ",val,"    ",type(val)
+        if isinstance(val, str) and key == "SetSeed":
+            data += '"%s":%s,'%(key,int(val))
+        elif isinstance(val, str) and not (val.count('[')>=2 or val.count('(')>=2):
+            data += '"%s":"%s",'%(key,val)
+        else:
+            data += '"%s":%s,'%(key,val)
+      data = data.replace("'",'"')
       data += '}'
       self.text_da += data_name + "_config = {} \n"
       self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
-      self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
+      self.text_da += data_name + "_config['From'] = 'String'\n"
       self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
       self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 

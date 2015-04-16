@@ -405,9 +405,11 @@ class New(object):
             if Parameters.has_key("CenteredFiniteDifference"):
                 __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
             if Parameters.has_key("EnableMultiProcessing"):
-                __Parameters["withmpEnabled"] = Parameters["EnableMultiProcessing"]
+                __Parameters["EnableMultiProcessing"] = Parameters["EnableMultiProcessing"]
+                __Parameters["withmpEnabled"]         = Parameters["EnableMultiProcessing"]
             if Parameters.has_key("NumberOfProcesses"):
-                __Parameters["withmpWorkers"] = Parameters["NumberOfProcesses"]
+                __Parameters["NumberOfProcesses"] = Parameters["NumberOfProcesses"]
+                __Parameters["withmpWorkers"]     = Parameters["NumberOfProcesses"]
         if Script is not None:
             __Matrix, __Function = None, None
             if Matrix:
