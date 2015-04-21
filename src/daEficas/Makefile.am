@@ -32,6 +32,7 @@ mypkgpython_PYTHON = \
 		__init__.py \
 		prefs_ADAO.py \
 		prefs.py \
+		traduitADAOsansToV7_6_0.py \
 		traduitADAOV7_4_0ToV7_6_0.py \
 		traduitADAOV7_5_0ToV7_6_0.py \
 		traduitADAOV7_5_1ToV7_6_0.py
