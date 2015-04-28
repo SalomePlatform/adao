@@ -63,7 +63,6 @@ begin_catalog_file = """#-*-coding:iso-8859-1-*-
 
 import os, re
 import Accas
-from Accas.A_VALIDATOR import FileExtVal, FunctionVal
 from Accas import *
 
 JdC = JDC_CATA (
@@ -240,7 +239,7 @@ def AlgorithmParametersInNS(filename):
         for ln in fc:
             if cr.match(ln): return 1
     return 0
-AlgorithmParametersInNS.info = u"The Python file has to contain explicitly a \\"AlgorithmParameters\\" variable."
+AlgorithmParametersInNS.info = u"The Python file has to contain explicitly an \\"AlgorithmParameters\\" variable."
 def F_AlgorithmParameters(statut, algos_names, fv=NoCheckInNS) : return FACT(
     statut = statut,
     Algorithm = SIMP(statut="o", typ = "TXM", into = algos_names ),
@@ -263,12 +262,16 @@ def F_variables(statut) : return FACT(
     NAMES = SIMP(statut="o", typ="TXM", max="**", validators=NoRepeat()),
     SIZES = SIMP(statut="o", typ="I", val_min=1, max="**")
     )
+def ChDir(dirname):
+    os.chdir(os.path.abspath(dirname))
+    return 1
+ChDir.info = u"This has to be a regular directory path."
 
 ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
     op=None,
     repetable           = "n",
     StudyName           = SIMP(statut="o", typ = "TXM", defaut="ADAO Calculation Case"),
-    StudyRepertory      = SIMP(statut="f", typ = "Repertoire", min=1, max=1),
+    StudyRepertory      = SIMP(statut="f", typ = "Repertoire", validators=FunctionVal(ChDir), min=1, max=1),
     Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
     AlgorithmParameters = F_AlgorithmParameters("o",(${algos_names}), AlgorithmParametersInNS),
     Background          = F_Background("o", BackgroundInNS),
@@ -290,7 +293,7 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
     op=None,
     repetable           = "n",
     StudyName           = SIMP(statut="o", typ = "TXM", defaut="ADAO Checking Case"),
-    StudyRepertory      = SIMP(statut="f", typ = "Repertoire", min=1, max=1),
+    StudyRepertory      = SIMP(statut="f", typ = "Repertoire", validators=FunctionVal(ChDir), min=1, max=1),
     Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
     AlgorithmParameters = F_AlgorithmParameters("o", (${check_names}), AlgorithmParametersInNS),
     CheckingPoint       = F_CheckingPoint("o", CheckingPointInNS),
