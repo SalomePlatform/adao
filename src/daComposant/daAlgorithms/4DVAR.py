@@ -169,6 +169,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.DirectInnovation  = [None,] # Le pas 0 n'est pas observé
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentState"].store( _X )
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             self.DirectCalculation = [None,]
             self.DirectInnovation  = [None,]
@@ -202,8 +204,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Jo = Jo + _YmHMX.T * RI * _YmHMX
             Jo  = 0.5 * Jo
             J   = float( Jb ) + float( Jo )
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["CurrentState"].store( _X )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

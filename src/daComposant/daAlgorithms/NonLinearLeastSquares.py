@@ -133,15 +133,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentState"].store( _X )
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             Jb  = 0.
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
             J   = float( Jb ) + float( Jo )
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["CurrentState"].store( _X )
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
