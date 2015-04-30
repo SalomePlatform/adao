@@ -284,7 +284,7 @@ class Algorithm:
         self._m = PlatformInfo.SystemUsage()
         #
         self._name = str( name )
-        self._parameters = {}
+        self._parameters = {"StoreSupplementaryCalculations":[]}
         self.__required_parameters = {}
         self.StoredVariables = {}
         #
@@ -318,8 +318,7 @@ class Algorithm:
         return 0
 
     def _post_run(self,_oH=None):
-        if self._parameters.has_key("StoreSupplementaryCalculations") and \
-            "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             for _A in self.StoredVariables["APosterioriCovariance"]:
                 if "APosterioriVariances" in self._parameters["StoreSupplementaryCalculations"]:
                     self.StoredVariables["APosterioriVariances"].store( numpy.diag(_A) )
