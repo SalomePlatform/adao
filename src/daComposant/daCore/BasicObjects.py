@@ -284,7 +284,7 @@ class Algorithm:
         self._m = PlatformInfo.SystemUsage()
         #
         self._name = str( name )
-        self._parameters = {}
+        self._parameters = {"StoreSupplementaryCalculations":[]}
         self.__required_parameters = {}
         self.StoredVariables = {}
         #

@@ -78,27 +78,27 @@ NoCheckInNS.info = ""
 def DirectOperatorInNS(filename):
     if os.path.exists(filename):
         fc = open(filename, 'r').readlines()
-        cr = re.compile("^DirectOperator[\s]*=")
+        cr = re.compile("^def[\s]*DirectOperator[\s]*\(")
         for ln in fc:
             if cr.match(ln): return 1
     return 0
-DirectOperatorInNS.info = u"The Python file has to contain explicitly a \\"DirectOperator\\" variable."
+DirectOperatorInNS.info = u"The Python file has to contain explicitly a \\"DirectOperator\\" function definition with only one vector as argument."
 def TangentOperatorInNS(filename):
     if os.path.exists(filename):
         fc = open(filename, 'r').readlines()
-        cr = re.compile("^TangentOperator[\s]*=")
+        cr = re.compile("^def[\s]*TangentOperator[\s]*\(")
         for ln in fc:
             if cr.match(ln): return 1
     return 0
-TangentOperatorInNS.info = u"The Python file has to contain explicitly a \\"TangentOperator\\" variable."
+TangentOperatorInNS.info = u"The Python file has to contain explicitly a \\"TangentOperator\\" function definition with only one pair of vectors as argument."
 def AdjointOperatorInNS(filename):
     if os.path.exists(filename):
         fc = open(filename, 'r').readlines()
-        cr = re.compile("^AdjointOperator[\s]*=")
+        cr = re.compile("^def[\s]*AdjointOperator[\s]*\(")
         for ln in fc:
             if cr.match(ln): return 1
     return 0
-AdjointOperatorInNS.info = u"The Python file has to contain explicitly a \\"AdjointOperator\\" variable."
+AdjointOperatorInNS.info = u"The Python file has to contain explicitly an \\"AdjointOperator\\" function definition with only one pair of vectors as argument."
 """%(module_version.name,module_version.version)
 
 # Important : validators=[...] pour que les conditions soient traitées simultanément, en "ET", et pas en "OU" (choisi dans le cas du tuple à la place de la liste)

@@ -21,5 +21,5 @@
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 name    = "Data Assimilation Package"
-version = "0.10.1"
-date    = "vendredi 30 janvier 2015, 12:12:12 (UTC+0100)"
+version = "0.11.0"
+date    = "jeudi 30 avril 2015, 12:12:12 (UTC+0100)"
