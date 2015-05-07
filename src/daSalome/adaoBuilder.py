@@ -498,21 +498,29 @@ class New(object):
             __FunctionText = String
         elif Template is not None:
             if Template == "ValuePrinter":
-                __FunctionText = "print info,var[-1]"
+                __FunctionText = """print info, var[-1]"""
             if Template == "ValueSeriePrinter":
-                __FunctionText = "print info,var[:]"
+                __FunctionText = """print info, var[:]"""
             if Template == "ValueSaver":
-                __FunctionText = r"import numpy,re\nv=numpy.array((var[-1]))\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"
+                __FunctionText = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"""
             if Template == "ValueSerieSaver":
-                __FunctionText = r"import numpy,re\nv=numpy.array((var[:])) \nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"
+                __FunctionText = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"""
             if Template == "ValuePrinterAndSaver":
-                __FunctionText = r"import numpy,re\nv=numpy.array((var[-1]))\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"
+                __FunctionText = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"""
             if Template == "ValueSeriePrinterAndSaver":
-                __FunctionText = r"import numpy,re\nv=numpy.array((var[:])) \nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"
+                __FunctionText = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)"""
             if Template == "ValueGnuPlotter":
-                __FunctionText = r"import Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( var[-1], with_='lines lw 2' ) )"
+                __FunctionText = """import numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal ifig, gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
             if Template == "ValueSerieGnuPlotter":
-                __FunctionText = r"import Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( var[:], with_='lines lw 2' ) )"
+                __FunctionText = """import numpy, Gnuplot\nv=numpy.array(var[:],  ndmin=1)\nglobal ifig, gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
+            if Template == "ValuePrinterAndGnuPlotter":
+                __FunctionText = """print info, var[-1]\nimport numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
+            if Template == "ValueSeriePrinterAndGnuPlotter":
+                __FunctionText = """print info, var[:] \nimport numpy, Gnuplot\nv=numpy.array(var[:],  ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
+            if Template == "ValuePrinterSaverAndGnuPlotter":
+                __FunctionText = """print info, var[-1]\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
+            if Template == "ValueSeriePrinterSaverAndGnuPlotter":
+                __FunctionText = """print info, var[:] \nimport numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
         elif Script is not None:
             __FunctionText = _ImportFromScript(Script).getstring()
         else:

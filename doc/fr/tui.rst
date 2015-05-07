@@ -116,9 +116,10 @@ d'erreurs :math:`\mathbf{R}` (nommée ``ObservationError``)::
     case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
     case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
 
-On remarque que l'on peut donner en entrée des quantités vectorielles des objets
-de type ``list``, ``tuple``, ``array`` ou ``matrix`` de Numpy. Dans ces deux
-derniers cas, il faut simplement importer Numpy avant.
+On remarque que l'on peut donner, en entrée des quantités vectorielles ou
+matricielles, des objets de type ``str``, ``list`` ou``tuple`` de Python, ou de
+type ``array`` ou ``matrix`` de Numpy. Dans ces deux derniers cas, il faut
+simplement importer le module Numpy avant.
 
 On doit ensuite définir les opérateurs :math:`H` d'observation et éventuellement
 :math:`M` d'évolution. Dans tous les cas, linéaire ou non-linéaire, on peut les
@@ -154,8 +155,8 @@ ci-dessus) et l'enregistre dans le cas ADAO::
 
 Pour connaître les résultats intermédiaire ou finaux du calcul du cas, on peut
 ajouter des "*observer*", qui permettent d'associer l'exécution d'un script à
-une variable interne ou finale du calcul. On se reportera à la description de la
-manière d':ref:`section_advanced_observer`, et à la :ref:`section_reference`
+une variable intermédiaire ou finale du calcul. On se reportera à la description
+de la manière d':ref:`section_advanced_observer`, et à la :ref:`section_reference`
 pour savoir quelles sont les quantités observables. Cette association
 d'"*observer*" avec une quantité existante se fait de manière similaire à la
 définition des données du calcul::
@@ -171,8 +172,8 @@ simple dans l'environnement de l'interpréteur Python::
 Au final, on obtient le script très compact proposé précédemment dans
 :ref:`subsection_tui_example`.
 
-Fournir des données de calcul plus complexes
-++++++++++++++++++++++++++++++++++++++++++++
+Fournir des données ou informations de calcul plus complexes
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Une telle interface s'écrivant en Python, il est possible d'utiliser toute la
 puissance du langage pour entrer des données plus complexes qu'une déclaration
