@@ -112,12 +112,13 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "OMA", "OMB", "Innovation",
-    "SigmaBck2", "SigmaObs2", "MahalanobisConsistency",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtOptimum",
-    "SimulationQuantiles"].
+    "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState",
+    "CostFunctionJ", "Innovation", "SigmaBck2", "SigmaObs2",
+    "MahalanobisConsistency", "SimulationQuantiles",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
   Quantiles
     Cette liste indique les valeurs de quantile, entre 0 et 1, à estimer par

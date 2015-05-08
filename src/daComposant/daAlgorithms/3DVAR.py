@@ -320,7 +320,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
         if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
-            Qtls = self._parameters["Quantiles"]
+            Qtls = map(float, self._parameters["Quantiles"])
             nech = self._parameters["NumberOfSamplesForQuantiles"]
             HXa  = numpy.matrix(numpy.ravel( HXa )).T
             YfQ  = None

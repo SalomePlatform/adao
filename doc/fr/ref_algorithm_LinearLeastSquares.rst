@@ -94,10 +94,11 @@ Les options de l'algorithme sont les suivantes:
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["OMA", "CostFunctionJ",
+    possibles sont dans la liste suivante : ["OMA", "CurrentState",
+    "CostFunctionJ", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["OMA"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
 
 *Astuce pour cet algorithme :*
 

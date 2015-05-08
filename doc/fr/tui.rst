@@ -208,10 +208,10 @@ de manière plus riche, pour enchaîner sur des post-traitements après le calcul
 en TUI.
 
 Les variables de résultats de calcul, ou les variables internes issues de
-l'optimisation sont disponibles à travers la méthode ``get`` du cas de calcul TUI
-ADAO, qui renvoie un objet de type liste de la variable demandée. On se
-reportera aux :ref:`section_ref_output_variables` pour une description détaillée
-sur ce sujet.
+l'optimisation ou de l'assimilation de données, sont disponibles à travers la
+méthode ``get`` du cas de calcul TUI ADAO, qui renvoie un objet de type liste de
+la variable demandée. On se reportera aux :ref:`section_ref_output_variables`
+pour une description détaillée sur ce sujet.
 
 A titre d'exemple, on donne quelques lignes de script qui permettent d'obtenir
 le nombre d'itérations de l'optimisation et la valeur optimale ainsi que sa
@@ -220,7 +220,7 @@ taille::
     print
     print "    Nombre d'iterations :", len(case.get("CostFunctionJ"))
     Xa = case.get("Analysis")
-    print "    Analyse optimale  :", Xa[-1]
+    print "    Analyse optimale    :", Xa[-1]
     print "    Taille de l'analyse :", len(Xa[-1])
     print
 
@@ -228,9 +228,10 @@ Ces lignes peuvent être très simplement additionnées à l'exemple initial de cas
 de calcul TUI ADAO proposé dans :ref:`subsection_tui_example`.
 
 De même que pour l'entrée des données, la simplicité de récupération des
-résultats permet d'envisager aisément des post-traitements enchaînés, pour
-utiliser par exemple de la visualisation avec MatPlotLib ou PARAVIS [PARAVIS]_,
-de l'adaptation de maillage avec HOMARD [HOMARD]_, ou pour d'autres calculs.
+résultats permet d'envisager aisément des post-traitements enchaînés dans
+SALOME, pour utiliser par exemple de la visualisation avec MatPlotLib ou PARAVIS
+[PARAVIS]_, de l'adaptation de maillage avec HOMARD [HOMARD]_, ou pour d'autres
+calculs.
 
 .. _subsection_tui_commands:
 
@@ -548,10 +549,10 @@ ici, puisque dépendante de l'utilisateur).
 
 Les hypothèses du cas utilisateur sont les suivantes. On suppose :
 
-#.      que l'on veut recaler 3 paramètres ``alpha``, ``beta`` et ``gamma`` dans un domaine borné,
-#.      que l'on dispose d'observations nommées ``observations``,
-#.      que l'utilisateur dispose en Python d'une fonction de simulation physique appellée ``simulation`` préalablement testée, qui transforme les 3 paramètres en résultats similaires aux observations,
-#.      que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
+#. que l'on veut recaler 3 paramètres ``alpha``, ``beta`` et ``gamma`` dans un domaine borné,
+#. que l'on dispose d'observations nommées ``observations``,
+#. que l'utilisateur dispose en Python d'une fonction de simulation physique appellée ``simulation`` préalablement testée, qui transforme les 3 paramètres en résultats similaires aux observations,
+#. que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
 
 Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne par
 exemple les entrées suivantes, parfaitement arbitraires, en construisant les

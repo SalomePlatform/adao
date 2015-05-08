@@ -97,6 +97,17 @@ commande.
 
 Les options de l'algorithme sont les suivantes:
 
+  StoreSupplementaryCalculations
+    Cette liste indique les noms des variables supplémentaires qui peuvent être
+    disponibles à la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    possibles sont dans la liste suivante : ["CurrentState", "Innovation",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
+
   SetSeed
     Cette clé permet de donner un nombre entier pour fixer la graine du
     générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est

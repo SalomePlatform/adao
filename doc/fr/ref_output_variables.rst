@@ -41,7 +41,7 @@ calcul. L'obtention de ces informations se fait ensuite de manière standardisée
 à l'aide de l'étape de post-processing du calcul.
 
 L'étape est aisément identifiée par l'utilisateur dans son cas ADAO de
-définition (par la mot-clé "*UserPostAnalysis*") ou dans son schéma YACS
+définition (par le mot-clé "*UserPostAnalysis*") ou dans son schéma YACS
 d'exécution (par des noeuds ou blocs situés après le bloc de calcul, et reliés
 graphiquement au port de sortie "*algoResults*" du bloc de calcul):
 

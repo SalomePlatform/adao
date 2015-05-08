@@ -159,7 +159,7 @@ The options of the algorithm are the following:
     "OMB", "Innovation", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Tips for this algorithm:*
 

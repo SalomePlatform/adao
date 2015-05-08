@@ -96,6 +96,17 @@ command.
 
 The options of the algorithm are the following:
 
+  StoreSupplementaryCalculations
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations or memory consumptions. The default is a void list, none of
+    these variables being calculated and stored by default. The possible names
+    are in the following list: ["CurrentState", "Innovation",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum"].
+
+    Example : ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
+
   SetSeed
     This key allow to give an integer in order to fix the seed of the random
     generator used to generate the ensemble. A convenient value is for example

@@ -166,7 +166,7 @@ Les options de l'algorithme sont les suivantes:
     "CurrentState", "OMA", "OMB", "Innovation",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Astuce pour cet algorithme :*
 

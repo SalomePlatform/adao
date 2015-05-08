@@ -112,9 +112,9 @@ Les options de l'algorithme sont les suivantes:
     possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
     "CurrentState", "OMA", "OMB", "Innovation",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"]. 
+    "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Astuce pour cet algorithme :*
 

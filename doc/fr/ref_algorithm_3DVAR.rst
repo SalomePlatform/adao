@@ -175,7 +175,7 @@ Les options de l'algorithme sont les suivantes:
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum", "SimulationQuantiles"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
   Quantiles
     Cette liste indique les valeurs de quantile, entre 0 et 1, à estimer par

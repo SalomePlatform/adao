@@ -45,7 +45,11 @@ the form of hyper-cubes, explicit or sampled using classic distributions. Be
 careful to the size of the hyper-cube (and then to the number of calculations)
 that can be reached, it can be big very quickly.
 
-To perform distributed or complex sampling, see other modules available in
+To be visible by the user, the results of sampling has to be explicitly asked
+for. One use for that, on the desired variable, the final saving through
+"*UserPostAnalysis*" or the treatment during the calculation by "*observer*".
+
+To perform distributed or more complex sampling, see other modules available in
 SALOME : PARAMETRIC or OPENTURNS.
 
 Optional and required commands

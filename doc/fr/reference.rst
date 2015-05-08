@@ -82,16 +82,16 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
    
    ref_assimilation_keywords
    ref_algorithm_3DVAR
+   ref_algorithm_Blue
+   ref_algorithm_EnsembleBlue
+   ref_algorithm_ExtendedBlue
+   ref_algorithm_ExtendedKalmanFilter
+   ref_algorithm_KalmanFilter
    ref_algorithm_LinearLeastSquares
    ref_algorithm_NonLinearLeastSquares
-   ref_algorithm_Blue
-   ref_algorithm_ExtendedBlue
-   ref_algorithm_EnsembleBlue
-   ref_algorithm_KalmanFilter
-   ref_algorithm_ExtendedKalmanFilter
-   ref_algorithm_UnscentedKalmanFilter
    ref_algorithm_ParticleSwarmOptimization
    ref_algorithm_QuantileRegression
+   ref_algorithm_UnscentedKalmanFilter
 
 .. _section_reference_checking:
 
@@ -116,5 +116,5 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
    ref_algorithm_GradientTest
    ref_algorithm_LinearityTest
    ref_algorithm_ObserverTest
-   ref_algorithm_TangentTest
    ref_algorithm_SamplingTest
+   ref_algorithm_TangentTest

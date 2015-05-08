@@ -120,7 +120,7 @@ Les options de l'algorithme sont les suivantes:
     "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState",
     "Innovation"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

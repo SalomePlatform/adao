@@ -46,7 +46,12 @@ sous la forme d'hyper-cubes, explicites ou échantillonnés selon des lois
 courantes. Attention à la taille de l'hyper-cube (et donc au nombre de calculs)
 qu'il est possible d'atteindre, elle peut rapidement devenir importante.
 
-Pour effectuer un échantillonage distribué ou plus complexe, voir d'autres
+Pour apparaître pour l'utilisateur, les résultats de l'échantillonnage doivent
+être demandés explicitement. On utilise pour cela, sur la variable désirée, la
+sauvegarde finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en
+cours de calcul à l'aide des "*observer*" adaptés.
+
+Pour effectuer un échantillonnage distribué ou plus complexe, voir d'autres
 modules disponibles dans SALOME : PARAMETRIC ou OPENTURNS.
 
 Commandes requises et optionnelles

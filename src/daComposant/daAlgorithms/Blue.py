@@ -39,7 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CostFunctionJ", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtOptimum"]
+            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -127,12 +127,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la fonction coût
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
-           "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
-           "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
-           "SigmaObs2"                     in self._parameters["StoreSupplementaryCalculations"] or \
-           "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulationQuantiles"           in self._parameters["StoreSupplementaryCalculations"]:
+           "CostFunctionJ"                      in self._parameters["StoreSupplementaryCalculations"] or \
+           "OMA"                                in self._parameters["StoreSupplementaryCalculations"] or \
+           "SigmaObs2"                          in self._parameters["StoreSupplementaryCalculations"] or \
+           "MahalanobisConsistency"             in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulatedObservationAtOptimum"      in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulationQuantiles"                in self._parameters["StoreSupplementaryCalculations"]:
             HXa = Hm * Xa
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
@@ -163,6 +164,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
@@ -179,7 +182,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
         if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
-            Qtls = self._parameters["Quantiles"]
+            Qtls = map(float, self._parameters["Quantiles"])
             nech = self._parameters["NumberOfSamplesForQuantiles"]
             YfQ  = None
             for i in range(nech):
@@ -204,6 +207,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["SimulationQuantiles"].store( YQ )
         if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
         if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #

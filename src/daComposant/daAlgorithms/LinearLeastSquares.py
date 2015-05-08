@@ -39,7 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["OMA", "CostFunctionJ", "SimulatedObservationAtOptimum"]
+            listval  = ["OMA", "CurrentState", "CostFunctionJ", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -83,8 +83,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
         if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
         if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #

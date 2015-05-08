@@ -29,6 +29,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "ENSEMBLEBLUE")
         self.defineRequiredParameter(
+            name     = "StoreInternalVariables",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["CurrentState", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            )
+        self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
@@ -77,16 +90,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------
         for iens in range(nb_ens):
-            d  = EnsembleY[:,iens] - Hm * Xb[iens]
+            HXb = Hm * Xb[iens]
+            if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+            d  = EnsembleY[:,iens] - HXb
+            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["Innovation"].store( numpy.ravel(d) )
             Xa = Xb[iens] + K*d
             self.StoredVariables["CurrentState"].store( Xa )
-            self.StoredVariables["Innovation"].store( d.A1 )
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm * Xa )
         #
         # Fabrication de l'analyse
         # ------------------------
         Members = self.StoredVariables["CurrentState"][-nb_ens:]
         Xa = numpy.matrix( Members ).mean(axis=0)
         self.StoredVariables["Analysis"].store( Xa.A1 )
+        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel( Hm * Xa ) )
         #
         self._post_run(HO)
         return 0

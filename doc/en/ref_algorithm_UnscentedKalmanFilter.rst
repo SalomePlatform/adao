@@ -132,7 +132,7 @@ The options of the algorithm are the following:
     "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState",
     "Innovation"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA","Innovation"]}``
+    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
