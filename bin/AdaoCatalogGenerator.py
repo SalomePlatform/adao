@@ -81,6 +81,9 @@ def DirectOperatorInNS(filename):
         cr = re.compile("^def[\s]*DirectOperator[\s]*\(")
         for ln in fc:
             if cr.match(ln): return 1
+        cr = re.compile("^DirectOperator[\s]*=")
+        for ln in fc:
+            if cr.match(ln): return 1
     return 0
 DirectOperatorInNS.info = u"The Python file has to contain explicitly a \\"DirectOperator\\" function definition with only one vector as argument."
 def TangentOperatorInNS(filename):
@@ -89,12 +92,18 @@ def TangentOperatorInNS(filename):
         cr = re.compile("^def[\s]*TangentOperator[\s]*\(")
         for ln in fc:
             if cr.match(ln): return 1
+        cr = re.compile("^TangentOperator[\s]*=")
+        for ln in fc:
+            if cr.match(ln): return 1
     return 0
 TangentOperatorInNS.info = u"The Python file has to contain explicitly a \\"TangentOperator\\" function definition with only one pair of vectors as argument."
 def AdjointOperatorInNS(filename):
     if os.path.exists(filename):
         fc = open(filename, 'r').readlines()
         cr = re.compile("^def[\s]*AdjointOperator[\s]*\(")
+        for ln in fc:
+            if cr.match(ln): return 1
+        cr = re.compile("^AdjointOperator[\s]*=")
         for ln in fc:
             if cr.match(ln): return 1
     return 0

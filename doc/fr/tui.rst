@@ -117,7 +117,7 @@ d'erreurs :math:`\mathbf{R}` (nommée ``ObservationError``)::
     case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
 
 On remarque que l'on peut donner, en entrée des quantités vectorielles ou
-matricielles, des objets de type ``str``, ``list`` ou``tuple`` de Python, ou de
+matricielles, des objets de type ``str``, ``list`` ou ``tuple`` de Python, ou de
 type ``array`` ou ``matrix`` de Numpy. Dans ces deux derniers cas, il faut
 simplement importer le module Numpy avant.
 
@@ -474,19 +474,20 @@ Paramétrer le calcul, les sorties, etc.
 .. index:: single: setObserver
 
 **setObserver** (*Variable, Template, String, Script, Info*)
-    Cette commande permet de définir un observer sur une variable courante ou
-    finale du calcul.  On se reportera à la description de la manière
+    Cette commande permet de définir un *observer* sur une variable courante ou
+    finale du calcul. On se reportera à la description de la manière
     d':ref:`section_advanced_observer`, et à la :ref:`section_reference` pour
-    savoir quelles sont les quantités observables. On définit par "*String*" le
-    corps de l'observer par une chaine de caractères incluant si nécessaire des
-    sauts de lignes. On recommande d'utiliser les patrons disponibles par
-    l'argument "*Template*". On dispose des patrons simples suivants :
-    "*ValuePrinter*", "*ValueSeriePrinter*", "*ValueSaver*",
-    "*ValueSerieSaver*", "*ValuePrinterAndSaver*",
-    "*ValueSeriePrinterAndSaver*", "*ValueGnuPlotter*",
-    "*ValueSerieGnuPlotter*". Dans le cas d'une définition par "*Script*", le
-    fichier indiqué doit contenir uniquement le corps de la fonction, comme
-    décrit dans la manière d':ref:`section_advanced_observer`.
+    savoir quelles sont les quantités observables. On définit comme un
+    "*String*" le corps de l'*observer*, en utilisant une chaine de caractères
+    incluant si nécessaire des sauts de lignes. On recommande d'utiliser les
+    patrons disponibles par l'argument "*Template*". On dispose des patrons
+    simples suivants : "ValuePrinter", "ValueSeriePrinter", "ValueSaver",
+    "ValueSerieSaver", "ValuePrinterAndSaver", "ValueSeriePrinterAndSaver",
+    "ValueGnuPlotter", "ValueSerieGnuPlotter", "ValuePrinterAndGnuPlotter",
+    "ValueSeriePrinterAndGnuPlotter", "ValuePrinterSaverAndGnuPlotter",
+    "ValueSeriePrinterSaverAndGnuPlotter". Dans le cas d'une définition par
+    "*Script*", le fichier indiqué doit contenir uniquement le corps de la
+    fonction, comme décrit dans la manière d':ref:`section_advanced_observer`.
 
 Effectuer le calcul 
 +++++++++++++++++++
