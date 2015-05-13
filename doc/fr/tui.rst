@@ -263,7 +263,7 @@ La définition des données lors de la création de cas de calcul TUI ADAO supporte
 **deux syntaxes entièrement équivalentes**. On peut :
 
 - soit utiliser la commande ``set`` et comme premier argument le concept
-  ``XXXXX`` sur laquelle appliquer la commande dont les arguments suivent,
+  ``XXXXX`` sur lequel appliquer la commande dont les arguments suivent,
 - soit utiliser la commande ``setXXXXX`` contenant les arguments de la commande
   à appliquer.
 
@@ -291,8 +291,8 @@ entrées en interface GUI, décrits dans la section des
 fait soit lors de leur définition, soit lors de l'exécution.
 
 Dans chaque commande, le mot-clé booléen "*Stored*" permet d'indiquer si l'on
-veut éventuellement la stocker la grandeur définie pour en disposer en en cours
-de calcul ou en sortie. Le choix par défaut est de ne pas stocker, et il est
+veut éventuellement la stocker la grandeur définie, pour en disposer en cours de
+calcul ou en sortie. Le choix par défaut est de ne pas stocker, et il est
 recommandé de conserver cette valeur par défaut. En effet, pour un cas de calcul
 TUI, on dispose déjà souvent des grandeurs données en entrées qui sont présentes
 dans l'espace de nommage courant du cas.
@@ -303,18 +303,18 @@ Les commandes disponibles sont les suivantes :
 
 **setBackground** (*Vector, VectorSerie, Script, Stored*)
     Cette commande permet de définir l'ébauche :math:`\mathbf{x}^b`. Selon les
-    algorithmes, on peut le définir comme un vecteur simple par "*Vector*", ou
-    comme une liste de vecteurs par "*VectorSerie*". Si on le définit par un
+    algorithmes, on peut la définir comme un vecteur simple par "*Vector*", ou
+    comme une liste de vecteurs par "*VectorSerie*". Si on la définit par un
     script dans "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
     "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
 
 .. index:: single: setBackgroundError
 
 **setBackgroundError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    Cette commande permet de définir la matrice :math:`\mathbf{B}` des
+    Cette commande permet de définir la matrice :math:`\mathbf{B}` de
     covariance des erreurs d'ébauche. La matrice peut être définie de manière
-    complète par "*Matrix*", ou de manière parcimonieuse comme une matrice
-    diagonale dont on donne la variance unique sur la diagonale par
+    complète par le mot-clé "*Matrix*", ou de manière parcimonieuse, comme une
+    matrice diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
     vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
     Si on la définit par un script dans "*Script*", la matrice est de type
@@ -340,15 +340,15 @@ Les commandes disponibles sont les suivantes :
     valeur est définie comme un objet de type fonction ou de type "*Matrix*".
     Dans le cas d'une fonction, différentes formes fonctionnelles peuvent être
     utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`, et entrées par "*OneFunction*" ou
-    "*ThreeFunctions*". Dans le cas d'une définition par "*Script*", l'opérateur
-    est de type "*Matrix*", "*OneFunction*" ou "*ThreeFunctions*" selon que
-    l'une de ces variables est placée à "*True*". Les paramètres de contrôle de
-    l'approximation numérique de l'opérateur adjoint, dans le cas
-    "*OneFunction*", peuvent être renseignés par un dictionnaire dans
-    "*Parameters*". Les entrées potentielles de ce dictionnaire de paramètres
-    sont "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similaires à
-    celles de l'interface graphique).
+    :ref:`section_ref_operator_requirements`, et entrées par les mots-clés
+    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
+    "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
+    "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
+    Les paramètres de contrôle de l'approximation numérique de l'opérateur
+    adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
+    dictionnaire à travers le mot-clé "*Parameters*". Les entrées potentielles
+    de ce dictionnaire de paramètres sont "*DifferentialIncrement*",
+    "*CenteredFiniteDifference*" (similaires à celles de l'interface graphique).
 
 .. index:: single: setControlInput
 
@@ -363,10 +363,10 @@ Les commandes disponibles sont les suivantes :
 .. index:: single: setEvolutionError
 
 **setEvolutionError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    Cette commande permet de définir la matrice :math:`\mathbf{Q}` des
+    Cette commande permet de définir la matrice :math:`\mathbf{Q}` de
     covariance des erreurs d'évolution. La matrice peut être définie de manière
-    complète par "*Matrix*", ou de manière parcimonieuse comme une matrice
-    diagonale dont on donne la variance unique sur la diagonale par
+    complète par le mot-clé "*Matrix*", ou de manière parcimonieuse, comme une
+    matrice diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
     vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
     Si on la définit par un script dans "*Script*", la matrice est de type
@@ -380,13 +380,13 @@ Les commandes disponibles sont les suivantes :
     décrit un pas élémentaire d'évolution. Sa valeur est définie comme un objet
     de type fonction ou de type "*Matrix*". Dans le cas d'une fonction,
     différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`, et entrées par
-    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
-    "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
-    "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
-    Les paramètres de contrôle de l'approximation numérique de l'opérateur
-    adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
-    dictionnaire dans "*Parameters*". Les entrées potentielles de ce
+    la section :ref:`section_ref_operator_requirements`, et entrées par les
+    mots-clés "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une
+    définition par "*Script*", l'opérateur est de type "*Matrix*",
+    "*OneFunction*" ou "*ThreeFunctions*" selon que l'une de ces variables est
+    placée à "*True*". Les paramètres de contrôle de l'approximation numérique
+    de l'opérateur adjoint, dans le cas "*OneFunction*", peuvent être renseignés
+    par un dictionnaire dans "*Parameters*". Les entrées potentielles de ce
     dictionnaire de paramètres sont "*DifferentialIncrement*",
     "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
     "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
@@ -404,15 +404,16 @@ Les commandes disponibles sont les suivantes :
 .. index:: single: setObservationError
 
 **setObservationError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    Cette commande permet de définir la matrice :math:`\mathbf{R}` des
+    Cette commande permet de définir la matrice :math:`\mathbf{R}` de
     covariance des erreurs d'observation. La matrice peut être définie de
-    manière complète par "*Matrix*", ou de manière parcimonieuse comme une
-    matrice diagonale dont on donne la variance unique sur la diagonale par
-    "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
-    vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
-    Si on la définit par un script dans "*Script*", la matrice est de type
-    "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
-    selon que l'une de ces variables est placée à "*True*".
+    manière complète par le mot-clé "*Matrix*", ou de manière parcimonieuse,
+    comme une matrice diagonale dont on donne la variance unique sur la
+    diagonale par "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on
+    donne le vecteur des variances situé sur la diagonale par
+    "*DiagonalSparseMatrix*". Si on la définit par un script dans "*Script*", la
+    matrice est de type "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou
+    "*DiagonalSparseMatrix*" selon que l'une de ces variables est placée à
+    "*True*".
 
 .. index:: single: setObservationOperator
 
@@ -423,16 +424,16 @@ Les commandes disponibles sont les suivantes :
     :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type fonction
     ou de type "*Matrix*". Dans le cas d'une fonction, différentes formes
     fonctionnelles peuvent être utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`, et entrées par "*OneFunction*" ou
-    "*ThreeFunctions*". Dans le cas d'une définition par "*Script*", l'opérateur
-    est de type "*Matrix*", "*OneFunction*" ou "*ThreeFunctions*" selon que
-    l'une de ces variables est placée à "*True*". Les paramètres de contrôle de
-    l'approximation numérique de l'opérateur adjoint, dans le cas
-    "*OneFunction*", peuvent être renseignés par un dictionnaire dans
-    "*Parameters*". Les entrées potentielles de ce dictionnaire de paramètres
-    sont "*DifferentialIncrement*", "*CenteredFiniteDifference*",
-    "*EnableMultiProcessing*", "*NumberOfProcesses*" (similaires à celles de
-    l'interface graphique).
+    :ref:`section_ref_operator_requirements`, et entrées par les mots-clés
+    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
+    "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
+    "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
+    Les paramètres de contrôle de l'approximation numérique de l'opérateur
+    adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
+    dictionnaire dans "*Parameters*". Les entrées potentielles de ce
+    dictionnaire de paramètres sont "*DifferentialIncrement*",
+    "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
+    "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
 
 .. index:: single: set
 
