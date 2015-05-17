@@ -43,26 +43,27 @@ expérimentales, ou observations, et de modèles numériques *a priori*, y compris
 des informations sur leurs erreurs. Certaines des méthodes incluses dans ce
 cadre sont également connues sous les noms  d'*estimation des paramètres*, de
 *problèmes inverses*, d'*estimation bayésienne*, d'*interpolation optimale*,
-etc. De plus amples détails peuvent être trouvés dans la partie
+etc. De plus amples détails peuvent être trouvés dans la partie proposant
 :ref:`section_theory`.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la documentation théorique (indiquée dans le titre par **[DocT]**),
 à la documentation utilisateur (indiquée dans le titre par **[DocU]**), et à la
-documentation de référence (indiquée dans le titre par **[DocR]**). La seconde
-partie présente :ref:`section_theory`, et à leurs concepts. Pour un utilisateur,
-la troisième partie explique comment :ref:`section_using`, et la quatrième
-partie présente des exemples d'utilisation sous la forme de
-:ref:`section_examples`. Les utilisateurs intéressés par un accès rapide au
-module peuvent s'arrêter avant la lecture de la suite, mais un usage utile du
-module nécessite de lire et de revenir régulièrement aux troisième et septième
-parties. La cinquième partie indique les :ref:`section_advanced`, avec
-l'obtention de renseignements supplémentaires ou l'usage par scripts d'exécution
-sans interface utilisateur graphique (GUI). La partie suivante détaille la
-:ref:`section_reference`, avec quatre sous-parties principales qui suivent, la
-dernière sous-partie décrivant une :ref:`section_tui` du module. Enfin, pour
-respecter les exigences de licence du module, n'oubliez pas de lire la partie
-:ref:`section_license`.
+documentation de référence (indiquée dans le titre par **[DocR]**).
+
+La première partie est l':ref:`section_intro`. La seconde partie présente
+:ref:`section_theory`, et à leurs concepts. Pour un utilisateur courant, la
+troisième partie explique comment :ref:`section_using`, et la quatrième partie
+présente des exemples d'utilisation sous la forme de :ref:`section_examples`.
+Les utilisateurs intéressés par un accès rapide au module peuvent s'arrêter
+avant la lecture de la suite, mais un usage utile du module nécessite de lire et
+de revenir régulièrement aux troisième et septième parties. La cinquième partie
+indique les :ref:`section_advanced`, avec l'obtention de renseignements
+supplémentaires ou l'usage par scripts d'exécution sans interface utilisateur
+graphique (GUI). La partie suivante détaille la :ref:`section_reference`, avec
+quatre sous-parties principales qui suivent, la dernière sous-partie décrivant
+une :ref:`section_tui` du module. Enfin, pour respecter les exigences de licence
+du module, n'oubliez pas de lire la partie :ref:`section_license`.
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de

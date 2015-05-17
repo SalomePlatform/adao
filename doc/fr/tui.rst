@@ -497,10 +497,10 @@ Effectuer le calcul
 
 **executePythonScheme** ()
     Cette commande lance le calcul complet dans l'environnement de
-    l'interpréteur Python courant, sans interaction avec YACS. Les sorties
-    standard et d'erreur sont celles de l'interpréteur Python. On dispose si
-    nécessaire du parallélisme interne des algorithmes dans ADAO et du
-    parallélisme interne du ou des codes de simulation utilisé.
+    l'interpréteur Python courant, sans interaction avec YACS [YACS]_. Les
+    sorties standard et d'erreur sont celles de l'interpréteur Python. On
+    dispose si nécessaire du parallélisme interne des algorithmes dans ADAO et
+    du parallélisme interne du ou des codes de simulation utilisé.
 
 .. .. index:: single: generateYACSscheme
 .. 
@@ -553,7 +553,7 @@ Les hypothèses du cas utilisateur sont les suivantes. On suppose :
 
 #. que l'on veut recaler 3 paramètres ``alpha``, ``beta`` et ``gamma`` dans un domaine borné,
 #. que l'on dispose d'observations nommées ``observations``,
-#. que l'utilisateur dispose en Python d'une fonction de simulation physique appellée ``simulation`` préalablement testée, qui transforme les 3 paramètres en résultats similaires aux observations,
+#. que l'utilisateur dispose en Python d'une fonction de simulation physique appellée ``simulation``, préalablement (bien) testée, qui transforme les 3 paramètres en résultats similaires aux observations,
 #. que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
 
 Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne par

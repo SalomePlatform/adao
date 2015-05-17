@@ -46,13 +46,15 @@ be found in the section :ref:`section_theory`.
 The documentation for this module is divided into several major categories,
 related to the theoretical documentation (indicated in the title by **[DocT]**),
 to the user documentation (indicated in the title by **[DocU]**), and to the
-reference documentation (indicated in the title by **[DocR]**). The second part
-introduces :ref:`section_theory`, and their concepts. The third part describes
+reference documentation (indicated in the title by **[DocR]**).
+
+The first part is the :ref:`section_intro`. The second part introduces
+:ref:`section_theory`, and their concepts. The third part describes
 :ref:`section_using`, and the fourth part gives examples on ADAO usage as
 :ref:`section_examples`. Users interested in quick use of the module can stop
 before reading the rest, but a valuable use of the module requires to read and
-come back regularly to the third and seventh parts. The fifth part indicate
-:ref:`section_advanced`, with obtaining additional information or the use of
+come back regularly to the third and seventh parts. The fifth part indicates the
+:ref:`section_advanced`, with how to obtain additional information or how to use
 non-GUI execution scripting. The next part gives a detailed
 :ref:`section_reference`, with four main sub-parts following, the last one
 giving a :ref:`section_tui` of the module. And, to respect the module

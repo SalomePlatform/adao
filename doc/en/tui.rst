@@ -240,9 +240,9 @@ warning in future versions. It is strongly recommended not to do so.
 
 To clarify and facilitate the use of the module for scripting, **this section
 therefore defines the application programming interface (API) for textual user
-interface (TUI) a comprehensive and restricted manner**. Use in scripts of ADAO
-objects or functions other than those defined here is strongly discouraged, as
-this will likely lead to crashes without warning in future versions.
+interface (TUI) by a comprehensive and restricted manner**. Use in scripts of
+ADAO objects or functions other than those defined here is strongly discouraged,
+as this will likely lead to crashes without warning in future versions.
 
 Equivalent syntax calls for commands
 ++++++++++++++++++++++++++++++++++++
@@ -284,7 +284,7 @@ output. The default is not to store, and it is recommended to keep this default.
 Indeed, for a TUI calculation case, the quantity given in entries are often
 available in the current name space of the case.
 
-The available commands are::
+The available commands are:
 
 .. index:: single: setBackground
 
@@ -477,8 +477,8 @@ Perform the calculation
 
 **executePythonScheme** ()
     This command launches the complete calculation in the environment of the
-    current Python interpreter, without interaction with YACS.The standard
-    output and standard error are those of the Python interpreter. If
+    current Python interpreter, without interaction with YACS [YACS]_. The
+    standard output and standard error are those of the Python interpreter. If
     necessary, the internal parallelism, of the algorithms in ADAO and of the
     simulation code used, is available.
 
@@ -498,7 +498,7 @@ Get the calculation results separately
     visualization. Its argument the name of a variable "*Concept*" and returns
     back the quantity as a list (even if there is only one specimen) of this
     base variable. For a list of variables and use them, the user has to refer
-    to the ':ref:`subsection_r_o_v_Inventaire` and more generally to the
+    to the :ref:`subsection_r_o_v_Inventaire` and more generally to the
     :ref:`section_ref_output_variables` and to the individual documentations of
     the algorithms.
 
@@ -520,7 +520,7 @@ The hypothesis of the user case are the following ones. It is assumed:
 
 #. that we want to adjust 3 parameters ``alpha``, ``beta`` and ``gamma`` in a bounded domain,
 #. that we dispose of observations named ``observations``,
-#. that the user have a Python function of physical simulation named ``simulation`` previously tested, which transforms the 3 parameters in results similar to the observations,
+#. that the user have a Python function of physical simulation named ``simulation``, previously (well) tested, which transforms the 3 parameters in results similar to the observations,
 #. that the independent holding, that the user want to elaborate, is represented here by the simple printing of the initial state, of the optimal state, of the simulation in that point, of the intermediate state and of the number of optimization iteration.
 
 In order to try in a simple way this example of TUI calculation case, we choose
