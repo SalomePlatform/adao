@@ -199,9 +199,9 @@ variables ``var`` and ``info``. The variable ``var`` is to be used in the same
 way as for the final ADD object, that is as a list/tuple object.
 
 Some templates are available when editing the ADAO case in graphical editor.
-These simple scripts can be customized by the user, either at the EFICAS edition
-stage, or at the YACS edition stage, to improve the tuning of the ADAO
-calculation in YACS.
+These simple scripts can be customized by the user, either at the embedded
+edition stage, or at the edition stage before execution, to improve the tuning
+of the ADAO calculation.
 
 As an example, here is one very simple script (similar to the "*ValuePrinter*"
 template) used to print the value of one monitored variable::

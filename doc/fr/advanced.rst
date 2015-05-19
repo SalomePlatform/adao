@@ -211,8 +211,9 @@ liste/tuple.
 
 Des modèles ("templates") sont disponibles lors de l'édition le cas ADAO dans
 l'éditeur graphique. Ces scripts simples peuvent être adaptés par l'utilisateur,
-soit dans l'étape d'édition EFICAS, ou dans l'étape d'édition YACS, pour
-améliorer l'adaptation du calcul ADAO dans YACS.
+soit dans l'étape d'édition intégrée, ou dans l'étape d'édition avant
+l'exécution, pour améliorer l'adaptation du calcul ADAO dans le superviseur
+d'exécution de SALOME.
 
 A titre d'exemple, voici un script très simple (similaire au modèle
 "*ValuePrinter*") utilisable pour afficher la valeur d'une variable surveillée::

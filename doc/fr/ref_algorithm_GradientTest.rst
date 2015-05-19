@@ -41,19 +41,40 @@ Résidu "Taylor"
 ***************
 
 On observe le résidu issu du développement de Taylor de la fonction :math:`F`,
-normalisée par la valeur au point nominal :
+normalisé par la valeur au point nominal :
 
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{|| F(\mathbf{x}) ||}
 
 Si le résidu décroit et que la décroissance se fait en :math:`\alpha^2` selon
 :math:`\alpha`, cela signifie que le gradient est bien calculé jusqu'à la
-précision d'arrêt de la décroissance quadratique et que :math:`F` n'est pas
+précision d'arrêt de la décroissance quadratique, et que :math:`F` n'est pas
 linéaire.
 
 Si le résidu décroit et que la décroissance se fait en :math:`\alpha` selon
 :math:`\alpha`, jusqu'à un certain seuil après lequel le résidu est faible et
 constant, cela signifie que :math:`F` est linéaire et que le résidu décroit à
 partir de l'erreur faite dans le calcul du terme :math:`\nabla_xF`.
+
+Résidu "TaylorOnNorm"
+*********************
+
+On observe le résidu issu du développement de Taylor de la fonction :math:`F`,
+rapporté au paramètre :math:`\alpha` au carré :
+
+.. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{\alpha^2}
+
+C'est un résidu essentiellement similaire au critère classique de Taylor décrit
+précédemment, mais son comportement peut différer selon les propriétés
+numériques des calculs de ses différents termes.
+
+Si le résidu est constant jusqu'à un certain seuil et croissant ensuite, cela
+signifie que le gradient est bien calculé jusqu'à cette précision d'arrêt, et
+que :math:`F` n'est pas linéaire.
+
+Si le résidu est systématiquement croissant en partant d'une valeur faible par
+rapport à :math:`||F(\mathbf{x})||`, cela signifie que :math:`F` est
+(quasi-)linéaire et que le calcul du gradient est correct jusqu'au moment où le
+résidu est de l'ordre de grandeur de :math:`||F(\mathbf{x})||`.
 
 Résidu "Norm"
 *************
@@ -134,8 +155,10 @@ Les options de l'algorithme sont les suivantes:
   ResiduFormula
     Cette clé indique la formule de résidu qui doit être utilisée pour le test.
     Le choix par défaut est "Taylor", et les choix possibles sont "Taylor"
-    (résidu du développement de Taylor de l'opérateur, qui doit décroître comme
-    le carré de la perturbation) et "Norm" (résidu obtenu en prenant la norme du
+    (résidu du développement de Taylor normalisé de l'opérateur, qui doit
+    décroître comme le carré de la perturbation), "TaylorOnNorm" (résidu du
+    développement de Taylor rapporté à la perturbation de l'opérateur, qui doit
+    rester constant) et "Norm" (résidu obtenu en prenant la norme du
     développement de Taylor à l'ordre 0, qui approxime le gradient, et qui doit
     rester constant).
 

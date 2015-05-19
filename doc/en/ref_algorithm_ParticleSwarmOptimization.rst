@@ -145,7 +145,7 @@ The options of the algorithm are the following:
     (``None`` is not allowed when there is no bound). This key is required and
     there is no default values.
 
-    Example : ``{"BoxBounds":[[-0.5,0.5],[0.01,2.],[0.,1.e99],[-1.e99,1.e99]]}``
+    Example : ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
   SetSeed
     This key allow to give an integer in order to fix the seed of the random

@@ -131,7 +131,7 @@ Les options de l'algorithme sont les suivantes:
     liste. C'est donc une liste de listes, chacune étant de taille
     potentiellement différente.
 
-    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` pour un espace d'état de dimension 2
+    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` pour un espace d'état de dimension 2
 
   SampleAsMinMaxStepHyperCube
     Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
@@ -151,8 +151,8 @@ Les options de l'algorithme sont les suivantes:
     (mean,std), 'lognormal' de paramètres (mean,sigma), 'uniform' de paramètres
     (low,high), ou 'weibull' de paramètre (shape). C'est donc une liste de la
     même taille que celle de l'état.
-    
-    Exemple : ``{"SampleAsIndependantRandomVariables":[['normal',[0.,1.],3],['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
+
+    Exemple : ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
 
   QualityCriterion
     Cette clé indique le critère de qualité, qui est utilisé pour trouver

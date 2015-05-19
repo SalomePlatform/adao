@@ -149,7 +149,7 @@ Les options de l'algorithme sont les suivantes:
     valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
     n'y a pas de valeurs par défaut.
 
-    Exemple : ``{"BoxBounds":[[-0.5,0.5],[0.01,2.],[0.,1.e99],[-1.e99,1.e99]]}``
+    Exemple : ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
   SetSeed
     Cette clé permet de donner un nombre entier pour fixer la graine du

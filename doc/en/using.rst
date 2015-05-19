@@ -43,18 +43,20 @@
    :align: middle
    :scale: 50%
 
-This section presents the usage of the ADAO module in SALOME platform. It is
-complemented by the detailed description of all the commands and keywords in the
-section :ref:`section_reference`, by advanced usage procedures in the section
-:ref:`section_advanced`, and by examples in the section :ref:`section_examples`.
+This section presents the usage of the ADAO module in SALOME platform. Here we
+describe the general progression to establish an ADAO case, the details being
+given in the following chapters. It is completed by the detailed description of
+all the commands and keywords in the section :ref:`section_reference`, by
+advanced usage procedures in the section :ref:`section_advanced`, and by
+examples in the section :ref:`section_examples`.
 
 Logical procedure to build an ADAO case
 ---------------------------------------
 
 The construction of an ADAO case follows a simple approach to define the set of
-input data, and then generates a complete executable block diagram used in YACS.
-Many variations exist for the definition of input data, but the logical sequence
-remains unchanged.
+input data, and then generates a complete executable block diagram used in YACS
+[#]_. Many variations exist for the definition of input data, but the logical
+sequence remains unchanged.
 
 First of all, the user is considered to know its personal input data needed to
 set up the data assimilation study. These data can already be available in
@@ -86,28 +88,28 @@ or opening an already existing one:
   .. centered::
     **Activating the module ADAO in SALOME**
 
-Choosing the "*New*" button, an embedded case editor EFICAS [#]_ will be opened,
-along with the standard "*Object browser*". You can then click on the "*New*"
-button |eficas_new| (or choose the "*New*" entry in the "*ADAO*" main menu) to
-create a new ADAO case, and you will see:
+Choosing the "*New*" button, an embedded case editor [#]_ will be opened, along
+with the standard "*Object browser*". You can then click on the "*New*" button
+|eficas_new| (or choose the "*New*" entry in the "*ADAO*" main menu) to create a
+new ADAO case, and you will see:
 
   .. _adao_viewer:
   .. image:: images/adao_viewer.png
     :align: center
     :width: 100%
   .. centered::
-    **The EFICAS editor for cases definition in module ADAO**
+    **The embedded editor for cases definition in module ADAO**
 
 .. _section_u_step2:
 
 STEP 2: Build and modify the ADAO case, and save it
 ---------------------------------------------------
 
-To build a case using EFICAS, you have to go through a series of sub-steps, by
-selecting, at each sub-step, a keyword and then filling in its value. It is
-noted that it is in this step that is needed, among other things, to define the
-call to the simulation code used in observation or evolution operators
-describing the problem [#]_.
+To build a case using the embedded editor, you have to go through a series of
+sub-steps, by selecting, at each sub-step, a keyword and then filling in its
+value. It is noted that it is in this step that is needed, among other things,
+to define the call to the simulation code used in observation or evolution
+operators describing the problem [#]_.
 
 The structured editor indicates hierarchical types, values or keywords allowed.
 Incomplete or incorrect keywords are identified by a visual error red flag.
@@ -137,20 +139,20 @@ Finally, you have to save your ADAO case by pushing the "*Save*" button
 |eficas_save|, or the "*Save as*" button |eficas_saveas|, or by choosing the
 "*Save/Save as*" entry in the "*ADAO*" menu. You will be prompted for a location
 in your file tree and a name, that will be completed by a "*.comm*" extension
-used for JDC EFICAS files. This will generate a pair of files describing the
-ADAO case, with the same base name, the first one being completed by a "*.comm*"
-extension and the second one by a "*.py*" extension [#]_.
+used for the embedded case editor. This will generate a pair of files describing
+the ADAO case, with the same base name, the first one being completed by a
+"*.comm*" extension and the second one by a "*.py*" extension [#]_.
 
 .. _section_u_step3:
 
 STEP 3: Export the ADAO case as a YACS scheme
 ---------------------------------------------
 
-When the ADAO case is completed, you have to export it as a YACS scheme [#]_ in
-order to execute the data assimilation calculation. This can be easily done by
-using the "*Export to YACS*" button |eficas_yacs|, or equivalently choose the
-"*Export to YACS*" entry in the "*ADAO*" main menu, or in the contextual case
-menu in the SALOME object browser.
+When the ADAO case is completed, you have to export it as a YACS scheme in order
+to execute the data assimilation calculation. This can be easily done by using
+the "*Export to YACS*" button |eficas_yacs|, or equivalently choose the "*Export
+to YACS*" entry in the "*ADAO*" main menu, or in the contextual case menu in the
+SALOME object browser.
 
   .. _adao_exporttoyacs01:
   .. image:: images/adao_exporttoyacs.png
@@ -190,9 +192,9 @@ post-processing can use all the SALOME possibilities. See the part describing
 full description of these elements.
 
 In practice, the YACS scheme has an "*algoResults*" output port of the
-computation bloc, which gives access to an object of type "*pyobj*" named
-hereafter "*ADD*", containing all the calculation results. These results can be
-obtained by retrieving the named variables stored along the calculation. The
+computation bloc, which gives access to a structured object named hereafter
+"*ADD*" for example, containing all the calculation results. These results can
+be obtained by retrieving the named variables stored along the calculation. The
 main information is the "*Analysis*" one, that can be obtained by the python
 command (for example in an in-line script node or a script provided through the
 "*UserPostAnalysis*" keyword)::
@@ -249,10 +251,10 @@ shown in the "*YACS Container Log*".
 The execution can also be done using a Shell script, as described in the section
 :ref:`section_advanced`.
 
-.. [#] For more information on EFICAS, see the *EFICAS module* and its integrated help available from the main menu *Help* of the SALOME platform.
+.. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.
+
+.. [#] For more information on the embedded case editor, see the *EFICAS module* and its integrated help available from the main menu *Help* of the SALOME platform.
 
 .. [#] The use of physical simulation code in the data assimilation elementary operators is illustrated or described in the following main parts.
-
-.. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.
 
 .. [#] This intermediary python file can also be used as described in the section :ref:`section_advanced`.

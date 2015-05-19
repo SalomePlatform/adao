@@ -37,9 +37,9 @@ Each command or keyword to be defined through the ADAO GUI has some properties.
 The first property is to be *required*, *optional* or only factual, describing a
 type of input. The second property is to be an "open" variable with a fixed type
 but with any value allowed by the type, or a "restricted" variable, limited to
-some specified values. The EFICAS editor GUI having build-in validating
+some specified values. The embedded case editor GUI having build-in validating
 capacities, the properties of the commands or keywords given through this GUI
-are automatically correct. 
+are automatically correct.
 
 .. _section_reference_entry:
 

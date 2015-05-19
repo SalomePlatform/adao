@@ -125,16 +125,16 @@ menu approprié de module de SALOME, et on voit :
     **Activation du module ADAO dans SALOME**
 
 Choisir le bouton "*Nouveau*" dans cette fenêtre. On obtient directement
-l'interface EFICAS pour la définition de variables, en même temps que l'"*Arbre
-d'étude*" de SALOME. On peut alors choisir le bouton "*Nouveau*" |eficas_new|
-pour créer un nouveau cas ADAO, et on voit :
+l'interface de l'éditeur intégré de cas pour la définition de variables, en même
+temps que l'"*Arbre d'étude*" de SALOME. On peut alors choisir le bouton
+"*Nouveau*" |eficas_new| pour créer un nouveau cas ADAO, et on voit :
 
   .. _adao_viewer:
   .. image:: images/adao_viewer.png
     :align: center
     :width: 100%
   .. centered::
-    **L'éditeur EFICAS pour la définition de cas dans le module ADAO**
+    **L'éditeur intégré pour la définition de cas dans le module ADAO**
 
 Ensuite, il faut remplir les variables pour construire le cas ADAO en utilisant
 les conditions d'expérience décrites ci-dessus. L'ensemble des informations

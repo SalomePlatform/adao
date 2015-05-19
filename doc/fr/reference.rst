@@ -38,7 +38,7 @@ propriétés particulières. La première propriété est d'être *requise*,
 *optionnelle* ou simplement utile, décrivant un type d'entrée. La seconde
 propriété est d'être une variable "ouverte" avec un type fixé mais avec
 n'importe quelle valeur autorisée par le type, ou une variable "fermée", limitée
-à des valeurs spécifiées. L'éditeur graphique EFICAS disposant de capacités
+à des valeurs spécifiées. L'éditeur graphique intégré disposant de capacités
 intrinsèques de validation, les propriétés des commandes ou mots-clés données à
 l'aide de l'interface graphique sont automatiquement correctes.
 

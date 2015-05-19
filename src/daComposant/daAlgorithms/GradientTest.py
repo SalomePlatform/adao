@@ -33,7 +33,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "Taylor",
             typecast = str,
             message  = "Formule de résidu utilisée",
-            listval  = ["Norm", "Taylor"],
+            listval  = ["Norm", "TaylorOnNorm", "Taylor"],
             )
         self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
@@ -91,7 +91,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.setParameters(Parameters)
         #
         Hm = HO["Direct"].appliedTo
-        if self._parameters["ResiduFormula"] == "Taylor":
+        if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
             Ht = HO["Tangent"].appliedInXTo
         #
         # ----------
@@ -115,7 +115,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        if self._parameters["ResiduFormula"] == "Taylor":
+        if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
             GradFxdX = Ht( (X, dX0) )
             GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
         #
@@ -126,7 +126,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
             __msgdoc = """
             On observe le résidu issu du développement de Taylor de la fonction F,
-            normalisée par la valeur au point nominal :
+            normalisé par la valeur au point nominal :
 
                          || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
               R(Alpha) = ----------------------------------------------------
@@ -134,12 +134,37 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
             Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
             cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
-            de la décroissance quadratique et que F n'est pas linéaire.
+            de la décroissance quadratique, et que F n'est pas linéaire.
 
             Si le résidu décroit et que la décroissance se fait en Alpha selon Alpha,
             jusqu'à un certain seuil aprés lequel le résidu est faible et constant, cela
             signifie que F est linéaire et que le résidu décroit à partir de l'erreur
             faite dans le calcul du terme GradientF_X.
+
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
+            """
+        if self._parameters["ResiduFormula"] == "TaylorOnNorm":
+            __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __msgdoc = """
+            On observe le résidu issu du développement de Taylor de la fonction F,
+            rapporté au paramètre Alpha au carré :
+
+                         || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
+              R(Alpha) = ----------------------------------------------------
+                                            Alpha**2
+
+            C'est un résidu essentiellement similaire au critère classique de Taylor,
+            mais son comportement peut différer selon les propriétés numériques des
+            calculs de ses différents termes.
+
+            Si le résidu est constant jusqu'à un certain seuil et croissant ensuite,
+            cela signifie que le gradient est bien calculé jusqu'à cette précision
+            d'arrêt, et que F n'est pas linéaire.
+
+            Si le résidu est systématiquement croissant en partant d'une valeur faible
+            par rapport à ||F(X)||, cela signifie que F est (quasi-)linéaire et que le
+            calcul du gradient est correct jusqu'au moment où le résidu est de l'ordre de
+            grandeur de ||F(X)||.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """
@@ -192,7 +217,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NormedFX    = numpy.linalg.norm( FX_plus_dX - FX )
             NormedFXsdX = NormedFX/NormedX
             # Residu Taylor
-            if self._parameters["ResiduFormula"] == "Taylor":
+            if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
                 NormedFXGdX = numpy.linalg.norm( FX_plus_dX - FX - amplitude * GradFxdX )
             # Residu Norm
             NormedFXsAm = NormedFX/amplitude
@@ -203,13 +228,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NormesdX.append(     NormedX     )
             NormesFXdX.append(   NormeFXdX   )
             NormesdFX.append(    NormedFX    )
-            if self._parameters["ResiduFormula"] == "Taylor":
+            if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
                 NormesdFXGdX.append( NormedFXGdX )
             NormesdFXsdX.append( NormedFXsdX )
             NormesdFXsAm.append( NormedFXsAm )
             #
             if self._parameters["ResiduFormula"] == "Taylor":
                 Residu = NormedFXGdX / NormeFX
+            elif self._parameters["ResiduFormula"] == "TaylorOnNorm":
+                Residu = NormedFXGdX / (amplitude*amplitude)
             elif self._parameters["ResiduFormula"] == "Norm":
                 Residu = NormedFXsAm
             if Normalisation < 0 : Normalisation = Residu
@@ -233,7 +260,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             f.close()
             #
             Residus = self.StoredVariables["CostFunctionJ"][-len(Perturbations):]
-            if self._parameters["ResiduFormula"] == "Taylor":
+            if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
                 PerturbationsCarre = [ 10**(2*i) for i in xrange(-len(NormesdFXGdX)+1,1) ]
                 PerturbationsCarre.reverse()
                 dessiner(

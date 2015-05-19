@@ -117,17 +117,17 @@ button or menu of SALOME, and you will see:
   .. centered::
     **Activating the module ADAO in SALOME**
 
-Choose the "*New*" button in this window. You will directly get the EFICAS
-interface for variables definition, along with the SALOME "*Object browser*".
-You can then click on the "*New*" button |eficas_new| to create a new ADAO case,
-and you will see:
+Choose the "*New*" button in this window. You will directly get the embedded
+case editor interface for variables definition, along with the SALOME "*Object
+browser*". You can then click on the "*New*" button |eficas_new| to create a new
+ADAO case, and you will see:
 
   .. _adao_viewer:
   .. image:: images/adao_viewer.png
     :align: center
     :width: 100%
   .. centered::
-    **The EFICAS editor for cases definition in module ADAO**
+    **The embedded editor for cases definition in module ADAO**
 
 Then, fill in the variables to build the ADAO case by using the experimental set
 up described above. All the technical information given above will be directly

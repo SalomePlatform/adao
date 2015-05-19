@@ -43,10 +43,12 @@
    :align: middle
    :scale: 50%
 
-Cette section présente l'usage du module ADAO dans la plateforme SALOME. Il est
-complété par la description détaillée de l'ensemble des commandes et mots-clés
-dans la section :ref:`section_reference`, par des procédures avancées d'usage
-dans la section :ref:`section_advanced`, et par des exemples dans la section
+Cette section présente l'usage du module ADAO dans la plateforme SALOME. On
+décrit ici le cheminement général pour établir un cas ADAO, les détails étant
+fournis dans les chapitres suivants. Il est complété par la description
+détaillée de l'ensemble des commandes et mots-clés dans la section
+:ref:`section_reference`, par des procédures avancées d'usage dans la section
+:ref:`section_advanced`, et par des exemples dans la section
 :ref:`section_examples`.
 
 Procédure logique pour construire un cas ADAO
@@ -54,8 +56,8 @@ Procédure logique pour construire un cas ADAO
 
 La construction d'un cas ADAO suit une démarche simple pour définir l'ensemble
 des données d'entrée, et ensuite générer un diagramme complet d'exécution
-utilisé dans YACS. De nombreuses variations existent pour la définition des
-données d'entrée, mais la séquence logique reste inchangée.
+utilisé dans YACS [#]_. De nombreuses variations existent pour la définition
+des données d'entrée, mais la séquence logique reste inchangée.
 
 De manière générale, l'utilisateur doit connaître ses données d'entrées,
 requises pour mettre au point une étude d'assimilation de données. Ces données
@@ -89,7 +91,7 @@ l'ouverture d'une étude déjà existante:
   .. centered::
     **Activation du module ADAO dans SALOME**
 
-En choisissant le bouton "*Nouveau*", un éditeur intégré de cas EFICAS [#]_ sera
+En choisissant le bouton "*Nouveau*", un éditeur intégré de cas [#]_ sera
 ouvert, en même temps que le "*navigateur d'objets*" standard. On peut alors
 cliquer sur le bouton "*Nouveau*"(ou choisir l'entrée "*Nouveau*"  dans le dans
 le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
@@ -99,18 +101,18 @@ le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
     :align: center
     :width: 100%
   .. centered::
-    **L'éditeur EFICAS pour la définition des cas dans le module ADAO**
+    **L'éditeur intégré pour la définition des cas dans le module ADAO**
 
 .. _section_u_step2:
 
 ÉTAPE 2 : Créer et modifier le cas ADAO, et l'enregistrer
 ---------------------------------------------------------
 
-Pour construire un cas en utilisant EFICAS, on doit passer par une série de
-sous-étapes, en choisissant, à chaque étape, un mot-clé puis en remplissant ses
-valeurs. On note que c'est dans cette étape qu'il faut, entre autres, définir
-l'**appel au code de simulation** utilisé dans les opérateurs d'observation ou
-d'évolution décrivant le problème [#]_.
+Pour construire un cas en utilisant l'éditeur intégré, on doit passer par une
+série de sous-étapes, en choisissant, à chaque étape, un mot-clé puis en
+remplissant ses valeurs. On note que c'est dans cette étape qu'il faut, entre
+autres, définir l'**appel au code de simulation** utilisé dans les opérateurs
+d'observation ou d'évolution décrivant le problème [#]_.
 
 L'éditeur structuré indique des types hiérarchiques, des valeurs ou des
 mots-clés autorisés. Les mots-clés incomplets ou incorrects sont identifiés par
@@ -144,9 +146,9 @@ Au final, il faut enregistrer le cas ADAO en utilisant le bouton "*Enregistrer*"
 choisissant l'entrée "*Enregistrer/ Enregistrer sous*" dans le menu "*ADAO*". Il
 est alors demandé un emplacement, à choisir dans l'arborescence des fichiers, et
 un nom, qui sera complété par l'extension "*.comm*" utilisée pour les fichiers
-JDC d'EFICAS. Cette action va générer une paire de fichiers décrivant le cas
-ADAO, avec le même nom de base, le premier présentant une extension "*.comm*" et
-le second une extension "*.py*" [#]_.
+de l'éditeur intégre de cas. Cette action va générer une paire de fichiers
+décrivant le cas ADAO, avec le même nom de base, le premier présentant une
+extension "*.comm*" et le second une extension "*.py*" [#]_.
 
 .. _section_u_step3:
 
@@ -154,11 +156,11 @@ le second une extension "*.py*" [#]_.
 ---------------------------------------------------
 
 Lorsque le cas ADAO est complété, il doit être converti ou exporté sous la forme
-d'un schéma YACS  [#]_ pour pouvoir exécuter le calcul d'assimilation de
-données. Cela peut être réalisé facilement en utilisant le bouton "*Exporter
-vers YACS*" |eficas_yacs|, ou de manière équivalente en choisissant l'entrée
-"*Exporter vers YACS*" dans le menu principal "*ADAO*", ou dans le menu
-contextuel du cas dans le navigateur d'objets SALOME.
+d'un schéma YACS pour pouvoir exécuter le calcul d'assimilation de données. Cela
+peut être réalisé facilement en utilisant le bouton "*Exporter vers YACS*"
+|eficas_yacs|, ou de manière équivalente en choisissant l'entrée "*Exporter vers
+YACS*" dans le menu principal "*ADAO*", ou dans le menu contextuel du cas dans
+le navigateur d'objets SALOME.
 
   .. _adao_exporttoyacs01:
   .. image:: images/adao_exporttoyacs.png
@@ -181,7 +183,7 @@ fichier XML*.
 
 .. index:: single: Analysis
 
-Lorsque le schéma YACS est généré et ouvert dans SALOME à travers le l'interface
+Lorsque le schéma YACS est généré et ouvert dans SALOME à travers l'interface
 graphique du module YACS, on peut modifier ou compléter le schéma comme tout
 schéma YACS standard. Des noeuds ou des blocs peuvent être ajoutés, copiés ou
 modifiés pour élaborer une analyse complexe, ou pour insérer des capacités
@@ -189,7 +191,7 @@ d'assimilation de données ou d'optimisation dans des schémas de calculs YACS
 plus complexes.
 
 Le principal complément nécessaire dans un schéma YACS est une étape de
-post-processing. L'évaluation du résultat doit être réalisé dans le contexte
+post-processing. L'évaluation du résultat doit être réalisée dans le contexte
 physique de simulation utilisé par la procédure d'assimilation de données. Le
 post-processing peut être fournit à travers le mot-clé "*UserPostAnalysis*"
 d'ADAO sous la forme d'un fichier de script ou d'une chaîne de caractères, par
@@ -200,8 +202,8 @@ capacités de SALOME. On se reportera à la partie traitant des
 description complète de ces éléments.
 
 En pratique, le schéma YACS dispose d'un port de sortie "*algoResults*" dans le
-bloc de calcul, qui donne accès à un objet de type "*pyobj*" nommé ci-aprés
-"*ADD*", qui contient tous les résultats de calcul. Ces résultats peuvent être
+bloc de calcul, qui donne accès à un objet structuré nommé ci-aprés "*ADD*" par
+exemple, qui contient tous les résultats de calcul. Ces résultats peuvent être
 obtenus en récupérant les variables nommées stockées au cours des calculs.
 L'information principale est la variable "*Analysis*", qui peut être obtenue par
 une commande python (par exemple dans un noeud script intégré ("in-line script
@@ -262,10 +264,10 @@ présentée dans la "*fenêtre de sortie de YACS*".
 L'exécution peut aussi être conduite en utilisant un script de commandes Shell,
 comme décrit dans la section :ref:`section_advanced`.
 
-.. [#] Pour de plus amples informations sur EFICAS, voir le *module EFICAS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+
+.. [#] Pour de plus amples informations sur l'éditeur intégré de cas, voir le *module EFICAS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 
 .. [#] L'utilisation du code de simulation physique dans les opérateurs de base de l'assimilation de données est illustrée ou décrite dans les parties principales qui suivent.
-
-.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 
 .. [#] Ce fichier python intermédiaire peut aussi être utilisé comme décrit dans la section :ref:`section_advanced`.

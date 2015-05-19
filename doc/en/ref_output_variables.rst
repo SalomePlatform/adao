@@ -76,13 +76,13 @@ Examples of Python scripts to obtain or treat the outputs
 
 These examples present Python commands or scripts which allow to obtain or to
 treat the ouput of an algorithm run. To help the user, they are directly
-available in the user interface, when building the ADAO case in EFICAS, in the
-"*Template*" type fields. In an equivalent way, these commands can be integrated
-in an external user script (and inserted in the ADAO case by a "*Script*" type
-input) or can exist as a string, including line feeds (and inserted in the ADAO
-case by a "*String*" type input). Lot of variants can be build from these
-simple examples, the main objective beeing to help the user to elaborate the
-exact procedure he needs in output.
+available in the user interface, when building the ADAO case in the embedded
+case editor, in the "*Template*" type fields. In an equivalent way, these
+commands can be integrated in an external user script (and inserted in the ADAO
+case by a "*Script*" type input) or can exist as a string, including line feeds
+(and inserted in the ADAO case by a "*String*" type input). Lot of variants can
+be build from these simple examples, the main objective beeing to help the user
+to elaborate the exact procedure he needs in output.
 
 The first example (named "*AnalysisPrinter*" in the inputs of type 
 "*Template*") consists in printing, in the standard log output, the value of the

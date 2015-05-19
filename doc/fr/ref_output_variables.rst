@@ -77,15 +77,16 @@ Exemples de scripts Python pour obtenir ou traiter les sorties
 .. index:: single: AnalysisPrinterAndSaver
 
 Ces exemples présentent des commandes ou scripts Python qui permettent d'obtenir
-ou de traiter les sorties d'une exécution d'algorithme. Pour aider l'utilisateur,
-ils sont directement disponibles dans l'interface, à la construction du cas ADAO
-dans EFICAS, dans les champs de type "*Template*". De manière équivalente, ces
-commandes peuvent être contenues dans un script utilisateur externe (et insérées
-dans le cas ADAO par l'entrée de type "*Script*") ou contenues dans une chaîne
-de caractères, y compris les retour à la ligne (et insérées dans le cas ADAO par
-l'entrée de type "*String*"). De nombreuses variantes peuvent être imaginées à
-partir de ces exemples simples, l'objectif étant surtout d'aider l'utilisateur à
-effectuer le traitement exact dont il a besoin en sortie.
+ou de traiter les sorties d'une exécution d'algorithme. Pour aider
+l'utilisateur, ils sont directement disponibles dans l'interface, à la
+construction du cas ADAO dans l'éditeur intégré de cas, dans les champs de type
+"*Template*". De manière équivalente, ces commandes peuvent être contenues dans
+un script utilisateur externe (et insérées dans le cas ADAO par l'entrée de type
+"*Script*") ou contenues dans une chaîne de caractères, y compris les retour à
+la ligne (et insérées dans le cas ADAO par l'entrée de type "*String*"). De
+nombreuses variantes peuvent être imaginées à partir de ces exemples simples,
+l'objectif étant surtout d'aider l'utilisateur à effectuer le traitement exact
+dont il a besoin en sortie.
 
 Le premier exemple (appelé "*AnalysisPrinter*" dans les entrées de type
 "*Template*") consiste à afficher, dans la sortie standard d'exécution, la

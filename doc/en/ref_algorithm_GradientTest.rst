@@ -46,10 +46,36 @@ function, normalized by the value at the nominal point:
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{|| F(\mathbf{x}) ||}
 
 If the residue is decreasing and the decrease change in :math:`\alpha^2` with
+respect to :math:`\alpha`, it signifies that the gradient is well calculated
+until the stopping precision of the quadratic decrease, and that :math:`F` is
+not linear.
+
+If the residue is decreasing and the decrease change in :math:`\alpha` with
 respect to :math:`\alpha`, until a certain level after which the residue remains
 small and constant, it signifies that the :math:`F` is linear and that the
 residue is decreasing due to the error coming from :math:`\nabla_xF` term
 calculation.
+
+"TaylorOnNorm" residue
+**********************
+
+One observe the residue coming from the Taylor development of the :math:`F`
+function, with respect to the :math:`\alpha` parameter to the square:
+
+.. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{\alpha^2}
+
+This is a residue essentialy similar to the classical Taylor criterion
+previously described, but its behaviour can differ depending on the numerical
+properties of the calculation.
+
+If the residue is constant until a certain level after which the residue will
+growth, it signifies that the gradient is well calculated until this stopping
+precision, and that :math:`F` is not linear.
+
+If the residue is systematicaly growing from a very smal value with respect to
+:math:`||F(\mathbf{x})||`, it signifies that :math:`F` is (quasi-)linear and
+that the gradient calculation is correct until the precision for which the
+residue reachs the numerical order of :math:`||F(\mathbf{x})||`.
 
 "Norm" residue
 **************
@@ -126,10 +152,12 @@ The options of the algorithm are the following:
 
   ResiduFormula
     This key indicates the residue formula that has to be used for the test. The
-    default choice is "Taylor", and the possible ones are "Taylor" (residue of
-    the Taylor development of the operator, which has to decrease with the
-    square power of the perturbation) and "Norm" (residue obtained by taking the
-    norm of the Taylor development at zero order approximation, which
+    default choice is "Taylor", and the possible ones are "Taylor" (normalized
+    residue of the Taylor development of the operator, which has to decrease
+    with the square power of the perturbation), "TaylorOnNorm" (residue of the
+    Taylor development of the operator with respect to the pertibation to the
+    square, which has to remain constant) and "Norm" (residue obtained by taking
+    the norm of the Taylor development at zero order approximation, which
     approximate the gradient, and which has to remain constant).
 
     Example : ``{"ResiduFormula":"Taylor"}``

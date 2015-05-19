@@ -126,7 +126,7 @@ The options of the algorithm are the following:
     list of explicit sampling of each variable as a list. That is then a list of
     lists, each of them being potentially of different size.
 
-    Example : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.],[-2,2,1]]}`` for a state space of dimension 2
+    Example : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` for a state space of dimension 2
 
   SampleAsMinMaxStepHyperCube
     This key describes the calculations points as an hyper-cube, from a given
@@ -146,7 +146,7 @@ The options of the algorithm are the following:
     'uniform' of parameters (low,high), or 'weibull' of parameter (shape). That
     is then a list of the same size than the one of the state.
 
-    Example : ``{"SampleAsIndependantRandomVariables":[['normal',[0.,1.],3],['uniform',[-2,2],4]]`` for a state space of dimension 2
+    Example : ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` for a state space of dimension 2
 
   QualityCriterion
     This key indicates the quality criterion, used to find the state estimate.
