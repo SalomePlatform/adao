@@ -165,10 +165,12 @@ The options of the algorithm are the following:
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState", "OMA",
-    "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum", "SimulationQuantiles"].
+    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentOptimum",
+    "CurrentState", "IndexOfOptimum", "Innovation", "MahalanobisConsistency",
+    "OMA", "OMB", "SigmaObs2", "SimulatedObservationAtBackground",
+    "SimulatedObservationAtCurrentOptimum",
+    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
+    "SimulationQuantiles"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
@@ -249,8 +251,9 @@ The unconditional outputs of the algorithm are the following:
 The conditional outputs of the algorithm are the following:
 
   APosterioriCorrelations
-    *List of matrices*. Each element is an *a posteriori* error correlation
-    matrix of the optimal state.
+    *List of matrices*. Each element is an *a posteriori* error correlations
+    matrix of the optimal state, coming from the :math:`\mathbf{A}*` covariance
+    matrix.
 
     Example : ``C = ADD.get("APosterioriCorrelations")[-1]``
 
@@ -262,13 +265,15 @@ The conditional outputs of the algorithm are the following:
 
   APosterioriStandardDeviations
     *List of matrices*. Each element is an *a posteriori* error standard
-    deviation matrix of the optimal state.
+    errors diagonal matrix of the optimal state, coming from the
+    :math:`\mathbf{A}*` covariance matrix.
 
-    Example : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
+    Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
-    *List of matrices*. Each element is an *a posteriori* error variance matrix
-    of the optimal state.
+    *List of matrices*. Each element is an *a posteriori* error variance
+    errors diagonal matrix of the optimal state, coming from the
+    :math:`\mathbf{A}*` covariance matrix.
 
     Example : ``V = ADD.get("APosterioriVariances")[-1]``
 
@@ -278,11 +283,24 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``bma = ADD.get("BMA")[-1]``
 
+  CurrentOptimum
+    *List of vectors*. Each element is the optimal state obtained at the current
+    step of the optimization algorithm. It is not necessarely the last state.
+
+    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
     optimization algorithm procedure.
 
     Example : ``Xs = ADD.get("CurrentState")[:]``
+
+  IndexOfOptimum
+    *List of integers*. Each element is the iteration index of the optimum
+    obtained at the current step the optimization algorithm. It is not
+    necessarely the number of the last iteration.
+
+    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
 
   Innovation
     *List of vectors*. Each element is an innovation vector, which is in static
@@ -321,11 +339,18 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
+  SimulatedObservationAtCurrentOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the optimal state obtained at the current step the optimization algorithm,
+    that is, in the observation space.
+
+    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
+
   SimulatedObservationAtCurrentState
     *List of vectors*. Each element is an observed vector at the current state,
     that is, in the observation space.
 
-    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
     *List of vectors*. Each element is a vector of observation simulated from

@@ -170,10 +170,12 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState", "OMA",
-    "OMB", "Innovation", "SigmaObs2", "MahalanobisConsistency",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum", "SimulationQuantiles"].
+    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentOptimum",
+    "CurrentState", "IndexOfOptimum", "Innovation", "MahalanobisConsistency",
+    "OMA", "OMB", "SigmaObs2", "SimulatedObservationAtBackground",
+    "SimulatedObservationAtCurrentOptimum",
+    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
+    "SimulationQuantiles"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
@@ -256,8 +258,9 @@ Les sorties non conditionnelles de l'algorithme sont les suivantes:
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   APosterioriCorrelations
-    *Liste de matrices*. Chaque élément est une matrice de corrélation des
-    erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque élément est une matrice de corrélations des
+    erreurs *a posteriori* de l'état optimal, issue de la matrice
+    :math:`\mathbf{A}*` des covariances.
 
     Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
 
@@ -268,14 +271,16 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
     Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
 
   APosterioriStandardDeviations
-    *Liste de matrices*. Chaque élément est une matrice d'écart-types des
-    erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque élément est une matrice diagonale d'écarts-types
+    des erreurs *a posteriori* de l'état optimal, issue de la matrice
+    :math:`\mathbf{A}*` des covariances.
 
-    Exemple : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
+    Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
-    *Liste de matrices*. Chaque élément est une matrice de variances des erreurs
-    *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque élément est une matrice diagonale de variances
+    des erreurs *a posteriori* de l'état optimal, issue de la matrice
+    :math:`\mathbf{A}*` des covariances.
 
     Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
 
@@ -285,11 +290,25 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``bma = ADD.get("BMA")[-1]``
 
+  CurrentOptimum
+    *Liste de vecteurs*. Chaque élément est le vecteur d'état optimal au pas de
+    temps courant au cours du déroulement de l'algorithme d'optimisation. Ce
+    n'est pas nécessairement le dernier état.
+
+    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+
   CurrentState
     *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
     au cours du déroulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
+
+  IndexOfOptimum
+    *Liste d'entiers*. Chaque élément est l'index d'itération de l'optimum
+    obtenu au cours du déroulement de l'algorithme d'optimisation. Ce n'est pas
+    nécessairement le numéro de la dernière itération.
+
+    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
 
   Innovation
     *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
@@ -328,11 +347,18 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
-  SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,
-    c'est-à-dire dans l'espace des observations.
+  SimulatedObservationAtCurrentOptimum
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état optimal au pas de temps courant au cours du déroulement de
+    l'algorithme d'optimisation, c'est-à-dire dans l'espace des observations.
 
-    Exemple : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à

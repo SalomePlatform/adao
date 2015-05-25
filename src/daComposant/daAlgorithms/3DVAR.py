@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CurrentOptimum", "IndexOfOptimum", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -159,11 +159,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._parameters["StoreInternalVariables"] or \
+                "CurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
+                "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
+               "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
@@ -171,6 +174,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
+            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["IndexOfOptimum"].store( IndexMin )
+            if "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
+            if "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
             return J
         #
         def GradientOfCostFunction(x):
@@ -273,7 +286,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
            "SigmaObs2"                     in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulationQuantiles"           in self._parameters["StoreSupplementaryCalculations"]:
-            HXa = Hm(Xa)
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                HXa = self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
+            elif "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
+            else:
+                HXa = Hm(Xa)
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------

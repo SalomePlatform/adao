@@ -211,11 +211,32 @@ at the input.
 All other information are conditioned by the algorithm and/or the user requests
 of availability. They are the following, in alphabetical order:
 
+  APosterioriCorrelations
+    *List of matrices*. Each element is an *a posteriori* error correlations
+    matrix of the optimal state, coming from the :math:`\mathbf{A}*` covariance
+    matrix.
+
+    Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
+
   APosterioriCovariance
     *List of matrices*. Each element is an *a posteriori* error covariance
     matrix :math:`\mathbf{A}*` of the optimal state.
 
     Example : ``A = ADD.get("APosterioriCovariance")[-1]``
+
+  APosterioriStandardDeviations
+    *List of matrices*. Each element is an *a posteriori* error standard errors
+    diagonal matrix of the optimal state, coming from the :math:`\mathbf{A}*`
+    covariance matrix.
+
+    Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
+
+  APosterioriVariances
+    *List of matrices*. Each element is an *a posteriori* error variances
+    diagonal matrix of the optimal state, coming from the :math:`\mathbf{A}*`
+    covariance matrix.
+
+    Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
     *List of vectors*. Each element is a vector of difference between the
@@ -240,11 +261,24 @@ of availability. They are the following, in alphabetical order:
 
     Example : ``Jo = ADD.get("CostFunctionJo")[:]``
 
+  CurrentOptimum
+    *List of vectors*. Each element is the optimal state obtained at the current
+    step of the optimization algorithm. It is not necessarely the last state.
+
+    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
     optimization algorithm procedure.
 
     Example : ``Xs = ADD.get("CurrentState")[:]``
+
+  IndexOfOptimum
+    *List of integers*. Each element is the iteration index of the optimum
+    obtained at the current step the optimization algorithm. It is not
+    necessarely the number of the last iteration.
+
+    Exemple : ``i = ADD.get("MahalanobisConsistency")[-1]``
 
   Innovation
     *List of vectors*. Each element is an innovation vector, which is in static
@@ -289,11 +323,18 @@ of availability. They are the following, in alphabetical order:
 
     Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
+  SimulatedObservationAtCurrentOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the optimal state obtained at the current step the optimization algorithm,
+    that is, in the observation space.
+
+    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
+
   SimulatedObservationAtCurrentState
     *List of vectors*. Each element is an observed vector at the current state,
     that is, in the observation space.
 
-    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
     *List of vectors*. Each element is a vector of observation simulated from

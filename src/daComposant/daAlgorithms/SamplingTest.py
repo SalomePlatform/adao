@@ -124,7 +124,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------
         BI = B.getI()
         RI = R.getI()
-        def CostFunction(x,HmX, QualityMeasure="AugmentedWeightedLeastSquares"):
+        def CostFunction(x, HmX, QualityMeasure="AugmentedWeightedLeastSquares"):
             if numpy.any(numpy.isnan(HmX)):
                 _X  = numpy.nan
                 _HX = numpy.nan

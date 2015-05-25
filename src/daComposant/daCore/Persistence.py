@@ -652,6 +652,13 @@ class OneScalar(Persistence):
     def __init__(self, name="", unit="", basetype = float):
         Persistence.__init__(self, name, unit, basetype)
 
+class OneIndex(Persistence):
+    """
+    Classe définissant le stockage d'une valeur unique entière (int) par pas.
+    """
+    def __init__(self, name="", unit="", basetype = int):
+        Persistence.__init__(self, name, unit, basetype)
+
 class OneVector(Persistence):
     """
     Classe de stockage d'une liste de valeurs numériques homogènes par pas. Ne
