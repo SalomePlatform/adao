@@ -166,8 +166,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                     d = d - Cm * Un
             #
+            _A = R + Ht * Pn_predicted * Ha
+            _u = numpy.linalg.solve( _A , d )
+            Xn = Xn_predicted + Pn_predicted * Ha * _u
             Kn = Pn_predicted * Ha * (R + Ht * Pn_predicted * Ha).I
-            Xn = Xn_predicted + Kn * d
             Pn = Pn_predicted - Kn * Ht * Pn_predicted
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )

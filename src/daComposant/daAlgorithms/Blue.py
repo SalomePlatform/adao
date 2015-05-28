@@ -150,6 +150,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulationQuantiles"   in self._parameters["StoreSupplementaryCalculations"]:
+            if   (Y.size <= Xb.size) and (Y.size > 100): K  = B * Ha * (R + Hm * B * Ha).I
+            elif (Y.size >  Xb.size) and (Y.size > 100): K = (BI + Ha * RI * Hm).I * Ha * RI
+            else:                                        pass # K deja calcule
             A = B - K * Hm * B
             if min(A.shape) != max(A.shape):
                 raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
