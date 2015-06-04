@@ -20,21 +20,17 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import log
 import optparse
 import sys
 import re
+import Traducteur.log as log
 
-from load   import getJDC, getJDCFromTexte
-from mocles import parseKeywords
-from removemocle  import *
-from renamemocle  import *
-from renamemocle  import *
-from inseremocle  import *
-from changeValeur import *
-from movemocle    import *
-from dictErreurs  import *
-from regles import pasDeRegle
+from Traducteur.load         import getJDC, getJDCFromTexte
+from Traducteur.mocles       import parseKeywords
+from Traducteur.dictErreurs  import GenereErreurPourCommande
+from Traducteur.inseremocle  import *
+from Traducteur.movemocle    import *
+from Traducteur.renamemocle  import *
 
 version_out = "V7_6_0"
 
