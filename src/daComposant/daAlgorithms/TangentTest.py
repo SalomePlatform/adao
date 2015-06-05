@@ -56,6 +56,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
+            name     = "AmplitudeOfTangentPerturbation",
+            default  = 1.e-2,
+            typecast = float,
+            message  = "Amplitude de la perturbation pour le calcul de la forme tangente",
+            minval   = 1.e-10,
+            maxval   = 1.,
+            )
+        self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
@@ -108,8 +116,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul du gradient au point courant X pour l'incrément dX
         # qui est le tangent en X multiplié par dX
         # ---------------------------------------------------------
-        GradFxdX = Ht( (Xn, dX0) )
+        dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
+        GradFxdX = Ht( (Xn, dX1) )
         GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
+        GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
         NormeGX  = numpy.linalg.norm( GradFxdX )
         #
         # Entete des resultats
