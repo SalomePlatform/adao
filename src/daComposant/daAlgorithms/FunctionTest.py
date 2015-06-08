@@ -92,6 +92,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             print("===> Beginning of evaluation, without activating debug\n")
         #
         # ----------
+        HO["Direct"].disableAvoidingRedundancy()
+        # ----------
         Ys = []
         for i in range(self._parameters["NumberOfRepetition"]):
             print("     %s\n"%("-"*75,))
@@ -117,6 +119,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Ys.append( copy.copy( numpy.ravel(
                 Yn
                 ) ) )
+        # ----------
+        HO["Direct"].enableAvoidingRedundancy()
         # ----------
         #
         print("     %s\n"%("-"*75,))

@@ -48,6 +48,7 @@ class CacheManager:
         """
         self.__tolerBP  = float(toleranceInRedundancy)
         self.__lenghtOR = int(lenghtOfRedundancy)
+        self.__initlnOR = self.__lenghtOR
         self.clearCache()
 
     def clearCache(self):
@@ -69,7 +70,9 @@ class CacheManager:
         return __alc, __HxV
 
     def storeValueInX(self, xValue, HxValue ):
-        if self.__lenghtOR < 0: self.__lenghtOR = 2 * xValue.size + 2
+        if self.__lenghtOR < 0:
+            self.__lenghtOR = 2 * xValue.size + 2
+            self.__initlnOR = self.__lenghtOR
         while len(self.__listOPCV) > self.__lenghtOR:
             # logging.debug("CM Réduction de la liste des cas à %i éléments par suppression du premier"%self.__lenghtOR)
             self.__listOPCV.pop(0)
@@ -78,6 +81,13 @@ class CacheManager:
             copy.copy(HxValue),
             numpy.linalg.norm(xValue),
             ) )
+
+    def disable(self):
+        self.__initlnOR = self.__lenghtOR
+        self.__lenghtOR = 0
+
+    def enable(self):
+        self.__lenghtOR = self.__initlnOR
 
 # ==============================================================================
 class Operator:
@@ -112,6 +122,15 @@ class Operator:
             self.__Method = None
             self.__Matrix = None
             self.__Type   = None
+
+    def disableAvoidingRedundancy(self):
+        Operator.CM.disable()
+
+    def enableAvoidingRedundancy(self):
+        if self.__AvoidRC:
+            Operator.CM.enable()
+        else:
+            Operator.CM.disable()
 
     def isType(self):
         return self.__Type
