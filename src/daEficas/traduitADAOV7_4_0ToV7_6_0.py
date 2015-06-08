@@ -23,8 +23,8 @@
 import optparse
 import sys
 import re
-import Traducteur.log as log
 
+import Traducteur.log as log
 from Traducteur.load         import getJDC, getJDCFromTexte
 from Traducteur.mocles       import parseKeywords
 from Traducteur.dictErreurs  import GenereErreurPourCommande
@@ -69,7 +69,7 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
         # Insere le MC s'il n'existe pas
         chercheOperInsereFacteurSiRegle(jdc, command, "AlgorithmParameters",((("AlgorithmParameters",),"nexistepasMCFParmi"),))
         # Deplace le MC
-        moveMotClefInOperToFact(jdc, command, "Algorithm", "AlgorithmParameters")
+        moveMotClefInOperToFact(jdc, command, "Algorithm", "AlgorithmParameters", plusieursFois=False)
         # Renomme le MC
         renameMotCleInFact(jdc, command, "AlgorithmParameters", "INPUT_TYPE", "Parameters")
         # Renomme le MC
