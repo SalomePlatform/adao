@@ -111,7 +111,7 @@ SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
     #!/bin/bash
     if (test $# != 1)
     then
-      echo -e "\nUsage: $0 <Schéma xml YACS ADAO>\n"
+      echo -e "\nUsage: $0 <Cas .comm/.py ADAO>\n"
       exit
     else
       D=`dirname $1`

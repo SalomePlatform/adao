@@ -105,7 +105,7 @@ following Shell script::
     #!/bin/bash
     if (test $# != 1)
     then
-      echo -e "\nUsage: $0 <ADAO YACS xml scheme>\n"
+      echo -e "\nUsage: $0 <ADAO .comm/.py case>\n"
       exit
     else
       D=`dirname $1`

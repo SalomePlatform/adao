@@ -29,6 +29,7 @@ __all__ = ["New"]
 import os
 from daCore import AssimilationStudy
 
+# ==============================================================================
 class New(object):
     """
     Creation TUI d'un cas ADAO
