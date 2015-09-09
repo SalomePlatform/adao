@@ -286,6 +286,7 @@ class Algorithm:
             - SimulatedObservationAtCurrentState : l'état observé H(X) à l'état courant
             - SimulatedObservationAtOptimum : l'état observé H(Xa) à l'optimum
             - Innovation : l'innovation : d = Y - H(X)
+            - InnovationAtCurrentState : l'innovation à l'état courant : dn = Y - H(Xn)
             - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
             - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
             - MahalanobisConsistency : indicateur de consistance des covariances
@@ -307,32 +308,33 @@ class Algorithm:
         self.__required_parameters = {}
         self.StoredVariables = {}
         #
-        self.StoredVariables["CostFunctionJ"]                      = Persistence.OneScalar(name = "CostFunctionJ")
-        self.StoredVariables["CostFunctionJb"]                     = Persistence.OneScalar(name = "CostFunctionJb")
-        self.StoredVariables["CostFunctionJo"]                     = Persistence.OneScalar(name = "CostFunctionJo")
-        self.StoredVariables["GradientOfCostFunctionJ"]            = Persistence.OneVector(name = "GradientOfCostFunctionJ")
-        self.StoredVariables["GradientOfCostFunctionJb"]           = Persistence.OneVector(name = "GradientOfCostFunctionJb")
-        self.StoredVariables["GradientOfCostFunctionJo"]           = Persistence.OneVector(name = "GradientOfCostFunctionJo")
-        self.StoredVariables["CurrentState"]                       = Persistence.OneVector(name = "CurrentState")
-        self.StoredVariables["Analysis"]                           = Persistence.OneVector(name = "Analysis")
-        self.StoredVariables["IndexOfOptimum"]                     = Persistence.OneIndex(name = "IndexOfOptimum")
-        self.StoredVariables["CurrentOptimum"]                     = Persistence.OneVector(name = "CurrentOptimum")
-        self.StoredVariables["SimulatedObservationAtBackground"]   = Persistence.OneVector(name = "SimulatedObservationAtBackground")
-        self.StoredVariables["SimulatedObservationAtCurrentState"] = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
-        self.StoredVariables["SimulatedObservationAtOptimum"]      = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
+        self.StoredVariables["CostFunctionJ"]                        = Persistence.OneScalar(name = "CostFunctionJ")
+        self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
+        self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
+        self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
+        self.StoredVariables["GradientOfCostFunctionJb"]             = Persistence.OneVector(name = "GradientOfCostFunctionJb")
+        self.StoredVariables["GradientOfCostFunctionJo"]             = Persistence.OneVector(name = "GradientOfCostFunctionJo")
+        self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
+        self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name = "IndexOfOptimum")
+        self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
+        self.StoredVariables["SimulatedObservationAtBackground"]     = Persistence.OneVector(name = "SimulatedObservationAtBackground")
+        self.StoredVariables["SimulatedObservationAtCurrentState"]   = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
+        self.StoredVariables["SimulatedObservationAtOptimum"]        = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
         self.StoredVariables["SimulatedObservationAtCurrentOptimum"] = Persistence.OneVector(name = "SimulatedObservationAtCurrentOptimum")
-        self.StoredVariables["Innovation"]                         = Persistence.OneVector(name = "Innovation")
-        self.StoredVariables["SigmaObs2"]                          = Persistence.OneScalar(name = "SigmaObs2")
-        self.StoredVariables["SigmaBck2"]                          = Persistence.OneScalar(name = "SigmaBck2")
-        self.StoredVariables["MahalanobisConsistency"]             = Persistence.OneScalar(name = "MahalanobisConsistency")
-        self.StoredVariables["OMA"]                                = Persistence.OneVector(name = "OMA")
-        self.StoredVariables["OMB"]                                = Persistence.OneVector(name = "OMB")
-        self.StoredVariables["BMA"]                                = Persistence.OneVector(name = "BMA")
-        self.StoredVariables["APosterioriCovariance"]              = Persistence.OneMatrix(name = "APosterioriCovariance")
-        self.StoredVariables["APosterioriVariances"]               = Persistence.OneVector(name = "APosterioriVariances")
-        self.StoredVariables["APosterioriStandardDeviations"]      = Persistence.OneVector(name = "APosterioriStandardDeviations")
-        self.StoredVariables["APosterioriCorrelations"]            = Persistence.OneMatrix(name = "APosterioriCorrelations")
-        self.StoredVariables["SimulationQuantiles"]                = Persistence.OneMatrix(name = "SimulationQuantiles")
+        self.StoredVariables["Innovation"]                           = Persistence.OneVector(name = "Innovation")
+        self.StoredVariables["InnovationAtCurrentState"]             = Persistence.OneVector(name = "InnovationAtCurrentState")
+        self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")
+        self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
+        self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
+        self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
+        self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
+        self.StoredVariables["BMA"]                                  = Persistence.OneVector(name = "BMA")
+        self.StoredVariables["APosterioriCovariance"]                = Persistence.OneMatrix(name = "APosterioriCovariance")
+        self.StoredVariables["APosterioriVariances"]                 = Persistence.OneVector(name = "APosterioriVariances")
+        self.StoredVariables["APosterioriStandardDeviations"]        = Persistence.OneVector(name = "APosterioriStandardDeviations")
+        self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
+        self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
 
     def _pre_run(self):
         logging.debug("%s Lancement"%self._name)
@@ -340,7 +342,7 @@ class Algorithm:
         return 0
 
     def _post_run(self,_oH=None):
-        if self._parameters.has_key("StoreSupplementaryCalculations") and \
+        if ("StoreSupplementaryCalculations" in self._parameters) and \
             "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             for _A in self.StoredVariables["APosterioriCovariance"]:
                 if "APosterioriVariances" in self._parameters["StoreSupplementaryCalculations"]:
@@ -371,11 +373,11 @@ class Algorithm:
         else:
             return self.StoredVariables
 
-    def has_key(self, key=None):
+    def __contains__(self, key=None):
         """
         Vérifie si l'une des variables stockées est identifiée par la clé.
         """
-        return self.StoredVariables.has_key(key)
+        return (key in self.StoredVariables)
 
     def keys(self):
         """

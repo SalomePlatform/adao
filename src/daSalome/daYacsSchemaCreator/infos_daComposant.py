@@ -246,6 +246,7 @@ OptDefaultDict["UserPostAnalysis"]   = "Template"
 ObserversList = [
     "Analysis",
     "Innovation",
+    "InnovationAtCurrentState",
     "CurrentState",
     "CurrentOptimum",
     "IndexOfOptimum",

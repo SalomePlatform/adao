@@ -146,7 +146,7 @@ class Persistence:
             for tagKey in __filteringKwTags:
                 __tmp = []
                 for i in __indexOfFilteredItems:
-                    if self.__tags[i].has_key(tagKey):
+                    if tagKey in self.__tags[i]:
                         if self.__tags[i][tagKey] == kwargs[tagKey]:
                             __tmp.append( i )
                         elif isinstance(kwargs[tagKey],(list,tuple)) and self.__tags[i][tagKey] in kwargs[tagKey]:
@@ -164,7 +164,7 @@ class Persistence:
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __keys = []
         for i in __indexOfFilteredItems:
-            if self.__tags[i].has_key( keyword ):
+            if keyword in self.__tags[i]:
                 __keys.append( self.__tags[i][keyword] )
             else:
                 __keys.append( None )
@@ -174,7 +174,7 @@ class Persistence:
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __pairs = []
         for i in __indexOfFilteredItems:
-            if self.__tags[i].has_key( keyword ):
+            if keyword in self.__tags[i]:
                 __pairs.append( [self.__tags[i][keyword], self.__values[i]] )
             else:
                 __pairs.append( [None, self.__values[i]] )

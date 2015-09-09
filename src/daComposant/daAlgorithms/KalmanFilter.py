@@ -98,7 +98,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         self.StoredVariables["Analysis"].store( Xn.A1 )
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
-            self.StoredVariables["APosterioriCovariance"].store( Pn )
+            self.StoredVariables["APosterioriCovariance"].store( Pn.asfullmatrix(Xn.size) )
             covarianceXa = Pn
         Xa               = Xn
         previousJMinimum = numpy.finfo(float).max

@@ -171,9 +171,9 @@ Les options de l'algorithme sont les suivantes:
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
     "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentOptimum",
-    "CurrentState", "IndexOfOptimum", "Innovation", "MahalanobisConsistency",
-    "OMA", "OMB", "SigmaObs2", "SimulatedObservationAtBackground",
-    "SimulatedObservationAtCurrentOptimum",
+    "CurrentState", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
+    "MahalanobisConsistency", "OMA", "OMB", "SigmaObs2",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
     "SimulationQuantiles"].
 

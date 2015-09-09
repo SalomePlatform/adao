@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CurrentOptimum", "IndexOfOptimum", "Innovation", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"]
+            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CostFunctionJ", "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -165,11 +165,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["CurrentState"].store( _X )
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            _Innovation = Y - _HX
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
                "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
+            if "InnovationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["InnovationAtCurrentState"].store( _HX )
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
-            Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+            Jo  = 0.5 * _Innovation.T * RI * _Innovation
             J   = float( Jb ) + float( Jo )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
