@@ -764,5 +764,121 @@ class Covariance:
         return self.shape[0]
 
 # ==============================================================================
+def CostFunction3D(
+    _x,
+    _Hm  = None,  # Pour simuler Hm(x) : HO["Direct"].appliedTo
+    _HmX = None,  # Simulation déjà faite de Hm(x)
+    _arg = None,  # Arguments supplementaires pour Hm, sous la forme d'un tuple
+    _BI  = None,
+    _RI  = None,
+    _Xb  = None,
+    _Y   = None,
+    _SIV = False, # A résorber pour la 8.0
+    _SSC = [],    # self._parameters["StoreSupplementaryCalculations"]
+    _nPS = 0,     # nbPreviousSteps
+    _QM  = "DA",  # QualityMeasure
+    _SSV = {},    # Entrée et/ou sortie : self.StoredVariables
+    _fRt = False, # Restitue ou pas la sortie étendue
+    _sSc = True,  # Stocke ou pas les SSC
+    ):
+    """
+    Fonction-coût générale utile pour les algorithmes statiques/3D : 3DVAR, BLUE
+    et dérivés, Kalman et dérivés, LeastSquares, SamplingTest, PSO, SA, Tabu,
+    DFO, QuantileRegression
+    """
+    if not _sSc:
+        _SIV = False
+        _SSC = {}
+    else:
+        for k in ["CostFunctionJ",
+                  "CostFunctionJb",
+                  "CostFunctionJo",
+                  "CurrentOptimum",
+                  "CurrentState", 
+                  "IndexOfOptimum",
+                  "SimulatedObservationAtCurrentOptimum",
+                  "SimulatedObservationAtCurrentState",
+                  ]:
+            if k not in _SSV:
+                _SSV[k] = []
+            if hasattr(_SSV[k],"store"):
+                _SSV[k].append = _SSV[k].store # Pour utiliser "append" au lieu de "store"
+    #
+    _X  = numpy.asmatrix(numpy.ravel( _x )).T
+    if _SIV or "CurrentState" in _SSC or "CurrentOptimum" in _SSC:
+        _SSV["CurrentState"].append( _X )
+    #
+    if _HmX is not None:
+        _HX = _HmX
+    else:
+        if _Hm is None:
+            raise ValueError("%s Operator has to be defined."%(self.__name,))
+        if _arg is None:
+            _HX = _Hm( _X )
+        else:
+            _HX = _Hm( _X, *_arg )
+    _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+    #
+    if "SimulatedObservationAtCurrentState" in _SSC or \
+       "SimulatedObservationAtCurrentOptimum" in _SSC:
+        _SSV["SimulatedObservationAtCurrentState"].append( _HX )
+    #
+    if numpy.any(numpy.isnan(_HX)):
+        Jb, Jo, J = numpy.nan, numpy.nan, numpy.nan
+    else:
+        _Y   = numpy.asmatrix(numpy.ravel( _Y )).T
+        if _QM in ["AugmentedWeightedLeastSquares", "AWLS", "AugmentedPonderatedLeastSquares", "APLS", "DA"]:
+            if _BI is None or _RI is None:
+                raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
+            _Xb  = numpy.asmatrix(numpy.ravel( _Xb )).T
+            Jb  = 0.5 * (_X - _Xb).T * _BI * (_X - _Xb)
+            Jo  = 0.5 * (_Y - _HX).T * _RI * (_Y - _HX)
+        elif _QM in ["WeightedLeastSquares", "WLS", "PonderatedLeastSquares", "PLS"]:
+            if _RI is None:
+                raise ValueError("Observation error covariance matrix has to be properly defined!")
+            Jb  = 0.
+            Jo  = 0.5 * (_Y - _HX).T * _RI * (_Y - _HX)
+        elif _QM in ["LeastSquares", "LS", "L2"]:
+            Jb  = 0.
+            Jo  = 0.5 * (_Y - _HX).T * (_Y - _HX)
+        elif _QM in ["AbsoluteValue", "L1"]:
+            Jb  = 0.
+            Jo  = numpy.sum( numpy.abs(_Y - _HX) )
+        elif _QM in ["MaximumError", "ME"]:
+            Jb  = 0.
+            Jo  = numpy.max( numpy.abs(_Y - _HX) )
+        elif _QM in ["QR", "Null"]:
+            Jb  = 0.
+            Jo  = 0.
+        else:
+            raise ValueError("Unknown asked quality measure!")
+        #
+        J   = float( Jb ) + float( Jo )
+    #
+    if _sSc:
+        _SSV["CostFunctionJb"].append( Jb )
+        _SSV["CostFunctionJo"].append( Jo )
+        _SSV["CostFunctionJ" ].append( J )
+    #
+    if "IndexOfOptimum" in _SSC or \
+       "CurrentOptimum" in _SSC or \
+       "SimulatedObservationAtCurrentOptimum" in _SSC:
+        IndexMin = numpy.argmin( _SSV["CostFunctionJ"][_nPS:] ) + _nPS
+    if "IndexOfOptimum" in _SSC:
+        _SSV["IndexOfOptimum"].append( IndexMin )
+    if "CurrentOptimum" in _SSC:
+        _SSV["CurrentOptimum"].append( _SSV["CurrentState"][IndexMin] )
+    if "SimulatedObservationAtCurrentOptimum" in _SSC:
+        _SSV["SimulatedObservationAtCurrentOptimum"].append( _SSV["SimulatedObservationAtCurrentState"][IndexMin] )
+    #
+    if _fRt:
+        return _SSV
+    else:
+        if _QM in ["QR"]: # Pour le QuantileRegression
+            return _HX
+        else:
+            return J
+
+# ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'

@@ -273,16 +273,16 @@ class AssimilationStudy:
                        }
         """
         if (type(asFunction) is type({})) and \
-                asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
-                asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
-            if not asFunction.has_key("withCenteredDF"):            asFunction["withCenteredDF"]            = False
-            if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
-            if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
-            if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
-            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
-            if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
-            if not asFunction.has_key("withmpEnabled"):             asFunction["withmpEnabled"]             = False
-            if not asFunction.has_key("withmpWorkers"):             asFunction["withmpWorkers"]             = None
+                ("useApproximatedDerivatives" in asFunction) and bool(asFunction["useApproximatedDerivatives"]) and \
+                ("Direct" in asFunction) and (asFunction["Direct"] is not None):
+            if "withCenteredDF"            not in asFunction: asFunction["withCenteredDF"]            = False
+            if "withIncrement"             not in asFunction: asFunction["withIncrement"]             = 0.01
+            if "withdX"                    not in asFunction: asFunction["withdX"]                    = None
+            if "withAvoidingRedundancy"    not in asFunction: asFunction["withAvoidingRedundancy"]    = True
+            if "withToleranceInRedundancy" not in asFunction: asFunction["withToleranceInRedundancy"] = 1.e-18
+            if "withLenghtOfRedundancy"    not in asFunction: asFunction["withLenghtOfRedundancy"]    = -1
+            if "withmpEnabled"             not in asFunction: asFunction["withmpEnabled"]             = False
+            if "withmpWorkers"             not in asFunction: asFunction["withmpWorkers"]             = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = asFunction["Direct"],
@@ -299,12 +299,12 @@ class AssimilationStudy:
             self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__HO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
         elif (type(asFunction) is type({})) and \
-                asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
+                ("Tangent" in asFunction) and ("Adjoint" in asFunction) and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
-            if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
+            if ("Direct" not in asFunction) or (asFunction["Direct"] is None):
                 self.__HO["Direct"] = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             else:
-                self.__HO["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC  )
+                self.__HO["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC )
             self.__HO["Tangent"]    = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             self.__HO["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"], avoidingRedundancy = avoidRC )
         elif asMatrix is not None:
@@ -377,16 +377,16 @@ class AssimilationStudy:
                        }
         """
         if (type(asFunction) is type({})) and \
-                asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
-                asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
-            if not asFunction.has_key("withCenteredDF"):            asFunction["withCenteredDF"]            = False
-            if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
-            if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
-            if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
-            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
-            if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
-            if not asFunction.has_key("withmpEnabled"):             asFunction["withmpEnabled"]             = False
-            if not asFunction.has_key("withmpWorkers"):             asFunction["withmpWorkers"]             = None
+                ("useApproximatedDerivatives" in asFunction) and bool(asFunction["useApproximatedDerivatives"]) and \
+                ("Direct" in asFunction) and (asFunction["Direct"] is not None):
+            if "withCenteredDF"            not in asFunction: asFunction["withCenteredDF"]            = False
+            if "withIncrement"             not in asFunction: asFunction["withIncrement"]             = 0.01
+            if "withdX"                    not in asFunction: asFunction["withdX"]                    = None
+            if "withAvoidingRedundancy"    not in asFunction: asFunction["withAvoidingRedundancy"]    = True
+            if "withToleranceInRedundancy" not in asFunction: asFunction["withToleranceInRedundancy"] = 1.e-18
+            if "withLenghtOfRedundancy"    not in asFunction: asFunction["withLenghtOfRedundancy"]    = -1
+            if "withmpEnabled"             not in asFunction: asFunction["withmpEnabled"]             = False
+            if "withmpWorkers"             not in asFunction: asFunction["withmpWorkers"]             = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = asFunction["Direct"],
@@ -399,13 +399,13 @@ class AssimilationStudy:
                 mpEnabled             = asFunction["withmpEnabled"],
                 mpWorkers             = asFunction["withmpWorkers"],
                 )
-            self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC  )
+            self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
             self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__EM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
         elif (type(asFunction) is type({})) and \
-                asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
+                ("Tangent" in asFunction) and ("Adjoint" in asFunction) and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
-            if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
+            if ("Direct" not in asFunction) or (asFunction["Direct"] is None):
                 self.__EM["Direct"] = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             else:
                 self.__EM["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC )
@@ -503,16 +503,16 @@ class AssimilationStudy:
                        }
         """
         if (type(asFunction) is type({})) and \
-                asFunction.has_key("useApproximatedDerivatives") and bool(asFunction["useApproximatedDerivatives"]) and \
-                asFunction.has_key("Direct") and (asFunction["Direct"] is not None):
-            if not asFunction.has_key("withCenteredDF"):            asFunction["withCenteredDF"]            = False
-            if not asFunction.has_key("withIncrement"):             asFunction["withIncrement"]             = 0.01
-            if not asFunction.has_key("withdX"):                    asFunction["withdX"]                    = None
-            if not asFunction.has_key("withAvoidingRedundancy"):    asFunction["withAvoidingRedundancy"]    = True
-            if not asFunction.has_key("withToleranceInRedundancy"): asFunction["withToleranceInRedundancy"] = 1.e-18
-            if not asFunction.has_key("withLenghtOfRedundancy"):    asFunction["withLenghtOfRedundancy"]    = -1
-            if not asFunction.has_key("withmpEnabled"):             asFunction["withmpEnabled"]             = False
-            if not asFunction.has_key("withmpWorkers"):             asFunction["withmpWorkers"]             = None
+                ("useApproximatedDerivatives" in asFunction) and bool(asFunction["useApproximatedDerivatives"]) and \
+                ("Direct" in asFunction) and (asFunction["Direct"] is not None):
+            if "withCenteredDF"            not in asFunction: asFunction["withCenteredDF"]            = False
+            if "withIncrement"             not in asFunction: asFunction["withIncrement"]             = 0.01
+            if "withdX"                    not in asFunction: asFunction["withdX"]                    = None
+            if "withAvoidingRedundancy"    not in asFunction: asFunction["withAvoidingRedundancy"]    = True
+            if "withToleranceInRedundancy" not in asFunction: asFunction["withToleranceInRedundancy"] = 1.e-18
+            if "withLenghtOfRedundancy"    not in asFunction: asFunction["withLenghtOfRedundancy"]    = -1
+            if "withmpEnabled"             not in asFunction: asFunction["withmpEnabled"]             = False
+            if "withmpWorkers"             not in asFunction: asFunction["withmpWorkers"]             = None
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = asFunction["Direct"],
@@ -525,16 +525,16 @@ class AssimilationStudy:
                 mpEnabled             = asFunction["withmpEnabled"],
                 mpWorkers             = asFunction["withmpWorkers"],
                 )
-            self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC  )
+            self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
             self.__CM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__CM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
         elif (type(asFunction) is type({})) and \
-                asFunction.has_key("Tangent") and asFunction.has_key("Adjoint") and \
+                ("Tangent" in asFunction) and ("Adjoint" in asFunction) and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
-            if not asFunction.has_key("Direct") or (asFunction["Direct"] is None):
+            if ("Direct" not in asFunction) or (asFunction["Direct"] is None):
                 self.__CM["Direct"] = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             else:
-                self.__CM["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC  )
+                self.__CM["Direct"] = Operator( fromMethod = asFunction["Direct"],  avoidingRedundancy = avoidRC )
             self.__CM["Tangent"]    = Operator( fromMethod = asFunction["Tangent"], avoidingRedundancy = avoidRC )
             self.__CM["Adjoint"]    = Operator( fromMethod = asFunction["Adjoint"], avoidingRedundancy = avoidRC )
         elif asMatrix is not None:
@@ -687,9 +687,9 @@ class AssimilationStudy:
         #
         # Instancie un objet du type élémentaire du fichier
         # -------------------------------------------------
-        if self.__StoredInputs.has_key(name):
+        if name in self.__StoredInputs:
             raise ValueError("A default input with the same name \"%s\" already exists."%str(name))
-        elif self.__StoredDiagnostics.has_key(name):
+        elif name in self.__StoredDiagnostics:
             raise ValueError("A diagnostic with the same name \"%s\" already exists."%str(name))
         else:
             self.__StoredDiagnostics[name] = self.__diagnosticFile.ElementaryDiagnostic(
@@ -809,8 +809,8 @@ class AssimilationStudy:
         if self.__CM is not None and len(self.__CM) > 0 and not(type(self.__CM) is type({})) and not( __CM_shape[1] == max(__U_shape) ):
             raise ValueError("Shape characteristic of control model (CM) \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape,__U_shape))
         #
-        if self.__StoredInputs.has_key("AlgorithmParameters") \
-            and self.__StoredInputs["AlgorithmParameters"].has_key("Bounds") \
+        if ("AlgorithmParameters" in self.__StoredInputs) \
+            and ("Bounds" in self.__StoredInputs["AlgorithmParameters"]) \
             and (type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type([]) or type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type(())) \
             and (len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) != max(__Xb_shape)):
             raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself." \
@@ -854,11 +854,11 @@ class AssimilationStudy:
         stockée qui est renvoyée, et le diagnostic est inatteignable.
         """
         if key is not None:
-            if self.__algorithm.has_key(key):
+            if key in self.__algorithm:
                 return self.__algorithm.get( key )
-            elif self.__StoredInputs.has_key(key):
+            elif key in self.__StoredInputs:
                 return self.__StoredInputs[key]
-            elif self.__StoredDiagnostics.has_key(key):
+            elif key in self.__StoredDiagnostics:
                 return self.__StoredDiagnostics[key]
             else:
                 raise ValueError("The requested key \"%s\" does not exists as an input, a diagnostic or a stored variable."%key)
@@ -996,7 +996,7 @@ class AssimilationStudy:
         # Association interne de l'observer à la variable
         # -----------------------------------------------
         for n in VariableNames:
-            if not self.__algorithm.has_key( n ):
+            if n not in self.__algorithm:
                 raise ValueError("An observer requires to be set on a variable named %s which does not exist."%n)
             else:
                 self.__algorithm.StoredVariables[ n ].setDataObserver(
@@ -1028,7 +1028,7 @@ class AssimilationStudy:
         # Association interne de l'observer à la variable
         # -----------------------------------------------
         for n in VariableNames:
-            if not self.__algorithm.has_key( n ):
+            if n not in self.__algorithm:
                 raise ValueError("An observer requires to be removed on a variable named %s which does not exist."%n)
             else:
                 self.__algorithm.StoredVariables[ n ].removeDataObserver(

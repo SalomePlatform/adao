@@ -107,21 +107,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
         if Y.size <= Xb.size:
-            if Y.size > 100: # len(R)
-                _A = R + Hm * B * Ha
-                _u = numpy.linalg.solve( _A , d )
-                Xa = Xb + B * Ha * _u
-            else:
-                K  = B * Ha * (R + Hm * B * Ha).I
-                Xa = Xb + K*d
+            _A = R + Hm * B * Ha
+            _u = numpy.linalg.solve( _A , d )
+            Xa = Xb + B * Ha * _u
         else:
-            if Y.size > 100: # len(R)
-                _A = BI + Ha * RI * Hm
-                _u = numpy.linalg.solve( _A , Ha * RI * d )
-                Xa = Xb + _u
-            else:
-                K = (BI + Ha * RI * Hm).I * Ha * RI
-                Xa = Xb + K*d
+            _A = BI + Ha * RI * Hm
+            _u = numpy.linalg.solve( _A , Ha * RI * d )
+            Xa = Xb + _u
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
         # Calcul de la fonction coût
@@ -150,9 +142,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------
         if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulationQuantiles"   in self._parameters["StoreSupplementaryCalculations"]:
-            if   (Y.size <= Xb.size) and (Y.size > 100): K  = B * Ha * (R + Hm * B * Ha).I
-            elif (Y.size >  Xb.size) and (Y.size > 100): K = (BI + Ha * RI * Hm).I * Ha * RI
-            else:                                        pass # K deja calcule
+            if   (Y.size <= Xb.size): K  = B * Ha * (R + Hm * B * Ha).I
+            elif (Y.size >  Xb.size): K = (BI + Ha * RI * Hm).I * Ha * RI
             A = B - K * Hm * B
             if min(A.shape) != max(A.shape):
                 raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
