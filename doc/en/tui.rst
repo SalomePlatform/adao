@@ -23,6 +23,7 @@
 
 .. index:: single: TUI
 .. index:: single: API/TUI
+.. index:: single: adaoBuilder
 .. _section_tui:
 
 ================================================================================
@@ -83,9 +84,9 @@ More details are given here on the successive steps of the setup of an ADAO TUI
 calculation case. The commands themselves are detailed just after in the
 :ref:`subsection_tui_commands`.
 
-The initial creation of a study is done using the following commands, the
-``case`` object name of the ADAO TUI calculation case being let free to the
-user choice::
+The creation and initialisation of a study are done using the following
+commands, the ``case`` object name of the ADAO TUI calculation case being let
+free to the user choice::
 
     from numpy import array
     import adaoBuilder
@@ -267,6 +268,22 @@ and::
 The choice of one or the other syntaxes is freely left to the user, according to
 its context of use. In the following, for clarity, we define the controls
 according to the second syntax.
+
+Creating a calculation case in TUI text interface
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The creation and the initialisation of a calculation case in TUI text interface
+are done by importing the interface module "*adaoBuilder*" and by by invoking
+its method "*New()*" as illustrated in the following lines (the ``case`` object
+name being let free to the user choice)::
+
+    from numpy import array
+    import adaoBuilder
+    case = adaoBuilder.New()
+
+It is recommended by default to always import the ``numpy`` module (or some of
+its embedded constructors such as the ``array`` one) to make easier its upcoming
+use in the commands.
 
 Defining the calculation data
 +++++++++++++++++++++++++++++
@@ -624,6 +641,18 @@ The command set execution gives the following result::
 
 As it should be in twin experiments, it is found that we get correctly the
 parameters that were used to artificially build the observations.
+
+.. Réconciliation de courbes à l'aide de MedCoupling
+.. +++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Utilisation de fonctions de surveillance de type "observer"
+.. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Suivre d'un recalage à l'aide de MatPlotLib
+.. +++++++++++++++++++++++++++++++++++++++++++
+
+.. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
+.. -----------------------------------------------------------------------------
 
 .. [HOMARD] For more information on HOMARD, see the *HOMARD module* and its integrated help available from the main menu *Help* of the SALOME platform.
 

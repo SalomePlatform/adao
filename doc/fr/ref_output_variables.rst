@@ -164,6 +164,9 @@ dans l'édition du cas ADAO.
 Inventaire des informations potentiellement disponibles en sortie
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: Dry
+.. index:: single: Forecast
+
 L'ensemble des informations potentiellement disponibles en sortie est indiqué
 ici indépendamment des algorithmes, pour inventaire.
 
@@ -336,7 +339,8 @@ alphabétique:
 
   SimulatedObservationAtBackground
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'ébauche :math:`\mathbf{x}^b`.
+    partir de l'ébauche :math:`\mathbf{x}^b`. C'est la prévision à partir de
+    l'ébauche, et elle est parfois appellée "*Dry*".
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
@@ -355,7 +359,9 @@ alphabétique:
 
   SimulatedObservationAtOptimum
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
+    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`. C'est la
+    prévision à partir de l'analyse ou de l'état optimal, et elle est parfois
+    appellée "*Forecast*".
 
     Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 

@@ -28,9 +28,10 @@
 ================================================================================
 
 The following sections present the reference description of the ADAO commands
-and keywords available through the GUI or through scripts. A first common
-section presents in general the :ref:`section_reference_entry`. After that, one
-describes successively the :ref:`section_reference_assimilation` and the
+and keywords available through the GUI or through scripts. Two first common
+sections present the :ref:`section_reference_entry` and the
+:ref:`section_reference_special_entry`. After that, one describes successively
+the :ref:`section_reference_assimilation` and the
 :ref:`section_reference_checking`.
 
 Each command or keyword to be defined through the ADAO GUI has some properties.
@@ -44,22 +45,36 @@ are automatically correct.
 .. _section_reference_entry:
 
 ========================================================================================
-**[DocR]** General entries and outputs, functions and matrices
+**[DocR]** General entries and outputs
 ========================================================================================
 
 This section describes in general the different possibilities of entry types and
-output variables, and the functional or matrix forms that can be used. The
-mathematical notations used afterwards are explained in the section
-:ref:`section_theory`.
+output variables that can be used. The mathematical notations used afterwards
+are explained in the section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
    
    ref_entry_types
    ref_options_AlgorithmParameters
+   ref_output_variables
+
+.. _section_reference_special_entry:
+
+========================================================================================
+**[DocR]** Special entries: functions, matrices, "*observer*"
+========================================================================================
+
+This section describes the special entries, as the functional or matrix forms,
+that can be used. The mathematical notations used afterwards are explained in
+the section :ref:`section_theory`.
+
+.. toctree::
+   :maxdepth: 1
+   
    ref_operator_requirements
    ref_covariance_requirements
-   ref_output_variables
+   ref_observers_requirements
 
 .. _section_reference_assimilation:
 

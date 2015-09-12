@@ -107,7 +107,11 @@ différences finies peut aussi être choisi à travers l'interface, en utilisant le
 mot-clé "*CenteredFiniteDifference*", avec 0 pour un schéma non centré du
 premier ordre (qui est la valeur par défaut), et avec 1 pour un schéma centré du
 second ordre (qui coûte numériquement deux fois plus cher que le premier ordre).
-Si nécessaire et si possible, on peut :ref:`subsection_ref_parallel_df`.
+Si nécessaire et si possible, on peut :ref:`subsection_ref_parallel_df`. Dans
+tous les cas, un mécanisme de cache interne permet de limiter le nombre
+d'évaluations de l'opérateur pour éviter des calculs redondants, au minimum
+possible du point de vue de l'exécution séquentielle ou parallèle des
+approximations numériques des opérateurs tangent et adjoint.
 
 Cette première forme de définition de l'opérateur permet aisément de tester la
 forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la

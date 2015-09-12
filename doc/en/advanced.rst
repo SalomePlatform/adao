@@ -128,8 +128,8 @@ following Shell script::
 
 In all cases, the standard output and errors come in the launching terminal.
 
-Running an ADAO calculation scheme in YACS using a TUI user mode
-----------------------------------------------------------------
+Running an ADAO calculation scheme in YACS using the text user mode (YACS TUI)
+------------------------------------------------------------------------------
 
 This section describes how to execute in TUI (Text User Interface) YACS mode a
 YACS calculation scheme, obtained in the graphical interface by using the ADAO
@@ -255,6 +255,7 @@ Accelerating numerical derivatives calculations by using a parallel mode
 ------------------------------------------------------------------------
 
 .. index:: single: EnableMultiProcessing
+.. index:: single: NumberOfProcesses
 
 When setting an operator, as described in
 :ref:`section_ref_operator_requirements`, the user can choose a functional form
@@ -267,11 +268,14 @@ executed in parallel.
 Under some conditions, it is then possible to accelerate the numerical
 derivatives calculations by using a parallel mode for the finite differences
 approximation. When setting up an ADAO case, it is done by adding the optional
-sub-command "*EnableMultiProcessing*", set to "1", for the
-"*SCRIPTWITHONEFUNCTION*" command in the operator definition. The parallel mode
-will only use local resources (both multi-cores or multi-processors) of the
-computer on which SALOME is running, requiring as many resources as available.
-By default, this parallel mode is disabled ("*EnableMultiProcessing=0*").
+keyword "*EnableMultiProcessing*", set to "1", for the "*SCRIPTWITHONEFUNCTION*"
+command in the operator definition. The parallel mode will only use local
+resources (both multi-cores or multi-processors) of the computer on which SALOME
+is running, requiring as many resources as available. If necessary, one can
+reduce the available ressources by limiting the possible number of parallel
+processes using the keyword "*NumberOfProcesses*", set to desired maximum (or to
+"0" for automatic control, which is the default value). By default, this
+parallel mode is disabled ("*EnableMultiProcessing=0*").
 
 The main conditions to perform parallel calculations come from the user defined
 function, that represents the direct operator. This function has at least to be

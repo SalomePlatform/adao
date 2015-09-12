@@ -158,6 +158,9 @@ boolean "* * Stored" associated with it in the edition of the ADAO case.
 Inventory of potentially available information at the output
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: Dry
+.. index:: single: Forecast
+
 The set of potentially available information at the output is listed here
 regardless of algorithms, for inventory.
 
@@ -324,7 +327,8 @@ of availability. They are the following, in alphabetical order:
 
   SimulatedObservationAtBackground
     *List of vectors*. Each element is a vector of observation simulated from
-    the background :math:`\mathbf{x}^b`.
+    the background :math:`\mathbf{x}^b`. It is the forecast using the
+    background, and it is sometimes called "*Dry*".
 
     Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
@@ -343,7 +347,9 @@ of availability. They are the following, in alphabetical order:
 
   SimulatedObservationAtOptimum
     *List of vectors*. Each element is a vector of observation simulated from
-    the analysis or optimal state :math:`\mathbf{x}^a`.
+    the analysis or the optimal state :math:`\mathbf{x}^a`. It is the forecast
+    using the analysis or the optimal state, and it is sometimes called
+    "*Forecast*".
 
     Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 

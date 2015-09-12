@@ -135,8 +135,8 @@ SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
 Dans tous les cas, les sorties standard et d'erreur se font dans le terminal de
 lancement.
 
-Exécuter un schéma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI)
-------------------------------------------------------------------------------
+Exécuter un schéma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI YACS)
+-----------------------------------------------------------------------------------
 
 Cette section décrit comment exécuter en mode TUI (Text User Interface) YACS un
 schéma de calcul YACS, obtenu dans l'interface graphique par la fonction
@@ -270,6 +270,7 @@ Accélérer les calculs de dérivées numériques en utilisant un mode parallèle
 ---------------------------------------------------------------------------
 
 .. index:: single: EnableMultiProcessing
+.. index:: single: NumberOfProcesses
 
 Lors de la définition d'un opérateur, comme décrit dans le chapitre des
 :ref:`section_ref_operator_requirements`, l'utilisateur peut choisir la forme
@@ -286,8 +287,12 @@ ajoutant le mot-clé optionnel "*EnableMultiProcessing*", mis à "1", de la
 commande "*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur. Le mode
 parallèle utilise uniquement des ressources locales (à la fois multi-coeurs ou
 multi-processeurs) de l'ordinateur sur lequel SALOME est en train de tourner,
-demandant autant de ressources que disponible. Par défaut, ce mode parallèle est
-désactivé ("*EnableMultiProcessing=0*").
+demandant autant de ressources que disponible. Si nécessaire, on peut réduire
+les ressources disponibles en limitant le nombre possible de processus
+parallèles grâce au mot-clé optionnel "*NumberOfProcesses*", que l'on met au
+maximum souhaité (ou à "0" pour le contrôle automatique, qui est la valeur par
+défaut). Par défaut, ce mode parallèle est désactivé
+("*EnableMultiProcessing=0*").
 
 Les principales conditions pour réaliser ces calculs parallèles viennent de la
 fonction définie par l'utilisateur, qui représente l'opérateur direct. Cette

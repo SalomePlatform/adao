@@ -23,6 +23,7 @@
 
 .. index:: single: TUI
 .. index:: single: API/TUI
+.. index:: single: adaoBuilder
 .. _section_tui:
 
 ================================================================================
@@ -85,7 +86,7 @@ On décrit ici plus en détail les différentes étapes de création d'un cas de
 calcul TUI ADAO. Les commandes elles-mêmes sont détaillées juste après dans
 l':ref:`subsection_tui_commands`.
 
-L'initialisation et la création d'une étude se fait par les commandes suivantes,
+La création et l'initialisation d'une étude se font par les commandes suivantes,
 le nom ``case`` de l'objet du cas de calcul TUI ADAO étant quelconque, au choix
 de l'utilisateur::
 
@@ -279,6 +280,22 @@ et::
 Le choix de l'une ou l'autre des syntaxes est librement laissé à l'utilisateur,
 selon son contexte d'usage. Dans la suite, par souci de clarté, on définit les
 commandes selon la seconde syntaxe.
+
+Création d'un cas de calcul en interface textuelle TUI
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+La création et l'initialisation d'un cas de calcul en interface textuelle TUI se
+font en important le module d'interface "*adaoBuilder*" et en invoquant sa
+méthode "*New()*" comme illustré dans les quelques lignes suivantes (le nom
+``case`` de l'objet étant quelconque, au choix de l'utilisateur)::
+
+    from numpy import array
+    import adaoBuilder
+    case = adaoBuilder.New()
+
+Il est recommandé par principe de toujours importer le module ``numpy`` (ou ses
+constructeurs particuliers, comme celui d'``array``) pour faciliter ensuite son
+usage dans les commandes elle-mêmes.
 
 Définir les données de calcul
 +++++++++++++++++++++++++++++

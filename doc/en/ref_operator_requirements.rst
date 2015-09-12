@@ -102,7 +102,11 @@ adjoint operators. The finite differences approximation order can also be chosen
 through the GUI, using the keyword "*CenteredFiniteDifference*", with 0 for an
 uncentered schema of first order (which is the default value), and with 1 for a
 centered schema of second order (of twice the first order computational cost).
-If necessary and if possible, :ref:`subsection_ref_parallel_df` can be used.
+If necessary and if possible, :ref:`subsection_ref_parallel_df` can be used. In
+all cases, an internal cache mechanism is used to restrict the number of
+operator evaluations to avoid redundant calculations, at the minimum possible in
+a sequential or parallel execution scheme for numerical approximations of the
+tangent and adjoint operators.
 
 This first operator definition form allows easily to test the functional form
 before its use in an ADAO case, greatly reducing the complexity of operator

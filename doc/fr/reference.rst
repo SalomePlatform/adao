@@ -29,9 +29,10 @@
 
 Les sections suivantes présentent la description de référence des commandes et
 mots-clés ADAO disponibles à travers l'interface graphique (GUI) ou à travers
-des scripts. Une première section commune présente de manière générale les
-:ref:`section_reference_entry`. Ensuite, on décrit successivement les
-:ref:`section_reference_assimilation` et les :ref:`section_reference_checking`.
+des scripts. Les deux premières sections communes présentent les
+:ref:`section_reference_entry` et les :ref:`section_reference_special_entry`.
+Ensuite, on décrit successivement les :ref:`section_reference_assimilation` et
+les :ref:`section_reference_checking`.
 
 Chaque commande ou mot-clé à définir par l'interface graphique (GUI) a des
 propriétés particulières. La première propriété est d'être *requise*,
@@ -45,22 +46,36 @@ l'aide de l'interface graphique sont automatiquement correctes.
 .. _section_reference_entry:
 
 ========================================================================================
-**[DocR]** Entrées et sorties générales, fonctions et matrices
+**[DocR]** Entrées et sorties générales
 ========================================================================================
 
 Cette section décrit de manière générale les différentes possibilités de types
-d'entrées et de variables de sortie, et les formes fonctionnelles ou
-matricielles que l'on peut utiliser. Les notations mathématiques utilisées sont
-expliquées dans la section :ref:`section_theory`.
+d'entrées et de variables de sortie que l'on peut utiliser. Les notations
+mathématiques utilisées sont expliquées dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
    
    ref_entry_types
    ref_options_AlgorithmParameters
+   ref_output_variables
+
+.. _section_reference_special_entry:
+
+========================================================================================
+**[DocR]** Entrées spéciales : fonctions, matrices, "*observer*"
+========================================================================================
+
+Cette section décrit les entrées spéciales, comme les formes fonctionnelles ou
+matricielles, que l'on peut utiliser. Les notations mathématiques utilisées
+sont expliquées dans la section :ref:`section_theory`.
+
+.. toctree::
+   :maxdepth: 1
+   
    ref_operator_requirements
    ref_covariance_requirements
-   ref_output_variables
+   ref_observers_requirements
 
 .. _section_reference_assimilation:
 

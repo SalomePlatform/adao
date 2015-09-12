@@ -27,42 +27,9 @@ Liste des types d'entrées possibles
 -----------------------------------
 
 Chaque variable ADAO présente un pseudo-type qui aide à la remplir et à la
-valider. Les différents pseudo-types sont:
-
-.. index:: single: Dict
-
-**Dict**
-    Cela indique une variable qui doit être remplie avec un dictionnaire Python
-    ``{"clé":"valeur"...}``, usuellement donné soit par une chaîne de caractères
-    soit par un fichier script.
-
-.. index:: single: Function
-
-**Function**
-    Cela indique une variable qui doit être donnée comme une fonction Python,
-    usuellement donnée soit par une chaîne de caractères soit par un fichier
-    script.
-
-.. index:: single: Matrix
-
-**Matrix**
-    Cela indique une variable qui doit être donnée comme une matrice,
-    usuellement donnée soit par une chaîne de caractères soit par un fichier
-    script.
-
-.. index:: single: ScalarSparseMatrix
-
-**ScalarSparseMatrix**
-    Cela indique une variable qui doit être donnée comme un nombre unique (qui
-    sera utilisé pour multiplier une matrice identité), usuellement donné soit
-    par une chaîne de caractères soit par un fichier script.
-
-.. index:: single: DiagonalSparseMatrix
-
-**DiagonalSparseMatrix**
-    Cela indique une variable qui doit , (qui sera
-    utilisé pour remplacer la diagonale d'une matrice identité), usuellement
-    donné soit par une chaîne de caractères soit par un fichier script.
+valider. Ces pseudo-types représentent explicitement des formes informatiques ou
+mathématiques simples. Deux pseudo-types, purement informatiques, permettent de
+désigner la manière dont on fournit les variables en entrée:
 
 .. index:: single: Script
 
@@ -81,22 +48,61 @@ valider. Les différents pseudo-types sont:
     par exemple "1 2 ; 3 4" ou "[[1,2],[3,4]]" pour une matrice carrée de taille
     2x2.
 
+Les différents autres pseudo-types sont les suivants. Les variables auquelles
+ils s'appliquent peuvent elles-mêmes être données soit par une chaîne de
+caractères (un "*String*"), soit par un fichier script (un "*Script*"):
+
+.. index:: single: Dict
+
+**Dict**
+    Cela indique une variable qui doit être remplie avec un dictionnaire Python
+    ``{"clé":"valeur"...}``.
+
+.. index:: single: Function
+
+**Function**
+    Cela indique une variable qui doit être donnée comme une fonction Python.
+    Les fonctions sont des entrées spéciales décrites par des
+    :ref:`section_ref_operator_requirements`.
+
+.. index:: single: Matrix
+
+**Matrix**
+    Cela indique une variable qui doit être donnée comme une matrice.
+
+.. index:: single: ScalarSparseMatrix
+
+**ScalarSparseMatrix**
+    Cela indique une variable qui doit être donnée comme un nombre unique (qui
+    sera ensuite utilisé pour multiplier une matrice identité).
+
+.. index:: single: DiagonalSparseMatrix
+
+**DiagonalSparseMatrix**
+    Cela indique une variable qui doit doit être donnée comme un vecteur, (qui
+    sera ensuite utilisé comme la diagonale d'une matrice carrée).
+
 .. index:: single: Vector
 
 **Vector**
-    Cela indique une variable qui doit être remplie comme un vecteur,
-    usuellement donné soit par une chaîne de caractères soit par un fichier
-    script.
+    Cela indique une variable qui doit être remplie comme un vecteur.
 
 .. index:: single: VectorSerie
 
 **VectorSerie**
-    Cela indique une variable qui doit être remplie comme une liste de vecteurs,
-    usuellement donnée soit par une chaîne de caractères soit par un fichier
-    script.
+    Cela indique une variable qui doit être remplie comme une liste de vecteurs.
 
-Lorsqu'une commande ou un mot-clé peut être rempli par un nom de fichier script,
-ce script doit présenter une variable ou une méthode que porte le même nom que
-la variable à remplir. En d'autres mots, lorsque l'on importe le script dans un
-noeud Python de YACS, il doit créer une variable du bon nom dans l'espace de
-nommage courant du noeud.
+Lorsqu'une commande ou un mot-clé peut être rempli par un nom de fichier script
+désigné par le pseudo-type "*Script*", ce script doit présenter une variable ou
+une méthode que porte le même nom que la variable à remplir. En d'autres termes,
+lorsque l'on importe le script dans un noeud Python de YACS, il doit créer une
+variable du bon nom dans l'espace de nommage courant du noeud. Par exemple, un
+script Python rendant disponible la variable d'ébauche, nommée "*Background*",
+doit présenter la forme suivante::
+
+    ...
+    Background =...
+    ...
+
+Son importation permet ainsi de créer la variable "*Background*". Les points
+"..." symbolisent du code quelconque autour de ce début particulier de ligne.
