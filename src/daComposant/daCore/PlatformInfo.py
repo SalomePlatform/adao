@@ -62,22 +62,22 @@ class PlatformInfo:
         return version.date
     
     def getPythonVersion(self):
-        "Retourne la version de python utilisée"
+        "Retourne la version de python disponible"
         import sys
         return ".".join(map(str,sys.version_info[0:3]))
 
     def getNumpyVersion(self):
-        "Retourne la version de numpy utilisée"
+        "Retourne la version de numpy disponible"
         import numpy.version
         return numpy.version.version
 
     def getScipyVersion(self):
-        "Retourne la version de scipy utilisée"
+        "Retourne la version de scipy disponible"
         import scipy.version
         return scipy.version.version
 
     def getMatplotlibVersion(self):
-        "Retourne la version de matplotlib utilisée"
+        "Retourne la version de matplotlib disponible"
         try:
             import matplotlib
             return matplotlib.__version__
@@ -85,12 +85,20 @@ class PlatformInfo:
             return "0.0.0"
 
     def getGnuplotVersion(self):
-        "Retourne la version de gnuplotpy utilisée"
+        "Retourne la version de gnuplotpy disponible"
         try:
             import Gnuplot
             return Gnuplot.__version__
         except:
             return "0.0"
+
+    def getSphinxVersion(self):
+        "Retourne la version de sphinx disponible"
+        try:
+            import sphinx
+            return sphinx.__version__
+        except:
+            return "0.0.0"
 
     def getCurrentMemorySize(self):
         "Retourne la taille mémoire courante utilisée"

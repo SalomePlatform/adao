@@ -309,6 +309,11 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``d = ADD.get("Innovation")[-1]``
 
+  InnovationAtCurrentState
+    *List of vectors*. Each element is an innovation vector at current state.
+
+    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
+
   MahalanobisConsistency
     *List of values*. Each element is a value of the Mahalanobis quality
     indicator.

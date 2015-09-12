@@ -522,6 +522,14 @@ class New(object):
                 __FunctionText = """print info, var[-1]\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
             if Template == "ValueSeriePrinterSaverAndGnuPlotter":
                 __FunctionText = """print info, var[:] \nimport numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp('set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )"""
+            if Template == "ValueMean":
+                __FunctionText = """import numpy\nprint info, numpy.nanmean(var[-1])"""
+            if Template == "ValueStandardError":
+                __FunctionText = """import numpy\nprint info, numpy.nanstd(var[-1])"""
+            if Template == "ValueVariance":
+                __FunctionText = """import numpy\nprint info, numpy.nanvar(var[-1])"""
+            if Template == "ValueRMS":
+                __FunctionText = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint info, float( numpy.sqrt((1./v.size)*(v*v.T)) )"""
         elif Script is not None:
             __FunctionText = _ImportFromScript(Script).getstring()
         else:

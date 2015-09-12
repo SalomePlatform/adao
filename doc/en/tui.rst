@@ -445,30 +445,31 @@ Setting the calculation, outputs, etc.
 .. index:: single: setDebug
 
 **setDebug** ()
-   This command enables the detailed information mode when running.
+    This command enables the detailed information mode when running.
 
 .. index:: single: setNoDebug
 
 **setNoDebug** ()
-   This command disables the detailed information mode when running.
+    This command disables the detailed information mode when running.
 
 .. index:: single: setObserver
 
 **setObserver** (*Variable, Template, String, Script, Info*)
-	This command allows to set an *observer* on the current or final 
-	calculation variable. Reference should be made to the description of the 
-	way of ':ref:`section_advanced_observer`, and to the 
-	:ref:`section_reference` to know what are the observable quantities. One 
-	defines as "*String*" the *observer* body, using a string including if 
-	necessary line breaks. It is recommended to use the patterns available by 
-	the argument "*Template*". There exist the following simple patterns: 
-	"ValuePrinter", "ValueSeriePrinter", "ValueSaver", "ValueSerieSaver", 
-	"ValuePrinterAndSaver", "ValueSeriePrinterAndSaver", "ValueGnuPlotter", 
-	"ValueSerieGnuPlotter", "ValuePrinterAndGnuPlotter", 
-	"ValueSeriePrinterAndGnuPlotter", "ValuePrinterSaverAndGnuPlotter", 
-	"ValueSeriePrinterSaverAndGnuPlotter". In the case of a definition as 
-	"*Script*", the file must contain only the body of the function, as 
-	described in the way of :ref:`section_advanced_observer`.
+    This command allows to set an *observer* on the current or final calculation
+    variable. Reference should be made to the description of the way of
+    ':ref:`section_advanced_observer`, and to the :ref:`section_reference` to
+    know what are the observable quantities. One defines as "*String*" the
+    *observer* body, using a string including if necessary line breaks. It is
+    recommended to use the patterns available by the argument "*Template*".
+    There exist the following simple patterns: "ValuePrinter",
+    "ValueSeriePrinter", "ValueSaver", "ValueSerieSaver",
+    "ValuePrinterAndSaver", "ValueSeriePrinterAndSaver", "ValueGnuPlotter",
+    "ValueSerieGnuPlotter", "ValuePrinterAndGnuPlotter",
+    "ValueSeriePrinterAndGnuPlotter", "ValuePrinterSaverAndGnuPlotter",
+    "ValueSeriePrinterSaverAndGnuPlotter", "ValueMean", "ValueStandardError",
+    "ValueVariance", "ValueRMS". In the case of a definition as "*Script*", the
+    file must contain only the body of the function, as  described in the way of
+    :ref:`section_advanced_observer`.
 
 Perform the calculation
 +++++++++++++++++++++++

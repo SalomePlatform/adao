@@ -51,6 +51,18 @@ Glossaire
       Mot-clé indiquant la matrice de covariance des erreurs *a posteriori*
       d'analyse.
 
+   APosterioriCorrelations
+      Mot-clé indiquant la matrice de corrélation des erreurs *a posteriori*
+      d'analyse.
+
+   APosterioriVariances
+      Mot-clé indiquant la matrice diagonale des variances des erreurs *a
+      posteriori* d'analyse.
+
+   APosterioriStandardDeviations
+      Mot-clé indiquant la matrice diagonale des écarts-types des erreurs *a
+      posteriori* d'analyse.
+
    BMA (Background minus Analysis)
       Différence entre l'état d'ébauche et l'état optimal estimé, notée
       :math:`\mathbf{x}^b - \mathbf{x}^a`.
@@ -110,3 +122,7 @@ Glossaire
    CostFunctionJb
       Mot-clé indiquant la partie due à l'ébauche dans la fonction de
       minimisation, notée :math:`J^b`.
+
+   CurrentState
+      Mot-clé indiquant l'état courant utilisé au cours du déroulement d'un
+      algorithme d'optimisation.

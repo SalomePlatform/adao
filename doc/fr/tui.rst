@@ -486,9 +486,10 @@ Paramétrer le calcul, les sorties, etc.
     "ValueSerieSaver", "ValuePrinterAndSaver", "ValueSeriePrinterAndSaver",
     "ValueGnuPlotter", "ValueSerieGnuPlotter", "ValuePrinterAndGnuPlotter",
     "ValueSeriePrinterAndGnuPlotter", "ValuePrinterSaverAndGnuPlotter",
-    "ValueSeriePrinterSaverAndGnuPlotter". Dans le cas d'une définition par
-    "*Script*", le fichier indiqué doit contenir uniquement le corps de la
-    fonction, comme décrit dans la manière d':ref:`section_advanced_observer`.
+    "ValueSeriePrinterSaverAndGnuPlotter", "ValueMean", "ValueStandardError",
+    "ValueVariance", "ValueRMS". Dans le cas d'une définition par "*Script*", le
+    fichier indiqué doit contenir uniquement le corps de la fonction, comme
+    décrit dans la manière d':ref:`section_advanced_observer`.
 
 Effectuer le calcul 
 +++++++++++++++++++

@@ -48,6 +48,18 @@ Glossary
       Keyword to indicate the covariance matrix of *a posteriori* analysis
       errors.
 
+   APosterioriCorrelations
+      Keyword to indicate the correlation matrix of *a posteriori* analysis
+      errors.
+
+   APosterioriVariances
+      Keyword to indicate the variances diagonal matrix of *a posteriori*
+      analysis errors.
+
+   APosterioriStandardDeviations
+      Keyword to indicate the standard errors diagonal matrix of *a posteriori*
+      analysis errors.
+
    BMA (Background minus Analysis)
       Difference between the background state and the optimal state estimation,
       noted as :math:`\mathbf{x}^b - \mathbf{x}^a`.
@@ -103,3 +115,7 @@ Glossary
    CostFunctionJb
       Keyword to indicate the background part of the minimization function,
       noted as :math:`J^b`.
+
+   CurrentState
+      Keyword to indicate the current state used during an optimization
+      algorithm procedure.

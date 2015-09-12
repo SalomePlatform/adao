@@ -216,7 +216,7 @@ of availability. They are the following, in alphabetical order:
     matrix of the optimal state, coming from the :math:`\mathbf{A}*` covariance
     matrix.
 
-    Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
+    Example : ``C = ADD.get("APosterioriCorrelations")[-1]``
 
   APosterioriCovariance
     *List of matrices*. Each element is an *a posteriori* error covariance
@@ -229,14 +229,14 @@ of availability. They are the following, in alphabetical order:
     diagonal matrix of the optimal state, coming from the :math:`\mathbf{A}*`
     covariance matrix.
 
-    Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
+    Example : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
     *List of matrices*. Each element is an *a posteriori* error variances
     diagonal matrix of the optimal state, coming from the :math:`\mathbf{A}*`
     covariance matrix.
 
-    Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
+    Example : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
     *List of vectors*. Each element is a vector of difference between the
@@ -265,7 +265,7 @@ of availability. They are the following, in alphabetical order:
     *List of vectors*. Each element is the optimal state obtained at the current
     step of the optimization algorithm. It is not necessarely the last state.
 
-    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+    Example : ``Xo = ADD.get("CurrentOptimum")[:]``
 
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
@@ -278,7 +278,7 @@ of availability. They are the following, in alphabetical order:
     obtained at the current step the optimization algorithm. It is not
     necessarely the number of the last iteration.
 
-    Exemple : ``i = ADD.get("MahalanobisConsistency")[-1]``
+    Example : ``i = ADD.get("MahalanobisConsistency")[-1]``
 
   Innovation
     *List of vectors*. Each element is an innovation vector, which is in static
@@ -286,6 +286,11 @@ of availability. They are the following, in alphabetical order:
     evolution increment.
 
     Example : ``d = ADD.get("Innovation")[-1]``
+
+  InnovationAtCurrentState
+    *List of vectors*. Each element is an innovation vector at current state.
+
+    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
 
   MahalanobisConsistency
     *List of values*. Each element is a value of the Mahalanobis quality
@@ -328,7 +333,7 @@ of availability. They are the following, in alphabetical order:
     the optimal state obtained at the current step the optimization algorithm,
     that is, in the observation space.
 
-    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
+    Example : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
 
   SimulatedObservationAtCurrentState
     *List of vectors*. Each element is an observed vector at the current state,

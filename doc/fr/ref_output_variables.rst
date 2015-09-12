@@ -298,6 +298,12 @@ alphabétique:
 
     Exemple : ``d = ADD.get("Innovation")[-1]``
 
+  InnovationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
+    courant.
+
+    Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
+
   MahalanobisConsistency
     *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
     qualité de Mahalanobis.
