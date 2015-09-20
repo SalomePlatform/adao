@@ -137,6 +137,7 @@ class AssimilationStudy:
             asEyeByVector = None,
             asCovObject   = None,
             toBeStored    = False,
+            toBeChecked   = False,
             ):
         """
         Permet de définir la covariance des erreurs d'ébauche :
@@ -159,6 +160,7 @@ class AssimilationStudy:
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
             asCovObject   = asCovObject,
+            toBeChecked   = toBeChecked,
             )
         if toBeStored:
             self.__StoredInputs["BackgroundError"] = self.__B
@@ -202,6 +204,7 @@ class AssimilationStudy:
             asEyeByVector = None,
             asCovObject   = None,
             toBeStored    = False,
+            toBeChecked   = False,
             ):
         """
         Permet de définir la covariance des erreurs d'observations :
@@ -224,6 +227,7 @@ class AssimilationStudy:
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
             asCovObject   = asCovObject,
+            toBeChecked   = toBeChecked,
             )
         if toBeStored:
             self.__StoredInputs["ObservationError"] = self.__R
@@ -430,6 +434,7 @@ class AssimilationStudy:
             asEyeByVector = None,
             asCovObject   = None,
             toBeStored    = False,
+            toBeChecked   = False,
             ):
         """
         Permet de définir la covariance des erreurs de modèle :
@@ -452,6 +457,7 @@ class AssimilationStudy:
             asEyeByScalar = asEyeByScalar,
             asEyeByVector = asEyeByVector,
             asCovObject   = asCovObject,
+            toBeChecked   = toBeChecked,
             )
         if toBeStored:
             self.__StoredInputs["EvolutionError"] = self.__Q

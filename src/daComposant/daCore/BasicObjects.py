@@ -510,6 +510,7 @@ class Covariance:
             asEyeByScalar = None,
             asEyeByVector = None,
             asCovObject   = None,
+            toBeChecked   = False,
             ):
         """
         Permet de définir une covariance :
@@ -525,8 +526,11 @@ class Covariance:
           methodes obligatoires "getT", "getI", "diag", "trace", "__add__",
           "__sub__", "__neg__", "__mul__", "__rmul__" et facultatives "shape",
           "size", "cholesky", "choleskyI", "asfullmatrix", "__repr__", "__str__"
+        - toBeChecked : booléen indiquant si le caractère SDP de la matrice
+          pleine doit être vérifié
         """
         self.__name       = str(name)
+        self.__check      = bool(toBeChecked)
         #
         self.__C          = None
         self.__is_scalar  = False
@@ -577,11 +581,16 @@ class Covariance:
             raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your scalar input %s."%(self.__name,self.__C))
         if self.isvector() and (self.__C <= 0).any():
             raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your vector input."%(self.__name,))
-        if self.ismatrix() and logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
+        if self.ismatrix() and (self.__check or logging.getLogger().level < logging.WARNING):
             try:
                 L = numpy.linalg.cholesky( self.__C )
             except:
                 raise ValueError("The %s covariance matrix is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
+        if self.isobject() and (self.__check or logging.getLogger().level < logging.WARNING):
+            try:
+                L = self.__C.cholesky()
+            except:
+                raise ValueError("The %s covariance object is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
 
     def isscalar(self):
         return self.__is_scalar
