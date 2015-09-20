@@ -23,6 +23,6 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 name    = "ADAO"
-version = "V7_6_0" # Version pour catalogue, avec des "_" entre les numeros
+version = "V7_7_0" # Version pour catalogue, avec des "_" entre les numeros
 date    = ""
 year    = "2015" # Annee de copyright
