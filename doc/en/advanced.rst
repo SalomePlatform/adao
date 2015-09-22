@@ -191,29 +191,17 @@ Getting information on special variables during the ADAO calculation in YACS
 .. index:: single: Observer Template
 
 Some special internal optimization variables, used during calculations, can be
-monitored during the ADAO calculation in YACS. These variables can be printed,
+monitored during the ADAO calculation. These variables can be printed,
 plotted, saved, etc. This can be done using "*observer*", that are scripts,
-each associated with one variable. In order to use this feature, the user has to
-build scripts using as standard inputs (e.g. available in the namespace) the
-variables ``var`` and ``info``. The variable ``var`` is to be used in the same
-way as for the final ADD object, that is as a list/tuple object.
+each associated with one variable.
 
 Some templates are available when editing the ADAO case in graphical editor.
 These simple scripts can be customized by the user, either at the embedded
 edition stage, or at the edition stage before execution, to improve the tuning
 of the ADAO calculation.
 
-As an example, here is one very simple script (similar to the "*ValuePrinter*"
-template) used to print the value of one monitored variable::
-
-    print "    --->",info," Value =",var[-1]
-
-Stored in a Python file, this script can be associated to each variable
-available in the "*SELECTION*" keyword of the "*Observers*" command:
-"*Analysis*", "*CurrentState*", "*CostFunction*"... The current value of the
-variable will be printed at each step of the optimization or assimilation
-algorithm. The "*observer*" can embed plotting capabilities, storage, complex
-printing, statistical treatment, etc.
+To implement these "*observer*" efficiently, one can look to the 
+:ref:`ref_observers_requirements`.
 
 Getting more information when running a calculation
 ---------------------------------------------------

@@ -773,6 +773,40 @@ class Covariance:
         return self.shape[0]
 
 # ==============================================================================
+class TemplateStorage(object):
+    """
+    Classe générale de stockage de type dictionnaire étendu
+    (Template)
+    """
+    def __init__( self, language = "fr_FR" ):
+        self.__preferedLanguage = "fr"
+        self.__values = {}
+
+    def store( self, name = None, content = None, fr_FR = "", en_EN = "" ):
+        if name is None or content is None:
+            raise ValueError("To be consistent, the storage of a template must provide a name and a content.")
+        self.__values[str(name)] = {
+            'content': str(content),
+            'fr_FR'  : str(fr_FR),
+            'en_EN'  : str(en_EN),
+            }
+
+    def keys(self):
+        __keys = self.__values.keys()
+        __keys.sort()
+        return __keys
+
+    def __len__(self):
+        return len(self.__values)
+
+    def __getitem__(self, name=None ):
+        return self.__values[name]['content']
+
+    def getdoc(self, name = None, lang = "fr_FR"):
+        if lang not in self.__values[name]: lang = "fr_FR"
+        return self.__values[name][lang]
+
+# ==============================================================================
 def CostFunction3D(
     _x,
     _Hm  = None,  # Pour simuler Hm(x) : HO["Direct"].appliedTo

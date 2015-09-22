@@ -498,6 +498,7 @@ class New(object):
         if String is not None:
             __FunctionText = String
         elif Template is not None:
+            __FunctionText = ""
             if Template == "ValuePrinter":
                 __FunctionText = """print info, var[-1]"""
             if Template == "ValueSeriePrinter":

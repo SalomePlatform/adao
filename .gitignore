@@ -48,7 +48,7 @@ src/Makefile.in
 switch.log
 
 # YAMM specific
-git_diff.log
-git_fetch.log
+diff.log
+fetch.log
 update.log
 binary_archive.log

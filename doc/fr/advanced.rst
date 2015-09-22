@@ -200,14 +200,9 @@ Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO e
 .. index:: single: Observer Template
 
 Certaines variables spéciales internes à l'optimisation, utilisées au cours des
-calculs, peuvent être surveillées durant un calcul ADAO en YACS. Ces variables
-peuvent être affichées, tracées, enregistrées, etc. C'est réalisable en
-utilisant des "*observer*", qui sont des scripts, chacun associé à une
-variable. Pour pouvoir utiliser cette capacité, l'utilisateur doit construire
-des scripts disposant en entrée standard (i.e. disponible dans l'espace de
-nommage) des variables ``var`` et ``info``. La variable ``var`` est à utiliser
-de la même manière que l'objet final ADD, c'est-à-dire comme un objet de type
-liste/tuple.
+calculs, peuvent être surveillées durant un calcul ADAO. Ces variables peuvent
+être affichées, tracées, enregistrées, etc. C'est réalisable en utilisant des
+"*observer*", qui sont des scripts, chacun associé à une variable.
 
 Des modèles ("templates") sont disponibles lors de l'édition le cas ADAO dans
 l'éditeur graphique. Ces scripts simples peuvent être adaptés par l'utilisateur,
@@ -215,17 +210,8 @@ soit dans l'étape d'édition intégrée, ou dans l'étape d'édition avant
 l'exécution, pour améliorer l'adaptation du calcul ADAO dans le superviseur
 d'exécution de SALOME.
 
-A titre d'exemple, voici un script très simple (similaire au modèle
-"*ValuePrinter*") utilisable pour afficher la valeur d'une variable surveillée::
-
-    print "    --->",info," Value =",var[-1]
-
-Stocké comme un fichier Python, ce script peut être associé à chaque variable
-présente dans le mot-clé "*SELECTION*" de la commande "*Observers*":
-"*Analysis*", "*CurrentState*", "*CostFunction*"... La valeur courante de la
-variable sera affichée à chaque étape de l'algorithme d'optimisation ou
-d'assimilation. Les "*observer*" peuvent inclure des capacités d'affichage
-graphique, de stockage, d'affichage complexe, de traitement statistique, etc.
+Pour mettre en oeuvre ces "*observer*" de manière efficace, on se reportera aux
+:ref:`ref_observers_requirements`.
 
 Obtenir plus d'information lors du déroulement d'un calcul
 ----------------------------------------------------------

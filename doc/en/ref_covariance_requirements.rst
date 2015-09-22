@@ -26,11 +26,25 @@
 Requirements to describe covariance matrices
 --------------------------------------------
 
-Multiple covariance matrices are required to implement the data assimilation or
+.. index:: single: covariance matrix
+.. index:: single: background error covariances
+.. index:: single: observation error covariances
+.. index:: single: covariances
+
+In general, a covariance matrix (or a variance-covariance matrix) has to be
+squared, symetric, semi-definite positive. Each of its terms describes the
+covariance of the two random variables corresponding to its position in the
+matrix. The normalized form of the covariance is the linear correlation. One can
+express the following relation, between a covariance matrix :math:`\mathbf{M}`
+and its corresponding correlation matrix :math:`\mathbf{C}` (full matrix) and
+standard deviation matrix :math:`\mathbf{\Sigma}` (diagonal matrix):
+
+.. math:: \mathbf{M} = \mathbf{\Sigma} * \mathbf{C} * \mathbf{\Sigma}
+
+Various covariance matrices are required to implement the data assimilation or
 optimization procedures. The main ones are the background error covariance
 matrix, noted as :math:`\mathbf{B}`, and the observation error covariance matrix,
-noted as :math:`\mathbf{R}`. Such a matrix is required to be a squared symmetric
-semi-definite positive matrix.
+noted as :math:`\mathbf{R}`.
 
 There are 3 practical methods for the user to provide a covariance matrix. The
 method is chosen by the "*INPUT_TYPE*" keyword of each defined covariance

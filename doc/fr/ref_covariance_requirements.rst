@@ -26,11 +26,26 @@
 Exigences pour décrire les matrices de covariance
 -------------------------------------------------
 
-De multiples matrices de covariance sont nécessaires pour mettre en oeuvre des
+.. index:: single: matrice de covariance
+.. index:: single: covariances d'erreurs d'ébauche
+.. index:: single: covariances d'erreurs d'observation
+.. index:: single: covariances
+
+De manière générale, une matrice de covariance (ou une matrice de
+variance-covariance) doit être carrée, symétrique, semi-définie positive. Chacun
+de ses termes décrit la covariance des deux variables aléatoires correspondantes
+à sa position dans la matrice. La forme normalisée de la covariance est la
+corrélation linéaire. On peut écrire la relation suivante, entre une matrice de
+covariance :math:`\mathbf{M}` et ses matrices correspondantes de corrélation
+:math:`\mathbf{C}` (matrice pleine) et d'écart-type :math:`\mathbf{\Sigma}`
+(matrice diagonale):
+
+.. math:: \mathbf{M} = \mathbf{\Sigma} * \mathbf{C} * \mathbf{\Sigma}
+
+Diverses matrices de covariance sont nécessaires pour mettre en oeuvre des
 procédures d'assimilation de données ou d'optimisation. Les principales sont la
 matrice de covariance des erreurs d'ébauche, notée :math:`\mathbf{B}`, et la
-matrice de covariance des erreurs d'observation, notée :math:`\mathbf{R}`. Une
-telle matrice doit être une matrice carré symétrique semi-définie positive.
+matrice de covariance des erreurs d'observation, notée :math:`\mathbf{R}`.
 
 Il y a 3 méthodes pratiques pour l'utilisateur pour fournir une matrice de
 covariance. La méthode est choisie à l'aide du mot-clé "*INPUT_TYPE*" de chaque
@@ -51,10 +66,10 @@ Première forme matricielle : utiliser la représentation "*Matrix*"
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
 
-La première forme est le défaut et la plus générale. La matrice de covariance
-:math:`\mathbf{M}` doit être entièrement spécifiée. Même si la matrice est
-symétrique par nature, la totalité de la matrice :math:`\mathbf{M}` doit être
-donnée.
+La première forme est le défaut, et c'est la plus générale. La matrice de
+covariance :math:`\mathbf{M}` doit être entièrement spécifiée. Même si la
+matrice est symétrique par nature, la totalité de la matrice :math:`\mathbf{M}`
+doit être donnée.
 
 .. math:: \mathbf{M} =  \begin{pmatrix}
     m_{11} & m_{12} & \cdots   & m_{1n} \\
@@ -83,9 +98,9 @@ Seconde forme matricielle : utiliser la représentation "*ScalarSparseMatrix*"
 .. index:: single: ObservationError
 
 Au contraire, la seconde forme matricielle est une méthode très simplifiée pour
-définir une matrice. La matrice de covariance :math:`\mathbf{M}` est supposée
-être un multiple positif de la matrice identité. Cette matrice peut alors être
-spécifiée de manière unique par le multiplicateur :math:`m`:
+définir une matrice. La matrice de covariance :math:`\mathbf{M}` est ici
+supposée être un multiple positif de la matrice identité. Cette matrice peut
+alors être spécifiée de manière unique par le multiplicateur :math:`m`:
 
 .. math:: \mathbf{M} =  m \times \begin{pmatrix}
     1       & 0      & \cdots   & 0      \\
@@ -114,10 +129,10 @@ Troisième forme matricielle : utiliser la représentation "*DiagonalSparseMatrix*
 
 La troisième forme est aussi une méthode simplifiée pour fournir la matrice,
 mais un peu plus puissante que la seconde. La matrice de covariance
-:math:`\mathbf{M}` est toujours considérée comme diagonale, mais l'utilisateur
-doit spécifier toutes les valeurs positives situées sur la diagonale. La matrice
-peut alors être définie uniquement par un vecteur :math:`\mathbf{V}` qui se
-retrouve ensuite sur la diagonale:
+:math:`\mathbf{M}` est ici toujours considérée comme diagonale, mais
+l'utilisateur doit spécifier toutes les valeurs positives situées sur la
+diagonale. La matrice peut alors être définie uniquement par un vecteur
+:math:`\mathbf{V}` qui se retrouve ensuite sur la diagonale:
 
 .. math:: \mathbf{M} =  \begin{pmatrix}
     v_{1}  & 0      & \cdots   & 0      \\
