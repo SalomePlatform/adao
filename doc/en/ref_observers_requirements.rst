@@ -86,6 +86,8 @@ Inventory of available *observer* models ("*Template*")
 Template **ValueGnuPlotter** :
 ..............................
 
+Graphically plot with Gnuplot the current value of the variable.
+
 ::
 
     import numpy, Gnuplot
@@ -105,6 +107,8 @@ Template **ValueGnuPlotter** :
 
 Template **ValueMean** :
 ........................
+
+Print on standard output the mean of the current value of the variable.
 
 ::
 
@@ -127,6 +131,8 @@ Print on standard output the current value of the variable.
 Template **ValuePrinterAndGnuPlotter** :
 ........................................
 
+Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable.
+
 ::
 
     print info, var[-1]
@@ -148,6 +154,8 @@ Template **ValuePrinterAndGnuPlotter** :
 Template **ValuePrinterAndSaver** :
 ...................................
 
+Print on standard output and, in the same time, save in a file the current value of the variable.
+
 ::
 
     import numpy, re
@@ -167,6 +175,8 @@ Template **ValuePrinterAndSaver** :
 
 Template **ValuePrinterSaverAndGnuPlotter** :
 .............................................
+
+Print on standard output and, in the same, time save in a file and graphically plot the current value of the variable.
 
 ::
 
@@ -199,6 +209,8 @@ Template **ValuePrinterSaverAndGnuPlotter** :
 Template **ValueRMS** :
 .......................
 
+Print on standard output the root mean square (RMS), or quadratic mean, of the current value of the variable.
+
 ::
 
     import numpy
@@ -209,6 +221,8 @@ Template **ValueRMS** :
 
 Template **ValueSaver** :
 .........................
+
+Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
 
 ::
 
@@ -228,6 +242,8 @@ Template **ValueSaver** :
 
 Template **ValueSerieGnuPlotter** :
 ...................................
+
+Graphically plot with Gnuplot the value serie of the variable.
 
 ::
 
@@ -260,6 +276,8 @@ Print on standard output the value serie of the variable.
 Template **ValueSeriePrinterAndGnuPlotter** :
 .............................................
 
+Print on standard output and, in the same time, graphically plot with Gnuplot the value serie of the variable.
+
 ::
 
     print info, var[:] 
@@ -281,6 +299,8 @@ Template **ValueSeriePrinterAndGnuPlotter** :
 Template **ValueSeriePrinterAndSaver** :
 ........................................
 
+Print on standard output and, in the same time, save in a file the value serie of the variable.
+
 ::
 
     import numpy, re
@@ -300,6 +320,8 @@ Template **ValueSeriePrinterAndSaver** :
 
 Template **ValueSeriePrinterSaverAndGnuPlotter** :
 ..................................................
+
+Print on standard output and, in the same, time save in a file and graphically plot the value serie of the variable.
 
 ::
 
@@ -332,6 +354,8 @@ Template **ValueSeriePrinterSaverAndGnuPlotter** :
 Template **ValueSerieSaver** :
 ..............................
 
+Save the value serie of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+
 ::
 
     import numpy, re
@@ -351,6 +375,8 @@ Template **ValueSerieSaver** :
 Template **ValueStandardError** :
 .................................
 
+Print on standard output the standard error of the current value of the variable.
+
 ::
 
     import numpy
@@ -360,6 +386,8 @@ Template **ValueStandardError** :
 
 Template **ValueVariance** :
 ............................
+
+Print on standard output the variance of the current value of the variable.
 
 ::
 

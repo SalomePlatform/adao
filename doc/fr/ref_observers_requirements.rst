@@ -29,51 +29,55 @@ Exigences pour les fonctions décrivant un "*observer*"
 .. index:: single: Observer
 .. index:: single: Observer Template
 
-Certaines variables spéciales internes à l'optimisation, utilisées au cours des
-calculs, peuvent être surveillées durant un calcul ADAO en YACS. Ces variables
-peuvent être affichées, tracées, enregistrées, etc. C'est réalisable en
-utilisant des "*observer*", qui sont des scripts, chacun associé à une
-variable, qui sont activés à chaque modification de la variable.
+Certaines variables spéciales, internes à l'optimisation, utilisées au cours des
+calculs, peuvent être surveillées durant un calcul ADAO. Ces variables peuvent
+être affichées, tracées, enregistrées, etc. C'est réalisable en utilisant des
+"*observer*", parfois aussi appelés des "callback". Ce sont des scripts Python,
+qui sont chacun associé à une variable donnée. Ils sont activés à chaque
+modification de la variable.
 
 Il y a 3 méthodes pratiques pour intégrer un "*observer*" dans un cas ADAO. La
 méthode est choisie à l'aide du mot-clé "*NodeType*" de chaque entrée de type
-*observer*, comme montré dans la figure qui suit :
+"*observer*", comme montré dans la figure qui suit :
 
   .. eficas_observer_nodetype:
   .. image:: images/eficas_observer_nodetype.png
     :align: center
     :width: 100%
   .. centered::
-    **Choisir le type d'entrée**
+    **Choisir pour un "*observer*" son type d'entrée**
 
 L'"*observer*" peut être fourni sous la forme d'un script explicite (entrée de
 type "*String*"), d'un script contenu dans un fichier externe (entrée de type
 "*Script*"), ou en utilisant un modèle (entrée de type "*Template*") fourni par
-défaut dans ADAO lors de l'édition dans l'éditeur graphique. Ces derniers sont
-des scripts simples qui peuvent être adaptés par l'utilisateur, soit dans
-l'étape d'édition intégrée, soit dans l'étape d'édition avant l'exécution, pour
-améliorer l'adaptation du calcul ADAO dans le superviseur d'exécution de SALOME.
+défaut dans ADAO lors de l'usage de l'éditeur graphique. Ces derniers sont des
+scripts simples qui peuvent être adaptés par l'utilisateur, soit dans l'étape
+d'édition intégrée du cas, soit dans l'étape d'édition du schéma avant
+l'exécution, pour améliorer la performance du calcul ADAO dans le superviseur
+d'exécution de SALOME.
 
-Forme générale d'un script permettant de définir un  *observer*
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Forme générale d'un script permettant de définir un *observer*
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour pouvoir utiliser cette capacité, l'utilisateur doit disposer ou construire
 des scripts utilisant en entrée standard (i.e. disponible dans l'espace de
-nommage) des variables ``var`` et ``info``. La variable ``var`` est à utiliser
+nommage) les variables ``var`` et ``info``. La variable ``var`` est à utiliser
 comme un objet de type liste/tuple, contenant la variable d'intérêt indicée par
 l'étape de mise à jour.
 
 A titre d'exemple, voici un script très simple (similaire au modèle
-"*ValuePrinter*") utilisable pour afficher la valeur d'une variable surveillée::
+"*ValuePrinter*"), utilisable pour afficher la valeur d'une variable
+surveillée::
 
     print "    --->",info," Value =",var[-1]
 
-Stocké comme un fichier Python, ce script peut être associé à chaque variable
-présente dans le mot-clé "*SELECTION*" de la commande "*Observers*":
-"*Analysis*", "*CurrentState*", "*CostFunction*"... La valeur courante de la
-variable sera affichée à chaque étape de l'algorithme d'optimisation ou
-d'assimilation. Les "*observer*" peuvent inclure des capacités d'affichage
-graphique, de stockage, d'affichage complexe, de traitement statistique, etc.
+Stocké comme un fichier Python ou une chaîne de caractères explicite, ces lignes
+de script peuvent être associées à chaque variable présente dans le mot-clé
+"*SELECTION*" de la commande "*Observers*" du cas ADAO : "*Analysis*",
+"*CurrentState*", "*CostFunction*"... La valeur courante de la variable sera
+affichée à chaque étape de l'algorithme d'optimisation ou d'assimilation. Les
+"*observer*" peuvent inclure des capacités d'affichage graphique, de stockage,
+de traitement complexe, d'analyse statistique, etc.
 
 On donne ci-aprés l'identifiant et le contenu de chaque modèle disponible.
 
@@ -84,6 +88,8 @@ Inventaire des modèles d'*observer* disponibles ("*Template*")
 
 Modèle **ValueGnuPlotter** :
 ............................
+
+Affiche graphiquement avec Gnuplot la valeur courante de la variable.
 
 ::
 
@@ -104,6 +110,8 @@ Modèle **ValueGnuPlotter** :
 
 Modèle **ValueMean** :
 ......................
+
+Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
 
 ::
 
@@ -126,6 +134,8 @@ Imprime sur la sortie standard la valeur courante de la variable.
 Modèle **ValuePrinterAndGnuPlotter** :
 ......................................
 
+Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la valeur courante de la variable.
+
 ::
 
     print info, var[-1]
@@ -147,6 +157,8 @@ Modèle **ValuePrinterAndGnuPlotter** :
 Modèle **ValuePrinterAndSaver** :
 .................................
 
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la valeur courante de la variable.
+
 ::
 
     import numpy, re
@@ -166,6 +178,8 @@ Modèle **ValuePrinterAndSaver** :
 
 Modèle **ValuePrinterSaverAndGnuPlotter** :
 ...........................................
+
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la valeur courante de la variable .
 
 ::
 
@@ -198,6 +212,8 @@ Modèle **ValuePrinterSaverAndGnuPlotter** :
 Modèle **ValueRMS** :
 .....................
 
+Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moyenne quadratique, de la valeur courante de la variable.
+
 ::
 
     import numpy
@@ -208,6 +224,8 @@ Modèle **ValueRMS** :
 
 Modèle **ValueSaver** :
 .......................
+
+Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement.
 
 ::
 
@@ -227,6 +245,8 @@ Modèle **ValueSaver** :
 
 Modèle **ValueSerieGnuPlotter** :
 .................................
+
+Affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 
 ::
 
@@ -259,6 +279,8 @@ Imprime sur la sortie standard la série des valeurs de la variable.
 Modèle **ValueSeriePrinterAndGnuPlotter** :
 ...........................................
 
+Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable.
+
 ::
 
     print info, var[:] 
@@ -280,6 +302,8 @@ Modèle **ValueSeriePrinterAndGnuPlotter** :
 Modèle **ValueSeriePrinterAndSaver** :
 ......................................
 
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la série des valeurs de la variable.
+
 ::
 
     import numpy, re
@@ -299,6 +323,8 @@ Modèle **ValueSeriePrinterAndSaver** :
 
 Modèle **ValueSeriePrinterSaverAndGnuPlotter** :
 ................................................
+
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la série des valeurs de la variable.
 
 ::
 
@@ -331,6 +357,8 @@ Modèle **ValueSeriePrinterSaverAndGnuPlotter** :
 Modèle **ValueSerieSaver** :
 ............................
 
+Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape.
+
 ::
 
     import numpy, re
@@ -350,6 +378,8 @@ Modèle **ValueSerieSaver** :
 Modèle **ValueStandardError** :
 ...............................
 
+Imprime sur la sortie standard l'écart-type de la valeur courante de la variable.
+
 ::
 
     import numpy
@@ -359,6 +389,8 @@ Modèle **ValueStandardError** :
 
 Modèle **ValueVariance** :
 ..........................
+
+Imprime sur la sortie standard la variance de la valeur courante de la variable.
 
 ::
 
