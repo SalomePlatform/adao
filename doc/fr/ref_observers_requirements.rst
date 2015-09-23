@@ -84,6 +84,114 @@ On donne ci-aprés l'identifiant et le contenu de chaque modèle disponible.
 Inventaire des modèles d'*observer* disponibles ("*Template*")
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: ValuePrinter (Observer)
+
+Modèle **ValuePrinter** :
+.........................
+
+Imprime sur la sortie standard la valeur courante de la variable.
+
+::
+
+    print info, var[-1]
+
+.. index:: single: ValueSeriePrinter (Observer)
+
+Modèle **ValueSeriePrinter** :
+..............................
+
+Imprime sur la sortie standard la série des valeurs de la variable.
+
+::
+
+    print info, var[:]
+
+.. index:: single: ValueSaver (Observer)
+
+Modèle **ValueSaver** :
+.......................
+
+Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[-1], ndmin=1)
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValueSerieSaver (Observer)
+
+Modèle **ValueSerieSaver** :
+............................
+
+Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[:],  ndmin=1)
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValuePrinterAndSaver (Observer)
+
+Modèle **ValuePrinterAndSaver** :
+.................................
+
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la valeur courante de la variable.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[-1], ndmin=1)
+    print info,v
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValueSeriePrinterAndSaver (Observer)
+
+Modèle **ValueSeriePrinterAndSaver** :
+......................................
+
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la série des valeurs de la variable.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[:],  ndmin=1)
+    print info,v
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
 .. index:: single: ValueGnuPlotter (Observer)
 
 Modèle **ValueGnuPlotter** :
@@ -106,28 +214,27 @@ Affiche graphiquement avec Gnuplot la valeur courante de la variable.
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValueMean (Observer)
+.. index:: single: ValueSerieGnuPlotter (Observer)
 
-Modèle **ValueMean** :
-......................
+Modèle **ValueSerieGnuPlotter** :
+.................................
 
-Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
-
-::
-
-    import numpy
-    print info, numpy.nanmean(var[-1])
-
-.. index:: single: ValuePrinter (Observer)
-
-Modèle **ValuePrinter** :
-.........................
-
-Imprime sur la sortie standard la valeur courante de la variable.
+Affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 
 ::
 
-    print info, var[-1]
+    import numpy, Gnuplot
+    v=numpy.array(var[:],  ndmin=1)
+    global ifig, gp
+    try:
+        ifig += 1
+        gp('set style data lines')
+    except:
+        ifig = 0
+        gp = Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title  "%s (Figure %i)"'%(info,ifig))
+    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterAndGnuPlotter (Observer)
 
@@ -152,27 +259,28 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnu
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValuePrinterAndSaver (Observer)
+.. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
 
-Modèle **ValuePrinterAndSaver** :
-.................................
+Modèle **ValueSeriePrinterAndGnuPlotter** :
+...........................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la valeur courante de la variable.
+Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 
 ::
 
-    import numpy, re
-    v=numpy.array(var[-1], ndmin=1)
-    print info,v
-    global istep
+    print info, var[:] 
+    import numpy, Gnuplot
+    v=numpy.array(var[:],  ndmin=1)
+    global ifig,gp
     try:
-        istep += 1
+        ifig += 1
+        gp('set style data lines')
     except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
+        ifig = 0
+        gp = Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title  "%s (Figure %i)"'%(info,ifig))
+    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterSaverAndGnuPlotter (Observer)
 
@@ -207,118 +315,6 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et 
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValueRMS (Observer)
-
-Modèle **ValueRMS** :
-.....................
-
-Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moyenne quadratique, de la valeur courante de la variable.
-
-::
-
-    import numpy
-    v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print info, float( numpy.sqrt((1./v.size)*(v*v.T)) )
-
-.. index:: single: ValueSaver (Observer)
-
-Modèle **ValueSaver** :
-.......................
-
-Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement.
-
-::
-
-    import numpy, re
-    v=numpy.array(var[-1], ndmin=1)
-    global istep
-    try:
-        istep += 1
-    except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
-
-.. index:: single: ValueSerieGnuPlotter (Observer)
-
-Modèle **ValueSerieGnuPlotter** :
-.................................
-
-Affiche graphiquement avec Gnuplot la série des valeurs de la variable.
-
-::
-
-    import numpy, Gnuplot
-    v=numpy.array(var[:],  ndmin=1)
-    global ifig, gp
-    try:
-        ifig += 1
-        gp('set style data lines')
-    except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
-    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
-
-.. index:: single: ValueSeriePrinter (Observer)
-
-Modèle **ValueSeriePrinter** :
-..............................
-
-Imprime sur la sortie standard la série des valeurs de la variable.
-
-::
-
-    print info, var[:]
-
-.. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
-
-Modèle **ValueSeriePrinterAndGnuPlotter** :
-...........................................
-
-Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable.
-
-::
-
-    print info, var[:] 
-    import numpy, Gnuplot
-    v=numpy.array(var[:],  ndmin=1)
-    global ifig,gp
-    try:
-        ifig += 1
-        gp('set style data lines')
-    except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
-    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
-
-.. index:: single: ValueSeriePrinterAndSaver (Observer)
-
-Modèle **ValueSeriePrinterAndSaver** :
-......................................
-
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la série des valeurs de la variable.
-
-::
-
-    import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
-    print info,v
-    global istep
-    try:
-        istep += 1
-    except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
-
 .. index:: single: ValueSeriePrinterSaverAndGnuPlotter (Observer)
 
 Modèle **ValueSeriePrinterSaverAndGnuPlotter** :
@@ -352,26 +348,17 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et 
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValueSerieSaver (Observer)
+.. index:: single: ValueMean (Observer)
 
-Modèle **ValueSerieSaver** :
-............................
+Modèle **ValueMean** :
+......................
 
-Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape.
+Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
 
 ::
 
-    import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
-    global istep
-    try:
-        istep += 1
-    except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
+    import numpy
+    print info, numpy.nanmean(var[-1])
 
 .. index:: single: ValueStandardError (Observer)
 
@@ -396,3 +383,16 @@ Imprime sur la sortie standard la variance de la valeur courante de la variable.
 
     import numpy
     print info, numpy.nanvar(var[-1])
+
+.. index:: single: ValueRMS (Observer)
+
+Modèle **ValueRMS** :
+.....................
+
+Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moyenne quadratique, de la valeur courante de la variable.
+
+::
+
+    import numpy
+    v = numpy.matrix( numpy.ravel( var[-1] ) )
+    print info, float( numpy.sqrt((1./v.size)*(v*v.T)) )

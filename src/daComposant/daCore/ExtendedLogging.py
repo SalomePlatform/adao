@@ -76,7 +76,7 @@ __all__ = []
 import os
 import sys
 import logging
-from PlatformInfo import PlatformInfo
+import PlatformInfo
 
 LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
 
@@ -95,7 +95,7 @@ class ExtendedLogging:
         #
         # Initialise l'affichage de logging
         # ---------------------------------
-        p = PlatformInfo()
+        p = PlatformInfo.PlatformInfo()
         #
         logging.info( "--------------------------------------------------" )
         logging.info( "Lancement de "+p.getName()+" "+p.getVersion() )

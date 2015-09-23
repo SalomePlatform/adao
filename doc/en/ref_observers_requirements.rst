@@ -81,6 +81,114 @@ Hereinafter we give the identifier and the contents of each model available.
 Inventory of available *observer* models ("*Template*")
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: ValuePrinter (Observer)
+
+Template **ValuePrinter** :
+...........................
+
+Print on standard output the current value of the variable.
+
+::
+
+    print info, var[-1]
+
+.. index:: single: ValueSeriePrinter (Observer)
+
+Template **ValueSeriePrinter** :
+................................
+
+Print on standard output the value serie of the variable.
+
+::
+
+    print info, var[:]
+
+.. index:: single: ValueSaver (Observer)
+
+Template **ValueSaver** :
+.........................
+
+Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[-1], ndmin=1)
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValueSerieSaver (Observer)
+
+Template **ValueSerieSaver** :
+..............................
+
+Save the value serie of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[:],  ndmin=1)
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValuePrinterAndSaver (Observer)
+
+Template **ValuePrinterAndSaver** :
+...................................
+
+Print on standard output and, in the same time, save in a file the current value of the variable.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[-1], ndmin=1)
+    print info,v
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValueSeriePrinterAndSaver (Observer)
+
+Template **ValueSeriePrinterAndSaver** :
+........................................
+
+Print on standard output and, in the same time, save in a file the value serie of the variable.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[:],  ndmin=1)
+    print info,v
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
 .. index:: single: ValueGnuPlotter (Observer)
 
 Template **ValueGnuPlotter** :
@@ -103,28 +211,27 @@ Graphically plot with Gnuplot the current value of the variable.
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValueMean (Observer)
+.. index:: single: ValueSerieGnuPlotter (Observer)
 
-Template **ValueMean** :
-........................
+Template **ValueSerieGnuPlotter** :
+...................................
 
-Print on standard output the mean of the current value of the variable.
-
-::
-
-    import numpy
-    print info, numpy.nanmean(var[-1])
-
-.. index:: single: ValuePrinter (Observer)
-
-Template **ValuePrinter** :
-...........................
-
-Print on standard output the current value of the variable.
+Graphically plot with Gnuplot the value serie of the variable.
 
 ::
 
-    print info, var[-1]
+    import numpy, Gnuplot
+    v=numpy.array(var[:],  ndmin=1)
+    global ifig, gp
+    try:
+        ifig += 1
+        gp('set style data lines')
+    except:
+        ifig = 0
+        gp = Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title  "%s (Figure %i)"'%(info,ifig))
+    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterAndGnuPlotter (Observer)
 
@@ -149,27 +256,28 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValuePrinterAndSaver (Observer)
+.. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
 
-Template **ValuePrinterAndSaver** :
-...................................
+Template **ValueSeriePrinterAndGnuPlotter** :
+.............................................
 
-Print on standard output and, in the same time, save in a file the current value of the variable.
+Print on standard output and, in the same time, graphically plot with Gnuplot the value serie of the variable.
 
 ::
 
-    import numpy, re
-    v=numpy.array(var[-1], ndmin=1)
-    print info,v
-    global istep
+    print info, var[:] 
+    import numpy, Gnuplot
+    v=numpy.array(var[:],  ndmin=1)
+    global ifig,gp
     try:
-        istep += 1
+        ifig += 1
+        gp('set style data lines')
     except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
+        ifig = 0
+        gp = Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title  "%s (Figure %i)"'%(info,ifig))
+    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterSaverAndGnuPlotter (Observer)
 
@@ -204,118 +312,6 @@ Print on standard output and, in the same, time save in a file and graphically p
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValueRMS (Observer)
-
-Template **ValueRMS** :
-.......................
-
-Print on standard output the root mean square (RMS), or quadratic mean, of the current value of the variable.
-
-::
-
-    import numpy
-    v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print info, float( numpy.sqrt((1./v.size)*(v*v.T)) )
-
-.. index:: single: ValueSaver (Observer)
-
-Template **ValueSaver** :
-.........................
-
-Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
-
-::
-
-    import numpy, re
-    v=numpy.array(var[-1], ndmin=1)
-    global istep
-    try:
-        istep += 1
-    except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
-
-.. index:: single: ValueSerieGnuPlotter (Observer)
-
-Template **ValueSerieGnuPlotter** :
-...................................
-
-Graphically plot with Gnuplot the value serie of the variable.
-
-::
-
-    import numpy, Gnuplot
-    v=numpy.array(var[:],  ndmin=1)
-    global ifig, gp
-    try:
-        ifig += 1
-        gp('set style data lines')
-    except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
-    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
-
-.. index:: single: ValueSeriePrinter (Observer)
-
-Template **ValueSeriePrinter** :
-................................
-
-Print on standard output the value serie of the variable.
-
-::
-
-    print info, var[:]
-
-.. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
-
-Template **ValueSeriePrinterAndGnuPlotter** :
-.............................................
-
-Print on standard output and, in the same time, graphically plot with Gnuplot the value serie of the variable.
-
-::
-
-    print info, var[:] 
-    import numpy, Gnuplot
-    v=numpy.array(var[:],  ndmin=1)
-    global ifig,gp
-    try:
-        ifig += 1
-        gp('set style data lines')
-    except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
-    gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
-
-.. index:: single: ValueSeriePrinterAndSaver (Observer)
-
-Template **ValueSeriePrinterAndSaver** :
-........................................
-
-Print on standard output and, in the same time, save in a file the value serie of the variable.
-
-::
-
-    import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
-    print info,v
-    global istep
-    try:
-        istep += 1
-    except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
-
 .. index:: single: ValueSeriePrinterSaverAndGnuPlotter (Observer)
 
 Template **ValueSeriePrinterSaverAndGnuPlotter** :
@@ -349,26 +345,17 @@ Print on standard output and, in the same, time save in a file and graphically p
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
-.. index:: single: ValueSerieSaver (Observer)
+.. index:: single: ValueMean (Observer)
 
-Template **ValueSerieSaver** :
-..............................
+Template **ValueMean** :
+........................
 
-Save the value serie of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+Print on standard output the mean of the current value of the variable.
 
 ::
 
-    import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
-    global istep
-    try:
-        istep += 1
-    except:
-        istep = 0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
-    numpy.savetxt(f,v)
+    import numpy
+    print info, numpy.nanmean(var[-1])
 
 .. index:: single: ValueStandardError (Observer)
 
@@ -393,3 +380,16 @@ Print on standard output the variance of the current value of the variable.
 
     import numpy
     print info, numpy.nanvar(var[-1])
+
+.. index:: single: ValueRMS (Observer)
+
+Template **ValueRMS** :
+.......................
+
+Print on standard output the root mean square (RMS), or quadratic mean, of the current value of the variable.
+
+::
+
+    import numpy
+    v = numpy.matrix( numpy.ravel( var[-1] ) )
+    print info, float( numpy.sqrt((1./v.size)*(v*v.T)) )
