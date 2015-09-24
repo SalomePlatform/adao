@@ -275,3 +275,34 @@ that the derivatives has to be done only partially against :math:`\mathbf{x}`.
 In such a case with explicit control, only the second functional form (using
 "*ScriptWithFunctions*") and third functional form (using "*ScriptWithSwitch*")
 can be used.
+
+Additional notes on nondimensionalization of operators
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: Nondimensionalization
+.. index:: single: Dimensionless
+
+It is common that physical quantities, in input or output of the operators, have
+significant differences in magnitude or rate of change. One way to avoid
+numerical difficulties is to use, or to set, a nondimensionalization of the
+calculations carried out in operators [WikipediaND]_. In principle, since
+physical simulation should be as dimensionless as possible, it is firstly
+recommended to use the existing capacity of nondimensionalization of the
+calculation code.
+
+However, in the common case where we can not dispose of it, it is often useful
+to surround the calculation to remove dimension for input or output. A simple
+way to do this is to convert the input parameters :math:`\mathbf{x}` which are
+arguments of a function like "*DirectOperator*". One mostly use the default
+values :math:`\mathbf{x}^b` (background, or nominal value). Provided that each
+component of :math:`\mathbf{x}^b` is non zero, one can indeed put:
+
+.. math:: \mathbf{x} = \mathbf{\alpha}\mathbf{x}^b
+
+and then optimize the multiplicative parameter :math:`\mathbf{\alpha}`.  This
+parameter has as default value (or as background) a vector of 1. Be careful,
+applying a process of nondimensionalization also requires changing the error
+covariances associated in an ADAO formulation of the optimization problem.
+
+Such a process is rarely enough to avoid all the numerical problems, but it
+often improves a lot the numeric conditioning of the optimization.

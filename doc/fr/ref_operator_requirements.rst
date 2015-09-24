@@ -285,3 +285,37 @@ notant que les dérivées doivent être faites seulement partiellement par rapport
 à :math:`\mathbf{x}`. Dans un tel cas de contrôle explicite, seule la deuxième
 forme fonctionnelle (en utilisant "*ScriptWithFunctions*") et la troisième forme
 fonctionnelle (en utilisant "*ScriptWithSwitch*") peuvent être utilisées.
+
+Remarques complémentaires sur l'adimensionnement des opérateurs
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: Adimensionnement
+.. index:: single: Sans dimension
+
+Il est fréquent que les grandeurs physiques, en entrée ou en sortie des
+opérateurs, présentent des différences notables d'ordre de grandeur ou de taux
+de variation. Une manière d'éviter des difficultés numériques est d'utiliser, ou
+d'établir, un adimensionnement des calculs menés dans les opérateurs
+[WikipediaND]_. Par principe, dans la mesure où la simulation de la physique
+devrait être la plus adimensionnée possible, il est en premier lieu recommandé
+d'utiliser les capacités existantes d'adimensionnement du code de calcul.
+
+Néanmoins, dans le cas courant où l'on ne peut en disposer, il est souvent utile
+d'environner le calcul pour l'adimensionner en entrée ou en sortie. Une manière
+simple de faire cela en entrée consiste à transformer les paramètres
+:math:`\mathbf{x}` en argument d'une fonction comme "*DirectOperator*". On
+utilise le plus souvent les valeurs par défaut :math:`\mathbf{x}^b` (ébauche, ou
+valeur nominale). Pourvu que chaque composante de :math:`\mathbf{x}^b` soit non
+nulle, on peut en effet poser:
+
+.. math:: \mathbf{x} = \mathbf{\alpha}\mathbf{x}^b
+
+et optimiser ensuite le paramètre multiplicatif :math:`\mathbf{\alpha}`. Ce
+paramètre a pour valeur par défaut (ou pour ébauche) un vecteur de 1. Attention,
+l'application d'une démarche d'adimensionnement nécessite aussi la modification
+des covariances d'erreurs associées dans la formulation ADAO du problème
+d'optimisation.
+
+Une telle démarche suffit rarement à éviter tous les problèmes numériques, mais
+permet souvent d'améliorer beaucoup le conditionnement numérique de
+l'optimisation.

@@ -63,6 +63,8 @@ Bibliography
 
 .. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
 
+.. [WikipediaND] Wikipedia, *Nondimensionalization*, https://en.wikipedia.org/wiki/Nondimensionalization
+
 .. [WikipediaPSO] Wikipedia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
 
 .. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression

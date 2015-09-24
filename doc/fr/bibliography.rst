@@ -59,16 +59,23 @@ Bibliographie
 
 .. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
 
-.. [WikipediaDA] Wikipedia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
+.. [WikipediaDA] Wikipédia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
 
-.. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
+.. [WikipediaMO] Wikipédia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
 
-.. [WikipediaPSO] Wikipedia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
+.. [WikipediaND] Wikipédia, *Nondimensionalization*, https://en.wikipedia.org/wiki/Nondimensionalization
 
-.. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
+.. [WikipediaPSO] Wikipédia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
 
-.. [WikipediaTI] Wikipedia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
+.. [WikipediaQR] Wikipédia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
 
-.. [WikipediaUKF] Wikipedia, *Unscented Kalman filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
+.. [WikipediaTI] Wikipédia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
+
+.. [WikipediaUKF] Wikipédia, *Unscented Kalman filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
 
 .. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 23(4), pp.550-560, 1997
+
+*Nota Bene* : un lien vers la version française de chaque page Wikipédia se
+trouve dans le sous-menu "*Languages*". Les deux versions sont complémentaires
+car, même si souvent le contenu en anglais est plus fourni, les informations
+disponibles dans chaque langue ne sont pas toujours identiques.
