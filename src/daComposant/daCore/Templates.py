@@ -40,6 +40,7 @@ class TemplateStorage(object):
         self.__order            = -1
 
     def store( self, name = None, content = None, fr_FR = "", en_EN = "", order = "next" ):
+        "D.store(k, c,  fr_FR, en_EN, o) -> Store template k and its main characteristics"
         if name is None or content is None:
             raise ValueError("To be consistent, the storage of a template must provide a name and a content.")
         if order == "next":
@@ -54,25 +55,34 @@ class TemplateStorage(object):
             }
 
     def keys(self):
+        "D.keys() -> list of D's keys"
         __keys = self.__values.keys()
         __keys.sort()
         return __keys
 
     def has_key(self, name):
-        return self.__values.has_key(name)
+        "D.has_key(k) -> True if D has a key k, else False"
+        return name in self.__values
+
+    def __contains__(self, name):
+        "D.__contains__(k) -> True if D has a key k, else False"
+        return name in self.__values
 
     def __len__(self):
+        "x.__len__() <==> len(x)"
         return len(self.__values)
 
     def __getitem__(self, name=None ):
+        "x.__getitem__(y) <==> x[y]"
         return self.__values[name]['content']
 
     def getdoc(self, name = None, lang = "fr_FR"):
+        "D.getdoc(k, l) -> Return documentation of key k in language l"
         if lang not in self.__values[name]: lang = self.__preferedLanguage
         return self.__values[name][lang]
 
     def keys_in_presentation_order(self):
-        "Restitue l'ordre de présentation requis"
+        "D.keys_in_presentation_order() -> list of D's keys in presentation order"
         __orders = []
         for k in self.keys():
             __orders.append( self.__values[k]['order'] )

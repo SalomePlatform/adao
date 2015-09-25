@@ -35,14 +35,14 @@ import Persistence
 import PlatformInfo
 
 # ==============================================================================
-class CacheManager:
+class CacheManager(object):
     """
     Classe générale de gestion d'un cache de calculs
     """
     def __init__(self,
-            toleranceInRedundancy = 1.e-18,
-            lenghtOfRedundancy    = -1,
-            ):
+                 toleranceInRedundancy = 1.e-18,
+                 lenghtOfRedundancy    = -1,
+                ):
         """
         Les caractéristiques de tolérance peuvent être modifées à la création.
         """
@@ -52,29 +52,32 @@ class CacheManager:
         self.clearCache()
 
     def clearCache(self):
+        "Vide le cache"
         self.__listOPCV = [] # Operator Previous Calculated Points, Results, Point Norms
-        # logging.debug("CM Tolerance de determination des doublons : %.2e"%self.__tolerBP)
+        # logging.debug("CM Tolerance de determination des doublons : %.2e", self.__tolerBP)
 
     def wasCalculatedIn(self, xValue ): #, info="" ):
+        "Vérifie l'existence d'un calcul correspondant à la valeur"
         __alc = False
         __HxV = None
         for i in xrange(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
             if xValue.size != self.__listOPCV[i][0].size:
-                # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé"%(xValue.shape,i,self.__listOPCP[i].shape))
+                # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé", xValue.shape,i,self.__listOPCP[i].shape)
                 continue
             if numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCV[i][0]) < self.__tolerBP * self.__listOPCV[i][2]:
                 __alc  = True
                 __HxV = self.__listOPCV[i][1]
-                # logging.debug("CM Cas%s déja calculé, portant le numéro %i"%(info,i))
+                # logging.debug("CM Cas%s déja calculé, portant le numéro %i", info, i)
                 break
         return __alc, __HxV
 
     def storeValueInX(self, xValue, HxValue ):
+        "Stocke un calcul correspondant à la valeur"
         if self.__lenghtOR < 0:
             self.__lenghtOR = 2 * xValue.size + 2
             self.__initlnOR = self.__lenghtOR
         while len(self.__listOPCV) > self.__lenghtOR:
-            # logging.debug("CM Réduction de la liste des cas à %i éléments par suppression du premier"%self.__lenghtOR)
+            # logging.debug("CM Réduction de la liste des cas à %i éléments par suppression du premier", self.__lenghtOR)
             self.__listOPCV.pop(0)
         self.__listOPCV.append( (
             copy.copy(numpy.ravel(xValue)),
@@ -83,14 +86,16 @@ class CacheManager:
             ) )
 
     def disable(self):
+        "Inactive le cache"
         self.__initlnOR = self.__lenghtOR
         self.__lenghtOR = 0
 
     def enable(self):
+        "Active le cache"
         self.__lenghtOR = self.__initlnOR
 
 # ==============================================================================
-class Operator:
+class Operator(object):
     """
     Classe générale d'interface de type opérateur
     """
@@ -124,15 +129,18 @@ class Operator:
             self.__Type   = None
 
     def disableAvoidingRedundancy(self):
+        "Inactive le cache"
         Operator.CM.disable()
 
     def enableAvoidingRedundancy(self):
+        "Active le cache"
         if self.__AvoidRC:
             Operator.CM.enable()
         else:
             Operator.CM.disable()
 
     def isType(self):
+        "Renvoie le type"
         return self.__Type
 
     def appliedTo(self, xValue):
@@ -244,19 +252,22 @@ class Operator:
         else:             return __nbcalls[which]
 
     def __addOneMatrixCall(self):
+        "Comptabilise un appel"
         self.__NbCallsAsMatrix   += 1 # Decompte local
         Operator.NbCallsAsMatrix += 1 # Decompte global
 
     def __addOneMethodCall(self):
+        "Comptabilise un appel"
         self.__NbCallsAsMethod   += 1 # Decompte local
         Operator.NbCallsAsMethod += 1 # Decompte global
 
     def __addOneCacheCall(self):
+        "Comptabilise un appel"
         self.__NbCallsOfCached   += 1 # Decompte local
         Operator.NbCallsOfCached += 1 # Decompte global
 
 # ==============================================================================
-class Algorithm:
+class Algorithm(object):
     """
     Classe générale d'interface de type algorithme
 
@@ -300,7 +311,7 @@ class Algorithm:
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
-        logging.debug("%s Initialisation"%str(name))
+        logging.debug("%s Initialisation", str(name))
         self._m = PlatformInfo.SystemUsage()
         #
         self._name = str( name )
@@ -337,11 +348,13 @@ class Algorithm:
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
 
     def _pre_run(self):
-        logging.debug("%s Lancement"%self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mio"%(self._name, self._m.getUsedMemory("Mio")))
+        "Pré-calcul"
+        logging.debug("%s Lancement", self._name)
+        logging.debug("%s Taille mémoire utilisée de %.1f Mio", self._name, self._m.getUsedMemory("Mio"))
         return 0
 
     def _post_run(self,_oH=None):
+        "Post-calcul"
         if ("StoreSupplementaryCalculations" in self._parameters) and \
             "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             for _A in self.StoredVariables["APosterioriCovariance"]:
@@ -354,10 +367,10 @@ class Algorithm:
                     _C = numpy.dot(_EI, numpy.dot(_A, _EI))
                     self.StoredVariables["APosterioriCorrelations"].store( _C )
         if _oH is not None:
-            logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i"%(self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0)))
-            logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i"%(self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3)))
-        logging.debug("%s Taille mémoire utilisée de %.1f Mio"%(self._name, self._m.getUsedMemory("Mio")))
-        logging.debug("%s Terminé"%self._name)
+            logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i", self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
+            logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i", self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
+        logging.debug("%s Taille mémoire utilisée de %.1f Mio", self._name, self._m.getUsedMemory("Mio"))
+        logging.debug("%s Terminé", self._name)
         return 0
 
     def get(self, key=None):
@@ -374,15 +387,11 @@ class Algorithm:
             return self.StoredVariables
 
     def __contains__(self, key=None):
-        """
-        Vérifie si l'une des variables stockées est identifiée par la clé.
-        """
-        return (key in self.StoredVariables)
+        "D.__contains__(k) -> True if D has a key k, else False"
+        return key in self.StoredVariables
 
     def keys(self):
-        """
-        Renvoie la liste des clés de variables stockées.
-        """
+        "D.keys() -> list of D's keys"
         return self.StoredVariables.keys()
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
@@ -408,7 +417,7 @@ class Algorithm:
             "listval"  : listval,
             "message"  : message,
             }
-        logging.debug("%s %s (valeur par défaut = %s)"%(self._name, message, self.setParameterValue(name)))
+        logging.debug("%s %s (valeur par défaut = %s)", self._name, message, self.setParameterValue(name))
 
     def getRequiredParameters(self, noDetails=True):
         """
@@ -446,7 +455,7 @@ class Algorithm:
         if maxval is not None and (numpy.array(__val, float) > maxval).any():
             raise ValueError("The parameter named \"%s\" of value \"%s\" can not be greater than %s."%(name, __val, maxval))
         if listval is not None:
-            if typecast is list or typecast is tuple or type(__val) is list or type(__val) is tuple:
+            if typecast is list or typecast is tuple or isinstance(__val,list) or isinstance(__val,tuple):
                 for v in __val:
                     if v not in listval:
                         raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%(v, name, listval))
@@ -464,10 +473,10 @@ class Algorithm:
                 self._parameters[k] = self.setParameterValue(k,fromDico[k])
             else:
                 self._parameters[k] = self.setParameterValue(k)
-            logging.debug("%s %s : %s"%(self._name, self.__required_parameters[k]["message"], self._parameters[k]))
+            logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
 
 # ==============================================================================
-class Diagnostic:
+class Diagnostic(object):
     """
     Classe générale d'interface de type diagnostic
 
@@ -483,6 +492,7 @@ class Diagnostic:
     externe d'activation).
     """
     def __init__(self, name = "", parameters = {}):
+        "Initialisation"
         self.name       = str(name)
         self.parameters = dict( parameters )
 
@@ -500,18 +510,18 @@ class Diagnostic:
         raise NotImplementedError("Diagnostic activation method has not been implemented!")
 
 # ==============================================================================
-class Covariance:
+class Covariance(object):
     """
     Classe générale d'interface de type covariance
     """
     def __init__(self,
-            name          = "GenericCovariance",
-            asCovariance  = None,
-            asEyeByScalar = None,
-            asEyeByVector = None,
-            asCovObject   = None,
-            toBeChecked   = False,
-            ):
+                 name          = "GenericCovariance",
+                 asCovariance  = None,
+                 asEyeByScalar = None,
+                 asEyeByVector = None,
+                 asCovObject   = None,
+                 toBeChecked   = False,
+                ):
         """
         Permet de définir une covariance :
         - asCovariance : entrée des données, comme une matrice compatible avec
@@ -573,6 +583,7 @@ class Covariance:
         self.__validate()
 
     def __validate(self):
+        "Validation"
         if self.ismatrix() and min(self.shape) != max(self.shape):
             raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name,self.shape))
         if self.isobject() and min(self.shape) != max(self.shape):
@@ -593,18 +604,23 @@ class Covariance:
                 raise ValueError("The %s covariance object is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
 
     def isscalar(self):
+        "Vérification du type interne"
         return self.__is_scalar
 
     def isvector(self):
+        "Vérification du type interne"
         return self.__is_vector
 
     def ismatrix(self):
+        "Vérification du type interne"
         return self.__is_matrix
 
     def isobject(self):
+        "Vérification du type interne"
         return self.__is_object
 
     def getI(self):
+        "Inversion"
         if   self.ismatrix():
             return Covariance(self.__name+"I", asCovariance  = self.__C.I )
         elif self.isvector():
@@ -617,6 +633,7 @@ class Covariance:
             return None # Indispensable
 
     def getT(self):
+        "Transposition"
         if   self.ismatrix():
             return Covariance(self.__name+"T", asCovariance  = self.__C.T )
         elif self.isvector():
@@ -627,6 +644,7 @@ class Covariance:
             return Covariance(self.__name+"T", asCovObject   = self.__C.getT() )
 
     def cholesky(self):
+        "Décomposition de Cholesky"
         if   self.ismatrix():
             return Covariance(self.__name+"C", asCovariance  = numpy.linalg.cholesky(self.__C) )
         elif self.isvector():
@@ -637,6 +655,7 @@ class Covariance:
             return Covariance(self.__name+"C", asCovObject   = self.__C.cholesky() )
 
     def choleskyI(self):
+        "Inversion de la décomposition de Cholesky"
         if   self.ismatrix():
             return Covariance(self.__name+"H", asCovariance  = numpy.linalg.cholesky(self.__C).I )
         elif self.isvector():
@@ -647,6 +666,7 @@ class Covariance:
             return Covariance(self.__name+"H", asCovObject   = self.__C.choleskyI() )
 
     def diag(self, msize=None):
+        "Diagonale de la matrice"
         if   self.ismatrix():
             return numpy.diag(self.__C)
         elif self.isvector():
@@ -660,6 +680,7 @@ class Covariance:
             return self.__C.diag()
 
     def asfullmatrix(self, msize=None):
+        "Matrice pleine"
         if   self.ismatrix():
             return self.__C
         elif self.isvector():
@@ -673,6 +694,7 @@ class Covariance:
             return self.__C.asfullmatrix()
 
     def trace(self, msize=None):
+        "Trace de la matrice"
         if   self.ismatrix():
             return numpy.trace(self.__C)
         elif self.isvector():
@@ -686,12 +708,15 @@ class Covariance:
             return self.__C.trace()
 
     def __repr__(self):
+        "x.__repr__() <==> repr(x)"
         return repr(self.__C)
 
     def __str__(self):
+        "x.__str__() <==> str(x)"
         return str(self.__C)
 
     def __add__(self, other):
+        "x.__add__(y) <==> x+y"
         if   self.ismatrix() or self.isobject():
             return self.__C + numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
@@ -700,9 +725,11 @@ class Covariance:
             return numpy.asmatrix(_A)
 
     def __radd__(self, other):
+        "x.__radd__(y) <==> y+x"
         raise NotImplementedError("%s covariance matrix __radd__ method not available for %s type!"%(self.__name,type(other)))
 
     def __sub__(self, other):
+        "x.__sub__(y) <==> x-y"
         if   self.ismatrix() or self.isobject():
             return self.__C - numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
@@ -711,12 +738,15 @@ class Covariance:
             return numpy.asmatrix(_A)
 
     def __rsub__(self, other):
+        "x.__rsub__(y) <==> y-x"
         raise NotImplementedError("%s covariance matrix __rsub__ method not available for %s type!"%(self.__name,type(other)))
 
     def __neg__(self):
+        "x.__neg__() <==> -x"
         return - self.__C
 
     def __mul__(self, other):
+        "x.__mul__(y) <==> x*y"
         if   self.ismatrix() and isinstance(other,numpy.matrix):
             return self.__C * other
         elif self.ismatrix() and (isinstance(other,numpy.ndarray) \
@@ -753,6 +783,7 @@ class Covariance:
             raise NotImplementedError("%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __rmul__(self, other):
+        "x.__rmul__(y) <==> y*x"
         if self.ismatrix() and isinstance(other,numpy.matrix):
             return other * self.__C
         elif self.isvector() and isinstance(other,numpy.matrix):
@@ -770,26 +801,26 @@ class Covariance:
             raise NotImplementedError("%s covariance matrix __rmul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __len__(self):
+        "x.__len__() <==> len(x)"
         return self.shape[0]
 
 # ==============================================================================
-def CostFunction3D(
-    _x,
-    _Hm  = None,  # Pour simuler Hm(x) : HO["Direct"].appliedTo
-    _HmX = None,  # Simulation déjà faite de Hm(x)
-    _arg = None,  # Arguments supplementaires pour Hm, sous la forme d'un tuple
-    _BI  = None,
-    _RI  = None,
-    _Xb  = None,
-    _Y   = None,
-    _SIV = False, # A résorber pour la 8.0
-    _SSC = [],    # self._parameters["StoreSupplementaryCalculations"]
-    _nPS = 0,     # nbPreviousSteps
-    _QM  = "DA",  # QualityMeasure
-    _SSV = {},    # Entrée et/ou sortie : self.StoredVariables
-    _fRt = False, # Restitue ou pas la sortie étendue
-    _sSc = True,  # Stocke ou pas les SSC
-    ):
+def CostFunction3D(_x,
+                   _Hm  = None,  # Pour simuler Hm(x) : HO["Direct"].appliedTo
+                   _HmX = None,  # Simulation déjà faite de Hm(x)
+                   _arg = None,  # Arguments supplementaires pour Hm, sous la forme d'un tuple
+                   _BI  = None,
+                   _RI  = None,
+                   _Xb  = None,
+                   _Y   = None,
+                   _SIV = False, # A résorber pour la 8.0
+                   _SSC = [],    # self._parameters["StoreSupplementaryCalculations"]
+                   _nPS = 0,     # nbPreviousSteps
+                   _QM  = "DA",  # QualityMeasure
+                   _SSV = {},    # Entrée et/ou sortie : self.StoredVariables
+                   _fRt = False, # Restitue ou pas la sortie étendue
+                   _sSc = True,  # Stocke ou pas les SSC
+                  ):
     """
     Fonction-coût générale utile pour les algorithmes statiques/3D : 3DVAR, BLUE
     et dérivés, Kalman et dérivés, LeastSquares, SamplingTest, PSO, SA, Tabu,
@@ -803,11 +834,11 @@ def CostFunction3D(
                   "CostFunctionJb",
                   "CostFunctionJo",
                   "CurrentOptimum",
-                  "CurrentState", 
+                  "CurrentState",
                   "IndexOfOptimum",
                   "SimulatedObservationAtCurrentOptimum",
                   "SimulatedObservationAtCurrentState",
-                  ]:
+                 ]:
             if k not in _SSV:
                 _SSV[k] = []
             if hasattr(_SSV[k],"store"):
@@ -821,7 +852,7 @@ def CostFunction3D(
         _HX = _HmX
     else:
         if _Hm is None:
-            raise ValueError("%s Operator has to be defined."%(self.__name,))
+            raise ValueError("COSTFUNCTION3D Operator has to be defined.")
         if _arg is None:
             _HX = _Hm( _X )
         else:

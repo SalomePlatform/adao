@@ -34,7 +34,7 @@ Cet algorithme réalise une estimation d'état par minimisation variationnelle de
 la fonctionnelle :math:`J` d'écart classique en assimilation de données
 statique:
 
-.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
+.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-H(\mathbf{x}))^T.\mathbf{R}^{-1}.(\mathbf{y}^o-H(\mathbf{x}))
 
 qui est usuellement désignée comme la fonctionnelle "*3D-VAR*" (voir par exemple
 [Talagrand97]_).

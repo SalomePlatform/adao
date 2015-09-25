@@ -81,7 +81,11 @@ import PlatformInfo
 LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
 
 # ==============================================================================
-class ExtendedLogging:
+class ExtendedLogging(object):
+    """
+    Logger général pour disposer conjointement de la sortie standard et de la
+    sortie sur fichier
+    """
     def __init__(self, level=logging.WARNING):
         """
         Initialise un logging à la console pour TOUS les niveaux de messages.

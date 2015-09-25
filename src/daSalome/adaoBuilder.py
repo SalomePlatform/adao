@@ -98,7 +98,7 @@ class New(object):
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
         except Exception as e:
-            if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
+            if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
             raise ValueError("during settings, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
 
@@ -188,10 +188,10 @@ class New(object):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setControlModel", dir(), locals())
         __Parameters = {}
-        if Parameters is not None and type(Parameters) == type({}):
-            if Parameters.has_key("DifferentialIncrement"):
+        if (Parameters is not None) and isinstance(Parameters, dict):
+            if "DifferentialIncrement" in Parameters:
                 __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
-            if Parameters.has_key("CenteredFiniteDifference"):
+            if "CenteredFiniteDifference" in Parameters:
                 __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
         if Script is not None:
             __Matrix, __Function = None, None
@@ -215,10 +215,10 @@ class New(object):
                 __Function.update({"useApproximatedDerivatives":True})
                 __Function.update(__Parameters)
             elif ThreeFunctions is not None:
-                if (type(ThreeFunctions) is not type({})) or \
-                    not ThreeFunctions.has_key("Direct") or \
-                    not ThreeFunctions.has_key("Tangent") or \
-                    not ThreeFunctions.has_key("Adjoint"):
+                if (not isinstance(ThreeFunctions, dict)) or \
+                   "Direct"  not in ThreeFunctions or \
+                   "Tangent" not in ThreeFunctions or \
+                   "Adjoint" not in ThreeFunctions:
                     raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
                 __Function = ThreeFunctions
                 __Function.update(__Parameters)
@@ -292,14 +292,14 @@ class New(object):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setEvolutionModel", dir(), locals())
         __Parameters = {}
-        if Parameters is not None and type(Parameters) == type({}):
-            if Parameters.has_key("DifferentialIncrement"):
+        if (Parameters is not None) and isinstance(Parameters, dict):
+            if "DifferentialIncrement" in Parameters:
                 __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
-            if Parameters.has_key("CenteredFiniteDifference"):
+            if "CenteredFiniteDifference" in Parameters:
                 __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
-            if Parameters.has_key("EnableMultiProcessing"):
+            if "EnableMultiProcessing" in Parameters:
                 __Parameters["withmpEnabled"] = Parameters["EnableMultiProcessing"]
-            if Parameters.has_key("NumberOfProcesses"):
+            if "NumberOfProcesses" in Parameters:
                 __Parameters["withmpWorkers"] = Parameters["NumberOfProcesses"]
         if Script is not None:
             __Matrix, __Function = None, None
@@ -323,10 +323,10 @@ class New(object):
                 __Function.update({"useApproximatedDerivatives":True})
                 __Function.update(__Parameters)
             elif ThreeFunctions is not None:
-                if (type(ThreeFunctions) is not type({})) or \
-                    not ThreeFunctions.has_key("Direct") or \
-                    not ThreeFunctions.has_key("Tangent") or \
-                    not ThreeFunctions.has_key("Adjoint"):
+                if (not isinstance(ThreeFunctions, dict)) or \
+                   "Direct"  not in ThreeFunctions or \
+                   "Tangent" not in ThreeFunctions or \
+                   "Adjoint" not in ThreeFunctions:
                     raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
                 __Function = ThreeFunctions
                 __Function.update(__Parameters)
@@ -400,15 +400,15 @@ class New(object):
         "Définition d'une entrée de calcul"
         self.__dumper.register("setObservationOperator", dir(), locals())
         __Parameters = {}
-        if Parameters is not None and type(Parameters) == type({}):
-            if Parameters.has_key("DifferentialIncrement"):
+        if (Parameters is not None) and isinstance(Parameters, dict):
+            if "DifferentialIncrement" in Parameters:
                 __Parameters["withIncrement"] = Parameters["DifferentialIncrement"]
-            if Parameters.has_key("CenteredFiniteDifference"):
+            if "CenteredFiniteDifference" in Parameters:
                 __Parameters["withCenteredDF"] = Parameters["CenteredFiniteDifference"]
-            if Parameters.has_key("EnableMultiProcessing"):
+            if "EnableMultiProcessing" in Parameters:
                 __Parameters["EnableMultiProcessing"] = Parameters["EnableMultiProcessing"]
                 __Parameters["withmpEnabled"]         = Parameters["EnableMultiProcessing"]
-            if Parameters.has_key("NumberOfProcesses"):
+            if "NumberOfProcesses" in Parameters:
                 __Parameters["NumberOfProcesses"] = Parameters["NumberOfProcesses"]
                 __Parameters["withmpWorkers"]     = Parameters["NumberOfProcesses"]
         if Script is not None:
@@ -433,10 +433,10 @@ class New(object):
                 __Function.update({"useApproximatedDerivatives":True})
                 __Function.update(__Parameters)
             elif ThreeFunctions is not None:
-                if (type(ThreeFunctions) is not type({})) or \
-                    not ThreeFunctions.has_key("Direct") or \
-                    not ThreeFunctions.has_key("Tangent") or \
-                    not ThreeFunctions.has_key("Adjoint"):
+                if (not isinstance(ThreeFunctions, dict)) or \
+                   "Direct"  not in ThreeFunctions or \
+                   "Tangent" not in ThreeFunctions or \
+                   "Adjoint" not in ThreeFunctions:
                     raise ValueError("ThreeFunctions has to be a dictionnary and to have the 3 keys Direct, Tangent, Adjoint")
                 __Function = ThreeFunctions
                 __Function.update(__Parameters)
@@ -497,7 +497,7 @@ class New(object):
         #
         if String is not None:
             __FunctionText = String
-        elif (Template is not None) and Templates.ObserverTemplates.has_key(Template):
+        elif (Template is not None) and (Template in Templates.ObserverTemplates):
             __FunctionText = Templates.ObserverTemplates[Template]
         elif Script is not None:
             __FunctionText = _ImportFromScript(Script).getstring()
@@ -519,7 +519,7 @@ class New(object):
         try:
             self.__adaoStudy.analyze()
         except Exception as e:
-            if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
+            if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
             raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
 

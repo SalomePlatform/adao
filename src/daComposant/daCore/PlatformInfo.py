@@ -42,29 +42,33 @@ __all__ = []
 import os
 
 # ==============================================================================
-class PlatformInfo:
+class PlatformInfo(object):
     """
     Rassemblement des informations sur le code et la plateforme
     """
+    def __init__(self):
+        "Sans effet"
+        pass
+
     def getName(self):
         "Retourne le nom de l'application"
-        import version
-        return version.name
+        import version as dav
+        return dav.name
 
     def getVersion(self):
         "Retourne le numéro de la version"
-        import version
-        return version.version
+        import version as dav
+        return dav.version
 
     def getDate(self):
         "Retourne la date de création de la version"
-        import version
-        return version.date
-    
+        import version as dav
+        return dav.date
+
     def getPythonVersion(self):
         "Retourne la version de python disponible"
         import sys
-        return ".".join(map(str,sys.version_info[0:3]))
+        return ".".join([str(x) for x in sys.version_info[0:3]]) # map(str,sys.version_info[0:3]))
 
     def getNumpyVersion(self):
         "Retourne la version de numpy disponible"
@@ -81,7 +85,7 @@ class PlatformInfo:
         try:
             import matplotlib
             return matplotlib.__version__
-        except:
+        except ImportError:
             return "0.0.0"
 
     def getGnuplotVersion(self):
@@ -89,7 +93,7 @@ class PlatformInfo:
         try:
             import Gnuplot
             return Gnuplot.__version__
-        except:
+        except ImportError:
             return "0.0"
 
     def getSphinxVersion(self):
@@ -97,7 +101,7 @@ class PlatformInfo:
         try:
             import sphinx
             return sphinx.__version__
-        except:
+        except ImportError:
             return "0.0.0"
 
     def getCurrentMemorySize(self):
@@ -105,8 +109,8 @@ class PlatformInfo:
         return 1
 
     def __str__(self):
-        import version
-        return "%s %s (%s)"%(version.name,version.version,version.date)
+        import version as dav
+        return "%s %s (%s)"%(dav.name,dav.version,dav.date)
 
 # ==============================================================================
 def uniq(sequence):
@@ -117,11 +121,12 @@ def uniq(sequence):
     return [x for x in sequence if x not in __seen and not __seen.add(x)]
 
 # ==============================================================================
-class PathManagement:
+class PathManagement(object):
     """
     Mise à jour du path système pour les répertoires d'outils
     """
     def __init__(self):
+        "Déclaration des répertoires statiques"
         import sys
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         self.__paths = {}
@@ -143,7 +148,7 @@ class PathManagement:
         return self.__paths
 
 # ==============================================================================
-class SystemUsage:
+class SystemUsage(object):
     """
     Permet de récupérer les différentes tailles mémoires du process courant
     """
@@ -154,17 +159,30 @@ class SystemUsage:
     _proc_status = '/proc/%d/status' % os.getpid()
     _memo_status = '/proc/meminfo'
     _scale = {
-        'o':     1.0, 'ko' : 1.e3,   'Mo' : 1.e6,          'Go' : 1.e9,                 # Multiples SI de l'octet
-                      'kio': 1024.0, 'Mio': 1024.0*1024.0, 'Gio': 1024.0*1024.0*1024.0, # Multiples binaires de l'octet
-        'B':     1.0, 'kB' : 1024.0, 'MB' : 1024.0*1024.0, 'GB' : 1024.0*1024.0*1024.0, # Multiples binaires du byte=octet
-             }
+        'o'  : 1.0,     # Multiples SI de l'octet
+        'ko' : 1.e3,
+        'Mo' : 1.e6,
+        'Go' : 1.e9,
+        'kio': 1024.0,  # Multiples binaires de l'octet
+        'Mio': 1024.0*1024.0,
+        'Gio': 1024.0*1024.0*1024.0,
+        'B':     1.0,   # Multiples binaires du byte=octet
+        'kB' : 1024.0,
+        'MB' : 1024.0*1024.0,
+        'GB' : 1024.0*1024.0*1024.0,
+        }
+    #
+    def __init__(self):
+        "Sans effet"
+        pass
     #
     def _VmA(self, VmKey, unit):
+        "Lecture des paramètres mémoire de la machine"
         try:
             t = open(self._memo_status)
             v = t.read()
             t.close()
-        except:
+        except IOError:
             return 0.0           # non-Linux?
         i = v.index(VmKey)       # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
         v = v[i:].split(None, 3) # whitespace
@@ -194,11 +212,12 @@ class SystemUsage:
                self._VmA('Cached:', unit) + self._VmA('SwapCached:', unit)
     #
     def _VmB(self, VmKey, unit):
+        "Lecture des paramètres mémoire du processus"
         try:
             t = open(self._proc_status)
             v = t.read()
             t.close()
-        except:
+        except IOError:
             return 0.0           # non-Linux?
         i = v.index(VmKey)       # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
         v = v[i:].split(None, 3) # whitespace

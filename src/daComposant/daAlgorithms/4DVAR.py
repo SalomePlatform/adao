@@ -86,7 +86,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "CurrentState", "CostFunctionJ"]
+            listval  = ["BMA", "CurrentState", "CostFunctionJ", "IndexOfOptimum", "CurrentOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
@@ -169,7 +169,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.DirectInnovation  = [None,] # Le pas 0 n'est pas observé
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._parameters["StoreInternalVariables"] or \
+                "CurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
+                "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             self.DirectCalculation = [None,]
@@ -207,6 +209,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
+            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["IndexOfOptimum"].store( IndexMin )
+            if "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
             return J
         #
         def GradientOfCostFunction(x):

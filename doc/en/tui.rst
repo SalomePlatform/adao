@@ -30,11 +30,6 @@
 **[DocR]** Textual Application Programming Interface for the user (API/TUI)
 ================================================================================
 
-.. warning::
-
-  in its present version, this text programming interface (TUI) is experimental,
-  and so changes can be required in forthcoming versions.
-
 This section presents advanced usage of the ADAO module using its text
 programming interface (API/TUI). This interface gives ability to create a
 calculation object in a similar way than the case building obtained through the
@@ -473,20 +468,14 @@ Setting the calculation, outputs, etc.
 
 **setObserver** (*Variable, Template, String, Script, Info*)
     This command allows to set an *observer* on the current or final calculation
-    variable. Reference should be made to the description of the way of
-    ':ref:`section_advanced_observer`, and to the :ref:`section_reference` to
-    know what are the observable quantities. One defines as "*String*" the
-    *observer* body, using a string including if necessary line breaks. It is
-    recommended to use the patterns available by the argument "*Template*".
-    There exist the following simple patterns: "ValuePrinter",
-    "ValueSeriePrinter", "ValueSaver", "ValueSerieSaver",
-    "ValuePrinterAndSaver", "ValueSeriePrinterAndSaver", "ValueGnuPlotter",
-    "ValueSerieGnuPlotter", "ValuePrinterAndGnuPlotter",
-    "ValueSeriePrinterAndGnuPlotter", "ValuePrinterSaverAndGnuPlotter",
-    "ValueSeriePrinterSaverAndGnuPlotter", "ValueMean", "ValueStandardError",
-    "ValueVariance", "ValueRMS". In the case of a definition as "*Script*", the
-    file must contain only the body of the function, as  described in the way of
-    :ref:`section_advanced_observer`.
+    variable. Reference should be made to the description of the
+    ':ref:`ref_observers_requirements` for their list and content, and to the
+    :ref:`section_reference` to know what are the observable quantities. One
+    defines as "*String*" the *observer* body, using a string including if
+    necessary line breaks. It is recommended to use the patterns available by
+    the argument "*Template*". In the case of a definition as "*Script*", the
+    file must contain only the body of the function, as  described in the
+    :ref:`ref_observers_requirements`.
 
 Perform the calculation
 +++++++++++++++++++++++

@@ -61,6 +61,7 @@ FromNumpyList["Dict"]                 = ["String", "Script"]
 # -- Infos from daAlgorithms --
 AssimAlgos = [
     "3DVAR",
+    "4DVAR",
     "Blue",
     "ExtendedBlue",
     "EnsembleBlue",
@@ -84,6 +85,11 @@ CheckAlgos = [
 
 AlgoDataRequirements = {}
 AlgoDataRequirements["3DVAR"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["4DVAR"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -168,6 +174,7 @@ AlgoDataRequirements["SamplingTest"] = [
 
 AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
+AlgoType["4DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
 AlgoType["ExtendedBlue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"

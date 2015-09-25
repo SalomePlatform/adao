@@ -32,7 +32,7 @@ import numpy, copy
 from PlatformInfo import PathManagement ; PathManagement()
 
 # ==============================================================================
-class Persistence:
+class Persistence(object):
     """
     Classe générale de persistence définissant les accesseurs nécessaires
     (Template)
@@ -42,12 +42,12 @@ class Persistence:
         name : nom courant
         unit : unité
         basetype : type de base de l'objet stocké à chaque pas
-        
+
         La gestion interne des données est exclusivement basée sur les variables
         initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
         objets comme des attributs) :
         __basetype : le type de base de chaque valeur, sous la forme d'un type
-                     permettant l'instanciation ou le casting Python 
+                     permettant l'instanciation ou le casting Python
         __values : les valeurs de stockage. Par défaut, c'est None
         """
         self.__name = str(name)
@@ -55,13 +55,18 @@ class Persistence:
         #
         self.__basetype = basetype
         #
-        self.__values = []
-        self.__tags   = []
+        self.__values   = []
+        self.__tags     = []
         #
         self.__dynamic  = False
+        self.__gnuplot  = None
+        self.__g        = None
+        self.__title    = None
+        self.__ltitle   = None
+        self.__pause    = None
         #
         self.__dataobservers = []
-    
+
     def basetype(self, basetype=None):
         """
         Renvoie ou met en place le type de base des objets stockés
@@ -98,7 +103,7 @@ class Persistence:
         else:
             self.__values.pop()
             self.__tags.pop()
-    
+
     def shape(self):
         """
         Renvoie la taille sous forme numpy du dernier objet stocké. Si c'est un
@@ -120,26 +125,32 @@ class Persistence:
 
     # ---------------------------------------------------------
     def __str__(self):
+        "x.__str__() <==> str(x)"
         msg  = "   Index        Value   Tags\n"
         for i,v in enumerate(self.__values):
             msg += "  i=%05i  %10s   %s\n"%(i,v,self.__tags[i])
         return msg
-    
+
     def __len__(self):
+        "x.__len__() <==> len(x)"
         return len(self.__values)
-    
+
     def __getitem__(self, index=None ):
+        "x.__getitem__(y) <==> x[y]"
         return copy.copy(self.__values[index])
-    
+
     def count(self, value):
+        "L.count(value) -> integer -- return number of occurrences of value"
         return self.__values.count(value)
-    
+
     def index(self, value, start=0, stop=None):
+        "L.index(value, [start, [stop]]) -> integer -- return first index of value."
         if stop is None : stop = len(self.__values)
         return self.__values.index(value, start, stop)
 
     # ---------------------------------------------------------
     def __filteredIndexes(self, **kwargs):
+        "Function interne filtrant les index"
         __indexOfFilteredItems = range(len(self.__tags))
         __filteringKwTags = kwargs.keys()
         if len(__filteringKwTags) > 0:
@@ -157,10 +168,12 @@ class Persistence:
 
     # ---------------------------------------------------------
     def values(self, **kwargs):
+        "D.values() -> list of D's values"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return [self.__values[i] for i in __indexOfFilteredItems]
 
     def keys(self, keyword=None , **kwargs):
+        "D.keys() -> list of D's keys"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __keys = []
         for i in __indexOfFilteredItems:
@@ -171,16 +184,18 @@ class Persistence:
         return __keys
 
     def items(self, keyword=None , **kwargs):
+        "D.items() -> list of D's (key, value) pairs, as 2-tuples"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __pairs = []
         for i in __indexOfFilteredItems:
             if keyword in self.__tags[i]:
-                __pairs.append( [self.__tags[i][keyword], self.__values[i]] )
+                __pairs.append( (self.__tags[i][keyword], self.__values[i]) )
             else:
-                __pairs.append( [None, self.__values[i]] )
+                __pairs.append( (None, self.__values[i]) )
         return __pairs
 
     def tagkeys(self):
+        "D.tagkeys() -> list of D's tag keys"
         __allKeys = []
         for dicotags in self.__tags:
             __allKeys.extend( dicotags.keys() )
@@ -199,13 +214,14 @@ class Persistence:
     #             return [self.__values[i] for i in __indexOfFilteredItems]
 
     def tagserie(self, item=None, withValues=False, outputTag=None, **kwargs):
+        "D.tagserie() -> list of D's tag serie"
         if item is None:
             __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         else:
             __indexOfFilteredItems = [item,]
         #
         # Dans le cas où la sortie donne les valeurs d'un "outputTag"
-        if outputTag is not None and type(outputTag) is str :
+        if outputTag is not None and isinstance(outputTag,str) :
             outputValues = []
             for index in __indexOfFilteredItems:
                 if outputTag in self.__tags[index].keys():
@@ -229,10 +245,12 @@ class Persistence:
     # ---------------------------------------------------------
     # Pour compatibilite
     def stepnumber(self):
+        "Nombre de pas"
         return len(self.__values)
 
     # Pour compatibilite
     def stepserie(self, **kwargs):
+        "Nombre de pas filtrés"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return __indexOfFilteredItems
 
@@ -253,7 +271,7 @@ class Persistence:
         Renvoie la série, contenant à chaque pas, l'écart-type des données
         au pas. Il faut que le type de base soit compatible avec les types
         élémentaires numpy.
-        
+
         ddof : c'est le nombre de degrés de liberté pour le calcul de
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
         """
@@ -299,14 +317,15 @@ class Persistence:
             raise TypeError("Base type is incompatible with numpy")
 
     def __preplots(self,
-            title    = "",
-            xlabel   = "",
-            ylabel   = "",
-            ltitle   = None,
-            geometry = "600x400",
-            persist  = False,
-            pause    = True,
-            ):
+                   title    = "",
+                   xlabel   = "",
+                   ylabel   = "",
+                   ltitle   = None,
+                   geometry = "600x400",
+                   persist  = False,
+                   pause    = True,
+                  ):
+        "Préparation des plots"
         #
         # Vérification de la disponibilité du module Gnuplot
         try:
@@ -333,18 +352,20 @@ class Persistence:
         self.__ltitle = ltitle
         self.__pause  = pause
 
-    def plots(self, item=None, step=None,
-            steps    = None,
-            title    = "",
-            xlabel   = "",
-            ylabel   = "",
-            ltitle   = None,
-            geometry = "600x400",
-            filename = "",
-            dynamic  = False,
-            persist  = False,
-            pause    = True,
-            ):
+    def plots(self,
+              item     = None,
+              step     = None,
+              steps    = None,
+              title    = "",
+              xlabel   = "",
+              ylabel   = "",
+              ltitle   = None,
+              geometry = "600x400",
+              filename = "",
+              dynamic  = False,
+              persist  = False,
+              pause    = True,
+             ):
         """
         Renvoie un affichage de la valeur à chaque pas, si elle est compatible
         avec un affichage Gnuplot (donc essentiellement un vecteur). Si
@@ -399,7 +420,7 @@ class Persistence:
         i = -1
         for index in indexes:
             self.__g('set title  "'+str(title).encode('ascii','replace')+' (pas '+str(index)+')"')
-            if ( type(steps) is list ) or ( type(steps) is type(numpy.array([])) ):
+            if isinstance(steps,list) or isinstance(steps,numpy.ndarray):
                 Steps = list(steps)
             else:
                 Steps = range(len(self.__values[index]))
@@ -448,7 +469,7 @@ class Persistence:
         Renvoie l'écart-type de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
         les types élémentaires numpy.
-        
+
         ddof : c'est le nombre de degrés de liberté pour le calcul de
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
         """
@@ -508,15 +529,15 @@ class Persistence:
     # "tofile", "min"...
 
     def plot(self,
-            steps    = None,
-            title    = "",
-            xlabel   = "",
-            ylabel   = "",
-            ltitle   = None,
-            geometry = "600x400",
-            filename = "",
-            persist  = False,
-            pause    = True,
+             steps    = None,
+             title    = "",
+             xlabel   = "",
+             ylabel   = "",
+             ltitle   = None,
+             geometry = "600x400",
+             filename = "",
+             persist  = False,
+             pause    = True,
             ):
         """
         Renvoie un affichage unique pour l'ensemble des valeurs à chaque pas, si
@@ -559,7 +580,7 @@ class Persistence:
             self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
         if ltitle is None:
             ltitle = ""
-        if ( type(steps) is list ) or ( type(steps) is type(numpy.array([])) ):
+        if isinstance(steps,list) or isinstance(steps, numpy.ndarray):
             Steps = list(steps)
         else:
             Steps = range(len(self.__values[0]))
@@ -584,14 +605,10 @@ class Persistence:
             raw_input('Please press return to continue...\n')
 
     # ---------------------------------------------------------
-    def setDataObserver(self,
-        HookFunction   = None,
-        HookParameters = None,
-        Scheduler      = None,
-        ):
+    def setDataObserver(self, HookFunction = None, HookParameters = None, Scheduler = None):
         """
         Association à la variable d'un triplet définissant un observer
-        
+
         Le Scheduler attendu est une fréquence, une simple liste d'index ou un
         xrange des index.
         """
@@ -599,32 +616,29 @@ class Persistence:
         # Vérification du Scheduler
         # -------------------------
         maxiter = int( 1e9 )
-        if type(Scheduler) is int:    # Considéré comme une fréquence à partir de 0
+        if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
             Schedulers = xrange( 0, maxiter, int(Scheduler) )
-        elif type(Scheduler) is xrange: # Considéré comme un itérateur
+        elif isinstance(Scheduler,xrange): # Considéré comme un itérateur
             Schedulers = Scheduler
-        elif type(Scheduler) is list: # Considéré comme des index explicites
-            Schedulers = map( long, Scheduler )
-        else:                         # Dans tous les autres cas, activé par défaut
+        elif isinstance(Scheduler,list):   # Considéré comme des index explicites
+            Schedulers = [long(i) for i in Scheduler] # map( long, Scheduler )
+        else:                              # Dans tous les autres cas, activé par défaut
             Schedulers = xrange( 0, maxiter )
         #
         # Stockage interne de l'observer dans la variable
         # -----------------------------------------------
         self.__dataobservers.append( [HookFunction, HookParameters, Schedulers] )
 
-    def removeDataObserver(self,
-        HookFunction   = None,
-        ):
+    def removeDataObserver(self, HookFunction = None):
         """
         Suppression d'un observer nommé sur la variable.
-        
+
         On peut donner dans HookFunction la meme fonction que lors de la
         définition, ou un simple string qui est le nom de la fonction.
-        
         """
         if hasattr(HookFunction,"func_name"):
             name = str( HookFunction.func_name )
-        elif type(HookFunction) is str:
+        elif isinstance(HookFunction,str):
             name = str( HookFunction )
         else:
             name = None
@@ -636,7 +650,7 @@ class Persistence:
             if name is hf.func_name: index_to_remove.append( i )
         index_to_remove.reverse()
         for i in index_to_remove:
-                self.__dataobservers.pop( i )
+            self.__dataobservers.pop( i )
 
 # ==============================================================================
 class OneScalar(Persistence):
@@ -683,7 +697,9 @@ class OneList(Persistence):
     def __init__(self, name="", unit="", basetype = list):
         Persistence.__init__(self, name, unit, basetype)
 
-def NoType( value ): return value
+def NoType( value ):
+    "Fonction transparente, sans effet sur son argument"
+    return value
 
 class OneNoType(Persistence):
     """
@@ -697,18 +713,18 @@ class OneNoType(Persistence):
         Persistence.__init__(self, name, unit, basetype)
 
 # ==============================================================================
-class CompositePersistence:
+class CompositePersistence(object):
     """
     Structure de stockage permettant de rassembler plusieurs objets de
     persistence.
-    
+
     Des objets par défaut sont prévus, et des objets supplémentaires peuvent
     être ajoutés.
     """
     def __init__(self, name="", defaults=True):
         """
         name : nom courant
-        
+
         La gestion interne des données est exclusivement basée sur les variables
         initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
         objets comme des attributs) :
@@ -791,22 +807,28 @@ class CompositePersistence:
     # ---------------------------------------------------------
     # Méthodes d'accès de type dictionnaire
     def __getitem__(self, name=None ):
+        "x.__getitem__(y) <==> x[y]"
         return self.get_object( name )
 
     def __setitem__(self, name=None, objet=None ):
+        "x.__setitem__(i, y) <==> x[i]=y"
         self.set_object( name, objet )
 
     def keys(self):
+        "D.keys() -> list of D's keys"
         return self.get_stored_objects(hideVoidObjects = False)
 
     def values(self):
+        "D.values() -> list of D's values"
         return self.__StoredObjects.values()
 
     def items(self):
+        "D.items() -> list of D's (key, value) pairs, as 2-tuples"
         return self.__StoredObjects.items()
 
     # ---------------------------------------------------------
     def get_stored_objects(self, hideVoidObjects = False):
+        "Renvoie la liste des objets présents"
         objs = self.__StoredObjects.keys()
         if hideVoidObjects:
             usedObjs = []

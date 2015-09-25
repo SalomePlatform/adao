@@ -30,12 +30,6 @@
 **[DocR]** Interface de programmation textuelle pour l'utilisateur (API/TUI)
 ================================================================================
 
-.. warning::
-
-  dans sa présente version, cette interface de programmation textuelle (TUI) est
-  expérimentale, et reste donc susceptible de changements dans les prochaines
-  versions.
-
 Cette section présente des méthodes avancées d'usage du module ADAO à l'aide de
 son interface de programmation textuelle (API/TUI). Cette interface permet de
 créer un objet de calcul de manière similaire à la construction d'un cas par
@@ -493,20 +487,15 @@ Paramétrer le calcul, les sorties, etc.
 
 **setObserver** (*Variable, Template, String, Script, Info*)
     Cette commande permet de définir un *observer* sur une variable courante ou
-    finale du calcul. On se reportera à la description de la manière
-    d':ref:`section_advanced_observer`, et à la :ref:`section_reference` pour
-    savoir quelles sont les quantités observables. On définit comme un
-    "*String*" le corps de l'*observer*, en utilisant une chaine de caractères
-    incluant si nécessaire des sauts de lignes. On recommande d'utiliser les
-    patrons disponibles par l'argument "*Template*". On dispose des patrons
-    simples suivants : "ValuePrinter", "ValueSeriePrinter", "ValueSaver",
-    "ValueSerieSaver", "ValuePrinterAndSaver", "ValueSeriePrinterAndSaver",
-    "ValueGnuPlotter", "ValueSerieGnuPlotter", "ValuePrinterAndGnuPlotter",
-    "ValueSeriePrinterAndGnuPlotter", "ValuePrinterSaverAndGnuPlotter",
-    "ValueSeriePrinterSaverAndGnuPlotter", "ValueMean", "ValueStandardError",
-    "ValueVariance", "ValueRMS". Dans le cas d'une définition par "*Script*", le
-    fichier indiqué doit contenir uniquement le corps de la fonction, comme
-    décrit dans la manière d':ref:`section_advanced_observer`.
+    finale du calcul. On se reportera à la description des
+    :ref:`ref_observers_requirements` pour avoir leur liste et leur format, et à
+    la :ref:`section_reference` pour savoir quelles sont les quantités
+    observables. On définit comme un "*String*" le corps de l'*observer*, en
+    utilisant une chaine de caractères incluant si nécessaire des sauts de
+    lignes. On recommande d'utiliser les patrons disponibles par l'argument
+    "*Template*". Dans le cas d'une définition par "*Script*", le fichier
+    indiqué doit contenir uniquement le corps de la fonction, comme décrit dans
+    les :ref:`ref_observers_requirements`.
 
 Effectuer le calcul 
 +++++++++++++++++++
