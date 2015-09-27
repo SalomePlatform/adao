@@ -46,6 +46,7 @@ Commandes requises et optionnelles
 .. index:: single: Minimizer
 .. index:: single: MaximumNumberOfSteps
 .. index:: single: CostDecrementTolerance
+.. index:: single: Bounds
 .. index:: single: StoreSupplementaryCalculations
 
 Les commandes requises générales, disponibles dans l'interface en édition, sont
@@ -75,8 +76,8 @@ les suivantes:
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les options
-particulières, décrites ci-après, de l'algorithme. On se reportera à la
+paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particulières, décrites ci-après, de l'algorithme. On se reportera à la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
@@ -103,6 +104,16 @@ Les options de l'algorithme sont les suivantes:
     l'adapter aux besoins pour des problèmes réels.
 
     Exemple : ``{"CostDecrementTolerance":1.e-7}``
+
+  Bounds
+    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
+    variable d'état optimisée. Les bornes doivent être données par une liste de
+    liste de paires de bornes inférieure/supérieure pour chaque variable, avec
+    une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les bornes peuvent
+    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
+    prennent en compte.
+
+    Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être

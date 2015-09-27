@@ -92,8 +92,8 @@ les suivantes:
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les options
-particulières, décrites ci-après, de l'algorithme. On se reportera à la
+paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particulières, décrites ci-après, de l'algorithme. On se reportera à la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
@@ -107,6 +107,13 @@ Les options de l'algorithme sont les suivantes:
     une valeur autorisée lorsqu'il n'y a pas de borne).
 
     Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
+
+  ConstrainedBy
+    Cette clé permet d'indiquer la méthode de prise en compte des contraintes de
+    bornes. La seule disponible est "EstimateProjection", qui projete
+    l'estimation de l'état courant sur les contraintes de bornes.
+
+    Exemple : ``{"ConstrainedBy":"EstimateProjection"}``
 
   EstimationOf
     Cette clé permet de choisir le type d'estimation à réaliser. Cela peut être

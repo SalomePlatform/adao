@@ -34,9 +34,9 @@ Cet algorithme réalise une estimation de l'état d'un système dynamique par un
 filtre de Kalman.
 
 Il est théoriquement réservé aux cas d'opérateurs d'observation et d'évolution
-incrémentale (processus) linéaires, même s'il fonctionne parfois dans les cas "faiblement"
-non-linéaire. On peut vérifier la linéarité de l'opérateur d'observation à
-l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
+incrémentale (processus) linéaires, même s'il fonctionne parfois dans les cas
+"faiblement" non-linéaire. On peut vérifier la linéarité de l'opérateur
+d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
 En cas de non-linéarité, même peu marquée, on lui préférera
 l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou
@@ -93,8 +93,8 @@ les suivantes:
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les options
-particulières, décrites ci-après, de l'algorithme. On se reportera à la
+paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particulières, décrites ci-après, de l'algorithme. On se reportera à la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 

@@ -21,18 +21,32 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: ExtendedKalmanFilter
-.. _section_ref_algorithm_ExtendedKalmanFilter:
+.. index:: single: 4DVAR
+.. _section_ref_algorithm_4DVAR:
 
-Algorithme de calcul "*ExtendedKalmanFilter*"
----------------------------------------------
+Algorithme de calcul "*4DVAR*"
+------------------------------
+
+.. warning::
+
+  dans sa présente version, cet algorithme est expérimental, et reste donc
+  susceptible de changements dans les prochaines versions.
 
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation de l'état d'un système dynamique par un
-filtre de Kalman étendu, utilisant un calcul non linéaire de l'état et de
-l'évolution incrémentale (processus).
+Cet algorithme réalise une estimation de l'état d'un système dynamique, par une
+méthode de minimisation variationnelle de la fonctionnelle :math:`J` d'écart
+classique en assimilation de données :
+
+.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\sum_{t\in T}(\mathbf{y^o}(t)-H(\mathbf{x},t))^T.\mathbf{R}^{-1}.(\mathbf{y^o}(t)-H(\mathbf{x},t))
+
+qui est usuellement désignée comme la fonctionnelle "*4D-VAR*" (voir par exemple
+[Talagrand97]_). Il est bien adapté aux cas d'opérateurs d'observation et
+d'évolution non-linéaires, son domaine d'application est comparable aux
+algorithmes de filtrage de Kalman et en particulier
+l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou
+l':ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -46,6 +60,10 @@ Commandes requises et optionnelles
 .. index:: single: Bounds
 .. index:: single: ConstrainedBy
 .. index:: single: EstimationOf
+.. index:: single: MaximumNumberOfSteps
+.. index:: single: CostDecrementTolerance
+.. index:: single: ProjectedGradientTolerance
+.. index:: single: GradientNormTolerance
 .. index:: single: StoreSupplementaryCalculations
 
 Les commandes requises générales, disponibles dans l'interface en édition, sont
@@ -94,14 +112,26 @@ commande.
 
 Les options de l'algorithme sont les suivantes:
 
+  Minimizer
+    Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
+    défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
+    linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
+    (minimisation non linéaire sous contraintes), "CG" (minimisation non
+    linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
+    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). Il
+    est fortement conseillé de conserver la valeur par défaut.
+
+    Exemple : ``{"Minimizer":"LBFGSB"}``
+
   Bounds
     Cette clé permet de définir des bornes supérieure et inférieure pour chaque
     variable d'état optimisée. Les bornes doivent être données par une liste de
     liste de paires de bornes inférieure/supérieure pour chaque variable, avec
-    une valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas
-    une valeur autorisée lorsqu'il n'y a pas de borne).
+    une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les bornes peuvent
+    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
+    prennent en compte.
 
-    Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
+    Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   ConstrainedBy
     Cette clé permet d'indiquer la méthode de prise en compte des contraintes de
@@ -110,6 +140,24 @@ Les options de l'algorithme sont les suivantes:
 
     Exemple : ``{"ConstrainedBy":"EstimateProjection"}``
 
+  MaximumNumberOfSteps
+    Cette clé indique le nombre maximum d'itérations possibles en optimisation
+    itérative. Le défaut est 15000, qui est très similaire à une absence de
+    limite sur les itérations. Il est ainsi recommandé d'adapter ce paramètre
+    aux besoins pour des problèmes réels. Pour certains optimiseurs, le nombre
+    de pas effectif d'arrêt peut être légèrement différent de la limite à cause
+    d'exigences de contrôle interne de l'algorithme.
+
+    Exemple : ``{"MaximumNumberOfSteps":100}``
+
+  CostDecrementTolerance
+    Cette clé indique une valeur limite, conduisant à arrêter le processus
+    itératif d'optimisation lorsque la fonction coût décroît moins que cette
+    tolérance au dernier pas. Le défaut est de 1.e-7, et il est recommandé
+    de l'adapter aux besoins pour des problèmes réels.
+
+    Exemple : ``{"CostDecrementTolerance":1.e-7}``
+
   EstimationOf
     Cette clé permet de choisir le type d'estimation à réaliser. Cela peut être
     soit une estimation de l'état, avec la valeur "State", ou une estimation de
@@ -117,17 +165,33 @@ Les options de l'algorithme sont les suivantes:
 
     Exemple : ``{"EstimationOf":"Parameters"}``
 
+  ProjectedGradientTolerance
+    Cette clé indique une valeur limite, conduisant à arrêter le processus
+    itératif d'optimisation lorsque toutes les composantes du gradient projeté
+    sont en-dessous de cette limite. C'est utilisé uniquement par les
+    optimiseurs sous contraintes. Le défaut est -1, qui désigne le défaut
+    interne de chaque optimiseur (usuellement 1.e-5), et il n'est pas recommandé
+    de le changer.
+
+    Exemple : ``{"ProjectedGradientTolerance":-1}``
+
+  GradientNormTolerance
+    Cette clé indique une valeur limite, conduisant à arrêter le processus
+    itératif d'optimisation lorsque la norme du gradient est en dessous de cette
+    limite. C'est utilisé uniquement par les optimiseurs sans contraintes. Le
+    défaut est 1.e-5 et il n'est pas recommandé de le changer.
+
+    Exemple : ``{"GradientNormTolerance":1.e-5}``
+
   StoreSupplementaryCalculations
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState",
-    "Innovation"].
+    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
+    "CurrentOptimum", "CurrentState", "IndexOfOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -149,38 +213,6 @@ Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``Xa = ADD.get("Analysis")[-1]``
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
-
-  APosterioriCorrelations
-    *Liste de matrices*. Chaque élément est une matrice de corrélation des
-    erreurs *a posteriori* de l'état optimal.
-
-    Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
-
-  APosterioriCovariance
-    *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
-    covariances des erreurs *a posteriori* de l'état optimal.
-
-    Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
-
-  APosterioriStandardDeviations
-    *Liste de matrices*. Chaque élément est une matrice d'écart-types des
-    erreurs *a posteriori* de l'état optimal.
-
-    Exemple : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
-
-  APosterioriVariances
-    *Liste de matrices*. Chaque élément est une matrice de variances des erreurs
-    *a posteriori* de l'état optimal.
-
-    Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
-
-  BMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'ébauche et l'état optimal.
-
-    Exemple : ``bma = ADD.get("BMA")[-1]``
-
   CostFunctionJ
     *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
     :math:`J`.
@@ -199,22 +231,43 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
 
+Les sorties conditionnelles de l'algorithme sont les suivantes:
+
+  BMA
+    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
+    l'ébauche et l'état optimal.
+
+    Exemple : ``bma = ADD.get("BMA")[-1]``
+
+  CurrentOptimum
+    *Liste de vecteurs*. Chaque élément est le vecteur d'état optimal au pas de
+    temps courant au cours du déroulement de l'algorithme d'optimisation. Ce
+    n'est pas nécessairement le dernier état.
+
+    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+
   CurrentState
     *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
     au cours du déroulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
-  Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
+  IndexOfOptimum
+    *Liste d'entiers*. Chaque élément est l'index d'itération de l'optimum
+    obtenu au cours du déroulement de l'algorithme d'optimisation. Ce n'est pas
+    nécessairement le numéro de la dernière itération.
 
-    Exemple : ``d = ADD.get("Innovation")[-1]``
+    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
 
 Voir aussi
 ++++++++++
 
 Références vers d'autres sections :
+  - :ref:`section_ref_algorithm_3DVAR`
   - :ref:`section_ref_algorithm_KalmanFilter`
-  - :ref:`section_ref_algorithm_UnscentedKalmanFilter`
+  - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
+
+Références bibliographiques :
+  - [Byrd95]_
+  - [Morales11]_
+  - [Talagrand97]_

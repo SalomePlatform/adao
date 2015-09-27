@@ -30,6 +30,12 @@
 **[DocR]** Interface de programmation textuelle pour l'utilisateur (API/TUI)
 ================================================================================
 
+.. warning::
+
+  dans sa présente version, cette interface de programmation textuelle (TUI) est
+  expérimentale, et reste donc susceptible de changements dans les prochaines
+  versions.
+
 Cette section présente des méthodes avancées d'usage du module ADAO à l'aide de
 son interface de programmation textuelle (API/TUI). Cette interface permet de
 créer un objet de calcul de manière similaire à la construction d'un cas par

@@ -97,6 +97,7 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
    
    ref_assimilation_keywords
    ref_algorithm_3DVAR
+   ref_algorithm_4DVAR
    ref_algorithm_Blue
    ref_algorithm_EnsembleBlue
    ref_algorithm_ExtendedBlue

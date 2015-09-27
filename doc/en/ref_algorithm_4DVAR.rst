@@ -21,19 +21,31 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: UnscentedKalmanFilter
-.. _section_ref_algorithm_UnscentedKalmanFilter:
+.. index:: single: 4DVAR
+.. _section_ref_algorithm_4DVAR:
 
-Calculation algorithm "*UnscentedKalmanFilter*"
------------------------------------------------
+Calculation algorithm "*4DVAR*"
+-------------------------------
+
+.. warning::
+
+  in its present version, this algorithm is experimental, and so changes can be
+  required in forthcoming versions.
 
 Description
 +++++++++++
 
-This algorithm realizes an estimation of the state of a dynamic system by a
-"unscented" Kalman Filter, avoiding to have to perform the tangent and adjoint
-operators for the observation and evolution operators, as in the simple or
-extended Kalman filter.
+This algorithm realizes an estimation of the state of a dynamic system, by a
+variational minimization method of the classical :math:`J` function in data
+assimilation:
+
+.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\sum_{t\in T}(\mathbf{y^o}(t)-H(\mathbf{x},t))^T.\mathbf{R}^{-1}.(\mathbf{y^o}(t)-H(\mathbf{x},t))
+
+which is usually designed as the "*4D-VAR*" function (see for example
+[Talagrand97]_). It is well suited in cases of non-linear observation and
+evolution operators, its application domain is similar to the one of Kalman
+filters, specially the :ref:`section_ref_algorithm_ExtendedKalmanFilter` or the
+:ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -47,10 +59,10 @@ Optional and required commands
 .. index:: single: Bounds
 .. index:: single: ConstrainedBy
 .. index:: single: EstimationOf
-.. index:: single: Alpha
-.. index:: single: Beta
-.. index:: single: Kappa
-.. index:: single: Reconditioner
+.. index:: single: MaximumNumberOfSteps
+.. index:: single: CostDecrementTolerance
+.. index:: single: ProjectedGradientTolerance
+.. index:: single: GradientNormTolerance
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -98,13 +110,24 @@ command.
 
 The options of the algorithm are the following:
 
+  Minimizer
+    This key allows to choose the optimization minimizer. The default choice is
+    "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
+    minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
+    constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
+    (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
+    strongly recommended to stay with the default.
+
+    Example : ``{"Minimizer":"LBFGSB"}``
+
   Bounds
     This key allows to define upper and lower bounds for every state variable
     being optimized. Bounds have to be given by a list of list of pairs of
-    lower/upper bounds for each variable, with extreme values every time there
-    is no bound (``None`` is not allowed when there is no bound).
+    lower/upper bounds for each variable, with possibly ``None`` every time
+    there is no bound. The bounds can always be specified, but they are taken
+    into account only by the constrained optimizers.
 
-    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
+    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   ConstrainedBy
     This key allows to choose the method to take into account the bounds
@@ -113,33 +136,55 @@ The options of the algorithm are the following:
 
     Example : ``{"ConstrainedBy":"EstimateProjection"}``
 
+  MaximumNumberOfSteps
+    This key indicates the maximum number of iterations allowed for iterative
+    optimization. The default is 15000, which is very similar to no limit on
+    iterations. It is then recommended to adapt this parameter to the needs on
+    real problems. For some optimizers, the effective stopping step can be
+    slightly different of the limit due to algorithm internal control
+    requirements.
+
+    Example : ``{"MaximumNumberOfSteps":100}``
+
+  CostDecrementTolerance
+    This key indicates a limit value, leading to stop successfully the
+    iterative optimization process when the cost function decreases less than
+    this tolerance at the last step. The default is 1.e-7, and it is
+    recommended to adapt it to the needs on real problems.
+
+    Example : ``{"CostDecrementTolerance":1.e-7}``
+
   EstimationOf
     This key allows to choose the type of estimation to be performed. It can be
     either state-estimation, with a value of "State", or parameter-estimation,
     with a value of "Parameters". The default choice is "State".
 
-    Example : ``{"EstimationOf":"Parameters"}``
+  ProjectedGradientTolerance
+    This key indicates a limit value, leading to stop successfully the iterative
+    optimization process when all the components of the projected gradient are
+    under this limit. It is only used for constrained optimizers. The default is
+    -1, that is the internal default of each minimizer (generally 1.e-5), and it
+    is not recommended to change it.
 
-  Alpha, Beta, Kappa, Reconditioner
-    These keys are internal scaling parameters. "Alpha" requires a value between
-    1.e-4 and 1. "Beta" has an optimal value of 2 for Gaussian *a priori*
-    distribution. "Kappa" requires an integer value, and the right default is
-    obtained by setting it to 0. "Reconditioner" requires a value between 1.e-3
-    and 10, it defaults to 1.
+    Example : ``{"ProjectedGradientTolerance":-1}``
 
-    Example : ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
+  GradientNormTolerance
+    This key indicates a limit value, leading to stop successfully the
+    iterative optimization process when the norm of the gradient is under this
+    limit. It is only used for non-constrained optimizers.  The default is
+    1.e-5 and it is not recommended to change it.
+
+    Example : ``{"GradientNormTolerance":1.e-5}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState",
-    "Innovation"].
+    are in the following list: ["BMA", "CostFunctionJ", "CurrentOptimum",
+    "CurrentState", "IndexOfOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+    Example : ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -160,38 +205,6 @@ The unconditional outputs of the algorithm are the following:
 
     Example : ``Xa = ADD.get("Analysis")[-1]``
 
-The conditional outputs of the algorithm are the following:
-
-  APosterioriCorrelations
-    *List of matrices*. Each element is an *a posteriori* error correlation
-    matrix of the optimal state.
-
-    Example : ``C = ADD.get("APosterioriCorrelations")[-1]``
-
-  APosterioriCovariance
-    *List of matrices*. Each element is an *a posteriori* error covariance
-    matrix :math:`\mathbf{A}*` of the optimal state.
-
-    Example : ``A = ADD.get("APosterioriCovariance")[-1]``
-
-  APosterioriStandardDeviations
-    *List of matrices*. Each element is an *a posteriori* error standard
-    deviation matrix of the optimal state.
-
-    Example : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
-
-  APosterioriVariances
-    *List of matrices*. Each element is an *a posteriori* error variance matrix
-    of the optimal state.
-
-    Example : ``V = ADD.get("APosterioriVariances")[-1]``
-
-  BMA
-    *List of vectors*. Each element is a vector of difference between the
-    background and the optimal state.
-
-    Example : ``bma = ADD.get("BMA")[-1]``
-
   CostFunctionJ
     *List of values*. Each element is a value of the error function :math:`J`.
 
@@ -209,25 +222,42 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``Jo = ADD.get("CostFunctionJo")[:]``
 
+The conditional outputs of the algorithm are the following:
+
+  BMA
+    *List of vectors*. Each element is a vector of difference between the
+    background and the optimal state.
+
+    Example : ``bma = ADD.get("BMA")[-1]``
+
+  CurrentOptimum
+    *List of vectors*. Each element is the optimal state obtained at the current
+    step of the optimization algorithm. It is not necessarely the last state.
+
+    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
     optimization algorithm procedure.
 
     Example : ``Xs = ADD.get("CurrentState")[:]``
 
-  Innovation
-    *List of vectors*. Each element is an innovation vector, which is in static
-    the difference between the optimal and the background, and in dynamic the
-    evolution increment.
+  IndexOfOptimum
+    *List of integers*. Each element is the iteration index of the optimum
+    obtained at the current step the optimization algorithm. It is not
+    necessarely the number of the last iteration.
 
-    Example : ``d = ADD.get("Innovation")[-1]``
+    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
 
 See also
 ++++++++
 
 References to other sections:
+  - :ref:`section_ref_algorithm_3DVAR`
   - :ref:`section_ref_algorithm_KalmanFilter`
   - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
 
 Bibliographical references:
-  - [WikipediaUKF]_
+  - [Byrd95]_
+  - [Morales11]_
+  - [Talagrand97]_

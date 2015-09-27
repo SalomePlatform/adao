@@ -46,6 +46,7 @@ Optional and required commands
 .. index:: single: Minimizer
 .. index:: single: MaximumNumberOfSteps
 .. index:: single: CostDecrementTolerance
+.. index:: single: Bounds
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -102,6 +103,15 @@ The options of the algorithm are the following:
     and it is recommended to adapt it to the needs on real problems.
 
     Example : ``{"CostDecrementTolerance":1.e-7}``
+
+  Bounds
+    This key allows to define upper and lower bounds for every state variable
+    being optimized. Bounds have to be given by a list of list of pairs of
+    lower/upper bounds for each variable, with possibly ``None`` every time
+    there is no bound. The bounds can always be specified, but they are taken
+    into account only by the constrained optimizers.
+
+    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
