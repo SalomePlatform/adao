@@ -276,7 +276,7 @@ class AssimilationStudy:
                         "withmpWorkers"             :None,
                        }
         """
-        if (type(asFunction) is type({})) and \
+        if isinstance(asFunction, dict) and \
                 ("useApproximatedDerivatives" in asFunction) and bool(asFunction["useApproximatedDerivatives"]) and \
                 ("Direct" in asFunction) and (asFunction["Direct"] is not None):
             if "withCenteredDF"            not in asFunction: asFunction["withCenteredDF"]            = False
@@ -302,7 +302,7 @@ class AssimilationStudy:
             self.__HO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
             self.__HO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__HO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
-        elif (type(asFunction) is type({})) and \
+        elif isinstance(asFunction, dict) and \
                 ("Tangent" in asFunction) and ("Adjoint" in asFunction) and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if ("Direct" not in asFunction) or (asFunction["Direct"] is None):
@@ -380,7 +380,7 @@ class AssimilationStudy:
                         "withmpWorkers"             :None,
                        }
         """
-        if (type(asFunction) is type({})) and \
+        if isinstance(asFunction, dict) and \
                 ("useApproximatedDerivatives" in asFunction) and bool(asFunction["useApproximatedDerivatives"]) and \
                 ("Direct" in asFunction) and (asFunction["Direct"] is not None):
             if "withCenteredDF"            not in asFunction: asFunction["withCenteredDF"]            = False
@@ -406,7 +406,7 @@ class AssimilationStudy:
             self.__EM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
             self.__EM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__EM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
-        elif (type(asFunction) is type({})) and \
+        elif isinstance(asFunction, dict) and \
                 ("Tangent" in asFunction) and ("Adjoint" in asFunction) and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if ("Direct" not in asFunction) or (asFunction["Direct"] is None):
@@ -508,7 +508,7 @@ class AssimilationStudy:
                         "withmpWorkers"             :None,
                        }
         """
-        if (type(asFunction) is type({})) and \
+        if isinstance(asFunction, dict) and \
                 ("useApproximatedDerivatives" in asFunction) and bool(asFunction["useApproximatedDerivatives"]) and \
                 ("Direct" in asFunction) and (asFunction["Direct"] is not None):
             if "withCenteredDF"            not in asFunction: asFunction["withCenteredDF"]            = False
@@ -534,7 +534,7 @@ class AssimilationStudy:
             self.__CM["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
             self.__CM["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
             self.__CM["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
-        elif (type(asFunction) is type({})) and \
+        elif isinstance(asFunction, dict) and \
                 ("Tangent" in asFunction) and ("Adjoint" in asFunction) and \
                 (asFunction["Tangent"] is not None) and (asFunction["Adjoint"] is not None):
             if ("Direct" not in asFunction) or (asFunction["Direct"] is None):
@@ -711,64 +711,64 @@ class AssimilationStudy:
         Validation de la correspondance correcte des tailles des variables et
         des matrices s'il y en a.
         """
-        if self.__Xb is None:                  __Xb_shape = (0,)
-        elif hasattr(self.__Xb,"size"):        __Xb_shape = (self.__Xb.size,)
+        if self.__Xb is None:                      __Xb_shape = (0,)
+        elif hasattr(self.__Xb,"size"):            __Xb_shape = (self.__Xb.size,)
         elif hasattr(self.__Xb,"shape"):
-            if type(self.__Xb.shape) is tuple: __Xb_shape = self.__Xb.shape
-            else:                              __Xb_shape = self.__Xb.shape()
+            if isinstance(self.__Xb.shape, tuple): __Xb_shape = self.__Xb.shape
+            else:                                  __Xb_shape = self.__Xb.shape()
         else: raise TypeError("The background (Xb) has no attribute of shape: problem !")
         #
-        if self.__Y is None:                  __Y_shape = (0,)
-        elif hasattr(self.__Y,"size"):        __Y_shape = (self.__Y.size,)
+        if self.__Y is None:                       __Y_shape = (0,)
+        elif hasattr(self.__Y,"size"):             __Y_shape = (self.__Y.size,)
         elif hasattr(self.__Y,"shape"):
-            if type(self.__Y.shape) is tuple: __Y_shape = self.__Y.shape
-            else:                             __Y_shape = self.__Y.shape()
+            if isinstance(self.__Y.shape, tuple):  __Y_shape = self.__Y.shape
+            else:                                  __Y_shape = self.__Y.shape()
         else: raise TypeError("The observation (Y) has no attribute of shape: problem !")
         #
-        if self.__U is None:                  __U_shape = (0,)
-        elif hasattr(self.__U,"size"):        __U_shape = (self.__U.size,)
+        if self.__U is None:                       __U_shape = (0,)
+        elif hasattr(self.__U,"size"):             __U_shape = (self.__U.size,)
         elif hasattr(self.__U,"shape"):
-            if type(self.__U.shape) is tuple: __U_shape = self.__U.shape
-            else:                             __U_shape = self.__U.shape()
+            if isinstance(self.__U.shape, tuple):  __U_shape = self.__U.shape
+            else:                                  __U_shape = self.__U.shape()
         else: raise TypeError("The control (U) has no attribute of shape: problem !")
         #
-        if self.__B is None:                  __B_shape = (0,0)
+        if self.__B is None:                       __B_shape = (0,0)
         elif hasattr(self.__B,"shape"):
-            if type(self.__B.shape) is tuple: __B_shape = self.__B.shape
-            else:                             __B_shape = self.__B.shape()
+            if isinstance(self.__B.shape, tuple):  __B_shape = self.__B.shape
+            else:                                  __B_shape = self.__B.shape()
         else: raise TypeError("The a priori errors covariance matrix (B) has no attribute of shape: problem !")
         #
-        if self.__R is None:                  __R_shape = (0,0)
+        if self.__R is None:                       __R_shape = (0,0)
         elif hasattr(self.__R,"shape"):
-            if type(self.__R.shape) is tuple: __R_shape = self.__R.shape
-            else:                             __R_shape = self.__R.shape()
+            if isinstance(self.__R.shape, tuple):  __R_shape = self.__R.shape
+            else:                                  __R_shape = self.__R.shape()
         else: raise TypeError("The observation errors covariance matrix (R) has no attribute of shape: problem !")
         #
-        if self.__Q is None:                  __Q_shape = (0,0)
+        if self.__Q is None:                       __Q_shape = (0,0)
         elif hasattr(self.__Q,"shape"):
-            if type(self.__Q.shape) is tuple: __Q_shape = self.__Q.shape
-            else:                             __Q_shape = self.__Q.shape()
+            if isinstance(self.__Q.shape, tuple):  __Q_shape = self.__Q.shape
+            else:                                  __Q_shape = self.__Q.shape()
         else: raise TypeError("The evolution errors covariance matrix (Q) has no attribute of shape: problem !")
         #
-        if len(self.__HO) == 0:                          __HO_shape = (0,0)
-        elif type(self.__HO) is type({}):                __HO_shape = (0,0)
+        if len(self.__HO) == 0:                              __HO_shape = (0,0)
+        elif isinstance(self.__HO, dict):                    __HO_shape = (0,0)
         elif hasattr(self.__HO["Direct"],"shape"):
-            if type(self.__HO["Direct"].shape) is tuple: __HO_shape = self.__HO["Direct"].shape
-            else:                                        __HO_shape = self.__HO["Direct"].shape()
+            if isinstance(self.__HO["Direct"].shape, tuple): __HO_shape = self.__HO["Direct"].shape
+            else:                                            __HO_shape = self.__HO["Direct"].shape()
         else: raise TypeError("The observation operator (H) has no attribute of shape: problem !")
         #
-        if len(self.__EM) == 0:                          __EM_shape = (0,0)
-        elif type(self.__EM) is type({}):                __EM_shape = (0,0)
+        if len(self.__EM) == 0:                              __EM_shape = (0,0)
+        elif isinstance(self.__EM, dict):                    __EM_shape = (0,0)
         elif hasattr(self.__EM["Direct"],"shape"):
-            if type(self.__EM["Direct"].shape) is tuple: __EM_shape = self.__EM["Direct"].shape
-            else:                                        __EM_shape = self.__EM["Direct"].shape()
+            if isinstance(self.__EM["Direct"].shape, tuple): __EM_shape = self.__EM["Direct"].shape
+            else:                                            __EM_shape = self.__EM["Direct"].shape()
         else: raise TypeError("The evolution model (EM) has no attribute of shape: problem !")
         #
-        if len(self.__CM) == 0:                          __CM_shape = (0,0)
-        elif type(self.__CM) is type({}):                __CM_shape = (0,0)
+        if len(self.__CM) == 0:                              __CM_shape = (0,0)
+        elif isinstance(self.__CM, dict):                    __CM_shape = (0,0)
         elif hasattr(self.__CM["Direct"],"shape"):
-            if type(self.__CM["Direct"].shape) is tuple: __CM_shape = self.__CM["Direct"].shape
-            else:                                        __CM_shape = self.__CM["Direct"].shape()
+            if isinstance(self.__CM["Direct"].shape, tuple): __CM_shape = self.__CM["Direct"].shape
+            else:                                            __CM_shape = self.__CM["Direct"].shape()
         else: raise TypeError("The control model (CM) has no attribute of shape: problem !")
         #
         # Vérification des conditions
@@ -817,7 +817,7 @@ class AssimilationStudy:
         #
         if ("AlgorithmParameters" in self.__StoredInputs) \
             and ("Bounds" in self.__StoredInputs["AlgorithmParameters"]) \
-            and (type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type([]) or type(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) is type(())) \
+            and (isinstance(self.__StoredInputs["AlgorithmParameters"]["Bounds"], list) or isinstance(self.__StoredInputs["AlgorithmParameters"]["Bounds"], tuple)) \
             and (len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]) != max(__Xb_shape)):
             raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself." \
                 %(len(self.__StoredInputs["AlgorithmParameters"]["Bounds"]),max(__Xb_shape)))
@@ -987,14 +987,14 @@ class AssimilationStudy:
         les arguments (variable persistante VariableName, paramètres HookParameters).
         """
         #
-        if type( self.__algorithm ) is dict:
+        if isinstance(self.__algorithm, dict):
             raise ValueError("No observer can be build before choosing an algorithm.")
         #
         # Vérification du nom de variable et typage
         # -----------------------------------------
-        if type( VariableName ) is str:
+        if isinstance(VariableName, str):
             VariableNames = [VariableName,]
-        elif type( VariableName ) is list:
+        elif isinstance(VariableName, list):
             VariableNames = map( str, VariableName )
         else:
             raise ValueError("The observer requires a name or a list of names of variables.")
@@ -1019,14 +1019,14 @@ class AssimilationStudy:
         Permet de retirer un observer à une ou des variable nommée.
         """
         #
-        if type( self.__algorithm ) is dict:
+        if isinstance(self.__algorithm, dict):
             raise ValueError("No observer can be removed before choosing an algorithm.")
         #
         # Vérification du nom de variable et typage
         # -----------------------------------------
-        if type( VariableName ) is str:
+        if isinstance(VariableName, str):
             VariableNames = [VariableName,]
-        elif type( VariableName ) is list:
+        elif isinstance(VariableName, list):
             VariableNames = map( str, VariableName )
         else:
             raise ValueError("The observer requires a name or a list of names of variables.")

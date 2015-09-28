@@ -63,6 +63,7 @@ AssimAlgos = [
     "3DVAR",
     "4DVAR",
     "Blue",
+    "DerivativeFreeOptimization",
     "ExtendedBlue",
     "EnsembleBlue",
     "KalmanFilter",
@@ -95,6 +96,11 @@ AlgoDataRequirements["4DVAR"] = [
     "ObservationOperator",
     ]
 AlgoDataRequirements["Blue"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["DerivativeFreeOptimization"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -176,6 +182,7 @@ AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["4DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
+AlgoType["DerivativeFreeOptimization"] = "Optim"
 AlgoType["ExtendedBlue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"

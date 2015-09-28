@@ -23,8 +23,7 @@
 """
     Définit les outils généraux élémentaires.
 
-    Ce module est destiné à etre appelée par AssimilationStudy pour constituer
-    les objets élémentaires de l'algorithme.
+    Ce module est destiné à être appelée par AssimilationStudy.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []

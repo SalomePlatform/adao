@@ -27,7 +27,7 @@ import numpy, scipy.optimize
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self, "DERIVATIVESFREEOPTIMIZATION")
+        BasicObjects.Algorithm.__init__(self, "DERIVATIVEFREEOPTIMIZATION")
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "POWELL",
@@ -53,7 +53,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StateVariationTolerance",
             default  = 1.e-4,
             typecast = float,
-            message  = "Variation relative minimale de l'état lors de l'arrêt",
+            message  = "Variation relative maximale de l'état lors de l'arrêt",
             )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",

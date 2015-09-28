@@ -49,6 +49,10 @@ Bibliography
 
 .. [Morales11] Morales J.L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
 
+.. [Nelder] Nelder J.A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
+
+.. [Powell] Powell M.J.D., *An efficient method for finding the minimum of a function of several variables without calculating derivatives*, Computer Journal, 7(2), pp.155-162, 1964
+
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 
 .. [SalomeMeca] *Salome_Meca and Code_Aster, Analysis of Structures and Thermomechanics for Studies & Research*, http://www.code-aster.org/

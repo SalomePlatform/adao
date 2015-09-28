@@ -21,11 +21,11 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: 4DVAR
-.. _section_ref_algorithm_4DVAR:
+.. index:: single: DerivativeFreeOptimization
+.. _section_ref_algorithm_DerivativeFreeOptimization:
 
-Calculation algorithm "*4DVAR*"
--------------------------------
+Calculation algorithm "*DerivativeFreeOptimization*"
+----------------------------------------------------
 
 .. warning::
 
@@ -35,17 +35,15 @@ Calculation algorithm "*4DVAR*"
 Description
 +++++++++++
 
-This algorithm realizes an estimation of the state of a dynamic system, by a
-variational minimization method of the classical :math:`J` function in data
-assimilation:
+This algorithm realizes an estimation of the state of a dynamic system by
+minimization of a cost function :math:`J` without gradient. It is a method that
+doesn't use the derivatives of the cost function. It fall in the same category
+then the :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
-.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\sum_{t\in T}(\mathbf{y^o}(t)-H(\mathbf{x},t))^T.\mathbf{R}^{-1}.(\mathbf{y^o}(t)-H(\mathbf{x},t))
-
-which is usually designed as the "*4D-VAR*" function (see for example
-[Talagrand97]_). It is well suited in cases of non-linear observation and
-evolution operators, its application domain is similar to the one of Kalman
-filters, specially the :ref:`section_ref_algorithm_ExtendedKalmanFilter` or the
-:ref:`section_ref_algorithm_UnscentedKalmanFilter`.
+This is an optimization method allowing for global minimum search of a general
+error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
+with or without weights. The default error function is the augmented weighted
+least squares function, classicaly used in data assimilation.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -56,13 +54,12 @@ Optional and required commands
 .. index:: single: Observation
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
-.. index:: single: Bounds
-.. index:: single: ConstrainedBy
-.. index:: single: EstimationOf
+.. index:: single: Minimizer
 .. index:: single: MaximumNumberOfSteps
+.. index:: single: MaximumNumberOfFunctionEvaluations
+.. index:: single: StateVariationTolerance
 .. index:: single: CostDecrementTolerance
-.. index:: single: ProjectedGradientTolerance
-.. index:: single: GradientNormTolerance
+.. index:: single: QualityCriterion
 .. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
@@ -112,29 +109,12 @@ The options of the algorithm are the following:
 
   Minimizer
     This key allows to choose the optimization minimizer. The default choice is
-    "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
-    minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
-    constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
-    (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
-    strongly recommended to stay with the default.
+    "POWELL", and the possible ones are "POWELL" (modified Powell unconstrained
+    minimizer, see [Powell]_), "SIMPLEX" (nonlinear constrained minimizer), "CG"
+    (simplex of Nelder-Mead unconstrained minimizer, see [Nelder]_). It is
+    recommended to stay with the default.
 
-    Example : ``{"Minimizer":"LBFGSB"}``
-
-  Bounds
-    This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds have to be given by a list of list of pairs of
-    lower/upper bounds for each variable, with possibly ``None`` every time
-    there is no bound. The bounds can always be specified, but they are taken
-    into account only by the constrained optimizers.
-
-    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
-
-  ConstrainedBy
-    This key allows to choose the method to take into account the bounds
-    constraints. The only one available is the "EstimateProjection", which
-    projects the current state estimate on the bounds constraints.
-
-    Example : ``{"ConstrainedBy":"EstimateProjection"}``
+    Example : ``{"Minimizer":"POWELL"}``
 
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
@@ -144,7 +124,23 @@ The options of the algorithm are the following:
     slightly different of the limit due to algorithm internal control
     requirements.
 
-    Example : ``{"MaximumNumberOfSteps":100}``
+    Example : ``{"MaximumNumberOfSteps":50}``
+
+  MaximumNumberOfFunctionEvaluations
+    This key indicates the maximum number of evaluation of the cost function to
+    be optimized. The default is 15000, which is very similar to no limit on
+    iterations. The calculation can be over this limit when an outer
+    optimization loop has to be finished. It is strongly recommended to adapt
+    this parameter to the needs on real problems.
+
+    Example : ``{"MaximumNumberOfFunctionEvaluations":50}``
+
+  StateVariationTolerance
+    This key indicates the maximum relative variation of the state for stopping
+    by convergence on the state.  The default is 1.e-4, and it is recommended to
+    adapt it to the needs on real problems.
+
+    Example : ``{"StateVariationTolerance":1.e-4}``
 
   CostDecrementTolerance
     This key indicates a limit value, leading to stop successfully the
@@ -154,39 +150,27 @@ The options of the algorithm are the following:
 
     Example : ``{"CostDecrementTolerance":1.e-7}``
 
-  EstimationOf
-    This key allows to choose the type of estimation to be performed. It can be
-    either state-estimation, with a value of "State", or parameter-estimation,
-    with a value of "Parameters". The default choice is "State".
+  QualityCriterion
+    This key indicates the quality criterion, minimized to find the optimal
+    state estimate. The default is the usual data assimilation criterion named
+    "DA", the augmented weighted least squares. The possible criteria has to be
+    in the following list, where the equivalent names are indicated by the sign
+    "=": ["AugmentedWeightedLeastSquares"="AWLS"="DA",
+    "WeightedLeastSquares"="WLS", "LeastSquares"="LS"="L2",
+    "AbsoluteValue"="L1", "MaximumError"="ME"].
 
-    Example : ``{"EstimationOf":"Parameters"}``
-
-  ProjectedGradientTolerance
-    This key indicates a limit value, leading to stop successfully the iterative
-    optimization process when all the components of the projected gradient are
-    under this limit. It is only used for constrained optimizers. The default is
-    -1, that is the internal default of each minimizer (generally 1.e-5), and it
-    is not recommended to change it.
-
-    Example : ``{"ProjectedGradientTolerance":-1}``
-
-  GradientNormTolerance
-    This key indicates a limit value, leading to stop successfully the
-    iterative optimization process when the norm of the gradient is under this
-    limit. It is only used for non-constrained optimizers.  The default is
-    1.e-5 and it is not recommended to change it.
-
-    Example : ``{"GradientNormTolerance":1.e-5}``
+    Example : ``{"QualityCriterion":"DA"}``
 
   StoreSupplementaryCalculations
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["BMA", "CostFunctionJ", "CurrentOptimum",
-    "CurrentState", "IndexOfOptimum"].
+    are in the following list: ["CurrentState", "CostFunctionJ",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+    Example : ``{"StoreSupplementaryCalculations":["CurrentState", "CostFunctionJ"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -224,43 +208,38 @@ The unconditional outputs of the algorithm are the following:
 
     Example : ``Jo = ADD.get("CostFunctionJo")[:]``
 
-The conditional outputs of the algorithm are the following:
-
-  BMA
-    *List of vectors*. Each element is a vector of difference between the
-    background and the optimal state.
-
-    Example : ``bma = ADD.get("BMA")[-1]``
-
-  CurrentOptimum
-    *List of vectors*. Each element is the optimal state obtained at the current
-    step of the optimization algorithm. It is not necessarely the last state.
-
-    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
-
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
     optimization algorithm procedure.
 
     Example : ``Xs = ADD.get("CurrentState")[:]``
 
-  IndexOfOptimum
-    *List of integers*. Each element is the iteration index of the optimum
-    obtained at the current step the optimization algorithm. It is not
-    necessarely the number of the last iteration.
+The conditional outputs of the algorithm are the following:
 
-    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
+  SimulatedObservationAtBackground
+    *List of vectors*. Each element is a vector of observation simulated from
+    the background :math:`\mathbf{x}^b`.
+
+    Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *List of vectors*. Each element is an observed vector at the current state,
+    that is, in the observation space.
+
+    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+
+  SimulatedObservationAtOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the analysis or optimal state :math:`\mathbf{x}^a`.
+
+    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 
 See also
 ++++++++
 
 References to other sections:
-  - :ref:`section_ref_algorithm_3DVAR`
-  - :ref:`section_ref_algorithm_KalmanFilter`
-  - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
+  - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
 
 Bibliographical references:
-  - [Byrd95]_
-  - [Morales11]_
-  - [Talagrand97]_
-  - [Zhu97]_
+  - [Nelder]_
+  - [Powell]_

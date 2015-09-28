@@ -30,8 +30,11 @@ Algorithme de calcul "*ParticleSwarmOptimization*"
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation de l'état d'un système dynamique par un
-essaim particulaire.
+Cet algorithme réalise une estimation de l'état d'un système dynamique par
+minimisation d'une fonctionnelle d'écart :math:`J` en utilisant un essaim
+particulaire. C'est une méthode qui n'utilise pas les dérivées de la
+fonctionnelle d'écart. Elle entre dans la même catégorie que
+l':ref:`section_ref_algorithm_DerivativeFreeOptimization`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
@@ -262,6 +265,9 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
 Voir aussi
 ++++++++++
+
+Références vers d'autres sections :
+  - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 
 Références bibliographiques :
   - [WikipediaPSO]_
