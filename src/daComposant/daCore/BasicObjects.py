@@ -307,6 +307,7 @@ class Algorithm(object):
             - APosterioriVariances : variances de la matrice A
             - APosterioriStandardDeviations : écart-types de la matrice A
             - APosterioriCorrelations : correlations de la matrice A
+            - Residu : dans le cas des algorithmes de vérification
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
@@ -345,6 +346,7 @@ class Algorithm(object):
         self.StoredVariables["APosterioriStandardDeviations"]        = Persistence.OneVector(name = "APosterioriStandardDeviations")
         self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
+        self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
 
     def _pre_run(self):
         "Pré-calcul"

@@ -66,6 +66,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Titre du tableau et de la figure",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -86,6 +93,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Y = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
         Y = numpy.asmatrix(numpy.ravel( Y )).T
         NormeY = numpy.linalg.norm( Y )
+        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["CurrentState"].store( numpy.ravel(X) )
+        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Y) )
         #
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
@@ -143,7 +154,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   |  %9.3e"%(i,amplitude,NormeX,NormeY,NormedX,Residu)
             msgs += "\n" + __marge + msg
             #
-            self.StoredVariables["CostFunctionJ"].store( Residu )
+            self.StoredVariables["Residu"].store( Residu )
         #
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n"

@@ -119,6 +119,7 @@ Commandes requises et optionnelles
 .. index:: single: InitialDirection
 .. index:: single: ResiduFormula
 .. index:: single: SetSeed
+.. index:: single: StoreSupplementaryCalculations
 
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
@@ -197,6 +198,50 @@ Les options de l'algorithme sont les suivantes:
     utilise ainsi l'initialisation par défaut de l'ordinateur.
 
     Exemple : ``{"SetSeed":1000}``
+
+  StoreSupplementaryCalculations
+    Cette liste indique les noms des variables supplémentaires qui peuvent être
+    disponibles à la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    possibles sont dans la liste suivante : ["CurrentState", "Residu",
+    "SimulatedObservationAtCurrentState"].
+
+    Exemple : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+
+Informations et variables disponibles à la fin de l'algorithme
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+En sortie, après exécution de l'algorithme, on dispose d'informations et de
+variables issues du calcul. La description des
+:ref:`section_ref_output_variables` indique la manière de les obtenir par la
+méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
+l'écriture des procédures de post-processing, sont décrites dans
+l':ref:`subsection_r_o_v_Inventaire`.
+
+Les sorties non conditionnelles de l'algorithme sont les suivantes:
+
+  Residu
+    *Liste de valeurs*. Chaque élément est la valeur du résidu particulier
+    vérifié lors d'un algorithme de vérification, selon l'ordre des tests
+    effectués.
+
+    Exemple : ``r = ADD.get("Residu")[:]``
+
+Les sorties conditionnelles de l'algorithme sont les suivantes:
+
+  CurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
+    au cours du déroulement de l'algorithme d'optimisation.
+
+    Exemple : ``Xs = ADD.get("CurrentState")[:]``
+
+  SimulatedObservationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
 Voir aussi
 ++++++++++

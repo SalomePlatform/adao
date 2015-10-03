@@ -74,6 +74,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Titre du tableau et de la figure",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -103,6 +110,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         FX      = numpy.asmatrix(numpy.ravel( Hm( Xn ) )).T
         NormeX  = numpy.linalg.norm( Xn )
         NormeFX = numpy.linalg.norm( FX )
+        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
+        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
         # Fabrication de la direction de  l'incrément dX
         # ----------------------------------------------
@@ -238,49 +249,83 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             dX      = amplitude * dX0
             #
             if self._parameters["ResiduFormula"] == "CenteredDL":
+                if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn - dX) )
+                #
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
                 #
+                if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_moins_dX) )
+                #
                 Residu = numpy.linalg.norm( FX_plus_dX + FX_moins_dX - 2 * FX ) / NormeFX
                 #
-                self.StoredVariables["CostFunctionJ"].store( Residu )
+                self.StoredVariables["Residu"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,Residu,math.log10(max(1.e-99,Residu)))
                 msgs += "\n" + __marge + msg
             #
             if self._parameters["ResiduFormula"] == "Taylor":
+                if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
+                #
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
+                #
+                if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
                 #
                 Residu = numpy.linalg.norm( FX_plus_dX - FX - amplitude * GradFxdX ) / NormeFX
                 #
-                self.StoredVariables["CostFunctionJ"].store( Residu )
+                self.StoredVariables["Residu"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,Residu,math.log10(max(1.e-99,Residu)))
                 msgs += "\n" + __marge + msg
             #
             if self._parameters["ResiduFormula"] == "NominalTaylor":
+                if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn - dX) )
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(dX) )
+                #
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
                 FdX         = numpy.asmatrix(numpy.ravel( Hm( dX ) )).T
+                #
+                if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_moins_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FdX) )
                 #
                 Residu = max(
                     numpy.linalg.norm( FX_plus_dX  - amplitude * FdX ) / NormeFX,
                     numpy.linalg.norm( FX_moins_dX + amplitude * FdX ) / NormeFX,
                     )
                 #
-                self.StoredVariables["CostFunctionJ"].store( Residu )
+                self.StoredVariables["Residu"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100.*abs(Residu-1.),"%")
                 msgs += "\n" + __marge + msg
             #
             if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
+                if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn - dX) )
+                    self.StoredVariables["CurrentState"].store( numpy.ravel(dX) )
+                #
                 FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
                 FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
                 FdX         = numpy.asmatrix(numpy.ravel( Hm( dX ) )).T
+                #
+                if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_moins_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FdX) )
                 #
                 Residu = max(
                     RMS( FX, FX_plus_dX   - amplitude * FdX ) / NormeFX,
                     RMS( FX, FX_moins_dX  + amplitude * FdX ) / NormeFX,
                     )
                 #
-                self.StoredVariables["CostFunctionJ"].store( Residu )
+                self.StoredVariables["Residu"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %9.3e   %5i %s"%(i,amplitude,NormeX,NormeFX,Residu,100.*Residu,"%")
                 msgs += "\n" + __marge + msg
         #

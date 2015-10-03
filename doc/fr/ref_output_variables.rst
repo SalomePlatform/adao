@@ -325,6 +325,13 @@ alphabétique:
 
     Exemple : ``omb = ADD.get("OMB")[-1]``
 
+  Residu
+    *Liste de valeurs*. Chaque élément est la valeur du résidu particulier
+    vérifié lors d'un algorithme de vérification, selon l'ordre des tests
+    effectués.
+
+    Exemple : ``r = ADD.get("Residu")[:]``
+
   SigmaBck2
     *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
     qualité :math:`(\sigma^b)^2` de la partie ébauche.

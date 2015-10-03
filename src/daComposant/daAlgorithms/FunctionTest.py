@@ -54,6 +54,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = bool,
             message  = "Activation du mode debug lors de l'exécution",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["CurrentState", "SimulatedObservationAtCurrentState"]
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -72,11 +79,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msg += "     ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
             print("%s"%msg)
         #
-        msg  = "===> Information before launching:\n"
-        msg += "     -----------------------------\n"
-        msg += "     Characteristics of input vector X, internally converted:\n"
-        msg += "       Type...............: %s\n"%type( Xn )
-        msg += "       Lenght of vector...: %i\n"%max(numpy.matrix( Xn ).shape)
+        msg  = ("===> Information before launching:\n")
+        msg += ("     -----------------------------\n")
+        msg += ("     Characteristics of input vector X, internally converted:\n")
+        msg += ("       Type...............: %s\n")%type( Xn )
+        msg += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Xn ).shape)
         msg += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Xn )
         msg += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Xn )
         msg += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Xn )
@@ -96,6 +103,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------
         Ys = []
         for i in range(self._parameters["NumberOfRepetition"]):
+            if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
             print("     %s\n"%("-"*75,))
             if self._parameters["NumberOfRepetition"] > 1:
                 print("===> Repetition step number %i on a total of %i\n"%(i+1,self._parameters["NumberOfRepetition"]))
@@ -115,6 +124,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msg += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn )
             msg += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
             print(msg)
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
             #
             Ys.append( copy.copy( numpy.ravel(
                 Yn

@@ -313,6 +313,12 @@ of availability. They are the following, in alphabetical order:
 
     Example : ``omb = ADD.get("OMB")[-1]``
 
+  Residu
+    *List of values*. Each element is the value of the particular residu
+    verified during a checking algorithm, in the order of the tests.
+
+    Example : ``r = ADD.get("Residu")[:]``
+
   SigmaBck2
     *List of values*. Each element is a value of the quality indicator
     :math:`(\sigma^b)^2` of the background part.

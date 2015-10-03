@@ -178,10 +178,59 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["CostFunctionJ", "CurrentState", "Innovation",
-    "SimulatedObservationAtCurrentState"].
+    are in the following list: ["CostFunctionJ", "CurrentState",
+    "InnovationAtCurrentState", "SimulatedObservationAtCurrentState"].
 
     Example : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
+
+Information and variables available at the end of the algorithm
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+At the output, after executing the algorithm, there are variables and
+information originating from the calculation. The description of
+:ref:`section_ref_output_variables` show the way to obtain them by the method
+named ``get`` of the variable "*ADD*" of the post-processing. The input
+variables, available to the user at the output in order to facilitate the
+writing of post-processing procedures, are described in the
+:ref:`subsection_r_o_v_Inventaire`.
+
+The unconditional outputs of the algorithm are the following:
+
+  CostFunctionJ
+    *List of values*. Each element is a value of the error function :math:`J`.
+
+    Example : ``J = ADD.get("CostFunctionJ")[:]``
+
+  CostFunctionJb
+    *List of values*. Each element is a value of the error function :math:`J^b`,
+    that is of the background difference part.
+
+    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
+
+  CostFunctionJo
+    *List of values*. Each element is a value of the error function :math:`J^o`,
+    that is of the observation difference part.
+
+    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
+
+The conditional outputs of the algorithm are the following:
+
+  CurrentState
+    *List of vectors*. Each element is a usual state vector used during the
+    optimization algorithm procedure.
+
+    Example : ``Xs = ADD.get("CurrentState")[:]``
+
+  InnovationAtCurrentState
+    *List of vectors*. Each element is an innovation vector at current state.
+
+    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *List of vectors*. Each element is an observed vector at the current state,
+    that is, in the observation space.
+
+    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
 See also
 ++++++++

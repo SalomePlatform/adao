@@ -74,6 +74,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Titre du tableau et de la figure",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -98,6 +105,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         FX      = numpy.asmatrix(numpy.ravel( Hm( Xn ) )).T
         NormeX  = numpy.linalg.norm( Xn )
         NormeFX = numpy.linalg.norm( FX )
+        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
+        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
         # Fabrication de la direction de  l'incrément dX
         # ----------------------------------------------
@@ -173,7 +184,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 #
                 Residu = numpy.linalg.norm( FX_plus_dX - FX ) / (amplitude * NormeGX)
                 #
-                self.StoredVariables["CostFunctionJ"].store( Residu )
+                self.StoredVariables["Residu"].store( Residu )
                 msg = "  %2i  %5.0e   %9.3e   %9.3e   |   %11.5e    %5.1e"%(i,amplitude,NormeX,NormeFX,Residu,abs(Residu-1.)/amplitude)
                 msgs += "\n" + __marge + msg
         #

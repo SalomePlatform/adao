@@ -62,6 +62,7 @@ Optional and required commands
 .. index:: single: EpsilonMinimumExponent
 .. index:: single: InitialDirection
 .. index:: single: SetSeed
+.. index:: single: StoreSupplementaryCalculations
 
 The general required commands, available in the editing user interface, are the
 following:
@@ -123,10 +124,54 @@ The options of the algorithm are the following:
 
     Example : ``{"SetSeed":1000}``
 
+  StoreSupplementaryCalculations
+    This list indicates the names of the supplementary variables that can be
+    available at the end of the algorithm. It involves potentially costly
+    calculations or memory consumptions. The default is a void list, none of
+    these variables being calculated and stored by default. The possible names
+    are in the following list: ["CurrentState", "Residu",
+    "SimulatedObservationAtCurrentState"].
+
+    Example : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+
+Information and variables available at the end of the algorithm
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+At the output, after executing the algorithm, there are variables and
+information originating from the calculation. The description of
+:ref:`section_ref_output_variables` show the way to obtain them by the method
+named ``get`` of the variable "*ADD*" of the post-processing. The input
+variables, available to the user at the output in order to facilitate the
+writing of post-processing procedures, are described in the
+:ref:`subsection_r_o_v_Inventaire`.
+
+The unconditional outputs of the algorithm are the following:
+
+  Residu
+    *List of values*. Each element is the value of the particular residu
+    verified during a checking algorithm, in the order of the tests.
+
+    Example : ``r = ADD.get("Residu")[:]``
+
+The conditional outputs of the algorithm are the following:
+
+  CurrentState
+    *List of vectors*. Each element is a usual state vector used during the
+    optimization algorithm procedure.
+
+    Example : ``Xs = ADD.get("CurrentState")[:]``
+
+  SimulatedObservationAtCurrentState
+    *List of vectors*. Each element is an observed vector at the current state,
+    that is, in the observation space.
+
+    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+
 See also
 ++++++++
 
 References to other sections:
   - :ref:`section_ref_algorithm_FunctionTest`
+  - :ref:`section_ref_algorithm_LinearityTest`
   - :ref:`section_ref_algorithm_AdjointTest`
   - :ref:`section_ref_algorithm_GradientTest`

@@ -92,6 +92,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Label de la courbe tracée dans la figure",
             )
+        self.defineRequiredParameter(
+            name     = "StoreSupplementaryCalculations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -110,6 +117,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         FX      = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
+        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
+        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
@@ -222,6 +233,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             FX_plus_dX = Hm( X + dX )
             FX_plus_dX = numpy.asmatrix(numpy.ravel( FX_plus_dX )).T
             #
+            if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentState"].store( numpy.ravel(X + dX) )
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
+            #
             NormedX     = numpy.linalg.norm( dX )
             NormeFXdX   = numpy.linalg.norm( FX_plus_dX )
             NormedFX    = numpy.linalg.norm( FX_plus_dX - FX )
@@ -254,7 +270,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu,math.log10(max(1.e-99,Residu)))
             msgs += "\n" + __marge + msg
             #
-            self.StoredVariables["CostFunctionJ"].store( Residu )
+            self.StoredVariables["Residu"].store( Residu )
         #
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n"
@@ -269,7 +285,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             f.write(msgs)
             f.close()
             #
-            Residus = self.StoredVariables["CostFunctionJ"][-len(Perturbations):]
+            Residus = self.StoredVariables["Residu"][-len(Perturbations):]
             if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
                 PerturbationsCarre = [ 10**(2*i) for i in xrange(-len(NormesdFXGdX)+1,1) ]
                 PerturbationsCarre.reverse()

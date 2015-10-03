@@ -186,9 +186,60 @@ Les options de l'algorithme sont les suivantes:
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["CostFunctionJ", "CurrentState",
-    "Innovation", "SimulatedObservationAtCurrentState"].
+    "InnovationAtCurrentState", "SimulatedObservationAtCurrentState"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
+
+Informations et variables disponibles à la fin de l'algorithme
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+En sortie, après exécution de l'algorithme, on dispose d'informations et de
+variables issues du calcul. La description des
+:ref:`section_ref_output_variables` indique la manière de les obtenir par la
+méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
+l'écriture des procédures de post-processing, sont décrites dans
+l':ref:`subsection_r_o_v_Inventaire`.
+
+Les sorties non conditionnelles de l'algorithme sont les suivantes:
+
+  CostFunctionJ
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J`.
+
+    Exemple : ``J = ADD.get("CostFunctionJ")[:]``
+
+  CostFunctionJb
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+
+    Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
+
+  CostFunctionJo
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+
+    Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
+
+Les sorties conditionnelles de l'algorithme sont les suivantes:
+
+  CurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
+    au cours du déroulement de l'algorithme d'optimisation.
+
+    Exemple : ``Xs = ADD.get("CurrentState")[:]``
+
+  InnovationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
+    courant.
+
+    Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
 Voir aussi
 ++++++++++

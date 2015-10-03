@@ -283,4 +283,5 @@ ObserversList = [
     "APosterioriCovariance",
     "APosterioriStandardDeviations",
     "APosterioriVariances",
+    "Residu",
     ]
