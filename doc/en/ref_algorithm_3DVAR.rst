@@ -165,8 +165,9 @@ The options of the algorithm are the following:
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentOptimum",
-    "CurrentState", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
+    "APosterioriVariances", "BMA", "CostFunctionJ",
+    "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "CurrentState",
+    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
     "MahalanobisConsistency", "OMA", "OMB", "SigmaObs2",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
@@ -282,6 +283,27 @@ The conditional outputs of the algorithm are the following:
     background and the optimal state.
 
     Example : ``bma = ADD.get("BMA")[-1]``
+
+  CostFunctionJAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J`.
+    At each step, the value corresponds to the optimal state found from the
+    beginning.
+
+    Example : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+
+  CostFunctionJbAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J^b`,
+    that is of the background difference part. At each step, the value
+    corresponds to the optimal state found from the beginning.
+
+    Example : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+
+  CostFunctionJoAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J^o`,
+    that is of the observation difference part. At each step, the value
+    corresponds to the optimal state found from the beginning.
+
+    Example : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
 
   CurrentOptimum
     *List of vectors*. Each element is the optimal state obtained at the current

@@ -264,6 +264,27 @@ of availability. They are the following, in alphabetical order:
 
     Example : ``Jo = ADD.get("CostFunctionJo")[:]``
 
+  CostFunctionJAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J`.
+    At each step, the value corresponds to the optimal state found from the
+    beginning.
+
+    Example : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+
+  CostFunctionJbAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J^b`,
+    that is of the background difference part. At each step, the value
+    corresponds to the optimal state found from the beginning.
+
+    Example : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+
+  CostFunctionJoAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J^o`,
+    that is of the observation difference part. At each step, the value
+    corresponds to the optimal state found from the beginning.
+
+    Example : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
+
   CurrentOptimum
     *List of vectors*. Each element is the optimal state obtained at the current
     step of the optimization algorithm. It is not necessarely the last state.

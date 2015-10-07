@@ -203,11 +203,11 @@ Graphically plot with Gnuplot the current value of the variable.
     global ifig, gp
     try:
         ifig += 1
-        gp('set style data lines')
+        gp(' set style data lines')
     except:
         ifig = 0
         gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
+        gp(' set style data lines')
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
@@ -225,11 +225,11 @@ Graphically plot with Gnuplot the value serie of the variable.
     global ifig, gp
     try:
         ifig += 1
-        gp('set style data lines')
+        gp(' set style data lines')
     except:
         ifig = 0
         gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
+        gp(' set style data lines')
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
@@ -248,11 +248,11 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
     global ifig,gp
     try:
         ifig += 1
-        gp('set style data lines')
+        gp(' set style data lines')
     except:
         ifig = 0
         gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
+        gp(' set style data lines')
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
@@ -271,11 +271,11 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
     global ifig,gp
     try:
         ifig += 1
-        gp('set style data lines')
+        gp(' set style data lines')
     except:
         ifig = 0
         gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
+        gp(' set style data lines')
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
@@ -304,11 +304,11 @@ Print on standard output and, in the same, time save in a file and graphically p
     global ifig,gp
     try:
         ifig += 1
-        gp('set style data lines')
+        gp(' set style data lines')
     except:
         ifig = 0
         gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
+        gp(' set style data lines')
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
@@ -337,11 +337,11 @@ Print on standard output and, in the same, time save in a file and graphically p
     global ifig,gp
     try:
         ifig += 1
-        gp('set style data lines')
+        gp(' set style data lines')
     except:
         ifig = 0
         gp = Gnuplot.Gnuplot(persist=1)
-        gp('set style data lines')
+        gp(' set style data lines')
     gp('set title  "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 

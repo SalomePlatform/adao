@@ -170,8 +170,9 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentOptimum",
-    "CurrentState", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
+    "APosterioriVariances", "BMA", "CostFunctionJ",
+    "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "CurrentState",
+    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
     "MahalanobisConsistency", "OMA", "OMB", "SigmaObs2",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
@@ -289,6 +290,27 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
     l'ébauche et l'état optimal.
 
     Exemple : ``bma = ADD.get("BMA")[-1]``
+
+  CostFunctionJAtCurrentOptimum
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J`. A chaque pas, la valeur correspond à l'état optimal trouvé depuis
+    le début.
+
+    Exemple : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+
+  CostFunctionJbAtCurrentOptimum
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche. A chaque pas, la
+    valeur correspond à l'état optimal trouvé depuis le début.
+
+    Exemple : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+
+  CostFunctionJoAtCurrentOptimum
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^o`, c'est-à-dire de la partie écart à l'observation. A chaque pas,
+    la valeur correspond à l'état optimal trouvé depuis le début.
+
+    Exemple : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
 
   CurrentOptimum
     *Liste de vecteurs*. Chaque élément est le vecteur d'état optimal au pas de

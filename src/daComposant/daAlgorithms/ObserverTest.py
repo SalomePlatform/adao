@@ -47,9 +47,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------------------------------------
         self.StoredVariables["Analysis"].store( __Xa )
         self.StoredVariables["CurrentState"].store( __Xa )
+        self.StoredVariables["CurrentOptimum"].store( __Xa )
+        #
         self.StoredVariables["CostFunctionJb"].store( 1. )
         self.StoredVariables["CostFunctionJo"].store( 2. )
         self.StoredVariables["CostFunctionJ" ].store( 3. )
+        self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( 4. )
+        self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( 5. )
+        self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( 6. )
+        self.StoredVariables["IndexOfOptimum"].store( 1 )
         #
         self.StoredVariables["APosterioriCovariance"].store( numpy.diag(__Xa) )
         self.StoredVariables["APosterioriVariances"].store( __Xa )
@@ -59,10 +65,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.StoredVariables["OMA"].store( __YY )
         self.StoredVariables["OMB"].store( __YY )
         self.StoredVariables["Innovation"].store( __YY )
+        self.StoredVariables["InnovationAtCurrentState"].store( __YY )
         self.StoredVariables["SigmaObs2"].store( 1. )
         self.StoredVariables["SigmaBck2"].store( 1. )
         self.StoredVariables["MahalanobisConsistency"].store( 1. )
         self.StoredVariables["SimulationQuantiles"].store( numpy.matrix((__YY,__YY,__YY)) )
+        self.StoredVariables["SimulatedObservationAtBackground"].store( __YY )
+        self.StoredVariables["SimulatedObservationAtCurrentState"].store( __YY )
+        self.StoredVariables["SimulatedObservationAtOptimum"].store( __YY )
+        self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( __YY )
         #
         print
         self._post_run()
