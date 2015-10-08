@@ -381,6 +381,19 @@ Print on standard output the variance of the current value of the variable.
     import numpy
     print info, numpy.nanvar(var[-1])
 
+.. index:: single: ValueL2Norm (Observer)
+
+Template **ValueL2Norm** :
+..........................
+
+Print on standard output the L2 norm of the current value of the variable.
+
+::
+
+    import numpy
+    v = numpy.matrix( numpy.ravel( var[-1] ) )
+    print info, float( numpy.linalg.norm(v) )
+
 .. index:: single: ValueRMS (Observer)
 
 Template **ValueRMS** :

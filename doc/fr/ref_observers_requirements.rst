@@ -384,6 +384,19 @@ Imprime sur la sortie standard la variance de la valeur courante de la variable.
     import numpy
     print info, numpy.nanvar(var[-1])
 
+.. index:: single: ValueL2Norm (Observer)
+
+Modèle **ValueL2Norm** :
+........................
+
+Imprime sur la sortie standard la norme L2 de la valeur courante de la variable.
+
+::
+
+    import numpy
+    v = numpy.matrix( numpy.ravel( var[-1] ) )
+    print info, float( numpy.linalg.norm(v) )
+
 .. index:: single: ValueRMS (Observer)
 
 Modèle **ValueRMS** :
