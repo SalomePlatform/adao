@@ -76,20 +76,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
-        # Opérateur d'observation
-        # -----------------------
+        # Opérateurs
+        # ----------
         Hm = HO["Tangent"].asMatrix(Xb)
         Hm = Hm.reshape(Y.size,Xb.size) # ADAO & check shape
         Ha = HO["Adjoint"].asMatrix(Xb)
         Ha = Ha.reshape(Xb.size,Y.size) # ADAO & check shape
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
-        # ----------------------------------------------------
+        # Utilisation éventuelle d'un vecteur H(Xb) précalculé (sans cout)
+        # ----------------------------------------------------------------
         if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
             HXb = HO["AppliedToX"]["HXb"]
         else:
             HXb = Hm * Xb
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+        if Y.size != HXb.size:
+            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+        if max(Y.shape) != max(HXb.shape):
+            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -98,10 +102,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de l'innovation
         # ----------------------
-        if Y.size != HXb.size:
-            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
-        if max(Y.shape) != max(HXb.shape):
-            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
         #
         # Calcul de la matrice de gain et de l'analyse
@@ -131,9 +131,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["StoreInternalVariables"] or \
            "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
            "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"]:
+            #
             Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
             Jo  = 0.5 * oma.T * RI * oma
             J   = float( Jb ) + float( Jo )
+            #
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

@@ -170,10 +170,12 @@ Les options de l'algorithme sont les suivantes:
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["CurrentState", "CostFunctionJ",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+    "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "IndexOfOptimum",
+    "InnovationAtCurrentState", "BMA", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
+    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["CurrentState", "CostFunctionJ"]}``
+    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

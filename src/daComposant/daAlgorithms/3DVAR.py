@@ -134,21 +134,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Hm = HO["Direct"].appliedTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
-        # ----------------------------------------------------
+        # Utilisation éventuelle d'un vecteur H(Xb) précalculé (sans cout)
+        # ----------------------------------------------------------------
         if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
             HXb = HO["AppliedToX"]["HXb"]
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
-        #
-        # Calcul de l'innovation
-        # ----------------------
         if Y.size != HXb.size:
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
-        d  = Y - HXb
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -170,10 +166,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             if "InnovationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["InnovationAtCurrentState"].store( _HX )
+                self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
+            #
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             Jo  = 0.5 * _Innovation.T * RI * _Innovation
             J   = float( Jb ) + float( Jo )
+            #
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
@@ -205,10 +203,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------
-        if type(Xb) is type(numpy.matrix([])):
-            Xini = Xb.A1.tolist()
-        else:
-            Xini = list(Xb)
+        Xini = numpy.ravel(Xb)
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -332,6 +327,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or \
+            "OMB" in self._parameters["StoreSupplementaryCalculations"] or \
+            "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or \
+            "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+            d  = Y - HXb
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
