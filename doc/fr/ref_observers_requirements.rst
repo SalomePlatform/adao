@@ -33,7 +33,7 @@ Certaines variables spéciales, internes à l'optimisation, utilisées au cours des
 calculs, peuvent être surveillées durant un calcul ADAO. Ces variables peuvent
 être affichées, tracées, enregistrées, etc. C'est réalisable en utilisant des
 "*observer*", parfois aussi appelés des "callback". Ce sont des scripts Python,
-qui sont chacun associé à une variable donnée. Ils sont activés à chaque
+qui sont chacun associés à une variable donnée. Ils sont activés à chaque
 modification de la variable.
 
 Il y a 3 méthodes pratiques pour intégrer un "*observer*" dans un cas ADAO. La
@@ -71,15 +71,15 @@ surveillée::
 
     print "    --->",info," Value =",var[-1]
 
-Stocké comme un fichier Python ou une chaîne de caractères explicite, ces lignes
-de script peuvent être associées à chaque variable présente dans le mot-clé
-"*SELECTION*" de la commande "*Observers*" du cas ADAO : "*Analysis*",
+Stockées comme un fichier Python ou une chaîne de caractères explicite, ces
+lignes de script peuvent être associées à chaque variable présente dans le
+mot-clé "*SELECTION*" de la commande "*Observers*" du cas ADAO : "*Analysis*",
 "*CurrentState*", "*CostFunction*"... La valeur courante de la variable sera
 affichée à chaque étape de l'algorithme d'optimisation ou d'assimilation. Les
 "*observer*" peuvent inclure des capacités d'affichage graphique, de stockage,
 de traitement complexe, d'analyse statistique, etc.
 
-On donne ci-aprés l'identifiant et le contenu de chaque modèle disponible.
+On donne ci-après l'identifiant et le contenu de chaque modèle disponible.
 
 Inventaire des modèles d'*observer* disponibles ("*Template*")
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

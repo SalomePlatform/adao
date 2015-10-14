@@ -20,6 +20,12 @@
 #
 #  Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
+"""
+    Version
+"""
+__author__ = "Jean-Philippe ARGAUD"
+__all__ = []
+
 name    = "Data Assimilation Package"
 version = "0.12.0"
 date    = "vendredi 31 octobre 2015, 12:12:12 (UTC+0100)"

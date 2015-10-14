@@ -835,7 +835,7 @@ class CompositePersistence(object):
             for k in objs:
                 try:
                     if len(self.__StoredObjects[k]) > 0: usedObjs.append( k )
-                except:
+                finally:
                     pass
             objs = usedObjs
         objs.sort()
