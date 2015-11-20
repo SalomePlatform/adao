@@ -72,38 +72,38 @@ ACTIONS_MAP={
 
 class AdaoCaseManager(EficasObserver):
   """
-  Cette classe gére les cas ADAO et coordonne les GUI de SALOME (l'étude)
-  et le GUI de l'objet Eficas (héritage du module Eficas)
+  Cette classe gere les cas ADAO et coordonne les GUI de SALOME (l'etude)
+  et le GUI de l'objet Eficas (heritage du module Eficas)
   """
 
   def __init__(self):
 
-    # Création d'un dictionnaire de cas
+    # Creation d'un dictionnaire de cas
     # Key   == ref objet editor eficas (on est sur qu'elle est unique, cas duplication)
     # Value == objet AdaoCase()
     self.cases = {}
 
-    # Création des deux managers
+    # Creation des deux managers
     self.salome_manager = AdaoGuiUiComponentBuilder()
     self.eficas_manager = AdaoEficasWrapper(parent=SalomePyQt.SalomePyQt().getDesktop())
 
-    # On s'enregistre comme observer pour les évènements venant d'Eficas
-    # Les évènements du salome_manager viennent par le biais de la méthode
+    # On s'enregistre comme observer pour les evenements venant d'Eficas
+    # Les evenements du salome_manager viennent par le biais de la methode
     # processGUIEvent
     self.eficas_manager.addObserver(self)
 
-    # Création du GUI Eficas
+    # Creation du GUI Eficas
     self.eficas_manager.init_gui()
 
-    # Création du viewer QT
-    # Scroll Widget (pour les petites résolutions)
+    # Creation du viewer QT
+    # Scroll Widget (pour les petites resolutions)
     area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
     area.setWidget(self.eficas_manager)
     area.setWidgetResizable(1)
     wmType = "ADAO View"
     self.eficas_viewId = sgPyQt.createView(wmType, area)
 
-    # On interdit que la vue soit fermée
+    # On interdit que la vue soit fermee
     # Cela simplifier grandement le code
     sgPyQt.setViewClosable(self.eficas_viewId, False)
 
@@ -113,7 +113,7 @@ class AdaoCaseManager(EficasObserver):
 
 ######
 #
-# Gestion de l'activation/désactivation du module
+# Gestion de l'activation/desactivation du module
 #
 ######
 
@@ -127,16 +127,16 @@ class AdaoCaseManager(EficasObserver):
 
 #######
 #
-# Gestion de la sélection entre le GUI d'Eficas
-# et l'arbre d'étude de SALOME
+# Gestion de la selection entre le GUI d'Eficas
+# et l'arbre d'etude de SALOME
 #
 #######
 
-  # Depuis l'étude SALOME
+  # Depuis l'etude SALOME
   def currentSelectionChanged(self):
     """
-    Cette méthode permet de changer le tab vu dans eficas
-    selon la sélection de l'utilisateur dans l'étude SALOME
+    Cette methode permet de changer le tab vu dans eficas
+    selon la selection de l'utilisateur dans l'etude SALOME
     """
     adaoLogger.debug("currentSelectionChanged")
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
@@ -150,7 +150,7 @@ class AdaoCaseManager(EficasObserver):
   def _processEficasTabChanged(self, eficasWrapper, eficasEvent):
     """
     Gestion de la synchonisation entre le tab courant d'Eficas
-    et la selection dans l'étude SALOME
+    et la selection dans l'etude SALOME
     """
     editor = eficasEvent.callbackId
     for case_editor, adao_case in self.cases.iteritems():
@@ -158,10 +158,10 @@ class AdaoCaseManager(EficasObserver):
         adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
         break
 
-  # On remet la sélection dans SALOME grâce au tab dans Eficas
+  # On remet la selection dans SALOME grâce au tab dans Eficas
   def harmonizeSelectionFromEficas(self):
     """
-    Cette méthode permet d'harmoniser la sélection dans l'étude
+    Cette methode permet d'harmoniser la selection dans l'etude
     grâce au tab courant d'Eficas
     """
     if self.cases:
@@ -176,25 +176,25 @@ class AdaoCaseManager(EficasObserver):
 
 #######
 #
-# Gestion de la création d'un nouveau cas
-# 1: la fonction newAdaoCase est appelée par le GUI SALOME
-# 2: la fonction _processEficasNewEvent est appelée par le manager EFICAS
+# Gestion de la creation d'un nouveau cas
+# 1: la fonction newAdaoCase est appelee par le GUI SALOME
+# 2: la fonction _processEficasNewEvent est appelee par le manager EFICAS
 #
 #######
 
   def newAdaoCase(self):
-    adaoLogger.debug("Création d'un nouveau cas adao")
+    adaoLogger.debug("Creation d'un nouveau cas adao")
     self.eficas_manager.adaofileNew(AdaoCase())
 
   def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
     adao_case = eficasEvent.callbackId
-    # Ajout dand l'étude
+    # Ajout dand l'etude
     salomeStudyId   = adaoGuiHelper.getActiveStudyId()
     salomeStudyItem = adaoStudyEditor.addInStudy(salomeStudyId, adao_case)
-    # Affichage correct dans l'étude
+    # Affichage correct dans l'etude
     adaoGuiHelper.refreshObjectBrowser()
     adaoGuiHelper.selectItem(salomeStudyItem.GetID())
-    # Finalisation des données du cas
+    # Finalisation des donnees du cas
     adao_case.salome_study_id   = salomeStudyId
     adao_case.salome_study_item = salomeStudyItem
     # Ajout du cas
@@ -203,12 +203,12 @@ class AdaoCaseManager(EficasObserver):
 #######
 #
 # Gestion de l'ouverture d'un cas
-# 1: la fonction openAdaoCase est appelée par le GUI SALOME
-# 2: la fonction _processEficasOpenEvent est appelée par le manager EFICAS
+# 1: la fonction openAdaoCase est appelee par le GUI SALOME
+# 2: la fonction _processEficasOpenEvent est appelee par le manager EFICAS
 #
 #######
 
-# Rq: l'ouverture d'un cas adao est un cas particulier de la création d'un cas adao
+# Rq: l'ouverture d'un cas adao est un cas particulier de la creation d'un cas adao
 
   def openAdaoCase(self):
     adaoLogger.debug("Ouverture d'un cas adao")
@@ -220,39 +220,43 @@ class AdaoCaseManager(EficasObserver):
 #######
 #
 # Gestion de la sauvegarde d'un cas
-# 1: la fonction saveAdaoCase est appelée par le GUI SALOME
-# 1 bis: la fonction saveasAdaoCase est appelée par le GUI SALOME
-# 2: la fonction _processEficasSaveEvent est appelée par le manager EFICAS
+# 1: la fonction saveAdaoCase est appelee par le GUI SALOME
+# 1 bis: la fonction saveasAdaoCase est appelee par le GUI SALOME
+# 2: la fonction _processEficasSaveEvent est appelee par le manager EFICAS
 #
 #######
 
   def saveAdaoCase(self):
-    adaoLogger.debug("Sauvegarde du cas s'il y a modification")
-    # A priori, l'utilisateur s'attend à sauvegarder le cas qui est ouvert
+    adaoLogger.debug("Sauvegarde du cas s'il y a modification (version save)")
+    # A priori, l'utilisateur s'attend a sauvegarder le cas qui est ouvert
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.iteritems():
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        if not adao_case.isOk():
+          adaoLogger.debug("Cas invalide, donc il est sauvegarde, mais il ne peut pas etre exporte vers YACS ensuite")
         self.eficas_manager.adaoFileSave(adao_case)
         break
 
   def saveasAdaoCase(self):
     adaoLogger.debug("Sauvegarde du cas s'il y a modification (version save as)")
-    # A priori, l'utilisateur s'attend à sauvegarder le cas qui est ouvert
+    # A priori, l'utilisateur s'attend a sauvegarder le cas qui est ouvert
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.iteritems():
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        if not adao_case.isOk():
+          adaoLogger.debug("Cas invalide, donc il est sauvegarde, mais il ne peut pas etre exporte vers YACS ensuite")
         self.eficas_manager.adaoFileSaveAs(adao_case)
         break
 
   def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
     adao_case = eficasEvent.callbackId
-    # On met à jour l'étude
+    # On met a jour l'etude
     adaoStudyEditor.updateItem(adao_case.salome_study_id, adao_case.salome_study_item, adao_case)
-    # Affichage correct dans l'étude
+    # Affichage correct dans l'etude
     adaoGuiHelper.refreshObjectBrowser()
     adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
     # Ajout du cas
@@ -261,14 +265,14 @@ class AdaoCaseManager(EficasObserver):
 #######
 #
 # Gestion de la fermeture d'un cas
-# 1: la fonction closeAdaoCase est appelée par le GUI SALOME
-# 2: la fonction _processEficasCloseEvent est appelée par le manager EFICAS
+# 1: la fonction closeAdaoCase est appelee par le GUI SALOME
+# 2: la fonction _processEficasCloseEvent est appelee par le manager EFICAS
 #
 #######
 
   def closeAdaoCase(self):
     adaoLogger.debug("Fermeture d'un cas")
-    # A priori, l'utilisateur s'attend à sauvegarder le cas qui est ouvert
+    # A priori, l'utilisateur s'attend a sauvegarder le cas qui est ouvert
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
@@ -284,7 +288,7 @@ class AdaoCaseManager(EficasObserver):
     editor = eficasEvent.callbackId
     # Recuperation du cas
     adao_case = self.cases[editor]
-    # Suppression de l'objet dans l'étude
+    # Suppression de l'objet dans l'etude
     adaoStudyEditor.removeItem(adao_case.salome_study_id, adao_case.salome_study_item)
     # Suppression du cas
     self.cases.pop(editor)
@@ -294,13 +298,13 @@ class AdaoCaseManager(EficasObserver):
 #######
 #
 # Gestion de la connexion avec YACS
-# 1: la fonction exportCasToYACS exporte l'étude vers YACS
+# 1: la fonction exportCasToYACS exporte l'etude vers YACS
 #
 #######
   def exportCaseToYACS(self):
     adaoLogger.debug("Export du cas vers YACS")
 
-    # A priori, l'utilisateur s'attend à exporter le cas qui est ouvert
+    # A priori, l'utilisateur s'attend a exporter le cas qui est ouvert
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
@@ -312,17 +316,17 @@ class AdaoCaseManager(EficasObserver):
           if msg != "":
             adaoGuiHelper.gui_warning(SalomePyQt.SalomePyQt().getDesktop(), msg)
         else:
-          adaoGuiHelper.gui_warning(SalomePyQt.SalomePyQt().getDesktop(), "Cannot export case, case is not valid")
+          adaoGuiHelper.gui_warning(SalomePyQt.SalomePyQt().getDesktop(), "ADAO/EFICAS case can't be exported to ADAO/YACS, it is incomplete or invalid. Please return to ADAO/EFICAS edition stage.")
         break
 
 #######
 #
-# Méthodes secondaires permettant de rediriger les évènements
-# de SALOME et d'Eficas vers les bonnes méthodes de la classe
+# Methodes secondaires permettant de rediriger les evenements
+# de SALOME et d'Eficas vers les bonnes methodes de la classe
 #
 #######
 
-  # Gestion des évènements venant du manager Eficas
+  # Gestion des evenements venant du manager Eficas
   __processOptions={
       EficasEvent.EVENT_TYPES.CLOSE      : "_processEficasCloseEvent",
       EficasEvent.EVENT_TYPES.SAVE       : "_processEficasSaveEvent",
@@ -345,7 +349,7 @@ class AdaoCaseManager(EficasObserver):
   def _processEficasUnknownEvent(self, eficasWrapper, eficasEvent):
     adaoLogger.error("Unknown Eficas Event")
 
-  # Gestion des évènements venant du GUI de SALOME
+  # Gestion des evenements venant du GUI de SALOME
   def processGUIEvent(self, actionId):
     """
     Main switch function for ui actions processing

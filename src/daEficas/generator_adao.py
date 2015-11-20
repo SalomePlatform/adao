@@ -66,10 +66,10 @@ class AdaoGenerator(PythonGenerator):
       self.generate_da()
       self.text_da_status = True
     except:
-      self.logger.info("Case is not correct, python command file for YACS schema generation cannot be created")
+      self.logger.debug("EFICAS case is not valid, python command file for YACS schema generation cannot be created")
       self.logger.debug(self.text_da)
       self.dictMCVal = {}
-      traceback.print_exc()
+      # traceback.print_exc()
     return self.text_comm
 
   def writeDefault(self, fn):
