@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2008-2015 EDF R&D
+# Copyright (C) 2008-2016 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
@@ -23,6 +23,6 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 name    = "ADAO"
-version = "V7_7_0" # Version pour catalogue, avec des "_" entre les numeros
+version = "V7_8_0" # Version pour catalogue, avec des "_" entre les numeros
 date    = ""
-year    = "2015" # Annee de copyright
+year    = "2016" # Annee de copyright
