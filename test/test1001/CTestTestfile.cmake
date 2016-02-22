@@ -1,4 +1,6 @@
-# Copyright (C) 2015  CEA/DEN, EDF R&D
+# Copyright (C) 2008-2016 EDF R&D
+#
+# This file is part of SALOME ADAO module
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,7 +22,7 @@
 #FILE(GLOB ADAO_TEST1001_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.py")
 
 SET(TEST_NAMES
-  HelloWorld
+  Versions
   )
 
 FOREACH(tfile ${TEST_NAMES})
