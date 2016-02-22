@@ -1,9 +1,9 @@
-# Copyright (C) 2008-2015 EDF R&D
+# Copyright (C) 2015  CEA/DEN, EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
-# version 2.1 of the License.
+# version 2.1 of the License, or (at your option) any later version.
 #
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,26 +16,16 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-include $(top_srcdir)/adm_local/make_common_starter.am
+#FILE(GLOB ADAO_TEST1001_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.py")
 
-SUBDIRS =
+SET(TEST_NAMES
+  HelloWorld
+  )
 
-if SALOME_MODULE
-SUBDIRS += idl
-endif
-
-SUBDIRS += src
-
-if SALOME_MODULE
-SUBDIRS += resources bin examples test
-endif
-
-if SPHINX_IS_OK
-SUBDIRS += doc
-endif
-
-ACLOCAL_AMFLAGS = -I adm_local -I ${KERNEL_ROOT_DIR}/salome_adm/unix/config_files
-
-EXTRA_DIST = autogen.sh
+FOREACH(tfile ${TEST_NAMES})
+  SET(TEST_NAME ADAO_${tfile})
+  ADD_TEST(${TEST_NAME} python ${tfile}.py)
+  #ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
+  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
+ENDFOREACH()

@@ -1,4 +1,6 @@
-# Copyright (C) 2008-2015 EDF R&D
+# Copyright (C) 2008-2016 EDF R&D
+#
+# This file is part of SALOME ADAO module
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,22 +22,20 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-SUBDIRS =
+EXTRA_DIST = test1001 test1002 CTestTestfileInstall.cmake.in
 
-if SALOME_MODULE
-SUBDIRS += idl
-endif
+DIR = $(top_srcdir)/test/
 
-SUBDIRS += src
+SALOMETESTDIR=$(DESTDIR)$(bindir)/test
 
-if SALOME_MODULE
-SUBDIRS += resources bin examples test
-endif
+install-data-local:
+	${mkinstalldirs} $(SALOMETESTDIR)
+	cp -R $(DIR)test1001 $(SALOMETESTDIR)
+	cp -R $(DIR)test1002 $(SALOMETESTDIR)
+	cp    $(DIR)CTestTestfileInstall.cmake.in $(SALOMETESTDIR)/CTestTestfile.cmake
 
-if SPHINX_IS_OK
-SUBDIRS += doc
-endif
-
-ACLOCAL_AMFLAGS = -I adm_local -I ${KERNEL_ROOT_DIR}/salome_adm/unix/config_files
-
-EXTRA_DIST = autogen.sh
+uninstall-local:
+	chmod -R +w $(SALOMETESTDIR)
+	rm -rf $(SALOMETESTDIR)/test1001
+	rm -rf $(SALOMETESTDIR)/test1002
+	rm     $(SALOMETESTDIR)/CTestTestfile.cmake

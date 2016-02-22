@@ -144,5 +144,6 @@ AC_CONFIG_FILES([
         doc/Makefile
         doc/en/Makefile
         doc/fr/Makefile
+        test/Makefile
         ])
 AC_OUTPUT
