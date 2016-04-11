@@ -27,7 +27,7 @@
 Introduction à ADAO
 ================================================================================
 
-Le but du module est ADAO **d'aider à l'usage de l'assimilation de données ou de
+Le but du module ADAO est **d'aider à l'usage de l'assimilation de données ou de
 l'optimisation en lien avec d'autres modules ou codes de simulation dans
 SALOME**. Le module ADAO fournit une interface à des algorithmes classiques
 d'assimilation de données ou d'optimisation, et permet d'intégrer leur usage

@@ -40,10 +40,11 @@ about their errors.
 In other words, data assimilation merges measurement data of a system, that are
 the observations, with *a priori* system physical and mathematical knowledge,
 embedded in numerical models, to obtain the best possible estimate of the system
-true state and of its stochastic properties. Note that this true state can not
-be reached, but can only be estimated. Moreover, despite the fact that the used
-information are stochastic by nature, data assimilation provides deterministic
-techniques in order to perform very efficiently the estimation.
+real state and of its stochastic properties. Note that this real state (or
+"*true state*") can not be reached, but can only be estimated. Moreover, despite
+the fact that the used information are stochastic by nature, data assimilation
+provides deterministic techniques in order to perform very efficiently the
+estimation.
 
 Because data assimilation look for the **best possible** estimate, its
 underlying procedure always integrates optimization in order to find this
@@ -121,9 +122,8 @@ In practice, the two observed gaps "*calculation-measures*" and
 parameters or initial conditions. The addition of these two gaps requires a
 relative weight, which is chosen to reflect the trust we give to each piece of
 information. This confidence is depicted by the covariance of the errors on the
-background and on the observations. Thus the stochastic aspect of information,
-measured or *a priori*, is essential for building the calibration error
-function.
+background and on the observations. Thus the stochastic aspect of information is
+essential for building the calibration error function.
 
 A simple example of parameters identification comes from any kind of physical
 simulation process involving a parametrized model. For example, a static

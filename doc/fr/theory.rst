@@ -42,7 +42,7 @@ En d'autres termes, l'assimilation de données rassemble les données mesurées
 d'un système, qui sont les observations, avec une connaissance physique et
 mathématique *a priori* du système, intégrée dans les modèles numériques, afin
 d'obtenir la meilleure estimation possible de l'état réel du système et de ses
-propriétés stochastiques. On note que cet état réel (ou "état" vrai") ne peut
+propriétés stochastiques. On note que cet état réel (ou "*état vrai*") ne peut
 être atteint, mais peut seulement être estimé. De plus, malgré le fait que les
 informations utilisées sont stochastiques par nature, l'assimilation de données
 fournit des techniques déterministes afin de réaliser l'estimation de manière
@@ -51,7 +51,7 @@ très efficace.
 L'assimilation de données cherchant l'estimation la **meilleure possible**, la
 démarche technique sous-jacente intègre toujours de l'optimisation afin de
 trouver cette estimation : des méthodes d'optimisation choisies sont toujours
-intégrés dans les algorithmes d'assimilation de données. Par ailleurs, les
+intégrées dans les algorithmes d'assimilation de données. Par ailleurs, les
 méthodes d'optimisation peuvent être vues dans ADAO comme un moyen d'étendre les
 applications d'assimilation de données. Elles seront présentées de cette façon
 dans la section pour `Approfondir l'estimation d'état par des méthodes
@@ -129,8 +129,8 @@ des paramètres ou des conditions initiales. L'ajout de ces deux incréments
 requiert une pondération relative, qui est choisie pour refléter la confiance
 que l'on donne à chaque information utilisée. Cette confiance est représentée
 par la covariance des erreurs sur l'ébauche et sur les observations. Ainsi
-l'aspect stochastique des informations, mesuré *a priori*, est essentiel pour
-construire une fonction d'erreur pour la calibration.
+l'aspect stochastique des informations est essentiel pour construire une
+fonction d'erreur pour la calibration.
 
 Un exemple simple d'identification de paramètres provient de tout type de
 simulation physique impliquant un modèle paramétré. Par exemple, une simulation
@@ -204,7 +204,7 @@ de la même manière que pour les observations. On définit la matrice
 
 L'estimation optimale des paramètres vrais :math:`\mathbf{x}^t`, étant donné
 l'ébauche :math:`\mathbf{x}^b` et les observations :math:`\mathbf{y}^o`, est
-ainsi l'"*analyse*" :math:`\mathbf{x}^a` et provient de la minimisation d'une
+ainsi "l'*analyse*" :math:`\mathbf{x}^a` et provient de la minimisation d'une
 fonction d'erreur, explicite en assimilation variationnelle, ou d'une correction
 de filtrage en assimilation par filtrage.
 
