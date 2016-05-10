@@ -55,6 +55,7 @@ class New(object):
             String               = None,
             Template             = None,
             ThreeFunctions       = None,
+            AppliedInXb          = None,
             Variable             = None,
             Vector               = None,
             VectorSerie          = None):
@@ -86,7 +87,7 @@ class New(object):
                                          DiagonalSparseMatrix,Script,Stored)
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(Matrix,OneFunction,ThreeFunctions,
-                                            Parameters,Script,Stored)
+                                            AppliedInXb, Parameters,Script,Stored)
             elif Concept == "AlgorithmParameters":
                 self.setAlgorithmParameters(Algorithm,Parameters,Script)
             elif Concept == "Debug":
@@ -394,6 +395,7 @@ class New(object):
             Matrix         = None,
             OneFunction    = None,
             ThreeFunctions = None,
+            AppliedInXb    = None,
             Parameters     = None,
             Script         = None,
             Stored         = False):
@@ -442,10 +444,15 @@ class New(object):
                 __Function.update(__Parameters)
             else:
                 __Function = None
+        if AppliedInXb is not None:
+            __appliedToX = {"HXb":AppliedInXb}
+        else:
+            __appliedToX = None
         #
         self.__adaoStudy.setObservationOperator(
             asFunction = __Function,
             asMatrix   = __Matrix,
+            appliedToX = __appliedToX,
             toBeStored = Stored,
             )
 

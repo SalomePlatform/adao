@@ -419,7 +419,7 @@ The available commands are:
 
 .. index:: single: setObservationOperator
 
-**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
+**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, Stored*)
     This command allows to set the evolution operator :math:`H`, which
     transforms the input parameters :math:`\mathbf{x}` in results
     :math:`\mathbf{y}` that are compared to observations :math:`\mathbf{y}^o`. 
@@ -429,7 +429,9 @@ The available commands are:
     or "*ThreeFunctions*" keywords.  If it is defined by a script in the
     "*Script*" keyword, the operator is of type "*Matrix*", "*OneFunction*" or
     "*ThreeFunctions*" according to whether one of these variables is positioned
-    to "*True*". The control parameters of the adjoint numerical approximation,
+    to "*True*". When the :math:`H` operator evaluated in :math:`\mathbf{x}^b`
+    is available, it can be given using "*AppliedInXb*" and will be considered
+    as a vector. The control parameters of the adjoint numerical approximation,
     in the "*OneFunction*"case, can be given by a dictionary through the
     "*Parameters*" keyword. Potential entries of this dictionary are
     "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the one

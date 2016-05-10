@@ -434,7 +434,7 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setObservationOperator
 
-**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
+**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, Stored*)
     Cette commande permet de définir l'opérateur d'observation :math:`H`, qui
     transforme les paramètres d'entrée :math:`\mathbf{x}` en résultats
     :math:`\mathbf{y}` qui sont à comparer aux observations
@@ -445,10 +445,12 @@ Les commandes disponibles sont les suivantes :
     "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
     "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
     "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
-    Les paramètres de contrôle de l'approximation numérique de l'opérateur
-    adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
-    dictionnaire dans "*Parameters*". Les entrées potentielles de ce
-    dictionnaire de paramètres sont "*DifferentialIncrement*",
+    Dans le cas où l'opérateur :math:`H` évalué en :math:`\mathbf{x}^b` est
+    disponible, il peut être donné en utilisant "*AppliedInXb*" et sera
+    considéré comme un vecteur. Les paramètres de contrôle de l'approximation
+    numérique de l'opérateur adjoint, dans le cas "*OneFunction*", peuvent être
+    renseignés par un dictionnaire dans "*Parameters*". Les entrées potentielles
+    de ce dictionnaire de paramètres sont "*DifferentialIncrement*",
     "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
     "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
 
