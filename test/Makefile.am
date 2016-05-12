@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-EXTRA_DIST = test1001 test1002 CTestTestfileInstall.cmake.in
+EXTRA_DIST = test1001 test1002 test6701 test6702 test6703 CTestTestfileInstall.cmake.in
 
 DIR = $(top_srcdir)/test/
 
@@ -31,10 +31,16 @@ install-data-local:
 	${mkinstalldirs} $(SALOMETESTDIR)
 	cp -R $(DIR)test1001 $(SALOMETESTDIR)
 	cp -R $(DIR)test1002 $(SALOMETESTDIR)
+	cp -R $(DIR)test6701 $(SALOMETESTDIR)
+	cp -R $(DIR)test6702 $(SALOMETESTDIR)
+	cp -R $(DIR)test6703 $(SALOMETESTDIR)
 	cp    $(DIR)CTestTestfileInstall.cmake.in $(SALOMETESTDIR)/CTestTestfile.cmake
 
 uninstall-local:
 	chmod -R +w $(SALOMETESTDIR)
 	rm -rf $(SALOMETESTDIR)/test1001
 	rm -rf $(SALOMETESTDIR)/test1002
+	rm -rf $(SALOMETESTDIR)/test6701
+	rm -rf $(SALOMETESTDIR)/test6702
+	rm -rf $(SALOMETESTDIR)/test6703
 	rm     $(SALOMETESTDIR)/CTestTestfile.cmake

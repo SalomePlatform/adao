@@ -19,16 +19,15 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(SALOME_TEST_DRIVER "@CMAKE_INSTALL_PREFIX@/bin/salome/appliskel/salome_test_driver.py")
+#FILE(GLOB ADAO_TEST1001_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.py")
 
-SET(COMPONENT_NAME ADAO)
-SET(TIMEOUT        500)
+SET(TEST_NAMES
+  Doc_TUI_Exemple_01
+  )
 
-# Add all test subdirs
-SUBDIRS(
-    test1001
-    test1002
-    test6701
-    test6702
-    test6703
-    )
+FOREACH(tfile ${TEST_NAMES})
+  SET(TEST_NAME ADAO_${tfile})
+  ADD_TEST(${TEST_NAME} python ${tfile}.py)
+  #ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
+  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
+ENDFOREACH()
