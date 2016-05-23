@@ -32,7 +32,7 @@ from Traducteur.inseremocle  import *
 from Traducteur.movemocle    import *
 from Traducteur.renamemocle  import *
 
-version_out = "V7_7_0"
+version_out = "V7_8_0"
 
 usage="""Usage: python %prog [options]
 

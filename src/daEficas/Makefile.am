@@ -19,7 +19,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
@@ -32,10 +32,11 @@ mypkgpython_PYTHON = \
 		__init__.py \
 		prefs_ADAO.py \
 		prefs.py \
-		traduitADAOsansToV7_7_0.py \
-		traduitADAOV7_4_0ToV7_7_0.py \
-		traduitADAOV7_5_0ToV7_7_0.py \
-		traduitADAOV7_5_1ToV7_7_0.py \
-		traduitADAOV7_6_0ToV7_7_0.py
+		traduitADAOsansToV7_8_0.py \
+		traduitADAOV7_4_0ToV7_8_0.py \
+		traduitADAOV7_5_0ToV7_8_0.py \
+		traduitADAOV7_5_1ToV7_8_0.py \
+		traduitADAOV7_6_0ToV7_8_0.py \
+		traduitADAOV7_7_0ToV7_8_0.py
 
 EXTRA_DIST = prefs_ADAO.py.in
