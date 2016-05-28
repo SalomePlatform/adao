@@ -137,7 +137,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé (sans cout)
         # ----------------------------------------------------------------
         if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
-            HXb = HO["AppliedToX"]["HXb"]
+            HXb = Hm( Xb, HO["AppliedToX"]["HXb"])
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T

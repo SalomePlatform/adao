@@ -142,7 +142,7 @@ class Operator(object):
         "Renvoie le type"
         return self.__Type
 
-    def appliedTo(self, xValue):
+    def appliedTo(self, xValue, HValue = None):
         """
         Permet de restituer le résultat de l'application de l'opérateur à un
         argument xValue. Cette méthode se contente d'appliquer, son argument
@@ -150,23 +150,28 @@ class Operator(object):
         Arguments :
         - xValue : argument adapté pour appliquer l'opérateur
         """
-        if self.__AvoidRC:
-            __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xValue)
-        else:
-            __alreadyCalculated = False
-        #
-        if __alreadyCalculated:
-            self.__addOneCacheCall()
-            HxValue = __HxV
-        else:
-            if self.__Matrix is not None:
-                self.__addOneMatrixCall()
-                HxValue = self.__Matrix * xValue
-            else:
-                self.__addOneMethodCall()
-                HxValue = self.__Method( xValue )
+        if HValue is not None:
+            HxValue = numpy.asmatrix( numpy.ravel( HValue ) ).T
             if self.__AvoidRC:
                 Operator.CM.storeValueInX(xValue,HxValue)
+        else:
+            if self.__AvoidRC:
+                __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xValue)
+            else:
+                __alreadyCalculated = False
+            #
+            if __alreadyCalculated:
+                self.__addOneCacheCall()
+                HxValue = __HxV
+            else:
+                if self.__Matrix is not None:
+                    self.__addOneMatrixCall()
+                    HxValue = self.__Matrix * xValue
+                else:
+                    self.__addOneMethodCall()
+                    HxValue = self.__Method( xValue )
+                if self.__AvoidRC:
+                    Operator.CM.storeValueInX(xValue,HxValue)
         #
         return HxValue
 
