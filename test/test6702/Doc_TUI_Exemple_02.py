@@ -19,6 +19,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+"Verification d'un exemple de la documentation"
 
 # ==============================================================================
 def test1():
@@ -34,6 +35,8 @@ def test1():
     case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
     case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
     case.execute()
+    #
+    return case.get("Analysis")[-1]
 
 def test2():
 
@@ -57,15 +60,22 @@ def test2():
         )
     case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
     case.execute()
+    #
+    return case.get("Analysis")[-1]
+
+def almost_equal_vectors(v1, v2):
+    print "\nMaximum of differences between the two :",max(abs(v2 - v1))
+    return max(abs(v2 - v1)) < 1.e-15
 
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
     print """Exemple de la doc :
 
-    Création détaillée d'un cas de calcul TUI ADAO
+    Creation detaillee d'un cas de calcul TUI ADAO
     ++++++++++++++++++++++++++++++++++++++++++++++
-    Les deux résultats doivent être identiques.
+    Les deux resultats sont testes pour etre identiques.
     """
-    test1()
-    test2()
+    xa1 = test1()
+    xa2 = test2()
+    assert almost_equal_vectors( xa1, xa2 )

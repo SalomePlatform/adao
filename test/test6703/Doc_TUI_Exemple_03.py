@@ -19,12 +19,12 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
-"Vérification d'un exemple de la documentation"
+"Verification d'un exemple de la documentation"
 
 # ==============================================================================
 
 #
-# Construction artificielle d'un exemple de données utilisateur
+# Construction artificielle d'un exemple de donnees utilisateur
 # -------------------------------------------------------------
 alpha = 5.
 beta = 7
@@ -51,7 +51,7 @@ def test1():
     import numpy
     import adaoBuilder
     #
-    # Mise en forme des entrées
+    # Mise en forme des entrees
     # -------------------------
     Xb = (alpha, beta, gamma)
     Bounds = (
@@ -87,17 +87,17 @@ def test1():
     case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
     case.execute()
     #
-    # Exploitation indépendante
+    # Exploitation independante
     # -------------------------
     Xbackground   = case.get("Background")
     Xoptimum      = case.get("Analysis")[-1]
     FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
     J_values      = case.get("CostFunctionJ")[:]
     print
-    print "Nombre d'itérations internes...: %i"%len(J_values)
-    print "Etat initial...................:",numpy.ravel(Xbackground)
-    print "Etat optimal...................:",numpy.ravel(Xoptimum)
-    print "Simulation à l'état optimal....:",numpy.ravel(FX_at_optimum)
+    print "Number of internal iterations...: %i"%len(J_values)
+    print "Initial state...................:",numpy.ravel(Xbackground)
+    print "Optimal state...................:",numpy.ravel(Xoptimum)
+    print "Simulation at optimal state.....:",numpy.ravel(FX_at_optimum)
     print
 
 # ==============================================================================
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
     print """Exemple de la doc :
 
-    Exploitation indépendante des résultats d'un cas de calcul
+    Exploitation independante des resultats d'un cas de calcul
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     """
     test1()

@@ -19,6 +19,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+"Verification d'un exemple de la documentation"
 
 # ==============================================================================
 def test1():
@@ -40,7 +41,7 @@ if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
     print """Exemple de la doc :
 
-    Un exemple simple de création d'un cas de calcul TUI ADAO
+    Un exemple simple de creation d'un cas de calcul TUI ADAO
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     """
     test1()
