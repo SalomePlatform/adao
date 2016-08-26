@@ -2,13 +2,17 @@
 #-*-coding:iso-8859-1-*-
 """Test des versions de modules"""
 
-minimal_python_version     = "2.7.10"
-minimal_numpy_version      = "1.9.2"
-minimal_scipy_version      = "0.15.0"
-minimal_matplotlib_version = "1.4.3"
+# Versions Calibre9/Jessie
+minimal_python_version     = "2.7.9"
+minimal_numpy_version      = "1.8.2"
+minimal_scipy_version      = "0.14.0"
+minimal_matplotlib_version = "1.4.2"
 
 def compare_versions(v1,v2):
     "Comparaison v1 >= v2"
+    for s in ['+', 'rc1', 'rc2', 'rc3']:
+        v1 = v1.replace(s,'',1)
+        v2 = v2.replace(s,'',1)
     v11,v12,v13 = map(float,v1.split('.'))
     v21,v22,v23 = map(float,v2.split('.'))
     lv1 = 1e6*v11 + 1e3*v12 + v13
