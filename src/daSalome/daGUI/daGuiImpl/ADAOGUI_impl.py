@@ -22,8 +22,14 @@
 
 __author__="aribes/gboulant"
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from daUtils.qtversion import useQT5
+if useQT5:
+    from PyQt5.QtGui import *
+    from PyQt5.QtCore import *
+    from PyQt5.QtWidgets import QApplication
+else:
+    from PyQt4.QtGui import *
+    from PyQt4.QtCore import *
 
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
@@ -49,6 +55,7 @@ __study2context__   = {}
 __current_context__ = None
 def _setContext( studyID ):
     global __study2context__, __current_context__
+    QApplication.processEvents()
     if not __study2context__.has_key(studyID):
         __study2context__[studyID] = GUIcontext()
         pass
@@ -98,13 +105,11 @@ def activate():
 def deactivate():
     ctx = _setContext( sgPyQt.getStudyId() )
     ctx.adaoCaseManager.deactivate()
-    pass
 
 # called when active study is changed
 # active study ID is passed as parameter
 def activeStudyChanged( studyID ):
     ctx = _setContext( sgPyQt.getStudyId() )
-    pass
 
 # called when popup menu is invoked
 # popup menu and menu context are passed as parameters
@@ -121,7 +126,6 @@ def OnGUIEvent(actionId) :
     Called when an event is raised from a graphic item (click on menu item or
     toolbar button). The actionId value is the ID associated to the item.
     """
-    pass
     ctx = _setContext( sgPyQt.getStudyId() )
     ctx.adaoCaseManager.processGUIEvent(actionId)
 
@@ -133,7 +137,7 @@ def preferenceChanged( section, setting ):
 # called when active view is changed
 # view ID is passed as parameter
 def activeViewChanged( viewID ):
-  pass
+    pass
 
 # called when active view is cloned
 # cloned view ID is passed as parameter

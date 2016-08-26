@@ -25,9 +25,14 @@ import os
 
 import eficasSalome               # Import from EFICAS_SRC
 from InterfaceQT4 import qtEficas # Import from Eficas
-from PyQt4.QtGui  import *        # Import from PyQT
-from PyQt4.QtCore import *        # Import from PyQT
-# from PyQt4.QtAssistant import *   # Import from PyQT
+from daUtils.qtversion import useQT5
+if useQT5:
+    from PyQt5.QtGui  import *        # Import from PyQT
+    from PyQt5.QtCore import *        # Import from PyQT
+else:
+    from PyQt4.QtGui  import *        # Import from PyQT
+    from PyQt4.QtCore import *        # Import from PyQT
+    # from PyQt5.QtAssistant import *   # Import from PyQT
 
 from daUtils.adaoEficasEvent import *
 from daUtils.adaoLogger import *
@@ -51,9 +56,14 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
     def init_gui(self):
 
       eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
-      self.connect(self.viewmanager.myQtab, SIGNAL('currentChanged(int)'), self.tabChanged)
+      if useQT5:
+          self.viewmanager.myQtab.currentChanged.connect(self.tabChanged)
+      else:
+          self.connect(self.viewmanager.myQtab, SIGNAL('currentChanged(int)'), self.tabChanged)
       self.menubar.hide()
       self.toolBar.hide()
+      if useQT5:
+          self.frameEntete.close()
 
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))

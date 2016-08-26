@@ -79,7 +79,11 @@ def componentName():
 # _MEM_ we use here the tr() translation methode to manage constant parameters
 # in the application. We could have specified instead constant values directly
 # in the code below. It's a matter of convenience.
-from PyQt4.QtCore import QObject
+from daUtils.qtversion import useQT5
+if useQT5:
+    from PyQt5.QtCore import QObject
+else:
+    from PyQt4.QtCore import QObject
 QObjectTR=QObject()
 
 def componentUserName():

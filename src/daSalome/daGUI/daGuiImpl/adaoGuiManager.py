@@ -28,9 +28,15 @@ in the GUI part of the module.
 __author__ = "aribes/gboulant"
 
 import traceback
-from PyQt4.QtCore import QObject
-from PyQt4.QtCore import *        # Import from PyQT
-from PyQt4 import QtGui,QtCore
+from daUtils.qtversion import useQT5
+if useQT5:
+    from PyQt5.QtCore import QObject
+    from PyQt5.QtWidgets import QScrollArea
+else:
+    from PyQt4.QtCore import QObject
+    from PyQt4.QtCore import *        # Import from PyQT
+    from PyQt4 import QtCore
+    from PyQt4.QtGui import QScrollArea
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
@@ -97,7 +103,7 @@ class AdaoCaseManager(EficasObserver):
 
     # Creation du viewer QT
     # Scroll Widget (pour les petites resolutions)
-    area = QtGui.QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
+    area = QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
     area.setWidget(self.eficas_manager)
     area.setWidgetResizable(1)
     wmType = "ADAO View"
@@ -109,7 +115,10 @@ class AdaoCaseManager(EficasObserver):
 
     # On s'abonne au gestionnaire de selection
     self.selection_manager = sgPyQt.getSelection()
-    QtCore.QObject.connect(self.selection_manager, QtCore.SIGNAL('currentSelectionChanged()'), self.currentSelectionChanged)
+    if useQT5:
+        self.selection_manager.currentSelectionChanged.connect(self.currentSelectionChanged)
+    else:
+        QtCore.QObject.connect(self.selection_manager, QtCore.SIGNAL('currentSelectionChanged()'), self.currentSelectionChanged)
 
 ######
 #

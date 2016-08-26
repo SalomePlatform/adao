@@ -27,5 +27,6 @@ mypkgpython_PYTHON = \
 		     __init__.py \
 		     adaoEficasEvent.py \
 		     adaoLogger.py \
+		     qtversion.py \
 		     enumerate.py
 
