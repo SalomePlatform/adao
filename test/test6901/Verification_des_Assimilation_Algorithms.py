@@ -25,6 +25,7 @@
 import adaoBuilder, numpy
 def test1():
     """Verification de la disponibilite de l'ensemble des algorithmes"""
+    Xa = {}
     for algo in ("3DVAR", "Blue", "ExtendedBlue", "LinearLeastSquares", "NonLinearLeastSquares", ):
         print
         msg = "Algorithme en test : %s"%algo
@@ -39,6 +40,7 @@ def test1():
         adaopy.setObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
         adaopy.setObserver("Analysis",Template="ValuePrinter")
         adaopy.execute()
+        Xa[algo] = adaopy.get("Analysis")[-1]
         del adaopy
     #
     for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
@@ -57,6 +59,7 @@ def test1():
         adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
         adaopy.setObserver("Analysis",Template="ValuePrinter")
         adaopy.execute()
+        Xa[algo] = adaopy.get("Analysis")[-1]
         del adaopy
     #
     for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
@@ -75,6 +78,7 @@ def test1():
         adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
         adaopy.setObserver("Analysis",Template="ValuePrinter")
         adaopy.execute()
+        Xa[algo] = adaopy.get("Analysis")[-1]
         del adaopy
     #
     for algo in ("EnsembleBlue", ):
@@ -95,7 +99,28 @@ def test1():
         adaopy.execute()
         del adaopy
     #
+    print
+    msg = "Tests des ecarts"
+    print msg+"\n"+"="*len(msg)
+    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue"), Xa)
+    verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa)
+    verify_similarity_of_algo_results(("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter"), Xa)
+    print
+    #
     return 0
+
+def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
+    """Comparaison de deux vecteurs"""
+    print "  Difference maximale %s: %.2e"%(msg, max(abs(v2 - v1)))
+    return max(abs(v2 - v1)) < precision
+
+def verify_similarity_of_algo_results(serie = [], Xa = {}):
+    print "Camparaisons :"
+    for algo1 in serie:
+        for algo2 in serie:
+            if algo1 is algo2: break
+            assert almost_equal_vectors( Xa[algo1], Xa[algo2], 1.e-5, "entre %s et %s "%(algo1, algo2) )
+    print "Algorithmes dont les resultats sont similaires : %s\n"%(serie,)
 
 #===============================================================================
 if __name__ == "__main__":

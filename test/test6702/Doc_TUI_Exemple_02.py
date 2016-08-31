@@ -63,10 +63,10 @@ def test2():
     #
     return case.get("Analysis")[-1]
 
-def almost_equal_vectors(v1, v2):
+def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
     """Comparaison de deux vecteurs"""
-    print "\nMaximum of differences between the two :",max(abs(v2 - v1))
-    return max(abs(v2 - v1)) < 1.e-15
+    print "  Difference maximale %s: %.2e"%(msg, max(abs(v2 - v1)))
+    return max(abs(v2 - v1)) < precision
 
 # ==============================================================================
 if __name__ == "__main__":
@@ -79,4 +79,4 @@ if __name__ == "__main__":
     """
     xa1 = test1()
     xa2 = test2()
-    assert almost_equal_vectors( xa1, xa2 )
+    assert almost_equal_vectors( xa1, xa2, msg = "entre les deux" )
