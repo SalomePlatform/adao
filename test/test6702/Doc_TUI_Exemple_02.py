@@ -23,7 +23,7 @@
 
 # ==============================================================================
 def test1():
-
+    """Exemple"""
     from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
@@ -39,7 +39,7 @@ def test1():
     return case.get("Analysis")[-1]
 
 def test2():
-
+    """Exemple"""
     from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
@@ -64,6 +64,7 @@ def test2():
     return case.get("Analysis")[-1]
 
 def almost_equal_vectors(v1, v2):
+    """Comparaison de deux vecteurs"""
     print "\nMaximum of differences between the two :",max(abs(v2 - v1))
     return max(abs(v2 - v1)) < 1.e-15
 

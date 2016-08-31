@@ -30,11 +30,6 @@
 **[DocR]** Textual Application Programming Interface for the user (API/TUI)
 ================================================================================
 
-.. warning::
-
-  in its present version, this text programming interface (TUI) is experimental,
-  and so changes can be required in forthcoming versions.
-
 This section presents advanced usage of the ADAO module using its text
 programming interface (API/TUI). This interface gives ability to create a
 calculation object in a similar way than the case building obtained through the
@@ -515,6 +510,8 @@ Get the calculation results separately
     to the :ref:`subsection_r_o_v_Inventaire` and more generally to the
     :ref:`section_ref_output_variables` and to the individual documentations of
     the algorithms.
+
+.. _subsection_tui_advanced:
 
 More advanced examples of ADAO TUI calculation case
 ---------------------------------------------------

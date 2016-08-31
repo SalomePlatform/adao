@@ -23,7 +23,7 @@
 
 # ==============================================================================
 def test1():
-
+    """Exemple"""
     from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
@@ -35,6 +35,8 @@ def test1():
     case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
     case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
     case.execute()
+    #
+    return 0
 
 # ==============================================================================
 if __name__ == "__main__":

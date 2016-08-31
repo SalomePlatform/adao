@@ -68,7 +68,6 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))
       # On gere nous meme l'etude
-      pass
 
 #######
 #

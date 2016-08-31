@@ -22,7 +22,6 @@
 "Verification d'un exemple de la documentation"
 
 # ==============================================================================
-
 #
 # Construction artificielle d'un exemple de donnees utilisateur
 # -------------------------------------------------------------
@@ -47,7 +46,7 @@ observations = simulation((2, 3, 4))
 
 # ==============================================================================
 def test1():
-    "Test"
+    "Exemple"
     import numpy
     import adaoBuilder
     #
@@ -99,6 +98,8 @@ def test1():
     print "Optimal state...................:",numpy.ravel(Xoptimum)
     print "Simulation at optimal state.....:",numpy.ravel(FX_at_optimum)
     print
+    #
+    return 0
 
 # ==============================================================================
 if __name__ == "__main__":

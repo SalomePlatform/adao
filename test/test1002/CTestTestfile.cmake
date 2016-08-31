@@ -19,8 +19,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-#FILE(GLOB ADAO_TEST1001_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.py")
-
 SET(TEST_NAMES
   HelloWorld
   )

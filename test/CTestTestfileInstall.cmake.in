@@ -31,4 +31,5 @@ SUBDIRS(
     test6701
     test6702
     test6703
+    test6901
     )

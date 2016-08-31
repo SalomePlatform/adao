@@ -20,7 +20,7 @@
 #
 
 SET(TEST_NAMES
-  Doc_TUI_Exemple_03
+  Verification_des_Assimilation_Algorithms
   )
 
 FOREACH(tfile ${TEST_NAMES})

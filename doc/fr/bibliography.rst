@@ -29,6 +29,8 @@ Bibliographie
 
 .. [Argaud09] Argaud J.-P., Bouriquet B., Hunt J., *Data Assimilation from Operational and Industrial Applications to Complex Systems*, Mathematics Today, pp.150-152, October 2009
 
+.. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and http://rpython.r-forge.r-project.org/
+
 .. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999, http://www.ecmwf.int/sites/default/files/Data%20assimilation%20concepts%20and%20methods.pdf
 
 .. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014, http://cerea.enpc.fr/HomePages/bocquet/Doc/assim-mb.pdf 
@@ -43,7 +45,7 @@ Bibliographie
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
-.. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, available at http://www.econ.uiuc.edu/~roger/research/intro/intro.html
+.. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, http://www.econ.uiuc.edu/~roger/research/intro/intro.html
 
 .. [Koenker01] Koenker R., Hallock K. F., *Quantile Regression*, Journal of Economic Perspectives, 15(4), pp.143-156, 2001
 
@@ -52,6 +54,8 @@ Bibliographie
 .. [Nelder] Nelder J.A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
 
 .. [Powell] Powell M.J.D., *An efficient method for finding the minimum of a function of several variables without calculating derivatives*, Computer Journal, 7(2), pp.155-162, 1964
+
+.. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
 
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 
