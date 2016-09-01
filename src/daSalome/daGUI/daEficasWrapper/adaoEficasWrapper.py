@@ -60,10 +60,11 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
           self.viewmanager.myQtab.currentChanged.connect(self.tabChanged)
       else:
           self.connect(self.viewmanager.myQtab, SIGNAL('currentChanged(int)'), self.tabChanged)
-      self.menubar.hide()
-      self.toolBar.hide()
-      if useQT5:
-          self.frameEntete.close()
+      # self.menubar.hide()
+      # self.toolBar.hide()
+      # if useQT5:
+      #     self.frameEntete.close()
+      self.closeEntete()
 
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))
