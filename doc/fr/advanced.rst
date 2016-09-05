@@ -191,6 +191,114 @@ de types pour éviter d'obscures difficultés::
 Cette démarche permet par exemple d'éditer le schéma YACS XML en mode texte TUI,
 ou de rassembler les résultats pour un usage ultérieur.
 
+.. _section_advanced_R:
+
+Exécuter un calcul ADAO en environnement R en utilisant l'interface TUI ADAO
+----------------------------------------------------------------------------
+
+.. index:: single: R
+.. index:: single: rPython
+
+Pour étendre les possibilités d'analyse et de traitement, il est possible
+d'utiliser les calculs ADAO dans l'environnement **R** (voir [R]_ pour plus de
+détails). Ce dernier est disponible dans SALOME en lançant l'interpréteur R dans
+le shell "``salome shell``". Il faut de plus disposer, en R, du package
+"*rPython*", qui peut si nécessaire être installé par l'utilisateur à l'aide de
+la commande R suivante::
+
+    install.packages("rPython")
+
+On se reportera à la documentation [GilBellosta15]_ pour de plus amples
+renseignements sur ce package.
+
+Les calculs ADAO définis en interface textuelle (API/TUI, voir la
+:ref:`section_tui`) peuvent alors être interprétés depuis l'environnement R, en
+utilisant des données et des informations depuis R. La démarche est illustrée
+sur :ref:`subsection_tui_example`, proposé dans la description de l'interface
+API/TUI. Dans l'interpréteur R, on peut exécuter les commandes suivantes,
+directement issues de l'exemple simple::
+
+    #
+    # IMPORTANT : à exécuter dans l'interpréteur R
+    # --------------------------------------------
+    library(rPython)
+    python.exec("
+        from numpy import array
+        import adaoBuilder
+        case = adaoBuilder.New()
+        case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
+        case.set( 'Background',          Vector=[0, 1, 2] )
+        case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
+        case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
+        case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
+        case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
+        case.set( 'Observer',            Variable='Analysis', Template='ValuePrinter' )
+        case.execute()
+    ")
+
+dont le résultat est::
+
+    Analysis [ 0.25000264  0.79999797  0.94999939]
+
+Dans la rédaction des calculs ADAO exécutés depuis R, il convient d'être très
+attentif au bon usage des guillemets simples et doubles, qui ne doivent pas
+collisionner entre les deux langages.
+
+Les données peuvent venir l'environnement R et doivent être rangées dans des
+variables correctement assignées, pour être utilisées ensuite en Python pour
+ADAO. On se reportera à la documentation [GilBellosta15]_ pour la mise en
+oeuvre. On peut transformer l'exemple ci-dessus pour utiliser des données
+provenant de R pour alimenter les trois variables d'ébauche, d'observation et
+d'opérateur d'observation. On récupère à la fin l'état optimal dans une variable
+R aussi. Les autres lignes sont identiques. L'exemple devient ainsi::
+
+    #
+    # IMPORTANT : à exécuter dans l'interpréteur R
+    # --------------------------------------------
+    #
+    # Variables R
+    # -----------
+    xb <- 0:2
+    yo <- c(0.5, 1.5, 2.5)
+    h <- '1 0 0;0 2 0;0 0 3'
+    #
+    # Code Python
+    # -----------
+    library(rPython)
+    python.assign( "xb",  xb )
+    python.assign( "yo",  yo )
+    python.assign( "h",  h )
+    python.exec("
+        from numpy import array
+        import adaoBuilder
+        case = adaoBuilder.New()
+        case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
+        case.set( 'Background',          Vector=xb )
+        case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
+        case.set( 'Observation',         Vector=array(yo) )
+        case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
+        case.set( 'ObservationOperator', Matrix=str(h) )
+        case.set( 'Observer',            Variable='Analysis', Template='ValuePrinter' )
+        case.execute()
+        xa = list(case.get('Analysis')[-1])
+    ")
+    #
+    # Variables R
+    # -----------
+    xa <- python.get("xa")
+
+On remarquera les conversions explicite de type ``str`` et ``list`` pour
+s'assurer que les données sont bien transmises en type standards connus du
+package "*rPython*". De plus, ce sont les données qui peuvent être transférées
+entre les deux langages, et pas des fonctions ou méthodes. Il convient donc
+d'élaborer en Python de manière générique les fonctions d'exécution requises par
+ADAO, et de leur transmettre ensuite de manière correcte les données disponibles
+en R.
+
+Les cas plus complets, proposés dans les :ref:`subsection_tui_advanced`, peuvent
+être exécutés de la même manière, et ils donnent le même résultat que dans
+l'interface API/TUI en Python standard.
+
 .. _section_advanced_observer:
 
 Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO en YACS
@@ -336,38 +444,15 @@ commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'une
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
 
-Passer de la version 7.6 à la 7.7
+Passer de la version 7.8 à la 8.1
 +++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
 avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
-Passer de la version 7.5 à la 7.6
-+++++++++++++++++++++++++++++++++
-
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom. Cette
-procédure effectue automatiquement les modifications requises dans
-l'arborescence de stockage du fichier de cas ADAO.
-
-Passer de la version 7.4 à la 7.5
-+++++++++++++++++++++++++++++++++
-
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
-avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
-
-Passer de la version 7.3 à la 7.4
-+++++++++++++++++++++++++++++++++
-
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
-avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
-
-Passer de la version 7.2 à la 7.3
-+++++++++++++++++++++++++++++++++
+Passer de la version 7.x à la 7.y avec x < y
+++++++++++++++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
@@ -396,29 +481,16 @@ objets de type liste ou tuple::
 
 Les scripts de post-processing doivent être modifiés.
 
-Passer de la version 6.5 à la 6.6
-+++++++++++++++++++++++++++++++++
+Passer de la version 6.x à la 6.y avec x < y
+++++++++++++++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
 le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
-Il y a une incompatibilité introduite dans la dénomination des opérateurs
-élémentaires utilisés pour l'opérateur d'observation par script. Les nouveaux
-noms requis sont "*DirectOperator*", "*TangentOperator*" et "*AdjointOperator*",
-comme décrit dans la quatrième partie du chapitre :ref:`section_reference`. Les
-scripts d'opérateur doivent être modifiés.
-
-Passer de la version 6.4 à la 6.5
-+++++++++++++++++++++++++++++++++
-
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
-
-Passer de la version 6.3 à la 6.4
-+++++++++++++++++++++++++++++++++
-
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+Il y a une incompatibilité introduite dans les fichiers de script d'opérateur,
+lors de la dénomination des opérateurs élémentaires utilisés pour l'opérateur
+d'observation par script. Les nouveaux noms requis sont "*DirectOperator*",
+"*TangentOperator*" et "*AdjointOperator*", comme décrit dans la quatrième
+partie du chapitre :ref:`section_reference`. Les fichiers de script d'opérateur
+doivent être modifiés.

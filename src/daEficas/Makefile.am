@@ -32,11 +32,12 @@ mypkgpython_PYTHON = \
 		__init__.py \
 		prefs_ADAO.py \
 		prefs.py \
-		traduitADAOsansToV7_8_0.py \
-		traduitADAOV7_4_0ToV7_8_0.py \
-		traduitADAOV7_5_0ToV7_8_0.py \
-		traduitADAOV7_5_1ToV7_8_0.py \
-		traduitADAOV7_6_0ToV7_8_0.py \
-		traduitADAOV7_7_0ToV7_8_0.py
+		traduitADAOsansToV8_1_0.py \
+		traduitADAOV7_4_0ToV8_1_0.py \
+		traduitADAOV7_5_0ToV8_1_0.py \
+		traduitADAOV7_5_1ToV8_1_0.py \
+		traduitADAOV7_6_0ToV8_1_0.py \
+		traduitADAOV7_7_0ToV8_1_0.py \
+		traduitADAOV7_8_0ToV8_1_0.py
 
 EXTRA_DIST = prefs_ADAO.py.in
