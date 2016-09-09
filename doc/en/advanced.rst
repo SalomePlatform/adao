@@ -196,6 +196,9 @@ in SALOME by launching the R interpreter in the shell "``salome shell``".
 Moreover, the package "*rPython*" has to be available, it can be installed by
 the user if required by the following R command::
 
+    #
+    # IMPORTANT: to be run in R interpreter
+    # -------------------------------------
     install.packages("rPython")
 
 One will refer to the [GilBellosta15]_ documentation for more information on

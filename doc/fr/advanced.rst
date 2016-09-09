@@ -206,6 +206,9 @@ le shell "``salome shell``". Il faut de plus disposer, en R, du package
 "*rPython*", qui peut si nécessaire être installé par l'utilisateur à l'aide de
 la commande R suivante::
 
+    #
+    # IMPORTANT : à exécuter dans l'interpréteur R
+    # --------------------------------------------
     install.packages("rPython")
 
 On se reportera à la documentation [GilBellosta15]_ pour de plus amples
