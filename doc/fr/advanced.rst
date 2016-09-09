@@ -206,6 +206,7 @@ le shell "``salome shell``". Il faut de plus disposer, en R, du package
 "*rPython*", qui peut si nécessaire être installé par l'utilisateur à l'aide de
 la commande R suivante::
 
+    #-*-coding:iso-8859-1-*-
     #
     # IMPORTANT : à exécuter dans l'interpréteur R
     # --------------------------------------------
@@ -221,6 +222,7 @@ sur :ref:`subsection_tui_example`, proposé dans la description de l'interface
 API/TUI. Dans l'interpréteur R, on peut exécuter les commandes suivantes,
 directement issues de l'exemple simple::
 
+    #-*-coding:iso-8859-1-*-
     #
     # IMPORTANT : à exécuter dans l'interpréteur R
     # --------------------------------------------
@@ -255,6 +257,7 @@ provenant de R pour alimenter les trois variables d'ébauche, d'observation et
 d'opérateur d'observation. On récupère à la fin l'état optimal dans une variable
 R aussi. Les autres lignes sont identiques. L'exemple devient ainsi::
 
+    #-*-coding:iso-8859-1-*-
     #
     # IMPORTANT : à exécuter dans l'interpréteur R
     # --------------------------------------------

@@ -196,6 +196,7 @@ in SALOME by launching the R interpreter in the shell "``salome shell``".
 Moreover, the package "*rPython*" has to be available, it can be installed by
 the user if required by the following R command::
 
+    #-*-coding:iso-8859-1-*-
     #
     # IMPORTANT: to be run in R interpreter
     # -------------------------------------
@@ -211,6 +212,7 @@ and information from R. The approach is illustrated in the example
 In the R interpreter, one can run the following commands, directly coming from
 the simple example::
 
+    #-*-coding:iso-8859-1-*-
     #
     # IMPORTANT: to be run in R interpreter
     # -------------------------------------
@@ -244,6 +246,7 @@ above example to use data from R to feed the three variables of background,
 observation and observation operator. We get in the end the optimal state also
 in a R variable. The other lines are identical. The example thus becomes::
 
+    #-*-coding:iso-8859-1-*-
     #
     # IMPORTANT: to be run in R interpreter
     # -------------------------------------
