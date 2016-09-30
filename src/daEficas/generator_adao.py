@@ -55,7 +55,7 @@ class AdaoGenerator(PythonGenerator):
     ch.setFormatter(formatter)
     self.logger.addHandler(ch)
 
-  def gener(self,obj,format='brut',config=None):
+  def gener(self,obj,format='brut',config=None,appli=None):
     self.logger.debug("method gener called")
     self.text_comm = PythonGenerator.gener(self, obj, format, config)
     for key, value in self.dictMCVal.iteritems():
