@@ -110,12 +110,6 @@ class ExtendedLogging(object):
         logging.info( "- Scipy "+p.getScipyVersion() )
         logging.info( "" )
 
-#     def setLogfileLevel(self, level=logging.NOTSET ):
-#         """
-#         Permet de changer globalement le niveau des messages disponibles.
-#         """
-#         logging.getLogger().setLevel(level)
-#
     def setLogfile(self, filename=LOGFILE, filemode="w", level=logging.NOTSET):
         """
         Permet de disposer des messages dans un fichier EN PLUS de la console.

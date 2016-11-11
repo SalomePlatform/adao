@@ -20,7 +20,7 @@
 #
 
 SET(TEST_NAMES
-  HelloWorld
+  Performances
   )
 
 FOREACH(tfile ${TEST_NAMES})
