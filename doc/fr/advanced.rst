@@ -450,6 +450,13 @@ commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'une
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
 
+Passer de la version 8.x à la 8.y avec x < y
+++++++++++++++++++++++++++++++++++++++++++++
+
+Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
+procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+
 Passer de la version 7.8 à la 8.1
 +++++++++++++++++++++++++++++++++
 
