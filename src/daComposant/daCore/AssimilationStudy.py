@@ -41,7 +41,7 @@ except ImportError:
     logging.debug("Fail initial import of scipy.optimize")
 import Persistence
 from BasicObjects import Operator, Covariance
-from PlatformInfo import uniq
+import PlatformInfo
 
 # ==============================================================================
 class AssimilationStudy:
@@ -97,7 +97,7 @@ class AssimilationStudy:
         # qui est activée dans Persistence)
         self.__parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         sys.path.insert(0, self.__parent)
-        sys.path = uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
+        sys.path = PlatformInfo.uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
 
     # ---------------------------------------------------------
     def setBackground(self,
@@ -465,12 +465,7 @@ class AssimilationStudy:
 
     # -----------------------------------------------------------
     def setControlModel(self,
-            asFunction = {"Direct":None, "Tangent":None, "Adjoint":None,
-                          "useApproximatedDerivatives":False,
-                          "withCenteredDF"            :False,
-                          "withIncrement"             :0.01,
-                          "withdX"                    :None,
-                         },
+            asFunction = None,
             asMatrix   = None,
             Scheduler  = None,
             toBeStored = False,
@@ -945,7 +940,7 @@ class AssimilationStudy:
         if not os.path.isfile(os.path.join(asPath,"daAlgorithms","__init__.py")):
             raise ValueError("The given \""+asPath+"/daAlgorithms\" path must contain a file named \"__init__.py\"")
         sys.path.insert(0, os.path.abspath(asPath))
-        sys.path = uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
+        sys.path = PlatformInfo.uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
         return 1
 
     def get_diagnostics_main_path(self):
@@ -970,7 +965,7 @@ class AssimilationStudy:
         if not os.path.isfile(os.path.join(asPath,"daDiagnostics","__init__.py")):
             raise ValueError("The given \""+asPath+"/daDiagnostics\" path must contain a file named \"__init__.py\"")
         sys.path.insert(0, os.path.abspath(asPath))
-        sys.path = uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
+        sys.path = PlatformInfo.uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
         return 1
 
     # -----------------------------------------------------------

@@ -158,6 +158,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             l'on atteigne la précision du calcul.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
+
+            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
+                       a la precision machine.
             """
         #
         if len(self._parameters["ResultTitle"]) > 0:

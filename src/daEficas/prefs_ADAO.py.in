@@ -39,3 +39,8 @@ initialdir=os.environ["PWD"]
 encoding='iso-8859-1'
 # lang indique la langue utilisee pour les chaines d'aide : fr ou ang
 lang='fr'
+closeAutreCommande = True
+closeFrameRechercheCommande = True
+closeEntete = True
+taille=800
+

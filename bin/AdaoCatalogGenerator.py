@@ -406,12 +406,12 @@ for assim_data_input_name in infos.AssimDataDict.keys():
   decl_choices = ""
   decl_opts = ""
   if infos.AssimDataDefaultDict[assim_data_input_name] in infos.StoredAssimData:
-    storage = "    Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0, fr=\"Choix de stockage interne ou non du concept parent\", ang=\"Choice of the storage or not of the parent concept\"),"
+    storage = "    Stored = SIMP(statut=\"f\", typ = \"I\", into=(0, 1), defaut=0, fr=\"Choix de stockage interne ou non du concept parent\", ang=\"Choice of the storage or not of the parent concept\"),"
   for choice in infos.AssimDataDict[assim_data_input_name]:
     choices += "\"" + choice + "\", "
     decl_choices += assim_data_choice.substitute(choice_name = choice)
     if choice in infos.StoredAssimData:
-      storage = "    Stored = SIMP(statut=\"o\", typ = \"I\", into=(0, 1), defaut=0, fr=\"Choix de stockage interne ou non du concept parent\", ang=\"Choice of the storage or not of the parent concept\"),"
+      storage = "    Stored = SIMP(statut=\"f\", typ = \"I\", into=(0, 1), defaut=0, fr=\"Choix de stockage interne ou non du concept parent\", ang=\"Choice of the storage or not of the parent concept\"),"
   default_choice = "\"" + infos.AssimDataDefaultDict[assim_data_input_name] + "\""
 
   mem_file.write(assim_data_method.substitute(assim_name = assim_data_input_name,

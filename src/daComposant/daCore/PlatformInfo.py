@@ -108,6 +108,16 @@ class PlatformInfo(object):
         "Retourne la taille mémoire courante utilisée"
         return 1
 
+    def MaximumPrecision(self):
+        "Retourne la precision maximale flottante pour Numpy"
+        import numpy
+        try:
+            x = numpy.array([1.,], dtype='float128')
+            mfp = 'float128'
+        except:
+            mfp = 'float64'
+        return mfp
+
     def __str__(self):
         import version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)

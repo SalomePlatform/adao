@@ -45,7 +45,8 @@ class CONFIG(configuration.CONFIG_BASE):
 
   def __init__(self,appli,repIni):
 
-    self.labels_eficas = ['lang']
+    # self.labels_eficas = ['lang']
+    self.labels_eficas = ['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
     configuration.CONFIG_BASE.__init__(self,appli,repIni)
 
     self.rep_user = os.environ["HOME"]

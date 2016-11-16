@@ -123,6 +123,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             qui doit rester constamment egal a zero a la precision du calcul.
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             Y doit etre dans l'image de F. S'il n'est pas donne, on prend Y = F(X).
+
+            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
+                       a la precision machine.
             """
         #
         if len(self._parameters["ResultTitle"]) > 0:

@@ -163,6 +163,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             faite dans le calcul du terme GradientF_X.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
+
+            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
+                       a la precision machine.
             """
         if self._parameters["ResiduFormula"] == "TaylorOnNorm":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
@@ -188,6 +191,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             grandeur de ||F(X)||.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
+
+            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
+                       a la precision machine.
             """
         if self._parameters["ResiduFormula"] == "Norm":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
@@ -201,6 +207,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
+
+            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
+                       a la precision machine.
             """
         #
         if len(self._parameters["ResultTitle"]) > 0:
