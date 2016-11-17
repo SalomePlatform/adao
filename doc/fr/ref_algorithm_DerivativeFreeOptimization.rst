@@ -35,11 +35,10 @@ Algorithme de calcul "*DerivativeFreeOptimization*"
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation d'état d'un système dynamique par
-minimisation d'une fonctionnelle d'écart :math:`J` sans gradient. C'est une
-méthode qui n'utilise pas les dérivées de la fonctionnelle d'écart. Elle entre
-dans la même catégorie que
-l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+Cet algorithme réalise une estimation d'état d'un système par minimisation d'une
+fonctionnelle d'écart :math:`J` sans gradient. C'est une méthode qui n'utilise
+pas les dérivées de la fonctionnelle d'écart. Elle entre par exemple dans la
+même catégorie que l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
@@ -113,9 +112,14 @@ Les options de l'algorithme sont les suivantes:
   Minimizer
     Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
     défaut est "POWELL", et les choix possibles sont "POWELL" (minimisation sans
-    contrainte de type Powell modifiée, voir [Powell]_), "SIMPLEX" (minimisation
-    sans contrainte de type simplexe ou Nelder-Mead, voir [Nelder]_). Il est
-    conseillé de conserver la valeur par défaut.
+    contraintes de type Powell modifiée, voir [Powell]_), "SIMPLEX"
+    (minimisation sans contraintes de type simplexe ou Nelder-Mead, voir
+    [Nelder]_). Il est conseillé de conserver la valeur par défaut. Remarque :
+    la méthode par défaut "POWELL" effectue une optimisation par boucles
+    imbriquées interne/externe, conduisant ainsi à un contrôle relaché du nombre
+    d'évaluations de la fonctionnelle à optimiser. Si un contrôle précis du
+    nombre d'évaluations de cette fonctionnelle est requis, il faut choisir le
+    "SIMPLEX".
 
     Exemple : ``{"Minimizer":"POWELL"}``
 

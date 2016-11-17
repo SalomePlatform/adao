@@ -46,7 +46,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "MaximumNumberOfFunctionEvaluations",
             default  = 15000,
             typecast = int,
-            message  = "Nombre maximal de d'évaluations de la function",
+            message  = "Nombre maximal de d'évaluations de la fonction",
             minval   = -1,
             )
         self.defineRequiredParameter(

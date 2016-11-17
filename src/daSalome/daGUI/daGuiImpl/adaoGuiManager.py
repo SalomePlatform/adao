@@ -62,6 +62,7 @@ UI_ELT_IDS = Enumerate([
         'OPEN_ADAOCASE_ID',
         'SAVE_ADAOCASE_ID',
         'SAVE_AS_ADAOCASE_ID',
+        'VALIDATE_ADAOCASE_ID',
         'CLOSE_ADAOCASE_ID',
         'YACS_EXPORT_ID',
         ],offset=6950)
@@ -71,6 +72,7 @@ ACTIONS_MAP={
     UI_ELT_IDS.OPEN_ADAOCASE_ID:"openAdaoCase",
     UI_ELT_IDS.SAVE_ADAOCASE_ID:"saveAdaoCase",
     UI_ELT_IDS.SAVE_AS_ADAOCASE_ID:"saveasAdaoCase",
+    UI_ELT_IDS.VALIDATE_ADAOCASE_ID:"validateAdaoCase",
     UI_ELT_IDS.CLOSE_ADAOCASE_ID:"closeAdaoCase",
     UI_ELT_IDS.YACS_EXPORT_ID:"exportCaseToYACS",
 }
@@ -306,8 +308,25 @@ class AdaoCaseManager(EficasObserver):
 
 #######
 #
+# Gestion de la validation d'un cas
+# 1: la fonction validateAdaoCase est appelee par le GUI SALOME
+#
+#######
+
+  def validateAdaoCase(self):
+    adaoLogger.debug("Validation du cas par un rapport sur le JDC")
+    self.harmonizeSelectionFromEficas()
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        msg = adao_case.validationReportforJDC()
+        adaoGuiHelper.gui_information(SalomePyQt.SalomePyQt().getDesktop(), msg)
+        break
+
+#######
+#
 # Gestion de la connexion avec YACS
-# 1: la fonction exportCasToYACS exporte l'etude vers YACS
+# 1: la fonction exportCaseToYACS exporte l'etude vers YACS
 #
 #######
   def exportCaseToYACS(self):
@@ -400,6 +419,9 @@ class AdaoGuiUiComponentBuilder:
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.SAVE_AS_ADAOCASE_ID, "Save as case", "Save as case", "Save an ADAO case as", "eficas_saveas.png" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.VALIDATE_ADAOCASE_ID, "Validate case", "Validate case", "Validate an ADAO case", "eficas_valid.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an ADAO case", "eficas_close.png" )

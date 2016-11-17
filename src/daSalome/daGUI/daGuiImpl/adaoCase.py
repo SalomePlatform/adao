@@ -77,8 +77,9 @@ class AdaoCase:
     self.eficas_editor.saveFile()
     filename = self.filename[:self.filename.rfind(".")] + '.py'
     if not os.path.exists(filename):
-      msg =  "Cannot find the COMM associated python file for YACS\n"
-      msg += "generation. Is your case correct?\n"
+      msg =  "Cannot find the COMM/PY associated EFICAS/Python files for YACS\n"
+      msg += "generation. Is your case correct? Try to close and re-open the\n"
+      msg += "case with the ADAO/EFICAS editor."
       return msg
 
     if not os.environ.has_key("ADAO_ROOT_DIR"):
@@ -91,7 +92,7 @@ class AdaoCase:
     (stdoutdata, stderrdata) = p.communicate()
     if not os.path.exists(self.yacs_filename):
       msg  = "An error occured during the execution of the ADAO YACS Schema\n"
-      msg += "Creator. If SALOME is launched by command line, see errors\n"
+      msg += "Creator. If SALOME GUI is launched by command line, see errors\n"
       msg += "details in your terminal.\n"
       return msg
     return rtn
@@ -110,4 +111,11 @@ class AdaoCase:
       msg =  "Please install YACS module, error was: \n"
       msg += traceback.format_exc()
       return msg
+    return rtn
+
+  def validationReportforJDC(self):
+    rtn = "<i>Validation report is empty.</i>"
+    if self.eficas_editor.jdc:
+      rtn  = u"Validation report for the selected ADAO case:\n\n"
+      rtn += unicode( self.eficas_editor.jdc.report())
     return rtn

@@ -35,9 +35,9 @@ Calculation algorithm "*DerivativeFreeOptimization*"
 Description
 +++++++++++
 
-This algorithm realizes an estimation of the state of a dynamic system by
-minimization of a cost function :math:`J` without gradient. It is a method that
-doesn't use the derivatives of the cost function. It fall in the same category
+This algorithm realizes an estimation of the state of a system by minimization
+of a cost function :math:`J` without gradient. It is a method that doesn't use
+the derivatives of the cost function. It fall for example in the same category
 then the :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 This is an optimization method allowing for global minimum search of a general
@@ -110,9 +110,13 @@ The options of the algorithm are the following:
   Minimizer
     This key allows to choose the optimization minimizer. The default choice is
     "POWELL", and the possible ones are "POWELL" (modified Powell unconstrained
-    minimizer, see [Powell]_), "SIMPLEX" (nonlinear constrained minimizer), "CG"
-    (simplex of Nelder-Mead unconstrained minimizer, see [Nelder]_). It is
-    recommended to stay with the default.
+    minimizer, see [Powell]_), "SIMPLEX" (simplex or Nelder-Mead unconstrained
+    minimizer, see [Nelder]_). It is recommended to stay with the default.
+    Remark: the default "POWELL" method perform a dual outer/inner loops
+    optimization, leading then to less control on the cost function evaluation
+    number because it is the outer loop limit than is controled. If precise
+    control on this cost function evaluation number is required, choose the
+    "SIMPLEX" one.
 
     Example : ``{"Minimizer":"POWELL"}``
 

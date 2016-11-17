@@ -30,21 +30,29 @@ __sgPyQt = SalomePyQt.SalomePyQt()
 import adaoModuleHelper
 from daUtils.qtversion import useQT5
 if useQT5:
-    from PyQt5 import QtGui,QtCore
+    from PyQt5 import QtGui, QtCore
+    from PyQt5.QtWidgets import QApplication, QMessageBox
 else:
-    from PyQt4 import QtGui,QtCore
+    from PyQt4 import QtGui, QtCore
+    from PyQt4.QtGui import QApplication, QMessageBox
 
 def waitCursor():
     QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
 
 def restoreCursor():
-    QtGui.QApplication.restoreOverrideCursor()
+    QApplication.restoreOverrideCursor()
 
 def gui_warning(parent, msg="An error occurs" ):
     """
     This function displays a message dialog box displaying the specified message.
     """
-    QtGui.QMessageBox.warning( parent, "Alerte", msg)
+    QMessageBox.warning( parent, "Alerte", msg)
+
+def gui_information(parent, msg="Information" ):
+    """
+    This function displays a message dialog box displaying the specified message.
+    """
+    QMessageBox.information( parent, "Information", msg, QMessageBox.Close)
 
 def getActiveStudyId():
     """
@@ -120,3 +128,9 @@ def warning(msg):
     This function displays a message dialog box displaying the specified message.
     """
     gui_warning(getDesktop(),msg)
+
+def information(msg):
+    """
+    This function displays a message dialog box displaying the specified message.
+    """
+    gui_information(getDesktop(),msg)
