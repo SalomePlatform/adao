@@ -170,9 +170,9 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ",
-    "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "CurrentState",
-    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
+    "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
+    "CostFunctionJo", "CostFunctionJAtCurrentOptimum", "CurrentOptimum",
+    "CurrentState", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
     "MahalanobisConsistency", "OMA", "OMB", "SigmaObs2",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",

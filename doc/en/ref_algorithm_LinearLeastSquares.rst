@@ -94,7 +94,8 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["OMA", "CurrentState", "CostFunctionJ",
-    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
+    "CostFunctionJb", "CostFunctionJo", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum"].
 
     Example : ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
 

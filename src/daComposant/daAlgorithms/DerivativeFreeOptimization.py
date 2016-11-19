@@ -83,7 +83,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["CurrentState", "CostFunctionJ", "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA", "OMA", "OMB", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA", "OMA", "OMB", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

@@ -107,7 +107,11 @@ Les options de l'algorithme sont les suivantes:
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["CurrentState", "Innovation",
+    possibles sont dans la liste suivante : ["APosterioriCorrelations",
+    "APosterioriCovariance", "APosterioriStandardDeviations",
+    "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState",
+    "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation",
+    "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 

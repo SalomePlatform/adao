@@ -74,7 +74,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["CostFunctionJ","CurrentState","InnovationAtCurrentState","SimulatedObservationAtCurrentState"]
+            listval  = ["CostFunctionJ", "CostFunctionJb", "CostFunctionJo","CurrentState","InnovationAtCurrentState","SimulatedObservationAtCurrentState"]
             )
         self.defineRequiredParameter(
             name     = "SetSeed",

@@ -121,8 +121,8 @@ The options of the algorithm are the following:
     these variables being calculated and stored by default. The possible names
     are in the following list: ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CurrentState",
-    "Innovation"].
+    "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
+    "CostFunctionJo", "CurrentState", "Innovation"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 

@@ -178,8 +178,9 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["CostFunctionJ", "CurrentState",
-    "InnovationAtCurrentState", "SimulatedObservationAtCurrentState"].
+    are in the following list: ["CostFunctionJ", "CostFunctionJb",
+    "CostFunctionJo", "CurrentState", "InnovationAtCurrentState",
+    "SimulatedObservationAtCurrentState"].
 
     Example : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
