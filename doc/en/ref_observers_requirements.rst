@@ -92,6 +92,17 @@ Print on standard output the current value of the variable.
 
     print info, var[-1]
 
+.. index:: single: ValueAndIndexPrinter (Observer)
+
+Template **ValueAndIndexPrinter** :
+...................................
+
+Print on standard output the current value of the variable, adding its index.
+
+::
+
+    print str(info)+" index %i:"%(len(var)-1), var[-1]
+
 .. index:: single: ValueSeriePrinter (Observer)
 
 Template **ValueSeriePrinter** :
@@ -150,13 +161,35 @@ Save the value serie of the variable in a file of the '/tmp' directory named 'va
 Template **ValuePrinterAndSaver** :
 ...................................
 
-Print on standard output and, in the same time, save in a file the current value of the variable.
+Print on standard output and, in the same time save in a file, the current value of the variable.
 
 ::
 
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
     print info,v
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValueIndexPrinterAndSaver (Observer)
+
+Template **ValueIndexPrinterAndSaver** :
+........................................
+
+Print on standard output and, in the same time save in a file, the current value of the variable, adding its index.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[-1], ndmin=1)
+    print str(info)+" index %i:"%(len(var)-1),v
     global istep
     try:
         istep += 1

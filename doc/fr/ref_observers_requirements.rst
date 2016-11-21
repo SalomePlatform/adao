@@ -95,6 +95,17 @@ Imprime sur la sortie standard la valeur courante de la variable.
 
     print info, var[-1]
 
+.. index:: single: ValueAndIndexPrinter (Observer)
+
+Modèle **ValueAndIndexPrinter** :
+.................................
+
+Imprime sur la sortie standard la valeur courante de la variable, en ajoutant son index.
+
+::
+
+    print str(info)+" index %i:"%(len(var)-1), var[-1]
+
 .. index:: single: ValueSeriePrinter (Observer)
 
 Modèle **ValueSeriePrinter** :
@@ -153,13 +164,35 @@ Enregistre la série des valeurs de la variable dans un fichier du répertoire '/t
 Modèle **ValuePrinterAndSaver** :
 .................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la valeur courante de la variable.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable.
 
 ::
 
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
     print info,v
+    global istep
+    try:
+        istep += 1
+    except:
+        istep = 0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub('\s','_',f)
+    print 'Value saved in "%s"'%f
+    numpy.savetxt(f,v)
+
+.. index:: single: ValueIndexPrinterAndSaver (Observer)
+
+Modèle **ValueIndexPrinterAndSaver** :
+......................................
+
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable, en ajoutant son index.
+
+::
+
+    import numpy, re
+    v=numpy.array(var[-1], ndmin=1)
+    print str(info)+" index %i:"%(len(var)-1),v
     global istep
     try:
         istep += 1

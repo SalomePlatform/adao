@@ -100,6 +100,13 @@ ObserverTemplates.store(
     order   = "next",
     )
 ObserverTemplates.store(
+    name    = "ValueAndIndexPrinter",
+    content = """print str(info)+" index %i:"%(len(var)-1), var[-1]""",
+    fr_FR   = "Imprime sur la sortie standard la valeur courante de la variable, en ajoutant son index",
+    en_EN   = "Print on standard output the current value of the variable, adding its index",
+    order   = "next",
+    )
+ObserverTemplates.store(
     name    = "ValueSeriePrinter",
     content = """print info, var[:]""",
     fr_FR   = "Imprime sur la sortie standard la série des valeurs de la variable",
@@ -123,8 +130,15 @@ ObserverTemplates.store(
 ObserverTemplates.store(
     name    = "ValuePrinterAndSaver",
     content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
-    fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la valeur courante de la variable",
-    en_EN   = "Print on standard output and, in the same time, save in a file the current value of the variable",
+    fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable",
+    en_EN   = "Print on standard output and, in the same time save in a file, the current value of the variable",
+    order   = "next",
+    )
+ObserverTemplates.store(
+    name    = "ValueIndexPrinterAndSaver",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint str(info)+" index %i:"%(len(var)-1),v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
+    fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable, en ajoutant son index",
+    en_EN   = "Print on standard output and, in the same time save in a file, the current value of the variable, adding its index",
     order   = "next",
     )
 ObserverTemplates.store(
