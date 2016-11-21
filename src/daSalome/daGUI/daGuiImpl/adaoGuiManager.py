@@ -106,7 +106,9 @@ class AdaoCaseManager(EficasObserver):
     # Creation du viewer QT
     # Scroll Widget (pour les petites resolutions)
     area = QScrollArea(SalomePyQt.SalomePyQt().getDesktop());
-    area.setWidget(self.eficas_manager)
+    from PyQt5.QtWidgets  import QGridLayout
+    gridLayout = QGridLayout(area)
+    gridLayout.addWidget(self.eficas_manager)
     area.setWidgetResizable(1)
     wmType = "ADAO View"
     self.eficas_viewId = sgPyQt.createView(wmType, area)
