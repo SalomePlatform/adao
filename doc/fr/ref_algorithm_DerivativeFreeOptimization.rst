@@ -114,12 +114,14 @@ Les options de l'algorithme sont les suivantes:
     défaut est "POWELL", et les choix possibles sont "POWELL" (minimisation sans
     contraintes de type Powell modifiée, voir [Powell]_), "SIMPLEX"
     (minimisation sans contraintes de type simplexe ou Nelder-Mead, voir
-    [Nelder]_). Il est conseillé de conserver la valeur par défaut. Remarque :
-    la méthode par défaut "POWELL" effectue une optimisation par boucles
-    imbriquées interne/externe, conduisant ainsi à un contrôle relaché du nombre
+    [Nelder]_), "COBYLA" (minimisation avec contraintes par approximation
+    linéaire). Il est conseillé de conserver la valeur par défaut lorsqu'il n'y
+    a pas de bornes, et de passer à "COBYLA" en cas de bornes. Remarque : la
+    méthode par défaut "POWELL" effectue une optimisation par boucles imbriquées
+    interne/externe, conduisant ainsi à un contrôle relaché du nombre
     d'évaluations de la fonctionnelle à optimiser. Si un contrôle précis du
-    nombre d'évaluations de cette fonctionnelle est requis, il faut choisir le
-    "SIMPLEX".
+    nombre d'évaluations de cette fonctionnelle est requis, il faut choisir
+    "SIMPLEX" ou "COBYLA".
 
     Exemple : ``{"Minimizer":"POWELL"}``
 

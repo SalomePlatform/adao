@@ -33,7 +33,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "POWELL",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["POWELL", "SIMPLEX"],
+            listval  = ["POWELL", "SIMPLEX", "COBYLA"],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
@@ -85,6 +85,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = ["CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA", "OMA", "OMB", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
+        self.defineRequiredParameter( # Pas de type
+            name     = "Bounds",
+            message  = "Liste des valeurs de bornes",
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run()
@@ -96,6 +100,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Paramètres de pilotage
         # ----------------------
         self.setParameters(Parameters)
+        #
+        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+            Bounds = self._parameters["Bounds"]
+            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
+        else:
+            Bounds = None
         #
         # Opérateurs
         # ----------
@@ -192,6 +202,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 xtol        = self._parameters["StateVariationTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],
                 full_output = True,
+                disp        = self.__disp,
+                )
+        elif self._parameters["Minimizer"] == "COBYLA":
+            def make_constraints(bounds):
+                constraints = []
+                for (i,(a,b)) in enumerate(bounds):
+                    lower = lambda x: x[i] - a
+                    upper = lambda x: b - x[i]
+                    constraints = constraints + [lower] + [upper]
+                return constraints
+            if Bounds is None:
+                raise ValueError("Bounds have to be given for all axes as a list of lower/upper pairs!")
+            Minimum = scipy.optimize.fmin_cobyla(
+                func        = CostFunction,
+                x0          = Xini,
+                cons        = make_constraints( Bounds ),
+                consargs    = (), # To avoid extra-args
+                maxfun      = self._parameters["MaximumNumberOfFunctionEvaluations"]-1,
+                rhobeg      = 1.0,
+                rhoend      = self._parameters["StateVariationTolerance"],
+                catol       = 2.*self._parameters["StateVariationTolerance"],
                 disp        = self.__disp,
                 )
         else:
