@@ -55,6 +55,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def init_gui(self):
 
+      import salome ; salome.salome_init()
+
       eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
       if useQT5:
           self.viewmanager.myQtab.currentChanged.connect(self.tabChanged)

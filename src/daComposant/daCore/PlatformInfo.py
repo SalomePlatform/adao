@@ -104,6 +104,18 @@ class PlatformInfo(object):
         except ImportError:
             return "0.0.0"
 
+    def getNloptVersion(self):
+        "Retourne la version de nlopt disponible"
+        try:
+            import nlopt
+            return "%s.%s.%s"%(
+                nlopt.version_major(),
+                nlopt.version_minor(),
+                nlopt.version_bugfix(),
+                )
+        except ImportError:
+            return "0.0.0"
+
     def getCurrentMemorySize(self):
         "Retourne la taille mémoire courante utilisée"
         return 1
@@ -121,6 +133,31 @@ class PlatformInfo(object):
     def __str__(self):
         import version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
+
+# ==============================================================================
+try:
+    import matplotlib
+    has_matplotlib = True
+except ImportError:
+    has_matplotlib = False
+
+try:
+    import Gnuplot
+    has_gnuplot = True
+except ImportError:
+    has_gnuplot = False
+
+try:
+    import sphinx
+    has_sphinx = True
+except ImportError:
+    has_sphinx = False
+
+try:
+    import nlopt
+    has_nlopt = True
+except ImportError:
+    has_nlopt = False
 
 # ==============================================================================
 def uniq(sequence):
