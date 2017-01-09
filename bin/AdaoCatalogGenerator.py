@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2008-2016 EDF R&D
+# Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
@@ -35,7 +35,7 @@ logging.basicConfig(level=logging.WARNING)
 #----------- Templates Part ---------------#
 begin_catalog_file = """#-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2008-2016 EDF R&D
+# Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #

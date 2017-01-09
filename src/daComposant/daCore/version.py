@@ -1,6 +1,6 @@
 #-*-coding:iso-8859-1-*-
 #
-# Copyright (C) 2008-2016 EDF R&D
+# Copyright (C) 2008-2017 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,5 +27,5 @@ __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
 name    = "Data Assimilation Package"
-version = "16.12.08"
-date    = "jeudi 8 décembre 2016, 12:12:12 (UTC+0100)"
+version = "17.02.28"
+date    = "samedi 28 février 2017, 12:12:12 (UTC+0100)"
