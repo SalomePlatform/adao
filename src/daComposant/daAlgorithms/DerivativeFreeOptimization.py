@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
-from daCore import BasicObjects
+from daCore import BasicObjects, PlatformInfo
 import numpy, scipy.optimize
 
 # ==============================================================================
@@ -30,10 +30,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "DERIVATIVEFREEOPTIMIZATION")
         self.defineRequiredParameter(
             name     = "Minimizer",
-            default  = "POWELL",
+            default  = "BOBYQA",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["POWELL", "SIMPLEX", "COBYLA"],
+            listval  = ["BOBYQA", "COBYLA", "NEWUOA", "POWELL", "SIMPLEX", "SUBPLEX"],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
@@ -192,19 +192,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 full_output = True,
                 disp        = self.__disp,
                 )
-        elif self._parameters["Minimizer"] == "SIMPLEX":
-            Minimum, J_optimal, niter, nfeval, rc = scipy.optimize.fmin(
-                func        = CostFunction,
-                x0          = Xini,
-                args        = (self._parameters["QualityCriterion"],),
-                maxiter     = self._parameters["MaximumNumberOfSteps"]-1,
-                maxfun      = self._parameters["MaximumNumberOfFunctionEvaluations"],
-                xtol        = self._parameters["StateVariationTolerance"],
-                ftol        = self._parameters["CostDecrementTolerance"],
-                full_output = True,
-                disp        = self.__disp,
-                )
-        elif self._parameters["Minimizer"] == "COBYLA":
+        elif self._parameters["Minimizer"] == "COBYLA" and not PlatformInfo.has_nlopt:
             def make_constraints(bounds):
                 constraints = []
                 for (i,(a,b)) in enumerate(bounds):
@@ -226,6 +214,138 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 catol       = 2.*self._parameters["StateVariationTolerance"],
                 disp        = self.__disp,
                 )
+        elif self._parameters["Minimizer"] == "COBYLA" and PlatformInfo.has_nlopt:
+            import nlopt
+            opt = nlopt.opt(nlopt.LN_COBYLA, Xini.size)
+            def _f(_Xx, Grad):
+                # DFO, so no gradient
+                return CostFunction(_Xx, self._parameters["QualityCriterion"])
+            opt.set_min_objective(_f)
+            if Bounds is not None:
+                lub = numpy.array(Bounds).reshape((Xini.size,2))
+                lb = lub[:,0]
+                ub = lub[:,1]
+                if self.__disp:
+                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
+                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                opt.set_upper_bounds(ub)
+                opt.set_lower_bounds(lb)
+            opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
+            opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
+            opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
+            Minimum = opt.optimize( Xini )
+            if self.__disp:
+                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
+                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
+                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+        elif self._parameters["Minimizer"] == "SIMPLEX" and not PlatformInfo.has_nlopt:
+            Minimum, J_optimal, niter, nfeval, rc = scipy.optimize.fmin(
+                func        = CostFunction,
+                x0          = Xini,
+                args        = (self._parameters["QualityCriterion"],),
+                maxiter     = self._parameters["MaximumNumberOfSteps"]-1,
+                maxfun      = self._parameters["MaximumNumberOfFunctionEvaluations"],
+                xtol        = self._parameters["StateVariationTolerance"],
+                ftol        = self._parameters["CostDecrementTolerance"],
+                full_output = True,
+                disp        = self.__disp,
+                )
+        elif self._parameters["Minimizer"] == "SIMPLEX" and PlatformInfo.has_nlopt:
+            import nlopt
+            opt = nlopt.opt(nlopt.LN_NELDERMEAD, Xini.size)
+            def _f(_Xx, Grad):
+                # DFO, so no gradient
+                return CostFunction(_Xx, self._parameters["QualityCriterion"])
+            opt.set_min_objective(_f)
+            if Bounds is not None:
+                lub = numpy.array(Bounds).reshape((Xini.size,2))
+                lb = lub[:,0]
+                ub = lub[:,1]
+                if self.__disp:
+                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
+                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                opt.set_upper_bounds(ub)
+                opt.set_lower_bounds(lb)
+            opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
+            opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
+            opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
+            Minimum = opt.optimize( Xini )
+            if self.__disp:
+                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
+                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
+                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+        elif self._parameters["Minimizer"] == "BOBYQA" and PlatformInfo.has_nlopt:
+            import nlopt
+            opt = nlopt.opt(nlopt.LN_BOBYQA, Xini.size)
+            def _f(_Xx, Grad):
+                # DFO, so no gradient
+                return CostFunction(_Xx, self._parameters["QualityCriterion"])
+            opt.set_min_objective(_f)
+            if Bounds is not None:
+                lub = numpy.array(Bounds).reshape((Xini.size,2))
+                lb = lub[:,0]
+                ub = lub[:,1]
+                if self.__disp:
+                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
+                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                opt.set_upper_bounds(ub)
+                opt.set_lower_bounds(lb)
+            opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
+            opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
+            opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
+            Minimum = opt.optimize( Xini )
+            if self.__disp:
+                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
+                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
+                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+        elif self._parameters["Minimizer"] == "NEWUOA" and PlatformInfo.has_nlopt:
+            import nlopt
+            opt = nlopt.opt(nlopt.LN_NEWUOA, Xini.size)
+            def _f(_Xx, Grad):
+                # DFO, so no gradient
+                return CostFunction(_Xx, self._parameters["QualityCriterion"])
+            opt.set_min_objective(_f)
+            if Bounds is not None:
+                lub = numpy.array(Bounds).reshape((Xini.size,2))
+                lb = lub[:,0]
+                ub = lub[:,1]
+                if self.__disp:
+                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
+                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                opt.set_upper_bounds(ub)
+                opt.set_lower_bounds(lb)
+            opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
+            opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
+            opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
+            Minimum = opt.optimize( Xini )
+            if self.__disp:
+                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
+                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
+                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+        elif self._parameters["Minimizer"] == "SUBPLEX" and PlatformInfo.has_nlopt:
+            import nlopt
+            opt = nlopt.opt(nlopt.LN_SBPLX, Xini.size)
+            def _f(_Xx, Grad):
+                # DFO, so no gradient
+                return CostFunction(_Xx, self._parameters["QualityCriterion"])
+            opt.set_min_objective(_f)
+            if Bounds is not None:
+                lub = numpy.array(Bounds).reshape((Xini.size,2))
+                lb = lub[:,0]
+                ub = lub[:,1]
+                if self.__disp:
+                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
+                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                opt.set_upper_bounds(ub)
+                opt.set_lower_bounds(lb)
+            opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
+            opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
+            opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
+            Minimum = opt.optimize( Xini )
+            if self.__disp:
+                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
+                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
+                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
