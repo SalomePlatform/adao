@@ -39,7 +39,7 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import os
+import os, sys
 
 # ==============================================================================
 class PlatformInfo(object):
@@ -67,7 +67,6 @@ class PlatformInfo(object):
 
     def getPythonVersion(self):
         "Retourne la version de python disponible"
-        import sys
         return ".".join([str(x) for x in sys.version_info[0:3]]) # map(str,sys.version_info[0:3]))
 
     def getNumpyVersion(self):
@@ -130,6 +129,14 @@ class PlatformInfo(object):
             mfp = 'float64'
         return mfp
 
+    def MachinePrecision(self):
+        # Alternative sans module :
+        # eps = 2.38
+        # while eps > 0:
+        #     old_eps = eps
+        #     eps = (1.0 + eps/2) - 1.0
+        return sys.float_info.epsilon
+
     def __str__(self):
         import version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
@@ -174,7 +181,6 @@ class PathManagement(object):
     """
     def __init__(self):
         "Déclaration des répertoires statiques"
-        import sys
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         self.__paths = {}
         self.__paths["daExternals"] = os.path.join(parent,"daExternals")

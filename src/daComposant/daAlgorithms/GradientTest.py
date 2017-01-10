@@ -21,8 +21,9 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
-from daCore import BasicObjects
+from daCore import BasicObjects, PlatformInfo
 import numpy, math
+mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -143,6 +144,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Entete des resultats
         # --------------------
         __marge =  12*" "
+        __precision = """
+            Remarque : les nombres inferieurs a %.0e (environ) representent un zero
+                       a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "Taylor":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
             __msgdoc = """
@@ -163,10 +167,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             faite dans le calcul du terme GradientF_X.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-
-            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
-                       a la precision machine.
-            """
+            """ + __precision
         if self._parameters["ResiduFormula"] == "TaylorOnNorm":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
             __msgdoc = """
@@ -191,10 +192,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             grandeur de ||F(X)||.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-
-            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
-                       a la precision machine.
-            """
+            """ + __precision
         if self._parameters["ResiduFormula"] == "Norm":
             __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
             __msgdoc = """
@@ -207,10 +205,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-
-            Remarque : les nombres inferieurs a 1.e-16 (environ) representent un zero
-                       a la precision machine.
-            """
+            """ + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
             msgs  = "\n"

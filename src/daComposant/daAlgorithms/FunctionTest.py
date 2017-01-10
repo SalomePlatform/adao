@@ -23,6 +23,7 @@
 import logging
 from daCore import BasicObjects, PlatformInfo
 import numpy, copy
+mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
@@ -143,7 +144,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["NumberOfRepetition"] > 1:
             msg  = ("     %s\n"%("-"*75,))
             msg += ("\n===> Statistical analysis of the outputs obtained throught repeated evaluations\n")
-            msg += ("\n     (Remark: numbers that are (about) under 1.e-16 represent 0 to machine precision)\n")
+            msg += ("\n     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
             Yy = numpy.array( Ys )
             msg += ("\n     Characteristics of the whole set of outputs Y:\n")
             msg += ("       Number of evaluations.........................: %i\n")%len( Ys )

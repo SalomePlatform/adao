@@ -21,8 +21,9 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
-from daCore import BasicObjects
+from daCore import BasicObjects, PlatformInfo
 import numpy, math
+mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -140,6 +141,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Entete des resultats
         # --------------------
         __marge =  12*" "
+        __precision = """
+            Remarque : les nombres inferieurs a %.0e (environ) representent un zero
+                       a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "CenteredDL":
             __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
             __msgdoc = """
@@ -163,7 +167,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             de la décroissance quadratique.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """
+            """ + __precision
         if self._parameters["ResiduFormula"] == "Taylor":
             __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
             __msgdoc = """
@@ -186,7 +190,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             de la décroissance quadratique.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """
+            """ + __precision
         if self._parameters["ResiduFormula"] == "NominalTaylor":
             __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
             __msgdoc = """
@@ -207,7 +211,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             est vérifiée.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """
+            """ + __precision
         if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
             __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
             __msgdoc = """
@@ -227,7 +231,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             est vérifiée.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """
+            """ + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
             msgs  = "\n"
