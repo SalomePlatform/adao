@@ -133,10 +133,10 @@ The options of the algorithm are the following:
 
   MaximumNumberOfFunctionEvaluations
     This key indicates the maximum number of evaluation of the cost function to
-    be optimized. The default is 15000, which is very similar to no limit on
-    iterations. The calculation can be over this limit when an outer
-    optimization loop has to be finished. It is strongly recommended to adapt
-    this parameter to the needs on real problems.
+    be optimized. The default is 15000, which is an arbitrary limit. It is then
+    recommended to adapt this parameter to the needs on real problems. For some
+    optimizers, the effective number of function evaluations can be slightly
+    different of the limit due to algorithm internal control requirements.
 
     Example : ``{"MaximumNumberOfFunctionEvaluations":50}``
 

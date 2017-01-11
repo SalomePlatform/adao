@@ -46,7 +46,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "MaximumNumberOfFunctionEvaluations",
             default  = 15000,
             typecast = int,
-            message  = "Nombre maximal de d'évaluations de la fonction",
+            message  = "Nombre maximal d'évaluations de la fonction",
             minval   = -1,
             )
         self.defineRequiredParameter(
@@ -101,6 +101,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------
         self.setParameters(Parameters)
         #
+        if not PlatformInfo.has_nlopt and not self._parameters["Minimizer"] in ["COBYLA", "POWELL", "SIMPLEX"]:
+            self._parameters["Minimizer"] = "SIMPLEX"
         if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
             Bounds = self._parameters["Bounds"]
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
@@ -175,6 +177,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------
         Xini = numpy.ravel(Xb)
+        if len(Xini) < 2 and self._parameters["Minimizer"] == "NEWUOA":
+            raise ValueError("The minimizer %s can not be used when the optimisation state dimension is 1. Please choose another minimizer."%self._parameters["Minimizer"])
         #
         # Minimisation de la fonctionnelle
         # --------------------------------

@@ -33,7 +33,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 50,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
-            minval   = 1,
+            minval   = 0,
+            )
+        self.defineRequiredParameter(
+            name     = "MaximumNumberOfFunctionEvaluations",
+            default  = 15000,
+            typecast = int,
+            message  = "Nombre maximal d'évaluations de la fonction",
+            minval   = -1,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -168,6 +175,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Initialisation de l'essaim
         # --------------------------
+        NumberOfFunctionEvaluations = 0
         LimitVelocity = numpy.abs(SpaceUp-SpaceLow)
         #
         PosInsect = []
@@ -182,10 +190,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         qBestPosInsect = []
         Best = copy.copy(SpaceLow)
         qBest = CostFunction(Best,self._parameters["QualityCriterion"])
+        NumberOfFunctionEvaluations += 1
         #
         for i in range(self._parameters["NumberOfInsects"]):
             insect  = numpy.ravel(PosInsect[:,i])
             quality = CostFunction(insect,self._parameters["QualityCriterion"])
+            NumberOfFunctionEvaluations += 1
             qBestPosInsect.append(quality)
             if quality < qBest:
                 Best  = copy.copy( insect )
@@ -209,6 +219,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     VelocityInsect[j,i] = self._parameters["SwarmVelocity"]*VelocityInsect[j,i] +  Phip*rp[j]*(BestPosInsect[j,i]-PosInsect[j,i]) +  Phig*rg[j]*(Best[j]-PosInsect[j,i])
                     PosInsect[j,i] = PosInsect[j,i]+VelocityInsect[j,i]
                 quality = CostFunction(insect,self._parameters["QualityCriterion"])
+                NumberOfFunctionEvaluations += 1
                 if quality < qBestPosInsect[i]:
                     BestPosInsect[:,i] = copy.copy( insect )
                     qBestPosInsect[i]  = copy.copy( quality )
@@ -226,6 +237,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( 0. )
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( qBest )
+            if NumberOfFunctionEvaluations > self._parameters["MaximumNumberOfFunctionEvaluations"]:
+                logging.debug("%s Stopping search because the number %i of function evaluations is exceeding the maximum %i."%(self._name, NumberOfFunctionEvaluations, self._parameters["MaximumNumberOfFunctionEvaluations"]))
+                break
         #
         # Obtention de l'analyse
         # ----------------------

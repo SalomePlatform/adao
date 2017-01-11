@@ -50,6 +50,7 @@ Optional and required commands
 .. index:: single: ObservationError
 .. index:: single: ObservationOperator
 .. index:: single: MaximumNumberOfSteps
+.. index:: single: MaximumNumberOfFunctionEvaluations
 .. index:: single: NumberOfInsects
 .. index:: single: SwarmVelocity
 .. index:: single: GroupRecallRate
@@ -109,6 +110,15 @@ The options of the algorithm are the following:
     recommended to adapt this parameter to the needs on real problems.
 
     Example : ``{"MaximumNumberOfSteps":100}``
+
+  MaximumNumberOfFunctionEvaluations
+    This key indicates the maximum number of evaluation of the cost function to
+    be optimized. The default is 15000, which is an arbitrary limit. It is then
+    recommended to adapt this parameter to the needs on real problems. For some
+    optimizers, the effective number of function evaluations can be slightly
+    different of the limit due to algorithm internal control requirements.
+
+    Example : ``{"MaximumNumberOfFunctionEvaluations":50}``
 
   NumberOfInsects
     This key indicates the number of insects or particles in the swarm. The
