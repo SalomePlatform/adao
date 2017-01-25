@@ -168,9 +168,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if "InnovationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
             #
-            Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
-            Jo  = 0.5 * _Innovation.T * RI * _Innovation
-            J   = float( Jb ) + float( Jo )
+            Jb  = float( 0.5 * (_X - Xb).T * BI * (_X - Xb) )
+            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            J   = Jb + Jo
             #
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )

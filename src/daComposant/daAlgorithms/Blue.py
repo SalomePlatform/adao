@@ -132,9 +132,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
            "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
            "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"]:
             #
-            Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
-            Jo  = 0.5 * oma.T * RI * oma
-            J   = float( Jb ) + float( Jo )
+            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+            Jo  = float( 0.5 * oma.T * RI * oma )
+            J   = Jb + Jo
             #
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
