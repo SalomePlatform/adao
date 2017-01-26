@@ -31,9 +31,9 @@ Bibliography
 
 .. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and http://rpython.r-forge.r-project.org/
 
-.. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999, http://www.ecmwf.int/sites/default/files/Data%20assimilation%20concepts%20and%20methods.pdf
+.. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999
 
-.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014, http://cerea.enpc.fr/HomePages/bocquet/Doc/assim-mb.pdf 
+.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014
 
 .. [Buchinsky98] Buchinsky M., *Recent Advances in Quantile Regression Models: A Practical Guidline for Empirical Research*, Journal of Human Resources, 33(1), pp.88-126, 1998
 
@@ -43,19 +43,33 @@ Bibliography
 
 .. [Ide97] Ide K., Courtier P., Ghil M., Lorenc A. C., *Unified notation for data assimilation: operational, sequential and variational*, Journal of the Meteorological Society of Japan, 75(1B), pp.181-189, 1997
 
+.. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, http://ab-initio.mit.edu/nlopt
+
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
 .. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, http://www.econ.uiuc.edu/~roger/research/intro/intro.html
 
 .. [Koenker01] Koenker R., Hallock K. F., *Quantile Regression*, Journal of Economic Perspectives, 15(4), pp.143-156, 2001
 
-.. [Morales11] Morales J.L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
+.. [Morales11] Morales J. L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
 
-.. [Nelder] Nelder J.A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
+.. [Nelder65] Nelder J. A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
 
-.. [Powell] Powell M.J.D., *An efficient method for finding the minimum of a function of several variables without calculating derivatives*, Computer Journal, 7(2), pp.155-162, 1964
+.. [Powell64] Powell M. J. D., *An efficient method for finding the minimum of a function of several variables without calculating derivatives*, Computer Journal, 7(2), pp.155-162, 1964
+
+.. [Powell94] Powell M. J. D., *A direct search optimization method that models the objective and constraint functions by linear interpolation*, in Advances in Optimization and Numerical Analysis, eds. S. Gomez and J-P Hennart, Kluwer Academic (Dordrecht), pp. 51-67, 1994
+
+.. [Powell98] Powell M. J. D., *Direct search algorithms for optimization calculations*, Acta Numerica 7, 287-336, 1998
+
+.. [Powell04] Powell M. J. D., *The NEWUOA software for unconstrained optimization without derivatives*, Proc. 40th Workshop on Large Scale Nonlinear Optimization, Erice, Italy, 2004
+
+.. [Powell07] Powell M. J. D., *A view of algorithms for optimization without derivatives*, Cambridge University Technical Report DAMTP 2007/NA03, 2007
+
+.. [Powell09] Powell M. J. D., *The BOBYQA algorithm for bound constrained optimization without derivatives*, Cambridge University Technical Report DAMTP NA2009/06, 2009
 
 .. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
+
+.. [Rowan90] Rowan T., *Functional Stability Analysis of Numerical Algorithms*, Ph.D. thesis, Department of Computer Sciences, University of Texas at Austin, 1990
 
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 

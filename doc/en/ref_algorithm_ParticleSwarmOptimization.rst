@@ -33,7 +33,7 @@ Description
 This algorithm realizes an estimation of the state of a dynamic system by
 minimization of a cost function :math:`J` by using a particle swarm. It is a
 method that doesn't use the derivatives of the cost function. It fall in the
-same category then the :ref:`section_ref_algorithm_DerivativeFreeOptimization`.
+same category than the :ref:`section_ref_algorithm_DerivativeFreeOptimization`.
 
 This is an optimization method allowing for global minimum search of a general
 error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,

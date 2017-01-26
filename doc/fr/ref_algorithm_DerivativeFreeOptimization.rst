@@ -37,7 +37,7 @@ Description
 
 Cet algorithme réalise une estimation d'état d'un système par minimisation d'une
 fonctionnelle d'écart :math:`J` sans gradient. C'est une méthode qui n'utilise
-pas les dérivées de la fonctionnelle d'écart. Elle entre par exemple dans la
+pas les dérivées de la fonctionnelle d'écart. Elle entre, par exemple, dans la
 même catégorie que l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
@@ -111,19 +111,20 @@ Les options de l'algorithme sont les suivantes:
 
   Minimizer
     Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
-    défaut est "POWELL", et les choix possibles sont "POWELL" (minimisation sans
-    contraintes de type Powell modifiée, voir [Powell]_), "SIMPLEX"
-    (minimisation sans contraintes de type simplexe ou Nelder-Mead, voir
-    [Nelder]_), "COBYLA" (minimisation avec contraintes par approximation
-    linéaire). Il est conseillé de conserver la valeur par défaut lorsqu'il n'y
-    a pas de bornes, et de passer à "COBYLA" en cas de bornes. Remarque : la
-    méthode par défaut "POWELL" effectue une optimisation par boucles imbriquées
-    interne/externe, conduisant ainsi à un contrôle relaché du nombre
-    d'évaluations de la fonctionnelle à optimiser. Si un contrôle précis du
-    nombre d'évaluations de cette fonctionnelle est requis, il faut choisir
-    "SIMPLEX" ou "COBYLA".
+    défaut est "BOBYQA", et les choix possibles sont 
+    "BOBYQA" (minimisation avec ou sans contraintes par approximation quadratique [Powell09]_),
+    "COBYLA" (minimisation avec ou sans contraintes par approximation linéaire [Powell94]_ [Powell98]_).
+    "NEWUOA" (minimisation avec ou sans contraintes par approximation quadratique itérative [Powell04]_),
+    "POWELL" (minimisation sans contraintes de type directions conjuguées [Powell64]_),
+    "SIMPLEX" (minimisation avec ou sans contraintes de type simplexe ou Nelder-Mead, voir [Nelder65]_),
+    "SUBPLEX" (minimisation avec ou sans contraintes de type simplexe sur une suite de sous-espaces [Rowan90]_).
+    Remarque : la méthode "POWELL" effectue une optimisation par boucles
+    imbriquées interne/externe, conduisant ainsi à un contrôle relaché du
+    nombre d'évaluations de la fonctionnelle à optimiser. Si un contrôle précis
+    du nombre d'évaluations de cette fonctionnelle est requis, il faut choisir
+    un autre minimiseur.
 
-    Exemple : ``{"Minimizer":"POWELL"}``
+    Exemple : ``{"Minimizer":"BOBYQA"}``
 
   MaximumNumberOfSteps
     Cette clé indique le nombre maximum d'itérations possibles en optimisation
@@ -256,5 +257,12 @@ Références vers d'autres sections :
   - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
 
 Références bibliographiques :
-  - [Nelder]_
-  - [Powell]_
+  - [Johnson08]_
+  - [Nelder65]_
+  - [Powell64]_
+  - [Powell94]_
+  - [Powell98]_
+  - [Powell04]_
+  - [Powell07]_
+  - [Powell09]_
+  - [Rowan90]_

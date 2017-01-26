@@ -37,8 +37,8 @@ Description
 
 This algorithm realizes an estimation of the state of a system by minimization
 of a cost function :math:`J` without gradient. It is a method that doesn't use
-the derivatives of the cost function. It fall for example in the same category
-then the :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+the derivatives of the cost function. It fall, for example, in the same category
+than the :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 This is an optimization method allowing for global minimum search of a general
 error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
@@ -109,17 +109,19 @@ The options of the algorithm are the following:
 
   Minimizer
     This key allows to choose the optimization minimizer. The default choice is
-    "POWELL", and the possible ones are "POWELL" (modified Powell unconstrained
-    minimizer, see [Powell]_), "SIMPLEX" (simplex or Nelder-Mead unconstrained
-    minimizer, see [Nelder]_), "COBYLA" (constrained optimization by linear
-    approximation). It is recommended to stay with the default when there is no
-    bounds, and to choose "COBYLA" when there are bounds. Remark: the default
-    "POWELL" method perform a dual outer/inner loops optimization, leading then
-    to less control on the cost function evaluation number because it is the
-    outer loop limit than is controled. If precise control on this cost function
-    evaluation number is required, choose the "SIMPLEX" or the "COBYLA" one.
+    "BOBYQA", and the possible ones are
+    "BOBYQA" (minimization with or without contraints by quadratic approximation [Powell09]_),
+    "COBYLA" (minimization with or without contraints by linear approximation [Powell94]_ [Powell98]_).
+    "NEWUOA" (minimization with or without contraints by iterative quadratic approximation [Powell04]_),
+    "POWELL" (minimization unconstrained using conjugate directions [Powell64]_),
+    "SIMPLEX" (minimization with or without contraints using Nelder-Mead simplex algorithm [Nelder65]_),
+    "SUBPLEX" (minimization with or without contraints using Nelder-Mead on a sequence of subspaces [Rowan90]_).
+    Remark: the "POWELL" method perform a dual outer/inner loops optimization,
+    leading then to less control on the cost function evaluation number because
+    it is the outer loop limit than is controled. If precise control on this
+    cost function evaluation number is required, choose an another minimizer.
 
-    Example : ``{"Minimizer":"POWELL"}``
+    Example : ``{"Minimizer":"BOBYQA"}``
 
   MaximumNumberOfSteps
     This key indicates the maximum number of iterations allowed for iterative
@@ -249,5 +251,12 @@ References to other sections:
   - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
 
 Bibliographical references:
-  - [Nelder]_
-  - [Powell]_
+  - [Johnson08]_
+  - [Nelder65]_
+  - [Powell64]_
+  - [Powell94]_
+  - [Powell98]_
+  - [Powell04]_
+  - [Powell07]_
+  - [Powell09]_
+  - [Rowan90]_
