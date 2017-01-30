@@ -21,9 +21,11 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
+from utExtend import assertAlmostEqualArrays
+
 # ==============================================================================
 def test1():
-    """Exemple"""
+    """Test"""
     from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
@@ -39,7 +41,7 @@ def test1():
     return case.get("Analysis")[-1]
 
 def test2():
-    """Exemple"""
+    """Test"""
     from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
@@ -63,11 +65,6 @@ def test2():
     #
     return case.get("Analysis")[-1]
 
-def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
-    """Comparaison de deux vecteurs"""
-    print "  Difference maximale %s: %.2e"%(msg, max(abs(v2 - v1)))
-    return max(abs(v2 - v1)) < precision
-
 # ==============================================================================
 if __name__ == "__main__":
     print '\n AUTODIAGNOSTIC \n'
@@ -79,4 +76,5 @@ if __name__ == "__main__":
     """
     xa1 = test1()
     xa2 = test2()
-    assert almost_equal_vectors( xa1, xa2, msg = "entre les deux" )
+    ecart = assertAlmostEqualArrays(xa1, xa2, places = 15)
+    print "  Difference maximale entre les deux : %.2e"%ecart

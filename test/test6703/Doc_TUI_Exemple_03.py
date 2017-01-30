@@ -21,6 +21,8 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
+from utExtend import assertAlmostEqualArrays
+
 # ==============================================================================
 #
 # Construction artificielle d'un exemple de donnees utilisateur
@@ -46,7 +48,7 @@ observations = simulation((2, 3, 4))
 
 # ==============================================================================
 def test1():
-    "Exemple"
+    "Test"
     import numpy
     import adaoBuilder
     #
@@ -99,7 +101,7 @@ def test1():
     print "Simulation at optimal state.....:",numpy.ravel(FX_at_optimum)
     print
     #
-    return 0
+    return case.get("Analysis")[-1]
 
 # ==============================================================================
 if __name__ == "__main__":
@@ -109,4 +111,5 @@ if __name__ == "__main__":
     Exploitation independante des resultats d'un cas de calcul
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     """
-    test1()
+    xa = test1()
+    assertAlmostEqualArrays(xa, [ 2., 3., 4.])

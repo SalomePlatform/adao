@@ -21,9 +21,11 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
+from utExtend import assertAlmostEqualArrays
+
 # ==============================================================================
 def test1():
-    """Exemple"""
+    """Test"""
     from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
@@ -36,7 +38,7 @@ def test1():
     case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
     case.execute()
     #
-    return 0
+    return case.get("Analysis")[-1]
 
 # ==============================================================================
 if __name__ == "__main__":
@@ -46,4 +48,5 @@ if __name__ == "__main__":
     Un exemple simple de creation d'un cas de calcul TUI ADAO
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     """
-    test1()
+    xa = test1()
+    assertAlmostEqualArrays(xa, [0.25, 0.80, 0.95], places = 5)
