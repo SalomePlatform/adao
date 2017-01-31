@@ -302,6 +302,7 @@ logging.debug("CREATE Matrix is %s"%matrix)
 import numpy, logging
 logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromString")
 matrix = numpy.matrix(matrix_in_string)
+if matrix.size != 1: raise ValueError('\n\n  The sparse matrix, declared as a "ScalarSparseMatrix" to be build using a scalar input,\n  is not of the good size (its actual measured size is %i). Please correct your input and relaunch.'%matrix.size)
 type = "ScalarSparseMatrix"
 logging.debug("CREATE ScalarSparseMatrix is %s"%matrix)
 ]]></code></script>
