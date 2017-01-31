@@ -35,6 +35,7 @@ install-data-local:
 	cp -R $(DIR)test6702 $(SALOMETESTDIR)
 	cp -R $(DIR)test6703 $(SALOMETESTDIR)
 	cp -R $(DIR)test6901 $(SALOMETESTDIR)
+	cp -R $(DIR)test6902 $(SALOMETESTDIR)
 	cp    $(DIR)CTestTestfileInstall.cmake.in $(SALOMETESTDIR)/CTestTestfile.cmake
 
 uninstall-local:
@@ -45,4 +46,5 @@ uninstall-local:
 	rm -rf $(SALOMETESTDIR)/test6702
 	rm -rf $(SALOMETESTDIR)/test6703
 	rm -rf $(SALOMETESTDIR)/test6901
+	rm -rf $(SALOMETESTDIR)/test6902
 	rm     $(SALOMETESTDIR)/CTestTestfile.cmake

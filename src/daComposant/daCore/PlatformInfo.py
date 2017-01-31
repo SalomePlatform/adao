@@ -143,6 +143,13 @@ class PlatformInfo(object):
 
 # ==============================================================================
 try:
+    import scipy
+    import scipy.optimize
+    has_scipy = True
+except ImportError:
+    has_scipy = False
+
+try:
     import matplotlib
     has_matplotlib = True
 except ImportError:
