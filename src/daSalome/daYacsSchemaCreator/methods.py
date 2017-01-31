@@ -32,7 +32,7 @@ import os
 from daYacsSchemaCreator.infos_daComposant import *
 
 def _Internal_Add_dir_script_ports(node, sf, ed, br, t_type):
-  # On conserve le pointeur de "node" et "typ"
+  # On conserve le pointeur de "node" et "t_type"
   __scriptfile = str( sf )
   __exist_dir  = bool( ed )
   __base_dir   = str( br )

@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-EXTRA_DIST = test1001 test1002 test6701 test6702 test6703 CTestTestfileInstall.cmake.in
+EXTRA_DIST = test1001 test1002 test6701 test6702 test6703 test6901 test6902 CTestTestfileInstall.cmake.in
 
 DIR = $(top_srcdir)/test/
 
