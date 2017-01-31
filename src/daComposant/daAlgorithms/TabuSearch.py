@@ -111,17 +111,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
-        #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
-        #
-        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
-            Bounds = self._parameters["Bounds"]
-            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
-        else:
-            Bounds = None
+        self._pre_run(Parameters)
         #
         if self._parameters["NoiseDistribution"] == "Uniform":
             nrange = numpy.ravel(self._parameters["NoiseHalfRange"]) # Vecteur
@@ -166,7 +156,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             for state in TL:
                 if numpy.all(numpy.abs( _X - numpy.ravel(state) ) <= 1e-16*numpy.abs(_X)):
                     _xInList = True
-            if _xInList: sys.exit()
+            # if _xInList: import sys ; sys.exit()
             return _xInList
         #
         # Minimisation de la fonctionnelle
