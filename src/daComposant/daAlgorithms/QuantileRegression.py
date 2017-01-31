@@ -75,20 +75,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
+        self._pre_run(Parameters)
         #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
-        #
-        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
-            Bounds = self._parameters["Bounds"]
-            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
-        else:
-            Bounds = None
-        #
-        # Opérateur d'observation
-        # -----------------------
         Hm = HO["Direct"].appliedTo
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
@@ -145,7 +133,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
-                bounds      = Bounds,
+                bounds      = self._parameters["Bounds"],
                 quantile    = self._parameters["Quantile"],
                 maxfun      = self._parameters["MaximumNumberOfSteps"],
                 toler       = self._parameters["CostDecrementTolerance"],

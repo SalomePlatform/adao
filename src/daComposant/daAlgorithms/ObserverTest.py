@@ -30,14 +30,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "OBSERVERTEST")
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
+        self._pre_run(Parameters)
         print "Results of observer check on all potential variables or commands,"
         print "         only activated on selected ones by explicit association."
         print
-        #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
         #
         __Xa = 1.+numpy.arange(3.)
         __Xb = numpy.zeros(3)

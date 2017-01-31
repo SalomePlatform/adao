@@ -84,11 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
-        #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
+        self._pre_run(Parameters)
         #
         def RMS(V1, V2):
             import math

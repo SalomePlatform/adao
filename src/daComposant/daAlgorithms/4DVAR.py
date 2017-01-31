@@ -94,23 +94,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
-        if logging.getLogger().level < logging.WARNING:
-            self.__iprint, self.__disp = 1, 1
-            self.__message = scipy.optimize.tnc.MSG_ALL
-        else:
-            self.__iprint, self.__disp = -1, 0
-            self.__message = scipy.optimize.tnc.MSG_NONE
-        #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
-        #
-        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
-            Bounds = self._parameters["Bounds"]
-            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
-        else:
-            Bounds = None
+        self._pre_run(Parameters)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         if self._parameters.has_key("Minimizer") == "TNC":
@@ -192,9 +176,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 elif self._parameters["EstimationOf"] == "Parameters":
                     pass
                 #
-                if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
-                    _Xn = numpy.max(numpy.hstack((_Xn,numpy.asmatrix(Bounds)[:,0])),axis=1)
-                    _Xn = numpy.min(numpy.hstack((_Xn,numpy.asmatrix(Bounds)[:,1])),axis=1)
+                if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+                    _Xn = numpy.max(numpy.hstack((_Xn,numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
+                    _Xn = numpy.min(numpy.hstack((_Xn,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
                 #
                 # Etape de différence aux observations
                 if self._parameters["EstimationOf"] == "State":
@@ -260,11 +244,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                bounds      = Bounds,
+                bounds      = self._parameters["Bounds"],
                 maxfun      = self._parameters["MaximumNumberOfSteps"]-1,
                 factr       = self._parameters["CostDecrementTolerance"]*1.e14,
                 pgtol       = self._parameters["ProjectedGradientTolerance"],
-                iprint      = self.__iprint,
+                iprint      = self._parameters["optiprint"],
                 )
             nfeval = Informations['funcalls']
             rc     = Informations['warnflag']
@@ -274,11 +258,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                bounds      = Bounds,
+                bounds      = self._parameters["Bounds"],
                 maxfun      = self._parameters["MaximumNumberOfSteps"],
                 pgtol       = self._parameters["ProjectedGradientTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],
-                messages    = self.__message,
+                messages    = self._parameters["optmessages"],
                 )
         elif self._parameters["Minimizer"] == "CG":
             Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
@@ -288,7 +272,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 maxiter     = self._parameters["MaximumNumberOfSteps"],
                 gtol        = self._parameters["GradientNormTolerance"],
-                disp        = self.__disp,
+                disp        = self._parameters["optdisp"],
                 full_output = True,
                 )
         elif self._parameters["Minimizer"] == "NCG":
@@ -299,7 +283,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 maxiter     = self._parameters["MaximumNumberOfSteps"],
                 avextol     = self._parameters["CostDecrementTolerance"],
-                disp        = self.__disp,
+                disp        = self._parameters["optdisp"],
                 full_output = True,
                 )
         elif self._parameters["Minimizer"] == "BFGS":
@@ -310,7 +294,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 args        = (),
                 maxiter     = self._parameters["MaximumNumberOfSteps"],
                 gtol        = self._parameters["GradientNormTolerance"],
-                disp        = self.__disp,
+                disp        = self._parameters["optdisp"],
                 full_output = True,
                 )
         else:

@@ -356,10 +356,35 @@ class Algorithm(object):
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
 
-    def _pre_run(self):
+    def _pre_run(self, Parameters ):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
         logging.debug("%s Taille mémoire utilisée de %.1f Mio", self._name, self._m.getUsedMemory("Mio"))
+        #
+        # Mise a jour de self._parameters avec Parameters
+        self.__setParameters(Parameters)
+        #
+        # Corrections et complements
+        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
+        else:
+            self._parameters["Bounds"] = None
+        #
+        if logging.getLogger().level < logging.WARNING:
+            self._parameters["optiprint"], self._parameters["optdisp"] = 1, 1
+            if PlatformInfo.has_scipy:
+                import scipy.optimize
+                self._parameters["optmessages"] = scipy.optimize.tnc.MSG_ALL
+            else:
+                self._parameters["optmessages"] = 15
+        else:
+            self._parameters["optiprint"], self._parameters["optdisp"] = -1, 0
+            if PlatformInfo.has_scipy:
+                import scipy.optimize
+                self._parameters["optmessages"] = scipy.optimize.tnc.MSG_NONE
+            else:
+                self._parameters["optmessages"] = 15
+        #
         return 0
 
     def _post_run(self,_oH=None):
@@ -472,7 +497,7 @@ class Algorithm(object):
                 raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%( __val, name,listval))
         return __val
 
-    def setParameters(self, fromDico={}):
+    def __setParameters(self, fromDico={}):
         """
         Permet de stocker les paramètres reçus dans le dictionnaire interne.
         """

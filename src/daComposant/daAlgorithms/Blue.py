@@ -70,14 +70,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
+        self._pre_run(Parameters)
         #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
-        #
-        # Opérateurs
-        # ----------
         Hm = HO["Tangent"].asMatrix(Xb)
         Hm = Hm.reshape(Y.size,Xb.size) # ADAO & check shape
         Ha = HO["Adjoint"].asMatrix(Xb)

@@ -102,9 +102,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
-        #
-        self.setParameters(Parameters)
+        self._pre_run(Parameters)
         #
         Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
@@ -223,7 +221,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Boucle sur les perturbations
         # ----------------------------
-        Normalisation= -1
         NormesdX     = []
         NormesFXdX   = []
         NormesdFX    = []
@@ -269,7 +266,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Residu = NormedFXGdX / (amplitude*amplitude)
             elif self._parameters["ResiduFormula"] == "Norm":
                 Residu = NormedFXsAm
-            if Normalisation < 0 : Normalisation = Residu
             #
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu,math.log10(max(1.e-99,Residu)))
             msgs += "\n" + __marge + msg

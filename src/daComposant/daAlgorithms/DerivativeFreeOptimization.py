@@ -91,23 +91,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
-        if logging.getLogger().level < logging.WARNING:
-            self.__disp = 1
-        else:
-            self.__disp = 0
-        #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
+        self._pre_run(Parameters)
         #
         if not PlatformInfo.has_nlopt and not self._parameters["Minimizer"] in ["COBYLA", "POWELL", "SIMPLEX"]:
             self._parameters["Minimizer"] = "SIMPLEX"
-        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
-            Bounds = self._parameters["Bounds"]
-            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
-        else:
-            Bounds = None
         #
         # Opérateurs
         # ----------
@@ -194,7 +181,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 xtol        = self._parameters["StateVariationTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],
                 full_output = True,
-                disp        = self.__disp,
+                disp        = self._parameters["optdisp"],
                 )
         elif self._parameters["Minimizer"] == "COBYLA" and not PlatformInfo.has_nlopt:
             def make_constraints(bounds):
@@ -204,19 +191,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     upper = lambda x: b - x[i]
                     constraints = constraints + [lower] + [upper]
                 return constraints
-            if Bounds is None:
+            if self._parameters["Bounds"] is None:
                 raise ValueError("Bounds have to be given for all axes as a list of lower/upper pairs!")
             Minimum = scipy.optimize.fmin_cobyla(
                 func        = CostFunction,
                 x0          = Xini,
-                cons        = make_constraints( Bounds ),
+                cons        = make_constraints( self._parameters["Bounds"] ),
                 args        = (self._parameters["QualityCriterion"],),
                 consargs    = (), # To avoid extra-args
                 maxfun      = self._parameters["MaximumNumberOfFunctionEvaluations"],
                 rhobeg      = 1.0,
                 rhoend      = self._parameters["StateVariationTolerance"],
                 catol       = 2.*self._parameters["StateVariationTolerance"],
-                disp        = self.__disp,
+                disp        = self._parameters["optdisp"],
                 )
         elif self._parameters["Minimizer"] == "COBYLA" and PlatformInfo.has_nlopt:
             import nlopt
@@ -225,11 +212,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # DFO, so no gradient
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
-            if Bounds is not None:
-                lub = numpy.array(Bounds).reshape((Xini.size,2))
+            if self._parameters["Bounds"] is not None:
+                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
                 lb = lub[:,0]
                 ub = lub[:,1]
-                if self.__disp:
+                if self._parameters["optdisp"]:
                     print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
                     print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
                 opt.set_upper_bounds(ub)
@@ -238,7 +225,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
-            if self.__disp:
+            if self._parameters["optdisp"]:
                 print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
                 print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
                 print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
@@ -252,7 +239,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 xtol        = self._parameters["StateVariationTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],
                 full_output = True,
-                disp        = self.__disp,
+                disp        = self._parameters["optdisp"],
                 )
         elif self._parameters["Minimizer"] == "SIMPLEX" and PlatformInfo.has_nlopt:
             import nlopt
@@ -261,11 +248,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # DFO, so no gradient
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
-            if Bounds is not None:
-                lub = numpy.array(Bounds).reshape((Xini.size,2))
+            if self._parameters["Bounds"] is not None:
+                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
                 lb = lub[:,0]
                 ub = lub[:,1]
-                if self.__disp:
+                if self._parameters["optdisp"]:
                     print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
                     print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
                 opt.set_upper_bounds(ub)
@@ -274,7 +261,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
-            if self.__disp:
+            if self._parameters["optdisp"]:
                 print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
                 print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
                 print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
@@ -285,11 +272,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # DFO, so no gradient
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
-            if Bounds is not None:
-                lub = numpy.array(Bounds).reshape((Xini.size,2))
+            if self._parameters["Bounds"] is not None:
+                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
                 lb = lub[:,0]
                 ub = lub[:,1]
-                if self.__disp:
+                if self._parameters["optdisp"]:
                     print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
                     print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
                 opt.set_upper_bounds(ub)
@@ -298,7 +285,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
-            if self.__disp:
+            if self._parameters["optdisp"]:
                 print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
                 print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
                 print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
@@ -309,11 +296,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # DFO, so no gradient
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
-            if Bounds is not None:
-                lub = numpy.array(Bounds).reshape((Xini.size,2))
+            if self._parameters["Bounds"] is not None:
+                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
                 lb = lub[:,0]
                 ub = lub[:,1]
-                if self.__disp:
+                if self._parameters["optdisp"]:
                     print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
                     print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
                 opt.set_upper_bounds(ub)
@@ -322,7 +309,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
-            if self.__disp:
+            if self._parameters["optdisp"]:
                 print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
                 print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
                 print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
@@ -333,11 +320,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # DFO, so no gradient
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
-            if Bounds is not None:
-                lub = numpy.array(Bounds).reshape((Xini.size,2))
+            if self._parameters["Bounds"] is not None:
+                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
                 lb = lub[:,0]
                 ub = lub[:,1]
-                if self.__disp:
+                if self._parameters["optdisp"]:
                     print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
                     print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
                 opt.set_upper_bounds(ub)
@@ -346,7 +333,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_xtol_rel(2.*self._parameters["StateVariationTolerance"])
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
-            if self.__disp:
+            if self._parameters["optdisp"]:
                 print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
                 print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
                 print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())

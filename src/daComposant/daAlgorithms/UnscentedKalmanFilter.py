@@ -90,17 +90,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run()
+        self._pre_run(Parameters)
         #
-        # Paramètres de pilotage
-        # ----------------------
-        self.setParameters(Parameters)
-        #
-        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
-            Bounds = self._parameters["Bounds"]
-            logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
-        else:
-            Bounds = None
         if self._parameters["EstimationOf"] == "Parameters":
             self._parameters["StoreInternalVariables"] = True
         #
@@ -192,10 +183,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xnp = numpy.hstack([Xn, Xn+Gamma*Pndemi, Xn-Gamma*Pndemi])
             nbSpts = 2*Xn.size+1
             #
-            if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+            if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
                 for point in range(nbSpts):
-                    Xnp[:,point] = numpy.max(numpy.hstack((Xnp[:,point],numpy.asmatrix(Bounds)[:,0])),axis=1)
-                    Xnp[:,point] = numpy.min(numpy.hstack((Xnp[:,point],numpy.asmatrix(Bounds)[:,1])),axis=1)
+                    Xnp[:,point] = numpy.max(numpy.hstack((Xnp[:,point],numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
+                    Xnp[:,point] = numpy.min(numpy.hstack((Xnp[:,point],numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             #
             XEtnnp = []
             for point in range(nbSpts):
@@ -204,9 +195,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                         Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                         XEtnnpi = XEtnnpi + Cm * Un
-                    if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
-                        XEtnnpi = numpy.max(numpy.hstack((XEtnnpi,numpy.asmatrix(Bounds)[:,0])),axis=1)
-                        XEtnnpi = numpy.min(numpy.hstack((XEtnnpi,numpy.asmatrix(Bounds)[:,1])),axis=1)
+                    if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+                        XEtnnpi = numpy.max(numpy.hstack((XEtnnpi,numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
+                        XEtnnpi = numpy.min(numpy.hstack((XEtnnpi,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
                 elif self._parameters["EstimationOf"] == "Parameters":
                     # --- > Par principe, M = Id, Q = 0
                     XEtnnpi = Xnp[:,point]
@@ -215,26 +206,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             Xncm = numpy.matrix( XEtnnp.getA()*numpy.array(Wm) ).sum(axis=1)
             #
-            if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
-                Xncm = numpy.max(numpy.hstack((Xncm,numpy.asmatrix(Bounds)[:,0])),axis=1)
-                Xncm = numpy.min(numpy.hstack((Xncm,numpy.asmatrix(Bounds)[:,1])),axis=1)
+            if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+                Xncm = numpy.max(numpy.hstack((Xncm,numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
+                Xncm = numpy.min(numpy.hstack((Xncm,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             #
             if self._parameters["EstimationOf"] == "State":        Pnm = Q
             elif self._parameters["EstimationOf"] == "Parameters": Pnm = 0.
             for point in range(nbSpts):
                 Pnm += Wc[i] * (XEtnnp[:,point]-Xncm) * (XEtnnp[:,point]-Xncm).T
             #
-            if self._parameters["EstimationOf"] == "Parameters" and Bounds is not None:
+            if self._parameters["EstimationOf"] == "Parameters" and self._parameters["Bounds"] is not None:
                 Pnmdemi = self._parameters["Reconditioner"] * numpy.linalg.cholesky(Pnm)
             else:
                 Pnmdemi = numpy.linalg.cholesky(Pnm)
             #
             Xnnp = numpy.hstack([Xncm, Xncm+Gamma*Pnmdemi, Xncm-Gamma*Pnmdemi])
             #
-            if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+            if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
                 for point in range(nbSpts):
-                    Xnnp[:,point] = numpy.max(numpy.hstack((Xnnp[:,point],numpy.asmatrix(Bounds)[:,0])),axis=1)
-                    Xnnp[:,point] = numpy.min(numpy.hstack((Xnnp[:,point],numpy.asmatrix(Bounds)[:,1])),axis=1)
+                    Xnnp[:,point] = numpy.max(numpy.hstack((Xnnp[:,point],numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
+                    Xnnp[:,point] = numpy.min(numpy.hstack((Xnnp[:,point],numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             #
             Ynnp = []
             for point in range(nbSpts):
@@ -262,9 +253,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xn = Xncm + Kn * d
             Pn = Pnm - Kn * Pyyn * Kn.T
             #
-            if Bounds is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
-                Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(Bounds)[:,0])),axis=1)
-                Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(Bounds)[:,1])),axis=1)
+            if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
+                Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
+                Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )
             if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
