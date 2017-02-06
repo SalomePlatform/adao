@@ -115,7 +115,7 @@ implementation. One can then use the "*FunctionTest*" ADAO checking algorithm
 test.
 
 **Important warning:** the name "*DirectOperator*" is mandatory, and the type of
-the ``X`` argument can be either a list, a numpy array or a numpy 1D-matrix. The
+the ``X`` argument can be either a list, a Numpy array or a Numpy 1D-matrix. The
 user function has to accept and treat all these cases.
 
 Second functional form: using "*ScriptWithFunctions*"
@@ -169,7 +169,7 @@ return the associated matrix.
 
 **Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
 "*AdjointOperator*" are mandatory, and the type of the ``X``, Y``, ``dX``
-arguments can be either a python list, a numpy array or a numpy 1D-matrix. The
+arguments can be either a python list, a Numpy array or a Numpy 1D-matrix. The
 user has to treat these cases in his script.
 
 Third functional form: using "*ScriptWithSwitch*"
@@ -276,19 +276,18 @@ In such a case with explicit control, only the second functional form (using
 "*ScriptWithFunctions*") and third functional form (using "*ScriptWithSwitch*")
 can be used.
 
-Additional notes on nondimensionalization of operators
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Additional notes on dimensionless transformation of operators
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Nondimensionalization
 .. index:: single: Dimensionless
 
 It is common that physical quantities, in input or output of the operators, have
 significant differences in magnitude or rate of change. One way to avoid
-numerical difficulties is to use, or to set, a nondimensionalization of the
+numerical difficulties is to use, or to set, a dimensionless version of
 calculations carried out in operators [WikipediaND]_. In principle, since
-physical simulation should be as dimensionless as possible, it is firstly
-recommended to use the existing capacity of nondimensionalization of the
-calculation code.
+physical simulation should be as dimensionless as possible, it is at first
+recommended to use the existing dimensionless capacity of the calculation code.
 
 However, in the common case where we can not dispose of it, it is often useful
 to surround the calculation to remove dimension for input or output. A simple
@@ -301,8 +300,8 @@ component of :math:`\mathbf{x}^b` is non zero, one can indeed put:
 
 and then optimize the multiplicative parameter :math:`\mathbf{\alpha}`.  This
 parameter has as default value (or as background) a vector of 1. Be careful,
-applying a process of nondimensionalization also requires changing the error
-covariances associated in an ADAO formulation of the optimization problem.
+applying a process of dimensionless transformation also requires changing the
+associated error covariances in an ADAO formulation of the optimization problem.
 
 Such a process is rarely enough to avoid all the numerical problems, but it
 often improves a lot the numeric conditioning of the optimization.

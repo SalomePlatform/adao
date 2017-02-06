@@ -48,7 +48,7 @@ désigner la manière dont on fournit les variables en entrée:
     par exemple "1 2 ; 3 4" ou "[[1,2],[3,4]]" pour une matrice carrée de taille
     2x2.
 
-Les différents autres pseudo-types sont les suivants. Les variables auquelles
+Les différents autres pseudo-types sont les suivants. Les variables auxquelles
 ils s'appliquent peuvent elles-mêmes être données soit par une chaîne de
 caractères (un "*String*"), soit par un fichier script (un "*Script*"):
 

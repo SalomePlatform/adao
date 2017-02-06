@@ -343,7 +343,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
         self.ADD.setDataObserver(observer_name, HookFunction=self.obs, HookParameters = observer_name)
 
     # Start Assimilation Study
-    print "Launching the analyse\n"
+    print "Launching the analysis\n"
     try:
         self.ADD.analyze()
     except Exception as e:

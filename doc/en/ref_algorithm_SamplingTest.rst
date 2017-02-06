@@ -34,7 +34,7 @@ This algorithm allows to calculate the values, linked to a :math:`\mathbf{x}`
 state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
 :math:`L^{\infty}`, with or without weights, and of the observation operator,
 for an priori given states sample. The default error function is the augmented
-weighted least squares function, classicaly used in data assimilation.
+weighted least squares function, classically used in data assimilation.
 
 It is useful to test the sensitivity, of the error function :math:`J`, in
 particular, to the state :math:`\mathbf{x}` variations. When a state is not
@@ -49,8 +49,8 @@ To be visible by the user, the results of sampling has to be explicitly asked
 for. One use for that, on the desired variable, the final saving through
 "*UserPostAnalysis*" or the treatment during the calculation by "*observer*".
 
-To perform distributed or more complex sampling, see other modules available in
-SALOME : PARAMETRIC or OPENTURNS.
+To perform distributed or more complex sampling, see OPENTURNS module available
+in SALOME.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -138,10 +138,10 @@ The options of the algorithm are the following:
 
   SampleAsIndependantRandomVariables
     This key describes the calculations points as an hyper-cube, for which the
-    points on each axis come from a independant random sampling of the axis
+    points on each axis come from a independent random sampling of the axis
     variable, under the specification of the distribution, its parameters and
     the number of points in the sample, as a list ``['distribution',
-    [parametres], nombre]`` for each axis. The possible distributions are
+    [parameters], number]`` for each axis. The possible distributions are
     'normal' of parameters (mean,std), 'lognormal' of parameters (mean,sigma),
     'uniform' of parameters (low,high), or 'weibull' of parameter (shape). That
     is then a list of the same size than the one of the state.
@@ -240,5 +240,4 @@ References to other sections:
   - :ref:`section_ref_algorithm_FunctionTest`
 
 References to other SALOME modules:
-  - PARAMETRIC, see the *User guide of PARAMETRIC module* in the main "*Help*" menu of SALOME platform
   - OPENTURNS, see the *User guide of OPENTURNS module* in the main "*Help*" menu of SALOME platform

@@ -242,7 +242,7 @@ of the following form::
    Entering in the assimilation study
    Name is set to........: Test
    Algorithm is set to...: Blue
-   Launching the analyse
+   Launching the analysis
 
    Optimal state: [0.5, 0.5, 0.5]
 

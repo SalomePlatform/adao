@@ -178,7 +178,7 @@ The options of the algorithm are the following:
   Quantiles
     This list indicates the values of quantile, between 0 and 1, to be estimated
     by simulation around the optimal state. The sampling uses a multivariate
-    gaussian random sampling, directed by the *a posteriori* covariance matrix.
+    Gaussian random sampling, directed by the *a posteriori* covariance matrix.
     This option is useful only if the supplementary calculation
     "SimulationQuantiles" has been chosen. The default is a void list.
 
@@ -205,7 +205,7 @@ The options of the algorithm are the following:
     This key indicates the type of simulation, linear (with the tangent
     observation operator applied to perturbation increments around the optimal
     state) or non-linear (with standard observation operator applied to
-    perturbated states), one want to do for each perturbation. It changes mainly
+    perturbed states), one want to do for each perturbation. It changes mainly
     the time of each elementary calculation, usually longer in non-linear than
     in linear. This option is useful only if the supplementary calculation
     "SimulationQuantiles" has been chosen. The default value is "Linear", and
@@ -269,7 +269,7 @@ The conditional outputs of the algorithm are the following:
     errors diagonal matrix of the optimal state, coming from the
     :math:`\mathbf{A}*` covariance matrix.
 
-    Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
+    Example : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
     *List of matrices*. Each element is an *a posteriori* error variance
@@ -307,9 +307,9 @@ The conditional outputs of the algorithm are the following:
 
   CurrentOptimum
     *List of vectors*. Each element is the optimal state obtained at the current
-    step of the optimization algorithm. It is not necessarely the last state.
+    step of the optimization algorithm. It is not necessarily the last state.
 
-    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+    Example : ``Xo = ADD.get("CurrentOptimum")[:]``
 
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
@@ -320,9 +320,9 @@ The conditional outputs of the algorithm are the following:
   IndexOfOptimum
     *List of integers*. Each element is the iteration index of the optimum
     obtained at the current step the optimization algorithm. It is not
-    necessarely the number of the last iteration.
+    necessarily the number of the last iteration.
 
-    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
+    Example : ``i = ADD.get("IndexOfOptimum")[-1]``
 
   Innovation
     *List of vectors*. Each element is an innovation vector, which is in static
@@ -371,7 +371,7 @@ The conditional outputs of the algorithm are the following:
     the optimal state obtained at the current step the optimization algorithm,
     that is, in the observation space.
 
-    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
+    Example : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
 
   SimulatedObservationAtCurrentState
     *List of vectors*. Each element is an observed vector at the current state,
@@ -404,3 +404,4 @@ Bibliographical references:
   - [Byrd95]_
   - [Morales11]_
   - [Talagrand97]_
+  - [Zhu97]_

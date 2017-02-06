@@ -197,7 +197,7 @@ The conditional outputs of the algorithm are the following:
     the difference between the optimal and the background, and in dynamic the
     evolution increment.
 
-    Exemple : ``d = ADD.get("Innovation")[-1]``
+    Example : ``d = ADD.get("Innovation")[-1]``
 
 See also
 ++++++++

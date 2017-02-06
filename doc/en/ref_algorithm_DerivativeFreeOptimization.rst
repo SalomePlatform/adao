@@ -36,14 +36,14 @@ Description
 +++++++++++
 
 This algorithm realizes an estimation of the state of a system by minimization
-of a cost function :math:`J` without gradient. It is a method that doesn't use
+of a cost function :math:`J` without gradient. It is a method that does not use
 the derivatives of the cost function. It fall, for example, in the same category
 than the :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 This is an optimization method allowing for global minimum search of a general
 error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
 with or without weights. The default error function is the augmented weighted
-least squares function, classicaly used in data assimilation.
+least squares function, classically used in data assimilation.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -110,15 +110,15 @@ The options of the algorithm are the following:
   Minimizer
     This key allows to choose the optimization minimizer. The default choice is
     "BOBYQA", and the possible ones are
-    "BOBYQA" (minimization with or without contraints by quadratic approximation [Powell09]_),
-    "COBYLA" (minimization with or without contraints by linear approximation [Powell94]_ [Powell98]_).
-    "NEWUOA" (minimization with or without contraints by iterative quadratic approximation [Powell04]_),
+    "BOBYQA" (minimization with or without constraints by quadratic approximation [Powell09]_),
+    "COBYLA" (minimization with or without constraints by linear approximation [Powell94]_ [Powell98]_).
+    "NEWUOA" (minimization with or without constraints by iterative quadratic approximation [Powell04]_),
     "POWELL" (minimization unconstrained using conjugate directions [Powell64]_),
-    "SIMPLEX" (minimization with or without contraints using Nelder-Mead simplex algorithm [Nelder65]_),
-    "SUBPLEX" (minimization with or without contraints using Nelder-Mead on a sequence of subspaces [Rowan90]_).
+    "SIMPLEX" (minimization with or without constraints using Nelder-Mead simplex algorithm [Nelder65]_),
+    "SUBPLEX" (minimization with or without constraints using Nelder-Mead on a sequence of subspaces [Rowan90]_).
     Remark: the "POWELL" method perform a dual outer/inner loops optimization,
     leading then to less control on the cost function evaluation number because
-    it is the outer loop limit than is controled. If precise control on this
+    it is the outer loop limit than is controlled. If precise control on this
     cost function evaluation number is required, choose an another minimizer.
 
     Example : ``{"Minimizer":"BOBYQA"}``

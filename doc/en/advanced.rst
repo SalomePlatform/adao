@@ -71,7 +71,7 @@ the following Shell script::
 
 It is then required to change it to be in executable mode.
 
-A more complete example consist in launching execution of a YACS sheme given by
+A more complete example consist in launching execution of a YACS scheme given by
 the user, having previously verified its availability. For that, replacing the
 text ``<SALOME main installation directory>``, one needs only to save the
 following Shell script::
@@ -389,7 +389,7 @@ the following ones:
 
 #. The dimension of the state vector is more than 2 or 3.
 #. Unitary calculation of user defined direct function "last for long time", that is, more than few minutes.
-#. The user defined direct function doesn't already use parallelism (or parallel execution is disabled in the user calculation).
+#. The user defined direct function does not already use parallelism (or parallel execution is disabled in the user calculation).
 #. The user defined direct function avoids read/write access to common resources, mainly stored data, output files or memory capacities.
 #. The "*observer*" added by the user avoid read/write access to common resources, such as files or memory.
 

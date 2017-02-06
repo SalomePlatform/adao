@@ -110,7 +110,7 @@ ObserverTemplates.store(
     name    = "ValueSeriePrinter",
     content = """print info, var[:]""",
     fr_FR   = "Imprime sur la sortie standard la série des valeurs de la variable",
-    en_EN   = "Print on standard output the value serie of the variable",
+    en_EN   = "Print on standard output the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
@@ -124,7 +124,7 @@ ObserverTemplates.store(
     name    = "ValueSerieSaver",
     content = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
     fr_FR   = "Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape",
-    en_EN   = "Save the value serie of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
+    en_EN   = "Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
     order   = "next",
     )
 ObserverTemplates.store(
@@ -145,7 +145,7 @@ ObserverTemplates.store(
     name    = "ValueSeriePrinterAndSaver",
     content = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la série des valeurs de la variable",
-    en_EN   = "Print on standard output and, in the same time, save in a file the value serie of the variable",
+    en_EN   = "Print on standard output and, in the same time, save in a file the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
@@ -159,7 +159,7 @@ ObserverTemplates.store(
     name    = "ValueSerieGnuPlotter",
     content = """import numpy, Gnuplot\nv=numpy.array(var[:],  ndmin=1)\nglobal ifig, gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Affiche graphiquement avec Gnuplot la série des valeurs de la variable",
-    en_EN   = "Graphically plot with Gnuplot the value serie of the variable",
+    en_EN   = "Graphically plot with Gnuplot the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
@@ -173,7 +173,7 @@ ObserverTemplates.store(
     name    = "ValueSeriePrinterAndGnuPlotter",
     content = """print info, var[:] \nimport numpy, Gnuplot\nv=numpy.array(var[:],  ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable",
-    en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the value serie of the variable",
+    en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
@@ -187,7 +187,7 @@ ObserverTemplates.store(
     name    = "ValueSeriePrinterSaverAndGnuPlotter",
     content = """print info, var[:] \nimport numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la série des valeurs de la variable",
-    en_EN   = "Print on standard output and, in the same, time save in a file and graphically plot the value serie of the variable",
+    en_EN   = "Print on standard output and, in the same, time save in a file and graphically plot the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(

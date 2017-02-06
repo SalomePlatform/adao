@@ -153,7 +153,7 @@ Description simple du cadre méthodologique de l'assimilation de données
 
 On peut décrire ces démarches de manière simple. Par défaut, toutes les
 variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster, ou un
-champ discretisé à reconstruire.
+champ discrétisé à reconstruire.
 
 Selon les notations standards en assimilation de données, on note
 :math:`\mathbf{x}^a` les paramètres optimaux qui doivent être déterminés par

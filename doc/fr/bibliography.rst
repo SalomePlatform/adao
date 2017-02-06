@@ -100,4 +100,4 @@ Bibliographie
 *Nota Bene* : un lien vers la version française de chaque page Wikipédia se
 trouve dans le sous-menu "*Languages*". Les deux versions sont complémentaires
 car, même si souvent le contenu en anglais est plus fourni, les informations
-disponibles dans chaque langue ne sont pas toujours identiques.
+disponibles dans chaque langue ne sont pas identiques.

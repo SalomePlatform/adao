@@ -51,8 +51,8 @@ Pour apparaître pour l'utilisateur, les résultats de l'échantillonnage doivent
 sauvegarde finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en
 cours de calcul à l'aide des "*observer*" adaptés.
 
-Pour effectuer un échantillonnage distribué ou plus complexe, voir d'autres
-modules disponibles dans SALOME : PARAMETRIC ou OPENTURNS.
+Pour effectuer un échantillonnage distribué ou plus complexe, voir le module
+OPENTURNS disponible dans SALOME.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -249,5 +249,4 @@ Références vers d'autres sections :
   - :ref:`section_ref_algorithm_FunctionTest`
 
 Références vers d'autres modules SALOME :
-  - PARAMETRIC, voir le *Guide utilisateur du module PARAMETRIC* dans le menu principal *Aide* de l'environnement SALOME
   - OPENTURNS, voir le *Guide utilisateur du module OPENTURNS* dans le menu principal *Aide* de l'environnement SALOME

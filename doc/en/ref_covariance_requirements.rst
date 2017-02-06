@@ -32,7 +32,7 @@ Requirements to describe covariance matrices
 .. index:: single: covariances
 
 In general, a covariance matrix (or a variance-covariance matrix) has to be
-squared, symetric, semi-definite positive. Each of its terms describes the
+squared, symmetric, semi-definite positive. Each of its terms describes the
 covariance of the two random variables corresponding to its position in the
 matrix. The normalized form of the covariance is the linear correlation. One can
 express the following relation, between a covariance matrix :math:`\mathbf{M}`

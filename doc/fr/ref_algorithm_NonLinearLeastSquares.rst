@@ -35,7 +35,7 @@ la fonctionnelle :math:`J` d'écart classique de "Moindres Carrés" pondérés:
 
 .. math:: J(\mathbf{x})=(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-Il est similaire à l':ref:`section_ref_algorithm_3DVAR` amputé de sa partie
+Il est similaire à l':ref:`section_ref_algorithm_3DVAR` privé de sa partie
 ébauche. L'ébauche, requise dans l'interface, ne sert que de point initial pour
 la minimisation variationnelle.
 
@@ -268,3 +268,4 @@ Références vers d'autres sections :
 Références bibliographiques :
   - [Byrd95]_
   - [Morales11]_
+  - [Zhu97]_

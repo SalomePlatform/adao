@@ -413,3 +413,4 @@ Références bibliographiques :
   - [Byrd95]_
   - [Morales11]_
   - [Talagrand97]_
+  - [Zhu97]_

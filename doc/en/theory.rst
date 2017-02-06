@@ -321,7 +321,7 @@ classical gradient optimization. But other measures of errors can be more
 adapted to real physical simulation problems. Then, **an another way to extend
 estimation possibilities is to use other measures of errors to be reduced**. For
 example, we can cite *absolute error value*, *maximum error value*, etc. These
-error measures are not differentiables, but some optimization methods can deal
+error measures are not differentiable, but some optimization methods can deal
 with:  heuristics and meta-heuristics for real-valued problem, etc. As
 previously, the main drawback remain a greater numerical cost to find state
 estimates, and no guarantee of convergence in finite time. Here again, we only

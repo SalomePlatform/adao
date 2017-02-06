@@ -39,7 +39,7 @@ even if it sometimes works in "slightly" non-linear cases. One can verify the
 linearity of the observation operator with the help of the
 :ref:`section_ref_algorithm_LinearityTest`.
 
-In case of non-linearity, even slightly marked, it will be easily prefered the
+In case of non-linearity, even slightly marked, it will be easily preferred the
 :ref:`section_ref_algorithm_ExtendedBlue` or the
 :ref:`section_ref_algorithm_3DVAR`.
 
@@ -121,7 +121,7 @@ The options of the algorithm are the following:
   Quantiles
     This list indicates the values of quantile, between 0 and 1, to be estimated
     by simulation around the optimal state. The sampling uses a multivariate
-    gaussian random sampling, directed by the *a posteriori* covariance matrix.
+    Gaussian random sampling, directed by the *a posteriori* covariance matrix.
     This option is useful only if the supplementary calculation
     "SimulationQuantiles" has been chosen. The default is a void list.
 
@@ -148,7 +148,7 @@ The options of the algorithm are the following:
     This key indicates the type of simulation, linear (with the tangent
     observation operator applied to perturbation increments around the optimal
     state) or non-linear (with standard observation operator applied to
-    perturbated states), one want to do for each perturbation. It changes mainly
+    perturbed states), one want to do for each perturbation. It changes mainly
     the time of each elementary calculation, usually longer in non-linear than
     in linear. This option is useful only if the supplementary calculation
     "SimulationQuantiles" has been chosen. The default value is "Linear", and

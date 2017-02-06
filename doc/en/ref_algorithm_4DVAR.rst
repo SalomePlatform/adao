@@ -256,9 +256,9 @@ The conditional outputs of the algorithm are the following:
 
   CurrentOptimum
     *List of vectors*. Each element is the optimal state obtained at the current
-    step of the optimization algorithm. It is not necessarely the last state.
+    step of the optimization algorithm. It is not necessarily the last state.
 
-    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+    Example : ``Xo = ADD.get("CurrentOptimum")[:]``
 
   CurrentState
     *List of vectors*. Each element is a usual state vector used during the
@@ -269,9 +269,9 @@ The conditional outputs of the algorithm are the following:
   IndexOfOptimum
     *List of integers*. Each element is the iteration index of the optimum
     obtained at the current step the optimization algorithm. It is not
-    necessarely the number of the last iteration.
+    necessarily the number of the last iteration.
 
-    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
+    Example : ``i = ADD.get("IndexOfOptimum")[-1]``
 
 See also
 ++++++++

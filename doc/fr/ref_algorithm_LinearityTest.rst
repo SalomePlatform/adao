@@ -53,7 +53,7 @@ Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
 faible qu'à partir d'un certain ordre d'incrément, l'hypothèse de linéarité
 de :math:`F` n'est pas vérifiée.
 
-Si le résidu décroit et que la décroissance se fait en :math:`\alpha^2` selon
+Si le résidu décroît et que la décroissance se fait en :math:`\alpha^2` selon
 :math:`\alpha`, cela signifie que le gradient est bien calculé jusqu'au niveau
 d'arrêt de la décroissance quadratique.
 
@@ -72,7 +72,7 @@ Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
 faible qu'à partir d'un certain ordre d'incrément, l'hypothèse de linéarité
 de :math:`F` n'est pas vérifiée.
 
-Si le résidu décroit et que la décroissance se fait en :math:`\alpha^2` selon
+Si le résidu décroît et que la décroissance se fait en :math:`\alpha^2` selon
 :math:`\alpha`, cela signifie que le gradient est bien calculé jusqu'au niveau
 d'arrêt de la décroissance quadratique.
 

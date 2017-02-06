@@ -146,7 +146,7 @@ Au final, il faut enregistrer le cas ADAO en utilisant le bouton "*Enregistrer*"
 choisissant l'entrée "*Enregistrer/ Enregistrer sous*" dans le menu "*ADAO*". Il
 est alors demandé un emplacement, à choisir dans l'arborescence des fichiers, et
 un nom, qui sera complété par l'extension "*.comm*" utilisée pour les fichiers
-de l'éditeur intégre de cas. Cette action va générer une paire de fichiers
+de l'éditeur intégré de cas. Cette action va générer une paire de fichiers
 décrivant le cas ADAO, avec le même nom de base, le premier présentant une
 extension "*.comm*" et le second une extension "*.py*" [#]_.
 
@@ -202,7 +202,7 @@ capacités de SALOME. On se reportera à la partie traitant des
 description complète de ces éléments.
 
 En pratique, le schéma YACS dispose d'un port de sortie "*algoResults*" dans le
-bloc de calcul, qui donne accès à un objet structuré nommé ci-aprés "*ADD*" par
+bloc de calcul, qui donne accès à un objet structuré nommé ci-après "*ADD*" par
 exemple, qui contient tous les résultats de calcul. Ces résultats peuvent être
 obtenus en récupérant les variables nommées stockées au cours des calculs.
 L'information principale est la variable "*Analysis*", qui peut être obtenue par
@@ -255,7 +255,7 @@ simple ci-dessus est de la forme suivante::
    Entering in the assimilation study
    Name is set to........: Test
    Algorithm is set to...: Blue
-   Launching the analyse
+   Launching the analysis
 
    Optimal state: [0.5, 0.5, 0.5]
 

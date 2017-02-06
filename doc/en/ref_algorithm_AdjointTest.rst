@@ -140,7 +140,7 @@ writing of post-processing procedures, are described in the
 The unconditional outputs of the algorithm are the following:
 
   Residu
-    *List of values*. Each element is the value of the particular residu
+    *List of values*. Each element is the value of the particular residue
     verified during a checking algorithm, in the order of the tests.
 
     Example : ``r = ADD.get("Residu")[:]``

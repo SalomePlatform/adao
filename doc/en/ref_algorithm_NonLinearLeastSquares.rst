@@ -40,7 +40,7 @@ part. The background, required in the interface, is only used as an initial
 point for the variational minimization.
 
 In all cases, it is recommended to prefer the :ref:`section_ref_algorithm_3DVAR`
-for its stability as for its behaviour during optimization.
+for its stability as for its behavior during optimization.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
@@ -258,3 +258,4 @@ References to other sections:
 Bibliographical references:
   - [Byrd95]_
   - [Morales11]_
+  - [Zhu97]_

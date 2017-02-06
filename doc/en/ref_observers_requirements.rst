@@ -50,7 +50,7 @@ The "*observer*" can be given as a explicit script (entry of type "*String*"),
 as a script in an external file (entry of type "*Script*"), or by using a
 template or pattern (entry of type"*Template*") available by default in ADAO
 when using the graphical editor. These templates are simple scripts that can be
-tuned by the user, either in the integrated edtition stage of the case, or in
+tuned by the user, either in the integrated edition stage of the case, or in
 the edition stage of the schema before execution, to improve the ADAO case
 performance in the SALOME execution supervisor.
 
@@ -108,7 +108,7 @@ Print on standard output the current value of the variable, adding its index.
 Template **ValueSeriePrinter** :
 ................................
 
-Print on standard output the value serie of the variable.
+Print on standard output the value series of the variable.
 
 ::
 
@@ -140,7 +140,7 @@ Save the current value of the variable in a file of the '/tmp' directory named '
 Template **ValueSerieSaver** :
 ..............................
 
-Save the value serie of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
 
 ::
 
@@ -205,7 +205,7 @@ Print on standard output and, in the same time save in a file, the current value
 Template **ValueSeriePrinterAndSaver** :
 ........................................
 
-Print on standard output and, in the same time, save in a file the value serie of the variable.
+Print on standard output and, in the same time, save in a file the value series of the variable.
 
 ::
 
@@ -249,7 +249,7 @@ Graphically plot with Gnuplot the current value of the variable.
 Template **ValueSerieGnuPlotter** :
 ...................................
 
-Graphically plot with Gnuplot the value serie of the variable.
+Graphically plot with Gnuplot the value series of the variable.
 
 ::
 
@@ -294,7 +294,7 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 Template **ValueSeriePrinterAndGnuPlotter** :
 .............................................
 
-Print on standard output and, in the same time, graphically plot with Gnuplot the value serie of the variable.
+Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable.
 
 ::
 
@@ -350,7 +350,7 @@ Print on standard output and, in the same, time save in a file and graphically p
 Template **ValueSeriePrinterSaverAndGnuPlotter** :
 ..................................................
 
-Print on standard output and, in the same, time save in a file and graphically plot the value serie of the variable.
+Print on standard output and, in the same, time save in a file and graphically plot the value series of the variable.
 
 ::
 

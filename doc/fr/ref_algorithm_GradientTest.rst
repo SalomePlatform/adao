@@ -45,14 +45,14 @@ normalisé par la valeur au point nominal :
 
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{|| F(\mathbf{x}) ||}
 
-Si le résidu décroit et que la décroissance se fait en :math:`\alpha^2` selon
+Si le résidu décroît et que la décroissance se fait en :math:`\alpha^2` selon
 :math:`\alpha`, cela signifie que le gradient est bien calculé jusqu'à la
 précision d'arrêt de la décroissance quadratique, et que :math:`F` n'est pas
 linéaire.
 
-Si le résidu décroit et que la décroissance se fait en :math:`\alpha` selon
+Si le résidu décroît et que la décroissance se fait en :math:`\alpha` selon
 :math:`\alpha`, jusqu'à un certain seuil après lequel le résidu est faible et
-constant, cela signifie que :math:`F` est linéaire et que le résidu décroit à
+constant, cela signifie que :math:`F` est linéaire et que le résidu décroît à
 partir de l'erreur faite dans le calcul du terme :math:`\nabla_xF`.
 
 Résidu "TaylorOnNorm"

@@ -564,7 +564,7 @@ Les hypothèses du cas utilisateur sont les suivantes. On suppose :
 
 #. que l'on veut recaler 3 paramètres ``alpha``, ``beta`` et ``gamma`` dans un domaine borné,
 #. que l'on dispose d'observations nommées ``observations``,
-#. que l'utilisateur dispose en Python d'une fonction de simulation physique appellée ``simulation``, préalablement (bien) testée, qui transforme les 3 paramètres en résultats similaires aux observations,
+#. que l'utilisateur dispose en Python d'une fonction de simulation physique appelée ``simulation``, préalablement (bien) testée, qui transforme les 3 paramètres en résultats similaires aux observations,
 #. que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
 
 Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne par
@@ -665,7 +665,7 @@ L'exécution de jeu de commandes donne le résultat suivant::
     Etat optimal...................: [ 2.  3.  4.]
     Simulation à l'état optimal....: [  2.   6.  12.  20.]
 
-Comme il se doit en expériences jumelles, on constate que l'on retouve bien les
+Comme il se doit en expériences jumelles, on constate que l'on retrouve bien les
 paramètres qui ont servi à construire artificiellement les observations.
 
 .. Réconciliation de courbes à l'aide de MedCoupling
@@ -673,12 +673,6 @@ paramètres qui ont servi à construire artificiellement les observations.
 
 .. Utilisation de fonctions de surveillance de type "observer"
 .. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. Suivre d'un recalage à l'aide de MatPlotLib
-.. +++++++++++++++++++++++++++++++++++++++++++
-
-.. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
-.. -----------------------------------------------------------------------------
 
 .. [HOMARD] Pour de plus amples informations sur HOMARD, voir le *module HOMARD* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 

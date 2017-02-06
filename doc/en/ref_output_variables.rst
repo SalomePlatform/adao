@@ -75,13 +75,13 @@ Examples of Python scripts to obtain or treat the outputs
 .. index:: single: AnalysisPrinterAndSaver
 
 These examples present Python commands or scripts which allow to obtain or to
-treat the ouput of an algorithm run. To help the user, they are directly
+treat the output of an algorithm run. To help the user, they are directly
 available in the user interface, when building the ADAO case in the embedded
 case editor, in the "*Template*" type fields. In an equivalent way, these
 commands can be integrated in an external user script (and inserted in the ADAO
 case by a "*Script*" type input) or can exist as a string, including line feeds
 (and inserted in the ADAO case by a "*String*" type input). Lot of variants can
-be build from these simple examples, the main objective beeing to help the user
+be build from these simple examples, the main objective being to help the user
 to elaborate the exact procedure he needs in output.
 
 The first example (named "*AnalysisPrinter*" in the inputs of type 
@@ -94,7 +94,7 @@ analysis or the optimal state, noted as :math:`\mathbf{x}^a` in the section
     print 'Analysis:',xa"
 
 The ``numpy.ravel`` function is here to be sure that the ``xa`` variable will
-contain a real unidimensional vector, whatever the previoux computing choices
+contain a real unidimensional vector, whatever the previous computing choices
 are.
 
 A second example (named "*AnalysisSaver*" in the inputs of type  "*Template*")
@@ -124,7 +124,7 @@ value of :math:`\mathbf{x}^a`. It is realized by the commands::
 To facilitate these examples extension for user needs, we recall that all the
 SALOME functions are available at the same level than these commands. The user
 can for example request for graphical representation with the PARAVIS [#]_ or
-other modules, for computating operations driven by YACS [#]_ or an another
+other modules, for computing operations driven by YACS [#]_ or an another
 module, etc.
 
 Other usage examples are also given for :ref:`section_u_step4` of the
@@ -287,7 +287,7 @@ of availability. They are the following, in alphabetical order:
 
   CurrentOptimum
     *List of vectors*. Each element is the optimal state obtained at the current
-    step of the optimization algorithm. It is not necessarely the last state.
+    step of the optimization algorithm. It is not necessarily the last state.
 
     Example : ``Xo = ADD.get("CurrentOptimum")[:]``
 
@@ -300,7 +300,7 @@ of availability. They are the following, in alphabetical order:
   IndexOfOptimum
     *List of integers*. Each element is the iteration index of the optimum
     obtained at the current step the optimization algorithm. It is not
-    necessarely the number of the last iteration.
+    necessarily the number of the last iteration.
 
     Example : ``i = ADD.get("MahalanobisConsistency")[-1]``
 

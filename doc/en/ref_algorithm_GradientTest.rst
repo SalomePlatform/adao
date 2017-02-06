@@ -64,18 +64,18 @@ function, with respect to the :math:`\alpha` parameter to the square:
 
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{\alpha^2}
 
-This is a residue essentialy similar to the classical Taylor criterion
-previously described, but its behaviour can differ depending on the numerical
+This is a residue essentially similar to the classical Taylor criterion
+previously described, but its behavior can differ depending on the numerical
 properties of the calculation.
 
 If the residue is constant until a certain level after which the residue will
 growth, it signifies that the gradient is well calculated until this stopping
 precision, and that :math:`F` is not linear.
 
-If the residue is systematicaly growing from a very smal value with respect to
+If the residue is systematically growing from a very small value with respect to
 :math:`||F(\mathbf{x})||`, it signifies that :math:`F` is (quasi-)linear and
 that the gradient calculation is correct until the precision for which the
-residue reachs the numerical order of :math:`||F(\mathbf{x})||`.
+residue reaches the numerical order of :math:`||F(\mathbf{x})||`.
 
 "Norm" residue
 **************
@@ -156,7 +156,7 @@ The options of the algorithm are the following:
     default choice is "Taylor", and the possible ones are "Taylor" (normalized
     residue of the Taylor development of the operator, which has to decrease
     with the square power of the perturbation), "TaylorOnNorm" (residue of the
-    Taylor development of the operator with respect to the pertibation to the
+    Taylor development of the operator with respect to the perturbation to the
     square, which has to remain constant) and "Norm" (residue obtained by taking
     the norm of the Taylor development at zero order approximation, which
     approximate the gradient, and which has to remain constant).
@@ -195,7 +195,7 @@ writing of post-processing procedures, are described in the
 The unconditional outputs of the algorithm are the following:
 
   Residu
-    *List of values*. Each element is the value of the particular residu
+    *List of values*. Each element is the value of the particular residue
     verified during a checking algorithm, in the order of the tests.
 
     Example : ``r = ADD.get("Residu")[:]``

@@ -97,7 +97,7 @@ Glossary
       procedure.
 
    background
-      The *a priori* known state, which is not optimal, and is used as a rought
+      The *a priori* known state, which is not optimal, and is used as a rough
       estimate, or a "best estimate", before an optimal estimation.
 
    innovation

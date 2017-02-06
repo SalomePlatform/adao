@@ -40,7 +40,7 @@ is determined as follows in the graphical user interface:
 #. then secondly, only in the "*Dict*" case of "*Parameters*", by the included keyword "*FROM*" which allows to choose between a string entry and a Python script file entry.
 
 If an option or a parameter is specified by the user for an algorithm that
-doesn't support it, the option is simply left unused and don't stop the
+does not support it, the option is simply left unused and don't stop the
 treatment. The meaning of the acronyms or particular names can be found in the
 :ref:`genindex` or the :ref:`section_glossary`.
 
@@ -64,8 +64,8 @@ is selected by the user. One can then modify its value, or fill it in list cases
 for example.
 
 It is the recommended way to modify only some algorithmic parameters in a safe
-way. This method allows only to define authorized paramters for a given
-algorithm, and the defined values are not keeped if the user changes the
+way. This method allows only to define authorized parameters for a given
+algorithm, and the defined values are not kept if the user changes the
 algorithm.
 
 Second method : using a string in the graphical interface

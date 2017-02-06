@@ -79,7 +79,7 @@ More details are given here on the successive steps of the setup of an ADAO TUI
 calculation case. The commands themselves are detailed just after in the
 :ref:`subsection_tui_commands`.
 
-The creation and initialisation of a study are done using the following
+The creation and initialization of a study are done using the following
 commands, the ``case`` object name of the ADAO TUI calculation case being let
 free to the user choice::
 
@@ -267,7 +267,7 @@ according to the second syntax.
 Creating a calculation case in TUI text interface
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-The creation and the initialisation of a calculation case in TUI text interface
+The creation and the initialization of a calculation case in TUI text interface
 are done by importing the interface module "*adaoBuilder*" and by by invoking
 its method "*New()*" as illustrated in the following lines (the ``case`` object
 name being let free to the user choice)::
@@ -640,12 +640,6 @@ parameters that were used to artificially build the observations.
 
 .. Utilisation de fonctions de surveillance de type "observer"
 .. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. Suivre d'un recalage à l'aide de MatPlotLib
-.. +++++++++++++++++++++++++++++++++++++++++++
-
-.. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
-.. -----------------------------------------------------------------------------
 
 .. [HOMARD] For more information on HOMARD, see the *HOMARD module* and its integrated help available from the main menu *Help* of the SALOME platform.
 

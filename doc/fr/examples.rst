@@ -342,7 +342,7 @@ dictionnaire sont optionnelles, elles disposent toutes d'une valeur par défaut,
 et elles peuvent être présentes sans être utiles. Par exemple::
 
     AlgorithmParameters = {
-        "Minimizer" : "CG", # Choix possible : "LBFGSB", "TNC", "CG", "BFGS"
+        "Minimizer" : "LBFGSB", # Recommended
         "MaximumNumberOfSteps" : 10,
         }
 
@@ -350,7 +350,8 @@ Si aucune borne n'est requise sur les variables de contrôle, alors on peut
 choisir les algorithmes de minimisation "*BFGS*" ou "*CG*" pour tous les
 algorithmes variationnels d'assimilation de données ou d'optimisation. Pour
 l'optimisation sous contraintes, l'algorithme "*LBFGSB*" est bien souvent plus
-robuste, mais le "*TNC*" est parfois plus performant.
+robuste, mais le "*TNC*" est parfois plus performant. De manière générale,
+le choix de l'algorithme "*LBFGSB*" est recommandé.
 
 Ensuite le script peut être ajouté au cas ADAO, dans une entrée de type fichier
 pour le mot-clé "*AlgorithmParameters*", de la manière suivante:
@@ -428,7 +429,7 @@ l'état vrai :math:`\mathbf{x}^t` et l'opérateur d'observation
 
 et, avec un écart-type arbitraire de 1% sur chaque composante de l'erreur::
 
-    R = 0.0001 * diagonal( lenght(Yo) )
+    R = 0.0001 * diagonal( length(Yo) )
 
 Toutes les informations requises pour l'estimation par assimilation de données
 sont maintenant définies.
@@ -576,7 +577,7 @@ définis dans un fichier de script Python nommé
     # Creating the required ADAO variable
     # -----------------------------------
     AlgorithmParameters = {
-        "Minimizer" : "TNC",         # Possible : "LBFGSB", "TNC", "CG", "BFGS"
+        "Minimizer" : "LBFGSB",      # Recommended
         "MaximumNumberOfSteps" : 15, # Number of global iterative steps
         "Bounds" : [
             [ None, None ],          # Bound on the first parameter
