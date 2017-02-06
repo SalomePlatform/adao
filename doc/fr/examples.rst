@@ -183,31 +183,31 @@ schéma YACS, on obtient la représentation suivante du schéma ADAO généré :
 
 Après ce point, toutes les modifications, exécutions et post-processing du
 schéma d'assimilation de données seront effectués dans le module YACS. De
-manière à vérifier les résultats d'une manière simple, on crée ici un nouveau
-noeud YACS en utilisant le sous-menu "*Noeud de script in-line*" dans la vue
-graphique de YACS, et on le nomme "*PostProcessing*".
+manière à vérifier les résultats d'une manière simple, on utilise le noeud
+"*UserPostAnalysis*" (ou on crée ici un nouveau noeud YACS par le sous-menu
+"*Noeud de script in-line*" dans la vue graphique de YACS).
 
 Ce noeud de script va récupérer l'analyse issue de l'assimilation de données
 depuis le port de sortie "*algoResults*" du bloc de calcul (qui donne accés à un
 objet Python SALOME), et va l'afficher à la sortie standard.
 
 Pour obtenir ceci, ce noeud de script doit comporter un port d'entrée de type
-"*pyobj*", nommé "*results*" par exemple, qui doit être relié graphiquement au
+"*pyobj*", nommé "*Study*" par exemple, qui doit être relié graphiquement au
 port de sortie "*algoResults*" du bloc de calcul. Ensuite, le code pour remplir
 le noeud de script est::
 
-    Xa = results.ADD.get("Analysis")[-1]
+    Xa = Study.getResults().get("Analysis")[-1]
 
     print
     print "Analysis =",Xa
     print
 
-Le schéma YACS complété peut être enregistré (en écrasant le schéma généré si la
-commande ou le bouton "*Enregistrer*" sont utilisés, ou sinon avec un nom
-nouveau par la commande "*Enregistrer sous*"). De manière pratique, la mise au
-point d'une telle procédure de post-processing peut être réalisée dans YACS pour
-la tester, et ensuite entièrement enregistrée dans un script Python qui peut
-être intégré au cas ADAO en utilisant le mot-clé "*UserPostAnalysis*".
+Le schéma YACS (initial ou complété) peut être enregistré (en écrasant le schéma
+généré si la commande ou le bouton "*Enregistrer*" sont utilisés, ou sinon avec
+un nom nouveau par la commande "*Enregistrer sous*"). De manière pratique, la
+mise au point d'une telle procédure de post-processing peut être réalisée dans
+YACS pour la tester, et ensuite entièrement enregistrée dans un script Python
+qui peut être intégré au cas ADAO en utilisant le mot-clé "*UserPostAnalysis*".
 
 Ensuite, de manière classique dans YACS, le schéma doit être compilé, et ensuite
 être exécuté. Après la fin de l'exécution, les affichages sur la sortie standard
@@ -329,13 +329,23 @@ Ajout de paramètres pour contrôler l'algorithme d'assimilation de données
 
 On peut ajouter des paramètres optionnels pour contrôler le calcul de
 l'algorithme d'assimilation de données. Ceci se fait en utilisant les paramètres
-optionnels dans la commande "*AlgorithmParameters*" de la définition du cas ADAO,
-qui est un mot-clé de la commande générale "*ASSIMILATION_STUDY*". Ce mot-clé
-nécessite une définition explicite des valeurs ou un dictionnaire Python,
-contenant des paires clé/valeur. La liste des paramètres optionnels possibles
-sont donnés dans la section :ref:`section_reference` et ses sous-sections.
+optionnels dans la commande "*AlgorithmParameters*" de la définition du cas
+ADAO, qui est un mot-clé de la commande générale "*ASSIMILATION_STUDY*". Ce
+mot-clé nécessite une définition explicite des valeurs à partir de valeurs par
+défaut, ou à partir d'un dictionnaire Python, contenant des paires clé/valeur.
+La liste des paramètres optionnels possibles sont donnés dans la section
+:ref:`section_reference` et ses sous-sections. On recommande d'utiliser la
+définition explicite de valeurs à partir de la liste par défaut de paramètres
+optionnels, comme ici avec le "*MaximumNumberOfSteps*":
 
-Le dictionnaire doit être défini, par exemple, dans un fichiers externe de
+  .. _adao_scriptentry02:
+  .. image:: images/adao_scriptentry02.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Ajouter des paramètres pour contrôler l'algorithme et les sorties**
+
+Le dictionnaire peut être défini, par exemple, dans un fichiers externe de
 script Python, en utilisant le nom obligatoire de variable
 "*AlgorithmParameters*" pour le dictionnaire. Toutes les clés dans le
 dictionnaire sont optionnelles, elles disposent toutes d'une valeur par défaut,
@@ -350,18 +360,10 @@ Si aucune borne n'est requise sur les variables de contrôle, alors on peut
 choisir les algorithmes de minimisation "*BFGS*" ou "*CG*" pour tous les
 algorithmes variationnels d'assimilation de données ou d'optimisation. Pour
 l'optimisation sous contraintes, l'algorithme "*LBFGSB*" est bien souvent plus
-robuste, mais le "*TNC*" est parfois plus performant. De manière générale,
-le choix de l'algorithme "*LBFGSB*" est recommandé.
-
-Ensuite le script peut être ajouté au cas ADAO, dans une entrée de type fichier
-pour le mot-clé "*AlgorithmParameters*", de la manière suivante:
-
-  .. _adao_scriptentry02:
-  .. image:: images/adao_scriptentry02.png
-    :align: center
-    :width: 100%
-  .. centered::
-    **Ajouter des paramètres pour contrôler l'algorithme et les sorties**
+robuste, mais le "*TNC*" est parfois plus performant. De manière générale, le
+choix de l'algorithme "*LBFGSB*" est recommandé. Ensuite le script peut être
+ajouté au cas ADAO, dans une entrée de type fichier associé au format "*Dict*"
+dans le mot-clé "*Parameters*".
 
 Les autres étapes et résultats sont exactement les mêmes que dans l'exemple
 précédent `Construire un cas d'estimation avec une définition explicite des

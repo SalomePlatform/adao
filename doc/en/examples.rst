@@ -173,30 +173,31 @@ generated ADAO scheme:
 
 After that point, all the modifications, executions and post-processing of the
 data assimilation scheme will be done in the YACS module. In order to check the
-result in a simple way, we create here a new YACS node by using the "*in-line
-script node*" sub-menu of the YACS graphical view, and we name it
-"*PostProcessing*".
+result in a simple way, we use the "*UserPostAnalysis*" node (or we create here
+a new YACS node by using the "*in-line script node*" sub-menu of the YACS
+graphical view).
 
 This script node will retrieve the data assimilation analysis from the
 "*algoResults*" output port of the computation bloc (which gives access to a
 SALOME Python Object), and will print it on the standard output. 
 
 To obtain this, the in-line script node need to have an input port of type
-"*pyobj*", named "*results*" for example, that have to be linked graphically to
+"*pyobj*", named "*Study*" for example, that have to be linked graphically to
 the "*algoResults*" output port of the computation bloc. Then, the code to fill
 in the script node is::
 
-    Xa = results.ADD.get("Analysis")[-1]
+    Xa = Study.getResults().get("Analysis")[-1]
 
     print
     print "Analysis =",Xa
     print
 
-The augmented YACS scheme can be saved (overwriting the generated scheme if the
-"*Save*" command or button are used, or with a new name through the "*Save as*"
-command). Ideally, the implementation of such post-processing procedure can be
-done in YACS to test, and then entirely saved in one Python script that can be
-integrated in the ADAO case by using the keyword "*UserPostAnalysis*".
+The (initial or augmented) YACS scheme can be saved (overwriting the generated
+scheme if the "*Save*" command or button are used, or with a new name through
+the "*Save as*" command). Ideally, the implementation of such post-processing
+procedure can be done in YACS to test, and then entirely saved in one Python
+script that can be integrated in the ADAO case by using the keyword
+"*UserPostAnalysis*".
 
 Then, classically in YACS, the scheme have to be compiled for run, and then
 executed. After completion, the printing on standard output is available in the
@@ -310,13 +311,22 @@ Adding parameters to control the data assimilation algorithm
 
 One can add some optional parameters to control the data assimilation algorithm
 calculation. This is done by using optional parameters in the
-"*AlgorithmParameters*" command of the ADAO case definition, which is a keyword of
-the "*ASSIMILATION_STUDY*" general command. This keyword requires an explicit
-definition of the values or a Python dictionary, containing some key/value
-pairs. The list of possible optional parameters are given in the section
-:ref:`section_reference` and its subsections.
+"*AlgorithmParameters*" command of the ADAO case definition, which is a keyword
+of the "*ASSIMILATION_STUDY*" general command. This keyword requires an explicit
+definition of the values from default ones, or from a Python dictionary,
+containing some key/value pairs. The list of possible optional parameters are
+given in the section :ref:`section_reference` and its subsections. The
+recommandation is to use the explicit definition of values from the default list
+of optionnal parameters, as here with the "*MaximumNumberOfSteps*":
 
-This dictionary has to be defined, for example, in an external Python script
+  .. _adao_scriptentry02:
+  .. image:: images/adao_scriptentry02.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Adding parameters to control the algorithm and the outputs**
+
+This dictionary can be defined, for example, in an external Python script
 file, using the mandatory variable name "*AlgorithmParameters*" for the
 dictionary. All the keys inside the dictionary are optional, they all have
 default values, and can exist without being used. For example::
@@ -331,16 +341,8 @@ the "*BFGS*" or "*CG*" minimization algorithm for all the variational data
 assimilation or optimization algorithms. For constrained optimization, the
 minimizer "*LBFGSB*" is often more robust, but the "*TNC*" is sometimes more
 effective. In a general way, the "*LBFGSB*" algorithm choice is recommended.
-
 Then the script can be added to the ADAO case, in a file entry describing the
-"*AlgorithmParameters*" keyword, as follows:
-
-  .. _adao_scriptentry02:
-  .. image:: images/adao_scriptentry02.png
-    :align: center
-    :width: 100%
-  .. centered::
-    **Adding parameters to control the algorithm and the outputs**
+"*Parameters*" keyword.
 
 Other steps and results are exactly the same as in the `Building an estimation
 case with explicit data definition`_ previous example. The dictionary can also

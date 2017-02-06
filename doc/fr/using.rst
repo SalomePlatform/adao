@@ -93,7 +93,7 @@ l'ouverture d'une étude déjà existante:
 
 En choisissant le bouton "*Nouveau*", un éditeur intégré de cas [#]_ sera
 ouvert, en même temps que le "*navigateur d'objets*" standard. On peut alors
-cliquer sur le bouton "*Nouveau*"(ou choisir l'entrée "*Nouveau*"  dans le dans
+cliquer sur le bouton "*Nouveau*" (ou choisir l'entrée "*Nouveau*"  dans le dans
 le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
 
   .. _adao_viewer:

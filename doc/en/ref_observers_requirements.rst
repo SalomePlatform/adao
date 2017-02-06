@@ -50,7 +50,7 @@ The "*observer*" can be given as a explicit script (entry of type "*String*"),
 as a script in an external file (entry of type "*Script*"), or by using a
 template or pattern (entry of type"*Template*") available by default in ADAO
 when using the graphical editor. These templates are simple scripts that can be
-tuned by the user, either in the integrated edition stage of the case, or in
+tuned by the user, either in the integrated edtition stage of the case, or in
 the edition stage of the schema before execution, to improve the ADAO case
 performance in the SALOME execution supervisor.
 
