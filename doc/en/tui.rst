@@ -635,11 +635,14 @@ The command set execution gives the following result::
 As it should be in twin experiments, it is found that we get correctly the
 parameters that were used to artificially build the observations.
 
-.. Réconciliation de courbes à l'aide de MedCoupling
+.. Reconciliation de courbes a l'aide de MedCoupling
 .. +++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Utilisation de fonctions de surveillance de type "observer"
 .. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
+.. -----------------------------------------------------------------------------
 
 .. [HOMARD] For more information on HOMARD, see the *HOMARD module* and its integrated help available from the main menu *Help* of the SALOME platform.
 

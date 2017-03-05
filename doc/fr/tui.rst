@@ -674,6 +674,9 @@ paramètres qui ont servi à construire artificiellement les observations.
 .. Utilisation de fonctions de surveillance de type "observer"
 .. +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+.. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
+.. -----------------------------------------------------------------------------
+
 .. [HOMARD] Pour de plus amples informations sur HOMARD, voir le *module HOMARD* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 
 .. [PARAVIS] Pour de plus amples informations sur PARAVIS, voir le *module PARAVIS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.

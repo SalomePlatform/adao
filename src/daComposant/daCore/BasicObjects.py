@@ -582,6 +582,8 @@ class Covariance(object):
         self.__is_matrix  = False
         self.__is_object  = False
         if asEyeByScalar is not None:
+            if numpy.matrix(asEyeByScalar).size != 1:
+                raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.matrix(asEyeByScalar).size)
             self.__is_scalar = True
             self.__C         = numpy.abs( float(asEyeByScalar) )
             self.shape       = (0,0)

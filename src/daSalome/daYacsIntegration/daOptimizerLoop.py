@@ -274,7 +274,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     self.tout     = self.runtime.getTypeCode("SALOME_TYPES/ParametricOutput")
     self.pyobject = self.runtime.getTypeCode("pyobj")
 
-    # Absolument indispensable de définir ainsi "self.optim_hooks"
+    # Absolument indispensable de definir ainsi "self.optim_hooks"
     # (sinon on a une "Unknown Exception" sur l'attribut "finish")
     self.optim_hooks = OptimizerHooks(self)
 
