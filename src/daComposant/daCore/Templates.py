@@ -94,56 +94,56 @@ ObserverTemplates = TemplateStorage()
 
 ObserverTemplates.store(
     name    = "ValuePrinter",
-    content = """print info, var[-1]""",
+    content = """print(str(info)+" "+str(var[-1]))""",
     fr_FR   = "Imprime sur la sortie standard la valeur courante de la variable",
     en_EN   = "Print on standard output the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueAndIndexPrinter",
-    content = """print str(info)+" index %i:"%(len(var)-1), var[-1]""",
+    content = """print(str(info)+(" index %i:"%(len(var)-1))+" "+str(var[-1]))""",
     fr_FR   = "Imprime sur la sortie standard la valeur courante de la variable, en ajoutant son index",
     en_EN   = "Print on standard output the current value of the variable, adding its index",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSeriePrinter",
-    content = """print info, var[:]""",
+    content = """print(str(info)+" "+str(var[:]))""",
     fr_FR   = "Imprime sur la sortie standard la série des valeurs de la variable",
     en_EN   = "Print on standard output the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSaver",
-    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement",
     en_EN   = "Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSerieSaver",
-    content = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape",
     en_EN   = "Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValuePrinterAndSaver",
-    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable",
     en_EN   = "Print on standard output and, in the same time save in a file, the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueIndexPrinterAndSaver",
-    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint str(info)+" index %i:"%(len(var)-1),v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable, en ajoutant son index",
     en_EN   = "Print on standard output and, in the same time save in a file, the current value of the variable, adding its index",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterAndSaver",
-    content = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nprint info,v\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[:],  ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la série des valeurs de la variable",
     en_EN   = "Print on standard output and, in the same time, save in a file the value series of the variable",
     order   = "next",
@@ -164,63 +164,63 @@ ObserverTemplates.store(
     )
 ObserverTemplates.store(
     name    = "ValuePrinterAndGnuPlotter",
-    content = """print info, var[-1]\nimport numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    content = """print(str(info)+" "+str(var[-1]))\nimport numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la valeur courante de la variable",
     en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterAndGnuPlotter",
-    content = """print info, var[:] \nimport numpy, Gnuplot\nv=numpy.array(var[:],  ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    content = """print(str(info)+" "+str(var[:]))\nimport numpy, Gnuplot\nv=numpy.array(var[:],  ndmin=1)\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable",
     en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValuePrinterSaverAndGnuPlotter",
-    content = """print info, var[-1]\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    content = """print(str(info)+" "+str(var[-1]))\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la valeur courante de la variable ",
     en_EN   = "Print on standard output and, in the same, time save in a file and graphically plot the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterSaverAndGnuPlotter",
-    content = """print info, var[:] \nimport numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint 'Value saved in \"%s\"'%f\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    content = """print(str(info)+" "+str(var[:]))\nimport numpy, re\nv=numpy.array(var[:],  ndmin=1)\nglobal istep\ntry:\n    istep += 1\nexcept:\n    istep = 0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig += 1\n    gp(' set style data lines')\nexcept:\n    ifig = 0\n    gp = Gnuplot.Gnuplot(persist=1)\n    gp(' set style data lines')\ngp('set title  \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la série des valeurs de la variable",
     en_EN   = "Print on standard output and, in the same, time save in a file and graphically plot the value series of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueMean",
-    content = """import numpy\nprint info, numpy.nanmean(var[-1])""",
+    content = """import numpy\nprint(str(info)+" "+str(numpy.nanmean(var[-1])))""",
     fr_FR   = "Imprime sur la sortie standard la moyenne de la valeur courante de la variable",
     en_EN   = "Print on standard output the mean of the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueStandardError",
-    content = """import numpy\nprint info, numpy.nanstd(var[-1])""",
+    content = """import numpy\nprint(str(info)+" "+str(numpy.nanstd(var[-1])))""",
     fr_FR   = "Imprime sur la sortie standard l'écart-type de la valeur courante de la variable",
     en_EN   = "Print on standard output the standard error of the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueVariance",
-    content = """import numpy\nprint info, numpy.nanvar(var[-1])""",
+    content = """import numpy\nprint(str(info)+" "+str(numpy.nanvar(var[-1])))""",
     fr_FR   = "Imprime sur la sortie standard la variance de la valeur courante de la variable",
     en_EN   = "Print on standard output the variance of the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueL2Norm",
-    content = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint info, float( numpy.linalg.norm(v) )""",
+    content = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint(str(info)+" "+str(float( numpy.linalg.norm(v) )))""",
     fr_FR   = "Imprime sur la sortie standard la norme L2 de la valeur courante de la variable",
     en_EN   = "Print on standard output the L2 norm of the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueRMS",
-    content = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint info, float( numpy.sqrt((1./v.size)*(v*v.T)) )""",
+    content = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint(str(info)+" "+str(float( numpy.sqrt((1./v.size)*(v*v.T)) )))""",
     fr_FR   = "Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moyenne quadratique, de la valeur courante de la variable",
     en_EN   = "Print on standard output the root mean square (RMS), or quadratic mean, of the current value of the variable",
     order   = "next",
@@ -228,4 +228,4 @@ ObserverTemplates.store(
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')

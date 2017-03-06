@@ -27,5 +27,5 @@ __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
 name    = "Data Assimilation Package"
-version = "17.02.28"
-date    = "samedi 28 février 2017, 12:12:12 (UTC+0100)"
+version = "17.04.30"
+date    = "samedi 30 avril 2017, 12:12:12 (UTC+0100)"

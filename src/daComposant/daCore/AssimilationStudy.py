@@ -324,7 +324,7 @@ class AssimilationStudy:
             self.__HO["AppliedToX"] = {}
             if type(appliedToX) is not dict:
                 raise ValueError("Error: observation operator defined by \"appliedToX\" need a dictionary as argument.")
-            for key in appliedToX.keys():
+            for key in list(appliedToX.keys()):
                 if type( appliedToX[key] ) is type( numpy.matrix([]) ):
                     # Pour le cas où l'on a une vraie matrice
                     self.__HO["AppliedToX"][key] = numpy.matrix( appliedToX[key].A1, numpy.float ).T
@@ -633,7 +633,7 @@ class AssimilationStudy:
             self.__algorithmFile = __import__(str(choice), globals(), locals(), [])
             self.__algorithmName = str(choice)
             sys.path = sys_path_tmp ; del sys_path_tmp
-        except ImportError, e:
+        except ImportError as e:
             raise ImportError("The module named \"%s\" was found, but is incorrect at the import stage.\n             The import error message is: %s"%(choice,e))
         #
         # Instancie un objet du type élémentaire du fichier
@@ -683,7 +683,7 @@ class AssimilationStudy:
             sys_path_tmp = sys.path ; sys.path.insert(0,module_path)
             self.__diagnosticFile = __import__(str(choice), globals(), locals(), [])
             sys.path = sys_path_tmp ; del sys_path_tmp
-        except ImportError, e:
+        except ImportError as e:
             raise ImportError("The module named \"%s\" was found, but is incorrect at the import stage.\n             The import error message is: %s"%(choice,e))
         #
         # Instancie un objet du type élémentaire du fichier
@@ -876,14 +876,14 @@ class AssimilationStudy:
         identifiés par les chaînes de caractères. L'algorithme doit avoir été
         préalablement choisi sinon la méthode renvoie "None".
         """
-        if len( self.__algorithm.keys()) == 0 and len( self.__StoredInputs.keys() ) == 0:
+        if len(list(self.__algorithm.keys())) == 0 and len(list(self.__StoredInputs.keys())) == 0:
             return None
         else:
             variables = []
-            if len( self.__algorithm.keys()) > 0:
-                variables.extend( self.__algorithm.get().keys() )
-            if len( self.__StoredInputs.keys() ) > 0:
-                variables.extend( self.__StoredInputs.keys() )
+            if len( list(self.__algorithm.keys())) > 0:
+                variables.extend( list(self.__algorithm.get().keys()) )
+            if len( list(self.__StoredInputs.keys()) ) > 0:
+                variables.extend( list(self.__StoredInputs.keys()) )
             variables.sort()
             return variables
 
@@ -990,7 +990,7 @@ class AssimilationStudy:
         if isinstance(VariableName, str):
             VariableNames = [VariableName,]
         elif isinstance(VariableName, list):
-            VariableNames = map( str, VariableName )
+            VariableNames = list(map( str, VariableName ))
         else:
             raise ValueError("The observer requires a name or a list of names of variables.")
         #
@@ -1022,7 +1022,7 @@ class AssimilationStudy:
         if isinstance(VariableName, str):
             VariableNames = [VariableName,]
         elif isinstance(VariableName, list):
-            VariableNames = map( str, VariableName )
+            VariableNames = list(map( str, VariableName ))
         else:
             raise ValueError("The observer requires a name or a list of names of variables.")
         #
@@ -1079,4 +1079,4 @@ class AssimilationStudy:
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')
