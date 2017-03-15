@@ -457,6 +457,28 @@ Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
 avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
+Pour faciliter les futures évolutions, il est fortement recommandé de veiller à
+ce que vos fichiers scripts utilisateurs utilisent une syntaxe compatibible avec
+Python 2 et avec Python 3. En particulier, on recommande d'utiliser la syntaxe
+fonctionnelle pour les "*print*" et non pas la syntaxe "*commande*", comme par
+exemple::
+
+    # Python 2 & 3
+    x, unit = 1., "cm"
+    print( "x = %s %s"%(str(x),str(unit)) )
+
+ou::
+
+    # Python 2 & 3
+    x, unit = 1., "cm"
+    print( "x = {0} {1}".format(str(x),str(unit)) )
+
+plutôt que::
+
+    # Python 2 uniquement
+    x, unit = 1., "cm"
+    print "x =", x, unit
+
 Passer de la version 7.8 à la 8.1
 +++++++++++++++++++++++++++++++++
 

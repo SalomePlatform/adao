@@ -359,7 +359,7 @@ class Algorithm(object):
     def _pre_run(self, Parameters ):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
-        logging.debug("%s Taille mémoire utilisée de %.1f Mio", self._name, self._m.getUsedMemory("Mio"))
+        logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
         #
         # Mise a jour de self._parameters avec Parameters
         self.__setParameters(Parameters)
@@ -403,7 +403,7 @@ class Algorithm(object):
         if _oH is not None:
             logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i", self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
             logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i", self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
-        logging.debug("%s Taille mémoire utilisée de %.1f Mio", self._name, self._m.getUsedMemory("Mio"))
+        logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
         logging.debug("%s Terminé", self._name)
         return 0
 

@@ -434,6 +434,27 @@ There is no known incompatibility for the ADAO case files. The upgrade procedure
 is to read the old ADAO case file with the new SALOME/ADAO module, and save it
 with a new name.
 
+To make future developments easier, it is strongly recommended to ensure that
+your user scripts files use a Python 2 and a Python 3 compatible syntax. In
+particular, it is recommended to use the functional syntax for "*print*" and not
+the "*command*" syntax, for example:
+
+    # Python 2 & 3
+    x, unit = 1., "cm"
+    print( "x = %s %s"%(str(x),str(unit)) )
+
+or::
+
+    # Python 2 & 3
+    x, unit = 1., "cm"
+    print( "x = {0} {1}".format(str(x),str(unit)) )
+
+rather than::
+
+    # Python 2 only
+    x, unit = 1., "cm"
+    print "x =", x, unit
+
 Switching from 7.8 to 8.1
 +++++++++++++++++++++++++
 

@@ -29,18 +29,26 @@ import os, sys
 # Configuration de Eficas
 # =======================
 #
-# INSTALLDIR, REPINI est obligatoire
+# INSTALLDIR, repIni est obligatoire
 INSTALLDIR = "@EFICAS_DIR@"
 sys.path.insert(0,INSTALLDIR)
-# positionnee a repin au debut mise a jour dans configuration
+#
+# Positionnee a repin au debut, mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
 #
 # Sert comme directory initial des QFileDialog
 initialdir=os.environ["PWD"]
 #
 # Traductions et codages
+#
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
-encoding='iso-8859-1'
+# encoding='iso-8859-1'
+# ===== Specifique : pour la 8_3_0 et suivantes 8_x ! Enlever pour les 9_x !
+import sys
+reload(sys)
+sys.setdefaultencoding('latin1')
+# ===== Fin specifique =====================================================
+#
 # Indique la langue du catalogue utilisee pour les chaines d'aide : fr ou ang
 # lang='fr'
 # Traduction des labels de boutons ou autres
