@@ -31,9 +31,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters)
-        print "Results of observer check on all potential variables or commands,"
-        print "         only activated on selected ones by explicit association."
-        print
+        print("Results of observer check on all potential variables or commands,")
+        print("         only activated on selected ones by explicit association.")
+        print("")
         #
         __Xa = 1.+numpy.arange(3.)
         __Xb = numpy.zeros(3)
@@ -71,10 +71,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.StoredVariables["SimulatedObservationAtOptimum"].store( __YY )
         self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( __YY )
         #
-        print
+        print("")
         self._post_run()
         return 0
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')

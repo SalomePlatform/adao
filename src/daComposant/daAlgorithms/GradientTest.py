@@ -276,9 +276,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += "\n"
         #
         # ----------
-        print
-        print "Results of gradient check by \"%s\" formula:"%self._parameters["ResiduFormula"]
-        print msgs
+        print("\nResults of gradient check by \"%s\" formula:"%self._parameters["ResiduFormula"])
+        print(msgs)
         #
         if self._parameters["PlotAndSave"]:
             f = open(str(self._parameters["ResultFile"])+".txt",'a')
@@ -375,4 +374,4 @@ def dessiner(
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')

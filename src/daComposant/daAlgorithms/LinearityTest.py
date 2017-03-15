@@ -334,13 +334,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Sorties eventuelles
         # -------------------
-        print
-        print "Results of linearity check by \"%s\" formula:"%self._parameters["ResiduFormula"]
-        print msgs
+        print("\nResults of linearity check by \"%s\" formula:"%self._parameters["ResiduFormula"])
+        print(msgs)
         #
         self._post_run(HO)
         return 0
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')

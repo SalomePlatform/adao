@@ -217,8 +217,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 lb = lub[:,0]
                 ub = lub[:,1]
                 if self._parameters["optdisp"]:
-                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
-                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                    print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
+                    print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
                 opt.set_upper_bounds(ub)
                 opt.set_lower_bounds(lb)
             opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
@@ -226,9 +226,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
             if self._parameters["optdisp"]:
-                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
-                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
-                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+                print("%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum))
+                print("%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value()))
+                print("%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result()))
         elif self._parameters["Minimizer"] == "SIMPLEX" and not PlatformInfo.has_nlopt:
             Minimum, J_optimal, niter, nfeval, rc = scipy.optimize.fmin(
                 func        = CostFunction,
@@ -253,8 +253,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 lb = lub[:,0]
                 ub = lub[:,1]
                 if self._parameters["optdisp"]:
-                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
-                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                    print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
+                    print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
                 opt.set_upper_bounds(ub)
                 opt.set_lower_bounds(lb)
             opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
@@ -262,9 +262,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
             if self._parameters["optdisp"]:
-                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
-                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
-                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+                print("%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum))
+                print("%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value()))
+                print("%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result()))
         elif self._parameters["Minimizer"] == "BOBYQA" and PlatformInfo.has_nlopt:
             import nlopt
             opt = nlopt.opt(nlopt.LN_BOBYQA, Xini.size)
@@ -277,8 +277,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 lb = lub[:,0]
                 ub = lub[:,1]
                 if self._parameters["optdisp"]:
-                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
-                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                    print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
+                    print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
                 opt.set_upper_bounds(ub)
                 opt.set_lower_bounds(lb)
             opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
@@ -286,9 +286,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
             if self._parameters["optdisp"]:
-                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
-                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
-                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+                print("%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum))
+                print("%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value()))
+                print("%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result()))
         elif self._parameters["Minimizer"] == "NEWUOA" and PlatformInfo.has_nlopt:
             import nlopt
             opt = nlopt.opt(nlopt.LN_NEWUOA, Xini.size)
@@ -301,8 +301,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 lb = lub[:,0]
                 ub = lub[:,1]
                 if self._parameters["optdisp"]:
-                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
-                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                    print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
+                    print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
                 opt.set_upper_bounds(ub)
                 opt.set_lower_bounds(lb)
             opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
@@ -310,9 +310,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
             if self._parameters["optdisp"]:
-                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
-                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
-                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+                print("%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum))
+                print("%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value()))
+                print("%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result()))
         elif self._parameters["Minimizer"] == "SUBPLEX" and PlatformInfo.has_nlopt:
             import nlopt
             opt = nlopt.opt(nlopt.LN_SBPLX, Xini.size)
@@ -325,8 +325,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 lb = lub[:,0]
                 ub = lub[:,1]
                 if self._parameters["optdisp"]:
-                    print "%s: upper bounds %s"%(opt.get_algorithm_name(),ub)
-                    print "%s: lower bounds %s"%(opt.get_algorithm_name(),lb)
+                    print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
+                    print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
                 opt.set_upper_bounds(ub)
                 opt.set_lower_bounds(lb)
             opt.set_ftol_rel(self._parameters["CostDecrementTolerance"])
@@ -334,9 +334,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             opt.set_maxeval(self._parameters["MaximumNumberOfFunctionEvaluations"])
             Minimum = opt.optimize( Xini )
             if self._parameters["optdisp"]:
-                print "%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum)
-                print "%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value())
-                print "%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result())
+                print("%s: optimal state: %s"%(opt.get_algorithm_name(),Minimum))
+                print("%s: minimum of J: %s"%(opt.get_algorithm_name(),opt.last_optimum_value()))
+                print("%s: return code: %i"%(opt.get_algorithm_name(),opt.last_optimize_result()))
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
@@ -377,4 +377,4 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')
