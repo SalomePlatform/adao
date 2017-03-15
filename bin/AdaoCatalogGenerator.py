@@ -224,7 +224,7 @@ def F_ObserverTemplate() : return BLOC(condition = " NodeType == 'Template' ",
 
 def F_Observers(statut) : return FACT(
     statut=statut,
-    SELECTION = SIMP(statut="o", defaut=[], typ="TXM", min=0, max="**", validators=NoRepeat(), into=(${choices})),${decl_choices}
+    SELECTION = SIMP(statut="o", defaut=[], typ="TXM", min=0, max="**", homo="SansOrdreNiDoublon", validators=NoRepeat(), into=(${choices})),${decl_choices}
     )
 """%(observers_list,observers_cont)
 

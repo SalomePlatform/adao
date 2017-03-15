@@ -49,6 +49,7 @@ EXTRA_DIST = conf.py advanced.rst  examples.rst  index.rst  intro.rst  theory.rs
 	     images/eficas_close.png \
 	     images/eficas_open.png \
 	     images/eficas_saveas.png \
+	     images/eficas_tree.png \
 	     images/eficas_valid.png \
 	     images/yacs_containerlog.png
 

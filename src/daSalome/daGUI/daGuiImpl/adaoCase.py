@@ -43,6 +43,7 @@ class AdaoCase:
     self.salome_study_item = None           # Study item object
 
     self.eficas_editor = None               # Editor object from Eficas
+    self.arbreOuvert = False
 
   def setEditor(self, editor):
     if editor is not self.eficas_editor:
@@ -119,3 +120,13 @@ class AdaoCase:
       rtn  = u"Validation report for the selected ADAO case:\n\n"
       rtn += unicode( self.eficas_editor.jdc.report())
     return rtn
+
+  def showTreeAdaoCase(self):
+    if self.eficas_editor:
+      if self.arbreOuvert:
+        self.eficas_editor.fermeArbre()
+        self.arbreOuvert = False
+      else:
+        self.eficas_editor.ouvreArbre()
+        self.arbreOuvert = True
+    return self.arbreOuvert

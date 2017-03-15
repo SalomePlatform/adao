@@ -20,27 +20,36 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import os, sys
 
 # print "import des prefs de Adao"
-
+#
 # Configuration de Eficas
+# =======================
+#
 # INSTALLDIR, REPINI est obligatoire
 INSTALLDIR = "@EFICAS_DIR@"
 sys.path.insert(0,INSTALLDIR)
 # positionnee a repin au debut mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
-
-# initialdir sert comme directory initial des QFileDialog
+#
+# Sert comme directory initial des QFileDialog
 initialdir=os.environ["PWD"]
+#
+# Traductions et codages
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
 encoding='iso-8859-1'
-# lang indique la langue utilisee pour les chaines d'aide : fr ou ang
-lang='fr'
+# Indique la langue du catalogue utilisee pour les chaines d'aide : fr ou ang
+# lang='fr'
+# Traduction des labels de boutons ou autres
+translatorFichier = os.environ["ADAO_ROOT_DIR"] + "/share/salome/resources/adao/adao" # Ce nom sera complete par EFICAS avec _<LANG>.qm
+#
+# Pilotage des sous-fenetres d'EFICAS
 closeAutreCommande = True
 closeFrameRechercheCommande = True
 closeEntete = True
+closeArbre = True
 taille=800
 

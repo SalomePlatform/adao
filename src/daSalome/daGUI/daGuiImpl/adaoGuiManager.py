@@ -63,6 +63,7 @@ UI_ELT_IDS = Enumerate([
         'SAVE_ADAOCASE_ID',
         'SAVE_AS_ADAOCASE_ID',
         'VALIDATE_ADAOCASE_ID',
+        'SHOWTREE_ADAOCASE_ID',
         'CLOSE_ADAOCASE_ID',
         'YACS_EXPORT_ID',
         ],offset=6950)
@@ -73,6 +74,7 @@ ACTIONS_MAP={
     UI_ELT_IDS.SAVE_ADAOCASE_ID:"saveAdaoCase",
     UI_ELT_IDS.SAVE_AS_ADAOCASE_ID:"saveasAdaoCase",
     UI_ELT_IDS.VALIDATE_ADAOCASE_ID:"validateAdaoCase",
+    UI_ELT_IDS.SHOWTREE_ADAOCASE_ID:"showTreeAdaoCase",
     UI_ELT_IDS.CLOSE_ADAOCASE_ID:"closeAdaoCase",
     UI_ELT_IDS.YACS_EXPORT_ID:"exportCaseToYACS",
 }
@@ -327,6 +329,22 @@ class AdaoCaseManager(EficasObserver):
 
 #######
 #
+# Gestion de l'affichage de l'arbre EFICAS
+# 1: la fonction showTreeAdaoCase est appelee par le GUI SALOME
+#
+#######
+
+  def showTreeAdaoCase(self):
+    adaoLogger.debug("Validation du cas par un rapport sur le JDC")
+    self.harmonizeSelectionFromEficas()
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.iteritems():
+      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        msg = adao_case.showTreeAdaoCase()
+        break
+
+#######
+#
 # Gestion de la connexion avec YACS
 # 1: la fonction exportCaseToYACS exporte l'etude vers YACS
 #
@@ -424,6 +442,9 @@ class AdaoGuiUiComponentBuilder:
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.VALIDATE_ADAOCASE_ID, "Validate case", "Validate case", "Validate an ADAO case", "eficas_valid.png" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.SHOWTREE_ADAOCASE_ID, "Show tree", "Show tree", "Show the commands tree", "eficas_tree.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an ADAO case", "eficas_close.png" )

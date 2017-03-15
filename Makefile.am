@@ -29,7 +29,7 @@ endif
 SUBDIRS += src
 
 if SALOME_MODULE
-SUBDIRS += resources bin examples test
+SUBDIRS += resources bin examples test i18n
 endif
 
 if SPHINX_IS_OK

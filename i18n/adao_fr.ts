@@ -3,14 +3,12 @@
 <context>
     <name>@default</name>
     <message>
-        <location filename="." line="0"/>
         <source>ASSIMILATION_STUDY</source>
-        <translation type="obsolete">Assimilation de données ou optimisation</translation>
+        <translation>Assimilation de données ou optimisation</translation>
     </message>
     <message>
-        <location filename="." line="0"/>
         <source>CHECKING_STUDY</source>
-        <translation type="obsolete">Vérification</translation>
+        <translation>Vérification</translation>
     </message>
 </context>
 </TS>
