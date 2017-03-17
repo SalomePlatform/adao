@@ -30,8 +30,8 @@ __all__ = []
 
 import logging, copy
 import numpy
-import Persistence
-import PlatformInfo
+from daCore import Persistence
+from daCore import PlatformInfo
 
 # ==============================================================================
 class CacheManager(object):
@@ -59,7 +59,7 @@ class CacheManager(object):
         "Vérifie l'existence d'un calcul correspondant à la valeur"
         __alc = False
         __HxV = None
-        for i in xrange(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
+        for i in range(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
             if xValue.size != self.__listOPCV[i][0].size:
                 # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé", xValue.shape,i,self.__listOPCP[i].shape)
                 continue
@@ -175,7 +175,7 @@ class Operator(object):
         #
         return HxValue
 
-    def appliedControledFormTo(self, (xValue, uValue) ):
+    def appliedControledFormTo(self, paire ):
         """
         Permet de restituer le résultat de l'application de l'opérateur à une
         paire (xValue, uValue). Cette méthode se contente d'appliquer, son
@@ -185,6 +185,8 @@ class Operator(object):
         - xValue : argument X adapté pour appliquer l'opérateur
         - uValue : argument U adapté pour appliquer l'opérateur
         """
+        assert len(paire) == 2, "Incorrect number of arguments"
+        xValue, uValue = paire
         if self.__Matrix is not None:
             self.__addOneMatrixCall()
             return self.__Matrix * xValue
@@ -195,7 +197,7 @@ class Operator(object):
             self.__addOneMethodCall()
             return self.__Method( xValue )
 
-    def appliedInXTo(self, (xNominal, xValue) ):
+    def appliedInXTo(self, paire ):
         """
         Permet de restituer le résultat de l'application de l'opérateur à un
         argument xValue, sachant que l'opérateur est valable en xNominal.
@@ -208,6 +210,8 @@ class Operator(object):
           est construit pour etre ensuite appliqué
         - xValue : argument adapté pour appliquer l'opérateur
         """
+        assert len(paire) == 2, "Incorrect number of arguments"
+        xNominal, xValue = paire
         if self.__Matrix is not None:
             self.__addOneMatrixCall()
             return self.__Matrix * xValue
@@ -365,7 +369,7 @@ class Algorithm(object):
         self.__setParameters(Parameters)
         #
         # Corrections et complements
-        if self._parameters.has_key("Bounds") and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
+        if "Bounds" in self._parameters and (type(self._parameters["Bounds"]) is type([]) or type(self._parameters["Bounds"]) is type(())) and (len(self._parameters["Bounds"]) > 0):
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
         else:
             self._parameters["Bounds"] = None

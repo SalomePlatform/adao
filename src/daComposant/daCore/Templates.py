@@ -60,9 +60,9 @@ class TemplateStorage(object):
         __keys.sort()
         return __keys
 
-    def has_key(self, name):
-        "D.has_key(k) -> True if D has a key k, else False"
-        return name in self.__values
+    # def has_key(self, name):
+    #     "D.has_key(k) -> True if D has a key k, else False"
+    #     return name in self.__values
 
     def __contains__(self, name):
         "D.__contains__(k) -> True if D has a key k, else False"

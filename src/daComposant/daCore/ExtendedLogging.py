@@ -76,7 +76,7 @@ __all__ = []
 import os
 import sys
 import logging
-import PlatformInfo
+from daCore import PlatformInfo
 
 LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
 

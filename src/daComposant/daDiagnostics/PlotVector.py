@@ -124,7 +124,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')
 
     D = ElementaryDiagnostic("Mon Plot")
 
@@ -146,4 +146,4 @@ if __name__ == "__main__":
     D.calculate(vect, title = "Vecteur 8", ltitle = "Vecteur 8")
     temps = [0.1,0.2,0.3,0.4,0.5]
     D.calculate(vect, temps, title = "Vecteur 8 avec axe du temps modifie")
-    print
+    print("")

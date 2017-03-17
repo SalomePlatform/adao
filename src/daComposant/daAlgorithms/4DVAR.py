@@ -97,7 +97,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
-        if self._parameters.has_key("Minimizer") == "TNC":
+        if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
         # Opérateurs
@@ -106,7 +106,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Mm = EM["Direct"].appliedControledFormTo
         #
-        if CM is not None and CM.has_key("Tangent") and U is not None:
+        if CM is not None and "Tangent" in CM and U is not None:
             Cm = CM["Tangent"].asMatrix(Xb)
         else:
             Cm = None

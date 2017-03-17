@@ -32,16 +32,16 @@ __all__ = ["AssimilationStudy"]
 
 import os, sys
 import numpy
-import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
+from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
 import logging
 try:
     import scipy.optimize
     logging.debug("Succeed initial import of scipy.optimize with Scipy %s", scipy.version.version)
 except ImportError:
     logging.debug("Fail initial import of scipy.optimize")
-import Persistence
-from BasicObjects import Operator, Covariance
-import PlatformInfo
+from daCore import Persistence
+from daCore.BasicObjects import Operator, Covariance
+from daCore import PlatformInfo
 
 # ==============================================================================
 class AssimilationStudy:

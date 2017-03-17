@@ -29,7 +29,7 @@ __all__ = []
 
 import numpy, copy
 
-from PlatformInfo import PathManagement ; PathManagement()
+from daCore.PlatformInfo import PathManagement ; PathManagement()
 
 # ==============================================================================
 class Persistence(object):

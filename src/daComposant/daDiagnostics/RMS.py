@@ -59,7 +59,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')
 
     D = ElementaryDiagnostic("Ma RMS")
 
@@ -81,8 +81,8 @@ if __name__ == "__main__":
     vect1 = [-0.23262176, 1.36065207,  0.32988102, 0.24400551, -0.66765848, -0.19088483, -0.31082575,  0.56849814,  1.21453443,  0.99657516]
     vect2 = [0,0,0,0,0,0,0,0,0,0]
     D.calculate(vect1,vect2)
-    print " Les valeurs de RMS attendues sont les suivantes : [1.0, 1.0, 1.0, 3.0, 0.53162016515553656, 0.73784217096601323]"
-    print " Les RMS obtenues................................:", D[:]
-    print " La moyenne......................................:", D.mean()
-    print
+    print(" Les valeurs de RMS attendues sont les suivantes : [1.0, 1.0, 1.0, 3.0, 0.53162016515553656, 0.73784217096601323]")
+    print(" Les RMS obtenues................................: %s"%(D[:],))
+    print(" La moyenne......................................: %s"%(D.mean(),))
+    print("")
 

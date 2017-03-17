@@ -130,7 +130,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["EstimationOf"] == "State":
             M = EM["Direct"].appliedControledFormTo
         #
-        if CM is not None and CM.has_key("Tangent") and U is not None:
+        if CM is not None and "Tangent" in CM and U is not None:
             Cm = CM["Tangent"].asMatrix(Xb)
         else:
             Cm = None

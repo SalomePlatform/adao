@@ -52,17 +52,17 @@ class PlatformInfo(object):
 
     def getName(self):
         "Retourne le nom de l'application"
-        import version as dav
+        import daCore.version as dav
         return dav.name
 
     def getVersion(self):
         "Retourne le numéro de la version"
-        import version as dav
+        import daCore.version as dav
         return dav.version
 
     def getDate(self):
         "Retourne la date de création de la version"
-        import version as dav
+        import daCore.version as dav
         return dav.date
 
     def getPythonVersion(self):
@@ -138,7 +138,7 @@ class PlatformInfo(object):
         return sys.float_info.epsilon
 
     def __str__(self):
-        import version as dav
+        import daCore.version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
 
 # ==============================================================================

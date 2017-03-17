@@ -31,7 +31,9 @@ from daCore.BasicObjects import Operator
 # logging.getLogger().setLevel(logging.DEBUG)
 
 # ==============================================================================
-def ExecuteFunction( (X, funcrepr) ):
+def ExecuteFunction( paire ):
+    assert len(paire) == 2, "Incorrect number of arguments"
+    X, funcrepr = paire
     __X = numpy.asmatrix(numpy.ravel( X )).T
     __sys_path_tmp = sys.path ; sys.path.insert(0,funcrepr["__userFunction__path"])
     __module = __import__(funcrepr["__userFunction__modl"], globals(), locals(), [])
@@ -122,7 +124,7 @@ class FDApproximation(object):
             self.__listJPIN = [] # Jacobian Previous Calculated Increment Norms
         else:
             self.__avoidRC = False
-        if float(increment) <> 0.:
+        if abs(float(increment)) > 1.e-15:
             self.__increment  = float(increment)
         else:
             self.__increment  = 0.01
@@ -318,10 +320,12 @@ class FDApproximation(object):
         return _Jacobienne
 
     # ---------------------------------------------------------
-    def TangentOperator(self, (X, dX) ):
+    def TangentOperator(self, paire ):
         """
         Calcul du tangent à l'aide de la Jacobienne.
         """
+        assert len(paire) == 2, "Incorrect number of arguments"
+        X, dX = paire
         _Jacobienne = self.TangentMatrix( X )
         if dX is None or len(dX) == 0:
             #
@@ -337,10 +341,12 @@ class FDApproximation(object):
             return _HtX.A1
 
     # ---------------------------------------------------------
-    def AdjointOperator(self, (X, Y) ):
+    def AdjointOperator(self, paire ):
         """
         Calcul de l'adjoint à l'aide de la Jacobienne.
         """
+        assert len(paire) == 2, "Incorrect number of arguments"
+        X, Y = paire
         _JacobienneT = self.TangentMatrix( X ).T
         if Y is None or len(Y) == 0:
             #
@@ -357,4 +363,4 @@ class FDApproximation(object):
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\n AUTODIAGNOSTIC \n')

@@ -110,7 +110,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
-        if self._parameters.has_key("Minimizer") == "TNC":
+        if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
         # Opérateurs
@@ -118,9 +118,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Hm = HO["Direct"].appliedTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé (sans cout)
-        # ----------------------------------------------------------------
-        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
+        # ----------------------------------------------------
+        if HO["AppliedToX"] is not None and "HXb" in HO["AppliedToX"]:
             HXb = Hm( Xb, HO["AppliedToX"]["HXb"])
         else:
             HXb = Hm( Xb )
@@ -271,8 +271,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
            "SigmaObs2"                     in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulationQuantiles"           in self._parameters["StoreSupplementaryCalculations"]:
+           "SimulationQuantiles"           in self._parameters["StoreSupplementaryCalculations"] or \
+           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
             elif "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
@@ -312,9 +312,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or \
-            "OMB" in self._parameters["StoreSupplementaryCalculations"] or \
             "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or \
-            "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+            "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"] or \
+            "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             d  = Y - HXb
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )

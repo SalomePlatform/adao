@@ -81,7 +81,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+        if HO["AppliedToX"] is not None and "HXb" in HO["AppliedToX"]:
             HXb = Hm( Xb, HO["AppliedToX"]["HXb"])
         else:
             HXb = Hm( Xb )
