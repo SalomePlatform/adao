@@ -72,7 +72,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = ["BMA", "OMA", "OMB", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "CostFunctionJAtCurrentOptimum", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
@@ -83,7 +83,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
-        if self._parameters.has_key("Minimizer") == "TNC":
+        if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
         # Opérateurs
@@ -93,19 +93,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
-        if HO["AppliedToX"] is not None and HO["AppliedToX"].has_key("HXb"):
+        if HO["AppliedToX"] is not None and "HXb" in HO["AppliedToX"]:
             HXb = Hm( Xb, HO["AppliedToX"]["HXb"])
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
-        #
-        # Calcul de l'innovation
-        # ----------------------
         if Y.size != HXb.size:
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
-        d  = Y - HXb
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -117,18 +113,41 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._parameters["StoreInternalVariables"] or \
+                "CurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
+                "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            _Innovation = Y - _HX
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
+               "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
+            if "InnovationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
+            #
             Jb  = 0.
-            Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
-            J   = float( Jb ) + float( Jo )
+            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            J   = Jb + Jo
+            #
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
+            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["IndexOfOptimum"].store( IndexMin )
+            if "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
+            if "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
+            if "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
+                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
+                self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
             return J
         #
         def GradientOfCostFunction(x):
@@ -144,16 +163,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            _Innovation = Y - _HX
             Jb  = 0.
-            Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
-            J   = float( Jb ) + float( Jo )
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            J   = Jb + Jo
+            if self._parameters["StoreInternalVariables"] or \
+                "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( _X )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
             #
-            return numpy.ravel( RdemiI*(Y - _HX) )
+            return numpy.ravel( RdemiI*_Innovation )
         #
         def GradientOfCostFunctionLM(x):
             _X      = numpy.asmatrix(numpy.ravel( x )).T
@@ -166,10 +187,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------
-        if type(Xb) is type(numpy.matrix([])):
-            Xini = Xb.A1.tolist()
-        else:
-            Xini = list(Xb)
+        Xini = numpy.ravel(Xb)
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -265,11 +283,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
-            HXa = Hm(Xa)
+            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                HXa = self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
+            elif "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
+            else:
+                HXa = Hm(Xa)
         #
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or \
+            "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            d  = Y - HXb
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
@@ -278,6 +304,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
+        if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
+            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
         if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
