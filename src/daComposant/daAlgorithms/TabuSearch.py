@@ -134,15 +134,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Définition de la fonction de deplacement
         # ----------------------------------------
         def Tweak( x, NoiseDistribution, NoiseAddingProbability ):
-            _X  = numpy.asmatrix(numpy.ravel( x )).T
+            _X  = numpy.matrix(numpy.ravel( x )).T
             if NoiseDistribution == "Uniform":
-                for i in xrange(_X.size):
+                for i in range(_X.size):
                     if NoiseAddingProbability >= numpy.random.uniform():
                         _increment = numpy.random.uniform(low=-nrange[i], high=nrange[i])
                         # On ne traite pas encore le dépassement des bornes ici
                         _X[i] += _increment
             elif NoiseDistribution == "Gaussian":
-                for i in xrange(_X.size):
+                for i in range(_X.size):
                     if NoiseAddingProbability >= numpy.random.uniform():
                         _increment = numpy.random.normal(loc=0., scale=sigma[i])
                         # On ne traite pas encore le dépassement des bornes ici
