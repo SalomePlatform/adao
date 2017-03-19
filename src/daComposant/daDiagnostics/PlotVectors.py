@@ -58,9 +58,9 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
-        self.__g('set title  "'+str(title) +'"')
-        self.__g('set xlabel "'+str(xlabel)+'"')
-        self.__g('set ylabel "'+str(ylabel)+'"')
+        self.__g('set title  "'+title.decode() +'"')
+        self.__g('set xlabel "'+xlabel.decode()+'"')
+        self.__g('set ylabel "'+ylabel.decode()+'"')
         self.__g.plot( self.__gnuplot.Data( Steps, Vector.pop(0), title=ltitle.pop(0) ) )
         for vector in Vector:
             self.__g.replot( self.__gnuplot.Data( Steps, vector, title=ltitle.pop(0) ) )

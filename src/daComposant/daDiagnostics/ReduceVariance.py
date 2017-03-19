@@ -78,12 +78,12 @@ if __name__ == "__main__":
     # ----------------------
     x1 = numpy.matrix(([3. , 4., 5. ]))
     x2 = numpy.matrix(([1.5, 2., 2.5]))
-    print(" L'écart entre les observations et l'ébauche est OMB :", x1)
-    print(" La moyenne de OMB (i.e. le biais) est de............:", x1.mean())
-    print(" La variance de OMB est de...........................:", x1.var())
-    print(" L'écart entre les observations et l'analyse est OMA :", x2)
-    print(" La moyenne de OMA (i.e. le biais) est de............:", x2.mean())
-    print(" La variance de OMA est de...........................:", x2.var())
+    print(" L'écart entre les observations et l'ébauche est OMB : %s"%(x1,))
+    print(" La moyenne de OMB (i.e. le biais) est de............: %s"%(x1.mean(),))
+    print(" La variance de OMB est de...........................: %s"%(x1.var(),))
+    print(" L'écart entre les observations et l'analyse est OMA : %s"%(x2,))
+    print(" La moyenne de OMA (i.e. le biais) est de............: %s"%(x2.mean(),))
+    print(" La variance de OMA est de...........................: %s"%(x2.var(),))
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
     if not D[0] :
@@ -96,12 +96,12 @@ if __name__ == "__main__":
     # ---------------------
     x1 = numpy.array(range(11))
     x2 = numpy.matrix(range(-10,12,2))
-    print(" L'écart entre les observations et l'ébauche est OMB :", x1)
-    print(" La moyenne de OMB (i.e. le biais) est de............:", x1.mean())
-    print(" La variance de OMB est de...........................:", x1.var())
-    print(" L'écart entre les observations et l'analyse est OMA :", x2)
-    print(" La moyenne de OMA (i.e. le biais) est de............:", x2.mean())
-    print(" La variance de OMA est de...........................:", x2.var())
+    print(" L'écart entre les observations et l'ébauche est OMB : %s"%(x1,))
+    print(" La moyenne de OMB (i.e. le biais) est de............: %s"%(x1.mean(),))
+    print(" La variance de OMB est de...........................: %s"%(x1.var(),))
+    print(" L'écart entre les observations et l'analyse est OMA : %s"%(x2,))
+    print(" La moyenne de OMA (i.e. le biais) est de............: %s"%(x2.mean(),))
+    print(" La variance de OMA est de...........................: %s"%(x2.var(),))
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
     if not D[1] :
