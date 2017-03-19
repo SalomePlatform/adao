@@ -83,7 +83,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ha = HO["Adjoint"].appliedInXTo
         #
         # ----------
-        Perturbations = [ 10**i for i in xrange(self._parameters["EpsilonMinimumExponent"],1) ]
+        Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
         X       = numpy.asmatrix(numpy.ravel( Xb )).T

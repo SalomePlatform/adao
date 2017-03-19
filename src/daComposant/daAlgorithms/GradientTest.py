@@ -109,7 +109,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Ht = HO["Tangent"].appliedInXTo
         #
         # ----------
-        Perturbations = [ 10**i for i in xrange(self._parameters["EpsilonMinimumExponent"],1) ]
+        Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
         X       = numpy.asmatrix(numpy.ravel(    Xb   )).T
@@ -286,7 +286,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             Residus = self.StoredVariables["Residu"][-len(Perturbations):]
             if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
-                PerturbationsCarre = [ 10**(2*i) for i in xrange(-len(NormesdFXGdX)+1,1) ]
+                PerturbationsCarre = [ 10**(2*i) for i in range(-len(NormesdFXGdX)+1,1) ]
                 PerturbationsCarre.reverse()
                 dessiner(
                     Perturbations, 
@@ -336,7 +336,7 @@ def dessiner(
     __g('set grid')
     __g('set autoscale')
     __g('set title  "'+titre+'"')
-    # __g('set xrange [] reverse')
+    # __g('set range [] reverse')
     # __g('set yrange [0:2]')
     #
     if logX:

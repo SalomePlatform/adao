@@ -98,7 +98,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Construction des perturbations
         # ------------------------------
-        Perturbations = [ 10**i for i in xrange(self._parameters["EpsilonMinimumExponent"],1) ]
+        Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
         # Calcul du point courant
