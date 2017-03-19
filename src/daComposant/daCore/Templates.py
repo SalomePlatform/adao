@@ -56,7 +56,7 @@ class TemplateStorage(object):
 
     def keys(self):
         "D.keys() -> list of D's keys"
-        __keys = self.__values.keys()
+        __keys = list(self.__values.keys())
         __keys.sort()
         return __keys
 

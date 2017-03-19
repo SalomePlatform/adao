@@ -27,7 +27,7 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import numpy, copy
+import sys, numpy, copy
 
 from daCore.PlatformInfo import PathManagement ; PathManagement()
 
@@ -238,7 +238,7 @@ class Persistence(object):
                 allTags = {}
                 for index in __indexOfFilteredItems:
                     allTags.update( self.__tags[index] )
-                allKeys = allTags.keys()
+                allKeys = list(allTags.keys())
                 allKeys.sort()
                 return allKeys
 
@@ -594,7 +594,7 @@ class Persistence(object):
         self.__g('set ylabel "'+str(ylabel).encode('ascii','replace')+'"')
         #
         # Tracé du ou des vecteurs demandés
-        indexes = range(len(self.__values))
+        indexes = list(range(len(self.__values)))
         self.__g.plot( self.__gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle+" (pas 0)" ) )
         for index in indexes:
             self.__g.replot( self.__gnuplot.Data( Steps, self.__values[index], title=ltitle+" (pas %i)"%index ) )
@@ -610,20 +610,30 @@ class Persistence(object):
         Association à la variable d'un triplet définissant un observer
 
         Le Scheduler attendu est une fréquence, une simple liste d'index ou un
-        xrange des index.
+        range des index.
         """
         #
         # Vérification du Scheduler
         # -------------------------
         maxiter = int( 1e9 )
-        if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
-            Schedulers = xrange( 0, maxiter, int(Scheduler) )
-        elif isinstance(Scheduler,xrange): # Considéré comme un itérateur
-            Schedulers = Scheduler
-        elif isinstance(Scheduler,list):   # Considéré comme des index explicites
-            Schedulers = [long(i) for i in Scheduler] # map( long, Scheduler )
-        else:                              # Dans tous les autres cas, activé par défaut
-            Schedulers = xrange( 0, maxiter )
+        if sys.version.split()[0] < '3':
+            if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
+                Schedulers = xrange( 0, maxiter, int(Scheduler) )
+            elif isinstance(Scheduler,xrange): # Considéré comme un itérateur
+                Schedulers = Scheduler
+            elif isinstance(Scheduler,(list,tuple)):   # Considéré comme des index explicites
+                Schedulers = [long(i) for i in Scheduler] # map( long, Scheduler )
+            else:                              # Dans tous les autres cas, activé par défaut
+                Schedulers = xrange( 0, maxiter )
+        else:
+            if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
+                Schedulers = range( 0, maxiter, int(Scheduler) )
+            elif sys.version.split()[0] > '3' and isinstance(Scheduler,range): # Considéré comme un itérateur
+                Schedulers = Scheduler
+            elif isinstance(Scheduler,(list,tuple)):   # Considéré comme des index explicites
+                Schedulers = [int(i) for i in Scheduler] # map( int, Scheduler )
+            else:                              # Dans tous les autres cas, activé par défaut
+                Schedulers = range( 0, maxiter )
         #
         # Stockage interne de l'observer dans la variable
         # -----------------------------------------------
@@ -647,7 +657,7 @@ class Persistence(object):
         index_to_remove = []
         for [hf, hp, hs] in self.__dataobservers:
             i = i + 1
-            if name is hf.func_name: index_to_remove.append( i )
+            if name is hf.__name__: index_to_remove.append( i )
         index_to_remove.reverse()
         for i in index_to_remove:
             self.__dataobservers.pop( i )
@@ -838,6 +848,7 @@ class CompositePersistence(object):
                 finally:
                     pass
             objs = usedObjs
+        objs = list(objs)
         objs.sort()
         return objs
 
@@ -858,7 +869,10 @@ class CompositePersistence(object):
         else:
             filename = os.path.abspath( filename )
         #
-        import cPickle
+        if sys.version.split()[0] < '3':
+            import cPickle as lPickle
+        else:
+            import pickle  as lPickle
         if mode == "pickle":
             if compress == "gzip":
                 import gzip
@@ -868,7 +882,7 @@ class CompositePersistence(object):
                 output = bz2.BZ2File( filename, 'wb')
             else:
                 output = open( filename, 'wb')
-            cPickle.dump(self, output)
+            lPickle.dump(self, output)
             output.close()
         else:
             raise ValueError("Save mode '%s' unknown. Choose another one."%mode)
@@ -885,7 +899,10 @@ class CompositePersistence(object):
         else:
             filename = os.path.abspath( filename )
         #
-        import cPickle
+        if sys.version.split()[0] < '3':
+            import cPickle as lPickle
+        else:
+            import pickle  as lPickle
         if mode == "pickle":
             if compress == "gzip":
                 import gzip
@@ -895,7 +912,7 @@ class CompositePersistence(object):
                 pkl_file = bz2.BZ2File( filename, 'rb')
             else:
                 pkl_file = open(filename, 'rb')
-            output = cPickle.load(pkl_file)
+            output = lPickle.load(pkl_file)
             for k in output.keys():
                 self[k] = output[k]
         else:

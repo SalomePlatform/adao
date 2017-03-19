@@ -463,7 +463,7 @@ class Algorithm(object):
         dictionnaire des paramètres requis.
         """
         if noDetails:
-            ks = self.__required_parameters.keys()
+            ks = list(self.__required_parameters.keys())
             ks.sort()
             return ks
         else:

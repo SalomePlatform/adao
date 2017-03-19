@@ -139,7 +139,7 @@ class FDApproximation(object):
     # ---------------------------------------------------------
     def __doublon__(self, e, l, n, v=None):
         __ac, __iac = False, -1
-        for i in xrange(len(l)-1,-1,-1):
+        for i in range(len(l)-1,-1,-1):
             if numpy.linalg.norm(e - l[i]) < self.__tolerBP * n[i]:
                 __ac, __iac = True, i
                 if v is not None: logging.debug("FDA Cas%s déja calculé, récupération du doublon %i"%(v,__iac))
