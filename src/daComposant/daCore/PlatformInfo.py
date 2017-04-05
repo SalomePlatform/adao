@@ -76,8 +76,11 @@ class PlatformInfo(object):
 
     def getScipyVersion(self):
         "Retourne la version de scipy disponible"
-        import scipy.version
-        return scipy.version.version
+        try:
+            import scipy.version
+            return scipy.version.version
+        except ImportError:
+            return "0.0.0"
 
     def getMatplotlibVersion(self):
         "Retourne la version de matplotlib disponible"
