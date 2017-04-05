@@ -90,7 +90,7 @@ Print on standard output the current value of the variable.
 
 ::
 
-    print info, var[-1]
+    print(str(info)+" "+str(var[-1]))
 
 .. index:: single: ValueAndIndexPrinter (Observer)
 
@@ -101,7 +101,7 @@ Print on standard output the current value of the variable, adding its index.
 
 ::
 
-    print str(info)+" index %i:"%(len(var)-1), var[-1]
+    print(str(info)+(" index %i:"%(len(var)-1))+" "+str(var[-1]))
 
 .. index:: single: ValueSeriePrinter (Observer)
 
@@ -112,7 +112,7 @@ Print on standard output the value series of the variable.
 
 ::
 
-    print info, var[:]
+    print(str(info)+" "+str(var[:]))
 
 .. index:: single: ValueSaver (Observer)
 
@@ -132,7 +132,7 @@ Save the current value of the variable in a file of the '/tmp' directory named '
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueSerieSaver (Observer)
@@ -153,7 +153,7 @@ Save the value series of the variable in a file of the '/tmp' directory named 'v
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValuePrinterAndSaver (Observer)
@@ -167,7 +167,7 @@ Print on standard output and, in the same time save in a file, the current value
 
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
-    print info,v
+    print(str(info)+" "+str(v))
     global istep
     try:
         istep += 1
@@ -175,7 +175,7 @@ Print on standard output and, in the same time save in a file, the current value
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueIndexPrinterAndSaver (Observer)
@@ -189,7 +189,7 @@ Print on standard output and, in the same time save in a file, the current value
 
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
-    print str(info)+" index %i:"%(len(var)-1),v
+    print(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))
     global istep
     try:
         istep += 1
@@ -197,7 +197,7 @@ Print on standard output and, in the same time save in a file, the current value
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueSeriePrinterAndSaver (Observer)
@@ -211,7 +211,7 @@ Print on standard output and, in the same time, save in a file the value series 
 
     import numpy, re
     v=numpy.array(var[:],  ndmin=1)
-    print info,v
+    print(str(info)+" "+str(v))
     global istep
     try:
         istep += 1
@@ -219,7 +219,7 @@ Print on standard output and, in the same time, save in a file the value series 
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueGnuPlotter (Observer)
@@ -275,7 +275,7 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 
 ::
 
-    print info, var[-1]
+    print(str(info)+" "+str(var[-1]))
     import numpy, Gnuplot
     v=numpy.array(var[-1], ndmin=1)
     global ifig,gp
@@ -298,7 +298,7 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 
 ::
 
-    print info, var[:] 
+    print(str(info)+" "+str(var[:]))
     import numpy, Gnuplot
     v=numpy.array(var[:],  ndmin=1)
     global ifig,gp
@@ -321,7 +321,7 @@ Print on standard output and, in the same, time save in a file and graphically p
 
 ::
 
-    print info, var[-1]
+    print(str(info)+" "+str(var[-1]))
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
     global istep
@@ -331,7 +331,7 @@ Print on standard output and, in the same, time save in a file and graphically p
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
     global ifig,gp
@@ -354,7 +354,7 @@ Print on standard output and, in the same, time save in a file and graphically p
 
 ::
 
-    print info, var[:] 
+    print(str(info)+" "+str(var[:]))
     import numpy, re
     v=numpy.array(var[:],  ndmin=1)
     global istep
@@ -364,7 +364,7 @@ Print on standard output and, in the same, time save in a file and graphically p
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
     global ifig,gp
@@ -388,7 +388,7 @@ Print on standard output the mean of the current value of the variable.
 ::
 
     import numpy
-    print info, numpy.nanmean(var[-1])
+    print(str(info)+" "+str(numpy.nanmean(var[-1])))
 
 .. index:: single: ValueStandardError (Observer)
 
@@ -400,7 +400,7 @@ Print on standard output the standard error of the current value of the variable
 ::
 
     import numpy
-    print info, numpy.nanstd(var[-1])
+    print(str(info)+" "+str(numpy.nanstd(var[-1])))
 
 .. index:: single: ValueVariance (Observer)
 
@@ -412,7 +412,7 @@ Print on standard output the variance of the current value of the variable.
 ::
 
     import numpy
-    print info, numpy.nanvar(var[-1])
+    print(str(info)+" "+str(numpy.nanvar(var[-1])))
 
 .. index:: single: ValueL2Norm (Observer)
 
@@ -425,7 +425,7 @@ Print on standard output the L2 norm of the current value of the variable.
 
     import numpy
     v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print info, float( numpy.linalg.norm(v) )
+    print(str(info)+" "+str(float( numpy.linalg.norm(v) )))
 
 .. index:: single: ValueRMS (Observer)
 
@@ -438,4 +438,4 @@ Print on standard output the root mean square (RMS), or quadratic mean, of the c
 
     import numpy
     v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print info, float( numpy.sqrt((1./v.size)*(v*v.T)) )
+    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*(v*v.T)) )))

@@ -93,7 +93,7 @@ Imprime sur la sortie standard la valeur courante de la variable.
 
 ::
 
-    print info, var[-1]
+    print(str(info)+" "+str(var[-1]))
 
 .. index:: single: ValueAndIndexPrinter (Observer)
 
@@ -104,7 +104,7 @@ Imprime sur la sortie standard la valeur courante de la variable, en ajoutant so
 
 ::
 
-    print str(info)+" index %i:"%(len(var)-1), var[-1]
+    print(str(info)+(" index %i:"%(len(var)-1))+" "+str(var[-1]))
 
 .. index:: single: ValueSeriePrinter (Observer)
 
@@ -115,7 +115,7 @@ Imprime sur la sortie standard la série des valeurs de la variable.
 
 ::
 
-    print info, var[:]
+    print(str(info)+" "+str(var[:]))
 
 .. index:: single: ValueSaver (Observer)
 
@@ -135,7 +135,7 @@ Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueSerieSaver (Observer)
@@ -156,7 +156,7 @@ Enregistre la série des valeurs de la variable dans un fichier du répertoire '/t
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValuePrinterAndSaver (Observer)
@@ -170,7 +170,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la 
 
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
-    print info,v
+    print(str(info)+" "+str(v))
     global istep
     try:
         istep += 1
@@ -178,7 +178,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la 
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueIndexPrinterAndSaver (Observer)
@@ -192,7 +192,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la 
 
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
-    print str(info)+" index %i:"%(len(var)-1),v
+    print(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))
     global istep
     try:
         istep += 1
@@ -200,7 +200,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la 
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueSeriePrinterAndSaver (Observer)
@@ -214,7 +214,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la 
 
     import numpy, re
     v=numpy.array(var[:],  ndmin=1)
-    print info,v
+    print(str(info)+" "+str(v))
     global istep
     try:
         istep += 1
@@ -222,7 +222,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la 
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
 .. index:: single: ValueGnuPlotter (Observer)
@@ -278,7 +278,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnu
 
 ::
 
-    print info, var[-1]
+    print(str(info)+" "+str(var[-1]))
     import numpy, Gnuplot
     v=numpy.array(var[-1], ndmin=1)
     global ifig,gp
@@ -301,7 +301,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnu
 
 ::
 
-    print info, var[:] 
+    print(str(info)+" "+str(var[:]))
     import numpy, Gnuplot
     v=numpy.array(var[:],  ndmin=1)
     global ifig,gp
@@ -324,7 +324,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et 
 
 ::
 
-    print info, var[-1]
+    print(str(info)+" "+str(var[-1]))
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
     global istep
@@ -334,7 +334,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et 
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
     global ifig,gp
@@ -357,7 +357,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et 
 
 ::
 
-    print info, var[:] 
+    print(str(info)+" "+str(var[:]))
     import numpy, re
     v=numpy.array(var[:],  ndmin=1)
     global istep
@@ -367,7 +367,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et 
         istep = 0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
-    print 'Value saved in "%s"'%f
+    print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
     global ifig,gp
@@ -391,7 +391,7 @@ Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
 ::
 
     import numpy
-    print info, numpy.nanmean(var[-1])
+    print(str(info)+" "+str(numpy.nanmean(var[-1])))
 
 .. index:: single: ValueStandardError (Observer)
 
@@ -403,7 +403,7 @@ Imprime sur la sortie standard l'écart-type de la valeur courante de la variable
 ::
 
     import numpy
-    print info, numpy.nanstd(var[-1])
+    print(str(info)+" "+str(numpy.nanstd(var[-1])))
 
 .. index:: single: ValueVariance (Observer)
 
@@ -415,7 +415,7 @@ Imprime sur la sortie standard la variance de la valeur courante de la variable.
 ::
 
     import numpy
-    print info, numpy.nanvar(var[-1])
+    print(str(info)+" "+str(numpy.nanvar(var[-1])))
 
 .. index:: single: ValueL2Norm (Observer)
 
@@ -428,7 +428,7 @@ Imprime sur la sortie standard la norme L2 de la valeur courante de la variable.
 
     import numpy
     v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print info, float( numpy.linalg.norm(v) )
+    print(str(info)+" "+str(float( numpy.linalg.norm(v) )))
 
 .. index:: single: ValueRMS (Observer)
 
@@ -441,4 +441,4 @@ Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moye
 
     import numpy
     v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print info, float( numpy.sqrt((1./v.size)*(v*v.T)) )
+    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*(v*v.T)) )))
