@@ -213,9 +213,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
             if self._parameters["Bounds"] is not None:
-                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
-                lb = lub[:,0]
-                ub = lub[:,1]
+                lub = numpy.array(self._parameters["Bounds"],dtype=float).reshape((Xini.size,2))
+                lb = lub[:,0] ; lb[numpy.isnan(lb)] = -float('inf')
+                ub = lub[:,1] ; ub[numpy.isnan(ub)] = +float('inf')
                 if self._parameters["optdisp"]:
                     print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
                     print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
@@ -249,9 +249,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
             if self._parameters["Bounds"] is not None:
-                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
-                lb = lub[:,0]
-                ub = lub[:,1]
+                lub = numpy.array(self._parameters["Bounds"],dtype=float).reshape((Xini.size,2))
+                lb = lub[:,0] ; lb[numpy.isnan(lb)] = -float('inf')
+                ub = lub[:,1] ; ub[numpy.isnan(ub)] = +float('inf')
                 if self._parameters["optdisp"]:
                     print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
                     print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
@@ -273,9 +273,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
             if self._parameters["Bounds"] is not None:
-                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
-                lb = lub[:,0]
-                ub = lub[:,1]
+                lub = numpy.array(self._parameters["Bounds"],dtype=float).reshape((Xini.size,2))
+                lb = lub[:,0] ; lb[numpy.isnan(lb)] = -float('inf')
+                ub = lub[:,1] ; ub[numpy.isnan(ub)] = +float('inf')
                 if self._parameters["optdisp"]:
                     print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
                     print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
@@ -297,9 +297,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
             if self._parameters["Bounds"] is not None:
-                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
-                lb = lub[:,0]
-                ub = lub[:,1]
+                lub = numpy.array(self._parameters["Bounds"],dtype=float).reshape((Xini.size,2))
+                lb = lub[:,0] ; lb[numpy.isnan(lb)] = -float('inf')
+                ub = lub[:,1] ; ub[numpy.isnan(ub)] = +float('inf')
                 if self._parameters["optdisp"]:
                     print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
                     print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
@@ -321,9 +321,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 return CostFunction(_Xx, self._parameters["QualityCriterion"])
             opt.set_min_objective(_f)
             if self._parameters["Bounds"] is not None:
-                lub = numpy.array(self._parameters["Bounds"]).reshape((Xini.size,2))
-                lb = lub[:,0]
-                ub = lub[:,1]
+                lub = numpy.array(self._parameters["Bounds"],dtype=float).reshape((Xini.size,2))
+                lb = lub[:,0] ; lb[numpy.isnan(lb)] = -float('inf')
+                ub = lub[:,1] ; ub[numpy.isnan(ub)] = +float('inf')
                 if self._parameters["optdisp"]:
                     print("%s: upper bounds %s"%(opt.get_algorithm_name(),ub))
                     print("%s: lower bounds %s"%(opt.get_algorithm_name(),lb))
