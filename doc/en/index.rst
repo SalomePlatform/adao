@@ -49,16 +49,17 @@ to the user documentation (indicated in the title by **[DocU]**), and to the
 reference documentation (indicated in the title by **[DocR]**).
 
 The first part is the :ref:`section_intro`. The second part introduces
-:ref:`section_theory`, and their concepts. The third part describes
-:ref:`section_using`, and the fourth part gives examples on ADAO usage as
-:ref:`section_examples`. Users interested in quick use of the module can stop
-before reading the rest, but a valuable use of the module requires to read and
-come back regularly to the third and seventh parts. The fifth part indicates the
-:ref:`section_advanced`, with how to obtain additional information or how to use
-non-GUI execution scripting. The next part gives a detailed
-:ref:`section_reference`, with four main sub-parts following, the last one
-giving a :ref:`section_tui` of the module. And, to respect the module
-requirements, be sure to read the part :ref:`section_license`.
+:ref:`section_theory`, and their concepts, and the next part describes a
+:ref:`section_methodology`. The fourth part describes :ref:`section_using`, and
+the fifth part gives examples on ADAO usage as :ref:`section_examples`. Users
+interested in quick use of the module can stop before reading the rest, but a
+valuable use of the module requires to read and come back regularly to the
+fourth and tenth parts. The sixth part indicates the :ref:`section_advanced`,
+with how to obtain additional information or how to use non-GUI execution
+scripting. The seventh part gives a detailed :ref:`section_reference`, with four
+main sub-parts following, the last one giving a :ref:`section_tui` of the
+module. And, to respect the module requirements, be sure to read the part
+:ref:`section_license`.
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization. In particular, vectors
@@ -75,6 +76,7 @@ Table of contents
 
    intro
    theory
+   methodology
    using
    examples
    advanced

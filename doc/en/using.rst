@@ -59,23 +59,26 @@ input data, and then generates a complete executable block diagram used in YACS
 sequence remains unchanged.
 
 First of all, the user is considered to know its personal input data needed to
-set up the data assimilation study. These data can already be available in
-SALOME or not.
+set up the data assimilation study, following :ref:`section_methodology`. These
+data can already be available in SALOME or not.
 
-**Basically, the procedure of using ADAO involves the following steps:**
+Basically, the procedure of using ADAO involves the following steps:
 
-#.  **Activate the ADAO module and use the editor GUI,**
-#.  **Build and/or modify the ADAO case, and save it,**
-#.  **Export the ADAO case as a YACS scheme,**
-#.  **Supplement and modify the YACS scheme, and save it,**
-#.  **Execute the YACS case and obtain the results.**
+    - :ref:`section_u_step1`
+    - :ref:`section_u_step2`
+    - :ref:`section_u_step3`
+    - :ref:`section_u_step4`
+    - :ref:`section_u_step5`
 
 Each step will be detailed in the next section.
+
+Detailed procedure to build an ADAO case
+----------------------------------------
 
 .. _section_u_step1:
 
 STEP 1: Activate the ADAO module and use the editor GUI
--------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 As always for a module, it has to be activated by choosing the appropriate
 module button (or the menu) in the toolbar of SALOME. If there is no SALOME
@@ -103,7 +106,7 @@ new ADAO case, and you will see:
 .. _section_u_step2:
 
 STEP 2: Build and modify the ADAO case, and save it
----------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To build a case using the embedded editor, you have to go through a series of
 sub-steps, by selecting, at each sub-step, a keyword and then filling in its
@@ -146,7 +149,7 @@ the ADAO case, with the same base name, the first one being completed by a
 .. _section_u_step3:
 
 STEP 3: Export the ADAO case as a YACS scheme
----------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++
 
 When the ADAO case is completed, you have to export it as a YACS scheme in order
 to execute the data assimilation calculation. This can be easily done by using
@@ -170,7 +173,7 @@ file will be overwritten without prompting for replacing the XML file*.
 .. _section_u_step4:
 
 STEP 4: Supplement and modify the YACS scheme, and save it
-----------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Analysis
 
@@ -221,7 +224,7 @@ simple example is given in the section :ref:`section_examples`.
 .. _section_u_step5:
 
 STEP 5: Execute the YACS case and obtain the results
-----------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The YACS scheme is now complete and can be executed. Parametrization and
 execution of this YACS case is fully compliant with the standard way to deal
