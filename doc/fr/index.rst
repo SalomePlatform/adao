@@ -52,18 +52,19 @@ relatives à la documentation théorique (indiquée dans le titre par **[DocT]**),
 documentation de référence (indiquée dans le titre par **[DocR]**).
 
 La première partie est l':ref:`section_intro`. La seconde partie présente
-:ref:`section_theory`, et à leurs concepts. Pour un utilisateur courant, la
-troisième partie explique comment :ref:`section_using`, et la quatrième partie
-présente des exemples d'utilisation sous la forme de :ref:`section_examples`.
-Les utilisateurs intéressés par un accès rapide au module peuvent s'arrêter
-avant la lecture de la suite, mais un usage utile du module nécessite de lire et
-de revenir régulièrement aux troisième et septième parties. La cinquième partie
+:ref:`section_theory`, et à leurs concepts, et la partie suivante décrit la
+:ref:`section_methodology`. Pour un utilisateur courant, la quatrième partie
+explique comment :ref:`section_using`, et la cinquième partie présente des
+exemples d'utilisation sous la forme de :ref:`section_examples`. Les
+utilisateurs intéressés par un accès rapide au module peuvent s'arrêter avant la
+lecture de la suite, mais un usage utile du module nécessite de lire et de
+revenir régulièrement aux quatrième et septième parties. La sixième partie
 indique les :ref:`section_advanced`, avec l'obtention de renseignements
 supplémentaires ou l'usage par scripts d'exécution sans interface utilisateur
-graphique (GUI). La partie suivante détaille la :ref:`section_reference`, avec
-quatre sous-parties principales qui suivent, la dernière sous-partie décrivant
-une :ref:`section_tui` du module. Enfin, pour respecter les exigences de licence
-du module, n'oubliez pas de lire la partie :ref:`section_license`.
+graphique (GUI). La septième partie détaille la :ref:`section_reference`, avec
+quatre sous-parties principales qui suivent, la dernière décrivant une
+:ref:`section_tui` du module. Enfin, pour respecter les exigences de licence du
+module, n'oubliez pas de lire la partie :ref:`section_license`.
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
@@ -81,6 +82,7 @@ Table des matières
 
    intro
    theory
+   methodology
    using
    examples
    advanced

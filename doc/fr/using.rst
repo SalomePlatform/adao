@@ -60,24 +60,28 @@ utilisé dans YACS [#]_. De nombreuses variations existent pour la définition
 des données d'entrée, mais la séquence logique reste inchangée.
 
 De manière générale, l'utilisateur doit connaître ses données d'entrées,
-requises pour mettre au point une étude d'assimilation de données. Ces données
-peuvent être disponibles dans SALOME ou non.
+requises pour mettre au point une étude d'assimilation de données, en suivant la
+:ref:`section_methodology`. Ces données peuvent déjà être disponibles dans
+SALOME ou non.
 
-**Fondamentalement, la procédure d'utilisation de ADAO comprend les étapes
-suivantes:**
+Fondamentalement, la procédure d'utilisation de ADAO comprend les étapes
+suivantes:
 
-#.  **Activez le module ADAO et utiliser l'éditeur graphique (GUI),**
-#.  **Construire et/ou modifier le cas ADAO et l'enregistrer,**
-#.  **Exporter le cas ADAO comme un schéma YACS,**
-#.  **Compléter et modifier le schéma YACS, et l'enregistrer,**
-#.  **Exécutez le cas YACS et obtenir les résultats.**
+    - :ref:`section_u_step1`
+    - :ref:`section_u_step2`
+    - :ref:`section_u_step3`
+    - :ref:`section_u_step4`
+    - :ref:`section_u_step5`
 
 Chaque étape est détaillée dans la section suivante.
+
+Procédure détaillée pour construire un cas ADAO
+-----------------------------------------------
 
 .. _section_u_step1:
 
 ÉTAPE 1 : Activer le module ADAO et utiliser l'interface graphique d'édition (GUI)
-----------------------------------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Comme toujours pour un module, il doit être préalablement activé en
 sélectionnant le bouton de module approprié (ou le menu) dans la barre d'outils
@@ -106,7 +110,7 @@ le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
 .. _section_u_step2:
 
 ÉTAPE 2 : Créer et modifier le cas ADAO, et l'enregistrer
----------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour construire un cas en utilisant l'éditeur intégré, on doit passer par une
 série de sous-étapes, en choisissant, à chaque étape, un mot-clé puis en
@@ -153,7 +157,7 @@ extension "*.comm*" et le second une extension "*.py*" [#]_.
 .. _section_u_step3:
 
 ÉTAPE 3 : Exporter le cas ADAO comme un schéma YACS
----------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Lorsque le cas ADAO est complété, il doit être converti ou exporté sous la forme
 d'un schéma YACS pour pouvoir exécuter le calcul d'assimilation de données. Cela
@@ -179,7 +183,7 @@ fichier XML*.
 .. _section_u_step4:
 
 ÉTAPE 4 : Compléter et modifier le schéma YACS, et l'enregistrer
-----------------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Analysis
 
@@ -232,7 +236,7 @@ natif ou externe à SALOME. Un exemple simple est disponible dans la section
 .. _section_u_step5:
 
 ÉTAPE 5 : Exécuter le schéma YACS et obtenir les résultats
-----------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Le schéma YACS est maintenant complet et peut être exécuté. La paramétrisation
 et l'exécution de ce cas YACS est entièrement compatible avec la manière
