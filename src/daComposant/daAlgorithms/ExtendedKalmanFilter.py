@@ -168,12 +168,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
             if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CurrentState"].store( Xn )
+            if self._parameters["StoreInternalVariables"] \
+                or "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"] \
+                or "CostFunctionJb" in self._parameters["StoreSupplementaryCalculations"] \
+                or "CostFunctionJo" in self._parameters["StoreSupplementaryCalculations"]:
                 Jb  = 0.5 * (Xn - Xb).T * BI * (Xn - Xb)
                 Jo  = 0.5 * d.T * RI * d
                 J   = float( Jb ) + float( Jo )
-                if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                    self.StoredVariables["CurrentState"].store( Xn )
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )

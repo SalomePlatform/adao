@@ -548,6 +548,74 @@ class Diagnostic(object):
         raise NotImplementedError("Diagnostic activation method has not been implemented!")
 
 # ==============================================================================
+class Vector(object):
+    """
+    Classe générale d'interface de type vecteur
+    """
+    def __init__(self,
+                 name               = "GenericVector",
+                 asVector           = None,
+                 asPersistentVector = None,
+                 Scheduler          = None,
+                 toBeChecked        = False,
+                ):
+        """
+        Permet de définir un vecteur :
+        - asVector : entrée des données, comme un vecteur compatible avec
+          le constructeur de numpy.matrix
+        - asPersistentVector : entrée des données, comme une série de
+          vecteurs compatible avec le constructeur de numpy.matrix, ou
+          comme un objet de type Persistence
+        """
+        self.__name       = str(name)
+        self.__check      = bool(toBeChecked)
+        #
+        self.__V          = None
+        self.__T          = None
+        self.__is_vector  = False
+        self.__is_series  = False
+        if asVector is not None:
+            self.__is_vector = True
+            self.__V         = numpy.matrix( numpy.ravel(numpy.matrix(asVector)), numpy.float ).T
+            self.shape       = self.__V.shape
+            self.size        = self.__V.size
+        elif asPersistentVector is not None:
+            self.__is_series  = True
+            if type(asPersistentVector) in [tuple, list, numpy.ndarray, numpy.matrix]:
+                self.__V = Persistence.OneVector(self.__name, basetype=numpy.matrix)
+                for member in asPersistentVector:
+                    self.__V.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
+                import sys ; sys.stdout.flush()
+            else:
+                self.__V = asPersistentVector
+            if type(self.__V.shape) in (tuple, list):
+                self.shape       = self.__V.shape
+            else:
+                self.shape       = self.__V.shape()
+            self.size        = self.shape[0] * self.shape[1]
+        else:
+            raise ValueError("The %s object is improperly defined, it requires at minima either a vector, a list/tuple of vectors or a persistent object. Please check your vector input."%self.__name)
+        #
+        if Scheduler is not None:
+            self.__T = Scheduler
+
+    def isvector(self):
+        "Vérification du type interne"
+        return self.__is_vector
+
+    def isseries(self):
+        "Vérification du type interne"
+        return self.__is_series
+
+    def __repr__(self):
+        "x.__repr__() <==> repr(x)"
+        return repr(self.__V)
+
+    def __str__(self):
+        "x.__str__() <==> str(x)"
+        return str(self.__V)
+
+# ==============================================================================
 class Covariance(object):
     """
     Classe générale d'interface de type covariance

@@ -112,7 +112,7 @@ class Persistence(object):
         longueur. Par défaut, renvoie 1.
         """
         if len(self.__values) > 0:
-            if self.__basetype in [numpy.matrix, numpy.array, numpy.ravel]:
+            if self.__basetype in [numpy.matrix, numpy.ndarray, numpy.array, numpy.ravel]:
                 return self.__values[-1].shape
             elif self.__basetype in [int, float]:
                 return (1,)
