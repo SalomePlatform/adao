@@ -28,7 +28,7 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import logging, copy
+import logging, copy, os
 import numpy
 from daCore import Persistence
 from daCore import PlatformInfo
@@ -556,16 +556,21 @@ class Vector(object):
                  name               = "GenericVector",
                  asVector           = None,
                  asPersistentVector = None,
+                 fromScript         = None,
                  Scheduler          = None,
                  toBeChecked        = False,
                 ):
         """
         Permet de définir un vecteur :
-        - asVector : entrée des données, comme un vecteur compatible avec
-          le constructeur de numpy.matrix
-        - asPersistentVector : entrée des données, comme une série de
-          vecteurs compatible avec le constructeur de numpy.matrix, ou
-          comme un objet de type Persistence
+        - asVector : entrée des données, comme un vecteur compatible avec le
+          constructeur de numpy.matrix, ou "True" si entrée par script.
+        - asPersistentVector : entrée des données, comme une série de vecteurs
+          compatible avec le constructeur de numpy.matrix, ou comme un objet de
+          type Persistence, ou "True" si entrée par script.
+        - fromScript : si un script valide est donné contenant une variable
+          nommée "name", la variable est de type "asVector" (par défaut) ou
+          "asPersistentVector" selon que l'une de ces variables est placée à
+          "True".
         """
         self.__name       = str(name)
         self.__check      = bool(toBeChecked)
@@ -574,20 +579,30 @@ class Vector(object):
         self.__T          = None
         self.__is_vector  = False
         self.__is_series  = False
-        if asVector is not None:
+        #
+        if fromScript is not None:
+            __Vector, __Series = None, None
+            if VectorSerie:
+                __Series = ImportFromScript(fromScript).getvalue( self.__name )
+            else:
+                __Vector = ImportFromScript(fromScript).getvalue( self.__name )
+        else:
+            __Vector, __Series = asVector, asPersistentVector
+        #
+        if __Vector is not None:
             self.__is_vector = True
             self.__V         = numpy.matrix( numpy.ravel(numpy.matrix(asVector)), numpy.float ).T
             self.shape       = self.__V.shape
             self.size        = self.__V.size
-        elif asPersistentVector is not None:
+        elif __Series is not None:
             self.__is_series  = True
-            if type(asPersistentVector) in [tuple, list, numpy.ndarray, numpy.matrix]:
+            if type(__Series) in [tuple, list, numpy.ndarray, numpy.matrix]:
                 self.__V = Persistence.OneVector(self.__name, basetype=numpy.matrix)
-                for member in asPersistentVector:
+                for member in __Series:
                     self.__V.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
                 import sys ; sys.stdout.flush()
             else:
-                self.__V = asPersistentVector
+                self.__V = __Series
             if type(self.__V.shape) in (tuple, list):
                 self.shape       = self.__V.shape
             else:
@@ -626,6 +641,7 @@ class Covariance(object):
                  asEyeByScalar = None,
                  asEyeByVector = None,
                  asCovObject   = None,
+                 fromScript    = None,
                  toBeChecked   = False,
                 ):
         """
@@ -653,26 +669,40 @@ class Covariance(object):
         self.__is_vector  = False
         self.__is_matrix  = False
         self.__is_object  = False
-        if asEyeByScalar is not None:
-            if numpy.matrix(asEyeByScalar).size != 1:
-                raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.matrix(asEyeByScalar).size)
+        #
+        if fromScript is not None:
+            __Matrix, __Scalar, __Vector, __Object = None, None, None, None
+            if asEyeByScalar:
+                __Scalar = _ImportFromScript(Script).getvalue( "BackgroundError" )
+            elif asEyeByVector:
+                __Vector = _ImportFromScript(Script).getvalue( "BackgroundError" )
+            elif asCovObject:
+                __Object = _ImportFromScript(Script).getvalue( "BackgroundError" )
+            else:
+                __Matrix = _ImportFromScript(Script).getvalue( "BackgroundError" )
+        else:
+            __Matrix, __Scalar, __Vector, __Object = asCovariance, asEyeByScalar, asEyeByVector, asCovObject
+        #
+        if __Scalar is not None:
+            if numpy.matrix(__Scalar).size != 1:
+                raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.matrix(__Scalar).size)
             self.__is_scalar = True
-            self.__C         = numpy.abs( float(asEyeByScalar) )
+            self.__C         = numpy.abs( float(__Scalar) )
             self.shape       = (0,0)
             self.size        = 0
-        elif asEyeByVector is not None:
+        elif __Vector is not None:
             self.__is_vector = True
-            self.__C         = numpy.abs( numpy.array( numpy.ravel( numpy.matrix(asEyeByVector, float ) ) ) )
+            self.__C         = numpy.abs( numpy.array( numpy.ravel( numpy.matrix(__Vector, float ) ) ) )
             self.shape       = (self.__C.size,self.__C.size)
             self.size        = self.__C.size**2
-        elif asCovariance is not None:
+        elif __Matrix is not None:
             self.__is_matrix = True
-            self.__C         = numpy.matrix( asCovariance, float )
+            self.__C         = numpy.matrix( __Matrix, float )
             self.shape       = self.__C.shape
             self.size        = self.__C.size
-        elif asCovObject is not None:
+        elif __Object is not None:
             self.__is_object = True
-            self.__C         = asCovObject
+            self.__C         = __Object
             for at in ("getT","getI","diag","trace","__add__","__sub__","__neg__","__mul__","__rmul__"):
                 if not hasattr(self.__C,at):
                     raise ValueError("The matrix given for %s as an object has no attribute \"%s\". Please check your object input."%(self.__name,at))
@@ -911,6 +941,51 @@ class Covariance(object):
     def __len__(self):
         "x.__len__() <==> len(x)"
         return self.shape[0]
+
+# ==============================================================================
+class ObserverF(object):
+    """
+    Creation d'une fonction d'observateur a partir de son texte
+    """
+    def __init__(self, corps=""):
+        self.__corps = corps
+    def func(self,var,info):
+        "Fonction d'observation"
+        exec(self.__corps)
+    def getfunc(self):
+        "Restitution du pointeur de fonction dans l'objet"
+        return self.func
+
+# ==============================================================================
+class ImportFromScript(object):
+    """
+    Obtention d'une variable nommee depuis un fichier script importe
+    """
+    def __init__(self, __filename=None):
+        "Verifie l'existence et importe le script"
+        __filename = __filename.rstrip(".py")
+        if __filename is None:
+            raise ValueError("The name of the file containing the variable to be imported has to be specified.")
+        if not os.path.isfile(str(__filename)+".py"):
+            raise ValueError("The file containing the variable to be imported doesn't seem to exist. The given file name is:\n  \"%s\""%__filename)
+        self.__scriptfile = __import__(__filename, globals(), locals(), [])
+        self.__scriptstring = open(__filename+".py",'r').read()
+    def getvalue(self, __varname=None, __synonym=None ):
+        "Renvoie la variable demandee"
+        if __varname is None:
+            raise ValueError("The name of the variable to be imported has to be specified.")
+        if not hasattr(self.__scriptfile, __varname):
+            if __synonym is None:
+                raise ValueError("The imported script file doesn't contain the specified variable \"%s\"."%__varname)
+            elif not hasattr(self.__scriptfile, __synonym):
+                raise ValueError("The imported script file doesn't contain the specified variable \"%s\"."%__synonym)
+            else:
+                return getattr(self.__scriptfile, __synonym)
+        else:
+            return getattr(self.__scriptfile, __varname)
+    def getstring(self):
+        "Renvoie le script complet"
+        return self.__scriptstring
 
 # ==============================================================================
 def CostFunction3D(_x,
