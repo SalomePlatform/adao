@@ -615,7 +615,7 @@ class _TUIViewer(_GenericViewer):
             for command in __content:
                 self._append(*command)
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
-        if __command is not None and __keys is not None and __local is not None and not self._switchoff:
+        if __command is not None and __keys is not None and __local is not None:
             __text  = ""
             if __pre is not None:
                 __text += "%s = "%__pre
@@ -624,13 +624,11 @@ class _TUIViewer(_GenericViewer):
             for k in __keys:
                 __v = __local[k]
                 if __v is None: continue
+                if   k == "Checked" and not __v: continue
+                if   k == "Stored"  and not __v: continue
                 __text += "%s=%s, "%(k,repr(__v))
             __text += ")"
             self._addLine(__text)
-            if __switchoff:
-                self._switchoff = True
-        if not __switchoff:
-            self._switchoff = False
     def dump(self, __filename=None):
         __text = "\n".join(self._lineSerie)
         if __filename is not None:
