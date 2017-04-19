@@ -548,15 +548,102 @@ class Diagnostic(object):
         raise NotImplementedError("Diagnostic activation method has not been implemented!")
 
 # ==============================================================================
-class Vector(object):
+class ParameterDictionary(object):
     """
-    Classe générale d'interface de type vecteur
+    Classe générale d'interface de type dictionnaire de paramètres
+    """
+    def __init__(self,
+                 name               = "GenericParamDict",
+                 asAlgorithm        = None,
+                 asDict             = None,
+                 asScript           = None,
+                ):
+        """
+        """
+        self.__name       = str(name)
+        self.__A          = None
+        self.__D          = None
+        #
+        if asScript is not None:
+            __Algo = ImportFromScript(asScript).getvalue( "Algorithm" )
+            __Dict = ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
+        else:
+            __Algo = asAlgorithm
+            __Dict = asDict
+        #
+        if __Algo is not None:
+            self.__A = str(__Algo)
+        if __Dict is not None:
+            self.__D = dict(__Dict)
+
+    def __repr__(self):
+        "x.__repr__() <==> repr(x)"
+        return repr(self.__A)+"\n"+repr(self.__D)
+
+    def __str__(self):
+        "x.__str__() <==> str(x)"
+        return str(self.__A)+"\n"+str(self.__D)
+
+# ==============================================================================
+class DataObserver(object):
+    """
+    Classe générale d'interface de type observer
+    """
+    def __init__(self,
+                 name       = "GenericObserver",
+                 onVariable = None,
+                 asTemplate = None,
+                 asString   = None,
+                 asScript   = None,
+                 withInfo   = None,
+                ):
+        self.__name       = str(name)
+        self.__V          = None
+        self.__O          = None
+        self.__I          = None
+        #
+        if onVariable is None:
+            raise ValueError("setting an observer has to be done over a variable name, not over None.")
+        else:
+            self.__V = str(onVariable)
+        #
+        if withInfo is None:
+            self.__I = str(onVariable)
+        else:
+            self.__I = str(withInfo)
+        #
+        if asString is not None:
+            __FunctionText = asString
+        elif (asTemplate is not None) and (asTemplate in ObserverTemplates):
+            __FunctionText = ObserverTemplates[asTemplate]
+        elif asScript is not None:
+            __FunctionText = ImportFromScript(asScript).getstring()
+        else:
+            __FunctionText = ""
+        __Function = ObserverF(__FunctionText)
+        #
+        self.__O = __Function.getfunc()
+        #
+        return {self.__V:(self.__O, self.__I)}
+
+    def __repr__(self):
+        "x.__repr__() <==> repr(x)"
+        return repr(self.__V)+"\n"+repr(self.__O)
+
+    def __str__(self):
+        "x.__str__() <==> str(x)"
+        return str(self.__V)+"\n"+str(self.__O)
+
+# ==============================================================================
+class State(object):
+    """
+    Classe générale d'interface de type état
     """
     def __init__(self,
                  name               = "GenericVector",
                  asVector           = None,
                  asPersistentVector = None,
-                 fromScript         = None,
+                 asScript           = None,
                  Scheduler          = None,
                  toBeChecked        = False,
                 ):
@@ -567,9 +654,9 @@ class Vector(object):
         - asPersistentVector : entrée des données, comme une série de vecteurs
           compatible avec le constructeur de numpy.matrix, ou comme un objet de
           type Persistence, ou "True" si entrée par script.
-        - fromScript : si un script valide est donné contenant une variable
-          nommée "name", la variable est de type "asVector" (par défaut) ou
-          "asPersistentVector" selon que l'une de ces variables est placée à
+        - asScript : si un script valide est donné contenant une variable 
+          nommée "name", la variable est de type "asVector" (par défaut) ou 
+          "asPersistentVector" selon que l'une de ces variables est placée à 
           "True".
         """
         self.__name       = str(name)
@@ -580,12 +667,12 @@ class Vector(object):
         self.__is_vector  = False
         self.__is_series  = False
         #
-        if fromScript is not None:
+        if asScript is not None:
             __Vector, __Series = None, None
-            if VectorSerie:
-                __Series = ImportFromScript(fromScript).getvalue( self.__name )
+            if asPersistentVector:
+                __Series = ImportFromScript(asScript).getvalue( self.__name )
             else:
-                __Vector = ImportFromScript(fromScript).getvalue( self.__name )
+                __Vector = ImportFromScript(asScript).getvalue( self.__name )
         else:
             __Vector, __Series = asVector, asPersistentVector
         #
@@ -641,7 +728,7 @@ class Covariance(object):
                  asEyeByScalar = None,
                  asEyeByVector = None,
                  asCovObject   = None,
-                 fromScript    = None,
+                 asScript      = None,
                  toBeChecked   = False,
                 ):
         """
@@ -670,16 +757,16 @@ class Covariance(object):
         self.__is_matrix  = False
         self.__is_object  = False
         #
-        if fromScript is not None:
+        if asScript is not None:
             __Matrix, __Scalar, __Vector, __Object = None, None, None, None
             if asEyeByScalar:
-                __Scalar = _ImportFromScript(Script).getvalue( "BackgroundError" )
+                __Scalar = _ImportFromScript(asScript).getvalue( "BackgroundError" )
             elif asEyeByVector:
-                __Vector = _ImportFromScript(Script).getvalue( "BackgroundError" )
+                __Vector = _ImportFromScript(asScript).getvalue( "BackgroundError" )
             elif asCovObject:
-                __Object = _ImportFromScript(Script).getvalue( "BackgroundError" )
+                __Object = _ImportFromScript(asScript).getvalue( "BackgroundError" )
             else:
-                __Matrix = _ImportFromScript(Script).getvalue( "BackgroundError" )
+                __Matrix = _ImportFromScript(asScript).getvalue( "BackgroundError" )
         else:
             __Matrix, __Scalar, __Vector, __Object = asCovariance, asEyeByScalar, asEyeByVector, asCovObject
         #
