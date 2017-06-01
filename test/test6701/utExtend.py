@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,7 +32,7 @@ import numpy
 def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
     "Compare two vectors, like unittest.assertAlmostEqual"
     if msg is not None:
-        print msg
+        print(msg)
     if delta is not None:
         if ( (numpy.asarray(first) - numpy.asarray(second)) > float(delta) ).any():
             raise AssertionError("%s != %s within %s places"%(first,second,delta))

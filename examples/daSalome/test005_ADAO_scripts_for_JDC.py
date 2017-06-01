@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -52,7 +52,8 @@ H  = numpy.matrix(numpy.core.identity(dimension))
 def FunctionH( X ):
     return H * X
 #
-def AdjointH( (X, Y) ):
+def AdjointH( paire ):
+    X, Y = paire
     return H.T * Y
 #
 # The possible computations

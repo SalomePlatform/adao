@@ -1,6 +1,7 @@
-print "  ---> observerState"
-print "       var  =",var[-1]
-print "       info =",info
+# -*- coding: utf-8 -*-
+print("  ---> observerState")
+print("       var  =",var[-1])
+print("       info =",info)
 #
 import Gnuplot
 import os
@@ -16,7 +17,7 @@ gp('set title  "'+str(info)+'"')
 gp.plot( Gnuplot.Data( var[-1] ) )
 
 filename = os.path.join("/tmp", "imageState_%02i.ps"%numero)
-print "       imageState \"%s\""%filename
+print("       imageState \"%s\""%filename)
 
 gp.hardcopy(filename=filename, color=1)
 numero += 1

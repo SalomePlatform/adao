@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -42,11 +42,11 @@ def test1():
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
-    print """Exemple de la doc :
+    print('\nAUTODIAGNOSTIC\n')
+    print("""Exemple de la doc :
 
     Un exemple simple de creation d'un cas de calcul TUI ADAO
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    """
+    """)
     xa = test1()
     assertAlmostEqualArrays(xa, [0.25, 0.80, 0.95], places = 5)

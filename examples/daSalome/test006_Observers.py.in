@@ -1,10 +1,10 @@
-#-*-coding:iso-8859-1-*- 
-study_config = {} 
+# -*- coding: utf-8 -*-
+study_config = {}
 study_config['StudyType'] = 'ASSIMILATION_STUDY'
 study_config['Name'] = 'test_observers'
 study_config['Debug'] = '0'
 study_config['Algorithm'] = '3DVAR'
-AlgorithmParameters_config = {} 
+AlgorithmParameters_config = {}
 AlgorithmParameters_config['Type'] = 'Dict'
 AlgorithmParameters_config['From'] = 'Script'
 AlgorithmParameters_config['Data'] = 'test006_Observers_var.py'

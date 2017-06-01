@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -41,15 +41,15 @@ J           = ADD.get("CostFunctionJ")[:]
 #
 # Verifying the results by printing
 # ---------------------------------
-print
-print "obs = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Observation").A1]))
-print
-print "xb  = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Background").A1]))
-print "xt  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xt)]))
-print "xa  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xa)]))
-print
+print("")
+print("obs = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Observation").A1])))
+print("")
+print("xb  = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Background").A1])))
+print("xt  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xt)])))
+print("xa  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xa)])))
+print("")
 for i in range( len(x_series) ):
-    print "Step %2i : J = %.4e     X = [%s]"%(i, J[i], ", ".join(["%.4f"%v for v in x_series[i]]))
-print
+    print("Step %2i : J = %.4e     X = [%s]"%(i, J[i], ", ".join(["%.4f"%v for v in x_series[i]])))
+print("")
 #
 # ==============================================================================

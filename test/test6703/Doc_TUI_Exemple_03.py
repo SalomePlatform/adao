@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -94,22 +94,22 @@ def test1():
     Xoptimum      = case.get("Analysis")[-1]
     FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
     J_values      = case.get("CostFunctionJ")[:]
-    print
-    print "Number of internal iterations...: %i"%len(J_values)
-    print "Initial state...................:",numpy.ravel(Xbackground)
-    print "Optimal state...................:",numpy.ravel(Xoptimum)
-    print "Simulation at optimal state.....:",numpy.ravel(FX_at_optimum)
-    print
+    print("")
+    print("Number of internal iterations...: %i"%len(J_values))
+    print("Initial state...................: %s"%(numpy.ravel(Xbackground),))
+    print("Optimal state...................: %s"%(numpy.ravel(Xoptimum),))
+    print("Simulation at optimal state.....: %s"%(numpy.ravel(FX_at_optimum),))
+    print("")
     #
     return case.get("Analysis")[-1]
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
-    print """Exemple de la doc :
+    print('\nAUTODIAGNOSTIC\n')
+    print("""Exemple de la doc :
 
     Exploitation independante des resultats d'un cas de calcul
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    """
+    """)
     xa = test1()
     assertAlmostEqualArrays(xa, [ 2., 3., 4.])

@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -25,9 +25,9 @@ import adaoBuilder
 # ==============================================================================
 def test1():
     for algo in ("AdjointTest", "FunctionTest", "GradientTest", "LinearityTest", "TangentTest"):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10,"NumberOfRepetition":2, "SetSeed":1000})
@@ -40,9 +40,9 @@ def test1():
         del adaopy
     #
     for algo in ("ObserverTest", ):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo)
@@ -56,9 +56,9 @@ def test1():
         del adaopy
     #
     for algo in ("SamplingTest", ):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={
@@ -76,5 +76,5 @@ def test1():
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\nAUTODIAGNOSTIC\n')
     test1()

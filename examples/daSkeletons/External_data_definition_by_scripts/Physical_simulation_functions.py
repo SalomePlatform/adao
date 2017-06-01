@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -38,9 +38,9 @@ def DirectOperator( XX ):
     """ Direct non-linear simulation operator """
     #
     # --------------------------------------> EXAMPLE TO BE REMOVED
-    if type(XX) is type(numpy.matrix([])):  # EXAMPLE TO BE REMOVED
+    if isinstance(XX, type(numpy.matrix([]))):  # EXAMPLE TO BE REMOVED
         HX = XX.A1.tolist()                 # EXAMPLE TO BE REMOVED
-    elif type(XX) is type(numpy.array([])): # EXAMPLE TO BE REMOVED
+    elif isinstance(XX, type(numpy.array([]))): # EXAMPLE TO BE REMOVED
         HX = numpy.matrix(XX).A1.tolist()   # EXAMPLE TO BE REMOVED
     else:                                   # EXAMPLE TO BE REMOVED
         HX = XX                             # EXAMPLE TO BE REMOVED
@@ -57,13 +57,13 @@ AdjointOperator = FDA.AdjointOperator
 # ==============================================================================
 if __name__ == "__main__":
 
-    print
-    print "AUTODIAGNOSTIC"
-    print "=============="
+    print("")
+    print("AUTODIAGNOSTIC")
+    print("==============")
     
     from Physical_data_and_covariance_matrices import True_state
     X0, noms = True_state()
  
     FX = DirectOperator( X0 )
-    print "FX =", FX
-    print
+    print("FX =", FX)
+    print("")

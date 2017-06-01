@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*- 
+# -*- coding: utf-8 -*-
 study_config = {} 
 study_config['StudyType'] = 'ASSIMILATION_STUDY'
 study_config['Name'] = 'Test'

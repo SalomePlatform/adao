@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -67,14 +67,14 @@ def test2():
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
-    print """Exemple de la doc :
+    print('\nAUTODIAGNOSTIC\n')
+    print("""Exemple de la doc :
 
     Creation detaillee d'un cas de calcul TUI ADAO
     ++++++++++++++++++++++++++++++++++++++++++++++
     Les deux resultats sont testes pour etre identiques.
-    """
+    """)
     xa1 = test1()
     xa2 = test2()
     ecart = assertAlmostEqualArrays(xa1, xa2, places = 15)
-    print "  Difference maximale entre les deux : %.2e"%ecart
+    print("  Difference maximale entre les deux : %.2e"%ecart)

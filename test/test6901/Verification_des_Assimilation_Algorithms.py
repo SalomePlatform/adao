@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -27,9 +27,9 @@ def test1():
     """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
     Xa = {}
     for algo in ("3DVAR", "Blue", "ExtendedBlue", "LinearLeastSquares", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "Bounds":[[-1,10.],[-1,10.],[-1,10.]]})
@@ -44,9 +44,9 @@ def test1():
         del adaopy
     #
     for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, })
@@ -63,9 +63,9 @@ def test1():
         del adaopy
     #
     for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000, })
@@ -80,9 +80,9 @@ def test1():
         del adaopy
     #
     for algo in ("EnsembleBlue", ):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"SetSeed":1000, })
@@ -96,14 +96,14 @@ def test1():
         Xa[algo] = adaopy.get("Analysis")[-1]
         del adaopy
     #
-    print
+    print("")
     msg = "Tests des ecarts attendus :"
-    print msg+"\n"+"="*len(msg)
+    print(msg+"\n"+"="*len(msg))
     verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa)
     verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa)
     verify_similarity_of_algo_results(("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter"), Xa)
-    print "  Les resultats obtenus sont corrects."
-    print
+    print("  Les resultats obtenus sont corrects.")
+    print("")
     #
     return 0
 
@@ -113,9 +113,9 @@ def test2():
     M = numpy.matrix("1 0 0;0 2 0;0 0 3")
     def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
     for algo in ("3DVAR", "Blue", "ExtendedBlue", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "Bounds":[[-1,10.],[-1,10.],[-1,10.]]})
@@ -132,9 +132,9 @@ def test2():
     M = numpy.matrix("1 0 0;0 2 0;0 0 3")
     def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
     for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, })
@@ -153,9 +153,9 @@ def test2():
     M = numpy.matrix("1 0 0;0 1 0;0 0 1")
     def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
     for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
-        print
+        print("")
         msg = "Algorithme en test : %s"%algo
-        print msg+"\n"+"-"*len(msg)
+        print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
         adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000, })
@@ -169,31 +169,31 @@ def test2():
         Xa[algo] = adaopy.get("Analysis")[-1]
         del adaopy
     #
-    print
+    print("")
     msg = "Tests des ecarts attendus :"
-    print msg+"\n"+"="*len(msg)
+    print(msg+"\n"+"="*len(msg))
     verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa)
     verify_similarity_of_algo_results(("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter"), Xa)
-    print "  Les resultats obtenus sont corrects."
-    print
+    print("  Les resultats obtenus sont corrects.")
+    print("")
     #
     return 0
 
 def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
     """Comparaison de deux vecteurs"""
-    print "    Difference maximale %s: %.2e"%(msg, max(abs(v2 - v1)))
+    print("    Difference maximale %s: %.2e"%(msg, max(abs(v2 - v1))))
     return max(abs(v2 - v1)) < precision
 
 def verify_similarity_of_algo_results(serie = [], Xa = {}):
-    print "  Comparaisons :"
+    print("  Comparaisons :")
     for algo1 in serie:
         for algo2 in serie:
             if algo1 is algo2: break
             assert almost_equal_vectors( Xa[algo1], Xa[algo2], 5.e-5, "entre %s et %s "%(algo1, algo2) )
-    print "  Algorithmes dont les resultats sont similaires : %s\n"%(serie,)
+    print("  Algorithmes dont les resultats sont similaires : %s\n"%(serie,))
 
 #===============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\nAUTODIAGNOSTIC\n')
     test1()
     test2()

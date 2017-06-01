@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -55,10 +55,10 @@ BackgroundError = B
 # ----------------------------------------------------------
 ObservationError = R
 
-print xb
-print B
-print yo
-print R
+print(xb)
+print(B)
+print(yo)
+print(R)
 
 #
 # Definition of the init_data dictionnary

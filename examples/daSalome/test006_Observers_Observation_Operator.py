@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -54,7 +54,8 @@ def FunctionH( X ):
     time.sleep(1)
     return H * X
 #
-def AdjointH( (X, Y) ):
+def AdjointH( paire ):
+    X, Y = paire
     return H.T * Y
 #
 # The possible computations

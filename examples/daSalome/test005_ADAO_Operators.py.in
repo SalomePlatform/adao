@@ -1,5 +1,5 @@
-#-*-coding:iso-8859-1-*- 
-study_config = {} 
+# -*- coding: utf-8 -*-
+study_config = {}
 study_config['StudyType'] = 'ASSIMILATION_STUDY'
 study_config['Name'] = 'Test'
 study_config['Debug'] = '0'
@@ -8,7 +8,7 @@ Background_config = {}
 Background_config['Type'] = 'Vector'
 Background_config['From'] = 'String'
 Background_config['Data'] = '0 0 0'
-Background_config['Stored'] = '0'
+Background_config['Stored'] = '1'
 study_config['Background'] = Background_config
 BackgroundError_config = {}
 BackgroundError_config['Type'] = 'Matrix'
@@ -51,7 +51,7 @@ study_config['Repertory'] = '@prefix@/share/salome/adao_examples/daSalome'
 Analysis_config = {}
 Analysis_config['From'] = 'String'
 Analysis_config['Data'] = """import numpy
-Xb = Study.getBackground()
+Xb = ADD.get("Background")
 Xa = ADD.get("Analysis")[-1]
 print
 print "Size of Background...........= %i"%len(Xb.A1)

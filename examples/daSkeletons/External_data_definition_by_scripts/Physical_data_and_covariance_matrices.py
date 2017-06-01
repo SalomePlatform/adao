@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -51,14 +51,14 @@ def Simple_Matrix( size, diagonal=None ):
 # ==============================================================================
 if __name__ == "__main__":
 
-    print
-    print "AUTODIAGNOSTIC"
-    print "=============="
+    print("")
+    print("AUTODIAGNOSTIC")
+    print("==============")
     
-    print
-    print "True_state = ", True_state()
-    print
-    print "B or R =\n",Simple_Matrix(3)
-    print
-    print "B or R =\n",Simple_Matrix(4, diagonal=numpy.arange(4,dtype=float))
-    print
+    print("")
+    print("True_state = ", True_state())
+    print("")
+    print("B or R =\n",Simple_Matrix(3))
+    print("")
+    print("B or R =\n",Simple_Matrix(4, diagonal=numpy.arange(4,dtype=float)))
+    print("")

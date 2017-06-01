@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -26,62 +26,62 @@ import numpy, time
 numpy.set_printoptions(precision=5)
 
 def testSysteme():
-    print "  Les caracteristiques des applications et outils systeme :"
-    import sys ; v=sys.version.split() ; print "    - Python systeme....: %s"%v[0]
-    import numpy ; print "    - Numpy.............: %s"%numpy.version.version
+    print("  Les caracteristiques des applications et outils systeme :")
+    import sys ; v=sys.version.split() ; print("    - Python systeme....: %s"%v[0])
+    import numpy ; print("    - Numpy.............: %s"%numpy.version.version)
     try:
-        import scipy ; print "    - Scipy.............: %s"%scipy.version.version
+        import scipy ; print("    - Scipy.............: %s"%scipy.version.version)
     except:
-        print "    - Scipy.............: %s"%("absent",)
+        print("    - Scipy.............: %s"%("absent",))
     try:
-        import numpy.distutils.system_info as sysinfo ; la = sysinfo.get_info('lapack') ; print "    - Lapack............: %s/lib%s.so"%(la['library_dirs'][0],la['libraries'][0])
+        import numpy.distutils.system_info as sysinfo ; la = sysinfo.get_info('lapack') ; print("    - Lapack............: %s/lib%s.so"%(la['library_dirs'][0],la['libraries'][0]))
     except:
-        print "    - Lapack............: %s"%("absent",)
-    print
+        print("    - Lapack............: %s"%("absent",))
+    print("")
     return True
 
 def testNumpy01(dimension = 3, precision = 1.e-17, repetitions = 10):
     "Test Numpy"
     __d = int(dimension)
-    print "    Taille du test..................................: %.0e"%__d
+    print("    Taille du test..................................: %.0e"%__d)
     t_init = time.time()
     A = numpy.array([numpy.arange(dimension)+1.,]*__d)
     x = numpy.arange(__d)+1.
-    print "    La duree elapsed moyenne de l'initialisation est: %4.1f s"%(time.time()-t_init)
+    print("    La duree elapsed moyenne de l'initialisation est: %4.1f s"%(time.time()-t_init))
     #
     t_init = time.time()
     for i in range(repetitions):
         b = numpy.dot(A,x)
-    print "    La duree elapsed pour %3i produits est de.......: %4.1f s"%(repetitions, time.time()-t_init)
+    print("    La duree elapsed pour %3i produits est de.......: %4.1f s"%(repetitions, time.time()-t_init))
     r = [__d*(__d+1.)*(2.*__d+1.)/6.,]*__d
     if max(abs(b-r)) > precision:
         raise ValueError("Resultat du test errone (1)")
     else:
-        print "    Test correct, erreur maximale inferieure a %s"%precision
-    print
+        print("    Test correct, erreur maximale inferieure a %s"%precision)
+    print("")
     del A, x, b
 
 def testNumpy02(dimension = 3, precision = 1.e-17, repetitions = 100):
     "Test Numpy"
     __d = int(dimension)
-    print "    Taille du test..................................: %.0e"%__d
+    print("    Taille du test..................................: %.0e"%__d)
     t_init = time.time()
     A = numpy.random.normal(0.,1.,size=(__d,__d))
     x = numpy.random.normal(0.,1.,size=(__d,))
-    print "    La duree elapsed moyenne de l'initialisation est: %4.1f s"%(time.time()-t_init)
+    print("    La duree elapsed moyenne de l'initialisation est: %4.1f s"%(time.time()-t_init))
     #
     t_init = time.time()
     for i in range(repetitions):
         b = numpy.dot(A,x)
-    print "    La duree elapsed pour %3i produits est de.......: %4.1f s"%(repetitions, time.time()-t_init)
-    print
+    print("    La duree elapsed pour %3i produits est de.......: %4.1f s"%(repetitions, time.time()-t_init))
+    print("")
     del A, x, b
 
 # ==============================================================================
 if __name__ == "__main__":
-    print '\n AUTODIAGNOSTIC \n'
+    print('\nAUTODIAGNOSTIC\n')
     testSysteme()
     numpy.random.seed(1000)
     testNumpy01(dimension = 1.e4)
     testNumpy02(dimension = 3.e3)
-    print
+    print("")

@@ -2,7 +2,7 @@
 ASSIMILATION_STUDY(StudyName='Test',
                    StudyRepertory='@prefix@/share/salome/adao_examples/daSalome',
                    AlgorithmParameters=_F(Algorithm='3DVAR',),
-                   Background=_F(Stored=0,
+                   Background=_F(Stored=1,
                                  INPUT_TYPE='Vector',
                                  data=_F(FROM='String',
                                          STRING='0 0 0',),),
@@ -25,7 +25,7 @@ ASSIMILATION_STUDY(StudyName='Test',
                    UserPostAnalysis=_F(FROM='String',
                                        STRING=
 """import numpy
-Xb = Study.getBackground()
+Xb = ADD.get("Background")
 Xa = ADD.get("Analysis")[-1]
 print
 print "Size of Background...........= %i"%len(Xb.A1)
