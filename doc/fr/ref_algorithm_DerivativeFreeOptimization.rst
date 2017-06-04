@@ -29,22 +29,22 @@ Algorithme de calcul "*DerivativeFreeOptimization*"
 
 .. warning::
 
-  dans sa présente version, cet algorithme est expérimental, et reste donc
+  dans sa prÃ©sente version, cet algorithme est expÃ©rimental, et reste donc
   susceptible de changements dans les prochaines versions.
 
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation d'état d'un système par minimisation d'une
-fonctionnelle d'écart :math:`J` sans gradient. C'est une méthode qui n'utilise
-pas les dérivées de la fonctionnelle d'écart. Elle entre, par exemple, dans la
-même catégorie que l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+Cet algorithme rÃ©alise une estimation d'Ã©tat d'un systÃ¨me par minimisation d'une
+fonctionnelle d'Ã©cart :math:`J` sans gradient. C'est une mÃ©thode qui n'utilise
+pas les dÃ©rivÃ©es de la fonctionnelle d'Ã©cart. Elle entre, par exemple, dans la
+mÃªme catÃ©gorie que l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
-C'est une méthode d'optimisation permettant la recherche du minimum global d'une
+C'est une mÃ©thode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
-:math:`L^{\infty}`, avec ou sans pondérations. La fonctionnelle d'erreur par
-défaut est celle de moindres carrés pondérés augmentés, classiquement utilisée
-en assimilation de données.
+:math:`L^{\infty}`, avec ou sans pondÃ©rations. La fonctionnelle d'erreur par
+dÃ©faut est celle de moindres carrÃ©s pondÃ©rÃ©s augmentÃ©s, classiquement utilisÃ©e
+en assimilation de donnÃ©es.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -63,130 +63,130 @@ Commandes requises et optionnelles
 .. index:: single: QualityCriterion
 .. index:: single: StoreSupplementaryCalculations
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'Ã©bauche ou
+    d'initialisation, notÃ© prÃ©cÃ©demment :math:`\mathbf{x}^b`. Sa valeur est
+    dÃ©finie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
 
   BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{B}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'observation utilisÃ© en
+    assimilation de donnÃ©es ou en optimisation, et notÃ© prÃ©cÃ©demment
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
     ou de type "*VectorSerie*".
 
   ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{R}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de
     type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+    diffÃ©rentes formes fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans
+    la section :ref:`section_ref_operator_requirements`. Si un contrÃ´le
+    :math:`U` est inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre
+    appliquÃ© Ã  une paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_assimilation_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   Minimizer
-    Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
-    défaut est "BOBYQA", et les choix possibles sont 
+    Cette clÃ© permet de changer le minimiseur pour l'optimiseur. Le choix par
+    dÃ©faut est "BOBYQA", et les choix possibles sont
     "BOBYQA" (minimisation avec ou sans contraintes par approximation quadratique [Powell09]_),
-    "COBYLA" (minimisation avec ou sans contraintes par approximation linéaire [Powell94]_ [Powell98]_).
-    "NEWUOA" (minimisation avec ou sans contraintes par approximation quadratique itérative [Powell04]_),
-    "POWELL" (minimisation sans contraintes de type directions conjuguées [Powell64]_),
+    "COBYLA" (minimisation avec ou sans contraintes par approximation linÃ©aire [Powell94]_ [Powell98]_).
+    "NEWUOA" (minimisation avec ou sans contraintes par approximation quadratique itÃ©rative [Powell04]_),
+    "POWELL" (minimisation sans contraintes de type directions conjuguÃ©es [Powell64]_),
     "SIMPLEX" (minimisation avec ou sans contraintes de type simplexe ou Nelder-Mead, voir [Nelder65]_),
     "SUBPLEX" (minimisation avec ou sans contraintes de type simplexe sur une suite de sous-espaces [Rowan90]_).
-    Remarque : la méthode "POWELL" effectue une optimisation par boucles
-    imbriquées interne/externe, conduisant ainsi à un contrôle relaché du
-    nombre d'évaluations de la fonctionnelle à optimiser. Si un contrôle précis
-    du nombre d'évaluations de cette fonctionnelle est requis, il faut choisir
+    Remarque : la mÃ©thode "POWELL" effectue une optimisation par boucles
+    imbriquÃ©es interne/externe, conduisant ainsi Ã  un contrÃ´le relachÃ© du
+    nombre d'Ã©valuations de la fonctionnelle Ã  optimiser. Si un contrÃ´le prÃ©cis
+    du nombre d'Ã©valuations de cette fonctionnelle est requis, il faut choisir
     un autre minimiseur.
 
     Exemple : ``{"Minimizer":"BOBYQA"}``
 
   Bounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    variable d'état optimisée. Les bornes doivent être données par une liste de
-    liste de paires de bornes inférieure/supérieure pour chaque variable, avec
+    Cette clÃ© permet de dÃ©finir des bornes supÃ©rieure et infÃ©rieure pour chaque
+    variable d'Ã©tat optimisÃ©e. Les bornes doivent Ãªtre donnÃ©es par une liste de
+    liste de paires de bornes infÃ©rieure/supÃ©rieure pour chaque variable, avec
     une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les bornes peuvent
-    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
+    toujours Ãªtre spÃ©cifiÃ©es, mais seuls les optimiseurs sous contraintes les
     prennent en compte.
 
     Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
 
   MaximumNumberOfSteps
-    Cette clé indique le nombre maximum d'itérations possibles en optimisation
-    itérative. Le défaut est 15000, qui est une limite arbitraire. Il est ainsi
-    fortement recommandé d'adapter ce paramètre aux besoins pour des problèmes
-    réels. Pour certains optimiseurs, le nombre de pas effectif d'arrêt peut
-    être légèrement différent de la limite à cause d'exigences de contrôle
+    Cette clÃ© indique le nombre maximum d'itÃ©rations possibles en optimisation
+    itÃ©rative. Le dÃ©faut est 15000, qui est une limite arbitraire. Il est ainsi
+    fortement recommandÃ© d'adapter ce paramÃ¨tre aux besoins pour des problÃ¨mes
+    rÃ©els. Pour certains optimiseurs, le nombre de pas effectif d'arrÃªt peut
+    Ãªtre lÃ©gÃ¨rement diffÃ©rent de la limite Ã  cause d'exigences de contrÃ´le
     interne de l'algorithme.
 
     Exemple : ``{"MaximumNumberOfSteps":50}``
 
   MaximumNumberOfFunctionEvaluations
-    Cette clé indique le nombre maximum d'évaluations possibles de la
-    fonctionnelle à optimiser. Le défaut est de 15000, qui est une limite
-    arbitraire. Il est ainsi recommandé d'adapter ce paramètre aux besoins pour
-    des problèmes réels. Pour certains optimiseurs, le nombre effectif
-    d'évaluations à l'arrêt peut être légèrement différent de la limite à cause
-    d'exigences de déroulement interne de l'algorithme.
+    Cette clÃ© indique le nombre maximum d'Ã©valuations possibles de la
+    fonctionnelle Ã  optimiser. Le dÃ©faut est de 15000, qui est une limite
+    arbitraire. Il est ainsi recommandÃ© d'adapter ce paramÃ¨tre aux besoins pour
+    des problÃ¨mes rÃ©els. Pour certains optimiseurs, le nombre effectif
+    d'Ã©valuations Ã  l'arrÃªt peut Ãªtre lÃ©gÃ¨rement diffÃ©rent de la limite Ã  cause
+    d'exigences de dÃ©roulement interne de l'algorithme.
 
     Exemple : ``{"MaximumNumberOfFunctionEvaluations":50}``
 
   StateVariationTolerance
-    Cette clé indique la variation relative maximale de l'état lors pour l'arrêt
-    par convergence sur l'état. Le défaut est de 1.e-4, et il est recommandé
-    de l'adapter aux besoins pour des problèmes réels.
+    Cette clÃ© indique la variation relative maximale de l'Ã©tat lors pour l'arrÃªt
+    par convergence sur l'Ã©tat. Le dÃ©faut est de 1.e-4, et il est recommandÃ©
+    de l'adapter aux besoins pour des problÃ¨mes rÃ©els.
 
     Exemple : ``{"StateVariationTolerance":1.e-4}``
 
   CostDecrementTolerance
-    Cette clé indique une valeur limite, conduisant à arrêter le processus
-    itératif d'optimisation lorsque la fonction coût décroît moins que cette
-    tolérance au dernier pas. Le défaut est de 1.e-7, et il est recommandé
-    de l'adapter aux besoins pour des problèmes réels.
+    Cette clÃ© indique une valeur limite, conduisant Ã  arrÃªter le processus
+    itÃ©ratif d'optimisation lorsque la fonction coÃ»t dÃ©croÃ®t moins que cette
+    tolÃ©rance au dernier pas. Le dÃ©faut est de 1.e-7, et il est recommandÃ©
+    de l'adapter aux besoins pour des problÃ¨mes rÃ©els.
 
     Exemple : ``{"CostDecrementTolerance":1.e-7}``
 
   QualityCriterion
-    Cette clé indique le critère de qualité, qui est minimisé pour trouver
-    l'estimation optimale de l'état. Le défaut est le critère usuel de
-    l'assimilation de données nommé "DA", qui est le critère de moindres carrés
-    pondérés augmentés. Les critères possibles sont dans la liste suivante, dans
-    laquelle les noms équivalents sont indiqués par un signe "=" :
+    Cette clÃ© indique le critÃ¨re de qualitÃ©, qui est minimisÃ© pour trouver
+    l'estimation optimale de l'Ã©tat. Le dÃ©faut est le critÃ¨re usuel de
+    l'assimilation de donnÃ©es nommÃ© "DA", qui est le critÃ¨re de moindres carrÃ©s
+    pondÃ©rÃ©s augmentÃ©s. Les critÃ¨res possibles sont dans la liste suivante, dans
+    laquelle les noms Ã©quivalents sont indiquÃ©s par un signe "=" :
     ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
     "LeastSquares"="LS"="L2", "AbsoluteValue"="L1",  "MaximumError"="ME"].
 
     Exemple : ``{"QualityCriterion":"DA"}``
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["CurrentState", "CostFunctionJ",
     "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
     "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA",
@@ -196,77 +196,77 @@ Les options de l'algorithme sont les suivantes:
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un Ã©tat optimal :math:`\mathbf{x}*`
     en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+    donnÃ©es.
 
     Exemple : ``Xa = ADD.get("Analysis")[-1]``
 
   CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
     :math:`J`.
 
     Exemple : ``J = ADD.get("CostFunctionJ")[:]``
 
   CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^b`, c'est-Ã -dire de la partie Ã©cart Ã  l'Ã©bauche.
 
     Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
 
   CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^o`, c'est-Ã -dire de la partie Ã©cart Ã  l'observation.
 
     Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   SimulatedObservationAtBackground
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'ébauche :math:`\mathbf{x}^b`.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©bauche :math:`\mathbf{x}^b`.
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
   SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,
-    c'est-à-dire dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur observÃ© Ã  l'Ã©tat courant,
+    c'est-Ã -dire dans l'espace des observations.
 
     Exemple : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'analyse ou de l'Ã©tat optimal :math:`\mathbf{x}^a`.
 
     Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
 
-Références bibliographiques :
+RÃ©fÃ©rences bibliographiques :
   - [Johnson08]_
   - [Nelder65]_
   - [Powell64]_

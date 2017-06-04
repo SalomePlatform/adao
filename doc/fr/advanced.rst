@@ -24,88 +24,88 @@
 .. _section_advanced:
 
 ================================================================================
-**[DocU]** Usages avancés du module ADAO
+**[DocU]** Usages avancÃ©s du module ADAO
 ================================================================================
 
-Cette section présente des méthodes avancées d'usage du module ADAO, comment
+Cette section prÃ©sente des mÃ©thodes avancÃ©es d'usage du module ADAO, comment
 obtenir plus d'information lors d'un calcul, ou comment l'utiliser sans
-l'interface graphique (GUI). Cela nécessite de savoir comment trouver les
-fichiers ou les commandes incluses dans l'installation complète de SALOME. Tous
-les noms à remplacer par l'utilisateur sont indiqués par la syntaxe ``<...>``.
+l'interface graphique (GUI). Cela nÃ©cessite de savoir comment trouver les
+fichiers ou les commandes incluses dans l'installation complÃ¨te de SALOME. Tous
+les noms Ã  remplacer par l'utilisateur sont indiquÃ©s par la syntaxe ``<...>``.
 
-Convertir et exécuter un fichier de commandes ADAO (JDC) par l'intermédiaire d'un script Shell
+Convertir et exÃ©cuter un fichier de commandes ADAO (JDC) par l'intermÃ©diaire d'un script Shell
 ----------------------------------------------------------------------------------------------
 
-Il est possible de convertir et exécuter une fichier de commandes ADAO (JDC, ou
-paire de fichiers ".comm/.py", qui se trouvent dans le répertoire ``<Répertoire
+Il est possible de convertir et exÃ©cuter une fichier de commandes ADAO (JDC, ou
+paire de fichiers ".comm/.py", qui se trouvent dans le rÃ©pertoire ``<RÃ©pertoire
 du fichier JDC ADAO>``) automatiquement en utilisant un script de commandes
-Shell "type" contenant toutes les étapes requises. Si la commande principale de
-lancement de SALOME, nommée ``salome``, n'est pas couramment accessible dans un
-terminal courant, l'utilisateur doit savoir où se trouvent les principaux
+Shell "type" contenant toutes les Ã©tapes requises. Si la commande principale de
+lancement de SALOME, nommÃ©e ``salome``, n'est pas couramment accessible dans un
+terminal courant, l'utilisateur doit savoir oÃ¹ se trouvent les principaux
 fichiers de lancement de SALOME, et en particulier ce fichier ``salome``. Le
-répertoire dans lequel ce fichier réside est symboliquement nommé ``<Répertoire
-principal d'installation de SALOME>`` et doit être remplacé par le bon dans le
-modèle "type" de fichier Shell.
+rÃ©pertoire dans lequel ce fichier rÃ©side est symboliquement nommÃ© ``<RÃ©pertoire
+principal d'installation de SALOME>`` et doit Ãªtre remplacÃ© par le bon dans le
+modÃ¨le "type" de fichier Shell.
 
-Lorsqu'un fichier de commande ADAO est construit par l'interface d'édition
-graphique d'ADAO et est enregistré, s'il est nommé par exemple
-"EtudeAdao1.comm", alors un fichier compagnon nommé "EtudeAdao1.py" est
-automatiquement créé dans la même répertoire. Il est nommé ``<Fichier Python
-ADAO>`` dans le modèle "type", et il est converti vers YACS comme un ``<Schéma
-xml YACS ADAO>`` sous la forme d'un fichier en ".xml" nommé "EtudeAdao1.xml".
-Ensuite, ce dernier peut être exécuté en mode console en utilisant l'ordre
+Lorsqu'un fichier de commande ADAO est construit par l'interface d'Ã©dition
+graphique d'ADAO et est enregistrÃ©, s'il est nommÃ© par exemple
+"EtudeAdao1.comm", alors un fichier compagnon nommÃ© "EtudeAdao1.py" est
+automatiquement crÃ©Ã© dans la mÃªme rÃ©pertoire. Il est nommÃ© ``<Fichier Python
+ADAO>`` dans le modÃ¨le "type", et il est converti vers YACS comme un ``<SchÃ©ma
+xml YACS ADAO>`` sous la forme d'un fichier en ".xml" nommÃ© "EtudeAdao1.xml".
+Ensuite, ce dernier peut Ãªtre exÃ©cutÃ© en mode console en utilisant l'ordre
 standard du mode console de YACS (voir la documentation YACS pour de plus amples
 informations).
 
 Dans tous les exemples de fichiers de commandes Shell de lancement, on choisit
-de démarrer et arrêter le serveur d'application SALOME dans le même script. Ce
-n'est pas indispensable, mais c'est utile pour éviter des sessions SALOME en
+de dÃ©marrer et arrÃªter le serveur d'application SALOME dans le mÃªme script. Ce
+n'est pas indispensable, mais c'est utile pour Ã©viter des sessions SALOME en
 attente.
 
-L'exemple le plus simple consiste uniquement à lancer l'exécution d'un schéma
-YACS donné, qui a préalablement été généré par l'utilisateur en interface
+L'exemple le plus simple consiste uniquement Ã  lancer l'exÃ©cution d'un schÃ©ma
+YACS donnÃ©, qui a prÃ©alablement Ã©tÃ© gÃ©nÃ©rÃ© par l'utilisateur en interface
 graphique. Dans ce cas, en ayant pris soin de remplacer les textes contenus
 entre les symboles ``<...>``, il suffit d'enregistrer le script de commandes
 Shell suivant::
 
     #!/bin/bash
-    USERDIR="<Répertoire du fichier JDC ADAO>"
-    SALOMEDIR="<Répertoire principal d'installation de SALOME>"
+    USERDIR="<RÃ©pertoire du fichier JDC ADAO>"
+    SALOMEDIR="<RÃ©pertoire principal d'installation de SALOME>"
     $SALOMEDIR/salome start -k -t
-    $SALOMEDIR/salome shell -- "driver $USERDIR/<Schéma xml YACS ADAO>"
+    $SALOMEDIR/salome shell -- "driver $USERDIR/<SchÃ©ma xml YACS ADAO>"
     $SALOMEDIR/salome shell killSalome.py
 
-Il faut ensuite le rendre exécutable pour l'exécuter.
+Il faut ensuite le rendre exÃ©cutable pour l'exÃ©cuter.
 
-Un exemple une peu plus complet consiste à lancer l'exécution d'un schéma YACS
-indiqué par l'utilisateur, en ayant préalablement vérifié sa disponibilité. Pour
-cela, en remplaçant le texte ``<Répertoire principal d'installation de
+Un exemple une peu plus complet consiste Ã  lancer l'exÃ©cution d'un schÃ©ma YACS
+indiquÃ© par l'utilisateur, en ayant prÃ©alablement vÃ©rifiÃ© sa disponibilitÃ©. Pour
+cela, en remplaÃ§ant le texte ``<RÃ©pertoire principal d'installation de
 SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
 
     #!/bin/bash
     if (test $# != 1)
     then
-      echo -e "\nUsage: $0 <Schéma xml YACS ADAO>\n"
+      echo -e "\nUsage: $0 <SchÃ©ma xml YACS ADAO>\n"
       exit
     else
       USERFILE="$1"
     fi
     if (test ! -e $USERFILE)
     then
-      echo -e "\nErreur : le fichier XML nommé $USERFILE n'existe pas.\n"
+      echo -e "\nErreur : le fichier XML nommÃ© $USERFILE n'existe pas.\n"
       exit
     else
-      SALOMEDIR="<Répertoire principal d'installation de SALOME>"
+      SALOMEDIR="<RÃ©pertoire principal d'installation de SALOME>"
       $SALOMEDIR/salome start -k -t
       $SALOMEDIR/salome shell -- "driver $USERFILE"
       $SALOMEDIR/salome shell killSalome.py
     fi
 
-Un autre exemple de script consiste à ajouter la conversion du fichier de
-commandes ADAO (JDC, ou paire de fichiers ".comm/.py") en un schéma YACS associé
+Un autre exemple de script consiste Ã  ajouter la conversion du fichier de
+commandes ADAO (JDC, ou paire de fichiers ".comm/.py") en un schÃ©ma YACS associÃ©
 (fichier ".xml"). A la fin du script, on choisit aussi de supprimer le fichier
-de ``<Schéma xml YACS ADAO>`` car c'est un fichier généré. Pour cela, en ayant
-bien pris soin de remplacer le texte ``<Répertoire principal d'installation de
+de ``<SchÃ©ma xml YACS ADAO>`` car c'est un fichier gÃ©nÃ©rÃ©. Pour cela, en ayant
+bien pris soin de remplacer le texte ``<RÃ©pertoire principal d'installation de
 SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
 
     #!/bin/bash
@@ -121,10 +121,10 @@ SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
     fi
     if (test ! -e $USERFILE.py)
     then
-      echo -e "\nErreur : le fichier PY nommé $USERFILE.py n'existe pas.\n"
+      echo -e "\nErreur : le fichier PY nommÃ© $USERFILE.py n'existe pas.\n"
       exit
     else
-      SALOMEDIR="<Répertoire principal d'installation de SALOME>"
+      SALOMEDIR="<RÃ©pertoire principal d'installation de SALOME>"
       $SALOMEDIR/salome start -k -t
       $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py $USERFILE.py $USERFILE.xml"
       $SALOMEDIR/salome shell -- "driver $USERFILE.xml"
@@ -135,20 +135,20 @@ SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
 Dans tous les cas, les sorties standard et d'erreur se font dans le terminal de
 lancement.
 
-Exécuter un schéma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI YACS)
+ExÃ©cuter un schÃ©ma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI YACS)
 -----------------------------------------------------------------------------------
 
-Cette section décrit comment exécuter en mode TUI (Text User Interface) YACS un
-schéma de calcul YACS, obtenu dans l'interface graphique par la fonction
+Cette section dÃ©crit comment exÃ©cuter en mode TUI (Text User Interface) YACS un
+schÃ©ma de calcul YACS, obtenu dans l'interface graphique par la fonction
 "*Exporter vers YACS*" d'ADAO. Cela utilise le mode texte standard de YACS, qui
-est rapidement rappelé ici (voir la documentation YACS pour de plus amples
-informations) à travers un exemple simple. Comme décrit dans la documentation,
-un schéma XML peut être chargé en python. On donne ici une séquence complète de
-commandes pour tester la validité du schéma avant de l'exécuter, ajoutant des
-lignes supplémentaires initiales pour charger de manière explicite le catalogue
-de types pour éviter d'obscures difficultés::
+est rapidement rappelÃ© ici (voir la documentation YACS pour de plus amples
+informations) Ã  travers un exemple simple. Comme dÃ©crit dans la documentation,
+un schÃ©ma XML peut Ãªtre chargÃ© en python. On donne ici une sÃ©quence complÃ¨te de
+commandes pour tester la validitÃ© du schÃ©ma avant de l'exÃ©cuter, ajoutant des
+lignes supplÃ©mentaires initiales pour charger de maniÃ¨re explicite le catalogue
+de types pour Ã©viter d'obscures difficultÃ©s::
 
-    #-*-coding:iso-8859-1-*-
+    #-*- coding: utf-8 -*-
     import pilot
     import SALOMERuntime
     import loader
@@ -158,13 +158,13 @@ de types pour éviter d'obscures difficultés::
     xmlLoader = loader.YACSLoader()
     xmlLoader.registerProcCataLoader()
     try:
-     catalogAd = r.loadCatalog("proc", "<Schéma xml YACS ADAO>")
+        catalogAd = r.loadCatalog("proc", "<SchÃ©ma xml YACS ADAO>")
+        r.addCatalog(catalogAd)
     except:
-      pass
-    r.addCatalog(catalogAd)
+        pass
 
     try:
-        p = xmlLoader.load("<Schéma xml YACS ADAO>")
+        p = xmlLoader.load("<SchÃ©ma xml YACS ADAO>")
     except IOError,ex:
         print "IO exception:",ex
 
@@ -174,13 +174,13 @@ de types pour éviter d'obscures difficultés::
         print logger.getStr()
 
     if not p.isValid():
-        print "Le schéma n'est pas valide et ne peut pas être exécuté"
+        print "Le schÃ©ma n'est pas valide et ne peut pas Ãªtre exÃ©cutÃ©"
         print p.getErrorReport()
 
     info=pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
     p.checkConsistency(info)
     if info.areWarningsOrErrors():
-        print "Le schéma n'est pas cohérent et ne peut pas être exécuté"
+        print "Le schÃ©ma n'est pas cohÃ©rent et ne peut pas Ãªtre exÃ©cutÃ©"
         print info.getGlobalRepr()
 
     e = pilot.ExecutorSwig()
@@ -188,43 +188,43 @@ de types pour éviter d'obscures difficultés::
     if p.getEffectiveState() != pilot.DONE:
         print p.getErrorReport()
 
-Cette démarche permet par exemple d'éditer le schéma YACS XML en mode texte TUI,
-ou de rassembler les résultats pour un usage ultérieur.
+Cette dÃ©marche permet par exemple d'Ã©diter le schÃ©ma YACS XML en mode texte TUI,
+ou de rassembler les rÃ©sultats pour un usage ultÃ©rieur.
 
 .. _section_advanced_R:
 
-Exécuter un calcul ADAO en environnement R en utilisant l'interface TUI ADAO
+ExÃ©cuter un calcul ADAO en environnement R en utilisant l'interface TUI ADAO
 ----------------------------------------------------------------------------
 
 .. index:: single: R
 .. index:: single: rPython
 
-Pour étendre les possibilités d'analyse et de traitement, il est possible
+Pour Ã©tendre les possibilitÃ©s d'analyse et de traitement, il est possible
 d'utiliser les calculs ADAO dans l'environnement **R** (voir [R]_ pour plus de
-détails). Ce dernier est disponible dans SALOME en lançant l'interpréteur R dans
+dÃ©tails). Ce dernier est disponible dans SALOME en lanÃ§ant l'interprÃ©teur R dans
 le shell "``salome shell``". Il faut de plus disposer, en R, du package
-"*rPython*", qui peut si nécessaire être installé par l'utilisateur à l'aide de
+"*rPython*", qui peut si nÃ©cessaire Ãªtre installÃ© par l'utilisateur Ã  l'aide de
 la commande R suivante::
 
-    #-*-coding:iso-8859-1-*-
+    #-*- coding: utf-8 -*-
     #
-    # IMPORTANT : à exécuter dans l'interpréteur R
+    # IMPORTANT : Ã  exÃ©cuter dans l'interprÃ©teur R
     # --------------------------------------------
     install.packages("rPython")
 
-On se reportera à la documentation [GilBellosta15]_ pour de plus amples
+On se reportera Ã  la documentation [GilBellosta15]_ pour de plus amples
 renseignements sur ce package.
 
-Les calculs ADAO définis en interface textuelle (API/TUI, voir la
-:ref:`section_tui`) peuvent alors être interprétés depuis l'environnement R, en
-utilisant des données et des informations depuis R. La démarche est illustrée
-sur :ref:`subsection_tui_example`, proposé dans la description de l'interface
-API/TUI. Dans l'interpréteur R, on peut exécuter les commandes suivantes,
+Les calculs ADAO dÃ©finis en interface textuelle (API/TUI, voir la
+:ref:`section_tui`) peuvent alors Ãªtre interprÃ©tÃ©s depuis l'environnement R, en
+utilisant des donnÃ©es et des informations depuis R. La dÃ©marche est illustrÃ©e
+sur :ref:`subsection_tui_example`, proposÃ© dans la description de l'interface
+API/TUI. Dans l'interprÃ©teur R, on peut exÃ©cuter les commandes suivantes,
 directement issues de l'exemple simple::
 
-    #-*-coding:iso-8859-1-*-
+    #-*- coding: utf-8 -*-
     #
-    # IMPORTANT : à exécuter dans l'interpréteur R
+    # IMPORTANT : Ã  exÃ©cuter dans l'interprÃ©teur R
     # --------------------------------------------
     library(rPython)
     python.exec("
@@ -241,25 +241,25 @@ directement issues de l'exemple simple::
         case.execute()
     ")
 
-dont le résultat est::
+dont le rÃ©sultat est::
 
     Analysis [ 0.25000264  0.79999797  0.94999939]
 
-Dans la rédaction des calculs ADAO exécutés depuis R, il convient d'être très
+Dans la rÃ©daction des calculs ADAO exÃ©cutÃ©s depuis R, il convient d'Ãªtre trÃ¨s
 attentif au bon usage des guillemets simples et doubles, qui ne doivent pas
 collisionner entre les deux langages.
 
-Les données peuvent venir l'environnement R et doivent être rangées dans des
-variables correctement assignées, pour être utilisées ensuite en Python pour
-ADAO. On se reportera à la documentation [GilBellosta15]_ pour la mise en
-oeuvre. On peut transformer l'exemple ci-dessus pour utiliser des données
-provenant de R pour alimenter les trois variables d'ébauche, d'observation et
-d'opérateur d'observation. On récupère à la fin l'état optimal dans une variable
+Les donnÃ©es peuvent venir l'environnement R et doivent Ãªtre rangÃ©es dans des
+variables correctement assignÃ©es, pour Ãªtre utilisÃ©es ensuite en Python pour
+ADAO. On se reportera Ã  la documentation [GilBellosta15]_ pour la mise en
+oeuvre. On peut transformer l'exemple ci-dessus pour utiliser des donnÃ©es
+provenant de R pour alimenter les trois variables d'Ã©bauche, d'observation et
+d'opÃ©rateur d'observation. On rÃ©cupÃ¨re Ã  la fin l'Ã©tat optimal dans une variable
 R aussi. Les autres lignes sont identiques. L'exemple devient ainsi::
 
-    #-*-coding:iso-8859-1-*-
+    #-*- coding: utf-8 -*-
     #
-    # IMPORTANT : à exécuter dans l'interpréteur R
+    # IMPORTANT : Ã  exÃ©cuter dans l'interprÃ©teur R
     # --------------------------------------------
     #
     # Variables R
@@ -294,170 +294,171 @@ R aussi. Les autres lignes sont identiques. L'exemple devient ainsi::
     xa <- python.get("xa")
 
 On remarquera les conversions explicite de type ``str`` et ``list`` pour
-s'assurer que les données sont bien transmises en type standards connus du
-package "*rPython*". De plus, ce sont les données qui peuvent être transférées
-entre les deux langages, et pas des fonctions ou méthodes. Il convient donc
-d'élaborer en Python de manière générique les fonctions d'exécution requises par
-ADAO, et de leur transmettre ensuite de manière correcte les données disponibles
+s'assurer que les donnÃ©es sont bien transmises en type standards connus du
+package "*rPython*". De plus, ce sont les donnÃ©es qui peuvent Ãªtre transfÃ©rÃ©es
+entre les deux langages, et pas des fonctions ou mÃ©thodes. Il convient donc
+d'Ã©laborer en Python de maniÃ¨re gÃ©nÃ©rique les fonctions d'exÃ©cution requises par
+ADAO, et de leur transmettre ensuite de maniÃ¨re correcte les donnÃ©es disponibles
 en R.
 
-Les cas plus complets, proposés dans les :ref:`subsection_tui_advanced`, peuvent
-être exécutés de la même manière, et ils donnent le même résultat que dans
+Les cas plus complets, proposÃ©s dans les :ref:`subsection_tui_advanced`, peuvent
+Ãªtre exÃ©cutÃ©s de la mÃªme maniÃ¨re, et ils donnent le mÃªme rÃ©sultat que dans
 l'interface API/TUI en Python standard.
 
 .. _section_advanced_observer:
 
-Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO en YACS
+Obtenir des informations sur des variables spÃ©ciales au cours d'un calcul ADAO en YACS
 --------------------------------------------------------------------------------------
 
 .. index:: single: Observer
 .. index:: single: Observer Template
 
-Certaines variables spéciales internes à l'optimisation, utilisées au cours des
-calculs, peuvent être surveillées durant un calcul ADAO. Ces variables peuvent
-être affichées, tracées, enregistrées, etc. C'est réalisable en utilisant des
-"*observer*", qui sont des scripts, chacun associé à une variable.
+Certaines variables spÃ©ciales internes Ã  l'optimisation, utilisÃ©es au cours des
+calculs, peuvent Ãªtre surveillÃ©es durant un calcul ADAO. Ces variables peuvent
+Ãªtre affichÃ©es, tracÃ©es, enregistrÃ©es, etc. C'est rÃ©alisable en utilisant des
+"*observer*", qui sont des commandes rassemblÃ©es sous forme de scripts, chacun
+associÃ© Ã  une variable.
 
-Des modèles ("templates") sont disponibles lors de l'édition le cas ADAO dans
-l'éditeur graphique. Ces scripts simples peuvent être adaptés par l'utilisateur,
-soit dans l'étape d'édition intégrée, ou dans l'étape d'édition avant
-l'exécution, pour améliorer l'adaptation du calcul ADAO dans le superviseur
-d'exécution de SALOME.
+Des modÃ¨les ("templates") sont disponibles lors de l'Ã©dition le cas ADAO dans
+l'Ã©diteur graphique. Ces scripts simples peuvent Ãªtre adaptÃ©s par l'utilisateur,
+soit dans l'Ã©tape d'Ã©dition intÃ©grÃ©e, ou dans l'Ã©tape d'Ã©dition avant
+l'exÃ©cution, pour amÃ©liorer l'adaptation du calcul ADAO dans le superviseur
+d'exÃ©cution de SALOME.
 
-Pour mettre en oeuvre ces "*observer*" de manière efficace, on se reportera aux
+Pour mettre en oeuvre ces "*observer*" de maniÃ¨re efficace, on se reportera aux
 :ref:`ref_observers_requirements`.
 
-Obtenir plus d'information lors du déroulement d'un calcul
+Obtenir plus d'information lors du dÃ©roulement d'un calcul
 ----------------------------------------------------------
 
 .. index:: single: Logging
 
-Lors du déroulement d'un calcul, des données et messages utiles sont
-disponibles. Il y a deux manières d'obtenir ces informations.
+Lors du dÃ©roulement d'un calcul, des donnÃ©es et messages utiles sont
+disponibles. Il y a deux maniÃ¨res d'obtenir ces informations.
 
-La première, et la manière préférentielle, est d'utiliser la variable interne
+La premiÃ¨re, et la maniÃ¨re prÃ©fÃ©rentielle, est d'utiliser la variable interne
 "*Debug*" disponible dans chaque cas ADAO. Elle est atteignable dans l'interface
-graphique d'édition du module. La mettre à "*1*" permet d'envoyer des messages
-dans la fenêtre de sortie de l'exécution dans YACS ("*YACS Container Log*").
+graphique d'Ã©dition du module. La mettre Ã  "*1*" permet d'envoyer des messages
+dans la fenÃªtre de sortie de l'exÃ©cution dans YACS ("*YACS Container Log*").
 
-La seconde consiste à utiliser le module Python natif "*logging*" (voir la
+La seconde consiste Ã  utiliser le module Python natif "*logging*" (voir la
 documentation Python http://docs.python.org/library/logging.html pour de plus
-amples informations sur ce module). Dans l'ensemble du schéma YACS,
-principalement à travers les entrées sous forme de scripts, l'utilisateur peut
-fixer le niveau de logging en accord avec les besoins d'informations détaillées.
-Les différents niveaux de logging sont : "*DEBUG*", "*INFO*", "*WARNING*",
-"*ERROR*", "*CRITICAL*". Toutes les informations associées à un niveau sont
-affichées à tous les niveaux au-dessus de celui-ci (inclut). La méthode la plus
-facile consiste à changer le niveau de surveillance en utilisant les lignes
+amples informations sur ce module). Dans l'ensemble du schÃ©ma YACS,
+principalement Ã  travers les entrÃ©es sous forme de scripts, l'utilisateur peut
+fixer le niveau de logging en accord avec les besoins d'informations dÃ©taillÃ©es.
+Les diffÃ©rents niveaux de logging sont : "*DEBUG*", "*INFO*", "*WARNING*",
+"*ERROR*", "*CRITICAL*". Toutes les informations associÃ©es Ã  un niveau sont
+affichÃ©es Ã  tous les niveaux au-dessus de celui-ci (inclut). La mÃ©thode la plus
+facile consiste Ã  changer le niveau de surveillance en utilisant les lignes
 Python suivantes::
 
     import logging
     logging.getLogger().setLevel(logging.DEBUG)
 
-Le niveau par défaut standard de surveillance par logging est "*WARNING*", le
-niveau par défaut dans le module ADAO est "*INFO*".
+Le niveau par dÃ©faut standard de surveillance par logging est "*WARNING*", le
+niveau par dÃ©faut dans le module ADAO est "*INFO*".
 
-Il est aussi recommandé d'inclure de la surveillance par logging ou des
-mécanismes de débogage dans le code de simulation, et de les utiliser en
-conjonction avec les deux méthodes précédentes. Néanmoins, il convient d'être
-prudent dans le stockage de "grosses" variables car cela coûte du temps,
-quel que soit le niveau de surveillance choisi (c'est-à-dire même si ces
-variables ne sont pas affichées).
+Il est aussi recommandÃ© d'inclure de la surveillance par logging ou des
+mÃ©canismes de dÃ©bogage dans le code de simulation, et de les utiliser en
+conjonction avec les deux mÃ©thodes prÃ©cÃ©dentes. NÃ©anmoins, il convient d'Ãªtre
+prudent dans le stockage de "grosses" variables car cela coÃ»te du temps,
+quel que soit le niveau de surveillance choisi (c'est-Ã -dire mÃªme si ces
+variables ne sont pas affichÃ©es).
 
 .. _subsection_ref_parallel_df:
 
-Accélérer les calculs de dérivées numériques en utilisant un mode parallèle
+AccÃ©lÃ©rer les calculs de dÃ©rivÃ©es numÃ©riques en utilisant un mode parallÃ¨le
 ---------------------------------------------------------------------------
 
 .. index:: single: EnableMultiProcessing
 .. index:: single: NumberOfProcesses
 
-Lors de la définition d'un opérateur, comme décrit dans le chapitre des
+Lors de la dÃ©finition d'un opÃ©rateur, comme dÃ©crit dans le chapitre des
 :ref:`section_ref_operator_requirements`, l'utilisateur peut choisir la forme
-fonctionnelle "*ScriptWithOneFunction*". Cette forme conduit explicitement à
-approximer les opérateurs tangent et adjoint par un calcul par différences
-finies. Il requiert de nombreux appels à l'opérateur direct (fonction définie
-par l'utilisateur), au moins autant de fois que la dimension du vecteur d'état.
-Ce sont ces appels qui peuvent être potentiellement exécutés en parallèle.
+fonctionnelle "*ScriptWithOneFunction*". Cette forme conduit explicitement Ã 
+approximer les opÃ©rateurs tangent et adjoint par un calcul par diffÃ©rences
+finies. Il requiert de nombreux appels Ã  l'opÃ©rateur direct (fonction dÃ©finie
+par l'utilisateur), au moins autant de fois que la dimension du vecteur d'Ã©tat.
+Ce sont ces appels qui peuvent Ãªtre potentiellement exÃ©cutÃ©s en parallÃ¨le.
 
-Sous certaines conditions, il est alors possible d'accélérer les calculs de
-dérivées numériques en utilisant un mode parallèle pour l'approximation par
-différences finies. Lors de la définition d'un cas ADAO, c'est effectué en
-ajoutant le mot-clé optionnel "*EnableMultiProcessing*", mis à "1", de la
-commande "*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur. Le mode
-parallèle utilise uniquement des ressources locales (à la fois multi-coeurs ou
+Sous certaines conditions, il est alors possible d'accÃ©lÃ©rer les calculs de
+dÃ©rivÃ©es numÃ©riques en utilisant un mode parallÃ¨le pour l'approximation par
+diffÃ©rences finies. Lors de la dÃ©finition d'un cas ADAO, c'est effectuÃ© en
+ajoutant le mot-clÃ© optionnel "*EnableMultiProcessing*", mis Ã  "1", de la
+commande "*SCRIPTWITHONEFUNCTION*" dans la dÃ©finition de l'opÃ©rateur. Le mode
+parallÃ¨le utilise uniquement des ressources locales (Ã  la fois multi-coeurs ou
 multi-processeurs) de l'ordinateur sur lequel SALOME est en train de tourner,
-demandant autant de ressources que disponible. Si nécessaire, on peut réduire
+demandant autant de ressources que disponible. Si nÃ©cessaire, on peut rÃ©duire
 les ressources disponibles en limitant le nombre possible de processus
-parallèles grâce au mot-clé optionnel "*NumberOfProcesses*", que l'on met au
-maximum souhaité (ou à "0" pour le contrôle automatique, qui est la valeur par
-défaut). Par défaut, ce mode parallèle est désactivé
+parallÃ¨les grÃ¢ce au mot-clÃ© optionnel "*NumberOfProcesses*", que l'on met au
+maximum souhaitÃ© (ou Ã  "0" pour le contrÃ´le automatique, qui est la valeur par
+dÃ©faut). Par dÃ©faut, ce mode parallÃ¨le est dÃ©sactivÃ©
 ("*EnableMultiProcessing=0*").
 
-Les principales conditions pour réaliser ces calculs parallèles viennent de la
-fonction définie par l'utilisateur, qui représente l'opérateur direct. Cette
-fonction doit au moins être "thread safe" pour être exécutée dans un
-environnement Python parallèle (notions au-delà du cadre de ce paragraphe). Il
-n'est pas évident de donner des règles générales, donc il est recommandé, à
-l'utilisateur qui active ce parallélisme interne, de vérifier soigneusement sa
-fonction et les résultats obtenus.
+Les principales conditions pour rÃ©aliser ces calculs parallÃ¨les viennent de la
+fonction dÃ©finie par l'utilisateur, qui reprÃ©sente l'opÃ©rateur direct. Cette
+fonction doit au moins Ãªtre "thread safe" pour Ãªtre exÃ©cutÃ©e dans un
+environnement Python parallÃ¨le (notions au-delÃ  du cadre de ce paragraphe). Il
+n'est pas Ã©vident de donner des rÃ¨gles gÃ©nÃ©rales, donc il est recommandÃ©, Ã 
+l'utilisateur qui active ce parallÃ©lisme interne, de vÃ©rifier soigneusement sa
+fonction et les rÃ©sultats obtenus.
 
-D'un point de vue utilisateur, certaines conditions, qui doivent être réunies
-pour mettre en place des calculs parallèles pour les approximations des
-opérateurs tangent et adjoint, sont les suivantes :
+D'un point de vue utilisateur, certaines conditions, qui doivent Ãªtre rÃ©unies
+pour mettre en place des calculs parallÃ¨les pour les approximations des
+opÃ©rateurs tangent et adjoint, sont les suivantes :
 
-#. La dimension du vecteur d'état est supérieure à 2 ou 3.
-#. Le calcul unitaire de la fonction utilisateur directe "dure un certain temps", c'est-à-dire plus que quelques minutes.
-#. La fonction utilisateur directe n'utilise pas déjà du parallélisme (ou l'exécution parallèle est désactivée dans le calcul de l'utilisateur).
-#. La fonction utilisateur directe n'effectue pas d'accès en lecture/écriture à des ressources communes, principalement des données stockées, des fichiers de sortie ou des espaces mémoire.
-#. Les "*observer*" ajoutés par l'utilisateur n'effectuent pas d'accès en lecture/écriture à des ressources communes, comme des fichiers ou des espaces mémoire.
+#. La dimension du vecteur d'Ã©tat est supÃ©rieure Ã  2 ou 3.
+#. Le calcul unitaire de la fonction utilisateur directe "dure un certain temps", c'est-Ã -dire plus que quelques minutes.
+#. La fonction utilisateur directe n'utilise pas dÃ©jÃ  du parallÃ©lisme (ou l'exÃ©cution parallÃ¨le est dÃ©sactivÃ©e dans le calcul de l'utilisateur).
+#. La fonction utilisateur directe n'effectue pas d'accÃ¨s en lecture/Ã©criture Ã  des ressources communes, principalement des donnÃ©es stockÃ©es, des fichiers de sortie ou des espaces mÃ©moire.
+#. Les "*observer*" ajoutÃ©s par l'utilisateur n'effectuent pas d'accÃ¨s en lecture/Ã©criture Ã  des ressources communes, comme des fichiers ou des espaces mÃ©moire.
 
 Si ces conditions sont satisfaites, l'utilisateur peut choisir d'activer le
-parallélisme interne pour le calcul des dérivées numériques. Malgré la
-simplicité d'activation, obtenue en définissant une variable seulement,
-l'utilisateur est fortement invité à vérifier les résultats de ses calculs. Il
-faut au moins les effectuer une fois avec le parallélisme activé, et une autre
-fois avec le parallélisme désactivé, pour comparer les résultats. Si cette mise
-en oeuvre échoue à un moment ou à un autre, il faut savoir que ce schéma de
-parallélisme fonctionne pour des codes complexes, comme *Code_Aster* dans
+parallÃ©lisme interne pour le calcul des dÃ©rivÃ©es numÃ©riques. MalgrÃ© la
+simplicitÃ© d'activation, obtenue en dÃ©finissant une variable seulement,
+l'utilisateur est fortement invitÃ© Ã  vÃ©rifier les rÃ©sultats de ses calculs. Il
+faut au moins les effectuer une fois avec le parallÃ©lisme activÃ©, et une autre
+fois avec le parallÃ©lisme dÃ©sactivÃ©, pour comparer les rÃ©sultats. Si cette mise
+en oeuvre Ã©choue Ã  un moment ou Ã  un autre, il faut savoir que ce schÃ©ma de
+parallÃ©lisme fonctionne pour des codes complexes, comme *Code_Aster* dans
 *SalomeMeca* [SalomeMeca]_ par exemple. Donc, si cela ne marche pas dans votre
-cas, vérifiez bien votre fonction d'opérateur avant et pendant l'activation du
-parallélisme...
+cas, vÃ©rifiez bien votre fonction d'opÃ©rateur avant et pendant l'activation du
+parallÃ©lisme...
 
 .. warning::
 
-  en cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.
+  en cas de doute, il est recommandÃ© de NE PAS ACTIVER ce parallÃ©lisme.
 
-On rappelle aussi qu'il faut choisir dans YACS un container par défaut de type
-"*multi*" pour le lancement du schéma, pour permettre une exécution
-véritablement parallèle.
+On rappelle aussi qu'il faut choisir dans YACS un container par dÃ©faut de type
+"*multi*" pour le lancement du schÃ©ma, pour permettre une exÃ©cution
+vÃ©ritablement parallÃ¨le.
 
-Passer d'une version d'ADAO à une nouvelle
+Passer d'une version d'ADAO Ã  une nouvelle
 ------------------------------------------
 
 .. index:: single: Version
 
-Le module ADAO et ses fichiers de cas ".comm" sont identifiés par des versions,
-avec des caractéristiques "Major", "Minor" et "Revision". Une version
-particulière est numérotée "Major.Minor.Revision", avec un lien fort avec la
-numérotation de la plateforme SALOME.
+Le module ADAO et ses fichiers de cas ".comm" sont identifiÃ©s par des versions,
+avec des caractÃ©ristiques "Major", "Minor" et "Revision". Une version
+particuliÃ¨re est numÃ©rotÃ©e "Major.Minor.Revision", avec un lien fort avec la
+numÃ©rotation de la plateforme SALOME.
 
 Chaque version "Major.Minor.Revision" du module ADAO peut lire les fichiers de
-cas ADAO de la précédente version mineure "Major.Minor-1.*". En général, elle
+cas ADAO de la prÃ©cÃ©dente version mineure "Major.Minor-1.*". En gÃ©nÃ©ral, elle
 peut aussi lire les fichiers de cas de toutes les versions mineures "Major.*.*"
 d'une branche majeure, mais ce n'est pas obligatoirement vrai pour toutes les
-commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'une
-version ne peut pas être lu par une précédente version mineure ou majeure du
+commandes ou tous les mots-clÃ©s. En gÃ©nÃ©ral aussi, un fichier de cas ADAO d'une
+version ne peut pas Ãªtre lu par une prÃ©cÃ©dente version mineure ou majeure du
 module ADAO.
 
-Passer de la version 8.x à la 8.y avec x < y
+Passer de la version 8.x Ã  la 8.y avec x < y
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
-avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+Il n'y a pas d'incompatibilitÃ© connue pour les fichiers de cas ADAO. La
+procÃ©dure de montÃ©e en version consiste Ã  lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et Ã  l'enregistrer avec un nouveau nom.
 
-Pour faciliter les futures évolutions, il est fortement recommandé de veiller à
+Pour faciliter les futures Ã©volutions, il est fortement recommandÃ© de veiller Ã 
 ce que vos fichiers scripts utilisateurs utilisent une syntaxe compatibible avec
 Python 2 et avec Python 3. En particulier, on recommande d'utiliser la syntaxe
 fonctionnelle pour les "*print*" et non pas la syntaxe "*commande*", comme par
@@ -473,59 +474,59 @@ ou::
     x, unit = 1., "cm"
     print( "x = {0} {1}".format(str(x),str(unit)) )
 
-plutôt que::
+plutÃ´t que::
 
     # Python 2 uniquement
     x, unit = 1., "cm"
     print "x =", x, unit
 
-Passer de la version 7.8 à la 8.1
+Passer de la version 7.8 Ã  la 8.1
 +++++++++++++++++++++++++++++++++
 
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
-avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+Il n'y a pas d'incompatibilitÃ© connue pour les fichiers de cas ADAO. La
+procÃ©dure de montÃ©e en version consiste Ã  lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et Ã  l'enregistrer avec un nouveau nom.
 
-Passer de la version 7.x à la 7.y avec x < y
+Passer de la version 7.x Ã  la 7.y avec x < y
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
-avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+Il n'y a pas d'incompatibilitÃ© connue pour les fichiers de cas ADAO. La
+procÃ©dure de montÃ©e en version consiste Ã  lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et Ã  l'enregistrer avec un nouveau nom.
 
-Passer de la version 6.6 à la 7.2
+Passer de la version 6.6 Ã  la 7.2
 +++++++++++++++++++++++++++++++++
 
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+Il n'y a pas d'incompatibilitÃ© connue pour les fichiers de cas ADAO. La
+procÃ©dure de montÃ©e en version consiste Ã  lire l'ancien fichier de cas ADAO avec
+le nouveau module SALOME/ADAO, et Ã  l'enregistrer avec un nouveau nom.
 
-Il y a une incompatibilité introduite dans les fichiers de script de
+Il y a une incompatibilitÃ© introduite dans les fichiers de script de
 post-processing ou d'observers. L'ancienne syntaxe pour interroger un objet
-résultat, comme celui d'analyse "*Analysis*" (fourni dans un script à travers le
-mot-clé "*UserPostAnalysis*"), était par exemple::
+rÃ©sultat, comme celui d'analyse "*Analysis*" (fourni dans un script Ã  travers le
+mot-clÃ© "*UserPostAnalysis*"), Ã©tait par exemple::
 
     Analysis = ADD.get("Analysis").valueserie(-1)
     Analysis = ADD.get("Analysis").valueserie()
 
-La nouvelle syntaxe est entièrement compatible avec celle (classique) pour les
+La nouvelle syntaxe est entiÃ¨rement compatible avec celle (classique) pour les
 objets de type liste ou tuple::
 
     Analysis = ADD.get("Analysis")[-1]
     Analysis = ADD.get("Analysis")[:]
 
-Les scripts de post-processing doivent être modifiés.
+Les scripts de post-processing doivent Ãªtre modifiÃ©s.
 
-Passer de la version 6.x à la 6.y avec x < y
+Passer de la version 6.x Ã  la 6.y avec x < y
 ++++++++++++++++++++++++++++++++++++++++++++
 
-Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
-procédure de montée en version consiste à lire l'ancien fichier de cas ADAO avec
-le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+Il n'y a pas d'incompatibilitÃ© connue pour les fichiers de cas ADAO. La
+procÃ©dure de montÃ©e en version consiste Ã  lire l'ancien fichier de cas ADAO avec
+le nouveau module SALOME/ADAO, et Ã  l'enregistrer avec un nouveau nom.
 
-Il y a une incompatibilité introduite dans les fichiers de script d'opérateur,
-lors de la dénomination des opérateurs élémentaires utilisés pour l'opérateur
+Il y a une incompatibilitÃ© introduite dans les fichiers de script d'opÃ©rateur,
+lors de la dÃ©nomination des opÃ©rateurs Ã©lÃ©mentaires utilisÃ©s pour l'opÃ©rateur
 d'observation par script. Les nouveaux noms requis sont "*DirectOperator*",
-"*TangentOperator*" et "*AdjointOperator*", comme décrit dans la quatrième
-partie du chapitre :ref:`section_reference`. Les fichiers de script d'opérateur
-doivent être modifiés.
+"*TangentOperator*" et "*AdjointOperator*", comme dÃ©crit dans la quatriÃ¨me
+partie du chapitre :ref:`section_reference`. Les fichiers de script d'opÃ©rateur
+doivent Ãªtre modifiÃ©s.

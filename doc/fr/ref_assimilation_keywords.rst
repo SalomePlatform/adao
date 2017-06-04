@@ -24,7 +24,7 @@
 .. index:: single: ASSIMILATION_STUDY
 .. _section_ref_assimilation_keywords:
 
-Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'optimisation
+Liste des commandes et mots-clÃ©s pour un cas d'assimilation de donnÃ©es ou d'optimisation
 ----------------------------------------------------------------------------------------
 
 .. index:: single: Algorithm
@@ -49,134 +49,134 @@ Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'opti
 .. index:: single: UserPostAnalysis
 .. index:: single: UserPostAnalysis Template
 
-Ce jeu de commandes est lié à la description d'un cas de calcul, qui est une
-procédure d'*Assimilation de Données* ou d'*Optimisation*. Les termes sont
-classés par ordre alphabétique, sauf le premier, qui décrit le choix entre le
-calcul ou la vérification.
+Ce jeu de commandes est liÃ© Ã  la description d'un cas de calcul, qui est une
+procÃ©dure d'*Assimilation de DonnÃ©es* ou d'*Optimisation*. Les termes sont
+classÃ©s par ordre alphabÃ©tique, sauf le premier, qui dÃ©crit le choix entre le
+calcul ou la vÃ©rification.
 
-Les différentes commandes sont les suivantes:
+Les diffÃ©rentes commandes sont les suivantes:
 
   **ASSIMILATION_STUDY**
-    *Commande obligatoire*. C'est la commande générale qui décrit le cas
-    d'assimilation de données ou d'optimisation. Elle contient hiérarchiquement
+    *Commande obligatoire*. C'est la commande gÃ©nÃ©rale qui dÃ©crit le cas
+    d'assimilation de donnÃ©es ou d'optimisation. Elle contient hiÃ©rarchiquement
     toutes les autres commandes.
 
   AlgorithmParameters
-    *Commande obligatoire*. Elle définit l'algorithme d'assimilation de données
-    ou d'optimisation choisi par le mot-clé "*Algorithm*", et ses éventuels
-    paramètres optionnels. Les choix d'algorithmes sont disponibles à travers
+    *Commande obligatoire*. Elle dÃ©finit l'algorithme d'assimilation de donnÃ©es
+    ou d'optimisation choisi par le mot-clÃ© "*Algorithm*", et ses Ã©ventuels
+    paramÃ¨tres optionnels. Les choix d'algorithmes sont disponibles Ã  travers
     l'interface graphique. Il existe par exemple le "3DVAR", le "Blue"... Chaque
-    algorithme est défini, plus loin, par une sous-section spécifique. De
-    manière facultative, la commande permet aussi d'ajouter des paramètres pour
-    contrôler l'algorithme. Leurs valeurs sont définies explicitement ou dans un
-    objet de type "*Dict*". On se reportera à la
-    :ref:`section_ref_options_Algorithm_Parameters` pour l'usage détaillé de
+    algorithme est dÃ©fini, plus loin, par une sous-section spÃ©cifique. De
+    maniÃ¨re facultative, la commande permet aussi d'ajouter des paramÃ¨tres pour
+    contrÃ´ler l'algorithme. Leurs valeurs sont dÃ©finies explicitement ou dans un
+    objet de type "*Dict*". On se reportera Ã  la
+    :ref:`section_ref_options_Algorithm_Parameters` pour l'usage dÃ©taillÃ© de
     cette partie de la commande.
 
   Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*".
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'Ã©bauche ou
+    d'initialisation, notÃ© prÃ©cÃ©demment :math:`\mathbf{x}^b`. Sa valeur est
+    dÃ©finie comme un objet de type "*Vector*".
 
   BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{B}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ControlInput
-    *Commande optionnelle*. Elle indique le vecteur de contrôle utilisé pour
-    forcer le modèle d'évolution à chaque pas, usuellement noté
-    :math:`\mathbf{U}`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*". Lorsqu'il n'y a pas de contrôle, sa valeur doit
-    être une chaîne vide ''.
+    *Commande optionnelle*. Elle indique le vecteur de contrÃ´le utilisÃ© pour
+    forcer le modÃ¨le d'Ã©volution Ã  chaque pas, usuellement notÃ©
+    :math:`\mathbf{U}`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
+    ou de type "*VectorSerie*". Lorsqu'il n'y a pas de contrÃ´le, sa valeur doit
+    Ãªtre une chaÃ®ne vide ''.
 
   Debug
-    *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
-    intermédiaires de débogage. Les choix sont limités entre 0 (pour False) et
+    *Commande optionnelle*. Elle dÃ©finit le niveau de sorties et d'informations
+    intermÃ©diaires de dÃ©bogage. Les choix sont limitÃ©s entre 0 (pour False) et
     1 (pour True).
 
   EvolutionError
-    *Commande optionnelle*. Elle définit la matrice de covariance des erreurs
-    d'évolution, usuellement notée :math:`\mathbf{Q}`.  Sa valeur est définie
+    *Commande optionnelle*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©volution, usuellement notÃ©e :math:`\mathbf{Q}`.  Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   EvolutionModel
-    *Commande optionnelle*. Elle indique l'opérateur d'évolution du modèle,
-    usuellement noté :math:`M`, qui décrit un pas élémentaire d'évolution. Sa
-    valeur est définie comme un objet de type "*Function*" ou de type
-    "*Matrix*". Dans le cas du type "*Function*", différentes formes
-    fonctionnelles peuvent être utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'évolution, l'opérateur doit être appliqué à une
+    *Commande optionnelle*. Elle indique l'opÃ©rateur d'Ã©volution du modÃ¨le,
+    usuellement notÃ© :math:`M`, qui dÃ©crit un pas Ã©lÃ©mentaire d'Ã©volution. Sa
+    valeur est dÃ©finie comme un objet de type "*Function*" ou de type
+    "*Matrix*". Dans le cas du type "*Function*", diffÃ©rentes formes
+    fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans la section
+    :ref:`section_ref_operator_requirements`. Si un contrÃ´le :math:`U` est
+    inclus dans le modÃ¨le d'Ã©volution, l'opÃ©rateur doit Ãªtre appliquÃ© Ã  une
     paire :math:`(X,U)`.
 
   InputVariables
     *Commande optionnelle*. Elle permet d'indiquer le nom et la taille des
-    variables physiques qui sont rassemblées dans le vecteur d'état. Cette
-    information est destinée à être utilisée dans le traitement algorithmique
-    interne des données.
+    variables physiques qui sont rassemblÃ©es dans le vecteur d'Ã©tat. Cette
+    information est destinÃ©e Ã  Ãªtre utilisÃ©e dans le traitement algorithmique
+    interne des donnÃ©es.
 
   Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'observation utilisÃ© en
+    assimilation de donnÃ©es ou en optimisation, et notÃ© prÃ©cÃ©demment
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
     ou de type "*VectorSerie*".
 
   ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{R}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de
     type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+    diffÃ©rentes formes fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans
+    la section :ref:`section_ref_operator_requirements`. Si un contrÃ´le
+    :math:`U` est inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre
+    appliquÃ© Ã  une paire :math:`(X,U)`.
 
   Observers
-    *Commande optionnelle*. Elle permet de définir des observateurs internes,
-    qui sont des fonctions liées à une variable particulière, qui sont exécutées
-    chaque fois que cette variable est modifiée. C'est une manière pratique de
-    suivre des variables d'intérêt durant le processus d'assimilation de données
-    ou d'optimisation, en l'affichant ou en la traçant, etc. Des exemples
+    *Commande optionnelle*. Elle permet de dÃ©finir des observateurs internes,
+    qui sont des fonctions liÃ©es Ã  une variable particuliÃ¨re, qui sont exÃ©cutÃ©es
+    chaque fois que cette variable est modifiÃ©e. C'est une maniÃ¨re pratique de
+    suivre des variables d'intÃ©rÃªt durant le processus d'assimilation de donnÃ©es
+    ou d'optimisation, en l'affichant ou en la traÃ§ant, etc. Des exemples
     courants (squelettes) sont fournis pour aider l'utilisateur ou pour
-    faciliter l'élaboration d'un cas.
+    faciliter l'Ã©laboration d'un cas.
 
   OutputVariables
-    *Commande optionnelle*. Elle permet d'indiquer le nom et la taille des 
-    variables physiques qui sont rassemblées dans le vecteur d'observation.
-    Cette information est destinée à être utilisée dans le traitement
-    algorithmique interne des données.
+    *Commande optionnelle*. Elle permet d'indiquer le nom et la taille des
+    variables physiques qui sont rassemblÃ©es dans le vecteur d'observation.
+    Cette information est destinÃ©e Ã  Ãªtre utilisÃ©e dans le traitement
+    algorithmique interne des donnÃ©es.
 
   StudyName
-    *Commande obligatoire*. C'est une chaîne de caractères quelconque pour
-    décrire l'étude ADAO par un nom ou une déclaration.
+    *Commande obligatoire*. C'est une chaÃ®ne de caractÃ¨res quelconque pour
+    dÃ©crire l'Ã©tude ADAO par un nom ou une dÃ©claration.
 
   StudyRepertory
-    *Commande optionnelle*. S'il existe, ce répertoire est utilisé comme base
-    pour les calculs, et il est utilisé pour trouver les fichiers de script,
-    donnés par nom sans répertoire, qui peuvent être utilisés pour définir
+    *Commande optionnelle*. S'il existe, ce rÃ©pertoire est utilisÃ© comme base
+    pour les calculs, et il est utilisÃ© pour trouver les fichiers de script,
+    donnÃ©s par nom sans rÃ©pertoire, qui peuvent Ãªtre utilisÃ©s pour dÃ©finir
     certaines variables.
 
   UserDataInit
-    *Commande optionnelle*. Elle permet d'initialiser certains paramètres ou
-    certaines données automatiquement avant le traitement de données d'entrée
-    pour l'assimilation de données ou l'optimisation. Pour cela, elle indique un
-    nom de fichier de script à exécuter avant d'entrer dans l'initialisation des
+    *Commande optionnelle*. Elle permet d'initialiser certains paramÃ¨tres ou
+    certaines donnÃ©es automatiquement avant le traitement de donnÃ©es d'entrÃ©e
+    pour l'assimilation de donnÃ©es ou l'optimisation. Pour cela, elle indique un
+    nom de fichier de script Ã  exÃ©cuter avant d'entrer dans l'initialisation des
     variables choisies.
 
   UserPostAnalysis
-    *Commande optionnelle*. Elle permet de traiter des paramètres ou des
-    résultats après le déroulement de l'algorithme d'assimilation de données ou
-    d'optimisation. Sa valeur est définie comme un fichier script ou une chaîne
-    de caractères, permettant de produire directement du code de post-processing
+    *Commande optionnelle*. Elle permet de traiter des paramÃ¨tres ou des
+    rÃ©sultats aprÃ¨s le dÃ©roulement de l'algorithme d'assimilation de donnÃ©es ou
+    d'optimisation. Sa valeur est dÃ©finie comme un fichier script ou une chaÃ®ne
+    de caractÃ¨res, permettant de produire directement du code de post-processing
     dans un cas ADAO. Des exemples courants (squelettes) sont fournis pour aider
-    l'utilisateur ou pour faciliter l'élaboration d'un cas.
+    l'utilisateur ou pour faciliter l'Ã©laboration d'un cas.

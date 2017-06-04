@@ -24,23 +24,23 @@
 .. index:: single: FunctionTest
 .. _section_ref_algorithm_FunctionTest:
 
-Algorithme de vérification "*FunctionTest*"
+Algorithme de vÃ©rification "*FunctionTest*"
 -------------------------------------------
 
 Description
 +++++++++++
 
-Cet algorithme permet de vérifier que l'opérateur d'observation fonctionne
-correctement et que son appel se déroule de manière compatible avec son usage
-dans les algorithmes d'ADAO. De manière pratique, il permet d'appeler une ou
-plusieurs fois l'opérateur, en activant ou non le mode "debug" lors de
-l'exécution.
+Cet algorithme permet de vÃ©rifier que l'opÃ©rateur d'observation fonctionne
+correctement et que son appel se dÃ©roule de maniÃ¨re compatible avec son usage
+dans les algorithmes d'ADAO. De maniÃ¨re pratique, il permet d'appeler une ou
+plusieurs fois l'opÃ©rateur, en activant ou non le mode "debug" lors de
+l'exÃ©cution.
 
-Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
-l'opérateur est indiquée, et une autre globale est fournie de manière
-récapitulative à la fin de l'algorithme de vérification. La précision
-d'affichage est contrôlable pour permettre l'automatisation des tests
-d'opérateur.
+Une statistique sur les vecteurs en entrÃ©e et en sortie de chaque exÃ©cution de
+l'opÃ©rateur est indiquÃ©e, et une autre globale est fournie de maniÃ¨re
+rÃ©capitulative Ã  la fin de l'algorithme de vÃ©rification. La prÃ©cision
+d'affichage est contrÃ´lable pour permettre l'automatisation des tests
+d'opÃ©rateur.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -53,91 +53,91 @@ Commandes requises et optionnelles
 .. index:: single: SetDebug
 .. index:: single: StoreSupplementaryCalculations
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   CheckingPoint
-    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
-    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
-    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
+    *Commande obligatoire*. Elle dÃ©finit le vecteur utilisÃ© comme l'Ã©tat autour
+    duquel rÃ©aliser le test requis, notÃ© :math:`\mathbf{x}` et similaire Ã 
+    l'Ã©bauche :math:`\mathbf{x}^b`. Sa valeur est dÃ©finie comme un objet de type
     "*Vector*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, notée
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`.  Sa valeur est définie comme un objet de
-    type "*Function*". Différentes formes fonctionnelles peuvent être
-    utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'observation, l'opérateur doit être appliqué à une
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©e
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`.  Sa valeur est dÃ©finie comme un objet de
+    type "*Function*". DiffÃ©rentes formes fonctionnelles peuvent Ãªtre
+    utilisÃ©es, comme dÃ©crit dans la section
+    :ref:`section_ref_operator_requirements`. Si un contrÃ´le :math:`U` est
+    inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre appliquÃ© Ã  une
     paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_checking_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   NumberOfPrintedDigits
-    Cette clé indique le nombre de décimales de précision pour les affichages de
-    valeurs réelles. La valeur par défaut est 5, avec un minimum de 0.
+    Cette clÃ© indique le nombre de dÃ©cimales de prÃ©cision pour les affichages de
+    valeurs rÃ©elles. La valeur par dÃ©faut est 5, avec un minimum de 0.
 
     Exemple : ``{"NumberOfPrintedDigits":5}``
 
   NumberOfRepetition
-    Cette clé indique le nombre de fois où répéter l'évaluation de la fonction.
-    La valeur par défaut est 1.
+    Cette clÃ© indique le nombre de fois oÃ¹ rÃ©pÃ©ter l'Ã©valuation de la fonction.
+    La valeur par dÃ©faut est 1.
 
     Exemple : ``{"NumberOfRepetition":3}``
 
   SetDebug
-    Cette clé requiert l'activation, ou pas, du mode de débogage durant
-    l'évaluation de la fonction. La valeur par défaut est "False", les choix
+    Cette clÃ© requiert l'activation, ou pas, du mode de dÃ©bogage durant
+    l'Ã©valuation de la fonction. La valeur par dÃ©faut est "False", les choix
     sont "True" ou "False".
 
     Exemple : ``{"SetDebug":False}``
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["CurrentState",
     "SimulatedObservationAtCurrentState"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
   SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©tat courant, c'est-Ã -dire dans l'espace des observations.
 
     Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_LinearityTest`

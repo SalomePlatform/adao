@@ -23,42 +23,42 @@
 
 .. _section_ref_covariance_requirements:
 
-Exigences pour décrire les matrices de covariance
+Exigences pour dÃ©crire les matrices de covariance
 -------------------------------------------------
 
 .. index:: single: matrice de covariance
-.. index:: single: covariances d'erreurs d'ébauche
+.. index:: single: covariances d'erreurs d'Ã©bauche
 .. index:: single: covariances d'erreurs d'observation
 .. index:: single: covariances
 
-De manière générale, une matrice de covariance (ou une matrice de
-variance-covariance) doit être carrée, symétrique, semi-définie positive. Chacun
-de ses termes décrit la covariance des deux variables aléatoires correspondantes
-à sa position dans la matrice. La forme normalisée de la covariance est la
-corrélation linéaire. On peut écrire la relation suivante, entre une matrice de
-covariance :math:`\mathbf{M}` et ses matrices correspondantes de corrélation
-:math:`\mathbf{C}` (matrice pleine) et d'écart-type :math:`\mathbf{\Sigma}`
+De maniÃ¨re gÃ©nÃ©rale, une matrice de covariance (ou une matrice de
+variance-covariance) doit Ãªtre carrÃ©e, symÃ©trique, semi-dÃ©finie positive. Chacun
+de ses termes dÃ©crit la covariance des deux variables alÃ©atoires correspondantes
+Ã  sa position dans la matrice. La forme normalisÃ©e de la covariance est la
+corrÃ©lation linÃ©aire. On peut Ã©crire la relation suivante, entre une matrice de
+covariance :math:`\mathbf{M}` et ses matrices correspondantes de corrÃ©lation
+:math:`\mathbf{C}` (matrice pleine) et d'Ã©cart-type :math:`\mathbf{\Sigma}`
 (matrice diagonale):
 
 .. math:: \mathbf{M} = \mathbf{\Sigma} * \mathbf{C} * \mathbf{\Sigma}
 
-Diverses matrices de covariance sont nécessaires pour mettre en oeuvre des
-procédures d'assimilation de données ou d'optimisation. Les principales sont la
-matrice de covariance des erreurs d'ébauche, notée :math:`\mathbf{B}`, et la
-matrice de covariance des erreurs d'observation, notée :math:`\mathbf{R}`.
+Diverses matrices de covariance sont nÃ©cessaires pour mettre en oeuvre des
+procÃ©dures d'assimilation de donnÃ©es ou d'optimisation. Les principales sont la
+matrice de covariance des erreurs d'Ã©bauche, notÃ©e :math:`\mathbf{B}`, et la
+matrice de covariance des erreurs d'observation, notÃ©e :math:`\mathbf{R}`.
 
-Il y a 3 méthodes pratiques pour l'utilisateur pour fournir une matrice de
-covariance. La méthode est choisie à l'aide du mot-clé "*INPUT_TYPE*" de chaque
-matrice de covariance, comme montré dans la figure qui suit :
+Il y a 3 mÃ©thodes pratiques pour l'utilisateur pour fournir une matrice de
+covariance. La mÃ©thode est choisie Ã  l'aide du mot-clÃ© "*INPUT_TYPE*" de chaque
+matrice de covariance, comme montrÃ© dans la figure qui suit :
 
   .. eficas_covariance_matrix:
   .. image:: images/eficas_covariance_matrix.png
     :align: center
     :width: 100%
   .. centered::
-    **Choisir la représentation d'une matrice de covariance**
+    **Choisir la reprÃ©sentation d'une matrice de covariance**
 
-Première forme matricielle : utiliser la représentation "*Matrix*"
+PremiÃ¨re forme matricielle : utiliser la reprÃ©sentation "*Matrix*"
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Matrix
@@ -66,10 +66,10 @@ Première forme matricielle : utiliser la représentation "*Matrix*"
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
 
-La première forme est le défaut, et c'est la plus générale. La matrice de
-covariance :math:`\mathbf{M}` doit être entièrement spécifiée. Même si la
-matrice est symétrique par nature, la totalité de la matrice :math:`\mathbf{M}`
-doit être donnée.
+La premiÃ¨re forme est le dÃ©faut, et c'est la plus gÃ©nÃ©rale. La matrice de
+covariance :math:`\mathbf{M}` doit Ãªtre entiÃ¨rement spÃ©cifiÃ©e. MÃªme si la
+matrice est symÃ©trique par nature, la totalitÃ© de la matrice :math:`\mathbf{M}`
+doit Ãªtre donnÃ©e.
 
 .. math:: \mathbf{M} =  \begin{pmatrix}
     m_{11} & m_{12} & \cdots   & m_{1n} \\
@@ -78,10 +78,10 @@ doit être donnée.
     m_{n1} & \cdots & m_{nn-1} & m_{nn}
     \end{pmatrix}
 
-Cela peut être réalisé soit par un vecteur ou une matrice Numpy, soit par une
-liste de listes de valeurs (c'est-à-dire une liste de lignes). Par exemple, une
-matrice simple diagonale unitaire de covariances des erreurs d'ébauche
-:math:`\mathbf{B}` peut être décrite dans un fichier de script Python par::
+Cela peut Ãªtre rÃ©alisÃ© soit par un vecteur ou une matrice Numpy, soit par une
+liste de listes de valeurs (c'est-Ã -dire une liste de lignes). Par exemple, une
+matrice simple diagonale unitaire de covariances des erreurs d'Ã©bauche
+:math:`\mathbf{B}` peut Ãªtre dÃ©crite dans un fichier de script Python par::
 
     BackgroundError = [[1, 0 ... 0], [0, 1 ... 0] ... [0, 0 ... 1]]
 
@@ -89,7 +89,7 @@ ou::
 
     BackgroundError = numpy.eye(...)
 
-Seconde forme matricielle : utiliser la représentation "*ScalarSparseMatrix*"
+Seconde forme matricielle : utiliser la reprÃ©sentation "*ScalarSparseMatrix*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: ScalarSparseMatrix
@@ -97,10 +97,10 @@ Seconde forme matricielle : utiliser la représentation "*ScalarSparseMatrix*"
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
 
-Au contraire, la seconde forme matricielle est une méthode très simplifiée pour
-définir une matrice. La matrice de covariance :math:`\mathbf{M}` est ici
-supposée être un multiple positif de la matrice identité. Cette matrice peut
-alors être spécifiée de manière unique par le multiplicateur :math:`m`:
+Au contraire, la seconde forme matricielle est une mÃ©thode trÃ¨s simplifiÃ©e pour
+dÃ©finir une matrice. La matrice de covariance :math:`\mathbf{M}` est ici
+supposÃ©e Ãªtre un multiple positif de la matrice identitÃ©. Cette matrice peut
+alors Ãªtre spÃ©cifiÃ©e de maniÃ¨re unique par le multiplicateur :math:`m`:
 
 .. math:: \mathbf{M} =  m \times \begin{pmatrix}
     1       & 0      & \cdots   & 0      \\
@@ -109,17 +109,17 @@ alors être spécifiée de manière unique par le multiplicateur :math:`m`:
     0       & \cdots & 0        & 1
     \end{pmatrix}
 
-Le multiplicateur :math:`m` doit être un nombre réel ou entier positif (s'il
-est négatif, ce qui est impossible car une matrice de covariance est positive,
+Le multiplicateur :math:`m` doit Ãªtre un nombre rÃ©el ou entier positif (s'il
+est nÃ©gatif, ce qui est impossible car une matrice de covariance est positive,
 il est convertit en nombre positif). Par exemple, une simple matrice diagonale
-unitaire de covariances des erreurs d'ébauche :math:`\mathbf{B}` peut être
-décrite dans un fichier de script Python par::
+unitaire de covariances des erreurs d'Ã©bauche :math:`\mathbf{B}` peut Ãªtre
+dÃ©crite dans un fichier de script Python par::
 
     BackgroundError = 1.
 
 ou, mieux, par un "*String*" directement dans le cas ADAO.
 
-Troisième forme matricielle : utiliser la représentation "*DiagonalSparseMatrix*"
+TroisiÃ¨me forme matricielle : utiliser la reprÃ©sentation "*DiagonalSparseMatrix*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: DiagonalSparseMatrix
@@ -127,11 +127,11 @@ Troisième forme matricielle : utiliser la représentation "*DiagonalSparseMatrix*
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
 
-La troisième forme est aussi une méthode simplifiée pour fournir la matrice,
+La troisiÃ¨me forme est aussi une mÃ©thode simplifiÃ©e pour fournir la matrice,
 mais un peu plus puissante que la seconde. La matrice de covariance
-:math:`\mathbf{M}` est ici toujours considérée comme diagonale, mais
-l'utilisateur doit spécifier toutes les valeurs positives situées sur la
-diagonale. La matrice peut alors être définie uniquement par un vecteur
+:math:`\mathbf{M}` est ici toujours considÃ©rÃ©e comme diagonale, mais
+l'utilisateur doit spÃ©cifier toutes les valeurs positives situÃ©es sur la
+diagonale. La matrice peut alors Ãªtre dÃ©finie uniquement par un vecteur
 :math:`\mathbf{V}` qui se retrouve ensuite sur la diagonale:
 
 .. math:: \mathbf{M} =  \begin{pmatrix}
@@ -141,11 +141,11 @@ diagonale. La matrice peut alors être définie uniquement par un vecteur
     0      & \cdots & 0        & v_{n}
     \end{pmatrix}
 
-Cela peut être réalisé soit par vecteur ou une matrice Numpy, soit par
+Cela peut Ãªtre rÃ©alisÃ© soit par vecteur ou une matrice Numpy, soit par
 une liste, soit par une liste de listes de valeurs positives (dans tous les cas,
-si certaines valeurs sont négatives, elles sont converties en valeurs
+si certaines valeurs sont nÃ©gatives, elles sont converties en valeurs
 positives). Par exemple, un matrice simple diagonale unitaire des covariances
-des erreurs d'ébauche :math:`\mathbf{B}` peut être décrite dans un fichier de
+des erreurs d'Ã©bauche :math:`\mathbf{B}` peut Ãªtre dÃ©crite dans un fichier de
 script Python par::
 
     BackgroundError = [1, 1 ... 1]

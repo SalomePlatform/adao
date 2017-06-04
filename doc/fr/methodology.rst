@@ -24,20 +24,20 @@
 .. _section_methodology:
 
 ===========================================================================================
-**[DocT]** Méthodologie pour élaborer une étude d'Assimilation de Données ou d'Optimisation
+**[DocT]** MÃ©thodologie pour Ã©laborer une Ã©tude d'Assimilation de DonnÃ©es ou d'Optimisation
 ===========================================================================================
 
-Cette section présente un méthodologie générique pour construire une étude
-d'Assimilation de Données ou d'Optimisation. Elle décrit les étapes
-conceptuelles pour établir de manière indépendante cette étude. Elle est
-indépendante de tout outil, mais le module ADAO permet de mettre en oeuvre
-efficacement une telle étude.
+Cette section prÃ©sente un mÃ©thodologie gÃ©nÃ©rique pour construire une Ã©tude
+d'Assimilation de DonnÃ©es ou d'Optimisation. Elle dÃ©crit les Ã©tapes
+conceptuelles pour Ã©tablir de maniÃ¨re indÃ©pendante cette Ã©tude. Elle est
+indÃ©pendante de tout outil, mais le module ADAO permet de mettre en oeuvre
+efficacement une telle Ã©tude.
 
-Procédure logique pour une étude
+ProcÃ©dure logique pour une Ã©tude
 --------------------------------
 
-Pour une étude générique d'Assimilation de Données ou d'Optimisation, les
-principales étapes méthodologiques peuvent être les suivantes:
+Pour une Ã©tude gÃ©nÃ©rique d'Assimilation de DonnÃ©es ou d'Optimisation, les
+principales Ã©tapes mÃ©thodologiques peuvent Ãªtre les suivantes:
 
     - :ref:`section_m_step1`
     - :ref:`section_m_step2`
@@ -47,194 +47,194 @@ principales étapes méthodologiques peuvent être les suivantes:
     - :ref:`section_m_step6`
     - :ref:`section_m_step7`
 
-Chaque étape est détaillée dans la section suivante.
+Chaque Ã©tape est dÃ©taillÃ©e dans la section suivante.
 
-Procédure détaillée pour une étude
+ProcÃ©dure dÃ©taillÃ©e pour une Ã©tude
 ----------------------------------
 
 .. _section_m_step1:
 
-ÉTAPE 1: Spécifier la résolution du système physique et les paramètres à ajuster
+Ã‰TAPE 1: SpÃ©cifier la rÃ©solution du systÃ¨me physique et les paramÃ¨tres Ã  ajuster
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Une source essentielle de connaissance du système physique étudié est la
-simulation numérique. Elle est souvent disponible à travers un ou des cas de
-calcul, et elle est symbolisée par un **opérateur de simulation** (précédemment
-inclus dans :math:`H`). Un cas de calcul standard rassemble des hypothèses de
-modèles, une implémentation numérique, des capacités de calcul, etc. de manière
-à représenter le comportement du système physique. De plus, un cas de calcul est
-caractérisé par exemple par ses besoins en temps de calcul et en mémoire, par la
-taille de ses données et de ses résultats, etc. La connaissance de tous ces
-éléments est primordiale dans la mise au point d'une étude d'assimilation de
-données ou d'optimisation.
+Une source essentielle de connaissance du systÃ¨me physique Ã©tudiÃ© est la
+simulation numÃ©rique. Elle est souvent disponible Ã  travers un ou des cas de
+calcul, et elle est symbolisÃ©e par un **opÃ©rateur de simulation** (prÃ©cÃ©demment
+inclus dans :math:`H`). Un cas de calcul standard rassemble des hypothÃ¨ses de
+modÃ¨les, une implÃ©mentation numÃ©rique, des capacitÃ©s de calcul, etc. de maniÃ¨re
+Ã  reprÃ©senter le comportement du systÃ¨me physique. De plus, un cas de calcul est
+caractÃ©risÃ© par exemple par ses besoins en temps de calcul et en mÃ©moire, par la
+taille de ses donnÃ©es et de ses rÃ©sultats, etc. La connaissance de tous ces
+Ã©lÃ©ments est primordiale dans la mise au point d'une Ã©tude d'assimilation de
+donnÃ©es ou d'optimisation.
 
-Pour établir correctement une étude, il faut aussi choisir les inconnues
-d'optimisation incluses dans la simulation. Fréquemment, cela peut être à l'aide
-de modèles physiques dont les paramètres peuvent être ajustés. De plus, il est
-toujours utile d'ajouter une connaissance de type sensibilité, comme par exemple
-celle de la simulation par rapport aux paramètres qui peuvent être ajustés. Des
-éléments plus généraux, comme la stabilité ou la régularité de la simulation par
-rapport aux inconnues en entrée, sont aussi d'un grand intérêt.
+Pour Ã©tablir correctement une Ã©tude, il faut aussi choisir les inconnues
+d'optimisation incluses dans la simulation. FrÃ©quemment, cela peut Ãªtre Ã  l'aide
+de modÃ¨les physiques dont les paramÃ¨tres peuvent Ãªtre ajustÃ©s. De plus, il est
+toujours utile d'ajouter une connaissance de type sensibilitÃ©, comme par exemple
+celle de la simulation par rapport aux paramÃ¨tres qui peuvent Ãªtre ajustÃ©s. Des
+Ã©lÃ©ments plus gÃ©nÃ©raux, comme la stabilitÃ© ou la rÃ©gularitÃ© de la simulation par
+rapport aux inconnues en entrÃ©e, sont aussi d'un grand intÃ©rÃªt.
 
-En pratique, les méthodes d'optimisation peuvent requérir une information de
+En pratique, les mÃ©thodes d'optimisation peuvent requÃ©rir une information de
 type gradient de la simulation par rapport aux inconnues. Dans ce cas, le
-gradient explicite du code doit être donné, ou le gradient numérique doit être
-établi. Sa qualité est en relation avec la stabilité ou la régularité du code de
-simulation, et elle doit être vérifiée avec soin avant de mettre en oeuvre les
-calculs d'optimisation. Des conditions spécifiques doivent être utilisées pour
-ces vérifications.
+gradient explicite du code doit Ãªtre donnÃ©, ou le gradient numÃ©rique doit Ãªtre
+Ã©tabli. Sa qualitÃ© est en relation avec la stabilitÃ© ou la rÃ©gularitÃ© du code de
+simulation, et elle doit Ãªtre vÃ©rifiÃ©e avec soin avant de mettre en oeuvre les
+calculs d'optimisation. Des conditions spÃ©cifiques doivent Ãªtre utilisÃ©es pour
+ces vÃ©rifications.
 
-Un **opérateur d'observation** est toujours requis, en complément à l'opérateur
-de simulation. Cet opérateur d'observation, noté :math:`H` ou inclus dedans,
-doit convertir les sorties de la simulation numérique en quelque-chose qui est
-directement comparable aux observations. C'est un opérateur essentiel, car il
+Un **opÃ©rateur d'observation** est toujours requis, en complÃ©ment Ã  l'opÃ©rateur
+de simulation. Cet opÃ©rateur d'observation, notÃ© :math:`H` ou inclus dedans,
+doit convertir les sorties de la simulation numÃ©rique en quelque-chose qui est
+directement comparable aux observations. C'est un opÃ©rateur essentiel, car il
 est le moyen pratique de comparer les simulations et les observations. C'est
-usuellement réalisé par échantillonnage, projection ou intégration, des sorties
-de simulation, mais cela peut être plus compliqué. Souvent, du fait que
-l'opérateur d'observation fasse directement suite à celui de simulation dans un
-schéma simple d'assimilation de données, cet opérateur d'observation utilise
-fortement les capacités de post-traitement et d'extraction du code de
+usuellement rÃ©alisÃ© par Ã©chantillonnage, projection ou intÃ©gration, des sorties
+de simulation, mais cela peut Ãªtre plus compliquÃ©. Souvent, du fait que
+l'opÃ©rateur d'observation fasse directement suite Ã  celui de simulation dans un
+schÃ©ma simple d'assimilation de donnÃ©es, cet opÃ©rateur d'observation utilise
+fortement les capacitÃ©s de post-traitement et d'extraction du code de
 simulation.
 
 .. _section_m_step2:
 
-ÉTAPE 2: Spécifier les critères de qualification des résultats physiques
+Ã‰TAPE 2: SpÃ©cifier les critÃ¨res de qualification des rÃ©sultats physiques
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Comme les systèmes étudiés ont une réalité physique, il est important d'exprimer
-les **information physiques qui peuvent aider à qualifier un état simulé du
-système**. Il y a deux grand types d'informations qui conduisent à des critères
-permettant la qualification et la quantification de résultats d'optimisation.
+Comme les systÃ¨mes Ã©tudiÃ©s ont une rÃ©alitÃ© physique, il est important d'exprimer
+les **information physiques qui peuvent aider Ã  qualifier un Ã©tat simulÃ© du
+systÃ¨me**. Il y a deux grand types d'informations qui conduisent Ã  des critÃ¨res
+permettant la qualification et la quantification de rÃ©sultats d'optimisation.
 
-Premièrement, provenant d'une connaissance mathématique ou numérique, un grand
+PremiÃ¨rement, provenant d'une connaissance mathÃ©matique ou numÃ©rique, un grand
 nombre d'indicateurs standards permettent de qualifier, en relatif ou en absolu,
-l'intérêt d'un état optimal. Par exemple, des équations d'équilibre ou des
-conditions de fermeture sont des mesures complémentaires de la qualité d'un état
-du système. Des critères bien choisis comme des RMS, des RMSE, des extrema de
-champs, des intégrales, etc. permettent d'évaluer la qualité d'un état optimisé.
+l'intÃ©rÃªt d'un Ã©tat optimal. Par exemple, des Ã©quations d'Ã©quilibre ou des
+conditions de fermeture sont des mesures complÃ©mentaires de la qualitÃ© d'un Ã©tat
+du systÃ¨me. Des critÃ¨res bien choisis comme des RMS, des RMSE, des extrema de
+champs, des intÃ©grales, etc. permettent d'Ã©valuer la qualitÃ© d'un Ã©tat optimisÃ©.
 
-Deuxièmement, provenant d'une connaissance physique ou expérimentale, des
-informations utiles peuvent être obtenus à partir de l'interprétation des
-résultats d'optimisation. En particulier, la validité physique ou l'intérêt
-technique permettent d'évaluer l'intérêt de résultats des résultats numériques
+DeuxiÃ¨mement, provenant d'une connaissance physique ou expÃ©rimentale, des
+informations utiles peuvent Ãªtre obtenus Ã  partir de l'interprÃ©tation des
+rÃ©sultats d'optimisation. En particulier, la validitÃ© physique ou l'intÃ©rÃªt
+technique permettent d'Ã©valuer l'intÃ©rÃªt de rÃ©sultats des rÃ©sultats numÃ©riques
 de l'optimisation.
 
 Pour obtenir une information signifiante de ces deux types de connaissances, il
-est recommandé, si possible, de construire des critères numériques pour
-faciliter l'évaluation de la qualité globale des résultats numériques
+est recommandÃ©, si possible, de construire des critÃ¨res numÃ©riques pour
+faciliter l'Ã©valuation de la qualitÃ© globale des rÃ©sultats numÃ©riques
 
 .. _section_m_step3:
 
-ÉTAPE 3: Identifier et décrire les observations disponibles
+Ã‰TAPE 3: Identifier et dÃ©crire les observations disponibles
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En tant que seconde source d'information principale à propos du système physique
-à étudier, les **observations, ou mesures,** notées :math:`\mathbf{y}^o`,
-doivent être décrites avec soin. La qualité des mesures, leur erreurs
-intrinsèques, leur particularités, sont importantes à connaître, pour pouvoir
-introduire ces informations dans les calculs d'assimilation de données ou
+En tant que seconde source d'information principale Ã  propos du systÃ¨me physique
+Ã  Ã©tudier, les **observations, ou mesures,** notÃ©es :math:`\mathbf{y}^o`,
+doivent Ãªtre dÃ©crites avec soin. La qualitÃ© des mesures, leur erreurs
+intrinsÃ¨ques, leur particularitÃ©s, sont importantes Ã  connaÃ®tre, pour pouvoir
+introduire ces informations dans les calculs d'assimilation de donnÃ©es ou
 d'optimisation.
 
-Les observations doivent non seulement être disponibles, mais aussi doivent
-pouvoir être introduites efficacement dans l'environnement numérique de calcul
-ou d'optimisation. Ainsi l'environnement d'accès numérique aux observations est
-fondamental pour faciliter l'usage effectif de mesures variées et de sources
+Les observations doivent non seulement Ãªtre disponibles, mais aussi doivent
+pouvoir Ãªtre introduites efficacement dans l'environnement numÃ©rique de calcul
+ou d'optimisation. Ainsi l'environnement d'accÃ¨s numÃ©rique aux observations est
+fondamental pour faciliter l'usage effectif de mesures variÃ©es et de sources
 diverses, et pour encourager des essais extensifs utilisant des mesures.
-L'environnement d'accès numérique intègre la disponibilité de bases de données
-ou pas, les formats de données, les interfaces d'accès, etc.
+L'environnement d'accÃ¨s numÃ©rique intÃ¨gre la disponibilitÃ© de bases de donnÃ©es
+ou pas, les formats de donnÃ©es, les interfaces d'accÃ¨s, etc.
 
 .. _section_m_step4:
 
-ÉTAPE 4: Spécifier les éléments de modélisation de l'AD/Optimisation (covariances, ébauche...)
+Ã‰TAPE 4: SpÃ©cifier les Ã©lÃ©ments de modÃ©lisation de l'AD/Optimisation (covariances, Ã©bauche...)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Des éléments supplémentaires de modélisation en Assimilation de Données ou en
-Optimisation permettent d'améliorer l'information à propos de la représentation
-détaillée du système physique étudié.
+Des Ã©lÃ©ments supplÃ©mentaires de modÃ©lisation en Assimilation de DonnÃ©es ou en
+Optimisation permettent d'amÃ©liorer l'information Ã  propos de la reprÃ©sentation
+dÃ©taillÃ©e du systÃ¨me physique Ã©tudiÃ©.
 
-La connaissance *a-priori* de l'état du système peut être représentée en
-utilisant l'**ébauche**, notée :math:`\mathbf{x}^b`, et la **matrice de
-covariance des erreurs d'ébauche**, notée :math:`\mathbf{B}`. Ces informations
-sont extrêmement importantes à compléter, en particulier pour obtenir des
-résultats signifiants en Assimilation de Données.
+La connaissance *a-priori* de l'Ã©tat du systÃ¨me peut Ãªtre reprÃ©sentÃ©e en
+utilisant l'**Ã©bauche**, notÃ©e :math:`\mathbf{x}^b`, et la **matrice de
+covariance des erreurs d'Ã©bauche**, notÃ©e :math:`\mathbf{B}`. Ces informations
+sont extrÃªmement importantes Ã  complÃ©ter, en particulier pour obtenir des
+rÃ©sultats signifiants en Assimilation de DonnÃ©es.
 
-Par ailleurs, des informations sur les erreurs d'observation peuvent être
-utilisées pour compléter la **matrice de covariance des erreurs d'observation**,
-notée :math:`\mathbf{R}`. Comme pour :math:`\mathbf{B}`, il est recommandé
-d'utiliser des informations soigneusement vérifiées pour renseigner ces matrices
+Par ailleurs, des informations sur les erreurs d'observation peuvent Ãªtre
+utilisÃ©es pour complÃ©ter la **matrice de covariance des erreurs d'observation**,
+notÃ©e :math:`\mathbf{R}`. Comme pour :math:`\mathbf{B}`, il est recommandÃ©
+d'utiliser des informations soigneusement vÃ©rifiÃ©es pour renseigner ces matrices
 de covariances.
 
-Dans le cas de simulations dynamiques, il est de plus nécessaire de définir un
-**opérateur d'évolution** et la **matrice de covariance des erreurs
-d'évolution** associée.
+Dans le cas de simulations dynamiques, il est de plus nÃ©cessaire de dÃ©finir un
+**opÃ©rateur d'Ã©volution** et la **matrice de covariance des erreurs
+d'Ã©volution** associÃ©e.
 
 .. _section_m_step5:
 
-ÉTAPE 5: Choisir l'algorithme d'optimisation et ses paramètres
+Ã‰TAPE 5: Choisir l'algorithme d'optimisation et ses paramÃ¨tres
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-L'Assimilation de Données ou l'Optimisation demandent de résoudre un problème
-d'optimisation, le plus souvent sous la forme d'un problème de minimisation.
-Selon la disponibilité du gradient de la fonction coût en fonction des
-paramètres d'optimisation, la classe recommandée de méthodes sera différente.
-Les méthodes d'optimisation variationnelles ou avec linéarisation locale
-nécessitent ce gradient. A l'opposé, les méthodes sans dérivées ne nécessitent
-pas ce gradient, mais présentent souvent un coût de calcul notablement
-supérieur.
+L'Assimilation de DonnÃ©es ou l'Optimisation demandent de rÃ©soudre un problÃ¨me
+d'optimisation, le plus souvent sous la forme d'un problÃ¨me de minimisation.
+Selon la disponibilitÃ© du gradient de la fonction coÃ»t en fonction des
+paramÃ¨tres d'optimisation, la classe recommandÃ©e de mÃ©thodes sera diffÃ©rente.
+Les mÃ©thodes d'optimisation variationnelles ou avec linÃ©arisation locale
+nÃ©cessitent ce gradient. A l'opposÃ©, les mÃ©thodes sans dÃ©rivÃ©es ne nÃ©cessitent
+pas ce gradient, mais prÃ©sentent souvent un coÃ»t de calcul notablement
+supÃ©rieur.
 
-A l'intérieur même d'une classe de méthodes d'optimisation, pour chaque méthode,
-il y a usuellement un compromis à faire entre les *"capacités génériques de la
-méthode"* et ses *"performances particulières sur un problème spécifique"*. Les
-méthodes les plus génériques, comme par exemple la minimisation variationnelle
-utilisant l':ref:`section_ref_algorithm_3DVAR`, présentent de remarquables
-propriétés numériques d'efficacité, de robustesse et de fiabilité, ce qui
-conduit à les recommander indépendamment du problème à résoudre. De plus, il est
-souvent difficile de régler les paramètres d'une méthode d'optimisation, donc la
-méthodes la plus robuste est souvent celle qui présente le moins de paramètres.
-Au final, au moins au début, il est recommandé d'utiliser les méthodes les plus
-génériques et de changer le moins possible les paramètres par défaut connus.
+A l'intÃ©rieur mÃªme d'une classe de mÃ©thodes d'optimisation, pour chaque mÃ©thode,
+il y a usuellement un compromis Ã  faire entre les *"capacitÃ©s gÃ©nÃ©riques de la
+mÃ©thode"* et ses *"performances particuliÃ¨res sur un problÃ¨me spÃ©cifique"*. Les
+mÃ©thodes les plus gÃ©nÃ©riques, comme par exemple la minimisation variationnelle
+utilisant l':ref:`section_ref_algorithm_3DVAR`, prÃ©sentent de remarquables
+propriÃ©tÃ©s numÃ©riques d'efficacitÃ©, de robustesse et de fiabilitÃ©, ce qui
+conduit Ã  les recommander indÃ©pendamment du problÃ¨me Ã  rÃ©soudre. De plus, il est
+souvent difficile de rÃ©gler les paramÃ¨tres d'une mÃ©thode d'optimisation, donc la
+mÃ©thodes la plus robuste est souvent celle qui prÃ©sente le moins de paramÃ¨tres.
+Au final, au moins au dÃ©but, il est recommandÃ© d'utiliser les mÃ©thodes les plus
+gÃ©nÃ©riques et de changer le moins possible les paramÃ¨tres par dÃ©faut connus.
 
 .. _section_m_step6:
 
-ÉTAPE 6: Conduire les calculs d'optimisation et obtenir les résultats
+Ã‰TAPE 6: Conduire les calculs d'optimisation et obtenir les rÃ©sultats
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Après avoir mis au point une étude d'Assimilation de Données ou d'Optimisation,
-les calculs doivent être conduits de manière efficace.
+AprÃ¨s avoir mis au point une Ã©tude d'Assimilation de DonnÃ©es ou d'Optimisation,
+les calculs doivent Ãªtre conduits de maniÃ¨re efficace.
 
 Comme l'optimisation requiert usuellement un grand nombre de simulations
-physiques élémentaires du système, les calculs sont souvent effectués dans un
+physiques Ã©lÃ©mentaires du systÃ¨me, les calculs sont souvent effectuÃ©s dans un
 environnement de calculs hautes performances (HPC, ou Hight Performance
-Computing) pour réduire le temps complet d'utilisateur. Même si le problème
-d'optimisation est petit, le temps de simulation du système physique peut être
-long, nécessitant des ressources de calcul conséquentes. Ces besoins doivent
-être pris en compte suffisamment tôt dans la procédure d'étude pour être
-satisfaits sans nécessiter un effort trop important.
+Computing) pour rÃ©duire le temps complet d'utilisateur. MÃªme si le problÃ¨me
+d'optimisation est petit, le temps de simulation du systÃ¨me physique peut Ãªtre
+long, nÃ©cessitant des ressources de calcul consÃ©quentes. Ces besoins doivent
+Ãªtre pris en compte suffisamment tÃ´t dans la procÃ©dure d'Ã©tude pour Ãªtre
+satisfaits sans nÃ©cessiter un effort trop important.
 
-Pour la même raison de besoins de calculs importants, il est aussi important de
-préparer soigneusement les sorties de la procédure d'optimisation. L'état
+Pour la mÃªme raison de besoins de calculs importants, il est aussi important de
+prÃ©parer soigneusement les sorties de la procÃ©dure d'optimisation. L'Ã©tat
 optimal est la principale information requise, mais un grand nombre d'autres
-informations spéciales peuvent être obtenues au cours du calcul d'optimisation
-ou à la fin: évaluation des erreurs, états intermédiaires, indicateurs de
-qualité, etc. Toutes ces informations, nécessitant parfois des calculs
-additionnels, doivent être connues et demandées au début du processus
+informations spÃ©ciales peuvent Ãªtre obtenues au cours du calcul d'optimisation
+ou Ã  la fin: Ã©valuation des erreurs, Ã©tats intermÃ©diaires, indicateurs de
+qualitÃ©, etc. Toutes ces informations, nÃ©cessitant parfois des calculs
+additionnels, doivent Ãªtre connues et demandÃ©es au dÃ©but du processus
 d'optimisation.
 
 .. _section_m_step7:
 
-ÉTAPE 7: Exploiter les résultats et qualifier leur pertinence physique
+Ã‰TAPE 7: Exploiter les rÃ©sultats et qualifier leur pertinence physique
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Une fois les résultats obtenus, ils doivent être interprétés en termes de
-significations physique et numérique. Même si la démarche d'optimisation donne
-toujours un nouvel état optimal qui est au moins aussi bon que l'état *a
-priori*, et le plus souvent meilleur, cet état optimal doit par exemple être
-vérifié par rapport aux critères de qualité identifiés au moment de
-:ref:`section_m_step2`. Cela peut conduire à des études statistiques ou
-numériques de manière à évaluer l'intérêt d'un état optimal pour représenter la
-système physique.
+Une fois les rÃ©sultats obtenus, ils doivent Ãªtre interprÃ©tÃ©s en termes de
+significations physique et numÃ©rique. MÃªme si la dÃ©marche d'optimisation donne
+toujours un nouvel Ã©tat optimal qui est au moins aussi bon que l'Ã©tat *a
+priori*, et le plus souvent meilleur, cet Ã©tat optimal doit par exemple Ãªtre
+vÃ©rifiÃ© par rapport aux critÃ¨res de qualitÃ© identifiÃ©s au moment de
+:ref:`section_m_step2`. Cela peut conduire Ã  des Ã©tudes statistiques ou
+numÃ©riques de maniÃ¨re Ã  Ã©valuer l'intÃ©rÃªt d'un Ã©tat optimal pour reprÃ©senter la
+systÃ¨me physique.
 
-Au-delà de cette analyse qui doit être réalisée pour chaque étude d'Assimilation
-de Données ou d'Optimisation, il est très utile d'exploiter les résultats
-d'optimisation comme une partie intégrée dans une étude plus complète du système
-physique d'intérêt.
+Au-delÃ  de cette analyse qui doit Ãªtre rÃ©alisÃ©e pour chaque Ã©tude d'Assimilation
+de DonnÃ©es ou d'Optimisation, il est trÃ¨s utile d'exploiter les rÃ©sultats
+d'optimisation comme une partie intÃ©grÃ©e dans une Ã©tude plus complÃ¨te du systÃ¨me
+physique d'intÃ©rÃªt.

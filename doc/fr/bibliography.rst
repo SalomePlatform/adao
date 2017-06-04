@@ -33,7 +33,7 @@ Bibliographie
 
 .. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999
 
-.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014
+.. [Bocquet04] Bocquet M., *Introduction aux principes et mÃ©thodes de l'assimilation de donnÃ©es en gÃ©ophysique*, Lecture Notes, 2014
 
 .. [Buchinsky98] Buchinsky M., *Recent Advances in Quantile Regression Models: A Practical Guidline for Empirical Research*, Journal of Human Resources, 33(1), pp.88-126, 1998
 
@@ -73,7 +73,7 @@ Bibliographie
 
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 
-.. [SalomeMeca] *Salome_Meca et Code_Aster, Analyse des Structures et Thermomécanique pour les Etudes et la Recherche*, http://www.code-aster.org/
+.. [SalomeMeca] *Salome_Meca et Code_Aster, Analyse des Structures et ThermomÃ©canique pour les Etudes et la Recherche*, http://www.code-aster.org/
 
 .. [Tarantola87] Tarantola A., *Inverse Problem: Theory Methods for Data Fitting and Parameter Estimation*, Elsevier, 1987
 
@@ -81,23 +81,23 @@ Bibliographie
 
 .. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
 
-.. [WikipediaDA] Wikipédia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
+.. [WikipediaDA] WikipÃ©dia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
 
-.. [WikipediaMO] Wikipédia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
+.. [WikipediaMO] WikipÃ©dia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
 
-.. [WikipediaND] Wikipédia, *Nondimensionalization*, https://en.wikipedia.org/wiki/Nondimensionalization
+.. [WikipediaND] WikipÃ©dia, *Nondimensionalization*, https://en.wikipedia.org/wiki/Nondimensionalization
 
-.. [WikipediaPSO] Wikipédia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
+.. [WikipediaPSO] WikipÃ©dia, *Particle swarm optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
 
-.. [WikipediaQR] Wikipédia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
+.. [WikipediaQR] WikipÃ©dia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
 
-.. [WikipediaTI] Wikipédia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
+.. [WikipediaTI] WikipÃ©dia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
 
-.. [WikipediaUKF] Wikipédia, *Unscented Kalman filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
+.. [WikipediaUKF] WikipÃ©dia, *Unscented Kalman filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
 
 .. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 23(4), pp.550-560, 1997
 
-*Nota Bene* : un lien vers la version française de chaque page Wikipédia se
-trouve dans le sous-menu "*Languages*". Les deux versions sont complémentaires
-car, même si souvent le contenu en anglais est plus fourni, les informations
+*Nota Bene* : un lien vers la version franÃ§aise de chaque page WikipÃ©dia se
+trouve dans le sous-menu "*Languages*". Les deux versions sont complÃ©mentaires
+car, mÃªme si souvent le contenu en anglais est plus fourni, les informations
 disponibles dans chaque langue ne sont pas identiques.

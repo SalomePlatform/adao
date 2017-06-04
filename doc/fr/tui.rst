@@ -30,28 +30,28 @@
 **[DocR]** Interface de programmation textuelle pour l'utilisateur (API/TUI)
 ================================================================================
 
-Cette section présente des méthodes avancées d'usage du module ADAO à l'aide de
+Cette section prÃ©sente des mÃ©thodes avancÃ©es d'usage du module ADAO Ã  l'aide de
 son interface de programmation textuelle (API/TUI). Cette interface permet de
-créer un objet de calcul de manière similaire à la construction d'un cas par
-l'interface graphique (GUI). Dans le cas où l'on désire réaliser à la main le
+crÃ©er un objet de calcul de maniÃ¨re similaire Ã  la construction d'un cas par
+l'interface graphique (GUI). Dans le cas oÃ¹ l'on dÃ©sire rÃ©aliser Ã  la main le
 cas de calcul TUI, on recommande de bien s'appuyer sur l'ensemble de la
-documentation du module ADAO, et de se reporter si nécessaire à l'interface
-graphique (GUI), pour disposer de l'ensemble des éléments permettant de
-renseigner correctement les commandes. Les notions générales et termes utilisés
-ici sont définis dans :ref:`section_theory`.
+documentation du module ADAO, et de se reporter si nÃ©cessaire Ã  l'interface
+graphique (GUI), pour disposer de l'ensemble des Ã©lÃ©ments permettant de
+renseigner correctement les commandes. Les notions gÃ©nÃ©rales et termes utilisÃ©s
+ici sont dÃ©finis dans :ref:`section_theory`.
 
 .. _subsection_tui_creating:
 
-Création de cas de calcul TUI ADAO et exemples
+CrÃ©ation de cas de calcul TUI ADAO et exemples
 ----------------------------------------------
 
 .. _subsection_tui_example:
 
-Un exemple simple de création d'un cas de calcul TUI ADAO
+Un exemple simple de crÃ©ation d'un cas de calcul TUI ADAO
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour introduire l'interface TUI, on commence par un exemple simple mais complet
-de cas de calcul ADAO. Toutes les données sont explicitement définies dans le
+de cas de calcul ADAO. Toutes les donnÃ©es sont explicitement dÃ©finies dans le
 corps du script pour faciliter la lecture. L'ensemble des commandes est le
 suivant::
 
@@ -67,41 +67,41 @@ suivant::
     case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
     case.execute()
 
-Le résultat de l'exécution de ces commandes dans SALOME (que ce soit par la
+Le rÃ©sultat de l'exÃ©cution de ces commandes dans SALOME (que ce soit par la
 commande "*shell*" de SALOME, dans la console Python de l'interface, ou par le
-menu d'exécution d'un script) est le suivant::
+menu d'exÃ©cution d'un script) est le suivant::
 
     Analysis [ 0.25000264  0.79999797  0.94999939]
 
-Création détaillée d'un cas de calcul TUI ADAO
+CrÃ©ation dÃ©taillÃ©e d'un cas de calcul TUI ADAO
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-On décrit ici plus en détail les différentes étapes de création d'un cas de
-calcul TUI ADAO. Les commandes elles-mêmes sont détaillées juste après dans
+On dÃ©crit ici plus en dÃ©tail les diffÃ©rentes Ã©tapes de crÃ©ation d'un cas de
+calcul TUI ADAO. Les commandes elles-mÃªmes sont dÃ©taillÃ©es juste aprÃ¨s dans
 l':ref:`subsection_tui_commands`.
 
-La création et l'initialisation d'une étude se font par les commandes suivantes,
-le nom ``case`` de l'objet du cas de calcul TUI ADAO étant quelconque, au choix
+La crÃ©ation et l'initialisation d'une Ã©tude se font par les commandes suivantes,
+le nom ``case`` de l'objet du cas de calcul TUI ADAO Ã©tant quelconque, au choix
 de l'utilisateur::
 
     from numpy import array
     import adaoBuilder
     case = adaoBuilder.New()
 
-Il est recommandé d'importer par principe le module ``numpy`` ou ses
+Il est recommandÃ© d'importer par principe le module ``numpy`` ou ses
 constructeurs particuliers comme celui d'``array``, pour faciliter ensuite son
-usage dans les commandes elle-mêmes.
+usage dans les commandes elle-mÃªmes.
 
-Ensuite, le cas doit être construit par une préparation et un enregistrement des
-données définissant l'étude. L'ordre de ces commande n'a pas d'importance, il
-suffit que les concepts requis par l'algorithme utilisé soient présentes. On se
-reportera à :ref:`section_reference` et à ses sous-parties pour avoir le détail
-des commandes par algorithme. Ici, on définit successivement l'algorithme
-d'assimilation de données ou d'optimisation choisi et ses paramètres, puis
-l'ébauche :math:`\mathbf{x}^b` (nommée ``Background``) et sa covariance
-d'erreurs :math:`\mathbf{B}` (nommée ``BackgroundError``), et enfin
-l'observation :math:`\mathbf{y}^o` (nommée ``Observation``) et sa covariance
-d'erreurs :math:`\mathbf{R}` (nommée ``ObservationError``)::
+Ensuite, le cas doit Ãªtre construit par une prÃ©paration et un enregistrement des
+donnÃ©es dÃ©finissant l'Ã©tude. L'ordre de ces commande n'a pas d'importance, il
+suffit que les concepts requis par l'algorithme utilisÃ© soient prÃ©sentes. On se
+reportera Ã  :ref:`section_reference` et Ã  ses sous-parties pour avoir le dÃ©tail
+des commandes par algorithme. Ici, on dÃ©finit successivement l'algorithme
+d'assimilation de donnÃ©es ou d'optimisation choisi et ses paramÃ¨tres, puis
+l'Ã©bauche :math:`\mathbf{x}^b` (nommÃ©e ``Background``) et sa covariance
+d'erreurs :math:`\mathbf{B}` (nommÃ©e ``BackgroundError``), et enfin
+l'observation :math:`\mathbf{y}^o` (nommÃ©e ``Observation``) et sa covariance
+d'erreurs :math:`\mathbf{R}` (nommÃ©e ``ObservationError``)::
 
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     #
@@ -111,29 +111,29 @@ d'erreurs :math:`\mathbf{R}` (nommée ``ObservationError``)::
     case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
     case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
 
-On remarque que l'on peut donner, en entrée des quantités vectorielles ou
+On remarque que l'on peut donner, en entrÃ©e des quantitÃ©s vectorielles ou
 matricielles, des objets de type ``str``, ``list`` ou ``tuple`` de Python, ou de
 type ``array`` ou ``matrix`` de Numpy. Dans ces deux derniers cas, il faut
 simplement importer le module Numpy avant.
 
-On doit ensuite définir les opérateurs :math:`H` d'observation et éventuellement
-:math:`M` d'évolution. Dans tous les cas, linéaire ou non-linéaire, on peut les
-définir comme des fonctions. Dans le cas simple d'un opérateur linéaire, on peut
-aussi le définir à l'aide de la matrice qui correspond à l'opérateur linéaire.
-Dans le cas présent le plus simple d'opérateur linéaire, on utilise la syntaxe
-suivante pour un opérateur de :math:`\mathbf{R}^3` sur lui-même::
+On doit ensuite dÃ©finir les opÃ©rateurs :math:`H` d'observation et Ã©ventuellement
+:math:`M` d'Ã©volution. Dans tous les cas, linÃ©aire ou non-linÃ©aire, on peut les
+dÃ©finir comme des fonctions. Dans le cas simple d'un opÃ©rateur linÃ©aire, on peut
+aussi le dÃ©finir Ã  l'aide de la matrice qui correspond Ã  l'opÃ©rateur linÃ©aire.
+Dans le cas prÃ©sent le plus simple d'opÃ©rateur linÃ©aire, on utilise la syntaxe
+suivante pour un opÃ©rateur de :math:`\mathbf{R}^3` sur lui-mÃªme::
 
     case.ObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
 
-Dans le cas beaucoup plus courant d'un opérateur non-linéaire de
-:math:`\mathbf{R}^n` dans  :math:`\mathbf{R}^p`, il doit être préalablement
+Dans le cas beaucoup plus courant d'un opÃ©rateur non-linÃ©aire de
+:math:`\mathbf{R}^n` dans  :math:`\mathbf{R}^p`, il doit Ãªtre prÃ©alablement
 disponible sous la forme d'une fonction Python, connue dans l'espace de nommage
-courant, qui prend en entrée un vecteur ``numpy`` (ou une liste ordonnée) de
+courant, qui prend en entrÃ©e un vecteur ``numpy`` (ou une liste ordonnÃ©e) de
 taille :math:`n` et qui restitue en sortie un vecteur ``numpy`` de taille
-:math:`p`. Lorsque seul l'opérateur non-linéaire est défini par l'argument
-"*OneFunction*", son adjoint est directement établi de manière numérique et il
-est paramétrable par l'argument "*Parameters*". L'exemple suivant montre une
-fonction ``simulation`` (qui réalise ici le même opérateur linéaire que
+:math:`p`. Lorsque seul l'opÃ©rateur non-linÃ©aire est dÃ©fini par l'argument
+"*OneFunction*", son adjoint est directement Ã©tabli de maniÃ¨re numÃ©rique et il
+est paramÃ©trable par l'argument "*Parameters*". L'exemple suivant montre une
+fonction ``simulation`` (qui rÃ©alise ici le mÃªme opÃ©rateur linÃ©aire que
 ci-dessus) et l'enregistre dans le cas ADAO::
 
     import numpy
@@ -148,82 +148,82 @@ ci-dessus) et l'enregistre dans le cas ADAO::
         Parameters  = {"DifferentialIncrement":0.01},
         )
 
-Pour connaître les résultats intermédiaire ou finaux du calcul du cas, on peut
-ajouter des "*observer*", qui permettent d'associer l'exécution d'un script à
-une variable intermédiaire ou finale du calcul. On se reportera à la description
-de la manière d':ref:`section_advanced_observer`, et à la :ref:`section_reference`
-pour savoir quelles sont les quantités observables. Cette association
-d'"*observer*" avec une quantité existante se fait de manière similaire à la
-définition des données du calcul::
+Pour connaÃ®tre les rÃ©sultats intermÃ©diaire ou finaux du calcul du cas, on peut
+ajouter des "*observer*", qui permettent d'associer l'exÃ©cution d'un script Ã 
+une variable intermÃ©diaire ou finale du calcul. On se reportera Ã  la description
+de la maniÃ¨re d':ref:`section_advanced_observer`, et Ã  la :ref:`section_reference`
+pour savoir quelles sont les quantitÃ©s observables. Cette association
+d'"*observer*" avec une quantitÃ© existante se fait de maniÃ¨re similaire Ã  la
+dÃ©finition des donnÃ©es du calcul::
 
     case.set( 'Observer', Variable="Analysis", Template="ValuePrinter" )
 
 Enfin, lorsque toutes les informations requises sont disponibles dans le cas
-``case`` de calcul ADAO, on peut en demander l'exécution de manière très
-simple dans l'environnement de l'interpréteur Python::
+``case`` de calcul ADAO, on peut en demander l'exÃ©cution de maniÃ¨re trÃ¨s
+simple dans l'environnement de l'interprÃ©teur Python::
 
     case.execute()
 
-Au final, on obtient le script très compact proposé précédemment dans
+Au final, on obtient le script trÃ¨s compact proposÃ© prÃ©cÃ©demment dans
 :ref:`subsection_tui_example`.
 
-Fournir des données ou informations de calcul plus complexes
+Fournir des donnÃ©es ou informations de calcul plus complexes
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Une telle interface s'écrivant en Python, il est possible d'utiliser toute la
-puissance du langage pour entrer des données plus complexes qu'une déclaration
+Une telle interface s'Ã©crivant en Python, il est possible d'utiliser toute la
+puissance du langage pour entrer des donnÃ©es plus complexes qu'une dÃ©claration
 explicite.
 
-L'enregistrement des données d'entrées supporte différents types de variables,
-mais surtout, ces entrées peuvent recevoir des variables courantes disponibles
-dans l'espace de nommage du script. Il est donc aisé d'utiliser des variables
-calculées préalablement ou obtenues par l'import de scripts "utilisateur". Si
+L'enregistrement des donnÃ©es d'entrÃ©es supporte diffÃ©rents types de variables,
+mais surtout, ces entrÃ©es peuvent recevoir des variables courantes disponibles
+dans l'espace de nommage du script. Il est donc aisÃ© d'utiliser des variables
+calculÃ©es prÃ©alablement ou obtenues par l'import de scripts "utilisateur". Si
 par exemple les observations sont disponibles sous la forme d'une liste dans un
-fichier Python externe nommé ``observations.py`` sous le nom ``table``, il
-suffit de réaliser les opérations suivantes pour enregistrer les observations
+fichier Python externe nommÃ© ``observations.py`` sous le nom ``table``, il
+suffit de rÃ©aliser les opÃ©rations suivantes pour enregistrer les observations
 dans le cas de calcul TUI ADAO::
 
     from observations import table
     case.set( 'Observation', Vector=table )
 
-La première ligne importe la variable ``table`` depuis le fichier externe, et la
-seconde enregistre directement cette table comme la donnée "*Observation*".
+La premiÃ¨re ligne importe la variable ``table`` depuis le fichier externe, et la
+seconde enregistre directement cette table comme la donnÃ©e "*Observation*".
 
-La simplicité de cet enregistrement montre bien la facilité d'obtenir les
-données de calcul depuis des sources externes, fichiers ou flux informatiques
-atteignables en Python. Comme d'habitude, il est recommandé à l'utilisateur de
-vérifier ses données avant de les enregistrer dans le cas de calcul TUI ADAO
-pour éviter les erreurs compliquées à corriger.
+La simplicitÃ© de cet enregistrement montre bien la facilitÃ© d'obtenir les
+donnÃ©es de calcul depuis des sources externes, fichiers ou flux informatiques
+atteignables en Python. Comme d'habitude, il est recommandÃ© Ã  l'utilisateur de
+vÃ©rifier ses donnÃ©es avant de les enregistrer dans le cas de calcul TUI ADAO
+pour Ã©viter les erreurs compliquÃ©es Ã  corriger.
 
-Obtenir et utiliser les résultats de calcul de manière plus riche
+Obtenir et utiliser les rÃ©sultats de calcul de maniÃ¨re plus riche
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-De la même manière, il est possible d'obtenir et traiter les résultats de calcul
-de manière plus riche, pour enchaîner sur des post-traitements après le calcul
+De la mÃªme maniÃ¨re, il est possible d'obtenir et traiter les rÃ©sultats de calcul
+de maniÃ¨re plus riche, pour enchaÃ®ner sur des post-traitements aprÃ¨s le calcul
 en TUI.
 
-Les variables de résultats de calcul, ou les variables internes issues de
-l'optimisation ou de l'assimilation de données, sont disponibles à travers la
-méthode ``get`` du cas de calcul TUI ADAO, qui renvoie un objet de type liste de
-la variable demandée. On se reportera aux :ref:`section_ref_output_variables`
-pour une description détaillée sur ce sujet.
+Les variables de rÃ©sultats de calcul, ou les variables internes issues de
+l'optimisation ou de l'assimilation de donnÃ©es, sont disponibles Ã  travers la
+mÃ©thode ``get`` du cas de calcul TUI ADAO, qui renvoie un objet de type liste de
+la variable demandÃ©e. On se reportera aux :ref:`section_ref_output_variables`
+pour une description dÃ©taillÃ©e sur ce sujet.
 
 A titre d'exemple, on donne quelques lignes de script qui permettent d'obtenir
-le nombre d'itérations de l'optimisation et la valeur optimale ainsi que sa
+le nombre d'itÃ©rations de l'optimisation et la valeur optimale ainsi que sa
 taille::
 
-    print
-    print "    Nombre d'iterations :", len(case.get("CostFunctionJ"))
+    print("")
+    print("    Nombre d'iterations : %i"%len(case.get("CostFunctionJ")))
     Xa = case.get("Analysis")
-    print "    Analyse optimale    :", Xa[-1]
-    print "    Taille de l'analyse :", len(Xa[-1])
-    print
+    print("    Analyse optimale    : %s"%(Xa[-1],))
+    print("    Taille de l'analyse : %i"%len(Xa[-1]))
+    print("")
 
-Ces lignes peuvent être très simplement additionnées à l'exemple initial de cas
-de calcul TUI ADAO proposé dans :ref:`subsection_tui_example`.
+Ces lignes peuvent Ãªtre trÃ¨s simplement additionnÃ©es Ã  l'exemple initial de cas
+de calcul TUI ADAO proposÃ© dans :ref:`subsection_tui_example`.
 
-De même que pour l'entrée des données, la simplicité de récupération des
-résultats permet d'envisager aisément des post-traitements enchaînés dans
+De mÃªme que pour l'entrÃ©e des donnÃ©es, la simplicitÃ© de rÃ©cupÃ©ration des
+rÃ©sultats permet d'envisager aisÃ©ment des post-traitements enchaÃ®nÃ©s dans
 SALOME, pour utiliser par exemple de la visualisation avec MatPlotLib ou PARAVIS
 [PARAVIS]_, de l'adaptation de maillage avec HOMARD [HOMARD]_, ou pour d'autres
 calculs.
@@ -235,35 +235,35 @@ Ensemble des commandes disponibles en interface textuelle TUI
 
 Dans l'interface TUI du module ADAO, on suit les conventions et recommandations
 courantes en Python pour la distinction entre ce qui est public, et ce qui est
-privé ou réservé car relevant des détails d'implémentation. De manière pratique,
-tout nom d'objet ou de fonction commençant par au moins un signe "_" est privé
-au sens courant de programmation ("*private*"). Néanmoins, l'absence d'un tel
-signe au début d'un nom ne le désigne pas comme public. De manière générale, en
-Python, et contrairement à d'autres langages, on peut accéder aux objets ou aux
-fonction privés. Cela peut parfois être utile, mais un tel usage dans vos codes
-conduira à des plantages sans avertissement lors de futures versions. Il est
-donc fortement recommandé de ne pas le faire.
+privÃ© ou rÃ©servÃ© car relevant des dÃ©tails d'implÃ©mentation. De maniÃ¨re pratique,
+tout nom d'objet ou de fonction commenÃ§ant par au moins un signe "_" est privÃ©
+au sens courant de programmation ("*private*"). NÃ©anmoins, l'absence d'un tel
+signe au dÃ©but d'un nom ne le dÃ©signe pas comme public. De maniÃ¨re gÃ©nÃ©rale, en
+Python, et contrairement Ã  d'autres langages, on peut accÃ©der aux objets ou aux
+fonction privÃ©s. Cela peut parfois Ãªtre utile, mais un tel usage dans vos codes
+conduira Ã  des plantages sans avertissement lors de futures versions. Il est
+donc fortement recommandÃ© de ne pas le faire.
 
 Pour clarifier et faciliter l'utilisation du module pour du script, **cette
-section définit donc l'interface de programmation (API) textuelle publique pour
-l'utilisateur (TUI) de manière complète et limitative**. L'usage en script
-d'objets ou fonctions ADAO autres que ceux qui sont définis ici est fortement
-déconseillé, car cela conduira vraisemblablement à des plantages sans
+section dÃ©finit donc l'interface de programmation (API) textuelle publique pour
+l'utilisateur (TUI) de maniÃ¨re complÃ¨te et limitative**. L'usage en script
+d'objets ou fonctions ADAO autres que ceux qui sont dÃ©finis ici est fortement
+dÃ©conseillÃ©, car cela conduira vraisemblablement Ã  des plantages sans
 avertissement lors de futures versions.
 
-Syntaxes d'appel équivalentes pour les commandes TUI
+Syntaxes d'appel Ã©quivalentes pour les commandes TUI
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-La définition des données lors de la création de cas de calcul TUI ADAO supporte
-**deux syntaxes entièrement équivalentes**. On peut :
+La dÃ©finition des donnÃ©es lors de la crÃ©ation de cas de calcul TUI ADAO supporte
+**deux syntaxes entiÃ¨rement Ã©quivalentes**. On peut :
 
 - soit utiliser la commande ``set`` et comme premier argument le concept
   ``XXXXX`` sur lequel appliquer la commande dont les arguments suivent,
 - soit utiliser la commande ``setXXXXX`` contenant les arguments de la commande
-  à appliquer.
+  Ã  appliquer.
 
-Pour illustrer cette équivalence, on prend l'exemple des deux commandes
-suivantes qui conduisent au même résultat::
+Pour illustrer cette Ã©quivalence, on prend l'exemple des deux commandes
+suivantes qui conduisent au mÃªme rÃ©sultat::
 
     case.set( 'Background', Vector=[0, 1, 2] )
 
@@ -271,41 +271,41 @@ et::
 
     case.setBackground( Vector=[0, 1, 2] )
 
-Le choix de l'une ou l'autre des syntaxes est librement laissé à l'utilisateur,
-selon son contexte d'usage. Dans la suite, par souci de clarté, on définit les
+Le choix de l'une ou l'autre des syntaxes est librement laissÃ© Ã  l'utilisateur,
+selon son contexte d'usage. Dans la suite, par souci de clartÃ©, on dÃ©finit les
 commandes selon la seconde syntaxe.
 
-Création d'un cas de calcul en interface textuelle TUI
+CrÃ©ation d'un cas de calcul en interface textuelle TUI
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-La création et l'initialisation d'un cas de calcul en interface textuelle TUI se
+La crÃ©ation et l'initialisation d'un cas de calcul en interface textuelle TUI se
 font en important le module d'interface "*adaoBuilder*" et en invoquant sa
-méthode "*New()*" comme illustré dans les quelques lignes suivantes (le nom
-``case`` de l'objet étant quelconque, au choix de l'utilisateur)::
+mÃ©thode "*New()*" comme illustrÃ© dans les quelques lignes suivantes (le nom
+``case`` de l'objet Ã©tant quelconque, au choix de l'utilisateur)::
 
     from numpy import array
     import adaoBuilder
     case = adaoBuilder.New()
 
-Il est recommandé par principe de toujours importer le module ``numpy`` (ou ses
+Il est recommandÃ© par principe de toujours importer le module ``numpy`` (ou ses
 constructeurs particuliers, comme celui d'``array``) pour faciliter ensuite son
-usage dans les commandes elle-mêmes.
+usage dans les commandes elle-mÃªmes.
 
-Définir les données de calcul
+DÃ©finir les donnÃ©es de calcul
 +++++++++++++++++++++++++++++
 
-Les commandes qui suivent permettent de définir les données d'un cas de calcul
+Les commandes qui suivent permettent de dÃ©finir les donnÃ©es d'un cas de calcul
 TUI ADAO. Le pseudo-type des arguments est similaire et compatible avec ceux des
-entrées en interface GUI, décrits dans la section des
+entrÃ©es en interface GUI, dÃ©crits dans la section des
 :ref:`section_reference_entry` et en particulier par la
-:ref:`section_ref_entry_types`. La vérification de l'adéquation des grandeurs se
-fait soit lors de leur définition, soit lors de l'exécution.
+:ref:`section_ref_entry_types`. La vÃ©rification de l'adÃ©quation des grandeurs se
+fait soit lors de leur dÃ©finition, soit lors de l'exÃ©cution.
 
-Dans chaque commande, le mot-clé booléen "*Stored*" permet d'indiquer si l'on
-veut éventuellement la stocker la grandeur définie, pour en disposer en cours de
-calcul ou en sortie. Le choix par défaut est de ne pas stocker, et il est
-recommandé de conserver cette valeur par défaut. En effet, pour un cas de calcul
-TUI, on dispose déjà souvent des grandeurs données en entrées qui sont présentes
+Dans chaque commande, le mot-clÃ© boolÃ©en "*Stored*" permet d'indiquer si l'on
+veut Ã©ventuellement la stocker la grandeur dÃ©finie, pour en disposer en cours de
+calcul ou en sortie. Le choix par dÃ©faut est de ne pas stocker, et il est
+recommandÃ© de conserver cette valeur par dÃ©faut. En effet, pour un cas de calcul
+TUI, on dispose dÃ©jÃ  souvent des grandeurs donnÃ©es en entrÃ©es qui sont prÃ©sentes
 dans l'espace de nommage courant du cas.
 
 Les commandes disponibles sont les suivantes :
@@ -313,221 +313,222 @@ Les commandes disponibles sont les suivantes :
 .. index:: single: setBackground
 
 **setBackground** (*Vector, VectorSerie, Script, Stored*)
-    Cette commande permet de définir l'ébauche :math:`\mathbf{x}^b`. Selon les
-    algorithmes, on peut la définir comme un vecteur simple par "*Vector*", ou
-    comme une liste de vecteurs par "*VectorSerie*". Si on la définit par un
-    script dans "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
-    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
+    Cette commande permet de dÃ©finir l'Ã©bauche :math:`\mathbf{x}^b`. Selon les
+    algorithmes, on peut la dÃ©finir comme un vecteur simple par "*Vector*", ou
+    comme une liste de vecteurs par "*VectorSerie*". Si on la dÃ©finit par un
+    script dans "*Script*", le vecteur est de type "*Vector*" (par dÃ©faut) ou
+    "*VectorSerie*" selon que l'une de ces variables est placÃ©e Ã  "*True*".
 
 .. index:: single: setBackgroundError
 
 **setBackgroundError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    Cette commande permet de définir la matrice :math:`\mathbf{B}` de
-    covariance des erreurs d'ébauche. La matrice peut être définie de manière
-    complète par le mot-clé "*Matrix*", ou de manière parcimonieuse, comme une
+    Cette commande permet de dÃ©finir la matrice :math:`\mathbf{B}` de
+    covariance des erreurs d'Ã©bauche. La matrice peut Ãªtre dÃ©finie de maniÃ¨re
+    complÃ¨te par le mot-clÃ© "*Matrix*", ou de maniÃ¨re parcimonieuse, comme une
     matrice diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
-    vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
-    Si on la définit par un script dans "*Script*", la matrice est de type
-    "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
-    selon que l'une de ces variables est placée à "*True*".
+    vecteur des variances situÃ© sur la diagonale par "*DiagonalSparseMatrix*".
+    Si on la dÃ©finit par un script dans "*Script*", la matrice est de type
+    "*Matrix*" (par dÃ©faut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
+    selon que l'une de ces variables est placÃ©e Ã  "*True*".
 
 .. index:: single: setCheckingPoint
 
 **setCheckingPoint** (*Vector, VectorSerie, Script, Stored*)
-    Cette commande permet de définir un point courant :math:`\mathbf{x}` utilisé
-    pour un algorithme de vérification. Selon les algorithmes, on peut le
-    définir comme un vecteur simple par "*Vector*", ou comme une liste de
-    vecteurs par "*VectorSerie*". Si on le définit par un script dans
-    "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
-    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
+    Cette commande permet de dÃ©finir un point courant :math:`\mathbf{x}` utilisÃ©
+    pour un algorithme de vÃ©rification. Selon les algorithmes, on peut le
+    dÃ©finir comme un vecteur simple par "*Vector*", ou comme une liste de
+    vecteurs par "*VectorSerie*". Si on le dÃ©finit par un script dans
+    "*Script*", le vecteur est de type "*Vector*" (par dÃ©faut) ou
+    "*VectorSerie*" selon que l'une de ces variables est placÃ©e Ã  "*True*".
 
 .. index:: single: setControlModel
 
 **setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
-    Cette commande permet de définir l'opérateur de contrôle :math:`O`, qui
-    décrit un contrôle d'entrée linéaire externe de l'opérateur d'évolution ou
+    Cette commande permet de dÃ©finir l'opÃ©rateur de contrÃ´le :math:`O`, qui
+    dÃ©crit un contrÃ´le d'entrÃ©e linÃ©aire externe de l'opÃ©rateur d'Ã©volution ou
     d'observation. On se reportera :ref:`section_ref_operator_control`. Sa
-    valeur est définie comme un objet de type fonction ou de type "*Matrix*".
-    Dans le cas d'une fonction, différentes formes fonctionnelles peuvent être
-    utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`, et entrées par les mots-clés
-    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
-    "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
-    "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
-    Les paramètres de contrôle de l'approximation numérique de l'opérateur
-    adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
-    dictionnaire à travers le mot-clé "*Parameters*". Les entrées potentielles
-    de ce dictionnaire de paramètres sont "*DifferentialIncrement*",
-    "*CenteredFiniteDifference*" (similaires à celles de l'interface graphique).
+    valeur est dÃ©finie comme un objet de type fonction ou de type "*Matrix*".
+    Dans le cas d'une fonction, diffÃ©rentes formes fonctionnelles peuvent Ãªtre
+    utilisÃ©es, comme dÃ©crit dans la section
+    :ref:`section_ref_operator_requirements`, et entrÃ©es par les mots-clÃ©s
+    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une dÃ©finition par
+    "*Script*", l'opÃ©rateur est de type "*Matrix*", "*OneFunction*" ou
+    "*ThreeFunctions*" selon que l'une de ces variables est placÃ©e Ã  "*True*".
+    Les paramÃ¨tres de contrÃ´le de l'approximation numÃ©rique de l'opÃ©rateur
+    adjoint, dans le cas "*OneFunction*", peuvent Ãªtre renseignÃ©s par un
+    dictionnaire Ã  travers le mot-clÃ© "*Parameters*". Les entrÃ©es potentielles
+    de ce dictionnaire de paramÃ¨tres sont "*DifferentialIncrement*",
+    "*CenteredFiniteDifference*" (similaires Ã  celles de l'interface graphique).
 
 .. index:: single: setControlInput
 
 **setControlInput** (*Vector, VectorSerie, Script, Stored*)
-    Cette commande permet de définir le vecteur de contrôle :math:`\mathbf{u}`.
-    Selon les algorithmes, on peut le définir comme un vecteur simple par
+    Cette commande permet de dÃ©finir le vecteur de contrÃ´le :math:`\mathbf{u}`.
+    Selon les algorithmes, on peut le dÃ©finir comme un vecteur simple par
     "*Vector*", ou comme une liste de vecteurs par "*VectorSerie*". Si on le
-    définit par un script dans "*Script*", le vecteur est de type "*Vector*"
-    (par défaut) ou "*VectorSerie*" selon que l'une de ces variables est placée
-    à "*True*".
+    dÃ©finit par un script dans "*Script*", le vecteur est de type "*Vector*"
+    (par dÃ©faut) ou "*VectorSerie*" selon que l'une de ces variables est placÃ©e
+    Ã  "*True*".
 
 .. index:: single: setEvolutionError
 
 **setEvolutionError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    Cette commande permet de définir la matrice :math:`\mathbf{Q}` de
-    covariance des erreurs d'évolution. La matrice peut être définie de manière
-    complète par le mot-clé "*Matrix*", ou de manière parcimonieuse, comme une
+    Cette commande permet de dÃ©finir la matrice :math:`\mathbf{Q}` de
+    covariance des erreurs d'Ã©volution. La matrice peut Ãªtre dÃ©finie de maniÃ¨re
+    complÃ¨te par le mot-clÃ© "*Matrix*", ou de maniÃ¨re parcimonieuse, comme une
     matrice diagonale dont on donne la variance unique sur la diagonale par
     "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on donne le
-    vecteur des variances situé sur la diagonale par "*DiagonalSparseMatrix*".
-    Si on la définit par un script dans "*Script*", la matrice est de type
-    "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
-    selon que l'une de ces variables est placée à "*True*".
+    vecteur des variances situÃ© sur la diagonale par "*DiagonalSparseMatrix*".
+    Si on la dÃ©finit par un script dans "*Script*", la matrice est de type
+    "*Matrix*" (par dÃ©faut), "*ScalarSparseMatrix*" ou "*DiagonalSparseMatrix*"
+    selon que l'une de ces variables est placÃ©e Ã  "*True*".
 
 .. index:: single: setEvolutionModel
 
 **setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
-    Cette commande permet de définir l'opérateur d'evolution :math:`M`, qui
-    décrit un pas élémentaire d'évolution. Sa valeur est définie comme un objet
+    Cette commande permet de dÃ©finir l'opÃ©rateur d'evolution :math:`M`, qui
+    dÃ©crit un pas Ã©lÃ©mentaire d'Ã©volution. Sa valeur est dÃ©finie comme un objet
     de type fonction ou de type "*Matrix*". Dans le cas d'une fonction,
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`, et entrées par les
-    mots-clés "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une
-    définition par "*Script*", l'opérateur est de type "*Matrix*",
+    diffÃ©rentes formes fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans
+    la section :ref:`section_ref_operator_requirements`, et entrÃ©es par les
+    mots-clÃ©s "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une
+    dÃ©finition par "*Script*", l'opÃ©rateur est de type "*Matrix*",
     "*OneFunction*" ou "*ThreeFunctions*" selon que l'une de ces variables est
-    placée à "*True*". Les paramètres de contrôle de l'approximation numérique
-    de l'opérateur adjoint, dans le cas "*OneFunction*", peuvent être renseignés
-    par un dictionnaire dans "*Parameters*". Les entrées potentielles de ce
-    dictionnaire de paramètres sont "*DifferentialIncrement*",
+    placÃ©e Ã  "*True*". Les paramÃ¨tres de contrÃ´le de l'approximation numÃ©rique
+    de l'opÃ©rateur adjoint, dans le cas "*OneFunction*", peuvent Ãªtre renseignÃ©s
+    par un dictionnaire dans "*Parameters*". Les entrÃ©es potentielles de ce
+    dictionnaire de paramÃ¨tres sont "*DifferentialIncrement*",
     "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
-    "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
+    "*NumberOfProcesses*" (similaires Ã  celles de l'interface graphique).
 
 .. index:: single: setObservation
 
 **setObservation** (*Vector, VectorSerie, Script, Stored*)
-    Cette commande permet de définir le vecteur d'observation
-    :math:`\mathbf{y}^o`. Selon les algorithmes, on peut le définir comme un
+    Cette commande permet de dÃ©finir le vecteur d'observation
+    :math:`\mathbf{y}^o`. Selon les algorithmes, on peut le dÃ©finir comme un
     vecteur simple par "*Vector*", ou comme une liste de vecteurs par
-    "*VectorSerie*". Si on le définit par un script dans "*Script*", le vecteur
-    est de type "*Vector*" (par défaut) ou "*VectorSerie*" selon que l'une de
-    ces variables est placée à "*True*".
+    "*VectorSerie*". Si on le dÃ©finit par un script dans "*Script*", le vecteur
+    est de type "*Vector*" (par dÃ©faut) ou "*VectorSerie*" selon que l'une de
+    ces variables est placÃ©e Ã  "*True*".
 
 .. index:: single: setObservationError
 
 **setObservationError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    Cette commande permet de définir la matrice :math:`\mathbf{R}` de
-    covariance des erreurs d'observation. La matrice peut être définie de
-    manière complète par le mot-clé "*Matrix*", ou de manière parcimonieuse,
+    Cette commande permet de dÃ©finir la matrice :math:`\mathbf{R}` de
+    covariance des erreurs d'observation. La matrice peut Ãªtre dÃ©finie de
+    maniÃ¨re complÃ¨te par le mot-clÃ© "*Matrix*", ou de maniÃ¨re parcimonieuse,
     comme une matrice diagonale dont on donne la variance unique sur la
     diagonale par "*ScalarSparseMatrix*", ou comme une matrice diagonale dont on
-    donne le vecteur des variances situé sur la diagonale par
-    "*DiagonalSparseMatrix*". Si on la définit par un script dans "*Script*", la
-    matrice est de type "*Matrix*" (par défaut), "*ScalarSparseMatrix*" ou
-    "*DiagonalSparseMatrix*" selon que l'une de ces variables est placée à
+    donne le vecteur des variances situÃ© sur la diagonale par
+    "*DiagonalSparseMatrix*". Si on la dÃ©finit par un script dans "*Script*", la
+    matrice est de type "*Matrix*" (par dÃ©faut), "*ScalarSparseMatrix*" ou
+    "*DiagonalSparseMatrix*" selon que l'une de ces variables est placÃ©e Ã 
     "*True*".
 
 .. index:: single: setObservationOperator
 
 **setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, Stored*)
-    Cette commande permet de définir l'opérateur d'observation :math:`H`, qui
-    transforme les paramètres d'entrée :math:`\mathbf{x}` en résultats
-    :math:`\mathbf{y}` qui sont à comparer aux observations
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type fonction
-    ou de type "*Matrix*". Dans le cas d'une fonction, différentes formes
-    fonctionnelles peuvent être utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`, et entrées par les mots-clés
-    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une définition par
-    "*Script*", l'opérateur est de type "*Matrix*", "*OneFunction*" ou
-    "*ThreeFunctions*" selon que l'une de ces variables est placée à "*True*".
-    Dans le cas où l'opérateur :math:`H` évalué en :math:`\mathbf{x}^b` est
-    disponible, il peut être donné en utilisant "*AppliedInXb*" et sera
-    considéré comme un vecteur. Les paramètres de contrôle de l'approximation
-    numérique de l'opérateur adjoint, dans le cas "*OneFunction*", peuvent être
-    renseignés par un dictionnaire dans "*Parameters*". Les entrées potentielles
-    de ce dictionnaire de paramètres sont "*DifferentialIncrement*",
+    Cette commande permet de dÃ©finir l'opÃ©rateur d'observation :math:`H`, qui
+    transforme les paramÃ¨tres d'entrÃ©e :math:`\mathbf{x}` en rÃ©sultats
+    :math:`\mathbf{y}` qui sont Ã  comparer aux observations
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type fonction
+    ou de type "*Matrix*". Dans le cas d'une fonction, diffÃ©rentes formes
+    fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans la section
+    :ref:`section_ref_operator_requirements`, et entrÃ©es par les mots-clÃ©s
+    "*OneFunction*" ou "*ThreeFunctions*". Dans le cas d'une dÃ©finition par
+    "*Script*", l'opÃ©rateur est de type "*Matrix*", "*OneFunction*" ou
+    "*ThreeFunctions*" selon que l'une de ces variables est placÃ©e Ã  "*True*".
+    Dans le cas oÃ¹ l'opÃ©rateur :math:`H` Ã©valuÃ© en :math:`\mathbf{x}^b` est
+    disponible, il peut Ãªtre donnÃ© en utilisant "*AppliedInXb*" et sera
+    considÃ©rÃ© comme un vecteur. Les paramÃ¨tres de contrÃ´le de l'approximation
+    numÃ©rique de l'opÃ©rateur adjoint, dans le cas "*OneFunction*", peuvent Ãªtre
+    renseignÃ©s par un dictionnaire dans "*Parameters*". Les entrÃ©es potentielles
+    de ce dictionnaire de paramÃ¨tres sont "*DifferentialIncrement*",
     "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
-    "*NumberOfProcesses*" (similaires à celles de l'interface graphique).
+    "*NumberOfProcesses*" (similaires Ã  celles de l'interface graphique).
 
 .. index:: single: set
 
 **set** (*Concept,...*)
-    Cette commande permet de disposer d'une syntaxe équivalente pour toutes les
-    commandes de ce paragraphe. Son premier argument est le nom du concept à
-    définir (par exemple "*Background*" ou "*ObservationOperator*"), sur lequel
-    s'applique ensuite les arguments qui suivent, qui sont les mêmes que dans
-    les commandes individuelles précédentes. Lors de l'usage de cette commande,
+    Cette commande permet de disposer d'une syntaxe Ã©quivalente pour toutes les
+    commandes de ce paragraphe. Son premier argument est le nom du concept Ã 
+    dÃ©finir (par exemple "*Background*" ou "*ObservationOperator*"), sur lequel
+    s'applique ensuite les arguments qui suivent, qui sont les mÃªmes que dans
+    les commandes individuelles prÃ©cÃ©dentes. Lors de l'usage de cette commande,
     il est indispensable de nommer les arguments (par exemple "*Vector=...*").
 
-Paramétrer le calcul, les sorties, etc.
+ParamÃ©trer le calcul, les sorties, etc.
 +++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: setAlgorithmParameters
 
 **setAlgorithmParameters** (*Algorithm, Parameters, Script*)
-    Cette commande permet de choisir l'algorithme de calcul ou de vérification
+    Cette commande permet de choisir l'algorithme de calcul ou de vÃ©rification
     par l'argument "*Algorithm*" sous la forme d'un nom d'algorithme (on se
     reportera utilement aux listes des :ref:`section_reference_assimilation` et
-    des :ref:`section_reference_checking`), et de définir les paramètres de
-    calcul par l'argument "*Parameters*". Dans le cas d'une définition par
-    "*Script*", le fichier indiqué doit contenir les deux variables
-    "*Algorithm*" et "*Parameters*" (ou "*AlgorithmParameters*" de manière
-    équivalente).
+    des :ref:`section_reference_checking`), et de dÃ©finir les paramÃ¨tres de
+    calcul par l'argument "*Parameters*". Dans le cas d'une dÃ©finition par
+    "*Script*", le fichier indiquÃ© doit contenir les deux variables
+    "*Algorithm*" et "*Parameters*" (ou "*AlgorithmParameters*" de maniÃ¨re
+    Ã©quivalente).
 
 .. index:: single: setDebug
 
 **setDebug** ()
-    Cette commande permet d'activer le mode d'information détaillé lors de
-    l'exécution.
+    Cette commande permet d'activer le mode d'information dÃ©taillÃ© lors de
+    l'exÃ©cution.
 
 .. index:: single: setNoDebug
 
 **setNoDebug** ()
-    Cette commande permet de désactiver le mode d'information détaillé lors de
-    l'exécution.
+    Cette commande permet de dÃ©sactiver le mode d'information dÃ©taillÃ© lors de
+    l'exÃ©cution.
 
 .. index:: single: setObserver
 
 **setObserver** (*Variable, Template, String, Script, Info*)
-    Cette commande permet de définir un *observer* sur une variable courante ou
-    finale du calcul. On se reportera à la description des
-    :ref:`ref_observers_requirements` pour avoir leur liste et leur format, et à
-    la :ref:`section_reference` pour savoir quelles sont les quantités
-    observables. On définit comme un "*String*" le corps de l'*observer*, en
-    utilisant une chaine de caractères incluant si nécessaire des sauts de
+    Cette commande permet de dÃ©finir un *observer* sur une variable courante ou
+    finale du calcul. On se reportera Ã  la description des
+    :ref:`ref_observers_requirements` pour avoir leur liste et leur format, et
+    Ã  la :ref:`section_reference` pour savoir quelles sont les quantitÃ©s
+    observables. On dÃ©finit comme un "*String*" le corps de l'*observer*, en
+    utilisant une chaÃ®ne de caractÃ¨res incluant si nÃ©cessaire des sauts de
     lignes. On recommande d'utiliser les patrons disponibles par l'argument
-    "*Template*". Dans le cas d'une définition par "*Script*", le fichier
-    indiqué doit contenir uniquement le corps de la fonction, comme décrit dans
-    les :ref:`ref_observers_requirements`.
+    "*Template*". Dans le cas d'une dÃ©finition par "*Script*", le fichier
+    indiquÃ© doit contenir uniquement le corps de la fonction, comme dÃ©crit dans
+    les :ref:`ref_observers_requirements`. La variable "*Info*" contient une
+    chaÃ®ne de caractÃ¨re d'information ou une chaine vide.
 
-Effectuer le calcul 
+Effectuer le calcul
 +++++++++++++++++++
 
 .. index:: single: executePythonScheme
 
 **executePythonScheme** ()
     Cette commande lance le calcul complet dans l'environnement de
-    l'interpréteur Python courant, sans interaction avec YACS [YACS]_. Les
-    sorties standard et d'erreur sont celles de l'interpréteur Python. On
-    dispose si nécessaire du parallélisme interne des algorithmes dans ADAO et
-    du parallélisme interne du ou des codes de simulation utilisé.
+    l'interprÃ©teur Python courant, sans interaction avec YACS [YACS]_. Les
+    sorties standard et d'erreur sont celles de l'interprÃ©teur Python. On
+    dispose si nÃ©cessaire du parallÃ©lisme interne des algorithmes dans ADAO et
+    du parallÃ©lisme interne du ou des codes de simulation utilisÃ©.
 
 .. .. index:: single: generateYACSscheme
-.. 
+..
 .. **executeYACSScheme** (*File*)
-..     Cete commande génère le schéma YACS [YACS]_ du cas de calcul dans le fichier
-..     requis "*File*", et en lance l'exécution dans l'interpréteur YACS, comme on
-..     peut le réaliser en utilisant l'éditeur standard de cas ADAO. Les sorties
-..     standard et d'erreur sont celles de l'interpréteur YACS. On dispose si
-..     nécessaire du parallélisme de noeuds et blocs dans YACS, du parallélisme
-..     interne des algorithmes dans ADAO et du parallélisme interne du ou des codes
-..     de simulation utilisé.
+..     Cete commande gÃ©nÃ¨re le schÃ©ma YACS [YACS]_ du cas de calcul dans le fichier
+..     requis "*File*", et en lance l'exÃ©cution dans l'interprÃ©teur YACS, comme on
+..     peut le rÃ©aliser en utilisant l'Ã©diteur standard de cas ADAO. Les sorties
+..     standard et d'erreur sont celles de l'interprÃ©teur YACS. On dispose si
+..     nÃ©cessaire du parallÃ©lisme de noeuds et blocs dans YACS, du parallÃ©lisme
+..     interne des algorithmes dans ADAO et du parallÃ©lisme interne du ou des codes
+..     de simulation utilisÃ©.
 
 .. index:: single: execute
 
 **execute** ()
     Cette commande est un raccourci utilisateur pour "*executePythonScheme*".
 
-Obtenir séparément les résultats de calcul
+Obtenir sÃ©parÃ©ment les rÃ©sultats de calcul
 ++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: get
@@ -537,42 +538,42 @@ Obtenir séparément les résultats de calcul
     sortie du cas de calcul TUI ADAO pour les utiliser dans la suite du
     scripting, par exemple en visualisation. Elle a pour argument le nom d'un
     variable dans "*Concept*", et renvoie en retour la grandeur sous la forme
-    d'une liste (même s'il n'y en a qu'un exemplaire) de cette variable de
-    base. Pour connaître la liste des variables et les utiliser, on se
-    reportera à l':ref:`subsection_r_o_v_Inventaire`, et plus généralement à la
+    d'une liste (mÃªme s'il n'y en a qu'un exemplaire) de cette variable de
+    base. Pour connaÃ®tre la liste des variables et les utiliser, on se
+    reportera Ã  l':ref:`subsection_r_o_v_Inventaire`, et plus gÃ©nÃ©ralement Ã  la
     fois aux :ref:`section_ref_output_variables` et aux documentations
     individuelles des algorithmes.
 
 .. _subsection_tui_advanced:
 
-Exemples plus avancés de cas de calcul TUI ADAO
+Exemples plus avancÃ©s de cas de calcul TUI ADAO
 -----------------------------------------------
 
 On propose ici des exemples plus complets de cas de calcul TUI ADAO, en donnant
-l'objectif de l'exemple et un jeu de commandes qui permet de parvenir à cet
+l'objectif de l'exemple et un jeu de commandes qui permet de parvenir Ã  cet
 objectif.
 
-Exploitation indépendante des résultats d'un cas de calcul
+Exploitation indÃ©pendante des rÃ©sultats d'un cas de calcul
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-L'objectif est d'effectuer en TUI la mise en données d'un cas de calcul ADAO,
-son exécution, puis la récupération des résultats pour ensuite enchaîner sur une
-exploitation indépendante de ces résultats (cette dernière n'étant pas décrite
-ici, puisque dépendante de l'utilisateur).
+L'objectif est d'effectuer en TUI la mise en donnÃ©es d'un cas de calcul ADAO,
+son exÃ©cution, puis la rÃ©cupÃ©ration des rÃ©sultats pour ensuite enchaÃ®ner sur une
+exploitation indÃ©pendante de ces rÃ©sultats (cette derniÃ¨re n'Ã©tant pas dÃ©crite
+ici, puisque dÃ©pendante de l'utilisateur).
 
-Les hypothèses du cas utilisateur sont les suivantes. On suppose :
+Les hypothÃ¨ses du cas utilisateur sont les suivantes. On suppose :
 
-#. que l'on veut recaler 3 paramètres ``alpha``, ``beta`` et ``gamma`` dans un domaine borné,
-#. que l'on dispose d'observations nommées ``observations``,
-#. que l'utilisateur dispose en Python d'une fonction de simulation physique appelée ``simulation``, préalablement (bien) testée, qui transforme les 3 paramètres en résultats similaires aux observations,
-#. que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
+#. que l'on veut recaler 3 paramÃ¨tres ``alpha``, ``beta`` et ``gamma`` dans un domaine bornÃ©,
+#. que l'on dispose d'observations nommÃ©es ``observations``,
+#. que l'utilisateur dispose en Python d'une fonction de simulation physique appelÃ©e ``simulation``, prÃ©alablement (bien) testÃ©e, qui transforme les 3 paramÃ¨tres en rÃ©sultats similaires aux observations,
+#. que l'exploitation indÃ©pendante, que l'utilisateur veut faire, est reprÃ©sentÃ©e ici par l'affichage simple de l'Ã©tat initial, de l'Ã©tat optimal, de la simulation en ce point, des Ã©tats intermÃ©diaires et du nombre d'itÃ©rations d'optimisation.
 
-Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne par
-exemple les entrées suivantes, parfaitement arbitraires, en construisant les
-observations par simulation pour se placer dans un cas d'expériences jumelles::
+Pour effectuer de maniÃ¨re simple cet essai de cas de calcul TUI, on se donne par
+exemple les entrÃ©es suivantes, parfaitement arbitraires, en construisant les
+observations par simulation pour se placer dans un cas d'expÃ©riences jumelles::
 
     #
-    # Construction artificielle d'un exemple de données utilisateur
+    # Construction artificielle d'un exemple de donnÃ©es utilisateur
     # -------------------------------------------------------------
     alpha = 5.
     beta = 7
@@ -598,7 +599,7 @@ Le jeu de commandes que l'on peut utiliser est le suivant::
     import numpy
     import adaoBuilder
     #
-    # Mise en forme des entrées
+    # Mise en forme des entrÃ©es
     # -------------------------
     Xb = (alpha, beta, gamma)
     Bounds = (
@@ -634,20 +635,20 @@ Le jeu de commandes que l'on peut utiliser est le suivant::
     case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
     case.execute()
     #
-    # Exploitation indépendante
+    # Exploitation indÃ©pendante
     # -------------------------
     Xbackground   = case.get("Background")
     Xoptimum      = case.get("Analysis")[-1]
     FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
     J_values      = case.get("CostFunctionJ")[:]
-    print
-    print "Nombre d'itérations internes...: %i"%len(J_values)
-    print "Etat initial...................:",numpy.ravel(Xbackground)
-    print "Etat optimal...................:",numpy.ravel(Xoptimum)
-    print "Simulation à l'état optimal....:",numpy.ravel(FX_at_optimum)
-    print
+    print("")
+    print("Nombre d'itÃ©rations internes...: %i"%len(J_values))
+    print("Etat initial...................: %s"%(numpy.ravel(Xbackground),))
+    print("Etat optimal...................: %s"%(numpy.ravel(Xoptimum),))
+    print("Simulation Ã  l'Ã©tat optimal....: %s"%(numpy.ravel(FX_at_optimum),))
+    print("")
 
-L'exécution de jeu de commandes donne le résultat suivant::
+L'exÃ©cution de jeu de commandes donne le rÃ©sultat suivant::
 
     CurrentState [ 5.  7.  9.]
     CurrentState [ 0.   3.   1.5]
@@ -660,15 +661,15 @@ L'exécution de jeu de commandes donne le résultat suivant::
     CurrentState [ 2.00000007  3.          4.00000011]
     CurrentState [ 2.  3.  4.]
 
-    Nombre d'itérations internes...: 10
+    Nombre d'itÃ©rations internes...: 10
     Etat initial...................: [ 5.  7.  9.]
     Etat optimal...................: [ 2.  3.  4.]
-    Simulation à l'état optimal....: [  2.   6.  12.  20.]
+    Simulation Ã  l'Ã©tat optimal....: [  2.   6.  12.  20.]
 
-Comme il se doit en expériences jumelles, on constate que l'on retrouve bien les
-paramètres qui ont servi à construire artificiellement les observations.
+Comme il se doit en expÃ©riences jumelles, on constate que l'on retrouve bien les
+paramÃ¨tres qui ont servi Ã  construire artificiellement les observations.
 
-.. Réconciliation de courbes à l'aide de MedCoupling
+.. RÃ©conciliation de courbes Ã  l'aide de MedCoupling
 .. +++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. Utilisation de fonctions de surveillance de type "observer"
@@ -677,8 +678,8 @@ paramètres qui ont servi à construire artificiellement les observations.
 .. Equivalences entre l'interface graphique (GUI) et l'interface textuelle (TUI)
 .. -----------------------------------------------------------------------------
 
-.. [HOMARD] Pour de plus amples informations sur HOMARD, voir le *module HOMARD* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [HOMARD] Pour de plus amples informations sur HOMARD, voir le *module HOMARD* et son aide intÃ©grÃ©e disponible dans le menu principal *Aide* de l'environnement SALOME.
 
-.. [PARAVIS] Pour de plus amples informations sur PARAVIS, voir le *module PARAVIS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [PARAVIS] Pour de plus amples informations sur PARAVIS, voir le *module PARAVIS* et son aide intÃ©grÃ©e disponible dans le menu principal *Aide* de l'environnement SALOME.
 
-.. [YACS] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [YACS] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intÃ©grÃ©e disponible dans le menu principal *Aide* de l'environnement SALOME.

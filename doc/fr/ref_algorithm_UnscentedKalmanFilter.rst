@@ -30,10 +30,10 @@ Algorithme de calcul "*UnscentedKalmanFilter*"
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation de l'état d'un système dynamique par un
-filtre de Kalman "unscented", permettant d'éviter de devoir calculer les
-opérateurs tangent ou adjoint pour les opérateurs d'observation ou d'évolution,
-comme dans les filtres de Kalman simple ou étendu.
+Cet algorithme rÃ©alise une estimation de l'Ã©tat d'un systÃ¨me dynamique par un
+filtre de Kalman "unscented", permettant d'Ã©viter de devoir calculer les
+opÃ©rateurs tangent ou adjoint pour les opÃ©rateurs d'observation ou d'Ã©volution,
+comme dans les filtres de Kalman simple ou Ã©tendu.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -53,90 +53,90 @@ Commandes requises et optionnelles
 .. index:: single: Reconditioner
 .. index:: single: StoreSupplementaryCalculations
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'Ã©bauche ou
+    d'initialisation, notÃ© prÃ©cÃ©demment :math:`\mathbf{x}^b`. Sa valeur est
+    dÃ©finie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
 
   BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{B}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'observation utilisÃ© en
+    assimilation de donnÃ©es ou en optimisation, et notÃ© prÃ©cÃ©demment
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
     ou de type "*VectorSerie*".
 
   ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{R}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de
     type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+    diffÃ©rentes formes fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans
+    la section :ref:`section_ref_operator_requirements`. Si un contrÃ´le
+    :math:`U` est inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre
+    appliquÃ© Ã  une paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_assimilation_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   Bounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    variable d'état optimisée. Les bornes doivent être données par une liste de
-    liste de paires de bornes inférieure/supérieure pour chaque variable, avec
-    une valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas
-    une valeur autorisée lorsqu'il n'y a pas de borne).
+    Cette clÃ© permet de dÃ©finir des bornes supÃ©rieure et infÃ©rieure pour chaque
+    variable d'Ã©tat optimisÃ©e. Les bornes doivent Ãªtre donnÃ©es par une liste de
+    liste de paires de bornes infÃ©rieure/supÃ©rieure pour chaque variable, avec
+    une valeur extrÃªme chaque fois qu'il n'y a pas de borne (``None`` n'est pas
+    une valeur autorisÃ©e lorsqu'il n'y a pas de borne).
 
     Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
 
   ConstrainedBy
-    Cette clé permet d'indiquer la méthode de prise en compte des contraintes de
+    Cette clÃ© permet d'indiquer la mÃ©thode de prise en compte des contraintes de
     bornes. La seule disponible est "EstimateProjection", qui projette
-    l'estimation de l'état courant sur les contraintes de bornes.
+    l'estimation de l'Ã©tat courant sur les contraintes de bornes.
 
     Exemple : ``{"ConstrainedBy":"EstimateProjection"}``
 
   EstimationOf
-    Cette clé permet de choisir le type d'estimation à réaliser. Cela peut être
-    soit une estimation de l'état, avec la valeur "State", ou une estimation de
-    paramètres, avec la valeur "Parameters". Le choix par défaut est "State".
+    Cette clÃ© permet de choisir le type d'estimation Ã  rÃ©aliser. Cela peut Ãªtre
+    soit une estimation de l'Ã©tat, avec la valeur "State", ou une estimation de
+    paramÃ¨tres, avec la valeur "Parameters". Le choix par dÃ©faut est "State".
 
     Exemple : ``{"EstimationOf":"Parameters"}``
 
   Alpha, Beta, Kappa, Reconditioner
-    Ces clés sont des paramètres de mise à l'échelle interne. "Alpha" requiert
+    Ces clÃ©s sont des paramÃ¨tres de mise Ã  l'Ã©chelle interne. "Alpha" requiert
     une valeur comprise entre 1.e-4 et 1. "Beta" a une valeur optimale de 2 pour
-    une distribution *a priori* gaussienne. "Kappa" requiert une valeur entière,
-    dont la bonne valeur par défaut est obtenue en la mettant à 0.
-    "Reconditioner" requiert une valeur comprise entre 1.e-3 et 10, son défaut
-    étant 1.
+    une distribution *a priori* gaussienne. "Kappa" requiert une valeur entiÃ¨re,
+    dont la bonne valeur par dÃ©faut est obtenue en la mettant Ã  0.
+    "Reconditioner" requiert une valeur comprise entre 1.e-3 et 10, son dÃ©faut
+    Ã©tant 1.
 
     Exemple : ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
     "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
@@ -144,95 +144,95 @@ Les options de l'algorithme sont les suivantes:
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un Ã©tat optimal :math:`\mathbf{x}*`
     en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+    donnÃ©es.
 
     Exemple : ``Xa = ADD.get("Analysis")[-1]``
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   APosterioriCorrelations
-    *Liste de matrices*. Chaque élément est une matrice de corrélation des
-    erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice de corrÃ©lation des
+    erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
 
   APosterioriCovariance
-    *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
-    covariances des erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice :math:`\mathbf{A}*` de
+    covariances des erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
 
   APosterioriStandardDeviations
-    *Liste de matrices*. Chaque élément est une matrice d'écart-types des
-    erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice d'Ã©cart-types des
+    erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
-    *Liste de matrices*. Chaque élément est une matrice de variances des erreurs
-    *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice de variances des erreurs
+    *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'ébauche et l'état optimal.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'Ã©bauche et l'Ã©tat optimal.
 
     Exemple : ``bma = ADD.get("BMA")[-1]``
 
   CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
     :math:`J`.
 
     Exemple : ``J = ADD.get("CostFunctionJ")[:]``
 
   CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^b`, c'est-Ã -dire de la partie Ã©cart Ã  l'Ã©bauche.
 
     Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
 
   CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^o`, c'est-Ã -dire de la partie Ã©cart Ã  l'observation.
 
     Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
   Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'innovation, qui est
+    en statique l'Ã©cart de l'optimum Ã  l'Ã©bauche, et en dynamique l'incrÃ©ment
+    d'Ã©volution.
 
     Exemple : ``d = ADD.get("Innovation")[-1]``
 
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_KalmanFilter`
   - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
 
-Références bibliographiques :
+RÃ©fÃ©rences bibliographiques :
   - [WikipediaUKF]_

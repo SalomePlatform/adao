@@ -24,220 +24,220 @@
 .. _section_theory:
 
 =================================================================================
-**[DocT]** Une brève introduction à l'Assimilation de Données et à l'Optimisation
+**[DocT]** Une brÃ¨ve introduction Ã  l'Assimilation de DonnÃ©es et Ã  l'Optimisation
 =================================================================================
 
 .. index:: single: Data Assimilation
-.. index:: single: assimilation de données
-.. index:: single: état vrai
+.. index:: single: assimilation de donnÃ©es
+.. index:: single: Ã©tat vrai
 .. index:: single: observation
 .. index:: single: a priori
 
-L'**assimilation de données** est un cadre général pour le calcul de
-l'estimation optimale de l'état réel d'un système, au cours du temps si
-nécessaire. Il utilise les valeurs obtenues en combinant des observations et des
-modèles *a priori*, incluant de plus des informations sur leurs erreurs.
+L'**assimilation de donnÃ©es** est un cadre gÃ©nÃ©ral pour le calcul de
+l'estimation optimale de l'Ã©tat rÃ©el d'un systÃ¨me, au cours du temps si
+nÃ©cessaire. Il utilise les valeurs obtenues en combinant des observations et des
+modÃ¨les *a priori*, incluant de plus des informations sur leurs erreurs.
 
-En d'autres termes, l'assimilation de données rassemble les données mesurées
-d'un système, qui sont les observations, avec une connaissance physique et
-mathématique *a priori* du système, intégrée dans les modèles numériques, afin
-d'obtenir la meilleure estimation possible de l'état réel du système et de ses
-propriétés stochastiques. On note que cet état réel (ou "*état vrai*") ne peut
-être atteint, mais peut seulement être estimé. De plus, malgré le fait que les
-informations utilisées sont stochastiques par nature, l'assimilation de données
-fournit des techniques déterministes afin de réaliser l'estimation de manière
-très efficace.
+En d'autres termes, l'assimilation de donnÃ©es rassemble les donnÃ©es mesurÃ©es
+d'un systÃ¨me, qui sont les observations, avec une connaissance physique et
+mathÃ©matique *a priori* du systÃ¨me, intÃ©grÃ©e dans les modÃ¨les numÃ©riques, afin
+d'obtenir la meilleure estimation possible de l'Ã©tat rÃ©el du systÃ¨me et de ses
+propriÃ©tÃ©s stochastiques. On note que cet Ã©tat rÃ©el (ou "*Ã©tat vrai*") ne peut
+Ãªtre atteint, mais peut seulement Ãªtre estimÃ©. De plus, malgrÃ© le fait que les
+informations utilisÃ©es sont stochastiques par nature, l'assimilation de donnÃ©es
+fournit des techniques dÃ©terministes afin de rÃ©aliser l'estimation de maniÃ¨re
+trÃ¨s efficace.
 
-L'assimilation de données cherchant l'estimation la **meilleure possible**, la
-démarche technique sous-jacente intègre toujours de l'optimisation afin de
-trouver cette estimation : des méthodes d'optimisation choisies sont toujours
-intégrées dans les algorithmes d'assimilation de données. Par ailleurs, les
-méthodes d'optimisation peuvent être vues dans ADAO comme un moyen d'étendre les
-applications d'assimilation de données. Elles seront présentées de cette façon
-dans la section pour `Approfondir l'estimation d'état par des méthodes
-d'optimisation`_, mais elles sont beaucoup plus générale et peuvent être
-utilisés sans les concepts d'assimilation de données.
+L'assimilation de donnÃ©es cherchant l'estimation la **meilleure possible**, la
+dÃ©marche technique sous-jacente intÃ¨gre toujours de l'optimisation afin de
+trouver cette estimation : des mÃ©thodes d'optimisation choisies sont toujours
+intÃ©grÃ©es dans les algorithmes d'assimilation de donnÃ©es. Par ailleurs, les
+mÃ©thodes d'optimisation peuvent Ãªtre vues dans ADAO comme un moyen d'Ã©tendre les
+applications d'assimilation de donnÃ©es. Elles seront prÃ©sentÃ©es de cette faÃ§on
+dans la section pour `Approfondir l'estimation d'Ã©tat par des mÃ©thodes
+d'optimisation`_, mais elles sont beaucoup plus gÃ©nÃ©rale et peuvent Ãªtre
+utilisÃ©s sans les concepts d'assimilation de donnÃ©es.
 
-Deux types principaux d'applications existent en assimilation de données, qui
-sont couverts par le même formalisme : l'**identification de paramètres** et la
+Deux types principaux d'applications existent en assimilation de donnÃ©es, qui
+sont couverts par le mÃªme formalisme : l'**identification de paramÃ¨tres** et la
 **reconstruction de champs**. Avant d'introduire la `Description simple du cadre
-méthodologique de l'assimilation de données`_ dans une prochaine section, nous
-décrivons brièvement ces deux types d'applications. A la fin de ce chapitre,
-quelques références permettent d'`Approfondir le cadre méthodologique de
-l'assimilation de données`_ et d'`Approfondir l'estimation d'état par des
-méthodes d'optimisation`_.
+mÃ©thodologique de l'assimilation de donnÃ©es`_ dans une prochaine section, nous
+dÃ©crivons briÃ¨vement ces deux types d'applications. A la fin de ce chapitre,
+quelques rÃ©fÃ©rences permettent d'`Approfondir le cadre mÃ©thodologique de
+l'assimilation de donnÃ©es`_ et d'`Approfondir l'estimation d'Ã©tat par des
+mÃ©thodes d'optimisation`_.
 
-Reconstruction de champs ou interpolation de données
+Reconstruction de champs ou interpolation de donnÃ©es
 ----------------------------------------------------
 
 .. index:: single: reconstruction de champs
-.. index:: single: interpolation de données
+.. index:: single: interpolation de donnÃ©es
 .. index:: single: interpolation de champs
 
-La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
-partir d'un nombre restreint de mesures réelles, le champs physique qui est le
-plus *cohérent* avec ces mesures.
+La **reconstruction (ou l'interpolation) de champs** consiste Ã  trouver, Ã 
+partir d'un nombre restreint de mesures rÃ©elles, le champs physique qui est le
+plus *cohÃ©rent* avec ces mesures.
 
-La *cohérence* est à comprendre en termes d'interpolation, c'est-à-dire que le
-champ que l'on cherche à reconstruire, en utilisant de l'assimilation de données
+La *cohÃ©rence* est Ã  comprendre en termes d'interpolation, c'est-Ã -dire que le
+champ que l'on cherche Ã  reconstruire, en utilisant de l'assimilation de donnÃ©es
 sur les mesures, doit s'adapter au mieux aux mesures, tout en restant contraint
-par la simulation globale du champ. Le champ calculé est donc une estimation *a
-priori* du champ que l'on cherche à identifier.
+par la simulation globale du champ. Le champ calculÃ© est donc une estimation *a
+priori* du champ que l'on cherche Ã  identifier.
 
-Si le système évolue dans le temps, la reconstruction doit être établie à chaque
+Si le systÃ¨me Ã©volue dans le temps, la reconstruction doit Ãªtre Ã©tablie Ã  chaque
 pas de temps, du champ dans son ensemble. Le processus d'interpolation est dans
-ce cas plus compliqué car il est temporel, et plus seulement en termes de
-valeurs instantanées du champ.
+ce cas plus compliquÃ© car il est temporel, et plus seulement en termes de
+valeurs instantanÃ©es du champ.
 
-Un exemple simple de reconstruction de champs provient de la météorologie, dans
-laquelle on recherche les valeurs de variables comme la température ou la
-pression en tout point du domaine spatial. On dispose de mesures instantanées de
-ces quantités en certains points, mais aussi d'un historique de ces mesures. De
-plus, ces variables sont contraintes par les équations d'évolution de
-l'atmosphère, qui indiquent par exemple que la pression en un point ne peut pas
-prendre une valeur quelconque indépendamment de la valeur au même point à un
-temps précédent. On doit donc faire la reconstruction d'un champ en tout point
-de l'espace, de manière "cohérente" avec les équations d'évolution et avec les
-mesures aux précédents pas de temps.
+Un exemple simple de reconstruction de champs provient de la mÃ©tÃ©orologie, dans
+laquelle on recherche les valeurs de variables comme la tempÃ©rature ou la
+pression en tout point du domaine spatial. On dispose de mesures instantanÃ©es de
+ces quantitÃ©s en certains points, mais aussi d'un historique de ces mesures. De
+plus, ces variables sont contraintes par les Ã©quations d'Ã©volution de
+l'atmosphÃ¨re, qui indiquent par exemple que la pression en un point ne peut pas
+prendre une valeur quelconque indÃ©pendamment de la valeur au mÃªme point Ã  un
+temps prÃ©cÃ©dent. On doit donc faire la reconstruction d'un champ en tout point
+de l'espace, de maniÃ¨re "cohÃ©rente" avec les Ã©quations d'Ã©volution et avec les
+mesures aux prÃ©cÃ©dents pas de temps.
 
-Identification de paramètres, ajustement de modèles, calibration
+Identification de paramÃ¨tres, ajustement de modÃ¨les, calibration
 ----------------------------------------------------------------
 
-.. index:: single: identification de paramètres
-.. index:: single: ajustement de paramètres
-.. index:: single: ajustement de modèles
+.. index:: single: identification de paramÃ¨tres
+.. index:: single: ajustement de paramÃ¨tres
+.. index:: single: ajustement de modÃ¨les
 .. index:: single: calibration
-.. index:: single: ébauche
-.. index:: single: régularisation
-.. index:: single: problèmes inverses
+.. index:: single: Ã©bauche
+.. index:: single: rÃ©gularisation
+.. index:: single: problÃ¨mes inverses
 
-L'**identification (ou l'ajustement) de paramètres** par assimilation de données
-est une forme de calibration d'état qui utilise simultanément les mesures
-physiques et une estimation *a priori* des paramètres (appelée l'"*ébauche*")
-d'état que l'on cherche à identifier, ainsi qu'une caractérisation de leurs
-erreurs. De ce point de vue, cette démarche utilise toutes les informations
-disponibles sur le système physique, avec des hypothèses restrictives mais
-réalistes sur les erreurs, pour trouver l'"*estimation optimale*" de l'état
-vrai. On peut noter, en termes d'optimisation, que l'ébauche réalise la
-"*régularisation*", au sens mathématique de Tikhonov [Tikhonov77]_
-[WikipediaTI]_, du problème principal d'identification de paramètres. On peut
-aussi désigner cette démarche comme une résolution de type "*problème inverse*".
+L'**identification (ou l'ajustement) de paramÃ¨tres** par assimilation de donnÃ©es
+est une forme de calibration d'Ã©tat qui utilise simultanÃ©ment les mesures
+physiques et une estimation *a priori* des paramÃ¨tres (appelÃ©e l'"*Ã©bauche*")
+d'Ã©tat que l'on cherche Ã  identifier, ainsi qu'une caractÃ©risation de leurs
+erreurs. De ce point de vue, cette dÃ©marche utilise toutes les informations
+disponibles sur le systÃ¨me physique, avec des hypothÃ¨ses restrictives mais
+rÃ©alistes sur les erreurs, pour trouver l'"*estimation optimale*" de l'Ã©tat
+vrai. On peut noter, en termes d'optimisation, que l'Ã©bauche rÃ©alise la
+"*rÃ©gularisation*", au sens mathÃ©matique de Tikhonov [Tikhonov77]_
+[WikipediaTI]_, du problÃ¨me principal d'identification de paramÃ¨tres. On peut
+aussi dÃ©signer cette dÃ©marche comme une rÃ©solution de type "*problÃ¨me inverse*".
 
-En pratique, les deux écarts (ou incréments) observés "*calculs-mesures*" et
-"*calculs-ébauche*" sont combinés pour construire la correction de calibration
-des paramètres ou des conditions initiales. L'ajout de ces deux incréments
-requiert une pondération relative, qui est choisie pour refléter la confiance
-que l'on donne à chaque information utilisée. Cette confiance est représentée
-par la covariance des erreurs sur l'ébauche et sur les observations. Ainsi
+En pratique, les deux Ã©carts (ou incrÃ©ments) observÃ©s "*calculs-mesures*" et
+"*calculs-Ã©bauche*" sont combinÃ©s pour construire la correction de calibration
+des paramÃ¨tres ou des conditions initiales. L'ajout de ces deux incrÃ©ments
+requiert une pondÃ©ration relative, qui est choisie pour reflÃ©ter la confiance
+que l'on donne Ã  chaque information utilisÃ©e. Cette confiance est reprÃ©sentÃ©e
+par la covariance des erreurs sur l'Ã©bauche et sur les observations. Ainsi
 l'aspect stochastique des informations est essentiel pour construire une
 fonction d'erreur pour la calibration.
 
-Un exemple simple d'identification de paramètres provient de tout type de
-simulation physique impliquant un modèle paramétré. Par exemple, une simulation
-de mécanique statique d'une poutre contrainte par des forces est décrite par les
-paramètres de la poutre, comme un coefficient de Young, ou par l'intensité des
-forces appliquées. Le problème d'estimation de paramètres consiste à chercher
-par exemple la bonne valeur du coefficient de Young de telle manière à ce que la
+Un exemple simple d'identification de paramÃ¨tres provient de tout type de
+simulation physique impliquant un modÃ¨le paramÃ©trÃ©. Par exemple, une simulation
+de mÃ©canique statique d'une poutre contrainte par des forces est dÃ©crite par les
+paramÃ¨tres de la poutre, comme un coefficient de Young, ou par l'intensitÃ© des
+forces appliquÃ©es. Le problÃ¨me d'estimation de paramÃ¨tres consiste Ã  chercher
+par exemple la bonne valeur du coefficient de Young de telle maniÃ¨re Ã  ce que la
 simulation de la poutre corresponde aux mesures, en y incluant la connaissance
 des erreurs.
 
-Description simple du cadre méthodologique de l'assimilation de données
+Description simple du cadre mÃ©thodologique de l'assimilation de donnÃ©es
 -----------------------------------------------------------------------
 
-.. index:: single: ébauche
-.. index:: single: covariances d'erreurs d'ébauche
+.. index:: single: Ã©bauche
+.. index:: single: covariances d'erreurs d'Ã©bauche
 .. index:: single: covariances d'erreurs d'observation
 .. index:: single: covariances
 .. index:: single: 3DVAR
 .. index:: single: Blue
 
-On peut décrire ces démarches de manière simple. Par défaut, toutes les
-variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster, ou un
-champ discrétisé à reconstruire.
+On peut dÃ©crire ces dÃ©marches de maniÃ¨re simple. Par dÃ©faut, toutes les
+variables sont des vecteurs, puisqu'il y a plusieurs paramÃ¨tres Ã  ajuster, ou un
+champ discrÃ©tisÃ© Ã  reconstruire.
 
-Selon les notations standards en assimilation de données, on note
-:math:`\mathbf{x}^a` les paramètres optimaux qui doivent être déterminés par
+Selon les notations standards en assimilation de donnÃ©es, on note
+:math:`\mathbf{x}^a` les paramÃ¨tres optimaux qui doivent Ãªtre dÃ©terminÃ©s par
 calibration, :math:`\mathbf{y}^o` les observations (ou les mesures
-expérimentales) auxquelles on doit comparer les sorties de simulation,
-:math:`\mathbf{x}^b` l'ébauche (valeurs *a priori*, ou valeurs de 
-régularisation) des paramètres cherchés, :math:`\mathbf{x}^t` les paramètres
-inconnus idéaux qui donneraient exactement les observations (en supposant que
-toutes les erreurs soient nulles et que le modèle soit exact) en sortie.
+expÃ©rimentales) auxquelles on doit comparer les sorties de simulation,
+:math:`\mathbf{x}^b` l'Ã©bauche (valeurs *a priori*, ou valeurs de
+rÃ©gularisation) des paramÃ¨tres cherchÃ©s, :math:`\mathbf{x}^t` les paramÃ¨tres
+inconnus idÃ©aux qui donneraient exactement les observations (en supposant que
+toutes les erreurs soient nulles et que le modÃ¨le soit exact) en sortie.
 
-Dans le cas le plus simple, qui est statique, les étapes de simulation et
-d'observation peuvent être combinées en un unique opérateur d'observation noté
-:math:`H` (linéaire ou non-linéaire). Il transforme formellement les paramètres
-:math:`\mathbf{x}` en entrée en résultats :math:`\mathbf{y}`, qui peuvent être
-directement comparés aux observations :math:`\mathbf{y}^o` :
+Dans le cas le plus simple, qui est statique, les Ã©tapes de simulation et
+d'observation peuvent Ãªtre combinÃ©es en un unique opÃ©rateur d'observation notÃ©
+:math:`H` (linÃ©aire ou non-linÃ©aire). Il transforme formellement les paramÃ¨tres
+:math:`\mathbf{x}` en entrÃ©e en rÃ©sultats :math:`\mathbf{y}`, qui peuvent Ãªtre
+directement comparÃ©s aux observations :math:`\mathbf{y}^o` :
 
 .. math:: \mathbf{y} = H(\mathbf{x})
 
-De plus, on utilise l'opérateur linéarisé :math:`\mathbf{H}` pour représenter
-l'effet de l'opérateur complet :math:`H` autour d'un point de linéarisation (et
-on omettra ensuite de mentionner :math:`H` même si l'on peut le conserver). En
-réalité, on a déjà indiqué que la nature stochastique des variables est
-essentielle, provenant du fait que le modèle, l'ébauche et les observations sont
+De plus, on utilise l'opÃ©rateur linÃ©arisÃ© :math:`\mathbf{H}` pour reprÃ©senter
+l'effet de l'opÃ©rateur complet :math:`H` autour d'un point de linÃ©arisation (et
+on omettra ensuite de mentionner :math:`H` mÃªme si l'on peut le conserver). En
+rÃ©alitÃ©, on a dÃ©jÃ  indiquÃ© que la nature stochastique des variables est
+essentielle, provenant du fait que le modÃ¨le, l'Ã©bauche et les observations sont
 tous incorrects. On introduit donc des erreurs d'observations additives, sous la
-forme d'un vecteur aléatoire :math:`\mathbf{\epsilon}^o` tel que :
+forme d'un vecteur alÃ©atoire :math:`\mathbf{\epsilon}^o` tel que :
 
 .. math:: \mathbf{y}^o = \mathbf{H} \mathbf{x}^t + \mathbf{\epsilon}^o
 
-Les erreurs représentées ici ne sont pas uniquement celles des observations, ce
-sont aussi celles de la simulation. On peut toujours considérer que ces erreurs
-sont de moyenne nulle. En notant :math:`E[.]` l'espérance mathématique
-classique, on peut alors définir une matrice :math:`\mathbf{R}` des covariances
+Les erreurs reprÃ©sentÃ©es ici ne sont pas uniquement celles des observations, ce
+sont aussi celles de la simulation. On peut toujours considÃ©rer que ces erreurs
+sont de moyenne nulle. En notant :math:`E[.]` l'espÃ©rance mathÃ©matique
+classique, on peut alors dÃ©finir une matrice :math:`\mathbf{R}` des covariances
 d'erreurs d'observation par l'expression :
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
-L'ébauche peut aussi être écrite formellement comme une fonction de la valeur
+L'Ã©bauche peut aussi Ãªtre Ã©crite formellement comme une fonction de la valeur
 vraie, en introduisant le vecteur d'erreurs :math:`\mathbf{\epsilon}^b` tel que
 :
 
 .. math:: \mathbf{x}^b = \mathbf{x}^t + \mathbf{\epsilon}^b
 
-Les erreurs :math:`\mathbf{\epsilon}^b` sont aussi supposées de moyenne nulle,
-de la même manière que pour les observations. On définit la matrice
-:math:`\mathbf{B}` des covariances d'erreurs d'ébauche par :
+Les erreurs :math:`\mathbf{\epsilon}^b` sont aussi supposÃ©es de moyenne nulle,
+de la mÃªme maniÃ¨re que pour les observations. On dÃ©finit la matrice
+:math:`\mathbf{B}` des covariances d'erreurs d'Ã©bauche par :
 
 .. math:: \mathbf{B} = E[\mathbf{\epsilon}^b.{\mathbf{\epsilon}^b}^T]
 
-L'estimation optimale des paramètres vrais :math:`\mathbf{x}^t`, étant donné
-l'ébauche :math:`\mathbf{x}^b` et les observations :math:`\mathbf{y}^o`, est
+L'estimation optimale des paramÃ¨tres vrais :math:`\mathbf{x}^t`, Ã©tant donnÃ©
+l'Ã©bauche :math:`\mathbf{x}^b` et les observations :math:`\mathbf{y}^o`, est
 ainsi "l'*analyse*" :math:`\mathbf{x}^a` et provient de la minimisation d'une
 fonction d'erreur, explicite en assimilation variationnelle, ou d'une correction
 de filtrage en assimilation par filtrage.
 
 En **assimilation variationnelle**, dans un cas statique, on cherche
-classiquement à minimiser la fonction :math:`J` suivante :
+classiquement Ã  minimiser la fonction :math:`J` suivante :
 
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-:math:`J` est classiquement désignée comme la fonctionnelle "*3D-VAR*" en
-assimilation de données (voir par exemple [Talagrand97]_) ou comme la
-fonctionnelle de régularisation de Tikhonov généralisée en optimisation (voir
+:math:`J` est classiquement dÃ©signÃ©e comme la fonctionnelle "*3D-VAR*" en
+assimilation de donnÃ©es (voir par exemple [Talagrand97]_) ou comme la
+fonctionnelle de rÃ©gularisation de Tikhonov gÃ©nÃ©ralisÃ©e en optimisation (voir
 par exemple [WikipediaTI]_). Comme les matrices de covariance :math:`\mathbf{B}`
 et :math:`\mathbf{R}` sont proportionnelles aux variances d'erreurs, leur
-présence dans les deux termes de la fonctionnelle :math:`J` permet effectivement
-de pondérer les termes d'écarts par la confiance dans les erreurs d'ébauche ou
-d'observations. Le vecteur :math:`\mathbf{x}` des paramètres réalisant le
+prÃ©sence dans les deux termes de la fonctionnelle :math:`J` permet effectivement
+de pondÃ©rer les termes d'Ã©carts par la confiance dans les erreurs d'Ã©bauche ou
+d'observations. Le vecteur :math:`\mathbf{x}` des paramÃ¨tres rÃ©alisant le
 minimum de cette fonction constitue ainsi l'analyse :math:`\mathbf{x}^a`. C'est
-à ce niveau que l'on doit utiliser toute la panoplie des méthodes de
+Ã  ce niveau que l'on doit utiliser toute la panoplie des mÃ©thodes de
 minimisation de fonctions connues par ailleurs en optimisation (voir aussi la
-section `Approfondir l'estimation d'état par des méthodes d'optimisation`_).
-Selon la taille du vecteur :math:`\mathbf{x}` des paramètres à identifier, et la
-disponibilité du gradient ou de la hessienne de :math:`J`, il est judicieux
-d'adapter la méthode d'optimisation choisie (gradient, Newton, quasi-Newton...).
+section `Approfondir l'estimation d'Ã©tat par des mÃ©thodes d'optimisation`_).
+Selon la taille du vecteur :math:`\mathbf{x}` des paramÃ¨tres Ã  identifier, et la
+disponibilitÃ© du gradient ou de la hessienne de :math:`J`, il est judicieux
+d'adapter la mÃ©thode d'optimisation choisie (gradient, Newton, quasi-Newton...).
 
-En **assimilation par filtrage**, dans ce cas simple usuellement dénommé
+En **assimilation par filtrage**, dans ce cas simple usuellement dÃ©nommÃ©
 "*BLUE*" (pour "*Best Linear Unbiased Estimator*"), l'analyse
-:math:`\mathbf{x}^a` est donnée comme une correction de l'ébauche
-:math:`\mathbf{x}^b` par un terme proportionnel à la différence entre les
+:math:`\mathbf{x}^a` est donnÃ©e comme une correction de l'Ã©bauche
+:math:`\mathbf{x}^b` par un terme proportionnel Ã  la diffÃ©rence entre les
 observations :math:`\mathbf{y}^o` et les calculs :math:`\mathbf{H}\mathbf{x}^b` :
 
 .. math:: \mathbf{x}^a = \mathbf{x}^b + \mathbf{K}(\mathbf{y}^o - \mathbf{H}\mathbf{x}^b)
 
-où :math:`\mathbf{K}` est la matrice de gain de Kalman, qui s'exprime à l'aide
+oÃ¹ :math:`\mathbf{K}` est la matrice de gain de Kalman, qui s'exprime Ã  l'aide
 des matrices de covariance sous la forme suivante :
 
 .. math:: \mathbf{K} = \mathbf{B}\mathbf{H}^T(\mathbf{H}\mathbf{B}\mathbf{H}^T+\mathbf{R})^{-1}
@@ -245,110 +245,110 @@ des matrices de covariance sous la forme suivante :
 L'avantage du filtrage est le calcul explicite du gain, pour produire ensuite la
 matrice *a posteriori* de covariance d'analyse.
 
-Dans ce cas statique simple, on peut montrer, sous une hypothèse de
-distributions gaussiennes d'erreurs (très peu restrictive en pratique), que les
-deux approches *variationnelle* et *de filtrage* donnent la même solution.
+Dans ce cas statique simple, on peut montrer, sous une hypothÃ¨se de
+distributions gaussiennes d'erreurs (trÃ¨s peu restrictive en pratique), que les
+deux approches *variationnelle* et *de filtrage* donnent la mÃªme solution.
 
-On indique que ces méthodes de "*3D-VAR*" et de "*BLUE*" peuvent être étendues à
-des problèmes dynamiques, sous les noms respectifs de "*4D-VAR*" et de "*filtre
-de Kalman*". Elles peuvent prendre en compte l'opérateur d'évolution pour
-établir aux bons pas de temps une analyse de l'écart entre les observations et
-les simulations et pour avoir, à chaque instant, la propagation de l'ébauche à
-travers le modèle d'évolution. Un grand nombre de variantes ont été développées
-pour accroître la qualité numérique des méthodes ou pour prendre en compte des
-contraintes informatiques comme la taille ou la durée des calculs.
+On indique que ces mÃ©thodes de "*3D-VAR*" et de "*BLUE*" peuvent Ãªtre Ã©tendues Ã 
+des problÃ¨mes dynamiques, sous les noms respectifs de "*4D-VAR*" et de "*filtre
+de Kalman*". Elles peuvent prendre en compte l'opÃ©rateur d'Ã©volution pour
+Ã©tablir aux bons pas de temps une analyse de l'Ã©cart entre les observations et
+les simulations et pour avoir, Ã  chaque instant, la propagation de l'Ã©bauche Ã 
+travers le modÃ¨le d'Ã©volution. Un grand nombre de variantes ont Ã©tÃ© dÃ©veloppÃ©es
+pour accroÃ®tre la qualitÃ© numÃ©rique des mÃ©thodes ou pour prendre en compte des
+contraintes informatiques comme la taille ou la durÃ©e des calculs.
 
-Approfondir le cadre méthodologique de l'assimilation de données
+Approfondir le cadre mÃ©thodologique de l'assimilation de donnÃ©es
 ----------------------------------------------------------------
 
-.. index:: single: estimation d'état
-.. index:: single: estimation de paramètres
-.. index:: single: problèmes inverses
-.. index:: single: estimation bayésienne
+.. index:: single: estimation d'Ã©tat
+.. index:: single: estimation de paramÃ¨tres
+.. index:: single: problÃ¨mes inverses
+.. index:: single: estimation bayÃ©sienne
 .. index:: single: interpolation optimale
-.. index:: single: régularisation mathématique
-.. index:: single: méthodes de régularisation
-.. index:: single: méthodes de lissage
+.. index:: single: rÃ©gularisation mathÃ©matique
+.. index:: single: mÃ©thodes de rÃ©gularisation
+.. index:: single: mÃ©thodes de lissage
 
 Pour obtenir de plus amples informations sur les techniques d'assimilation de
-données, le lecteur peut consulter les documents introductifs comme
+donnÃ©es, le lecteur peut consulter les documents introductifs comme
 [Talagrand97]_ ou [Argaud09]_, des supports de formations ou de cours comme
 [Bouttier99]_ et [Bocquet04]_ (ainsi que d'autres documents issus des
-applications des géosciences), ou des documents généraux comme [Talagrand97]_,
+applications des gÃ©osciences), ou des documents gÃ©nÃ©raux comme [Talagrand97]_,
 [Tarantola87]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ et [WikipediaDA]_.
 
-On note que l'assimilation de données n'est pas limitée à la météorologie ou aux
-géo-sciences, mais est largement utilisée dans d'autres domaines scientifiques.
+On note que l'assimilation de donnÃ©es n'est pas limitÃ©e Ã  la mÃ©tÃ©orologie ou aux
+gÃ©o-sciences, mais est largement utilisÃ©e dans d'autres domaines scientifiques.
 Il y a de nombreux champs d'applications scientifiques et technologiques dans
-lesquels l'utilisation efficace des données observées, mais incomplètes, est
+lesquels l'utilisation efficace des donnÃ©es observÃ©es, mais incomplÃ¨tes, est
 cruciale.
 
-Certains aspects de l'assimilation de données sont aussi connus sous les noms
-d'*estimation d'état*, d'*estimation de paramètres*, de *problèmes inverses*,
-d'*estimation bayésienne*, d'*interpolation optimale*, de *régularisation
-mathématique*, de *lissage de données*, etc. Ces termes peuvent être utilisés
+Certains aspects de l'assimilation de donnÃ©es sont aussi connus sous les noms
+d'*estimation d'Ã©tat*, d'*estimation de paramÃ¨tres*, de *problÃ¨mes inverses*,
+d'*estimation bayÃ©sienne*, d'*interpolation optimale*, de *rÃ©gularisation
+mathÃ©matique*, de *lissage de donnÃ©es*, etc. Ces termes peuvent Ãªtre utilisÃ©s
 dans les recherches bibliographiques.
 
-Approfondir l'estimation d'état par des méthodes d'optimisation
+Approfondir l'estimation d'Ã©tat par des mÃ©thodes d'optimisation
 ---------------------------------------------------------------
 
-.. index:: single: estimation d'état
-.. index:: single: méthodes d'optimisation
+.. index:: single: estimation d'Ã©tat
+.. index:: single: mÃ©thodes d'optimisation
 
-Comme vu précédemment, dans un cas de simulation statique, l'assimilation
-variationnelle de données nécessite de minimiser la fonction objectif :math:`J`:
+Comme vu prÃ©cÃ©demment, dans un cas de simulation statique, l'assimilation
+variationnelle de donnÃ©es nÃ©cessite de minimiser la fonction objectif :math:`J`:
 
 .. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-qui est dénommée la fonctionnelle du "*3D-VAR*". Elle peut être vue comme la
-forme étendue d'une *minimisation moindres carrés*, obtenue en ajoutant un terme
-de régularisation utilisant :math:`\mathbf{x}-\mathbf{x}^b`, et en pondérant les
-différences par les deux matrices de covariances :math:`\mathbf{B}` et
-:math:`\mathbf{R}`. La minimisation de la fonctionnelle :math:`J` conduit à la
-*meilleure* estimation de l'état :math:`\mathbf{x}`. Pour obtenir plus
-d'informations sur ces notions, on se reportera aux ouvrages généraux de
-référence comme [Tarantola87]_.
+qui est dÃ©nommÃ©e la fonctionnelle du "*3D-VAR*". Elle peut Ãªtre vue comme la
+forme Ã©tendue d'une *minimisation moindres carrÃ©s*, obtenue en ajoutant un terme
+de rÃ©gularisation utilisant :math:`\mathbf{x}-\mathbf{x}^b`, et en pondÃ©rant les
+diffÃ©rences par les deux matrices de covariances :math:`\mathbf{B}` et
+:math:`\mathbf{R}`. La minimisation de la fonctionnelle :math:`J` conduit Ã  la
+*meilleure* estimation de l'Ã©tat :math:`\mathbf{x}`. Pour obtenir plus
+d'informations sur ces notions, on se reportera aux ouvrages gÃ©nÃ©raux de
+rÃ©fÃ©rence comme [Tarantola87]_.
 
-Les possibilités d'extension de cette estimation d'état, en utilisant de manière
-plus explicite des méthodes d'optimisation et leurs propriétés, peuvent être
-imaginées de deux manières.
+Les possibilitÃ©s d'extension de cette estimation d'Ã©tat, en utilisant de maniÃ¨re
+plus explicite des mÃ©thodes d'optimisation et leurs propriÃ©tÃ©s, peuvent Ãªtre
+imaginÃ©es de deux maniÃ¨res.
 
-En premier lieu, les méthodes classiques d'optimisation impliquent l'usage de
-méthodes de minimisation variées basées sur un gradient. Elles sont extrêmement
-efficaces pour rechercher un minimum local isolé. Mais elles nécessitent que la
-fonctionnelle :math:`J` soit suffisamment régulière et différentiable, et elles
-ne sont pas en mesure de saisir des propriétés globales du problème de
+En premier lieu, les mÃ©thodes classiques d'optimisation impliquent l'usage de
+mÃ©thodes de minimisation variÃ©es basÃ©es sur un gradient. Elles sont extrÃªmement
+efficaces pour rechercher un minimum local isolÃ©. Mais elles nÃ©cessitent que la
+fonctionnelle :math:`J` soit suffisamment rÃ©guliÃ¨re et diffÃ©rentiable, et elles
+ne sont pas en mesure de saisir des propriÃ©tÃ©s globales du problÃ¨me de
 minimisation, comme par exemple : minimum global, ensemble de solutions
-équivalentes dues à une sur-paramétrisation, multiples minima locaux, etc. **Une
-méthode pour étendre les possibilités d'estimation consiste donc à utiliser
-l'ensemble des méthodes d'optimisation existantes, permettant la minimisation
-globale, diverses propriétés de robustesse de la recherche, etc**. Il existe de
-nombreuses méthodes de minimisation, comme les méthodes stochastiques,
-évolutionnaires, les heuristiques et méta-heuristiques pour les problèmes à
-valeurs réelles, etc. Elles peuvent traiter des fonctionnelles :math:`J` en
-partie irrégulières ou bruitées, peuvent caractériser des minima locaux, etc. Le
-principal désavantage de ces méthodes est un coût numérique souvent bien
-supérieur pour trouver les estimations d'états, et pas de garantie de
-convergence en temps fini. Ici, on ne mentionne que des méthodes qui sont
-disponibles dans le module ADAO : la *régression de quantile (Quantile
+Ã©quivalentes dues Ã  une sur-paramÃ©trisation, multiples minima locaux, etc. **Une
+mÃ©thode pour Ã©tendre les possibilitÃ©s d'estimation consiste donc Ã  utiliser
+l'ensemble des mÃ©thodes d'optimisation existantes, permettant la minimisation
+globale, diverses propriÃ©tÃ©s de robustesse de la recherche, etc**. Il existe de
+nombreuses mÃ©thodes de minimisation, comme les mÃ©thodes stochastiques,
+Ã©volutionnaires, les heuristiques et mÃ©ta-heuristiques pour les problÃ¨mes Ã 
+valeurs rÃ©elles, etc. Elles peuvent traiter des fonctionnelles :math:`J` en
+partie irrÃ©guliÃ¨res ou bruitÃ©es, peuvent caractÃ©riser des minima locaux, etc. Le
+principal dÃ©savantage de ces mÃ©thodes est un coÃ»t numÃ©rique souvent bien
+supÃ©rieur pour trouver les estimations d'Ã©tats, et pas de garantie de
+convergence en temps fini. Ici, on ne mentionne que des mÃ©thodes qui sont
+disponibles dans le module ADAO : la *rÃ©gression de quantile (Quantile
 Regression)* [WikipediaQR]_ et l'*optimisation par essaim de particules
 (Particle Swarm Optimization)* [WikipediaPSO]_.
 
-En second lieu, les méthodes d'optimisation cherchent usuellement à minimiser
-des mesures quadratiques d'erreurs, car les propriétés naturelles de ces
-fonctions objectifs sont bien adaptées à l'optimisation classique par gradient.
-Mais d'autres mesures d'erreurs peuvent être mieux adaptées aux problèmes de
-simulation de la physique réelle. Ainsi, **une autre manière d'étendre les
-possibilités d'estimation consiste à utiliser d'autres mesures d'erreurs à
-réduire**. Par exemple, on peut citer l'**erreur absolue**, l'**erreur
-maximale**, etc. Ces mesures d'erreurs ne sont pas différentiables, mais
-certaines méthodes d'optimisation peuvent les traiter: heuristiques et
-méta-heuristiques pour les problèmes à valeurs réelles, etc. Comme précédemment,
-le principal désavantage de ces méthodes est un coût numérique souvent bien
-supérieur pour trouver les estimations d'états, et pas de garantie de
-convergence en temps fini. Ici encore, on ne mentionne que des méthodes qui sont
+En second lieu, les mÃ©thodes d'optimisation cherchent usuellement Ã  minimiser
+des mesures quadratiques d'erreurs, car les propriÃ©tÃ©s naturelles de ces
+fonctions objectifs sont bien adaptÃ©es Ã  l'optimisation classique par gradient.
+Mais d'autres mesures d'erreurs peuvent Ãªtre mieux adaptÃ©es aux problÃ¨mes de
+simulation de la physique rÃ©elle. Ainsi, **une autre maniÃ¨re d'Ã©tendre les
+possibilitÃ©s d'estimation consiste Ã  utiliser d'autres mesures d'erreurs Ã 
+rÃ©duire**. Par exemple, on peut citer l'**erreur absolue**, l'**erreur
+maximale**, etc. Ces mesures d'erreurs ne sont pas diffÃ©rentiables, mais
+certaines mÃ©thodes d'optimisation peuvent les traiter: heuristiques et
+mÃ©ta-heuristiques pour les problÃ¨mes Ã  valeurs rÃ©elles, etc. Comme prÃ©cÃ©demment,
+le principal dÃ©savantage de ces mÃ©thodes est un coÃ»t numÃ©rique souvent bien
+supÃ©rieur pour trouver les estimations d'Ã©tats, et pas de garantie de
+convergence en temps fini. Ici encore, on ne mentionne que des mÃ©thodes qui sont
 disponibles dans le module ADAO : l'*optimisation par essaim de particules
 (Particle Swarm Optimization)* [WikipediaPSO]_.
 
-Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
-sa recherche grâce au point d'entrée [WikipediaMO]_.
+Le lecteur intÃ©ressÃ© par le sujet de l'optimisation pourra utilement commencer
+sa recherche grÃ¢ce au point d'entrÃ©e [WikipediaMO]_.

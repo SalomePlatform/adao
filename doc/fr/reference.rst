@@ -24,38 +24,38 @@
 .. _section_reference:
 
 ================================================================================
-**[DocR]** Description de référence des commandes et mots-clés ADAO
+**[DocR]** Description de rÃ©fÃ©rence des commandes et mots-clÃ©s ADAO
 ================================================================================
 
-Les sections suivantes présentent la description de référence des commandes et
-mots-clés ADAO disponibles à travers l'interface graphique (GUI) ou à travers
-des scripts. Les deux premières sections communes présentent les
+Les sections suivantes prÃ©sentent la description de rÃ©fÃ©rence des commandes et
+mots-clÃ©s ADAO disponibles Ã  travers l'interface graphique (GUI) ou Ã  travers
+des scripts. Les deux premiÃ¨res sections communes prÃ©sentent les
 :ref:`section_reference_entry` et les :ref:`section_reference_special_entry`.
-Ensuite, on décrit successivement les :ref:`section_reference_assimilation` et
+Ensuite, on dÃ©crit successivement les :ref:`section_reference_assimilation` et
 les :ref:`section_reference_checking`.
 
-Chaque commande ou mot-clé à définir par l'interface graphique (GUI) a des
-propriétés particulières. La première propriété est d'être *requise*,
-*optionnelle* ou simplement utile, décrivant un type d'entrée. La seconde
-propriété est d'être une variable "ouverte" avec un type fixé mais avec
-n'importe quelle valeur autorisée par le type, ou une variable "fermée", limitée
-à des valeurs spécifiées. L'éditeur graphique intégré disposant de capacités
-intrinsèques de validation, les propriétés des commandes ou mots-clés données à
+Chaque commande ou mot-clÃ© Ã  dÃ©finir par l'interface graphique (GUI) a des
+propriÃ©tÃ©s particuliÃ¨res. La premiÃ¨re propriÃ©tÃ© est d'Ãªtre *requise*,
+*optionnelle* ou simplement utile, dÃ©crivant un type d'entrÃ©e. La seconde
+propriÃ©tÃ© est d'Ãªtre une variable "ouverte" avec un type fixÃ© mais avec
+n'importe quelle valeur autorisÃ©e par le type, ou une variable "fermÃ©e", limitÃ©e
+Ã  des valeurs spÃ©cifiÃ©es. L'Ã©diteur graphique intÃ©grÃ© disposant de capacitÃ©s
+intrinsÃ¨ques de validation, les propriÃ©tÃ©s des commandes ou mots-clÃ©s donnÃ©es Ã 
 l'aide de l'interface graphique sont automatiquement correctes.
 
 .. _section_reference_entry:
 
 ========================================================================================
-**[DocR]** Entrées et sorties générales
+**[DocR]** EntrÃ©es et sorties gÃ©nÃ©rales
 ========================================================================================
 
-Cette section décrit de manière générale les différentes possibilités de types
-d'entrées et de variables de sortie que l'on peut utiliser. Les notations
-mathématiques utilisées sont expliquées dans la section :ref:`section_theory`.
+Cette section dÃ©crit de maniÃ¨re gÃ©nÃ©rale les diffÃ©rentes possibilitÃ©s de types
+d'entrÃ©es et de variables de sortie que l'on peut utiliser. Les notations
+mathÃ©matiques utilisÃ©es sont expliquÃ©es dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_entry_types
    ref_options_AlgorithmParameters
    ref_output_variables
@@ -63,16 +63,16 @@ mathématiques utilisées sont expliquées dans la section :ref:`section_theory`.
 .. _section_reference_special_entry:
 
 ========================================================================================
-**[DocR]** Entrées spéciales : fonctions, matrices, "*observer*"
+**[DocR]** EntrÃ©es spÃ©ciales : fonctions, matrices, "*observer*"
 ========================================================================================
 
-Cette section décrit les entrées spéciales, comme les formes fonctionnelles ou
-matricielles, que l'on peut utiliser. Les notations mathématiques utilisées
-sont expliquées dans la section :ref:`section_theory`.
+Cette section dÃ©crit les entrÃ©es spÃ©ciales, comme les formes fonctionnelles ou
+matricielles, que l'on peut utiliser. Les notations mathÃ©matiques utilisÃ©es
+sont expliquÃ©es dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_operator_requirements
    ref_covariance_requirements
    ref_observers_requirements
@@ -80,21 +80,21 @@ sont expliquées dans la section :ref:`section_theory`.
 .. _section_reference_assimilation:
 
 ============================================================================================
-**[DocR]** Cas d'assimilation de données ou d'optimisation
+**[DocR]** Cas d'assimilation de donnÃ©es ou d'optimisation
 ============================================================================================
 
-Cette section décrit les algorithmes d'assimilation de données ou d'optimisation
-disponibles dans ADAO, détaillant leurs caractéristiques d'utilisation et leurs
+Cette section dÃ©crit les algorithmes d'assimilation de donnÃ©es ou d'optimisation
+disponibles dans ADAO, dÃ©taillant leurs caractÃ©ristiques d'utilisation et leurs
 options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section
-:ref:`section_examples` et dans les fichiers d'exemple installés avec le module
-ADAO. Les notations mathématiques utilisées sont expliquées dans la section
+:ref:`section_examples` et dans les fichiers d'exemple installÃ©s avec le module
+ADAO. Les notations mathÃ©matiques utilisÃ©es sont expliquÃ©es dans la section
 :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_assimilation_keywords
    ref_algorithm_3DVAR
    ref_algorithm_4DVAR
@@ -113,20 +113,20 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
 .. _section_reference_checking:
 
 ================================================================================
-**[DocR]** Cas de vérification
+**[DocR]** Cas de vÃ©rification
 ================================================================================
 
-Cette section décrit les algorithmes de vérification disponibles dans ADAO,
-détaillant leurs caractéristiques d'utilisation et leurs options.
+Cette section dÃ©crit les algorithmes de vÃ©rification disponibles dans ADAO,
+dÃ©taillant leurs caractÃ©ristiques d'utilisation et leurs options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section
-:ref:`section_examples` et dans les fichiers d'exemple installés avec le module
-ADAO. Les notations mathématiques utilisées sont expliquées dans la section
+:ref:`section_examples` et dans les fichiers d'exemple installÃ©s avec le module
+ADAO. Les notations mathÃ©matiques utilisÃ©es sont expliquÃ©es dans la section
 :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_checking_keywords
    ref_algorithm_AdjointTest
    ref_algorithm_FunctionTest

@@ -24,16 +24,16 @@
 .. index:: single: ObserverTest
 .. _section_ref_algorithm_ObserverTest:
 
-Algorithme de vérification "*ObserverTest*"
+Algorithme de vÃ©rification "*ObserverTest*"
 -------------------------------------------
 
 Description
 +++++++++++
 
-Cet algorithme permet de vérifier une fonction externe et fournie par
-l'utilisateur, utilisée comme un *observer*. Cette fonction externe peut être
-appliquée à chacune des variables potentiellement observables. Elle n'est
-activée que sur celles qui sont explicitement associées avec l'*observer* dans
+Cet algorithme permet de vÃ©rifier une fonction externe et fournie par
+l'utilisateur, utilisÃ©e comme un *observer*. Cette fonction externe peut Ãªtre
+appliquÃ©e Ã  chacune des variables potentiellement observables. Elle n'est
+activÃ©e que sur celles qui sont explicitement associÃ©es avec l'*observer* dans
 l'interface.
 
 Commandes requises et optionnelles
@@ -44,26 +44,26 @@ Commandes requises et optionnelles
 .. index:: single: ObservationOperator
 .. index:: single: Observers
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   Observers
-    *Commande obligatoire*. Elle permet de définir des observateurs internes,
-    qui sont des fonctions liées à une variable particulière, qui sont exécutées
-    chaque fois que cette variable est modifiée. C'est une manière pratique de
-    suivre des variables d'intérêt durant le processus d'assimilation de données
-    ou d'optimisation, en l'affichant ou en la traçant, etc. Des exemples
+    *Commande obligatoire*. Elle permet de dÃ©finir des observateurs internes,
+    qui sont des fonctions liÃ©es Ã  une variable particuliÃ¨re, qui sont exÃ©cutÃ©es
+    chaque fois que cette variable est modifiÃ©e. C'est une maniÃ¨re pratique de
+    suivre des variables d'intÃ©rÃªt durant le processus d'assimilation de donnÃ©es
+    ou d'optimisation, en l'affichant ou en la traÃ§ant, etc. Des exemples
     courants (squelettes) sont fournis pour aider l'utilisateur ou pour
-    faciliter l'élaboration d'un cas.
+    faciliter l'Ã©laboration d'un cas.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_checking_keywords`.
-    
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_checking_keywords`.
+
 *Astuce pour cet algorithme :*
 
     Comme les commandes *"CheckingPoint"* et *"ObservationOperator"* sont
-    requises pour TOUS les algorithmes de vérification dans l'interface, vous
-    devez fournir une valeur, malgré le fait que ces commandes ne sont pas
-    requises pour *"ObserverTest"*, et ne seront pas utilisées. La manière la
+    requises pour TOUS les algorithmes de vÃ©rification dans l'interface, vous
+    devez fournir une valeur, malgrÃ© le fait que ces commandes ne sont pas
+    requises pour *"ObserverTest"*, et ne seront pas utilisÃ©es. La maniÃ¨re la
     plus simple est de donner "1" comme un STRING pour les deux,
-    l'*"ObservationOperator"* devant être de type *Matrix*.
+    l'*"ObservationOperator"* devant Ãªtre de type *Matrix*.

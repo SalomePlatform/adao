@@ -24,34 +24,34 @@
 .. index:: single: SamplingTest
 .. _section_ref_algorithm_SamplingTest:
 
-Algorithme de vérification "*SamplingTest*"
+Algorithme de vÃ©rification "*SamplingTest*"
 -------------------------------------------
 
 Description
 +++++++++++
 
-Cet algorithme permet d'établir les valeurs, liées à un état :math:`\mathbf{x}`,
+Cet algorithme permet d'Ã©tablir les valeurs, liÃ©es Ã  un Ã©tat :math:`\mathbf{x}`,
 d'une fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`,
-:math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations, et de l'opérateur
-d'observation, pour un échantillon d'états donné a priori. La fonctionnelle
-d'erreur par défaut est celle de moindres carrés pondérés augmentés,
-classiquement utilisée en assimilation de données.
+:math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondÃ©rations, et de l'opÃ©rateur
+d'observation, pour un Ã©chantillon d'Ã©tats donnÃ© a priori. La fonctionnelle
+d'erreur par dÃ©faut est celle de moindres carrÃ©s pondÃ©rÃ©s augmentÃ©s,
+classiquement utilisÃ©e en assimilation de donnÃ©es.
 
-Il est utile pour tester la sensibilité, de la fonctionnelle :math:`J`, en
-particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque un état n'est
-pas observable, une valeur *"NaN"* est retournée.
+Il est utile pour tester la sensibilitÃ©, de la fonctionnelle :math:`J`, en
+particulier, aux variations de l'Ã©tat :math:`\mathbf{x}`. Lorsque un Ã©tat n'est
+pas observable, une valeur *"NaN"* est retournÃ©e.
 
-L'échantillon des états :math:`\mathbf{x}` peut être fourni explicitement ou
-sous la forme d'hyper-cubes, explicites ou échantillonnés selon des lois
-courantes. Attention à la taille de l'hyper-cube (et donc au nombre de calculs)
+L'Ã©chantillon des Ã©tats :math:`\mathbf{x}` peut Ãªtre fourni explicitement ou
+sous la forme d'hyper-cubes, explicites ou Ã©chantillonnÃ©s selon des lois
+courantes. Attention Ã  la taille de l'hyper-cube (et donc au nombre de calculs)
 qu'il est possible d'atteindre, elle peut rapidement devenir importante.
 
-Pour apparaître pour l'utilisateur, les résultats de l'échantillonnage doivent
-être demandés explicitement. On utilise pour cela, sur la variable désirée, la
-sauvegarde finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en
-cours de calcul à l'aide des "*observer*" adaptés.
+Pour apparaÃ®tre pour l'utilisateur, les rÃ©sultats de l'Ã©chantillonnage doivent
+Ãªtre demandÃ©s explicitement. On utilise pour cela, sur la variable dÃ©sirÃ©e, la
+sauvegarde finale Ã  l'aide du mot-clÃ© "*UserPostAnalysis*" ou le traitement en
+cours de calcul Ã  l'aide des "*observer*" adaptÃ©s.
 
-Pour effectuer un échantillonnage distribué ou plus complexe, voir le module
+Pour effectuer un Ã©chantillonnage distribuÃ© ou plus complexe, voir le module
 OPENTURNS disponible dans SALOME.
 
 Commandes requises et optionnelles
@@ -72,181 +72,181 @@ Commandes requises et optionnelles
 .. index:: single: SetSeed
 .. index:: single: StoreSupplementaryCalculations
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   CheckingPoint
-    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
-    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
-    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
+    *Commande obligatoire*. Elle dÃ©finit le vecteur utilisÃ© comme l'Ã©tat autour
+    duquel rÃ©aliser le test requis, notÃ© :math:`\mathbf{x}` et similaire Ã 
+    l'Ã©bauche :math:`\mathbf{x}^b`. Sa valeur est dÃ©finie comme un objet de type
     "*Vector*".
 
   BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{B}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'observation utilisÃ© en
+    assimilation de donnÃ©es ou en optimisation, et notÃ© prÃ©cÃ©demment
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
     ou de type "*VectorSerie*".
 
   ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{R}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, notée
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`.  Sa valeur est définie comme un objet de
-    type "*Function*". Différentes formes fonctionnelles peuvent être
-    utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'observation, l'opérateur doit être appliqué à une
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©e
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`.  Sa valeur est dÃ©finie comme un objet de
+    type "*Function*". DiffÃ©rentes formes fonctionnelles peuvent Ãªtre
+    utilisÃ©es, comme dÃ©crit dans la section
+    :ref:`section_ref_operator_requirements`. Si un contrÃ´le :math:`U` est
+    inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre appliquÃ© Ã  une
     paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_checking_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   SampleAsnUplet
-    Cette clé décrit les points de calcul sous la forme d'une liste de n-uplets,
-    chaque n-uplet étant un état.
+    Cette clÃ© dÃ©crit les points de calcul sous la forme d'une liste de n-uplets,
+    chaque n-uplet Ã©tant un Ã©tat.
 
-    Exemple : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` pour 3 points dans un espace d'état de dimension 4
+    Exemple : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` pour 3 points dans un espace d'Ã©tat de dimension 4
 
   SampleAsExplicitHyperCube
-    Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
-    donne la liste des échantillonnages explicites de chaque variable comme une
-    liste. C'est donc une liste de listes, chacune étant de taille
-    potentiellement différente.
+    Cette clÃ© dÃ©crit les points de calcul sous la forme d'un hyper-cube, dont on
+    donne la liste des Ã©chantillonnages explicites de chaque variable comme une
+    liste. C'est donc une liste de listes, chacune Ã©tant de taille
+    potentiellement diffÃ©rente.
 
-    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` pour un espace d'état de dimension 2
+    Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` pour un espace d'Ã©tat de dimension 2
 
   SampleAsMinMaxStepHyperCube
-    Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
-    donne la liste des échantillonnages implicites de chaque variable par un
-    triplet *[min,max,step]*. C'est donc une liste de la même taille que celle
-    de l'état. Les bornes sont incluses.
+    Cette clÃ© dÃ©crit les points de calcul sous la forme d'un hyper-cube, dont on
+    donne la liste des Ã©chantillonnages implicites de chaque variable par un
+    triplet *[min,max,step]*. C'est donc une liste de la mÃªme taille que celle
+    de l'Ã©tat. Les bornes sont incluses.
 
-    Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état de dimension 2
+    Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'Ã©tat de dimension 2
 
   SampleAsIndependantRandomVariables
-    Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont
-    les points sur chaque axe proviennent de l'échantillonnage aléatoire
-    indépendant de la variable d'axe, selon la spécification de la
-    distribution, de ses paramètres et du nombre de points de l'échantillon,
+    Cette clÃ© dÃ©crit les points de calcul sous la forme d'un hyper-cube, dont
+    les points sur chaque axe proviennent de l'Ã©chantillonnage alÃ©atoire
+    indÃ©pendant de la variable d'axe, selon la spÃ©cification de la
+    distribution, de ses paramÃ¨tres et du nombre de points de l'Ã©chantillon,
     sous la forme d'une liste ``['distribution', [parametres], nombre]`` pour
-    chaque axe. Les distributions possibles sont 'normal' de paramètres
-    (mean,std), 'lognormal' de paramètres (mean,sigma), 'uniform' de paramètres
-    (low,high), ou 'weibull' de paramètre (shape). C'est donc une liste de la
-    même taille que celle de l'état.
+    chaque axe. Les distributions possibles sont 'normal' de paramÃ¨tres
+    (mean,std), 'lognormal' de paramÃ¨tres (mean,sigma), 'uniform' de paramÃ¨tres
+    (low,high), ou 'weibull' de paramÃ¨tre (shape). C'est donc une liste de la
+    mÃªme taille que celle de l'Ã©tat.
 
-    Exemple : ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
+    Exemple : ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` pour un espace d'Ã©tat de dimension 2
 
   QualityCriterion
-    Cette clé indique le critère de qualité, qui est utilisé pour trouver
-    l'estimation de l'état. Le défaut est le critère usuel de l'assimilation de
-    données nommé "DA", qui est le critère de moindres carrés pondérés
-    augmentés. Les critères possibles sont dans la liste suivante, dans laquelle
-    les noms équivalents sont indiqués par un signe "=" :
+    Cette clÃ© indique le critÃ¨re de qualitÃ©, qui est utilisÃ© pour trouver
+    l'estimation de l'Ã©tat. Le dÃ©faut est le critÃ¨re usuel de l'assimilation de
+    donnÃ©es nommÃ© "DA", qui est le critÃ¨re de moindres carrÃ©s pondÃ©rÃ©s
+    augmentÃ©s. Les critÃ¨res possibles sont dans la liste suivante, dans laquelle
+    les noms Ã©quivalents sont indiquÃ©s par un signe "=" :
     ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
     "LeastSquares"="LS"="L2", "AbsoluteValue"="L1", "MaximumError"="ME"].
 
     Exemple : ``{"QualityCriterion":"DA"}``
 
   SetDebug
-    Cette clé requiert l'activation, ou pas, du mode de débogage durant
-    l'évaluation de la fonction. La valeur par défaut est "True", les choix sont
+    Cette clÃ© requiert l'activation, ou pas, du mode de dÃ©bogage durant
+    l'Ã©valuation de la fonction. La valeur par dÃ©faut est "True", les choix sont
     "True" ou "False".
 
     Exemple : ``{"SetDebug":False}``
 
   SetSeed
-    Cette clé permet de donner un nombre entier pour fixer la graine du
-    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
-    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
-    utilise ainsi l'initialisation par défaut de l'ordinateur.
+    Cette clÃ© permet de donner un nombre entier pour fixer la graine du
+    gÃ©nÃ©rateur alÃ©atoire utilisÃ© pour gÃ©nÃ©rer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par dÃ©faut, la graine est laissÃ©e non initialisÃ©e, et elle
+    utilise ainsi l'initialisation par dÃ©faut de l'ordinateur.
 
     Exemple : ``{"SetSeed":1000}``
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["CostFunctionJ", "CostFunctionJb",
     "CostFunctionJo", "CurrentState", "InnovationAtCurrentState",
     "SimulatedObservationAtCurrentState"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
     :math:`J`.
 
     Exemple : ``J = ADD.get("CostFunctionJ")[:]``
 
   CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^b`, c'est-Ã -dire de la partie Ã©cart Ã  l'Ã©bauche.
 
     Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
 
   CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^o`, c'est-Ã -dire de la partie Ã©cart Ã  l'observation.
 
     Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
   InnovationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'innovation Ã  l'Ã©tat
     courant.
 
     Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
 
   SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©tat courant, c'est-Ã -dire dans l'espace des observations.
 
     Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_FunctionTest`
 
-Références vers d'autres modules SALOME :
+RÃ©fÃ©rences vers d'autres modules SALOME :
   - OPENTURNS, voir le *Guide utilisateur du module OPENTURNS* dans le menu principal *Aide* de l'environnement SALOME

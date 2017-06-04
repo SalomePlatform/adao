@@ -30,14 +30,14 @@ Algorithme de calcul "*EnsembleBlue*"
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation de type BLUE (Best Linear Unbiased
-Estimator, qui est ici un estimateur d'Aitken) de l'état d'un système par
-méthode d'ensemble. Pour fonctionner, il faut fournir un ensemble d'ébauches,
-dont le nombre déterminera la taille de l'ensemble pour l'estimation.
+Cet algorithme rÃ©alise une estimation de type BLUE (Best Linear Unbiased
+Estimator, qui est ici un estimateur d'Aitken) de l'Ã©tat d'un systÃ¨me par
+mÃ©thode d'ensemble. Pour fonctionner, il faut fournir un ensemble d'Ã©bauches,
+dont le nombre dÃ©terminera la taille de l'ensemble pour l'estimation.
 
-Il est théoriquement réservé aux cas d'opérateurs d'observation linéaires, mais
-doit fonctionner aussi dans les cas "faiblement" non-linéaire. On peut vérifier
-la linéarité de l'opérateur d'observation à l'aide de
+Il est thÃ©oriquement rÃ©servÃ© aux cas d'opÃ©rateurs d'observation linÃ©aires, mais
+doit fonctionner aussi dans les cas "faiblement" non-linÃ©aire. On peut vÃ©rifier
+la linÃ©aritÃ© de l'opÃ©rateur d'observation Ã  l'aide de
 l':ref:`section_ref_algorithm_LinearityTest`.
 
 Commandes requises et optionnelles
@@ -51,57 +51,57 @@ Commandes requises et optionnelles
 .. index:: single: ObservationOperator
 .. index:: single: SetSeed
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'Ã©bauche ou
+    d'initialisation, notÃ© prÃ©cÃ©demment :math:`\mathbf{x}^b`. Sa valeur est
+    dÃ©finie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
 
   BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{B}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'observation utilisÃ© en
+    assimilation de donnÃ©es ou en optimisation, et notÃ© prÃ©cÃ©demment
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
     ou de type "*VectorSerie*".
 
   ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{R}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de
     type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+    diffÃ©rentes formes fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans
+    la section :ref:`section_ref_operator_requirements`. Si un contrÃ´le
+    :math:`U` est inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre
+    appliquÃ© Ã  une paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_assimilation_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["CurrentState", "Innovation",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
@@ -109,48 +109,48 @@ Les options de l'algorithme sont les suivantes:
     Exemple : ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
 
   SetSeed
-    Cette clé permet de donner un nombre entier pour fixer la graine du
-    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
-    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
-    utilise ainsi l'initialisation par défaut de l'ordinateur.
+    Cette clÃ© permet de donner un nombre entier pour fixer la graine du
+    gÃ©nÃ©rateur alÃ©atoire utilisÃ© pour gÃ©nÃ©rer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par dÃ©faut, la graine est laissÃ©e non initialisÃ©e, et elle
+    utilise ainsi l'initialisation par dÃ©faut de l'ordinateur.
 
     Exemple : ``{"SetSeed":1000}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un Ã©tat optimal :math:`\mathbf{x}*`
     en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+    donnÃ©es.
 
     Exemple : ``Xa = ADD.get("Analysis")[-1]``
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
   Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'innovation, qui est
+    en statique l'Ã©cart de l'optimum Ã  l'Ã©bauche, et en dynamique l'incrÃ©ment
+    d'Ã©volution.
 
     Exemple : ``d = ADD.get("Innovation")[-1]``
 
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_Blue`

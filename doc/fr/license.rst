@@ -32,7 +32,7 @@ Licence et conditions d'utilisation pour le module
 .. index:: single: ADAO
 
 La licence pour ce module est la GNU Lesser General Public License (Lesser GPL),
-tel qu'il est déclaré ici et dans les fichiers sources::
+tel qu'il est dÃ©clarÃ© ici et dans les fichiers sources::
 
     <ADAO, a SALOME module for Data Assimilation and Optimization>
 
@@ -54,18 +54,18 @@ tel qu'il est déclaré ici et dans les fichiers sources::
 
     See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
-En outre, on demande que toute publication ou présentation décrivant des travaux
+En outre, on demande que toute publication ou prÃ©sentation dÃ©crivant des travaux
 utilisant ce module, ou tout produit commercial ou non l'utilisant, cite au
-moins l'une des références ci-dessous :
+moins l'une des rÃ©fÃ©rences ci-dessous :
 
     * *ADAO, a SALOME module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
 
-    * *ADAO, un module SALOME pour l'Assimilation de Données et l'Aide à
+    * *ADAO, un module SALOME pour l'Assimilation de DonnÃ©es et l'Aide Ã 
       l'Optimisation*, http://www.salome-platform.org/
 
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,
       http://www.salome-platform.org/
 
-La documentation du module est également couverte par la licence et l'obligation
+La documentation du module est Ã©galement couverte par la licence et l'obligation
 de citation.

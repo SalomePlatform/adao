@@ -35,36 +35,36 @@ Comment obtenir les informations disponibles en sortie
 .. index:: single: get
 .. index:: single: ADD
 
-En sortie, après exécution d'une assimilation de données, d'une optimisation
-ou d'une vérification, on dispose de variables et d'informations issues du
-calcul. L'obtention de ces informations se fait ensuite de manière standardisée
-à l'aide de l'étape de post-processing du calcul.
+En sortie, aprÃ¨s exÃ©cution d'une assimilation de donnÃ©es, d'une optimisation
+ou d'une vÃ©rification, on dispose de variables et d'informations issues du
+calcul. L'obtention de ces informations se fait ensuite de maniÃ¨re standardisÃ©e
+Ã  l'aide de l'Ã©tape de post-processing du calcul.
 
-L'étape est aisément identifiée par l'utilisateur dans son cas ADAO de
-définition (par le mot-clé "*UserPostAnalysis*") ou dans son schéma YACS
-d'exécution (par des noeuds ou blocs situés après le bloc de calcul, et reliés
+L'Ã©tape est aisÃ©ment identifiÃ©e par l'utilisateur dans son cas ADAO de
+dÃ©finition (par le mot-clÃ© "*UserPostAnalysis*") ou dans son schÃ©ma YACS
+d'exÃ©cution (par des noeuds ou blocs situÃ©s aprÃ¨s le bloc de calcul, et reliÃ©s
 graphiquement au port de sortie "*algoResults*" du bloc de calcul):
 
-#. Dans le cas où l'utilisateur définit le post-processing dans son cas ADAO, il utilise un fichier script externe ou des commandes dans le champ de type "*String*" ou "*Template*". Le script qu'il fournit dispose d'une variable fixe "*ADD*" dans l'espace de noms.
-#. Dans le cas où l'utilisateur définit le post-processing dans son schéma YACS par un noeud Python situé après le bloc de calcul, il doit ajouter un port d'entrée de type "*pyobj*" nommé par exemple "*Study*", relié graphiquement au port de sortie "*algoResults*" du bloc de calcul. Le noeud Python de post-processing doit ensuite débuter par ``ADD = Study.getResults()``.
+#. Dans le cas oÃ¹ l'utilisateur dÃ©finit le post-processing dans son cas ADAO, il utilise un fichier script externe ou des commandes dans le champ de type "*String*" ou "*Template*". Le script qu'il fournit dispose d'une variable fixe "*ADD*" dans l'espace de noms.
+#. Dans le cas oÃ¹ l'utilisateur dÃ©finit le post-processing dans son schÃ©ma YACS par un noeud Python situÃ© aprÃ¨s le bloc de calcul, il doit ajouter un port d'entrÃ©e de type "*pyobj*" nommÃ© par exemple "*Study*", reliÃ© graphiquement au port de sortie "*algoResults*" du bloc de calcul. Le noeud Python de post-processing doit ensuite dÃ©buter par ``ADD = Study.getResults()``.
 
-Des patrons (ou "templates") sont donnés ci-après en
+Des patrons (ou "templates") sont donnÃ©s ci-aprÃ¨s en
 :ref:`subsection_r_o_v_Template`.  Dans tous les cas, le post-processing de
 l'utilisateur dispose dans l'espace de noms d'une variable dont le nom est
-"*ADD*", et dont l'unique méthode utilisable est nommée ``get``. Les arguments
-de cette méthode sont un nom d'information de sortie, comme décrit dans
+"*ADD*", et dont l'unique mÃ©thode utilisable est nommÃ©e ``get``. Les arguments
+de cette mÃ©thode sont un nom d'information de sortie, comme dÃ©crit dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
-Par exemple, pour avoir l'état optimal après un calcul d'assimilation de données
+Par exemple, pour avoir l'Ã©tat optimal aprÃ¨s un calcul d'assimilation de donnÃ©es
 ou d'optimisation, on utilise l'appel suivant::
 
     ADD.get("Analysis")
 
-Cet appel renvoie une liste de valeurs de la notion demandée (ou, dans le cas 
-de variables d'entrées qui ne sont par nature qu'en un unique exemplaire, la
-valeur elle-même). On peut alors demander un élément particulier de la liste par
+Cet appel renvoie une liste de valeurs de la notion demandÃ©e (ou, dans le cas
+de variables d'entrÃ©es qui ne sont par nature qu'en un unique exemplaire, la
+valeur elle-mÃªme). On peut alors demander un Ã©lÃ©ment particulier de la liste par
 les commandes standards de liste (en particulier ``[-1]`` pour le dernier, et
-``[:]`` pour tous les éléments).
+``[:]`` pour tous les Ã©lÃ©ments).
 
 .. _subsection_r_o_v_Template:
 
@@ -76,22 +76,22 @@ Exemples de scripts Python pour obtenir ou traiter les sorties
 .. index:: single: AnalysisSaver
 .. index:: single: AnalysisPrinterAndSaver
 
-Ces exemples présentent des commandes ou scripts Python qui permettent d'obtenir
-ou de traiter les sorties d'une exécution d'algorithme. Pour aider
-l'utilisateur, ils sont directement disponibles dans l'interface, à la
-construction du cas ADAO dans l'éditeur intégré de cas, dans les champs de type
-"*Template*". De manière équivalente, ces commandes peuvent être contenues dans
-un script utilisateur externe (et insérées dans le cas ADAO par l'entrée de type
-"*Script*") ou contenues dans une chaîne de caractères, y compris les retour à
-la ligne (et insérées dans le cas ADAO par l'entrée de type "*String*"). De
-nombreuses variantes peuvent être imaginées à partir de ces exemples simples,
-l'objectif étant surtout d'aider l'utilisateur à effectuer le traitement exact
+Ces exemples prÃ©sentent des commandes ou scripts Python qui permettent d'obtenir
+ou de traiter les sorties d'une exÃ©cution d'algorithme. Pour aider
+l'utilisateur, ils sont directement disponibles dans l'interface, Ã  la
+construction du cas ADAO dans l'Ã©diteur intÃ©grÃ© de cas, dans les champs de type
+"*Template*". De maniÃ¨re Ã©quivalente, ces commandes peuvent Ãªtre contenues dans
+un script utilisateur externe (et insÃ©rÃ©es dans le cas ADAO par l'entrÃ©e de type
+"*Script*") ou contenues dans une chaÃ®ne de caractÃ¨res, y compris les retour Ã 
+la ligne (et insÃ©rÃ©es dans le cas ADAO par l'entrÃ©e de type "*String*"). De
+nombreuses variantes peuvent Ãªtre imaginÃ©es Ã  partir de ces exemples simples,
+l'objectif Ã©tant surtout d'aider l'utilisateur Ã  effectuer le traitement exact
 dont il a besoin en sortie.
 
-Le premier exemple (appelé "*AnalysisPrinter*" dans les entrées de type
-"*Template*") consiste à afficher, dans la sortie standard d'exécution, la
-valeur de l'analyse ou de l'état optimal, noté :math:`\mathbf{x}^a` dans la
-partie :ref:`section_theory`. Cela se réalise par les commandes::
+Le premier exemple (appelÃ© "*AnalysisPrinter*" dans les entrÃ©es de type
+"*Template*") consiste Ã  afficher, dans la sortie standard d'exÃ©cution, la
+valeur de l'analyse ou de l'Ã©tat optimal, notÃ© :math:`\mathbf{x}^a` dans la
+partie :ref:`section_theory`. Cela se rÃ©alise par les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
@@ -99,11 +99,11 @@ partie :ref:`section_theory`. Cela se réalise par les commandes::
 
 La fonction ``numpy.ravel`` assure simplement que la variable ``xa`` contienne
 un vrai vecteur unidimensionnel, quels que soient les choix informatiques
-précédents.
+prÃ©cÃ©dents.
 
-Un second exemple (appelé "*AnalysisSaver*" dans les entrées de type
-"*Template*") consiste à enregistrer sur fichier la valeur de l'analyse ou de
-l'état optimal :math:`\mathbf{x}^a`. Cela se réalise par les commandes::
+Un second exemple (appelÃ© "*AnalysisSaver*" dans les entrÃ©es de type
+"*Template*") consiste Ã  enregistrer sur fichier la valeur de l'analyse ou de
+l'Ã©tat optimal :math:`\mathbf{x}^a`. Cela se rÃ©alise par les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
@@ -113,10 +113,10 @@ l'état optimal :math:`\mathbf{x}^a`. Cela se réalise par les commandes::
 
 Le fichier d'enregistrement choisi est un fichier texte ``/tmp/analysis.txt``.
 
-Il est aisé de combiner ces deux exemples pour en construire un troisième
-(appelé "*AnalysisPrinterAndSaver*" dans les entrées de type "*Template*"). Il
-consiste à simultanément afficher dans la sortie standard d'exécution et à
-enregistrer sur fichier la valeur de :math:`\mathbf{x}^a`. Cela se réalise par
+Il est aisÃ© de combiner ces deux exemples pour en construire un troisiÃ¨me
+(appelÃ© "*AnalysisPrinterAndSaver*" dans les entrÃ©es de type "*Template*"). Il
+consiste Ã  simultanÃ©ment afficher dans la sortie standard d'exÃ©cution et Ã 
+enregistrer sur fichier la valeur de :math:`\mathbf{x}^a`. Cela se rÃ©alise par
 les commandes::
 
     import numpy
@@ -127,37 +127,37 @@ les commandes::
     numpy.savetxt(f,xa)
 
 Pour faciliter l'extension de ces exemples selon les besoins utilisateurs, on
-rappelle que l'ensemble des fonctions de SALOME sont disponibles au même niveau
-que ces commandes. L'utilisateur peut en particulier requérir des actions de
-représentation graphique avec le module PARAVIS [#]_ ou d'autres modules, des
-actions de calcul pilotés par YACS [#]_ ou un autre module, etc.
+rappelle que l'ensemble des fonctions de SALOME sont disponibles au mÃªme niveau
+que ces commandes. L'utilisateur peut en particulier requÃ©rir des actions de
+reprÃ©sentation graphique avec le module PARAVIS [#]_ ou d'autres modules, des
+actions de calcul pilotÃ©s par YACS [#]_ ou un autre module, etc.
 
-D'autres exemples d'utilisation sont aussi donnés en :ref:`section_u_step4` de
+D'autres exemples d'utilisation sont aussi donnÃ©s en :ref:`section_u_step4` de
 la partie :ref:`section_using`, ou en partie :ref:`section_examples`.
 
-Conditionnalité des informations disponibles en sortie
+ConditionnalitÃ© des informations disponibles en sortie
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: AlgorithmParameters
 .. index:: single: Stored
 
-La disponibilité des informations après le calcul est conditionnée par le fait
-qu'elles aient été calculées ou demandées.
+La disponibilitÃ© des informations aprÃ¨s le calcul est conditionnÃ©e par le fait
+qu'elles aient Ã©tÃ© calculÃ©es ou demandÃ©es.
 
-Chaque algorithme ne fournit pas obligatoirement les mêmes informations, et
-n'utilise par exemple pas nécessairement les mêmes quantités intermédiaires. Il
-y a donc des informations toujours présentes comme l'état optimal résultant du
-calcul. Les autres informations ne sont présentes que pour certains algorithmes
-et/ou que si elles ont été réclamées avant l'exécution du calcul.
+Chaque algorithme ne fournit pas obligatoirement les mÃªmes informations, et
+n'utilise par exemple pas nÃ©cessairement les mÃªmes quantitÃ©s intermÃ©diaires. Il
+y a donc des informations toujours prÃ©sentes comme l'Ã©tat optimal rÃ©sultant du
+calcul. Les autres informations ne sont prÃ©sentes que pour certains algorithmes
+et/ou que si elles ont Ã©tÃ© rÃ©clamÃ©es avant l'exÃ©cution du calcul.
 
-On rappelle que l'utilisateur peut réclamer des informations supplémentaires
-lors de l'établissement de son cas ADAO, en utilisant la commande optionnelle
-"*AlgorithmParameters*" du cas ADAO. On se reportera à la
+On rappelle que l'utilisateur peut rÃ©clamer des informations supplÃ©mentaires
+lors de l'Ã©tablissement de son cas ADAO, en utilisant la commande optionnelle
+"*AlgorithmParameters*" du cas ADAO. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande, et à la description de chaque algorithme pour les informations
-disponibles par algorithme. On peut aussi demander à conserver certaines
-informations en entrée en changeant le booléen "*Stored*" qui lui est associé
-dans l'édition du cas ADAO. 
+commande, et Ã  la description de chaque algorithme pour les informations
+disponibles par algorithme. On peut aussi demander Ã  conserver certaines
+informations en entrÃ©e en changeant le boolÃ©en "*Stored*" qui lui est associÃ©
+dans l'Ã©dition du cas ADAO.
 
 .. _subsection_r_o_v_Inventaire:
 
@@ -167,239 +167,239 @@ Inventaire des informations potentiellement disponibles en sortie
 .. index:: single: Dry
 .. index:: single: Forecast
 
-L'ensemble des informations potentiellement disponibles en sortie est indiqué
-ici indépendamment des algorithmes, pour inventaire.
+L'ensemble des informations potentiellement disponibles en sortie est indiquÃ©
+ici indÃ©pendamment des algorithmes, pour inventaire.
 
-L'état optimal est une information qui est toujours naturellement disponible
-après un calcul d'assimilation de données ou d'optimisation. Il désigné par le
-mot-clé suivant:
+L'Ã©tat optimal est une information qui est toujours naturellement disponible
+aprÃ¨s un calcul d'assimilation de donnÃ©es ou d'optimisation. Il dÃ©signÃ© par le
+mot-clÃ© suivant:
 
   Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un Ã©tat optimal :math:`\mathbf{x}*`
     en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+    donnÃ©es.
 
     Exemple : ``Xa = ADD.get("Analysis")[-1]``
 
-Les variables suivantes sont des variables d'entrée. Elles sont mises à
-disposition de l'utilisateur en sortie pour faciliter l'écriture des procédures
-de post-processing, et sont conditionnées par une demande utilisateur à l'aide
-d'un booléen "*Stored*" en entrée.
+Les variables suivantes sont des variables d'entrÃ©e. Elles sont mises Ã 
+disposition de l'utilisateur en sortie pour faciliter l'Ã©criture des procÃ©dures
+de post-processing, et sont conditionnÃ©es par une demande utilisateur Ã  l'aide
+d'un boolÃ©en "*Stored*" en entrÃ©e.
 
   Background
-    *Vecteur*, dont la disponibilité est conditionnée par "*Stored*" en entrée.
-    C'est le vecteur d'ébauche :math:`\mathbf{x}^b`.
+    *Vecteur*, dont la disponibilitÃ© est conditionnÃ©e par "*Stored*" en entrÃ©e.
+    C'est le vecteur d'Ã©bauche :math:`\mathbf{x}^b`.
 
     Exemple : ``Xb = ADD.get("Background")``
 
   BackgroundError
-    *Matrice*, dont la disponibilité est conditionnée par "*Stored*" en entrée. 
+    *Matrice*, dont la disponibilitÃ© est conditionnÃ©e par "*Stored*" en entrÃ©e.
     C'est la matrice :math:`\mathbf{B}` de covariances des erreurs *a priori*
-    de l'ébauche.
+    de l'Ã©bauche.
 
     Exemple : ``B = ADD.get("BackgroundError")``
 
   EvolutionError
-    *Matrice*, dont la disponibilité est conditionnée par "*Stored*" en entrée. 
+    *Matrice*, dont la disponibilitÃ© est conditionnÃ©e par "*Stored*" en entrÃ©e.
     C'est la matrice :math:`\mathbf{M}` de covariances des erreurs *a priori*
-    de l'évolution.
+    de l'Ã©volution.
 
     Exemple : ``M = ADD.get("EvolutionError")``
 
   Observation
-    *Vecteur*, dont la disponibilité est conditionnée par "*Stored*" en entrée. 
+    *Vecteur*, dont la disponibilitÃ© est conditionnÃ©e par "*Stored*" en entrÃ©e.
     C'est le vecteur d'observation :math:`\mathbf{y}^o`.
 
     Exemple : ``Yo = ADD.get("Observation")``
 
   ObservationError
-    *Matrice*, dont la disponibilité est conditionnée par "*Stored*" en entrée. 
+    *Matrice*, dont la disponibilitÃ© est conditionnÃ©e par "*Stored*" en entrÃ©e.
     C'est la matrice :math:`\mathbf{R}` de covariances des erreurs *a priori*
     de l'observation.
 
     Exemple : ``R = ADD.get("ObservationError")``
 
-Toutes les autres informations sont conditionnées par l'algorithme et/ou par la
-demande utilisateur de disponibilité. Ce sont les suivantes, par ordre
-alphabétique:
+Toutes les autres informations sont conditionnÃ©es par l'algorithme et/ou par la
+demande utilisateur de disponibilitÃ©. Ce sont les suivantes, par ordre
+alphabÃ©tique:
 
   APosterioriCorrelations
-    *Liste de matrices*. Chaque élément est une matrice de corrélations des
-    erreurs *a posteriori* de l'état optimal, issue de la matrice
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice de corrÃ©lations des
+    erreurs *a posteriori* de l'Ã©tat optimal, issue de la matrice
     :math:`\mathbf{A}*` des covariances.
 
     Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
 
   APosterioriCovariance
-    *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
-    covariances des erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice :math:`\mathbf{A}*` de
+    covariances des erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
 
   APosterioriStandardDeviations
-    *Liste de matrices*. Chaque élément est une matrice diagonale d'écarts-types
-    des erreurs *a posteriori* de l'état optimal, issue de la matrice
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice diagonale d'Ã©carts-types
+    des erreurs *a posteriori* de l'Ã©tat optimal, issue de la matrice
     :math:`\mathbf{A}*` des covariances.
 
     Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
-    *Liste de matrices*. Chaque élément est une matrice diagonale de variances
-    des erreurs *a posteriori* de l'état optimal, issue de la matrice
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice diagonale de variances
+    des erreurs *a posteriori* de l'Ã©tat optimal, issue de la matrice
     :math:`\mathbf{A}*` des covariances.
 
     Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'ébauche et l'état optimal.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'Ã©bauche et l'Ã©tat optimal.
 
     Exemple : ``bma = ADD.get("BMA")[-1]``
 
   CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
     :math:`J`.
 
     Exemple : ``J = ADD.get("CostFunctionJ")[:]``
 
   CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^b`, c'est-Ã -dire de la partie Ã©cart Ã  l'Ã©bauche.
 
     Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
 
   CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^o`, c'est-Ã -dire de la partie Ã©cart Ã  l'observation.
 
     Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
 
   CostFunctionJAtCurrentOptimum
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J`. A chaque pas, la valeur correspond à l'état optimal trouvé depuis
-    le début.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J`. A chaque pas, la valeur correspond Ã  l'Ã©tat optimal trouvÃ© depuis
+    le dÃ©but.
 
     Exemple : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
 
   CostFunctionJbAtCurrentOptimum
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche. A chaque pas, la
-    valeur correspond à l'état optimal trouvé depuis le début.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^b`, c'est-Ã -dire de la partie Ã©cart Ã  l'Ã©bauche. A chaque pas, la
+    valeur correspond Ã  l'Ã©tat optimal trouvÃ© depuis le dÃ©but.
 
     Exemple : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
 
   CostFunctionJoAtCurrentOptimum
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation. A chaque pas,
-    la valeur correspond à l'état optimal trouvé depuis le début.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^o`, c'est-Ã -dire de la partie Ã©cart Ã  l'observation. A chaque pas,
+    la valeur correspond Ã  l'Ã©tat optimal trouvÃ© depuis le dÃ©but.
 
     Exemple : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
 
   CurrentOptimum
-    *Liste de vecteurs*. Chaque élément est le vecteur d'état optimal au pas de
-    temps courant au cours du déroulement de l'algorithme d'optimisation. Ce
-    n'est pas nécessairement le dernier état.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est le vecteur d'Ã©tat optimal au pas de
+    temps courant au cours du dÃ©roulement de l'algorithme d'optimisation. Ce
+    n'est pas nÃ©cessairement le dernier Ã©tat.
 
     Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
   IndexOfOptimum
-    *Liste d'entiers*. Chaque élément est l'index d'itération de l'optimum
-    obtenu au cours du déroulement de l'algorithme d'optimisation. Ce n'est pas
-    nécessairement le numéro de la dernière itération.
+    *Liste d'entiers*. Chaque Ã©lÃ©ment est l'index d'itÃ©ration de l'optimum
+    obtenu au cours du dÃ©roulement de l'algorithme d'optimisation. Ce n'est pas
+    nÃ©cessairement le numÃ©ro de la derniÃ¨re itÃ©ration.
 
     Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
 
   Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'innovation, qui est
+    en statique l'Ã©cart de l'optimum Ã  l'Ã©bauche, et en dynamique l'incrÃ©ment
+    d'Ã©volution.
 
     Exemple : ``d = ADD.get("Innovation")[-1]``
 
   InnovationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'innovation Ã  l'Ã©tat
     courant.
 
     Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
 
   MahalanobisConsistency
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité de Mahalanobis.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de l'indicateur de
+    qualitÃ© de Mahalanobis.
 
     Exemple : ``m = ADD.get("MahalanobisConsistency")[-1]``
 
   OMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état optimal dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'observation et l'Ã©tat optimal dans l'espace des observations.
 
     Exemple : ``oma = ADD.get("OMA")[-1]``
 
   OMB
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état d'ébauche dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'observation et l'Ã©tat d'Ã©bauche dans l'espace des observations.
 
     Exemple : ``omb = ADD.get("OMB")[-1]``
 
   Residu
-    *Liste de valeurs*. Chaque élément est la valeur du résidu particulier
-    vérifié lors d'un algorithme de vérification, selon l'ordre des tests
-    effectués.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est la valeur du rÃ©sidu particulier
+    vÃ©rifiÃ© lors d'un algorithme de vÃ©rification, selon l'ordre des tests
+    effectuÃ©s.
 
     Exemple : ``r = ADD.get("Residu")[:]``
 
   SigmaBck2
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité :math:`(\sigma^b)^2` de la partie ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de l'indicateur de
+    qualitÃ© :math:`(\sigma^b)^2` de la partie Ã©bauche.
 
     Exemple : ``sb2 = ADD.get("SigmaBck")[-1]``
 
   SigmaObs2
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité :math:`(\sigma^o)^2` de la partie observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de l'indicateur de
+    qualitÃ© :math:`(\sigma^o)^2` de la partie observation.
 
     Exemple : ``so2 = ADD.get("SigmaObs")[-1]``
 
   SimulatedObservationAtBackground
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'ébauche :math:`\mathbf{x}^b`. C'est la prévision à partir de
-    l'ébauche, et elle est parfois appellée "*Dry*".
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©bauche :math:`\mathbf{x}^b`. C'est la prÃ©vision Ã  partir de
+    l'Ã©bauche, et elle est parfois appellÃ©e "*Dry*".
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
   SimulatedObservationAtCurrentOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état optimal au pas de temps courant au cours du déroulement de
-    l'algorithme d'optimisation, c'est-à-dire dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©tat optimal au pas de temps courant au cours du dÃ©roulement de
+    l'algorithme d'optimisation, c'est-Ã -dire dans l'espace des observations.
 
     Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
 
   SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©tat courant, c'est-Ã -dire dans l'espace des observations.
 
     Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`. C'est la
-    prévision à partir de l'analyse ou de l'état optimal, et elle est parfois
-    appellée "*Forecast*".
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'analyse ou de l'Ã©tat optimal :math:`\mathbf{x}^a`. C'est la
+    prÃ©vision Ã  partir de l'analyse ou de l'Ã©tat optimal, et elle est parfois
+    appellÃ©e "*Forecast*".
 
     Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 
   SimulationQuantiles
-    *Liste de vecteurs*. Chaque élément est un vecteur correspondant à l'état
-    observé qui réalise le quantile demandé, dans le même ordre que les
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur correspondant Ã  l'Ã©tat
+    observÃ© qui rÃ©alise le quantile demandÃ©, dans le mÃªme ordre que les
     quantiles requis par l'utilisateur.
 
     Exemple : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
 
-.. [#] Pour de plus amples informations sur PARAVIS, voir le *module PARAVIS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [#] Pour de plus amples informations sur PARAVIS, voir le *module PARAVIS* et son aide intÃ©grÃ©e disponible dans le menu principal *Aide* de l'environnement SALOME.
 
-.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
+.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intÃ©grÃ©e disponible dans le menu principal *Aide* de l'environnement SALOME.

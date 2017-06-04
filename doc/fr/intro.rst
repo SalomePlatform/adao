@@ -24,26 +24,26 @@
 .. _section_intro:
 
 ================================================================================
-Introduction à ADAO
+Introduction Ã  ADAO
 ================================================================================
 
-Le but du module ADAO est **d'aider à l'usage de l'assimilation de données ou de
+Le but du module ADAO est **d'aider Ã  l'usage de l'assimilation de donnÃ©es ou de
 l'optimisation en lien avec d'autres modules ou codes de simulation dans
-SALOME**. Le module ADAO fournit une interface à des algorithmes classiques
-d'assimilation de données ou d'optimisation, et permet d'intégrer leur usage
-dans une étude SALOME. Les modules de calcul ou de simulation doivent fournir
-une ou plusieurs méthodes d'appel spécifiques afin d'être appelable dans le
-cadre SALOME/ADAO, et tous les modules SALOME peuvent être utilisés grace à
-l'intégration dans YACS de ADAO.
+SALOME**. Le module ADAO fournit une interface Ã  des algorithmes classiques
+d'assimilation de donnÃ©es ou d'optimisation, et permet d'intÃ©grer leur usage
+dans une Ã©tude SALOME. Les modules de calcul ou de simulation doivent fournir
+une ou plusieurs mÃ©thodes d'appel spÃ©cifiques afin d'Ãªtre appelable dans le
+cadre SALOME/ADAO, et tous les modules SALOME peuvent Ãªtre utilisÃ©s grace Ã 
+l'intÃ©gration dans YACS de ADAO.
 
-Son principal objectif est de **permettre l'usage de diverses méthodes standards
-d'assimilation de données ou d'optimisation, tout en restant facile à utiliser
-et en fournissant une démarche pour aider à la mise en oeuvre**. Pour
-l'utilisateur final, qui a préalablement recueilli les informations sur son
-problème physique, l'environnement lui permet d'avoir une démarche de type
-"souris\&click" pour construire un cas ADAO valide et pour l'évaluer.
+Son principal objectif est de **permettre l'usage de diverses mÃ©thodes standards
+d'assimilation de donnÃ©es ou d'optimisation, tout en restant facile Ã  utiliser
+et en fournissant une dÃ©marche pour aider Ã  la mise en oeuvre**. Pour
+l'utilisateur final, qui a prÃ©alablement recueilli les informations sur son
+problÃ¨me physique, l'environnement lui permet d'avoir une dÃ©marche de type
+"souris\&click" pour construire un cas ADAO valide et pour l'Ã©valuer.
 
-Le module couvre une grande variété d'applications pratiques, de façon robuste,
-permettant des applications réelles, mais aussi d'effectuer de l'expérimentation
-méthodologique rapide. Son évolutivité, des points de vue méthodologique et
-numérique, permettra l'extension de son domaine d'application.
+Le module couvre une grande variÃ©tÃ© d'applications pratiques, de faÃ§on robuste,
+permettant des applications rÃ©elles, mais aussi d'effectuer de l'expÃ©rimentation
+mÃ©thodologique rapide. Son Ã©volutivitÃ©, des points de vue mÃ©thodologique et
+numÃ©rique, permettra l'extension de son domaine d'application.

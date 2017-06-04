@@ -30,16 +30,16 @@ Algorithme de calcul "*ExtendedBlue*"
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation de type BLUE étendu (Best Linear Unbiased
-Estimator, étendu) de l'état d'un système.
+Cet algorithme rÃ©alise une estimation de type BLUE Ã©tendu (Best Linear Unbiased
+Estimator, Ã©tendu) de l'Ã©tat d'un systÃ¨me.
 
-Cet algorithme est une généralisation partiellement non-linéaire de
-l':ref:`section_ref_algorithm_Blue`. Il lui est équivalent pour un opérateur
-d'observation linéaire. On peut vérifier la linéarité de l'opérateur
-d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
+Cet algorithme est une gÃ©nÃ©ralisation partiellement non-linÃ©aire de
+l':ref:`section_ref_algorithm_Blue`. Il lui est Ã©quivalent pour un opÃ©rateur
+d'observation linÃ©aire. On peut vÃ©rifier la linÃ©aritÃ© de l'opÃ©rateur
+d'observation Ã  l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
-En non-linéaire, il se rapproche de l':ref:`section_ref_algorithm_3DVAR`, sans
-lui être entièrement équivalent.
+En non-linÃ©aire, il se rapproche de l':ref:`section_ref_algorithm_3DVAR`, sans
+lui Ãªtre entiÃ¨rement Ã©quivalent.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -56,57 +56,57 @@ Commandes requises et optionnelles
 .. index:: single: NumberOfSamplesForQuantiles
 .. index:: single: SimulationForQuantiles
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'Ã©bauche ou
+    d'initialisation, notÃ© prÃ©cÃ©demment :math:`\mathbf{x}^b`. Sa valeur est
+    dÃ©finie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
 
   BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{B}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
+    *Commande obligatoire*. Elle dÃ©finit le vecteur d'observation utilisÃ© en
+    assimilation de donnÃ©es ou en optimisation, et notÃ© prÃ©cÃ©demment
+    :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de type "*Vector*"
     ou de type "*VectorSerie*".
 
   ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
+    *Commande obligatoire*. Elle dÃ©finit la matrice de covariance des erreurs
+    d'Ã©bauche, notÃ©e prÃ©cÃ©demment :math:`\mathbf{R}`. Sa valeur est dÃ©finie
     comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
     type "*DiagonalSparseMatrix*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`. Sa valeur est dÃ©finie comme un objet de
     type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+    diffÃ©rentes formes fonctionnelles peuvent Ãªtre utilisÃ©es, comme dÃ©crit dans
+    la section :ref:`section_ref_operator_requirements`. Si un contrÃ´le
+    :math:`U` est inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre
+    appliquÃ© Ã  une paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_assimilation_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
     "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState",
@@ -118,165 +118,165 @@ Les options de l'algorithme sont les suivantes:
     Exemple : ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
 
   Quantiles
-    Cette liste indique les valeurs de quantile, entre 0 et 1, à estimer par
-    simulation autour de l'état optimal. L'échantillonnage utilise des tirages
-    aléatoires gaussiens multivariés, dirigés par la matrice de covariance a
-    posteriori. Cette option n'est utile que si le calcul supplémentaire
-    "SimulationQuantiles" a été choisi. La valeur par défaut est une liste vide.
+    Cette liste indique les valeurs de quantile, entre 0 et 1, Ã  estimer par
+    simulation autour de l'Ã©tat optimal. L'Ã©chantillonnage utilise des tirages
+    alÃ©atoires gaussiens multivariÃ©s, dirigÃ©s par la matrice de covariance a
+    posteriori. Cette option n'est utile que si le calcul supplÃ©mentaire
+    "SimulationQuantiles" a Ã©tÃ© choisi. La valeur par dÃ©faut est une liste vide.
 
     Exemple : ``{"Quantiles":[0.1,0.9]}``
 
   SetSeed
-    Cette clé permet de donner un nombre entier pour fixer la graine du
-    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
-    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
-    utilise ainsi l'initialisation par défaut de l'ordinateur.
+    Cette clÃ© permet de donner un nombre entier pour fixer la graine du
+    gÃ©nÃ©rateur alÃ©atoire utilisÃ© pour gÃ©nÃ©rer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par dÃ©faut, la graine est laissÃ©e non initialisÃ©e, et elle
+    utilise ainsi l'initialisation par dÃ©faut de l'ordinateur.
 
     Exemple : ``{"SetSeed":1000}``
 
   NumberOfSamplesForQuantiles
-    Cette clé indique le nombre de simulations effectuées pour estimer les
-    quantiles. Cette option n'est utile que si le calcul supplémentaire
-    "SimulationQuantiles" a été choisi. Le défaut est 100, ce qui suffit souvent
-    pour une estimation correcte de quantiles courants à 5%, 10%, 90% ou 95%.
+    Cette clÃ© indique le nombre de simulations effectuÃ©es pour estimer les
+    quantiles. Cette option n'est utile que si le calcul supplÃ©mentaire
+    "SimulationQuantiles" a Ã©tÃ© choisi. Le dÃ©faut est 100, ce qui suffit souvent
+    pour une estimation correcte de quantiles courants Ã  5%, 10%, 90% ou 95%.
 
     Exemple : ``{"NumberOfSamplesForQuantiles":100}``
 
   SimulationForQuantiles
-    Cette clé indique le type de simulation, linéaire (avec l'opérateur
-    d'observation tangent appliqué sur des incréments de perturbations autour de
-    l'état optimal) ou non-linéaire (avec l'opérateur d'observation standard
-    appliqué aux états perturbés), que l'on veut faire pour chaque perturbation.
-    Cela change essentiellement le temps de chaque simulation élémentaire,
-    usuellement plus long en non-linéaire qu'en linéaire. Cette option n'est
-    utile que si le calcul supplémentaire "SimulationQuantiles" a été choisi. La
-    valeur par défaut est "Linear", et les choix possibles sont "Linear" et
+    Cette clÃ© indique le type de simulation, linÃ©aire (avec l'opÃ©rateur
+    d'observation tangent appliquÃ© sur des incrÃ©ments de perturbations autour de
+    l'Ã©tat optimal) ou non-linÃ©aire (avec l'opÃ©rateur d'observation standard
+    appliquÃ© aux Ã©tats perturbÃ©s), que l'on veut faire pour chaque perturbation.
+    Cela change essentiellement le temps de chaque simulation Ã©lÃ©mentaire,
+    usuellement plus long en non-linÃ©aire qu'en linÃ©aire. Cette option n'est
+    utile que si le calcul supplÃ©mentaire "SimulationQuantiles" a Ã©tÃ© choisi. La
+    valeur par dÃ©faut est "Linear", et les choix possibles sont "Linear" et
     "NonLinear".
 
     Exemple : ``{"SimulationForQuantiles":"Linear"}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un Ã©tat optimal :math:`\mathbf{x}*`
     en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+    donnÃ©es.
 
     Exemple : ``Xa = ADD.get("Analysis")[-1]``
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   APosterioriCorrelations
-    *Liste de matrices*. Chaque élément est une matrice de corrélation des
-    erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice de corrÃ©lation des
+    erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
 
   APosterioriCovariance
-    *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
-    covariances des erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice :math:`\mathbf{A}*` de
+    covariances des erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
 
   APosterioriStandardDeviations
-    *Liste de matrices*. Chaque élément est une matrice d'écart-types des
-    erreurs *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice d'Ã©cart-types des
+    erreurs *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
 
   APosterioriVariances
-    *Liste de matrices*. Chaque élément est une matrice de variances des erreurs
-    *a posteriori* de l'état optimal.
+    *Liste de matrices*. Chaque Ã©lÃ©ment est une matrice de variances des erreurs
+    *a posteriori* de l'Ã©tat optimal.
 
     Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
 
   BMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'ébauche et l'état optimal.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'Ã©bauche et l'Ã©tat optimal.
 
     Exemple : ``bma = ADD.get("BMA")[-1]``
 
   CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
     :math:`J`.
 
     Exemple : ``J = ADD.get("CostFunctionJ")[:]``
 
   CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^b`, c'est-Ã -dire de la partie Ã©cart Ã  l'Ã©bauche.
 
     Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
 
   CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de fonctionnelle d'Ã©cart
+    :math:`J^o`, c'est-Ã -dire de la partie Ã©cart Ã  l'observation.
 
     Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
 
   Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'innovation, qui est
+    en statique l'Ã©cart de l'optimum Ã  l'Ã©bauche, et en dynamique l'incrÃ©ment
+    d'Ã©volution.
 
     Exemple : ``d = ADD.get("Innovation")[-1]``
 
   MahalanobisConsistency
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité de Mahalanobis.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de l'indicateur de
+    qualitÃ© de Mahalanobis.
 
     Exemple : ``m = ADD.get("MahalanobisConsistency")[-1]``
 
   OMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état optimal dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'observation et l'Ã©tat optimal dans l'espace des observations.
 
     Exemple : ``oma = ADD.get("OMA")[-1]``
 
   OMB
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état d'ébauche dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©cart entre
+    l'observation et l'Ã©tat d'Ã©bauche dans l'espace des observations.
 
     Exemple : ``omb = ADD.get("OMB")[-1]``
 
   SigmaBck2
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité :math:`(\sigma^b)^2` de la partie ébauche.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de l'indicateur de
+    qualitÃ© :math:`(\sigma^b)^2` de la partie Ã©bauche.
 
     Exemple : ``sb2 = ADD.get("SigmaBck")[-1]``
 
   SigmaObs2
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité :math:`(\sigma^o)^2` de la partie observation.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est une valeur de l'indicateur de
+    qualitÃ© :math:`(\sigma^o)^2` de la partie observation.
 
     Exemple : ``so2 = ADD.get("SigmaObs")[-1]``
 
   SimulatedObservationAtBackground
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'ébauche :math:`\mathbf{x}^b`.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©bauche :math:`\mathbf{x}^b`.
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
 
   SimulatedObservationAtOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'analyse ou de l'Ã©tat optimal :math:`\mathbf{x}^a`.
 
     Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 
   SimulationQuantiles
-    *Liste de vecteurs*. Chaque élément est un vecteur correspondant à l'état
-    observé qui réalise le quantile demandé, dans le même ordre que les
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur correspondant Ã  l'Ã©tat
+    observÃ© qui rÃ©alise le quantile demandÃ©, dans le mÃªme ordre que les
     quantiles requis par l'utilisateur.
 
     Exemple : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
@@ -284,7 +284,7 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_Blue`
   - :ref:`section_ref_algorithm_3DVAR`
   - :ref:`section_ref_algorithm_LinearityTest`

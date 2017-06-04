@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -55,7 +56,7 @@ templates_path = ['_templates']
 source_suffix = '.rst'
 
 # The encoding of source files.
-#source_encoding = 'utf-8'
+source_encoding = 'utf-8'
 
 # The master toctree document.
 master_doc = 'index'
@@ -218,8 +219,6 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
-
-source_encoding = 'iso-8859-15'
 
 # -- Options for Epub output ---------------------------------------------------
 

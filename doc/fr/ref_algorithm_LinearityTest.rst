@@ -24,89 +24,89 @@
 .. index:: single: LinearityTest
 .. _section_ref_algorithm_LinearityTest:
 
-Algorithme de vérification "*LinearityTest*"
+Algorithme de vÃ©rification "*LinearityTest*"
 --------------------------------------------
 
 Description
 +++++++++++
 
-Cet algorithme permet de vérifier la qualité de linéarité de l'opérateur, en
-calculant un résidu dont les propriétés théoriques sont connues. Plusieurs
-formules de résidu sont utilisables.
+Cet algorithme permet de vÃ©rifier la qualitÃ© de linÃ©aritÃ© de l'opÃ©rateur, en
+calculant un rÃ©sidu dont les propriÃ©tÃ©s thÃ©oriques sont connues. Plusieurs
+formules de rÃ©sidu sont utilisables.
 
 Dans tous les cas, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
 :math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` est le code de calcul.
 
-Résidu "CenteredDL"
+RÃ©sidu "CenteredDL"
 *******************
 
-On observe le résidu suivant, provenant de la différence centrée des valeurs de
-:math:`F` au point nominal et aux points perturbés, normalisée par la valeur au
+On observe le rÃ©sidu suivant, provenant de la diffÃ©rence centrÃ©e des valeurs de
+:math:`F` au point nominal et aux points perturbÃ©s, normalisÃ©e par la valeur au
 point nominal :
 
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) + F(\mathbf{x}-\alpha*\mathbf{dx}) - 2*F(\mathbf{x}) ||}{|| F(\mathbf{x}) ||}
 
-S'il reste constamment très faible par rapport à 1, l'hypothèse de linéarité
-de :math:`F` est vérifiée.
+S'il reste constamment trÃ¨s faible par rapport Ã  1, l'hypothÃ¨se de linÃ©aritÃ©
+de :math:`F` est vÃ©rifiÃ©e.
 
-Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
-faible qu'à partir d'un certain ordre d'incrément, l'hypothèse de linéarité
-de :math:`F` n'est pas vérifiée.
+Si le rÃ©sidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
+faible qu'Ã  partir d'un certain ordre d'incrÃ©ment, l'hypothÃ¨se de linÃ©aritÃ©
+de :math:`F` n'est pas vÃ©rifiÃ©e.
 
-Si le résidu décroît et que la décroissance se fait en :math:`\alpha^2` selon
-:math:`\alpha`, cela signifie que le gradient est bien calculé jusqu'au niveau
-d'arrêt de la décroissance quadratique.
+Si le rÃ©sidu dÃ©croÃ®t et que la dÃ©croissance se fait en :math:`\alpha^2` selon
+:math:`\alpha`, cela signifie que le gradient est bien calculÃ© jusqu'au niveau
+d'arrÃªt de la dÃ©croissance quadratique.
 
-Résidu "Taylor"
+RÃ©sidu "Taylor"
 ***************
 
-On observe le résidu issu du développement de Taylor de la fonction :math:`F`,
-normalisée par la valeur au point nominal :
+On observe le rÃ©sidu issu du dÃ©veloppement de Taylor de la fonction :math:`F`,
+normalisÃ©e par la valeur au point nominal :
 
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{|| F(\mathbf{x}) ||}
 
-S'il reste constamment trés faible par rapport à 1, l'hypothèse de linéarité
-de :math:`F` est vérifiée.
+S'il reste constamment trÃ©s faible par rapport Ã  1, l'hypothÃ¨se de linÃ©aritÃ©
+de :math:`F` est vÃ©rifiÃ©e.
 
-Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
-faible qu'à partir d'un certain ordre d'incrément, l'hypothèse de linéarité
-de :math:`F` n'est pas vérifiée.
+Si le rÃ©sidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
+faible qu'Ã  partir d'un certain ordre d'incrÃ©ment, l'hypothÃ¨se de linÃ©aritÃ©
+de :math:`F` n'est pas vÃ©rifiÃ©e.
 
-Si le résidu décroît et que la décroissance se fait en :math:`\alpha^2` selon
-:math:`\alpha`, cela signifie que le gradient est bien calculé jusqu'au niveau
-d'arrêt de la décroissance quadratique.
+Si le rÃ©sidu dÃ©croÃ®t et que la dÃ©croissance se fait en :math:`\alpha^2` selon
+:math:`\alpha`, cela signifie que le gradient est bien calculÃ© jusqu'au niveau
+d'arrÃªt de la dÃ©croissance quadratique.
 
-Résidu "NominalTaylor"
+RÃ©sidu "NominalTaylor"
 **********************
 
-On observe le résidu obtenu à partir de deux approximations d'ordre 1 de
-:math:`F(\mathbf{x})`, normalisées par la valeur au point nominal :
+On observe le rÃ©sidu obtenu Ã  partir de deux approximations d'ordre 1 de
+:math:`F(\mathbf{x})`, normalisÃ©es par la valeur au point nominal :
 
 .. math:: R(\alpha) = \max(|| F(\mathbf{x}+\alpha*\mathbf{dx}) - \alpha * F(\mathbf{dx}) || / || F(\mathbf{x}) ||,|| F(\mathbf{x}-\alpha*\mathbf{dx}) + \alpha * F(\mathbf{dx}) || / || F(\mathbf{x}) ||)
 
-S'il reste constamment égal à 1 à moins de 2 ou 3 pourcents prés (c'est-à-dire
-que :math:`|R-1|` reste égal à 2 ou 3 pourcents), c'est que l'hypothèse de
-linéarité de :math:`F` est vérifiée.
+S'il reste constamment Ã©gal Ã  1 Ã  moins de 2 ou 3 pourcents prÃ©s (c'est-Ã -dire
+que :math:`|R-1|` reste Ã©gal Ã  2 ou 3 pourcents), c'est que l'hypothÃ¨se de
+linÃ©aritÃ© de :math:`F` est vÃ©rifiÃ©e.
 
-S'il est égal à 1 sur une partie seulement du domaine de variation de
-l'incrément :math:`\alpha`, c'est sur sous-domaine que l'hypothèse de linéarité
-de :math:`F` est vérifiée.
+S'il est Ã©gal Ã  1 sur une partie seulement du domaine de variation de
+l'incrÃ©ment :math:`\alpha`, c'est sur sous-domaine que l'hypothÃ¨se de linÃ©aritÃ©
+de :math:`F` est vÃ©rifiÃ©e.
 
-Résidu "NominalTaylorRMS"
+RÃ©sidu "NominalTaylorRMS"
 *************************
 
-On observe le résidu obtenu à partir de deux approximations d'ordre 1 de
-:math:`F(\mathbf{x})`, normalisées par la valeur au point nominal, dont on
-calcule l'écart quadratique (RMS) avec la valeur au point nominal :
+On observe le rÃ©sidu obtenu Ã  partir de deux approximations d'ordre 1 de
+:math:`F(\mathbf{x})`, normalisÃ©es par la valeur au point nominal, dont on
+calcule l'Ã©cart quadratique (RMS) avec la valeur au point nominal :
 
 .. math:: R(\alpha) = \max(RMS( F(\mathbf{x}), F(\mathbf{x}+\alpha*\mathbf{dx}) - \alpha * F(\mathbf{dx}) ) / || F(\mathbf{x}) ||,RMS( F(\mathbf{x}), F(\mathbf{x}-\alpha*\mathbf{dx}) + \alpha * F(\mathbf{dx}) ) / || F(\mathbf{x}) ||)
 
-S'il reste constamment égal à 0 à moins de 1 ou 2 pourcents prés, c'est
-que l'hypothèse de linéarité de F est vérifiée.
+S'il reste constamment Ã©gal Ã  0 Ã  moins de 1 ou 2 pourcents prÃ©s, c'est
+que l'hypothÃ¨se de linÃ©aritÃ© de F est vÃ©rifiÃ©e.
 
-S'il est égal à 0 sur une partie seulement du domaine de variation de
-l'incrément :math:`\alpha`, c'est sur cette partie que l'hypothèse de linéarité
-de F est vérifiée.
+S'il est Ã©gal Ã  0 sur une partie seulement du domaine de variation de
+l'incrÃ©ment :math:`\alpha`, c'est sur cette partie que l'hypothÃ¨se de linÃ©aritÃ©
+de F est vÃ©rifiÃ©e.
 
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
@@ -121,130 +121,130 @@ Commandes requises et optionnelles
 .. index:: single: SetSeed
 .. index:: single: StoreSupplementaryCalculations
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
+Les commandes requises gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition, sont
 les suivantes:
 
   CheckingPoint
-    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
-    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
-    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
+    *Commande obligatoire*. Elle dÃ©finit le vecteur utilisÃ© comme l'Ã©tat autour
+    duquel rÃ©aliser le test requis, notÃ© :math:`\mathbf{x}` et similaire Ã 
+    l'Ã©bauche :math:`\mathbf{x}^b`. Sa valeur est dÃ©finie comme un objet de type
     "*Vector*".
 
   ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, notée
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`.  Sa valeur est définie comme un objet de
-    type "*Function*". Différentes formes fonctionnelles peuvent être
-    utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'observation, l'opérateur doit être appliqué à une
+    *Commande obligatoire*. Elle indique l'opÃ©rateur d'observation, notÃ©e
+    prÃ©cÃ©demment :math:`H`, qui transforme les paramÃ¨tres d'entrÃ©e
+    :math:`\mathbf{x}` en rÃ©sultats :math:`\mathbf{y}` qui sont Ã  comparer aux
+    observations :math:`\mathbf{y}^o`.  Sa valeur est dÃ©finie comme un objet de
+    type "*Function*". DiffÃ©rentes formes fonctionnelles peuvent Ãªtre
+    utilisÃ©es, comme dÃ©crit dans la section
+    :ref:`section_ref_operator_requirements`. Si un contrÃ´le :math:`U` est
+    inclus dans le modÃ¨le d'observation, l'opÃ©rateur doit Ãªtre appliquÃ© Ã  une
     paire :math:`(X,U)`.
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
+Les commandes optionnelles gÃ©nÃ©rales, disponibles dans l'interface en Ã©dition,
+sont indiquÃ©es dans la :ref:`section_ref_checking_keywords`. De plus, les
+paramÃ¨tres de la commande "*AlgorithmParameters*" permettent d'indiquer les
+options particuliÃ¨res, dÃ©crites ci-aprÃ¨s, de l'algorithme. On se reportera Ã  la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
 Les options de l'algorithme sont les suivantes:
 
   AmplitudeOfInitialDirection
-    Cette clé indique la mise à l'échelle de la perturbation initiale construite
-    comme un vecteur utilisé pour la dérivée directionnelle autour du point
-    nominal de vérification. La valeur par défaut est de 1, ce qui signifie pas
-    de mise à l'échelle.
+    Cette clÃ© indique la mise Ã  l'Ã©chelle de la perturbation initiale construite
+    comme un vecteur utilisÃ© pour la dÃ©rivÃ©e directionnelle autour du point
+    nominal de vÃ©rification. La valeur par dÃ©faut est de 1, ce qui signifie pas
+    de mise Ã  l'Ã©chelle.
 
     Exemple : ``{"AmplitudeOfInitialDirection":0.5}``
 
   EpsilonMinimumExponent
-    Cette clé indique la valeur de l'exposant minimal du coefficient en
-    puissance de 10 qui doit être utilisé pour faire décroître le multiplicateur
-    de l'incrément. La valeur par défaut est de -8, et elle doit être entre 0 et
-    -20. Par exemple, la valeur par défaut conduit à calculer le résidu de la
-    formule avec un incrément fixe multiplié par 1.e0 jusqu'à 1.e-8.
+    Cette clÃ© indique la valeur de l'exposant minimal du coefficient en
+    puissance de 10 qui doit Ãªtre utilisÃ© pour faire dÃ©croÃ®tre le multiplicateur
+    de l'incrÃ©ment. La valeur par dÃ©faut est de -8, et elle doit Ãªtre entre 0 et
+    -20. Par exemple, la valeur par dÃ©faut conduit Ã  calculer le rÃ©sidu de la
+    formule avec un incrÃ©ment fixe multipliÃ© par 1.e0 jusqu'Ã  1.e-8.
 
     Exemple : ``{"EpsilonMinimumExponent":-12}``
 
   InitialDirection
-    Cette clé indique la direction vectorielle utilisée pour la dérivée
-    directionnelle autour du point nominal de vérification. Cela doit être un
-    vecteur. Si elle n'est pas spécifiée, la direction par défaut est une
-    perturbation par défaut autour de zéro de la même taille vectorielle que le
-    point de vérification.
+    Cette clÃ© indique la direction vectorielle utilisÃ©e pour la dÃ©rivÃ©e
+    directionnelle autour du point nominal de vÃ©rification. Cela doit Ãªtre un
+    vecteur. Si elle n'est pas spÃ©cifiÃ©e, la direction par dÃ©faut est une
+    perturbation par dÃ©faut autour de zÃ©ro de la mÃªme taille vectorielle que le
+    point de vÃ©rification.
 
     Exemple : ``{"InitialDirection":[0.1,0.1,100.,3}``
 
   ResiduFormula
-    Cette clé indique la formule de résidu qui doit être utilisée pour le test.
-    Le choix par défaut est "CenteredDL", et les choix possibles sont
-    "CenteredDL" (résidu de la différence entre la fonction au point nominal et
-    ses valeurs avec des incréments positif et négatif, qui doit rester très
-    faible), "Taylor" (résidu du développement de Taylor de l'opérateur
-    normalisé par sa valeur nominal, qui doit rester très faible),
-    "NominalTaylor" (résidu de l'approximation à l'ordre 1 de l'opérateur,
-    normalisé au point nominal, qui doit rester proche de 1), et
-    "NominalTaylorRMS" (résidu de l'approximation à l'ordre 1 de l'opérateur,
-    normalisé par l'écart quadratique moyen (RMS) au point nominal, qui doit
+    Cette clÃ© indique la formule de rÃ©sidu qui doit Ãªtre utilisÃ©e pour le test.
+    Le choix par dÃ©faut est "CenteredDL", et les choix possibles sont
+    "CenteredDL" (rÃ©sidu de la diffÃ©rence entre la fonction au point nominal et
+    ses valeurs avec des incrÃ©ments positif et nÃ©gatif, qui doit rester trÃ¨s
+    faible), "Taylor" (rÃ©sidu du dÃ©veloppement de Taylor de l'opÃ©rateur
+    normalisÃ© par sa valeur nominal, qui doit rester trÃ¨s faible),
+    "NominalTaylor" (rÃ©sidu de l'approximation Ã  l'ordre 1 de l'opÃ©rateur,
+    normalisÃ© au point nominal, qui doit rester proche de 1), et
+    "NominalTaylorRMS" (rÃ©sidu de l'approximation Ã  l'ordre 1 de l'opÃ©rateur,
+    normalisÃ© par l'Ã©cart quadratique moyen (RMS) au point nominal, qui doit
     rester proche de 0).
 
     Exemple : ``{"ResiduFormula":"CenteredDL"}``
 
   SetSeed
-    Cette clé permet de donner un nombre entier pour fixer la graine du
-    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
-    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
-    utilise ainsi l'initialisation par défaut de l'ordinateur.
+    Cette clÃ© permet de donner un nombre entier pour fixer la graine du
+    gÃ©nÃ©rateur alÃ©atoire utilisÃ© pour gÃ©nÃ©rer l'ensemble. Un valeur pratique est
+    par exemple 1000. Par dÃ©faut, la graine est laissÃ©e non initialisÃ©e, et elle
+    utilise ainsi l'initialisation par dÃ©faut de l'ordinateur.
 
     Exemple : ``{"SetSeed":1000}``
 
   StoreSupplementaryCalculations
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+    Cette liste indique les noms des variables supplÃ©mentaires qui peuvent Ãªtre
+    disponibles Ã  la fin de l'algorithme. Cela implique potentiellement des
+    calculs ou du stockage coÃ»teux. La valeur par dÃ©faut est une liste vide,
+    aucune de ces variables n'Ã©tant calculÃ©e et stockÃ©e par dÃ©faut. Les noms
     possibles sont dans la liste suivante : ["CurrentState", "Residu",
     "SimulatedObservationAtCurrentState"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
-Informations et variables disponibles à la fin de l'algorithme
+Informations et variables disponibles Ã  la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
+En sortie, aprÃ¨s exÃ©cution de l'algorithme, on dispose d'informations et de
 variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
+:ref:`section_ref_output_variables` indique la maniÃ¨re de les obtenir par la
+mÃ©thode nommÃ©e ``get`` de la variable "*ADD*" du post-processing. Les variables
+d'entrÃ©e, mises Ã  disposition de l'utilisateur en sortie pour faciliter
+l'Ã©criture des procÃ©dures de post-processing, sont dÃ©crites dans
 l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   Residu
-    *Liste de valeurs*. Chaque élément est la valeur du résidu particulier
-    vérifié lors d'un algorithme de vérification, selon l'ordre des tests
-    effectués.
+    *Liste de valeurs*. Chaque Ã©lÃ©ment est la valeur du rÃ©sidu particulier
+    vÃ©rifiÃ© lors d'un algorithme de vÃ©rification, selon l'ordre des tests
+    effectuÃ©s.
 
     Exemple : ``r = ADD.get("Residu")[:]``
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'Ã©tat courant utilisÃ©
+    au cours du dÃ©roulement de l'algorithme d'optimisation.
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
   SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+    *Liste de vecteurs*. Chaque Ã©lÃ©ment est un vecteur d'observation simulÃ© Ã 
+    partir de l'Ã©tat courant, c'est-Ã -dire dans l'espace des observations.
 
     Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
 Voir aussi
 ++++++++++
 
-Références vers d'autres sections :
+RÃ©fÃ©rences vers d'autres sections :
   - :ref:`section_ref_algorithm_FunctionTest`

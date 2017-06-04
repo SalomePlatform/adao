@@ -31,50 +31,50 @@ Documentation ADAO
    :align: center
    :alt: Logo ADAO
 
-Le module ADAO fournit des fonctionnalités d'**assimilation de données et
-d'optimisation** dans un contexte SALOME. Il est basé sur l'utilisation d'autres
-modules, à savoir YACS et EFICAS, et sur l'utilisation d'une bibliothèque et des
-outils génériques sous-jacents d'assimilation de données.
+Le module ADAO fournit des fonctionnalitÃ©s d'**assimilation de donnÃ©es et
+d'optimisation** dans un contexte SALOME. Il est basÃ© sur l'utilisation d'autres
+modules, Ã  savoir YACS et EFICAS, et sur l'utilisation d'une bibliothÃ¨que et des
+outils gÃ©nÃ©riques sous-jacents d'assimilation de donnÃ©es.
 
-En bref, l'assimilation de données est un cadre méthodologique pour calculer
-l'estimation optimale de la valeur réelle (inaccessible) de l'état d'un système
+En bref, l'assimilation de donnÃ©es est un cadre mÃ©thodologique pour calculer
+l'estimation optimale de la valeur rÃ©elle (inaccessible) de l'Ã©tat d'un systÃ¨me
 au cours du temps. Il utilise des informations provenant de mesures
-expérimentales, ou observations, et de modèles numériques *a priori*, y compris
-des informations sur leurs erreurs. Certaines des méthodes incluses dans ce
-cadre sont également connues sous les noms  d'*estimation des paramètres*, de
-*problèmes inverses*, d'*estimation bayésienne*, d'*interpolation optimale*,
-etc. De plus amples détails peuvent être trouvés dans la partie proposant
+expÃ©rimentales, ou observations, et de modÃ¨les numÃ©riques *a priori*, y compris
+des informations sur leurs erreurs. Certaines des mÃ©thodes incluses dans ce
+cadre sont Ã©galement connues sous les noms  d'*estimation des paramÃ¨tres*, de
+*problÃ¨mes inverses*, d'*estimation bayÃ©sienne*, d'*interpolation optimale*,
+etc. De plus amples dÃ©tails peuvent Ãªtre trouvÃ©s dans la partie proposant
 :ref:`section_theory`.
 
-La documentation de ce module est divisée en plusieurs grandes catégories,
-relatives à la documentation théorique (indiquée dans le titre par **[DocT]**),
-à la documentation utilisateur (indiquée dans le titre par **[DocU]**), et à la
-documentation de référence (indiquée dans le titre par **[DocR]**).
+La documentation de ce module est divisÃ©e en plusieurs grandes catÃ©gories,
+relatives Ã  la documentation thÃ©orique (indiquÃ©e dans le titre par **[DocT]**),
+Ã  la documentation utilisateur (indiquÃ©e dans le titre par **[DocU]**), et Ã  la
+documentation de rÃ©fÃ©rence (indiquÃ©e dans le titre par **[DocR]**).
 
-La première partie est l':ref:`section_intro`. La seconde partie présente
-:ref:`section_theory`, et à leurs concepts, et la partie suivante décrit la
-:ref:`section_methodology`. Pour un utilisateur courant, la quatrième partie
-explique comment :ref:`section_using`, et la cinquième partie présente des
+La premiÃ¨re partie est l':ref:`section_intro`. La seconde partie prÃ©sente
+:ref:`section_theory`, et Ã  leurs concepts, et la partie suivante dÃ©crit la
+:ref:`section_methodology`. Pour un utilisateur courant, la quatriÃ¨me partie
+explique comment :ref:`section_using`, et la cinquiÃ¨me partie prÃ©sente des
 exemples d'utilisation sous la forme de :ref:`section_examples`. Les
-utilisateurs intéressés par un accès rapide au module peuvent s'arrêter avant la
-lecture de la suite, mais un usage utile du module nécessite de lire et de
-revenir régulièrement aux quatrième et septième parties. La sixième partie
+utilisateurs intÃ©ressÃ©s par un accÃ¨s rapide au module peuvent s'arrÃªter avant la
+lecture de la suite, mais un usage utile du module nÃ©cessite de lire et de
+revenir rÃ©guliÃ¨rement aux quatriÃ¨me et septiÃ¨me parties. La sixiÃ¨me partie
 indique les :ref:`section_advanced`, avec l'obtention de renseignements
-supplémentaires ou l'usage par scripts d'exécution sans interface utilisateur
-graphique (GUI). La septième partie détaille la :ref:`section_reference`, avec
-quatre sous-parties principales qui suivent, la dernière décrivant une
+supplÃ©mentaires ou l'usage par scripts d'exÃ©cution sans interface utilisateur
+graphique (GUI). La septiÃ¨me partie dÃ©taille la :ref:`section_reference`, avec
+quatre sous-parties principales qui suivent, la derniÃ¨re dÃ©crivant une
 :ref:`section_tui` du module. Enfin, pour respecter les exigences de licence du
 module, n'oubliez pas de lire la partie :ref:`section_license`.
 
-Dans cette documentation, on utilise les notations standards de l'algèbre
-linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
-l'optimisation. En particulier, les vecteurs sont écrits horizontalement ou
-verticalement sans faire la différence. Les matrices sont écrites soit
-normalement, ou avec une notation condensée, consistant à utiliser un espace
-pour séparer les valeurs, et un "``;``" pour séparer les lignes de la matrice,
-de façon continue sur une ligne.
+Dans cette documentation, on utilise les notations standards de l'algÃ¨bre
+linÃ©aire, de l'assimilation de donnÃ©es (comme dÃ©crit dans [Ide97]_) et de
+l'optimisation. En particulier, les vecteurs sont Ã©crits horizontalement ou
+verticalement sans faire la diffÃ©rence. Les matrices sont Ã©crites soit
+normalement, ou avec une notation condensÃ©e, consistant Ã  utiliser un espace
+pour sÃ©parer les valeurs, et un "``;``" pour sÃ©parer les lignes de la matrice,
+de faÃ§on continue sur une ligne.
 
-Table des matières
+Table des matiÃ¨res
 ------------------
 
 .. toctree::
