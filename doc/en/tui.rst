@@ -204,12 +204,12 @@ for a detailed description on this subject.
 For instance, we give some script lines that allow to get the number of
 iterations of the optimization and the optimal value, and its size::
 
-    print
-    print "    Number of iterations :", len(case.get("CostFunctionJ"))
+    print("")
+    print("    Number of iterations : %i"%len(case.get("CostFunctionJ")))
     Xa = case.get("Analysis")
-    print "    Optimal analysis     :", Xa[-1]
-    print "    Size of the analysis :", len(Xa[-1])
-    print
+    print("    Optimal analysis     : %s"%(Xa[-1],))
+    print("    Size of the analysis : %i"%len(Xa[-1]))
+    print("")
 
 These lines can be very simply added to the initial example of ADAO TUI
 calculation case given in :ref:`subsection_tui_example`.
@@ -469,15 +469,16 @@ Setting the calculation, outputs, etc.
 .. index:: single: setObserver
 
 **setObserver** (*Variable, Template, String, Script, Info*)
-    This command allows to set an *observer* on the current or final calculation
-    variable. Reference should be made to the description of the
-    ':ref:`ref_observers_requirements` for their list and content, and to the
-    :ref:`section_reference` to know what are the observable quantities. One
-    defines as "*String*" the *observer* body, using a string including if
-    necessary line breaks. It is recommended to use the patterns available by
-    the argument "*Template*". In the case of a definition as "*Script*", the
-    file must contain only the body of the function, as  described in the
-    :ref:`ref_observers_requirements`.
+    This command allows to set an *observer* on the current or final 
+    calculation variable. Reference should be made to the description of the 
+    ':ref:`ref_observers_requirements` for their list and content, and to the 
+    :ref:`section_reference` to know what are the observable quantities. One 
+    defines as "*String*" the *observer* body, using a string including if 
+    necessary line breaks. It is recommended to use the patterns available by 
+    the argument "*Template*". In the case of a definition as "*Script*", the 
+    file must contain only the body of the function, as  described in the 
+    :ref:`ref_observers_requirements`. The "*Info*" variable contains an 
+    information string or can be void.
 
 Perform the calculation
 +++++++++++++++++++++++
@@ -607,12 +608,12 @@ The set of commands that can be used is the following::
     Xoptimum      = case.get("Analysis")[-1]
     FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
     J_values      = case.get("CostFunctionJ")[:]
-    print
-    print "Number of internal iterations...: %i"%len(J_values)
-    print "Initial state...................:",numpy.ravel(Xbackground)
-    print "Optimal state...................:",numpy.ravel(Xoptimum)
-    print "Simulation at optimal state.....:",numpy.ravel(FX_at_optimum)
-    print
+    print("")
+    print("Number of internal iterations...: %i"%len(J_values))
+    print("Initial state...................: %s"%(numpy.ravel(Xbackground),))
+    print("Optimal state...................: %s"%(numpy.ravel(Xoptimum),))
+    print("Simulation at optimal state.....: %s"%(numpy.ravel(FX_at_optimum),))
+    print("")
 
 The command set execution gives the following result::
 

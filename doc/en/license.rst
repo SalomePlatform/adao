@@ -61,7 +61,7 @@ one of the references given below:
     * *ADAO, a SALOME module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
 
-    * *ADAO, un module SALOME pour l'Assimilation de Données et l'Aide à
+    * *ADAO, un module SALOME pour l'Assimilation de DonnÃ©es et l'Aide Ã 
       l'Optimisation*, http://www.salome-platform.org/
 
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,

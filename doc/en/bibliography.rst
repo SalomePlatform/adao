@@ -33,7 +33,7 @@ Bibliography
 
 .. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999
 
-.. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014
+.. [Bocquet04] Bocquet M., *Introduction aux principes et mÃ©thodes de l'assimilation de donnÃ©es en gÃ©ophysique*, Lecture Notes, 2014
 
 .. [Buchinsky98] Buchinsky M., *Recent Advances in Quantile Regression Models: A Practical Guidline for Empirical Research*, Journal of Human Resources, 33(1), pp.88-126, 1998
 
