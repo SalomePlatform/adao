@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -25,7 +26,6 @@ import sys
 import os
 import traceback
 import logging
-from optparse import OptionParser
 from daYacsSchemaCreator.methods import *
 from daYacsSchemaCreator.help_methods import *
 
@@ -33,9 +33,11 @@ def create_schema(config_file, yacs_schema_filename):
 
   # Import config_file
   try:
-    execfile(config_file)
-  except:
-    raise ValueError("\n\n Exception in loading %s"%config_file)
+    exec(compile(open(config_file).read(), config_file, 'exec'))
+  except Exception as e:
+    if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
+    else: msg = ""
+    raise ValueError("\n\nexception in loading %s\n\nThe following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal.\n"%(config_file,str(e),msg))
 
   if "study_config" not in locals():
     raise ValueError("\n\n Cannot found study_config in %s\n"%str(config_file))

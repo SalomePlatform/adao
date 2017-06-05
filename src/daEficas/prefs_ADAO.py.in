@@ -42,15 +42,25 @@ initialdir=os.environ["PWD"]
 # Traductions et codages
 #
 # Codage des strings qui accepte les accents (en remplacement de 'ascii')
-# encoding='iso-8859-1'
-# ===== Specifique : pour la 8_3_0 et suivantes 8_x ! Enlever pour les 9_x !
-import sys
-reload(sys)
-sys.setdefaultencoding('latin1')
-# ===== Fin specifique =====================================================
+# encoding='utf-8'
+#
+# ===== Specifique : pour la 8_3_0 et suivantes 8_x ! Enlever pour les 9_x ! JPA
+if sys.version.split()[0] < '3':
+    # ===== Specifique : redefinition de l'encoding avant le Python 3 ! JPA
+    reload(sys)
+    sys.setdefaultencoding('latin1')
+    # ===== Specifique : pour les suivantes 8_x ! Enlever pour les 9_x ! JPA
+    # 19/05/2017 : Redefinition du hook de "sys" present dans <GUI/src/SUITApp/SUITApp_init_python.cxx>
+    def _custom_except_hook(exc_type, exc_value, exc_traceback):
+        import sys
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        pass
+    sys.excepthook = _custom_except_hook
+    del _custom_except_hook, sys
+# ===== Fin specifique ===================================================== JPA
 #
 # Indique la langue du catalogue utilisee pour les chaines d'aide : fr ou ang
-# lang='fr'
+# lang = 'fr'
 # Traduction des labels de boutons ou autres
 translatorFichier = os.environ["ADAO_ROOT_DIR"] + "/share/salome/resources/adao/adao" # Ce nom sera complete par EFICAS avec _<LANG>.qm
 #
@@ -59,5 +69,5 @@ closeAutreCommande = True
 closeFrameRechercheCommande = True
 closeEntete = True
 closeArbre = True
-taille=800
+taille = 800
 

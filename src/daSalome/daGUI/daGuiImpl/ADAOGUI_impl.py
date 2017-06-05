@@ -56,7 +56,7 @@ __current_context__ = None
 def _setContext( studyID ):
     global __study2context__, __current_context__
     QApplication.processEvents()
-    if not __study2context__.has_key(studyID):
+    if studyID not in __study2context__:
         __study2context__[studyID] = GUIcontext()
         pass
     __current_context__ = __study2context__[studyID]
@@ -85,7 +85,7 @@ def windows():
 # called when module is initialized
 # return list of 2d/3d views to be used ny the module
 def views():
-  print "views"
+  print("views")
   return []
 
 def createPreferences():

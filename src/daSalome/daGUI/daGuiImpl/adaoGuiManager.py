@@ -45,8 +45,8 @@ from daGuiImpl.adaoCase import AdaoCase
 from daEficasWrapper.adaoEficasWrapper import AdaoEficasWrapper
 
 from daUtils.adaoEficasEvent import *
-import adaoGuiHelper
-import adaoStudyEditor
+from . import adaoGuiHelper
+from . import adaoStudyEditor
 from daUtils import adaoLogger
 
 __cases__ = {}
@@ -156,7 +156,7 @@ class AdaoCaseManager(EficasObserver):
     adaoLogger.debug("currentSelectionChanged")
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     if salomeStudyItem is not None:
-      for case_editor, adao_case in self.cases.iteritems():
+      for case_editor, adao_case in list(self.cases.items()):
         if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
           self.eficas_manager.selectCase(adao_case.eficas_editor)
           break
@@ -168,7 +168,7 @@ class AdaoCaseManager(EficasObserver):
     et la selection dans l'etude SALOME
     """
     editor = eficasEvent.callbackId
-    for case_editor, adao_case in self.cases.iteritems():
+    for case_editor, adao_case in list(self.cases.items()):
       if case_editor is editor:
         adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
         break
@@ -184,7 +184,7 @@ class AdaoCaseManager(EficasObserver):
       editor = self.eficas_manager.getCurrentEditor()
       # 2: sync with SALOME GUI is a tab is opened
       if editor:
-        for case_editor, adao_case in self.cases.iteritems():
+        for case_editor, adao_case in list(self.cases.items()):
           if case_editor is editor:
             adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
             break
@@ -247,7 +247,7 @@ class AdaoCaseManager(EficasObserver):
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_name, adao_case in list(self.cases.items()):
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         if not adao_case.isOk():
           adaoLogger.debug("Cas invalide, donc il est sauvegarde, mais il ne peut pas etre exporte vers YACS ensuite")
@@ -260,7 +260,7 @@ class AdaoCaseManager(EficasObserver):
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_name, adao_case in list(self.cases.items()):
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         if not adao_case.isOk():
           adaoLogger.debug("Cas invalide, donc il est sauvegarde, mais il ne peut pas etre exporte vers YACS ensuite")
@@ -291,7 +291,7 @@ class AdaoCaseManager(EficasObserver):
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_name, adao_case in list(self.cases.items()):
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         self.eficas_manager.adaoFileClose(adao_case)
         break
@@ -321,7 +321,7 @@ class AdaoCaseManager(EficasObserver):
     adaoLogger.debug("Validation du cas par un rapport sur le JDC")
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_name, adao_case in list(self.cases.items()):
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         msg = adao_case.validationReportforJDC()
         adaoGuiHelper.gui_information(SalomePyQt.SalomePyQt().getDesktop(), msg)
@@ -338,7 +338,7 @@ class AdaoCaseManager(EficasObserver):
     adaoLogger.debug("Validation du cas par un rapport sur le JDC")
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_name, adao_case in list(self.cases.items()):
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         msg = adao_case.showTreeAdaoCase()
         break
@@ -356,7 +356,7 @@ class AdaoCaseManager(EficasObserver):
     # dans le GUI d'Eficas
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
-    for case_name, adao_case in self.cases.iteritems():
+    for case_name, adao_case in list(self.cases.items()):
       if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         if adao_case.isOk():
           msg = adao_case.exportCaseToYACS()
@@ -402,7 +402,7 @@ class AdaoCaseManager(EficasObserver):
     """
     Main switch function for ui actions processing
     """
-    if ACTIONS_MAP.has_key(actionId):
+    if actionId in ACTIONS_MAP:
       try:
           functionName = ACTIONS_MAP[actionId]
           getattr(self,functionName)()

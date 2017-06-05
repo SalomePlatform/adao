@@ -1,4 +1,5 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -46,7 +47,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def __init__(self, parent):
         # Configuration de l'installation
-        # Permet à EFICAS de faire ses import correctement
+        # Permet Ã  EFICAS de faire ses import correctement
         my_path = os.path.dirname(os.path.abspath(__file__))
         ADAO_INSTALL_DIR = my_path + "/../daEficas"
         sys.path.insert(0,ADAO_INSTALL_DIR)
@@ -74,7 +75,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# Gestion des évènements provenant des widgets QT d'Eficas
+# Gestion des Ã©vÃ¨nements provenant des widgets QT d'Eficas
 #
 #######
 
@@ -87,11 +88,11 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# Méthodes gérant les boutons dans SALOME
+# MÃ©thodes gÃ©rant les boutons dans SALOME
 #
 #######
 
-# Rq: Utilisation de la méthode str() pour passer d'un Qstring à un string
+# Rq: Utilisation de la mÃ©thode str() pour passer d'un Qstring Ã  un string
 
     def adaofileNew(self, adao_case):
 
@@ -149,7 +150,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# Méthodes auxiliares de gestion du GUI Eficas pour synchronisation
+# MÃ©thodes auxiliares de gestion du GUI Eficas pour synchronisation
 # avec la partie GUI de SALOME
 #
 #######
@@ -175,12 +176,12 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
 #######
 #
-# Méthodes secondaires permettant de gérer les observeurs du
+# MÃ©thodes secondaires permettant de gÃ©rer les observeurs du
 # GUI d'Eficas
 #
 #######
 
-    def addObserver(self, observer):
+    def addEWObserver(self, observer):
         """
         In fact, only one observer may be defined for the moment.
         """

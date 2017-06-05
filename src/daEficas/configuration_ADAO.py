@@ -20,10 +20,10 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: AndrÃ© Ribes, andre.ribes@edf.fr, EDF R&D
 
 """
-    Ce module sert pour charger les paramètres de configuration d'EFICAS
+    Ce module sert pour charger les paramÃ¨tres de configuration d'EFICAS
 """
 # Modules Python
 # print "passage dans la surcharge de configuration pour Adao"
@@ -49,15 +49,15 @@ class CONFIG(configuration.CONFIG_BASE):
     self.labels_eficas = ['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
     configuration.CONFIG_BASE.__init__(self,appli,repIni)
 
-    self.rep_user = os.environ["HOME"]
-    self.appli   = appli
-    self.code    = appli.code
-    # self.lang    = "fr"
-    self.rep_ini = repIni
-    self.rep_mat=" " # Compatbilite Aster
-    self.savedir      = self.rep_user
+    self.rep_user         = os.environ["HOME"]
+    self.appli            = appli
+    self.code             = appli.code
+    # self.lang           = "fr"
+    self.rep_ini          = repIni
+    self.rep_mat          = " " # Compatbilite Aster
+    self.savedir          = self.rep_user
     self.generator_module = "generator_adao"
-    self.convert_module = "convert_adao"
+    self.convert_module   = "convert_adao"
 
     # Format des catalogues...
     # (code, version, catalogue, formatIn, formatOut)

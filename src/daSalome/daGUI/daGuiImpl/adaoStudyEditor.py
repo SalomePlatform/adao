@@ -26,7 +26,7 @@ from daUtils.enumerate import Enumerate
 
 from salome.kernel import studyedit
 
-import adaoModuleHelper
+from . import adaoModuleHelper
 
 #
 # ==============================================================================

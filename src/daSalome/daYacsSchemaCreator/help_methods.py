@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -182,13 +183,13 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
     raise ValueError("\n\n" + data_name +" found but " + data_name_type  +" is not defined in the study configuration !\n")
   else:
     if data_config[data_name_type] not in AssimType[data_name]:
-      raise ValueError("\n\n" + data_name_type + " of " + data_name + " defined in the study configuration does not have a correct type : " + str(data_config[data_name_type]) 
+      raise ValueError("\n\n" + data_name_type + " of " + data_name + " defined in the study configuration does not have a correct type : " + str(data_config[data_name_type])
                     + "\n You can have : " + str(AssimType[data_name]) + "\n")
   if data_name_from not in data_config:
     raise ValueError("\n\n" + data_name + " found but " + data_name_from + " is not defined in the study configuration !\n")
   else:
     if data_config[data_name_from] not in FromNumpyList[data_config[data_name_type]]:
-      raise ValueError("\n\n" + data_name_from + " of " + data_name + " defined in the study configuration does not have a correct value : " + str(data_config[data_name_from]) 
+      raise ValueError("\n\n" + data_name_from + " of " + data_name + " defined in the study configuration does not have a correct value : " + str(data_config[data_name_from])
                     + "\n You can have : " + str(FromNumpyList[data_config[data_name_type]]) + "\n")
 
   # Check des fichiers

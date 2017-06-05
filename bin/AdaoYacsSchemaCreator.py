@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,7 +20,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: André Ribes, andre.ribes@edf.fr, EDF R&D
+# Author: AndrÃ© Ribes, andre.ribes@edf.fr, EDF R&D
 
 import sys
 import os
@@ -45,13 +45,12 @@ except:
   sys.exit(1)
 
 # Parse arguments
-from optparse import OptionParser
-usage = "usage: %prog [options] config_file yacs_schema_filename"
-version="%prog 0.1"
-my_parser = OptionParser(usage=usage, version=version)
-(options, args) = my_parser.parse_args()
-check_args(args)
+from argparse import ArgumentParser
+usage = "usage: %(prog)s [options] config_file yacs_schema_filename"
+version="%(prog)s 0.1"
+my_parser = ArgumentParser(usage=usage, version=version)
+my_parser.add_argument('config_file')
+my_parser.add_argument('yacs_schema_filename')
+args = my_parser.parse_args()
 
-config_file =  args[0]
-yacs_schema_filename =  args[1]
-create_schema(config_file, yacs_schema_filename)
+create_schema(args.config_file, args.yacs_schema_filename)

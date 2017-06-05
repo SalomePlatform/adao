@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='iso-8859-1' ?>
+<?xml version='1.0' encoding='utf-8' ?>
 <!--
   Copyright (C) 2008-2017 EDF R&D
 
@@ -19,7 +19,7 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 
   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-  
+
   Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 -->
 <proc>
@@ -60,7 +60,7 @@
 
 <![CDATA[
 import numpy, logging
-logging.debug("CREATE Entering in CreateAssimilationStudy")
+logging.debug("CREATE YI Entering in CreateAssimilationStudy")
 print "Entering in the assimilation study"
 print "Name is set to........:", Name
 print "Algorithm is set to...:", Algorithm
@@ -70,130 +70,130 @@ try:
     from daYacsIntegration.daStudy import *
     assim_study = daStudy(Name, Algorithm, Debug)
 
-    logging.debug("CREATE Data entered are:")
+    logging.debug("CREATE YI Data entered are:")
 
     # Algorithm parameters
     if "AlgorithmParameters" in locals():
-      logging.debug("CREATE AlgorithmParameters is %s"%AlgorithmParameters)
-      assim_study.setAlgorithmParameters(AlgorithmParameters)
+      logging.debug("CREATE YI AlgorithmParameters is %s"%AlgorithmParameters)
+      assim_study.setYIAlgorithmParameters(AlgorithmParameters)
 
     # Background
     if "Background" in locals():
-      logging.debug("CREATE Background is set")
-      logging.debug("CREATE BackgroundType is %s"%BackgroundType)
-      logging.debug("CREATE BackgroundStored is %s"%BackgroundStored)
-      assim_study.setBackgroundType(BackgroundType)
-      assim_study.setBackgroundStored(BackgroundStored)
-      assim_study.setBackground(Background)
+      logging.debug("CREATE YI Background is set")
+      logging.debug("CREATE YI BackgroundType is %s"%BackgroundType)
+      logging.debug("CREATE YI BackgroundStored is %s"%BackgroundStored)
+      assim_study.setYIBackgroundType(BackgroundType)
+      assim_study.setYIBackgroundStored(BackgroundStored)
+      assim_study.setYIBackground(Background)
 
     # CheckingPoint
     if "CheckingPoint" in locals():
-      logging.debug("CREATE CheckingPoint is set")
-      logging.debug("CREATE CheckingPointType is %s"%CheckingPointType)
-      logging.debug("CREATE CheckingPointStored is %s"%CheckingPointStored)
-      assim_study.setCheckingPointType(CheckingPointType)
-      assim_study.setCheckingPointStored(CheckingPointStored)
-      assim_study.setCheckingPoint(CheckingPoint)
+      logging.debug("CREATE YI CheckingPoint is set")
+      logging.debug("CREATE YI CheckingPointType is %s"%CheckingPointType)
+      logging.debug("CREATE YI CheckingPointStored is %s"%CheckingPointStored)
+      assim_study.setYICheckingPointType(CheckingPointType)
+      assim_study.setYICheckingPointStored(CheckingPointStored)
+      assim_study.setYICheckingPoint(CheckingPoint)
 
     # ControlInput
     if "ControlInput" in locals():
-      logging.debug("CREATE ControlInput is set")
-      logging.debug("CREATE ControlInputType is %s"%ControlInputType)
-      logging.debug("CREATE ControlInputStored is %s"%ControlInputStored)
-      assim_study.setControlInputType(ControlInputType)
-      assim_study.setControlInputStored(ControlInputStored)
-      assim_study.setControlInput(ControlInput)
+      logging.debug("CREATE YI ControlInput is set")
+      logging.debug("CREATE YI ControlInputType is %s"%ControlInputType)
+      logging.debug("CREATE YI ControlInputStored is %s"%ControlInputStored)
+      assim_study.setYIControlInputType(ControlInputType)
+      assim_study.setYIControlInputStored(ControlInputStored)
+      assim_study.setYIControlInput(ControlInput)
 
     # Observation
     if "Observation" in locals():
-      logging.debug("CREATE Observation is set")
-      logging.debug("CREATE ObservationType is %s"%ObservationType)
-      logging.debug("CREATE ObservationStored is %s"%ObservationStored)
-      assim_study.setObservationType(ObservationType)
-      assim_study.setObservationStored(ObservationStored)
-      assim_study.setObservation(Observation)
+      logging.debug("CREATE YI Observation is set")
+      logging.debug("CREATE YI ObservationType is %s"%ObservationType)
+      logging.debug("CREATE YI ObservationStored is %s"%ObservationStored)
+      assim_study.setYIObservationType(ObservationType)
+      assim_study.setYIObservationStored(ObservationStored)
+      assim_study.setYIObservation(Observation)
 
     # BackgroundError
     if "BackgroundError" in locals():
-      logging.debug("CREATE BackgroundError is set")
-      logging.debug("CREATE BackgroundErrorType is %s"%BackgroundErrorType)
-      logging.debug("CREATE BackgroundErrorStored is %s"%BackgroundErrorStored)
-      assim_study.setBackgroundErrorType(BackgroundErrorType)
-      assim_study.setBackgroundErrorStored(BackgroundErrorStored)
-      assim_study.setBackgroundError(BackgroundError)
+      logging.debug("CREATE YI BackgroundError is set")
+      logging.debug("CREATE YI BackgroundErrorType is %s"%BackgroundErrorType)
+      logging.debug("CREATE YI BackgroundErrorStored is %s"%BackgroundErrorStored)
+      assim_study.setYIBackgroundErrorType(BackgroundErrorType)
+      assim_study.setYIBackgroundErrorStored(BackgroundErrorStored)
+      assim_study.setYIBackgroundError(BackgroundError)
 
     # ObservationError
     if "ObservationError" in locals():
-      logging.debug("CREATE ObservationError is set")
-      logging.debug("CREATE ObservationErrorType is %s"%ObservationErrorType)
-      logging.debug("CREATE ObservationErrorStored is %s"%ObservationErrorStored)
-      assim_study.setObservationErrorType(ObservationErrorType)
-      assim_study.setObservationErrorStored(ObservationErrorStored)
-      assim_study.setObservationError(ObservationError)
+      logging.debug("CREATE YI ObservationError is set")
+      logging.debug("CREATE YI ObservationErrorType is %s"%ObservationErrorType)
+      logging.debug("CREATE YI ObservationErrorStored is %s"%ObservationErrorStored)
+      assim_study.setYIObservationErrorType(ObservationErrorType)
+      assim_study.setYIObservationErrorStored(ObservationErrorStored)
+      assim_study.setYIObservationError(ObservationError)
 
     # EvolutionError
     if "EvolutionError" in locals():
-      logging.debug("CREATE EvolutionError is set")
-      logging.debug("CREATE EvolutionErrorType is %s"%EvolutionErrorType)
-      logging.debug("CREATE EvolutionErrorStored is %s"%EvolutionErrorStored)
-      assim_study.setEvolutionErrorType(EvolutionErrorType)
-      assim_study.setEvolutionErrorStored(EvolutionErrorStored)
-      assim_study.setEvolutionError(EvolutionError)
+      logging.debug("CREATE YI EvolutionError is set")
+      logging.debug("CREATE YI EvolutionErrorType is %s"%EvolutionErrorType)
+      logging.debug("CREATE YI EvolutionErrorStored is %s"%EvolutionErrorStored)
+      assim_study.setYIEvolutionErrorType(EvolutionErrorType)
+      assim_study.setYIEvolutionErrorStored(EvolutionErrorStored)
+      assim_study.setYIEvolutionError(EvolutionError)
 
     # ObservationOperator
     ObservationOperatorOk = 0
     if "ObservationOperator" in locals():
-      logging.debug("CREATE ObservationOperator is set")
-      logging.debug("CREATE ObservationOperatorType is %s"%ObservationOperatorType)
-      assim_study.setObservationOperatorType("Matrix", ObservationOperatorType)
-      assim_study.setObservationOperator("Matrix", ObservationOperator)
+      logging.debug("CREATE YI ObservationOperator is set")
+      logging.debug("CREATE YI ObservationOperatorType is %s"%ObservationOperatorType)
+      assim_study.setYIObservationOperatorType("Matrix", ObservationOperatorType)
+      assim_study.setYIObservationOperator("Matrix", ObservationOperator)
       ObservationOperatorOk = 1
 
     if ObservationOperatorOk == 0:
       if "ObservationOperatorDirect" in locals():
-        logging.debug("CREATE ObservationOperatorDirect is %s"%ObservationOperatorDirect)
-        assim_study.setObservationOperatorType("Direct", "Function")
-        assim_study.setObservationOperator("Direct", ObservationOperatorDirect)
+        logging.debug("CREATE YI ObservationOperatorDirect is %s"%ObservationOperatorDirect)
+        assim_study.setYIObservationOperatorType("Direct", "Function")
+        assim_study.setYIObservationOperator("Direct", ObservationOperatorDirect)
       if "ObservationOperatorTangent" in locals():
-        logging.debug("CREATE ObservationOperatorTangent is %s"%ObservationOperatorTangent)
-        assim_study.setObservationOperatorType("Tangent", "Function")
-        assim_study.setObservationOperator("Tangent", ObservationOperatorTangent)
+        logging.debug("CREATE YI ObservationOperatorTangent is %s"%ObservationOperatorTangent)
+        assim_study.setYIObservationOperatorType("Tangent", "Function")
+        assim_study.setYIObservationOperator("Tangent", ObservationOperatorTangent)
       if "ObservationOperatorAdjoint" in locals():
-        logging.debug("CREATE ObservationOperatorAdjoint is %s"%ObservationOperatorAdjoint)
-        assim_study.setObservationOperatorType("Adjoint", "Function")
-        assim_study.setObservationOperator("Adjoint", ObservationOperatorAdjoint)
+        logging.debug("CREATE YI ObservationOperatorAdjoint is %s"%ObservationOperatorAdjoint)
+        assim_study.setYIObservationOperatorType("Adjoint", "Function")
+        assim_study.setYIObservationOperator("Adjoint", ObservationOperatorAdjoint)
 
     # EvolutionModel
     EvolutionModelOk = 0
     if "EvolutionModel" in locals():
-      logging.debug("CREATE EvolutionModel is set")
-      logging.debug("CREATE EvolutionModelType is %s"%EvolutionModelType)
-      assim_study.setEvolutionModelType("Matrix", EvolutionModelType)
-      assim_study.setEvolutionModel("Matrix", EvolutionModel)
+      logging.debug("CREATE YI EvolutionModel is set")
+      logging.debug("CREATE YI EvolutionModelType is %s"%EvolutionModelType)
+      assim_study.setYIEvolutionModelType("Matrix", EvolutionModelType)
+      assim_study.setYIEvolutionModel("Matrix", EvolutionModel)
       EvolutionModelOk = 1
 
     if EvolutionModelOk == 0:
       if "EvolutionModelDirect" in locals():
-        logging.debug("CREATE EvolutionModelDirect is %s"%EvolutionModelDirect)
-        assim_study.setEvolutionModelType("Direct", "Function")
-        assim_study.setEvolutionModel("Direct", EvolutionModelDirect)
+        logging.debug("CREATE YI EvolutionModelDirect is %s"%EvolutionModelDirect)
+        assim_study.setYIEvolutionModelType("Direct", "Function")
+        assim_study.setYIEvolutionModel("Direct", EvolutionModelDirect)
       if "EvolutionModelTangent" in locals():
-        logging.debug("CREATE EvolutionModelTangent is %s"%EvolutionModelTangent)
-        assim_study.setEvolutionModelType("Tangent", "Function")
-        assim_study.setEvolutionModel("Tangent", EvolutionModelTangent)
+        logging.debug("CREATE YI EvolutionModelTangent is %s"%EvolutionModelTangent)
+        assim_study.setYIEvolutionModelType("Tangent", "Function")
+        assim_study.setYIEvolutionModel("Tangent", EvolutionModelTangent)
       if "EvolutionModelAdjoint" in locals():
-        logging.debug("CREATE EvolutionModelAdjoint is %s"%EvolutionModelAdjoint)
-        assim_study.setEvolutionModelType("Adjoint", "Function")
-        assim_study.setEvolutionModel("Adjoint", EvolutionModelAdjoint)
+        logging.debug("CREATE YI EvolutionModelAdjoint is %s"%EvolutionModelAdjoint)
+        assim_study.setYIEvolutionModelType("Adjoint", "Function")
+        assim_study.setYIEvolutionModel("Adjoint", EvolutionModelAdjoint)
 
     # Variables
     for name, size in zip(InputVariablesNames, InputVariablesSizes):
-      assim_study.setInputVariable(name, size)
+      assim_study.setYIInputVariable(name, size)
     for name, size in zip(OutputVariablesNames, OutputVariablesSizes):
-      assim_study.setOutputVariable(name, size)
+      assim_study.setYIOutputVariable(name, size)
 
     if has_observers:
-      logging.debug("CREATE Observers keys are %s"%observers.keys())
+      logging.debug("CREATE YI Observers keys are %s"%observers.keys())
       # Adding observers to the study
       for observer_name in observers.keys():
         scheduler = ""
@@ -203,7 +203,7 @@ try:
           scheduler = observers[observer_name]["scheduler"]
         if "info" in observers[observer_name].keys():
           info = observers[observer_name]["info"]
-        assim_study.addObserver(observer_name, scheduler, info, number)
+        assim_study.addYIObserver(observer_name, scheduler, info, number)
 
 except Exception as e:
     if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
@@ -229,10 +229,16 @@ Study = assim_study
   <inline name="CreateNumpyMatrixFromString">
     <script><code><![CDATA[
 import numpy, logging
-logging.debug("CREATE Entering in CreateNumpyMatrixFromString")
-matrix = numpy.matrix(matrix_in_string)
+logging.debug("CREATE YI Entering in CreateNumpyMatrixFromString")
+if (matrix_in_string.find("array")>-1) or (matrix_in_string.find("matrix")>-1):
+    matrix_in_string=matrix_in_string.replace("array","numpy.array")
+    matrix_in_string=matrix_in_string.replace("matrix","numpy.matrix")
+    exec("matrix="+matrix_in_string)
+    matrix = numpy.matrix(matrix)
+else:
+    matrix = numpy.matrix(matrix_in_string)
 type = "Matrix"
-logging.debug("CREATE Matrix is %s"%matrix)
+logging.debug("CREATE YI Matrix is %s"%matrix)
 ]]></code></script>
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
@@ -243,10 +249,16 @@ logging.debug("CREATE Matrix is %s"%matrix)
   <inline name="CreateNumpyScalarSparseMatrixFromString">
     <script><code><![CDATA[
 import numpy, logging
-logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromString")
-matrix = numpy.matrix(matrix_in_string)
+logging.debug("CREATE YI Entering in CreateNumpyScalarSparseMatrixFromString")
+if (matrix_in_string.find("array")>-1) or (matrix_in_string.find("matrix")>-1):
+    matrix_in_string=matrix_in_string.replace("array","numpy.array")
+    matrix_in_string=matrix_in_string.replace("matrix","numpy.matrix")
+    exec("matrix="+matrix_in_string)
+    matrix = numpy.matrix(matrix)
+else:
+    matrix = numpy.matrix(matrix_in_string)
 type = "ScalarSparseMatrix"
-logging.debug("CREATE ScalarSparseMatrix is %s"%matrix)
+logging.debug("CREATE YI ScalarSparseMatrix is %s"%matrix)
 ]]></code></script>
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
@@ -257,10 +269,16 @@ logging.debug("CREATE ScalarSparseMatrix is %s"%matrix)
   <inline name="CreateNumpyDiagonalSparseMatrixFromString">
     <script><code><![CDATA[
 import numpy, logging
-logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromString")
-matrix = numpy.matrix(matrix_in_string)
+logging.debug("CREATE YI Entering in CreateNumpyDiagonalSparseMatrixFromString")
+if (matrix_in_string.find("array")>-1) or (matrix_in_string.find("matrix")>-1):
+    matrix_in_string=matrix_in_string.replace("array","numpy.array")
+    matrix_in_string=matrix_in_string.replace("matrix","numpy.matrix")
+    exec("matrix="+matrix_in_string)
+    matrix = numpy.matrix(matrix)
+else:
+    matrix = numpy.matrix(matrix_in_string)
 type = "DiagonalSparseMatrix"
-logging.debug("CREATE DiagonalSparseMatrix is %s"%matrix)
+logging.debug("CREATE YI DiagonalSparseMatrix is %s"%matrix)
 ]]></code></script>
     <inport name="matrix_in_string" type="string"/>
     <outport name="matrix" type="pyobj"/>
@@ -271,7 +289,7 @@ logging.debug("CREATE DiagonalSparseMatrix is %s"%matrix)
   <inline name="CreateNumpyMatrixFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateNumpyMatrixFromScript")
+logging.debug("CREATE YI Entering in CreateNumpyMatrixFromScript")
 type = "Matrix"
 
 # Get file path and filename
@@ -295,7 +313,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   <inline name="CreateNumpyScalarSparseMatrixFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateNumpyScalarSparseMatrixFromScript")
+logging.debug("CREATE YI Entering in CreateNumpyScalarSparseMatrixFromScript")
 type = "ScalarSparseMatrix"
 
 # Get file path and filename
@@ -319,7 +337,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   <inline name="CreateNumpyDiagonalSparseMatrixFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateNumpyDiagonalSparseMatrixFromScript")
+logging.debug("CREATE YI Entering in CreateNumpyDiagonalSparseMatrixFromScript")
 type = "DiagonalSparseMatrix"
 
 # Get file path and filename
@@ -343,8 +361,14 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   <inline name="CreateNumpyVectorFromString">
     <script><code><![CDATA[
 import numpy, logging
-logging.debug("CREATE Entering in CreateNumpyVectorFromString")
-vector = numpy.matrix(vector_in_string)
+logging.debug("CREATE YI Entering in CreateNumpyVectorFromString")
+if (vector_in_string.find("array")>-1) or (vector_in_string.find("matrix")>-1):
+    vector_in_string=vector_in_string.replace("array","numpy.array")
+    vector_in_string=vector_in_string.replace("matrix","numpy.matrix")
+    exec("vector="+vector_in_string)
+    vector = numpy.matrix(vector)
+else:
+    vector = numpy.matrix(vector_in_string)
 type = "Vector"
 logging.debug("Vector is %s"%vector)
 ]]></code></script>
@@ -357,7 +381,7 @@ logging.debug("Vector is %s"%vector)
   <inline name="CreateNumpyVectorFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateNumpyVectorFromScript")
+logging.debug("CREATE YI Entering in CreateNumpyVectorFromScript")
 type = "Vector"
 
 # Get file path and filename
@@ -381,7 +405,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   <inline name="CreateNumpyVectorSerieFromString">
     <script><code><![CDATA[
 import numpy, logging
-logging.debug("CREATE Entering in CreateNumpyVectorSerieFromString")
+logging.debug("CREATE YI Entering in CreateNumpyVectorSerieFromString")
 vector_in_list = eval(str(vector_in_string),{},{})
 vector = numpy.matrix(vector_in_list)
 type = "VectorSerie"
@@ -396,7 +420,7 @@ logging.debug("VectorSerie is %s"%vector)
   <inline name="CreateNumpyVectorSerieFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateNumpyVectorSerieFromScript")
+logging.debug("CREATE YI Entering in CreateNumpyVectorSerieFromScript")
 type = "VectorSerie"
 
 # Get file path and filename
@@ -431,7 +455,7 @@ ADD.analyze()
 
   <inline name="SimpleUserAnalysis">
     <script><code><![CDATA[
-#-*-coding:iso-8859-1-*-
+#-*- coding: utf-8 -*-
 import logging
 logging.debug("TERMINATE Entering in SimpleUserAnalysis")
 ADD = Study.getResults()
@@ -454,7 +478,7 @@ result = None
   <inline name="CreateDictFromString">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateDictFromString")
+logging.debug("CREATE YI Entering in CreateDictFromString")
 dico = eval(dict_in_string)
 ]]></code></script>
     <inport name="dict_in_string" type="string"/>
@@ -463,7 +487,7 @@ dico = eval(dict_in_string)
   <inline name="CreateDictFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in CreateDictFromScript")
+logging.debug("CREATE YI Entering in CreateDictFromScript")
 
 # Get file path and filename
 try:
@@ -484,7 +508,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   <inline name="UserDataInitFromScript">
     <script><code><![CDATA[
 import logging, sys, os
-logging.debug("CREATE Entering in UserDataInitFromScript")
+logging.debug("CREATE YI Entering in UserDataInitFromScript")
 
 # Get file path and filename
 try:
@@ -506,7 +530,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   <inline name="ReadForSwitchNode">
     <script><code><![CDATA[
 import logging
-logging.debug("CREATE Entering in ReadForSwitchNode")
+logging.debug("CREATE YI Entering in ReadForSwitchNode")
 logging.debug("       with input data : "+str(data["specificParameters"]))
 switch_value = -1
 for param in data["specificParameters"]:

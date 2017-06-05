@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+#-*-coding:utf-8-*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -24,10 +24,11 @@
 
 import SALOMERuntime
 import pilot
-import pickle, cPickle
+import cPickle
 import numpy
 import threading
 
+# Pour disposer des classes dans l'espace de nommage lors du pickle
 from daCore.AssimilationStudy import AssimilationStudy
 from daYacsIntegration import daStudy
 
@@ -159,7 +160,7 @@ class OptimizerHooks:
       self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
-      while 1:
+      while True:
         #print "waiting"
         self.optim_algo.signalMasterAndWait()
         #print "signal"
@@ -183,8 +184,9 @@ class OptimizerHooks:
       #print "sync false is not yet implemented"
       self.optim_algo.setError("sync == false not yet implemented")
 
-  def Tangent(self, (X, dX), sync = 1):
+  def Tangent(self, xxx_todo_changeme, sync = 1):
     # print "Call Tangent OptimizerHooks"
+    (X, dX) = xxx_todo_changeme
     if sync == 1:
       # 1: Get a unique sample number
       self.optim_algo.counter_lock.acquire()
@@ -196,7 +198,7 @@ class OptimizerHooks:
       self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
-      while 1:
+      while True:
         self.optim_algo.signalMasterAndWait()
         if self.optim_algo.isTerminationRequested():
           self.optim_algo.pool.destroyAll()
@@ -218,8 +220,9 @@ class OptimizerHooks:
       #print "sync false is not yet implemented"
       self.optim_algo.setError("sync == false not yet implemented")
 
-  def Adjoint(self, (X, Y), sync = 1):
+  def Adjoint(self, xxx_todo_changeme1, sync = 1):
     # print "Call Adjoint OptimizerHooks"
+    (X, Y) = xxx_todo_changeme1
     if sync == 1:
       # 1: Get a unique sample number
       self.optim_algo.counter_lock.acquire()
@@ -231,7 +234,7 @@ class OptimizerHooks:
       self.optim_algo.pool.pushInSample(local_counter, sample)
 
       # 3: Wait
-      while 1:
+      while True:
         #print "waiting"
         self.optim_algo.signalMasterAndWait()
         #print "signal"
@@ -290,64 +293,64 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     except ValueError as e:
         raise ValueError("\n\n  Handling internal error in study exchange (message: \"%s\").\n  The case is probably too big (bigger than the physical plus the virtual memory available).\n  Try if possible to store the covariance matrices in sparse format.\n"%(str(e),))
     #print "[Debug] da_study is ", self.da_study
-    self.da_study.initAlgorithm()
+    self.da_study.initYIAlgorithm()
     self.ADD = self.da_study.getResults()
 
   def startToTakeDecision(self):
     # print "Algorithme startToTakeDecision"
 
     # Check if ObservationOperator is already set
-    if self.da_study.getObservationOperatorType("Direct") == "Function" or self.da_study.getObservationOperatorType("Tangent") == "Function" or self.da_study.getObservationOperatorType("Adjoint") == "Function" :
+    if self.da_study.getYIObservationOperatorType("Direct") == "Function" or self.da_study.getYIObservationOperatorType("Tangent") == "Function" or self.da_study.getYIObservationOperatorType("Adjoint") == "Function" :
       # print "Set Hooks for ObservationOperator"
       # Use proxy function for YACS
       self.hooksOO = OptimizerHooks(self, switch_value=1)
       direct = tangent = adjoint = None
-      if self.da_study.getObservationOperatorType("Direct") == "Function":
+      if self.da_study.getYIObservationOperatorType("Direct") == "Function":
         direct = self.hooksOO.Direct
-      if self.da_study.getObservationOperatorType("Tangent") == "Function" :
+      if self.da_study.getYIObservationOperatorType("Tangent") == "Function" :
         tangent = self.hooksOO.Tangent
-      if self.da_study.getObservationOperatorType("Adjoint") == "Function" :
+      if self.da_study.getYIObservationOperatorType("Adjoint") == "Function" :
         adjoint = self.hooksOO.Adjoint
 
       # Set ObservationOperator
-      self.ADD.setObservationOperator(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+      self.ADD.setObservationOperator(ThreeFunctions = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
     # else:
       # print "Not setting Hooks for ObservationOperator"
 
     # Check if EvolutionModel is already set
-    if self.da_study.getEvolutionModelType("Direct") == "Function" or self.da_study.getEvolutionModelType("Tangent") == "Function" or self.da_study.getEvolutionModelType("Adjoint") == "Function" :
+    if self.da_study.getYIEvolutionModelType("Direct") == "Function" or self.da_study.getYIEvolutionModelType("Tangent") == "Function" or self.da_study.getYIEvolutionModelType("Adjoint") == "Function" :
       self.has_evolution_model = True
       # print "Set Hooks for EvolutionModel"
       # Use proxy function for YACS
       self.hooksEM = OptimizerHooks(self, switch_value=2)
       direct = tangent = adjoint = None
-      if self.da_study.getEvolutionModelType("Direct") == "Function":
+      if self.da_study.getYIEvolutionModelType("Direct") == "Function":
         direct = self.hooksEM.Direct
-      if self.da_study.getEvolutionModelType("Tangent") == "Function" :
+      if self.da_study.getYIEvolutionModelType("Tangent") == "Function" :
         tangent = self.hooksEM.Tangent
-      if self.da_study.getEvolutionModelType("Adjoint") == "Function" :
+      if self.da_study.getYIEvolutionModelType("Adjoint") == "Function" :
         adjoint = self.hooksEM.Adjoint
 
       # Set EvolutionModel
-      self.ADD.setEvolutionModel(asFunction = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
+      self.ADD.setEvolutionModel(ThreeFunctions = {"Direct":direct, "Tangent":tangent, "Adjoint":adjoint})
     # else:
       # print "Not setting Hooks for EvolutionModel"
 
     # Set Observers
-    for observer_name in self.da_study.observers_dict.keys():
+    for observer_name in list(self.da_study.observers_dict.keys()):
       # print "observers %s found" % observer_name
       self.has_observer = True
       if self.da_study.observers_dict[observer_name]["scheduler"] != "":
-        self.ADD.setDataObserver(observer_name, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[observer_name]["scheduler"], HookParameters = observer_name)
+        self.ADD.setObserver(Variable = observer_name, ObjectFunction = self.obs, Scheduler = self.da_study.observers_dict[observer_name]["scheduler"], Info = observer_name)
       else:
-        self.ADD.setDataObserver(observer_name, HookFunction=self.obs, HookParameters = observer_name)
+        self.ADD.setObserver(Variable = observer_name, ObjectFunction = self.obs, Info = observer_name)
 
     # Start Assimilation Study
-    print "Launching the analysis\n"
+    print("Launching the analysis\n")
     try:
-        self.ADD.analyze()
+        self.ADD.execute()
     except Exception as e:
-        if type(e) == type(SyntaxError()): msg = "at %s: %s"%(e.offset, e.text)
+        if isinstance(e, type(SyntaxError())): msg = "at %s: %s"%(e.offset, e.text)
         else: msg = ""
         raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the YACS GUI or in the launching terminal."%(str(e),msg))
 
@@ -394,9 +397,9 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     var_str = cPickle.dumps(var)
     # Add Again Data Observer
     if self.da_study.observers_dict[info]["scheduler"] != "":
-      self.ADD.setDataObserver(info, HookFunction=self.obs, Scheduler = self.da_study.observers_dict[info]["scheduler"], HookParameters = info)
+      self.ADD.setObserver(Variable = info, ObjectFunction = self.obs, Scheduler = self.da_study.observers_dict[info]["scheduler"], Info = info)
     else:
-      self.ADD.setDataObserver(info, HookFunction=self.obs, HookParameters = info)
+      self.ADD.setObserver(Variable = info, ObjectFunction = self.obs, Info = info)
     var_struct.setEltAtRank("value", var_str)
     specificParameters.pushBack(var_struct)
 
@@ -416,7 +419,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Wait
     import sys, traceback
     try:
-      while 1:
+      while True:
         self.signalMasterAndWait()
         if self.isTerminationRequested():
           self.pool.destroyAll()
@@ -430,17 +433,17 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
             self.counter_lock.release()
             break
     except:
-      print "Exception in user code:"
-      print '-'*60
+      print("Exception in user code:")
+      print('-'*60)
       traceback.print_exc(file=sys.stdout)
-      print '-'*60
+      print('-'*60)
 
   def getAlgoResult(self):
-    # Remove data observers, required to pickle assimilation study object
-    for observer_name in self.da_study.observers_dict.keys():
-      self.ADD.removeDataObserver(observer_name, self.obs)
-    self.ADD.prepare_to_pickle()
-    result = pickle.dumps(self.da_study) # Careful : pickle is mandatory over cPickle !
+#     # Remove data observers, required to pickle assimilation study object
+#     for observer_name in list(self.da_study.observers_dict.keys()):
+#       self.ADD.removeDataObserver(observer_name, self.obs)
+    self.da_study.YI_prepare_to_pickle()
+    result = cPickle.dumps(self.da_study)
     return result
 
   # Obligatoire ???

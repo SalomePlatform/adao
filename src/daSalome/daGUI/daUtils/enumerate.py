@@ -51,14 +51,10 @@ class Enumerate(object):
         return (value in self._dict_keynumbers.values())
 
     def listkeys(self):
-        list = self._dict_keynumbers.keys()
-        list.sort()
-        return list
+        return sorted(self._dict_keynumbers.keys())
 
     def listvalues(self):
-        list = self._dict_keynumbers.values()
-        list.sort()
-        return list
+        return sorted(self._dict_keynumbers.values())
 
 #
 # ==============================================================================
@@ -71,7 +67,7 @@ def TEST_simple():
         'SEP',
         'OTHER'
     ])
-    print TYPES_LIST.listvalues()
+    print(TYPES_LIST.listvalues())
     return True
 
 def TEST_createFromList():
@@ -82,8 +78,8 @@ def TEST_createFromList():
         'MED',
         'SMESH'])
 
-    print codes.KERNEL
-    print codes.GEOM
+    print(codes.KERNEL)
+    print(codes.GEOM)
     if (codes.KERNEL == 0 and codes.GEOM == 2):
         return True
     else:
@@ -94,8 +90,8 @@ def TEST_createFromString():
 
     codes = Enumerate(aList.split())
 
-    print codes.KERNEL
-    print codes.GEOM
+    print(codes.KERNEL)
+    print(codes.GEOM)
     if (codes.KERNEL == 0 and codes.GEOM == 2):
         return True
     else:
@@ -109,7 +105,7 @@ def TEST_contains():
         'MED',
         'SMESH'])
 
-    print "VISU in enumerate?", codes.contains("VISU")
+    print("VISU in enumerate?", codes.contains("VISU"))
     if ( not codes.contains("VISU") ):
         return True
     else:
@@ -136,8 +132,8 @@ def TEST_offset():
         'MED',
         'SMESH'], offset=20)
 
-    print codes.KERNEL
-    print codes.GEOM
+    print(codes.KERNEL)
+    print(codes.GEOM)
     if (codes.KERNEL == 20 and codes.GEOM == 22):
         return True
     else:
@@ -151,7 +147,7 @@ def TEST_listvalues():
         'MED',
         'SMESH'], offset=20)
 
-    print codes.listvalues()
+    print(codes.listvalues())
     if codes.listvalues() != [20,21,22,23,24]:
         return False
     return True

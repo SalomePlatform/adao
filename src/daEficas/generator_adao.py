@@ -58,7 +58,7 @@ class AdaoGenerator(PythonGenerator):
   def gener(self,obj,format='brut',config=None,appli=None):
     self.logger.debug("method gener called")
     self.text_comm = PythonGenerator.gener(self, obj, format, config)
-    for key, value in self.dictMCVal.iteritems():
+    for key, value in self.dictMCVal.items():
       self.logger.debug("dictMCVAl %s %s" % (key,value))
 
     try :
@@ -69,7 +69,7 @@ class AdaoGenerator(PythonGenerator):
       self.logger.debug("EFICAS case is not valid, python command file for YACS schema generation cannot be created")
       self.logger.debug(self.text_da)
       self.dictMCVal = {}
-      #�traceback.print_exc()
+      # traceback.print_exc()
     return self.text_comm
 
   def writeDefault(self, fn):
@@ -93,14 +93,14 @@ class AdaoGenerator(PythonGenerator):
     return s
 
   def generate_da(self):
-  
+
     if "__CHECKING_STUDY__StudyName" in self.dictMCVal.keys():
       self.type_of_study = "CHECKING_STUDY"
     else:
       self.type_of_study = "ASSIMILATION_STUDY"
-        
-    self.text_da += "#-*-coding:iso-8859-1-*- \n"
-    self.text_da += "study_config = {} \n"
+
+    self.text_da += "#-*- coding: utf-8 -*-\n"
+    self.text_da += "study_config = {}\n"
 
     # Extraction de Study_type
     self.text_da += "study_config['StudyType'] = '" + self.type_of_study + "'\n"
@@ -154,7 +154,7 @@ class AdaoGenerator(PythonGenerator):
 
   def add_data(self, data_name):
 
-    # Extraction des données
+    # Extraction des donnees
     search_text = "__"+self.type_of_study+"__" + data_name + "__"
     data_type = self.dictMCVal[search_text + "INPUT_TYPE"]
     search_type = search_text + data_type + "__data__"
@@ -252,7 +252,7 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += "Init_config['From'] = 'Script'\n"
       self.text_da += "Init_config['Data'] = '" + init_file_data + "'\n"
       self.text_da += "Init_config['Target'] = ["
-      if type(init_target_list) is type("str"):
+      if isinstance(init_target_list, "str"):
         self.text_da +=  "'" + init_target_list + "',"
       else:
         for target in init_target_list:
@@ -288,7 +288,7 @@ class AdaoGenerator(PythonGenerator):
 
   def add_AlgorithmParameters(self):
 
-    if not self.dictMCVal.has_key("__"+self.type_of_study+"__AlgorithmParameters__Parameters"): return
+    if "__"+self.type_of_study+"__AlgorithmParameters__Parameters" not in self.dictMCVal: return
 
     data_name = "AlgorithmParameters"
     data_type = "Dict"

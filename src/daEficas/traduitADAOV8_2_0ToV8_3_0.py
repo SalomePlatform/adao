@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,7 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import optparse
+import argparse
 import sys
 import re
 
@@ -34,10 +34,10 @@ from Traducteur.renamemocle  import *
 
 version_out = "V8_3_0"
 
-usage="""Usage: python %prog [options]
+usage="""Usage: python %(prog)s [args]
 
 Typical use is:
-  python %prog --infile=xxxx.comm --outfile=yyyy.comm"""
+  python %(prog)s --infile=xxxx.comm --outfile=yyyy.comm"""
 
 atraiter = (
     )
@@ -65,9 +65,8 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
     #
     log.ferme(hdlr)
     if outfile is not None:
-        f=open(outfile,'w')
-        f.write( fsrc )
-        f.close()
+        with open(outfile,'w',encoding='utf8') as f:
+            f.write( fsrc )
     else:
         return fsrc
 
@@ -78,21 +77,21 @@ class MonTraducteur:
         return traduc(infile=None,outfile=None,texte=self.__texte,flog=None)
 
 def main():
-    parser = optparse.OptionParser(usage=usage)
+    parser = argparse.ArgumentParser(usage=usage)
 
-    parser.add_option('-i','--infile', dest="infile",
+    parser.add_argument('-i','--infile', dest="infile",
         help="Le fichier COMM en entree, a traduire")
-    parser.add_option('-o','--outfile', dest="outfile", default='out.comm',
+    parser.add_argument('-o','--outfile', dest="outfile", default='out.comm',
         help="Le fichier COMM en sortie, traduit")
 
-    options, args = parser.parse_args()
-    if len(options.infile) == 0:
-        print
+    args = parser.parse_args()
+    if len(args.infile) == 0:
+        print("")
         parser.print_help()
-        print
+        print("")
         sys.exit(1)
 
-    traduc(options.infile,options.outfile)
+    traduc(args.infile,args.outfile)
 
 if __name__ == '__main__':
     main()

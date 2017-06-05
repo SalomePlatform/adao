@@ -1,4 +1,5 @@
-# -*- coding: iso-8859-1 -*-
+#-*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -20,7 +21,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-__author__="André Ribes - EDF R&D"
+__author__="AndrÃ© Ribes - EDF R&D"
 
 class DevelException(Exception):
     def __init__(self, message):
@@ -32,7 +33,7 @@ class DevelException(Exception):
 # Interface of an eficas observer (for implementing the subject/observer pattern)
 # ==============================================================================
 #
-from enumerate import Enumerate
+from .enumerate import Enumerate
 
 class EficasObserver:
     """

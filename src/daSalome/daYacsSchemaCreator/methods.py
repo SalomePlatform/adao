@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2017 EDF R&D
 #
 # This file is part of SALOME ADAO module
@@ -70,7 +71,7 @@ def create_yacs_proc(study_config):
   t_bool = proc.getTypeCode("bool")
   t_param_input  = proc.getTypeCode("SALOME_TYPES/ParametricInput")
   t_param_output = proc.getTypeCode("SALOME_TYPES/ParametricOutput")
-  if "Repertory" in study_config.keys():
+  if "Repertory" in list(study_config.keys()):
     base_repertory = study_config["Repertory"]
     repertory      = True
   else:
@@ -86,7 +87,7 @@ def create_yacs_proc(study_config):
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
   CAS_node.getInputPort("Name").edInitPy(study_config["Name"])
   CAS_node.getInputPort("Algorithm").edInitPy(study_config["Algorithm"])
-  if study_config.has_key("Debug") and study_config["Debug"] == "1":
+  if "Debug" in study_config and study_config["Debug"] == "1":
     CAS_node.getInputPort("Debug").edInitPy(True)
   else:
     CAS_node.getInputPort("Debug").edInitPy(False)
@@ -112,7 +113,7 @@ def create_yacs_proc(study_config):
   # Adding an observer init node if an user defines some
   factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
   init_observers_node = factory_init_observers_node.cloneNode("SetObservers")
-  if "Observers" in study_config.keys():
+  if "Observers" in list(study_config.keys()):
     node_script = init_observers_node.getScript()
     node_script += "has_observers = True\n"
     node_script += "observers = " + str(study_config["Observers"]) + "\n"
@@ -132,7 +133,7 @@ def create_yacs_proc(study_config):
   # Step 0.5: Find if there is a user init node
   init_config = {}
   init_config["Target"] = []
-  if "UserDataInit" in study_config.keys():
+  if "UserDataInit" in list(study_config.keys()):
     init_config = study_config["UserDataInit"]
     factory_init_node = catalogAd.getNodeFromNodeMap("UserDataInitFromScript")
     init_node = factory_init_node.cloneNode("UserDataInit")
@@ -145,11 +146,9 @@ def create_yacs_proc(study_config):
 
   # Step 1: get input data from user configuration
 
-  st_keys = study_config.keys()
-  st_keys.sort()
+  st_keys = sorted(list(study_config.keys()))
   for key in st_keys:
-    ad_keys = AssimData
-    ad_keys.sort()
+    ad_keys = sorted(AssimData)
     if key in ad_keys:
       data_config = study_config[key]
 
@@ -171,7 +170,14 @@ def create_yacs_proc(study_config):
           back_node.edAddInputPort("init_data", t_pyobj)
           ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), back_node.getInputPort("init_data"))
         back_node_script += "# Import script and get data\n__import__(module_name)\nuser_script_module = sys.modules[module_name]\n\n"
-        back_node_script += key + " = user_script_module." + key + "\n"
+        if key == "AlgorithmParameters":
+            back_node_script += "if hasattr(user_script_module,'" + key + "'):\n  "
+            back_node_script += key + " = user_script_module." + key + "\n"
+            skey = "Parameters"
+            back_node_script += "elif hasattr(user_script_module,'" + skey + "'):\n  "
+            back_node_script += key + " = user_script_module." + skey + "\n"
+        else:
+            back_node_script += key + " = user_script_module." + key + "\n"
         back_node.setScript(back_node_script)
         # Connect node with CreateAssimilationStudy
         CAS_node.edAddInputPort(key, t_pyobj)
@@ -408,7 +414,7 @@ def create_yacs_proc(study_config):
       script_str= open(script_filename, 'r')
     except:
       raise ValueError("Exception in opening function script file: " + script_filename)
-    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script  = "#-*- coding: utf-8 -*-\n"
     node_script += "import sys, os \n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
@@ -436,7 +442,7 @@ def create_yacs_proc(study_config):
       script_str= open(script_filename, 'r')
     except:
       raise ValueError("Exception in opening function script file: " + script_filename)
-    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script  = "#-*- coding: utf-8 -*-\n"
     node_script += "import sys, os, numpy, logging\n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
@@ -516,7 +522,7 @@ def create_yacs_proc(study_config):
       script_str= open(script_filename, 'r')
     except:
       raise ValueError("Exception in opening function script file: " + script_filename)
-    node_script  = "#-*-coding:iso-8859-1-*-\n"
+    node_script  = "#-*- coding: utf-8 -*-\n"
     node_script += "import sys, os, numpy, logging\n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
@@ -541,9 +547,9 @@ def create_yacs_proc(study_config):
     node_script += """    Function   = DirectOperator,\n"""
     node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
     node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
-    if 'EnableMultiProcessing' in ScriptWithOneFunction.keys():
+    if 'EnableMultiProcessing' in list(ScriptWithOneFunction.keys()):
         node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableMultiProcessing'])
-    if 'NumberOfProcesses' in ScriptWithOneFunction.keys():
+    if 'NumberOfProcesses' in list(ScriptWithOneFunction.keys()):
         node_script += """    mpWorkers  = %s,\n"""%str(ScriptWithOneFunction['NumberOfProcesses'])
     node_script += """    )\n"""
     node_script += """#\n"""
@@ -586,7 +592,7 @@ def create_yacs_proc(study_config):
     opt_script_nodeOO = factory_opt_script_node.cloneNode("FakeFunctionNode")
 
   # Check if we have a python script for OptimizerLoopNode
-  if "EvolutionModel" in study_config.keys():
+  if "EvolutionModel" in list(study_config.keys()):
     data_config = study_config["EvolutionModel"]
     opt_script_nodeEM = None
     if data_config["Type"] == "Function" and (data_config["From"] == "ScriptWithSwitch" or data_config["From"] == "FunctionDict"):
@@ -605,7 +611,7 @@ def create_yacs_proc(study_config):
         script_str= open(script_filename, 'r')
       except:
         raise ValueError("Exception in opening function script file: " + script_filename)
-      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script  = "#-*- coding: utf-8 -*-\n"
       node_script += "import sys, os \n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
@@ -632,7 +638,7 @@ def create_yacs_proc(study_config):
         script_str= open(script_filename, 'r')
       except:
         raise ValueError("Exception in opening function script file: " + script_filename)
-      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script  = "#-*- coding: utf-8 -*-\n"
       node_script += "import sys, os, numpy, logging\n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
@@ -714,7 +720,7 @@ def create_yacs_proc(study_config):
         script_str= open(script_filename, 'r')
       except:
         raise ValueError("Exception in opening function script file: " + script_filename)
-      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script  = "#-*- coding: utf-8 -*-\n"
       node_script += "import sys, os, numpy, logging\n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
@@ -738,9 +744,9 @@ def create_yacs_proc(study_config):
       node_script += """    Function   = DirectOperator,\n"""
       node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
       node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
-      if 'EnableMultiProcessing' in ScriptWithOneFunction.keys():
+      if 'EnableMultiProcessing' in list(ScriptWithOneFunction.keys()):
           node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableMultiProcessing'])
-      if 'NumberOfProcesses' in ScriptWithOneFunction.keys():
+      if 'NumberOfProcesses' in list(ScriptWithOneFunction.keys()):
           node_script += """    mpWorkers  = %s,\n"""%str(ScriptWithOneFunction['NumberOfProcesses'])
       node_script += """    )\n"""
       node_script += """#\n"""
@@ -785,7 +791,7 @@ def create_yacs_proc(study_config):
       opt_script_nodeEM = factory_opt_script_node.cloneNode("FakeFunctionNode")
 
   # Add computation bloc
-  if "Observers" in study_config.keys():
+  if "Observers" in list(study_config.keys()):
     execution_bloc = runtime.createBloc("Execution Bloc")
     optimizer_node.edSetNode(execution_bloc)
 
@@ -811,7 +817,7 @@ def create_yacs_proc(study_config):
     ADAO_Case.edAddDFLink(opt_script_nodeOO.getOutputPort("result"), optimizer_node.edGetPortForOutPool())
 
     # Second case: evolution bloc
-    if "EvolutionModel" in study_config.keys():
+    if "EvolutionModel" in list(study_config.keys()):
       computation_blocEM = runtime.createBloc("computation_blocEM")
       computation_blocEM.edAddChild(opt_script_nodeEM)
       switch_node.edSetNode(2, computation_blocEM)
@@ -853,7 +859,7 @@ def create_yacs_proc(study_config):
       ADAO_Case.edAddCFLink(observation_node, end_observation_node)
       ADAO_Case.edAddDFLink(end_observation_node.getOutputPort("output"), optimizer_node.edGetPortForOutPool())
 
-  elif "EvolutionModel" in study_config.keys():
+  elif "EvolutionModel" in list(study_config.keys()):
     execution_bloc = runtime.createBloc("Execution Bloc")
     optimizer_node.edSetNode(execution_bloc)
 
@@ -905,7 +911,7 @@ def create_yacs_proc(study_config):
     ADAO_Case.edAddDFLink(init_node.getOutputPort("init_data"), opt_script_nodeOO.getInputPort("init_data"))
 
   # Step 4: create post-processing from user configuration
-  if "UserPostAnalysis" in study_config.keys():
+  if "UserPostAnalysis" in list(study_config.keys()):
     analysis_config = study_config["UserPostAnalysis"]
     if analysis_config["From"] == "String":
       factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
@@ -939,7 +945,7 @@ def create_yacs_proc(study_config):
         analysis_file = open(analysis_file_name, 'r')
       except:
         raise ValueError("Exception in opening analysis file: " + str(analysis_config["Data"]))
-      node_script  = "#-*-coding:iso-8859-1-*-\n"
+      node_script  = "#-*- coding: utf-8 -*-\n"
       node_script += "import sys, os \n"
       node_script += "filepath = \"" + os.path.dirname(analysis_file_name) + "\"\n"
       node_script += "filename = \"" + os.path.basename(analysis_file_name) + "\"\n"

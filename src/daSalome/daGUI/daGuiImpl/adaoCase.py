@@ -27,8 +27,8 @@ import SalomePyQt
 
 import eficasSalome
 from Ihm import CONNECTOR
-import adaoGuiHelper
-import adaoStudyEditor
+from . import adaoGuiHelper
+from . import adaoStudyEditor
 
 class AdaoCase:
 
@@ -83,7 +83,7 @@ class AdaoCase:
       msg += "case with the ADAO/EFICAS editor."
       return msg
 
-    if not os.environ.has_key("ADAO_ROOT_DIR"):
+    if "ADAO_ROOT_DIR" not in os.environ:
       return "Please add ADAO_ROOT_DIR to your environnement."
 
     adao_path = os.environ["ADAO_ROOT_DIR"]
