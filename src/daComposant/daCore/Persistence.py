@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -21,8 +21,8 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Définit des outils de persistence et d'enregistrement de séries de valeurs
-    pour analyse ultérieure ou utilisation de calcul.
+    DÃ©finit des outils de persistence et d'enregistrement de sÃ©ries de valeurs
+    pour analyse ultÃ©rieure ou utilisation de calcul.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
@@ -31,24 +31,32 @@ import sys, numpy, copy
 
 from daCore.PlatformInfo import PathManagement ; PathManagement()
 
+if sys.version_info.major < 3:
+    range = xrange
+    iLong = long
+    import cPickle as pickle
+else:
+    iLong = int
+    import pickle
+
 # ==============================================================================
 class Persistence(object):
     """
-    Classe générale de persistence définissant les accesseurs nécessaires
+    Classe gÃ©nÃ©rale de persistence dÃ©finissant les accesseurs nÃ©cessaires
     (Template)
     """
     def __init__(self, name="", unit="", basetype=str):
         """
         name : nom courant
-        unit : unité
-        basetype : type de base de l'objet stocké à chaque pas
+        unit : unitÃ©
+        basetype : type de base de l'objet stockÃ© Ã  chaque pas
 
-        La gestion interne des données est exclusivement basée sur les variables
-        initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
+        La gestion interne des donnÃ©es est exclusivement basÃ©e sur les variables
+        initialisÃ©es ici (qui ne sont pas accessibles depuis l'extÃ©rieur des
         objets comme des attributs) :
         __basetype : le type de base de chaque valeur, sous la forme d'un type
                      permettant l'instanciation ou le casting Python
-        __values : les valeurs de stockage. Par défaut, c'est None
+        __values : les valeurs de stockage. Par dÃ©faut, c'est None
         """
         self.__name = str(name)
         self.__unit = str(unit)
@@ -69,7 +77,7 @@ class Persistence(object):
 
     def basetype(self, basetype=None):
         """
-        Renvoie ou met en place le type de base des objets stockés
+        Renvoie ou met en place le type de base des objets stockÃ©s
         """
         if basetype is None:
             return self.__basetype
@@ -106,10 +114,10 @@ class Persistence(object):
 
     def shape(self):
         """
-        Renvoie la taille sous forme numpy du dernier objet stocké. Si c'est un
+        Renvoie la taille sous forme numpy du dernier objet stockÃ©. Si c'est un
         objet numpy, renvoie le shape. Si c'est un entier, un flottant, un
         complexe, renvoie 1. Si c'est une liste ou un dictionnaire, renvoie la
-        longueur. Par défaut, renvoie 1.
+        longueur. Par dÃ©faut, renvoie 1.
         """
         if len(self.__values) > 0:
             if self.__basetype in [numpy.matrix, numpy.ndarray, numpy.array, numpy.ravel]:
@@ -198,9 +206,8 @@ class Persistence(object):
         "D.tagkeys() -> list of D's tag keys"
         __allKeys = []
         for dicotags in self.__tags:
-            __allKeys.extend( dicotags.keys() )
-        __allKeys = list(set(__allKeys))
-        __allKeys.sort()
+            __allKeys.extend( list(dicotags.keys()) )
+        __allKeys = sorted(set(__allKeys))
         return __allKeys
 
     # def valueserie(self, item=None, allSteps=True, **kwargs):
@@ -220,17 +227,16 @@ class Persistence(object):
         else:
             __indexOfFilteredItems = [item,]
         #
-        # Dans le cas où la sortie donne les valeurs d'un "outputTag"
+        # Dans le cas oÃ¹ la sortie donne les valeurs d'un "outputTag"
         if outputTag is not None and isinstance(outputTag,str) :
             outputValues = []
             for index in __indexOfFilteredItems:
                 if outputTag in self.__tags[index].keys():
                     outputValues.append( self.__tags[index][outputTag] )
-            outputValues = list(set(outputValues))
-            outputValues.sort()
+            outputValues = sorted(set(outputValues))
             return outputValues
         #
-        # Dans le cas où la sortie donne les tags satisfaisants aux conditions
+        # Dans le cas oÃ¹ la sortie donne les tags satisfaisants aux conditions
         else:
             if withValues:
                 return [self.__tags[index] for index in __indexOfFilteredItems]
@@ -238,8 +244,7 @@ class Persistence(object):
                 allTags = {}
                 for index in __indexOfFilteredItems:
                     allTags.update( self.__tags[index] )
-                allKeys = list(allTags.keys())
-                allKeys.sort()
+                allKeys = sorted(allTags.keys())
                 return allKeys
 
     # ---------------------------------------------------------
@@ -250,16 +255,22 @@ class Persistence(object):
 
     # Pour compatibilite
     def stepserie(self, **kwargs):
-        "Nombre de pas filtrés"
+        "Nombre de pas filtrÃ©s"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return __indexOfFilteredItems
+
+    # Pour compatibilite
+    def steplist(self, **kwargs):
+        "Nombre de pas filtrÃ©s"
+        __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
+        return list(__indexOfFilteredItems)
 
     # ---------------------------------------------------------
     def means(self):
         """
-        Renvoie la série, contenant à chaque pas, la valeur moyenne des données
+        Renvoie la sÃ©rie, contenant Ã  chaque pas, la valeur moyenne des donnÃ©es
         au pas. Il faut que le type de base soit compatible avec les types
-        élémentaires numpy.
+        Ã©lÃ©mentaires numpy.
         """
         try:
             return [numpy.matrix(item).mean() for item in self.__values]
@@ -268,12 +279,12 @@ class Persistence(object):
 
     def stds(self, ddof=0):
         """
-        Renvoie la série, contenant à chaque pas, l'écart-type des données
+        Renvoie la sÃ©rie, contenant Ã  chaque pas, l'Ã©cart-type des donnÃ©es
         au pas. Il faut que le type de base soit compatible avec les types
-        élémentaires numpy.
+        Ã©lÃ©mentaires numpy.
 
-        ddof : c'est le nombre de degrés de liberté pour le calcul de
-               l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
+        ddof : c'est le nombre de degrÃ©s de libertÃ© pour le calcul de
+               l'Ã©cart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
         """
         try:
             if numpy.version.version >= '1.1.0':
@@ -285,8 +296,8 @@ class Persistence(object):
 
     def sums(self):
         """
-        Renvoie la série, contenant à chaque pas, la somme des données au pas.
-        Il faut que le type de base soit compatible avec les types élémentaires
+        Renvoie la sÃ©rie, contenant Ã  chaque pas, la somme des donnÃ©es au pas.
+        Il faut que le type de base soit compatible avec les types Ã©lÃ©mentaires
         numpy.
         """
         try:
@@ -296,8 +307,8 @@ class Persistence(object):
 
     def mins(self):
         """
-        Renvoie la série, contenant à chaque pas, le minimum des données au pas.
-        Il faut que le type de base soit compatible avec les types élémentaires
+        Renvoie la sÃ©rie, contenant Ã  chaque pas, le minimum des donnÃ©es au pas.
+        Il faut que le type de base soit compatible avec les types Ã©lÃ©mentaires
         numpy.
         """
         try:
@@ -307,8 +318,8 @@ class Persistence(object):
 
     def maxs(self):
         """
-        Renvoie la série, contenant à chaque pas, la maximum des données au pas.
-        Il faut que le type de base soit compatible avec les types élémentaires
+        Renvoie la sÃ©rie, contenant Ã  chaque pas, la maximum des donnÃ©es au pas.
+        Il faut que le type de base soit compatible avec les types Ã©lÃ©mentaires
         numpy.
         """
         try:
@@ -325,16 +336,16 @@ class Persistence(object):
                    persist  = False,
                    pause    = True,
                   ):
-        "Préparation des plots"
+        "PrÃ©paration des plots"
         #
-        # Vérification de la disponibilité du module Gnuplot
+        # VÃ©rification de la disponibilitÃ© du module Gnuplot
         try:
             import Gnuplot
             self.__gnuplot = Gnuplot
         except:
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
-        # Vérification et compléments sur les paramètres d'entrée
+        # VÃ©rification et complÃ©ments sur les paramÃ¨tres d'entrÃ©e
         if persist:
             self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
         else:
@@ -346,8 +357,8 @@ class Persistence(object):
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
-        self.__g('set xlabel "'+str(xlabel).encode('ascii','replace')+'"')
-        self.__g('set ylabel "'+str(ylabel).encode('ascii','replace')+'"')
+        self.__g('set xlabel "'+str(xlabel)+'"')
+        self.__g('set ylabel "'+str(ylabel)+'"')
         self.__title  = title
         self.__ltitle = ltitle
         self.__pause  = pause
@@ -367,39 +378,39 @@ class Persistence(object):
               pause    = True,
              ):
         """
-        Renvoie un affichage de la valeur à chaque pas, si elle est compatible
+        Renvoie un affichage de la valeur Ã  chaque pas, si elle est compatible
         avec un affichage Gnuplot (donc essentiellement un vecteur). Si
-        l'argument "step" existe dans la liste des pas de stockage effectués,
-        renvoie l'affichage de la valeur stockée à ce pas "step". Si l'argument
-        "item" est correct, renvoie l'affichage de la valeur stockée au numéro
-        "item". Par défaut ou en l'absence de "step" ou "item", renvoie un
+        l'argument "step" existe dans la liste des pas de stockage effectuÃ©s,
+        renvoie l'affichage de la valeur stockÃ©e Ã  ce pas "step". Si l'argument
+        "item" est correct, renvoie l'affichage de la valeur stockÃ©e au numÃ©ro
+        "item". Par dÃ©faut ou en l'absence de "step" ou "item", renvoie un
         affichage successif de tous les pas.
 
         Arguments :
-            - step     : valeur du pas à afficher
-            - item     : index de la valeur à afficher
+            - step     : valeur du pas Ã  afficher
+            - item     : index de la valeur Ã  afficher
             - steps    : liste unique des pas de l'axe des X, ou None si c'est
-                         la numérotation par défaut
-            - title    : base du titre général, qui sera automatiquement
-                         complétée par la mention du pas
+                         la numÃ©rotation par dÃ©faut
+            - title    : base du titre gÃ©nÃ©ral, qui sera automatiquement
+                         complÃ©tÃ©e par la mention du pas
             - xlabel   : label de l'axe des X
             - ylabel   : label de l'axe des Y
-            - ltitle   : titre associé au vecteur tracé
-            - geometry : taille en pixels de la fenêtre et position du coin haut
-                         gauche, au format X11 : LxH+X+Y (défaut : 600x400)
+            - ltitle   : titre associÃ© au vecteur tracÃ©
+            - geometry : taille en pixels de la fenÃªtre et position du coin haut
+                         gauche, au format X11 : LxH+X+Y (dÃ©faut : 600x400)
             - filename : base de nom de fichier Postscript pour une sauvegarde,
-                         qui est automatiquement complétée par le numéro du
-                         fichier calculé par incrément simple de compteur
-            - dynamic  : effectue un affichage des valeurs à chaque stockage
-                         (au-delà du second). La méthode "plots" permet de
-                         déclarer l'affichage dynamique, et c'est la méthode
-                         "__replots" qui est utilisée pour l'effectuer
-            - persist  : booléen indiquant que la fenêtre affichée sera
-                         conservée lors du passage au dessin suivant
-                         Par défaut, persist = False
-            - pause    : booléen indiquant une pause après chaque tracé, et
+                         qui est automatiquement complÃ©tÃ©e par le numÃ©ro du
+                         fichier calculÃ© par incrÃ©ment simple de compteur
+            - dynamic  : effectue un affichage des valeurs Ã  chaque stockage
+                         (au-delÃ  du second). La mÃ©thode "plots" permet de
+                         dÃ©clarer l'affichage dynamique, et c'est la mÃ©thode
+                         "__replots" qui est utilisÃ©e pour l'effectuer
+            - persist  : boolÃ©en indiquant que la fenÃªtre affichÃ©e sera
+                         conservÃ©e lors du passage au dessin suivant
+                         Par dÃ©faut, persist = False
+            - pause    : boolÃ©en indiquant une pause aprÃ¨s chaque tracÃ©, et
                          attendant un Return
-                         Par défaut, pause = True
+                         Par dÃ©faut, pause = True
         """
         import os
         if not self.__dynamic:
@@ -408,22 +419,22 @@ class Persistence(object):
                 self.__dynamic = True
                 if len(self.__values) == 0: return 0
         #
-        # Tracé du ou des vecteurs demandés
+        # TracÃ© du ou des vecteurs demandÃ©s
         indexes = []
         if step is not None and step < len(self.__values):
             indexes.append(step)
         elif item is not None and item < len(self.__values):
             indexes.append(item)
         else:
-            indexes = indexes + range(len(self.__values))
+            indexes = indexes + list(range(len(self.__values)))
         #
         i = -1
         for index in indexes:
-            self.__g('set title  "'+str(title).encode('ascii','replace')+' (pas '+str(index)+')"')
+            self.__g('set title  "'+str(title)+' (pas '+str(index)+')"')
             if isinstance(steps,list) or isinstance(steps,numpy.ndarray):
                 Steps = list(steps)
             else:
-                Steps = range(len(self.__values[index]))
+                Steps = list(range(len(self.__values[index])))
             #
             self.__g.plot( self.__gnuplot.Data( Steps, self.__values[index], title=ltitle ) )
             #
@@ -434,7 +445,7 @@ class Persistence(object):
                     raise ValueError("Error: a file with this name \"%s\" already exists."%stepfilename)
                 self.__g.hardcopy(filename=stepfilename, color=1)
             if self.__pause:
-                raw_input('Please press return to continue...\n')
+                eval(input('Please press return to continue...\n'))
 
     def __replots(self):
         """
@@ -442,19 +453,19 @@ class Persistence(object):
         """
         if self.__dynamic and len(self.__values) < 2: return 0
         #
-        self.__g('set title  "'+str(self.__title).encode('ascii','replace'))
-        Steps = range(len(self.__values))
+        self.__g('set title  "'+str(self.__title))
+        Steps = list(range(len(self.__values)))
         self.__g.plot( self.__gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
         #
         if self.__pause:
-            raw_input('Please press return to continue...\n')
+            eval(input('Please press return to continue...\n'))
 
     # ---------------------------------------------------------
     def mean(self):
         """
         Renvoie la moyenne sur toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        les types Ã©lÃ©mentaires numpy.
         """
         try:
             if self.__basetype in [int, float]:
@@ -466,12 +477,12 @@ class Persistence(object):
 
     def std(self, ddof=0):
         """
-        Renvoie l'écart-type de toutes les valeurs sans tenir compte de la
+        Renvoie l'Ã©cart-type de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        les types Ã©lÃ©mentaires numpy.
 
-        ddof : c'est le nombre de degrés de liberté pour le calcul de
-               l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
+        ddof : c'est le nombre de degrÃ©s de libertÃ© pour le calcul de
+               l'Ã©cart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
         """
         try:
             if numpy.version.version >= '1.1.0':
@@ -485,7 +496,7 @@ class Persistence(object):
         """
         Renvoie la somme de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        les types Ã©lÃ©mentaires numpy.
         """
         try:
             return numpy.array(self.__values).sum(axis=0)
@@ -496,7 +507,7 @@ class Persistence(object):
         """
         Renvoie le minimum de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        les types Ã©lÃ©mentaires numpy.
         """
         try:
             return numpy.array(self.__values).min(axis=0)
@@ -507,7 +518,7 @@ class Persistence(object):
         """
         Renvoie le maximum de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        les types Ã©lÃ©mentaires numpy.
         """
         try:
             return numpy.array(self.__values).max(axis=0)
@@ -516,9 +527,9 @@ class Persistence(object):
 
     def cumsum(self):
         """
-        Renvoie la somme cumulée de toutes les valeurs sans tenir compte de la
+        Renvoie la somme cumulÃ©e de toutes les valeurs sans tenir compte de la
         longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        les types Ã©lÃ©mentaires numpy.
         """
         try:
             return numpy.array(self.__values).cumsum(axis=0)
@@ -540,40 +551,40 @@ class Persistence(object):
              pause    = True,
             ):
         """
-        Renvoie un affichage unique pour l'ensemble des valeurs à chaque pas, si
+        Renvoie un affichage unique pour l'ensemble des valeurs Ã  chaque pas, si
         elles sont compatibles avec un affichage Gnuplot (donc essentiellement
         un vecteur). Si l'argument "step" existe dans la liste des pas de
-        stockage effectués, renvoie l'affichage de la valeur stockée à ce pas
+        stockage effectuÃ©s, renvoie l'affichage de la valeur stockÃ©e Ã  ce pas
         "step". Si l'argument "item" est correct, renvoie l'affichage de la
-        valeur stockée au numéro "item".
+        valeur stockÃ©e au numÃ©ro "item".
 
         Arguments :
             - steps    : liste unique des pas de l'axe des X, ou None si c'est
-                         la numérotation par défaut
-            - title    : base du titre général, qui sera automatiquement
-                         complétée par la mention du pas
+                         la numÃ©rotation par dÃ©faut
+            - title    : base du titre gÃ©nÃ©ral, qui sera automatiquement
+                         complÃ©tÃ©e par la mention du pas
             - xlabel   : label de l'axe des X
             - ylabel   : label de l'axe des Y
-            - ltitle   : titre associé au vecteur tracé
-            - geometry : taille en pixels de la fenêtre et position du coin haut
-                         gauche, au format X11 : LxH+X+Y (défaut : 600x400)
+            - ltitle   : titre associÃ© au vecteur tracÃ©
+            - geometry : taille en pixels de la fenÃªtre et position du coin haut
+                         gauche, au format X11 : LxH+X+Y (dÃ©faut : 600x400)
             - filename : nom de fichier Postscript pour une sauvegarde
-            - persist  : booléen indiquant que la fenêtre affichée sera
-                         conservée lors du passage au dessin suivant
-                         Par défaut, persist = False
-            - pause    : booléen indiquant une pause après chaque tracé, et
+            - persist  : boolÃ©en indiquant que la fenÃªtre affichÃ©e sera
+                         conservÃ©e lors du passage au dessin suivant
+                         Par dÃ©faut, persist = False
+            - pause    : boolÃ©en indiquant une pause aprÃ¨s chaque tracÃ©, et
                          attendant un Return
-                         Par défaut, pause = True
+                         Par dÃ©faut, pause = True
         """
         #
-        # Vérification de la disponibilité du module Gnuplot
+        # VÃ©rification de la disponibilitÃ© du module Gnuplot
         try:
             import Gnuplot
             self.__gnuplot = Gnuplot
         except:
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
-        # Vérification et compléments sur les paramètres d'entrée
+        # VÃ©rification et complÃ©ments sur les paramÃ¨tres d'entrÃ©e
         if persist:
             self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
         else:
@@ -583,17 +594,17 @@ class Persistence(object):
         if isinstance(steps,list) or isinstance(steps, numpy.ndarray):
             Steps = list(steps)
         else:
-            Steps = range(len(self.__values[0]))
+            Steps = list(range(len(self.__values[0])))
         self.__g = self.__gnuplot.Gnuplot() # persist=1
         self.__g('set terminal '+self.__gnuplot.GnuplotOpts.default_term)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
-        self.__g('set title  "'+str(title).encode('ascii','replace') +'"')
-        self.__g('set xlabel "'+str(xlabel).encode('ascii','replace')+'"')
-        self.__g('set ylabel "'+str(ylabel).encode('ascii','replace')+'"')
+        self.__g('set title  "'+str(title) +'"')
+        self.__g('set xlabel "'+str(xlabel)+'"')
+        self.__g('set ylabel "'+str(ylabel)+'"')
         #
-        # Tracé du ou des vecteurs demandés
+        # TracÃ© du ou des vecteurs demandÃ©s
         indexes = list(range(len(self.__values)))
         self.__g.plot( self.__gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle+" (pas 0)" ) )
         for index in indexes:
@@ -602,52 +613,45 @@ class Persistence(object):
         if filename != "":
             self.__g.hardcopy(filename=filename, color=1)
         if pause:
-            raw_input('Please press return to continue...\n')
+            eval(input('Please press return to continue...\n'))
 
     # ---------------------------------------------------------
     def setDataObserver(self, HookFunction = None, HookParameters = None, Scheduler = None):
         """
-        Association à la variable d'un triplet définissant un observer
+        Association Ã  la variable d'un triplet dÃ©finissant un observer
 
-        Le Scheduler attendu est une fréquence, une simple liste d'index ou un
+        Le Scheduler attendu est une frÃ©quence, une simple liste d'index ou un
         range des index.
         """
         #
-        # Vérification du Scheduler
+        # VÃ©rification du Scheduler
         # -------------------------
         maxiter = int( 1e9 )
-        if sys.version.split()[0] < '3':
-            if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
-                Schedulers = xrange( 0, maxiter, int(Scheduler) )
-            elif isinstance(Scheduler,xrange): # Considéré comme un itérateur
-                Schedulers = Scheduler
-            elif isinstance(Scheduler,(list,tuple)):   # Considéré comme des index explicites
-                Schedulers = [long(i) for i in Scheduler] # map( long, Scheduler )
-            else:                              # Dans tous les autres cas, activé par défaut
-                Schedulers = xrange( 0, maxiter )
-        else:
-            if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
-                Schedulers = range( 0, maxiter, int(Scheduler) )
-            elif sys.version.split()[0] > '3' and isinstance(Scheduler,range): # Considéré comme un itérateur
-                Schedulers = Scheduler
-            elif isinstance(Scheduler,(list,tuple)):   # Considéré comme des index explicites
-                Schedulers = [int(i) for i in Scheduler] # map( int, Scheduler )
-            else:                              # Dans tous les autres cas, activé par défaut
-                Schedulers = range( 0, maxiter )
+        if isinstance(Scheduler,int):      # ConsidÃ©rÃ© comme une frÃ©quence Ã  partir de 0
+            Schedulers = range( 0, maxiter, int(Scheduler) )
+        elif isinstance(Scheduler,range):  # ConsidÃ©rÃ© comme un itÃ©rateur
+            Schedulers = Scheduler
+        elif isinstance(Scheduler,(list,tuple)):   # ConsidÃ©rÃ© comme des index explicites
+            Schedulers = [iLong(i) for i in Scheduler] #Â map( long, Scheduler )
+        else:                              # Dans tous les autres cas, activÃ© par dÃ©faut
+            Schedulers = range( 0, maxiter )
         #
         # Stockage interne de l'observer dans la variable
         # -----------------------------------------------
         self.__dataobservers.append( [HookFunction, HookParameters, Schedulers] )
 
-    def removeDataObserver(self, HookFunction = None):
+    def removeDataObserver(self, HookFunction = None, AllObservers = False):
         """
-        Suppression d'un observer nommé sur la variable.
+        Suppression d'un observer nommÃ© sur la variable.
 
         On peut donner dans HookFunction la meme fonction que lors de la
-        définition, ou un simple string qui est le nom de la fonction.
+        dÃ©finition, ou un simple string qui est le nom de la fonction. Si
+        AllObservers est vrai, supprime tous les observers enregistrÃ©s.
         """
         if hasattr(HookFunction,"func_name"):
             name = str( HookFunction.func_name )
+        elif hasattr(HookFunction,"__name__"):
+            name = str( HookFunction.__name__ )
         elif isinstance(HookFunction,str):
             name = str( HookFunction )
         else:
@@ -657,20 +661,24 @@ class Persistence(object):
         index_to_remove = []
         for [hf, hp, hs] in self.__dataobservers:
             i = i + 1
-            if name is hf.__name__: index_to_remove.append( i )
+            if name is hf.__name__ or AllObservers: index_to_remove.append( i )
         index_to_remove.reverse()
         for i in index_to_remove:
             self.__dataobservers.pop( i )
+        return len(index_to_remove)
+
+    def hasDataObserver(self):
+        return bool(len(self.__dataobservers) > 0)
 
 # ==============================================================================
 class OneScalar(Persistence):
     """
-    Classe définissant le stockage d'une valeur unique réelle (float) par pas.
+    Classe dÃ©finissant le stockage d'une valeur unique rÃ©elle (float) par pas.
 
-    Le type de base peut être changé par la méthode "basetype", mais il faut que
-    le nouveau type de base soit compatible avec les types par éléments de
-    numpy. On peut même utiliser cette classe pour stocker des vecteurs/listes
-    ou des matrices comme dans les classes suivantes, mais c'est déconseillé
+    Le type de base peut Ãªtre changÃ© par la mÃ©thode "basetype", mais il faut que
+    le nouveau type de base soit compatible avec les types par Ã©lÃ©ments de
+    numpy. On peut mÃªme utiliser cette classe pour stocker des vecteurs/listes
+    ou des matrices comme dans les classes suivantes, mais c'est dÃ©conseillÃ©
     pour conserver une signification claire des noms.
     """
     def __init__(self, name="", unit="", basetype = float):
@@ -678,15 +686,15 @@ class OneScalar(Persistence):
 
 class OneIndex(Persistence):
     """
-    Classe définissant le stockage d'une valeur unique entière (int) par pas.
+    Classe dÃ©finissant le stockage d'une valeur unique entiÃ¨re (int) par pas.
     """
     def __init__(self, name="", unit="", basetype = int):
         Persistence.__init__(self, name, unit, basetype)
 
 class OneVector(Persistence):
     """
-    Classe de stockage d'une liste de valeurs numériques homogènes par pas. Ne
-    pas utiliser cette classe pour des données hétérogènes, mais "OneList".
+    Classe de stockage d'une liste de valeurs numÃ©riques homogÃ¨nes par pas. Ne
+    pas utiliser cette classe pour des donnÃ©es hÃ©tÃ©rogÃ¨nes, mais "OneList".
     """
     def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
@@ -700,8 +708,8 @@ class OneMatrix(Persistence):
 
 class OneList(Persistence):
     """
-    Classe de stockage d'une liste de valeurs hétérogènes (list) par pas. Ne pas
-    utiliser cette classe pour des données numériques homogènes, mais
+    Classe de stockage d'une liste de valeurs hÃ©tÃ©rogÃ¨nes (list) par pas. Ne pas
+    utiliser cette classe pour des donnÃ©es numÃ©riques homogÃ¨nes, mais
     "OneVector".
     """
     def __init__(self, name="", unit="", basetype = list):
@@ -714,10 +722,10 @@ def NoType( value ):
 class OneNoType(Persistence):
     """
     Classe de stockage d'un objet sans modification (cast) de type. Attention,
-    selon le véritable type de l'objet stocké à chaque pas, les opérations
-    arithmétiques à base de numpy peuvent être invalides ou donner des résultats
-    inattendus. Cette classe n'est donc à utiliser qu'à bon escient
-    volontairement, et pas du tout par défaut.
+    selon le vÃ©ritable type de l'objet stockÃ© Ã  chaque pas, les opÃ©rations
+    arithmÃ©tiques Ã  base de numpy peuvent Ãªtre invalides ou donner des rÃ©sultats
+    inattendus. Cette classe n'est donc Ã  utiliser qu'Ã  bon escient
+    volontairement, et pas du tout par dÃ©faut.
     """
     def __init__(self, name="", unit="", basetype = NoType):
         Persistence.__init__(self, name, unit, basetype)
@@ -728,17 +736,17 @@ class CompositePersistence(object):
     Structure de stockage permettant de rassembler plusieurs objets de
     persistence.
 
-    Des objets par défaut sont prévus, et des objets supplémentaires peuvent
-    être ajoutés.
+    Des objets par dÃ©faut sont prÃ©vus, et des objets supplÃ©mentaires peuvent
+    Ãªtre ajoutÃ©s.
     """
     def __init__(self, name="", defaults=True):
         """
         name : nom courant
 
-        La gestion interne des données est exclusivement basée sur les variables
-        initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
+        La gestion interne des donnÃ©es est exclusivement basÃ©e sur les variables
+        initialisÃ©es ici (qui ne sont pas accessibles depuis l'extÃ©rieur des
         objets comme des attributs) :
-        __StoredObjects : objets de type persistence collectés dans cet objet
+        __StoredObjects : objets de type persistence collectÃ©s dans cet objet
         """
         self.__name = str(name)
         #
@@ -773,8 +781,8 @@ class CompositePersistence(object):
 
     def add_object(self, name=None, persistenceType=Persistence, basetype=None ):
         """
-        Ajoute dans les objets stockables un nouvel objet défini par son nom, son
-        type de Persistence et son type de base à chaque pas.
+        Ajoute dans les objets stockables un nouvel objet dÃ©fini par son nom, son
+        type de Persistence et son type de base Ã  chaque pas.
         """
         if name is None: raise ValueError("Object name is required for adding an object.")
         if name in self.__StoredObjects.keys():
@@ -786,7 +794,7 @@ class CompositePersistence(object):
 
     def get_object(self, name=None ):
         """
-        Renvoie l'objet de type Persistence qui porte le nom demandé.
+        Renvoie l'objet de type Persistence qui porte le nom demandÃ©.
         """
         if name is None: raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
@@ -795,9 +803,9 @@ class CompositePersistence(object):
 
     def set_object(self, name=None, objet=None ):
         """
-        Affecte directement un 'objet' qui porte le nom 'name' demandé.
-        Attention, il n'est pas effectué de vérification sur le type, qui doit
-        comporter les méthodes habituelles de Persistence pour que cela
+        Affecte directement un 'objet' qui porte le nom 'name' demandÃ©.
+        Attention, il n'est pas effectuÃ© de vÃ©rification sur le type, qui doit
+        comporter les mÃ©thodes habituelles de Persistence pour que cela
         fonctionne.
         """
         if name is None: raise ValueError("Object name is required for setting an object.")
@@ -815,7 +823,7 @@ class CompositePersistence(object):
         del self.__StoredObjects[name]
 
     # ---------------------------------------------------------
-    # Méthodes d'accès de type dictionnaire
+    # MÃ©thodes d'accÃ¨s de type dictionnaire
     def __getitem__(self, name=None ):
         "x.__getitem__(y) <==> x[y]"
         return self.get_object( name )
@@ -838,7 +846,7 @@ class CompositePersistence(object):
 
     # ---------------------------------------------------------
     def get_stored_objects(self, hideVoidObjects = False):
-        "Renvoie la liste des objets présents"
+        "Renvoie la liste des objets prÃ©sents"
         objs = self.__StoredObjects.keys()
         if hideVoidObjects:
             usedObjs = []
@@ -848,14 +856,13 @@ class CompositePersistence(object):
                 finally:
                     pass
             objs = usedObjs
-        objs = list(objs)
-        objs.sort()
+        objs = sorted(objs)
         return objs
 
     # ---------------------------------------------------------
     def save_composite(self, filename=None, mode="pickle", compress="gzip"):
         """
-        Enregistre l'objet dans le fichier indiqué selon le "mode" demandé,
+        Enregistre l'objet dans le fichier indiquÃ© selon le "mode" demandÃ©,
         et renvoi le nom du fichier
         """
         import os
@@ -869,10 +876,6 @@ class CompositePersistence(object):
         else:
             filename = os.path.abspath( filename )
         #
-        if sys.version.split()[0] < '3':
-            import cPickle as lPickle
-        else:
-            import pickle  as lPickle
         if mode == "pickle":
             if compress == "gzip":
                 import gzip
@@ -882,7 +885,7 @@ class CompositePersistence(object):
                 output = bz2.BZ2File( filename, 'wb')
             else:
                 output = open( filename, 'wb')
-            lPickle.dump(self, output)
+            pickle.dump(self, output)
             output.close()
         else:
             raise ValueError("Save mode '%s' unknown. Choose another one."%mode)
@@ -891,7 +894,7 @@ class CompositePersistence(object):
 
     def load_composite(self, filename=None, mode="pickle", compress="gzip"):
         """
-        Recharge un objet composite sauvé en fichier
+        Recharge un objet composite sauvÃ© en fichier
         """
         import os
         if filename is None:
@@ -899,10 +902,6 @@ class CompositePersistence(object):
         else:
             filename = os.path.abspath( filename )
         #
-        if sys.version.split()[0] < '3':
-            import cPickle as lPickle
-        else:
-            import pickle  as lPickle
         if mode == "pickle":
             if compress == "gzip":
                 import gzip
@@ -912,7 +911,7 @@ class CompositePersistence(object):
                 pkl_file = bz2.BZ2File( filename, 'rb')
             else:
                 pkl_file = open(filename, 'rb')
-            output = lPickle.load(pkl_file)
+            output = pickle.load(pkl_file)
             for k in output.keys():
                 self[k] = output[k]
         else:

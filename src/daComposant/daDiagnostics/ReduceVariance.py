@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -33,13 +33,13 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
 
     def _formula(self, V1, V2):
         """
-        Vérification de la reduction de variance sur les écarts entre OMB et OMA
+        VÃ©rification de la reduction de variance sur les Ã©carts entre OMB et OMA
         lors de l'analyse
         """
-        varianceOMB = V1.var() 
-        varianceOMA = V2.var() 
+        varianceOMB = V1.var()
+        varianceOMA = V2.var()
         #
-        if varianceOMA > varianceOMB: 
+        if varianceOMA > varianceOMB:
             reducevariance = False
         else :
             reducevariance = True
@@ -48,10 +48,10 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
 
     def calculate(self, vectorOMB = None, vectorOMA = None, step = None):
         """
-        Teste les arguments, active la formule de calcul et stocke le résultat
+        Teste les arguments, active la formule de calcul et stocke le rÃ©sultat
         Arguments :
-            - vectorOMB : vecteur d'écart entre les observations et l'ébauche 
-            - vectorOMA : vecteur d'écart entre les observations et l'analyse
+            - vectorOMB : vecteur d'Ã©cart entre les observations et l'Ã©bauche
+            - vectorOMA : vecteur d'Ã©cart entre les observations et l'analyse
         """
         if ( (vectorOMB is None) or (vectorOMA is None) ):
             raise ValueError("Two vectors must be given to test the reduction of the variance after analysis")
@@ -78,34 +78,34 @@ if __name__ == "__main__":
     # ----------------------
     x1 = numpy.matrix(([3. , 4., 5. ]))
     x2 = numpy.matrix(([1.5, 2., 2.5]))
-    print(" L'écart entre les observations et l'ébauche est OMB : %s"%(x1,))
+    print(" L'Ã©cart entre les observations et l'Ã©bauche est OMB : %s"%(x1,))
     print(" La moyenne de OMB (i.e. le biais) est de............: %s"%(x1.mean(),))
     print(" La variance de OMB est de...........................: %s"%(x1.var(),))
-    print(" L'écart entre les observations et l'analyse est OMA : %s"%(x2,))
+    print(" L'Ã©cart entre les observations et l'analyse est OMA : %s"%(x2,))
     print(" La moyenne de OMA (i.e. le biais) est de............: %s"%(x2.mean(),))
     print(" La variance de OMA est de...........................: %s"%(x2.var(),))
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
     if not D[0] :
-            print(" Résultat : l'analyse NE RÉDUIT PAS la variance")
+            print(" RÃ©sultat : l'analyse NE RÃ‰DUIT PAS la variance")
     else :
-            print(" Résultat : l'analyse RÉDUIT la variance")
+            print(" RÃ©sultat : l'analyse RÃ‰DUIT la variance")
     print("")
     #
     # Vecteur de type array
     # ---------------------
     x1 = numpy.array(range(11))
     x2 = numpy.matrix(range(-10,12,2))
-    print(" L'écart entre les observations et l'ébauche est OMB : %s"%(x1,))
+    print(" L'Ã©cart entre les observations et l'Ã©bauche est OMB : %s"%(x1,))
     print(" La moyenne de OMB (i.e. le biais) est de............: %s"%(x1.mean(),))
     print(" La variance de OMB est de...........................: %s"%(x1.var(),))
-    print(" L'écart entre les observations et l'analyse est OMA : %s"%(x2,))
+    print(" L'Ã©cart entre les observations et l'analyse est OMA : %s"%(x2,))
     print(" La moyenne de OMA (i.e. le biais) est de............: %s"%(x2.mean(),))
     print(" La variance de OMA est de...........................: %s"%(x2.var(),))
     #
     D.calculate( vectorOMB = x1,  vectorOMA = x2)
     if not D[1] :
-            print(" Résultat : l'analyse NE RÉDUIT PAS la variance")
+            print(" RÃ©sultat : l'analyse NE RÃ‰DUIT PAS la variance")
     else :
-            print(" Résultat : l'analyse RÉDUIT la variance")
+            print(" RÃ©sultat : l'analyse RÃ‰DUIT la variance")
     print("")

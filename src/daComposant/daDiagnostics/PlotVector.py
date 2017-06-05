@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -27,7 +27,7 @@ import os.path
 # ==============================================================================
 class ElementaryDiagnostic(BasicObjects.Diagnostic):
     """
-    Classe pour tracer simplement un vecteur à chaque pas
+    Classe pour tracer simplement un vecteur Ã  chaque pas
     """
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
         BasicObjects.Diagnostic.__init__(self, name, parameters)
@@ -45,7 +45,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
             persist,
             pause ):
         """
-        Trace en gnuplot le vecteur Vector, avec une légende générale, en X et
+        Trace en gnuplot le vecteur Vector, avec une lÃ©gende gÃ©nÃ©rale, en X et
         en Y
         """
         if persist:
@@ -65,7 +65,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
         if filename != "":
             self.__g.hardcopy(filename=filename, color=1)
         if pause:
-            raw_input('Please press return to continue...\n')
+            eval(input('Please press return to continue...\n'))
         #
         return 1
 
@@ -77,24 +77,24 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
                         pause    = True ):
         """
         Arguments :
-            - vector   : le vecteur à tracer, en liste ou en numpy.array
+            - vector   : le vecteur Ã  tracer, en liste ou en numpy.array
             - steps    : liste unique des pas de l'axe des X, ou None si c'est
-                         la numérotation par défaut
-            - title    : titre général du dessin
+                         la numÃ©rotation par dÃ©faut
+            - title    : titre gÃ©nÃ©ral du dessin
             - xlabel   : label de l'axe des X
             - ylabel   : label de l'axe des Y
-            - ltitle   : titre associé au vecteur tracé
-            - geometry : taille en pixels de la fenêtre et position du coin haut
-                         gauche, au format X11 : LxH+X+Y (défaut : 600x400)
-            - filename : nom de fichier Postscript pour une sauvegarde à 1 pas
-                         Attention, il faut changer le nom à l'appel pour
+            - ltitle   : titre associÃ© au vecteur tracÃ©
+            - geometry : taille en pixels de la fenÃªtre et position du coin haut
+                         gauche, au format X11 : LxH+X+Y (dÃ©faut : 600x400)
+            - filename : nom de fichier Postscript pour une sauvegarde Ã  1 pas
+                         Attention, il faut changer le nom Ã  l'appel pour
                          plusieurs pas de sauvegarde
-            - persist  : booléen indiquant que la fenêtre affichée sera
-                         conservée lors du passage au dessin suivant
-                         Par défaut, persist = False
-            - pause    : booléen indiquant une pause après chaque tracé, et
+            - persist  : boolÃ©en indiquant que la fenÃªtre affichÃ©e sera
+                         conservÃ©e lors du passage au dessin suivant
+                         Par dÃ©faut, persist = False
+            - pause    : boolÃ©en indiquant une pause aprÃ¨s chaque tracÃ©, et
                          attendant un Return
-                         Par défaut, pause = True
+                         Par dÃ©faut, pause = True
         """
         if vector is None:
             raise ValueError("One vector must be given to plot it.")
@@ -102,8 +102,8 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
         if Vector.size < 1:
             raise ValueError("The given vector must not be empty")
         if steps is None:
-            Steps = range(len( vector ))
-        elif not ( type(steps) is type([]) or type(steps) is not type(numpy.array([])) ):
+            Steps = list(range(len( vector )))
+        elif not ( isinstance(steps, type([])) or not isinstance(steps, type(numpy.array([]))) ):
             raise ValueError("The steps must be given as a list/tuple.")
         else:
             Steps = list(steps)

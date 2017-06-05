@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,10 +20,12 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import sys, logging
 from daCore import BasicObjects, PlatformInfo
 import numpy, math
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
+if sys.version_info.major > 2:
+    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -33,14 +35,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ResiduFormula",
             default  = "CenteredDL",
             typecast = str,
-            message  = "Formule de résidu utilisée",
+            message  = "Formule de rÃ©sidu utilisÃ©e",
             listval  = ["CenteredDL", "Taylor", "NominalTaylor", "NominalTaylorRMS"],
             )
         self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
             default  = -8,
             typecast = int,
-            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrément",
+            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrÃ©ment",
             minval   = -20,
             maxval   = 0,
             )
@@ -48,13 +50,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "InitialDirection",
             default  = [],
             typecast = list,
-            message  = "Direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfInitialDirection",
             default  = 1.,
             typecast = float,
-            message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Amplitude de la direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfTangentPerturbation",
@@ -67,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "ResultTitle",
@@ -79,7 +81,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
 
@@ -90,7 +92,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             import math
             return math.sqrt( ((numpy.ravel(V2) - numpy.ravel(V1))**2).sum() / float(numpy.ravel(V1).size) )
         #
-        # Opérateurs
+        # Operateurs
         # ----------
         Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
@@ -112,8 +114,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
-        # Fabrication de la direction de  l'incrément dX
-        # ----------------------------------------------
+        # Fabrication de la direction de l'increment dX
+        # ---------------------------------------------
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
             for v in Xn.A1:
@@ -126,7 +128,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        # Calcul du gradient au point courant X pour l'incrément dX
+        # Calcul du gradient au point courant X pour l'increment dX
         # ---------------------------------------------------------
         if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
             dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
@@ -136,106 +138,107 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Entete des resultats
         # --------------------
-        __marge =  12*" "
-        __precision = """
+        __marge =  12*u" "
+        __precision = u"""
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "CenteredDL":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
-            __msgdoc = """
-            On observe le résidu provenant de la différence centrée des valeurs de F
-            au point nominal et aux points perturbés, normalisée par la valeur au
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
+            __msgdoc = u"""
+            On observe le residu provenant de la difference centree des valeurs de F
+            au point nominal et aux points perturbes, normalisee par la valeur au
             point nominal :
 
                          || F(X+Alpha*dX) + F(X-Alpha*dX) - 2*F(X) ||
               R(Alpha) = --------------------------------------------
                                          || F(X) ||
 
-            S'il reste constamment trés faible par rapport à 1, l'hypothèse de linéarité
-            de F est vérifiée.
+            S'il reste constamment tres faible par rapport a 1, l'hypothese de linearite
+            de F est verifiee.
 
-            Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
-            faible qu'à partir d'un certain ordre d'incrément, l'hypothèse de linéarité
-            de F n'est pas vérifiée.
+            Si le residu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
+            faible qu'a partir d'un certain ordre d'increment, l'hypothese de linearite
+            de F n'est pas verifiee.
 
-            Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
-            cela signifie que le gradient est calculable jusqu'à la précision d'arrêt
-            de la décroissance quadratique.
+            Si le residu decroit et que la decroissance se fait en Alpha**2 selon Alpha,
+            cela signifie que le gradient est calculable jusqu'a la precision d'arret
+            de la decroissance quadratique.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
-            __msgdoc = """
-            On observe le résidu issu du développement de Taylor de la fonction F,
-            normalisée par la valeur au point nominal :
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
+            __msgdoc = u"""
+            On observe le residu issu du developpement de Taylor de la fonction F,
+            normalisee par la valeur au point nominal :
 
                          || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
               R(Alpha) = ----------------------------------------------------
                                          || F(X) ||
 
-            S'il reste constamment trés faible par rapport à 1, l'hypothèse de linéarité
-            de F est vérifiée.
+            S'il reste constamment tres faible par rapport a 1, l'hypothese de linearite
+            de F est verifiee.
 
-            Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
-            faible qu'à partir d'un certain ordre d'incrément, l'hypothèse de linéarité
-            de F n'est pas vérifiée.
+            Si le residu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
+            faible qu'a partir d'un certain ordre d'increment, l'hypothese de linearite
+            de F n'est pas verifiee.
 
-            Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
-            cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
-            de la décroissance quadratique.
+            Si le residu decroit et que la decroissance se fait en Alpha**2 selon Alpha,
+            cela signifie que le gradient est bien calcule jusqu'a la precision d'arret
+            de la decroissance quadratique.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         if self._parameters["ResiduFormula"] == "NominalTaylor":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
-            __msgdoc = """
-            On observe le résidu obtenu à partir de deux approximations d'ordre 1 de F(X),
-            normalisées par la valeur au point nominal :
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
+            __msgdoc = u"""
+            On observe le residu obtenu a partir de deux approximations d'ordre 1 de F(X),
+            normalisees par la valeur au point nominal :
 
               R(Alpha) = max(
                 || F(X+Alpha*dX) - Alpha * F(dX) || / || F(X) ||,
                 || F(X-Alpha*dX) + Alpha * F(dX) || / || F(X) ||,
               )
 
-            S'il reste constamment égal à 1 à moins de 2 ou 3 pourcents prés (c'est-à-dire
-            que |R-1| reste égal à 2 ou 3 pourcents), c'est que l'hypothèse de linéarité
-            de F est vérifiée.
+            S'il reste constamment egal a 1 a moins de 2 ou 3 pourcents pres (c'est-a-dire
+            que |R-1| reste egal a 2 ou 3 pourcents), c'est que l'hypothese de linearite
+            de F est verifiee.
 
-            S'il est égal à 1 sur une partie seulement du domaine de variation de
-            l'incrément Alpha, c'est sur cette partie que l'hypothèse de linéarité de F
-            est vérifiée.
+            S'il est egal a 1 sur une partie seulement du domaine de variation de
+            l'increment Alpha, c'est sur cette partie que l'hypothese de linearite de F
+            est verifiee.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
-            __msgdoc = """
-            On observe le résidu obtenu à partir de deux approximations d'ordre 1 de F(X),
-            normalisées par la valeur au point nominal :
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
+            __msgdoc = u"""
+            On observe le residu obtenu a partir de deux approximations d'ordre 1 de F(X),
+            normalisees par la valeur au point nominal :
 
               R(Alpha) = max(
                 RMS( F(X), F(X+Alpha*dX) - Alpha * F(dX) ) / || F(X) ||,
                 RMS( F(X), F(X-Alpha*dX) + Alpha * F(dX) ) / || F(X) ||,
               )
 
-            S'il reste constamment égal à 0 à moins de 1 ou 2 pourcents prés, c'est
-            que l'hypothèse de linéarité de F est vérifiée.
+            S'il reste constamment egal a 0 a moins de 1 ou 2 pourcents pres, c'est
+            que l'hypothese de linearite de F est verifiee.
 
-            S'il est égal à 0 sur une partie seulement du domaine de variation de
-            l'incrément Alpha, c'est sur cette partie que l'hypothèse de linéarité de F
-            est vérifiée.
+            S'il est egal a 0 sur une partie seulement du domaine de variation de
+            l'increment Alpha, c'est sur cette partie que l'hypothese de linearite de F
+            est verifiee.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            __rt = unicode(self._parameters["ResultTitle"])
+            msgs  = u"\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
+            msgs += __marge + "    " + __rt + "\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
         else:
-            msgs  = ""
+            msgs  = u""
         msgs += __msgdoc
         #
         __nbtirets = len(__entete)

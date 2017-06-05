@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Implémentation informatique de l'algorithme MMQR, basée sur la publication :
+    ImplÃ©mentation informatique de l'algorithme MMQR, basÃ©e sur la publication :
     David R. Hunter, Kenneth Lange, "Quantile Regression via an MM Algorithm",
     Journal of Computational and Graphical Statistics, 9, 1, pp.60-77, 2000.
 """
@@ -97,7 +97,7 @@ def mmqr(
         veps          = 1. - 2. * quantile - residus * poids
         lastsurrogate = -sum(residus * veps) - (1.-2.*quantile)*sum(residus)
     #
-    # Mesure d'écart : q*Sum(residus)-sum(residus negatifs)
+    # Mesure d'Ã©cart : q*Sum(residus)-sum(residus negatifs)
     # ----------------
     Ecart = quantile * sum(residus) - sum( residus[residus<0] )
     #

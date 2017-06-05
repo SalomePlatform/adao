@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,13 +32,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
@@ -52,13 +52,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "NumberOfSamplesForQuantiles",
             default  = 100,
             typecast = int,
-            message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
+            message  = "Nombre d'Ã©chantillons simulÃ©s pour le calcul des quantiles",
             minval   = 1,
             )
         self.defineRequiredParameter(
@@ -78,15 +78,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ha = Ha.reshape(Xb.size,Y.size) # ADAO & check shape
         H  = HO["Direct"].appliedTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
+        # Utilisation Ã©ventuelle d'un vecteur H(Xb) prÃ©calculÃ©
         # ----------------------------------------------------
-        if HO["AppliedToX"] is not None and "HXb" in HO["AppliedToX"]:
-            HXb = H( Xb, HO["AppliedToX"]["HXb"])
+        if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
+            HXb = H( Xb, HO["AppliedInX"]["HXb"])
         else:
             HXb = H( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
@@ -111,7 +111,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xa = Xb + _u
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
-        # Calcul de la fonction coût
+        # Calcul de la fonction coÃ»t
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
            "CostFunctionJ"                      in self._parameters["StoreSupplementaryCalculations"] or \
@@ -151,7 +151,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
@@ -171,7 +171,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
         if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
-            Qtls = map(float, self._parameters["Quantiles"])
             nech = self._parameters["NumberOfSamplesForQuantiles"]
             HtM  = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
             HtM  = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
@@ -190,9 +189,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     YfQ = numpy.hstack((YfQ,Yr))
             YfQ.sort(axis=-1)
             YQ = None
-            for quantile in Qtls:
-                if not (0. <= quantile <= 1.): continue
-                indice = int(nech * quantile - 1./nech)
+            for quantile in self._parameters["Quantiles"]:
+                if not (0. <= float(quantile) <= 1.): continue
+                indice = int(nech * float(quantile) - 1./nech)
                 if YQ is None: YQ = YfQ[:,indice]
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )

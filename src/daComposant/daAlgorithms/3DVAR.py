@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,7 +32,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Minimizer",
             default  = "LBFGSB",
             typecast = str,
-            message  = "Minimiseur utilisé",
+            message  = "Minimiseur utilisÃ©",
             listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS"],
             )
         self.defineRequiredParameter(
@@ -46,32 +46,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "CostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
-            message  = "Diminution relative minimale du cout lors de l'arrêt",
+            message  = "Diminution relative minimale du cout lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "ProjectedGradientTolerance",
             default  = -1,
             typecast = float,
-            message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
+            message  = "Maximum des composantes du gradient projetÃ© lors de l'arrÃªt",
             minval   = -1,
             )
         self.defineRequiredParameter(
             name     = "GradientNormTolerance",
             default  = 1.e-05,
             typecast = float,
-            message  = "Maximum des composantes du gradient lors de l'arrêt",
+            message  = "Maximum des composantes du gradient lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "CostFunctionJAtCurrentOptimum", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"]
             )
         self.defineRequiredParameter(
@@ -85,13 +85,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "NumberOfSamplesForQuantiles",
             default  = 100,
             typecast = int,
-            message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
+            message  = "Nombre d'Ã©chantillons simulÃ©s pour le calcul des quantiles",
             minval   = 1,
             )
         self.defineRequiredParameter(
@@ -113,15 +113,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
-        # Opérateurs
+        # OpÃ©rateurs
         # ----------
         Hm = HO["Direct"].appliedTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
+        # Utilisation Ã©ventuelle d'un vecteur H(Xb) prÃ©calculÃ©
         # ----------------------------------------------------
-        if HO["AppliedToX"] is not None and "HXb" in HO["AppliedToX"]:
-            HXb = Hm( Xb, HO["AppliedToX"]["HXb"])
+        if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
+            HXb = Hm( Xb, HO["AppliedInX"]["HXb"])
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
@@ -130,12 +130,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction-coût
+        # DÃ©finition de la fonction-coÃ»t
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
@@ -185,7 +185,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) + numpy.ravel( GradJo ) ).T
             return GradJ.A1
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de dÃ©marrage de l'optimisation : Xini = Xb
         # ------------------------------------
         Xini = numpy.ravel(Xb)
         #
@@ -309,7 +309,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or \
             "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"] or \
@@ -330,7 +330,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
         if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
-            Qtls = map(float, self._parameters["Quantiles"])
             nech = self._parameters["NumberOfSamplesForQuantiles"]
             HXa  = numpy.matrix(numpy.ravel( HXa )).T
             YfQ  = None
@@ -348,9 +347,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     YfQ = numpy.hstack((YfQ,Yr))
             YfQ.sort(axis=-1)
             YQ = None
-            for quantile in Qtls:
-                if not (0. <= quantile <= 1.): continue
-                indice = int(nech * quantile - 1./nech)
+            for quantile in self._parameters["Quantiles"]:
+                if not (0. <= float(quantile) <= 1.): continue
+                indice = int(nech * float(quantile) - 1./nech)
                 if YQ is None: YQ = YfQ[:,indice]
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )

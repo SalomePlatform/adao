@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -46,7 +46,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Minimizer",
             default  = "LBFGSB",
             typecast = str,
-            message  = "Minimiseur utilisé",
+            message  = "Minimiseur utilisÃ©",
             listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS"],
             )
         self.defineRequiredParameter(
@@ -60,32 +60,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "CostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
-            message  = "Diminution relative minimale du cout lors de l'arrêt",
+            message  = "Diminution relative minimale du cout lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "ProjectedGradientTolerance",
             default  = -1,
             typecast = float,
-            message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
+            message  = "Maximum des composantes du gradient projetÃ© lors de l'arrÃªt",
             minval   = -1,
             )
         self.defineRequiredParameter(
             name     = "GradientNormTolerance",
             default  = 1.e-05,
             typecast = float,
-            message  = "Maximum des composantes du gradient lors de l'arrêt",
+            message  = "Maximum des composantes du gradient lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["BMA", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "IndexOfOptimum", "CurrentOptimum", "CostFunctionJAtCurrentOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
@@ -100,7 +100,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
             self.setParameterValue("StoreInternalVariables",True)
         #
-        # Opérateurs
+        # OpÃ©rateurs
         # ----------
         Hm = HO["Direct"].appliedControledFormTo
         #
@@ -130,10 +130,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _CmUn = 0.
             return _CmUn
         #
-        # Remarque : les observations sont exploitées à partir du pas de temps
-        # numéro 1, et sont utilisées dans Yo comme rangées selon ces indices.
-        # Donc le pas 0 n'est pas utilisé puisque la première étape commence
-        # avec l'observation du pas 1.
+        # Remarque : les observations sont exploitÃ©es Ã  partir du pas de temps
+        # numÃ©ro 1, et sont utilisÃ©es dans Yo comme rangÃ©es selon ces indices.
+        # Donc le pas 0Â n'est pas utilisÃ© puisque la premiÃ¨re Ã©tape commence
+        # avecÂ l'observation du pas 1.
         #
         # Nombre de pas identique au nombre de pas d'observations
         # -------------------------------------------------------
@@ -142,15 +142,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             duration = 2
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction-coût
+        # DÃ©finition de la fonction-coÃ»t
         # ------------------------------
-        self.DirectCalculation = [None,] # Le pas 0 n'est pas observé
-        self.DirectInnovation  = [None,] # Le pas 0 n'est pas observé
+        self.DirectCalculation = [None,] #Â Le pas 0 n'est pas observÃ©
+        self.DirectInnovation  = [None,] #Â Le pas 0 n'est pas observÃ©
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
             if self._parameters["StoreInternalVariables"] or \
@@ -170,7 +170,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     _Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
                 _Un = Un(step)
                 #
-                # Etape d'évolution
+                # Etape d'Ã©volution
                 if self._parameters["EstimationOf"] == "State":
                     _Xn = Mm( (_Xn, _Un) ) + CmUn(_Xn, _Un)
                 elif self._parameters["EstimationOf"] == "Parameters":
@@ -180,7 +180,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     _Xn = numpy.max(numpy.hstack((_Xn,numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
                     _Xn = numpy.min(numpy.hstack((_Xn,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
                 #
-                # Etape de différence aux observations
+                # Etape de diffÃ©rence aux observations
                 if self._parameters["EstimationOf"] == "State":
                     _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, None) ) )).T
                 elif self._parameters["EstimationOf"] == "Parameters":
@@ -212,9 +212,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             GradJb  = BI * (_X - Xb)
             GradJo  = 0.
             for step in range(duration-1,0,-1):
-                # Etape de récupération du dernier stockage de l'évolution
+                # Etape de rÃ©cupÃ©ration du dernier stockage de l'Ã©volution
                 _Xn = self.DirectCalculation.pop()
-                # Etape de récupération du dernier stockage de l'innovation
+                # Etape de rÃ©cupÃ©ration du dernier stockage de l'innovation
                 _YmHMX = self.DirectInnovation.pop()
                 # Calcul des adjoints
                 Ha = HO["Adjoint"].asMatrix(ValueForMethodForm = _Xn)
@@ -222,14 +222,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = _Xn)
                 Ma = Ma.reshape(_Xn.size,_Xn.size) # ADAO & check shape
                 # Calcul du gradient par etat adjoint
-                GradJo = GradJo + Ha * RI * _YmHMX # Equivaut pour Ha lineaire à : Ha( (_Xn, RI * _YmHMX) )
-                GradJo = Ma * GradJo               # Equivaut pour Ma lineaire à : Ma( (_Xn, GradJo) )
+                GradJo = GradJo + Ha * RI * _YmHMX # Equivaut pour Ha lineaire Ã  : Ha( (_Xn, RI * _YmHMX) )
+                GradJo = Ma * GradJo               # Equivaut pour Ma lineaire Ã  : Ma( (_Xn, GradJo) )
             GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) - numpy.ravel( GradJo ) ).T
             return GradJ.A1
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de dÃ©marrage de l'optimisation : Xini = Xb
         # ------------------------------------
-        if type(Xb) is type(numpy.matrix([])):
+        if isinstance(Xb, type(numpy.matrix([]))):
             Xini = Xb.A1.tolist()
         else:
             Xini = list(Xb)
@@ -314,7 +314,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )

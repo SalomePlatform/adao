@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,7 +32,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Minimizer",
             default  = "BOBYQA",
             typecast = str,
-            message  = "Minimiseur utilisé",
+            message  = "Minimiseur utilisÃ©",
             listval  = ["BOBYQA", "COBYLA", "NEWUOA", "POWELL", "SIMPLEX", "SUBPLEX"],
             )
         self.defineRequiredParameter(
@@ -46,26 +46,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "MaximumNumberOfFunctionEvaluations",
             default  = 15000,
             typecast = int,
-            message  = "Nombre maximal d'évaluations de la fonction",
+            message  = "Nombre maximal d'Ã©valuations de la fonction",
             minval   = -1,
             )
         self.defineRequiredParameter(
             name     = "StateVariationTolerance",
             default  = 1.e-4,
             typecast = float,
-            message  = "Variation relative maximale de l'état lors de l'arrêt",
+            message  = "Variation relative maximale de l'Ã©tat lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
-            message  = "Diminution relative minimale du cout lors de l'arrêt",
+            message  = "Diminution relative minimale du cout lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
             default  = "AugmentedWeightedLeastSquares",
             typecast = str,
-            message  = "Critère de qualité utilisé",
+            message  = "CritÃ¨re de qualitÃ© utilisÃ©",
             listval  = ["AugmentedWeightedLeastSquares","AWLS","DA",
                         "WeightedLeastSquares","WLS",
                         "LeastSquares","LS","L2",
@@ -76,13 +76,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA", "OMA", "OMB", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
@@ -96,16 +96,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if not PlatformInfo.has_nlopt and not self._parameters["Minimizer"] in ["COBYLA", "POWELL", "SIMPLEX"]:
             self._parameters["Minimizer"] = "SIMPLEX"
         #
-        # Opérateurs
+        # OpÃ©rateurs
         # ----------
         Hm = HO["Direct"].appliedTo
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction-coût
+        # DÃ©finition de la fonction-coÃ»t
         # ------------------------------
         def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
@@ -161,7 +161,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
             return J
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de dÃ©marrage de l'optimisation : Xini = Xb
         # ------------------------------------
         Xini = numpy.ravel(Xb)
         if len(Xini) < 2 and self._parameters["Minimizer"] == "NEWUOA":

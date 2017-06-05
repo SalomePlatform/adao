@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,10 +20,12 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import sys, logging
 from daCore import BasicObjects, PlatformInfo
 import numpy
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
+if sys.version_info.major > 2:
+    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -33,14 +35,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ResiduFormula",
             default  = "ScalarProduct",
             typecast = str,
-            message  = "Formule de résidu utilisée",
+            message  = "Formule de rÃ©sidu utilisÃ©e",
             listval  = ["ScalarProduct"],
             )
         self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
             default  = -8,
             typecast = int,
-            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrément",
+            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrÃ©ment",
             minval   = -20,
             maxval   = 0,
             )
@@ -48,18 +50,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "InitialDirection",
             default  = [],
             typecast = list,
-            message  = "Direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfInitialDirection",
             default  = 1.,
             typecast = float,
-            message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Amplitude de la direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "ResultTitle",
@@ -71,7 +73,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
 
@@ -111,13 +113,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Entete des resultats
         # --------------------
-        __marge =  12*" "
-        __precision = """
+        __marge =  12*u" "
+        __precision = u"""
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "ScalarProduct":
-            __entete = "  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)  "
-            __msgdoc = """
+            __entete = u"  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)  "
+            __msgdoc = u"""
             On observe le residu qui est la difference de deux produits scalaires :
 
               R(Alpha) = | < TangentF_X(dX) , Y > - < dX , AdjointF_X(Y) > |
@@ -128,12 +130,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             """ + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            __rt = unicode(self._parameters["ResultTitle"])
+            msgs  = u"\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
+            msgs += __marge + "    " + __rt + "\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
         else:
-            msgs  = ""
+            msgs  = u""
         msgs += __msgdoc
         #
         __nbtirets = len(__entete)

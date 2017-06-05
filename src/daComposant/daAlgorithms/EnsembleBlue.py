@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,34 +32,34 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters)
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Nombre d'ensemble pour l'ébauche
+        # Nombre d'ensemble pour l'Ã©bauche
         # --------------------------------
         nb_ens = Xb.stepnumber()
         #
-        # Construction de l'ensemble des observations, par génération a partir
+        # Construction de l'ensemble des observations, par gÃ©nÃ©ration a partir
         # de la diagonale de R
         # --------------------------------------------------------------------
         DiagonaleR = R.diag(Y.size)
@@ -69,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             EnsembleY[npar,:] = Y[npar] + bruit
         EnsembleY = numpy.matrix(EnsembleY)
         #
-        # Initialisation des opérateurs d'observation et de la matrice gain
+        # Initialisation des opÃ©rateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
         Hm = HO["Tangent"].asMatrix(None)
         Hm = Hm.reshape(Y.size,Xb[0].size) # ADAO & check shape

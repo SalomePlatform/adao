@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,13 +32,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["OMA", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
 
@@ -58,7 +58,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Xa =  K * Y
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
-        # Calcul de la fonction coût
+        # Calcul de la fonction coÃ»t
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
            "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
@@ -75,7 +75,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )

@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -39,13 +39,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "MaximumNumberOfFunctionEvaluations",
             default  = 15000,
             typecast = int,
-            message  = "Nombre maximal d'évaluations de la fonction",
+            message  = "Nombre maximal d'Ã©valuations de la fonction",
             minval   = -1,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "NumberOfInsects",
@@ -58,7 +58,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SwarmVelocity",
             default  = 1.,
             typecast = float,
-            message  = "Vitesse de groupe imposée par l'essaim",
+            message  = "Vitesse de groupe imposÃ©e par l'essaim",
             minval   = 0.,
             )
         self.defineRequiredParameter(
@@ -73,7 +73,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "QualityCriterion",
             default  = "AugmentedWeightedLeastSquares",
             typecast = str,
-            message  = "Critère de qualité utilisé",
+            message  = "CritÃ¨re de qualitÃ© utilisÃ©",
             listval  = ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA",
                         "WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS",
                         "LeastSquares","LS","L2",
@@ -84,26 +84,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
             name     = "BoxBounds",
-            message  = "Liste des valeurs de bornes d'incréments de paramètres",
+            message  = "Liste des valeurs de bornes d'incrÃ©ments de paramÃ¨tres",
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters)
         #
-        if "BoxBounds" in self._parameters and (type(self._parameters["BoxBounds"]) is type([]) or type(self._parameters["BoxBounds"]) is type(())) and (len(self._parameters["BoxBounds"]) > 0):
+        if ("BoxBounds" in self._parameters) and isinstance(self._parameters["BoxBounds"], (list, tuple)) and (len(self._parameters["BoxBounds"]) > 0):
             BoxBounds = self._parameters["BoxBounds"]
-            logging.debug("%s Prise en compte des bornes d'incréments de paramètres effectuee"%(self._name,))
+            logging.debug("%s Prise en compte des bornes d'incrÃ©ments de paramÃ¨tres effectuee"%(self._name,))
         else:
             raise ValueError("Particle Swarm Optimization requires bounds on all variables to be given.")
         BoxBounds   = numpy.array(BoxBounds)
@@ -112,18 +112,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Phig = float( self._parameters["GroupRecallRate"] )
         Phip = 1. - Phig
-        logging.debug("%s Taux de rappel au meilleur insecte du groupe (entre 0 et 1) = %s et à la meilleure position précédente (son complémentaire à 1) = %s"%(self._name, str(Phig), str(Phip)))
+        logging.debug("%s Taux de rappel au meilleur insecte du groupe (entre 0 et 1) = %s et Ã  la meilleure position prÃ©cÃ©dente (son complÃ©mentaire Ã  1) = %s"%(self._name, str(Phig), str(Phip)))
         #
-        # Opérateur d'observation
+        # OpÃ©rateur d'observation
         # -----------------------
         Hm = HO["Direct"].appliedTo
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction-coût
+        # DÃ©finition de la fonction-coÃ»t
         # ------------------------------
         def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
@@ -154,9 +154,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             return J
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de dÃ©marrage de l'optimisation : Xini = Xb
         # ------------------------------------
-        if type(Xb) is type(numpy.matrix([])):
+        if isinstance(Xb, type(numpy.matrix([]))):
             Xini = Xb.A1.tolist()
         elif Xb is not None:
             Xini = list(Xb)
@@ -196,7 +196,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if quality < qBest:
                 Best  = copy.copy( insect )
                 qBest = copy.copy( quality )
-        logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(Best), str(qBest)))
+        logging.debug("%s Initialisation, Insecte = %s, QualitÃ© = %s"%(self._name, str(Best), str(qBest)))
         #
         if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["CurrentState"].store( Best )
@@ -222,7 +222,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     if quality < qBest :
                         Best  = copy.copy( insect )
                         qBest = copy.copy( quality )
-            logging.debug("%s Etape %i, Insecte = %s, Qualité = %s"%(self._name, n, str(Best), str(qBest)))
+            logging.debug("%s Etape %i, Insecte = %s, QualitÃ© = %s"%(self._name, n, str(Best), str(qBest)))
             #
             if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( Best )
@@ -252,7 +252,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
            "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             HXa = Hm(Xa)
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )

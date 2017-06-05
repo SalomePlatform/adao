@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,10 +20,12 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import sys, logging
 from daCore import BasicObjects, PlatformInfo
 import numpy, math
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
+if sys.version_info.major > 2:
+    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -33,14 +35,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ResiduFormula",
             default  = "Taylor",
             typecast = str,
-            message  = "Formule de résidu utilisée",
+            message  = "Formule de rÃ©sidu utilisÃ©e",
             listval  = ["Taylor"],
             )
         self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
             default  = -8,
             typecast = int,
-            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrément",
+            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrÃ©ment",
             minval   = -20,
             maxval   = 0,
             )
@@ -48,13 +50,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "InitialDirection",
             default  = [],
             typecast = list,
-            message  = "Direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfInitialDirection",
             default  = 1.,
             typecast = float,
-            message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Amplitude de la direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfTangentPerturbation",
@@ -67,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "ResultTitle",
@@ -79,7 +81,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
 
@@ -105,8 +107,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
-        # Fabrication de la direction de  l'incrément dX
-        # ----------------------------------------------
+        # Fabrication de la direction de l'increment dX
+        # ---------------------------------------------
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
             for v in Xn.A1:
@@ -119,8 +121,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
         #
-        # Calcul du gradient au point courant X pour l'incrément dX
-        # qui est le tangent en X multiplié par dX
+        # Calcul du gradient au point courant X pour l'increment dX
+        # qui est le tangent en X multiplie par dX
         # ---------------------------------------------------------
         dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
         GradFxdX = Ht( (Xn, dX1) )
@@ -130,41 +132,42 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Entete des resultats
         # --------------------
-        __marge =  12*" "
-        __precision = """
+        __marge =  12*u" "
+        __precision = u"""
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = "  i   Alpha     ||X||      ||F(X)||   |     R(Alpha)    |R-1|/Alpha  "
-            __msgdoc = """
-            On observe le résidu provenant du rapport d'incréments utilisant le
-            linéaire tangent :
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |     R(Alpha)    |R-1|/Alpha  "
+            __msgdoc = u"""
+            On observe le residu provenant du rapport d'increments utilisant le
+            lineaire tangent :
 
                           || F(X+Alpha*dX) - F(X) ||
               R(Alpha) = -----------------------------
                          || Alpha * TangentF_X * dX ||
 
-            qui doit rester stable en 1+O(Alpha) jusqu'à ce que l'on atteigne la
-            précision du calcul.
-            
-            Lorsque |R-1|/Alpha est inférieur ou égal à une valeur stable
-            lorsque Alpha varie, le tangent est valide, jusqu'à ce que l'on
-            atteigne la précision du calcul.
-            
-            Si |R-1|/Alpha est très faible, le code F est vraisemblablement
-            linéaire ou quasi-linéaire, et le tangent est valide jusqu'à ce que
-            l'on atteigne la précision du calcul.
+            qui doit rester stable en 1+O(Alpha) jusqu'a ce que l'on atteigne la
+            precision du calcul.
+
+            Lorsque |R-1|/Alpha est inferieur ou egal a une valeur stable
+            lorsque Alpha varie, le tangent est valide, jusqu'a ce que l'on
+            atteigne la precision du calcul.
+
+            Si |R-1|/Alpha est tres faible, le code F est vraisemblablement
+            lineaire ou quasi-lineaire, et le tangent est valide jusqu'a ce que
+            l'on atteigne la precision du calcul.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            __rt = unicode(self._parameters["ResultTitle"])
+            msgs  = u"\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
+            msgs += __marge + "    " + __rt + "\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
         else:
-            msgs  = ""
+            msgs  = u""
         msgs += __msgdoc
         #
         __nbtirets = len(__entete)

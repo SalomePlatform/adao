@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Définit les versions approximées des opérateurs tangents et adjoints.
+    DÃ©finit les versions approximÃ©es des opÃ©rateurs tangents et adjoints.
 """
 __author__ = "Jean-Philippe ARGAUD"
 
@@ -45,13 +45,13 @@ def ExecuteFunction( paire ):
 # ==============================================================================
 class FDApproximation(object):
     """
-    Cette classe sert d'interface pour définir les opérateurs approximés. A la
-    création d'un objet, en fournissant une fonction "Function", on obtient un
-    objet qui dispose de 3 méthodes "DirectOperator", "TangentOperator" et
-    "AdjointOperator". On contrôle l'approximation DF avec l'incrément
-    multiplicatif "increment" valant par défaut 1%, ou avec l'incrément fixe
-    "dX" qui sera multiplié par "increment" (donc en %), et on effectue de DF
-    centrées si le booléen "centeredDF" est vrai.
+    Cette classe sert d'interface pour dÃ©finir les opÃ©rateurs approximÃ©s. A la
+    crÃ©ation d'un objet, en fournissant une fonction "Function", on obtient un
+    objet qui dispose de 3 mÃ©thodes "DirectOperator", "TangentOperator" et
+    "AdjointOperator". On contrÃ´le l'approximation DF avec l'incrÃ©ment
+    multiplicatif "increment" valant par dÃ©faut 1%, ou avec l'incrÃ©ment fixe
+    "dX" qui sera multipliÃ© par "increment" (donc en %), et on effectue de DF
+    centrÃ©es si le boolÃ©en "centeredDF" est vrai.
     """
     def __init__(self,
             Function              = None,
@@ -98,7 +98,7 @@ class FDApproximation(object):
                 try:
                     mod = os.path.join(Function.__globals__['filepath'],Function.__globals__['filename'])
                 except:
-                    mod = os.path.abspath(Function.im_func.__globals__['__file__'])
+                    mod = os.path.abspath(Function.__func__.__globals__['__file__'])
                 if not os.path.isfile(mod):
                     raise ImportError("No user defined function or method found with the name %s"%(mod,))
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
@@ -128,7 +128,7 @@ class FDApproximation(object):
             self.__increment  = float(increment)
         else:
             self.__increment  = 0.01
-        if dX is None:  
+        if dX is None:
             self.__dX     = None
         else:
             self.__dX     = numpy.asmatrix(numpy.ravel( dX )).T
@@ -142,14 +142,14 @@ class FDApproximation(object):
         for i in range(len(l)-1,-1,-1):
             if numpy.linalg.norm(e - l[i]) < self.__tolerBP * n[i]:
                 __ac, __iac = True, i
-                if v is not None: logging.debug("FDA Cas%s déja calculé, récupération du doublon %i"%(v,__iac))
+                if v is not None: logging.debug("FDA Cas%s dÃ©ja calculÃ©, rÃ©cupÃ©ration du doublon %i"%(v,__iac))
                 break
         return __ac, __iac
 
     # ---------------------------------------------------------
     def DirectOperator(self, X ):
         """
-        Calcul du direct à l'aide de la fonction fournie.
+        Calcul du direct Ã  l'aide de la fonction fournie.
         """
         logging.debug("FDA Calcul DirectOperator (explicite)")
         _X = numpy.asmatrix(numpy.ravel( X )).T
@@ -160,32 +160,32 @@ class FDApproximation(object):
     # ---------------------------------------------------------
     def TangentMatrix(self, X ):
         """
-        Calcul de l'opérateur tangent comme la Jacobienne par différences finies,
-        c'est-à-dire le gradient de H en X. On utilise des différences finies
+        Calcul de l'opÃ©rateur tangent comme la Jacobienne par diffÃ©rences finies,
+        c'est-Ã -dire le gradient de H en X. On utilise des diffÃ©rences finies
         directionnelles autour du point X. X est un numpy.matrix.
-        
-        Différences finies centrées (approximation d'ordre 2):
-        1/ Pour chaque composante i de X, on ajoute et on enlève la perturbation
-           dX[i] à la  composante X[i], pour composer X_plus_dXi et X_moins_dXi, et
-           on calcule les réponses HX_plus_dXi = H( X_plus_dXi ) et HX_moins_dXi =
+
+        DiffÃ©rences finies centrÃ©es (approximation d'ordre 2):
+        1/ Pour chaque composante i de X, on ajoute et on enlÃ¨ve la perturbation
+           dX[i] Ã  la  composante X[i], pour composer X_plus_dXi et X_moins_dXi, et
+           on calcule les rÃ©ponses HX_plus_dXi = H( X_plus_dXi ) et HX_moins_dXi =
            H( X_moins_dXi )
-        2/ On effectue les différences (HX_plus_dXi-HX_moins_dXi) et on divise par
+        2/ On effectue les diffÃ©rences (HX_plus_dXi-HX_moins_dXi) et on divise par
            le pas 2*dXi
-        3/ Chaque résultat, par composante, devient une colonne de la Jacobienne
-        
-        Différences finies non centrées (approximation d'ordre 1):
-        1/ Pour chaque composante i de X, on ajoute la perturbation dX[i] à la 
-           composante X[i] pour composer X_plus_dXi, et on calcule la réponse
+        3/ Chaque rÃ©sultat, par composante, devient une colonne de la Jacobienne
+
+        DiffÃ©rences finies non centrÃ©es (approximation d'ordre 1):
+        1/ Pour chaque composante i de X, on ajoute la perturbation dX[i] Ã  la
+           composante X[i] pour composer X_plus_dXi, et on calcule la rÃ©ponse
            HX_plus_dXi = H( X_plus_dXi )
         2/ On calcule la valeur centrale HX = H(X)
-        3/ On effectue les différences (HX_plus_dXi-HX) et on divise par
+        3/ On effectue les diffÃ©rences (HX_plus_dXi-HX) et on divise par
            le pas dXi
-        4/ Chaque résultat, par composante, devient une colonne de la Jacobienne
-        
+        4/ Chaque rÃ©sultat, par composante, devient une colonne de la Jacobienne
+
         """
         logging.debug("FDA Calcul de la Jacobienne")
-        logging.debug("FDA   Incrément de............: %s*X"%float(self.__increment))
-        logging.debug("FDA   Approximation centrée...: %s"%(self.__centeredDF))
+        logging.debug("FDA   IncrÃ©ment de............: %s*X"%float(self.__increment))
+        logging.debug("FDA   Approximation centrÃ©e...: %s"%(self.__centeredDF))
         #
         if X is None or len(X)==0:
             raise ValueError("Nominal point X for approximate derivatives can not be None or void (X=%s)."%(str(X),))
@@ -210,10 +210,10 @@ class FDApproximation(object):
             __bidon, __alreadyCalculatedI = self.__doublon__(_dX, self.__listJPCI, self.__listJPIN, None)
             if __alreadyCalculatedP == __alreadyCalculatedI > -1:
                 __alreadyCalculated, __i = True, __alreadyCalculatedP
-                logging.debug("FDA Cas J déja calculé, récupération du doublon %i"%__i)
+                logging.debug("FDA Cas J dÃ©ja calculÃ©, rÃ©cupÃ©ration du doublon %i"%__i)
         #
         if __alreadyCalculated:
-            logging.debug("FDA   Calcul Jacobienne (par récupération du doublon %i)"%__i)
+            logging.debug("FDA   Calcul Jacobienne (par rÃ©cupÃ©ration du doublon %i)"%__i)
             _Jacobienne = self.__listJPCR[__i]
         else:
             logging.debug("FDA   Calcul Jacobienne (explicite)")
@@ -322,7 +322,7 @@ class FDApproximation(object):
     # ---------------------------------------------------------
     def TangentOperator(self, paire ):
         """
-        Calcul du tangent à l'aide de la Jacobienne.
+        Calcul du tangent Ã  l'aide de la Jacobienne.
         """
         assert len(paire) == 2, "Incorrect number of arguments"
         X, dX = paire
@@ -334,7 +334,7 @@ class FDApproximation(object):
             return _Jacobienne
         else:
             #
-            # Calcul de la valeur linéarisée de H en X appliqué à dX
+            # Calcul de la valeur linÃ©arisÃ©e de H en X appliquÃ© Ã  dX
             # ------------------------------------------------------
             _dX = numpy.asmatrix(numpy.ravel( dX )).T
             _HtX = numpy.dot(_Jacobienne, _dX)
@@ -343,7 +343,7 @@ class FDApproximation(object):
     # ---------------------------------------------------------
     def AdjointOperator(self, paire ):
         """
-        Calcul de l'adjoint à l'aide de la Jacobienne.
+        Calcul de l'adjoint Ã  l'aide de la Jacobienne.
         """
         assert len(paire) == 2, "Incorrect number of arguments"
         X, Y = paire
@@ -355,7 +355,7 @@ class FDApproximation(object):
             return _JacobienneT
         else:
             #
-            # Calcul de la valeur de l'adjoint en X appliqué à Y
+            # Calcul de la valeur de l'adjoint en X appliquÃ© Ã  Y
             # --------------------------------------------------
             _Y = numpy.asmatrix(numpy.ravel( Y )).T
             _HaY = numpy.dot(_JacobienneT, _Y)

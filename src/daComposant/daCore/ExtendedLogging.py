@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -22,36 +22,36 @@
 
 """
     Ce module permet de mettre en place un logging utilisable partout dans
-    l'application, par défaut à la console, et si nécessaire dans un fichier.
+    l'application, par dÃ©faut Ã  la console, et si nÃ©cessaire dans un fichier.
 
-    Il doit être appelé en premier dans AssimilationStudy (mais pas directement
+    Il doit Ãªtre appelÃ© en premier dans AssimilationStudy (mais pas directement
     dans les applications utilisateurs), en l'important et en instanciant un
     objet :
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging()
 
-    Par défaut, seuls les messages du niveau WARNING ou au-delà sont disponibles
+    Par dÃ©faut, seuls les messages du niveau WARNING ou au-delÃ  sont disponibles
     (donc les simples messages d'info ne sont pas disponibles), ce que l'on peut
-    changer à l'instanciation avec le mot-clé "level" :
+    changer Ã  l'instanciation avec le mot-clÃ© "level" :
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging(level=20)
 
-    On peut éventuellement demander à l'objet de sortir aussi les messages dans
-    un fichier (noms par défaut : AssimilationStudy.log, niveau NOTSET) :
+    On peut Ã©ventuellement demander Ã  l'objet de sortir aussi les messages dans
+    un fichier (noms par dÃ©faut : AssimilationStudy.log, niveau NOTSET) :
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging().setLogfile()
 
     Si on veut changer le nom du fichier ou le niveau global de message, il faut
-    récupérer l'instance et appliquer les méthodes :
+    rÃ©cupÃ©rer l'instance et appliquer les mÃ©thodes :
         import ExtendedLogging
         log = ExtendedLogging.ExtendedLogging()
         import logging
         log.setLevel(logging.DEBUG)
         log.setLogfile(filename="toto.log", filemode="a", level=logging.WARNING)
-    et on change éventuellement le niveau avec :
+    et on change Ã©ventuellement le niveau avec :
         log.setLogfileLevel(logging.INFO)
 
-    Ensuite, n'importe où dans les applications, il suffit d'utiliser le module
+    Ensuite, n'importe oÃ¹ dans les applications, il suffit d'utiliser le module
     "logging" (avec un petit "l") :
         import logging
-        log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
+        log = logging.getLogger(NAME) # Avec rien (recommandÃ©) ou un nom NAME
         log.critical("...")
         log.error("...")
         log.warning("...")
@@ -61,10 +61,10 @@
         import logging
         logging.info("...")
 
-    Dans une application, à n'importe quel endroit et autant de fois qu'on veut,
+    Dans une application, Ã  n'importe quel endroit et autant de fois qu'on veut,
     on peut changer le niveau global de message en utilisant par exemple :
         import logging
-        log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
+        log = logging.getLogger(NAME) # Avec rien (recommandÃ©) ou un nom NAME
         log.setLevel(logging.DEBUG)
 
     On rappelle les niveaux (attributs de "logging") et leur ordre :
@@ -83,12 +83,12 @@ LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
 # ==============================================================================
 class ExtendedLogging(object):
     """
-    Logger général pour disposer conjointement de la sortie standard et de la
+    Logger gÃ©nÃ©ral pour disposer conjointement de la sortie standard et de la
     sortie sur fichier
     """
     def __init__(self, level=logging.WARNING):
         """
-        Initialise un logging à la console pour TOUS les niveaux de messages.
+        Initialise un logging Ã  la console pour TOUS les niveaux de messages.
         """
         logging.basicConfig(
             format = '%(levelname)-8s %(message)s',
@@ -123,7 +123,7 @@ class ExtendedLogging(object):
         Permet de disposer des messages dans un fichier EN PLUS de la console.
         """
         if self.__logfile is not None:
-            # Supprime le précédent mode de stockage fichier s'il exsitait
+            # Supprime le prÃ©cÃ©dent mode de stockage fichier s'il exsitait
             logging.getLogger().removeHandler(self.__logfile)
         self.__logfile = logging.FileHandler(filename, filemode)
         self.__logfile.setLevel(level)
@@ -134,8 +134,8 @@ class ExtendedLogging(object):
 
     def setLogfileLevel(self, level=logging.NOTSET ):
         """
-        Permet de changer le niveau des messages stockés en fichier. Il ne sera
-        pris en compte que s'il est supérieur au niveau global.
+        Permet de changer le niveau des messages stockÃ©s en fichier. Il ne sera
+        pris en compte que s'il est supÃ©rieur au niveau global.
         """
         self.__logfile.setLevel(level)
 

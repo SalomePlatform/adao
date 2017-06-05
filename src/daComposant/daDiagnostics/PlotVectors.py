@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -27,7 +27,7 @@ import os.path
 # ==============================================================================
 class ElementaryDiagnostic(BasicObjects.Diagnostic):
     """
-    Classe pour tracer simplement une liste de vecteurs à chaque pas
+    Classe pour tracer simplement une liste de vecteurs Ã  chaque pas
     """
     def __init__(self, name = "", unit = "", basetype = None, parameters = {}):
         BasicObjects.Diagnostic.__init__(self, name, parameters)
@@ -45,8 +45,8 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
             persist,
             pause ):
         """
-        Trace en gnuplot chaque vecteur de la liste Vector, avec une légende
-        générale, en X et en Y
+        Trace en gnuplot chaque vecteur de la liste Vector, avec une lÃ©gende
+        gÃ©nÃ©rale, en X et en Y
         """
         if persist:
             self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
@@ -67,7 +67,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
         if filename != "":
             self.__g.hardcopy(filename=filename, color=1)
         if pause:
-            raw_input('Please press return to continue...\n')
+            eval(input('Please press return to continue...\n'))
         #
         return 1
 
@@ -79,30 +79,30 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
                         pause    = True ):
         """
         Arguments :
-            - vector   : liste des vecteurs à tracer, chacun étant en liste ou
+            - vector   : liste des vecteurs Ã  tracer, chacun Ã©tant en liste ou
                          en numpy.array
-            - steps    : liste unique des pas, ou None si c'est la numérotation
-                         par défaut
-            - title    : titre général du dessin
+            - steps    : liste unique des pas, ou None si c'est la numÃ©rotation
+                         par dÃ©faut
+            - title    : titre gÃ©nÃ©ral du dessin
             - xlabel   : label de l'axe des X
             - ylabel   : label de l'axe des Y
-            - ltitle   : liste des titres associés à chaque vecteur, dans le
-                         même ordre que les vecteurs eux-mêmes
-            - geometry : taille en pixels de la fenêtre et position du coin haut
-                         gauche, au format X11 : LxH+X+Y (défaut : 600x400)
-            - filename : nom de fichier Postscript pour une sauvegarde à 1 pas
-                         Attention, il faut changer le nom à l'appel pour
+            - ltitle   : liste des titres associÃ©s Ã  chaque vecteur, dans le
+                         mÃªme ordre que les vecteurs eux-mÃªmes
+            - geometry : taille en pixels de la fenÃªtre et position du coin haut
+                         gauche, au format X11 : LxH+X+Y (dÃ©faut : 600x400)
+            - filename : nom de fichier Postscript pour une sauvegarde Ã  1 pas
+                         Attention, il faut changer le nom Ã  l'appel pour
                          plusieurs pas de sauvegarde
-            - persist  : booléen indiquant que la fenêtre affichée sera
-                         conservée lors du passage au dessin suivant
-                         Par défaut, persist = False
-            - pause    : booléen indiquant une pause après chaque tracé, et
+            - persist  : boolÃ©en indiquant que la fenÃªtre affichÃ©e sera
+                         conservÃ©e lors du passage au dessin suivant
+                         Par dÃ©faut, persist = False
+            - pause    : boolÃ©en indiquant une pause aprÃ¨s chaque tracÃ©, et
                          attendant un Return
-                         Par défaut, pause = True
+                         Par dÃ©faut, pause = True
         """
         if vector is None:
             raise ValueError("One vector must be given to plot it.")
-        if type(vector) is not type([]) and type(vector) is not type(()):
+        if not isinstance(vector, (list, tuple)):
             raise ValueError("The vector(s) must be given as a list/tuple.")
         if ltitle is None or len(ltitle) != len(vector):
             ltitle = ["" for i in range(len(vector))]
@@ -112,8 +112,8 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic):
             if VectorList[-1].size < 1:
                 raise ValueError("Each given vector must not be empty.")
         if steps is None:
-            Steps = range(len(vector[0]))
-        elif not ( type(steps) is type([]) or type(steps) is not type(numpy.array([])) ):
+            Steps = list(range(len(vector[0])))
+        elif not ( isinstance(steps, type([])) or not isinstance(steps, type(numpy.array([]))) ):
             raise ValueError("The steps must be given as a list/tuple.")
         else:
             Steps = list(steps)

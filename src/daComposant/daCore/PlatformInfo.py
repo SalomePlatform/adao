@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -21,19 +21,19 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Informations sur le code et la plateforme, et mise à jour des chemins
+    Informations sur le code et la plateforme, et mise Ã  jour des chemins
 
-    La classe "PlatformInfo" permet de récupérer les informations générales sur
+    La classe "PlatformInfo" permet de rÃ©cupÃ©rer les informations gÃ©nÃ©rales sur
     le code et la plateforme sous forme de strings, ou d'afficher directement
-    les informations disponibles par les méthodes. L'impression directe d'un
+    les informations disponibles par les mÃ©thodes. L'impression directe d'un
     objet de cette classe affiche les informations minimales. Par exemple :
         print PlatformInfo()
         print PlatformInfo().getVersion()
         created = PlatformInfo().getDate()
 
-    La classe "PathManagement" permet de mettre à jour les chemins système pour
-    ajouter les outils numériques, matrices... On l'utilise en instanciant
-    simplement cette classe, sans meme récupérer d'objet :
+    La classe "PathManagement" permet de mettre Ã  jour les chemins systÃ¨me pour
+    ajouter les outils numÃ©riques, matrices... On l'utilise en instanciant
+    simplement cette classe, sans meme rÃ©cupÃ©rer d'objet :
         PathManagement()
 """
 __author__ = "Jean-Philippe ARGAUD"
@@ -56,12 +56,12 @@ class PlatformInfo(object):
         return dav.name
 
     def getVersion(self):
-        "Retourne le numéro de la version"
+        "Retourne le numÃ©ro de la version"
         import daCore.version as dav
         return dav.version
 
     def getDate(self):
-        "Retourne la date de création de la version"
+        "Retourne la date de crÃ©ation de la version"
         import daCore.version as dav
         return dav.date
 
@@ -119,7 +119,7 @@ class PlatformInfo(object):
             return "0.0.0"
 
     def getCurrentMemorySize(self):
-        "Retourne la taille mémoire courante utilisée"
+        "Retourne la taille mÃ©moire courante utilisÃ©e"
         return 1
 
     def MaximumPrecision(self):
@@ -179,7 +179,7 @@ except ImportError:
 # ==============================================================================
 def uniq(sequence):
     """
-    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
+    Fonction pour rendre unique chaque Ã©lÃ©ment d'une liste, en prÃ©servant l'ordre
     """
     __seen = set()
     return [x for x in sequence if x not in __seen and not __seen.add(x)]
@@ -187,10 +187,10 @@ def uniq(sequence):
 # ==============================================================================
 class PathManagement(object):
     """
-    Mise à jour du path système pour les répertoires d'outils
+    Mise Ã  jour du path systÃ¨me pour les rÃ©pertoires d'outils
     """
     def __init__(self):
-        "Déclaration des répertoires statiques"
+        "DÃ©claration des rÃ©pertoires statiques"
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         self.__paths = {}
         self.__paths["daExternals"] = os.path.join(parent,"daExternals")
@@ -206,18 +206,18 @@ class PathManagement(object):
 
     def getpaths(self):
         """
-        Renvoie le dictionnaire des chemins ajoutés
+        Renvoie le dictionnaire des chemins ajoutÃ©s
         """
         return self.__paths
 
 # ==============================================================================
 class SystemUsage(object):
     """
-    Permet de récupérer les différentes tailles mémoires du process courant
+    Permet de rÃ©cupÃ©rer les diffÃ©rentes tailles mÃ©moires du process courant
     """
     #
-    # Le module resource renvoie 0 pour les tailles mémoire. On utilise donc
-    # plutôt : http://code.activestate.com/recipes/286222/ et Wikipedia
+    # Le module resource renvoie 0 pour les tailles mÃ©moire. On utilise donc
+    # plutÃ´t : http://code.activestate.com/recipes/286222/ et Wikipedia
     #
     _proc_status = '/proc/%d/status' % os.getpid()
     _memo_status = '/proc/meminfo'
@@ -240,7 +240,7 @@ class SystemUsage(object):
         pass
     #
     def _VmA(self, VmKey, unit):
-        "Lecture des paramètres mémoire de la machine"
+        "Lecture des paramÃ¨tres mÃ©moire de la machine"
         try:
             t = open(self._memo_status)
             v = t.read()
@@ -256,26 +256,26 @@ class SystemUsage(object):
         return mem / self._scale[unit]
     #
     def getAvailablePhysicalMemory(self, unit="o"):
-        "Renvoie la mémoire physique utilisable en octets"
+        "Renvoie la mÃ©moire physique utilisable en octets"
         return self._VmA('MemTotal:', unit)
     #
     def getAvailableSwapMemory(self, unit="o"):
-        "Renvoie la mémoire swap utilisable en octets"
+        "Renvoie la mÃ©moire swap utilisable en octets"
         return self._VmA('SwapTotal:', unit)
     #
     def getAvailableMemory(self, unit="o"):
-        "Renvoie la mémoire totale (physique+swap) utilisable en octets"
+        "Renvoie la mÃ©moire totale (physique+swap) utilisable en octets"
         return self._VmA('MemTotal:', unit) + self._VmA('SwapTotal:', unit)
     #
     def getUsableMemory(self, unit="o"):
-        """Renvoie la mémoire utilisable en octets
-        Rq : il n'est pas sûr que ce décompte soit juste...
+        """Renvoie la mÃ©moire utilisable en octets
+        Rq : il n'est pas sÃ»r que ce dÃ©compte soit juste...
         """
         return self._VmA('MemFree:', unit) + self._VmA('SwapFree:', unit) + \
                self._VmA('Cached:', unit) + self._VmA('SwapCached:', unit)
     #
     def _VmB(self, VmKey, unit):
-        "Lecture des paramètres mémoire du processus"
+        "Lecture des paramÃ¨tres mÃ©moire du processus"
         try:
             t = open(self._proc_status)
             v = t.read()
@@ -291,23 +291,23 @@ class SystemUsage(object):
         return mem / self._scale[unit]
     #
     def getUsedMemory(self, unit="o"):
-        "Renvoie la mémoire résidente utilisée en octets"
+        "Renvoie la mÃ©moire rÃ©sidente utilisÃ©e en octets"
         return self._VmB('VmRSS:', unit)
     #
     def getVirtualMemory(self, unit="o"):
-        "Renvoie la mémoire totale utilisée en octets"
+        "Renvoie la mÃ©moire totale utilisÃ©e en octets"
         return self._VmB('VmSize:', unit)
     #
     def getUsedStacksize(self, unit="o"):
-        "Renvoie la taille du stack utilisé en octets"
+        "Renvoie la taille du stack utilisÃ© en octets"
         return self._VmB('VmStk:', unit)
     #
     def getMaxUsedMemory(self, unit="o"):
-        "Renvoie la mémoire résidente maximale mesurée"
+        "Renvoie la mÃ©moire rÃ©sidente maximale mesurÃ©e"
         return self._VmB('VmHWM:', unit)
     #
     def getMaxVirtualMemory(self, unit="o"):
-        "Renvoie la mémoire totale maximale mesurée"
+        "Renvoie la mÃ©moire totale maximale mesurÃ©e"
         return self._VmB('VmPeak:', unit)
 
 # ==============================================================================

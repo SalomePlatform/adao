@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -40,7 +40,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Minimizer",
             default  = "MMQR",
             typecast = str,
-            message  = "Minimiseur utilisé",
+            message  = "Minimiseur utilisÃ©",
             listval  = ["MMQR"],
             )
         self.defineRequiredParameter(
@@ -54,19 +54,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "CostDecrementTolerance",
             default  = 1.e-6,
             typecast = float,
-            message  = "Maximum de variation de la fonction d'estimation lors de l'arrêt",
+            message  = "Maximum de variation de la fonction d'estimation lors de l'arrÃªt",
             )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
@@ -79,10 +79,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Hm = HO["Direct"].appliedTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
+        # Utilisation Ã©ventuelle d'un vecteur H(Xb) prÃ©calculÃ©
         # ----------------------------------------------------
-        if HO["AppliedToX"] is not None and "HXb" in HO["AppliedToX"]:
-            HXb = Hm( Xb, HO["AppliedToX"]["HXb"])
+        if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
+            HXb = Hm( Xb, HO["AppliedInX"]["HXb"])
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
@@ -95,7 +95,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
         #
-        # Définition de la fonction-coût
+        # DÃ©finition de la fonction-coÃ»t
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
@@ -118,9 +118,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Hg = HO["Tangent"].asMatrix( _X )
             return Hg
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de dÃ©marrage de l'optimisation : Xini = Xb
         # ------------------------------------
-        if type(Xb) is type(numpy.matrix([])):
+        if isinstance(Xb, type(numpy.matrix([]))):
             Xini = Xb.A1.tolist()
         else:
             Xini = list(Xb)
@@ -154,7 +154,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
            "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             HXa = Hm(Xa)
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )

@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -34,7 +34,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
 
     def _formula(self, V1, V2):
         """
-        Fait un écart RMS entre deux vecteurs V1 et V2
+        Fait un Ã©cart RMS entre deux vecteurs V1 et V2
         """
         rms = math.sqrt( ((V2 - V1)**2).sum() / float(V1.size) )
         #
@@ -42,7 +42,7 @@ class ElementaryDiagnostic(BasicObjects.Diagnostic,Persistence.OneScalar):
 
     def calculate(self, vector1 = None, vector2 = None, step = None):
         """
-        Teste les arguments, active la formule de calcul et stocke le résultat
+        Teste les arguments, active la formule de calcul et stocke le rÃ©sultat
         """
         if vector1 is None or vector2 is None:
             raise ValueError("Two vectors must be given to calculate their RMS")

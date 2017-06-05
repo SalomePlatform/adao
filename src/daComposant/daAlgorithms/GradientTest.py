@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,10 +20,12 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import sys, logging
 from daCore import BasicObjects, PlatformInfo
 import numpy, math
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
+if sys.version_info.major > 2:
+    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -33,14 +35,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ResiduFormula",
             default  = "Taylor",
             typecast = str,
-            message  = "Formule de résidu utilisée",
+            message  = "Formule de rÃ©sidu utilisÃ©e",
             listval  = ["Norm", "TaylorOnNorm", "Taylor"],
             )
         self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
             default  = -8,
             typecast = int,
-            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrément",
+            message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrÃ©ment",
             minval   = -20,
             maxval   = 0,
             )
@@ -48,13 +50,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "InitialDirection",
             default  = [],
             typecast = list,
-            message  = "Direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfInitialDirection",
             default  = 1.,
             typecast = float,
-            message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
+            message  = "Amplitude de la direction initiale de la dÃ©rivÃ©e directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
             name     = "AmplitudeOfTangentPerturbation",
@@ -67,19 +69,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "PlotAndSave",
             default  = False,
             typecast = bool,
-            message  = "Trace et sauve les résultats",
+            message  = "Trace et sauve les rÃ©sultats",
             )
         self.defineRequiredParameter(
             name     = "ResultFile",
             default  = self._name+"_result_file",
             typecast = str,
-            message  = "Nom de base (hors extension) des fichiers de sauvegarde des résultats",
+            message  = "Nom de base (hors extension) des fichiers de sauvegarde des rÃ©sultats",
             )
         self.defineRequiredParameter(
             name     = "ResultTitle",
@@ -91,13 +93,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ResultLabel",
             default  = "",
             typecast = str,
-            message  = "Label de la courbe tracée dans la figure",
+            message  = "Label de la courbe tracÃ©e dans la figure",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
 
@@ -141,77 +143,78 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Entete des resultats
         # --------------------
-        __marge =  12*" "
-        __precision = """
+        __marge =  12*u" "
+        __precision = u"""
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
-            __msgdoc = """
-            On observe le résidu issu du développement de Taylor de la fonction F,
-            normalisé par la valeur au point nominal :
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __msgdoc = u"""
+            On observe le residu issu du developpement de Taylor de la fonction F,
+            normalise par la valeur au point nominal :
 
                          || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
               R(Alpha) = ----------------------------------------------------
                                          || F(X) ||
 
-            Si le résidu décroit et que la décroissance se fait en Alpha**2 selon Alpha,
-            cela signifie que le gradient est bien calculé jusqu'à la précision d'arrêt
-            de la décroissance quadratique, et que F n'est pas linéaire.
+            Si le residu decroit et que la decroissance se fait en Alpha**2 selon Alpha,
+            cela signifie que le gradient est bien calcule jusqu'a la precision d'arret
+            de la decroissance quadratique, et que F n'est pas lineaire.
 
-            Si le résidu décroit et que la décroissance se fait en Alpha selon Alpha,
-            jusqu'à un certain seuil aprés lequel le résidu est faible et constant, cela
-            signifie que F est linéaire et que le résidu décroit à partir de l'erreur
+            Si le residu decroit et que la decroissance se fait en Alpha selon Alpha,
+            jusqu'a un certain seuil apres lequel le residu est faible et constant, cela
+            signifie que F est lineaire et que le residu decroit a partir de l'erreur
             faite dans le calcul du terme GradientF_X.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         if self._parameters["ResiduFormula"] == "TaylorOnNorm":
-            __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
-            __msgdoc = """
-            On observe le résidu issu du développement de Taylor de la fonction F,
-            rapporté au paramètre Alpha au carré :
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __msgdoc = u"""
+            On observe le residu issu du developpement de Taylor de la fonction F,
+            rapporte au parametre Alpha au carre :
 
                          || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
               R(Alpha) = ----------------------------------------------------
                                             Alpha**2
 
-            C'est un résidu essentiellement similaire au critère classique de Taylor,
-            mais son comportement peut différer selon les propriétés numériques des
-            calculs de ses différents termes.
+            C'est un residu essentiellement similaire au critere classique de Taylor,
+            mais son comportement peut differer selon les proprietes numeriques des
+            calculs de ses differents termes.
 
-            Si le résidu est constant jusqu'à un certain seuil et croissant ensuite,
-            cela signifie que le gradient est bien calculé jusqu'à cette précision
-            d'arrêt, et que F n'est pas linéaire.
+            Si le residu est constant jusqu'a un certain seuil et croissant ensuite,
+            cela signifie que le gradient est bien calcule jusqu'a cette precision
+            d'arret, et que F n'est pas lineaire.
 
-            Si le résidu est systématiquement croissant en partant d'une valeur faible
-            par rapport à ||F(X)||, cela signifie que F est (quasi-)linéaire et que le
-            calcul du gradient est correct jusqu'au moment où le résidu est de l'ordre de
+            Si le residu est systematiquement croissant en partant d'une valeur faible
+            par rapport a ||F(X)||, cela signifie que F est (quasi-)lineaire et que le
+            calcul du gradient est correct jusqu'au moment ou le residu est de l'ordre de
             grandeur de ||F(X)||.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         if self._parameters["ResiduFormula"] == "Norm":
-            __entete = "  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
-            __msgdoc = """
-            On observe le résidu, qui est basé sur une approximation du gradient :
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __msgdoc = u"""
+            On observe le residu, qui est base sur une approximation du gradient :
 
                           || F(X+Alpha*dX) - F(X) ||
               R(Alpha) =  ---------------------------
                                     Alpha
 
-            qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
+            qui doit rester constant jusqu'a ce que l'on atteigne la precision du calcul.
 
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
             """ + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            msgs  = "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msgs += __marge + "    " + self._parameters["ResultTitle"] + "\n"
-            msgs += __marge + "====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
+            __rt = unicode(self._parameters["ResultTitle"])
+            msgs  = u"\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
+            msgs += __marge + "    " + __rt + "\n"
+            msgs += __marge + "====" + "="*len(__rt) + "====\n"
         else:
-            msgs  = ""
+            msgs  = u""
         msgs += __msgdoc
         #
         __nbtirets = len(__entete)
@@ -249,8 +252,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             # Residu Norm
             NormedFXsAm = NormedFX/amplitude
             #
-            # if numpy.abs(NormedFX) < 1.e-20:
-            #     break
+            #Â if numpy.abs(NormedFX) < 1.e-20:
+            #Â     break
             #
             NormesdX.append(     NormedX     )
             NormesFXdX.append(   NormeFXdX   )
@@ -289,7 +292,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 PerturbationsCarre = [ 10**(2*i) for i in range(-len(NormesdFXGdX)+1,1) ]
                 PerturbationsCarre.reverse()
                 dessiner(
-                    Perturbations, 
+                    Perturbations,
                     Residus,
                     titre    = self._parameters["ResultTitle"],
                     label    = self._parameters["ResultLabel"],
@@ -301,7 +304,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     )
             elif self._parameters["ResiduFormula"] == "Norm":
                 dessiner(
-                    Perturbations, 
+                    Perturbations,
                     Residus,
                     titre    = self._parameters["ResultTitle"],
                     label    = self._parameters["ResultLabel"],
@@ -314,7 +317,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         return 0
 
 # ==============================================================================
-    
+
 def dessiner(
         X,
         Y,
@@ -325,7 +328,7 @@ def dessiner(
         filename  = "",
         pause     = False,
         YRef      = None, # Vecteur de reference a comparer a Y
-        recalYRef = True, # Decalage du point 0 de YRef à Y[0]
+        recalYRef = True, # Decalage du point 0 de YRef a Y[0]
         normdY0   = 0.,   # Norme de DeltaY[0]
         ):
     import Gnuplot
@@ -336,8 +339,8 @@ def dessiner(
     __g('set grid')
     __g('set autoscale')
     __g('set title  "'+titre+'"')
-    # __g('set range [] reverse')
-    # __g('set yrange [0:2]')
+    # __g('set range []Â reverse')
+    #Â __g('set yrange [0:2]')
     #
     if logX:
         steps = numpy.log10( X )
@@ -370,7 +373,7 @@ def dessiner(
     if filename != "":
         __g.hardcopy( filename, color=1)
     if pause:
-        raw_input('Please press return to continue...\n')
+        eval(input('Please press return to continue...\n'))
 
 # ==============================================================================
 if __name__ == "__main__":

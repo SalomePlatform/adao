@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -38,7 +38,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
         self.defineRequiredParameter(
             name     = "LengthOfTabuList",
@@ -51,21 +51,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "NumberOfElementaryPerturbations",
             default  = 1,
             typecast = int,
-            message  = "Nombre de perturbations élémentaires pour choisir une perturbation d'état",
+            message  = "Nombre de perturbations Ã©lÃ©mentaires pour choisir une perturbation d'Ã©tat",
             minval   = 1,
             )
         self.defineRequiredParameter(
             name     = "NoiseDistribution",
             default  = "Uniform",
             typecast = str,
-            message  = "Distribution pour générer les perturbations d'état",
+            message  = "Distribution pour gÃ©nÃ©rer les perturbations d'Ã©tat",
             listval  = ["Gaussian","Uniform"],
             )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
             default  = "AugmentedWeightedLeastSquares",
             typecast = str,
-            message  = "Critère de qualité utilisé",
+            message  = "CritÃ¨re de qualitÃ© utilisÃ©",
             listval  = ["AugmentedWeightedLeastSquares","AWLS","DA",
                         "WeightedLeastSquares","WLS",
                         "LeastSquares","LS","L2",
@@ -76,19 +76,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "NoiseHalfRange",
             default  = [],
             typecast = numpy.matrix,
-            message  = "Demi-amplitude des perturbations uniformes centrées d'état pour chaque composante de l'état",
+            message  = "Demi-amplitude des perturbations uniformes centrÃ©es d'Ã©tat pour chaque composante de l'Ã©tat",
             )
         self.defineRequiredParameter(
             name     = "StandardDeviation",
             default  = [],
             typecast = numpy.matrix,
-            message  = "Ecart-type des perturbations gaussiennes d'état pour chaque composante de l'état",
+            message  = "Ecart-type des perturbations gaussiennes d'Ã©tat pour chaque composante de l'Ã©tat",
             )
         self.defineRequiredParameter(
             name     = "NoiseAddingProbability",
             default  = 1.,
             typecast = float,
-            message  = "Probabilité de perturbation d'une composante de l'état",
+            message  = "ProbabilitÃ© de perturbation d'une composante de l'Ã©tat",
             minval   = 0.,
             maxval   = 1.,
             )
@@ -96,13 +96,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.defineRequiredParameter( # Pas de type
@@ -122,16 +122,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if sigma.size != Xb.size:
                 raise ValueError("Noise generation by Gaussian distribution requires standard deviation for all variable increments. The actual standard deviation vector is:\n%s"%sigma)
         #
-        # Opérateur d'observation
+        # OpÃ©rateur d'observation
         # -----------------------
         Hm = HO["Direct"].appliedTo
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction de deplacement
+        # DÃ©finition de la fonction de deplacement
         # ----------------------------------------
         def Tweak( x, NoiseDistribution, NoiseAddingProbability ):
             _X  = numpy.matrix(numpy.ravel( x )).T
@@ -139,13 +139,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 for i in range(_X.size):
                     if NoiseAddingProbability >= numpy.random.uniform():
                         _increment = numpy.random.uniform(low=-nrange[i], high=nrange[i])
-                        # On ne traite pas encore le dépassement des bornes ici
+                        # On ne traite pas encore le dÃ©passement des bornes ici
                         _X[i] += _increment
             elif NoiseDistribution == "Gaussian":
                 for i in range(_X.size):
                     if NoiseAddingProbability >= numpy.random.uniform():
                         _increment = numpy.random.normal(loc=0., scale=sigma[i])
-                        # On ne traite pas encore le dépassement des bornes ici
+                        # On ne traite pas encore le dÃ©passement des bornes ici
                         _X[i] += _increment
             #
             return _X
@@ -199,7 +199,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 )
             for nbt in range(self._parameters["NumberOfElementaryPerturbations"]-1):
                 _W = Tweak( _S, self._parameters["NoiseDistribution"], self._parameters["NoiseAddingProbability"] )
-                # _qualityW = CostFunction( _W, self._parameters["QualityCriterion"] )
+                #Â _qualityW = CostFunction( _W, self._parameters["QualityCriterion"] )
                 _qualityW = BasicObjects.CostFunction3D(
                            _W,
                     _Hm  = Hm,
@@ -245,7 +245,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
            "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             HXa = Hm(Xa)
         #
-        # Calculs et/ou stockages supplémentaires
+        # Calculs et/ou stockages supplÃ©mentaires
         # ---------------------------------------
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )

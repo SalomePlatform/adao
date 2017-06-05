@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -32,31 +32,31 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SampleAsnUplet",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par une liste de n-uplet",
+            message  = "Points de calcul dÃ©finis par une liste de n-uplet",
             )
         self.defineRequiredParameter(
             name     = "SampleAsExplicitHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable comme une liste",
+            message  = "Points de calcul dÃ©finis par un hyper-cube dont on donne la liste des Ã©chantillonages de chaque variable comme une liste",
             )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxStepHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable par un triplet [min,max,step]",
+            message  = "Points de calcul dÃ©finis par un hyper-cube dont on donne la liste des Ã©chantillonages de chaque variable par un triplet [min,max,step]",
             )
         self.defineRequiredParameter(
             name     = "SampleAsIndependantRandomVariables",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
+            message  = "Points de calcul dÃ©finis par un hyper-cube dont les points sur chaque axe proviennent de l'Ã©chantillonage indÃ©pendant de la variable selon la spÃ©cification ['distribution',[parametres],nombre]",
             )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
             default  = "AugmentedWeightedLeastSquares",
             typecast = str,
-            message  = "Critère de qualité utilisé",
+            message  = "CritÃ¨re de qualitÃ© utilisÃ©",
             listval  = ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA",
                         "WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS",
                         "LeastSquares","LS","L2",
@@ -67,19 +67,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SetDebug",
             default  = False,
             typecast = bool,
-            message  = "Activation du mode debug lors de l'exécution",
+            message  = "Activation du mode debug lors de l'exÃ©cution",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CostFunctionJ", "CostFunctionJb", "CostFunctionJo","CurrentState","InnovationAtCurrentState","SimulatedObservationAtCurrentState"]
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            message  = "Graine fixÃ©e pour le gÃ©nÃ©rateur alÃ©atoire",
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

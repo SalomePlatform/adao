@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -39,13 +39,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
-            message  = "Stockage des variables internes ou intermédiaires du calcul",
+            message  = "Stockage des variables internes ou intermÃ©diaires du calcul",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation"]
             )
 
@@ -55,7 +55,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["EstimationOf"] == "Parameters":
             self._parameters["StoreInternalVariables"] = True
         #
-        # Opérateurs
+        # OpÃ©rateurs
         # ----------
         if B is None:
             raise ValueError("Background error covariance matrix has to be properly defined!")
@@ -81,7 +81,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             duration = 2
         #
-        # Précalcul des inversions de B et R
+        # PrÃ©calcul des inversions de B et R
         # ----------------------------------
         if self._parameters["StoreInternalVariables"]:
             BI = B.getI()

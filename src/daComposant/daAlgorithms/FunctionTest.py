@@ -1,4 +1,4 @@
-#-*-coding:iso-8859-1-*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2017 EDF R&D
 #
@@ -20,11 +20,13 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import sys, logging
 from daCore import BasicObjects, PlatformInfo
 import numpy, copy
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
+if sys.version_info.major > 2:
+    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -34,14 +36,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "NumberOfPrintedDigits",
             default  = 5,
             typecast = int,
-            message  = "Nombre de chiffres affichés pour les impressions de réels",
+            message  = "Nombre de chiffres affichÃ©s pour les impressions de rÃ©els",
             minval   = 0,
             )
         self.defineRequiredParameter(
             name     = "NumberOfRepetition",
             default  = 1,
             typecast = int,
-            message  = "Nombre de fois où l'exécution de la fonction est répétée",
+            message  = "Nombre de fois oÃ¹ l'exÃ©cution de la fonction est rÃ©pÃ©tÃ©e",
             minval   = 1,
             )
         self.defineRequiredParameter(
@@ -54,13 +56,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SetDebug",
             default  = False,
             typecast = bool,
-            message  = "Activation du mode debug lors de l'exécution",
+            message  = "Activation du mode debug lors de l'exÃ©cution",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
-            message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
+            message  = "Liste de calculs supplÃ©mentaires Ã  stocker et/ou effectuer",
             listval  = ["CurrentState", "SimulatedObservationAtCurrentState"]
             )
 
@@ -72,24 +74,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Xn = copy.copy( Xb )
         #
         # ----------
+        __marge =  5*u" "
         _p = self._parameters["NumberOfPrintedDigits"]
         if len(self._parameters["ResultTitle"]) > 0:
-            msg  = "     ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            msg += "        " + self._parameters["ResultTitle"] + "\n"
-            msg += "     ====" + "="*len(self._parameters["ResultTitle"]) + "====\n"
-            print("%s"%msg)
+            __rt = unicode(self._parameters["ResultTitle"])
+            msgs  = u"\n"
+            msgs +=  __marge + "====" + "="*len(__rt) + "====\n"
+            msgs +=  __marge + "    " + __rt + "\n"
+            msgs +=  __marge + "====" + "="*len(__rt) + "====\n"
+            print("%s"%msgs)
         #
-        msg  = ("===> Information before launching:\n")
-        msg += ("     -----------------------------\n")
-        msg += ("     Characteristics of input vector X, internally converted:\n")
-        msg += ("       Type...............: %s\n")%type( Xn )
-        msg += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Xn ).shape)
-        msg += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Xn )
-        msg += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Xn )
-        msg += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Xn, dtype=mfp )
-        msg += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Xn, dtype=mfp )
-        msg += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Xn )
-        print(msg)
+        msgs  = ("===> Information before launching:\n")
+        msgs += ("     -----------------------------\n")
+        msgs += ("     Characteristics of input vector X, internally converted:\n")
+        msgs += ("       Type...............: %s\n")%type( Xn )
+        msgs += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Xn ).shape)
+        msgs += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Xn )
+        msgs += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Xn )
+        msgs += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Xn, dtype=mfp )
+        msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Xn, dtype=mfp )
+        msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Xn )
+        print(msgs)
         #
         if self._parameters["SetDebug"]:
             CUR_LEVEL = logging.getLogger().getEffectiveLevel()
@@ -114,16 +119,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             print("\n===> End of direct operator evaluation\n")
             #
-            msg  = ("===> Information after evaluation:\n")
-            msg += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
-            msg += ("       Type...............: %s\n")%type( Yn )
-            msg += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Yn ).shape)
-            msg += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Yn )
-            msg += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Yn )
-            msg += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Yn, dtype=mfp )
-            msg += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn, dtype=mfp )
-            msg += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
-            print(msg)
+            msgs  = ("===> Information after evaluation:\n")
+            msgs += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
+            msgs += ("       Type...............: %s\n")%type( Yn )
+            msgs += ("       Lenght of vector...: %i\n")%max(numpy.matrix( Yn ).shape)
+            msgs += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Yn )
+            msgs += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Yn )
+            msgs += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Yn, dtype=mfp )
+            msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn, dtype=mfp )
+            msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
+            print(msgs)
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
             #
@@ -140,32 +145,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             logging.getLogger().setLevel(CUR_LEVEL)
         #
         if self._parameters["NumberOfRepetition"] > 1:
-            msg  = ("     %s\n"%("-"*75,))
-            msg += ("\n===> Statistical analysis of the outputs obtained throught repeated evaluations\n")
-            msg += ("\n     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
+            msgs  = ("     %s\n"%("-"*75,))
+            msgs += ("\n===> Statistical analysis of the outputs obtained throught repeated evaluations\n")
+            msgs += ("\n     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
             Yy = numpy.array( Ys )
-            msg += ("\n     Characteristics of the whole set of outputs Y:\n")
-            msg += ("       Number of evaluations.........................: %i\n")%len( Ys )
-            msg += ("       Minimum value of the whole set of outputs.....: %."+str(_p)+"e\n")%numpy.min( Yy )
-            msg += ("       Maximum value of the whole set of outputs.....: %."+str(_p)+"e\n")%numpy.max( Yy )
-            msg += ("       Mean of vector of the whole set of outputs....: %."+str(_p)+"e\n")%numpy.mean( Yy, dtype=mfp )
-            msg += ("       Standard error of the whole set of outputs....: %."+str(_p)+"e\n")%numpy.std( Yy, dtype=mfp )
+            msgs += ("\n     Characteristics of the whole set of outputs Y:\n")
+            msgs += ("       Number of evaluations.........................: %i\n")%len( Ys )
+            msgs += ("       Minimum value of the whole set of outputs.....: %."+str(_p)+"e\n")%numpy.min( Yy )
+            msgs += ("       Maximum value of the whole set of outputs.....: %."+str(_p)+"e\n")%numpy.max( Yy )
+            msgs += ("       Mean of vector of the whole set of outputs....: %."+str(_p)+"e\n")%numpy.mean( Yy, dtype=mfp )
+            msgs += ("       Standard error of the whole set of outputs....: %."+str(_p)+"e\n")%numpy.std( Yy, dtype=mfp )
             Ym = numpy.mean( numpy.array( Ys ), axis=0, dtype=mfp )
-            msg += ("\n     Characteristics of the vector Ym, mean of the outputs Y:\n")
-            msg += ("       Size of the mean of the outputs...............: %i\n")%Ym.size
-            msg += ("       Minimum value of the mean of the outputs......: %."+str(_p)+"e\n")%numpy.min( Ym )
-            msg += ("       Maximum value of the mean of the outputs......: %."+str(_p)+"e\n")%numpy.max( Ym )
-            msg += ("       Mean of the mean of the outputs...............: %."+str(_p)+"e\n")%numpy.mean( Ym, dtype=mfp )
-            msg += ("       Standard error of the mean of the outputs.....: %."+str(_p)+"e\n")%numpy.std( Ym, dtype=mfp )
+            msgs += ("\n     Characteristics of the vector Ym, mean of the outputs Y:\n")
+            msgs += ("       Size of the mean of the outputs...............: %i\n")%Ym.size
+            msgs += ("       Minimum value of the mean of the outputs......: %."+str(_p)+"e\n")%numpy.min( Ym )
+            msgs += ("       Maximum value of the mean of the outputs......: %."+str(_p)+"e\n")%numpy.max( Ym )
+            msgs += ("       Mean of the mean of the outputs...............: %."+str(_p)+"e\n")%numpy.mean( Ym, dtype=mfp )
+            msgs += ("       Standard error of the mean of the outputs.....: %."+str(_p)+"e\n")%numpy.std( Ym, dtype=mfp )
             Ye = numpy.mean( numpy.array( Ys ) - Ym, axis=0, dtype=mfp )
-            msg += "\n     Characteristics of the mean of the differences between the outputs Y and their mean Ym:\n"
-            msg += ("       Size of the mean of the differences...........: %i\n")%Ym.size
-            msg += ("       Minimum value of the mean of the differences..: %."+str(_p)+"e\n")%numpy.min( Ye )
-            msg += ("       Maximum value of the mean of the differences..: %."+str(_p)+"e\n")%numpy.max( Ye )
-            msg += ("       Mean of the mean of the differences...........: %."+str(_p)+"e\n")%numpy.mean( Ye, dtype=mfp )
-            msg += ("       Standard error of the mean of the differences.: %."+str(_p)+"e\n")%numpy.std( Ye, dtype=mfp )
-            msg += ("\n     %s\n"%("-"*75,))
-            print(msg)
+            msgs += "\n     Characteristics of the mean of the differences between the outputs Y and their mean Ym:\n"
+            msgs += ("       Size of the mean of the differences...........: %i\n")%Ym.size
+            msgs += ("       Minimum value of the mean of the differences..: %."+str(_p)+"e\n")%numpy.min( Ye )
+            msgs += ("       Maximum value of the mean of the differences..: %."+str(_p)+"e\n")%numpy.max( Ye )
+            msgs += ("       Mean of the mean of the differences...........: %."+str(_p)+"e\n")%numpy.mean( Ye, dtype=mfp )
+            msgs += ("       Standard error of the mean of the differences.: %."+str(_p)+"e\n")%numpy.std( Ye, dtype=mfp )
+            msgs += ("\n     %s\n"%("-"*75,))
+            print(msgs)
         #
         self._post_run(HO)
         return 0
