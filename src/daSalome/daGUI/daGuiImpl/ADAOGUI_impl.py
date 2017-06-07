@@ -85,7 +85,6 @@ def windows():
 # called when module is initialized
 # return list of 2d/3d views to be used ny the module
 def views():
-  print("views")
   return []
 
 def createPreferences():
