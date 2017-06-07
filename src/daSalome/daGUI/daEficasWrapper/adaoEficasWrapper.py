@@ -181,7 +181,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 #
 #######
 
-    def addEWObserver(self, observer):
+    def addObserver(self, observer):
         """
         In fact, only one observer may be defined for the moment.
         """

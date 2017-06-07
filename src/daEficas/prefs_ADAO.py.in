@@ -48,7 +48,7 @@ initialdir=os.environ["PWD"]
 if sys.version.split()[0] < '3':
     # ===== Specifique : redefinition de l'encoding avant le Python 3 ! JPA
     reload(sys)
-    sys.setdefaultencoding('latin1')
+    sys.setdefaultencoding('utf-8')
     # ===== Specifique : pour les suivantes 8_x ! Enlever pour les 9_x ! JPA
     # 19/05/2017 : Redefinition du hook de "sys" present dans <GUI/src/SUITApp/SUITApp_init_python.cxx>
     def _custom_except_hook(exc_type, exc_value, exc_traceback):
@@ -70,4 +70,5 @@ closeFrameRechercheCommande = True
 closeEntete = True
 closeArbre = True
 taille = 800
+nombreDeBoutonParLigne = 2
 
