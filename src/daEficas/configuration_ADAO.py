@@ -36,7 +36,6 @@ else:
     from PyQt4.QtGui  import *
 
 # Modules Eficas
-from Editeur import utils
 from InterfaceQT4 import configuration
 
 # Classe de base permettant de lire, afficher
