@@ -73,9 +73,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO" ),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         Hm = HO["Direct"].appliedTo
         #

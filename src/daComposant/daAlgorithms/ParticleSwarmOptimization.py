@@ -97,9 +97,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "BoxBounds",
             message  = "Liste des valeurs de bornes d'incréments de paramètres",
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         if ("BoxBounds" in self._parameters) and isinstance(self._parameters["BoxBounds"], (list, tuple)) and (len(self._parameters["BoxBounds"]) > 0):
             BoxBounds = self._parameters["BoxBounds"]

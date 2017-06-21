@@ -88,9 +88,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            optional = ("U", "EM", "CM", "Q"),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         if self._parameters["EstimationOf"] == "Parameters":
             self._parameters["StoreInternalVariables"] = True
@@ -120,11 +124,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateurs
         # ----------
-        if B is None:
-            raise ValueError("Background error covariance matrix has to be properly defined!")
-        if R is None:
-            raise ValueError("Observation error covariance matrix has to be properly defined!")
-        #
         H = HO["Direct"].appliedControledFormTo
         #
         if self._parameters["EstimationOf"] == "State":

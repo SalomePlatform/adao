@@ -84,9 +84,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO"),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         def RMS(V1, V2):
             import math
@@ -143,7 +146,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "CenteredDL":
-            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )"
             __msgdoc = u"""
             On observe le residu provenant de la difference centree des valeurs de F
             au point nominal et aux points perturbes, normalisee par la valeur au
@@ -164,10 +167,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             cela signifie que le gradient est calculable jusqu'a la precision d'arret
             de la decroissance quadratique.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )  "
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)  log10( R )"
             __msgdoc = u"""
             On observe le residu issu du developpement de Taylor de la fonction F,
             normalisee par la valeur au point nominal :
@@ -187,10 +189,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             cela signifie que le gradient est bien calcule jusqu'a la precision d'arret
             de la decroissance quadratique.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         if self._parameters["ResiduFormula"] == "NominalTaylor":
-            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %  "
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %"
             __msgdoc = u"""
             On observe le residu obtenu a partir de deux approximations d'ordre 1 de F(X),
             normalisees par la valeur au point nominal :
@@ -208,10 +209,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             l'increment Alpha, c'est sur cette partie que l'hypothese de linearite de F
             est verifiee.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
-            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %  "
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %"
             __msgdoc = u"""
             On observe le residu obtenu a partir de deux approximations d'ordre 1 de F(X),
             normalisees par la valeur au point nominal :
@@ -228,8 +228,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             l'increment Alpha, c'est sur cette partie que l'hypothese de linearite de F
             est verifiee.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = unicode(self._parameters["ResultTitle"])
@@ -241,7 +240,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs  = u""
         msgs += __msgdoc
         #
-        __nbtirets = len(__entete)
+        __nbtirets = len(__entete) + 2
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n" + __marge + __entete
         msgs += "\n" + __marge + "-"*__nbtirets

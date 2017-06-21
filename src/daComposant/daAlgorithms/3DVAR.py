@@ -105,9 +105,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":

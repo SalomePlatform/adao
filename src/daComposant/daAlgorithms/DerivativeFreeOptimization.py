@@ -89,11 +89,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         if not PlatformInfo.has_nlopt and not self._parameters["Minimizer"] in ["COBYLA", "POWELL", "SIMPLEX"]:
+            logging.debug("%s Absence de NLopt, utilisation forcee du minimiseur SIMPLEX"%(self._name,))
             self._parameters["Minimizer"] = "SIMPLEX"
         #
         # Opérateurs

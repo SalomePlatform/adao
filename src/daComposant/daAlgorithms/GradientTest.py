@@ -102,9 +102,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "HO"),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
@@ -148,7 +151,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
             __msgdoc = u"""
             On observe le residu issu du developpement de Taylor de la fonction F,
             normalise par la valeur au point nominal :
@@ -166,10 +169,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             signifie que F est lineaire et que le residu decroit a partir de l'erreur
             faite dans le calcul du terme GradientF_X.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         if self._parameters["ResiduFormula"] == "TaylorOnNorm":
-            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
             __msgdoc = u"""
             On observe le residu issu du developpement de Taylor de la fonction F,
             rapporte au parametre Alpha au carre :
@@ -191,10 +193,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             calcul du gradient est correct jusqu'au moment ou le residu est de l'ordre de
             grandeur de ||F(X)||.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         if self._parameters["ResiduFormula"] == "Norm":
-            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )  "
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
             __msgdoc = u"""
             On observe le residu, qui est base sur une approximation du gradient :
 
@@ -204,8 +205,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
             qui doit rester constant jusqu'a ce que l'on atteigne la precision du calcul.
 
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            """ + __precision
+            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = unicode(self._parameters["ResultTitle"])
@@ -217,7 +217,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs  = u""
         msgs += __msgdoc
         #
-        __nbtirets = len(__entete)
+        __nbtirets = len(__entete) + 2
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n" + __marge + __entete
         msgs += "\n" + __marge + "-"*__nbtirets

@@ -68,9 +68,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Type de simulation pour l'estimation des quantiles",
             listval  = ["Linear", "NonLinear"]
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         Hm = HO["Tangent"].asMatrix(Xb)
         Hm = Hm.reshape(Y.size,Xb.size) # ADAO & check shape

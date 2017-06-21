@@ -76,9 +76,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = ["CurrentState", "Residu", "SimulatedObservationAtCurrentState"]
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "HO" ),
+            optional = ("Y", ),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         Hm = HO["Direct"].appliedTo
         Ht = HO["Tangent"].appliedInXTo
@@ -118,7 +122,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Remarque : les nombres inferieurs a %.0e (environ) representent un zero
                        a la precision machine.\n"""%mpr
         if self._parameters["ResiduFormula"] == "ScalarProduct":
-            __entete = u"  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)  "
+            __entete = u"  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)"
             __msgdoc = u"""
             On observe le residu qui est la difference de deux produits scalaires :
 
@@ -126,8 +130,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
             qui doit rester constamment egal a zero a la precision du calcul.
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            Y doit etre dans l'image de F. S'il n'est pas donne, on prend Y = F(X).
-            """ + __precision
+            Y doit etre dans l'image de F. S'il n'est pas donne, on prend Y = F(X).\n""" + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = unicode(self._parameters["ResultTitle"])
@@ -139,7 +142,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs  = u""
         msgs += __msgdoc
         #
-        __nbtirets = len(__entete)
+        __nbtirets = len(__entete) + 2
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n" + __marge + __entete
         msgs += "\n" + __marge + "-"*__nbtirets

@@ -81,9 +81,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
             )
+        self.requireInputArguments(
+            mandatory= ("Xb", "HO"),
+            )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters)
+        self._pre_run(Parameters, R, B, Q)
         #
         Hm = HO["Direct"].appliedTo
         #

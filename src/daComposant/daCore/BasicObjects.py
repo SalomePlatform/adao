@@ -492,8 +492,9 @@ class Algorithm(object):
         self._name = str( name )
         self._parameters = {"StoreSupplementaryCalculations":[]}
         self.__required_parameters = {}
-        self.StoredVariables = {}
+        self.__required_inputs = {"RequiredInputValues":{"mandatory":(), "optional":()}}
         #
+        self.StoredVariables = {}
         self.StoredVariables["CostFunctionJ"]                        = Persistence.OneScalar(name = "CostFunctionJ")
         self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
         self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
@@ -526,7 +527,7 @@ class Algorithm(object):
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
 
-    def _pre_run(self, Parameters ):
+    def _pre_run(self, Parameters, R=None, B=None, Q=None ):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
@@ -535,6 +536,20 @@ class Algorithm(object):
         self.__setParameters(Parameters)
         #
         # Corrections et complements
+        def __test_cvalue( argument, variable, argname):
+            if argument is None:
+                if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
+                    raise ValueError("%s %s error covariance matrix %s has to be properly defined!"%(self._name,argname,variable))
+                elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
+                    logging.debug("%s %s error covariance matrix %s is not set, but is optional."%(self._name,argname,variable))
+                else:
+                    logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name,argname,variable))
+            else:
+                logging.debug("%s %s error covariance matrix %s is set."%(self._name,argname,variable))
+        __test_cvalue( R, "R", "Observation" )
+        __test_cvalue( B, "B", "Background" )
+        __test_cvalue( Q, "Q", "Evolution" )
+        #
         if ("Bounds" in self._parameters) and isinstance(self._parameters["Bounds"], (list, tuple)) and (len(self._parameters["Bounds"]) > 0):
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
         else:
@@ -682,6 +697,13 @@ class Algorithm(object):
             elif __val not in listval:
                 raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%( __val, name,listval))
         return __val
+
+    def requireInputArguments(self, mandatory=(), optional=()):
+        """
+        Permet d'imposer des arguments requises en entrée
+        """
+        self.__required_inputs["RequiredInputValues"]["mandatory"] = tuple( mandatory )
+        self.__required_inputs["RequiredInputValues"]["optional"]  = tuple( optional )
 
     def __setParameters(self, fromDico={}):
         """
