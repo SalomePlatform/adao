@@ -47,8 +47,7 @@ except:
 # Parse arguments
 from argparse import ArgumentParser
 usage = "usage: %(prog)s [options] config_file yacs_schema_filename"
-version="%(prog)s 0.1"
-my_parser = ArgumentParser(usage=usage, version=version)
+my_parser = ArgumentParser(usage=usage)
 my_parser.add_argument('config_file')
 my_parser.add_argument('yacs_schema_filename')
 args = my_parser.parse_args()
