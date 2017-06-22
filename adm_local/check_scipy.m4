@@ -23,7 +23,7 @@ AC_REQUIRE([CHECK_PYTHON])dnl
 
 scipy_ok=no
 
-scipydir=`$PYTHON -c "import scipy;print scipy.get_include()" 2>/dev/null`
+scipydir=`$PYTHON -c "import scipy;print(scipy.get_include())" 2>/dev/null`
 
 if test -d "$scipydir"; then
    scipy_ok=yes
