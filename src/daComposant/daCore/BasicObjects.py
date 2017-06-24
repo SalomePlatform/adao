@@ -908,7 +908,7 @@ class AlgorithmAndParameters(object):
         if hasattr(asDictAO["ControlInput"],"getO"):        self.__U  = asDictAO["ControlInput"].getO()
         else:                                               self.__U  = asDictAO["ControlInput"]
         if hasattr(asDictAO["ObservationOperator"],"getO"): self.__HO = asDictAO["ObservationOperator"].getO()
-        else:                                               self.__HO  = asDictAO["ObservationOperator"]
+        else:                                               self.__HO = asDictAO["ObservationOperator"]
         if hasattr(asDictAO["EvolutionModel"],"getO"):      self.__EM = asDictAO["EvolutionModel"].getO()
         else:                                               self.__EM = asDictAO["EvolutionModel"]
         if hasattr(asDictAO["ControlModel"],"getO"):        self.__CM = asDictAO["ControlModel"].getO()
@@ -1714,6 +1714,155 @@ class ObserverF(object):
     def getfunc(self):
         "Restitution du pointeur de fonction dans l'objet"
         return self.func
+
+# ==============================================================================
+class CaseLogger(object):
+    """
+    Conservation des commandes de creation d'un cas
+    """
+    def __init__(self, __name="", __objname="case", __viewers={}, __loaders={}):
+        self.__name     = str(__name)
+        self.__objname  = str(__objname)
+        self.__logSerie = []
+        self.__switchoff = False
+        self.__viewers = self.__loaders = {"TUI":_TUIViewer}
+        self.__viewers.update(__viewers)
+        self.__loaders.update(__loaders)
+
+    def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
+        "Enregistrement d'une commande individuelle"
+        if __command is not None and __keys is not None and __local is not None and not self.__switchoff:
+            if "self" in __keys: __keys.remove("self")
+            self.__logSerie.append( (str(__command), __keys, __local, __pre, __switchoff) )
+            if __switchoff:
+                self.__switchoff = True
+        if not __switchoff:
+            self.__switchoff = False
+
+    def dump(self, __filename=None, __format="TUI"):
+        "Restitution normalisée des commandes (par les *GenericCaseViewer)"
+        if __format in self.__viewers:
+            __formater = self.__viewers[__format](self.__name, self.__objname, self.__logSerie)
+        else:
+            raise ValueError("Dumping as \"%s\" is not available"%__format)
+        return __formater.dump(__filename)
+
+    def load(self, __filename=None, __format="TUI"):
+        "Chargement normalisé des commandes"
+        if __format in self.__loaders:
+            __formater = self.__loaders[__format]()
+        else:
+            raise ValueError("Loading as \"%s\" is not available"%__format)
+        return __formater.load(__filename)
+
+# ==============================================================================
+class GenericCaseViewer(object):
+    """
+    Gestion des commandes de creation d'une vue de cas
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        self._name     = str(__name)
+        self._objname  = str(__objname)
+        self._lineSerie = []
+        self._switchoff = False
+        self._numobservers = 2
+        self._content = __content
+    def _addLine(self, line=""):
+        "Ajoute un enregistrement individuel"
+        self._lineSerie.append(line)
+    def _finalize(self):
+        "Enregistrement du final"
+        pass
+    def _append(self):
+        "Transformation de commande individuelle en enregistrement"
+        raise NotImplementedError()
+    def _extract(self):
+        "Transformation d'enregistrement en commande individuelle"
+        raise NotImplementedError()
+    def _interpret(self):
+        "Interprétation d'une commande"
+        raise NotImplementedError()
+    def dump(self, __filename=None):
+        "Restitution normalisée des commandes"
+        self._finalize()
+        __text = "\n".join(self._lineSerie)
+        __text +="\n"
+        if __filename is not None:
+            __file = os.path.abspath(__filename)
+            fid = open(__file,"w")
+            fid.write(__text)
+            fid.close()
+        return __text
+    def load(self, __filename=None):
+        "Chargement normalisé des commandes"
+        if os.path.exists(__filename):
+            self._content = open(__filename, 'r').read()
+        __commands = self._extract(self._content)
+        return __commands
+    def execCase(self, __filename=None):
+        "Exécution normalisée des commandes"
+        if os.path.exists(__filename):
+            self._content = open(__filename, 'r').read()
+        __retcode = self._interpret(self._content)
+        return __retcode
+
+class _TUIViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes de creation d'un cas TUI
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        self._addLine("#\n# Python script for ADAO TUI\n#")
+        self._addLine("from numpy import array, matrix")
+        self._addLine("import adaoBuilder")
+        self._addLine("%s = adaoBuilder.New('%s')"%(self._objname, self._name))
+        if self._content is not None:
+            for command in self._content:
+                self._append(*command)
+    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
+        "Transformation d'une commande individuelle en un enregistrement"
+        if __command is not None and __keys is not None and __local is not None:
+            __text  = ""
+            if __pre is not None:
+                __text += "%s = "%__pre
+            __text += "%s.%s( "%(self._objname,str(__command))
+            if "self" in __keys: __keys.remove("self")
+            if __command not in ("set","get") and "Concept" in __keys: __keys.remove("Concept")
+            for k in __keys:
+                __v = __local[k]
+                if __v is None: continue
+                if   k == "Checked" and not __v: continue
+                if   k == "Stored"  and not __v: continue
+                if   k == "AvoidRC" and __v: continue
+                if   k == "noDetails": continue
+                numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
+                __text += "%s=%s, "%(k,repr(__v))
+                numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+            __text.rstrip(", ")
+            __text += ")"
+            self._addLine(__text)
+    def _extract(self, __content=""):
+        "Transformation un enregistrement en d'une commande individuelle"
+        __is_case = False
+        __commands = []
+        __content = __content.replace("\r\n","\n")
+        for line in __content.split("\n"):
+            if "adaoBuilder" in line and "=" in line:
+                self._objname = line.split("=")[0].strip()
+                __is_case = True
+            if not __is_case:
+                continue
+            else:
+                if self._objname+".set" in line:
+                    __commands.append( line.replace(self._objname+".","",1) )
+        return __commands
+    def _interpret(self, __content=""):
+        "Interprétation d'une commande"
+        __content = __content.replace("\r\n","\n")
+        exec(__content)
+        return 0
 
 # ==============================================================================
 class ImportFromScript(object):

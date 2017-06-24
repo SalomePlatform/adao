@@ -26,15 +26,15 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["New"]
 
-from daCore.Aidsm import Aidsm
+from daCore.Aidsm import Aidsm as _Aidsm
 
 # ==============================================================================
-class New(Aidsm):
+class New(_Aidsm):
     """
     Generic ADAO TUI builder
     """
     def __init__(self, name = ""):
-        Aidsm.__init__(self, name)
+        _Aidsm.__init__(self, name)
 
 # ==============================================================================
 if __name__ == "__main__":

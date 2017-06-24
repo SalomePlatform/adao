@@ -33,15 +33,165 @@ import logging
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
 from daCore.BasicObjects import DiagnosticAndParameters, ImportFromScript
+from daCore.BasicObjects import CaseLogger, GenericCaseViewer
 from daCore.Templates    import ObserverTemplates
 from daCore import PlatformInfo
 
 # ==============================================================================
+class DICViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes de creation d'un cas DIC
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        self._addLine("# -*- coding: utf-8 -*-")
+        self._addLine("#\n# Input for ADAO converter to YACS\n#")
+        self._addLine("from numpy import array, matrix")
+        self._addLine("#")
+        self._addLine("study_config = {}")
+        self._addLine("study_config['StudyType'] = 'ASSIMILATION_STUDY'")
+        self._addLine("study_config['Name'] = '%s'"%self._name)
+        self._addLine("observers = {}")
+        self._addLine("study_config['Observers'] = observers")
+        self._addLine("#")
+        self._addLine("inputvariables_config = {}")
+        self._addLine("inputvariables_config['Order'] =['adao_default']")
+        self._addLine("inputvariables_config['adao_default'] = -1")
+        self._addLine("study_config['InputVariables'] = inputvariables_config")
+        self._addLine("#")
+        self._addLine("outputvariables_config = {}")
+        self._addLine("outputvariables_config['Order'] = ['adao_default']")
+        self._addLine("outputvariables_config['adao_default'] = -1")
+        self._addLine("study_config['OutputVariables'] = outputvariables_config")
+        if __content is not None:
+            for command in __content:
+                self._append(*command)
+    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
+        "Transformation d'une commande individuelle en un enregistrement"
+        if __command == "set": __command = __local["Concept"]
+        else:                  __command = __command.replace("set", "", 1)
+        #
+        __text  = None
+        if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get'):
+            return
+        elif __command in ['Debug', 'setDebug']:
+            __text  = "#\nstudy_config['Debug'] = '1'"
+        elif __command in ['NoDebug', 'setNoDebug']:
+            __text  = "#\nstudy_config['Debug'] = '0'"
+        elif __command in ['Observer', 'setObserver']:
+            __obs   = __local['Variable']
+            self._numobservers += 1
+            __text  = "#\n"
+            __text += "observers['%s'] = {}\n"%__obs
+            if __local['String'] is not None:
+                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
+                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, __local['String'])
+            if __local['Script'] is not None:
+                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'Script')
+                __text += "observers['%s']['Script'] = \"%s\"\n"%(__obs, __local['Script'])
+            if __local['Template'] is not None:
+                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
+                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, ObserverTemplates[__local['Template']])
+            if __local['Info'] is not None:
+                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __local['Info'])
+            else:
+                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __obs)
+            __text += "observers['%s']['number'] = %s"%(__obs, self._numobservers)
+        elif __local is not None: # __keys is not None and
+            numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
+            __text  = "#\n"
+            __text += "%s_config = {}\n"%__command
+            if 'self' in __local: __local.pop('self')
+            __to_be_removed = []
+            for __k,__v in __local.items():
+                if __v is None: __to_be_removed.append(__k)
+            for __k in __to_be_removed:
+                    __local.pop(__k)
+            for __k,__v in __local.items():
+                if __k == "Concept": continue
+                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix'] and 'Script' in __local: continue
+                if __k == 'Algorithm':
+                    __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
+                elif __k == 'Script':
+                    __k = 'Vector'
+                    for __lk in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix']:
+                        if __lk in __local and __local[__lk]: __k = __lk
+                    if __command == "AlgorithmParameters": __k = "Dict"
+                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command,'Script')
+                    __text += "%s_config['Data'] = '%s'\n"%(__command,repr(__v))
+                    __text = __text.replace("''","'")
+                elif __k in ('Stored', 'Checked'):
+                    if bool(__v):
+                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
+                elif __k in ('AvoidRC', 'noDetails'):
+                    if not bool(__v):
+                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
+                else:
+                    if __k is 'Parameters': __k = "Dict"
+                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command,'String')
+                    __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command,repr(__v))
+            __text += "study_config['%s'] = %s_config"%(__command,__command)
+            numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+            if __switchoff:
+                self._switchoff = True
+        if __text is not None: self._addLine(__text)
+        if not __switchoff:
+            self._switchoff = False
+    def _finalize(self):
+        self.__loadVariablesByScript()
+        self._addLine("#")
+        self._addLine("Analysis_config = {}")
+        self._addLine("Analysis_config['From'] = 'String'")
+        self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
+        self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
+        self._addLine("print 'Analysis:',xa\"\"\"")
+        self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
+    def __loadVariablesByScript(self):
+        exec("\n".join(self._lineSerie))
+        if "Algorithm" in study_config and len(study_config['Algorithm'])>0:
+            self.__hasAlgorithm = True
+        else:
+            self.__hasAlgorithm = False
+        if not self.__hasAlgorithm and \
+                "AlgorithmParameters" in study_config and \
+                isinstance(study_config['AlgorithmParameters'], dict) and \
+                "From" in study_config['AlgorithmParameters'] and \
+                "Data" in study_config['AlgorithmParameters'] and \
+                study_config['AlgorithmParameters']['From'] == 'Script':
+            __asScript = study_config['AlgorithmParameters']['Data']
+            __var = ImportFromScript(__asScript).getvalue( "Algorithm" )
+            __text = "#\nstudy_config['Algorithm'] = '%s'"%(__var,)
+            self._addLine(__text)
+        if self.__hasAlgorithm and \
+                "AlgorithmParameters" in study_config and \
+                isinstance(study_config['AlgorithmParameters'], dict) and \
+                "From" not in study_config['AlgorithmParameters'] and \
+                "Data" not in study_config['AlgorithmParameters']:
+            __text  = "#\n"
+            __text += "AlgorithmParameters_config['Type'] = 'Dict'\n"
+            __text += "AlgorithmParameters_config['From'] = 'String'\n"
+            __text += "AlgorithmParameters_config['Data'] = '{}'\n"
+            self._addLine(__text)
+        del study_config
+
+class XMLViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes de creation d'un cas DIC
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        raise NotImplementedError()
+
+# ==============================================================================
 class Aidsm(object):
     """ ADAO Internal Data Structure Model """
-    def __init__(self, name = ""):
+    def __init__(self, name = "", viewers={"DIC":DICViewer, "XML":XMLViewer}):
         self.__name = str(name)
-        self.__case = _CaseLogger(self.__name)
+        self.__case = CaseLogger(self.__name, "case", viewers)
         #
         self.__adaoObject   = {}
         self.__StoredInputs = {}
@@ -690,7 +840,7 @@ class Aidsm(object):
         Operator.CM.clearCache()
         #~ try:
         if   Executor == "YACS": self.__executeYACSScheme( FileName )
-        else:                    self.__executePythonScheme()
+        else:                    self.__executePythonScheme( FileName )
         #~ except Exception as e:
             #~ if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             #~ else: msg = ""
@@ -716,8 +866,22 @@ class Aidsm(object):
     # -----------------------------------------------------------
 
     def dump(self, FileName=None, Formater="TUI"):
-        "Récupération normalisée de la liste des commandes"
+        "Restitution normalisée des commandes"
         return self.__case.dump(FileName, Formater)
+
+    def load(self, FileName=None, Formater="TUI"):
+        "Chargement normalisé des commandes"
+        __commands = self.__case.load(FileName, Formater)
+        from numpy import array, matrix
+        for __command in __commands:
+            exec("self."+__command)
+        return 0
+
+    def clear(self):
+        "Effacement du contenu du cas en cours"
+        self.__init__(self.__name)
+
+    # -----------------------------------------------------------
 
     def __dir__(self):
         "Clarifie la visibilité des méthodes"
@@ -736,260 +900,6 @@ class Aidsm(object):
         del self.__adaoObject # Break pickle in Python 2
         del self.__case       # Break pickle in Python 2
         return 0
-
-# ==============================================================================
-class _CaseLogger(object):
-    """
-    Conservation des commandes de creation d'un cas
-    """
-    def __init__(self, __name="", __objname="case"):
-        self.__name     = str(__name)
-        self.__objname  = str(__objname)
-        self.__logSerie = []
-        self.__switchoff = False
-
-    def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
-        "Enregistrement d'une commande individuelle"
-        if __command is not None and __keys is not None and __local is not None and not self.__switchoff:
-            if "self" in __keys: __keys.remove("self")
-            self.__logSerie.append( (str(__command), __keys, __local, __pre, __switchoff) )
-            if __switchoff:
-                self.__switchoff = True
-        if not __switchoff:
-            self.__switchoff = False
-
-    def dump(self, __filename=None, __format="TUI"):
-        """
-        Récupération normalisée de la liste des commandes selon le Formater :
-        - TUI (API de référence)
-        - DIC (Transitoire, pour passer vers XML YACS)
-        - XML (Experimental. Structured AIDSM)
-        """
-        if   __format == "TUI":
-            self.__dumper = _TUIViewer(self.__name, self.__objname, self.__logSerie)
-            __text = self.__dumper.dump(__filename)
-        elif __format == "DIC":
-            self.__dumper = _DICViewer(self.__name, self.__objname, self.__logSerie)
-            __text = self.__dumper.dump(__filename)
-        elif __format == "XML":
-            self.__dumper = _XMLViewer(self.__name, self.__objname, self.__logSerie)
-            __text = self.__dumper.dump(__filename)
-        else:
-            raise ValueError("Dumping as \"%s\" is not available"%__format)
-        return __text
-
-# ==============================================================================
-class _GenericCaseViewer(object):
-    """
-    Etablissement des commandes de creation d'une vue
-    """
-    def __init__(self, __name="", __objname="case", __content=None):
-        "Initialisation et enregistrement de l'entete"
-        self._name     = str(__name)
-        self._objname  = str(__objname)
-        self._lineSerie = []
-        self._switchoff = False
-        self._numobservers = 2
-    def _addLine(self, line=""):
-        "Ajoute un enregistrement individuel"
-        self._lineSerie.append(line)
-    def _finalize(self):
-        "Enregistrement du final"
-        pass
-    def _append(self):
-        "Transformation d'une commande individuelle en un enregistrement"
-        raise NotImplementedError()
-    def dump(self, __filename=None):
-        "Restitution de la liste des commandes de creation d'un cas"
-        self._finalize()
-        __text = "\n".join(self._lineSerie)
-        if __filename is not None:
-            __file = os.path.abspath(__filename)
-            fid = open(__file,"w")
-            fid.write(__text)
-            fid.close()
-        return __text
-
-class _TUIViewer(_GenericCaseViewer):
-    """
-    Etablissement des commandes de creation d'un cas TUI
-    """
-    def __init__(self, __name="", __objname="case", __content=None):
-        "Initialisation et enregistrement de l'entete"
-        _GenericCaseViewer.__init__(self, __name, __objname, __content)
-        self._addLine("#\n# Python script for ADAO TUI\n#")
-        self._addLine("from numpy import array, matrix")
-        self._addLine("import adaoBuilder")
-        self._addLine("%s = adaoBuilder.New('%s')"%(self._objname, self._name))
-        if __content is not None:
-            for command in __content:
-                self._append(*command)
-    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
-        "Transformation d'une commande individuelle en un enregistrement"
-        if __command is not None and __keys is not None and __local is not None:
-            __text  = ""
-            if __pre is not None:
-                __text += "%s = "%__pre
-            __text += "%s.%s( "%(self._objname,str(__command))
-            if "self" in __keys: __keys.remove("self")
-            if __command not in ("set","get") and "Concept" in __keys: __keys.remove("Concept")
-            for k in __keys:
-                __v = __local[k]
-                if __v is None: continue
-                if   k == "Checked" and not __v: continue
-                if   k == "Stored"  and not __v: continue
-                if   k == "AvoidRC" and __v: continue
-                if   k == "noDetails": continue
-                __text += "%s=%s, "%(k,repr(__v))
-            __text.rstrip(", ")
-            __text += ")"
-            self._addLine(__text)
-
-class _DICViewer(_GenericCaseViewer):
-    """
-    Etablissement des commandes de creation d'un cas DIC
-    """
-    def __init__(self, __name="", __objname="case", __content=None):
-        "Initialisation et enregistrement de l'entete"
-        _GenericCaseViewer.__init__(self, __name, __objname, __content)
-        self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Input for ADAO converter to YACS\n#")
-        self._addLine("from numpy import array, matrix")
-        self._addLine("#")
-        self._addLine("study_config = {}")
-        self._addLine("study_config['StudyType'] = 'ASSIMILATION_STUDY'")
-        self._addLine("study_config['Name'] = '%s'"%self._name)
-        self._addLine("observers = {}")
-        self._addLine("study_config['Observers'] = observers")
-        self._addLine("#")
-        self._addLine("inputvariables_config = {}")
-        self._addLine("inputvariables_config['Order'] =['adao_default']")
-        self._addLine("inputvariables_config['adao_default'] = -1")
-        self._addLine("study_config['InputVariables'] = inputvariables_config")
-        self._addLine("#")
-        self._addLine("outputvariables_config = {}")
-        self._addLine("outputvariables_config['Order'] = ['adao_default']")
-        self._addLine("outputvariables_config['adao_default'] = -1")
-        self._addLine("study_config['OutputVariables'] = outputvariables_config")
-        if __content is not None:
-            for command in __content:
-                self._append(*command)
-    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
-        "Transformation d'une commande individuelle en un enregistrement"
-        if __command == "set": __command = __local["Concept"]
-        else:                  __command = __command.replace("set", "", 1)
-        #
-        __text  = None
-        if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get'):
-            return
-        elif __command in ['Debug', 'setDebug']:
-            __text  = "#\nstudy_config['Debug'] = '1'"
-        elif __command in ['NoDebug', 'setNoDebug']:
-            __text  = "#\nstudy_config['Debug'] = '0'"
-        elif __command in ['Observer', 'setObserver']:
-            __obs   = __local['Variable']
-            self._numobservers += 1
-            __text  = "#\n"
-            __text += "observers['%s'] = {}\n"%__obs
-            if __local['String'] is not None:
-                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
-                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, __local['String'])
-            if __local['Script'] is not None:
-                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'Script')
-                __text += "observers['%s']['Script'] = \"%s\"\n"%(__obs, __local['Script'])
-            if __local['Template'] is not None:
-                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
-                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, ObserverTemplates[__local['Template']])
-            if __local['Info'] is not None:
-                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __local['Info'])
-            else:
-                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __obs)
-            __text += "observers['%s']['number'] = %s"%(__obs, self._numobservers)
-        elif __local is not None: # __keys is not None and
-            __text  = "#\n"
-            __text += "%s_config = {}\n"%__command
-            if 'self' in __local: __local.pop('self')
-            __to_be_removed = []
-            for __k,__v in __local.items():
-                if __v is None: __to_be_removed.append(__k)
-            for __k in __to_be_removed:
-                    __local.pop(__k)
-            for __k,__v in __local.items():
-                if __k == "Concept": continue
-                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix'] and 'Script' in __local: continue
-                if __k == 'Algorithm':
-                    __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
-                elif __k == 'Script':
-                    __k = 'Vector'
-                    for __lk in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix']:
-                        if __lk in __local and __local[__lk]: __k = __lk
-                    if __command == "AlgorithmParameters": __k = "Dict"
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,'Script')
-                    __text += "%s_config['Data'] = '%s'\n"%(__command,repr(__v))
-                    __text = __text.replace("''","'")
-                elif __k in ('Stored', 'Checked'):
-                    if bool(__v):
-                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
-                elif __k in ('AvoidRC', 'noDetails'):
-                    if not bool(__v):
-                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
-                else:
-                    if __k is 'Parameters': __k = "Dict"
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,'String')
-                    __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command,repr(__v))
-            __text += "study_config['%s'] = %s_config"%(__command,__command)
-            if __switchoff:
-                self._switchoff = True
-        if __text is not None: self._addLine(__text)
-        if not __switchoff:
-            self._switchoff = False
-    def _finalize(self):
-        self.__loadVariablesByScript()
-        self._addLine("#")
-        self._addLine("Analysis_config = {}")
-        self._addLine("Analysis_config['From'] = 'String'")
-        self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
-        self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
-        self._addLine("print 'Analysis:',xa\"\"\"")
-        self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
-    def __loadVariablesByScript(self):
-        exec("\n".join(self._lineSerie))
-        if "Algorithm" in study_config and len(study_config['Algorithm'])>0:
-            self.__hasAlgorithm = True
-        else:
-            self.__hasAlgorithm = False
-        if not self.__hasAlgorithm and \
-                "AlgorithmParameters" in study_config and \
-                isinstance(study_config['AlgorithmParameters'], dict) and \
-                "From" in study_config['AlgorithmParameters'] and \
-                "Data" in study_config['AlgorithmParameters'] and \
-                study_config['AlgorithmParameters']['From'] == 'Script':
-            __asScript = study_config['AlgorithmParameters']['Data']
-            __var = ImportFromScript(__asScript).getvalue( "Algorithm" )
-            __text = "#\nstudy_config['Algorithm'] = '%s'"%(__var,)
-            self._addLine(__text)
-        if self.__hasAlgorithm and \
-                "AlgorithmParameters" in study_config and \
-                isinstance(study_config['AlgorithmParameters'], dict) and \
-                "From" not in study_config['AlgorithmParameters'] and \
-                "Data" not in study_config['AlgorithmParameters']:
-            __text  = "#\n"
-            __text += "AlgorithmParameters_config['Type'] = 'Dict'\n"
-            __text += "AlgorithmParameters_config['From'] = 'String'\n"
-            __text += "AlgorithmParameters_config['Data'] = '{}'\n"
-            self._addLine(__text)
-        del study_config
-
-class _XMLViewer(_GenericCaseViewer):
-    """
-    Etablissement des commandes de creation d'un cas DIC
-    """
-    def __init__(self, __name="", __objname="case", __content=None):
-        "Initialisation et enregistrement de l'entete"
-        _GenericCaseViewer.__init__(self, __name, __objname, __content)
-        raise NotImplementedError()
 
 # ==============================================================================
 if __name__ == "__main__":
