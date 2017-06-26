@@ -29,6 +29,7 @@ __all__ = ["Aidsm"]
 import os, sys
 from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
 import logging
+import numpy
 #
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
