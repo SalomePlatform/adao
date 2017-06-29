@@ -102,7 +102,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters, R, B, Q)
+        self._pre_run(Parameters, Xb, Y, R, B, Q)
         #
         if ("BoxBounds" in self._parameters) and isinstance(self._parameters["BoxBounds"], (list, tuple)) and (len(self._parameters["BoxBounds"]) > 0):
             BoxBounds = self._parameters["BoxBounds"]

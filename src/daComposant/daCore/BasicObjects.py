@@ -405,7 +405,7 @@ class FullOperator(object):
             self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC )
             self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC )
         elif asMatrix is not None:
-            __matrice = numpy.matrix( asMatrix, numpy.float )
+            __matrice = numpy.matrix( __Matrix, numpy.float )
             self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC )
             self.__FO["Tangent"] = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC )
             self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC )
@@ -527,7 +527,7 @@ class Algorithm(object):
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
 
-    def _pre_run(self, Parameters, R=None, B=None, Q=None ):
+    def _pre_run(self, Parameters, Xb=None, Y=None, R=None, B=None, Q=None ):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
@@ -536,6 +536,18 @@ class Algorithm(object):
         self.__setParameters(Parameters)
         #
         # Corrections et complements
+        def __test_vvalue( argument, variable, argname):
+            if argument is None:
+                if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
+                    raise ValueError("%s %s vector %s has to be properly defined!"%(self._name,argname,variable))
+                elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
+                    logging.debug("%s %s vector %s is not set, but is optional."%(self._name,argname,variable))
+                else:
+                    logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,variable))
+            else:
+                logging.debug("%s %s vector %s is set, and its size is %i."%(self._name,argname,variable,numpy.array(argument).size))
+        __test_vvalue( Xb, "Xb", "Background or initial state" )
+        __test_vvalue( Y,  "Y",  "Observation" )
         def __test_cvalue( argument, variable, argname):
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
@@ -1873,20 +1885,20 @@ class ImportFromScript(object):
         "Verifie l'existence et importe le script"
         self.__filename = __filename.rstrip(".py")
         if self.__filename is None:
-            raise ValueError("The name of the file containing the variable to be imported has to be specified.")
+            raise ValueError("The name of the file, containing the variable to be read, has to be specified.")
         if not os.path.isfile(str(self.__filename)+".py"):
-            raise ValueError("The file containing the variable to be imported doesn't seem to exist. The given file name is:\n  \"%s\""%self.__filename)
+            raise ValueError("The file containing the variable to be imported doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%self.__filename)
         self.__scriptfile = __import__(self.__filename, globals(), locals(), [])
         self.__scriptstring = open(self.__filename+".py",'r').read()
     def getvalue(self, __varname=None, __synonym=None ):
         "Renvoie la variable demandee"
         if __varname is None:
-            raise ValueError("The name of the variable to be imported has to be specified.")
+            raise ValueError("The name of the variable to be read has to be specified. Please check the content of the file and the syntax.")
         if not hasattr(self.__scriptfile, __varname):
             if __synonym is None:
-                raise ValueError("The imported script file \"%s\" doesn't contain the specified variable \"%s\"."%(str(self.__filename)+".py",__varname))
+                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__filename)+".py",__varname))
             elif not hasattr(self.__scriptfile, __synonym):
-                raise ValueError("The imported script file \"%s\" doesn't contain the specified variable \"%s\"."%(str(self.__filename)+".py",__synonym))
+                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__filename)+".py",__synonym))
             else:
                 return getattr(self.__scriptfile, __synonym)
         else:

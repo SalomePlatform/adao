@@ -18,7 +18,7 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 
   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-  
+
   Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 -->
 <document>
@@ -28,7 +28,7 @@
     <parameter name="icon"          value="ADAO.png"/>
     <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
-    <parameter name="version"       value="8.3.0"/>
+    <parameter name="version"       value="8.4.0"/>
   </section>
   <section name="resources">
     <!-- Module resources -->

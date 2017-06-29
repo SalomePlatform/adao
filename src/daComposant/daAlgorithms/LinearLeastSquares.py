@@ -42,11 +42,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["OMA", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R"),
+            mandatory= ("Y", "HO", "R"),
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters, R, B, Q)
+        self._pre_run(Parameters, Xb, Y, R, B, Q)
         #
         Hm = HO["Tangent"].asMatrix(None)
         Hm = Hm.reshape(Y.size,-1) # ADAO & check shape
