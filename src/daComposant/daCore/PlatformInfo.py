@@ -176,6 +176,21 @@ try:
 except ImportError:
     has_nlopt = False
 
+if "ROOT_SALOME" in os.environ:
+    has_salome = True
+else:
+    has_salome = False
+
+if "YACS_ROOT_DIR" in os.environ:
+    has_yacs = True
+else:
+    has_yacs = False
+
+if "ADAO_ROOT_DIR" in os.environ:
+    has_adao = True
+else:
+    has_adao = False
+
 # ==============================================================================
 def uniq(sequence):
     """

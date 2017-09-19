@@ -911,7 +911,7 @@ class AlgorithmAndParameters(object):
         Operator.CM.clearCache()
         #
         if not isinstance(asDictAO, dict):
-            raise ValueError("The objects for algorithm calculation has to be given as a dictionnary, and is not")
+            raise ValueError("The objects for algorithm calculation have to be given together as a dictionnary, and they are not")
         if   hasattr(asDictAO["Background"],"getO"):        self.__Xb = asDictAO["Background"].getO()
         elif hasattr(asDictAO["CheckingPoint"],"getO"):     self.__Xb = asDictAO["CheckingPoint"].getO()
         else:                                               self.__Xb = None
@@ -948,9 +948,9 @@ class AlgorithmAndParameters(object):
     def executeYACSScheme(self, FileName=None):
         "Permet de lancer le calcul d'assimilation"
         if FileName is None or not os.path.exists(FileName):
-            raise ValueError("a existing DIC Python file name has to be given for YACS execution.\n")
-        if not os.environ.has_key("ADAO_ROOT_DIR"):
-            raise ImportError("Unable to get ADAO_ROOT_DIR environnement variable. Please launch SALOME to add ADAO_ROOT_DIR to your environnement.\n")
+            raise ValueError("an existing DIC Python file name has to be given for YACS execution.\n")
+        if not PlatformInfo.has_salome or not PlatformInfo.has_yacs or not PlatformInfo.has_adao:
+            raise ImportError("Unable to get SALOME, YACS or ADAO environnement variables. Please launch SALOME before executing.\n")
         #
         __converterExe = os.path.join(os.environ["ADAO_ROOT_DIR"], "bin/salome", "AdaoYacsSchemaCreator.py")
         __inputFile    = os.path.abspath(FileName)
@@ -963,7 +963,7 @@ class AlgorithmAndParameters(object):
         if not os.path.exists(__outputFile):
             __msg  = "An error occured during the execution of the ADAO YACS Schema\n"
             __msg += "Creator applied on the input file:\n"
-            __msg += "  %s\n"%__outputFile
+            __msg += "  %s\n"%__inputFile
             __msg += "If SALOME GUI is launched by command line, see errors\n"
             __msg += "details in your terminal.\n"
             raise ValueError(__msg)
@@ -1780,12 +1780,7 @@ class GenericCaseViewer(object):
         self._switchoff = False
         self._numobservers = 2
         self._content = __content
-    def _addLine(self, line=""):
-        "Ajoute un enregistrement individuel"
-        self._lineSerie.append(line)
-    def _finalize(self):
-        "Enregistrement du final"
-        pass
+        self._missing = """raise ValueError("This case requires beforehand to import or define the variable named <%s>. When corrected, remove this command, correct and uncomment the following one.")\n# """
     def _append(self):
         "Transformation de commande individuelle en enregistrement"
         raise NotImplementedError()
@@ -1795,6 +1790,12 @@ class GenericCaseViewer(object):
     def _interpret(self):
         "Interprétation d'une commande"
         raise NotImplementedError()
+    def _finalize(self):
+        "Enregistrement du final"
+        pass
+    def _addLine(self, line=""):
+        "Ajoute un enregistrement individuel"
+        self._lineSerie.append(line)
     def dump(self, __filename=None):
         "Restitution normalisée des commandes"
         self._finalize()
@@ -1849,6 +1850,11 @@ class _TUIViewer(GenericCaseViewer):
                 if   k == "Stored"  and not __v: continue
                 if   k == "AvoidRC" and __v: continue
                 if   k == "noDetails": continue
+                if isinstance(__v,Persistence.Persistence): __v = __v.values()
+                if callable(__v): __text = self._missing%__v.__name__+__text
+                if isinstance(__v,dict):
+                    for val in __v.values():
+                        if callable(val): __text = self._missing%val.__name__+__text
                 numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
                 __text += "%s=%s, "%(k,repr(__v))
                 numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
@@ -1856,7 +1862,7 @@ class _TUIViewer(GenericCaseViewer):
             __text += ")"
             self._addLine(__text)
     def _extract(self, __content=""):
-        "Transformation un enregistrement en d'une commande individuelle"
+        "Transformation un enregistrement en une commande individuelle"
         __is_case = False
         __commands = []
         __content = __content.replace("\r\n","\n")
