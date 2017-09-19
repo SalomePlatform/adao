@@ -28,13 +28,8 @@ import SalomePyQt
 __sgPyQt = SalomePyQt.SalomePyQt()
 
 from . import adaoModuleHelper
-from daUtils.qtversion import useQT5
-if useQT5:
-    from PyQt5 import QtGui, QtCore
-    from PyQt5.QtWidgets import QApplication, QMessageBox
-else:
-    from PyQt4 import QtGui, QtCore
-    from PyQt4.QtGui import QApplication, QMessageBox
+from PyQt5 import QtGui, QtCore
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 def waitCursor():
     QtGui.QApplication.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))

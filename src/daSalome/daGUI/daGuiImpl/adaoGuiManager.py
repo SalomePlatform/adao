@@ -28,15 +28,8 @@ in the GUI part of the module.
 __author__ = "aribes/gboulant"
 
 import traceback
-from daUtils.qtversion import useQT5
-if useQT5:
-    from PyQt5.QtCore import QObject
-    from PyQt5.QtWidgets import QScrollArea
-else:
-    from PyQt4.QtCore import QObject
-    from PyQt4.QtCore import *        # Import from PyQT
-    from PyQt4 import QtCore
-    from PyQt4.QtGui import QScrollArea
+from PyQt5.QtCore import QObject
+from PyQt5.QtWidgets import QScrollArea
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()
 
@@ -121,10 +114,7 @@ class AdaoCaseManager(EficasObserver):
 
     # On s'abonne au gestionnaire de selection
     self.selection_manager = sgPyQt.getSelection()
-    if useQT5:
-        self.selection_manager.currentSelectionChanged.connect(self.currentSelectionChanged)
-    else:
-        QtCore.QObject.connect(self.selection_manager, QtCore.SIGNAL('currentSelectionChanged()'), self.currentSelectionChanged)
+    self.selection_manager.currentSelectionChanged.connect(self.currentSelectionChanged)
 
 ######
 #

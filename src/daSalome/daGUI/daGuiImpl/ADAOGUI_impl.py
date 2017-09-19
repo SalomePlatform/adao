@@ -22,14 +22,9 @@
 
 __author__="aribes/gboulant"
 
-from daUtils.qtversion import useQT5
-if useQT5:
-    from PyQt5.QtGui import *
-    from PyQt5.QtCore import *
-    from PyQt5.QtWidgets import QApplication
-else:
-    from PyQt4.QtGui import *
-    from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QApplication
 
 import SalomePyQt
 sgPyQt = SalomePyQt.SalomePyQt()

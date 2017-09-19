@@ -29,11 +29,7 @@
 # print "passage dans la surcharge de configuration pour Adao"
 import os, sys, string, types, re
 import traceback
-from daUtils.qtversion import useQT5
-if useQT5:
-    from PyQt5.QtGui  import *
-else:
-    from PyQt4.QtGui  import *
+from PyQt5.QtGui  import *
 
 # Modules Eficas
 from InterfaceQT4 import configuration
