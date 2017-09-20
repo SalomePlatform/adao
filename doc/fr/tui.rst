@@ -123,7 +123,7 @@ aussi le définir à l'aide de la matrice qui correspond à l'opérateur linéai
 Dans le cas présent le plus simple d'opérateur linéaire, on utilise la syntaxe
 suivante pour un opérateur de :math:`\mathbf{R}^3` sur lui-même::
 
-    case.ObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
+    case.set( 'ObservationOperator', Matrix = "1 0 0;0 2 0;0 0 3")
 
 Dans le cas beaucoup plus courant d'un opérateur non-linéaire de
 :math:`\mathbf{R}^n` dans  :math:`\mathbf{R}^p`, il doit être préalablement
@@ -503,30 +503,22 @@ Paramétrer le calcul, les sorties, etc.
 Effectuer le calcul
 +++++++++++++++++++
 
-.. index:: single: executePythonScheme
-
-**executePythonScheme** ()
-    Cette commande lance le calcul complet dans l'environnement de
-    l'interpréteur Python courant, sans interaction avec YACS [YACS]_. Les
-    sorties standard et d'erreur sont celles de l'interpréteur Python. On
-    dispose si nécessaire du parallélisme interne des algorithmes dans ADAO et
-    du parallélisme interne du ou des codes de simulation utilisé.
-
-.. .. index:: single: generateYACSscheme
-..
-.. **executeYACSScheme** (*File*)
-..     Cete commande génère le schéma YACS [YACS]_ du cas de calcul dans le fichier
-..     requis "*File*", et en lance l'exécution dans l'interpréteur YACS, comme on
-..     peut le réaliser en utilisant l'éditeur standard de cas ADAO. Les sorties
-..     standard et d'erreur sont celles de l'interpréteur YACS. On dispose si
-..     nécessaire du parallélisme de noeuds et blocs dans YACS, du parallélisme
-..     interne des algorithmes dans ADAO et du parallélisme interne du ou des codes
-..     de simulation utilisé.
-
 .. index:: single: execute
+.. index:: single: Executor
+.. index:: single: SaveCaseInFile
 
-**execute** ()
-    Cette commande est un raccourci utilisateur pour "*executePythonScheme*".
+**execute** (*Executor, SaveCaseInFile*)
+    Cette commande lance le calcul complet dans l'environnement d'exécution
+    choisi par le mot-clé *Executor*. Cet environnement peut être celui de
+    l'interpréteur Python, sans interaction avec YACS (demandé par la valeur
+    "*Python*"), ou celui de YACS (demandé par la valeur "*YACS*"). Si un
+    fichier est indiqué dans le mot-clé *SaveCaseInFile*, il sera utilisé
+    pour enregistrer la version associée du fichier de commande pour
+    l'environnement d'exécution requis. Lors de l'exécution, les sorties
+    courantes (standard et d'erreur) sont celles de l'environnement choisi.
+    On dispose si nécessaire (ou si possible) du parallélisme interne des
+    algorithmes dans ADAO, du parallélisme de YACS, et du parallélisme interne
+    du ou des codes de simulation utilisés.
 
 Obtenir séparément les résultats de calcul
 ++++++++++++++++++++++++++++++++++++++++++

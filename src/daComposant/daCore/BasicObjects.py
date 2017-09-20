@@ -1732,14 +1732,14 @@ class CaseLogger(object):
     """
     Conservation des commandes de creation d'un cas
     """
-    def __init__(self, __name="", __objname="case", __viewers={}, __loaders={}):
+    def __init__(self, __name="", __objname="case", __addViewers={}, __addLoaders={}):
         self.__name     = str(__name)
         self.__objname  = str(__objname)
         self.__logSerie = []
         self.__switchoff = False
         self.__viewers = self.__loaders = {"TUI":_TUIViewer}
-        self.__viewers.update(__viewers)
-        self.__loaders.update(__loaders)
+        self.__viewers.update(__addViewers)
+        self.__loaders.update(__addLoaders)
 
     def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Enregistrement d'une commande individuelle"

@@ -110,8 +110,8 @@ optimization algorithm and its parameters, then the *a priori* state
     case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
     case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
 
-As a remark, vector or matrix inputs can be given as objects of type ``str``, 
-``list`` or ``tuple`` of Python, or of type ``array`` or ``matrix`` of Numpy. 
+As a remark, vector or matrix inputs can be given as objects of type ``str``,
+``list`` or ``tuple`` of Python, or of type ``array`` or ``matrix`` of Numpy.
 For these last two cases, one has only to import Numpy module before.
 
 After that, one has to define the operators :math:`H` of observation and
@@ -121,7 +121,7 @@ define it using the matrix that corresponds to the linear operator. In the most
 simple present case of a linear operator, we use the following syntax for an
 operator from :math:`\mathbf{R}^3` into itself::
 
-    case.ObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
+    case.set( 'ObservationOperator', Matrix = "1 0 0;0 2 0;0 0 3")
 
 In the most frequent case of a non-linear operator of :math:`\mathbf{R}^n` into
 :math:`\mathbf{R}^p`, it has to be previously available as a Python function,
@@ -417,7 +417,7 @@ The available commands are:
 **setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, Stored*)
     This command allows to set the evolution operator :math:`H`, which
     transforms the input parameters :math:`\mathbf{x}` in results
-    :math:`\mathbf{y}` that are compared to observations :math:`\mathbf{y}^o`. 
+    :math:`\mathbf{y}` that are compared to observations :math:`\mathbf{y}^o`.
     Its value is defined as an object of type function or of type "*Matrix*".
     For the function case, various functional forms may be used, as described in
     the :ref:`section_ref_operator_requirements`, and entered by "*OneFunction*"
@@ -469,33 +469,35 @@ Setting the calculation, outputs, etc.
 .. index:: single: setObserver
 
 **setObserver** (*Variable, Template, String, Script, Info*)
-    This command allows to set an *observer* on the current or final 
-    calculation variable. Reference should be made to the description of the 
-    ':ref:`ref_observers_requirements` for their list and content, and to the 
-    :ref:`section_reference` to know what are the observable quantities. One 
-    defines as "*String*" the *observer* body, using a string including if 
-    necessary line breaks. It is recommended to use the patterns available by 
-    the argument "*Template*". In the case of a definition as "*Script*", the 
-    file must contain only the body of the function, as  described in the 
-    :ref:`ref_observers_requirements`. The "*Info*" variable contains an 
+    This command allows to set an *observer* on the current or final
+    calculation variable. Reference should be made to the description of the
+    ':ref:`ref_observers_requirements` for their list and content, and to the
+    :ref:`section_reference` to know what are the observable quantities. One
+    defines as "*String*" the *observer* body, using a string including if
+    necessary line breaks. It is recommended to use the patterns available by
+    the argument "*Template*". In the case of a definition as "*Script*", the
+    file must contain only the body of the function, as  described in the
+    :ref:`ref_observers_requirements`. The "*Info*" variable contains an
     information string or can be void.
 
 Perform the calculation
 +++++++++++++++++++++++
 
-.. index:: single: executePythonScheme
-
-**executePythonScheme** ()
-    This command launches the complete calculation in the environment of the
-    current Python interpreter, without interaction with YACS [YACS]_. The
-    standard output and standard error are those of the Python interpreter. If
-    necessary, the internal parallelism, of the algorithms in ADAO and of the
-    simulation code used, is available.
-
 .. index:: single: execute
+.. index:: single: Executor
+.. index:: single: SaveCaseInFile
 
-**execute** ()
-    This command is a user shorthand for "*executePythonScheme*".
+**execute** (*Executor, SaveCaseInFile*)
+    This command launches the complete calculation in the execution environment
+    chosen by the keyword *Executor*. This environment can be the current
+    Python interpreter, without interaction with YACS (using the value
+    "*Python*"), or the one of YACS (using the value "*YACS*"). If a file is
+    given in the keyword *SaveCaseInFile*, it will be used to save the
+    associated version of commands file for the given execution environment.
+    During the execution, the usual outputs (standard and error) are the one of
+    the chosen environment. If necessary (and if possible), the ADAO algorithms
+    internal parallelism, the parallelism of YACS, and the internal parallelism
+    of the simulation code(s) used, are available.
 
 Get the calculation results separately
 ++++++++++++++++++++++++++++++++++++++

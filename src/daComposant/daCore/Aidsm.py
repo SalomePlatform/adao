@@ -36,6 +36,7 @@ from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
 from daCore.BasicObjects import DiagnosticAndParameters, ImportFromScript
 from daCore.BasicObjects import CaseLogger, GenericCaseViewer
 from daCore.Templates    import ObserverTemplates
+from daCore import Persistence
 from daCore import PlatformInfo
 
 # ==============================================================================
@@ -111,17 +112,41 @@ class DICViewer(GenericCaseViewer):
                     __local.pop(__k)
             for __k,__v in __local.items():
                 if __k == "Concept": continue
-                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix'] and 'Script' in __local: continue
+                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local: continue
                 if __k == 'Algorithm':
                     __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
                 elif __k == 'Script':
                     __k = 'Vector'
+                    __f = 'Script'
+                    __v = "'"+repr(__v)+"'"
                     for __lk in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix']:
                         if __lk in __local and __local[__lk]: __k = __lk
                     if __command == "AlgorithmParameters": __k = "Dict"
+                    if 'OneFunction' in __local and __local['OneFunction']:
+                        __text += "%s_ScriptWithOneFunction = {}\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['Script'] = {}\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['Script']['Direct'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Tangent'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Adjoint'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['DifferentialIncrement'] = 1e-06\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['CenteredFiniteDifference'] = 0\n"%(__command,)
+                        __k = 'Function'
+                        __f = 'ScriptWithOneFunction'
+                        __v = '%s_ScriptWithOneFunction'%(__command,)
+                    if 'ThreeFunctions' in __local and __local['ThreeFunctions']:
+                        __text += "%s_ScriptWithFunctions = {}\n"%(__command,)
+                        __text += "%s_ScriptWithFunctions['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
+                        __text += "%s_ScriptWithFunctions['Script'] = {}\n"%(__command,)
+                        __text += "%s_ScriptWithFunctions['Script']['Direct'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithFunctions['Script']['Tangent'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithFunctions['Script']['Adjoint'] = %s\n"%(__command,__v)
+                        __k = 'Function'
+                        __f = 'ScriptWithFunctions'
+                        __v = '%s_ScriptWithFunctions'%(__command,)
                     __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,'Script')
-                    __text += "%s_config['Data'] = '%s'\n"%(__command,repr(__v))
+                    __text += "%s_config['From'] = '%s'\n"%(__command,__f)
+                    __text += "%s_config['Data'] = %s\n"%(__command,__v)
                     __text = __text.replace("''","'")
                 elif __k in ('Stored', 'Checked'):
                     if bool(__v):
@@ -131,6 +156,11 @@ class DICViewer(GenericCaseViewer):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
                 else:
                     if __k is 'Parameters': __k = "Dict"
+                    if isinstance(__v,Persistence.Persistence): __v = __v.values()
+                    if callable(__v): __text = self._missing%__v.__name__+__text
+                    if isinstance(__v,dict):
+                        for val in __v.values():
+                            if callable(val): __text = self._missing%val.__name__+__text
                     __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
                     __text += "%s_config['From'] = '%s'\n"%(__command,'String')
                     __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command,repr(__v))
@@ -180,7 +210,7 @@ class DICViewer(GenericCaseViewer):
 
 class XMLViewer(GenericCaseViewer):
     """
-    Etablissement des commandes de creation d'un cas DIC
+    Etablissement des commandes de creation d'un cas XML
     """
     def __init__(self, __name="", __objname="case", __content=None):
         "Initialisation et enregistrement de l'entete"
@@ -190,9 +220,9 @@ class XMLViewer(GenericCaseViewer):
 # ==============================================================================
 class Aidsm(object):
     """ ADAO Internal Data Structure Model """
-    def __init__(self, name = "", viewers={"DIC":DICViewer, "XML":XMLViewer}):
+    def __init__(self, name = "", addViewers={"DIC":DICViewer}):
         self.__name = str(name)
-        self.__case = CaseLogger(self.__name, "case", viewers)
+        self.__case = CaseLogger(self.__name, "case", addViewers)
         #
         self.__adaoObject   = {}
         self.__StoredInputs = {}
@@ -217,7 +247,7 @@ class Aidsm(object):
         #
         for ename in self.__Concepts:
             self.__adaoObject[ename] = None
-        for ename in ("ObservationOperator", "EvolutionModel", "ControlModel", "Observer"):
+        for ename in ("ObservationOperator", "EvolutionModel", "ControlModel"):
             self.__adaoObject[ename] = {}
         for ename in ("Diagnostic", "Observer"):
             self.__adaoObject[ename]   = []
@@ -835,13 +865,13 @@ class Aidsm(object):
 
     # -----------------------------------------------------------
 
-    def execute(self, Executor=None, FileName=None):
+    def execute(self, Executor=None, SaveCaseInFile=None):
         "Lancement du calcul"
         self.__case.register("execute",dir(),locals(),None,True)
         Operator.CM.clearCache()
         #~ try:
-        if   Executor == "YACS": self.__executeYACSScheme( FileName )
-        else:                    self.__executePythonScheme( FileName )
+        if   Executor == "YACS": self.__executeYACSScheme( SaveCaseInFile )
+        else:                    self.__executePythonScheme( SaveCaseInFile )
         #~ except Exception as e:
             #~ if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             #~ else: msg = ""
@@ -898,8 +928,8 @@ class Aidsm(object):
                 if self.__adaoObject['AlgorithmParameters'].hasObserver( k ):
                     self.__adaoObject['AlgorithmParameters'].removeObserver( k, "", True )
                 self.__StoredInputs[k] = self.__adaoObject['AlgorithmParameters'].pop(k, None)
-        del self.__adaoObject # Break pickle in Python 2
-        del self.__case       # Break pickle in Python 2
+        del self.__adaoObject # Because it breaks pickle in Python 2
+        del self.__case       # Because it breaks pickle in Python 2
         return 0
 
 # ==============================================================================
