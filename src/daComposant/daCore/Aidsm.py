@@ -869,13 +869,13 @@ class Aidsm(object):
         "Lancement du calcul"
         self.__case.register("execute",dir(),locals(),None,True)
         Operator.CM.clearCache()
-        #~ try:
-        if   Executor == "YACS": self.__executeYACSScheme( SaveCaseInFile )
-        else:                    self.__executePythonScheme( SaveCaseInFile )
-        #~ except Exception as e:
-            #~ if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
-            #~ else: msg = ""
-            #~ raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal.\n"%(str(e),msg))
+        try:
+            if   Executor == "YACS": self.__executeYACSScheme( SaveCaseInFile )
+            else:                    self.__executePythonScheme( SaveCaseInFile )
+        except Exception as e:
+            if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
+            else: msg = ""
+            raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal.\n"%(str(e),msg))
         return 0
 
     def __executePythonScheme(self, FileName=None):
@@ -928,8 +928,8 @@ class Aidsm(object):
                 if self.__adaoObject['AlgorithmParameters'].hasObserver( k ):
                     self.__adaoObject['AlgorithmParameters'].removeObserver( k, "", True )
                 self.__StoredInputs[k] = self.__adaoObject['AlgorithmParameters'].pop(k, None)
-        del self.__adaoObject # Because it breaks pickle in Python 2
-        del self.__case       # Because it breaks pickle in Python 2
+        del self.__adaoObject # Because it breaks pickle in Python 2. Not required for Python 3
+        del self.__case       # Because it breaks pickle in Python 2. Not required for Python 3
         return 0
 
 # ==============================================================================

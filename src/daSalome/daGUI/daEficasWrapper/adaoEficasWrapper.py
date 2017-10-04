@@ -57,7 +57,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       # self.menubar.hide()
       # self.toolBar.hide()
       # self.frameEntete.close()
-      self.closeEntete()
+      # self.closeEntete()
 
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))

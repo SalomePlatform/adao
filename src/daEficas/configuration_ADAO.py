@@ -58,6 +58,7 @@ class CONFIG(configuration.CONFIG_BASE):
     # (code, version, catalogue, formatIn, formatOut)
     # Il faut les mettre dans un tuple
     self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "adao"),)
+# JPA 21/09/2017 : self.catalogues = (("ADAO", "V0", os.path.join(self.rep_ini, 'ADAO_Cata_V0.py'), "python", "adao"),)
 
 def make_config(appli,rep):
 
