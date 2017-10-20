@@ -4,11 +4,11 @@
     <name>@default</name>
     <message>
         <source>ASSIMILATION_STUDY</source>
-        <translation>Assimilation de données ou optimisation</translation>
+        <translation>Assimilation de donnees ou optimisation</translation>
     </message>
     <message>
         <source>CHECKING_STUDY</source>
-        <translation>Vérification</translation>
+        <translation>Verification</translation>
     </message>
 </context>
 </TS>
