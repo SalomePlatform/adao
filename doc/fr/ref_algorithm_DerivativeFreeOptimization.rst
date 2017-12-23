@@ -187,11 +187,12 @@ Les options de l'algorithme sont les suivantes:
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["CurrentState", "CostFunctionJ",
+    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
     "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA",
-    "OMA", "OMB", "SimulatedObservationAtBackground",
-    "SimulatedObservationAtCurrentOptimum",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
+    "CurrentOptimum", "CurrentState", "IndexOfOptimum",
+    "InnovationAtCurrentState", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
@@ -242,11 +243,71 @@ Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
+  CostFunctionJAtCurrentOptimum
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J`. A chaque pas, la valeur correspond à l'état optimal trouvé depuis
+    le début.
+
+    Exemple : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+
+  CostFunctionJbAtCurrentOptimum
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche. A chaque pas, la
+    valeur correspond à l'état optimal trouvé depuis le début.
+
+    Exemple : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+
+  CostFunctionJoAtCurrentOptimum
+    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
+    :math:`J^o`, c'est-à-dire de la partie écart à l'observation. A chaque pas,
+    la valeur correspond à l'état optimal trouvé depuis le début.
+
+    Exemple : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
+
+  CurrentOptimum
+    *Liste de vecteurs*. Chaque élément est le vecteur d'état optimal au pas de
+    temps courant au cours du déroulement de l'algorithme d'optimisation. Ce
+    n'est pas nécessairement le dernier état.
+
+    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
+
+  IndexOfOptimum
+    *Liste d'entiers*. Chaque élément est l'index d'itération de l'optimum
+    obtenu au cours du déroulement de l'algorithme d'optimisation. Ce n'est pas
+    nécessairement le numéro de la dernière itération.
+
+    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
+
+  InnovationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
+    courant.
+
+    Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
+
+  OMA
+    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
+    l'observation et l'état optimal dans l'espace des observations.
+
+    Exemple : ``oma = ADD.get("OMA")[-1]``
+
+  OMB
+    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
+    l'observation et l'état d'ébauche dans l'espace des observations.
+
+    Exemple : ``omb = ADD.get("OMB")[-1]``
+
   SimulatedObservationAtBackground
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
     partir de l'ébauche :math:`\mathbf{x}^b`.
 
     Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentOptimum
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état optimal au pas de temps courant au cours du déroulement de
+    l'algorithme d'optimisation, c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
 
   SimulatedObservationAtCurrentState
     *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,

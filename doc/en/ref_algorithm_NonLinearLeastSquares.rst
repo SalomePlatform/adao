@@ -155,9 +155,13 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "OMA", "OMB", "Innovation",
-    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
+    are in the following list: ["BMA", "CostFunctionJ",
+    "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
+    "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation",
+    "InnovationAtCurrentState", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
@@ -218,12 +222,24 @@ The conditional outputs of the algorithm are the following:
 
     Example : ``Xs = ADD.get("CurrentState")[:]``
 
+  IndexOfOptimum
+    *List of integers*. Each element is the iteration index of the optimum
+    obtained at the current step the optimization algorithm. It is not
+    necessarily the number of the last iteration.
+
+    Example : ``i = ADD.get("IndexOfOptimum")[-1]``
+
   Innovation
     *List of vectors*. Each element is an innovation vector, which is in static
     the difference between the optimal and the background, and in dynamic the
     evolution increment.
 
     Example : ``d = ADD.get("Innovation")[-1]``
+
+  InnovationAtCurrentState
+    *List of vectors*. Each element is an innovation vector at current state.
+
+    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
 
   OMA
     *List of vectors*. Each element is a vector of difference between the
@@ -236,6 +252,19 @@ The conditional outputs of the algorithm are the following:
     observation and the background state in the observation space.
 
     Example : ``omb = ADD.get("OMB")[-1]``
+
+  SimulatedObservationAtBackground
+    *List of vectors*. Each element is a vector of observation simulated from
+    the background :math:`\mathbf{x}^b`.
+
+    Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the optimal state obtained at the current step the optimization algorithm,
+    that is, in the observation space.
+
+    Example : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
 
   SimulatedObservationAtCurrentState
     *List of vectors*. Each element is an observed vector at the current state,

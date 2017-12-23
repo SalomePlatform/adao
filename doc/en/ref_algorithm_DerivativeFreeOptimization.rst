@@ -182,11 +182,12 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["CurrentState", "CostFunctionJ",
+    are in the following list: ["BMA", "CostFunctionJ",
     "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA",
-    "OMA", "OMB", "SimulatedObservationAtBackground",
-    "SimulatedObservationAtCurrentOptimum",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
+    "CurrentOptimum", "CurrentState", "IndexOfOptimum",
+    "InnovationAtCurrentState", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
     Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
@@ -235,11 +236,69 @@ The unconditional outputs of the algorithm are the following:
 
 The conditional outputs of the algorithm are the following:
 
+  CostFunctionJAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J`.
+    At each step, the value corresponds to the optimal state found from the
+    beginning.
+
+    Example : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+
+  CostFunctionJbAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J^b`,
+    that is of the background difference part. At each step, the value
+    corresponds to the optimal state found from the beginning.
+
+    Example : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+
+  CostFunctionJoAtCurrentOptimum
+    *List of values*. Each element is a value of the error function :math:`J^o`,
+    that is of the observation difference part. At each step, the value
+    corresponds to the optimal state found from the beginning.
+
+    Example : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
+
+  CurrentOptimum
+    *List of vectors*. Each element is the optimal state obtained at the current
+    step of the optimization algorithm. It is not necessarily the last state.
+
+    Example : ``Xo = ADD.get("CurrentOptimum")[:]``
+
+  IndexOfOptimum
+    *List of integers*. Each element is the iteration index of the optimum
+    obtained at the current step the optimization algorithm. It is not
+    necessarily the number of the last iteration.
+
+    Example : ``i = ADD.get("IndexOfOptimum")[-1]``
+
+  InnovationAtCurrentState
+    *List of vectors*. Each element is an innovation vector at current state.
+
+    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
+
+  OMA
+    *List of vectors*. Each element is a vector of difference between the
+    observation and the optimal state in the observation space.
+
+    Example : ``oma = ADD.get("OMA")[-1]``
+
+  OMB
+    *List of vectors*. Each element is a vector of difference between the
+    observation and the background state in the observation space.
+
+    Example : ``omb = ADD.get("OMB")[-1]``
+
   SimulatedObservationAtBackground
     *List of vectors*. Each element is a vector of observation simulated from
     the background :math:`\mathbf{x}^b`.
 
     Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentOptimum
+    *List of vectors*. Each element is a vector of observation simulated from
+    the optimal state obtained at the current step the optimization algorithm,
+    that is, in the observation space.
+
+    Example : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
 
   SimulatedObservationAtCurrentState
     *List of vectors*. Each element is an observed vector at the current state,

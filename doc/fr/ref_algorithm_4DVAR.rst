@@ -190,6 +190,7 @@ Les options de l'algorithme sont les suivantes:
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
     "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
     "CurrentOptimum", "CurrentState", "IndexOfOptimum"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``

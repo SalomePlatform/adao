@@ -166,10 +166,12 @@ The options of the algorithm are the following:
     are in the following list: ["APosterioriCorrelations",
     "APosterioriCovariance", "APosterioriStandardDeviations",
     "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CostFunctionJAtCurrentOptimum", "CurrentOptimum",
-    "CurrentState", "IndexOfOptimum", "Innovation", "InnovationAtCurrentState",
-    "MahalanobisConsistency", "OMA", "OMB", "SigmaObs2",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
+    "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
+    "CurrentOptimum", "CurrentState", "IndexOfOptimum", "Innovation",
+    "InnovationAtCurrentState", "MahalanobisConsistency", "OMA", "OMB",
+    "SigmaObs2", "SimulatedObservationAtBackground",
+    "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
     "SimulationQuantiles"].
 

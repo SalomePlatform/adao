@@ -55,7 +55,7 @@ de cas de calcul ADAO. Toutes les données sont explicitement définies dans le
 corps du script pour faciliter la lecture. L'ensemble des commandes est le
 suivant::
 
-    from numpy import array
+    from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -84,7 +84,7 @@ La création et l'initialisation d'une étude se font par les commandes suivante
 le nom ``case`` de l'objet du cas de calcul TUI ADAO étant quelconque, au choix
 de l'utilisateur::
 
-    from numpy import array
+    from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
 
@@ -283,13 +283,13 @@ font en important le module d'interface "*adaoBuilder*" et en invoquant sa
 méthode "*New()*" comme illustré dans les quelques lignes suivantes (le nom
 ``case`` de l'objet étant quelconque, au choix de l'utilisateur)::
 
-    from numpy import array
+    from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
 
 Il est recommandé par principe de toujours importer le module ``numpy`` (ou ses
 constructeurs particuliers, comme celui d'``array``) pour faciliter ensuite son
-usage dans les commandes elle-mêmes.
+usage dans les commandes elles-mêmes.
 
 Définir les données de calcul
 +++++++++++++++++++++++++++++

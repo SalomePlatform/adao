@@ -83,7 +83,7 @@ The creation and initialization of a study are done using the following
 commands, the ``case`` object name of the ADAO TUI calculation case being let
 free to the user choice::
 
-    from numpy import array
+    from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
 

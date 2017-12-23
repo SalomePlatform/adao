@@ -112,11 +112,11 @@ Les options de l'algorithme sont les suivantes:
     Exemple : ``{"Minimizer":"LBFGSB"}``
 
   Bounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour
-    chaque variable d'état optimisée. Les bornes doivent être données par une
-    liste de liste de paires de bornes inférieure/supérieure pour chaque
-    variable, avec une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les
-    bornes peuvent toujours être spécifiées, mais seuls les optimiseurs sous
+    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
+    variable d'état optimisée. Les bornes doivent être données par une liste de
+    liste de paires de bornes inférieure/supérieure pour chaque variable, avec
+    une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les bornes
+    peuvent toujours être spécifiées, mais seuls les optimiseurs sous
     contraintes les prennent en compte.
 
     Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
@@ -163,9 +163,12 @@ Les options de l'algorithme sont les suivantes:
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
-    "CostFunctionJb", "CostFunctionJo", "CurrentState", "OMA", "OMB",
-    "Innovation", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+    "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
+    "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation",
+    "InnovationAtCurrentState", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+    "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"].
 
     Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
@@ -228,12 +231,25 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``Xs = ADD.get("CurrentState")[:]``
 
+  IndexOfOptimum
+    *Liste d'entiers*. Chaque élément est l'index d'itération de l'optimum
+    obtenu au cours du déroulement de l'algorithme d'optimisation. Ce n'est pas
+    nécessairement le numéro de la dernière itération.
+
+    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
+
   Innovation
     *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
     en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
     d'évolution.
 
     Exemple : ``d = ADD.get("Innovation")[-1]``
+
+  InnovationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
+    courant.
+
+    Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
 
   OMA
     *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
@@ -247,11 +263,24 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
 
     Exemple : ``omb = ADD.get("OMB")[-1]``
 
-  SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,
-    c'est-à-dire dans l'espace des observations.
+  SimulatedObservationAtBackground
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'ébauche :math:`\mathbf{x}^b`.
 
-    Exemple : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+    Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
+
+  SimulatedObservationAtCurrentOptimum
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état optimal au pas de temps courant au cours du déroulement de
+    l'algorithme d'optimisation, c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
+
+  SimulatedObservationAtCurrentState
+    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
+    partir de l'état courant, c'est-à-dire dans l'espace des observations.
+
+    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
 
   SimulatedObservationAtOptimum
     *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
