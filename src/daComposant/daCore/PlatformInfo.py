@@ -39,7 +39,8 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import os, sys
+import os
+import sys
 
 # ==============================================================================
 class PlatformInfo(object):
@@ -76,47 +77,47 @@ class PlatformInfo(object):
 
     def getScipyVersion(self):
         "Retourne la version de scipy disponible"
-        try:
-            import scipy.version
-            return scipy.version.version
-        except ImportError:
-            return "0.0.0"
+        if has_scipy:
+            __version = scipy.version.version
+        else:
+            __version = "0.0.0"
+        return __version
 
     def getMatplotlibVersion(self):
         "Retourne la version de matplotlib disponible"
-        try:
-            import matplotlib
-            return matplotlib.__version__
-        except ImportError:
-            return "0.0.0"
+        if has_matplotlib:
+            __version = matplotlib.__version__
+        else:
+            __version = "0.0.0"
+        return __version
 
     def getGnuplotVersion(self):
         "Retourne la version de gnuplotpy disponible"
-        try:
-            import Gnuplot
-            return Gnuplot.__version__
-        except ImportError:
-            return "0.0"
+        if has_gnuplot:
+            __version = Gnuplot.__version__
+        else:
+            __version = "0.0"
+        return __version
 
     def getSphinxVersion(self):
         "Retourne la version de sphinx disponible"
-        try:
-            import sphinx
-            return sphinx.__version__
-        except ImportError:
-            return "0.0.0"
+        if has_sphinx:
+            __version = sphinx.__version__
+        else:
+            __version = "0.0.0"
+        return __version
 
     def getNloptVersion(self):
         "Retourne la version de nlopt disponible"
-        try:
-            import nlopt
-            return "%s.%s.%s"%(
+        if has_nlopt:
+            __version = "%s.%s.%s"%(
                 nlopt.version_major(),
                 nlopt.version_minor(),
                 nlopt.version_bugfix(),
                 )
-        except ImportError:
-            return "0.0.0"
+        else:
+            __version = "0.0.0"
+        return __version
 
     def getCurrentMemorySize(self):
         "Retourne la taille mémoire courante utilisée"
@@ -126,9 +127,9 @@ class PlatformInfo(object):
         "Retourne la precision maximale flottante pour Numpy"
         import numpy
         try:
-            x = numpy.array([1.,], dtype='float128')
+            numpy.array([1.,], dtype='float128')
             mfp = 'float128'
-        except:
+        except Exception:
             mfp = 'float64'
         return mfp
 
@@ -147,6 +148,7 @@ class PlatformInfo(object):
 # ==============================================================================
 try:
     import scipy
+    import scipy.version
     import scipy.optimize
     has_scipy = True
 except ImportError:
@@ -176,20 +178,9 @@ try:
 except ImportError:
     has_nlopt = False
 
-if "ROOT_SALOME" in os.environ:
-    has_salome = True
-else:
-    has_salome = False
-
-if "YACS_ROOT_DIR" in os.environ:
-    has_yacs = True
-else:
-    has_yacs = False
-
-if "ADAO_ROOT_DIR" in os.environ:
-    has_adao = True
-else:
-    has_adao = False
+has_salome = bool( "ROOT_SALOME"   in os.environ )
+has_yacs   = bool( "YACS_ROOT_DIR" in os.environ )
+has_adao   = bool( "ADAO_ROOT_DIR" in os.environ )
 
 # ==============================================================================
 def uniq(sequence):

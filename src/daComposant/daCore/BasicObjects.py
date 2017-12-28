@@ -28,7 +28,10 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import os, sys, logging, copy
+import os
+import sys
+import logging
+import copy
 import numpy
 from daCore import Persistence
 from daCore import PlatformInfo
@@ -116,7 +119,7 @@ class Operator(object):
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
         self.__AvoidRC = bool( avoidingRedundancy )
         if   fromMethod is not None:
-            self.__Method = fromMethod
+            self.__Method = fromMethod # logtimer(fromMethod)
             self.__Matrix = None
             self.__Type   = "Method"
         elif fromMatrix is not None:
@@ -415,7 +418,7 @@ class FullOperator(object):
         #
         if __appliedInX is not None:
             self.__FO["AppliedInX"] = {}
-            if type(__appliedInX) is not dict:
+            if not isinstance(__appliedInX, dict):
                 raise ValueError("Error: observation operator defined by \"AppliedInX\" need a dictionary as argument.")
             for key in list(__appliedInX.keys()):
                 if type( __appliedInX[key] ) is type( numpy.matrix([]) ):
@@ -1198,13 +1201,13 @@ class AlgorithmAndParameters(object):
         if not( min(__EM_shape) == max(__EM_shape) ):
             raise ValueError("Shape characteristic of evolution operator (EM) is incorrect: \"%s\"."%(__EM_shape,))
         #
-        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and not( __HO_shape[1] == max(__Xb_shape) ):
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not( __HO_shape[1] == max(__Xb_shape) ):
             raise ValueError("Shape characteristic of observation operator (H) \"%s\" and state (X) \"%s\" are incompatible."%(__HO_shape,__Xb_shape))
-        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and not( __HO_shape[0] == max(__Y_shape) ):
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not( __HO_shape[0] == max(__Y_shape) ):
             raise ValueError("Shape characteristic of observation operator (H) \"%s\" and observation (Y) \"%s\" are incompatible."%(__HO_shape,__Y_shape))
-        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and len(self.__B) > 0 and not( __HO_shape[1] == __B_shape[0] ):
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__B) > 0 and not( __HO_shape[1] == __B_shape[0] ):
             raise ValueError("Shape characteristic of observation operator (H) \"%s\" and a priori errors covariance matrix (B) \"%s\" are incompatible."%(__HO_shape,__B_shape))
-        if len(self.__HO) > 0 and not(type(self.__HO) is type({})) and len(self.__R) > 0 and not( __HO_shape[0] == __R_shape[1] ):
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__R) > 0 and not( __HO_shape[0] == __R_shape[1] ):
             raise ValueError("Shape characteristic of observation operator (H) \"%s\" and observation errors covariance matrix (R) \"%s\" are incompatible."%(__HO_shape,__R_shape))
         #
         if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
@@ -1220,10 +1223,10 @@ class AlgorithmAndParameters(object):
         if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
             raise ValueError("Shape characteristic of observation errors covariance matrix (R) \"%s\" and observation (Y) \"%s\" are incompatible."%(__R_shape,__Y_shape))
         #
-        if self.__EM is not None and len(self.__EM) > 0 and not(type(self.__EM) is type({})) and not( __EM_shape[1] == max(__Xb_shape) ):
+        if self.__EM is not None and len(self.__EM) > 0 and not isinstance(self.__EM, dict) and not( __EM_shape[1] == max(__Xb_shape) ):
             raise ValueError("Shape characteristic of evolution model (EM) \"%s\" and state (X) \"%s\" are incompatible."%(__EM_shape,__Xb_shape))
         #
-        if self.__CM is not None and len(self.__CM) > 0 and not(type(self.__CM) is type({})) and not( __CM_shape[1] == max(__U_shape) ):
+        if self.__CM is not None and len(self.__CM) > 0 and not isinstance(self.__CM, dict) and not( __CM_shape[1] == max(__U_shape) ):
             raise ValueError("Shape characteristic of control model (CM) \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape,__U_shape))
         #
         if ("Bounds" in self.__P) \
@@ -1354,14 +1357,14 @@ class State(object):
             self.size        = self.__V.size
         elif __Series is not None:
             self.__is_series  = True
-            if type(__Series) in (tuple, list, numpy.ndarray, numpy.matrix):
+            if isinstance(__Series, (tuple, list, numpy.ndarray, numpy.matrix)):
                 self.__V = Persistence.OneVector(self.__name, basetype=numpy.matrix)
                 for member in __Series:
                     self.__V.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
                 import sys ; sys.stdout.flush()
             else:
                 self.__V = __Series
-            if type(self.__V.shape) in (tuple, list):
+            if isinstance(self.__V.shape, (tuple, list)):
                 self.shape       = self.__V.shape
             else:
                 self.shape       = self.__V.shape()
@@ -1490,6 +1493,8 @@ class Covariance(object):
 
     def __validate(self):
         "Validation"
+        if self.__C is None:
+            raise UnboundLocalError("%s covariance matrix value has not been set!"%(self.__name,))
         if self.ismatrix() and min(self.shape) != max(self.shape):
             raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name,self.shape))
         if self.isobject() and min(self.shape) != max(self.shape):
@@ -1658,19 +1663,14 @@ class Covariance(object):
         "x.__mul__(y) <==> x*y"
         if   self.ismatrix() and isinstance(other,numpy.matrix):
             return self.__C * other
-        elif self.ismatrix() and (isinstance(other,numpy.ndarray) \
-                               or isinstance(other,list) \
-                               or isinstance(other,tuple)):
+        elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
             if numpy.ravel(other).size == self.shape[1]: # Vecteur
                 return self.__C * numpy.asmatrix(numpy.ravel(other)).T
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
                 return self.__C * numpy.asmatrix(other)
             else:
                 raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asmatrix(other).shape,self.__name))
-        elif self.isvector() and (isinstance(other,numpy.matrix) \
-                               or isinstance(other,numpy.ndarray) \
-                               or isinstance(other,list) \
-                               or isinstance(other,tuple)):
+        elif self.isvector() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
             if numpy.ravel(other).size == self.shape[1]: # Vecteur
                 return numpy.asmatrix(self.__C * numpy.ravel(other)).T
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
@@ -1679,9 +1679,7 @@ class Covariance(object):
                 raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
             return self.__C * other
-        elif self.isscalar() and (isinstance(other,numpy.ndarray) \
-                               or isinstance(other,list) \
-                               or isinstance(other,tuple)):
+        elif self.isscalar() and isinstance(other, (list, numpy.ndarray, tuple)):
             if len(numpy.asarray(other).shape) == 1 or numpy.asarray(other).shape[1] == 1 or numpy.asarray(other).shape[0] == 1:
                 return self.__C * numpy.asmatrix(numpy.ravel(other)).T
             else:
@@ -1732,14 +1730,16 @@ class CaseLogger(object):
     """
     Conservation des commandes de creation d'un cas
     """
-    def __init__(self, __name="", __objname="case", __addViewers={}, __addLoaders={}):
+    def __init__(self, __name="", __objname="case", __addViewers=None, __addLoaders=None):
         self.__name     = str(__name)
         self.__objname  = str(__objname)
         self.__logSerie = []
         self.__switchoff = False
-        self.__viewers = self.__loaders = {"TUI":_TUIViewer}
-        self.__viewers.update(__addViewers)
-        self.__loaders.update(__addLoaders)
+        self.__viewers = self.__loaders = {"TUI":_TUIViewer, "DIC":_DICViewer}
+        if __addViewers is not None:
+            self.__viewers.update(dict(__addViewers))
+        if __addLoaders is not None:
+            self.__loaders.update(dict(__addLoaders))
 
     def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Enregistrement d'une commande individuelle"
@@ -1881,6 +1881,182 @@ class _TUIViewer(GenericCaseViewer):
         __content = __content.replace("\r\n","\n")
         exec(__content)
         return 0
+
+class _DICViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes de creation d'un cas DIC
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        self._addLine("# -*- coding: utf-8 -*-")
+        self._addLine("#\n# Input for ADAO converter to YACS\n#")
+        self._addLine("from numpy import array, matrix")
+        self._addLine("#")
+        self._addLine("study_config = {}")
+        self._addLine("study_config['StudyType'] = 'ASSIMILATION_STUDY'")
+        self._addLine("study_config['Name'] = '%s'"%self._name)
+        self._addLine("observers = {}")
+        self._addLine("study_config['Observers'] = observers")
+        self._addLine("#")
+        self._addLine("inputvariables_config = {}")
+        self._addLine("inputvariables_config['Order'] =['adao_default']")
+        self._addLine("inputvariables_config['adao_default'] = -1")
+        self._addLine("study_config['InputVariables'] = inputvariables_config")
+        self._addLine("#")
+        self._addLine("outputvariables_config = {}")
+        self._addLine("outputvariables_config['Order'] = ['adao_default']")
+        self._addLine("outputvariables_config['adao_default'] = -1")
+        self._addLine("study_config['OutputVariables'] = outputvariables_config")
+        if __content is not None:
+            for command in __content:
+                self._append(*command)
+    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
+        "Transformation d'une commande individuelle en un enregistrement"
+        if __command == "set": __command = __local["Concept"]
+        else:                  __command = __command.replace("set", "", 1)
+        #
+        __text  = None
+        if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get'):
+            return
+        elif __command in ['Debug', 'setDebug']:
+            __text  = "#\nstudy_config['Debug'] = '1'"
+        elif __command in ['NoDebug', 'setNoDebug']:
+            __text  = "#\nstudy_config['Debug'] = '0'"
+        elif __command in ['Observer', 'setObserver']:
+            __obs   = __local['Variable']
+            self._numobservers += 1
+            __text  = "#\n"
+            __text += "observers['%s'] = {}\n"%__obs
+            if __local['String'] is not None:
+                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
+                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, __local['String'])
+            if __local['Script'] is not None:
+                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'Script')
+                __text += "observers['%s']['Script'] = \"%s\"\n"%(__obs, __local['Script'])
+            if __local['Template'] is not None and __local['Template'] in Templates.ObserverTemplates:
+                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
+                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, Templates.ObserverTemplates[__local['Template']])
+            if __local['Info'] is not None:
+                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __local['Info'])
+            else:
+                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __obs)
+            __text += "observers['%s']['number'] = %s"%(__obs, self._numobservers)
+        elif __local is not None: # __keys is not None and
+            numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
+            __text  = "#\n"
+            __text += "%s_config = {}\n"%__command
+            if 'self' in __local: __local.pop('self')
+            __to_be_removed = []
+            for __k,__v in __local.items():
+                if __v is None: __to_be_removed.append(__k)
+            for __k in __to_be_removed:
+                __local.pop(__k)
+            for __k,__v in __local.items():
+                if __k == "Concept": continue
+                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local: continue
+                if __k == 'Algorithm':
+                    __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
+                elif __k == 'Script':
+                    __k = 'Vector'
+                    __f = 'Script'
+                    __v = "'"+repr(__v)+"'"
+                    for __lk in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix']:
+                        if __lk in __local and __local[__lk]: __k = __lk
+                    if __command == "AlgorithmParameters": __k = "Dict"
+                    if 'OneFunction' in __local and __local['OneFunction']:
+                        __text += "%s_ScriptWithOneFunction = {}\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['Script'] = {}\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['Script']['Direct'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Tangent'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Adjoint'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['DifferentialIncrement'] = 1e-06\n"%(__command,)
+                        __text += "%s_ScriptWithOneFunction['CenteredFiniteDifference'] = 0\n"%(__command,)
+                        __k = 'Function'
+                        __f = 'ScriptWithOneFunction'
+                        __v = '%s_ScriptWithOneFunction'%(__command,)
+                    if 'ThreeFunctions' in __local and __local['ThreeFunctions']:
+                        __text += "%s_ScriptWithFunctions = {}\n"%(__command,)
+                        __text += "%s_ScriptWithFunctions['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
+                        __text += "%s_ScriptWithFunctions['Script'] = {}\n"%(__command,)
+                        __text += "%s_ScriptWithFunctions['Script']['Direct'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithFunctions['Script']['Tangent'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithFunctions['Script']['Adjoint'] = %s\n"%(__command,__v)
+                        __k = 'Function'
+                        __f = 'ScriptWithFunctions'
+                        __v = '%s_ScriptWithFunctions'%(__command,)
+                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command,__f)
+                    __text += "%s_config['Data'] = %s\n"%(__command,__v)
+                    __text = __text.replace("''","'")
+                elif __k in ('Stored', 'Checked'):
+                    if bool(__v):
+                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
+                elif __k in ('AvoidRC', 'noDetails'):
+                    if not bool(__v):
+                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
+                else:
+                    if __k == 'Parameters': __k = "Dict"
+                    if isinstance(__v,Persistence.Persistence): __v = __v.values()
+                    if callable(__v): __text = self._missing%__v.__name__+__text
+                    if isinstance(__v,dict):
+                        for val in __v.values():
+                            if callable(val): __text = self._missing%val.__name__+__text
+                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command,'String')
+                    __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command,repr(__v))
+            __text += "study_config['%s'] = %s_config"%(__command,__command)
+            numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+            if __switchoff:
+                self._switchoff = True
+        if __text is not None: self._addLine(__text)
+        if not __switchoff:
+            self._switchoff = False
+    def _finalize(self):
+        self.__loadVariablesByScript()
+        self._addLine("#")
+        self._addLine("Analysis_config = {}")
+        self._addLine("Analysis_config['From'] = 'String'")
+        self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
+        self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
+        self._addLine("print 'Analysis:',xa\"\"\"")
+        self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
+    def __loadVariablesByScript(self):
+        __ExecVariables = {} # Necessaire pour recuperer la variable
+        exec("\n".join(self._lineSerie), __ExecVariables)
+        study_config = __ExecVariables['study_config']
+        self.__hasAlgorithm = bool(study_config['Algorithm'])
+        if not self.__hasAlgorithm and \
+                "AlgorithmParameters" in study_config and \
+                isinstance(study_config['AlgorithmParameters'], dict) and \
+                "From" in study_config['AlgorithmParameters'] and \
+                "Data" in study_config['AlgorithmParameters'] and \
+                study_config['AlgorithmParameters']['From'] == 'Script':
+            __asScript = study_config['AlgorithmParameters']['Data']
+            __var = ImportFromScript(__asScript).getvalue( "Algorithm" )
+            __text = "#\nstudy_config['Algorithm'] = '%s'"%(__var,)
+            self._addLine(__text)
+        if self.__hasAlgorithm and \
+                "AlgorithmParameters" in study_config and \
+                isinstance(study_config['AlgorithmParameters'], dict) and \
+                "From" not in study_config['AlgorithmParameters'] and \
+                "Data" not in study_config['AlgorithmParameters']:
+            __text  = "#\n"
+            __text += "AlgorithmParameters_config['Type'] = 'Dict'\n"
+            __text += "AlgorithmParameters_config['From'] = 'String'\n"
+            __text += "AlgorithmParameters_config['Data'] = '{}'\n"
+            self._addLine(__text)
+        del study_config
+
+class _XMLViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes de creation d'un cas XML
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        raise NotImplementedError()
 
 # ==============================================================================
 class ImportFromScript(object):

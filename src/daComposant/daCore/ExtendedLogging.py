@@ -76,6 +76,8 @@ __all__ = []
 import os
 import sys
 import logging
+import functools
+import time
 from daCore import PlatformInfo
 
 LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
@@ -144,6 +146,18 @@ class ExtendedLogging(object):
         Renvoie le niveau de logging sous forme texte
         """
         return logging.getLevelName( logging.getLogger().getEffectiveLevel() )
+
+# ==============================================================================
+def logtimer(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        start  = time.clock() # time.time()
+        result = f(*args, **kwargs)
+        end    = time.clock() # time.time()
+        msg    = 'TIMER Durée elapsed de la fonction utilisateur "{}": {:.3f}s'
+        logging.debug(msg.format(f.__name__, end-start))
+        return result
+    return wrapper
 
 # ==============================================================================
 if __name__ == "__main__":

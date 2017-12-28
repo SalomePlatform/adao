@@ -26,201 +26,21 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["Aidsm"]
 
-import os, sys
-from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
-import logging
-import numpy
+import os
+import sys
 #
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
-from daCore.BasicObjects import DiagnosticAndParameters, ImportFromScript
-from daCore.BasicObjects import CaseLogger, GenericCaseViewer
-from daCore.Templates    import ObserverTemplates
-from daCore import Persistence
+from daCore.BasicObjects import DiagnosticAndParameters, CaseLogger
 from daCore import PlatformInfo
-
-# ==============================================================================
-class DICViewer(GenericCaseViewer):
-    """
-    Etablissement des commandes de creation d'un cas DIC
-    """
-    def __init__(self, __name="", __objname="case", __content=None):
-        "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
-        self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Input for ADAO converter to YACS\n#")
-        self._addLine("from numpy import array, matrix")
-        self._addLine("#")
-        self._addLine("study_config = {}")
-        self._addLine("study_config['StudyType'] = 'ASSIMILATION_STUDY'")
-        self._addLine("study_config['Name'] = '%s'"%self._name)
-        self._addLine("observers = {}")
-        self._addLine("study_config['Observers'] = observers")
-        self._addLine("#")
-        self._addLine("inputvariables_config = {}")
-        self._addLine("inputvariables_config['Order'] =['adao_default']")
-        self._addLine("inputvariables_config['adao_default'] = -1")
-        self._addLine("study_config['InputVariables'] = inputvariables_config")
-        self._addLine("#")
-        self._addLine("outputvariables_config = {}")
-        self._addLine("outputvariables_config['Order'] = ['adao_default']")
-        self._addLine("outputvariables_config['adao_default'] = -1")
-        self._addLine("study_config['OutputVariables'] = outputvariables_config")
-        if __content is not None:
-            for command in __content:
-                self._append(*command)
-    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
-        "Transformation d'une commande individuelle en un enregistrement"
-        if __command == "set": __command = __local["Concept"]
-        else:                  __command = __command.replace("set", "", 1)
-        #
-        __text  = None
-        if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get'):
-            return
-        elif __command in ['Debug', 'setDebug']:
-            __text  = "#\nstudy_config['Debug'] = '1'"
-        elif __command in ['NoDebug', 'setNoDebug']:
-            __text  = "#\nstudy_config['Debug'] = '0'"
-        elif __command in ['Observer', 'setObserver']:
-            __obs   = __local['Variable']
-            self._numobservers += 1
-            __text  = "#\n"
-            __text += "observers['%s'] = {}\n"%__obs
-            if __local['String'] is not None:
-                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
-                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, __local['String'])
-            if __local['Script'] is not None:
-                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'Script')
-                __text += "observers['%s']['Script'] = \"%s\"\n"%(__obs, __local['Script'])
-            if __local['Template'] is not None:
-                __text += "observers['%s']['nodetype'] = '%s'\n"%(__obs, 'String')
-                __text += "observers['%s']['String'] = \"\"\"%s\"\"\"\n"%(__obs, ObserverTemplates[__local['Template']])
-            if __local['Info'] is not None:
-                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __local['Info'])
-            else:
-                __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __obs)
-            __text += "observers['%s']['number'] = %s"%(__obs, self._numobservers)
-        elif __local is not None: # __keys is not None and
-            numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
-            __text  = "#\n"
-            __text += "%s_config = {}\n"%__command
-            if 'self' in __local: __local.pop('self')
-            __to_be_removed = []
-            for __k,__v in __local.items():
-                if __v is None: __to_be_removed.append(__k)
-            for __k in __to_be_removed:
-                    __local.pop(__k)
-            for __k,__v in __local.items():
-                if __k == "Concept": continue
-                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local: continue
-                if __k == 'Algorithm':
-                    __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
-                elif __k == 'Script':
-                    __k = 'Vector'
-                    __f = 'Script'
-                    __v = "'"+repr(__v)+"'"
-                    for __lk in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix']:
-                        if __lk in __local and __local[__lk]: __k = __lk
-                    if __command == "AlgorithmParameters": __k = "Dict"
-                    if 'OneFunction' in __local and __local['OneFunction']:
-                        __text += "%s_ScriptWithOneFunction = {}\n"%(__command,)
-                        __text += "%s_ScriptWithOneFunction['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
-                        __text += "%s_ScriptWithOneFunction['Script'] = {}\n"%(__command,)
-                        __text += "%s_ScriptWithOneFunction['Script']['Direct'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithOneFunction['Script']['Tangent'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithOneFunction['Script']['Adjoint'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithOneFunction['DifferentialIncrement'] = 1e-06\n"%(__command,)
-                        __text += "%s_ScriptWithOneFunction['CenteredFiniteDifference'] = 0\n"%(__command,)
-                        __k = 'Function'
-                        __f = 'ScriptWithOneFunction'
-                        __v = '%s_ScriptWithOneFunction'%(__command,)
-                    if 'ThreeFunctions' in __local and __local['ThreeFunctions']:
-                        __text += "%s_ScriptWithFunctions = {}\n"%(__command,)
-                        __text += "%s_ScriptWithFunctions['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
-                        __text += "%s_ScriptWithFunctions['Script'] = {}\n"%(__command,)
-                        __text += "%s_ScriptWithFunctions['Script']['Direct'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithFunctions['Script']['Tangent'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithFunctions['Script']['Adjoint'] = %s\n"%(__command,__v)
-                        __k = 'Function'
-                        __f = 'ScriptWithFunctions'
-                        __v = '%s_ScriptWithFunctions'%(__command,)
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,__f)
-                    __text += "%s_config['Data'] = %s\n"%(__command,__v)
-                    __text = __text.replace("''","'")
-                elif __k in ('Stored', 'Checked'):
-                    if bool(__v):
-                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
-                elif __k in ('AvoidRC', 'noDetails'):
-                    if not bool(__v):
-                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
-                else:
-                    if __k is 'Parameters': __k = "Dict"
-                    if isinstance(__v,Persistence.Persistence): __v = __v.values()
-                    if callable(__v): __text = self._missing%__v.__name__+__text
-                    if isinstance(__v,dict):
-                        for val in __v.values():
-                            if callable(val): __text = self._missing%val.__name__+__text
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,'String')
-                    __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command,repr(__v))
-            __text += "study_config['%s'] = %s_config"%(__command,__command)
-            numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
-            if __switchoff:
-                self._switchoff = True
-        if __text is not None: self._addLine(__text)
-        if not __switchoff:
-            self._switchoff = False
-    def _finalize(self):
-        self.__loadVariablesByScript()
-        self._addLine("#")
-        self._addLine("Analysis_config = {}")
-        self._addLine("Analysis_config['From'] = 'String'")
-        self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
-        self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
-        self._addLine("print 'Analysis:',xa\"\"\"")
-        self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
-    def __loadVariablesByScript(self):
-        exec("\n".join(self._lineSerie))
-        if "Algorithm" in study_config and len(study_config['Algorithm'])>0:
-            self.__hasAlgorithm = True
-        else:
-            self.__hasAlgorithm = False
-        if not self.__hasAlgorithm and \
-                "AlgorithmParameters" in study_config and \
-                isinstance(study_config['AlgorithmParameters'], dict) and \
-                "From" in study_config['AlgorithmParameters'] and \
-                "Data" in study_config['AlgorithmParameters'] and \
-                study_config['AlgorithmParameters']['From'] == 'Script':
-            __asScript = study_config['AlgorithmParameters']['Data']
-            __var = ImportFromScript(__asScript).getvalue( "Algorithm" )
-            __text = "#\nstudy_config['Algorithm'] = '%s'"%(__var,)
-            self._addLine(__text)
-        if self.__hasAlgorithm and \
-                "AlgorithmParameters" in study_config and \
-                isinstance(study_config['AlgorithmParameters'], dict) and \
-                "From" not in study_config['AlgorithmParameters'] and \
-                "Data" not in study_config['AlgorithmParameters']:
-            __text  = "#\n"
-            __text += "AlgorithmParameters_config['Type'] = 'Dict'\n"
-            __text += "AlgorithmParameters_config['From'] = 'String'\n"
-            __text += "AlgorithmParameters_config['Data'] = '{}'\n"
-            self._addLine(__text)
-        del study_config
-
-class XMLViewer(GenericCaseViewer):
-    """
-    Etablissement des commandes de creation d'un cas XML
-    """
-    def __init__(self, __name="", __objname="case", __content=None):
-        "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
-        raise NotImplementedError()
+#
+from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
+import logging
 
 # ==============================================================================
 class Aidsm(object):
     """ ADAO Internal Data Structure Model """
-    def __init__(self, name = "", addViewers={"DIC":DICViewer}):
+    def __init__(self, name = "", addViewers=None):
         self.__name = str(name)
         self.__case = CaseLogger(self.__name, "case", addViewers)
         #
@@ -323,7 +143,10 @@ class Aidsm(object):
         except Exception as e:
             if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
-            raise ValueError("during settings, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal."%(str(e),msg))
+            raise ValueError("during settings, the following error occurs:\n"+\
+                             "\n%s %s\n\nSee also the potential messages, "+\
+                             "which can show the origin of the above error, "+\
+                             "in the launching terminal."%(str(e),msg))
 
     # -----------------------------------------------------------
 
@@ -669,9 +492,7 @@ class Aidsm(object):
             Variable       = None,
             ObjectFunction = None,
             ):
-        """
-        Permet de retirer un observer à une ou des variable nommée.
-        """
+        "Permet de retirer un observer à une ou des variable nommée"
         if "AlgorithmParameters" not in self.__adaoObject:
             raise ValueError("No algorithm registred, ask for one before removing observers")
         #
@@ -719,17 +540,10 @@ class Aidsm(object):
 
     def get(self, Concept=None, noDetails=True ):
         "Recuperation d'une sortie du calcul"
-        """
-        Permet d'accéder aux informations stockées, diagnostics et résultats
-        disponibles après l'exécution du calcul. Attention, quand un diagnostic
-        porte le même nom qu'une variable stockée (paramètre ou résultat),
-        c'est la variable stockée qui est renvoyée, et le diagnostic est
-        inatteignable.
-        """
         if Concept is not None:
             try:
                 self.__case.register("get", dir(), locals(), Concept) # Break pickle in Python 2
-            except:
+            except Exception:
                 pass
             if Concept in self.__StoredInputs:
                 return self.__StoredInputs[Concept]
@@ -875,7 +689,10 @@ class Aidsm(object):
         except Exception as e:
             if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
-            raise ValueError("during execution, the following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal.\n"%(str(e),msg))
+            raise ValueError("during execution, the following error occurs:\n"+\
+                             "\n%s %s\n\nSee also the potential messages, "+\
+                             "which can show the origin of the above error, "+\
+                             "in the launching terminal.\n"%(str(e),msg))
         return 0
 
     def __executePythonScheme(self, FileName=None):
