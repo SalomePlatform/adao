@@ -83,7 +83,25 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum", "CurrentOptimum", "IndexOfOptimum", "InnovationAtCurrentState", "BMA", "OMA", "OMB", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = [
+                "CurrentState",
+                "CostFunctionJ",
+                "CostFunctionJb",
+                "CostFunctionJo",
+                "CostFunctionJAtCurrentOptimum",
+                "CostFunctionJbAtCurrentOptimum",
+                "CostFunctionJoAtCurrentOptimum",
+                "CurrentOptimum",
+                "IndexOfOptimum",
+                "InnovationAtCurrentState",
+                "BMA",
+                "OMA",
+                "OMB",
+                "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentOptimum",
+                "SimulatedObservationAtCurrentState",
+                "SimulatedObservationAtOptimum",
+                ]
             )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
@@ -151,6 +169,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
                "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
                "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
                "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
             if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
@@ -160,9 +180,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
             if "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
-                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
                 self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
+            if "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
+            if "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
             return J
         #
         # Point de démarrage de l'optimisation : Xini = Xb

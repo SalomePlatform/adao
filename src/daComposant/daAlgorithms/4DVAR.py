@@ -86,7 +86,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "IndexOfOptimum", "CurrentOptimum", "CostFunctionJAtCurrentOptimum"]
+            listval  = [
+                "BMA",
+                "CurrentState",
+                "CostFunctionJ",
+                "CostFunctionJb",
+                "CostFunctionJo",
+                "IndexOfOptimum",
+                "CurrentOptimum",
+                "CostFunctionJAtCurrentOptimum",
+                "CostFunctionJbAtCurrentOptimum",
+                "CostFunctionJoAtCurrentOptimum",
+                ]
             )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
@@ -199,16 +210,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJ" ].store( J )
             if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
                "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+               "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
+               "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
             if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["IndexOfOptimum"].store( IndexMin )
             if "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
             if "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
-                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
-                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
                 self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
+            if "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
+            if "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
             return J
         #
         def GradientOfCostFunction(x):

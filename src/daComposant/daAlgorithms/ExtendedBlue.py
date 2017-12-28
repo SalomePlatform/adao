@@ -39,7 +39,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = [
+                "APosterioriCorrelations",
+                "APosterioriCovariance",
+                "APosterioriStandardDeviations",
+                "APosterioriVariances",
+                "BMA",
+                "OMA",
+                "OMB",
+                "CurrentState",
+                "CostFunctionJ",
+                "CostFunctionJb",
+                "CostFunctionJo",
+                "Innovation",
+                "SigmaBck2",
+                "SigmaObs2",
+                "MahalanobisConsistency",
+                "SimulationQuantiles",
+                "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentState",
+                "SimulatedObservationAtOptimum",
+                ]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -69,7 +89,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["Linear", "NonLinear"]
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
@@ -88,6 +108,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             HXb = H( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+        if Y.size != HXb.size:
+            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+        if max(Y.shape) != max(HXb.shape):
+            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -96,10 +120,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de l'innovation
         # ----------------------
-        if Y.size != HXb.size:
-            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
-        if max(Y.shape) != max(HXb.shape):
-            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         d  = Y - HXb
         #
         # Calcul de la matrice de gain et de l'analyse

@@ -39,7 +39,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["APosterioriCorrelations", "APosterioriCovariance", "APosterioriStandardDeviations", "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = [
+                "APosterioriCorrelations",
+                "APosterioriCovariance",
+                "APosterioriStandardDeviations",
+                "APosterioriVariances",
+                "BMA",
+                "OMA",
+                "OMB",
+                "CurrentState",
+                "CostFunctionJ",
+                "CostFunctionJb",
+                "CostFunctionJo",
+                "Innovation",
+                "SigmaBck2",
+                "SigmaObs2",
+                "MahalanobisConsistency",
+                "SimulationQuantiles",
+                "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentState",
+                "SimulatedObservationAtOptimum",
+                ]
             )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -80,8 +100,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ha = HO["Adjoint"].asMatrix(Xb)
         Ha = Ha.reshape(Xb.size,Y.size) # ADAO & check shape
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé (sans cout)
-        # ----------------------------------------------------------------
+        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
+        # ----------------------------------------------------
         if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
             HXb = HO["AppliedInX"]["HXb"]
         else:
@@ -128,11 +148,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["StoreInternalVariables"] or \
            "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
            "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"]:
-            #
             Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
             Jo  = float( 0.5 * oma.T * RI * oma )
             J   = Jb + Jo
-            #
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

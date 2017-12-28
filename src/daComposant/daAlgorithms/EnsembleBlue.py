@@ -39,7 +39,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["CurrentState", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = [
+                "CurrentState",
+                "Innovation",
+                "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentState",
+                "SimulatedObservationAtOptimum",
+                ]
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -47,7 +53,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Graine fixée pour le générateur aléatoire",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
             )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
