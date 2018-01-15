@@ -511,12 +511,12 @@ Effectuer le calcul
     Cette commande lance le calcul complet dans l'environnement d'exécution
     choisi par le mot-clé *Executor*. Cet environnement peut être celui de
     l'interpréteur Python, sans interaction avec YACS (demandé par la valeur
-    "*Python*"), ou celui de YACS (demandé par la valeur "*YACS*"). Si un
-    fichier est indiqué dans le mot-clé *SaveCaseInFile*, il sera utilisé
+    "*Python*"), ou celui de YACS (demandé par la valeur "*YACS*" [YACS]_). Si
+    un fichier est indiqué dans le mot-clé *SaveCaseInFile*, il sera utilisé
     pour enregistrer la version associée du fichier de commande pour
     l'environnement d'exécution requis. Lors de l'exécution, les sorties
-    courantes (standard et d'erreur) sont celles de l'environnement choisi.
-    On dispose si nécessaire (ou si possible) du parallélisme interne des
+    courantes (standard et d'erreur) sont celles de l'environnement choisi. On
+    dispose si nécessaire (ou si possible) du parallélisme interne des
     algorithmes dans ADAO, du parallélisme de YACS, et du parallélisme interne
     du ou des codes de simulation utilisés.
 

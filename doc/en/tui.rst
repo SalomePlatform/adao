@@ -491,8 +491,8 @@ Perform the calculation
     This command launches the complete calculation in the execution environment
     chosen by the keyword *Executor*. This environment can be the current
     Python interpreter, without interaction with YACS (using the value
-    "*Python*"), or the one of YACS (using the value "*YACS*"). If a file is
-    given in the keyword *SaveCaseInFile*, it will be used to save the
+    "*Python*"), or the one of YACS (using the value "*YACS*" [YACS]_). If a
+    file is given in the keyword *SaveCaseInFile*, it will be used to save the
     associated version of commands file for the given execution environment.
     During the execution, the usual outputs (standard and error) are the one of
     the chosen environment. If necessary (and if possible), the ADAO algorithms

@@ -31,10 +31,11 @@ Documentation ADAO
    :align: center
    :alt: Logo ADAO
 
-Le module ADAO fournit des fonctionnalités d'**assimilation de données et
-d'optimisation** dans un contexte SALOME. Il est basé sur l'utilisation d'autres
-modules, à savoir YACS et EFICAS, et sur l'utilisation d'une bibliothèque et des
-outils génériques sous-jacents d'assimilation de données.
+**Le module ADAO fournit des fonctionnalités d'assimilation de données et
+d'optimisation** dans un contexte SALOME [Salome]_. Il est basé sur
+l'utilisation d'autres modules, à savoir YACS et EFICAS, et sur l'utilisation
+d'une bibliothèque et d'outils génériques sous-jacents d'assimilation de
+données.
 
 En bref, l'assimilation de données est un cadre méthodologique pour calculer
 l'estimation optimale de la valeur réelle (inaccessible) de l'état d'un système
