@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2017 EDF R&D
+   Copyright (C) 2008-2018 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -179,7 +179,7 @@ graphical view).
 
 This script node will retrieve the data assimilation analysis from the
 "*algoResults*" output port of the computation bloc (which gives access to a
-SALOME Python Object), and will print it on the standard output. 
+SALOME Python Object), and will print it on the standard output.
 
 To obtain this, the in-line script node need to have an input port of type
 "*pyobj*", named "*Study*" for example, that have to be linked graphically to

@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2017 EDF R&D
+   Copyright (C) 2008-2018 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -127,7 +127,7 @@ The options of the algorithm are the following:
     Example : ``{"NumberOfInsects":100}``
 
   SwarmVelocity
-    This key indicates the part of the insect velocity which is imposed by the 
+    This key indicates the part of the insect velocity which is imposed by the
     swarm. It is a positive floating point value. The default value is 1.
 
     Example : ``{"SwarmVelocity":1.}``

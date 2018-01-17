@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2017 EDF R&D
+   Copyright (C) 2008-2018 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -84,7 +84,7 @@ case by a "*Script*" type input) or can exist as a string, including line feeds
 be build from these simple examples, the main objective being to help the user
 to elaborate the exact procedure he needs in output.
 
-The first example (named "*AnalysisPrinter*" in the inputs of type 
+The first example (named "*AnalysisPrinter*" in the inputs of type
 "*Template*") consists in printing, in the standard log output, the value of the
 analysis or the optimal state, noted as :math:`\mathbf{x}^a` in the section
 :ref:`section_theory`. It is realized by the commands::

@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2017 EDF R&D
+   Copyright (C) 2008-2018 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -189,7 +189,7 @@ This third form give more possibilities to control the execution of the three
 functions representing the operator, allowing advanced usage and control over
 each execution of the simulation code. This is done by using the keyword
 "*ScriptWithSwitch*" for the description of the chosen operator in the ADAO GUI.
-The user have to provide a switch in one script to control the execution of the 
+The user have to provide a switch in one script to control the execution of the
 direct, tangent and adjoint forms of its simulation code. The user can then, for
 example, use other approximations for the tangent and adjoint codes, or
 introduce more complexity in the argument treatment of the functions. But it

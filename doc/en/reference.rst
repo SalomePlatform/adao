@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2017 EDF R&D
+   Copyright (C) 2008-2018 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -54,7 +54,7 @@ are explained in the section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_entry_types
    ref_options_AlgorithmParameters
    ref_output_variables
@@ -71,7 +71,7 @@ the section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_operator_requirements
    ref_covariance_requirements
    ref_observers_requirements
@@ -92,7 +92,7 @@ The mathematical notations used afterward are explained in the section
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_assimilation_keywords
    ref_algorithm_3DVAR
    ref_algorithm_4DVAR
@@ -124,7 +124,7 @@ The mathematical notations used afterward are explained in the section
 
 .. toctree::
    :maxdepth: 1
-   
+
    ref_checking_keywords
    ref_algorithm_AdjointTest
    ref_algorithm_FunctionTest

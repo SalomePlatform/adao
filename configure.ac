@@ -1,4 +1,4 @@
-dnl  Copyright (C) 2008-2017 EDF R&D
+dnl  Copyright (C) 2008-2018 EDF R&D
 dnl
 dnl  This file is part of SALOME ADAO module
 dnl
@@ -88,7 +88,7 @@ if test "x$omniORBpy_ok" = "xno"; then
   salome_module_ok=no
 fi
 if test "x$Kernel_ok" = "xno"; then
-  AC_MSG_WARN([SALOME KERNEL is required for SALOME Module part - 
+  AC_MSG_WARN([SALOME KERNEL is required for SALOME Module part -
                You could define a correct KERNEL_ROOT_DIR or use the --with-kernel= configure option])
   salome_module_ok=no
 fi

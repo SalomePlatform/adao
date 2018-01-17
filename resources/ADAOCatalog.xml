@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='us-ascii' ?>
 <!--
-  Copyright (C) 2008-2017 EDF R&D
+  Copyright (C) 2008-2018 EDF R&D
 
   This file is part of SALOME ADAO module
 
@@ -19,7 +19,7 @@
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 
   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-  
+
   Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 -->
 
