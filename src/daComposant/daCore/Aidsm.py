@@ -566,7 +566,7 @@ class Aidsm(object):
         else:
             allvariables = {}
             allvariables.update( {"AlgorithmParameters":self.__adaoObject["AlgorithmParameters"].get()} )
-            allvariables.update( self.__adaoObject["AlgorithmParameters"].get() )
+            # allvariables.update( self.__adaoObject["AlgorithmParameters"].get() )
             allvariables.update( self.__StoredInputs )
             allvariables.pop('Diagnostic', None)
             allvariables.pop('Observer', None)
@@ -745,8 +745,9 @@ class Aidsm(object):
                 if self.__adaoObject['AlgorithmParameters'].hasObserver( k ):
                     self.__adaoObject['AlgorithmParameters'].removeObserver( k, "", True )
                 self.__StoredInputs[k] = self.__adaoObject['AlgorithmParameters'].pop(k, None)
-        del self.__adaoObject # Because it breaks pickle in Python 2. Not required for Python 3
-        del self.__case       # Because it breaks pickle in Python 2. Not required for Python 3
+        if sys.version_info[0] == 2:
+            del self.__adaoObject # Because it breaks pickle in Python 2. Not required for Python 3
+            del self.__case       # Because it breaks pickle in Python 2. Not required for Python 3
         return 0
 
 # ==============================================================================

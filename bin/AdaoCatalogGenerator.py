@@ -243,7 +243,7 @@ AlgorithmParametersInNS.info = u"The Python file has to contain explicitly an \\
 def F_AlgorithmParameters(statut, algos_names, fv=NoCheckInNS) : return FACT(
     statut = statut,
     Algorithm = SIMP(statut="o", typ = "TXM", into = algos_names ),
-    Parameters = SIMP(statut="f", typ = "TXM", into=("Defaults", "Dict") ),
+    Parameters = SIMP(statut="f", typ = "TXM", into=("Defaults", "Dict"), defaut="Defaults"),
     Dict = BLOC ( condition = " Parameters == 'Dict' ",
         statut="f",
         data = F_Dict("o", fv),
