@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2017 EDF R&D
+# Copyright (C) 2008-2018 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -60,10 +60,10 @@ if __name__ == "__main__":
     print("")
     print("AUTODIAGNOSTIC")
     print("==============")
-    
+
     from Physical_data_and_covariance_matrices import True_state
     X0, noms = True_state()
- 
+
     FX = DirectOperator( X0 )
     print("FX =", FX)
     print("")
