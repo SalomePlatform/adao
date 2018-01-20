@@ -82,7 +82,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if self._parameters["StoreInternalVariables"]:
+        if self._parameters["StoreInternalVariables"] \
+            or "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"] \
+            or "CostFunctionJb" in self._parameters["StoreSupplementaryCalculations"] \
+            or "CostFunctionJo" in self._parameters["StoreSupplementaryCalculations"]:
             BI = B.getI()
             RI = R.getI()
         #
@@ -143,7 +146,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
             if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
-            if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._parameters["StoreInternalVariables"] \
+                or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
                 self.StoredVariables["CurrentState"].store( Xn )
             if self._parameters["StoreInternalVariables"] \
                 or "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"] \

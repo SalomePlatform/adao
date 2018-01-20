@@ -689,10 +689,10 @@ class Aidsm(object):
         except Exception as e:
             if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
-            raise ValueError("during execution, the following error occurs:\n"+\
+            raise ValueError(("during execution, the following error occurs:\n"+\
                              "\n%s %s\n\nSee also the potential messages, "+\
                              "which can show the origin of the above error, "+\
-                             "in the launching terminal.\n"%(str(e),msg))
+                             "in the launching terminal.\n")%(str(e),msg))
         return 0
 
     def __executePythonScheme(self, FileName=None):
