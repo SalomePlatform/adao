@@ -43,32 +43,12 @@ of operator.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: ObservationOperator
-.. index:: single: NumberOfPrintedDigits
-.. index:: single: NumberOfRepetition
-.. index:: single: SetDebug
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  CheckingPoint
-    *Required command*. This indicates the vector used as the state around which
-    to perform the required check, noted :math:`\mathbf{x}` and similar to the
-    background :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
+  .. include:: snippets/CheckingPoint.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -79,26 +59,15 @@ command.
 
 The options of the algorithm are the following:
 
-  NumberOfPrintedDigits
-    This key indicates the number of digits of precision for floating point
-    printed output. The default is 5, with a minimum of 0.
+  .. include:: snippets/NumberOfPrintedDigits.rst
 
-    Example : ``{"NumberOfPrintedDigits":5}``
+  .. include:: snippets/NumberOfRepetition.rst
 
-  NumberOfRepetition
-    This key indicates the number of time to repeat the function evaluation. The
-    default is 1.
-
-    Example : ``{"NumberOfRepetition":3}``
-
-  SetDebug
-    This key requires the activation, or not, of the debug mode during the
-    function evaluation. The default is "False", the choices are "True" or
-    "False".
-
-    Example : ``{"SetDebug":False}``
+  .. include:: snippets/SetDebug.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -106,7 +75,8 @@ The options of the algorithm are the following:
     are in the following list: ["CurrentState",
     "SimulatedObservationAtCurrentState"].
 
-    Example : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -121,17 +91,9 @@ writing of post-processing procedures, are described in the
 
 The conditional outputs of the algorithm are the following:
 
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
+  .. include:: snippets/CurrentState.rst
 
-    Example : ``Xs = ADD.get("CurrentState")[:]``
-
-  SimulatedObservationAtCurrentState
-    *List of vectors*. Each element is an observed vector at the current state,
-    that is, in the observation space.
-
-    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 See also
 ++++++++

@@ -55,33 +55,12 @@ One take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: ObservationOperator
-.. index:: single: AmplitudeOfInitialDirection
-.. index:: single: EpsilonMinimumExponent
-.. index:: single: InitialDirection
-.. index:: single: SetSeed
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  CheckingPoint
-    *Required command*. This indicates the vector used as the state around which
-    to perform the required check, noted :math:`\mathbf{x}` and similar to the
-    background :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
+  .. include:: snippets/CheckingPoint.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control
-    :math:`U` included in the observation, the operator has to be applied to a
-    pair :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -92,39 +71,17 @@ command.
 
 The options of the algorithm are the following:
 
-  AmplitudeOfInitialDirection
-    This key indicates the scaling of the initial perturbation build as a vector
-    used for the directional derivative around the nominal checking point. The
-    default is 1, that means no scaling.
+  .. include:: snippets/AmplitudeOfInitialDirection.rst
 
-    Example : ``{"AmplitudeOfInitialDirection":0.5}``
+  .. include:: snippets/EpsilonMinimumExponent.rst
 
-  EpsilonMinimumExponent
-    This key indicates the minimal exponent value of the power of 10 coefficient
-    to be used to decrease the increment multiplier. The default is -8, and it
-    has to be between 0 and -20. For example, its default value leads to
-    calculate the residue of the scalar product formula with a fixed increment
-    multiplied from 1.e0 to 1.e-8.
+  .. include:: snippets/InitialDirection.rst
 
-    Example : ``{"EpsilonMinimumExponent":-12}``
-
-  InitialDirection
-    This key indicates the vector direction used for the directional derivative
-    around the nominal checking point. It has to be a vector. If not specified,
-    this direction defaults to a random perturbation around zero of the same
-    vector size than the checking point.
-
-    Example : ``{"InitialDirection":[0.1,0.1,100.,3}``
-
-  SetSeed
-    This key allow to give an integer in order to fix the seed of the random
-    generator used to generate the ensemble. A convenient value is for example
-    1000. By default, the seed is left uninitialized, and so use the default
-    initialization from the computer.
-
-    Example : ``{"SetSeed":1000}``
+  .. include:: snippets/SetSeed.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -132,7 +89,8 @@ The options of the algorithm are the following:
     are in the following list: ["CurrentState", "Residu",
     "SimulatedObservationAtCurrentState"].
 
-    Example : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -147,25 +105,13 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  Residu
-    *List of values*. Each element is the value of the particular residue
-    verified during a checking algorithm, in the order of the tests.
-
-    Example : ``r = ADD.get("Residu")[:]``
+  .. include:: snippets/Residu.rst
 
 The conditional outputs of the algorithm are the following:
 
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
+  .. include:: snippets/CurrentState.rst
 
-    Example : ``Xs = ADD.get("CurrentState")[:]``
-
-  SimulatedObservationAtCurrentState
-    *List of vectors*. Each element is an observed vector at the current state,
-    that is, in the observation space.
-
-    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 See also
 ++++++++

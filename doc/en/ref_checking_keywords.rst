@@ -29,12 +29,7 @@ List of commands and keywords for an ADAO checking case
 
 .. index:: single: Algorithm
 .. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: BackgroundError
 .. index:: single: Debug
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
 .. index:: single: Observer
 .. index:: single: Observers
 .. index:: single: Observer Template
@@ -64,43 +59,20 @@ The different commands are the following:
     :ref:`section_ref_options_Algorithm_Parameters` for the detailed use of this
     command part.
 
-  CheckingPoint
-    *Required command*. This indicates the vector used as the state around which
-    to perform the required check, noted :math:`\mathbf{x}` and similar to the
-    background :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
+  .. include:: snippets/CheckingPoint.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
   Debug
     *Optional command*. This define the level of trace and intermediary debug
     information. The choices are limited between 0 (for False) and 1 (for
     True).
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
   Observers
     *Optional command*. This command allows to set internal observers, that are

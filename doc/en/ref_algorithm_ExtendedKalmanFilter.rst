@@ -31,57 +31,34 @@ Description
 +++++++++++
 
 This algorithm realizes an estimation of the state of a dynamic system by a
-extended Kalman Filter, using a non-linear calculation of the state.
+extended Kalman Filter, using a non-linear calculation of the state and the
+incremental evolution (process).
+
+In case of really non-linear operators, one can easily use the
+:ref:`section_ref_algorithm_EnsembleKalmanFilter` or the
+:ref:`section_ref_algorithm_UnscentedKalmanFilter`, which are often far more
+adapted to non-linear behavior but more costly. One can verify the linearity of
+the operators with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: BackgroundError
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: Bounds
-.. index:: single: ConstrainedBy
-.. index:: single: EstimationOf
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  Background
-    *Required command*. This indicates the background or initial vector used,
-    previously noted as :math:`\mathbf{x}^b`. Its value is defined as a
-    "*Vector*" or a *VectorSerie*" type object.
+  .. include:: snippets/Background.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/EvolutionError.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/EvolutionModel.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/Observation.rst
+
+  .. include:: snippets/ObservationError.rst
+
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -92,29 +69,15 @@ command.
 
 The options of the algorithm are the following:
 
-  Bounds
-    This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds have to be given by a list of list of pairs of
-    lower/upper bounds for each variable, with extreme values every time there
-    is no bound (``None`` is not allowed when there is no bound).
+  .. include:: snippets/BoundsWithExtremes.rst
 
-    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,1.e99],[-1.e99,1.e99]]}``
+  .. include:: snippets/ConstrainedBy.rst
 
-  ConstrainedBy
-    This key allows to choose the method to take into account the bounds
-    constraints. The only one available is the "EstimateProjection", which
-    projects the current state estimate on the bounds constraints.
-
-    Example : ``{"ConstrainedBy":"EstimateProjection"}``
-
-  EstimationOf
-    This key allows to choose the type of estimation to be performed. It can be
-    either state-estimation, with a value of "State", or parameter-estimation,
-    with a value of "Parameters". The default choice is "State".
-
-    Example : ``{"EstimationOf":"Parameters"}``
+  .. include:: snippets/EstimationOf.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -124,7 +87,8 @@ The options of the algorithm are the following:
     "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
     "CostFunctionJo", "CurrentState", "Innovation"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -139,77 +103,34 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  Analysis
-    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
-    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
-
-    Example : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/Analysis.rst
 
 The conditional outputs of the algorithm are the following:
 
-  APosterioriCorrelations
-    *List of matrices*. Each element is an *a posteriori* error correlation
-    matrix of the optimal state.
+  .. include:: snippets/APosterioriCorrelations.rst
 
-    Example : ``C = ADD.get("APosterioriCorrelations")[-1]``
+  .. include:: snippets/APosterioriCovariance.rst
 
-  APosterioriCovariance
-    *List of matrices*. Each element is an *a posteriori* error covariance
-    matrix :math:`\mathbf{A}*` of the optimal state.
+  .. include:: snippets/APosterioriStandardDeviations.rst
 
-    Example : ``A = ADD.get("APosterioriCovariance")[-1]``
+  .. include:: snippets/APosterioriVariances.rst
 
-  APosterioriStandardDeviations
-    *List of matrices*. Each element is an *a posteriori* error standard
-    deviation matrix of the optimal state.
+  .. include:: snippets/BMA.rst
 
-    Example : ``E = ADD.get("APosterioriStandardDeviations")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  APosterioriVariances
-    *List of matrices*. Each element is an *a posteriori* error variance matrix
-    of the optimal state.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Example : ``V = ADD.get("APosterioriVariances")[-1]``
+  .. include:: snippets/CostFunctionJo.rst
 
-  BMA
-    *List of vectors*. Each element is a vector of difference between the
-    background and the optimal state.
+  .. include:: snippets/CurrentState.rst
 
-    Example : ``bma = ADD.get("BMA")[-1]``
-
-  CostFunctionJ
-    *List of values*. Each element is a value of the error function :math:`J`.
-
-    Example : ``J = ADD.get("CostFunctionJ")[:]``
-
-  CostFunctionJb
-    *List of values*. Each element is a value of the error function :math:`J^b`,
-    that is of the background difference part.
-
-    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *List of values*. Each element is a value of the error function :math:`J^o`,
-    that is of the observation difference part.
-
-    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
-
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
-
-    Example : ``Xs = ADD.get("CurrentState")[:]``
-
-  Innovation
-    *List of vectors*. Each element is an innovation vector, which is in static
-    the difference between the optimal and the background, and in dynamic the
-    evolution increment.
-
-    Example : ``d = ADD.get("Innovation")[-1]``
+  .. include:: snippets/Innovation.rst
 
 See also
 ++++++++
 
 References to other sections:
   - :ref:`section_ref_algorithm_KalmanFilter`
+  - :ref:`section_ref_algorithm_EnsembleKalmanFilter`
   - :ref:`section_ref_algorithm_UnscentedKalmanFilter`

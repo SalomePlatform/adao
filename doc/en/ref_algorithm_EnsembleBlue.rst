@@ -43,49 +43,19 @@ linearity of the observation operator with the help of the
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: BackgroundError
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: SetSeed
 
 The general required commands, available in the editing user interface, are the
 following:
 
-  Background
-    *Required command*. This indicates the background or initial vector used,
-    previously noted as :math:`\mathbf{x}^b`. Its value is defined as a
-    "*Vector*" or a *VectorSerie*" type object.
+  .. include:: snippets/Background.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -96,7 +66,11 @@ command.
 
 The options of the algorithm are the following:
 
+  .. include:: snippets/SetSeed.rst
+
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -105,15 +79,8 @@ The options of the algorithm are the following:
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
-
-  SetSeed
-    This key allow to give an integer in order to fix the seed of the random
-    generator used to generate the ensemble. A convenient value is for example
-    1000. By default, the seed is left uninitialized, and so use the default
-    initialization from the computer.
-
-    Example : ``{"SetSeed":1000}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -128,24 +95,11 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  Analysis
-    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
-    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
+  .. include:: snippets/Analysis.rst
 
-    Example : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/CurrentState.rst
 
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
-
-    Example : ``Xs = ADD.get("CurrentState")[:]``
-
-  Innovation
-    *List of vectors*. Each element is an innovation vector, which is in static
-    the difference between the optimal and the background, and in dynamic the
-    evolution increment.
-
-    Example : ``d = ADD.get("Innovation")[-1]``
+  .. include:: snippets/Innovation.rst
 
 See also
 ++++++++

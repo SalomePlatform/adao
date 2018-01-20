@@ -55,56 +55,18 @@ in SALOME.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: BackgroundError
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: SampleAsnUplet
-.. index:: single: SampleAsExplicitHyperCube
-.. index:: single: SampleAsMinMaxStepHyperCube
-.. index:: single: SampleAsIndependantRandomVariables
-.. index:: single: QualityCriterion
-.. index:: single: SetDebug
-.. index:: single: SetSeed
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  CheckingPoint
-    *Required command*. This indicates the vector used as the state around which
-    to perform the required check, noted :math:`\mathbf{x}` and similar to the
-    background :math:`\mathbf{x}^b`. It is defined as a "*Vector*" type object.
+  .. include:: snippets/CheckingPoint.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -114,12 +76,17 @@ described hereafter, of the algorithm. See
 command.
 
 The options of the algorithm are the following:
+.. index:: single: SampleAsnUplet
+.. index:: single: SampleAsExplicitHyperCube
+.. index:: single: SampleAsMinMaxStepHyperCube
+.. index:: single: SampleAsIndependantRandomVariables
 
   SampleAsnUplet
     This key describes the calculations points as a list of n-uplets, each
     n-uplet being a state.
 
-    Example : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` for 3 points in a state space of dimension 4
+    Example :
+    ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` for 3 points in a state space of dimension 4
 
   SampleAsExplicitHyperCube
     This key describes the calculations points as an hyper-cube, from a given
@@ -134,7 +101,8 @@ The options of the algorithm are the following:
     That is then a list of the same size than the one of the state. The bounds
     are included.
 
-    Example : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
+    Example :
+    ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
 
   SampleAsIndependantRandomVariables
     This key describes the calculations points as an hyper-cube, for which the
@@ -146,34 +114,18 @@ The options of the algorithm are the following:
     'uniform' of parameters (low,high), or 'weibull' of parameter (shape). That
     is then a list of the same size than the one of the state.
 
-    Example : ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` for a state space of dimension 2
+    Example :
+    ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` for a state space of dimension 2
 
-  QualityCriterion
-    This key indicates the quality criterion, used to find the state estimate.
-    The default is the usual data assimilation criterion named "DA", the
-    augmented weighted least squares. The possible criteria has to be in the
-    following list, where the equivalent names are indicated by the sign "=":
-    ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
-    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1", "MaximumError"="ME"].
+  .. include:: snippets/QualityCriterion.rst
 
-    Example : ``{"QualityCriterion":"DA"}``
+  .. include:: snippets/SetDebug.rst
 
-  SetDebug
-    This key requires the activation, or not, of the debug mode during the
-    function evaluation. The default is "True", the choices are "True" or
-    "False".
-
-    Example : ``{"SetDebug":False}``
-
-  SetSeed
-    This key allow to give an integer in order to fix the seed of the random
-    generator used to generate the ensemble. A convenient value is for example
-    1000. By default, the seed is left uninitialized, and so use the default
-    initialization from the computer.
-
-    Example : ``{"SetSeed":1000}``
+  .. include:: snippets/SetSeed.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -182,7 +134,8 @@ The options of the algorithm are the following:
     "CostFunctionJo", "CurrentState", "InnovationAtCurrentState",
     "SimulatedObservationAtCurrentState"].
 
-    Example : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -197,41 +150,19 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  CostFunctionJ
-    *List of values*. Each element is a value of the error function :math:`J`.
+  .. include:: snippets/CostFunctionJ.rst
 
-    Example : ``J = ADD.get("CostFunctionJ")[:]``
+  .. include:: snippets/CostFunctionJb.rst
 
-  CostFunctionJb
-    *List of values*. Each element is a value of the error function :math:`J^b`,
-    that is of the background difference part.
-
-    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *List of values*. Each element is a value of the error function :math:`J^o`,
-    that is of the observation difference part.
-
-    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
 The conditional outputs of the algorithm are the following:
 
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
+  .. include:: snippets/CurrentState.rst
 
-    Example : ``Xs = ADD.get("CurrentState")[:]``
+  .. include:: snippets/InnovationAtCurrentState.rst
 
-  InnovationAtCurrentState
-    *List of vectors*. Each element is an innovation vector at current state.
-
-    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
-
-  SimulatedObservationAtCurrentState
-    *List of vectors*. Each element is an observed vector at the current state,
-    that is, in the observation space.
-
-    Example : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 See also
 ++++++++

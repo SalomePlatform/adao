@@ -38,21 +38,10 @@ explicitly associated with the *observer* in the interface.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: ObservationOperator
-.. index:: single: Observers
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  Observers
-    *Optional command*. This command allows to set internal observers, that are
-    functions linked with a particular variable, which will be executed each
-    time this variable is modified. It is a convenient way to monitor variables
-    of interest during the data assimilation or optimization process, by
-    printing or plotting it, etc. Common templates are provided to help the user
-    to start or to quickly make his case.
+  .. include:: snippets/Observers.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`.

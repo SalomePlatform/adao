@@ -48,55 +48,18 @@ least squares function, classically used in data assimilation.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: BackgroundError
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: Minimizer
-.. index:: single: MaximumNumberOfSteps
-.. index:: single: MaximumNumberOfFunctionEvaluations
-.. index:: single: StateVariationTolerance
-.. index:: single: CostDecrementTolerance
-.. index:: single: QualityCriterion
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  Background
-    *Required command*. This indicates the background or initial vector used,
-    previously noted as :math:`\mathbf{x}^b`. Its value is defined as a
-    "*Vector*" or a *VectorSerie*" type object.
+  .. include:: snippets/Background.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -107,77 +70,23 @@ command.
 
 The options of the algorithm are the following:
 
-  Minimizer
-    This key allows to choose the optimization minimizer. The default choice is
-    "BOBYQA", and the possible ones are
-    "BOBYQA" (minimization with or without constraints by quadratic approximation [Powell09]_),
-    "COBYLA" (minimization with or without constraints by linear approximation [Powell94]_ [Powell98]_).
-    "NEWUOA" (minimization with or without constraints by iterative quadratic approximation [Powell04]_),
-    "POWELL" (minimization unconstrained using conjugate directions [Powell64]_),
-    "SIMPLEX" (minimization with or without constraints using Nelder-Mead simplex algorithm [Nelder65]_),
-    "SUBPLEX" (minimization with or without constraints using Nelder-Mead on a sequence of subspaces [Rowan90]_).
-    Remark: the "POWELL" method perform a dual outer/inner loops optimization,
-    leading then to less control on the cost function evaluation number because
-    it is the outer loop limit than is controlled. If precise control on this
-    cost function evaluation number is required, choose an another minimizer.
+  .. include:: snippets/Minimizer_DFO.rst
 
-    Example : ``{"Minimizer":"BOBYQA"}``
+  .. include:: snippets/BoundsWithNone.rst
 
-  Bounds
-    This key allows to define upper and lower bounds for every state variable
-    being optimized. Bounds have to be given by a list of list of pairs of
-    lower/upper bounds for each variable, with possibly ``None`` every time
-    there is no bound. The bounds can always be specified, but they are taken
-    into account only by the constrained optimizers.
+  .. include:: snippets/MaximumNumberOfSteps.rst
 
-    Example : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
+  .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
-  MaximumNumberOfSteps
-    This key indicates the maximum number of iterations allowed for iterative
-    optimization. The default is 15000, which is very similar to no limit on
-    iterations. It is then recommended to adapt this parameter to the needs on
-    real problems. For some optimizers, the effective stopping step can be
-    slightly different of the limit due to algorithm internal control
-    requirements.
+  .. include:: snippets/StateVariationTolerance.rst
 
-    Example : ``{"MaximumNumberOfSteps":50}``
+  .. include:: snippets/CostDecrementTolerance.rst
 
-  MaximumNumberOfFunctionEvaluations
-    This key indicates the maximum number of evaluation of the cost function to
-    be optimized. The default is 15000, which is an arbitrary limit. It is then
-    recommended to adapt this parameter to the needs on real problems. For some
-    optimizers, the effective number of function evaluations can be slightly
-    different of the limit due to algorithm internal control requirements.
-
-    Example : ``{"MaximumNumberOfFunctionEvaluations":50}``
-
-  StateVariationTolerance
-    This key indicates the maximum relative variation of the state for stopping
-    by convergence on the state.  The default is 1.e-4, and it is recommended to
-    adapt it to the needs on real problems.
-
-    Example : ``{"StateVariationTolerance":1.e-4}``
-
-  CostDecrementTolerance
-    This key indicates a limit value, leading to stop successfully the
-    iterative optimization process when the cost function decreases less than
-    this tolerance at the last step. The default is 1.e-7, and it is
-    recommended to adapt it to the needs on real problems.
-
-    Example : ``{"CostDecrementTolerance":1.e-7}``
-
-  QualityCriterion
-    This key indicates the quality criterion, minimized to find the optimal
-    state estimate. The default is the usual data assimilation criterion named
-    "DA", the augmented weighted least squares. The possible criteria has to be
-    in the following list, where the equivalent names are indicated by the sign
-    "=": ["AugmentedWeightedLeastSquares"="AWLS"="DA",
-    "WeightedLeastSquares"="WLS", "LeastSquares"="LS"="L2",
-    "AbsoluteValue"="L1", "MaximumError"="ME"].
-
-    Example : ``{"QualityCriterion":"DA"}``
+  .. include:: snippets/QualityCriterion.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -190,7 +99,8 @@ The options of the algorithm are the following:
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -205,112 +115,41 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  Analysis
-    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
-    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
+  .. include:: snippets/Analysis.rst
 
-    Example : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  CostFunctionJ
-    *List of values*. Each element is a value of the error function :math:`J`.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Example : ``J = ADD.get("CostFunctionJ")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
-  CostFunctionJb
-    *List of values*. Each element is a value of the error function :math:`J^b`,
-    that is of the background difference part.
-
-    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *List of values*. Each element is a value of the error function :math:`J^o`,
-    that is of the observation difference part.
-
-    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
-
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
-
-    Example : ``Xs = ADD.get("CurrentState")[:]``
+  .. include:: snippets/CurrentState.rst
 
 The conditional outputs of the algorithm are the following:
 
-  CostFunctionJAtCurrentOptimum
-    *List of values*. Each element is a value of the error function :math:`J`.
-    At each step, the value corresponds to the optimal state found from the
-    beginning.
+  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-    Example : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-  CostFunctionJbAtCurrentOptimum
-    *List of values*. Each element is a value of the error function :math:`J^b`,
-    that is of the background difference part. At each step, the value
-    corresponds to the optimal state found from the beginning.
+  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-    Example : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+  .. include:: snippets/CurrentOptimum.rst
 
-  CostFunctionJoAtCurrentOptimum
-    *List of values*. Each element is a value of the error function :math:`J^o`,
-    that is of the observation difference part. At each step, the value
-    corresponds to the optimal state found from the beginning.
+  .. include:: snippets/IndexOfOptimum.rst
 
-    Example : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
+  .. include:: snippets/InnovationAtCurrentState.rst
 
-  CurrentOptimum
-    *List of vectors*. Each element is the optimal state obtained at the current
-    step of the optimization algorithm. It is not necessarily the last state.
+  .. include:: snippets/OMA.rst
 
-    Example : ``Xo = ADD.get("CurrentOptimum")[:]``
+  .. include:: snippets/OMB.rst
 
-  IndexOfOptimum
-    *List of integers*. Each element is the iteration index of the optimum
-    obtained at the current step the optimization algorithm. It is not
-    necessarily the number of the last iteration.
+  .. include:: snippets/SimulatedObservationAtBackground.rst
 
-    Example : ``i = ADD.get("IndexOfOptimum")[-1]``
+  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
-  InnovationAtCurrentState
-    *List of vectors*. Each element is an innovation vector at current state.
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-    Example : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
-
-  OMA
-    *List of vectors*. Each element is a vector of difference between the
-    observation and the optimal state in the observation space.
-
-    Example : ``oma = ADD.get("OMA")[-1]``
-
-  OMB
-    *List of vectors*. Each element is a vector of difference between the
-    observation and the background state in the observation space.
-
-    Example : ``omb = ADD.get("OMB")[-1]``
-
-  SimulatedObservationAtBackground
-    *List of vectors*. Each element is a vector of observation simulated from
-    the background :math:`\mathbf{x}^b`.
-
-    Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
-
-  SimulatedObservationAtCurrentOptimum
-    *List of vectors*. Each element is a vector of observation simulated from
-    the optimal state obtained at the current step the optimization algorithm,
-    that is, in the observation space.
-
-    Example : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
-
-  SimulatedObservationAtCurrentState
-    *List of vectors*. Each element is an observed vector at the current state,
-    that is, in the observation space.
-
-    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
-
-  SimulatedObservationAtOptimum
-    *List of vectors*. Each element is a vector of observation simulated from
-    the analysis or optimal state :math:`\mathbf{x}^a`.
-
-    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+  .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 See also
 ++++++++

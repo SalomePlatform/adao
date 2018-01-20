@@ -29,16 +29,9 @@ List of commands and keywords for an ADAO calculation case
 
 .. index:: single: Algorithm
 .. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: BackgroundError
 .. index:: single: ControlInput
 .. index:: single: Debug
-.. index:: single: EvolutionError
-.. index:: single: EvolutionModel
 .. index:: single: InputVariables
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
 .. index:: single: Observer
 .. index:: single: Observers
 .. index:: single: Observer Template
@@ -72,16 +65,9 @@ The different commands are the following:
     :ref:`section_ref_options_Algorithm_Parameters` for the detailed use of this
     command part.
 
-  Background
-    *Required command*. This indicates the background or initial vector used,
-    previously noted as :math:`\mathbf{x}^b`. Its value is defined as a
-    "*Vector*" type object.
+  .. include:: snippets/Background.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
   ControlInput
     *Optional command*. This indicates the control vector used to force the
@@ -94,47 +80,20 @@ The different commands are the following:
     information. The choices are limited between 0 (for False) and 1 (for
     True).
 
-  EvolutionError
-    *Optional command*. This indicates the evolution error covariance matrix,
-    usually noted as :math:`\mathbf{Q}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/EvolutionError.rst
 
-  EvolutionModel
-    *Optional command*. This indicates the evolution model operator, usually
-    noted :math:`M`, which describes an elementary step of evolution. Its value
-    is defined as a "*Function*" type object or a "*Matrix*" type one. In the
-    case of "*Function*" type, different functional forms can be used, as
-    described in the section :ref:`section_ref_operator_requirements`. If there
-    is some control :math:`U` included in the evolution model, the operator has
-    to be applied to a pair :math:`(X,U)`.
+  .. include:: snippets/EvolutionModel.rst
 
   InputVariables
     *Optional command*. This command allows to indicates the name and size of
     physical variables that are bundled together in the state vector. This
     information is dedicated to data processed inside an algorithm.
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control
-    :math:`U` included in the observation, the operator has to be applied to a
-    pair :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
   Observers
     *Optional command*. This command allows to set internal observers, that are

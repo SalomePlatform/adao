@@ -43,57 +43,18 @@ least squares function, classically used in data assimilation.
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: BackgroundError
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: MaximumNumberOfSteps
-.. index:: single: MaximumNumberOfFunctionEvaluations
-.. index:: single: NumberOfInsects
-.. index:: single: SwarmVelocity
-.. index:: single: GroupRecallRate
-.. index:: single: QualityCriterion
-.. index:: single: BoxBounds
-.. index:: single: SetSeed
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  Background
-    *Required command*. This indicates the background or initial vector used,
-    previously noted as :math:`\mathbf{x}^b`. Its value is defined as a
-    "*Vector*" or a *VectorSerie*" type object.
+  .. include:: snippets/Background.rst
 
-  BackgroundError
-    *Required command*. This indicates the background error covariance matrix,
-    previously noted as :math:`\mathbf{B}`. Its value is defined as a "*Matrix*"
-    type object, a "*ScalarSparseMatrix*" type object, or a
-    "*DiagonalSparseMatrix*" type object.
+  .. include:: snippets/BackgroundError.rst
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -103,51 +64,38 @@ described hereafter, of the algorithm. See
 command.
 
 The options of the algorithm are the following:
+.. index:: single: NumberOfInsects
+.. index:: single: SwarmVelocity
+.. index:: single: GroupRecallRate
+.. index:: single: QualityCriterion
+.. index:: single: BoxBounds
 
-  MaximumNumberOfSteps
-    This key indicates the maximum number of iterations allowed for iterative
-    optimization. The default is 50, which is an arbitrary limit. It is then
-    recommended to adapt this parameter to the needs on real problems.
+  .. include:: snippets/MaximumNumberOfSteps_50.rst
 
-    Example : ``{"MaximumNumberOfSteps":100}``
+  .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
-  MaximumNumberOfFunctionEvaluations
-    This key indicates the maximum number of evaluation of the cost function to
-    be optimized. The default is 15000, which is an arbitrary limit. It is then
-    recommended to adapt this parameter to the needs on real problems. For some
-    optimizers, the effective number of function evaluations can be slightly
-    different of the limit due to algorithm internal control requirements.
-
-    Example : ``{"MaximumNumberOfFunctionEvaluations":50}``
+  .. include:: snippets/QualityCriterion.rst
 
   NumberOfInsects
     This key indicates the number of insects or particles in the swarm. The
     default is 100, which is a usual default for this algorithm.
 
-    Example : ``{"NumberOfInsects":100}``
+    Example :
+    ``{"NumberOfInsects":100}``
 
   SwarmVelocity
     This key indicates the part of the insect velocity which is imposed by the
     swarm. It is a positive floating point value. The default value is 1.
 
-    Example : ``{"SwarmVelocity":1.}``
+    Example :
+    ``{"SwarmVelocity":1.}``
 
   GroupRecallRate
     This key indicates the recall rate at the best swarm insect. It is a
     floating point value between 0 and 1. The default value is 0.5.
 
-    Example : ``{"GroupRecallRate":0.5}``
-
-  QualityCriterion
-    This key indicates the quality criterion, minimized to find the optimal
-    state estimate. The default is the usual data assimilation criterion named
-    "DA", the augmented weighted least squares. The possible criteria has to be
-    in the following list, where the equivalent names are indicated by the sign
-    "=": ["AugmentedWeightedLeastSquares"="AWLS"="DA",
-    "WeightedLeastSquares"="WLS", "LeastSquares"="LS"="L2",
-    "AbsoluteValue"="L1", "MaximumError"="ME"].
-
-    Example : ``{"QualityCriterion":"DA"}``
+    Example :
+    ``{"GroupRecallRate":0.5}``
 
   BoxBounds
     This key allows to define upper and lower bounds for *increments* on every
@@ -157,17 +105,14 @@ The options of the algorithm are the following:
     (``None`` is not allowed when there is no bound). This key is required and
     there is no default values.
 
-    Example : ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
+    Example :
+    ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
-  SetSeed
-    This key allow to give an integer in order to fix the seed of the random
-    generator used to generate the ensemble. A convenient value is for example
-    1000. By default, the seed is left uninitialized, and so use the default
-    initialization from the computer.
-
-    Example : ``{"SetSeed":1000}``
+  .. include:: snippets/SetSeed.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -177,7 +122,8 @@ The options of the algorithm are the following:
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 Information and variables available at the end of the algorithm
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -192,79 +138,31 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  Analysis
-    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
-    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
+  .. include:: snippets/Analysis.rst
 
-    Example : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  CostFunctionJ
-    *List of values*. Each element is a value of the error function :math:`J`.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Example : ``J = ADD.get("CostFunctionJ")[:]``
-
-  CostFunctionJb
-    *List of values*. Each element is a value of the error function :math:`J^b`,
-    that is of the background difference part.
-
-    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *List of values*. Each element is a value of the error function :math:`J^o`,
-    that is of the observation difference part.
-
-    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
 The conditional outputs of the algorithm are the following:
 
-  BMA
-    *List of vectors*. Each element is a vector of difference between the
-    background and the optimal state.
+  .. include:: snippets/BMA.rst
 
-    Example : ``bma = ADD.get("BMA")[-1]``
+  .. include:: snippets/CurrentState.rst
 
-  CurrentState
-    *List of vectors*. Each element is a usual state vector used during the
-    optimization algorithm procedure.
+  .. include:: snippets/Innovation.rst
 
-    Example : ``Xs = ADD.get("CurrentState")[:]``
+  .. include:: snippets/OMA.rst
 
-  Innovation
-    *List of vectors*. Each element is an innovation vector, which is in static
-    the difference between the optimal and the background, and in dynamic the
-    evolution increment.
+  .. include:: snippets/OMB.rst
 
-    Example : ``d = ADD.get("Innovation")[-1]``
+  .. include:: snippets/SimulatedObservationAtBackground.rst
 
-  OMA
-    *List of vectors*. Each element is a vector of difference between the
-    observation and the optimal state in the observation space.
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-    Example : ``oma = ADD.get("OMA")[-1]``
-
-  OMB
-    *List of vectors*. Each element is a vector of difference between the
-    observation and the background state in the observation space.
-
-    Example : ``omb = ADD.get("OMB")[-1]``
-
-  SimulatedObservationAtBackground
-    *List of vectors*. Each element is a vector of observation simulated from
-    the background :math:`\mathbf{x}^b`.
-
-    Example : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
-
-  SimulatedObservationAtCurrentState
-    *List of vectors*. Each element is an observed vector at the current state,
-    that is, in the observation space.
-
-    Example : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
-
-  SimulatedObservationAtOptimum
-    *List of vectors*. Each element is a vector of observation simulated from
-    the analysis or optimal state :math:`\mathbf{x}^a`.
-
-    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+  .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 See also
 ++++++++

@@ -48,36 +48,14 @@ In all cases, it is recommanded to prefer at least the
 Optional and required commands
 ++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: StoreSupplementaryCalculations
-
 The general required commands, available in the editing user interface, are the
 following:
 
-  Observation
-    *Required command*. This indicates the observation vector used for data
-    assimilation or optimization, previously noted as :math:`\mathbf{y}^o`. It
-    is defined as a "*Vector*" or a *VectorSerie* type object.
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Required command*. This indicates the observation error covariance matrix,
-    previously noted as :math:`\mathbf{R}`. It is defined as a "*Matrix*" type
-    object, a "*ScalarSparseMatrix*" type object, or a "*DiagonalSparseMatrix*"
-    type object.
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Required command*. This indicates the observation operator, previously
-    noted :math:`H`, which transforms the input parameters :math:`\mathbf{x}` to
-    results :math:`\mathbf{y}` to be compared to observations
-    :math:`\mathbf{y}^o`. Its value is defined as a "*Function*" type object or
-    a "*Matrix*" type one. In the case of "*Function*" type, different
-    functional forms can be used, as described in the section
-    :ref:`section_ref_operator_requirements`. If there is some control :math:`U`
-    included in the observation, the operator has to be applied to a pair
-    :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
@@ -89,6 +67,8 @@ command.
 The options of the algorithm are the following:
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     This list indicates the names of the supplementary variables that can be
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
@@ -97,7 +77,8 @@ The options of the algorithm are the following:
     "CostFunctionJb", "CostFunctionJo", "SimulatedObservationAtCurrentState",
     "SimulatedObservationAtOptimum"].
 
-    Example : ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
+    Example :
+    ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
 
 *Tips for this algorithm:*
 
@@ -119,42 +100,20 @@ writing of post-processing procedures, are described in the
 
 The unconditional outputs of the algorithm are the following:
 
-  Analysis
-    *List of vectors*. Each element is an optimal state :math:`\mathbf{x}*` in
-    optimization or an analysis :math:`\mathbf{x}^a` in data assimilation.
+  .. include:: snippets/Analysis.rst
 
-    Example : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  CostFunctionJ
-    *List of values*. Each element is a value of the error function :math:`J`.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Example : ``J = ADD.get("CostFunctionJ")[:]``
-
-  CostFunctionJb
-    *List of values*. Each element is a value of the error function :math:`J^b`,
-    that is of the background difference part.
-
-    Example : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *List of values*. Each element is a value of the error function :math:`J^o`,
-    that is of the observation difference part.
-
-    Example : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
 The conditional outputs of the algorithm are the following:
 
-  OMA
-    *List of vectors*. Each element is a vector of difference between the
-    observation and the optimal state in the observation space.
+  .. include:: snippets/OMA.rst
 
-    Example : ``oma = ADD.get("OMA")[-1]``
+  .. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  SimulatedObservationAtOptimum
-    *List of vectors*. Each element is a vector of observation simulated from
-    the analysis or optimal state :math:`\mathbf{x}^a`.
-
-    Example : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
 
 See also
 ++++++++
