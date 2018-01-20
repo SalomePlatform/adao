@@ -38,41 +38,14 @@ déterminer les paramètres de modèles satisfaisant aux conditions de quantiles
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: Observation
-.. index:: single: ObservationOperator
-.. index:: single: Quantile
-.. index:: single: Minimizer
-.. index:: single: MaximumNumberOfSteps
-.. index:: single: CostDecrementTolerance
-.. index:: single: Bounds
-.. index:: single: StoreSupplementaryCalculations
-
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
 
-  Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*" ou de type "*VectorSerie*".
+  .. include:: snippets/Background.rst
 
-  Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*".
+  .. include:: snippets/Observation.rst
 
-  ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
-    type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
@@ -83,39 +56,17 @@ commande.
 
 Les options de l'algorithme sont les suivantes:
 
-  Quantile
-    Cette clé permet de définir la valeur réelle du quantile recherché, entre 0
-    et 1. La valeur par défaut est 0.5, correspondant à la médiane.
+  .. include:: snippets/Quantile.rst
 
-    Exemple : ``{"Quantile":0.5}``
+  .. include:: snippets/MaximumNumberOfSteps.rst
 
-  MaximumNumberOfSteps
-    Cette clé indique le nombre maximum d'itérations possibles en optimisation
-    itérative. Le défaut est 15000, qui est très similaire à une absence de
-    limite sur les itérations. Il est ainsi recommandé d'adapter ce paramètre
-    aux besoins pour des problèmes réels.
+  .. include:: snippets/CostDecrementTolerance_6.rst
 
-    Exemple : ``{"MaximumNumberOfSteps":100}``
-
-  CostDecrementTolerance
-    Cette clé indique une valeur limite, conduisant à arrêter le processus
-    itératif d'optimisation lorsque la fonction coût décroît moins que cette
-    tolérance au dernier pas. Le défaut est de 1.e-6, et il est recommandé de
-    l'adapter aux besoins pour des problèmes réels.
-
-    Exemple : ``{"CostDecrementTolerance":1.e-7}``
-
-  Bounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    variable d'état optimisée. Les bornes doivent être données par une liste de
-    liste de paires de bornes inférieure/supérieure pour chaque variable, avec
-    une valeur ``None`` chaque fois qu'il n'y a pas de borne. Les bornes peuvent
-    toujours être spécifiées, mais seuls les optimiseurs sous contraintes les
-    prennent en compte.
-
-    Exemple : ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
+  .. include:: snippets/BoundsWithNone.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
@@ -125,15 +76,16 @@ Les options de l'algorithme sont les suivantes:
     "Innovation", "SimulatedObservationAtBackground",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+    Exemple :
+    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Astuce pour cet algorithme :*
 
     Comme les commandes *"BackgroundError"* et *"ObservationError"* sont
-    requises pour TOUS les algorithmes de calcul dans l'interface, vous devez
-    fournir une valeur, malgré le fait que ces commandes ne sont pas requises
-    pour cet algorithme, et ne seront pas utilisées. La manière la plus simple
-    est de donner "1" comme un STRING pour les deux.
+    requises pour TOUS les algorithmes de calcul dans l'interface graphique,
+    vous devez fournir une valeur, malgré le fait que ces commandes ne sont pas
+    requises pour cet algorithme, et ne seront pas utilisées. La manière la
+    plus simple est de donner "1" comme un STRING pour les deux.
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -148,81 +100,31 @@ l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
-  Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
-    en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+  .. include:: snippets/Analysis.rst
 
-    Exemple : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J`.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Exemple : ``J = ADD.get("CostFunctionJ")[:]``
-
-  CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
-
-    Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
-
-    Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
-  BMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'ébauche et l'état optimal.
+  .. include:: snippets/BMA.rst
 
-    Exemple : ``bma = ADD.get("BMA")[-1]``
+  .. include:: snippets/CurrentState.rst
 
-  CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+  .. include:: snippets/Innovation.rst
 
-    Exemple : ``Xs = ADD.get("CurrentState")[:]``
+  .. include:: snippets/OMA.rst
 
-  Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
+  .. include:: snippets/OMB.rst
 
-    Exemple : ``d = ADD.get("Innovation")[-1]``
+  .. include:: snippets/SimulatedObservationAtBackground.rst
 
-  OMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état optimal dans l'espace des observations.
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-    Exemple : ``oma = ADD.get("OMA")[-1]``
-
-  OMB
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état d'ébauche dans l'espace des observations.
-
-    Exemple : ``omb = ADD.get("OMB")[-1]``
-
-  SimulatedObservationAtBackground
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'ébauche :math:`\mathbf{x}^b`.
-
-    Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
-
-  SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur observé à l'état courant,
-    c'est-à-dire dans l'espace des observations.
-
-    Exemple : ``Ys = ADD.get("SimulatedObservationAtCurrentState")[-1]``
-
-  SimulatedObservationAtOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
-
-    Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+  .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 Voir aussi
 ++++++++++

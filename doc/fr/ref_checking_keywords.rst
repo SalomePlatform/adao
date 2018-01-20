@@ -29,12 +29,7 @@ Liste des commandes et mots-clés pour un cas de vérification
 
 .. index:: single: Algorithm
 .. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: BackgroundError
 .. index:: single: Debug
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
 .. index:: single: Observer
 .. index:: single: Observers
 .. index:: single: Observer Template
@@ -65,45 +60,20 @@ Les différentes commandes sont les suivantes:
     :ref:`section_ref_options_Algorithm_Parameters` pour l'usage détaillé de
     cette partie de la commande.
 
-  CheckingPoint
-    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
-    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
-    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
-    "*Vector*".
+  .. include:: snippets/CheckingPoint.rst
 
-  BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/BackgroundError.rst
 
   Debug
     *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
     intermédiaires de débogage. Les choix sont limités entre 0 (pour False) et
     1 (pour True).
 
-  Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*".
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
-    type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
   Observers
     *Commande optionnelle*. Elle permet de définir des observateurs internes,

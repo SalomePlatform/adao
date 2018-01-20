@@ -164,241 +164,85 @@ dans l'édition du cas ADAO.
 Inventaire des informations potentiellement disponibles en sortie
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: Dry
-.. index:: single: Forecast
-
-L'ensemble des informations potentiellement disponibles en sortie est indiqué
-ici indépendamment des algorithmes, pour inventaire.
+Les principales informations potentiellement disponibles en sortie sont
+indiquées ici indépendamment des algorithmes, pour inventaire. On se reportera
+directement aux détails des algorithmes pour avoir l'inventaire exhaustif.
 
 L'état optimal est une information qui est toujours naturellement disponible
 après un calcul d'assimilation de données ou d'optimisation. Il désigné par le
 mot-clé suivant:
 
-  Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
-    en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+  .. include:: snippets/Analysis.rst
 
-    Exemple : ``Xa = ADD.get("Analysis")[-1]``
+Les variables suivantes sont des variables d'entrée que l'on peut aussi obtenir
+en sortie. Elles sont mises à disposition de l'utilisateur en sortie pour
+faciliter l'écriture des procédures de post-processing, et sont conditionnées
+par une demande utilisateur explicite à l'aide d'un booléen "*Stored*" en
+entrée. Toutes ces variables d'entrée restituées sont obtenables par la
+commande standard ".get(...)", qui s'applique à refournir l'unique objet donné
+en entrée.
 
-Les variables suivantes sont des variables d'entrée. Elles sont mises à
-disposition de l'utilisateur en sortie pour faciliter l'écriture des procédures
-de post-processing, et sont conditionnées par une demande utilisateur à l'aide
-d'un booléen "*Stored*" en entrée.
+  .. include:: snippets/Background.rst
 
-  Background
-    *Vecteur*, dont la disponibilité est conditionnée par "*Stored*" en entrée.
-    C'est le vecteur d'ébauche :math:`\mathbf{x}^b`.
+  .. include:: snippets/BackgroundError.rst
 
-    Exemple : ``Xb = ADD.get("Background")``
+  .. include:: snippets/EvolutionError.rst
 
-  BackgroundError
-    *Matrice*, dont la disponibilité est conditionnée par "*Stored*" en entrée.
-    C'est la matrice :math:`\mathbf{B}` de covariances des erreurs *a priori*
-    de l'ébauche.
+  .. include:: snippets/Observation.rst
 
-    Exemple : ``B = ADD.get("BackgroundError")``
-
-  EvolutionError
-    *Matrice*, dont la disponibilité est conditionnée par "*Stored*" en entrée.
-    C'est la matrice :math:`\mathbf{M}` de covariances des erreurs *a priori*
-    de l'évolution.
-
-    Exemple : ``M = ADD.get("EvolutionError")``
-
-  Observation
-    *Vecteur*, dont la disponibilité est conditionnée par "*Stored*" en entrée.
-    C'est le vecteur d'observation :math:`\mathbf{y}^o`.
-
-    Exemple : ``Yo = ADD.get("Observation")``
-
-  ObservationError
-    *Matrice*, dont la disponibilité est conditionnée par "*Stored*" en entrée.
-    C'est la matrice :math:`\mathbf{R}` de covariances des erreurs *a priori*
-    de l'observation.
-
-    Exemple : ``R = ADD.get("ObservationError")``
+  .. include:: snippets/ObservationError.rst
 
 Toutes les autres informations sont conditionnées par l'algorithme et/ou par la
-demande utilisateur de disponibilité. Ce sont les suivantes, par ordre
-alphabétique:
+demande utilisateur de disponibilité. Les principales sont les suivantes, par
+ordre alphabétique:
 
-  APosterioriCorrelations
-    *Liste de matrices*. Chaque élément est une matrice de corrélations des
-    erreurs *a posteriori* de l'état optimal, issue de la matrice
-    :math:`\mathbf{A}*` des covariances.
+  .. include:: snippets/APosterioriCorrelations.rst
 
-    Exemple : ``C = ADD.get("APosterioriCorrelations")[-1]``
+  .. include:: snippets/APosterioriCovariance.rst
 
-  APosterioriCovariance
-    *Liste de matrices*. Chaque élément est une matrice :math:`\mathbf{A}*` de
-    covariances des erreurs *a posteriori* de l'état optimal.
+  .. include:: snippets/APosterioriStandardDeviations.rst
 
-    Exemple : ``A = ADD.get("APosterioriCovariance")[-1]``
+  .. include:: snippets/APosterioriVariances.rst
 
-  APosterioriStandardDeviations
-    *Liste de matrices*. Chaque élément est une matrice diagonale d'écarts-types
-    des erreurs *a posteriori* de l'état optimal, issue de la matrice
-    :math:`\mathbf{A}*` des covariances.
+  .. include:: snippets/BMA.rst
 
-    Exemple : ``S = ADD.get("APosterioriStandardDeviations")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  APosterioriVariances
-    *Liste de matrices*. Chaque élément est une matrice diagonale de variances
-    des erreurs *a posteriori* de l'état optimal, issue de la matrice
-    :math:`\mathbf{A}*` des covariances.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Exemple : ``V = ADD.get("APosterioriVariances")[-1]``
+  .. include:: snippets/CostFunctionJo.rst
 
-  BMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'ébauche et l'état optimal.
+  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-    Exemple : ``bma = ADD.get("BMA")[-1]``
+  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-  CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J`.
+  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-    Exemple : ``J = ADD.get("CostFunctionJ")[:]``
+  .. include:: snippets/CurrentOptimum.rst
 
-  CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
+  .. include:: snippets/CurrentState.rst
 
-    Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
+  .. include:: snippets/IndexOfOptimum.rst
 
-  CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
+  .. include:: snippets/Innovation.rst
 
-    Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/InnovationAtCurrentState.rst
 
-  CostFunctionJAtCurrentOptimum
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J`. A chaque pas, la valeur correspond à l'état optimal trouvé depuis
-    le début.
+  .. include:: snippets/OMA.rst
 
-    Exemple : ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``
+  .. include:: snippets/OMB.rst
 
-  CostFunctionJbAtCurrentOptimum
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche. A chaque pas, la
-    valeur correspond à l'état optimal trouvé depuis le début.
+  .. include:: snippets/Residu.rst
 
-    Exemple : ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``
+  .. include:: snippets/SimulatedObservationAtBackground.rst
 
-  CostFunctionJoAtCurrentOptimum
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation. A chaque pas,
-    la valeur correspond à l'état optimal trouvé depuis le début.
+  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
-    Exemple : ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  CurrentOptimum
-    *Liste de vecteurs*. Chaque élément est le vecteur d'état optimal au pas de
-    temps courant au cours du déroulement de l'algorithme d'optimisation. Ce
-    n'est pas nécessairement le dernier état.
+  .. include:: snippets/SimulatedObservationAtOptimum.rst
 
-    Exemple : ``Xo = ADD.get("CurrentOptimum")[:]``
-
-  CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
-
-    Exemple : ``Xs = ADD.get("CurrentState")[:]``
-
-  IndexOfOptimum
-    *Liste d'entiers*. Chaque élément est l'index d'itération de l'optimum
-    obtenu au cours du déroulement de l'algorithme d'optimisation. Ce n'est pas
-    nécessairement le numéro de la dernière itération.
-
-    Exemple : ``i = ADD.get("IndexOfOptimum")[-1]``
-
-  Innovation
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation, qui est
-    en statique l'écart de l'optimum à l'ébauche, et en dynamique l'incrément
-    d'évolution.
-
-    Exemple : ``d = ADD.get("Innovation")[-1]``
-
-  InnovationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
-    courant.
-
-    Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
-
-  MahalanobisConsistency
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité de Mahalanobis.
-
-    Exemple : ``m = ADD.get("MahalanobisConsistency")[-1]``
-
-  OMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état optimal dans l'espace des observations.
-
-    Exemple : ``oma = ADD.get("OMA")[-1]``
-
-  OMB
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état d'ébauche dans l'espace des observations.
-
-    Exemple : ``omb = ADD.get("OMB")[-1]``
-
-  Residu
-    *Liste de valeurs*. Chaque élément est la valeur du résidu particulier
-    vérifié lors d'un algorithme de vérification, selon l'ordre des tests
-    effectués.
-
-    Exemple : ``r = ADD.get("Residu")[:]``
-
-  SigmaBck2
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité :math:`(\sigma^b)^2` de la partie ébauche.
-
-    Exemple : ``sb2 = ADD.get("SigmaBck")[-1]``
-
-  SigmaObs2
-    *Liste de valeurs*. Chaque élément est une valeur de l'indicateur de
-    qualité :math:`(\sigma^o)^2` de la partie observation.
-
-    Exemple : ``so2 = ADD.get("SigmaObs")[-1]``
-
-  SimulatedObservationAtBackground
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'ébauche :math:`\mathbf{x}^b`. C'est la prévision à partir de
-    l'ébauche, et elle est parfois appellée "*Dry*".
-
-    Exemple : ``hxb = ADD.get("SimulatedObservationAtBackground")[-1]``
-
-  SimulatedObservationAtCurrentOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état optimal au pas de temps courant au cours du déroulement de
-    l'algorithme d'optimisation, c'est-à-dire dans l'espace des observations.
-
-    Exemple : ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``
-
-  SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
-
-    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
-
-  SimulatedObservationAtOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`. C'est la
-    prévision à partir de l'analyse ou de l'état optimal, et elle est parfois
-    appellée "*Forecast*".
-
-    Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
-
-  SimulationQuantiles
-    *Liste de vecteurs*. Chaque élément est un vecteur correspondant à l'état
-    observé qui réalise le quantile demandé, dans le même ordre que les
-    quantiles requis par l'utilisateur.
-
-    Exemple : ``sQuantiles = ADD.get("SimulationQuantiles")[:]``
+  .. include:: snippets/SimulationQuantiles.rst
 
 .. [#] Pour de plus amples informations sur PARAVIS, voir le *module PARAVIS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
 

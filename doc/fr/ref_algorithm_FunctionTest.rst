@@ -45,33 +45,12 @@ d'opérateur.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: ObservationOperator
-.. index:: single: NumberOfPrintedDigits
-.. index:: single: NumberOfRepetition
-.. index:: single: SetDebug
-.. index:: single: StoreSupplementaryCalculations
-
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
 
-  CheckingPoint
-    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
-    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
-    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
-    "*Vector*".
+  .. include:: snippets/CheckingPoint.rst
 
-  ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, notée
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`.  Sa valeur est définie comme un objet de
-    type "*Function*". Différentes formes fonctionnelles peuvent être
-    utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'observation, l'opérateur doit être appliqué à une
-    paire :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
@@ -82,26 +61,15 @@ commande.
 
 Les options de l'algorithme sont les suivantes:
 
-  NumberOfPrintedDigits
-    Cette clé indique le nombre de décimales de précision pour les affichages de
-    valeurs réelles. La valeur par défaut est 5, avec un minimum de 0.
+  .. include:: snippets/NumberOfPrintedDigits.rst
 
-    Exemple : ``{"NumberOfPrintedDigits":5}``
+  .. include:: snippets/NumberOfRepetition.rst
 
-  NumberOfRepetition
-    Cette clé indique le nombre de fois où répéter l'évaluation de la fonction.
-    La valeur par défaut est 1.
-
-    Exemple : ``{"NumberOfRepetition":3}``
-
-  SetDebug
-    Cette clé requiert l'activation, ou pas, du mode de débogage durant
-    l'évaluation de la fonction. La valeur par défaut est "False", les choix
-    sont "True" ou "False".
-
-    Exemple : ``{"SetDebug":False}``
+  .. include:: snippets/SetDebug.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
@@ -109,7 +77,8 @@ Les options de l'algorithme sont les suivantes:
     possibles sont dans la liste suivante : ["CurrentState",
     "SimulatedObservationAtCurrentState"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+    Exemple :
+    ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -124,17 +93,9 @@ l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
-  CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+  .. include:: snippets/CurrentState.rst
 
-    Exemple : ``Xs = ADD.get("CurrentState")[:]``
-
-  SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
-
-    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 Voir aussi
 ++++++++++

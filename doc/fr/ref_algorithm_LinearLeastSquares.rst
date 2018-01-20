@@ -48,37 +48,14 @@ l':ref:`section_ref_algorithm_3DVAR`.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: StoreSupplementaryCalculations
-
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
 
-  Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*".
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
-    type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
@@ -90,6 +67,8 @@ commande.
 Les options de l'algorithme sont les suivantes:
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
@@ -98,15 +77,16 @@ Les options de l'algorithme sont les suivantes:
     "CostFunctionJ", "CostFunctionJb", "CostFunctionJo",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
+    Exemple :
+    ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
 
 *Astuce pour cet algorithme :*
 
-    Comme les commandes *"Background"* et *"BackgroundError"* sont requises pour
-    TOUS les algorithmes de calcul dans l'interface, vous devez fournir une
-    valeur, malgré le fait que ces commandes ne sont pas requises pour
-    cet algorithme, et ne seront pas utilisées. La manière la plus simple est
-    de donner "1" comme un STRING pour les deux.
+    Comme les commandes *"Background"* et *"BackgroundError"* sont requises
+    pour TOUS les algorithmes de calcul dans l'interface graphique, vous devez
+    fournir une valeur, malgré le fait que ces commandes ne sont pas requises
+    pour cet algorithme, et ne seront pas utilisées. La manière la plus simple
+    est de donner "1" comme un STRING pour les deux.
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -121,44 +101,19 @@ l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
-  Analysis
-    *Liste de vecteurs*. Chaque élément est un état optimal :math:`\mathbf{x}*`
-    en optimisation ou une analyse :math:`\mathbf{x}^a` en assimilation de
-    données.
+  .. include:: snippets/Analysis.rst
 
-    Exemple : ``Xa = ADD.get("Analysis")[-1]``
+  .. include:: snippets/CostFunctionJ.rst
 
-  CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J`.
+  .. include:: snippets/CostFunctionJb.rst
 
-    Exemple : ``J = ADD.get("CostFunctionJ")[:]``
-
-  CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
-
-    Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
-
-    Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
-  OMA
-    *Liste de vecteurs*. Chaque élément est un vecteur d'écart entre
-    l'observation et l'état optimal dans l'espace des observations.
+  .. include:: snippets/OMA.rst
 
-    Exemple : ``oma = ADD.get("OMA")[-1]``
-
-  SimulatedObservationAtOptimum
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`.
-
-    Exemple : ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``
+  .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 Voir aussi
 ++++++++++

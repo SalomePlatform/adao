@@ -57,58 +57,18 @@ OPENTURNS disponible dans SALOME.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: BackgroundError
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
-.. index:: single: SampleAsnUplet
-.. index:: single: SampleAsExplicitHyperCube
-.. index:: single: SampleAsMinMaxStepHyperCube
-.. index:: single: SampleAsIndependantRandomVariables
-.. index:: single: QualityCriterion
-.. index:: single: SetDebug
-.. index:: single: SetSeed
-.. index:: single: StoreSupplementaryCalculations
-
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
 
-  CheckingPoint
-    *Commande obligatoire*. Elle définit le vecteur utilisé comme l'état autour
-    duquel réaliser le test requis, noté :math:`\mathbf{x}` et similaire à
-    l'ébauche :math:`\mathbf{x}^b`. Sa valeur est définie comme un objet de type
-    "*Vector*".
+  .. include:: snippets/CheckingPoint.rst
 
-  BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/BackgroundError.rst
 
-  Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*".
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, notée
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`.  Sa valeur est définie comme un objet de
-    type "*Function*". Différentes formes fonctionnelles peuvent être
-    utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'observation, l'opérateur doit être appliqué à une
-    paire :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
@@ -118,12 +78,17 @@ options particulières, décrites ci-après, de l'algorithme. On se reportera à
 commande.
 
 Les options de l'algorithme sont les suivantes:
+.. index:: single: SampleAsnUplet
+.. index:: single: SampleAsExplicitHyperCube
+.. index:: single: SampleAsMinMaxStepHyperCube
+.. index:: single: SampleAsIndependantRandomVariables
 
   SampleAsnUplet
     Cette clé décrit les points de calcul sous la forme d'une liste de n-uplets,
     chaque n-uplet étant un état.
 
-    Exemple : ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` pour 3 points dans un espace d'état de dimension 4
+    Exemple :
+    ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` pour 3 points dans un espace d'état de dimension 4
 
   SampleAsExplicitHyperCube
     Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont on
@@ -139,7 +104,8 @@ Les options de l'algorithme sont les suivantes:
     triplet *[min,max,step]*. C'est donc une liste de la même taille que celle
     de l'état. Les bornes sont incluses.
 
-    Exemple : ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état de dimension 2
+    Exemple :
+    ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état de dimension 2
 
   SampleAsIndependantRandomVariables
     Cette clé décrit les points de calcul sous la forme d'un hyper-cube, dont
@@ -152,35 +118,18 @@ Les options de l'algorithme sont les suivantes:
     (low,high), ou 'weibull' de paramètre (shape). C'est donc une liste de la
     même taille que celle de l'état.
 
-    Exemple : ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
+    Exemple :
+    ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
 
-  QualityCriterion
-    Cette clé indique le critère de qualité, qui est utilisé pour trouver
-    l'estimation de l'état. Le défaut est le critère usuel de l'assimilation de
-    données nommé "DA", qui est le critère de moindres carrés pondérés
-    augmentés. Les critères possibles sont dans la liste suivante, dans laquelle
-    les noms équivalents sont indiqués par un signe "=" :
-    ["AugmentedWeightedLeastSquares"="AWLS"="DA", "WeightedLeastSquares"="WLS",
-    "LeastSquares"="LS"="L2", "AbsoluteValue"="L1", "MaximumError"="ME"].
+  .. include:: snippets/QualityCriterion.rst
 
-    Exemple : ``{"QualityCriterion":"DA"}``
+  .. include:: snippets/SetDebug.rst
 
-  SetDebug
-    Cette clé requiert l'activation, ou pas, du mode de débogage durant
-    l'évaluation de la fonction. La valeur par défaut est "True", les choix sont
-    "True" ou "False".
-
-    Exemple : ``{"SetDebug":False}``
-
-  SetSeed
-    Cette clé permet de donner un nombre entier pour fixer la graine du
-    générateur aléatoire utilisé pour générer l'ensemble. Un valeur pratique est
-    par exemple 1000. Par défaut, la graine est laissée non initialisée, et elle
-    utilise ainsi l'initialisation par défaut de l'ordinateur.
-
-    Exemple : ``{"SetSeed":1000}``
+  .. include:: snippets/SetSeed.rst
 
   StoreSupplementaryCalculations
+    .. index:: single: StoreSupplementaryCalculations
+
     Cette liste indique les noms des variables supplémentaires qui peuvent être
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
@@ -189,7 +138,8 @@ Les options de l'algorithme sont les suivantes:
     "CostFunctionJo", "CurrentState", "InnovationAtCurrentState",
     "SimulatedObservationAtCurrentState"].
 
-    Exemple : ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
+    Exemple :
+    ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
 Informations et variables disponibles à la fin de l'algorithme
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -204,43 +154,19 @@ l':ref:`subsection_r_o_v_Inventaire`.
 
 Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
-  CostFunctionJ
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J`.
+  .. include:: snippets/CostFunctionJ.rst
 
-    Exemple : ``J = ADD.get("CostFunctionJ")[:]``
+  .. include:: snippets/CostFunctionJb.rst
 
-  CostFunctionJb
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^b`, c'est-à-dire de la partie écart à l'ébauche.
-
-    Exemple : ``Jb = ADD.get("CostFunctionJb")[:]``
-
-  CostFunctionJo
-    *Liste de valeurs*. Chaque élément est une valeur de fonctionnelle d'écart
-    :math:`J^o`, c'est-à-dire de la partie écart à l'observation.
-
-    Exemple : ``Jo = ADD.get("CostFunctionJo")[:]``
+  .. include:: snippets/CostFunctionJo.rst
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
-  CurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'état courant utilisé
-    au cours du déroulement de l'algorithme d'optimisation.
+  .. include:: snippets/CurrentState.rst
 
-    Exemple : ``Xs = ADD.get("CurrentState")[:]``
+  .. include:: snippets/InnovationAtCurrentState.rst
 
-  InnovationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'innovation à l'état
-    courant.
-
-    Exemple : ``ds = ADD.get("InnovationAtCurrentState")[-1]``
-
-  SimulatedObservationAtCurrentState
-    *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé à
-    partir de l'état courant, c'est-à-dire dans l'espace des observations.
-
-    Exemple : ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``
+  .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 Voir aussi
 ++++++++++

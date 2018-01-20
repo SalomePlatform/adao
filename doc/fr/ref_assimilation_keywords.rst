@@ -29,16 +29,9 @@ Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'op
 
 .. index:: single: Algorithm
 .. index:: single: AlgorithmParameters
-.. index:: single: Background
-.. index:: single: BackgroundError
 .. index:: single: ControlInput
 .. index:: single: Debug
-.. index:: single: EvolutionError
-.. index:: single: EvolutionModel
 .. index:: single: InputVariables
-.. index:: single: Observation
-.. index:: single: ObservationError
-.. index:: single: ObservationOperator
 .. index:: single: Observer
 .. index:: single: Observers
 .. index:: single: Observer Template
@@ -73,16 +66,9 @@ Les différentes commandes sont les suivantes:
     :ref:`section_ref_options_Algorithm_Parameters` pour l'usage détaillé de
     cette partie de la commande.
 
-  Background
-    *Commande obligatoire*. Elle définit le vecteur d'ébauche ou
-    d'initialisation, noté précédemment :math:`\mathbf{x}^b`. Sa valeur est
-    définie comme un objet de type "*Vector*".
+  .. include:: snippets/Background.rst
 
-  BackgroundError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{B}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/BackgroundError.rst
 
   ControlInput
     *Commande optionnelle*. Elle indique le vecteur de contrôle utilisé pour
@@ -96,21 +82,9 @@ Les différentes commandes sont les suivantes:
     intermédiaires de débogage. Les choix sont limités entre 0 (pour False) et
     1 (pour True).
 
-  EvolutionError
-    *Commande optionnelle*. Elle définit la matrice de covariance des erreurs
-    d'évolution, usuellement notée :math:`\mathbf{Q}`.  Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/EvolutionError.rst
 
-  EvolutionModel
-    *Commande optionnelle*. Elle indique l'opérateur d'évolution du modèle,
-    usuellement noté :math:`M`, qui décrit un pas élémentaire d'évolution. Sa
-    valeur est définie comme un objet de type "*Function*" ou de type
-    "*Matrix*". Dans le cas du type "*Function*", différentes formes
-    fonctionnelles peuvent être utilisées, comme décrit dans la section
-    :ref:`section_ref_operator_requirements`. Si un contrôle :math:`U` est
-    inclus dans le modèle d'évolution, l'opérateur doit être appliqué à une
-    paire :math:`(X,U)`.
+  .. include:: snippets/EvolutionModel.rst
 
   InputVariables
     *Commande optionnelle*. Elle permet d'indiquer le nom et la taille des
@@ -118,28 +92,11 @@ Les différentes commandes sont les suivantes:
     information est destinée à être utilisée dans le traitement algorithmique
     interne des données.
 
-  Observation
-    *Commande obligatoire*. Elle définit le vecteur d'observation utilisé en
-    assimilation de données ou en optimisation, et noté précédemment
-    :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*".
+  .. include:: snippets/Observation.rst
 
-  ObservationError
-    *Commande obligatoire*. Elle définit la matrice de covariance des erreurs
-    d'ébauche, notée précédemment :math:`\mathbf{R}`. Sa valeur est définie
-    comme un objet de type "*Matrix*", de type "*ScalarSparseMatrix*", ou de
-    type "*DiagonalSparseMatrix*".
+  .. include:: snippets/ObservationError.rst
 
-  ObservationOperator
-    *Commande obligatoire*. Elle indique l'opérateur d'observation, noté
-    précédemment :math:`H`, qui transforme les paramètres d'entrée
-    :math:`\mathbf{x}` en résultats :math:`\mathbf{y}` qui sont à comparer aux
-    observations :math:`\mathbf{y}^o`. Sa valeur est définie comme un objet de
-    type "*Function*" ou de type "*Matrix*". Dans le cas du type "*Function*",
-    différentes formes fonctionnelles peuvent être utilisées, comme décrit dans
-    la section :ref:`section_ref_operator_requirements`. Si un contrôle
-    :math:`U` est inclus dans le modèle d'observation, l'opérateur doit être
-    appliqué à une paire :math:`(X,U)`.
+  .. include:: snippets/ObservationOperator.rst
 
   Observers
     *Commande optionnelle*. Elle permet de définir des observateurs internes,

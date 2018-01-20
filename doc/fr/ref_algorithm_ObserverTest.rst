@@ -39,22 +39,10 @@ l'interface.
 Commandes requises et optionnelles
 ++++++++++++++++++++++++++++++++++
 
-.. index:: single: AlgorithmParameters
-.. index:: single: CheckingPoint
-.. index:: single: ObservationOperator
-.. index:: single: Observers
-
 Les commandes requises générales, disponibles dans l'interface en édition, sont
 les suivantes:
 
-  Observers
-    *Commande obligatoire*. Elle permet de définir des observateurs internes,
-    qui sont des fonctions liées à une variable particulière, qui sont exécutées
-    chaque fois que cette variable est modifiée. C'est une manière pratique de
-    suivre des variables d'intérêt durant le processus d'assimilation de données
-    ou d'optimisation, en l'affichant ou en la traçant, etc. Des exemples
-    courants (squelettes) sont fournis pour aider l'utilisateur ou pour
-    faciliter l'élaboration d'un cas.
+  .. include:: snippets/Observers.rst
 
 Les commandes optionnelles générales, disponibles dans l'interface en édition,
 sont indiquées dans la :ref:`section_ref_checking_keywords`.
