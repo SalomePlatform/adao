@@ -101,6 +101,7 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
    ref_algorithm_Blue
    ref_algorithm_DerivativeFreeOptimization
    ref_algorithm_EnsembleBlue
+   ref_algorithm_EnsembleKalmanFilter
    ref_algorithm_ExtendedBlue
    ref_algorithm_ExtendedKalmanFilter
    ref_algorithm_KalmanFilter
