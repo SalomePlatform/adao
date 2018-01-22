@@ -22,9 +22,10 @@
 "Verification de la disponibilite de l'ensemble des algorithmes"
 
 # ==============================================================================
-import adaoBuilder, numpy
+import adaoBuilder, numpy, sys
 def test1():
     """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
+    print(test1.__doc__)
     Xa = {}
     for algo in ("3DVAR", "Blue", "ExtendedBlue", "LinearLeastSquares", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
         print("")
@@ -43,13 +44,13 @@ def test1():
         Xa[algo] = adaopy.get("Analysis")[-1]
         del adaopy
     #
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "EnsembleKalmanFilter", "4DVAR"):
         print("")
         msg = "Algorithme en test : %s"%algo
         print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, })
+        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
         adaopy.setBackground         (Vector = [0,1,2])
         adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
         adaopy.setObservation        (Vector = [0.5,1.5,2.5])
@@ -68,7 +69,7 @@ def test1():
         print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000, })
+        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000})
         adaopy.setBackground         (Vector = [0,1,2])
         adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
         adaopy.setObservation        (Vector = [0.5,1.5,2.5])
@@ -99,9 +100,10 @@ def test1():
     print("")
     msg = "Tests des ecarts attendus :"
     print(msg+"\n"+"="*len(msg))
-    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa)
-    verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa)
-    verify_similarity_of_algo_results(("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter"), Xa)
+    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
+    verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa, 5.e-7)
+    verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e-14)
+    verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 5.e-2)
     print("  Les resultats obtenus sont corrects.")
     print("")
     #
@@ -109,6 +111,7 @@ def test1():
 
 def test2():
     """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur fonctionnel)"""
+    print(test2.__doc__)
     Xa = {}
     M = numpy.matrix("1 0 0;0 2 0;0 0 3")
     def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
@@ -131,13 +134,13 @@ def test2():
     #
     M = numpy.matrix("1 0 0;0 2 0;0 0 3")
     def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
         print("")
         msg = "Algorithme en test : %s"%algo
         print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, })
+        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
         adaopy.setBackground         (Vector = [0,1,2])
         adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
         adaopy.setObservation        (Vector = [0.5,1.5,2.5])
@@ -158,7 +161,7 @@ def test2():
         print(msg+"\n"+"-"*len(msg))
         #
         adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000, })
+        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000})
         adaopy.setBackground         (Vector = [0,1,2])
         adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
         adaopy.setObservation        (Vector = [0.5,1.5,2.5])
@@ -172,8 +175,9 @@ def test2():
     print("")
     msg = "Tests des ecarts attendus :"
     print(msg+"\n"+"="*len(msg))
-    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa)
-    verify_similarity_of_algo_results(("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter"), Xa)
+    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
+    verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e14)
+    verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 5.e-2)
     print("  Les resultats obtenus sont corrects.")
     print("")
     #
@@ -184,13 +188,14 @@ def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
     print("    Difference maximale %s: %.2e"%(msg, max(abs(v2 - v1))))
     return max(abs(v2 - v1)) < precision
 
-def verify_similarity_of_algo_results(serie = [], Xa = {}):
+def verify_similarity_of_algo_results(serie = [], Xa = {}, precision = 1.e-15):
     print("  Comparaisons :")
     for algo1 in serie:
         for algo2 in serie:
             if algo1 is algo2: break
-            assert almost_equal_vectors( Xa[algo1], Xa[algo2], 5.e-5, "entre %s et %s "%(algo1, algo2) )
-    print("  Algorithmes dont les resultats sont similaires : %s\n"%(serie,))
+            assert almost_equal_vectors( Xa[algo1], Xa[algo2], precision, "entre %s et %s "%(algo1, algo2) )
+    print("  Algorithmes dont les resultats sont similaires a %.0e : %s\n"%(precision, serie,))
+    sys.stdout.flush()
 
 #===============================================================================
 if __name__ == "__main__":
