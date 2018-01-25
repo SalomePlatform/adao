@@ -52,4 +52,4 @@ my_parser.add_argument('config_file')
 my_parser.add_argument('yacs_schema_filename')
 args = my_parser.parse_args()
 
-create_schema(args.config_file, args.yacs_schema_filename)
+create_schema_from_file(args.config_file, args.yacs_schema_filename)

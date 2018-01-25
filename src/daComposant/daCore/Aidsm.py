@@ -706,8 +706,7 @@ class Aidsm(object):
     def __executeYACSScheme(self, FileName=None):
         "Lancement du calcul"
         self.__case.register("executeYACSScheme", dir(), locals())
-        if FileName is not None:
-            self.dump( FileName, "DIC")
+        self.dump( FileName, "YACS")
         self.__adaoObject["AlgorithmParameters"].executeYACSScheme( FileName )
         return 0
 

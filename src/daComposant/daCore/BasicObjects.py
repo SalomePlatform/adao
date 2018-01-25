@@ -951,25 +951,9 @@ class AlgorithmAndParameters(object):
     def executeYACSScheme(self, FileName=None):
         "Permet de lancer le calcul d'assimilation"
         if FileName is None or not os.path.exists(FileName):
-            raise ValueError("an existing DIC Python file name has to be given for YACS execution.\n")
+            raise ValueError("a YACS file name has to be given for YACS execution.\n")
         if not PlatformInfo.has_salome or not PlatformInfo.has_yacs or not PlatformInfo.has_adao:
             raise ImportError("Unable to get SALOME, YACS or ADAO environnement variables. Please launch SALOME before executing.\n")
-        #
-        __converterExe = os.path.join(os.environ["ADAO_ROOT_DIR"], "bin/salome", "AdaoYacsSchemaCreator.py")
-        __inputFile    = os.path.abspath(FileName)
-        __outputFile   = __inputFile[:__inputFile.rfind(".")] + '.xml'
-        #
-        __args = ["python", __converterExe, __inputFile, __outputFile]
-        import subprocess
-        __p = subprocess.Popen(__args)
-        (__stdoutdata, __stderrdata) = __p.communicate()
-        if not os.path.exists(__outputFile):
-            __msg  = "An error occured during the execution of the ADAO YACS Schema\n"
-            __msg += "Creator applied on the input file:\n"
-            __msg += "  %s\n"%__inputFile
-            __msg += "If SALOME GUI is launched by command line, see errors\n"
-            __msg += "details in your terminal.\n"
-            raise ValueError(__msg)
         #
         try:
             import pilot
@@ -981,13 +965,13 @@ class AlgorithmAndParameters(object):
             xmlLoader = loader.YACSLoader()
             xmlLoader.registerProcCataLoader()
             try:
-                catalogAd = r.loadCatalog("proc", __outputFile)
+                catalogAd = r.loadCatalog("proc", os.path.abspath(FileName))
             except:
                 pass
             r.addCatalog(catalogAd)
 
             try:
-                p = xmlLoader.load(__outputFile)
+                p = xmlLoader.load(os.path.abspath(FileName))
             except IOError as ex:
                 print("IO exception: %s"%(ex,))
 
@@ -1735,7 +1719,11 @@ class CaseLogger(object):
         self.__objname  = str(__objname)
         self.__logSerie = []
         self.__switchoff = False
-        self.__viewers = self.__loaders = {"TUI":_TUIViewer, "DIC":_DICViewer}
+        self.__viewers = self.__loaders = {
+            "TUI":_TUIViewer,
+            "DIC":_DICViewer,
+            "YACS":_YACSViewer,
+            }
         if __addViewers is not None:
             self.__viewers.update(dict(__addViewers))
         if __addLoaders is not None:
@@ -1803,9 +1791,9 @@ class GenericCaseViewer(object):
         __text +="\n"
         if __filename is not None:
             __file = os.path.abspath(__filename)
-            fid = open(__file,"w")
-            fid.write(__text)
-            fid.close()
+            __fid = open(__file,"w")
+            __fid.write(__text)
+            __fid.close()
         return __text
     def load(self, __filename=None):
         "Chargement normalisé des commandes"
@@ -2057,6 +2045,53 @@ class _XMLViewer(GenericCaseViewer):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content)
         raise NotImplementedError()
+
+class _YACSViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes de creation d'un cas YACS
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        self.__internalDIC = _DICViewer(__name, __objname, __content)
+        self._append       = self.__internalDIC._append
+    def dump(self, __filename=None):
+        "Restitution normalisée des commandes"
+        self.__internalDIC._finalize()
+        # -----
+        if __filename is not None:
+            __file    = os.path.abspath(__filename)
+            __DICfile = __file[:__file.rfind(".")] + '_DIC.py'
+            __DICdump = self.__internalDIC.dump(__DICfile)
+        else:
+            raise ValueError("A file name has to be given for YACS XML output.")
+        # -----
+        if not PlatformInfo.has_salome or \
+            not PlatformInfo.has_adao:
+            raise ImportError("\n\n"+\
+                "Unable to get SALOME or ADAO environnement variables.\n"+\
+                "Please load the right environnement before trying to use it.\n")
+        else:
+            if os.path.isfile(__file) or os.path.islink(__file):
+                os.remove(__file)
+            __converterExe = os.path.join(os.environ["ADAO_ROOT_DIR"], "bin/salome", "AdaoYacsSchemaCreator.py")
+            __args = ["python", __converterExe, __DICfile, __file]
+            import subprocess
+            __p = subprocess.Popen(__args)
+            (__stdoutdata, __stderrdata) = __p.communicate()
+            if not os.path.exists(__file):
+                __msg  = "An error occured during the ADAO YACS Schema build.\n"
+                __msg += "Creator applied on the input file:\n"
+                __msg += "  %s\n"%__DICfile
+                __msg += "If SALOME GUI is launched by command line, see errors\n"
+                __msg += "details in your terminal.\n"
+                raise ValueError(__msg)
+            os.remove(__DICfile)
+        # -----
+        __fid = open(__file,"r")
+        __text = __fid.read()
+        __fid.close()
+        return __text
 
 # ==============================================================================
 class ImportFromScript(object):

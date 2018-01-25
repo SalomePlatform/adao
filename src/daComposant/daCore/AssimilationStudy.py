@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Normalized interface for ADAO
+    Normalized interface for ADAO scripting (full version API)
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["AssimilationStudy"]
