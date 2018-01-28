@@ -955,47 +955,44 @@ class AlgorithmAndParameters(object):
         if not PlatformInfo.has_salome or not PlatformInfo.has_yacs or not PlatformInfo.has_adao:
             raise ImportError("Unable to get SALOME, YACS or ADAO environnement variables. Please launch SALOME before executing.\n")
         #
+        import pilot
+        import SALOMERuntime
+        import loader
+        SALOMERuntime.RuntimeSALOME_setRuntime()
+
+        r = pilot.getRuntime()
+        xmlLoader = loader.YACSLoader()
+        xmlLoader.registerProcCataLoader()
         try:
-            import pilot
-            import SALOMERuntime
-            import loader
-            SALOMERuntime.RuntimeSALOME_setRuntime()
-
-            r = pilot.getRuntime()
-            xmlLoader = loader.YACSLoader()
-            xmlLoader.registerProcCataLoader()
-            try:
-                catalogAd = r.loadCatalog("proc", os.path.abspath(FileName))
-            except:
-                pass
-            r.addCatalog(catalogAd)
-
-            try:
-                p = xmlLoader.load(os.path.abspath(FileName))
-            except IOError as ex:
-                print("IO exception: %s"%(ex,))
-
-            logger = p.getLogger("parser")
-            if not logger.isEmpty():
-                print("The imported file has errors :")
-                print(logger.getStr())
-
-            if not p.isValid():
-                print("Le schéma n'est pas valide et ne peut pas être exécuté")
-                print(p.getErrorReport())
-
-            info=pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
-            p.checkConsistency(info)
-            if info.areWarningsOrErrors():
-                print("Le schéma n'est pas cohérent et ne peut pas être exécuté")
-                print(info.getGlobalRepr())
-
-            e = pilot.ExecutorSwig()
-            e.RunW(p)
-            if p.getEffectiveState() != pilot.DONE:
-                print(p.getErrorReport())
+            catalogAd = r.loadCatalog("proc", os.path.abspath(FileName))
         except:
-            raise ValueError("execution error of YACS scheme")
+            pass
+        r.addCatalog(catalogAd)
+
+        try:
+            p = xmlLoader.load(os.path.abspath(FileName))
+        except IOError as ex:
+            print("The YACS XML schema file can not be loaded: %s"%(ex,))
+
+        logger = p.getLogger("parser")
+        if not logger.isEmpty():
+            print("The imported YACS XML schema has errors on parsing:")
+            print(logger.getStr())
+
+        if not p.isValid():
+            print("The YACS XML schema is not valid and will not be executed:")
+            print(p.getErrorReport())
+
+        info=pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
+        p.checkConsistency(info)
+        if info.areWarningsOrErrors():
+            print("The YACS XML schema is not coherent and will not be executed:")
+            print(info.getGlobalRepr())
+
+        e = pilot.ExecutorSwig()
+        e.RunW(p)
+        if p.getEffectiveState() != pilot.DONE:
+            print(p.getErrorReport())
         #
         return 0
 
@@ -1721,7 +1718,8 @@ class CaseLogger(object):
         self.__switchoff = False
         self.__viewers = self.__loaders = {
             "TUI":_TUIViewer,
-            "DIC":_DICViewer,
+            "DCT":_DCTViewer,
+            "SCD":_SCDViewer,
             "YACS":_YACSViewer,
             }
         if __addViewers is not None:
@@ -1775,9 +1773,6 @@ class GenericCaseViewer(object):
     def _extract(self):
         "Transformation d'enregistrement en commande individuelle"
         raise NotImplementedError()
-    def _interpret(self):
-        "Interprétation d'une commande"
-        raise NotImplementedError()
     def _finalize(self):
         "Enregistrement du final"
         pass
@@ -1801,20 +1796,26 @@ class GenericCaseViewer(object):
             self._content = open(__filename, 'r').read()
         __commands = self._extract(self._content)
         return __commands
-    def execCase(self, __filename=None):
-        "Exécution normalisée des commandes"
-        if os.path.exists(__filename):
-            self._content = open(__filename, 'r').read()
-        __retcode = self._interpret(self._content)
-        return __retcode
+
+    # --> Inutile d'accrocher l'interpretation au cas
+    # def _interpret(self):
+    #     "Interprétation d'une commande"
+    #     raise NotImplementedError()
+    # def execCase(self, __filename=None):
+    #     "Exécution normalisée des commandes"
+    #     if os.path.exists(__filename):
+    #         self._content = open(__filename, 'r').read()
+    #     __retcode = self._interpret(self._content)
+    #     return __retcode
 
 class _TUIViewer(GenericCaseViewer):
     """
-    Etablissement des commandes de creation d'un cas TUI
+    Etablissement des commandes d'un cas TUI
     """
     def __init__(self, __name="", __objname="case", __content=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content)
+        self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script for ADAO TUI\n#")
         self._addLine("from numpy import array, matrix")
         self._addLine("import adaoBuilder")
@@ -1855,7 +1856,7 @@ class _TUIViewer(GenericCaseViewer):
         __commands = []
         __content = __content.replace("\r\n","\n")
         for line in __content.split("\n"):
-            if "adaoBuilder" in line and "=" in line:
+            if "adaoBuilder.New" in line and "=" in line:
                 self._objname = line.split("=")[0].strip()
                 __is_case = True
             if not __is_case:
@@ -1864,15 +1865,93 @@ class _TUIViewer(GenericCaseViewer):
                 if self._objname+".set" in line:
                     __commands.append( line.replace(self._objname+".","",1) )
         return __commands
-    def _interpret(self, __content=""):
-        "Interprétation d'une commande"
+
+    # def _interpret(self, __content=""):
+    #     "Interprétation d'une commande"
+    #     __content = __content.replace("\r\n","\n")
+    #     exec(__content)
+    #     return 0
+
+class _DCTViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes d'un cas DCT
+    """
+    def __init__(self, __name="", __objname="case", __content=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        self._observerIndex = 0
+        self._addLine("# -*- coding: utf-8 -*-")
+        self._addLine("#\n# Python script for ADAO DCT\n#")
+        self._addLine("from numpy import array, matrix")
+        self._addLine("#")
+        self._addLine("%s = {}"%__objname)
+        if self._content is not None:
+            for command in self._content:
+                self._append(*command)
+    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
+        "Transformation d'une commande individuelle en un enregistrement"
+        if __command is not None and __keys is not None and __local is not None:
+            __text  = ""
+            if "execute" in __command: return
+            if "self" in __keys: __keys.remove("self")
+            if __command in ("set","get") and "Concept" in __keys:
+                __key = __local["Concept"]
+                __keys.remove("Concept")
+            else:
+                __key = __command.replace("set","").replace("get","")
+            if "Observer" in __key and 'Variable' in __keys:
+                self._observerIndex += 1
+                __key += "_%i"%self._observerIndex
+            __text += "%s['%s'] = {"%(self._objname,str(__key))
+            for k in __keys:
+                __v = __local[k]
+                if __v is None: continue
+                if   k == "Checked" and not __v: continue
+                if   k == "Stored"  and not __v: continue
+                if   k == "AvoidRC" and __v: continue
+                if   k == "noDetails": continue
+                if isinstance(__v,Persistence.Persistence): __v = __v.values()
+                if callable(__v): __text = self._missing%__v.__name__+__text
+                if isinstance(__v,dict):
+                    for val in __v.values():
+                        if callable(val): __text = self._missing%val.__name__+__text
+                numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
+                __text += "'%s':%s, "%(k,repr(__v))
+                numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+            __text.rstrip(", ").rstrip()
+            __text += "}"
+            if __text[-2:] == "{}": return # Supprime les *Debug et les variables
+            self._addLine(__text)
+    def _extract(self, __content=""):
+        "Transformation un enregistrement en une commande individuelle"
+        __is_case = False
+        __commands = []
         __content = __content.replace("\r\n","\n")
         exec(__content)
-        return 0
+        self._objdata = None
+        __getlocals = locals()
+        for k in __getlocals:
+            try:
+                if 'AlgorithmParameters' in __getlocals[k] and type(__getlocals[k]) is dict:
+                    self._objname = k
+                    self._objdata = __getlocals[k]
+            except:
+                continue
+        if self._objdata is None:
+            raise ValueError("Impossible to load given content as a ADAO DCT one (no 'AlgorithmParameters' key found).")
+        for k in self._objdata:
+            if 'Observer_' in k:
+                __command = k.split('_',1)[0]
+            else:
+                __command = k
+            __arguments = ["%s = %s"%(k,repr(v)) for k,v in self._objdata[k].items()]
+            __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
+        __commands.sort() # Pour commencer par 'AlgorithmParameters'
+        return __commands
 
-class _DICViewer(GenericCaseViewer):
+class _SCDViewer(GenericCaseViewer):
     """
-    Etablissement des commandes de creation d'un cas DIC
+    Etablissement des commandes d'un cas SCD (Study Config Dictionary)
     """
     def __init__(self, __name="", __objname="case", __content=None):
         "Initialisation et enregistrement de l'entete"
@@ -2053,16 +2132,16 @@ class _YACSViewer(GenericCaseViewer):
     def __init__(self, __name="", __objname="case", __content=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content)
-        self.__internalDIC = _DICViewer(__name, __objname, __content)
-        self._append       = self.__internalDIC._append
+        self.__internalSCD = _SCDViewer(__name, __objname, __content)
+        self._append       = self.__internalSCD._append
     def dump(self, __filename=None):
         "Restitution normalisée des commandes"
-        self.__internalDIC._finalize()
+        self.__internalSCD._finalize()
         # -----
         if __filename is not None:
             __file    = os.path.abspath(__filename)
-            __DICfile = __file[:__file.rfind(".")] + '_DIC.py'
-            __DICdump = self.__internalDIC.dump(__DICfile)
+            __SCDfile = __file[:__file.rfind(".")] + '_SCD.py'
+            __SCDdump = self.__internalSCD.dump(__SCDfile)
         else:
             raise ValueError("A file name has to be given for YACS XML output.")
         # -----
@@ -2075,18 +2154,18 @@ class _YACSViewer(GenericCaseViewer):
             if os.path.isfile(__file) or os.path.islink(__file):
                 os.remove(__file)
             __converterExe = os.path.join(os.environ["ADAO_ROOT_DIR"], "bin/salome", "AdaoYacsSchemaCreator.py")
-            __args = ["python", __converterExe, __DICfile, __file]
+            __args = ["python", __converterExe, __SCDfile, __file]
             import subprocess
             __p = subprocess.Popen(__args)
             (__stdoutdata, __stderrdata) = __p.communicate()
             if not os.path.exists(__file):
                 __msg  = "An error occured during the ADAO YACS Schema build.\n"
                 __msg += "Creator applied on the input file:\n"
-                __msg += "  %s\n"%__DICfile
+                __msg += "  %s\n"%__SCDfile
                 __msg += "If SALOME GUI is launched by command line, see errors\n"
                 __msg += "details in your terminal.\n"
                 raise ValueError(__msg)
-            os.remove(__DICfile)
+            os.remove(__SCDfile)
         # -----
         __fid = open(__file,"r")
         __text = __fid.read()

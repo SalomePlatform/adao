@@ -722,7 +722,7 @@ class Aidsm(object):
         from numpy import array, matrix
         for __command in __commands:
             exec("self."+__command)
-        return 0
+        return self
 
     def clear(self):
         "Effacement du contenu du cas en cours"

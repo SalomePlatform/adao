@@ -52,9 +52,9 @@ def test1():
     # print(case.dump(FileName=base_file+"_TUI.py", Formater="TUI"))
     case.dump(FileName=base_file+"_TUI.py", Formater="TUI")
     print("#===============================================================================")
-    print("#=== Restitution en fichier DIC ================================================")
-    # print(case.dump(FileName=base_file+"_DIC.py", Formater="DIC"))
-    case.dump(FileName=base_file+"_DIC.py", Formater="DIC")
+    print("#=== Restitution en fichier SCD ================================================")
+    # print(case.dump(FileName=base_file+"_SCD.py", Formater="SCD"))
+    case.dump(FileName=base_file+"_SCD.py", Formater="SCD")
     print("#===============================================================================")
     print("#=== Restitution en fichier YACS ===============================================")
     # print(case.dump(FileName=base_file+"_YACS.xml", Formater="YACS"))
@@ -65,7 +65,7 @@ def test1():
     cwd = os.getcwd()
     for f in [
         base_file+"_TUI.py",
-        base_file+"_DIC.py",
+        base_file+"_SCD.py",
         base_file+"_YACS.xml",
         ]:
         if os.path.exists(os.path.abspath(cwd+"/"+f)):
