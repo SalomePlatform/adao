@@ -204,8 +204,6 @@ class PathManagement(object):
         "Déclaration des répertoires statiques"
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
         self.__paths = {}
-        self.__paths["daExternals"] = os.path.join(parent,"daExternals")
-        self.__paths["daMatrices"]  = os.path.join(parent,"daMatrices")
         self.__paths["daNumerics"]  = os.path.join(parent,"daNumerics")
         #
         for v in self.__paths.values():

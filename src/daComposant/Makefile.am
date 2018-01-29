@@ -22,7 +22,7 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-EXTRA_DIST = daCore daAlgorithms daDiagnostics  daExternals  daMatrices  daNumerics
+EXTRA_DIST = daCore daAlgorithms daDiagnostics daNumerics
 
 DIR = $(top_srcdir)/src/daComposant/
 

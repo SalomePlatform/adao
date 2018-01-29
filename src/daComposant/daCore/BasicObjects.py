@@ -1068,8 +1068,7 @@ class AlgorithmAndParameters(object):
         """
         Permet de sélectionner l'algorithme à utiliser pour mener à bien l'étude
         d'assimilation. L'argument est un champ caractère se rapportant au nom
-        d'un fichier contenu dans "../daAlgorithms" et réalisant l'opération
-        d'assimilation sur les arguments fixes.
+        d'un algorithme réalisant l'opération sur les arguments fixes.
         """
         if choice is None:
             raise ValueError("Error: algorithm choice has to be given")
@@ -1084,13 +1083,15 @@ class AlgorithmAndParameters(object):
             if os.path.isfile(os.path.join(directory, daDirectory, str(choice)+'.py')):
                 module_path = os.path.abspath(os.path.join(directory, daDirectory))
         if module_path is None:
-            raise ImportError("No algorithm module named \"%s\" was found in a \"%s\" subdirectory\n             The search path is %s"%(choice, daDirectory, sys.path))
+            raise ImportError("No algorithm module named \"%s\" has been found in the search path.\n             The search path is %s"%(choice, sys.path))
         #
         # Importe le fichier complet comme un module
         # ------------------------------------------
         try:
             sys_path_tmp = sys.path ; sys.path.insert(0,module_path)
             self.__algorithmFile = __import__(str(choice), globals(), locals(), [])
+            if not hasattr(self.__algorithmFile, "ElementaryAlgorithm"):
+                raise ImportError("this module does not define a valid elementary algorithm.")
             self.__algorithmName = str(choice)
             sys.path = sys_path_tmp ; del sys_path_tmp
         except ImportError as e:
@@ -2134,15 +2135,11 @@ class _YACSViewer(GenericCaseViewer):
         GenericCaseViewer.__init__(self, __name, __objname, __content)
         self.__internalSCD = _SCDViewer(__name, __objname, __content)
         self._append       = self.__internalSCD._append
-    def dump(self, __filename=None):
+    def dump(self, __filename=None, __convertSCDinMemory=True):
         "Restitution normalisée des commandes"
         self.__internalSCD._finalize()
         # -----
-        if __filename is not None:
-            __file    = os.path.abspath(__filename)
-            __SCDfile = __file[:__file.rfind(".")] + '_SCD.py'
-            __SCDdump = self.__internalSCD.dump(__SCDfile)
-        else:
+        if __filename is None:
             raise ValueError("A file name has to be given for YACS XML output.")
         # -----
         if not PlatformInfo.has_salome or \
@@ -2150,7 +2147,17 @@ class _YACSViewer(GenericCaseViewer):
             raise ImportError("\n\n"+\
                 "Unable to get SALOME or ADAO environnement variables.\n"+\
                 "Please load the right environnement before trying to use it.\n")
+        elif __convertSCDinMemory:
+            __file    = os.path.abspath(__filename)
+            __SCDdump = self.__internalSCD.dump()
+            if os.path.isfile(__file) or os.path.islink(__file):
+                os.remove(__file)
+            from daYacsSchemaCreator.run import create_schema_from_content
+            create_schema_from_content(__SCDdump, __file)
         else:
+            __file    = os.path.abspath(__filename)
+            __SCDfile = __file[:__file.rfind(".")] + '_SCD.py'
+            __SCDdump = self.__internalSCD.dump(__SCDfile)
             if os.path.isfile(__file) or os.path.islink(__file):
                 os.remove(__file)
             __converterExe = os.path.join(os.environ["ADAO_ROOT_DIR"], "bin/salome", "AdaoYacsSchemaCreator.py")
@@ -2158,14 +2165,18 @@ class _YACSViewer(GenericCaseViewer):
             import subprocess
             __p = subprocess.Popen(__args)
             (__stdoutdata, __stderrdata) = __p.communicate()
-            if not os.path.exists(__file):
-                __msg  = "An error occured during the ADAO YACS Schema build.\n"
-                __msg += "Creator applied on the input file:\n"
-                __msg += "  %s\n"%__SCDfile
-                __msg += "If SALOME GUI is launched by command line, see errors\n"
-                __msg += "details in your terminal.\n"
-                raise ValueError(__msg)
+            __p.terminate()
             os.remove(__SCDfile)
+        # -----
+        if not os.path.exists(__file):
+            # logging.debug("-- Error YacsSchemaCreator with convert SCD in memory=%s --"%__convertSCDinMemory)
+            # logging.debug("-- Content of the file : --")
+            # logging.debug(__SCDdump)
+            __msg  = "An error occured during the ADAO YACS Schema build for\n"
+            __msg += "the target output file:\n"
+            __msg += "  %s\n"%__file
+            __msg += "See errors details in your launching terminal log.\n"
+            raise ValueError(__msg)
         # -----
         __fid = open(__file,"r")
         __text = __fid.read()

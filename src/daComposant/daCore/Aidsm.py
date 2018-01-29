@@ -113,11 +113,11 @@ class Aidsm(object):
         try:
             if   Concept in ("Background", "CheckingPoint", "ControlInput", "Observation", "Controls"):
                 commande = getattr(self,"set"+Concept)
-                commande(Vector, VectorSerie, Script, Scheduler, Stored, Checked )
+                commande(Vector, VectorSerie, Script, Stored, Scheduler, Checked )
             elif Concept in ("BackgroundError", "ObservationError", "EvolutionError"):
                 commande = getattr(self,"set"+Concept)
                 commande(Matrix, ScalarSparseMatrix, DiagonalSparseMatrix,
-                         ObjectMatrix, Script, Stored, Checked )
+                         Script, Stored, ObjectMatrix, Checked )
             elif Concept == "AlgorithmParameters":
                 self.setAlgorithmParameters( Algorithm, Parameters, Script )
             elif Concept == "Debug":
@@ -125,18 +125,18 @@ class Aidsm(object):
             elif Concept == "NoDebug":
                 self.setNoDebug()
             elif Concept == "Observer":
-                self.setObserver( Variable, Template, String, Script, ObjectFunction, Scheduler, Info )
+                self.setObserver( Variable, Template, String, Script, Info, ObjectFunction, Scheduler )
             elif Concept == "Diagnostic":
                 self.setDiagnostic( Diagnostic, Identifier, Parameters, Script, Unit, BaseType )
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
-                    Parameters, Script, AvoidRC, Stored, Checked )
+                    Parameters, Script, Stored, AvoidRC, Checked )
             elif Concept in ("EvolutionModel", "ControlModel"):
                 commande = getattr(self,"set"+Concept)
                 commande(
                     Matrix, OneFunction, ThreeFunctions,
-                    Parameters, Script, Scheduler, AvoidRC, Stored, Checked )
+                    Parameters, Script, Scheduler, Stored, AvoidRC, Checked )
 
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
@@ -154,8 +154,8 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
-            Scheduler      = None,
             Stored         = False,
+            Scheduler      = None,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "Background"
@@ -176,8 +176,8 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
-            Scheduler      = None,
             Stored         = False,
+            Scheduler      = None,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "CheckingPoint"
@@ -198,8 +198,8 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
-            Scheduler      = None,
             Stored         = False,
+            Scheduler      = None,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "ControlInput"
@@ -220,8 +220,8 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
-            Scheduler      = None,
             Stored         = False,
+            Scheduler      = None,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "Observation"
@@ -242,8 +242,8 @@ class Aidsm(object):
             Vector         = (), # Valeur par defaut pour un vecteur vide
             VectorSerie    = None,
             Script         = None,
-            Scheduler      = None,
             Stored         = False,
+            Scheduler      = None,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "Controls"
@@ -264,9 +264,9 @@ class Aidsm(object):
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
-            ObjectMatrix         = None,
             Script               = None,
             Stored               = False,
+            ObjectMatrix         = None,
             Checked              = False):
         "Definition d'un concept de calcul"
         Concept = "BackgroundError"
@@ -288,9 +288,9 @@ class Aidsm(object):
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
-            ObjectMatrix         = None,
             Script               = None,
             Stored               = False,
+            ObjectMatrix         = None,
             Checked              = False):
         "Definition d'un concept de calcul"
         Concept = "ObservationError"
@@ -312,9 +312,9 @@ class Aidsm(object):
             Matrix               = None,
             ScalarSparseMatrix   = None,
             DiagonalSparseMatrix = None,
-            ObjectMatrix         = None,
             Script               = None,
             Stored               = False,
+            ObjectMatrix         = None,
             Checked              = False):
         "Definition d'un concept de calcul"
         Concept = "EvolutionError"
@@ -339,8 +339,8 @@ class Aidsm(object):
             AppliedInXb    = None,
             Parameters     = None,
             Script         = None,
-            AvoidRC        = True,
             Stored         = False,
+            AvoidRC        = True,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "ObservationOperator"
@@ -367,9 +367,9 @@ class Aidsm(object):
             ThreeFunctions = None,
             Parameters     = None,
             Script         = None,
+            Stored         = False,
             Scheduler      = None,
             AvoidRC        = True,
-            Stored         = False,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "EvolutionModel"
@@ -396,9 +396,9 @@ class Aidsm(object):
             ThreeFunctions = None,
             Parameters     = None,
             Script         = None,
+            Stored         = False,
             Scheduler      = None,
             AvoidRC        = True,
-            Stored         = False,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "ControlModel"
@@ -469,9 +469,9 @@ class Aidsm(object):
             Template       = None,
             String         = None,
             Script         = None,
+            Info           = None,
             ObjectFunction = None,
-            Scheduler      = None,
-            Info           = None):
+            Scheduler      = None):
         "Definition d'un concept de calcul"
         Concept = "Observer"
         self.__case.register("set"+Concept, dir(), locals())
@@ -602,11 +602,15 @@ class Aidsm(object):
         """
         files = []
         for directory in sys.path:
-            if os.path.isdir(os.path.join(directory,"daAlgorithms")):
-                for fname in os.listdir(os.path.join(directory,"daAlgorithms")):
-                    root, ext = os.path.splitext(fname)
-                    if ext == '.py' and root != '__init__':
-                        files.append(root)
+            trypath = os.path.join(directory,"daAlgorithms")
+            if os.path.isdir(trypath):
+                for fname in os.listdir(trypath):
+                    if os.path.isfile(os.path.join(trypath,fname)):
+                        fc = open(os.path.join(trypath,fname)).read()
+                        iselal = bool("class ElementaryAlgorithm" in fc)
+                        root, ext = os.path.splitext(fname)
+                        if iselal and ext == '.py' and root != '__init__':
+                            files.append(root)
         files.sort()
         return files
 
