@@ -965,9 +965,9 @@ class AlgorithmAndParameters(object):
         xmlLoader.registerProcCataLoader()
         try:
             catalogAd = r.loadCatalog("proc", os.path.abspath(FileName))
+            r.addCatalog(catalogAd)
         except:
             pass
-        r.addCatalog(catalogAd)
 
         try:
             p = xmlLoader.load(os.path.abspath(FileName))
@@ -2094,7 +2094,11 @@ class _SCDViewer(GenericCaseViewer):
         __ExecVariables = {} # Necessaire pour recuperer la variable
         exec("\n".join(self._lineSerie), __ExecVariables)
         study_config = __ExecVariables['study_config']
-        self.__hasAlgorithm = bool(study_config['Algorithm'])
+        # Pour Python 3 : self.__hasAlgorithm = bool(study_config['Algorithm'])
+        if 'Algorithm' in study_config:
+            self.__hasAlgorithm = True
+        else:
+            self.__hasAlgorithm = False
         if not self.__hasAlgorithm and \
                 "AlgorithmParameters" in study_config and \
                 isinstance(study_config['AlgorithmParameters'], dict) and \

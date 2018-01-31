@@ -32,17 +32,16 @@ logging.debug("-- Starting AdaoYacsSchemaCreator --")
 
 # Check some basics variables
 if "ADAO_ROOT_DIR" not in os.environ:
-  logging.fatal("You have to define ADAO_ROOT_DIR")
-  sys.exit(1)
+    logging.fatal("You have to define ADAO_ROOT_DIR")
+    sys.exit(1)
 
 try:
-  from daYacsSchemaCreator.run import *
-  from daYacsSchemaCreator.help_methods import *
-except:
-  logging.fatal("Import of ADAO python modules failed !" +
-                "\n add ADAO python installation directory in your PYTHONPATH")
-  traceback.print_exc()
-  sys.exit(1)
+    from daYacsSchemaCreator import run
+except ImportError as e:
+    logging.fatal("\n  Import of YACS schema creator module failed, the error message is:\n" +
+                  "\n  %s\n"%(e,) +
+                  "\n  Add its installation directory in your PYTHONPATH.\n")
+    sys.exit(1)
 
 # Parse arguments
 from argparse import ArgumentParser
@@ -52,4 +51,4 @@ my_parser.add_argument('config_file')
 my_parser.add_argument('yacs_schema_filename')
 args = my_parser.parse_args()
 
-create_schema_from_file(args.config_file, args.yacs_schema_filename)
+run.create_schema_from_file(args.config_file, args.yacs_schema_filename)

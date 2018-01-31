@@ -26,6 +26,7 @@ import sys
 import os
 import traceback
 import logging
+import tempfile
 from daYacsSchemaCreator.methods import *
 from daYacsSchemaCreator.help_methods import *
 
@@ -34,7 +35,8 @@ def create_schema(config_file, config_content, yacs_schema_filename):
     if config_file is not None and config_content is None:
       # Import config_file
       try:
-        exec(compile(open(config_file).read(), config_file, 'exec'))
+        (fd, filename) = tempfile.mkstemp()
+        exec(compile(open(config_file).read(), filename, 'exec'))
       except Exception as e:
         if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
         else: msg = ""
@@ -42,11 +44,12 @@ def create_schema(config_file, config_content, yacs_schema_filename):
     elif config_file is None and config_content is not None:
       # Import config_content
       try:
-        exec(compile(config_content, None, 'exec'))
+        (fd, filename) = tempfile.mkstemp()
+        exec(compile(config_content, filename, 'exec'))
       except Exception as e:
         if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
         else: msg = ""
-        raise ValueError("\n\nexception in loading the DIC config content\n\nThe following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal.\n"%(str(e),msg))
+        raise ValueError("\n\nexception in loading the config content\n\nThe following error occurs:\n\n%s %s\n\nSee also the potential messages, which can show the origin of the above error, in the launching terminal.\n"%(str(e),msg))
     else:
         raise ValueError("Error in schema creation, file or content has to be given")
 
