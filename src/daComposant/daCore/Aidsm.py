@@ -31,7 +31,7 @@ import sys
 #
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
-from daCore.BasicObjects import DiagnosticAndParameters, CaseLogger
+from daCore.BasicObjects import CaseLogger
 from daCore import PlatformInfo
 #
 from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
@@ -69,7 +69,7 @@ class Aidsm(object):
             self.__adaoObject[ename] = None
         for ename in ("ObservationOperator", "EvolutionModel", "ControlModel"):
             self.__adaoObject[ename] = {}
-        for ename in ("Diagnostic", "Observer"):
+        for ename in ("Observer",):
             self.__adaoObject[ename]   = []
             self.__StoredInputs[ename] = []
         #
@@ -85,11 +85,8 @@ class Aidsm(object):
             Algorithm            = None,
             AppliedInXb          = None,
             AvoidRC              = True,
-            BaseType             = None,
             Checked              = False,
-            Diagnostic           = None,
             DiagonalSparseMatrix = None,
-            Identifier           = None,
             Info                 = None,
             Matrix               = None,
             ObjectFunction       = None,
@@ -103,7 +100,6 @@ class Aidsm(object):
             String               = None,
             Template             = None,
             ThreeFunctions       = None,
-            Unit                 = None,
             Variable             = None,
             Vector               = None,
             VectorSerie          = None,
@@ -126,8 +122,6 @@ class Aidsm(object):
                 self.setNoDebug()
             elif Concept == "Observer":
                 self.setObserver( Variable, Template, String, Script, Info, ObjectFunction, Scheduler )
-            elif Concept == "Diagnostic":
-                self.setDiagnostic( Diagnostic, Identifier, Parameters, Script, Unit, BaseType )
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
@@ -515,29 +509,6 @@ class Aidsm(object):
 
     # -----------------------------------------------------------
 
-    def setDiagnostic(self,
-            Diagnostic = None,
-            Identifier = None,
-            Parameters = None,
-            Script     = None,
-            Unit       = None,
-            BaseType   = None):
-        "Definition d'un concept de calcul"
-        Concept = "Diagnostic"
-        self.__case.register("set"+Concept, dir(), locals())
-        self.__adaoObject[Concept].append( DiagnosticAndParameters(
-                 name               = Concept,
-                 asDiagnostic       = Diagnostic,
-                 asIdentifier       = Identifier,
-                 asDict             = Parameters,
-                 asScript           = Script,
-                 asUnit             = Unit,
-                 asBaseType         = BaseType,
-                 asExistingDiags    = self.__StoredInputs[Concept],
-                ))
-        self.__StoredInputs[Concept].append(str(Identifier))
-        return 0
-
     def get(self, Concept=None, noDetails=True ):
         "Recuperation d'une sortie du calcul"
         if Concept is not None:
@@ -557,18 +528,13 @@ class Aidsm(object):
             elif Concept == "AlgorithmRequiredParameters" and self.__adaoObject["AlgorithmParameters"] is not None:
                 return self.__adaoObject["AlgorithmParameters"].getAlgorithmRequiredParameters(noDetails)
                 #
-            elif Concept in self.__StoredInputs["Diagnostic"]:
-                indice = self.__StoredInputs["Diagnostic"].index(Concept)
-                return self.__adaoObject["Diagnostic"][indice].get()
-                #
             else:
-                raise ValueError("The requested key \"%s\" does not exists as an input, a diagnostic or a stored variable."%Concept)
+                raise ValueError("The requested key \"%s\" does not exists as an input or a stored variable."%Concept)
         else:
             allvariables = {}
             allvariables.update( {"AlgorithmParameters":self.__adaoObject["AlgorithmParameters"].get()} )
             # allvariables.update( self.__adaoObject["AlgorithmParameters"].get() )
             allvariables.update( self.__StoredInputs )
-            allvariables.pop('Diagnostic', None)
             allvariables.pop('Observer', None)
             return allvariables
 
@@ -590,7 +556,6 @@ class Aidsm(object):
                 variables.extend(list(self.__adaoObject["AlgorithmParameters"].keys()))
             if len(list(self.__StoredInputs.keys())) > 0:
                 variables.extend( list(self.__StoredInputs.keys()) )
-            variables.remove('Diagnostic')
             variables.remove('Observer')
             variables.sort()
             return variables
@@ -614,27 +579,11 @@ class Aidsm(object):
         files.sort()
         return files
 
-    def get_available_diagnostics(self):
-        """
-        Renvoie la liste des diagnostics potentiellement utilisables, identifiés
-        par les chaînes de caractères.
-        """
-        files = []
-        for directory in sys.path:
-            if os.path.isdir(os.path.join(directory,"daDiagnostics")):
-                for fname in os.listdir(os.path.join(directory,"daDiagnostics")):
-                    root, ext = os.path.splitext(fname)
-                    if ext == '.py' and root != '__init__':
-                        files.append(root)
-        files.sort()
-        return files
-
     # -----------------------------------------------------------
 
     def get_algorithms_main_path(self):
         """
         Renvoie le chemin pour le répertoire principal contenant les algorithmes
-        dans un sous-répertoire "daAlgorithms"
         """
         return self.__parent
 
@@ -642,9 +591,6 @@ class Aidsm(object):
         """
         Ajoute au chemin de recherche des algorithmes un répertoire dans lequel
         se trouve un sous-répertoire "daAlgorithms"
-
-        Remarque : si le chemin a déjà été ajouté pour les diagnostics, il n'est
-        pas indispensable de le rajouter ici.
         """
         if not os.path.isdir(Path):
             raise ValueError("The given "+Path+" argument must exist as a directory")
@@ -652,31 +598,6 @@ class Aidsm(object):
             raise ValueError("The given \""+Path+"\" argument must contain a subdirectory named \"daAlgorithms\"")
         if not os.path.isfile(os.path.join(Path,"daAlgorithms","__init__.py")):
             raise ValueError("The given \""+Path+"/daAlgorithms\" path must contain a file named \"__init__.py\"")
-        sys.path.insert(0, os.path.abspath(Path))
-        sys.path = PlatformInfo.uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
-        return 0
-
-    def get_diagnostics_main_path(self):
-        """
-        Renvoie le chemin pour le répertoire principal contenant les diagnostics
-        dans un sous-répertoire "daDiagnostics"
-        """
-        return self.__parent
-
-    def add_diagnostics_path(self, Path=None):
-        """
-        Ajoute au chemin de recherche des algorithmes un répertoire dans lequel
-        se trouve un sous-répertoire "daDiagnostics"
-
-        Remarque : si le chemin a déjà été ajouté pour les algorithmes, il n'est
-        pas indispensable de le rajouter ici.
-        """
-        if not os.path.isdir(Path):
-            raise ValueError("The given "+Path+" argument must exist as a directory")
-        if not os.path.isdir(os.path.join(Path,"daDiagnostics")):
-            raise ValueError("The given \""+Path+"\" argument must contain a subdirectory named \"daDiagnostics\"")
-        if not os.path.isfile(os.path.join(Path,"daDiagnostics","__init__.py")):
-            raise ValueError("The given \""+Path+"/daDiagnostics\" path must contain a file named \"__init__.py\"")
         sys.path.insert(0, os.path.abspath(Path))
         sys.path = PlatformInfo.uniq( sys.path ) # Conserve en unique exemplaire chaque chemin
         return 0
