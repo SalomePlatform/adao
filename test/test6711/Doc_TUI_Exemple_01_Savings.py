@@ -45,28 +45,32 @@ def test1():
     base_file = "output_test6711"
     print("")
     print("#===============================================================================")
+    #
     print("#=== Restitution en dictionnaire basique =======================================")
     case.get()
     print("#===============================================================================")
+    #
     print("#=== Restitution en fichier TUI ================================================")
     # print(case.dump(FileName=base_file+"_TUI.py", Formater="TUI"))
     case.dump(FileName=base_file+"_TUI.py", Formater="TUI")
     print("#===============================================================================")
+    #
     print("#=== Restitution en fichier SCD ================================================")
     # print(case.dump(FileName=base_file+"_SCD.py", Formater="SCD"))
     case.dump(FileName=base_file+"_SCD.py", Formater="SCD")
     print("#===============================================================================")
-    print("#=== Restitution en fichier YACS ===============================================")
-    # print(case.dump(FileName=base_file+"_YACS.xml", Formater="YACS"))
-    case.dump(FileName=base_file+"_YACS.xml", Formater="YACS")
-    print("#===============================================================================")
+    #
+    #   print("#=== Restitution en fichier YACS ===============================================")
+    #   # print(case.dump(FileName=base_file+"_YACS.xml", Formater="YACS"))
+    #   case.dump(FileName=base_file+"_YACS.xml", Formater="YACS")
+    #   print("#===============================================================================")
     #
     print("")
     cwd = os.getcwd()
     for f in [
         base_file+"_TUI.py",
         base_file+"_SCD.py",
-        base_file+"_YACS.xml",
+        # base_file+"_YACS.xml",
         ]:
         if os.path.exists(os.path.abspath(cwd+"/"+f)):
             print("#=== Fichier \"%s\" correctement généré"%f)
