@@ -42,6 +42,7 @@ class Aidsm(object):
     """ ADAO Internal Data Structure Model """
     def __init__(self, name = "", addViewers=None):
         self.__name = str(name)
+        self.__directory    = None
         self.__case = CaseLogger(self.__name, "case", addViewers)
         #
         self.__adaoObject   = {}
@@ -137,10 +138,10 @@ class Aidsm(object):
         except Exception as e:
             if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
-            raise ValueError("during settings, the following error occurs:\n"+\
-                             "\n%s %s\n\nSee also the potential messages, "+\
-                             "which can show the origin of the above error, "+\
-                             "in the launching terminal."%(str(e),msg))
+            raise ValueError(("during settings, the following error occurs:\n"+\
+                              "\n%s %s\n\nSee also the potential messages, "+\
+                              "which can show the origin of the above error, "+\
+                              "in the launching terminal.")%(str(e),msg))
 
     # -----------------------------------------------------------
 
@@ -224,29 +225,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = Script,
-            scheduledBy        = Scheduler,
-            toBeChecked        = Checked,
-            )
-        if Stored:
-            self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
-        return 0
-
-    def setControls(self,
-            Vector         = (), # Valeur par defaut pour un vecteur vide
-            VectorSerie    = None,
-            Script         = None,
-            Stored         = False,
-            Scheduler      = None,
-            Checked        = False):
-        "Definition d'un concept de calcul"
-        Concept = "Controls"
-        self.__case.register("set"+Concept, dir(), locals())
-        self.__adaoObject[Concept] = State(
-            name               = Concept,
-            asVector           = Vector,
-            asPersistentVector = VectorSerie,
-            asScript           = Script,
+            asScript           = self.with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -413,12 +392,12 @@ class Aidsm(object):
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
-    def setDebug(self, level = 10):
+    def setDebug(self, __level = 10):
         "NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"
         self.__case.register("setDebug",dir(),locals())
         log = logging.getLogger()
-        log.setLevel( level )
-        self.__StoredInputs["Debug"]   = level
+        log.setLevel( __level )
+        self.__StoredInputs["Debug"]   = __level
         self.__StoredInputs["NoDebug"] = False
         return 0
 
@@ -579,7 +558,6 @@ class Aidsm(object):
         files.sort()
         return files
 
-    # -----------------------------------------------------------
 
     def get_algorithms_main_path(self):
         """

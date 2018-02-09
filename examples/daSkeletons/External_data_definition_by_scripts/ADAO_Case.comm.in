@@ -1,8 +1,10 @@
 
-ASSIMILATION_STUDY(Study_name='ADAO skeleton case',
-                   Study_repertory='@prefix@/share/salome/adao_examples/daSkeletons/External_data_definition_by_scripts',
-                   Debug=0,
-                   Algorithm='3DVAR',
+ASSIMILATION_STUDY(StudyName='ADAO skeleton case',
+                   StudyRepertory='@prefix@/share/salome/adao_examples/daSkeletons/External_data_definition_by_scripts',
+                   AlgorithmParameters=_F(Algorithm='3DVAR',
+                                       Parameters='Dict',
+                                       data=_F(FROM='Script',
+                                               SCRIPT_FILE='Script_AlgorithmParameters.py',),),
                    Background=_F(Stored=1,
                                  INPUT_TYPE='Vector',
                                  data=_F(FROM='Script',
@@ -23,8 +25,7 @@ ASSIMILATION_STUDY(Study_name='ADAO skeleton case',
                                           INPUT_TYPE='Function',
                                           data=_F(FROM='FunctionDict',
                                                   FUNCTIONDICT_FILE='Script_ObservationOperator_H.py',),),
-                   AlgorithmParameters=_F(INPUT_TYPE='Dict',
-                                          data=_F(FROM='Script',
-                                                  SCRIPT_FILE='Script_AlgorithmParameters.py',),),
                    UserPostAnalysis=_F(FROM='Script',
                                        SCRIPT_FILE='Script_UserPostAnalysis.py',),);
+#VERSION_CATALOGUE:V7_6_0:FIN VERSION_CATALOGUE
+

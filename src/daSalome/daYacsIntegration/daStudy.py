@@ -37,7 +37,6 @@ class daStudy:
   def __init__(self, name, algorithm, debug):
 
     self.ADD = AssimilationStudy(name)
-    self.ADD.setControls()
     self.algorithm = algorithm
     self.algorithm_dict = None
     self.Background = None

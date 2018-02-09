@@ -186,6 +186,7 @@ except ImportError:
 has_salome = bool( "ROOT_SALOME"   in os.environ )
 has_yacs   = bool( "YACS_ROOT_DIR" in os.environ )
 has_adao   = bool( "ADAO_ROOT_DIR" in os.environ )
+has_eficas = bool( "EFICAS_ROOT_DIR" in os.environ )
 
 # ==============================================================================
 def uniq(sequence):
