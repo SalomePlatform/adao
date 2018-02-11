@@ -115,7 +115,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, R, B, Q)
         #
         if not PlatformInfo.has_nlopt and not self._parameters["Minimizer"] in ["COBYLA", "POWELL", "SIMPLEX"]:
-            logging.debug("%s Absence de NLopt, utilisation forcee du minimiseur SIMPLEX"%(self._name,))
+            logging.warning("%s Minimization by SIMPLEX is forced because %s is unavailable (COBYLA, POWELL are also available)"%(self._name,self._parameters["Minimizer"]))
             self._parameters["Minimizer"] = "SIMPLEX"
         #
         # Opérateurs
