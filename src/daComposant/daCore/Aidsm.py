@@ -47,6 +47,7 @@ class Aidsm(object):
         #
         self.__adaoObject   = {}
         self.__StoredInputs = {}
+        self.__PostAnalysis = []
         #
         self.__Concepts = [
             "AlgorithmParameters",
@@ -54,13 +55,14 @@ class Aidsm(object):
             "CheckingPoint",
             "ControlInput",
             "Observation",
-            "Controls",
             "BackgroundError",
             "ObservationError",
             "EvolutionError",
             "ObservationOperator",
             "EvolutionModel",
             "ControlModel",
+            "Name",
+            "Directory",
             "Debug",
             "NoDebug",
             "Observer",
@@ -108,7 +110,7 @@ class Aidsm(object):
         "Interface unique de definition de variables d'entrees par argument"
         self.__case.register("set",dir(),locals(),None,True)
         try:
-            if   Concept in ("Background", "CheckingPoint", "ControlInput", "Observation", "Controls"):
+            if   Concept in ("Background", "CheckingPoint", "ControlInput", "Observation"):
                 commande = getattr(self,"set"+Concept)
                 commande(Vector, VectorSerie, Script, Stored, Scheduler, Checked )
             elif Concept in ("BackgroundError", "ObservationError", "EvolutionError"):
@@ -117,6 +119,10 @@ class Aidsm(object):
                          Script, Stored, ObjectMatrix, Checked )
             elif Concept == "AlgorithmParameters":
                 self.setAlgorithmParameters( Algorithm, Parameters, Script )
+            elif Concept == "Name":
+                self.setName(String)
+            elif Concept == "Directory":
+                self.setDirectory(String)
             elif Concept == "Debug":
                 self.setDebug()
             elif Concept == "NoDebug":
@@ -159,7 +165,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = Script,
+            asScript           = self.with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -181,7 +187,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = Script,
+            asScript           = self.with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -203,7 +209,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = Script,
+            asScript           = self.with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -250,7 +256,7 @@ class Aidsm(object):
             asEyeByScalar = ScalarSparseMatrix,
             asEyeByVector = DiagonalSparseMatrix,
             asCovObject   = ObjectMatrix,
-            asScript      = Script,
+            asScript      = self.with_directory(Script),
             toBeChecked   = Checked,
             )
         if Stored:
@@ -274,7 +280,7 @@ class Aidsm(object):
             asEyeByScalar = ScalarSparseMatrix,
             asEyeByVector = DiagonalSparseMatrix,
             asCovObject   = ObjectMatrix,
-            asScript      = Script,
+            asScript      = self.with_directory(Script),
             toBeChecked   = Checked,
             )
         if Stored:
@@ -298,7 +304,7 @@ class Aidsm(object):
             asEyeByScalar = ScalarSparseMatrix,
             asEyeByVector = DiagonalSparseMatrix,
             asCovObject   = ObjectMatrix,
-            asScript      = Script,
+            asScript      = self.with_directory(Script),
             toBeChecked   = Checked,
             )
         if Stored:
@@ -323,7 +329,7 @@ class Aidsm(object):
             asMatrix         = Matrix,
             asOneFunction    = OneFunction,
             asThreeFunctions = ThreeFunctions,
-            asScript         = Script,
+            asScript         = self.with_directory(Script),
             asDict           = Parameters,
             appliedInX       = AppliedInXb,
             avoidRC          = AvoidRC,
@@ -352,7 +358,7 @@ class Aidsm(object):
             asMatrix         = Matrix,
             asOneFunction    = OneFunction,
             asThreeFunctions = ThreeFunctions,
-            asScript         = Script,
+            asScript         = self.with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
             avoidRC          = AvoidRC,
@@ -381,7 +387,7 @@ class Aidsm(object):
             asMatrix         = Matrix,
             asOneFunction    = OneFunction,
             asThreeFunctions = ThreeFunctions,
-            asScript         = Script,
+            asScript         = self.with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
             avoidRC          = AvoidRC,
@@ -391,6 +397,24 @@ class Aidsm(object):
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
+
+    def setName(self, String=None):
+        "Definition d'un concept de calcul"
+        self.__case.register("setName",dir(),locals())
+        if String is not None:
+            self.__name = str(String)
+        else:
+            self.__name = None
+        self.__StoredInputs["Name"] = self.__name
+
+    def setDirectory(self, String=None):
+        "Definition d'un concept de calcul"
+        self.__case.register("setDirectory",dir(),locals())
+        if os.path.isdir(os.path.abspath(str(String))):
+            self.__directory = os.path.abspath(str(String))
+        else:
+            self.__directory = None
+        self.__StoredInputs["Directory"] = self.__directory
 
     def setDebug(self, __level = 10):
         "NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"
@@ -421,7 +445,7 @@ class Aidsm(object):
             name          = Concept,
             asAlgorithm   = Algorithm,
             asDict        = Parameters,
-            asScript      = Script,
+            asScript      = self.with_directory(Script),
             )
         return 0
 
@@ -433,7 +457,7 @@ class Aidsm(object):
             raise ValueError("No algorithm registred, ask for one before updating parameters")
         self.__adaoObject["AlgorithmParameters"].updateParameters(
             asDict        = Parameters,
-            asScript      = Script,
+            asScript      = self.with_directory(Script),
             )
         return 0
 
@@ -453,7 +477,7 @@ class Aidsm(object):
             onVariable  = Variable,
             asTemplate  = Template,
             asString    = String,
-            asScript    = Script,
+            asScript    = self.with_directory(Script),
             asObsObject = ObjectFunction,
             withInfo    = Info,
             scheduledBy = Scheduler,
@@ -558,7 +582,6 @@ class Aidsm(object):
         files.sort()
         return files
 
-
     def get_algorithms_main_path(self):
         """
         Renvoie le chemin pour le répertoire principal contenant les algorithmes
@@ -617,19 +640,34 @@ class Aidsm(object):
 
     def dump(self, FileName=None, Formater="TUI"):
         "Restitution normalisée des commandes"
-        return self.__case.dump(FileName, Formater)
+        __Upa = "\n".join(self.__PostAnalysis)
+        return self.__case.dump(FileName, Formater, __Upa)
 
-    def load(self, FileName=None, Formater="TUI"):
+    def load(self, FileName=None, Content=None, Object=None, Formater="TUI"):
         "Chargement normalisé des commandes"
-        __commands = self.__case.load(FileName, Formater)
+        __commands = self.__case.load(FileName, Content, Object, Formater)
         from numpy import array, matrix
         for __command in __commands:
-            exec("self."+__command)
+            if __command.find("set")>-1 and __command.find("set_")<0:
+                # logging.debug('Command loaded: %s'%(__command,))
+                exec("self."+__command)
+            else:
+                # logging.debug('Command not loaded: %s'%(__command,))
+                self.__PostAnalysis.append(__command)
         return self
 
     def clear(self):
         "Effacement du contenu du cas en cours"
         self.__init__(self.__name)
+
+    def with_directory(self, __filename=None):
+        if os.path.exists(str(__filename)):
+            __fullpath = __filename
+        elif os.path.exists(os.path.join(str(self.__directory), str(__filename))):
+            __fullpath = os.path.join(self.__directory, str(__filename))
+        else:
+            __fullpath = __filename
+        return __fullpath
 
     # -----------------------------------------------------------
 

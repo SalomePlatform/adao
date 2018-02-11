@@ -288,8 +288,8 @@ class FullOperator(object):
                  name             = "GenericFullOperator",
                  asMatrix         = None,
                  asOneFunction    = None, # Fonction
-                 asThreeFunctions = None, # Dictionnaire de fonctions
-                 asScript         = None,
+                 asThreeFunctions = None, # Fonctions dictionary
+                 asScript         = None, # Fonction(s) script
                  asDict           = None, # Parameters
                  appliedInX       = None,
                  avoidRC          = True,
@@ -755,7 +755,7 @@ class AlgorithmAndParameters(object):
         #
         self.updateParameters( asDict, asScript )
         #
-        if asScript is not None:
+        if asAlgorithm is None and asScript is not None:
             __Algo = ImportFromScript(asScript).getvalue( "Algorithm" )
         else:
             __Algo = asAlgorithm
@@ -771,7 +771,7 @@ class AlgorithmAndParameters(object):
                  asScript   = None,
                 ):
         "Mise a jour des parametres"
-        if asScript is not None:
+        if asDict is None and asScript is not None:
             __Dict = ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
         else:
             __Dict = asDict
@@ -822,8 +822,12 @@ class AlgorithmAndParameters(object):
         "Permet de lancer le calcul d'assimilation"
         if FileName is None or not os.path.exists(FileName):
             raise ValueError("a YACS file name has to be given for YACS execution.\n")
-        if not PlatformInfo.has_salome or not PlatformInfo.has_yacs or not PlatformInfo.has_adao:
-            raise ImportError("Unable to get SALOME, YACS or ADAO environnement variables. Please launch SALOME before executing.\n")
+        if not PlatformInfo.has_salome or \
+            not PlatformInfo.has_yacs or \
+            not PlatformInfo.has_adao:
+            raise ImportError("\n\n"+\
+                "Unable to get SALOME, YACS or ADAO environnement variables.\n"+\
+                "Please load the right environnement before trying to use it.\n")
         #
         import pilot
         import SALOMERuntime
@@ -1209,8 +1213,9 @@ class State(object):
             self.size        = self.__V.size
         elif __Series is not None:
             self.__is_series  = True
-            if isinstance(__Series, (tuple, list, numpy.ndarray, numpy.matrix)):
+            if isinstance(__Series, (tuple, list, numpy.ndarray, numpy.matrix, str)):
                 self.__V = Persistence.OneVector(self.__name, basetype=numpy.matrix)
+                if isinstance(__Series, str): __Series = eval(__Series)
                 for member in __Series:
                     self.__V.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
                 import sys ; sys.stdout.flush()
@@ -1589,6 +1594,7 @@ class CaseLogger(object):
         self.__switchoff = False
         self.__viewers = self.__loaders = {
             "TUI":_TUIViewer,
+            "EPD":_EPDViewer,
             "DCT":_DCTViewer,
             "SCD":_SCDViewer,
             "YACS":_YACSViewer,
@@ -1608,51 +1614,56 @@ class CaseLogger(object):
         if not __switchoff:
             self.__switchoff = False
 
-    def dump(self, __filename=None, __format="TUI"):
+    def dump(self, __filename=None, __format="TUI", __upa=""):
         "Restitution normalisée des commandes (par les *GenericCaseViewer)"
         if __format in self.__viewers:
             __formater = self.__viewers[__format](self.__name, self.__objname, self.__logSerie)
         else:
             raise ValueError("Dumping as \"%s\" is not available"%__format)
-        return __formater.dump(__filename)
+        return __formater.dump(__filename, __upa)
 
-    def load(self, __filename=None, __format="TUI"):
+    def load(self, __filename=None, __content=None, __object=None, __format="TUI"):
         "Chargement normalisé des commandes"
         if __format in self.__loaders:
             __formater = self.__loaders[__format]()
         else:
             raise ValueError("Loading as \"%s\" is not available"%__format)
-        return __formater.load(__filename)
+        return __formater.load(__filename, __content, __object)
 
 # ==============================================================================
 class GenericCaseViewer(object):
     """
     Gestion des commandes de creation d'une vue de cas
     """
-    def __init__(self, __name="", __objname="case", __content=None):
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
-        self._name     = str(__name)
-        self._objname  = str(__objname)
-        self._lineSerie = []
-        self._switchoff = False
+        self._name         = str(__name)
+        self._objname      = str(__objname)
+        self._lineSerie    = []
+        self._switchoff    = False
         self._numobservers = 2
-        self._content = __content
+        self._content      = __content
+        self._object       = __object
         self._missing = """raise ValueError("This case requires beforehand to import or define the variable named <%s>. When corrected, remove this command, correct and uncomment the following one.")\n# """
-    def _append(self):
+    def _append(self, *args):
         "Transformation de commande individuelle en enregistrement"
         raise NotImplementedError()
-    def _extract(self):
+    def _extract(self, *args):
         "Transformation d'enregistrement en commande individuelle"
         raise NotImplementedError()
-    def _finalize(self):
+    def _finalize(self, __upa=None):
         "Enregistrement du final"
-        pass
+        if __upa is not None and len(__upa)>0:
+            self._lineSerie.append("%s.execute()"%(self._objname,))
+            self._lineSerie.append(__upa)
     def _addLine(self, line=""):
         "Ajoute un enregistrement individuel"
         self._lineSerie.append(line)
-    def dump(self, __filename=None):
+    def _get_objname(self):
+        return self._objname
+    def dump(self, __filename=None, __upa=None):
         "Restitution normalisée des commandes"
-        self._finalize()
+        self._finalize(__upa)
         __text = "\n".join(self._lineSerie)
         __text +="\n"
         if __filename is not None:
@@ -1661,31 +1672,26 @@ class GenericCaseViewer(object):
             __fid.write(__text)
             __fid.close()
         return __text
-    def load(self, __filename=None):
+    def load(self, __filename=None, __content=None, __object=None):
         "Chargement normalisé des commandes"
-        if os.path.exists(__filename):
+        if __filename is not None and os.path.exists(__filename):
             self._content = open(__filename, 'r').read()
-        __commands = self._extract(self._content)
+        elif __content is not None and type(__content) is str:
+            self._content = __content
+        elif __object is not None and type(__object) is dict:
+            self._object = copy.deepcopy(__object)
+        else:
+            pass # use "self._content" from initialization
+        __commands = self._extract(self._content, self._object)
         return __commands
-
-    # --> Inutile d'accrocher l'interpretation au cas
-    # def _interpret(self):
-    #     "Interprétation d'une commande"
-    #     raise NotImplementedError()
-    # def execCase(self, __filename=None):
-    #     "Exécution normalisée des commandes"
-    #     if os.path.exists(__filename):
-    #         self._content = open(__filename, 'r').read()
-    #     __retcode = self._interpret(self._content)
-    #     return __retcode
 
 class _TUIViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas TUI
+    Etablissement des commandes d'un cas ADAO TUI (Cas<->TUI)
     """
-    def __init__(self, __name="", __objname="case", __content=None):
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script for ADAO TUI\n#")
         self._addLine("from numpy import array, matrix")
@@ -1721,35 +1727,168 @@ class _TUIViewer(GenericCaseViewer):
             __text.rstrip(", ")
             __text += ")"
             self._addLine(__text)
-    def _extract(self, __content=""):
+    def _extract(self, __multilines="", __object=None):
         "Transformation un enregistrement en une commande individuelle"
         __is_case = False
         __commands = []
-        __content = __content.replace("\r\n","\n")
-        for line in __content.split("\n"):
+        __multilines = __multilines.replace("\r\n","\n")
+        for line in __multilines.split("\n"):
             if "adaoBuilder.New" in line and "=" in line:
                 self._objname = line.split("=")[0].strip()
                 __is_case = True
+                logging.debug("TUI Extracting commands of '%s' object..."%(self._objname,))
             if not __is_case:
                 continue
             else:
                 if self._objname+".set" in line:
                     __commands.append( line.replace(self._objname+".","",1) )
+                    logging.debug("TUI Extracted command: %s"%(__commands[-1],))
         return __commands
 
-    # def _interpret(self, __content=""):
-    #     "Interprétation d'une commande"
-    #     __content = __content.replace("\r\n","\n")
-    #     exec(__content)
-    #     return 0
+class _EPDViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes d'un cas EPD (Eficas Python Dictionnary/Cas<-EPD)
+    """
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
+        self._observerIndex = 0
+        self._addLine("# -*- coding: utf-8 -*-")
+        self._addLine("#\n# Python script for ADAO EPD\n#")
+        self._addLine("from numpy import array, matrix")
+        self._addLine("#")
+        self._addLine("%s = {}"%__objname)
+        if self._content is not None:
+            for command in self._content:
+                self._append(*command)
+    def _extract(self, __multilines=None, __object=None):
+        "Transformation un enregistrement en une commande individuelle"
+        if __multilines is not None:
+            __multilines = __multilines.replace("\r\n","\n")
+            exec(__multilines)
+            self._objdata = None
+            __getlocals = locals()
+            for k in __getlocals:
+                try:
+                    if type(__getlocals[k]) is dict:
+                        if 'ASSIMILATION_STUDY' in __getlocals[k]:
+                            self._objname = k
+                            self._objdata = __getlocals[k]['ASSIMILATION_STUDY']
+                        if 'CHECKING_STUDY' in __getlocals[k]:
+                            self._objname = k
+                            self._objdata = __getlocals[k]['CHECKING_STUDY']
+                except:
+                    continue
+        elif __multilines is None and __object is not None and type(__object) is dict:
+            self._objname = "case"
+            self._objdata = None
+            if 'ASSIMILATION_STUDY' in __object:
+                self._objdata = __object['ASSIMILATION_STUDY']
+            if 'CHECKING_STUDY' in __object:
+                self._objdata = __object['CHECKING_STUDY']
+        else:
+            self._objdata = None
+        #
+        if self._objdata is None or not(type(self._objdata) is dict) or not('AlgorithmParameters' in self._objdata):
+            raise ValueError("Impossible to load given content as a ADAO EPD one (no dictionnary or no 'AlgorithmParameters' key found).")
+        # ----------------------------------------------------------------------
+        logging.debug("EPD Extracting commands of '%s' object..."%(self._objname,))
+        __commands = []
+        __UserPostAnalysis = ""
+        for k,r in self._objdata.items():
+            __command = k
+            logging.debug("EPD Extracted command: %s:%s"%(k, r))
+            if   __command == "StudyName" and len(str(r))>0:
+                __commands.append( "set( Concept='Name', String='%s')"%(str(r),) )
+            elif   __command == "StudyRepertory":
+                __commands.append( "set( Concept='Directory', String='%s')"%(str(r),) )
+            #
+            elif __command == "UserPostAnalysis" and type(r) is dict:
+                if 'STRING_DATA' in r:
+                    __UserPostAnalysis = r['STRING_DATA']['STRING']
+                elif 'SCRIPT_DATA' in r and os.path.exists(r['SCRIPT_DATA']['SCRIPT_FILE']):
+                    __UserPostAnalysis = open(r['SCRIPT_DATA']['SCRIPT_FILE'],'r').read()
+                elif 'TEMPLATE_DATA' in r:
+                    # AnalysisPrinter...
+                    __itempl = r['TEMPLATE_DATA']['Template']
+                    __UserPostAnalysis = r['TEMPLATE_DATA'][__itempl]['ValueTemplate']
+                else:
+                    __UserPostAnalysis = ""
+                __UserPostAnalysis = __UserPostAnalysis.replace("ADD",self._objname)
+            #
+            elif __command == "AlgorithmParameters" and type(r) is dict and 'Algorithm' in r:
+                if 'Parameters%s'%(r['Algorithm'],) in r and r['Parameters'] == 'Defaults':
+                    __Dict = r['Parameters%s'%(r['Algorithm'],)]
+                    if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
+                    if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
+                        __Dict['BoxBounds'] = eval(__Dict['BoxBounds'])
+                    __parameters = ', Parameters=%s'%(repr(__Dict),)
+                elif 'Dict' in r and r['Parameters'] == 'Dict':
+                    __from = r['Dict']['data']
+                    if 'STRING_DATA' in __from:
+                        __parameters = ", Parameters=%s"%(repr(eval(__from['STRING_DATA']['STRING'])),)
+                    elif 'SCRIPT_DATA' in __from and os.path.exists(__from['SCRIPT_DATA']['SCRIPT_FILE']):
+                        __parameters = ", Script='%s'"%(__from['SCRIPT_DATA']['SCRIPT_FILE'],)
+                else:
+                    __parameters = ""
+                __commands.append( "set( Concept='AlgorithmParameters', Algorithm='%s'%s )"%(r['Algorithm'],__parameters) )
+            #
+            elif __command == "Observers" and type(r) is dict and 'SELECTION' in r:
+                if type(r['SELECTION']) is str:
+                    __selection = (r['SELECTION'],)
+                else:
+                    __selection = tuple(r['SELECTION'])
+                for sk in __selection:
+                    __idata = r[sk]['%s_data'%sk]
+                    if __idata['NodeType'] == 'Template' and 'Template' in __idata['ObserverTemplate']:
+                        __template =__idata['ObserverTemplate']['Template']
+                        __commands.append( "set( Concept='Observer', Variable='%s', Template='%s' )"%(sk,__template) )
+                    if __idata['NodeType'] == 'String' and 'Value' in __idata:
+                        __value =__idata['Value']
+                        __commands.append( "set( Concept='Observer', Variable='%s', String='%s' )"%(sk,__value) )
+            #
+            # Background, ObservationError, ObservationOperator...
+            elif type(r) is dict:
+                __argumentsList = []
+                if 'Stored' in r and bool(r['Stored']):
+                    __argumentsList.append(['Stored',True])
+                if 'INPUT_TYPE' in r and r['INPUT_TYPE'] in r:
+                    # Vector, Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Function
+                    __itype = r['INPUT_TYPE']
+                    __idata = r[__itype]['data']
+                    if 'FROM' in __idata and __idata['FROM'].upper()+'_DATA' in __idata:
+                        # String, Script, Template, ScriptWithOneFunction, ScriptWithFunctions
+                        __ifrom = __idata['FROM']
+                        if __ifrom == 'String' or __ifrom == 'Template':
+                            __argumentsList.append([__itype,__idata['STRING_DATA']['STRING']])
+                        if __ifrom == 'Script':
+                            __argumentsList.append([__itype,True])
+                            __argumentsList.append(['Script',__idata['SCRIPT_DATA']['SCRIPT_FILE']])
+                        if __ifrom == 'ScriptWithOneFunction':
+                            __argumentsList.append(['OneFunction',True])
+                            __argumentsList.append(['Script',__idata['SCRIPTWITHONEFUNCTION_DATA'].pop('SCRIPTWITHONEFUNCTION_FILE')])
+                            if len(__idata['SCRIPTWITHONEFUNCTION_DATA'])>0:
+                                __argumentsList.append(['Parameters',__idata['SCRIPTWITHONEFUNCTION_DATA']])
+                        if __ifrom == 'ScriptWithFunctions':
+                            __argumentsList.append(['ThreeFunctions',True])
+                            __argumentsList.append(['Script',__idata['SCRIPTWITHFUNCTIONS_DATA'].pop('SCRIPTWITHFUNCTIONS_FILE')])
+                            if len(__idata['SCRIPTWITHFUNCTIONS_DATA'])>0:
+                                __argumentsList.append(['Parameters',__idata['SCRIPTWITHFUNCTIONS_DATA']])
+                __arguments = ["%s = %s"%(k,repr(v)) for k,v in __argumentsList]
+                __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
+        #
+        # ----------------------------------------------------------------------
+        __commands.sort() # Pour commencer par 'AlgorithmParameters'
+        __commands.append(__UserPostAnalysis)
+        return __commands
 
 class _DCTViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas DCT
+    Etablissement des commandes d'un cas DCT (Cas<->DCT)
     """
-    def __init__(self, __name="", __objname="case", __content=None):
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._observerIndex = 0
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script for ADAO DCT\n#")
@@ -1793,12 +1932,11 @@ class _DCTViewer(GenericCaseViewer):
             __text += "}"
             if __text[-2:] == "{}": return # Supprime les *Debug et les variables
             self._addLine(__text)
-    def _extract(self, __content=""):
+    def _extract(self, __multilines="", __object=None):
         "Transformation un enregistrement en une commande individuelle"
-        __is_case = False
         __commands = []
-        __content = __content.replace("\r\n","\n")
-        exec(__content)
+        __multilines = __multilines.replace("\r\n","\n")
+        exec(__multilines)
         self._objdata = None
         __getlocals = locals()
         for k in __getlocals:
@@ -1822,11 +1960,11 @@ class _DCTViewer(GenericCaseViewer):
 
 class _SCDViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas SCD (Study Config Dictionary)
+    Etablissement des commandes d'un cas SCD (Study Config Dictionary/Cas->SCD)
     """
-    def __init__(self, __name="", __objname="case", __content=None):
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Input for ADAO converter to YACS\n#")
         self._addLine("from numpy import array, matrix")
@@ -1855,7 +1993,7 @@ class _SCDViewer(GenericCaseViewer):
         else:                  __command = __command.replace("set", "", 1)
         #
         __text  = None
-        if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get'):
+        if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get', 'Name'):
             return
         elif __command in ['Debug', 'setDebug']:
             __text  = "#\nstudy_config['Debug'] = '1'"
@@ -1951,7 +2089,7 @@ class _SCDViewer(GenericCaseViewer):
         if __text is not None: self._addLine(__text)
         if not __switchoff:
             self._switchoff = False
-    def _finalize(self):
+    def _finalize(self, *__args):
         self.__loadVariablesByScript()
         self._addLine("#")
         self._addLine("Analysis_config = {}")
@@ -1993,21 +2131,21 @@ class _SCDViewer(GenericCaseViewer):
 
 class _XMLViewer(GenericCaseViewer):
     """
-    Etablissement des commandes de creation d'un cas XML
+    Etablissement des commandes d'un cas XML
     """
-    def __init__(self, __name="", __objname="case", __content=None):
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         raise NotImplementedError()
 
 class _YACSViewer(GenericCaseViewer):
     """
-    Etablissement des commandes de creation d'un cas YACS
+    Etablissement des commandes d'un cas YACS (Cas->SCD->YACS)
     """
-    def __init__(self, __name="", __objname="case", __content=None):
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content)
-        self.__internalSCD = _SCDViewer(__name, __objname, __content)
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
+        self.__internalSCD = _SCDViewer(__name, __objname, __content, __object)
         self._append       = self.__internalSCD._append
     def dump(self, __filename=None, __convertSCDinMemory=True):
         "Restitution normalisée des commandes"
@@ -2043,9 +2181,6 @@ class _YACSViewer(GenericCaseViewer):
             os.remove(__SCDfile)
         # -----
         if not os.path.exists(__file):
-            # logging.debug("-- Error YacsSchemaCreator with convert SCD in memory=%s --"%__convertSCDinMemory)
-            # logging.debug("-- Content of the file : --")
-            # logging.debug(__SCDdump)
             __msg  = "An error occured during the ADAO YACS Schema build for\n"
             __msg += "the target output file:\n"
             __msg += "  %s\n"%__file
@@ -2064,22 +2199,27 @@ class ImportFromScript(object):
     """
     def __init__(self, __filename=None):
         "Verifie l'existence et importe le script"
-        self.__filename = __filename.rstrip(".py")
-        if self.__filename is None:
+        if __filename is None:
             raise ValueError("The name of the file, containing the variable to be read, has to be specified.")
-        if not os.path.isfile(str(self.__filename)+".py"):
-            raise ValueError("The file containing the variable to be imported doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%self.__filename)
-        self.__scriptfile = __import__(self.__filename, globals(), locals(), [])
-        self.__scriptstring = open(self.__filename+".py",'r').read()
+        if not os.path.isfile(__filename):
+            raise ValueError("The file containing the variable to be imported doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%__filename)
+        if os.path.dirname(__filename) != '':
+            sys.path.insert(0, os.path.dirname(__filename))
+            __basename = os.path.basename(__filename).rstrip(".py")
+        else:
+            __basename = __filename.rstrip(".py")
+        self.__basename = __basename
+        self.__scriptfile = __import__(__basename, globals(), locals(), [])
+        self.__scriptstring = open(__filename,'r').read()
     def getvalue(self, __varname=None, __synonym=None ):
         "Renvoie la variable demandee"
         if __varname is None:
             raise ValueError("The name of the variable to be read has to be specified. Please check the content of the file and the syntax.")
         if not hasattr(self.__scriptfile, __varname):
             if __synonym is None:
-                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__filename)+".py",__varname))
+                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__basename)+".py",__varname))
             elif not hasattr(self.__scriptfile, __synonym):
-                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__filename)+".py",__synonym))
+                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__basename)+".py",__synonym))
             else:
                 return getattr(self.__scriptfile, __synonym)
         else:
