@@ -658,8 +658,9 @@ L'exécution de jeu de commandes donne le résultat suivant::
     Etat optimal...................: [ 2.  3.  4.]
     Simulation à l'état optimal....: [  2.   6.  12.  20.]
 
-Comme il se doit en expériences jumelles, on constate que l'on retrouve bien les
-paramètres qui ont servi à construire artificiellement les observations.
+Comme il se doit en expériences jumelles, avec une confiance majoritairement
+placée dans les observations, on constate que l'on retrouve bien les paramètres
+qui ont servi à construire artificiellement les observations.
 
 .. Réconciliation de courbes à l'aide de MedCoupling
 .. +++++++++++++++++++++++++++++++++++++++++++++++++

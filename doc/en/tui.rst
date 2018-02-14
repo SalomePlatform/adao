@@ -635,8 +635,9 @@ The command set execution gives the following result::
     Optimal state...................: [ 2.  3.  4.]
     Simulation at optimal state.....: [  2.   6.  12.  20.]
 
-As it should be in twin experiments, it is found that we get correctly the
-parameters that were used to artificially build the observations.
+As it should be in twin experiments, when we trust mainly in observations, it
+is found that we get correctly the parameters that were used to artificially
+build the observations.
 
 .. Reconciliation de courbes a l'aide de MedCoupling
 .. +++++++++++++++++++++++++++++++++++++++++++++++++

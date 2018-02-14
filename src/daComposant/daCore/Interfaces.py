@@ -98,7 +98,7 @@ class _TUIViewer(GenericCaseViewer):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Python script for ADAO TUI\n#")
+        self._addLine("#\n# Python script using ADAO TUI\n#")
         self._addLine("from numpy import array, matrix")
         self._addLine("import adaoBuilder")
         self._addLine("%s = adaoBuilder.New('%s')"%(self._objname, self._name))
@@ -159,7 +159,7 @@ class _EPDViewer(GenericCaseViewer):
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._observerIndex = 0
         self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Python script for ADAO EPD\n#")
+        self._addLine("#\n# Python script using ADAO EPD\n#")
         self._addLine("from numpy import array, matrix")
         self._addLine("#")
         self._addLine("%s = {}"%__objname)
@@ -195,7 +195,7 @@ class _EPDViewer(GenericCaseViewer):
             self._objdata = None
         #
         if self._objdata is None or not(type(self._objdata) is dict) or not('AlgorithmParameters' in self._objdata):
-            raise ValueError("Impossible to load given content as a ADAO EPD one (no dictionnary or no 'AlgorithmParameters' key found).")
+            raise ValueError("Impossible to load given content as an ADAO EPD one (no dictionnary or no 'AlgorithmParameters' key found).")
         # ----------------------------------------------------------------------
         logging.debug("EPD Extracting commands of '%s' object..."%(self._objname,))
         __commands = []
@@ -296,7 +296,7 @@ class _DCTViewer(GenericCaseViewer):
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._observerIndex = 0
         self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Python script for ADAO DCT\n#")
+        self._addLine("#\n# Python script using ADAO DCT\n#")
         self._addLine("from numpy import array, matrix")
         self._addLine("#")
         self._addLine("%s = {}"%__objname)
@@ -339,7 +339,6 @@ class _DCTViewer(GenericCaseViewer):
             self._addLine(__text)
     def _extract(self, __multilines="", __object=None):
         "Transformation un enregistrement en une commande individuelle"
-        __commands = []
         __multilines = __multilines.replace("\r\n","\n")
         exec(__multilines)
         self._objdata = None
@@ -352,7 +351,10 @@ class _DCTViewer(GenericCaseViewer):
             except:
                 continue
         if self._objdata is None:
-            raise ValueError("Impossible to load given content as a ADAO DCT one (no 'AlgorithmParameters' key found).")
+            raise ValueError("Impossible to load given content as an ADAO DCT one (no 'AlgorithmParameters' key found).")
+        # ----------------------------------------------------------------------
+        logging.debug("DCT Extracting commands of '%s' object..."%(self._objname,))
+        __commands = []
         for k in self._objdata:
             if 'Observer_' in k:
                 __command = k.split('_',1)[0]

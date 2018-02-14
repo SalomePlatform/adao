@@ -649,12 +649,21 @@ class Aidsm(object):
         from numpy import array, matrix
         for __command in __commands:
             if __command.find("set")>-1 and __command.find("set_")<0:
-                # logging.debug('Command loaded: %s'%(__command,))
                 exec("self."+__command)
             else:
-                # logging.debug('Command not loaded: %s'%(__command,))
                 self.__PostAnalysis.append(__command)
         return self
+
+    def convert(self,
+        FileNameFrom=None, ContentFrom=None, ObjectFrom=None, FormaterFrom="TUI",
+        FileNameTo=None, FormaterTo="TUI",
+        ):
+        "Conversion normalisée des commandes"
+        return self.load(
+            FileName=FileNameFrom, Content=ContentFrom, Object=ObjectFrom, Formater=FormaterFrom
+            ).dump(
+            FileName=FileNameTo, Formater=FormaterTo
+            )
 
     def clear(self):
         "Effacement du contenu du cas en cours"
