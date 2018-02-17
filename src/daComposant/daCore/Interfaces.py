@@ -287,6 +287,130 @@ class _EPDViewer(GenericCaseViewer):
         __commands.append(__UserPostAnalysis)
         return __commands
 
+class _COMViewer(GenericCaseViewer):
+    """
+    Etablissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
+    """
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
+        self._observerIndex = 0
+        self._addLine("# -*- coding: utf-8 -*-")
+        self._addLine("#\n# Python script using ADAO COMM\n#")
+        self._addLine("from numpy import array, matrix")
+        self._addLine("#")
+        self._addLine("%s = {}"%__objname)
+        if self._content is not None:
+            for command in self._content:
+                self._append(*command)
+    def _extract(self, __multilines=None, __object=None):
+        "Transformation un enregistrement en une commande individuelle"
+        if __multilines is not None:
+            __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
+            __multilines = __multilines.replace("CHECKING_STUDY",    "dict")
+            __multilines = __multilines.replace("_F(",               "dict(")
+            __multilines = __multilines.replace(",),);",             ",),)")
+        self._objname = "case"
+        self._objdata = None
+        exec("self._objdata = "+__multilines)
+        #
+        if self._objdata is None or not(type(self._objdata) is dict) or not('AlgorithmParameters' in self._objdata):
+            raise ValueError("Impossible to load given content as an ADAO COMM one (no dictionnary or no 'AlgorithmParameters' key found).")
+        # ----------------------------------------------------------------------
+        logging.debug("COMM Extracting commands of '%s' object..."%(self._objname,))
+        __commands = []
+        __UserPostAnalysis = ""
+        for k,r in self._objdata.items():
+            __command = k
+            logging.debug("COMM Extracted command: %s:%s"%(k, r))
+            if   __command == "StudyName" and len(str(r))>0:
+                __commands.append( "set( Concept='Name', String='%s')"%(str(r),) )
+            elif   __command == "StudyRepertory":
+                __commands.append( "set( Concept='Directory', String='%s')"%(str(r),) )
+            #
+            elif __command == "UserPostAnalysis" and type(r) is dict:
+                if 'STRING' in r:
+                    __UserPostAnalysis = r['STRING']
+                elif 'SCRIPT_FILE' in r and os.path.exists(r['SCRIPT_FILE']):
+                    __UserPostAnalysis = open(r['SCRIPT_FILE'],'r').read()
+                elif 'Template' in r and 'ValueTemplate' in r:
+                    # AnalysisPrinter...
+                    __UserPostAnalysis = r['ValueTemplate']
+                else:
+                    __UserPostAnalysis = ""
+                __UserPostAnalysis = __UserPostAnalysis.replace("ADD",self._objname)
+            #
+            elif __command == "AlgorithmParameters" and type(r) is dict and 'Algorithm' in r:
+                if 'Parameters' in r and r['Parameters'] == 'Defaults':
+                    __Dict = copy.deepcopy(r)
+                    __Dict.pop('Algorithm')
+                    if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
+                    if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
+                        __Dict['BoxBounds'] = eval(__Dict['BoxBounds'])
+                    __parameters = ', Parameters=%s'%(repr(__Dict),)
+                elif 'data' in r and r['Parameters'] == 'Dict':
+                    __from = r['data']
+                    if 'STRING' in __from:
+                        __parameters = ", Parameters=%s"%(repr(eval(__from['STRING'])),)
+                    elif 'SCRIPT_FILE' in __from and os.path.exists(__from['SCRIPT_FILE']):
+                        __parameters = ", Script='%s'"%(__from['SCRIPT_FILE'],)
+                else:
+                    __parameters = ""
+                __commands.append( "set( Concept='AlgorithmParameters', Algorithm='%s'%s )"%(r['Algorithm'],__parameters) )
+            #
+            elif __command == "Observers" and type(r) is dict and 'SELECTION' in r:
+                if type(r['SELECTION']) is str:
+                    __selection = (r['SELECTION'],)
+                else:
+                    __selection = tuple(r['SELECTION'])
+                for sk in __selection:
+                    __idata = r['%s_data'%sk]
+                    if __idata['NodeType'] == 'Template' and 'Template' in __idata:
+                        __template = __idata['Template']
+                        if 'Info' in __idata:
+                            __info = ", Info='%s'"%(__idata['Info'],)
+                        else:
+                            __info = ""
+                        __commands.append( "set( Concept='Observer', Variable='%s', Template='%s'%s )"%(sk,__template,__info) )
+                    if __idata['NodeType'] == 'String' and 'Value' in __idata:
+                        __value =__idata['Value']
+                        __commands.append( "set( Concept='Observer', Variable='%s', String='%s' )"%(sk,__value) )
+            #
+            # Background, ObservationError, ObservationOperator...
+            elif type(r) is dict:
+                __argumentsList = []
+                if 'Stored' in r and bool(r['Stored']):
+                    __argumentsList.append(['Stored',True])
+                if 'INPUT_TYPE' in r and 'data' in r:
+                    # Vector, Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Function
+                    __itype = r['INPUT_TYPE']
+                    __idata = r['data']
+                    if 'FROM' in __idata:
+                        # String, Script, Template, ScriptWithOneFunction, ScriptWithFunctions
+                        __ifrom = __idata['FROM']
+                        if __ifrom == 'String' or __ifrom == 'Template':
+                            __argumentsList.append([__itype,__idata['STRING']])
+                        if __ifrom == 'Script':
+                            __argumentsList.append([__itype,True])
+                            __argumentsList.append(['Script',__idata['SCRIPT_FILE']])
+                        if __ifrom == 'ScriptWithOneFunction':
+                            __argumentsList.append(['OneFunction',True])
+                            __argumentsList.append(['Script',__idata.pop('SCRIPTWITHONEFUNCTION_FILE')])
+                            if len(__idata)>0:
+                                __argumentsList.append(['Parameters',__idata])
+                        if __ifrom == 'ScriptWithFunctions':
+                            __argumentsList.append(['ThreeFunctions',True])
+                            __argumentsList.append(['Script',__idata.pop('SCRIPTWITHFUNCTIONS_FILE')])
+                            if len(__idata)>0:
+                                __argumentsList.append(['Parameters',__idata])
+                __arguments = ["%s = %s"%(k,repr(v)) for k,v in __argumentsList]
+                __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
+        #
+        # ----------------------------------------------------------------------
+        __commands.sort() # Pour commencer par 'AlgorithmParameters'
+        __commands.append(__UserPostAnalysis)
+        return __commands
+
 class _DCTViewer(GenericCaseViewer):
     """
     Etablissement des commandes d'un cas DCT (Cas<->DCT)
