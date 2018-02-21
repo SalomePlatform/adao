@@ -687,9 +687,9 @@ class _YACSViewer(GenericCaseViewer):
         # -----
         if not PlatformInfo.has_salome or \
             not PlatformInfo.has_adao:
-            raise ImportError("\n\n"+\
-                "Unable to get SALOME or ADAO environnement variables.\n"+\
-                "Please load the right environnement before trying to use it.\n")
+            raise ImportError(
+                "Unable to get SALOME or ADAO environnement variables for YACS conversion.\n"+\
+                "Please load the right environnement before trying to use it.")
         elif __convertSCDinMemory:
             __file    = os.path.abspath(__filename)
             __SCDdump = self.__internalSCD.dump()

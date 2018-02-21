@@ -77,6 +77,8 @@ def create_yacs_proc(study_config):
   else:
     base_repertory = ""
     repertory = False
+  if UseYACSContainer:
+    mycontainer = proc.createContainer("AdaoContainer")
 
   # Create ADAO case bloc
   ADAO_Case = runtime.createBloc("ADAO_Case_Bloc")
@@ -408,6 +410,9 @@ def create_yacs_proc(study_config):
       break
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if UseYACSContainer:
+      opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      opt_script_nodeOO.setContainer(mycontainer)
     if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(script_filename))):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
@@ -436,6 +441,9 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if UseYACSContainer:
+      opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      opt_script_nodeOO.setContainer(mycontainer)
     if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(script_filename))):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
@@ -516,6 +524,9 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
+    if UseYACSContainer:
+      opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      opt_script_nodeOO.setContainer(mycontainer)
     if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(script_filename))):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
@@ -542,7 +553,7 @@ def create_yacs_proc(study_config):
     node_script += """    DirectOperator\n"""
     node_script += """except NameError:\n"""
     node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
-    node_script += """import ApproximatedDerivatives\n"""
+    node_script += """from daNumerics import ApproximatedDerivatives\n"""
     node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
     node_script += """    Function   = DirectOperator,\n"""
     node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
@@ -739,7 +750,7 @@ def create_yacs_proc(study_config):
       node_script += """    DirectOperator\n"""
       node_script += """except NameError:\n"""
       node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
-      node_script += """import ApproximatedDerivatives\n"""
+      node_script += """from daNumerics import ApproximatedDerivatives\n"""
       node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
       node_script += """    Function   = DirectOperator,\n"""
       node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])

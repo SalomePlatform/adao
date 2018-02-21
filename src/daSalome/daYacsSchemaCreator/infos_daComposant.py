@@ -286,3 +286,6 @@ ObserversList = [
     "APosterioriVariances",
     "Residu",
     ]
+
+# Regulation : # of containers, 0 for no container
+UseYACSContainer = 1

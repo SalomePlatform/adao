@@ -49,7 +49,7 @@ def DirectOperator( XX ):
     return numpy.array( HX )
 
 # ==============================================================================
-from ApproximatedDerivatives import FDApproximation
+from daNumerics.ApproximatedDerivatives import FDApproximation
 FDA = FDApproximation( DirectOperator )
 TangentOperator = FDA.TangentOperator
 AdjointOperator = FDA.AdjointOperator

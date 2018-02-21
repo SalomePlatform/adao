@@ -1096,6 +1096,45 @@ class AlgorithmAndParameters(object):
         return 1
 
 # ==============================================================================
+class RegulationAndParameters(object):
+    """
+    Classe générale d'interface d'action pour la régulation et ses paramètres
+    """
+    def __init__(self,
+                 name               = "GenericRegulation",
+                 asAlgorithm        = None,
+                 asDict             = None,
+                 asScript           = None,
+                ):
+        """
+        """
+        self.__name       = str(name)
+        self.__P          = {}
+        #
+        if asAlgorithm is None and asScript is not None:
+            __Algo = ImportFromScript(asScript).getvalue( "Algorithm" )
+        else:
+            __Algo = asAlgorithm
+        #
+        if asDict is None and asScript is not None:
+            __Dict = ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
+        else:
+            __Dict = asDict
+        #
+        if __Dict is not None:
+            self.__P.update( dict(__Dict) )
+        #
+        if __Algo is not None:
+            self.__P.update( {"Algorithm":self.__A} )
+
+    def get(self, key = None):
+        "Vérifie l'existence d'une clé de variable ou de paramètres"
+        if key in self.__P:
+            return self.__P[key]
+        else:
+            return self.__P
+
+# ==============================================================================
 class DataObserver(object):
     """
     Classe générale d'interface de type observer

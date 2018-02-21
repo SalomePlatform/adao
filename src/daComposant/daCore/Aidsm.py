@@ -31,7 +31,7 @@ import sys
 #
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
-from daCore.BasicObjects import CaseLogger
+from daCore.BasicObjects import RegulationAndParameters, CaseLogger
 from daCore import PlatformInfo
 #
 from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
@@ -65,6 +65,7 @@ class Aidsm(object):
             "Directory",
             "Debug",
             "NoDebug",
+            "RegulationParameters",
             "Observer",
             ]
         #
@@ -119,6 +120,8 @@ class Aidsm(object):
                          Script, Stored, ObjectMatrix, Checked )
             elif Concept == "AlgorithmParameters":
                 self.setAlgorithmParameters( Algorithm, Parameters, Script )
+            elif Concept == "RegulationParameters":
+                self.setRegulationParameters( Algorithm, Parameters, Script )
             elif Concept == "Name":
                 self.setName(String)
             elif Concept == "Directory":
@@ -456,6 +459,21 @@ class Aidsm(object):
         if "AlgorithmParameters" not in self.__adaoObject:
             raise ValueError("No algorithm registred, ask for one before updating parameters")
         self.__adaoObject["AlgorithmParameters"].updateParameters(
+            asDict        = Parameters,
+            asScript      = self.with_directory(Script),
+            )
+        return 0
+
+    def setRegulationParameters(self,
+            Algorithm  = None,
+            Parameters = None,
+            Script     = None):
+        "Definition d'un concept de calcul"
+        Concept = "RegulationParameters"
+        self.__case.register("set"+Concept, dir(), locals())
+        self.__adaoObject[Concept] = RegulationAndParameters(
+            name          = Concept,
+            asAlgorithm   = Algorithm,
             asDict        = Parameters,
             asScript      = self.with_directory(Script),
             )

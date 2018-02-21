@@ -671,6 +671,21 @@ class Persistence(object):
         return bool(len(self.__dataobservers) > 0)
 
 # ==============================================================================
+class SchedulerTrigger(object):
+    """
+    Classe générale d'interface de type Scheduler/Trigger
+    """
+    def __init__(self,
+                 simplifiedCombo = None,
+                 startTime       = 0,
+                 endTime         = int( 1e9 ),
+                 timeDelay       = 1,
+                 timeUnit        = 1,
+                 frequency       = None,
+                ):
+        pass
+
+# ==============================================================================
 class OneScalar(Persistence):
     """
     Classe définissant le stockage d'une valeur unique réelle (float) par pas.
