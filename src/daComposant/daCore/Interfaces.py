@@ -150,143 +150,6 @@ class _TUIViewer(GenericCaseViewer):
                     logging.debug("TUI Extracted command: %s"%(__commands[-1],))
         return __commands
 
-class _EPDViewer(GenericCaseViewer):
-    """
-    Etablissement des commandes d'un cas EPD (Eficas Python Dictionnary/Cas<-EPD)
-    """
-    def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
-        self._observerIndex = 0
-        self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Python script using ADAO EPD\n#")
-        self._addLine("from numpy import array, matrix")
-        self._addLine("#")
-        self._addLine("%s = {}"%__objname)
-        if self._content is not None:
-            for command in self._content:
-                self._append(*command)
-    def _extract(self, __multilines=None, __object=None):
-        "Transformation un enregistrement en une commande individuelle"
-        if __multilines is not None:
-            __multilines = __multilines.replace("\r\n","\n")
-            exec(__multilines)
-            self._objdata = None
-            __getlocals = locals()
-            for k in __getlocals:
-                try:
-                    if type(__getlocals[k]) is dict:
-                        if 'ASSIMILATION_STUDY' in __getlocals[k]:
-                            self._objname = k
-                            self._objdata = __getlocals[k]['ASSIMILATION_STUDY']
-                        if 'CHECKING_STUDY' in __getlocals[k]:
-                            self._objname = k
-                            self._objdata = __getlocals[k]['CHECKING_STUDY']
-                except:
-                    continue
-        elif __multilines is None and __object is not None and type(__object) is dict:
-            self._objname = "case"
-            self._objdata = None
-            if 'ASSIMILATION_STUDY' in __object:
-                self._objdata = __object['ASSIMILATION_STUDY']
-            if 'CHECKING_STUDY' in __object:
-                self._objdata = __object['CHECKING_STUDY']
-        else:
-            self._objdata = None
-        #
-        if self._objdata is None or not(type(self._objdata) is dict) or not('AlgorithmParameters' in self._objdata):
-            raise ValueError("Impossible to load given content as an ADAO EPD one (no dictionnary or no 'AlgorithmParameters' key found).")
-        # ----------------------------------------------------------------------
-        logging.debug("EPD Extracting commands of '%s' object..."%(self._objname,))
-        __commands = []
-        __UserPostAnalysis = ""
-        for k,r in self._objdata.items():
-            __command = k
-            logging.debug("EPD Extracted command: %s:%s"%(k, r))
-            if   __command == "StudyName" and len(str(r))>0:
-                __commands.append( "set( Concept='Name', String='%s')"%(str(r),) )
-            elif   __command == "StudyRepertory":
-                __commands.append( "set( Concept='Directory', String='%s')"%(str(r),) )
-            #
-            elif __command == "UserPostAnalysis" and type(r) is dict:
-                if 'STRING_DATA' in r:
-                    __UserPostAnalysis = r['STRING_DATA']['STRING']
-                elif 'SCRIPT_DATA' in r and os.path.exists(r['SCRIPT_DATA']['SCRIPT_FILE']):
-                    __UserPostAnalysis = open(r['SCRIPT_DATA']['SCRIPT_FILE'],'r').read()
-                elif 'TEMPLATE_DATA' in r:
-                    # AnalysisPrinter...
-                    __itempl = r['TEMPLATE_DATA']['Template']
-                    __UserPostAnalysis = r['TEMPLATE_DATA'][__itempl]['ValueTemplate']
-                else:
-                    __UserPostAnalysis = ""
-                __UserPostAnalysis = __UserPostAnalysis.replace("ADD",self._objname)
-            #
-            elif __command == "AlgorithmParameters" and type(r) is dict and 'Algorithm' in r:
-                if 'Parameters%s'%(r['Algorithm'],) in r and r['Parameters'] == 'Defaults':
-                    __Dict = r['Parameters%s'%(r['Algorithm'],)]
-                    if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
-                    if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
-                        __Dict['BoxBounds'] = eval(__Dict['BoxBounds'])
-                    __parameters = ', Parameters=%s'%(repr(__Dict),)
-                elif 'Dict' in r and r['Parameters'] == 'Dict':
-                    __from = r['Dict']['data']
-                    if 'STRING_DATA' in __from:
-                        __parameters = ", Parameters=%s"%(repr(eval(__from['STRING_DATA']['STRING'])),)
-                    elif 'SCRIPT_DATA' in __from and os.path.exists(__from['SCRIPT_DATA']['SCRIPT_FILE']):
-                        __parameters = ", Script='%s'"%(__from['SCRIPT_DATA']['SCRIPT_FILE'],)
-                else:
-                    __parameters = ""
-                __commands.append( "set( Concept='AlgorithmParameters', Algorithm='%s'%s )"%(r['Algorithm'],__parameters) )
-            #
-            elif __command == "Observers" and type(r) is dict and 'SELECTION' in r:
-                if type(r['SELECTION']) is str:
-                    __selection = (r['SELECTION'],)
-                else:
-                    __selection = tuple(r['SELECTION'])
-                for sk in __selection:
-                    __idata = r[sk]['%s_data'%sk]
-                    if __idata['NodeType'] == 'Template' and 'Template' in __idata['ObserverTemplate']:
-                        __template =__idata['ObserverTemplate']['Template']
-                        __commands.append( "set( Concept='Observer', Variable='%s', Template='%s' )"%(sk,__template) )
-                    if __idata['NodeType'] == 'String' and 'Value' in __idata:
-                        __value =__idata['Value']
-                        __commands.append( "set( Concept='Observer', Variable='%s', String='%s' )"%(sk,__value) )
-            #
-            # Background, ObservationError, ObservationOperator...
-            elif type(r) is dict:
-                __argumentsList = []
-                if 'Stored' in r and bool(r['Stored']):
-                    __argumentsList.append(['Stored',True])
-                if 'INPUT_TYPE' in r and r['INPUT_TYPE'] in r:
-                    # Vector, Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Function
-                    __itype = r['INPUT_TYPE']
-                    __idata = r[__itype]['data']
-                    if 'FROM' in __idata and __idata['FROM'].upper()+'_DATA' in __idata:
-                        # String, Script, Template, ScriptWithOneFunction, ScriptWithFunctions
-                        __ifrom = __idata['FROM']
-                        if __ifrom == 'String' or __ifrom == 'Template':
-                            __argumentsList.append([__itype,__idata['STRING_DATA']['STRING']])
-                        if __ifrom == 'Script':
-                            __argumentsList.append([__itype,True])
-                            __argumentsList.append(['Script',__idata['SCRIPT_DATA']['SCRIPT_FILE']])
-                        if __ifrom == 'ScriptWithOneFunction':
-                            __argumentsList.append(['OneFunction',True])
-                            __argumentsList.append(['Script',__idata['SCRIPTWITHONEFUNCTION_DATA'].pop('SCRIPTWITHONEFUNCTION_FILE')])
-                            if len(__idata['SCRIPTWITHONEFUNCTION_DATA'])>0:
-                                __argumentsList.append(['Parameters',__idata['SCRIPTWITHONEFUNCTION_DATA']])
-                        if __ifrom == 'ScriptWithFunctions':
-                            __argumentsList.append(['ThreeFunctions',True])
-                            __argumentsList.append(['Script',__idata['SCRIPTWITHFUNCTIONS_DATA'].pop('SCRIPTWITHFUNCTIONS_FILE')])
-                            if len(__idata['SCRIPTWITHFUNCTIONS_DATA'])>0:
-                                __argumentsList.append(['Parameters',__idata['SCRIPTWITHFUNCTIONS_DATA']])
-                __arguments = ["%s = %s"%(k,repr(v)) for k,v in __argumentsList]
-                __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
-        #
-        # ----------------------------------------------------------------------
-        __commands.sort() # Pour commencer par 'AlgorithmParameters'
-        __commands.append(__UserPostAnalysis)
-        return __commands
-
 class _COMViewer(GenericCaseViewer):
     """
     Etablissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
@@ -310,6 +173,11 @@ class _COMViewer(GenericCaseViewer):
             __multilines = __multilines.replace("CHECKING_STUDY",    "dict")
             __multilines = __multilines.replace("_F(",               "dict(")
             __multilines = __multilines.replace(",),);",             ",),)")
+        __fulllines = ""
+        for line in __multilines.split("\n"):
+            if len(line) < 1: continue
+            __fulllines += line + "\n"
+        __multilines = __fulllines
         self._objname = "case"
         self._objdata = None
         exec("self._objdata = "+__multilines)
@@ -341,21 +209,23 @@ class _COMViewer(GenericCaseViewer):
                 __UserPostAnalysis = __UserPostAnalysis.replace("ADD",self._objname)
             #
             elif __command == "AlgorithmParameters" and type(r) is dict and 'Algorithm' in r:
-                if 'Parameters' in r and r['Parameters'] == 'Defaults':
-                    __Dict = copy.deepcopy(r)
-                    __Dict.pop('Algorithm')
-                    if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
-                    if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
-                        __Dict['BoxBounds'] = eval(__Dict['BoxBounds'])
-                    __parameters = ', Parameters=%s'%(repr(__Dict),)
-                elif 'data' in r and r['Parameters'] == 'Dict':
+                if 'data' in r and r['Parameters'] == 'Dict':
                     __from = r['data']
                     if 'STRING' in __from:
                         __parameters = ", Parameters=%s"%(repr(eval(__from['STRING'])),)
                     elif 'SCRIPT_FILE' in __from and os.path.exists(__from['SCRIPT_FILE']):
                         __parameters = ", Script='%s'"%(__from['SCRIPT_FILE'],)
-                else:
-                    __parameters = ""
+                else: # if 'Parameters' in r and r['Parameters'] == 'Defaults':
+                    __Dict = copy.deepcopy(r)
+                    __Dict.pop('Algorithm','')
+                    __Dict.pop('Parameters','')
+                    if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
+                    if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
+                        __Dict['BoxBounds'] = eval(__Dict['BoxBounds'])
+                    if len(__Dict) > 0:
+                        __parameters = ', Parameters=%s'%(repr(__Dict),)
+                    else:
+                        __parameters = ""
                 __commands.append( "set( Concept='AlgorithmParameters', Algorithm='%s'%s )"%(r['Algorithm'],__parameters) )
             #
             elif __command == "Observers" and type(r) is dict and 'SELECTION' in r:
@@ -388,6 +258,7 @@ class _COMViewer(GenericCaseViewer):
                     if 'FROM' in __idata:
                         # String, Script, Template, ScriptWithOneFunction, ScriptWithFunctions
                         __ifrom = __idata['FROM']
+                        __idata.pop('FROM','')
                         if __ifrom == 'String' or __ifrom == 'Template':
                             __argumentsList.append([__itype,__idata['STRING']])
                         if __ifrom == 'Script':
@@ -409,84 +280,6 @@ class _COMViewer(GenericCaseViewer):
         # ----------------------------------------------------------------------
         __commands.sort() # Pour commencer par 'AlgorithmParameters'
         __commands.append(__UserPostAnalysis)
-        return __commands
-
-class _DCTViewer(GenericCaseViewer):
-    """
-    Etablissement des commandes d'un cas DCT (Cas<->DCT)
-    """
-    def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
-        self._observerIndex = 0
-        self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Python script using ADAO DCT\n#")
-        self._addLine("from numpy import array, matrix")
-        self._addLine("#")
-        self._addLine("%s = {}"%__objname)
-        if self._content is not None:
-            for command in self._content:
-                self._append(*command)
-    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
-        "Transformation d'une commande individuelle en un enregistrement"
-        if __command is not None and __keys is not None and __local is not None:
-            __text  = ""
-            if "execute" in __command: return
-            if "self" in __keys: __keys.remove("self")
-            if __command in ("set","get") and "Concept" in __keys:
-                __key = __local["Concept"]
-                __keys.remove("Concept")
-            else:
-                __key = __command.replace("set","").replace("get","")
-            if "Observer" in __key and 'Variable' in __keys:
-                self._observerIndex += 1
-                __key += "_%i"%self._observerIndex
-            __text += "%s['%s'] = {"%(self._objname,str(__key))
-            for k in __keys:
-                __v = __local[k]
-                if __v is None: continue
-                if   k == "Checked" and not __v: continue
-                if   k == "Stored"  and not __v: continue
-                if   k == "AvoidRC" and __v: continue
-                if   k == "noDetails": continue
-                if isinstance(__v,Persistence.Persistence): __v = __v.values()
-                if callable(__v): __text = self._missing%__v.__name__+__text
-                if isinstance(__v,dict):
-                    for val in __v.values():
-                        if callable(val): __text = self._missing%val.__name__+__text
-                numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
-                __text += "'%s':%s, "%(k,repr(__v))
-                numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
-            __text.rstrip(", ").rstrip()
-            __text += "}"
-            if __text[-2:] == "{}": return # Supprime les *Debug et les variables
-            self._addLine(__text)
-    def _extract(self, __multilines="", __object=None):
-        "Transformation un enregistrement en une commande individuelle"
-        __multilines = __multilines.replace("\r\n","\n")
-        exec(__multilines)
-        self._objdata = None
-        __getlocals = locals()
-        for k in __getlocals:
-            try:
-                if 'AlgorithmParameters' in __getlocals[k] and type(__getlocals[k]) is dict:
-                    self._objname = k
-                    self._objdata = __getlocals[k]
-            except:
-                continue
-        if self._objdata is None:
-            raise ValueError("Impossible to load given content as an ADAO DCT one (no 'AlgorithmParameters' key found).")
-        # ----------------------------------------------------------------------
-        logging.debug("DCT Extracting commands of '%s' object..."%(self._objname,))
-        __commands = []
-        for k in self._objdata:
-            if 'Observer_' in k:
-                __command = k.split('_',1)[0]
-            else:
-                __command = k
-            __arguments = ["%s = %s"%(k,repr(v)) for k,v in self._objdata[k].items()]
-            __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
-        __commands.sort() # Pour commencer par 'AlgorithmParameters'
         return __commands
 
 class _SCDViewer(GenericCaseViewer):
@@ -553,7 +346,7 @@ class _SCDViewer(GenericCaseViewer):
             numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
             __text  = "#\n"
             __text += "%s_config = {}\n"%__command
-            if 'self' in __local: __local.pop('self')
+            __local.pop('self','')
             __to_be_removed = []
             for __k,__v in __local.items():
                 if __v is None: __to_be_removed.append(__k)
@@ -659,15 +452,6 @@ class _SCDViewer(GenericCaseViewer):
             __text += "AlgorithmParameters_config['Data'] = '{}'\n"
             self._addLine(__text)
         del study_config
-
-class _XMLViewer(GenericCaseViewer):
-    """
-    Etablissement des commandes d'un cas XML
-    """
-    def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
-        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
-        raise NotImplementedError()
 
 class _YACSViewer(GenericCaseViewer):
     """

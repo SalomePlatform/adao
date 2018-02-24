@@ -1634,16 +1634,13 @@ class CaseLogger(object):
         self.__logSerie = []
         self.__switchoff = False
         self.__viewers = {
-            "TUI":Interfaces._TUIViewer,
-            "DCT":Interfaces._DCTViewer,
-            "SCD":Interfaces._SCDViewer,
+            "TUI" :Interfaces._TUIViewer,
+            "SCD" :Interfaces._SCDViewer,
             "YACS":Interfaces._YACSViewer,
             }
         self.__loaders = {
-            "TUI":Interfaces._TUIViewer,
-            "DCT":Interfaces._DCTViewer,
-            "EPD":Interfaces._EPDViewer,
-            "COM":Interfaces._COMViewer,
+            "TUI" :Interfaces._TUIViewer,
+            "COM" :Interfaces._COMViewer,
             }
         if __addViewers is not None:
             self.__viewers.update(dict(__addViewers))
