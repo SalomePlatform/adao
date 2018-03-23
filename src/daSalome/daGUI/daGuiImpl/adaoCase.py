@@ -51,9 +51,9 @@ class AdaoCase:
       # Connect to the jdc
       CONNECTOR.Connect(self.eficas_editor.jdc, "valid", self.editorValidEvent, ())
 
-  # Rq on notera que l'on utilise isvalid dans isOk
+  # Rq on notera que l'on utilise isValid dans isOk
   #    et que isOk appelle editorValidEvent
-  #    il n'y a pas de boucle infini car isvalid n'émet
+  #    il n'y a pas de boucle infini car isValid n'émet
   #    son signal que si l'état a changé
   def editorValidEvent(self):
     adaoStudyEditor.updateItem(self.salome_study_id, self.salome_study_item, self)
@@ -61,7 +61,7 @@ class AdaoCase:
 
   def isOk(self):
     if self.eficas_editor.jdc:
-      return self.eficas_editor.jdc.isvalid()
+      return self.eficas_editor.jdc.isValid()
     return False
 
   def createYACSFile(self):

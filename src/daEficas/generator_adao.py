@@ -85,7 +85,7 @@ class AdaoGenerator(PythonGenerator):
     Convertit un objet MCSIMP en texte python
     """
     clef=""
-    for i in obj.get_genealogie() :
+    for i in obj.getGenealogie() :
       clef=clef+"__"+i
     self.dictMCVal[clef]=obj.valeur
 
@@ -288,15 +288,20 @@ class AdaoGenerator(PythonGenerator):
 
   def add_AlgorithmParameters(self):
 
-    if "__"+self.type_of_study+"__AlgorithmParameters__Parameters" not in self.dictMCVal: return
-
     data_name = "AlgorithmParameters"
     data_type = "Dict"
-    para_type = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Parameters"]
+    #
+    if "__"+self.type_of_study+"__AlgorithmParameters__Parameters" in self.dictMCVal:
+        para_type = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Parameters"]
+    else:
+        para_type = "Defaults"
+    #
     if para_type == "Defaults":
         from_type = para_type
     elif para_type == "Dict":
         from_type = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Dict__data__FROM"]
+    else:
+        return
 
     if from_type == "Script":
       data = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
@@ -315,7 +320,7 @@ class AdaoGenerator(PythonGenerator):
     elif from_type == "Defaults":
       base = "__"+self.type_of_study+"__AlgorithmParameters__Parameters"
       keys = [k for k in self.dictMCVal.keys() if base in k]
-      keys.remove(base)
+      if base in keys: keys.remove(base)
       keys = [k.replace(base,'') for k in keys]
       data  = '{'
       for k in keys:

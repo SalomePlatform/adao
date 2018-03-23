@@ -36,13 +36,13 @@ from InterfaceQT4 import configuration
 
 # Classe de base permettant de lire, afficher
 # et sauvegarder les fichiers utilisateurs
-class CONFIG(configuration.CONFIG_BASE):
+class CONFIG(configuration.configBase):
 
   def __init__(self,appli,repIni):
 
     # self.labels_eficas = ['lang']
     self.labels_eficas = ['lang','rep_cata','catalogues','closeAutreCommande','closeFrameRechercheCommande','closeEntete','taille']
-    configuration.CONFIG_BASE.__init__(self,appli,repIni)
+    configuration.configBase.__init__(self,appli,repIni)
 
     self.rep_user         = os.environ["HOME"]
     self.appli            = appli
