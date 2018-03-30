@@ -305,14 +305,14 @@ class AdaoGenerator(PythonGenerator):
 
     if from_type == "Script":
       data = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Dict__data__SCRIPT_DATA__SCRIPT_FILE"]
-      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config = {}\n"
       self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
       self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
       self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
       self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
     elif from_type == "String":
       data = self.dictMCVal["__"+self.type_of_study+"__AlgorithmParameters__Dict__data__STRING_DATA__STRING"]
-      self.text_da += data_name + "_config = {} \n"
+      self.text_da += data_name + "_config = {}\n"
       self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
       self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"
       self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
@@ -335,11 +335,12 @@ class AdaoGenerator(PythonGenerator):
             data += '"%s":%s,'%(key,val)
       data = data.replace("'",'"')
       data += '}'
-      self.text_da += data_name + "_config = {} \n"
-      self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
-      self.text_da += data_name + "_config['From'] = 'String'\n"
-      self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
-      self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
+      if data != '{}':
+          self.text_da += data_name + "_config = {}\n"
+          self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
+          self.text_da += data_name + "_config['From'] = 'String'\n"
+          self.text_da += data_name + "_config['Data'] = '" + data + "'\n"
+          self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
   def add_variables(self):
 
