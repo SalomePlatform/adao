@@ -73,7 +73,7 @@ class GenericCaseViewer(object):
         __text +="\n"
         if __filename is not None:
             __file = os.path.abspath(__filename)
-            __fid = open(__file,"w")
+            __fid = open(__file,"w",0)
             __fid.write(__text)
             __fid.close()
         return __text
@@ -462,38 +462,27 @@ class _YACSViewer(GenericCaseViewer):
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self.__internalSCD = _SCDViewer(__name, __objname, __content, __object)
         self._append       = self.__internalSCD._append
-    def dump(self, __filename=None, __convertSCDinMemory=True):
+    def dump(self, __filename=None, __upa=None):
         "Restitution normalisée des commandes"
-        self.__internalSCD._finalize()
         # -----
         if __filename is None:
             raise ValueError("A file name has to be given for YACS XML output.")
+        else:
+            __file    = os.path.abspath(__filename)
+            if os.path.isfile(__file) or os.path.islink(__file):
+                os.remove(__file)
         # -----
         if not PlatformInfo.has_salome or \
             not PlatformInfo.has_adao:
             raise ImportError(
                 "Unable to get SALOME or ADAO environnement variables for YACS conversion.\n"+\
                 "Please load the right environnement before trying to use it.")
-        elif __convertSCDinMemory:
-            __file    = os.path.abspath(__filename)
-            __SCDdump = self.__internalSCD.dump()
-            if os.path.isfile(__file) or os.path.islink(__file):
-                os.remove(__file)
-            from daYacsSchemaCreator.run import create_schema_from_content
-            create_schema_from_content(__SCDdump, __file)
         else:
-            __file    = os.path.abspath(__filename)
-            __SCDfile = __file[:__file.rfind(".")] + '_SCD.py'
-            __SCDdump = self.__internalSCD.dump(__SCDfile)
-            if os.path.isfile(__file) or os.path.islink(__file):
-                os.remove(__file)
-            __converterExe = os.path.join(os.environ["ADAO_ROOT_DIR"], "bin/salome", "AdaoYacsSchemaCreator.py")
-            __args = ["python", __converterExe, __SCDfile, __file]
-            import subprocess
-            __p = subprocess.Popen(__args)
-            (__stdoutdata, __stderrdata) = __p.communicate()
-            __p.terminate()
-            os.remove(__SCDfile)
+            from daYacsSchemaCreator.run import create_schema_from_content
+        # -----
+        self.__internalSCD._finalize(__upa)
+        __SCDdump = self.__internalSCD.dump()
+        create_schema_from_content(__SCDdump, __file)
         # -----
         if not os.path.exists(__file):
             __msg  = "An error occured during the ADAO YACS Schema build for\n"

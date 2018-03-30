@@ -168,7 +168,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = self.with_directory(Script),
+            asScript           = self.__with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -190,7 +190,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = self.with_directory(Script),
+            asScript           = self.__with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -212,7 +212,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = self.with_directory(Script),
+            asScript           = self.__with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -234,7 +234,7 @@ class Aidsm(object):
             name               = Concept,
             asVector           = Vector,
             asPersistentVector = VectorSerie,
-            asScript           = self.with_directory(Script),
+            asScript           = self.__with_directory(Script),
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -259,7 +259,7 @@ class Aidsm(object):
             asEyeByScalar = ScalarSparseMatrix,
             asEyeByVector = DiagonalSparseMatrix,
             asCovObject   = ObjectMatrix,
-            asScript      = self.with_directory(Script),
+            asScript      = self.__with_directory(Script),
             toBeChecked   = Checked,
             )
         if Stored:
@@ -283,7 +283,7 @@ class Aidsm(object):
             asEyeByScalar = ScalarSparseMatrix,
             asEyeByVector = DiagonalSparseMatrix,
             asCovObject   = ObjectMatrix,
-            asScript      = self.with_directory(Script),
+            asScript      = self.__with_directory(Script),
             toBeChecked   = Checked,
             )
         if Stored:
@@ -307,7 +307,7 @@ class Aidsm(object):
             asEyeByScalar = ScalarSparseMatrix,
             asEyeByVector = DiagonalSparseMatrix,
             asCovObject   = ObjectMatrix,
-            asScript      = self.with_directory(Script),
+            asScript      = self.__with_directory(Script),
             toBeChecked   = Checked,
             )
         if Stored:
@@ -332,7 +332,7 @@ class Aidsm(object):
             asMatrix         = Matrix,
             asOneFunction    = OneFunction,
             asThreeFunctions = ThreeFunctions,
-            asScript         = self.with_directory(Script),
+            asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = AppliedInXb,
             avoidRC          = AvoidRC,
@@ -361,7 +361,7 @@ class Aidsm(object):
             asMatrix         = Matrix,
             asOneFunction    = OneFunction,
             asThreeFunctions = ThreeFunctions,
-            asScript         = self.with_directory(Script),
+            asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
             avoidRC          = AvoidRC,
@@ -390,7 +390,7 @@ class Aidsm(object):
             asMatrix         = Matrix,
             asOneFunction    = OneFunction,
             asThreeFunctions = ThreeFunctions,
-            asScript         = self.with_directory(Script),
+            asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
             avoidRC          = AvoidRC,
@@ -448,7 +448,7 @@ class Aidsm(object):
             name          = Concept,
             asAlgorithm   = Algorithm,
             asDict        = Parameters,
-            asScript      = self.with_directory(Script),
+            asScript      = self.__with_directory(Script),
             )
         return 0
 
@@ -460,7 +460,7 @@ class Aidsm(object):
             raise ValueError("No algorithm registred, ask for one before updating parameters")
         self.__adaoObject["AlgorithmParameters"].updateParameters(
             asDict        = Parameters,
-            asScript      = self.with_directory(Script),
+            asScript      = self.__with_directory(Script),
             )
         return 0
 
@@ -475,7 +475,7 @@ class Aidsm(object):
             name          = Concept,
             asAlgorithm   = Algorithm,
             asDict        = Parameters,
-            asScript      = self.with_directory(Script),
+            asScript      = self.__with_directory(Script),
             )
         return 0
 
@@ -495,7 +495,7 @@ class Aidsm(object):
             onVariable  = Variable,
             asTemplate  = Template,
             asString    = String,
-            asScript    = self.with_directory(Script),
+            asScript    = self.__with_directory(Script),
             asObsObject = ObjectFunction,
             withInfo    = Info,
             scheduledBy = Scheduler,
@@ -687,7 +687,9 @@ class Aidsm(object):
         "Effacement du contenu du cas en cours"
         self.__init__(self.__name)
 
-    def with_directory(self, __filename=None):
+    # -----------------------------------------------------------
+
+    def __with_directory(self, __filename=None):
         if os.path.exists(str(__filename)):
             __fullpath = __filename
         elif os.path.exists(os.path.join(str(self.__directory), str(__filename))):
@@ -695,8 +697,6 @@ class Aidsm(object):
         else:
             __fullpath = __filename
         return __fullpath
-
-    # -----------------------------------------------------------
 
     def __dir__(self):
         "Clarifie la visibilité des méthodes"

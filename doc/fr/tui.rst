@@ -473,6 +473,16 @@ Paramétrer le calcul, les sorties, etc.
     "*Algorithm*" et "*Parameters*" (ou "*AlgorithmParameters*" de manière
     équivalente).
 
+.. index:: single: setName
+
+**setName** (*String*)
+    Cette commande permet de donner un titre court au cas de calcul.
+
+.. index:: single: setDirectory
+
+**setDirectory** (*String*)
+    Cette commande permet d'indiquer le répertoire courant d'exécution.
+
 .. index:: single: setDebug
 
 **setDebug** ()
@@ -535,6 +545,51 @@ Obtenir séparément les résultats de calcul
     reportera à l':ref:`subsection_r_o_v_Inventaire`, et plus généralement à la
     fois aux :ref:`section_ref_output_variables` et aux documentations
     individuelles des algorithmes.
+
+Enregistrer, charger ou convertir les commandes de cas de calcul
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+L'enregistrement ou le chargement d'un cas de calcul concernent les quantités
+et les actions qui lui sont liées par les commandes précédentes, à l'exclusion
+d'opérations externes au cas (comme par exemple le post-processing qui peut
+être développé après le cas de calcul). Les commandes enregistrées ou chargées
+restent néanmoins parfaitement compatibles avec ces opérations en Python
+externes au cas.
+
+.. index:: single: load
+.. index:: single: FileName
+.. index:: single: Content
+.. index:: single: Object
+.. index:: single: Formater
+
+**load** (*FileName, Content, Object, Formater*)
+    Cette commande permet de lire ou charger un cas d'étude, à partir d'un
+    fichier "*FileName*" ou d'un contenu en mémoire par "*Content*" ou
+    "*Object*". Le mot-clé "*Formater*" peut désigner le format "*TUI*" pour
+    les commandes du type interface de programmation textuelle, et le format
+    "*COM*" pour les commandes du type COMM provenant de l'interface ADAO de
+    type EFICAS.
+
+.. index:: single: dump
+
+**dump** (*FileName, Formater*)
+    Cette commande permet d'enregistrer, dans un fichier "*FileName*", les
+    commandes du cas d'étude en cours. Le mot-clé "*Formater*" peut désigner
+    les formats "*TUI*" pour les commandes du type interface de programmation
+    textuelle, et "*YACS*" pour les commandes du type YACS.
+
+.. index:: single: convert
+.. index:: single: FileNameFrom
+.. index:: single: ContentFrom
+.. index:: single: ObjectFrom
+.. index:: single: FormaterFrom
+.. index:: single: FileNameTo
+.. index:: single: FormaterTo
+
+**convert** (*FileNameFrom, ContentFrom, ObjectFrom, FormaterFrom, FileNameTo, FormaterTo*)
+    Cette commande permet de convertir directement d'un format reconnu à un
+    autre les commandes établissant le cas de calcul en cours. Certains
+    formats ne sont disponibles qu'en entrée ou qu'en sortie.
 
 .. _subsection_tui_advanced:
 

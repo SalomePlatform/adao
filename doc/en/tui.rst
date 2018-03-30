@@ -54,7 +54,7 @@ ADAO calculation case. All the data are explicitly defined inside the script in
 order to make the reading easier. The whole set of commands is the following
 one::
 
-    from numpy import array
+    from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -272,7 +272,7 @@ are done by importing the interface module "*adaoBuilder*" and by by invoking
 its method "*New()*" as illustrated in the following lines (the ``case`` object
 name being let free to the user choice)::
 
-    from numpy import array
+    from numpy import array, matrix
     import adaoBuilder
     case = adaoBuilder.New()
 
@@ -456,6 +456,16 @@ Setting the calculation, outputs, etc.
     the file must contain the two variables "*Algorithm*" and "*Parameters*" (or
     "*AlgorithmParameters*" equivalently).
 
+.. index:: single: setName
+
+**setName** (*String*)
+    This command allows to set a short title for the calculation case.
+
+.. index:: single: setDirectory
+
+**setDirectory** (*String*)
+    This command allows to set the execution standard directory.
+
 .. index:: single: setDebug
 
 **setDebug** ()
@@ -513,6 +523,49 @@ Get the calculation results separately
     to the :ref:`subsection_r_o_v_Inventaire` and more generally to the
     :ref:`section_ref_output_variables` and to the individual documentations of
     the algorithms.
+
+Saving, loading or converting calculation case commands
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The saving or loading of a calculation case deals with quantities and actions
+that are linked by the previous commands, excepted case external operations
+(such as, for example, post-processing that can be developped after the
+calculation cas). The registered or loaded commands remain fully compatible
+with these Python external case operations.
+
+.. index:: single: load
+.. index:: single: FileName
+.. index:: single: Content
+.. index:: single: Object
+.. index:: single: Formater
+
+**load** (*FileName, Content, Object, Formater*)
+    This command allows to read or load a calculation case, from a file named
+    "*FileName*" or a content in memory by "*Content*" or "*Object*". The
+    "*Formater*" keyword can indicate "*TUI*" for commands of textual
+    application programming interface, and "*COM*" for commands of COMM type
+    coming from EFICAS interface for ADAO.
+
+.. index:: single: dump
+
+**dump** (*FileName, Formater*)
+    This command allows to save, in a file named "*FileName*", the commands of
+    the current calculation case. The "*Formater*" keyword can indicate "*TUI*"
+    for commands of textual application programming interface, and "*YACS*" for
+    commands of type YACS.
+
+.. index:: single: convert
+.. index:: single: FileNameFrom
+.. index:: single: ContentFrom
+.. index:: single: ObjectFrom
+.. index:: single: FormaterFrom
+.. index:: single: FileNameTo
+.. index:: single: FormaterTo
+
+**convert** (*FileNameFrom, ContentFrom, ObjectFrom, FormaterFrom, FileNameTo, FormaterTo*)
+    This command allows to convert directly from a known format to an another
+    one the commands establishing the current calculation case. Some formats
+    are only available as input or as output.
 
 .. _subsection_tui_advanced:
 

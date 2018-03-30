@@ -22,8 +22,6 @@
 
 """
     Définit les outils généraux élémentaires.
-
-    Ce module est destiné à être appelée par AssimilationStudy.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
@@ -824,6 +822,9 @@ class AlgorithmAndParameters(object):
         "Permet de lancer le calcul d'assimilation"
         if FileName is None or not os.path.exists(FileName):
             raise ValueError("a YACS file name has to be given for YACS execution.\n")
+        else:
+            __file    = os.path.abspath(FileName)
+            logging.debug("The YACS file name is \"%s\"."%__file)
         if not PlatformInfo.has_salome or \
             not PlatformInfo.has_yacs or \
             not PlatformInfo.has_adao:
@@ -840,13 +841,13 @@ class AlgorithmAndParameters(object):
         xmlLoader = loader.YACSLoader()
         xmlLoader.registerProcCataLoader()
         try:
-            catalogAd = r.loadCatalog("proc", os.path.abspath(FileName))
+            catalogAd = r.loadCatalog("proc", __file)
             r.addCatalog(catalogAd)
         except:
             pass
 
         try:
-            p = xmlLoader.load(os.path.abspath(FileName))
+            p = xmlLoader.load(__file)
         except IOError as ex:
             print("The YACS XML schema file can not be loaded: %s"%(ex,))
 
