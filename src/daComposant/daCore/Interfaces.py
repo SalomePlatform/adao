@@ -73,7 +73,7 @@ class GenericCaseViewer(object):
         __text +="\n"
         if __filename is not None:
             __file = os.path.abspath(__filename)
-            __fid = open(__file,"w",0)
+            __fid = open(__file,"w")
             __fid.write(__text)
             __fid.close()
         return __text
