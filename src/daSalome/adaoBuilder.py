@@ -22,6 +22,27 @@
 
 """
     Normalized interface for ADAO scripting (full version API)
+
+    The main interface to use is an object "New" build from "adaoBuilder".
+
+    Usage by an example:
+
+        from numpy import array, matrix
+        import adaoBuilder
+        case = adaoBuilder.New()
+        case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
+        case.set( 'Background',          Vector=[0, 1, 2] )
+        case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
+        case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
+        case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
+        case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
+        case.execute()
+        #
+        print(case.get("Analysis")[-1])
+
+    Documentation
+
+        See associated up-to-date documentation for details of commands.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["New"]

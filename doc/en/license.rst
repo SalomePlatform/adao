@@ -58,10 +58,10 @@ In addition, we require that all publication or presentation describing work
 using this software, or all commercial or not products using it, quote at least
 one of the references given below:
 
-    * *ADAO, a SALOME module for Data Assimilation and Optimization*,
+    * *ADAO, a module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
 
-    * *ADAO, un module SALOME pour l'Assimilation de Données et l'Aide à
+    * *ADAO, un module pour l'Assimilation de Données et l'Aide à
       l'Optimisation*, http://www.salome-platform.org/
 
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,

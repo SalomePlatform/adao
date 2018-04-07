@@ -58,10 +58,10 @@ En outre, on demande que toute publication ou présentation décrivant des trava
 utilisant ce module, ou tout produit commercial ou non l'utilisant, cite au
 moins l'une des références ci-dessous :
 
-    * *ADAO, a SALOME module for Data Assimilation and Optimization*,
+    * *ADAO, a module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
 
-    * *ADAO, un module SALOME pour l'Assimilation de Données et l'Aide à
+    * *ADAO, un module pour l'Assimilation de Données et l'Aide à
       l'Optimisation*, http://www.salome-platform.org/
 
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,

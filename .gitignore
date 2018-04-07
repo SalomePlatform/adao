@@ -29,7 +29,6 @@ bin/Makefile.in
 bin/module_version.pyc
 checkout.log
 configure
-COPYING
 doc/Makefile.in
 examples/daSalome/Makefile.in
 examples/Makefile.in
