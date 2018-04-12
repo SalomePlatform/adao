@@ -26,6 +26,6 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-name    = "Data Assimilation Package"
+name    = "ADAO, a module for Data Assimilation and Optimization"
 version = "8.5.0"
 date    = "mardi 27 mars 2018, 12:12:12 (UTC+0100)"

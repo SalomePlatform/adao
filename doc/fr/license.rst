@@ -24,9 +24,10 @@
 .. _section_license:
 
 ================================================================================
-Licence et conditions d'utilisation pour le module
+Licence et conditions d'utilisation
 ================================================================================
 
+.. index:: single: COPYING
 .. index:: single: LICENCE
 .. index:: single: SALOME
 .. index:: single: ADAO
@@ -34,7 +35,7 @@ Licence et conditions d'utilisation pour le module
 La licence pour ce module est la GNU Lesser General Public License (Lesser GPL),
 tel qu'il est déclaré ici et dans les fichiers sources::
 
-    <ADAO, a SALOME module for Data Assimilation and Optimization>
+    <ADAO, a module for Data Assimilation and Optimization>
 
     Copyright (C) 2008-2018 EDF R&D
 
