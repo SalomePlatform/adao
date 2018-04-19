@@ -65,7 +65,7 @@ normalisée par la valeur au point nominal :
 
 .. math:: R(\alpha) = \frac{|| F(\mathbf{x}+\alpha*\mathbf{dx}) - F(\mathbf{x}) - \alpha * \nabla_xF(\mathbf{dx}) ||}{|| F(\mathbf{x}) ||}
 
-S'il reste constamment trés faible par rapport à 1, l'hypothèse de linéarité
+S'il reste constamment très faible par rapport à 1, l'hypothèse de linéarité
 de :math:`F` est vérifiée.
 
 Si le résidu varie, ou qu'il est de l'ordre de 1 ou plus, et qu'il n'est
