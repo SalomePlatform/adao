@@ -22,7 +22,16 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-name    = "ADAO"
-version = "V8_5_0" # Version pour catalogue, avec des "_" entre les numeros
-date    = ""
-year    = "2018" # Annee de copyright
+"""
+    Version
+"""
+__author__ = "Jean-Philippe ARGAUD"
+__all__ = []
+
+name     = "ADAO"
+version  = "8.5.0"
+year     = "2018"
+date     = "mardi 27 mars 2018, 12:12:12 (UTC+0100)"
+
+longname = name + ", a module for Data Assimilation and Optimization"
+cata     = "V" + version.replace(".","_")

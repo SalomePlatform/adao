@@ -111,7 +111,7 @@ def AdjointOperatorInNS(filename):
             if cr.match(ln): return 1
     return 0
 AdjointOperatorInNS.info = u"The Python file has to contain explicitly an \\"AdjointOperator\\" function definition with only one pair of vectors as argument."
-"""%(module_version.name,module_version.version)
+"""%(module_version.name,module_version.cata)
 
 # Important : validators=[...] pour que les conditions soient traitees simultanement, en "ET", et pas en "OU" (choisi dans le cas du tuple a la place de la liste)
 # validators=[OnlyStr(), FileExtVal('py'), FunctionVal(fv)]

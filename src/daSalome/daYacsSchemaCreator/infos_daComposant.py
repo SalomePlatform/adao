@@ -69,6 +69,7 @@ AssimAlgos = [
     "EnsembleBlue",
     "KalmanFilter",
     "ExtendedKalmanFilter",
+    "EnsembleKalmanFilter",
     "UnscentedKalmanFilter",
     "LinearLeastSquares",
     "NonLinearLeastSquares",
@@ -119,8 +120,14 @@ AlgoDataRequirements["EnsembleBlue"] = [
 AlgoDataRequirements["KalmanFilter"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
+    "ObservationOperator",
     ]
 AlgoDataRequirements["ExtendedKalmanFilter"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["EnsembleKalmanFilter"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -188,6 +195,7 @@ AlgoType["ExtendedBlue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
 AlgoType["ExtendedKalmanFilter"] = "Optim"
+AlgoType["EnsembleKalmanFilter"] = "Optim"
 AlgoType["UnscentedKalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
