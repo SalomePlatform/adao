@@ -76,7 +76,7 @@ def mmqr(
         DeriveesT = array(matrix(Derivees).T)
         M         =   dot( DeriveesT , (array(matrix(p*[poids,]).T)*Derivees) )
         SM        =   dot( DeriveesT , veps ).T
-        step      = - linalg.lstsq( M, SM )[0]
+        step      = - linalg.lstsq( M, SM, rcond=-1 )[0]
         #
         variables = variables + step
         if bounds is not None:

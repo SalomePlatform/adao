@@ -48,6 +48,7 @@ __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["New"]
 
 from daCore.Aidsm import Aidsm as _Aidsm
+from daCore.version import name, version, year, date
 
 # ==============================================================================
 class New(_Aidsm):

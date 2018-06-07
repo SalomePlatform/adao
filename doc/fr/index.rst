@@ -32,20 +32,20 @@ Documentation ADAO
    :alt: Logo ADAO
 
 **Le module ADAO fournit des fonctionnalités d'assimilation de données et
-d'optimisation** dans un contexte SALOME [Salome]_. Il est basé sur
-l'utilisation d'autres modules, à savoir YACS et EFICAS, et sur l'utilisation
-d'une bibliothèque et d'outils génériques sous-jacents d'assimilation de
-données.
+d'optimisation** dans un contexte Python ou SALOME [Salome]_. Il est basé sur
+l'utilisation d'autres modules, à savoir YACS et EFICAS s'ils sont disponibles,
+et sur l'utilisation d'une bibliothèque et d'outils génériques sous-jacents
+d'assimilation de données.
 
 En bref, l'assimilation de données est un cadre méthodologique pour calculer
-l'estimation optimale de la valeur réelle (inaccessible) de l'état d'un système
-au cours du temps. Il utilise des informations provenant de mesures
-expérimentales, ou observations, et de modèles numériques *a priori*, y compris
-des informations sur leurs erreurs. Certaines des méthodes incluses dans ce
-cadre sont également connues sous les noms  d'*estimation des paramètres*, de
-*problèmes inverses*, d'*estimation bayésienne*, d'*interpolation optimale*,
-etc. De plus amples détails peuvent être trouvés dans la partie proposant
-:ref:`section_theory`.
+l'estimation optimale de la valeur réelle (inaccessible) de l'état d'un
+système, éventuellement au cours du temps. Il utilise des informations
+provenant de mesures expérimentales, ou observations, et de modèles numériques
+*a priori*, y compris des informations sur leurs erreurs. Certaines des
+méthodes incluses dans ce cadre sont également connues sous les noms
+d'*estimation des paramètres*, de *problèmes inverses*, d'*estimation
+bayésienne*, d'*interpolation optimale*, etc. De plus amples détails peuvent
+être trouvés dans la partie proposant :ref:`section_theory`.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la documentation théorique (indiquée dans le titre par **[DocT]**),

@@ -32,17 +32,18 @@ ADAO documentation
    :alt: ADAO logo
 
 **The ADAO module provides data assimilation and optimization** features in
-SALOME context [Salome]_. It is based on usage of other SALOME modules, namely
-YACS and EFICAS, and on usage of a generic underlying data assimilation
-library.
+Python or SALOME context [Salome]_. It is based on usage of other SALOME
+modules, namely YACS and EFICAS if they are available, and on usage of a
+generic underlying data assimilation library.
 
 Briefly stated, Data Assimilation is a methodological framework to compute the
-optimal estimate of the inaccessible true value of a system state over time. It
-uses information coming from experimental measurements or observations, and from
-numerical *a priori* models, including information about their errors. Parts of
-the framework are also known under the names of *parameter estimation*, *inverse
-problems*, *Bayesian estimation*, *optimal interpolation*, etc. More details can
-be found in the section :ref:`section_theory`.
+optimal estimate of the inaccessible true value of a system state, eventually
+over time. It uses information coming from experimental measurements or
+observations, and from numerical *a priori* models, including information about
+their errors. Parts of the framework are also known under the names of
+*parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
+interpolation*, etc. More details can be found in the section
+:ref:`section_theory`.
 
 The documentation for this module is divided into several major categories,
 related to the theoretical documentation (indicated in the title by **[DocT]**),

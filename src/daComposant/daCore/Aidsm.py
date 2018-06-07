@@ -700,7 +700,7 @@ class Aidsm(object):
 
     def __dir__(self):
         "Clarifie la visibilité des méthodes"
-        return ['set', 'get', 'execute', '__doc__', '__init__', '__module__']
+        return ['set', 'get', 'execute', 'dump', 'load', '__doc__', '__init__', '__module__']
 
     def prepare_to_pickle(self):
         "Retire les variables non pickelisables, avec recopie efficace"
