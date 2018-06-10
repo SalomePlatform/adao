@@ -71,6 +71,11 @@ class PlatformInfo(object):
         import daCore.version as dav
         return dav.date
 
+    def getYear(self):
+        "Retourne l'année de création de la version"
+        import daCore.version as dav
+        return dav.year
+
     def getPythonVersion(self):
         "Retourne la version de python disponible"
         return ".".join([str(x) for x in sys.version_info[0:3]]) # map(str,sys.version_info[0:3]))
@@ -189,12 +194,29 @@ has_adao   = bool( "ADAO_ROOT_DIR" in os.environ )
 has_eficas = bool( "EFICAS_ROOT_DIR" in os.environ )
 
 # ==============================================================================
-def uniq(sequence):
+def uniq(__sequence):
     """
     Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
     """
     __seen = set()
-    return [x for x in sequence if x not in __seen and not __seen.add(x)]
+    return [x for x in __sequence if x not in __seen and not __seen.add(x)]
+
+def date2int(__date, __lang="FR"):
+    """
+    Fonction de secours, conversion pure : dd/mm/yy hh:mm ---> int(yyyymmddhhmm)
+    """
+    __date = __date.strip()
+    if __date.count('/') == 2 and __date.count(':') == 0 and __date.count(' ') == 0:
+        d,m,y = __date.split("/")
+        __number = (10**4)*int(y)+(10**2)*int(m)+int(d)
+    elif __date.count('/') == 2 and __date.count(':') == 1 and __date.count(' ') > 0:
+        part1, part2 = __date.split()
+        d,m,y = part1.strip().split("/")
+        h,n   = part2.strip().split(":")
+        __number = (10**8)*int(y)+(10**6)*int(m)+(10**4)*int(d)+(10**2)*int(h)+int(n)
+    else:
+        raise ValueError("Cannot convert \"%s\" as a D/M/Y H:M date"%d)
+    return __number
 
 # ==============================================================================
 class PathManagement(object):

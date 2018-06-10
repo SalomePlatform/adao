@@ -496,40 +496,42 @@ class _YACSViewer(GenericCaseViewer):
         __fid.close()
         return __text
 
+# ==============================================================================
 class ImportFromScript(object):
     """
-    Obtention d'une variable nommee depuis un fichier script importe
+    Obtention d'une variable nommee depuis un fichier script importé
     """
+    __slots__ = ("__basename", "__filenspace", "__filestring")
     def __init__(self, __filename=None):
         "Verifie l'existence et importe le script"
         if __filename is None:
             raise ValueError("The name of the file, containing the variable to be read, has to be specified.")
         if not os.path.isfile(__filename):
-            raise ValueError("The file containing the variable to be imported doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%__filename)
+            raise ValueError("The file containing the variable to be imported doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%str(__filename))
         if os.path.dirname(__filename) != '':
             sys.path.insert(0, os.path.dirname(__filename))
             __basename = os.path.basename(__filename).rstrip(".py")
         else:
             __basename = __filename.rstrip(".py")
         self.__basename = __basename
-        self.__scriptfile = __import__(__basename, globals(), locals(), [])
-        self.__scriptstring = open(__filename,'r').read()
+        self.__filenspace = __import__(__basename, globals(), locals(), [])
+        self.__filestring = open(__filename,'r').read()
     def getvalue(self, __varname=None, __synonym=None ):
-        "Renvoie la variable demandee"
+        "Renvoie la variable demandee par son nom ou son synonyme"
         if __varname is None:
             raise ValueError("The name of the variable to be read has to be specified. Please check the content of the file and the syntax.")
-        if not hasattr(self.__scriptfile, __varname):
+        if not hasattr(self.__filenspace, __varname):
             if __synonym is None:
                 raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__basename)+".py",__varname))
-            elif not hasattr(self.__scriptfile, __synonym):
+            elif not hasattr(self.__filenspace, __synonym):
                 raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__basename)+".py",__synonym))
             else:
-                return getattr(self.__scriptfile, __synonym)
+                return getattr(self.__filenspace, __synonym)
         else:
-            return getattr(self.__scriptfile, __varname)
+            return getattr(self.__filenspace, __varname)
     def getstring(self):
         "Renvoie le script complet"
-        return self.__scriptstring
+        return self.__filestring
 
 # ==============================================================================
 if __name__ == "__main__":
