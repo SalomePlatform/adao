@@ -32,8 +32,8 @@ ADAO documentation
    :alt: ADAO logo
 
 **The ADAO module provides data assimilation and optimization** features in
-Python or SALOME context [Salome]_. It is based on usage of other SALOME
-modules, namely YACS and EFICAS if they are available, and on usage of a
+Python [Python]_ or SALOME context [Salome]_. It is based on usage of other
+SALOME modules, namely YACS and EFICAS if they are available, and on usage of a
 generic underlying data assimilation library.
 
 Briefly stated, Data Assimilation is a methodological framework to compute the

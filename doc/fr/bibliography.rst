@@ -73,6 +73,8 @@ Bibliographie
 
 .. [Powell09] Powell M. J. D., *The BOBYQA algorithm for bound constrained optimization without derivatives*, Cambridge University Technical Report DAMTP NA2009/06, 2009
 
+.. [Python] *Python programming language*, http://www.python.org/
+
 .. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
 
 .. [Rowan90] Rowan T., *Functional Stability Analysis of Numerical Algorithms*, Ph.D. thesis, Department of Computer Sciences, University of Texas at Austin, 1990
