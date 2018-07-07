@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2018 EDF R&D
 #
@@ -32,7 +32,7 @@ from Traducteur.inseremocle  import *
 from Traducteur.movemocle    import *
 from Traducteur.renamemocle  import *
 
-version_out = "V8_5_0"
+version_out = "V9_2_0"
 
 usage="""Usage: python %(prog)s [args]
 
