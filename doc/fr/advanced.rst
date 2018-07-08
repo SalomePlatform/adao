@@ -451,6 +451,20 @@ commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'u
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
 
+Passer de la version 8.5 à la 9.2
++++++++++++++++++++++++++++++++++
+
+Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
+procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+
+Par contre, il peut se présenter des incompatibilités provenant de fichiers
+scripts utilisateurs qui n'auraient pas une syntaxe compatible avec Python 3.
+L'erreur la plus immédiate est l'usage de l'impression "*print*" avec la
+syntaxe "*commande*" au lieu de la syntaxe fonctionnelle "*print(...)*". Dans
+ce cas, il est suggéré de corriger la syntaxe des fichiers utilisateurs dans
+l'environnement 8 avant de passer en environnement 9.
+
 Passer de la version 8.x à la 8.y avec x < y
 ++++++++++++++++++++++++++++++++++++++++++++
 
@@ -459,7 +473,7 @@ procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
 avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
 Pour faciliter les futures évolutions, il est fortement recommandé de veiller à
-ce que vos fichiers scripts utilisateurs utilisent une syntaxe compatibible avec
+ce que vos fichiers scripts utilisateurs utilisent une syntaxe compatible avec
 Python 2 et avec Python 3. En particulier, on recommande d'utiliser la syntaxe
 fonctionnelle pour les "*print*" et non pas la syntaxe "*commande*", comme par
 exemple::

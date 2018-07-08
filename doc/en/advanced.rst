@@ -424,6 +424,19 @@ is not guaranteed for all the commands or keywords. In general also, an ADAO
 case file for one version can not be read by a previous minor or major version
 of the ADAO module.
 
+Switching from 8.5 to 9.2
++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case files. The upgrade procedure
+is to read the old ADAO case file with the new SALOME/ADAO module, and save it
+with a new name.
+
+However, there may be incompatibilities from user script files that would not
+have a syntax compatible with Python 3. The most immediate error is the use of
+printing "*print*" with "*command*" syntax instead of functional syntax
+"*print(...)*". In this case, it is suggested to correct the syntax of user
+files in environment 8 before switching to environment 9.
+
 Switching from 8.x to 8.y with x < y
 ++++++++++++++++++++++++++++++++++++
 
