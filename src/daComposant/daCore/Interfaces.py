@@ -549,11 +549,11 @@ class ImportFromFile(object):
     """
     __slots__ = (
         "_filename", "_varsline", "_format", "_delimiter", "_skiprows",
-        "__colnames", "__colindex", "__filestring", "__header")
+        "__colnames", "__colindex", "__filestring", "__header", "__allowvoid")
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_val, exc_tb): return False
     #
-    def __init__(self, Filename=None, ColNames=None, ColIndex=None, Format="Guess"):
+    def __init__(self, Filename=None, ColNames=None, ColIndex=None, Format="Guess", AllowVoidNameList=True):
         """
         Verifie l'existence et les informations de définition du fichier. Les
         noms de colonnes ou de variables sont ignorées si le format ne permet
@@ -563,11 +563,13 @@ class ImportFromFile(object):
             - ColNames : noms de la ou des colonnes/variables à lire
             - ColIndex : nom unique de la colonne/variable servant d'index
             - Format : format du fichier et/ou des données inclues
+            - AllowVoidNameList : permet, si la liste de noms est vide, de
+              prendre par défaut toutes les colonnes
         """
         if Filename is None:
             raise ValueError("The name of the file, containing the variables to be read, has to be specified.")
         if not os.path.isfile(Filename):
-            raise ValueError("The file, containing the variables to be read, doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%str(Filename))
+            raise ValueError("The file, containing the variables to be read, doesn't seem to exist. The given file name is:\n  \"%s\""%str(Filename))
         self._filename = os.path.abspath(Filename)
         #
         self.__header, self._varsline, self._skiprows = self.__getentete(self._filename)
@@ -610,6 +612,8 @@ class ImportFromFile(object):
         #
         if ColIndex is not None: self.__colindex = str(ColIndex)
         else:                    self.__colindex = None
+        #
+        self.__allowvoid = bool(AllowVoidNameList)
 
     def __getentete(self, __filename, __nblines = 3):
         "Lit l'entête du fichier pour trouver la définition des variables"
@@ -642,7 +646,11 @@ class ImportFromFile(object):
                 for i, n in enumerate(__varserie):
                     if v == n: __usecols.append(i)
             __usecols = tuple(__usecols)
-            if len(__usecols) == 0: __usecols = None
+            if len(__usecols) == 0:
+                if self.__allowvoid:
+                    __usecols = None
+                else:
+                    raise ValueError("Can not found any column corresponding to the required names %s"%(__colnames,))
         else:
             __usecols = None
         #
@@ -679,26 +687,34 @@ class ImportFromFile(object):
                             # Première colonne
                             __columns = numpy.reshape(__allcolumns[nom], (1,-1))
                 if self.__colindex is not None and self.__colindex in __allcolumns.files:
-                    __index = numpy.reshape(__allcolumns[self.__colindex], (1,-1))
+                    __index = numpy.array(numpy.reshape(__allcolumns[self.__colindex], (1,-1)), dtype=bytes)
         elif self._format == "TXT":
             __usecols, __useindex = self.__getindices(self.__colnames, self.__colindex)
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, skiprows=self._skiprows)
             if __useindex is not None:
-                __index = numpy.loadtxt(self._filename, usecols = __useindex, skiprows=self._skiprows)
+                __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), skiprows=self._skiprows)
         #
         elif self._format == "CSV":
             __usecols, __useindex = self.__getindices(self.__colnames, self.__colindex, self._delimiter)
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
             if __useindex is not None:
-                __index = numpy.loadtxt(self._filename, usecols = __useindex, delimiter = self._delimiter, skiprows=self._skiprows)
+                __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
         #
         elif self._format == "TSV":
             __usecols, __useindex = self.__getindices(self.__colnames, self.__colindex, self._delimiter)
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
             if __useindex is not None:
-                __index = numpy.loadtxt(self._filename, usecols = __useindex, delimiter = self._delimiter, skiprows=self._skiprows)
+                __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
         else:
             raise ValueError("Unkown file format %s"%self._format)
+        #
+        def toString(value):
+            try:
+                return value.decode()
+            except ValueError:
+                return value
+        if __index is not None:
+            __index = tuple([toString(v) for v in __index])
         #
         return (self.__colnames, __columns, self.__colindex, __index)
 
