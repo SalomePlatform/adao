@@ -559,6 +559,10 @@ class ImportDetector(object):
         #
         mimetypes.add_type('application/numpy.npy', '.npy')
         mimetypes.add_type('application/numpy.npz', '.npz')
+        if sys.platform.startswith("win"):
+            mimetypes.add_type('text/plain', '.txt')
+            mimetypes.add_type('text/csv', '.csv')
+            mimetypes.add_type('text/tab-separated-values', '.tsv')
     #
     # File related f
     # ------------------
