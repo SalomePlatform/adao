@@ -376,6 +376,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         self.StoredVariables["Analysis"].store( Xa.A1 )
         #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
         if "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
            "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
             if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
@@ -384,7 +386,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
             else:
                 HXa = Hm(Xa)
-        #
+        if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or \
+            "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+            d  = Y - HXb
         if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
