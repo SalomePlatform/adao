@@ -60,7 +60,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "CostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
-            message  = "Diminution relative minimale du cout lors de l'arrêt",
+            message  = "Diminution relative minimale du coût lors de l'arrêt",
             )
         self.defineRequiredParameter(
             name     = "ProjectedGradientTolerance",
