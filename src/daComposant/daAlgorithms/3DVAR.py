@@ -227,7 +227,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         nbPreviousSteps = self.StoredVariables["CostFunctionJ"].stepnumber()
         #
         if self._parameters["Minimizer"] == "LBFGSB":
-            Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
+            # Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
+            import lbfgsbhlt
+            Minimum, J_optimal, Informations = lbfgsbhlt.fmin_l_bfgs_b(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
