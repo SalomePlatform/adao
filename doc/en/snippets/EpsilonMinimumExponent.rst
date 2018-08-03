@@ -7,5 +7,5 @@ EpsilonMinimumExponent
   calculate the residue of the scalar product formula with a fixed increment
   multiplied from 1.e0 to 1.e-8.
 
-  Example :
+  Example:
   ``{"EpsilonMinimumExponent":-12}``

@@ -6,5 +6,5 @@ InitialDirection
   this direction defaults to a random perturbation around zero of the same
   vector size than the checking point.
 
-  Example :
+  Example:
   ``{"InitialDirection":[0.1,0.1,100.,3}``

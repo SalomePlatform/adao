@@ -4,5 +4,5 @@ NumberOfRepetition
   This key indicates the number of time to repeat the function evaluation. The
   default is 1.
 
-  Example :
+  Example:
   ``{"NumberOfRepetition":3}``

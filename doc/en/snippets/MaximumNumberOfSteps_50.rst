@@ -5,5 +5,5 @@ MaximumNumberOfSteps
   optimization. The default is 50, which is an arbitrary limit. It is then
   recommended to adapt this parameter to the needs on real problems.
 
-  Example :
+  Example:
   ``{"MaximumNumberOfSteps":50}``

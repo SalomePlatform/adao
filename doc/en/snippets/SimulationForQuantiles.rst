@@ -10,5 +10,5 @@ SimulationForQuantiles
   "SimulationQuantiles" has been chosen. The default value is "Linear", and
   the possible choices are "Linear" and "NonLinear".
 
-  Example :
+  Example:
   ``{"SimulationForQuantiles":"Linear"}``

@@ -7,5 +7,5 @@ MaximumNumberOfFunctionEvaluations
   optimizers, the effective number of function evaluations can be slightly
   different of the limit due to algorithm internal control requirements.
 
-  Example :
+  Example:
   ``{"MaximumNumberOfFunctionEvaluations":50}``

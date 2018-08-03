@@ -5,5 +5,5 @@ CostFunctionJAtCurrentOptimum
   At each step, the value corresponds to the optimal state found from the
   beginning.
 
-  Example :
+  Example:
   ``JACO = ADD.get("CostFunctionJAtCurrentOptimum")[:]``

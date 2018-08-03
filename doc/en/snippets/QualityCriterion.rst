@@ -9,5 +9,5 @@ QualityCriterion
   "WeightedLeastSquares"<=>"WLS", "LeastSquares"<=>"LS"<=>"L2",
   "AbsoluteValue"<=>"L1", "MaximumError"<=>"ME"].
 
-  Example :
+  Example:
   ``{"QualityCriterion":"DA"}``

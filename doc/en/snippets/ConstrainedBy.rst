@@ -5,5 +5,5 @@ ConstrainedBy
   constraints. The only one available is the "EstimateProjection", which
   projects the current state estimate on the bounds constraints.
 
-  Example :
+  Example:
   ``{"ConstrainedBy":"EstimateProjection"}``

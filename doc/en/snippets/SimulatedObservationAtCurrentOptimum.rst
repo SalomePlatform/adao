@@ -5,5 +5,5 @@ SimulatedObservationAtCurrentOptimum
   the optimal state obtained at the current step the optimization algorithm,
   that is, in the observation space.
 
-  Example :
+  Example:
   ``hxo = ADD.get("SimulatedObservationAtCurrentOptimum")[-1]``

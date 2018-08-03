@@ -6,5 +6,5 @@ GradientNormTolerance
   limit. It is only used for non-constrained optimizers.  The default is
   1.e-5 and it is not recommended to change it.
 
-  Example :
+  Example:
   ``{"GradientNormTolerance":1.e-5}``

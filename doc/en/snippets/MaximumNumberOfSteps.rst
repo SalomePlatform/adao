@@ -8,5 +8,5 @@ MaximumNumberOfSteps
   slightly different of the limit due to algorithm internal control
   requirements.
 
-  Example :
+  Example:
   ``{"MaximumNumberOfSteps":100}``

@@ -5,5 +5,5 @@ IndexOfOptimum
   obtained at the current step the optimization algorithm. It is not
   necessarily the number of the last iteration.
 
-  Example :
+  Example:
   ``i = ADD.get("IndexOfOptimum")[-1]``

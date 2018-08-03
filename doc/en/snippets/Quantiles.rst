@@ -7,5 +7,5 @@ Quantiles
   This option is useful only if the supplementary calculation
   "SimulationQuantiles" has been chosen. The default is a void list.
 
-  Example :
+  Example:
   ``{"Quantiles":[0.1,0.9]}``

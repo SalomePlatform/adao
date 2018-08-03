@@ -5,5 +5,5 @@ SimulationQuantiles
   state which realize the required quantile, in the same order than the
   quantiles values required by the user.
 
-  Example :
+  Example:
   ``sQuantiles = ADD.get("SimulationQuantiles")[:]``

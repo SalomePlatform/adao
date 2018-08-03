@@ -7,5 +7,5 @@ SimulatedObservationAtOptimum
   It is the forecast from the analysis or the optimal state, and it is
   sometimes called "*Forecast*".
 
-  Example :
+  Example:
   ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``

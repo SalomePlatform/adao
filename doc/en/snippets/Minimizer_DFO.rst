@@ -14,5 +14,5 @@ Minimizer
   it is the outer loop limit than is controlled. If precise control on this
   cost function evaluation number is required, choose an another minimizer.
 
-  Example :
+  Example:
   ``{"Minimizer":"BOBYQA"}``

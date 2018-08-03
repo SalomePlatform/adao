@@ -7,5 +7,5 @@ NumberOfSamplesForQuantiles
   sufficient for correct estimation of common quantiles at 5%, 10%, 90% or
   95%.
 
-  Example :
+  Example:
   ``{"NumberOfSamplesForQuantiles":100}``

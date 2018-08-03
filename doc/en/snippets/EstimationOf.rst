@@ -5,5 +5,5 @@ EstimationOf
   either state-estimation, with a value of "State", or parameter-estimation,
   with a value of "Parameters". The default choice is "State".
 
-  Example :
+  Example:
   ``{"EstimationOf":"Parameters"}``

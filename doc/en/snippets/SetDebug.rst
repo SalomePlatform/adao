@@ -5,5 +5,5 @@ SetDebug
   function or operator evaluation. The default is "False", the choices are
   "True" or "False".
 
-  Example :
+  Example:
   ``{"SetDebug":False}``

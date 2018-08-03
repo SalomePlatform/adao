@@ -7,5 +7,5 @@ ProjectedGradientTolerance
   -1, that is the internal default of each minimizer (generally 1.e-5), and it
   is not recommended to change it.
 
-  Example :
+  Example:
   ``{"ProjectedGradientTolerance":-1}``

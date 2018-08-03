@@ -5,5 +5,5 @@ CostFunctionJoAtCurrentOptimum
   that is of the observation difference part. At each step, the value
   corresponds to the optimal state found from the beginning.
 
-  Example :
+  Example:
   ``JoACO = ADD.get("CostFunctionJoAtCurrentOptimum")[:]``

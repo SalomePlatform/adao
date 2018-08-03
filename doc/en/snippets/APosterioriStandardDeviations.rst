@@ -5,5 +5,5 @@ APosterioriStandardDeviations
   errors diagonal matrix of the optimal state, coming from the
   :math:`\mathbf{A}*` covariance matrix.
 
-  Example :
+  Example:
   ``S = ADD.get("APosterioriStandardDeviations")[-1]``

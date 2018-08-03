@@ -5,5 +5,5 @@ Innovation
   the difference between the optimal and the background, and in dynamic the
   evolution increment.
 
-  Example :
+  Example:
   ``d = ADD.get("Innovation")[-1]``

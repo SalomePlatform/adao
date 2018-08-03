@@ -6,5 +6,5 @@ CostFunctionJbAtCurrentOptimum
   beginning. If this part does not exist in the error function, its value is
   zero.
 
-  Example :
+  Example:
   ``JbACO = ADD.get("CostFunctionJbAtCurrentOptimum")[:]``

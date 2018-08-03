@@ -6,4 +6,5 @@ CostDecrementTolerance
   this tolerance at the last step. The default is 1.e-6, and it is
   recommended to adapt it to the needs on real problems.
 
-  Example : ``{"CostDecrementTolerance":1.e-6}``
+  Example:
+  ``{"CostDecrementTolerance":1.e-6}``

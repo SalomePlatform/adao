@@ -7,5 +7,5 @@ Bounds
   there is no bound. The bounds can always be specified, but they are taken
   into account only by the constrained optimizers.
 
-  Example :
+  Example:
   ``{"Bounds":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``

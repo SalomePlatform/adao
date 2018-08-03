@@ -8,5 +8,5 @@ SetSeed
   the reproducibility of results involving random samples, it is strongly
   advised to initialize the seed.
 
-  Example :
+  Example:
   ``{"SetSeed":1000}``

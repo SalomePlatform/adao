@@ -5,5 +5,5 @@ SimulatedObservationAtCurrentState
   observation operator from the current state, that is, in the observation
   space.
 
-  Example :
+  Example:
   ``hxs = ADD.get("SimulatedObservationAtCurrentState")[-1]``

@@ -5,5 +5,5 @@ Analysis
   :math:`\mathbf{x}*` in optimization or an analysis :math:`\mathbf{x}^a` in
   data assimilation.
 
-  Example :
+  Example:
   ``Xa = ADD.get("Analysis")[-1]``

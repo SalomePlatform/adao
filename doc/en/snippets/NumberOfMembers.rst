@@ -5,5 +5,5 @@ NumberOfMembers
   The default is 100, and it is recommended to adapt it to the needs on real
   problems.
 
-  Example :
+  Example:
   ``{"NumberOfMembers":100}``

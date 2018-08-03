@@ -5,5 +5,5 @@ CostFunctionJb
   that is of the background difference part. If this part does not exist in the
   error function, its value is zero.
 
-  Example :
+  Example:
   ``Jb = ADD.get("CostFunctionJb")[:]``
