@@ -27,18 +27,15 @@
 Algorithme de calcul "*DerivativeFreeOptimization*"
 ---------------------------------------------------
 
-.. warning::
-
-  dans sa présente version, cet algorithme est expérimental, et reste donc
-  susceptible de changements dans les prochaines versions.
-
 Description
 +++++++++++
 
-Cet algorithme réalise une estimation d'état d'un système par minimisation d'une
-fonctionnelle d'écart :math:`J` sans gradient. C'est une méthode qui n'utilise
-pas les dérivées de la fonctionnelle d'écart. Elle entre, par exemple, dans la
-même catégorie que l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+Cet algorithme réalise une estimation d'état d'un système par minimisation
+d'une fonctionnelle d'écart :math:`J` sans gradient. C'est une méthode qui
+n'utilise pas les dérivées de la fonctionnelle d'écart. Elle entre, par
+exemple, dans la même catégorie que
+l':ref:`section_ref_algorithm_ParticleSwarmOptimization` ou
+l':ref:`section_ref_algorithm_DifferentialEvolution`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
@@ -93,10 +90,10 @@ Les options de l'algorithme sont les suivantes:
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
     possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
-    "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
-    "CurrentOptimum", "CurrentState", "IndexOfOptimum",
-    "InnovationAtCurrentState", "OMA", "OMB",
+    "CostFunctionJAtCurrentOptimum", "CostFunctionJb",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJo",
+    "CostFunctionJoAtCurrentOptimum", "CurrentOptimum", "CurrentState",
+    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "OMA", "OMB",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
@@ -128,6 +125,8 @@ Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
+  .. include:: snippets/BMA.rst
+
   .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
   .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
@@ -137,6 +136,8 @@ Les sorties conditionnelles de l'algorithme sont les suivantes:
   .. include:: snippets/CurrentOptimum.rst
 
   .. include:: snippets/IndexOfOptimum.rst
+
+  .. include:: snippets/Innovation.rst
 
   .. include:: snippets/InnovationAtCurrentState.rst
 
@@ -157,6 +158,7 @@ Voir aussi
 
 Références vers d'autres sections :
   - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
+  - :ref:`section_ref_algorithm_DifferentialEvolution`
 
 Références bibliographiques :
   - [Johnson08]_

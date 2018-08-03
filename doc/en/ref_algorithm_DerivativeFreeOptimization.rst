@@ -27,18 +27,14 @@
 Calculation algorithm "*DerivativeFreeOptimization*"
 ----------------------------------------------------
 
-.. warning::
-
-  in its present version, this algorithm is experimental, and so changes can be
-  required in forthcoming versions.
-
 Description
 +++++++++++
 
 This algorithm realizes an estimation of the state of a system by minimization
 of a cost function :math:`J` without gradient. It is a method that does not use
-the derivatives of the cost function. It fall, for example, in the same category
-than the :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+the derivatives of the cost function. It falls in the same category than the
+:ref:`section_ref_algorithm_ParticleSwarmOptimization` or the
+:ref:`section_ref_algorithm_DifferentialEvolution`.
 
 This is an optimization method allowing for global minimum search of a general
 error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
@@ -92,10 +88,10 @@ The options of the algorithm are the following:
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
     are in the following list: ["BMA", "CostFunctionJ",
-    "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
-    "CurrentOptimum", "CurrentState", "IndexOfOptimum",
-    "InnovationAtCurrentState", "OMA", "OMB",
+    "CostFunctionJAtCurrentOptimum", "CostFunctionJb",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJo",
+    "CostFunctionJoAtCurrentOptimum", "CurrentOptimum", "CurrentState",
+    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "OMA", "OMB",
     "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
     "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
@@ -127,6 +123,8 @@ The unconditional outputs of the algorithm are the following:
 
 The conditional outputs of the algorithm are the following:
 
+  .. include:: snippets/BMA.rst
+
   .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
   .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
@@ -136,6 +134,8 @@ The conditional outputs of the algorithm are the following:
   .. include:: snippets/CurrentOptimum.rst
 
   .. include:: snippets/IndexOfOptimum.rst
+
+  .. include:: snippets/Innovation.rst
 
   .. include:: snippets/InnovationAtCurrentState.rst
 
@@ -156,6 +156,7 @@ See also
 
 References to other sections:
   - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
+  - :ref:`section_ref_algorithm_DifferentialEvolution`
 
 Bibliographical references:
   - [Johnson08]_

@@ -43,6 +43,8 @@ Bibliographie
 
 .. [Cade03] Cade B. S., Noon B. R., *A Gentle Introduction to Quantile Regression for Ecologists*, Frontiers in Ecology and the Environment, 1(8), pp.412-420, 2003
 
+.. [Chakraborty08] Chakraborty U.K., *Advances in differential evolution*, Studies in computational intelligence, Vol.143, Springer, 2008
+
 .. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using monte carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), 10,143–10,162, 1994
 
 .. [Evensen03] Evensen G., *The Ensemble Kalman Filter: theoretical formulation and practical implementation*, Seminar on Recent developments in data assimilation for atmosphere and ocean, ECMWF, 8 to 12 September 2003
@@ -73,6 +75,8 @@ Bibliographie
 
 .. [Powell09] Powell M. J. D., *The BOBYQA algorithm for bound constrained optimization without derivatives*, Cambridge University Technical Report DAMTP NA2009/06, 2009
 
+.. [Price05] Price K.V., Storn R., Lampinen J., *Differential evolution: a practical approach to global optimization*, Springer, 2005
+
 .. [Python] *Python programming language*, http://www.python.org/
 
 .. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
@@ -82,6 +86,8 @@ Bibliographie
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 
 .. [SalomeMeca] *Salome_Meca et Code_Aster, Analyse des Structures et Thermomécanique pour les Etudes et la Recherche*, http://www.code-aster.org/
+
+.. [Storn97] Storn R., Price, K., *Differential Evolution – A Simple and Efficient Heuristic for global Optimization over Continuous Spaces*, Journal of Global Optimization, 11(1), pp.341-359, 1997
 
 .. [Tarantola87] Tarantola A., *Inverse Problem: Theory Methods for Data Fitting and Parameter Estimation*, Elsevier, 1987
 

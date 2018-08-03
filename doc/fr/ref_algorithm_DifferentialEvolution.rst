@@ -21,21 +21,26 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: ParticleSwarmOptimization
-.. _section_ref_algorithm_ParticleSwarmOptimization:
+.. index:: single: DifferentialEvolution
+.. _section_ref_algorithm_DifferentialEvolution:
 
-Algorithme de calcul "*ParticleSwarmOptimization*"
---------------------------------------------------
+Algorithme de calcul "*DifferentialEvolution*"
+----------------------------------------------
+
+.. warning::
+
+  dans sa présente version, cet algorithme est expérimental, et reste donc
+  susceptible de changements dans les prochaines versions.
 
 Description
 +++++++++++
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
 d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
-d'essaim particulaire. C'est une méthode qui n'utilise pas les dérivées de la
-fonctionnelle d'écart. Elle entre dans la même catégorie que
+d'évolution différentielle. C'est une méthode qui n'utilise pas les dérivées de
+la fonctionnelle d'écart. Elle entre dans la même catégorie que
 l':ref:`section_ref_algorithm_DerivativeFreeOptimization` ou
-l':ref:`section_ref_algorithm_DifferentialEvolution`.
+l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
@@ -67,51 +72,22 @@ options particulières, décrites ci-après, de l'algorithme. On se reportera à
 commande.
 
 Les options de l'algorithme sont les suivantes:
-.. index:: single: NumberOfInsects
-.. index:: single: SwarmVelocity
-.. index:: single: GroupRecallRate
-.. index:: single: QualityCriterion
-.. index:: single: BoxBounds
 
-  .. include:: snippets/MaximumNumberOfSteps_50.rst
+  .. include:: snippets/Minimizer_DE.rst
+
+  .. include:: snippets/BoundsWithExtremes.rst
+
+  .. include:: snippets/CrossOverProbability_CR.rst
+
+  .. include:: snippets/MaximumNumberOfSteps.rst
 
   .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
+  .. include:: snippets/MutationDifferentialWeight_F.rst
+
+  .. include:: snippets/PopulationSize.rst
+
   .. include:: snippets/QualityCriterion.rst
-
-  NumberOfInsects
-    Cette clé indique le nombre d'insectes ou de particules dans l'essaim. La
-    valeur par défaut est 100, qui est une valeur par défaut usuelle pour cet
-    algorithme.
-
-    Exemple :
-    ``{"NumberOfInsects":100}``
-
-  SwarmVelocity
-    Cette clé indique la part de la vitesse d'insecte qui est imposée par
-    l'essaim. C'est une valeur réelle positive. Le défaut est de 1.
-
-    Exemple :
-    ``{"SwarmVelocity":1.}``
-
-  GroupRecallRate
-    Cette clé indique le taux de rappel vers le meilleur insecte de l'essaim.
-    C'est une valeur réelle comprise entre 0 et 1. Le défaut est de 0.5.
-
-    Exemple :
-    ``{"GroupRecallRate":0.5}``
-
-  BoxBounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    incrément de  variable d'état optimisée (et non pas chaque variable d'état
-    elle-même). Les bornes doivent être données par une liste de liste de paires
-    de bornes inférieure/supérieure pour chaque incrément de variable, avec une
-    valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas une
-    valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
-    n'y a pas de valeurs par défaut.
-
-    Exemple :
-    ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
   .. include:: snippets/SetSeed.rst
 
@@ -122,10 +98,13 @@ Les options de l'algorithme sont les suivantes:
     disponibles à la fin de l'algorithme. Cela implique potentiellement des
     calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
     aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "OMA", "OMB", "Innovation",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
+    "CostFunctionJAtCurrentOptimum", "CostFunctionJb",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJo",
+    "CostFunctionJoAtCurrentOptimum", "CurrentOptimum", "CurrentState",
+    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
+    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
     Exemple :
     ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
@@ -151,19 +130,33 @@ Les sorties non conditionnelles de l'algorithme sont les suivantes:
 
   .. include:: snippets/CostFunctionJo.rst
 
+  .. include:: snippets/CurrentState.rst
+
 Les sorties conditionnelles de l'algorithme sont les suivantes:
 
   .. include:: snippets/BMA.rst
 
-  .. include:: snippets/CurrentState.rst
+  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+
+  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
+  .. include:: snippets/CurrentOptimum.rst
+
+  .. include:: snippets/IndexOfOptimum.rst
 
   .. include:: snippets/Innovation.rst
+
+  .. include:: snippets/InnovationAtCurrentState.rst
 
   .. include:: snippets/OMA.rst
 
   .. include:: snippets/OMB.rst
 
   .. include:: snippets/SimulatedObservationAtBackground.rst
+
+  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
   .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
@@ -174,7 +167,9 @@ Voir aussi
 
 Références vers d'autres sections :
   - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
-  - :ref:`section_ref_algorithm_DifferentialEvolution`
+  - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
 
 Références bibliographiques :
-  - [WikipediaPSO]_
+  - [Chakraborty08]_
+  - [Price05]_
+  - [Storn97]_

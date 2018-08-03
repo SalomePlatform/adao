@@ -21,21 +21,26 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: ParticleSwarmOptimization
-.. _section_ref_algorithm_ParticleSwarmOptimization:
+.. index:: single: DifferentialEvolution
+.. _section_ref_algorithm_DifferentialEvolution:
 
-Calculation algorithm "*ParticleSwarmOptimization*"
----------------------------------------------------
+Calculation algorithm "*DifferentialEvolution*"
+----------------------------------------------------
+
+.. warning::
+
+  in its present version, this algorithm is experimental, and so changes can be
+  required in forthcoming versions.
 
 Description
 +++++++++++
 
 This algorithm realizes an estimation of the state of a system by minimization
-of a cost function :math:`J` by using an evolutionary strategy of particle
-swarm. It is a method that does not use the derivatives of the cost function.
-It falls in the same category than the
+of a cost function :math:`J` by using an evolutionary strategy of differential
+evolution. It is a method that does not use the derivatives of the cost
+function. It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization` or the
-:ref:`section_ref_algorithm_DifferentialEvolution`.
+:ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 This is an optimization method allowing for global minimum search of a general
 error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
@@ -66,49 +71,22 @@ described hereafter, of the algorithm. See
 command.
 
 The options of the algorithm are the following:
-.. index:: single: NumberOfInsects
-.. index:: single: SwarmVelocity
-.. index:: single: GroupRecallRate
-.. index:: single: QualityCriterion
-.. index:: single: BoxBounds
 
-  .. include:: snippets/MaximumNumberOfSteps_50.rst
+  .. include:: snippets/Minimizer_DE.rst
+
+  .. include:: snippets/BoundsWithExtremes.rst
+
+  .. include:: snippets/CrossOverProbability_CR.rst
+
+  .. include:: snippets/MaximumNumberOfSteps.rst
 
   .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
+  .. include:: snippets/MutationDifferentialWeight_F.rst
+
+  .. include:: snippets/PopulationSize.rst
+
   .. include:: snippets/QualityCriterion.rst
-
-  NumberOfInsects
-    This key indicates the number of insects or particles in the swarm. The
-    default is 100, which is a usual default for this algorithm.
-
-    Example :
-    ``{"NumberOfInsects":100}``
-
-  SwarmVelocity
-    This key indicates the part of the insect velocity which is imposed by the
-    swarm. It is a positive floating point value. The default value is 1.
-
-    Example :
-    ``{"SwarmVelocity":1.}``
-
-  GroupRecallRate
-    This key indicates the recall rate at the best swarm insect. It is a
-    floating point value between 0 and 1. The default value is 0.5.
-
-    Example :
-    ``{"GroupRecallRate":0.5}``
-
-  BoxBounds
-    This key allows to define upper and lower bounds for *increments* on every
-    state variable being optimized (and not on state variables themselves).
-    Bounds have to be given by a list of list of pairs of lower/upper bounds for
-    each increment on variable, with extreme values every time there is no bound
-    (``None`` is not allowed when there is no bound). This key is required and
-    there is no default values.
-
-    Example :
-    ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
   .. include:: snippets/SetSeed.rst
 
@@ -119,10 +97,13 @@ The options of the algorithm are the following:
     available at the end of the algorithm. It involves potentially costly
     calculations or memory consumptions. The default is a void list, none of
     these variables being calculated and stored by default. The possible names
-    are in the following list: ["BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "OMA", "OMB", "Innovation",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+    are in the following list: ["BMA", "CostFunctionJ",
+    "CostFunctionJAtCurrentOptimum", "CostFunctionJb",
+    "CostFunctionJbAtCurrentOptimum", "CostFunctionJo",
+    "CostFunctionJoAtCurrentOptimum", "CurrentOptimum", "CurrentState",
+    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "OMA", "OMB",
+    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
+    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
 
     Example :
     ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
@@ -148,19 +129,33 @@ The unconditional outputs of the algorithm are the following:
 
   .. include:: snippets/CostFunctionJo.rst
 
+  .. include:: snippets/CurrentState.rst
+
 The conditional outputs of the algorithm are the following:
 
   .. include:: snippets/BMA.rst
 
-  .. include:: snippets/CurrentState.rst
+  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+
+  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
+  .. include:: snippets/CurrentOptimum.rst
+
+  .. include:: snippets/IndexOfOptimum.rst
 
   .. include:: snippets/Innovation.rst
+
+  .. include:: snippets/InnovationAtCurrentState.rst
 
   .. include:: snippets/OMA.rst
 
   .. include:: snippets/OMB.rst
 
   .. include:: snippets/SimulatedObservationAtBackground.rst
+
+  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
   .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
@@ -171,7 +166,9 @@ See also
 
 References to other sections:
   - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
-  - :ref:`section_ref_algorithm_DifferentialEvolution`
+  - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
 
 Bibliographical references:
-  - [WikipediaPSO]_
+  - [Chakraborty08]_
+  - [Price05]_
+  - [Storn97]_
