@@ -26,14 +26,16 @@ EXTRA_DIST = daCore daAlgorithms daNumerics
 
 DIR = $(top_srcdir)/src/daComposant/
 
+ADAODIR = $(DESTDIR)$(salomepythondir)/adao
+
 install-data-local:
-	${mkinstalldirs} $(DESTDIR)$(salomepythondir)
-	cp -R $(DIR)daCore $(DESTDIR)$(salomepythondir)
-	cp -R $(DIR)daAlgorithms $(DESTDIR)$(salomepythondir)
-	cp -R $(DIR)daNumerics $(DESTDIR)$(salomepythondir)
+	${mkinstalldirs} $(ADAODIR)
+	cp -R $(DIR)daCore $(ADAODIR)
+	cp -R $(DIR)daAlgorithms $(ADAODIR)
+	cp -R $(DIR)daNumerics $(ADAODIR)
 
 uninstall-local:
-	chmod -R +w $(DESTDIR)$(salomepythondir)
-	rm -rf $(DESTDIR)$(salomepythondir)/daCore
-	rm -rf $(DESTDIR)$(salomepythondir)/daAlgorithms
-	rm -rf $(DESTDIR)$(salomepythondir)/daNumerics
+	chmod -R +w $(ADAODIR)
+	rm -rf $(ADAODIR)/daCore
+	rm -rf $(ADAODIR)/daAlgorithms
+	rm -rf $(ADAODIR)/daNumerics

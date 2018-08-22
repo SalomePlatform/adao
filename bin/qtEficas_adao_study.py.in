@@ -30,7 +30,7 @@ import sys
 # Configuration de l'installation
 INSTALLDIR = "@EFICAS_DIR@"
 sys.path.insert(0,INSTALLDIR)
-ADAO_INSTALL_DIR = "@PYTHON_SITE@/salome/daEficas"
+ADAO_INSTALL_DIR = "@PYTHON_SITE@/salome/adao/daEficas"
 sys.path.insert(0,ADAO_INSTALL_DIR)
 
 # Configuration

@@ -23,7 +23,9 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-mypkgpythondir =$(salomepythondir)/daEficas
+ADAODIR = $(DESTDIR)$(salomepythondir)/adao
+
+mypkgpythondir = $(ADAODIR)/daEficas
 
 mypkgpython_PYTHON = \
 		configuration_ADAO.py \

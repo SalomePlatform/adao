@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-mypkgpythondir =$(salomepythondir)/daGuiImpl
+ADAODIR = $(DESTDIR)$(salomepythondir)/adao
+
+mypkgpythondir = $(ADAODIR)/daGuiImpl
 
 mypkgpython_PYTHON = \
 		     __init__.py \
