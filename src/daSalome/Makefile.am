@@ -37,9 +37,11 @@ install-data-local:
 	cp -R $(DIR)daYacsSchemaCreator $(ADAODIR)
 	cp -R $(DIR)daYacsIntegration $(ADAODIR)
 	cp    $(DIR)adaoBuilder.py $(ADAODIR)
+	cp    $(DIR)__init__.py $(ADAODIR)
 
 uninstall-local:
 	chmod -R +w $(ADAODIR)
 	rm -rf $(ADAODIR)/daYacsSchemaCreator
 	rm -rf $(ADAODIR)/daYacsIntegration
 	rm  -f $(ADAODIR)/adaoBuilder.py
+	rm  -f $(ADAODIR)/__init__.py
