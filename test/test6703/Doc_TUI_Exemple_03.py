@@ -50,7 +50,7 @@ observations = simulation((2, 3, 4))
 def test1():
     "Test"
     import numpy
-    import adaoBuilder
+    from adao import adaoBuilder
     #
     # Mise en forme des entrees
     # -------------------------

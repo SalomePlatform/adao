@@ -27,7 +27,7 @@ from utExtend import assertAlmostEqualArrays
 def test1():
     """Test"""
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     case.set( 'Background',          Vector=[0, 1, 2] )
@@ -43,7 +43,7 @@ def test1():
 def test2():
     """Test"""
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     case.set( 'Background',          Vector=[0, 1, 2] )

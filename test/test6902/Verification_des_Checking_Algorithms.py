@@ -20,7 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import adaoBuilder
+from adao import adaoBuilder
 
 # ==============================================================================
 def test1():

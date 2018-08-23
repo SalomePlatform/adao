@@ -22,7 +22,8 @@
 "Verification de la disponibilite de l'ensemble des algorithmes"
 
 # ==============================================================================
-import adaoBuilder, numpy, sys
+import numpy, sys
+from adao import adaoBuilder
 def test1():
     """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
     print(test1.__doc__)
