@@ -61,9 +61,9 @@
 <![CDATA[
 import numpy, logging
 logging.debug("CREATE YI Entering in CreateAssimilationStudy")
-print "Entering in the assimilation study"
-print "Name is set to........:", Name
-print "Algorithm is set to...:", Algorithm
+print("Entering in the assimilation study")
+print("Name is set to........:", Name)
+print("Algorithm is set to...:", Algorithm)
 
 try:
     # Create Assimilation study
@@ -590,7 +590,7 @@ output["errorMessage"]        = ""
 
   <inline name="SetObserversNode">
     <script><code><![CDATA[
-#print "Setting observers"
+#print("Setting observers")
 ]]></code></script>
     <outport name="has_observers" type="bool"/>
     <outport name="observers" type="pyobj"/>

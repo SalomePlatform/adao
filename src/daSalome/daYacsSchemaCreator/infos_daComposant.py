@@ -75,6 +75,7 @@ AssimAlgos = [
     "NonLinearLeastSquares",
     "QuantileRegression",
     "ParticleSwarmOptimization",
+    "DifferentialEvolution",
     ]
 CheckAlgos = [
     "FunctionTest",
@@ -151,6 +152,11 @@ AlgoDataRequirements["ParticleSwarmOptimization"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
+AlgoDataRequirements["DifferentialEvolution"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
 AlgoDataRequirements["QuantileRegression"] = [
     "Background",
     "Observation",
@@ -200,6 +206,7 @@ AlgoType["UnscentedKalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
 AlgoType["ParticleSwarmOptimization"] = "Optim"
+AlgoType["DifferentialEvolution"] = "Optim"
 AlgoType["QuantileRegression"] = "Optim"
 
 # Variables qui sont partages avec le generateur de
