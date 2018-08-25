@@ -36,6 +36,7 @@ if "ADAO_ROOT_DIR" not in os.environ:
     sys.exit(1)
 
 try:
+    import adao
     from daYacsSchemaCreator import run
 except ImportError as e:
     logging.fatal("\n  Import of YACS schema creator module failed, the error message is:\n" +

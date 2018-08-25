@@ -33,6 +33,7 @@ reasons:
    modules, for example for test purposes.
 """
 
+import adao
 from daGuiImpl import ADAOGUI_impl as GuiImpl
 from daUtils import adaoLogger
 
