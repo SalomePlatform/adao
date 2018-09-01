@@ -229,7 +229,7 @@ directement issues de l'exemple simple::
     library(rPython)
     python.exec("
         from numpy import array
-        import adaoBuilder
+        from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
         case.set( 'Background',          Vector=[0, 1, 2] )
@@ -276,7 +276,7 @@ R aussi. Les autres lignes sont identiques. L'exemple devient ainsi::
     python.assign( "h",  h )
     python.exec("
         from numpy import array
-        import adaoBuilder
+        from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
         case.set( 'Background',          Vector=xb )

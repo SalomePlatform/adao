@@ -56,7 +56,7 @@ corps du script pour faciliter la lecture. L'ensemble des commandes est le
 suivant::
 
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     case.set( 'Background',          Vector=[0, 1, 2] )
@@ -85,7 +85,7 @@ le nom ``case`` de l'objet du cas de calcul TUI ADAO étant quelconque, au choix
 de l'utilisateur::
 
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
 
 Il est recommandé d'importer par principe le module ``numpy`` ou ses
@@ -284,7 +284,7 @@ méthode "*New()*" comme illustré dans les quelques lignes suivantes (le nom
 ``case`` de l'objet étant quelconque, au choix de l'utilisateur)::
 
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
 
 Il est recommandé par principe de toujours importer le module ``numpy`` (ou ses
@@ -644,7 +644,7 @@ observations par simulation pour se placer dans un cas d'expériences jumelles::
 Le jeu de commandes que l'on peut utiliser est le suivant::
 
     import numpy
-    import adaoBuilder
+    from adao import adaoBuilder
     #
     # Mise en forme des entrées
     # -------------------------

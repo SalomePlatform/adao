@@ -55,7 +55,7 @@ order to make the reading easier. The whole set of commands is the following
 one::
 
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     case.set( 'Background',          Vector=[0, 1, 2] )
@@ -84,7 +84,7 @@ commands, the ``case`` object name of the ADAO TUI calculation case being let
 free to the user choice::
 
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
 
 It is recommended to import by default the ``numpy`` module or some of its
@@ -273,7 +273,7 @@ its method "*New()*" as illustrated in the following lines (the ``case`` object
 name being let free to the user choice)::
 
     from numpy import array, matrix
-    import adaoBuilder
+    from adao import adaoBuilder
     case = adaoBuilder.New()
 
 It is recommended by default to always import the ``numpy`` module (or some of
@@ -619,7 +619,7 @@ observations by simulation in order to set a twin experiments case::
 The set of commands that can be used is the following::
 
     import numpy
-    import adaoBuilder
+    from adao import adaoBuilder
     #
     # Formatting entries
     # ------------------

@@ -217,7 +217,7 @@ the simple example::
     library(rPython)
     python.exec("
         from numpy import array
-        import adaoBuilder
+        from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
         case.set( 'Background',          Vector=[0, 1, 2] )
@@ -262,7 +262,7 @@ in a R variable. The other lines are identical. The example thus becomes::
     python.assign( "h",  h )
     python.exec("
         from numpy import array
-        import adaoBuilder
+        from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
         case.set( 'Background',          Vector=xb )
