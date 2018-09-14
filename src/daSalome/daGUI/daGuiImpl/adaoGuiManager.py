@@ -194,13 +194,13 @@ class AdaoCaseManager(EficasObserver):
   def _processEficasNewEvent(self, eficasWrapper, eficasEvent):
     adao_case = eficasEvent.callbackId
     # Ajout dand l'etude
-    salomeStudyId   = adaoGuiHelper.getActiveStudyId()
-    salomeStudyItem = adaoStudyEditor.addInStudy(salomeStudyId, adao_case)
+    #~ salomeStudyId   = adaoGuiHelper.getActiveStudyId()
+    salomeStudyItem = adaoStudyEditor.addInStudy( adao_case ) # salomeStudyId, adao_case)
     # Affichage correct dans l'etude
     adaoGuiHelper.refreshObjectBrowser()
     adaoGuiHelper.selectItem(salomeStudyItem.GetID())
     # Finalisation des donnees du cas
-    adao_case.salome_study_id   = salomeStudyId
+    #~ adao_case.salome_study_id   = salomeStudyId
     adao_case.salome_study_item = salomeStudyItem
     # Ajout du cas
     self.cases[adao_case.eficas_editor] = adao_case
@@ -260,7 +260,7 @@ class AdaoCaseManager(EficasObserver):
   def _processEficasSaveEvent(self, eficasWrapper, eficasEvent):
     adao_case = eficasEvent.callbackId
     # On met a jour l'etude
-    adaoStudyEditor.updateItem(adao_case.salome_study_id, adao_case.salome_study_item, adao_case)
+    adaoStudyEditor.updateItem(adao_case.salome_study_item, adao_case) # adao_case.salome_study_id, adao_case.salome_study_item, adao_case)
     # Affichage correct dans l'etude
     adaoGuiHelper.refreshObjectBrowser()
     adaoGuiHelper.selectItem(adao_case.salome_study_item.GetID())
@@ -294,7 +294,7 @@ class AdaoCaseManager(EficasObserver):
     # Recuperation du cas
     adao_case = self.cases[editor]
     # Suppression de l'objet dans l'etude
-    adaoStudyEditor.removeItem(adao_case.salome_study_id, adao_case.salome_study_item)
+    adaoStudyEditor.removeItem(adao_case.salome_study_item) # adao_case.salome_study_id, adao_case.salome_study_item)
     # Suppression du cas
     self.cases.pop(editor)
     # Refresh GUI -> appelle currentSelectionChanged()
@@ -448,8 +448,8 @@ class AdaoGuiUiComponentBuilder:
         a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close the selected case", "" )
         a = sgPyQt.createAction( UI_ELT_IDS.YACS_EXPORT_ID, "Export to YACS", "Export to YACS", "Generate a YACS graph executing this case", "" )
 
-    def createPopupMenuOnItem(self,popup,salomeSudyId, item):
-        if adaoStudyEditor.isValidAdaoCaseItem(salomeSudyId, item):
+    def createPopupMenuOnItem(self,popup,item): # salomeSudyId, item):
+        if adaoStudyEditor.isValidAdaoCaseItem(item): # Attention : appel ancien avec un coquille (StudyId) : (salomeSudyId, item):
           popup.addAction( sgPyQt.action( UI_ELT_IDS.CLOSE_ADAOCASE_ID ) )
           popup.addAction( sgPyQt.action( UI_ELT_IDS.YACS_EXPORT_ID ) )
         return popup

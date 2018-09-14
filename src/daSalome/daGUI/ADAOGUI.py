@@ -74,9 +74,9 @@ def deactivate():
 
 # called when active study is changed
 # active study ID is passed as parameter
-def activeStudyChanged( studyID ):
-  adaoLogger.debug("activeStudyChanged")
-  GuiImpl.activeStudyChanged( studyID )
+#~ def activeStudyChanged( studyID ):
+  #~ adaoLogger.debug("activeStudyChanged")
+  #~ GuiImpl.activeStudyChanged( studyID )
 
 # called when popup menu is invoked
 # popup menu and menu context are passed as parameters

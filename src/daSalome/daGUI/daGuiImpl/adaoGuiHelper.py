@@ -49,12 +49,12 @@ def gui_information(parent, msg="Information" ):
     """
     QMessageBox.information( parent, "Information", msg, QMessageBox.Close)
 
-def getActiveStudyId():
-    """
-    This function returns the id of the active study. The concept of active study
-    makes sens only in the GUI context.
-    """
-    return salome.sg.getActiveStudyId()
+#~ def getActiveStudyId():
+    #~ """
+    #~ This function returns the id of the active study. The concept of active study
+    #~ makes sens only in the GUI context.
+    #~ """
+    #~ return salome.sg.getActiveStudyId()
 
 def refreshObjectBrowser():
     """
@@ -62,14 +62,15 @@ def refreshObjectBrowser():
     GUI is working.
     """
     if salome.sg is not None:
-        salome.sg.updateObjBrowser(0)
+        # salome.sg.updateObjBrowser(0)
+        salome.sg.updateObjBrowser()
 
 def selectItem(salomeStudyItem):
   if salome.sg is not None:
     salome.sg.ClearIObjects()
     salome.sg.AddIObject(salomeStudyItem)
 
-def getSelectedItem(salomeStudyId=-100):
+def getSelectedItem():# salomeStudyId=-100):
     """
     Get the current selection. If more than one item are selected, the
     only first is considered. The object is return (not the id).
@@ -78,8 +79,8 @@ def getSelectedItem(salomeStudyId=-100):
     if salome.sg is None:
         raise Exception("GuiHelper.getSelectedItem can't be used without the GUI context")
 
-    if salomeStudyId != -100:
-      studyEditor = salome.kernel.studyedit.getStudyEditor(salomeStudyId)
+    #~ if salomeStudyId != -100:
+      #~ studyEditor = salome.kernel.studyedit.getStudyEditor(salomeStudyId)
     studyEditor = salome.kernel.studyedit.getStudyEditor()
     item = None
     listEntries=salome.sg.getAllSelected()
@@ -88,18 +89,18 @@ def getSelectedItem(salomeStudyId=-100):
         item = studyEditor.study.FindObjectID( entry )
     return item
 
-def getAllSelected(salomeStudyId):
+def getAllSelected():# salomeStudyId):
     """
     Returns all selected items in the specified study.
     """
     if salome.sg is None:
         raise OmaException("getSelectedItem can't be used without the GUI context", OmaException.TYPES.DEVEL)
 
-    study = adaoModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
+    # study = adaoModuleHelper.getStudyManager().GetStudyByID( salomeStudyId )
     selcount = salome.sg.SelectedCount()
     seltypes = {}
     for i in range( selcount ):
-        __incObjToMap( seltypes, adaoModuleHelper.getObjectID( study, salome.sg.getSelected( i ) ) )
+        __incObjToMap( seltypes, adaoModuleHelper.getObjectID( salome.sg.getSelected( i ) ) ) # study, salome.sg.getSelected( i ) ) )
         pass
     return selcount, seltypes
 

@@ -46,16 +46,17 @@ class GUIcontext:
     def __init__(self):
         self.adaoCaseManager = AdaoCaseManager()
 
-__study2context__   = {}
-__current_context__ = None
-def _setContext( studyID ):
-    global __study2context__, __current_context__
-    QApplication.processEvents()
-    if studyID not in __study2context__:
-        __study2context__[studyID] = GUIcontext()
-        pass
-    __current_context__ = __study2context__[studyID]
-    return __current_context__
+#~ __study2context__   = {}
+#~ __current_context__ = None
+__current_context__ = GUIcontext()
+#~ def _setContext( studyID ):
+    #~ global __study2context__, __current_context__
+    #~ QApplication.processEvents()
+    #~ if studyID not in __study2context__:
+        #~ __study2context__[studyID] = GUIcontext()
+        #~ pass
+    #~ __current_context__ = __study2context__[studyID]
+    #~ return __current_context__
 
 # This object does not need to be embedded in a GUI context object. A single
 # instance for all studies is a priori sufficient.
@@ -91,36 +92,45 @@ def createPreferences():
 # called when module is activated
 # returns True if activating is successfull and False otherwise
 def activate():
-    ctx = _setContext( sgPyQt.getStudyId() )
+    #~ ctx = _setContext( sgPyQt.getStudyId() )
+    global __current_context__ ; ctx = __current_context__
+    QApplication.processEvents()
     ctx.adaoCaseManager.activate()
     return True
 
 # called when module is deactivated
 def deactivate():
-    ctx = _setContext( sgPyQt.getStudyId() )
+    #~ ctx = _setContext( sgPyQt.getStudyId() )
+    global __current_context__ ; ctx = __current_context__
+    QApplication.processEvents()
     ctx.adaoCaseManager.deactivate()
 
 # called when active study is changed
 # active study ID is passed as parameter
-def activeStudyChanged( studyID ):
-    ctx = _setContext( sgPyQt.getStudyId() )
+def activeStudyChanged(): # studyID ):
+    #~ ctx = _setContext( sgPyQt.getStudyId() )
+    QApplication.processEvents()
 
 # called when popup menu is invoked
 # popup menu and menu context are passed as parameters
 def createPopupMenu( popup, context ):
-  activeStudyId = sgPyQt.getStudyId()
-  ctx = _setContext(sgPyQt.getStudyId())
-  selcount, selected = adaoGuiHelper.getAllSelected(activeStudyId)
+  #~ activeStudyId = sgPyQt.getStudyId()
+  #~ ctx = _setContext(sgPyQt.getStudyId())
+  global __current_context__ ; ctx = __current_context__
+  QApplication.processEvents()
+  selcount, selected = adaoGuiHelper.getAllSelected()# activeStudyId)
   if selcount == 1:
-    selectedItem = adaoGuiHelper.getSelectedItem(activeStudyId)
-    popup = ctx.adaoCaseManager.salome_manager.createPopupMenuOnItem(popup, activeStudyId, selectedItem)
+    selectedItem = adaoGuiHelper.getSelectedItem()# activeStudyId)
+    popup = ctx.adaoCaseManager.salome_manager.createPopupMenuOnItem(popup, selectedItem) # activeStudyId, selectedItem)
 
 def OnGUIEvent(actionId) :
     """
     Called when an event is raised from a graphic item (click on menu item or
     toolbar button). The actionId value is the ID associated to the item.
     """
-    ctx = _setContext( sgPyQt.getStudyId() )
+    #~ ctx = _setContext( sgPyQt.getStudyId() )
+    global __current_context__ ; ctx = __current_context__
+    QApplication.processEvents()
     ctx.adaoCaseManager.processGUIEvent(actionId)
 
 # called when module's preferences are changed

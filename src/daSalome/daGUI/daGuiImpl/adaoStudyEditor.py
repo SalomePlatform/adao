@@ -49,14 +49,14 @@ ADAO_ITEM_TYPES = Enumerate([
 #   a SComponent is a reference in a study toward a SALOME component
 #
 
-def addInStudy(salomeStudyId, adaoCase):
+def addInStudy(adaoCase): # salomeStudyId, adaoCase):
     """
     This function adds in the specified SALOME study a study entry that corresponds
     to the specified adao case. This study case is put in a folder under
     the ADAO component and is identified by the case name.
     """
 
-    studyEditor = studyedit.getStudyEditor(salomeStudyId)
+    studyEditor = studyedit.getStudyEditor() # salomeStudyId)
 
     adaoRootEntry = studyEditor.findOrCreateComponent(
         moduleName    = adaoModuleHelper.componentName(),
@@ -79,9 +79,9 @@ def addInStudy(salomeStudyId, adaoCase):
 
     return salomeStudyItem
 
-def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
+def updateItem(salomeStudyItem, adaoCase): # salomeStudyId, salomeStudyItem, adaoCase):
 
-    studyEditor = studyedit.getStudyEditor(salomeStudyId)
+    studyEditor = studyedit.getStudyEditor() # salomeStudyId)
 
     if salomeStudyItem.GetName()[:-2] != adaoCase.name:
       itemName  = adaoCase.name
@@ -99,22 +99,22 @@ def updateItem(salomeStudyId, salomeStudyItem, adaoCase):
         comment = itemValue,
         icon    = icon)
 
-def removeItem(salomeStudyId, item):
+def removeItem(item): # salomeStudyId, item):
     """
     Remove the item from the specified study.
     """
-    studyEditor = studyedit.getStudyEditor(salomeStudyId)
+    studyEditor = studyedit.getStudyEditor() # salomeStudyId)
     return studyEditor.removeItem(item,True)
 
 
-def isValidAdaoCaseItem(salomeStudyId,item):
+def isValidAdaoCaseItem(item): # salomeStudyId,item):
     """
     Return true if the specified item corresponds to a valid adaoCase
     """
     if item is None:
         return False
 
-    studyEditor = studyedit.getStudyEditor(salomeStudyId)
+    studyEditor = studyedit.getStudyEditor() # salomeStudyId)
     itemType = studyEditor.getTypeId(item)
     if itemType != ADAO_ITEM_TYPES.ADAO_CASE:
         return False

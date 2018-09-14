@@ -43,6 +43,7 @@ from SALOME_NamingServicePy import SALOME_NamingServicePy_i
 from LifeCycleCORBA import LifeCycleCORBA
 import SALOMEDS
 import SALOMEDS_Attributes_idl
+from salome.kernel.studyedit import getStudyEditor
 
 #import OMA_ORB
 
@@ -206,10 +207,10 @@ def findOrCreateComponent( study ):
 ###
 # Get object's ID
 ###
-def getObjectID( study, entry ):
+def getObjectID( entry ): # study, entry ):
     ID = unknownID()
-    if study and entry:
-        sobj = study.FindObjectID( entry )
+    if entry: # study and entry:
+        sobj = getStudyEditor().study.FindObjectID( entry )
         if sobj is not None:
             test, anAttr = sobj.FindAttribute( "AttributeLocalID" )
             if test: ID = anAttr._narrow( SALOMEDS.AttributeLocalID ).Value()
