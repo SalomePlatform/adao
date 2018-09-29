@@ -76,7 +76,8 @@ class AdaoGenerator(PythonGenerator):
     if self.text_da_status:
       self.logger.debug("write adao python command file")
       filename = fn[:fn.rfind(".")] + '.py'
-      f = open( str(filename), 'wb')
+      #~ f = open( str(filename), 'wb')
+      f = open( str(filename), 'w')
       f.write( self.text_da )
       f.close()
 

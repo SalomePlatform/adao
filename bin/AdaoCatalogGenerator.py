@@ -35,6 +35,20 @@ logging.basicConfig(level=logging.WARNING)
 if sys.version_info.major > 2:
     def unicode(text, encoding='utf-8'): return text
 
+print("-- Starting AdaoCalatogGenerator.py --")
+
+try:
+  import adao
+  import daEficas
+  import daYacsSchemaCreator
+  import daCore.AssimilationStudy
+  import daYacsSchemaCreator.infos_daComposant as infos
+except:
+  logging.fatal("Import of ADAO python modules failed !" +
+                "\n add ADAO python installation directory in your PYTHONPATH")
+  traceback.print_exc()
+  sys.exit(1)
+
 #----------- Templates Part ---------------#
 begin_catalog_file = """# -*- coding: utf-8 -*-
 #
@@ -141,13 +155,13 @@ def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
     TEMPLATE_DATA =  BLOC (condition = " FROM in ( 'Template', ) ",
         Template = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "AnalysisPrinter", into=("AnalysisPrinter", "AnalysisSaver", "AnalysisPrinterAndSaver")),
         AnalysisPrinter = BLOC (condition = " Template == 'AnalysisPrinter' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import numpy\\nxa=numpy.ravel(ADD.get('Analysis')[-1])\\nprint 'Analysis:',xa" ),
+            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import numpy\\nxa=numpy.ravel(ADD.get('Analysis')[-1])\\nprint('Analysis:',xa)" ),
             ),
         AnalysisSaver = BLOC (condition = " Template == 'AnalysisSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import numpy\\nxa=numpy.ravel(ADD.get('Analysis')[-1])\\nf='/tmp/analysis.txt'\\nprint 'Analysis saved in \\"%s\\"'%f\\nnumpy.savetxt(f,xa)" ),
+            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import numpy\\nxa=numpy.ravel(ADD.get('Analysis')[-1])\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
             ),
         AnalysisPrinterAndSaver = BLOC (condition = " Template == 'AnalysisPrinterAndSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import numpy\\nxa=numpy.ravel(ADD.get('Analysis')[-1])\\nprint 'Analysis:',xa\\nf='/tmp/analysis.txt'\\nprint 'Analysis saved in \\"%s\\"'%f\\nnumpy.savetxt(f,xa)" ),
+            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "import numpy\\nxa=numpy.ravel(ADD.get('Analysis')[-1])\\nprint 'Analysis:',xa\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
             ),
         ),
     )
@@ -311,18 +325,6 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
 
 
 #----------- Begin generation script -----------#
-print("-- Starting AdaoCalatogGenerator.py --")
-
-try:
-  import daEficas
-  import daYacsSchemaCreator
-  import daCore.AssimilationStudy
-  import daYacsSchemaCreator.infos_daComposant as infos
-except:
-  logging.fatal("Import of ADAO python modules failed !" +
-                "\n add ADAO python installation directory in your PYTHONPATH")
-  traceback.print_exc()
-  sys.exit(1)
 
 # Parse arguments
 from argparse import ArgumentParser

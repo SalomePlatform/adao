@@ -24,7 +24,10 @@
 
 import SALOMERuntime
 import pilot
-import cPickle
+try:
+    import cPickle as pickle
+except:
+    import pickle
 import numpy
 import threading
 
@@ -289,7 +292,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     #print "[Debug] Input is ", input
     str_da_study = input.getStringValue()
     try:
-        self.da_study = cPickle.loads(str_da_study)
+        self.da_study = pickle.loads(str_da_study)
     except ValueError as e:
         raise ValueError("\n\n  Handling internal error in study exchange (message: \"%s\").\n  The case is probably too big (bigger than the physical plus the virtual memory available).\n  Try if possible to store the covariance matrices in sparse format.\n"%(str(e),))
     #print "[Debug] da_study is ", self.da_study
@@ -394,7 +397,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Remove Data Observer, so you can ...
     var.removeDataObserver(self.obs)
     # Pickle then ...
-    var_str = cPickle.dumps(var)
+    var_str = pickle.dumps(var)
     # Add Again Data Observer
     if self.da_study.observers_dict[info]["scheduler"] != "":
       self.ADD.setObserver(Variable = info, ObjectFunction = self.obs, Scheduler = self.da_study.observers_dict[info]["scheduler"], Info = info)
@@ -443,7 +446,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 #     for observer_name in list(self.da_study.observers_dict.keys()):
 #       self.ADD.removeDataObserver(observer_name, self.obs)
     self.da_study.YI_prepare_to_pickle()
-    result = cPickle.dumps(self.da_study)
+    result = pickle.dumps(self.da_study)
     return result
 
   # Obligatoire ???

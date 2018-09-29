@@ -547,13 +547,16 @@ logging.debug("       switching to value : "+str(switch_value))
     <script><code><![CDATA[
 import logging
 logging.debug("TERMINATE Entering in ExtractDataNode")
-import cPickle
+try:
+  import cPickle as pickle
+except:
+  import pickle
 from daCore.AssimilationStudy import AssimilationStudy
 var = None
 info = None
 for param in data["specificParameters"]:
   if param["name"] == "var":
-    var = cPickle.loads(param["value"])
+    var = pickle.loads(param["value"])
   if param["name"] == "info":
     info = param["value"]
 ]]></code></script>
