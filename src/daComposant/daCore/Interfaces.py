@@ -118,9 +118,10 @@ class _TUIViewer(GenericCaseViewer):
             for k in __keys:
                 __v = __local[k]
                 if __v is None: continue
-                if   k == "Checked" and not __v: continue
-                if   k == "Stored"  and not __v: continue
-                if   k == "AvoidRC" and __v: continue
+                if   k == "Checked"  and not __v: continue
+                if   k == "Stored"   and not __v: continue
+                if   k == "ColMajor" and not __v: continue
+                if   k == "AvoidRC"  and __v: continue
                 if   k == "noDetails": continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 if callable(__v): __text = self._missing%__v.__name__+__text
@@ -391,7 +392,7 @@ class _SCDViewer(GenericCaseViewer):
                     __text += "%s_config['From'] = '%s'\n"%(__command,__f)
                     __text += "%s_config['Data'] = %s\n"%(__command,__v)
                     __text = __text.replace("''","'")
-                elif __k in ('Stored', 'Checked'):
+                elif __k in ('Stored', 'Checked', 'ColMajor'):
                     if bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
                 elif __k in ('AvoidRC', 'noDetails'):
@@ -666,12 +667,14 @@ class ImportFromFile(object):
         self.__header, self._varsline, self._skiprows = self.__getentete()
         #
         if self._format == "text/csv" or Format.upper() == "CSV":
+            self._format = "text/csv"
             self.__filestring = "".join(self.__header)
             if self.__filestring.count(",") > 1:
                 self._delimiter = ","
             elif self.__filestring.count(";") > 1:
                 self._delimiter = ";"
         elif self._format == "text/tab-separated-values" or Format.upper() == "TSV":
+            self._format = "text/tab-separated-values"
             self._delimiter = "\t"
         else:
             self._delimiter = None
@@ -776,6 +779,7 @@ class ImportFromFile(object):
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
         else:
             raise ValueError("Unkown file format \"%s\""%self._format)
+        if __columns is None: __columns = ()
         #
         def toString(value):
             try:
@@ -791,6 +795,9 @@ class ImportFromFile(object):
         "Renvoie le fichier complet"
         with open(self._filename,'r') as fid:
             return fid.read()
+
+    def getformat(self):
+        return self._format
 
 # ==============================================================================
 class ImportScalarLinesFromFile(ImportFromFile):

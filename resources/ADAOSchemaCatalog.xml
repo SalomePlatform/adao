@@ -67,6 +67,7 @@ print("Algorithm is set to...:", Algorithm)
 
 try:
     # Create Assimilation study
+    import adao
     from daYacsIntegration.daStudy import *
     assim_study = daStudy(Name, Algorithm, Debug)
 

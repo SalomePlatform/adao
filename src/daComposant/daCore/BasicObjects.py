@@ -35,7 +35,7 @@ from daCore import Persistence
 from daCore import PlatformInfo
 from daCore import Interfaces
 from daCore import Templates
-from daCore.Interfaces import ImportFromScript
+from daCore.Interfaces import ImportFromScript, ImportFromFile
 
 # ==============================================================================
 class CacheManager(object):
@@ -1216,6 +1216,9 @@ class State(object):
                  asVector           = None,
                  asPersistentVector = None,
                  asScript           = None,
+                 asDataFile         = None,
+                 colNames           = None,
+                 colMajor           = False,
                  scheduledBy        = None,
                  toBeChecked        = False,
                 ):
@@ -1228,6 +1231,14 @@ class State(object):
           type Persistence, ou "True" si entrée par script.
         - asScript : si un script valide est donné contenant une variable
           nommée "name", la variable est de type "asVector" (par défaut) ou
+          "asPersistentVector" selon que l'une de ces variables est placée à
+          "True".
+        - asDataFile : si un ou plusieurs fichiers valides sont donnés
+          contenant des valeurs en colonnes, elles-mêmes nommées "colNames"
+          (s'il n'y a pas de nom de colonne indiquée, on cherche une colonne
+          nommée "name"), on récupère les colonnes et on les range ligne après
+          ligne (colMajor=False) ou colonne après colonne (colMajor=True). La
+          variable résultante est de type "asVector" (par défaut) ou
           "asPersistentVector" selon que l'une de ces variables est placée à
           "True".
         """
@@ -1245,6 +1256,26 @@ class State(object):
                 __Series = ImportFromScript(asScript).getvalue( self.__name )
             else:
                 __Vector = ImportFromScript(asScript).getvalue( self.__name )
+        elif asDataFile is not None:
+            __Vector, __Series = None, None
+            if asPersistentVector:
+                if colNames is not None:
+                    __Series = ImportFromFile(asDataFile).getvalue( colNames )[1]
+                else:
+                    __Series = ImportFromFile(asDataFile).getvalue( [self.__name,] )[1]
+                if bool(colMajor) and not ImportFromFile(asDataFile).getformat() == "application/numpy.npz":
+                    __Series = numpy.transpose(__Series)
+                elif not bool(colMajor) and ImportFromFile(asDataFile).getformat() == "application/numpy.npz":
+                    __Series = numpy.transpose(__Series)
+            else:
+                if colNames is not None:
+                    __Vector = ImportFromFile(asDataFile).getvalue( colNames )[1]
+                else:
+                    __Vector = ImportFromFile(asDataFile).getvalue( [self.__name,] )[1]
+                if bool(colMajor):
+                    __Vector = numpy.ravel(__Vector, order = "F")
+                else:
+                    __Vector = numpy.ravel(__Vector, order = "C")
         else:
             __Vector, __Series = asVector, asPersistentVector
         #

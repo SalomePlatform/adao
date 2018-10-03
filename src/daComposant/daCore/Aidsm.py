@@ -90,6 +90,9 @@ class Aidsm(object):
             AppliedInXb          = None,
             AvoidRC              = True,
             Checked              = False,
+            ColMajor             = False,
+            ColNames             = None,
+            DataFile             = None,
             DiagonalSparseMatrix = None,
             Info                 = None,
             Matrix               = None,
@@ -113,7 +116,7 @@ class Aidsm(object):
         try:
             if   Concept in ("Background", "CheckingPoint", "ControlInput", "Observation"):
                 commande = getattr(self,"set"+Concept)
-                commande(Vector, VectorSerie, Script, Stored, Scheduler, Checked )
+                commande(Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored, Scheduler, Checked )
             elif Concept in ("BackgroundError", "ObservationError", "EvolutionError"):
                 commande = getattr(self,"set"+Concept)
                 commande(Matrix, ScalarSparseMatrix, DiagonalSparseMatrix,
@@ -158,6 +161,9 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
+            DataFile       = None,
+            ColNames       = None,
+            ColMajor       = False,
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
@@ -169,6 +175,9 @@ class Aidsm(object):
             asVector           = Vector,
             asPersistentVector = VectorSerie,
             asScript           = self.__with_directory(Script),
+            asDataFile         = DataFile,
+            colNames           = ColNames,
+            colMajor           = ColMajor,
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -180,6 +189,9 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
+            DataFile       = None,
+            ColNames       = None,
+            ColMajor       = False,
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
@@ -191,6 +203,9 @@ class Aidsm(object):
             asVector           = Vector,
             asPersistentVector = VectorSerie,
             asScript           = self.__with_directory(Script),
+            asDataFile         = DataFile,
+            colNames           = ColNames,
+            colMajor           = ColMajor,
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -202,6 +217,9 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
+            DataFile       = None,
+            ColNames       = None,
+            ColMajor       = False,
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
@@ -213,6 +231,9 @@ class Aidsm(object):
             asVector           = Vector,
             asPersistentVector = VectorSerie,
             asScript           = self.__with_directory(Script),
+            asDataFile         = DataFile,
+            colNames           = ColNames,
+            colMajor           = ColMajor,
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
@@ -224,6 +245,9 @@ class Aidsm(object):
             Vector         = None,
             VectorSerie    = None,
             Script         = None,
+            DataFile       = None,
+            ColNames       = None,
+            ColMajor       = False,
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
@@ -235,6 +259,9 @@ class Aidsm(object):
             asVector           = Vector,
             asPersistentVector = VectorSerie,
             asScript           = self.__with_directory(Script),
+            asDataFile         = DataFile,
+            colNames           = ColNames,
+            colMajor           = ColMajor,
             scheduledBy        = Scheduler,
             toBeChecked        = Checked,
             )
