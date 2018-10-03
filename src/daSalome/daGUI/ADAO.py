@@ -42,7 +42,7 @@ class ADAO(ADAO_COMPONENT__POA.ADAO_ENGINE,
       interfaceName ):
     debug("Creating ADAO component instance", "ENGINE")
     SALOME_ComponentPy.SALOME_ComponentPy_i.__init__(self, orb, poa,
-        contID, containerName, instanceName, interfaceName, 0)
+        contID, containerName, instanceName, interfaceName)
     SALOME_DriverPy.SALOME_DriverPy_i.__init__(self, interfaceName)
 
     # On stocke dans l'attribut _naming_service, une ref sur le Naming Service

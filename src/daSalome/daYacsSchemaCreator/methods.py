@@ -393,7 +393,8 @@ def create_yacs_proc(study_config):
   name = "Execute" + study_config["Algorithm"]
   algLib = "daYacsIntegration.py"
   factoryName = "AssimilationAlgorithm_asynch"
-  optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
+  #~ optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
+  optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, True)
   compute_bloc.edAddChild(optimizer_node)
   ADAO_Case.edAddDFLink(CAS_node.getOutputPort("Study"), optimizer_node.edGetAlgoInitPort())
 
