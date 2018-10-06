@@ -28,10 +28,10 @@ __all__ = []
 
 import os
 import sys
-import logging
-import copy
 import numpy
 import mimetypes
+import logging
+import copy
 from daCore import Persistence
 from daCore import PlatformInfo
 from daCore import Templates
@@ -101,7 +101,7 @@ class _TUIViewer(GenericCaseViewer):
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script using ADAO TUI\n#")
         self._addLine("from numpy import array, matrix")
-        self._addLine("import adaoBuilder")
+        self._addLine("from adao import adaoBuilder")
         self._addLine("%s = adaoBuilder.New('%s')"%(self._objname, self._name))
         if self._content is not None:
             for command in self._content:
@@ -422,7 +422,7 @@ class _SCDViewer(GenericCaseViewer):
         self._addLine("Analysis_config['From'] = 'String'")
         self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
         self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
-        self._addLine("print 'Analysis:',xa\"\"\"")
+        self._addLine("print('Analysis:',xa)\"\"\"")
         self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
     def __loadVariablesByScript(self):
         __ExecVariables = {} # Necessaire pour recuperer la variable

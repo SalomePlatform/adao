@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-study_config = {} 
+study_config = {}
 study_config['StudyType'] = 'ASSIMILATION_STUDY'
 study_config['Name'] = 'Test'
 study_config['Debug'] = '0'
@@ -42,9 +42,9 @@ Analysis_config = {}
 Analysis_config['From'] = 'String'
 Analysis_config['Data'] = """import numpy
 Xa = ADD.get("Analysis")[-1]
-print
-print "Size of Analysis = %i"%len(Xa)
-print "Min, mean, max   = %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa))
-print
+print()
+print("Size of Analysis = %i"%len(Xa))
+print("Min, mean, max   = %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa)))
+print()
 """
 study_config['UserPostAnalysis'] = Analysis_config

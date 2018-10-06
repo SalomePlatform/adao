@@ -27,8 +27,8 @@
     le code et la plateforme sous forme de strings, ou d'afficher directement
     les informations disponibles par les méthodes. L'impression directe d'un
     objet de cette classe affiche les informations minimales. Par exemple :
-        print PlatformInfo()
-        print PlatformInfo().getVersion()
+        print(PlatformInfo())
+        print(PlatformInfo().getVersion())
         created = PlatformInfo().getDate()
 
     La classe "PathManagement" permet de mettre à jour les chemins système pour

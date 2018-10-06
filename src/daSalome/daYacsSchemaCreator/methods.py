@@ -391,7 +391,10 @@ def create_yacs_proc(study_config):
   ADAO_Case.edAddCFLink(CAS_node, compute_bloc)
   # We use an optimizer loop
   name = "Execute" + study_config["Algorithm"]
-  algLib = "daYacsIntegration.py"
+  if sys.version_info.major < 3:
+    algLib = "daYacsIntegration.py"
+  else:
+    algLib = "adao.py"
   factoryName = "AssimilationAlgorithm_asynch"
   #~ optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, "")
   optimizer_node = runtime.createOptimizerLoop(name, algLib, factoryName, True)
@@ -554,7 +557,10 @@ def create_yacs_proc(study_config):
     node_script += """    DirectOperator\n"""
     node_script += """except NameError:\n"""
     node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
-    node_script += """from daNumerics import ApproximatedDerivatives\n"""
+    if sys.version_info.major < 3:
+        node_script += """from daNumerics import ApproximatedDerivatives\n"""
+    else:
+        node_script += """from adao.daNumerics import ApproximatedDerivatives\n"""
     node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
     node_script += """    Function   = DirectOperator,\n"""
     node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
@@ -751,7 +757,10 @@ def create_yacs_proc(study_config):
       node_script += """    DirectOperator\n"""
       node_script += """except NameError:\n"""
       node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
-      node_script += """from daNumerics import ApproximatedDerivatives\n"""
+      if sys.version_info.major < 3:
+          node_script += """from daNumerics import ApproximatedDerivatives\n"""
+      else:
+          node_script += """from adao.daNumerics import ApproximatedDerivatives\n"""
       node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
       node_script += """    Function   = DirectOperator,\n"""
       node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])

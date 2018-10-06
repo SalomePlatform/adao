@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-study_config = {} 
+study_config = {}
 study_config['StudyType'] = 'ASSIMILATION_STUDY'
 study_config['Name'] = 'Test'
 study_config['Debug'] = '0'
@@ -41,5 +41,5 @@ Analysis_config = {}
 Analysis_config['From'] = 'String'
 Analysis_config['Data'] = """import numpy
 xa=numpy.ravel(ADD.get('Analysis')[-1])
-print 'Analysis:',xa"""
+print('Analysis:',xa)"""
 study_config['UserPostAnalysis'] = Analysis_config

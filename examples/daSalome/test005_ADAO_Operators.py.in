@@ -53,10 +53,10 @@ Analysis_config['From'] = 'String'
 Analysis_config['Data'] = """import numpy
 Xb = ADD.get("Background")
 Xa = ADD.get("Analysis")[-1]
-print
-print "Size of Background...........= %i"%len(Xb.A1)
-print "Size of Analysis.............= %i"%len(Xa)
-print "Min, mean, max of Analysis...= %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa))
-print
+print()
+print("Size of Background...........= %i"%len(Xb.A1))
+print("Size of Analysis.............= %i"%len(Xa))
+print("Min, mean, max of Analysis...= %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa)))
+print()
 """
 study_config['UserPostAnalysis'] = Analysis_config

@@ -59,7 +59,7 @@
     <script><code>
 
 <![CDATA[
-import numpy, logging
+import sys, numpy, logging
 logging.debug("CREATE YI Entering in CreateAssimilationStudy")
 print("Entering in the assimilation study")
 print("Name is set to........:", Name)
@@ -67,7 +67,8 @@ print("Algorithm is set to...:", Algorithm)
 
 try:
     # Create Assimilation study
-    import adao
+    if sys.version_info.major > 2:
+        import adao
     from daYacsIntegration.daStudy import *
     assim_study = daStudy(Name, Algorithm, Debug)
 
@@ -546,11 +547,11 @@ logging.debug("       switching to value : "+str(switch_value))
 
   <inline name="ExtractDataNode">
     <script><code><![CDATA[
-import logging
+import sys, logging
 logging.debug("TERMINATE Entering in ExtractDataNode")
-try:
+if sys.version_info.major < 3:
   import cPickle as pickle
-except:
+else:
   import pickle
 from daCore.AssimilationStudy import AssimilationStudy
 var = None

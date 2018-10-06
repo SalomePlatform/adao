@@ -27,9 +27,13 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import sys, numpy, copy
+import os, sys, numpy, copy
+import gzip, bz2
 
 from daCore.PlatformInfo import PathManagement ; PathManagement()
+from daCore.PlatformInfo import has_gnuplot
+if has_gnuplot:
+    import Gnuplot
 
 if sys.version_info.major < 3:
     range = xrange
@@ -67,7 +71,6 @@ class Persistence(object):
         self.__tags     = []
         #
         self.__dynamic  = False
-        self.__gnuplot  = None
         self.__g        = None
         self.__title    = None
         self.__ltitle   = None
@@ -339,21 +342,18 @@ class Persistence(object):
         "Préparation des plots"
         #
         # Vérification de la disponibilité du module Gnuplot
-        try:
-            import Gnuplot
-            self.__gnuplot = Gnuplot
-        except:
+        if not has_gnuplot:
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
         if persist:
-            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
+            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
         else:
-            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
+            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
         if ltitle is None:
             ltitle = ""
-        self.__g = self.__gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+self.__gnuplot.GnuplotOpts.default_term)
+        self.__g = Gnuplot.Gnuplot() # persist=1
+        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
@@ -412,7 +412,6 @@ class Persistence(object):
                          attendant un Return
                          Par défaut, pause = True
         """
-        import os
         if not self.__dynamic:
             self.__preplots(title, xlabel, ylabel, ltitle, geometry, persist, pause )
             if dynamic:
@@ -436,7 +435,7 @@ class Persistence(object):
             else:
                 Steps = list(range(len(self.__values[index])))
             #
-            self.__g.plot( self.__gnuplot.Data( Steps, self.__values[index], title=ltitle ) )
+            self.__g.plot( Gnuplot.Data( Steps, self.__values[index], title=ltitle ) )
             #
             if filename != "":
                 i += 1
@@ -455,7 +454,7 @@ class Persistence(object):
         #
         self.__g('set title  "'+str(self.__title))
         Steps = list(range(len(self.__values)))
-        self.__g.plot( self.__gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
+        self.__g.plot( Gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
         #
         if self.__pause:
             eval(input('Please press return to continue...\n'))
@@ -578,25 +577,22 @@ class Persistence(object):
         """
         #
         # Vérification de la disponibilité du module Gnuplot
-        try:
-            import Gnuplot
-            self.__gnuplot = Gnuplot
-        except:
+        if not has_gnuplot:
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
         if persist:
-            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
+            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
         else:
-            self.__gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
+            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
         if ltitle is None:
             ltitle = ""
         if isinstance(steps,list) or isinstance(steps, numpy.ndarray):
             Steps = list(steps)
         else:
             Steps = list(range(len(self.__values[0])))
-        self.__g = self.__gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+self.__gnuplot.GnuplotOpts.default_term)
+        self.__g = Gnuplot.Gnuplot() # persist=1
+        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
@@ -606,9 +602,9 @@ class Persistence(object):
         #
         # Tracé du ou des vecteurs demandés
         indexes = list(range(len(self.__values)))
-        self.__g.plot( self.__gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle+" (pas 0)" ) )
+        self.__g.plot( Gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle+" (pas 0)" ) )
         for index in indexes:
-            self.__g.replot( self.__gnuplot.Data( Steps, self.__values[index], title=ltitle+" (pas %i)"%index ) )
+            self.__g.replot( Gnuplot.Data( Steps, self.__values[index], title=ltitle+" (pas %i)"%index ) )
         #
         if filename != "":
             self.__g.hardcopy(filename=filename, color=1)
@@ -880,7 +876,6 @@ class CompositePersistence(object):
         Enregistre l'objet dans le fichier indiqué selon le "mode" demandé,
         et renvoi le nom du fichier
         """
-        import os
         if filename is None:
             if compress == "gzip":
                 filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.gz"
@@ -893,10 +888,8 @@ class CompositePersistence(object):
         #
         if mode == "pickle":
             if compress == "gzip":
-                import gzip
                 output = gzip.open( filename, 'wb')
             elif compress == "bzip2":
-                import bz2
                 output = bz2.BZ2File( filename, 'wb')
             else:
                 output = open( filename, 'wb')
@@ -911,7 +904,6 @@ class CompositePersistence(object):
         """
         Recharge un objet composite sauvé en fichier
         """
-        import os
         if filename is None:
             raise ValueError("A file name if requested to load a composite.")
         else:
@@ -919,10 +911,8 @@ class CompositePersistence(object):
         #
         if mode == "pickle":
             if compress == "gzip":
-                import gzip
                 pkl_file = gzip.open( filename, 'rb')
             elif compress == "bzip2":
-                import bz2
                 pkl_file = bz2.BZ2File( filename, 'rb')
             else:
                 pkl_file = open(filename, 'rb')

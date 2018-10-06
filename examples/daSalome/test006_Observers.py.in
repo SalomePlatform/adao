@@ -53,7 +53,7 @@ Analysis_config = {}
 Analysis_config['From'] = 'String'
 Analysis_config['Data'] = """import numpy
 xa=numpy.ravel(ADD.get('Analysis')[-1])
-print 'Analysis:',xa"""
+print('Analysis:',xa)"""
 study_config['UserPostAnalysis'] = Analysis_config
 Init_config = {}
 Init_config['Type'] = 'Dict'
@@ -65,9 +65,9 @@ observers = {}
 observers["CostFunctionJ"] = {}
 observers["CostFunctionJ"]["number"] = 3
 observers["CostFunctionJ"]["nodetype"] = "String"
-observers["CostFunctionJ"]["String"] = """print "  ---> observerCost"
-print "       var  =",var[:]
-print "       info =",info
+observers["CostFunctionJ"]["String"] = """print("  ---> observerCost")
+print("       var  =",var[:])
+print("       info =",info)
 #
 import Gnuplot
 import os
@@ -80,7 +80,7 @@ gp('set style data lines')
 gp('set title  "'+str(info)+'"')
 gp.plot( Gnuplot.Data( var[:] ) )
 filename = os.path.join("/tmp", "imageCost_%02i.ps"%numero)
-print "       imageCost %s"%filename
+print("       imageCost %s"%filename)
 gp.hardcopy(filename=filename, color=1)
 numero += 1
 """
