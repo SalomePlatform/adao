@@ -123,8 +123,11 @@ The documentation of the module is also covered by the license and the
 requirement of quoting.
 """
 
-import os, sys
+import os, sys, logging
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from daCore.version import name, version, year, date
-from daYacsIntegration.daOptimizerLoop import *
+try:
+    from daYacsIntegration.daOptimizerLoop import *
+except:
+    logging.debug("INIT Pas de chargement initial de daOptimizerLoop")

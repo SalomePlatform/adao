@@ -147,7 +147,7 @@ class AdaoCaseManager(EficasObserver):
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     if salomeStudyItem is not None:
       for case_editor, adao_case in self.cases.items():
-        if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
           self.eficas_manager.selectCase(adao_case.eficas_editor)
           break
 
@@ -238,7 +238,7 @@ class AdaoCaseManager(EficasObserver):
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.items():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         if not adao_case.isOk():
           adaoLogger.debug("Cas invalide, donc il est sauvegarde, mais il ne peut pas etre exporte vers YACS ensuite")
         self.eficas_manager.adaoFileSave(adao_case)
@@ -251,7 +251,7 @@ class AdaoCaseManager(EficasObserver):
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.items():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         if not adao_case.isOk():
           adaoLogger.debug("Cas invalide, donc il est sauvegarde, mais il ne peut pas etre exporte vers YACS ensuite")
         self.eficas_manager.adaoFileSaveAs(adao_case)
@@ -282,7 +282,7 @@ class AdaoCaseManager(EficasObserver):
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.items():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         self.eficas_manager.adaoFileClose(adao_case)
         break
 
@@ -312,7 +312,7 @@ class AdaoCaseManager(EficasObserver):
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.items():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         msg = adao_case.validationReportforJDC()
         adaoGuiHelper.gui_information(SalomePyQt.SalomePyQt().getDesktop(), msg)
         break
@@ -329,7 +329,7 @@ class AdaoCaseManager(EficasObserver):
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.items():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         msg = adao_case.showTreeAdaoCase()
         break
 
@@ -347,7 +347,7 @@ class AdaoCaseManager(EficasObserver):
     self.harmonizeSelectionFromEficas()
     salomeStudyItem = adaoGuiHelper.getSelectedItem()
     for case_name, adao_case in self.cases.items():
-      if adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
         if adao_case.isOk():
           msg = adao_case.exportCaseToYACS()
           # If msg is not empty -> error found
