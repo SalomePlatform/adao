@@ -742,7 +742,10 @@ class Aidsm(object):
         if sys.version_info[0] == 2:
             del self.__adaoObject # Because it breaks pickle in Python 2. Not required for Python 3
             del self.__case       # Because it breaks pickle in Python 2. Not required for Python 3
-        return 0
+        if sys.version_info.major < 3:
+            return 0
+        else:
+            return self.__StoredInputs
 
 # ==============================================================================
 if __name__ == "__main__":

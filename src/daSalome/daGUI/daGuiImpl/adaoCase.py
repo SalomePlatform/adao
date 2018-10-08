@@ -118,8 +118,8 @@ class AdaoCase:
   def validationReportforJDC(self):
     rtn = "<i>Validation report is empty.</i>"
     if self.eficas_editor.jdc:
-      rtn  = u"Validation report for the selected ADAO case:\n\n"
-      rtn += unicode( self.eficas_editor.jdc.report())
+      rtn  = "Validation report for the selected ADAO case:\n\n"
+      rtn += self.eficas_editor.jdc.report()
     return rtn
 
   def showTreeAdaoCase(self):

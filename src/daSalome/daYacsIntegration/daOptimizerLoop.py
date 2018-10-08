@@ -30,6 +30,7 @@ except:
     import pickle
 import numpy
 import threading
+import sys
 
 # Pour disposer des classes dans l'espace de nommage lors du pickle
 from daCore.AssimilationStudy import AssimilationStudy
@@ -361,7 +362,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     self.pool.destroyAll()
 
   def obs(self, var, info):
-    # print "Call observer %s" % info
+    # print("Call observer %s with var type %s" %(info,type(var))
     sample = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/ParametricInput'))
 
     # Fake data
@@ -445,9 +446,11 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
 #     # Remove data observers, required to pickle assimilation study object
 #     for observer_name in list(self.da_study.observers_dict.keys()):
 #       self.ADD.removeDataObserver(observer_name, self.obs)
-    self.da_study.YI_prepare_to_pickle()
-    result = pickle.dumps(self.da_study)
-    return result
+    if sys.version_info.major < 3:
+        self.da_study.YI_prepare_to_pickle()
+        return pickle.dumps(self.da_study)
+    else:
+        return pickle.dumps(self.da_study.getResults().prepare_to_pickle())
 
   # Obligatoire ???
   def finish(self):
