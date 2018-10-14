@@ -450,7 +450,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
         self.da_study.YI_prepare_to_pickle()
         return pickle.dumps(self.da_study)
     else:
-        return pickle.dumps(self.da_study.getResults().prepare_to_pickle())
+        return pickle.dumps(self.da_study.YI_prepare_to_pickle())
 
   # Obligatoire ???
   def finish(self):

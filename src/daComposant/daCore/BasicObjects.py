@@ -1291,7 +1291,6 @@ class State(object):
                 if isinstance(__Series, str): __Series = eval(__Series)
                 for member in __Series:
                     self.__V.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
-                import sys ; sys.stdout.flush()
             else:
                 self.__V = __Series
             if isinstance(self.__V.shape, (tuple, list)):
