@@ -33,7 +33,7 @@
   <type name="long" kind="int"/>
   <struct name="SALOME_TYPES/Parameter">
     <member type="string" name="name"></member>
-    <member type="string" name="value"></member>
+    <member type="pyobj" name="value"></member>
   </struct>
   <sequence content="SALOME_TYPES/Parameter" name="SALOME_TYPES/ParameterList"></sequence>
   <sequence content="double" name="SALOME_TYPES/Variable"></sequence>
@@ -238,6 +238,7 @@ if (matrix_in_string.find("array")>-1) or (matrix_in_string.find("matrix")>-1):
     exec("matrix="+matrix_in_string)
     matrix = numpy.matrix(matrix)
 else:
+    matrix_in_string=matrix_in_string.replace("'","").replace('"','')
     matrix = numpy.matrix(matrix_in_string)
 type = "Matrix"
 logging.debug("CREATE YI Matrix is %s"%matrix)
@@ -258,6 +259,7 @@ if (matrix_in_string.find("array")>-1) or (matrix_in_string.find("matrix")>-1):
     exec("matrix="+matrix_in_string)
     matrix = numpy.matrix(matrix)
 else:
+    matrix_in_string=matrix_in_string.replace("'","").replace('"','')
     matrix = numpy.matrix(matrix_in_string)
 type = "ScalarSparseMatrix"
 logging.debug("CREATE YI ScalarSparseMatrix is %s"%matrix)
@@ -278,6 +280,7 @@ if (matrix_in_string.find("array")>-1) or (matrix_in_string.find("matrix")>-1):
     exec("matrix="+matrix_in_string)
     matrix = numpy.matrix(matrix)
 else:
+    matrix_in_string=matrix_in_string.replace("'","").replace('"','')
     matrix = numpy.matrix(matrix_in_string)
 type = "DiagonalSparseMatrix"
 logging.debug("CREATE YI DiagonalSparseMatrix is %s"%matrix)
@@ -370,6 +373,7 @@ if (vector_in_string.find("array")>-1) or (vector_in_string.find("matrix")>-1):
     exec("vector="+vector_in_string)
     vector = numpy.matrix(vector)
 else:
+    vector_in_string=vector_in_string.replace("'","").replace('"','')
     vector = numpy.matrix(vector_in_string)
 type = "Vector"
 logging.debug("Vector is %s"%vector)
@@ -458,9 +462,12 @@ ADD.analyze()
   <inline name="SimpleUserAnalysis">
     <script><code><![CDATA[
 #-*- coding: utf-8 -*-
-import logging
+import sys, logging
 logging.debug("TERMINATE Entering in SimpleUserAnalysis")
-ADD = Study.getResults()
+if sys.version_info.major < 3:
+    ADD = Study.getResults()
+else:
+    ADD = Study
 # User code is below
 
 ]]></code></script>
@@ -530,10 +537,10 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   </inline>
 
   <inline name="ReadForSwitchNode">
-    <script><code><![CDATA[
-import logging
+    <script><code><![CDATA[import sys, logging
+if sys.version_info.major > 3: import adao
 logging.debug("CREATE YI Entering in ReadForSwitchNode")
-logging.debug("       with input data : "+str(data["specificParameters"]))
+logging.debug("       with input data : ",list(data["specificParameters"]))
 switch_value = -1
 for param in data["specificParameters"]:
   if param["name"] == "switch_value":
@@ -546,19 +553,15 @@ logging.debug("       switching to value : "+str(switch_value))
   </inline>
 
   <inline name="ExtractDataNode">
-    <script><code><![CDATA[
-import sys, logging
+    <script><code><![CDATA[import sys, logging
+if sys.version_info.major > 3: import adao
 logging.debug("TERMINATE Entering in ExtractDataNode")
-if sys.version_info.major < 3:
-  import cPickle as pickle
-else:
-  import pickle
 from daCore.AssimilationStudy import AssimilationStudy
 var = None
 info = None
 for param in data["specificParameters"]:
   if param["name"] == "var":
-    var = pickle.loads(param["value"])
+    var = param["value"]
   if param["name"] == "info":
     info = param["value"]
 ]]></code></script>
