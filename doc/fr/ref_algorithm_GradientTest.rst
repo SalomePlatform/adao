@@ -35,7 +35,9 @@ calculant un résidu dont les propriétés théoriques sont connues. Plusieurs
 formules de résidu sont disponibles.
 
 Dans tous les cas, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
-:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` est le code de calcul.
+:math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` avec :math:`\alpha_0` un paramètre
+utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est le code de
+calcul.
 
 Résidu "Taylor"
 ***************
