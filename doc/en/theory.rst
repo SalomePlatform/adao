@@ -32,21 +32,21 @@
 .. index:: single: observation
 .. index:: single: a priori
 
-**Data Assimilation** is a general framework for computing the optimal estimate
-of the true state of a system, over time if necessary. It uses values obtained
-by combining both observations and *a priori* models, including information
-about their errors.
+**Data Assimilation** is a general well established framework for computing the
+optimal estimate of the true state of a system, over time if necessary. It uses
+values obtained by combining both observations and *a priori* models, including
+information about their errors.
 
 In other words, data assimilation merges measurement data of a system, that are
 the observations, with *a priori* system physical and mathematical knowledge,
-embedded in numerical models, to obtain the best possible estimate of the system
-real state and of its stochastic properties. Note that this real state (or
-"*true state*") can not be reached, but can only be estimated. Moreover, despite
-the fact that the used information are stochastic by nature, data assimilation
-provides deterministic techniques in order to perform very efficiently the
-estimation.
+embedded in numerical models. The goal is to obtain the best possible estimate
+of the system real state and of its stochastic properties. Note that this real
+state (or "*true state*") can not be reached, but can only be estimated.
+Moreover, despite the fact that the used information are stochastic by nature,
+data assimilation provides deterministic techniques in order to perform very
+efficiently the estimation.
 
-Because data assimilation look for the **best possible** estimate, its
+Because data assimilation looks for the **best possible** estimate, its
 underlying procedure always integrates optimization in order to find this
 estimate: particular optimization methods are always embedded in data
 assimilation algorithms. Optimization methods can be seen in ADAO as a way to
@@ -132,6 +132,13 @@ parameters, such as a Young coefficient, or by the intensity of the force. The
 parameters estimation problem consists in finding for example the right Young
 coefficient value in order that the simulation of the beam corresponds to
 measurements, including the knowledge of errors.
+
+All quantities representing the description of physics in a model are likely to
+be calibrated in a data assimilation process, whether they are model
+parameters, initial conditions or boundary conditions. Their simultaneous
+consideration is greatly facilitated by the data assimilation framework, which
+makes it possible to objectively process a heterogeneous set of available
+information.
 
 Simple description of the data assimilation methodological framework
 --------------------------------------------------------------------
@@ -263,9 +270,9 @@ Going further in the data assimilation framework
 To get more information about the data assimilation techniques, the reader can
 consult introductory documents like [Talagrand97]_ or [Argaud09]_, on-line
 training courses or lectures like [Bouttier99]_ and [Bocquet04]_ (along with
-other materials coming from geosciences applications), or general documents like
-[Talagrand97]_, [Tarantola87]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ and
-[WikipediaDA]_.
+other materials coming from geosciences applications), or general documents
+like [Talagrand97]_, [Tarantola87]_, [Asch16]_, [Kalnay03]_, [Ide97]_,
+[Tikhonov77]_ and [WikipediaDA]_.
 
 Note that data assimilation is not restricted to meteorology or geo-sciences,
 but is widely used in other scientific domains. There are several fields in

@@ -67,8 +67,7 @@ print("Algorithm is set to...:", Algorithm)
 
 try:
     # Create Assimilation study
-    if sys.version_info.major > 2:
-        import adao
+    if sys.version_info.major > 2: import adao
     from daYacsIntegration.daStudy import *
     assim_study = daStudy(Name, Algorithm, Debug)
 
@@ -538,7 +537,7 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
 
   <inline name="ReadForSwitchNode">
     <script><code><![CDATA[import sys, logging
-if sys.version_info.major > 3: import adao
+if sys.version_info.major > 2: import adao
 logging.debug("CREATE YI Entering in ReadForSwitchNode")
 logging.debug("       with input data : ",list(data["specificParameters"]))
 switch_value = -1
@@ -554,7 +553,7 @@ logging.debug("       switching to value : "+str(switch_value))
 
   <inline name="ExtractDataNode">
     <script><code><![CDATA[import sys, logging
-if sys.version_info.major > 3: import adao
+if sys.version_info.major > 2: import adao
 logging.debug("TERMINATE Entering in ExtractDataNode")
 from daCore.AssimilationStudy import AssimilationStudy
 var = None

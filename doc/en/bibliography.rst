@@ -29,6 +29,8 @@ Bibliography
 
 .. [Argaud09] Argaud J.-P., Bouriquet B., Hunt J., *Data Assimilation from Operational and Industrial Applications to Complex Systems*, Mathematics Today, pp.150-152, October 2009
 
+.. [Asch16] Asch M., Bocquet M., Nodet M., *Data Assimilation - Methods, Algorithms and Applications*, SIAM, 2016
+
 .. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and http://rpython.r-forge.r-project.org/
 
 .. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999

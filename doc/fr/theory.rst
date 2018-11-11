@@ -33,29 +33,29 @@
 .. index:: single: observation
 .. index:: single: a priori
 
-L'**assimilation de données** est un cadre général pour le calcul de
+L'**assimilation de données** est un cadre général bien établi pour le calcul de
 l'estimation optimale de l'état réel d'un système, au cours du temps si
 nécessaire. Il utilise les valeurs obtenues en combinant des observations et des
 modèles *a priori*, incluant de plus des informations sur leurs erreurs.
 
-En d'autres termes, l'assimilation de données rassemble les données mesurées
-d'un système, qui sont les observations, avec une connaissance physique et
-mathématique *a priori* du système, intégrée dans les modèles numériques, afin
-d'obtenir la meilleure estimation possible de l'état réel du système et de ses
-propriétés stochastiques. On note que cet état réel (ou "*état vrai*") ne peut
-être atteint, mais peut seulement être estimé. De plus, malgré le fait que les
-informations utilisées sont stochastiques par nature, l'assimilation de données
-fournit des techniques déterministes afin de réaliser l'estimation de manière
-très efficace.
+En d'autres termes, l'assimilation de données est un moyen de fusionner les
+données mesurées d'un système, qui sont les observations, avec des
+connaissances physique et mathématique *a priori* du système, intégrées dans
+les modèles numériques. L'objectif est d'obtenir la meilleure estimation possible
+de l'état réel du système et de ses propriétés stochastiques. On note que cet
+état réel (ou "*état vrai*") ne peut être atteint, mais peut seulement être
+estimé. De plus, malgré le fait que les informations utilisées sont
+stochastiques par nature, l'assimilation de données fournit des techniques
+déterministes afin de réaliser l'estimation de manière très efficace.
 
-L'assimilation de données cherchant l'estimation la **meilleure possible**, la
-démarche technique sous-jacente intègre toujours de l'optimisation afin de
+Comme l'assimilation de données cherche l'estimation la **meilleure possible**,
+la démarche technique sous-jacente intègre toujours de l'optimisation afin de
 trouver cette estimation : des méthodes d'optimisation choisies sont toujours
 intégrées dans les algorithmes d'assimilation de données. Par ailleurs, les
-méthodes d'optimisation peuvent être vues dans ADAO comme un moyen d'étendre les
-applications d'assimilation de données. Elles seront présentées de cette façon
-dans la section pour `Approfondir l'estimation d'état par des méthodes
-d'optimisation`_, mais elles sont beaucoup plus générale et peuvent être
+méthodes d'optimisation peuvent être vues dans ADAO comme un moyen d'étendre
+les applications d'assimilation de données. Elles seront présentées de cette
+façon dans la section pour `Approfondir l'estimation d'état par des méthodes
+d'optimisation`_, mais elles sont beaucoup plus générales et peuvent être
 utilisés sans les concepts d'assimilation de données.
 
 Deux types principaux d'applications existent en assimilation de données, qui
@@ -140,6 +140,13 @@ forces appliquées. Le problème d'estimation de paramètres consiste à cherche
 par exemple la bonne valeur du coefficient de Young de telle manière à ce que la
 simulation de la poutre corresponde aux mesures, en y incluant la connaissance
 des erreurs.
+
+Toutes les grandeurs représentant la description de la physique dans un modèle
+sont susceptibles d'être calibrés dans une démarche d'assimilation de données,
+que ce soient des paramètres de modèles, des conditions initiales ou des
+conditions aux limites. Leur prise en compte simultanée est largement facilitée
+par la démarche d'assimilation de données, permettant de traiter objectivement
+un ensemble hétérogène d'informations à disposition.
 
 Description simple du cadre méthodologique de l'assimilation de données
 -----------------------------------------------------------------------
@@ -275,7 +282,8 @@ données, le lecteur peut consulter les documents introductifs comme
 [Talagrand97]_ ou [Argaud09]_, des supports de formations ou de cours comme
 [Bouttier99]_ et [Bocquet04]_ (ainsi que d'autres documents issus des
 applications des géosciences), ou des documents généraux comme [Talagrand97]_,
-[Tarantola87]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ et [WikipediaDA]_.
+[Tarantola87]_, [Asch16]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ et
+[WikipediaDA]_.
 
 On note que l'assimilation de données n'est pas limitée à la météorologie ou aux
 géo-sciences, mais est largement utilisée dans d'autres domaines scientifiques.
