@@ -57,7 +57,7 @@ class OptimizerHooks:
     sample.setEltAtRank("outputVarList", outputVarList)
 
     # Les parametres specifiques à ADAO
-    specificParameters = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("SALOME_TYPES/ParameterList"))
+    specificParameters = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("SALOME_TYPES/Parameter"))
     method_name = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
     method_name.setEltAtRank("name", "method")
     if sys.version_info.major < 3:
@@ -395,7 +395,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     sample.setEltAtRank("inputValues", time_sequence)
 
     # Add observer values in specific parameters
-    specificParameters = pilot.SequenceAny_New(self.runtime.getTypeCode("SALOME_TYPES/ParameterList"))
+    specificParameters = pilot.SequenceAny_New(self.runtime.getTypeCode("SALOME_TYPES/Parameter"))
 
     # Switch Value
     obs_switch = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/Parameter'))
