@@ -33,7 +33,7 @@
   <type name="long" kind="int"/>
   <struct name="SALOME_TYPES/Parameter">
     <member type="string" name="name"></member>
-    <member type="pyobj" name="value"></member>
+    <member type="string" name="value"></member>
   </struct>
   <sequence content="SALOME_TYPES/Parameter" name="SALOME_TYPES/ParameterList"></sequence>
   <sequence content="double" name="SALOME_TYPES/Variable"></sequence>
@@ -536,14 +536,17 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
   </inline>
 
   <inline name="ReadForSwitchNode">
-    <script><code><![CDATA[import sys, logging
+    <script><code><![CDATA[import sys, logging, codecs, pickle
 if sys.version_info.major > 2: import adao
+def loads( data ):
+  return pickle.loads(codecs.decode(data.encode(), "base64"))
 logging.debug("CREATE YI Entering in ReadForSwitchNode")
-logging.debug("       with input data : ",list(data["specificParameters"]))
+# logging.debug("       with input data : ",list(data["specificParameters"]))
 switch_value = -1
 for param in data["specificParameters"]:
+  # logging.debug("       ReadForSwitchNode specificParameters : ",param)
   if param["name"] == "switch_value":
-    switch_value = int(param["value"])
+    switch_value = int(loads(param["value"]))
 logging.debug("       switching to value : "+str(switch_value))
 ]]></code></script>
     <inport name="data" type="SALOME_TYPES/ParametricInput"/>
@@ -552,17 +555,19 @@ logging.debug("       switching to value : "+str(switch_value))
   </inline>
 
   <inline name="ExtractDataNode">
-    <script><code><![CDATA[import sys, logging
+    <script><code><![CDATA[import sys, logging, codecs, pickle
 if sys.version_info.major > 2: import adao
-logging.debug("TERMINATE Entering in ExtractDataNode")
+def loads( data ):
+  return pickle.loads(codecs.decode(data.encode(), "base64"))
+logging.debug("TERMINATE Entering in ExtractData/Node")
 from daCore.AssimilationStudy import AssimilationStudy
 var = None
 info = None
 for param in data["specificParameters"]:
   if param["name"] == "var":
-    var = param["value"]
+    var = loads(param["value"])
   if param["name"] == "info":
-    info = param["value"]
+    info = loads(param["value"])
 ]]></code></script>
     <inport name="data" type="SALOME_TYPES/ParametricInput"/>
     <outport name="var" type="pyobj"/>

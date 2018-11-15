@@ -455,7 +455,9 @@ def create_yacs_proc(study_config):
     except:
       raise ValueError("Exception in opening function script file: " + script_filename)
     node_script  = "#-*- coding: utf-8 -*-\n"
-    node_script += "import sys, os, numpy, logging\n"
+    node_script += "import sys, os, numpy, logging, pickle, codecs\n"
+    node_script += "def loads( data ):\n"
+    node_script += "  return pickle.loads(codecs.decode(data.encode(), 'base64'))\n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
@@ -465,7 +467,7 @@ def create_yacs_proc(study_config):
     node_script += """# ==============================================\n"""
     node_script += """__method = None\n"""
     node_script += """for param in computation["specificParameters"]:\n"""
-    node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+    node_script += """  if param["name"] == "method": __method = loads(param["value"])\n"""
     node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
     node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
     node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
@@ -538,7 +540,9 @@ def create_yacs_proc(study_config):
     except:
       raise ValueError("Exception in opening function script file: " + script_filename)
     node_script  = "#-*- coding: utf-8 -*-\n"
-    node_script += "import sys, os, numpy, logging\n"
+    node_script += "import sys, os, numpy, logging, pickle, codecs\n"
+    node_script += "def loads( data ):\n"
+    node_script += "  return pickle.loads(codecs.decode(data.encode(), 'base64'))\n"
     node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
     node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
@@ -548,7 +552,7 @@ def create_yacs_proc(study_config):
     node_script += """# ==============================================\n"""
     node_script += """__method = None\n"""
     node_script += """for param in computation["specificParameters"]:\n"""
-    node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+    node_script += """  if param["name"] == "method": __method = loads(param["value"])\n"""
     node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
     node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
     node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
@@ -657,7 +661,9 @@ def create_yacs_proc(study_config):
       except:
         raise ValueError("Exception in opening function script file: " + script_filename)
       node_script  = "#-*- coding: utf-8 -*-\n"
-      node_script += "import sys, os, numpy, logging\n"
+      node_script += "import sys, os, numpy, logging, pickle, codecs\n"
+      node_script += "def loads( data ):\n"
+      node_script += "  return pickle.loads(codecs.decode(data.encode(), 'base64'))\n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
@@ -666,7 +672,7 @@ def create_yacs_proc(study_config):
       node_script += """# ==============================================\n"""
       node_script += """__method = None\n"""
       node_script += """for param in computation["specificParameters"]:\n"""
-      node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+      node_script += """  if param["name"] == "method": __method = loads(param["value"])\n"""
       node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
       node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
       node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""
@@ -739,7 +745,9 @@ def create_yacs_proc(study_config):
       except:
         raise ValueError("Exception in opening function script file: " + script_filename)
       node_script  = "#-*- coding: utf-8 -*-\n"
-      node_script += "import sys, os, numpy, logging\n"
+      node_script += "import sys, os, numpy, logging, pickle, codecs\n"
+      node_script += "def loads( data ):\n"
+      node_script += "  return pickle.loads(codecs.decode(data.encode(), 'base64'))\n"
       node_script += "filepath = \"" + os.path.dirname(script_filename) + "\"\n"
       node_script += "filename = \"" + os.path.basename(script_filename) + "\"\n"
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
@@ -748,7 +756,7 @@ def create_yacs_proc(study_config):
       node_script += """# ==============================================\n"""
       node_script += """__method = None\n"""
       node_script += """for param in computation["specificParameters"]:\n"""
-      node_script += """  if param["name"] == "method": __method = param["value"]\n"""
+      node_script += """  if param["name"] == "method": __method = loads(param["value"])\n"""
       node_script += """if __method not in ["Direct", "Tangent", "Adjoint"]:\n"""
       node_script += """  raise ValueError("ComputationFunctionNode: no valid computation method is given, it has to be Direct, Tangent or Adjoint (\'%s\' given)."%__method)\n"""
       node_script += """logging.debug("ComputationFunctionNode: Found method is \'%s\'"%__method)\n"""

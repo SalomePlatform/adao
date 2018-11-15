@@ -211,12 +211,14 @@ contenant trois fonctions nommées "*DirectOperator*", "*TangentOperator*" et
 "*AdjointOperator*" comme précédemment. Voici le squelette d'aiguillage::
 
     import Physical_simulation_functions
-    import numpy, logging
+    import numpy, logging, codecs, pickle
+    def loads( data ):
+        return pickle.loads(codecs.decode(data.encode(), "base64"))
     #
     method = ""
     for param in computation["specificParameters"]:
         if param["name"] == "method":
-            method = param["value"]
+            method = loads(param["value"])
     if method not in ["Direct", "Tangent", "Adjoint"]:
         raise ValueError("No valid computation method is given")
     logging.info("Found method is \'%s\'"%method)

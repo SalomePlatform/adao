@@ -32,10 +32,16 @@ import numpy
 import threading
 import sys
 import traceback
+import codecs
 
 # Pour disposer des classes dans l'espace de nommage lors du pickle
 from daCore.AssimilationStudy import AssimilationStudy
 from daYacsIntegration import daStudy
+
+def dumps( data ):
+  return str(codecs.encode(pickle.dumps(data), "base64").decode())
+def loads( data ):
+  return pickle.loads(codecs.decode(data.encode(), "base64"))
 
 class OptimizerHooks:
 
@@ -60,27 +66,18 @@ class OptimizerHooks:
     specificParameters = pilot.SequenceAny_New(self.optim_algo.runtime.getTypeCode("SALOME_TYPES/Parameter"))
     method_name = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
     method_name.setEltAtRank("name", "method")
-    if sys.version_info.major < 3:
-      method_name.setEltAtRank("value", method)
-    else:
-      method_name.setEltAtRank("value", pickle.dumps(method))
+    method_name.setEltAtRank("value", dumps(method))
     specificParameters.pushBack(method_name)
     # print self.optim_algo.has_observer
     if self.optim_algo.has_observer:
       obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
       obs_switch.setEltAtRank("name", "switch_value")
-      if sys.version_info.major < 3:
-        obs_switch.setEltAtRank("value", "1")
-      else:
-        obs_switch.setEltAtRank("value", pickle.dumps("1"))
+      obs_switch.setEltAtRank("value", dumps("1"))
       specificParameters.pushBack(obs_switch)
     if self.optim_algo.has_evolution_model:
       obs_switch = pilot.StructAny_New(self.optim_algo.runtime.getTypeCode('SALOME_TYPES/Parameter'))
       obs_switch.setEltAtRank("name", "switch_value")
-      if sys.version_info.major < 3:
-        obs_switch.setEltAtRank("value", self.switch_value)
-      else:
-        obs_switch.setEltAtRank("value", pickle.dumps(self.switch_value))
+      obs_switch.setEltAtRank("value", dumps(self.switch_value))
       specificParameters.pushBack(obs_switch)
     sample.setEltAtRank("specificParameters", specificParameters)
 
@@ -400,10 +397,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Switch Value
     obs_switch = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/Parameter'))
     obs_switch.setEltAtRank("name", "switch_value")
-    if sys.version_info.major < 3:
-      obs_switch.setEltAtRank("value", self.da_study.observers_dict[info]["number"])
-    else:
-      obs_switch.setEltAtRank("value", pickle.dumps(self.da_study.observers_dict[info]["number"]))
+    obs_switch.setEltAtRank("value", dumps(self.da_study.observers_dict[info]["number"]))
     specificParameters.pushBack(obs_switch)
 
     # Var
@@ -413,7 +407,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Remove Data Observer, so you can ...
     var.removeDataObserver(self.obs)
     # Pickle then ...
-    var_struct.setEltAtRank("value", pickle.dumps(var))
+    var_struct.setEltAtRank("value", dumps(var))
     specificParameters.pushBack(var_struct)
     # Add Again Data Observer
     if self.da_study.observers_dict[info]["scheduler"] != "":
@@ -424,10 +418,7 @@ class AssimilationAlgorithm_asynch(SALOMERuntime.OptimizerAlgASync):
     # Info
     info_struct = pilot.StructAny_New(self.runtime.getTypeCode('SALOME_TYPES/Parameter'))
     info_struct.setEltAtRank("name", "info")
-    if sys.version_info.major < 3:
-      info_struct.setEltAtRank("value", self.da_study.observers_dict[info]["info"])
-    else:
-      info_struct.setEltAtRank("value", pickle.dumps(self.da_study.observers_dict[info]["info"]))
+    info_struct.setEltAtRank("value", dumps(self.da_study.observers_dict[info]["info"]))
     specificParameters.pushBack(info_struct)
 
     sample.setEltAtRank("specificParameters", specificParameters)
