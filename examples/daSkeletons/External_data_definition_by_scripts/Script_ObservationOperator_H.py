@@ -31,7 +31,9 @@ __author__ = "Jean-Philippe ARGAUD"
 # ==============================================================================
 #
 import Physical_simulation_functions
-import numpy, logging
+import numpy, logging, codecs, pickle
+def loads( data ):
+    return pickle.loads(codecs.decode(data.encode(), "base64"))
 #
 # -----------------------------------------------------------------------
 # SALOME input data and parameters: all information are the required input
@@ -47,7 +49,7 @@ import numpy, logging
 method = ""
 for param in computation["specificParameters"]:
     if param["name"] == "method":
-        method = param["value"]
+        method = loads(param["value"])
 logging.info("ComputationFunctionNode: Found method is \'%s\'"%method)
 #
 # Loading the H operator functions from external definitions

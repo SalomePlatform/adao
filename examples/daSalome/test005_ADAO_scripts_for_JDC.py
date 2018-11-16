@@ -20,8 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import numpy
-import logging
+import numpy, logging, codecs, pickle
+def loads( data ):
+    return pickle.loads(codecs.decode(data.encode(), "base64"))
 logging.info("ComputationFunctionNode: Begin")
 # ==============================================================================
 # Input data and parameters: all is in the required input variable
@@ -37,7 +38,7 @@ logging.info("ComputationFunctionNode: Begin")
 method = ""
 for param in computation["specificParameters"]:
     if param["name"] == "method":
-        method = param["value"]
+        method = loads(param["value"])
 logging.info("ComputationFunctionNode: Found method is \'%s\'"%method)
 #
 # Recovering the current control state X
