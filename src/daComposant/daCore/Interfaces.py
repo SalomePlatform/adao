@@ -560,10 +560,12 @@ class ImportDetector(object):
         #
         mimetypes.add_type('application/numpy.npy', '.npy')
         mimetypes.add_type('application/numpy.npz', '.npz')
+        mimetypes.add_type('application/dymola.sdf', '.sdf')
         if sys.platform.startswith("win"):
             mimetypes.add_type('text/plain', '.txt')
             mimetypes.add_type('text/csv', '.csv')
             mimetypes.add_type('text/tab-separated-values', '.tsv')
+            mimetypes.add_type('application/dymola.sdf', '.sdf')
     #
     # File related f
     # ------------------
@@ -582,6 +584,7 @@ class ImportDetector(object):
             raise ValueError("The name or the url of the file object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
         else:
             return False
+    #
     # Directory related tests
     # -----------------------
     def is_local_dir(self):
@@ -599,6 +602,7 @@ class ImportDetector(object):
             raise ValueError("The name or the url of the directory object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
         else:
             return False
+    #
     # Mime related functions
     # ------------------------
     def get_standard_mime(self):
@@ -615,6 +619,7 @@ class ImportDetector(object):
             return self.get_user_mime()
         else:
             return None
+    #
     # Name related functions
     # ----------------------
     def get_user_name(self):
@@ -632,7 +637,7 @@ class ImportFromFile(object):
     lecture d'un fichier au format spécifié (ou intuité) permet de charger ces
     fonctions depuis :
         - des fichiers textes en colonnes de type TXT, CSV, TSV...
-        - des fichiers de données binaires NPY, NPZ...
+        - des fichiers de données binaires NPY, NPZ, SDF...
     La lecture du fichier complet ne se fait que si nécessaire, pour assurer la
     performance tout en disposant de l'interprétation du contenu. Les fichiers
     textes doivent présenter en première ligne (hors commentaire ou ligne vide)
@@ -690,7 +695,7 @@ class ImportFromFile(object):
     def __getentete(self, __nblines = 3):
         "Lit l'entête du fichier pour trouver la définition des variables"
         __header, __varsline, __skiprows = [], "", 1
-        if self._format in ("application/numpy.npy", "application/numpy.npz"):
+        if self._format in ("application/numpy.npy", "application/numpy.npz", "application/dymola.sdf"):
             pass
         else:
             with open(self._filename,'r') as fid:
@@ -745,6 +750,7 @@ class ImportFromFile(object):
         __index = None
         if self._format == "application/numpy.npy":
             __columns = numpy.load(self._filename)
+        #
         elif self._format == "application/numpy.npz":
             __columns = None
             with numpy.load(self._filename) as __allcolumns:
@@ -766,6 +772,23 @@ class ImportFromFile(object):
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), skiprows=self._skiprows)
         #
+        elif self._format == "application/dymola.sdf" and PlatformInfo.has_sdf:
+            import sdf
+            __content = sdf.load(self._filename)
+            __columns = None
+            if self._colnames is None:
+                self._colnames = [__content.datasets[i].name for i in range(len(__content.datasets))]
+            for nom in self._colnames:
+                if nom in __content:
+                    if __columns is not None:
+                        # Attention : toutes les variables doivent avoir la même taille
+                        __columns = numpy.vstack((__columns, numpy.reshape(__content[nom].data, (1,-1))))
+                    else:
+                        # Première colonne
+                        __columns = numpy.reshape(__content[nom].data, (1,-1))
+            if self._colindex is not None and self._colindex in __content:
+                __index = __content[self._colindex].data
+        #
         elif self._format == "text/csv":
             __usecols, __useindex = self.__getindices(self._colnames, self._colindex, self._delimiter)
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
@@ -778,7 +801,7 @@ class ImportFromFile(object):
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
         else:
-            raise ValueError("Unkown file format \"%s\""%self._format)
+            raise ValueError("Unkown file format \"%s\" or no reader available"%self._format)
         if __columns is None: __columns = ()
         #
         def toString(value):
@@ -862,7 +885,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
         else:
             raise ValueError("Unkown file format \"%s\""%self._format)
         #
-        __names, __background, __bounds = [], [], []
+        __names, __thevalue, __bounds = [], [], []
         for sub in __content:
             if len(__usecols) == 4:
                 na, va, mi, ma = sub
@@ -884,14 +907,14 @@ class ImportScalarLinesFromFile(ImportFromFile):
             if (__varnames is None or na in __varnames) and (na not in __names):
                 # Ne stocke que la premiere occurence d'une variable
                 __names.append(na)
-                __background.append(va)
+                __thevalue.append(va)
                 __bounds.append((mi,ma))
         #
         __names      = tuple(__names)
-        __background = numpy.array(__background)
+        __thevalue = numpy.array(__thevalue)
         __bounds     = tuple(__bounds)
         #
-        return (__names, __background, __bounds)
+        return (__names, __thevalue, __bounds)
 
 # ==============================================================================
 if __name__ == "__main__":

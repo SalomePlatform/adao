@@ -188,6 +188,12 @@ try:
 except ImportError:
     has_nlopt = False
 
+try:
+    import sdf
+    has_sdf = True
+except ImportError:
+    has_sdf = False
+
 has_salome = bool( "ROOT_SALOME"   in os.environ )
 has_yacs   = bool( "YACS_ROOT_DIR" in os.environ )
 has_adao   = bool( "ADAO_ROOT_DIR" in os.environ )
