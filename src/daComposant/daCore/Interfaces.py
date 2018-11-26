@@ -565,7 +565,6 @@ class ImportDetector(object):
             mimetypes.add_type('text/plain', '.txt')
             mimetypes.add_type('text/csv', '.csv')
             mimetypes.add_type('text/tab-separated-values', '.tsv')
-            mimetypes.add_type('application/dymola.sdf', '.sdf')
     #
     # File related f
     # ------------------
@@ -646,7 +645,7 @@ class ImportFromFile(object):
     __slots__ = (
         "_filename", "_colnames", "_colindex", "_varsline", "_format",
         "_delimiter", "_skiprows", "__url", "__filestring", "__header",
-        "__allowvoid")
+        "__allowvoid", "__binaryformats", "__supportedformats")
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_val, exc_tb): return False
     #
@@ -663,6 +662,11 @@ class ImportFromFile(object):
             - AllowVoidNameList : permet, si la liste de noms est vide, de
               prendre par défaut toutes les colonnes
         """
+        self.__binaryformats =(
+            "application/numpy.npy",
+            "application/numpy.npz",
+            "application/dymola.sdf",
+            )
         self.__url = ImportDetector( Filename, Format)
         self.__url.raise_error_if_not_local_file()
         self._filename = self.__url.get_absolute_name()
@@ -695,7 +699,7 @@ class ImportFromFile(object):
     def __getentete(self, __nblines = 3):
         "Lit l'entête du fichier pour trouver la définition des variables"
         __header, __varsline, __skiprows = [], "", 1
-        if self._format in ("application/numpy.npy", "application/numpy.npz", "application/dymola.sdf"):
+        if self._format in self.__binaryformats:
             pass
         else:
             with open(self._filename,'r') as fid:
@@ -740,6 +744,16 @@ class ImportFromFile(object):
             __useindex = None
         #
         return (__usecols, __useindex)
+
+    def getsupported(self):
+        self.__supportedformats = {}
+        self.__supportedformats["text/plain"]                = True
+        self.__supportedformats["text/csv"]                  = True
+        self.__supportedformats["text/tab-separated-values"] = True
+        self.__supportedformats["application/numpy.npy"]     = True
+        self.__supportedformats["application/numpy.npz"]     = True
+        self.__supportedformats["application/dymola.sdf"]    = PlatformInfo.has_sdf
+        return self.__supportedformats
 
     def getvalue(self, ColNames=None, ColIndex=None ):
         "Renvoie la ou les variables demandees par la liste de leurs noms"
@@ -815,9 +829,12 @@ class ImportFromFile(object):
         return (self._colnames, __columns, self._colindex, __index)
 
     def getstring(self):
-        "Renvoie le fichier complet"
-        with open(self._filename,'r') as fid:
-            return fid.read()
+        "Renvoie le fichier texte complet"
+        if self._format in self.__binaryformats:
+            return ""
+        else:
+            with open(self._filename,'r') as fid:
+                return fid.read()
 
     def getformat(self):
         return self._format
