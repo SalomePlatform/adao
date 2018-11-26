@@ -91,7 +91,7 @@ analysis or the optimal state, noted as :math:`\mathbf{x}^a` in the section
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
-    print 'Analysis:',xa"
+    print('Analysis:',xa)
 
 The ``numpy.ravel`` function is here to be sure that the ``xa`` variable will
 contain a real unidimensional vector, whatever the previous computing choices
@@ -104,7 +104,7 @@ consists in saving on file the value of the analysis or the optimal state
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
     f='/tmp/analysis.txt'
-    print 'Analysis saved in "%s"'%f
+    print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)"
 
 The chosen recording file is a text one named ``/tmp/analysis.txt``.
@@ -116,9 +116,9 @@ value of :math:`\mathbf{x}^a`. It is realized by the commands::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
-    print 'Analysis:',xa
+    print('Analysis:',xa)
     f='/tmp/analysis.txt'
-    print 'Analysis saved in "%s"'%f
+    print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
 To facilitate these examples extension for user needs, we recall that all the

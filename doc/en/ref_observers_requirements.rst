@@ -66,7 +66,7 @@ As an example, here is a very simple script (similar to the model
 "*ValuePrinter*"), that can be used to print the value of the monitored
 variable::
 
-    print "    --->",info," Value =",var[-1]
+    print("    --->",info," Value =",var[-1])
 
 Stored as a Python file or as an explicit string, these script lines can be
 associated to each variable found in the keyword "*SELECTION*" of the

@@ -198,9 +198,9 @@ le noeud de script est::
 
     Xa = Study.getResults().get("Analysis")[-1]
 
-    print
-    print "Analysis =",Xa
-    print
+    print()
+    print("Analysis =",Xa)
+    print()
 
 Le schéma YACS (initial ou complété) peut être enregistré (en écrasant le schéma
 généré si la commande ou le bouton "*Enregistrer*" sont utilisés, ou sinon avec
@@ -605,13 +605,13 @@ données ou d'optimisation. L'exemple suivant de fichier script Python, nommé
     #
     # Verifying the results by printing
     # ---------------------------------
-    print
-    print "xt = %s"%xt
-    print "xa = %s"%numpy.array(xa)
-    print
+    print()
+    print("xt = %s"%xt)
+    print("xa = %s"%numpy.array(xa))
+    print()
     for i in range( len(x_series) ):
-        print "Etape %2i : J = %.5e  et  X = %s"%(i, J[i], x_series[i])
-    print
+        print("Etape %2i : J = %.5e  et  X = %s"%(i, J[i], x_series[i]))
+    print()
 
 Finalement, on obtient la description de l'ensemble des conditions
 d'expériences à travers la série de fichiers listée ici:

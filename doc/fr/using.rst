@@ -221,8 +221,8 @@ optimale de l'état par assimilation de données, dans un script fournit par
 l'intermédiaire du mot-clé "*UserPostAnalysis*", on peut utiliser::
 
     Xa = ADD.get("Analysis")[-1]
-    print "Optimal state:", Xa
-    print
+    print("Optimal state:", Xa)
+    print()
 
 Cette variable ``Xa`` est un vecteur de valeurs, qui représente la solution du
 problème d'évaluation par assimilation de données ou par optimisation, notée

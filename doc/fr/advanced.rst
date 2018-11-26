@@ -166,27 +166,27 @@ de types pour éviter d'obscures difficultés::
     try:
         p = xmlLoader.load("<Schéma xml YACS ADAO>")
     except IOError,ex:
-        print "IO exception:",ex
+        print("IO exception:",ex)
 
     logger = p.getLogger("parser")
     if not logger.isEmpty():
-        print "The imported file has errors :"
-        print logger.getStr()
+        print("The imported file has errors :")
+        print(logger.getStr())
 
     if not p.isValid():
-        print "Le schéma n'est pas valide et ne peut pas être exécuté"
-        print p.getErrorReport()
+        print("Le schéma n'est pas valide et ne peut pas être exécuté")
+        print(p.getErrorReport())
 
     info=pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
     p.checkConsistency(info)
     if info.areWarningsOrErrors():
-        print "Le schéma n'est pas cohérent et ne peut pas être exécuté"
-        print info.getGlobalRepr()
+        print("Le schéma n'est pas cohérent et ne peut pas être exécuté")
+        print(info.getGlobalRepr())
 
     e = pilot.ExecutorSwig()
     e.RunW(p)
     if p.getEffectiveState() != pilot.DONE:
-        print p.getErrorReport()
+        print(p.getErrorReport())
 
 Cette démarche permet par exemple d'éditer le schéma YACS XML en mode texte TUI,
 ou de rassembler les résultats pour un usage ultérieur.

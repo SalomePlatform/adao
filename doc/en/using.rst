@@ -210,8 +210,8 @@ data assimilation state evaluation, in a script provided through the
 "*UserPostAnalysis*" keyword, one can use::
 
     Xa = ADD.get("Analysis")[-1]
-    print "Optimal state:", Xa
-    print
+    print("Optimal state:", Xa)
+    print()
 
 This ``Xa`` variable is a vector of values, that represents the solution of the
 data assimilation or optimization evaluation problem, noted as

@@ -157,27 +157,27 @@ load the types catalog to avoid weird difficulties::
     try:
         p = xmlLoader.load("<ADAO YACS xml scheme>")
     except IOError,ex:
-        print "IO exception:",ex
+        print("IO exception:",ex)
 
     logger = p.getLogger("parser")
     if not logger.isEmpty():
-        print "The imported file has errors :"
-        print logger.getStr()
+        print("The imported file has errors :")
+        print(logger.getStr())
 
     if not p.isValid():
-        print "The schema is not valid and can not be executed"
-        print p.getErrorReport()
+        print("The schema is not valid and can not be executed")
+        print(p.getErrorReport())
 
     info=pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
     p.checkConsistency(info)
     if info.areWarningsOrErrors():
-        print "The schema is not consistent and can not be executed"
-        print info.getGlobalRepr()
+        print("The schema is not consistent and can not be executed")
+        print(info.getGlobalRepr())
 
     e = pilot.ExecutorSwig()
     e.RunW(p)
     if p.getEffectiveState() != pilot.DONE:
-        print p.getErrorReport()
+        print(p.getErrorReport())
 
 This method allows for example to edit the YACS XML scheme in TUI, or to gather
 results for further use.

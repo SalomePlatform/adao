@@ -188,9 +188,9 @@ in the script node is::
 
     Xa = Study.getResults().get("Analysis")[-1]
 
-    print
-    print "Analysis =",Xa
-    print
+    print()
+    print("Analysis =",Xa)
+    print()
 
 The (initial or augmented) YACS scheme can be saved (overwriting the generated
 scheme if the "*Save*" command or button are used, or with a new name through
@@ -572,13 +572,13 @@ Python script file, named ``Script_UserPostAnalysis.py``, illustrates the fact::
     #
     # Verifying the results by printing
     # ---------------------------------
-    print
-    print "xt = %s"%xt
-    print "xa = %s"%numpy.array(xa)
-    print
+    print()
+    print("xt = %s"%xt)
+    print("xa = %s"%numpy.array(xa))
+    print()
     for i in range( len(x_series) ):
-        print "Step %2i : J = %.5e  and  X = %s"%(i, J[i], x_series[i])
-    print
+        print("Step %2i : J = %.5e  and  X = %s"%(i, J[i], x_series[i]))
+    print()
 
 At the end, we get a description of the whole case setup through a set of files
 listed here:

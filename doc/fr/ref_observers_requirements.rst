@@ -69,7 +69,7 @@ A titre d'exemple, voici un script très simple (similaire au modèle
 "*ValuePrinter*"), utilisable pour afficher la valeur d'une variable
 surveillée::
 
-    print "    --->",info," Value =",var[-1]
+    print("    --->",info," Value =",var[-1])
 
 Stockées comme un fichier Python ou une chaîne de caractères explicite, ces
 lignes de script peuvent être associées à chaque variable présente dans le

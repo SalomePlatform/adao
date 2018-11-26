@@ -95,7 +95,7 @@ partie :ref:`section_theory`. Cela se réalise par les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
-    print 'Analysis:',xa"
+    print('Analysis:',xa)
 
 La fonction ``numpy.ravel`` assure simplement que la variable ``xa`` contienne
 un vrai vecteur unidimensionnel, quels que soient les choix informatiques
@@ -108,7 +108,7 @@ l'état optimal :math:`\mathbf{x}^a`. Cela se réalise par les commandes::
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
     f='/tmp/analysis.txt'
-    print 'Analysis saved in "%s"'%f
+    print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)"
 
 Le fichier d'enregistrement choisi est un fichier texte ``/tmp/analysis.txt``.
@@ -121,9 +121,9 @@ les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
-    print 'Analysis:',xa
+    print('Analysis:',xa)
     f='/tmp/analysis.txt'
-    print 'Analysis saved in "%s"'%f
+    print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
 Pour faciliter l'extension de ces exemples selon les besoins utilisateurs, on
