@@ -115,9 +115,9 @@ class ExtendedLogging(object):
         logging.info( "- Sphinx.......: "+str(PlatformInfo.has_sphinx) )
         logging.info( "- Nlopt........: "+str(PlatformInfo.has_nlopt) )
         logging.info( "Library versions:" )
-        logging.info( "- Python.......:"+p.getPythonVersion() )
-        logging.info( "- Numpy........:"+p.getNumpyVersion() )
-        logging.info( "- Scipy........:"+p.getScipyVersion() )
+        logging.info( "- Python.......: "+p.getPythonVersion() )
+        logging.info( "- Numpy........: "+p.getNumpyVersion() )
+        logging.info( "- Scipy........: "+p.getScipyVersion() )
         logging.info( "" )
 
     def setLogfile(self, filename=LOGFILE, filemode="w", level=logging.NOTSET):

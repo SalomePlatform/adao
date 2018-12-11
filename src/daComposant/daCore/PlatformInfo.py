@@ -46,6 +46,8 @@ __all__ = []
 
 import os
 import sys
+import platform
+import locale
 
 # ==============================================================================
 class PlatformInfo(object):
@@ -75,6 +77,30 @@ class PlatformInfo(object):
         "Retourne l'année de création de la version"
         import daCore.version as dav
         return dav.year
+
+    def getSystemInformation(self, __prefix=""):
+        __msg  = ""
+        __msg += "\n%s%30s : %s" %(__prefix,"platform.system",platform.system())
+        __msg += "\n%s%30s : %s" %(__prefix,"sys.platform",sys.platform)
+        __msg += "\n%s%30s : %s" %(__prefix,"platform.version",platform.version())
+        __msg += "\n%s%30s : %s" %(__prefix,"platform.platform",platform.platform())
+        __msg += "\n%s%30s : %s" %(__prefix,"platform.machine",platform.machine())
+        if sys.platform.startswith('linux'):
+            if hasattr(platform, 'linux_distribution'):
+                __msg += "\n%s%30s : %s" %(__prefix,
+                    "platform.linux_distribution",str(platform.linux_distribution()))
+            else:
+                __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
+        elif os.name == 'nt':
+            __msg += "\n%s%30s : %s" %(__prefix,"platform.win32_ver",platform.win32_ver()[1])
+        #
+        __msg += "\n"
+        __msg += "\n%s%30s : %s" %(__prefix,"platform.python_implementation",platform.python_implementation())
+        __msg += "\n%s%30s : %s" %(__prefix,"sys.executable",sys.executable)
+        __msg += "\n%s%30s : %s" %(__prefix,"sys.version",sys.version.replace('\n',''))
+        __msg += "\n%s%30s : %s" %(__prefix,"sys.getfilesystemencoding",str(sys.getfilesystemencoding()))
+        __msg += "\n%s%30s : %s" %(__prefix,"locale.getdefaultlocale",str(locale.getdefaultlocale()))
+        return __msg
 
     def getPythonVersion(self):
         "Retourne la version de python disponible"
