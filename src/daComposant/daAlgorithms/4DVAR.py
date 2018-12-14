@@ -169,8 +169,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
             if self._parameters["StoreInternalVariables"] or \
-                "CurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
-                "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+                self._toStore("CurrentState") or \
+                self._toStore("CurrentOptimum"):
                 self.StoredVariables["CurrentState"].store( _X )
             Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
             self.DirectCalculation = [None,]
@@ -208,21 +208,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
-            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("IndexOfOptimum") or \
+                self._toStore("CurrentOptimum") or \
+                self._toStore("CostFunctionJAtCurrentOptimum") or \
+                self._toStore("CostFunctionJbAtCurrentOptimum") or \
+                self._toStore("CostFunctionJoAtCurrentOptimum"):
                 IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
-            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("IndexOfOptimum"):
                 self.StoredVariables["IndexOfOptimum"].store( IndexMin )
-            if "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CurrentOptimum"):
                 self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
-            if "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CostFunctionJAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
-            if "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CostFunctionJbAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
-            if "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CostFunctionJoAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
             return J
         #
@@ -326,7 +326,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         # ----------------------------------------------------------------
-        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
             Minimum = self.StoredVariables["CurrentState"][IndexMin]
         #
         # Obtention de l'analyse
@@ -337,7 +337,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
-        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         #
         self._post_run(HO)

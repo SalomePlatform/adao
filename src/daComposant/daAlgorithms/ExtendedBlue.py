@@ -137,18 +137,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la fonction coût
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
-           "CostFunctionJ"                      in self._parameters["StoreSupplementaryCalculations"] or \
-           "OMA"                                in self._parameters["StoreSupplementaryCalculations"] or \
-           "SigmaObs2"                          in self._parameters["StoreSupplementaryCalculations"] or \
-           "MahalanobisConsistency"             in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulatedObservationAtOptimum"      in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulationQuantiles"                in self._parameters["StoreSupplementaryCalculations"]:
+            self._toStore("CostFunctionJ") or \
+            self._toStore("OMA") or \
+            self._toStore("SigmaObs2") or \
+            self._toStore("MahalanobisConsistency") or \
+            self._toStore("SimulatedObservationAtCurrentState") or \
+            self._toStore("SimulatedObservationAtOptimum") or \
+            self._toStore("SimulationQuantiles"):
             HXa  = numpy.matrix(numpy.ravel( H( Xa ) )).T
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
-           "CostFunctionJ"                 in self._parameters["StoreSupplementaryCalculations"] or \
-           "MahalanobisConsistency"        in self._parameters["StoreSupplementaryCalculations"]:
+            self._toStore("CostFunctionJ") or \
+            self._toStore("MahalanobisConsistency"):
             Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
             Jo  = float( 0.5 * oma.T * RI * oma )
             J   = Jb + Jo
@@ -158,8 +158,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
-        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulationQuantiles"   in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("APosterioriCovariance") or \
+            self._toStore("SimulationQuantiles"):
             if   (Y.size <= Xb.size): K  = B * Ha * (R + Hm * B * Ha).I
             elif (Y.size >  Xb.size): K = (BI + Ha * RI * Hm).I * Ha * RI
             A = B - K * Hm * B
@@ -176,24 +176,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
-        if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
-        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("Innovation"):
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
-        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
-        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(oma) )
-        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("OMB"):
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
-        if "SigmaObs2" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SigmaObs2"):
             TraceR = R.trace(Y.size)
             self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(oma)).T)) ) / TraceR )
-        if "SigmaBck2" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SigmaBck2"):
             self.StoredVariables["SigmaBck2"].store( float( (d.T * Hm * (Xa - Xb))/(Hm * B * Hm.T).trace() ) )
-        if "MahalanobisConsistency" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("MahalanobisConsistency"):
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
-        if "SimulationQuantiles" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulationQuantiles"):
             nech = self._parameters["NumberOfSamplesForQuantiles"]
             HtM  = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
             HtM  = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
@@ -218,11 +218,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if YQ is None: YQ = YfQ[:,indice]
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )
-        if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
-        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
-        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
         self._post_run(HO)

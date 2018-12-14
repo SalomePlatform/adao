@@ -111,7 +111,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------
         Ys = []
         for i in range(self._parameters["NumberOfRepetition"]):
-            if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
             print("     %s\n"%("-"*75,))
             if self._parameters["NumberOfRepetition"] > 1:
@@ -132,7 +132,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn, dtype=mfp )
             msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
             print(msgs)
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
             #
             Ys.append( copy.copy( numpy.ravel(

@@ -154,7 +154,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if self._parameters["StoreInternalVariables"]:
+        if self._parameters["StoreInternalVariables"] \
+            or self._toStore("CostFunctionJ") \
+            or self._toStore("CostFunctionJb") \
+            or self._toStore("CostFunctionJo"):
             BI = B.getI()
             RI = R.getI()
         #
@@ -167,7 +170,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Pn = B
         #
         self.StoredVariables["Analysis"].store( Xn.A1 )
-        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("APosterioriCovariance"):
             self.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
         Xa               = Xn
@@ -268,23 +271,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             #
             self.StoredVariables["Analysis"].store( Xn.A1 )
-            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
-            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("Innovation"):
                 self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
-            if self._parameters["StoreInternalVariables"]:
+            if self._parameters["StoreInternalVariables"] \
+                or self._toStore("CurrentState"):
+                self.StoredVariables["CurrentState"].store( Xn )
+            if self._parameters["StoreInternalVariables"] \
+                or self._toStore("CostFunctionJ") \
+                or self._toStore("CostFunctionJb") \
+                or self._toStore("CostFunctionJo"):
                 Jb  = 0.5 * (Xn - Xb).T * BI * (Xn - Xb)
                 Jo  = 0.5 * d.T * RI * d
                 J   = float( Jb ) + float( Jo )
-                if self._parameters["StoreInternalVariables"] or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
-                    self.StoredVariables["CurrentState"].store( Xn )
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )
                 if J < previousJMinimum:
                     previousJMinimum  = J
                     Xa                = Xn
-                    if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                    if self._toStore("APosterioriCovariance"):
                         covarianceXa  = Pn
             else:
                 Xa = Xn
@@ -294,10 +301,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------------------------------------------------
         if self._parameters["EstimationOf"] == "Parameters":
             self.StoredVariables["Analysis"].store( Xa.A1 )
-            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
         #
-        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         #
         self._post_run(HO)

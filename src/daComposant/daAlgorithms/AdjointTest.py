@@ -98,9 +98,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Y = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
         Y = numpy.asmatrix(numpy.ravel( Y )).T
         NormeY = numpy.linalg.norm( Y )
-        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(X) )
-        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Y) )
         #
         if len(self._parameters["InitialDirection"]) == 0:

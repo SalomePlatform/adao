@@ -121,9 +121,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         FX      = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
-        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
-        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
         if len(self._parameters["InitialDirection"]) == 0:
@@ -237,9 +237,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             FX_plus_dX = Hm( X + dX )
             FX_plus_dX = numpy.asmatrix(numpy.ravel( FX_plus_dX )).T
             #
-            if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( numpy.ravel(X + dX) )
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
             #
             NormedX     = numpy.linalg.norm( dX )

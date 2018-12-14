@@ -96,14 +96,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # -----------------------------------------------
         for iens in range(nb_ens):
             HXb = Hm * Xb[iens]
-            if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtBackground"):
                 self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
             d  = EnsembleY[:,iens] - HXb
-            if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("Innovation"):
                 self.StoredVariables["Innovation"].store( numpy.ravel(d) )
             Xa = Xb[iens] + K*d
             self.StoredVariables["CurrentState"].store( Xa )
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm * Xa )
         #
         # Fabrication de l'analyse
@@ -111,7 +111,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Members = self.StoredVariables["CurrentState"][-nb_ens:]
         Xa = numpy.matrix( Members ).mean(axis=0)
         self.StoredVariables["Analysis"].store( Xa.A1 )
-        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel( Hm * Xa ) )
         #
         self._post_run(HO)

@@ -154,11 +154,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     Jo  = numpy.max( numpy.abs(Y - _HX) )
                 #
                 J   = float( Jb ) + float( Jo )
-            if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( _X )
-            if "InnovationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("InnovationAtCurrentState"):
                 self.StoredVariables["InnovationAtCurrentState"].store( Y - _HX )
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )

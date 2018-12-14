@@ -106,11 +106,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
-        if self._parameters["StoreInternalVariables"] \
-            or "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"] \
-            or "CostFunctionJb" in self._parameters["StoreSupplementaryCalculations"] \
-            or "CostFunctionJo" in self._parameters["StoreSupplementaryCalculations"] \
-                or "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._parameters["StoreInternalVariables"] or \
+            self._toStore("CostFunctionJ") or \
+            self._toStore("CostFunctionJb") or \
+            self._toStore("CostFunctionJo") or \
+            self._toStore("APosterioriCovariance"):
             BI = B.getI()
             RI = R.getI()
         BIdemi = B.choleskyI()
@@ -129,7 +129,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:                         Qn = Q
         #
         self.StoredVariables["Analysis"].store( Xb.A1 )
-        if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("APosterioriCovariance"):
             self.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
         Xa               = Xb
@@ -193,29 +193,29 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["Analysis"].store( Xa )
             #
             del Yo, PfHT, HPfHT
-            if self._parameters["StoreInternalVariables"] \
-                or "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"] \
-                or "CostFunctionJb" in self._parameters["StoreSupplementaryCalculations"] \
-                or "CostFunctionJo" in self._parameters["StoreSupplementaryCalculations"] \
-                or "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"] \
-                or "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._parameters["StoreInternalVariables"] or \
+                self._toStore("CostFunctionJ") or \
+                self._toStore("CostFunctionJb") or \
+                self._toStore("CostFunctionJo") or \
+                self._toStore("APosterioriCovariance") or \
+                self._toStore("Innovation"):
                 d = Ynpu - numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
                 self.StoredVariables["Innovation"].store( d )
             if self._parameters["StoreInternalVariables"] \
-                or "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+                or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( Xn )
-            if self._parameters["StoreInternalVariables"] \
-                or "CostFunctionJ" in self._parameters["StoreSupplementaryCalculations"] \
-                or "CostFunctionJb" in self._parameters["StoreSupplementaryCalculations"] \
-                or "CostFunctionJo" in self._parameters["StoreSupplementaryCalculations"] \
-                or "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._parameters["StoreInternalVariables"] or \
+                self._toStore("CostFunctionJ") or \
+                self._toStore("CostFunctionJb") or \
+                self._toStore("CostFunctionJo") or \
+                self._toStore("APosterioriCovariance"):
                 Jb  = 0.5 * (Xa - Xb).T * BI * (Xa - Xb)
                 Jo  = 0.5 * d.T * RI * d
                 J   = float( Jb ) + float( Jo )
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )
-            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("APosterioriCovariance"):
                 Ht = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
                 Ht = Ht.reshape(__p,__n) # ADAO & check shape
                 Pf = 0.
@@ -233,10 +233,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ----------------------------------------------------------------
         if self._parameters["EstimationOf"] == "Parameters":
             self.StoredVariables["Analysis"].store( Xa.A1 )
-            if "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
         #
-        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         #
         self._post_run(HO)

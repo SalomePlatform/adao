@@ -105,9 +105,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         FX      = numpy.asmatrix(numpy.ravel( Hm( Xn ) )).T
         NormeX  = numpy.linalg.norm( Xn )
         NormeFX = numpy.linalg.norm( FX )
-        if "CurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
-        if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
         # Fabrication de la direction de l'increment dX

@@ -166,10 +166,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             _Innovation = Y - _HX
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"] or \
-               "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtCurrentState") or \
+                self._toStore("SimulatedObservationAtCurrentOptimum"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
-            if "InnovationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("InnovationAtCurrentState"):
                 self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
             #
             if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
@@ -197,24 +197,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
-            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"] or \
-               "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("IndexOfOptimum") or \
+                self._toStore("CurrentOptimum") or \
+                self._toStore("CostFunctionJAtCurrentOptimum") or \
+                self._toStore("CostFunctionJbAtCurrentOptimum") or \
+                self._toStore("CostFunctionJoAtCurrentOptimum") or \
+                self._toStore("SimulatedObservationAtCurrentOptimum"):
                 IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
-            if "IndexOfOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("IndexOfOptimum"):
                 self.StoredVariables["IndexOfOptimum"].store( IndexMin )
-            if "CurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CurrentOptimum"):
                 self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
-            if "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("SimulatedObservationAtCurrentOptimum"):
                 self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
-            if "CostFunctionJAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CostFunctionJAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
-            if "CostFunctionJbAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CostFunctionJbAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
-            if "CostFunctionJoAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            if self._toStore("CostFunctionJoAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
             return J
         #
@@ -249,28 +249,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
-        if "OMA"                           in self._parameters["StoreSupplementaryCalculations"] or \
-           "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
-            if "SimulatedObservationAtCurrentState" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("OMA") or self._toStore("SimulatedObservationAtOptimum"):
+            if self._toStore("SimulatedObservationAtCurrentState"):
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
-            elif "SimulatedObservationAtCurrentOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+            elif self._toStore("SimulatedObservationAtCurrentOptimum"):
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
             else:
                 HXa = Hm(Xa)
-        if "Innovation" in self._parameters["StoreSupplementaryCalculations"] or \
-            "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("Innovation") or \
+           self._toStore("OMB"):
             d  = Y - HXb
-        if "Innovation" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("Innovation"):
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
-        if "OMB" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("OMB"):
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
-        if "BMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
-        if "OMA" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
-        if "SimulatedObservationAtBackground" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(Hm(Xb)) )
-        if "SimulatedObservationAtOptimum" in self._parameters["StoreSupplementaryCalculations"]:
+        if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
         self._post_run()
