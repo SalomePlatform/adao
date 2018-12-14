@@ -508,6 +508,7 @@ class Algorithm(object):
         self.StoredVariables["GradientOfCostFunctionJb"]             = Persistence.OneVector(name = "GradientOfCostFunctionJb")
         self.StoredVariables["GradientOfCostFunctionJo"]             = Persistence.OneVector(name = "GradientOfCostFunctionJo")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["PredictedState"]                       = Persistence.OneVector(name = "PredictedState")
         self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
         self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name = "IndexOfOptimum")
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
@@ -539,7 +540,7 @@ class Algorithm(object):
         self.__setParameters(Parameters)
         #
         # Corrections et complements
-        def __test_vvalue( argument, variable, argname):
+        def __test_vvalue(argument, variable, argname):
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
                     raise ValueError("%s %s vector %s has to be properly defined!"%(self._name,argname,variable))
@@ -549,9 +550,11 @@ class Algorithm(object):
                     logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,variable))
             else:
                 logging.debug("%s %s vector %s is set, and its size is %i."%(self._name,argname,variable,numpy.array(argument).size))
+            return 0
         __test_vvalue( Xb, "Xb", "Background or initial state" )
         __test_vvalue( Y,  "Y",  "Observation" )
-        def __test_cvalue( argument, variable, argname):
+        #
+        def __test_cvalue(argument, variable, argname):
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
                     raise ValueError("%s %s error covariance matrix %s has to be properly defined!"%(self._name,argname,variable))
@@ -561,6 +564,7 @@ class Algorithm(object):
                     logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name,argname,variable))
             else:
                 logging.debug("%s %s error covariance matrix %s is set."%(self._name,argname,variable))
+            return 0
         __test_cvalue( R, "R", "Observation" )
         __test_cvalue( B, "B", "Background" )
         __test_cvalue( Q, "Q", "Evolution" )
@@ -606,6 +610,10 @@ class Algorithm(object):
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
         logging.debug("%s Terminé", self._name)
         return 0
+
+    def _toStore(self, key):
+        "True if in StoreSupplementaryCalculations, else False"
+        return key in self._parameters["StoreSupplementaryCalculations"]
 
     def get(self, key=None):
         """
