@@ -85,10 +85,24 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"platform.version",platform.version())
         __msg += "\n%s%30s : %s" %(__prefix,"platform.platform",platform.platform())
         __msg += "\n%s%30s : %s" %(__prefix,"platform.machine",platform.machine())
+        if len(platform.processor())>0:
+            __msg += "\n%s%30s : %s" %(__prefix,"platform.processor",platform.processor())
+        #
         if sys.platform.startswith('linux'):
             if hasattr(platform, 'linux_distribution'):
                 __msg += "\n%s%30s : %s" %(__prefix,
                     "platform.linux_distribution",str(platform.linux_distribution()))
+            else:
+                __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
+        elif sys.platform.startswith('darwin'):
+            if hasattr(platform, 'mac_ver'):
+                __macosxv = {'5': 'Leopard',       '6': 'Snow Leopard', '7': 'Lion',
+                             '8': 'Mountain Lion', '9': 'Mavericks',   '10': 'Yosemite',
+                             '11': 'El Capitan',  '12': 'Sierra'}
+                for key in __macosxv:
+                    if (platform.mac_ver()[0].split('.')[1] == key):
+                        __msg += "\n%s%30s : %s" %(__prefix,
+                            "platform.mac_ver",str(platform.mac_ver()[0]+"(" + macosx_dict[key]+")"))
             else:
                 __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
         elif os.name == 'nt':
@@ -100,6 +114,9 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"sys.version",sys.version.replace('\n',''))
         __msg += "\n%s%30s : %s" %(__prefix,"sys.getfilesystemencoding",str(sys.getfilesystemencoding()))
         __msg += "\n%s%30s : %s" %(__prefix,"locale.getdefaultlocale",str(locale.getdefaultlocale()))
+        __msg += "\n"
+        __msg += "\n%s%30s : %s" %(__prefix,"platform.node",platform.node())
+        __msg += "\n%s%30s : %s" %(__prefix,"os.path.expanduser",os.path.expanduser('~'))
         return __msg
 
     def getPythonVersion(self):
