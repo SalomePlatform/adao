@@ -84,10 +84,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Opérateurs
         # ----------
-        H = HO["Direct"].appliedControledFormTo
+        Hm = HO["Direct"].appliedControledFormTo
         #
         if self._parameters["EstimationOf"] == "State":
-            M = EM["Direct"].appliedControledFormTo
+            Mm = EM["Direct"].appliedControledFormTo
         #
         if CM is not None and "Tangent" in CM and U is not None:
             Cm = CM["Tangent"].asMatrix(Xb)
@@ -150,7 +150,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Un = None
             #
             if self._parameters["EstimationOf"] == "State":
-                Xn_predicted = numpy.asmatrix(numpy.ravel( M( (Xn, Un) ) )).T
+                Xn_predicted = numpy.asmatrix(numpy.ravel( Mm( (Xn, Un) ) )).T
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                     Xn_predicted = Xn_predicted + Cm * Un
@@ -165,9 +165,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Xn_predicted = numpy.min(numpy.hstack((Xn_predicted,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             #
             if self._parameters["EstimationOf"] == "State":
-                d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, None) ) )).T
+                d  = Ynpu - numpy.asmatrix(numpy.ravel( Hm( (Xn_predicted, None) ) )).T
             elif self._parameters["EstimationOf"] == "Parameters":
-                d  = Ynpu - numpy.asmatrix(numpy.ravel( H( (Xn_predicted, Un) ) )).T
+                d  = Ynpu - numpy.asmatrix(numpy.ravel( Hm( (Xn_predicted, Un) ) )).T
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                     d = d - Cm * Un
             #

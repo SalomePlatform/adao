@@ -146,8 +146,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             HXa = Hm * Xa
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
-           self._toStore("CostFunctionJ") or \
-           self._toStore("MahalanobisConsistency"):
+            self._toStore("CostFunctionJ") or \
+            self._toStore("MahalanobisConsistency"):
             Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
             Jo  = float( 0.5 * oma.T * RI * oma )
             J   = Jb + Jo

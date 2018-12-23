@@ -150,7 +150,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
         if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
-            HXb = Hm( Xb, HO["AppliedInX"]["HXb"])
+            HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
@@ -176,7 +176,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
             _Innovation = Y - _HX
             if self._toStore("SimulatedObservationAtCurrentState") or \
-               self._toStore("SimulatedObservationAtCurrentOptimum"):
+                self._toStore("SimulatedObservationAtCurrentOptimum"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             if self._toStore("InnovationAtCurrentState"):
                 self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
@@ -313,7 +313,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             elif self._toStore("SimulatedObservationAtCurrentOptimum"):
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
             else:
-                HXa = Hm(Xa)
+                HXa = Hm( Xa )
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
