@@ -418,8 +418,6 @@ class FullOperator(object):
         #
         if __appliedInX is not None:
             self.__FO["AppliedInX"] = {}
-            if not isinstance(__appliedInX, dict):
-                raise ValueError("Error: observation operator defined by \"AppliedInX\" need a dictionary as argument.")
             for key in list(__appliedInX.keys()):
                 if type( __appliedInX[key] ) is type( numpy.matrix([]) ):
                     # Pour le cas où l'on a une vraie matrice
@@ -1598,7 +1596,7 @@ class Covariance(object):
 
     def __mul__(self, other):
         "x.__mul__(y) <==> x*y"
-        if   self.ismatrix() and isinstance(other,numpy.matrix):
+        if   self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return self.__C * other
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
             if numpy.ravel(other).size == self.shape[1]: # Vecteur
@@ -1628,7 +1626,7 @@ class Covariance(object):
 
     def __rmul__(self, other):
         "x.__rmul__(y) <==> y*x"
-        if self.ismatrix() and isinstance(other,numpy.matrix):
+        if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return other * self.__C
         elif self.isvector() and isinstance(other,numpy.matrix):
             if numpy.ravel(other).size == self.shape[0]: # Vecteur
@@ -1636,7 +1634,7 @@ class Covariance(object):
             elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
                 return numpy.asmatrix(numpy.array(other) * self.__C)
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
             return other * self.__C
         elif self.isobject():
@@ -1711,6 +1709,21 @@ class CaseLogger(object):
         else:
             raise ValueError("Loading as \"%s\" is not available"%__format)
         return __formater.load(__filename, __content, __object)
+
+# ==============================================================================
+def MultiFonction( __xserie, _sFunction = lambda x: x ):
+    """
+    Pour une liste ordonnée de vecteurs en entrée, renvoie en sortie la liste
+    correspondante de valeurs de la fonction en argument
+    """
+    if not PlatformInfo.isIterable( __xserie ):
+        raise ValueError("MultiFonction not iterable unkown input type: %s"%(type(__xserie),))
+    #
+    __multiHX = []
+    for __xvalue in __xserie:
+        __multiHX.append( _sFunction( __xvalue ) )
+    #
+    return __multiHX
 
 # ==============================================================================
 def CostFunction3D(_x,

@@ -350,6 +350,7 @@ class Aidsm(object):
             Script         = None,
             Stored         = False,
             AvoidRC        = True,
+            InputAsMF      = False,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "ObservationOperator"
@@ -363,6 +364,7 @@ class Aidsm(object):
             asDict           = Parameters,
             appliedInX       = AppliedInXb,
             avoidRC          = AvoidRC,
+            inputAsMF        = InputAsMF,
             scheduledBy      = None,
             toBeChecked      = Checked,
             )
@@ -376,9 +378,10 @@ class Aidsm(object):
             ThreeFunctions = None,
             Parameters     = None,
             Script         = None,
-            Stored         = False,
             Scheduler      = None,
+            Stored         = False,
             AvoidRC        = True,
+            InputAsMF      = False,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "EvolutionModel"
@@ -392,6 +395,7 @@ class Aidsm(object):
             asDict           = Parameters,
             appliedInX       = None,
             avoidRC          = AvoidRC,
+            inputAsMF        = InputAsMF,
             scheduledBy      = Scheduler,
             toBeChecked      = Checked,
             )
@@ -405,9 +409,10 @@ class Aidsm(object):
             ThreeFunctions = None,
             Parameters     = None,
             Script         = None,
-            Stored         = False,
             Scheduler      = None,
+            Stored         = False,
             AvoidRC        = True,
+            InputAsMF      = False,
             Checked        = False):
         "Definition d'un concept de calcul"
         Concept = "ControlModel"
@@ -421,6 +426,7 @@ class Aidsm(object):
             asDict           = Parameters,
             appliedInX       = None,
             avoidRC          = AvoidRC,
+            inputAsMF        = InputAsMF,
             scheduledBy      = Scheduler,
             toBeChecked      = Checked,
             )

@@ -250,7 +250,23 @@ def uniq( __sequence ):
     __seen = set()
     return [x for x in __sequence if x not in __seen and not __seen.add(x)]
 
-def date2int(__date, __lang="FR"):
+def isIterable( __sequence, __check = False, __header = "" ):
+    """
+    Vérification que l'argument est un itérable
+    """
+    if  isinstance( __sequence, (list, tuple, map) ):
+        __isOk = True
+    elif type(__sequence).__name__ in ('generator','range'):
+        __isOk = True
+    elif "_iterator" in type(__sequence).__name__:
+        __isOk = True
+    else:
+        __isOk = False
+    if __check and not __isOk:
+        raise TypeError("Not iterable or unkown input type%s: %s"%(__header, type(__sequence),))
+    return __isOk
+
+def date2int( __date, __lang="FR" ):
     """
     Fonction de secours, conversion pure : dd/mm/yy hh:mm ---> int(yyyymmddhhmm)
     """
