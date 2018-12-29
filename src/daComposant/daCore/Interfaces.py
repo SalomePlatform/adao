@@ -392,7 +392,7 @@ class _SCDViewer(GenericCaseViewer):
                     __text += "%s_config['From'] = '%s'\n"%(__command,__f)
                     __text += "%s_config['Data'] = %s\n"%(__command,__v)
                     __text = __text.replace("''","'")
-                elif __k in ('Stored', 'Checked', 'ColMajor'):
+                elif __k in ('Stored', 'Checked', 'ColMajor', 'InputAsMF'):
                     if bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
                 elif __k in ('AvoidRC', 'noDetails'):

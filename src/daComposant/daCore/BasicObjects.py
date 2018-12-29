@@ -154,7 +154,7 @@ class Operator(object):
         "Renvoie le type"
         return self.__Type
 
-    def appliedTo(self, xValue, HValue = None):
+    def appliedTo(self, xValue, HValue = None, argsAsSerie = False):
         """
         Permet de restituer le résultat de l'application de l'opérateur à un
         argument xValue. Cette méthode se contente d'appliquer, son argument
@@ -162,30 +162,61 @@ class Operator(object):
         Arguments :
         - xValue : argument adapté pour appliquer l'opérateur
         """
-        if HValue is not None:
-            HxValue = numpy.asmatrix( numpy.ravel( HValue ) ).T
-            if self.__AvoidRC:
-                Operator.CM.storeValueInX(xValue,HxValue)
+        if argsAsSerie:
+            _xValue = xValue
+            _HValue = HValue
         else:
-            if self.__AvoidRC:
-                __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xValue)
+            _xValue = (xValue,)
+            if HValue is not None:
+                _HValue = (HValue,)
             else:
-                __alreadyCalculated = False
-            #
-            if __alreadyCalculated:
-                self.__addOneCacheCall()
-                HxValue = __HxV
-            else:
-                if self.__Matrix is not None:
-                    self.__addOneMatrixCall()
-                    HxValue = self.__Matrix * xValue
-                else:
-                    self.__addOneMethodCall()
-                    HxValue = self.__Method( xValue )
-                if self.__AvoidRC:
-                    Operator.CM.storeValueInX(xValue,HxValue)
+                _HValue = HValue
+        PlatformInfo.isIterable( _xValue, True, " in Operator.appliedTo" )
         #
-        return HxValue
+        if _HValue is not None:
+            assert len(_xValue) == len(_HValue), "Incompatible number of elements in xValue and HValue"
+            HxValue = []
+            for i in range(len(_HValue)):
+                HxValue.append( numpy.asmatrix( numpy.ravel( _HValue[i] ) ).T )
+                if self.__AvoidRC:
+                    Operator.CM.storeValueInX(_xValue[i],HxValue[-1])
+        else:
+            HxValue = []
+            _xserie = []
+            _hindex = []
+            for i, xv in enumerate(_xValue):
+                if self.__AvoidRC:
+                    __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xv)
+                else:
+                    __alreadyCalculated = False
+                #
+                if __alreadyCalculated:
+                    self.__addOneCacheCall()
+                    _hv = __HxV
+                else:
+                    if self.__Matrix is not None:
+                        self.__addOneMatrixCall()
+                        _hv = self.__Matrix * xv
+                    else:
+                        self.__addOneMethodCall()
+                        _xserie.append( xv )
+                        _hindex.append(  i )
+                        _hv = None
+                HxValue.append( _hv )
+            #
+            if len(_xserie)>0 and self.__Matrix is None:
+                _hserie = self.__Method( _xserie ) # Calcul MF
+                if not hasattr(_hserie, "pop"):
+                    raise TypeError("The user input multi-function doesn't seem to return sequence results, behaving like a mono-function. It has to be checked.")
+                for i in _hindex:
+                    _xv = _xserie.pop(0)
+                    _hv = _hserie.pop(0)
+                    HxValue[i] = _hv
+                    if self.__AvoidRC:
+                        Operator.CM.storeValueInX(_xv,_hv)
+        #
+        if argsAsSerie: return HxValue
+        else:           return HxValue[-1]
 
     def appliedControledFormTo(self, paire ):
         """
@@ -209,7 +240,7 @@ class Operator(object):
             self.__addOneMethodCall()
             return self.__Method( xValue )
 
-    def appliedInXTo(self, paire ):
+    def appliedInXTo(self, paires, argsAsSerie = False ):
         """
         Permet de restituer le résultat de l'application de l'opérateur à un
         argument xValue, sachant que l'opérateur est valable en xNominal.
@@ -222,14 +253,22 @@ class Operator(object):
           est construit pour etre ensuite appliqué
         - xValue : argument adapté pour appliquer l'opérateur
         """
-        assert len(paire) == 2, "Incorrect number of arguments"
-        xNominal, xValue = paire
+        if argsAsSerie: _nxValue = paires
+        else:           _nxValue = (paires,)
+        PlatformInfo.isIterable( _nxValue, True, " in Operator.appliedInXTo" )
+        #
         if self.__Matrix is not None:
-            self.__addOneMatrixCall()
-            return self.__Matrix * xValue
+            HxValue = []
+            for paire in _nxValue:
+                _xNominal, _xValue = paire
+                self.__addOneMatrixCall()
+                HxValue.append( self.__Matrix * _xValue )
         else:
-            self.__addOneMethodCall()
-            return self.__Method( (xNominal, xValue) )
+            self.__addOneMethodCall( len(_nxValue) )
+            HxValue = self.__Method( _nxValue ) # Calcul MF
+        #
+        if argsAsSerie: return HxValue
+        else:           return HxValue[-1]
 
     def asMatrix(self, ValueForMethodForm = "UnknownVoidValue"):
         """

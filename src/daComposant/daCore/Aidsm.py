@@ -95,6 +95,7 @@ class Aidsm(object):
             DataFile             = None,
             DiagonalSparseMatrix = None,
             Info                 = None,
+            InputAsMF            = False,
             Matrix               = None,
             ObjectFunction       = None,
             ObjectMatrix         = None,
@@ -138,7 +139,8 @@ class Aidsm(object):
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
-                    Parameters, Script, Stored, AvoidRC, Checked )
+                    Parameters, Script,
+                    Stored, AvoidRC, InputAsMF, Checked )
             elif Concept in ("EvolutionModel", "ControlModel"):
                 commande = getattr(self,"set"+Concept)
                 commande(
