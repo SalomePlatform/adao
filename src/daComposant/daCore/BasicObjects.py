@@ -31,6 +31,7 @@ import sys
 import logging
 import copy
 import numpy
+from functools import partial
 from daCore import Persistence
 from daCore import PlatformInfo
 from daCore import Interfaces
@@ -107,19 +108,26 @@ class Operator(object):
     NbCallsOfCached = 0
     CM = CacheManager()
     #
-    def __init__(self, fromMethod=None, fromMatrix=None, avoidingRedundancy = True):
+    def __init__(self, fromMethod=None, fromMatrix=None, avoidingRedundancy = True, inputAsMultiFunction = False):
         """
-        On construit un objet de ce type en fournissant à l'aide de l'un des
-        deux mots-clé, soit une fonction python, soit une matrice.
+        On construit un objet de ce type en fournissant, à l'aide de l'un des
+        deux mots-clé, soit une fonction ou un multi-fonction python, soit une
+        matrice.
         Arguments :
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
         - avoidingRedundancy : évite ou pas les calculs redondants
+        - inputAsMultiFunction : fonction explicitement définie ou pas en multi-fonction
         """
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
         self.__AvoidRC = bool( avoidingRedundancy )
-        if   fromMethod is not None:
+        self.__inputAsMF = bool( inputAsMultiFunction )
+        if   fromMethod is not None and self.__inputAsMF:
             self.__Method = fromMethod # logtimer(fromMethod)
+            self.__Matrix = None
+            self.__Type   = "Method"
+        elif fromMethod is not None and not self.__inputAsMF:
+            self.__Method = partial( MultiFonction, _sFunction=fromMethod)
             self.__Matrix = None
             self.__Type   = "Method"
         elif fromMatrix is not None:
@@ -293,6 +301,7 @@ class FullOperator(object):
                  asDict           = None, # Parameters
                  appliedInX       = None,
                  avoidRC          = True,
+                 inputAsMF        = False,# Fonction(s) as Multi-Functions
                  scheduledBy      = None,
                  toBeChecked      = False,
                  ):
@@ -386,6 +395,7 @@ class FullOperator(object):
             if "withLenghtOfRedundancy"    not in __Function: __Function["withLenghtOfRedundancy"]    = -1
             if "withmpEnabled"             not in __Function: __Function["withmpEnabled"]             = False
             if "withmpWorkers"             not in __Function: __Function["withmpWorkers"]             = None
+            if "withmfEnabled"             not in __Function: __Function["withmfEnabled"]             = inputAsMF
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = __Function["Direct"],
@@ -397,21 +407,22 @@ class FullOperator(object):
                 lenghtOfRedundancy    = __Function["withLenghtOfRedundancy"],
                 mpEnabled             = __Function["withmpEnabled"],
                 mpWorkers             = __Function["withmpWorkers"],
+                mfEnabled             = __Function["withmfEnabled"],
                 )
-            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC )
-            self.__FO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC )
-            self.__FO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC )
+            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF)
+            self.__FO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
-            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC )
-            self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC )
-            self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC )
+            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
         elif asMatrix is not None:
             __matrice = numpy.matrix( __Matrix, numpy.float )
-            self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC )
-            self.__FO["Tangent"] = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC )
-            self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC )
+            self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Tangent"] = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
             del __matrice
         else:
             raise ValueError("Improperly defined observation operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
