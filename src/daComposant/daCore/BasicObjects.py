@@ -218,7 +218,7 @@ class Operator(object):
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
 
-    def appliedControledFormTo(self, paire ):
+    def appliedControledFormTo(self, paires, argsAsSerie = False ):
         """
         Permet de restituer le résultat de l'application de l'opérateur à une
         paire (xValue, uValue). Cette méthode se contente d'appliquer, son
@@ -228,17 +228,30 @@ class Operator(object):
         - xValue : argument X adapté pour appliquer l'opérateur
         - uValue : argument U adapté pour appliquer l'opérateur
         """
-        assert len(paire) == 2, "Incorrect number of arguments"
-        xValue, uValue = paire
+        if argsAsSerie: _xuValue = paires
+        else:           _xuValue = (paires,)
+        PlatformInfo.isIterable( _xuValue, True, " in Operator.appliedControledFormTo" )
+        #
         if self.__Matrix is not None:
-            self.__addOneMatrixCall()
-            return self.__Matrix * xValue
-        elif uValue is not None:
-            self.__addOneMethodCall()
-            return self.__Method( (xValue, uValue) )
+            HxValue = []
+            for paire in _xuValue:
+                _xValue, _uValue = paire
+                self.__addOneMatrixCall()
+                HxValue.append( self.__Matrix * _xValue )
         else:
-            self.__addOneMethodCall()
-            return self.__Method( xValue )
+            HxValue = []
+            for paire in _xuValue:
+                _xuValue = []
+                _xValue, _uValue = paire
+                if _uValue is not None:
+                    _xuValue.append( paire )
+                else:
+                    _xuValue.append( _xValue )
+            self.__addOneMethodCall( len(_xuValue) )
+            HxValue = self.__Method( _xuValue ) # Calcul MF
+        #
+        if argsAsSerie: return HxValue
+        else:           return HxValue[-1]
 
     def appliedInXTo(self, paires, argsAsSerie = False ):
         """
@@ -270,18 +283,27 @@ class Operator(object):
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
 
-    def asMatrix(self, ValueForMethodForm = "UnknownVoidValue"):
+    def asMatrix(self, ValueForMethodForm = "UnknownVoidValue", argsAsSerie = False):
         """
         Permet de renvoyer l'opérateur sous la forme d'une matrice
         """
         if self.__Matrix is not None:
             self.__addOneMatrixCall()
-            return self.__Matrix
+            mValue = [self.__Matrix,]
         elif ValueForMethodForm is not "UnknownVoidValue": # Ne pas utiliser "None"
-            self.__addOneMethodCall()
-            return numpy.matrix( self.__Method( (ValueForMethodForm, None) ) )
+            mValue = []
+            if argsAsSerie:
+                self.__addOneMethodCall( len(ValueForMethodForm) )
+                for _vfmf in ValueForMethodForm:
+                    mValue.append( numpy.matrix( self.__Method(((_vfmf, None),)) ) )
+            else:
+                self.__addOneMethodCall()
+                mValue = self.__Method(((ValueForMethodForm, None),))
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
+        #
+        if argsAsSerie: return mValue
+        else:           return mValue[-1]
 
     def shape(self):
         """

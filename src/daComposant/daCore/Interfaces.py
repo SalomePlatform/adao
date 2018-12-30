@@ -123,6 +123,7 @@ class _TUIViewer(GenericCaseViewer):
                 if   k == "ColMajor" and not __v: continue
                 if   k == "AvoidRC"  and __v: continue
                 if   k == "noDetails": continue
+                if   k == "InputAsMF" and not __v: continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 if callable(__v): __text = self._missing%__v.__name__+__text
                 if isinstance(__v,dict):

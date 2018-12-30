@@ -145,8 +145,8 @@ class Aidsm(object):
                 commande = getattr(self,"set"+Concept)
                 commande(
                     Matrix, OneFunction, ThreeFunctions,
-                    Parameters, Script, Scheduler, Stored, AvoidRC, Checked )
-
+                    Parameters, Script, Scheduler,
+                    Stored, AvoidRC, InputAsMF, Checked )
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
         except Exception as e:
