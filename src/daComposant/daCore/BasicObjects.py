@@ -337,10 +337,10 @@ class Operator(object):
         self.__NbCallsAsMatrix   += 1 # Decompte local
         Operator.NbCallsAsMatrix += 1 # Decompte global
 
-    def __addOneMethodCall(self):
+    def __addOneMethodCall(self, nb = 1):
         "Comptabilise un appel"
-        self.__NbCallsAsMethod   += 1 # Decompte local
-        Operator.NbCallsAsMethod += 1 # Decompte global
+        self.__NbCallsAsMethod   += nb # Decompte local
+        Operator.NbCallsAsMethod += nb # Decompte global
 
     def __addOneCacheCall(self):
         "Comptabilise un appel"
@@ -356,9 +356,9 @@ class FullOperator(object):
     def __init__(self,
                  name             = "GenericFullOperator",
                  asMatrix         = None,
-                 asOneFunction    = None, # Fonction
-                 asThreeFunctions = None, # Fonctions dictionary
-                 asScript         = None, # Fonction(s) script
+                 asOneFunction    = None, # 1 Fonction
+                 asThreeFunctions = None, # 3 Fonctions in a dictionary
+                 asScript         = None, # 1 or 3 Fonction(s) by script
                  asDict           = None, # Parameters
                  appliedInX       = None,
                  avoidRC          = True,
@@ -1700,6 +1700,13 @@ class Covariance(object):
         "x.__rmul__(y) <==> y*x"
         if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return other * self.__C
+        elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
+            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+                return numpy.asmatrix(numpy.ravel(other)) * self.__C
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+                return numpy.asmatrix(other) * self.__C
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
         elif self.isvector() and isinstance(other,numpy.matrix):
             if numpy.ravel(other).size == self.shape[0]: # Vecteur
                 return numpy.asmatrix(numpy.ravel(other) * self.__C)

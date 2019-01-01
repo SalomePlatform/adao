@@ -118,12 +118,12 @@ class _TUIViewer(GenericCaseViewer):
             for k in __keys:
                 __v = __local[k]
                 if __v is None: continue
-                if   k == "Checked"  and not __v: continue
-                if   k == "Stored"   and not __v: continue
-                if   k == "ColMajor" and not __v: continue
-                if   k == "AvoidRC"  and __v: continue
-                if   k == "noDetails": continue
+                if   k == "Checked"   and not __v: continue
+                if   k == "Stored"    and not __v: continue
+                if   k == "ColMajor"  and not __v: continue
                 if   k == "InputAsMF" and not __v: continue
+                if   k == "AvoidRC"   and     __v: continue
+                if   k == "noDetails":             continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 if callable(__v): __text = self._missing%__v.__name__+__text
                 if isinstance(__v,dict):
