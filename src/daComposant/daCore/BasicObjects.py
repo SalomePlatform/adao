@@ -156,11 +156,14 @@ class Operator(object):
 
     def appliedTo(self, xValue, HValue = None, argsAsSerie = False):
         """
-        Permet de restituer le résultat de l'application de l'opérateur à un
-        argument xValue. Cette méthode se contente d'appliquer, son argument
-        devant a priori être du bon type.
+        Permet de restituer le résultat de l'application de l'opérateur à une
+        série d'arguments xValue. Cette méthode se contente d'appliquer, chaque
+        argument devant a priori être du bon type.
         Arguments :
-        - xValue : argument adapté pour appliquer l'opérateur
+        - les arguments par série sont :
+            - xValue : argument adapté pour appliquer l'opérateur
+            - HValue : valeur précalculée de l'opérateur en ce point
+        - argsAsSerie : indique si les arguments sont une mono ou multi-valeur
         """
         if argsAsSerie:
             _xValue = xValue
@@ -220,13 +223,15 @@ class Operator(object):
 
     def appliedControledFormTo(self, paires, argsAsSerie = False ):
         """
-        Permet de restituer le résultat de l'application de l'opérateur à une
-        paire (xValue, uValue). Cette méthode se contente d'appliquer, son
+        Permet de restituer le résultat de l'application de l'opérateur à des
+        paires (xValue, uValue). Cette méthode se contente d'appliquer, son
         argument devant a priori être du bon type. Si la uValue est None,
         on suppose que l'opérateur ne s'applique qu'à xValue.
         Arguments :
-        - xValue : argument X adapté pour appliquer l'opérateur
-        - uValue : argument U adapté pour appliquer l'opérateur
+        - paires : les arguments par paire sont :
+            - xValue : argument X adapté pour appliquer l'opérateur
+            - uValue : argument U adapté pour appliquer l'opérateur
+        - argsAsSerie : indique si l'argument est une mono ou multi-valeur
         """
         if argsAsSerie: _xuValue = paires
         else:           _xuValue = (paires,)
@@ -255,16 +260,19 @@ class Operator(object):
 
     def appliedInXTo(self, paires, argsAsSerie = False ):
         """
-        Permet de restituer le résultat de l'application de l'opérateur à un
-        argument xValue, sachant que l'opérateur est valable en xNominal.
-        Cette méthode se contente d'appliquer, son argument devant a priori
-        être du bon type. Si l'opérateur est linéaire car c'est une matrice,
-        alors il est valable en tout point nominal et il n'est pas nécessaire
-        d'utiliser xNominal.
-        Arguments : une liste contenant
-        - xNominal : argument permettant de donner le point où l'opérateur
-          est construit pour etre ensuite appliqué
-        - xValue : argument adapté pour appliquer l'opérateur
+        Permet de restituer le résultat de l'application de l'opérateur à une
+        série d'arguments xValue, sachant que l'opérateur est valable en
+        xNominal. Cette méthode se contente d'appliquer, son argument devant a
+        priori être du bon type. Si l'opérateur est linéaire car c'est une
+        matrice, alors il est valable en tout point nominal et xNominal peut
+        être quelconque. Il n'y a qu'une seule paire par défaut, et argsAsSerie
+        permet d'indiquer que l'argument est multi-paires.
+        Arguments :
+        - paires : les arguments par paire sont :
+            - xNominal : série d'arguments permettant de donner le point où
+              l'opérateur est construit pour être ensuite appliqué
+            - xValue : série d'arguments adaptés pour appliquer l'opérateur
+        - argsAsSerie : indique si l'argument est une mono ou multi-valeur
         """
         if argsAsSerie: _nxValue = paires
         else:           _nxValue = (paires,)
