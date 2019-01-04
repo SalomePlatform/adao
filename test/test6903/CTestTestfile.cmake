@@ -19,20 +19,18 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-SET(SALOME_TEST_DRIVER "@CMAKE_INSTALL_PREFIX@/bin/salome/appliskel/salome_test_driver.py")
+SET(TEST_NAMES
+  Verification_des_mono_et_multi_fonctions_A
+  Verification_des_mono_et_multi_fonctions_B
+  Verification_des_mono_et_multi_fonctions_C
+  Verification_des_mono_et_multi_fonctions_D
+  Verification_des_mono_et_multi_fonctions_E
+  Verification_des_mono_et_multi_fonctions_F
+  )
 
-SET(COMPONENT_NAME ADAO)
-SET(TIMEOUT        500)
-
-# Add all test subdirs
-SUBDIRS(
-    test1001
-    test1002
-    test6701
-    test6702
-    test6703
-    test6711
-    test6901
-    test6902
-    test6903
-    )
+FOREACH(tfile ${TEST_NAMES})
+  SET(TEST_NAME ADAO_${tfile})
+  ADD_TEST(${TEST_NAME} python ${tfile}.py)
+  #ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
+  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
+ENDFOREACH()

@@ -65,7 +65,7 @@ class CacheManager(object):
         __alc = False
         __HxV = None
         for i in range(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
-            if xValue.size != self.__listOPCV[i][0].size:
+            if not hasattr(xValue, 'size') or (xValue.size != self.__listOPCV[i][0].size):
                 # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé", xValue.shape,i,self.__listOPCP[i].shape)
                 continue
             if numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCV[i][0]) < self.__tolerBP * self.__listOPCV[i][2]:
