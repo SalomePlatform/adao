@@ -1,5 +1,5 @@
 ..
-   Copyright (C) 2008-2018 EDF R&D
+   Copyright (C) 2008-2019 EDF R&D
 
    This file is part of SALOME ADAO module.
 
@@ -37,7 +37,7 @@ tel qu'il est déclaré ici et dans les fichiers sources::
 
     <ADAO, a module for Data Assimilation and Optimization>
 
-    Copyright (C) 2008-2018 EDF R&D
+    Copyright (C) 2008-2019 EDF R&D
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public

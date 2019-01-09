@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2016 EDF R&D
+# Copyright (C) 2008-2019 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,15 +20,15 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-BUILT_SOURCES = ADAO_COMPONENTSK.cc 
+BUILT_SOURCES = ADAO_COMPONENTSK.cc
 IDL_FILES=ADAO_COMPONENT.idl
 
 lib_LTLIBRARIES = libADAO_COMPONENT.la
-salomeidl_DATA = $(IDL_FILES) 
-salomepython_DATA = ADAO_COMPONENT_idl.py 
+salomeidl_DATA = $(IDL_FILES)
+salomepython_DATA = ADAO_COMPONENT_idl.py
 libADAO_COMPONENT_la_SOURCES      =
 nodist_libADAO_COMPONENT_la_SOURCES = ADAO_COMPONENTSK.cc
-nodist_salomeinclude_HEADERS= ADAO_COMPONENT.hh 
+nodist_salomeinclude_HEADERS= ADAO_COMPONENT.hh
 libADAO_COMPONENT_la_CXXFLAGS     = -I.  $(KERNEL_INCLUDES)
 libADAO_COMPONENT_la_LIBADD     = $(KERNEL_LIBS)
 ##########################################################
