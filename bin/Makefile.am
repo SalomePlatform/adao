@@ -29,7 +29,7 @@ EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in # AdaoCatalogGen
 ADAODIR = $(DESTDIR)$(salomepythondir)/adao
 
 install-data-hook:
-	@export PYTHONPATH="$(DESTDIR)${salomepythondir}:${PYTHONPATH}" && python $(top_srcdir)/bin/AdaoCatalogGenerator.py $(ADAODIR)/daEficas ADAO_Cata_V0.py
+	@export PYTHONPATH="$(DESTDIR)${salomepythondir}:${PYTHONPATH}" && python${PYTHON_VERSION} $(top_srcdir)/bin/AdaoCatalogGenerator.py $(ADAODIR)/daEficas ADAO_Cata_V0.py
 
 uninstall-hook:
 	@rm $(ADAODIR)/daEficas/ADAO_Cata_V0.py
