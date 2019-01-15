@@ -540,30 +540,40 @@ class Algorithm(object):
         interne à l'objet, mais auquel on accède par la méthode "get".
 
         Les variables prévues sont :
-            - CostFunctionJ  : fonction-cout globale, somme des deux parties suivantes
-            - CostFunctionJb : partie ébauche ou background de la fonction-cout
-            - CostFunctionJo : partie observations de la fonction-cout
-            - GradientOfCostFunctionJ  : gradient de la fonction-cout globale
-            - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-cout
-            - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-cout
+            - APosterioriCorrelations : matrice de corrélations de la matrice A
+            - APosterioriCovariance : matrice de covariances a posteriori : A
+            - APosterioriStandardDeviations : vecteur des écart-types de la matrice A
+            - APosterioriVariances : vecteur des variances de la matrice A
+            - Analysis : vecteur d'analyse : Xa
+            - BMA : Background moins Analysis : Xa - Xb
+            - CostFunctionJ  : fonction-coût globale, somme des deux parties suivantes Jb et Jo
+            - CostFunctionJAtCurrentOptimum : fonction-coût globale à l'état optimal courant lors d'itérations
+            - CostFunctionJb : partie ébauche ou background de la fonction-coût : Jb
+            - CostFunctionJbAtCurrentOptimum : partie ébauche à l'état optimal courant lors d'itérations
+            - CostFunctionJo : partie observations de la fonction-coût : Jo
+            - CostFunctionJoAtCurrentOptimum : partie observations à l'état optimal courant lors d'itérations
+            - CurrentOptimum : état optimal courant lors d'itérations
             - CurrentState : état courant lors d'itérations
-            - Analysis : l'analyse Xa
-            - SimulatedObservationAtBackground : l'état observé H(Xb) à l'ébauche
-            - SimulatedObservationAtCurrentState : l'état observé H(X) à l'état courant
-            - SimulatedObservationAtOptimum : l'état observé H(Xa) à l'optimum
+            - GradientOfCostFunctionJ  : gradient de la fonction-coût globale
+            - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-coût
+            - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-coût
+            - IndexOfOptimum : index de l'état optimal courant lors d'itérations
             - Innovation : l'innovation : d = Y - H(X)
             - InnovationAtCurrentState : l'innovation à l'état courant : dn = Y - H(Xn)
-            - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
-            - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
+            - JacobianMatrixAtBackground : matrice jacobienne à l'ébauche
+            - JacobianMatrixAtOptimum : matrice jacobienne à l'optimum
             - MahalanobisConsistency : indicateur de consistance des covariances
-            - OMA : Observation moins Analysis : Y - Xa
+            - OMA : Observation moins Analyse : Y - Xa
             - OMB : Observation moins Background : Y - Xb
-            - AMB : Analysis moins Background : Xa - Xb
-            - APosterioriCovariance : matrice A
-            - APosterioriVariances : variances de la matrice A
-            - APosterioriStandardDeviations : écart-types de la matrice A
-            - APosterioriCorrelations : correlations de la matrice A
+            - PredictedState : état prédit courant lors d'itérations
             - Residu : dans le cas des algorithmes de vérification
+            - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
+            - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
+            - SimulatedObservationAtBackground : l'état observé H(Xb) à l'ébauche
+            - SimulatedObservationAtCurrentOptimum : l'état observé H(X) à l'état optimal courant
+            - SimulatedObservationAtCurrentState : l'état observé H(X) à l'état courant
+            - SimulatedObservationAtOptimum : l'état observé H(Xa) à l'optimum
+            - SimulationQuantiles : états observés H(X) pour les quantiles demandés
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
@@ -576,38 +586,40 @@ class Algorithm(object):
         self.__required_inputs = {"RequiredInputValues":{"mandatory":(), "optional":()}}
         #
         self.StoredVariables = {}
+        self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
+        self.StoredVariables["APosterioriCovariance"]                = Persistence.OneMatrix(name = "APosterioriCovariance")
+        self.StoredVariables["APosterioriStandardDeviations"]        = Persistence.OneVector(name = "APosterioriStandardDeviations")
+        self.StoredVariables["APosterioriVariances"]                 = Persistence.OneVector(name = "APosterioriVariances")
+        self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
+        self.StoredVariables["BMA"]                                  = Persistence.OneVector(name = "BMA")
         self.StoredVariables["CostFunctionJ"]                        = Persistence.OneScalar(name = "CostFunctionJ")
-        self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
-        self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
         self.StoredVariables["CostFunctionJAtCurrentOptimum"]        = Persistence.OneScalar(name = "CostFunctionJAtCurrentOptimum")
+        self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
         self.StoredVariables["CostFunctionJbAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJbAtCurrentOptimum")
+        self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
         self.StoredVariables["CostFunctionJoAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJoAtCurrentOptimum")
+        self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
+        self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
         self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
         self.StoredVariables["GradientOfCostFunctionJb"]             = Persistence.OneVector(name = "GradientOfCostFunctionJb")
         self.StoredVariables["GradientOfCostFunctionJo"]             = Persistence.OneVector(name = "GradientOfCostFunctionJo")
-        self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
-        self.StoredVariables["PredictedState"]                       = Persistence.OneVector(name = "PredictedState")
-        self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
         self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name = "IndexOfOptimum")
-        self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
-        self.StoredVariables["SimulatedObservationAtBackground"]     = Persistence.OneVector(name = "SimulatedObservationAtBackground")
-        self.StoredVariables["SimulatedObservationAtCurrentState"]   = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
-        self.StoredVariables["SimulatedObservationAtOptimum"]        = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
-        self.StoredVariables["SimulatedObservationAtCurrentOptimum"] = Persistence.OneVector(name = "SimulatedObservationAtCurrentOptimum")
         self.StoredVariables["Innovation"]                           = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["InnovationAtCurrentState"]             = Persistence.OneVector(name = "InnovationAtCurrentState")
-        self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")
-        self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
+        self.StoredVariables["JacobianMatrixAtBackground"]           = Persistence.OneMatrix(name = "JacobianMatrixAtBackground")
+        self.StoredVariables["JacobianMatrixAtOptimum"]              = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")
         self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
-        self.StoredVariables["BMA"]                                  = Persistence.OneVector(name = "BMA")
-        self.StoredVariables["APosterioriCovariance"]                = Persistence.OneMatrix(name = "APosterioriCovariance")
-        self.StoredVariables["APosterioriVariances"]                 = Persistence.OneVector(name = "APosterioriVariances")
-        self.StoredVariables["APosterioriStandardDeviations"]        = Persistence.OneVector(name = "APosterioriStandardDeviations")
-        self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
-        self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
+        self.StoredVariables["PredictedState"]                       = Persistence.OneVector(name = "PredictedState")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
+        self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
+        self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")
+        self.StoredVariables["SimulatedObservationAtBackground"]     = Persistence.OneVector(name = "SimulatedObservationAtBackground")
+        self.StoredVariables["SimulatedObservationAtCurrentOptimum"] = Persistence.OneVector(name = "SimulatedObservationAtCurrentOptimum")
+        self.StoredVariables["SimulatedObservationAtCurrentState"]   = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
+        self.StoredVariables["SimulatedObservationAtOptimum"]        = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
+        self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
 
     def _pre_run(self, Parameters, Xb=None, Y=None, R=None, B=None, Q=None ):
         "Pré-calcul"
