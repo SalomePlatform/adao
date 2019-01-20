@@ -94,6 +94,7 @@ class Aidsm(object):
             ColNames             = None,
             DataFile             = None,
             DiagonalSparseMatrix = None,
+            ExtraArgs            = None,
             Info                 = None,
             InputAsMF            = False,
             Matrix               = None,
@@ -139,13 +140,13 @@ class Aidsm(object):
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
-                    Parameters, Script,
+                    Parameters, Script, ExtraArgs,
                     Stored, AvoidRC, InputAsMF, Checked )
             elif Concept in ("EvolutionModel", "ControlModel"):
                 commande = getattr(self,"set"+Concept)
                 commande(
                     Matrix, OneFunction, ThreeFunctions,
-                    Parameters, Script, Scheduler,
+                    Parameters, Script, Scheduler, ExtraArgs,
                     Stored, AvoidRC, InputAsMF, Checked )
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
@@ -350,6 +351,7 @@ class Aidsm(object):
             AppliedInXb    = None,
             Parameters     = None,
             Script         = None,
+            ExtraArgs      = None,
             Stored         = False,
             AvoidRC        = True,
             InputAsMF      = False,
@@ -365,6 +367,7 @@ class Aidsm(object):
             asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = AppliedInXb,
+            extraArguments   = ExtraArgs,
             avoidRC          = AvoidRC,
             inputAsMF        = InputAsMF,
             scheduledBy      = None,
@@ -381,6 +384,7 @@ class Aidsm(object):
             Parameters     = None,
             Script         = None,
             Scheduler      = None,
+            ExtraArgs      = None,
             Stored         = False,
             AvoidRC        = True,
             InputAsMF      = False,
@@ -396,6 +400,7 @@ class Aidsm(object):
             asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
+            extraArguments   = ExtraArgs,
             avoidRC          = AvoidRC,
             inputAsMF        = InputAsMF,
             scheduledBy      = Scheduler,
@@ -412,6 +417,7 @@ class Aidsm(object):
             Parameters     = None,
             Script         = None,
             Scheduler      = None,
+            ExtraArgs      = None,
             Stored         = False,
             AvoidRC        = True,
             InputAsMF      = False,
@@ -427,6 +433,7 @@ class Aidsm(object):
             asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
+            extraArguments   = ExtraArgs,
             avoidRC          = AvoidRC,
             inputAsMF        = InputAsMF,
             scheduledBy      = Scheduler,

@@ -333,7 +333,7 @@ The available commands are:
 
 .. index:: single: setControlModel
 
-**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
+**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArgs, Stored*)
     This command allows to set the control operator :math:`O`, which represents
     an external linear input control of the evolution or observation operator.
     One can refer to the :ref:`section_ref_operator_control`. Its value is
@@ -374,7 +374,7 @@ The available commands are:
 
 .. index:: single: setEvolutionModel
 
-**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
+**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArgs, Stored*)
     This command allows to set the evolution operator :math:`M`, which describes
     an elementary evolution step. Its value is defined as an object of type
     function or of type "*Matrix*". For the function case, various functional
@@ -414,7 +414,7 @@ The available commands are:
 
 .. index:: single: setObservationOperator
 
-**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, Stored*)
+**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, ExtraArgs, Stored*)
     This command allows to set the evolution operator :math:`H`, which
     transforms the input parameters :math:`\mathbf{x}` in results
     :math:`\mathbf{y}` that are compared to observations :math:`\mathbf{y}^o`.

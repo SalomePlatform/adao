@@ -344,7 +344,7 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setControlModel
 
-**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
+**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArgs, Stored*)
     Cette commande permet de définir l'opérateur de contrôle :math:`O`, qui
     décrit un contrôle d'entrée linéaire externe de l'opérateur d'évolution ou
     d'observation. On se reportera :ref:`section_ref_operator_control`. Sa
@@ -386,7 +386,7 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setEvolutionModel
 
-**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, Stored*)
+**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArgs, Stored*)
     Cette commande permet de définir l'opérateur d'evolution :math:`M`, qui
     décrit un pas élémentaire d'évolution. Sa valeur est définie comme un objet
     de type fonction ou de type "*Matrix*". Dans le cas d'une fonction,
@@ -428,7 +428,7 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setObservationOperator
 
-**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, Stored*)
+**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, ExtraArgs, Stored*)
     Cette commande permet de définir l'opérateur d'observation :math:`H`, qui
     transforme les paramètres d'entrée :math:`\mathbf{x}` en résultats
     :math:`\mathbf{y}` qui sont à comparer aux observations

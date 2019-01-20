@@ -108,7 +108,13 @@ class Operator(object):
     NbCallsOfCached = 0
     CM = CacheManager()
     #
-    def __init__(self, fromMethod=None, fromMatrix=None, avoidingRedundancy = True, inputAsMultiFunction = False):
+    def __init__(self,
+        fromMethod           = None,
+        fromMatrix           = None,
+        avoidingRedundancy   = True,
+        inputAsMultiFunction = False,
+        extraArguments       = None,
+        ):
         """
         On construit un objet de ce type en fournissant, à l'aide de l'un des
         deux mots-clé, soit une fonction ou un multi-fonction python, soit une
@@ -116,12 +122,16 @@ class Operator(object):
         Arguments :
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
-        - avoidingRedundancy : évite ou pas les calculs redondants
-        - inputAsMultiFunction : fonction explicitement définie ou pas en multi-fonction
+        - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants
+        - inputAsMultiFunction : booléen indiquant une fonction explicitement
+          définie (ou pas) en multi-fonction
+        - extraArguments : arguments supplémentaires passés à la fonction de
+          base et ses dérivées (tuple ou dictionnaire)
         """
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
-        self.__AvoidRC = bool( avoidingRedundancy )
+        self.__AvoidRC   = bool( avoidingRedundancy )
         self.__inputAsMF = bool( inputAsMultiFunction )
+        self.__extraArgs = extraArguments
         if   fromMethod is not None and self.__inputAsMF:
             self.__Method = fromMethod # logtimer(fromMethod)
             self.__Matrix = None
@@ -208,7 +218,10 @@ class Operator(object):
                 HxValue.append( _hv )
             #
             if len(_xserie)>0 and self.__Matrix is None:
-                _hserie = self.__Method( _xserie ) # Calcul MF
+                if self.__extraArgs is None:
+                    _hserie = self.__Method( _xserie ) # Calcul MF
+                else:
+                    _hserie = self.__Method( _xserie, self.__extraArgs ) # Calcul MF
                 if not hasattr(_hserie, "pop"):
                     raise TypeError("The user input multi-function doesn't seem to return sequence results, behaving like a mono-function. It has to be checked.")
                 for i in _hindex:
@@ -253,7 +266,10 @@ class Operator(object):
                 else:
                     _xuValue.append( _xValue )
             self.__addOneMethodCall( len(_xuValue) )
-            HxValue = self.__Method( _xuValue ) # Calcul MF
+            if self.__extraArgs is None:
+                HxValue = self.__Method( _xuValue ) # Calcul MF
+            else:
+                HxValue = self.__Method( _xuValue, self.__extraArgs ) # Calcul MF
         #
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
@@ -286,7 +302,10 @@ class Operator(object):
                 HxValue.append( self.__Matrix * _xValue )
         else:
             self.__addOneMethodCall( len(_nxValue) )
-            HxValue = self.__Method( _nxValue ) # Calcul MF
+            if self.__extraArgs is None:
+                HxValue = self.__Method( _nxValue ) # Calcul MF
+            else:
+                HxValue = self.__Method( _nxValue, self.__extraArgs ) # Calcul MF
         #
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
@@ -369,16 +388,18 @@ class FullOperator(object):
                  asScript         = None, # 1 or 3 Fonction(s) by script
                  asDict           = None, # Parameters
                  appliedInX       = None,
+                 extraArguments   = None,
                  avoidRC          = True,
                  inputAsMF        = False,# Fonction(s) as Multi-Functions
                  scheduledBy      = None,
                  toBeChecked      = False,
                  ):
         ""
-        self.__name       = str(name)
-        self.__check      = bool(toBeChecked)
+        self.__name      = str(name)
+        self.__check     = bool(toBeChecked)
+        self.__extraArgs = extraArguments
         #
-        self.__FO          = {}
+        self.__FO        = {}
         #
         __Parameters = {}
         if (asDict is not None) and isinstance(asDict, dict):
@@ -459,7 +480,7 @@ class FullOperator(object):
             if "withCenteredDF"            not in __Function: __Function["withCenteredDF"]            = False
             if "withIncrement"             not in __Function: __Function["withIncrement"]             = 0.01
             if "withdX"                    not in __Function: __Function["withdX"]                    = None
-            if "withAvoidingRedundancy"    not in __Function: __Function["withAvoidingRedundancy"]    = True
+            if "withAvoidingRedundancy"    not in __Function: __Function["withAvoidingRedundancy"]    = avoidRC
             if "withToleranceInRedundancy" not in __Function: __Function["withToleranceInRedundancy"] = 1.e-18
             if "withLenghtOfRedundancy"    not in __Function: __Function["withLenghtOfRedundancy"]    = -1
             if "withmpEnabled"             not in __Function: __Function["withmpEnabled"]             = False
@@ -478,15 +499,15 @@ class FullOperator(object):
                 mpWorkers             = __Function["withmpWorkers"],
                 mfEnabled             = __Function["withmfEnabled"],
                 )
-            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF)
-            self.__FO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
-            self.__FO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
-            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
-            self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
-            self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif asMatrix is not None:
             __matrice = numpy.matrix( __Matrix, numpy.float )
             self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
@@ -1810,17 +1831,26 @@ class CaseLogger(object):
         return __formater.load(__filename, __content, __object)
 
 # ==============================================================================
-def MultiFonction( __xserie, _sFunction = lambda x: x ):
+def MultiFonction( __xserie, _extraArguments = None, _sFunction = lambda x: x ):
     """
     Pour une liste ordonnée de vecteurs en entrée, renvoie en sortie la liste
     correspondante de valeurs de la fonction en argument
     """
     if not PlatformInfo.isIterable( __xserie ):
-        raise ValueError("MultiFonction not iterable unkown input type: %s"%(type(__xserie),))
+        raise TypeError("MultiFonction not iterable unkown input type: %s"%(type(__xserie),))
     #
     __multiHX = []
-    for __xvalue in __xserie:
-        __multiHX.append( _sFunction( __xvalue ) )
+    if _extraArguments is None:
+        for __xvalue in __xserie:
+            __multiHX.append( _sFunction( __xvalue ) )
+    elif _extraArguments is not None and isinstance(_extraArguments, (list, tuple, map)):
+        for __xvalue in __xserie:
+            __multiHX.append( _sFunction( __xvalue, *_extraArguments ) )
+    elif _extraArguments is not None and isinstance(_extraArguments, dict):
+        for __xvalue in __xserie:
+            __multiHX.append( _sFunction( __xvalue, **_extraArguments ) )
+    else:
+        raise TypeError("MultiFonction extra arguments unkown input type: %s"%(type(_extraArguments),))
     #
     return __multiHX
 
