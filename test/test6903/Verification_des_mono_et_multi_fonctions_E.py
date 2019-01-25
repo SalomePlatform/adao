@@ -102,7 +102,7 @@ def test1():
         adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
         adaopy.setObservation        (Vector = [0.5,1.5,2.5,0.5,1.5,2.5,0.5,1.5,2.5])
         adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1 1 1 1 1 1 1")
-        adaopy.setObservationOperator(OneFunction = MultiFonction01, InputAsMF = True)
+        adaopy.setObservationOperator(OneFunction = MultiFonction01, InputFunctionAsMulti = True)
         adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
         adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
         adaopy.setObserver("Analysis",Template="ValuePrinter")

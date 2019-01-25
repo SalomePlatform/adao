@@ -94,9 +94,9 @@ class Aidsm(object):
             ColNames             = None,
             DataFile             = None,
             DiagonalSparseMatrix = None,
-            ExtraArgs            = None,
+            ExtraArguments       = None,
             Info                 = None,
-            InputAsMF            = False,
+            InputFunctionAsMulti = False,
             Matrix               = None,
             ObjectFunction       = None,
             ObjectMatrix         = None,
@@ -140,14 +140,14 @@ class Aidsm(object):
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
-                    Parameters, Script, ExtraArgs,
-                    Stored, AvoidRC, InputAsMF, Checked )
+                    Parameters, Script, ExtraArguments,
+                    Stored, AvoidRC, InputFunctionAsMulti, Checked )
             elif Concept in ("EvolutionModel", "ControlModel"):
                 commande = getattr(self,"set"+Concept)
                 commande(
                     Matrix, OneFunction, ThreeFunctions,
-                    Parameters, Script, Scheduler, ExtraArgs,
-                    Stored, AvoidRC, InputAsMF, Checked )
+                    Parameters, Script, Scheduler, ExtraArguments,
+                    Stored, AvoidRC, InputFunctionAsMulti, Checked )
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
         except Exception as e:
@@ -345,17 +345,17 @@ class Aidsm(object):
         return 0
 
     def setObservationOperator(self,
-            Matrix         = None,
-            OneFunction    = None,
-            ThreeFunctions = None,
-            AppliedInXb    = None,
-            Parameters     = None,
-            Script         = None,
-            ExtraArgs      = None,
-            Stored         = False,
-            AvoidRC        = True,
-            InputAsMF      = False,
-            Checked        = False):
+            Matrix               = None,
+            OneFunction          = None,
+            ThreeFunctions       = None,
+            AppliedInXb          = None,
+            Parameters           = None,
+            Script               = None,
+            ExtraArguments       = None,
+            Stored               = False,
+            AvoidRC              = True,
+            InputFunctionAsMulti = False,
+            Checked              = False):
         "Definition d'un concept de calcul"
         Concept = "ObservationOperator"
         self.__case.register("set"+Concept, dir(), locals())
@@ -367,9 +367,9 @@ class Aidsm(object):
             asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = AppliedInXb,
-            extraArguments   = ExtraArgs,
+            extraArguments   = ExtraArguments,
             avoidRC          = AvoidRC,
-            inputAsMF        = InputAsMF,
+            inputAsMF        = InputFunctionAsMulti,
             scheduledBy      = None,
             toBeChecked      = Checked,
             )
@@ -378,17 +378,17 @@ class Aidsm(object):
         return 0
 
     def setEvolutionModel(self,
-            Matrix         = None,
-            OneFunction    = None,
-            ThreeFunctions = None,
-            Parameters     = None,
-            Script         = None,
-            Scheduler      = None,
-            ExtraArgs      = None,
-            Stored         = False,
-            AvoidRC        = True,
-            InputAsMF      = False,
-            Checked        = False):
+            Matrix               = None,
+            OneFunction          = None,
+            ThreeFunctions       = None,
+            Parameters           = None,
+            Script               = None,
+            Scheduler            = None,
+            ExtraArguments       = None,
+            Stored               = False,
+            AvoidRC              = True,
+            InputFunctionAsMulti = False,
+            Checked              = False):
         "Definition d'un concept de calcul"
         Concept = "EvolutionModel"
         self.__case.register("set"+Concept, dir(), locals())
@@ -400,9 +400,9 @@ class Aidsm(object):
             asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
-            extraArguments   = ExtraArgs,
+            extraArguments   = ExtraArguments,
             avoidRC          = AvoidRC,
-            inputAsMF        = InputAsMF,
+            inputAsMF        = InputFunctionAsMulti,
             scheduledBy      = Scheduler,
             toBeChecked      = Checked,
             )
@@ -411,17 +411,17 @@ class Aidsm(object):
         return 0
 
     def setControlModel(self,
-            Matrix         = None,
-            OneFunction    = None,
-            ThreeFunctions = None,
-            Parameters     = None,
-            Script         = None,
-            Scheduler      = None,
-            ExtraArgs      = None,
-            Stored         = False,
-            AvoidRC        = True,
-            InputAsMF      = False,
-            Checked        = False):
+            Matrix               = None,
+            OneFunction          = None,
+            ThreeFunctions       = None,
+            Parameters           = None,
+            Script               = None,
+            Scheduler            = None,
+            ExtraArguments       = None,
+            Stored               = False,
+            AvoidRC              = True,
+            InputFunctionAsMulti = False,
+            Checked              = False):
         "Definition d'un concept de calcul"
         Concept = "ControlModel"
         self.__case.register("set"+Concept, dir(), locals())
@@ -433,9 +433,9 @@ class Aidsm(object):
             asScript         = self.__with_directory(Script),
             asDict           = Parameters,
             appliedInX       = None,
-            extraArguments   = ExtraArgs,
+            extraArguments   = ExtraArguments,
             avoidRC          = AvoidRC,
-            inputAsMF        = InputAsMF,
+            inputAsMF        = InputFunctionAsMulti,
             scheduledBy      = Scheduler,
             toBeChecked      = Checked,
             )
