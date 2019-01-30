@@ -77,4 +77,7 @@ if __name__ == "__main__":
     xa1 = test1()
     xa2 = test2()
     ecart = assertAlmostEqualArrays(xa1, xa2, places = 15)
-    print("  Difference maximale entre les deux : %.2e"%ecart)
+    print("")
+    print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
+    print("  Les résultats obtenus sont corrects.")
+    print("")

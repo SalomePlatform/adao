@@ -105,6 +105,8 @@ def testSysteme():
     except ImportError:
         pass
     print("")
+    print("  Les résultats obtenus sont corrects.")
+    print("")
     #
     return 0
 

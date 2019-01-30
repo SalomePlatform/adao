@@ -42,6 +42,12 @@ def simulation(x):
     __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
     return __H * __x
 #
+def multisimulation( xserie ):
+    yserie = []
+    for x in xserie:
+        yserie.append( simulation( x ) )
+    return yserie
+#
 # Observations obtenues par simulation
 # ------------------------------------
 observations = simulation((2, 3, 4))
@@ -82,8 +88,9 @@ def test1():
     case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
     case.set(
         'ObservationOperator',
-        OneFunction = simulation,
+        OneFunction = multisimulation,
         Parameters  = {"DifferentialIncrement":0.0001},
+        InputFunctionAsMulti = True,
         )
     case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
     case.execute()

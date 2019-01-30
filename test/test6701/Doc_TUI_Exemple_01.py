@@ -49,4 +49,8 @@ if __name__ == "__main__":
     +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     """)
     xa = test1()
-    assertAlmostEqualArrays(xa, [0.25, 0.80, 0.95], places = 5)
+    ecart = assertAlmostEqualArrays(xa, [0.25, 0.80, 0.95], places = 5)
+    print("")
+    print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
+    print("  Les résultats obtenus sont corrects.")
+    print("")
