@@ -21,9 +21,12 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification du fonctionnement correct d'entrees en mono ou multi-fonctions"
 
-# ==============================================================================
-import numpy, sys
+import sys
+import unittest
+import numpy
 from adao import adaoBuilder
+
+# ==============================================================================
 
 def ElementaryFunction01( InputArgument ):
     """
@@ -64,61 +67,62 @@ def MultiFonction01( xSerie ):
     return _ySerie
 
 # ==============================================================================
-def test1():
-    """
-    Verification du fonctionnement identique pour les algorithmes temporels
-    en utilisant une fonction non-lineaire et non-carree
-    """
-    print(test1.__doc__)
-    Xa = {}
-    #
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
-        print("")
-        msg = "Algorithme en test en MonoFonction : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
+class InTest(unittest.TestCase):
+    def test1(self):
+        """
+        Verification du fonctionnement identique pour les algorithmes temporels
+        en utilisant une fonction non-lineaire et non-carree
+        """
+        print(self.test1.__doc__)
+        Xa = {}
         #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5,0.5,1.5,2.5,0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1 1 1 1 1 1 1")
-        adaopy.setObservationOperator(OneFunction = ElementaryFunction01)
-        adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
-        adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa["Mono/"+algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
-        print("")
-        msg = "Algorithme en test en MultiFonction : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+            print("")
+            msg = "Algorithme en test en MonoFonction : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5,0.5,1.5,2.5,0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1 1 1 1 1 1 1")
+            adaopy.setObservationOperator(OneFunction = ElementaryFunction01)
+            adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
+            adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa["Mono/"+algo] = adaopy.get("Analysis")[-1]
+            del adaopy
         #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5,0.5,1.5,2.5,0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1 1 1 1 1 1 1")
-        adaopy.setObservationOperator(OneFunction = MultiFonction01, InputFunctionAsMulti = True)
-        adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
-        adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa["Multi/"+algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    print("")
-    msg = "Tests des ecarts attendus :"
-    print(msg+"\n"+"="*len(msg))
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
-        verify_similarity_of_algo_results(("Multi/"+algo, "Mono/"+algo), Xa, 1.e-20)
-    print("  Les resultats obtenus sont corrects.")
-    print("")
-    #
-    return 0
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+            print("")
+            msg = "Algorithme en test en MultiFonction : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5,0.5,1.5,2.5,0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1 1 1 1 1 1 1")
+            adaopy.setObservationOperator(OneFunction = MultiFonction01, InputFunctionAsMulti = True)
+            adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
+            adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa["Multi/"+algo] = adaopy.get("Analysis")[-1]
+            del adaopy
+        #
+        print("")
+        msg = "Tests des ecarts attendus :"
+        print(msg+"\n"+"="*len(msg))
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+            verify_similarity_of_algo_results(("Multi/"+algo, "Mono/"+algo), Xa, 1.e-20)
+        print("  Les resultats obtenus sont corrects.")
+        print("")
+        #
+        return 0
 
 # ==============================================================================
 def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
@@ -137,5 +141,5 @@ def verify_similarity_of_algo_results(serie = [], Xa = {}, precision = 1.e-15):
 
 #===============================================================================
 if __name__ == "__main__":
-    print('\nAUTODIAGNOSTIC\n')
-    test1()
+    print("\nAUTODIAGNOSTIC\n==============")
+    unittest.main()

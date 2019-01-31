@@ -47,6 +47,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 1.e-7,
             typecast = float,
             message  = "Diminution relative minimale du coût lors de l'arrêt",
+            minval   = 0.,
             )
         self.defineRequiredParameter(
             name     = "ProjectedGradientTolerance",
@@ -60,6 +61,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 1.e-05,
             typecast = float,
             message  = "Maximum des composantes du gradient lors de l'arrêt",
+            minval   = 0.,
             )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
@@ -342,6 +344,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     L = numpy.linalg.cholesky( A )
                 except:
                     raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
+        if self._toStore("APosterioriCovariance"):
             self.StoredVariables["APosterioriCovariance"].store( A )
         #
         # Calculs et/ou stockages supplémentaires

@@ -21,168 +21,172 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification de la disponibilite de l'ensemble des algorithmes"
 
-# ==============================================================================
-import numpy, sys
+import sys
+import unittest
+import numpy
 from adao import adaoBuilder
-def test1():
-    """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
-    print(test1.__doc__)
-    Xa = {}
-    for algo in ("3DVAR", "Blue", "ExtendedBlue", "LinearLeastSquares", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
-        #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "Bounds":[[-1,10.],[-1,10.],[-1,10.]]})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
-        adaopy.setObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "EnsembleKalmanFilter", "4DVAR"):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
-        #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
-        adaopy.setObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
-        adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
-        adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
-        #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 2 3")
-        adaopy.setObservationOperator(Matrix = "1 0 0;0 1 0;0 0 1")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    for algo in ("EnsembleBlue", ):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
-        #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"SetSeed":1000, })
-        adaopy.setBackground         (VectorSerie = 100*[[0,1,2]])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 2 3")
-        adaopy.setObservationOperator(Matrix = "1 0 0;0 1 0;0 0 1")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    print("")
-    msg = "Tests des ecarts attendus :"
-    print(msg+"\n"+"="*len(msg))
-    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
-    verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa, 5.e-7)
-    verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e-14)
-    verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 5.e-2)
-    print("  Les resultats obtenus sont corrects.")
-    print("")
-    #
-    return 0
 
-def test2():
-    """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur fonctionnel)"""
-    print(test2.__doc__)
-    Xa = {}
-    M = numpy.matrix("1 0 0;0 2 0;0 0 3")
-    def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
-    for algo in ("3DVAR", "Blue", "ExtendedBlue", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
+# ==============================================================================
+class InTest(unittest.TestCase):
+    def test1(self):
+        """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
+        print(self.test1.__doc__)
+        Xa = {}
+        for algo in ("3DVAR", "Blue", "ExtendedBlue", "LinearLeastSquares", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "Bounds":[[-1,10.],[-1,10.],[-1,10.]]})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
+            adaopy.setObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
         #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "Bounds":[[-1,10.],[-1,10.],[-1,10.]]})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
-        adaopy.setObservationOperator(OneFunction = H)
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    M = numpy.matrix("1 0 0;0 2 0;0 0 3")
-    def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
-    for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "EnsembleKalmanFilter", "4DVAR"):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
+            adaopy.setObservationOperator(Matrix = "1 0 0;0 2 0;0 0 3")
+            adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
+            adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
         #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
-        adaopy.setObservationOperator(OneFunction = H)
-        adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
-        adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    M = numpy.matrix("1 0 0;0 1 0;0 0 1")
-    def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
-    for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
-        print("")
-        msg = "Algorithme en test : %s"%algo
-        print(msg+"\n"+"-"*len(msg))
+        for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 2 3")
+            adaopy.setObservationOperator(Matrix = "1 0 0;0 1 0;0 0 1")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
         #
-        adaopy = adaoBuilder.New()
-        adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000})
-        adaopy.setBackground         (Vector = [0,1,2])
-        adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
-        adaopy.setObservation        (Vector = [0.5,1.5,2.5])
-        adaopy.setObservationError   (DiagonalSparseMatrix = "1 2 3")
-        adaopy.setObservationOperator(OneFunction = H)
-        adaopy.setObserver("Analysis",Template="ValuePrinter")
-        adaopy.execute()
-        Xa[algo] = adaopy.get("Analysis")[-1]
-        del adaopy
-    #
-    print("")
-    msg = "Tests des ecarts attendus :"
-    print(msg+"\n"+"="*len(msg))
-    verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
-    verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e14)
-    verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 5.e-2)
-    print("  Les resultats obtenus sont corrects.")
-    print("")
-    #
-    return 0
+        for algo in ("EnsembleBlue", ):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"SetSeed":1000, })
+            adaopy.setBackground         (VectorSerie = 100*[[0,1,2]])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 2 3")
+            adaopy.setObservationOperator(Matrix = "1 0 0;0 1 0;0 0 1")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
+        #
+        print("")
+        msg = "Tests des ecarts attendus :"
+        print(msg+"\n"+"="*len(msg))
+        verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
+        verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa, 5.e-7)
+        verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e-14)
+        verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 5.e-2)
+        print("  Les resultats obtenus sont corrects.")
+        print("")
+        #
+        return 0
+
+    def test2(self):
+        """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur fonctionnel)"""
+        print(self.test2.__doc__)
+        Xa = {}
+        M = numpy.matrix("1 0 0;0 2 0;0 0 3")
+        def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
+        for algo in ("3DVAR", "Blue", "ExtendedBlue", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "Bounds":[[-1,10.],[-1,10.],[-1,10.]]})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
+            adaopy.setObservationOperator(OneFunction = H)
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
+        #
+        M = numpy.matrix("1 0 0;0 2 0;0 0 3")
+        def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10, "SetSeed":1000})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 1 1")
+            adaopy.setObservationOperator(OneFunction = H)
+            adaopy.setEvolutionError     (ScalarSparseMatrix = 1.)
+            adaopy.setEvolutionModel     (Matrix = "1 0 0;0 1 0;0 0 1")
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
+        #
+        M = numpy.matrix("1 0 0;0 1 0;0 0 1")
+        def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
+        for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"BoxBounds":3*[[-1,3]], "SetSeed":1000})
+            adaopy.setBackground         (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservation        (Vector = [0.5,1.5,2.5])
+            adaopy.setObservationError   (DiagonalSparseMatrix = "1 2 3")
+            adaopy.setObservationOperator(OneFunction = H)
+            adaopy.setObserver("Analysis",Template="ValuePrinter")
+            adaopy.execute()
+            Xa[algo] = adaopy.get("Analysis")[-1]
+            del adaopy
+        #
+        print("")
+        msg = "Tests des ecarts attendus :"
+        print(msg+"\n"+"="*len(msg))
+        verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
+        verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e14)
+        verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 5.e-2)
+        print("  Les resultats obtenus sont corrects.")
+        print("")
+        #
+        return 0
 
 def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
     """Comparaison de deux vecteurs"""
@@ -200,6 +204,5 @@ def verify_similarity_of_algo_results(serie = [], Xa = {}, precision = 1.e-15):
 
 #===============================================================================
 if __name__ == "__main__":
-    print('\nAUTODIAGNOSTIC\n')
-    test1()
-    test2()
+    print("\nAUTODIAGNOSTIC\n==============")
+    unittest.main()

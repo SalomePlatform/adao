@@ -581,8 +581,9 @@ class Algorithm(object):
             - IndexOfOptimum : index de l'état optimal courant lors d'itérations
             - Innovation : l'innovation : d = Y - H(X)
             - InnovationAtCurrentState : l'innovation à l'état courant : dn = Y - H(Xn)
-            - JacobianMatrixAtBackground : matrice jacobienne à l'ébauche
+            - JacobianMatrixAtCurrentState : matrice jacobienne à l'état courant
             - JacobianMatrixAtOptimum : matrice jacobienne à l'optimum
+            - KalmanGainAtOptimum : gain de Kalman à l'optimum
             - MahalanobisConsistency : indicateur de consistance des covariances
             - OMA : Observation moins Analyse : Y - Xa
             - OMB : Observation moins Background : Y - Xb
@@ -627,8 +628,9 @@ class Algorithm(object):
         self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name = "IndexOfOptimum")
         self.StoredVariables["Innovation"]                           = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["InnovationAtCurrentState"]             = Persistence.OneVector(name = "InnovationAtCurrentState")
-        self.StoredVariables["JacobianMatrixAtBackground"]           = Persistence.OneMatrix(name = "JacobianMatrixAtBackground")
+        self.StoredVariables["JacobianMatrixAtCurrentState"]         = Persistence.OneMatrix(name = "JacobianMatrixAtCurrentState")
         self.StoredVariables["JacobianMatrixAtOptimum"]              = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")
+        self.StoredVariables["KalmanGainAtOptimum"]                  = Persistence.OneMatrix(name = "KalmanGainAtOptimum")
         self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
