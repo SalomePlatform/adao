@@ -24,7 +24,6 @@
 import sys
 import unittest
 import numpy
-from utExtend import assertAlmostEqualArrays
 
 # ==============================================================================
 #
@@ -141,6 +140,8 @@ class InTest(unittest.TestCase):
         print("Simulation at optimal state.....: %s"%(numpy.ravel(FX_at_optimum),))
         print("")
         #
+        # Fin du cas
+        # ----------
         ecart = assertAlmostEqualArrays(Xoptimum, [ 2., 3., 4.])
         #
         print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
@@ -148,6 +149,20 @@ class InTest(unittest.TestCase):
         print("")
         #
         return Xoptimum
+
+# ==============================================================================
+def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
+    "Compare two vectors, like unittest.assertAlmostEqual"
+    import numpy
+    if msg is not None:
+        print(msg)
+    if delta is not None:
+        if ( (numpy.asarray(first) - numpy.asarray(second)) > float(delta) ).any():
+            raise AssertionError("%s != %s within %s places"%(first,second,delta))
+    else:
+        if ( (numpy.asarray(first) - numpy.asarray(second)) > 10**(-int(places)) ).any():
+            raise AssertionError("%s != %s within %i places"%(first,second,places))
+    return max(abs(numpy.asarray(first) - numpy.asarray(second)))
 
 # ==============================================================================
 if __name__ == '__main__':

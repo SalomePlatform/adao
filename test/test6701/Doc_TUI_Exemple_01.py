@@ -21,8 +21,6 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
-from utExtend import assertAlmostEqualArrays
-
 # ==============================================================================
 def test1():
     """Test"""
@@ -39,6 +37,20 @@ def test1():
     case.execute()
     #
     return case.get("Analysis")[-1]
+
+# ==============================================================================
+def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
+    "Compare two vectors, like unittest.assertAlmostEqual"
+    import numpy
+    if msg is not None:
+        print(msg)
+    if delta is not None:
+        if ( (numpy.asarray(first) - numpy.asarray(second)) > float(delta) ).any():
+            raise AssertionError("%s != %s within %s places"%(first,second,delta))
+    else:
+        if ( (numpy.asarray(first) - numpy.asarray(second)) > 10**(-int(places)) ).any():
+            raise AssertionError("%s != %s within %i places"%(first,second,places))
+    return max(abs(numpy.asarray(first) - numpy.asarray(second)))
 
 # ==============================================================================
 if __name__ == "__main__":
