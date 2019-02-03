@@ -39,7 +39,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["OMA", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = [
+                "CostFunctionJ",
+                "CostFunctionJAtCurrentOptimum",
+                "CostFunctionJb",
+                "CostFunctionJbAtCurrentOptimum",
+                "CostFunctionJo",
+                "CostFunctionJoAtCurrentOptimum",
+                "CurrentOptimum",
+                "CurrentState",
+                "OMA",
+                "SimulatedObservationAtCurrentOptimum",
+                "SimulatedObservationAtCurrentState",
+                "SimulatedObservationAtOptimum",
+                ]
             )
         self.requireInputArguments(
             mandatory= ("Y", "HO", "R"),
@@ -64,28 +77,43 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la fonction coût
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ") or \
+            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
+            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
+            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
             self._toStore("OMA") or \
+            self._toStore("SimulatedObservationAtCurrentOptimum") or \
+            self._toStore("SimulatedObservationAtCurrentState") or \
             self._toStore("SimulatedObservationAtOptimum"):
             HXa = Hm * Xa
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ"):
+            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
+            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
+            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum"):
             Jb  = 0.
-            Jo  = 0.5 * oma.T * RI * oma
-            J   = float( Jb ) + float( Jo )
+            Jo  = float( 0.5 * oma.T * RI * oma )
+            J   = Jb + Jo
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
+            self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( Jb )
+            self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( Jo )
+            self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( J )
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
+        if self._toStore("CurrentOptimum"):
+            self.StoredVariables["CurrentOptimum"].store( numpy.ravel(Xa) )
         if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+        if self._toStore("SimulatedObservationAtBackground"):
+            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
+        if self._toStore("SimulatedObservationAtCurrentOptimum"):
+            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( numpy.ravel(HXa) )
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #

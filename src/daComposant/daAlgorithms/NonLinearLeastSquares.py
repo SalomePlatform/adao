@@ -170,12 +170,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
             if self._toStore("SimulatedObservationAtCurrentOptimum"):
                 self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
-            if self._toStore("CostFunctionJAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
             if self._toStore("CostFunctionJbAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
             if self._toStore("CostFunctionJoAtCurrentOptimum"):
                 self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
+            if self._toStore("CostFunctionJAtCurrentOptimum"):
+                self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
             return J
         #
         def GradientOfCostFunction(x):

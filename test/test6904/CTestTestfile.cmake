@@ -21,6 +21,7 @@
 
 SET(TEST_NAMES
   Definition_complete_de_cas_3DVAR
+  Definition_complete_de_cas_Blue
   )
 
 FOREACH(tfile ${TEST_NAMES})

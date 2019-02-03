@@ -46,8 +46,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "APosterioriVariances",
                 "BMA",
                 "CostFunctionJ",
+                "CostFunctionJAtCurrentOptimum",
                 "CostFunctionJb",
+                "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
+                "CostFunctionJoAtCurrentOptimum",
+                "CurrentOptimum",
                 "CurrentState",
                 "Innovation",
                 "MahalanobisConsistency",
@@ -56,6 +60,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SigmaBck2",
                 "SigmaObs2",
                 "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
                 "SimulationQuantiles",
@@ -136,17 +141,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la fonction coût
         # --------------------------
         if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ") or \
+            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
+            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
+            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
             self._toStore("OMA") or \
             self._toStore("SigmaObs2") or \
             self._toStore("MahalanobisConsistency") or \
+            self._toStore("SimulatedObservationAtCurrentOptimum") or \
             self._toStore("SimulatedObservationAtCurrentState") or \
             self._toStore("SimulatedObservationAtOptimum") or \
             self._toStore("SimulationQuantiles"):
             HXa = Hm * Xa
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ") or \
+            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
+            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
+            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
             self._toStore("MahalanobisConsistency"):
             Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
             Jo  = float( 0.5 * oma.T * RI * oma )
@@ -154,6 +164,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
+            self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( Jb )
+            self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( Jo )
+            self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( J )
         #
         # Calcul de la covariance d'analyse
         # ---------------------------------
@@ -177,6 +190,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------------
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
+        if self._toStore("CurrentOptimum"):
+            self.StoredVariables["CurrentOptimum"].store( numpy.ravel(Xa) )
         if self._toStore("Innovation"):
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if self._toStore("BMA"):
@@ -219,6 +234,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
+        if self._toStore("SimulatedObservationAtCurrentOptimum"):
+            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( numpy.ravel(HXa) )
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
         #
