@@ -77,7 +77,7 @@ class InTest(unittest.TestCase):
         # --------
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters',
-            Algorithm = '3DVAR',                  # Mots-clé réservé
+            Algorithm = 'NonLinearLeastSquares',  # Mots-clé réservé
             Parameters = {                        # Dictionnaire
                 "Bounds":Bounds,                  # Liste de paires de Real ou de None
                 "MaximumNumberOfSteps":100,       # Int >= 0
@@ -98,11 +98,6 @@ class InTest(unittest.TestCase):
         case.set( 'Observation',
             Vector = observations,                # array, list, tuple, matrix
             Stored = False,                       # Bool
-            )
-        case.set( 'BackgroundError',
-            Matrix = None,                        # None ou matrice carrée
-            ScalarSparseMatrix = 1.0e10,          # None ou Real > 0
-            DiagonalSparseMatrix = None,          # None ou vecteur
             )
         case.set( 'ObservationError',
             Matrix = None,                        # None ou matrice carrée
@@ -143,8 +138,8 @@ class InTest(unittest.TestCase):
         # ----------
         ecart = assertAlmostEqualArrays(Xoptimum, [ 2., 3., 4.])
         #
-        print("  The maximal absolute error in the test is of %.2e."%ecart)
-        print("  The results are correct.")
+        print("The maximal absolute error in the test is of %.2e."%ecart)
+        print("The results are correct.")
         print("")
         #
         return Xoptimum

@@ -19,7 +19,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
-"Verification d'un exemple de la documentation"
+"Full definition of a use case for the standard user"
 
 import sys
 import unittest
@@ -27,8 +27,8 @@ import numpy
 
 # ==============================================================================
 #
-# Construction artificielle d'un exemple de donnees utilisateur
-# -------------------------------------------------------------
+# Artificial user data example
+# ----------------------------
 alpha = 5.
 beta = 7
 gamma = 9.0
@@ -38,11 +38,11 @@ betamin,  betamax  = 3, 13
 gammamin, gammamax = 1.5, 15.5
 #
 def simulation(x):
-    "Fonction de simulation H pour effectuer Y=H(X)"
+    "Observation operator H for Y=H(X)"
     import numpy
-    __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-    __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
-    return __H * __x
+    __x = numpy.ravel(x)
+    __H = numpy.array([[1, 0, 0], [0, 2, 0], [0, 0, 3], [1, 2, 3]])
+    return numpy.dot(__H,__x)
 #
 def multisimulation( xserie ):
     yserie = []
@@ -50,17 +50,16 @@ def multisimulation( xserie ):
         yserie.append( simulation( x ) )
     return yserie
 #
-# Observations obtenues par simulation
-# ------------------------------------
+# Twin experiment observations
+# ----------------------------
 observations = simulation((2, 3, 4))
 
 # ==============================================================================
 class InTest(unittest.TestCase):
     def test1(self):
-        print("""Exemple de la doc :
-
-        Exploitation independante des resultats d'un cas de calcul
-        ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        print("""
+        Full definition of a use case for the standard user
+        +++++++++++++++++++++++++++++++++++++++++++++++++++
         """)
         #
         import numpy
@@ -78,7 +77,7 @@ class InTest(unittest.TestCase):
         # --------
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters',
-            Algorithm = 'Blue',                  # Mots-clé réservé
+            Algorithm = 'Blue',                   # Mots-clé réservé
             Parameters = {                        # Dictionnaire
                 "StoreSupplementaryCalculations":[# Liste de mots-clés réservés
                     "CostFunctionJAtCurrentOptimum",
@@ -90,11 +89,11 @@ class InTest(unittest.TestCase):
                 }
             )
         case.set( 'Background',
-            Vector = numpy.array(Xb),             # array, list, tuple, matrix
+            Vector = Xb,                          # array, list, tuple, matrix
             Stored = True,                        # Bool
             )
         case.set( 'Observation',
-            Vector = numpy.array(observations),   # array, list, tuple, matrix
+            Vector = observations,                # array, list, tuple, matrix
             Stored = False,                       # Bool
             )
         case.set( 'BackgroundError',
@@ -141,8 +140,8 @@ class InTest(unittest.TestCase):
         # ----------
         ecart = assertAlmostEqualArrays(Xoptimum, [ 2., 3., 4.])
         #
-        print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
-        print("  Les résultats obtenus sont corrects.")
+        print("The maximal absolute error in the test is of %.2e."%ecart)
+        print("The results are correct.")
         print("")
         #
         return Xoptimum

@@ -85,3 +85,5 @@ if __name__ == "__main__":
     testNumpy01(dimension = 1.e4)
     testNumpy02(dimension = 3.e3)
     print("")
+    print("  Les résultats obtenus sont corrects.")
+    print("")
