@@ -22,7 +22,7 @@
 SET(SALOME_TEST_DRIVER "@CMAKE_INSTALL_PREFIX@/bin/salome/appliskel/salome_test_driver.py")
 
 SET(COMPONENT_NAME ADAO)
-SET(TIMEOUT        500)
+SET(TIMEOUT         500)
 
 # Add all test subdirs
 SUBDIRS(
