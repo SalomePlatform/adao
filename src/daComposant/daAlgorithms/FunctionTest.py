@@ -63,7 +63,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["CurrentState", "SimulatedObservationAtCurrentState"]
+            listval  = [
+                "CurrentState",
+                "SimulatedObservationAtCurrentState",
+                ]
             )
         self.requireInputArguments(
             mandatory= ("Xb", "HO"),
