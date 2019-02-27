@@ -91,6 +91,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "IndexOfOptimum",
                 "Innovation",
                 "InnovationAtCurrentState",
+                "JacobianMatrixAtBackground",
+                "JacobianMatrixAtOptimum",
+                "KalmanGainAtOptimum",
                 "MahalanobisConsistency",
                 "OMA",
                 "OMB",
@@ -160,6 +163,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
+        #
+        if self._toStore("JacobianMatrixAtBackground"):
+            HtMb = HO["Tangent"].asMatrix(ValueForMethodForm = Xb)
+            HtMb = HtMb.reshape(Y.size,Xb.size) # ADAO & check shape
+            self.StoredVariables["JacobianMatrixAtBackground"].store( HtMb )
         #
         # Précalcul des inversions de B et R
         # ----------------------------------
@@ -320,11 +328,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul de la covariance d'analyse
         # ---------------------------------
         if self._toStore("APosterioriCovariance") or \
-           self._toStore("SimulationQuantiles"):
+            self._toStore("SimulationQuantiles") or \
+            self._toStore("JacobianMatrixAtOptimum") or \
+            self._toStore("KalmanGainAtOptimum"):
             HtM = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
             HtM = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
+        if self._toStore("APosterioriCovariance") or \
+            self._toStore("SimulationQuantiles") or \
+            self._toStore("KalmanGainAtOptimum"):
             HaM = HO["Adjoint"].asMatrix(ValueForMethodForm = Xa)
             HaM = HaM.reshape(Xa.size,Y.size) # ADAO & check shape
+        if self._toStore("APosterioriCovariance") or \
+            self._toStore("SimulationQuantiles"):
             HessienneI = []
             nb = Xa.size
             for i in range(nb):
@@ -346,6 +361,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
         if self._toStore("APosterioriCovariance"):
             self.StoredVariables["APosterioriCovariance"].store( A )
+        if self._toStore("JacobianMatrixAtOptimum"):
+            self.StoredVariables["JacobianMatrixAtOptimum"].store( HtM )
+        if self._toStore("KalmanGainAtOptimum"):
+            if   (Y.size <= Xb.size): KG  = B * HaM * (R + numpy.dot(HtM, B * HaM)).I
+            elif (Y.size >  Xb.size): KG = (BI + numpy.dot(HaM, RI * HtM)).I * HaM * RI
+            self.StoredVariables["KalmanGainAtOptimum"].store( KG )
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
