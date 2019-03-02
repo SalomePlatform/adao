@@ -24,26 +24,39 @@
 .. index:: single: AlgorithmParameters
 .. index:: single: Parameters
 .. index:: single: Defaults
+.. index:: single: setAlgorithmParameters
 .. _section_ref_options_Algorithm_Parameters:
 
-Description des options d'un algorithme dans "*AlgorithmParameters*"
---------------------------------------------------------------------
+Description des options d'un algorithme par "*AlgorithmParameters*"
+-------------------------------------------------------------------
 
 Chaque algorithme peut être contrôlé en utilisant des options ou des paramètres
 particuliers. Ils sont donnés à travers la commande optionnelle "*Parameters*"
 incluse dans la commande obligatoire "*AlgorithmParameters*".
 
-Il y a 3 méthodes pratiques pour l'utilisateur pour fournir ces options. La
-méthode est déterminée de la manière suivante dans l'interface graphique
-d'édition :
+Il y a 3 méthodes pratiques pour l'utilisateur de l'interface graphique EFICAS
+d'ADAO (GUI) pour fournir ces options. La méthode est déterminée de la manière
+suivante dans l'interface graphique EFICAS :
 
-#. premièrement à l'aide du mot-clé "*Parameters*" dans la commande "*AlgorithmParameters*", qui permet de choisir entre "*Defaults*" (utilisation de mots-clés explicites pré-remplis par les valeurs par défaut des paramètres) et "*Dict*" (utilisation d'un dictionnaire pour renseigner les mots-clés nécessaires),
-#. puis deuxièmement, uniquement dans le cas "*Dict*" de "*Parameters*", par le mot-clé "*FROM*" inclus qui permet de choisir entre une entrée par chaîne de caractères ou une entrée par fichier de script Python.
+#. premièrement à l'aide du mot-clé "*Parameters*" dans la commande
+   "*AlgorithmParameters*", qui permet de choisir entre "*Defaults*"
+   (utilisation de mots-clés explicites pré-remplis par les valeurs par défaut
+   des paramètres) et "*Dict*" (utilisation d'un dictionnaire pour renseigner
+   les mots-clés nécessaires),
+#. puis deuxièmement ou troisièmement, uniquement dans le cas "*Dict*" de
+   "*Parameters*", par le mot-clé "*FROM*" inclus qui permet de choisir entre
+   une entrée par chaîne de caractères ou une entrée par fichier de script
+   Python.
+
+Ces deux dernières options sont celles que l'on peut aussi utiliser dans
+l'interface textuelle d'ADAO (TUI), par les mot-clés "*Parameters*" et
+"*Script*" dans la commande correspondante "*AlgorithmParameters*" (voir la
+partie :ref:`section_tui` pour une description détaillée).
 
 Si une option ou un paramètre est spécifié par l'utilisateur pour un algorithme
-qui ne la supporte pas, cette option est simplement laissée inutilisée et ne
-bloque pas le traitement. La signification des acronymes ou des noms
-particuliers peut être trouvée dans l':ref:`genindex` ou dans le
+qui ne la supporte pas, cette option est simplement ignorée (laissée
+inutilisée) et ne bloque pas le traitement. La signification des acronymes ou
+des noms particuliers peut être trouvée dans l':ref:`genindex` ou dans le
 :ref:`section_glossary`.
 
 Première méthode : utiliser les mots-clés explicites pré-remplis
@@ -71,6 +84,8 @@ algorithmiques de manière sûre. Cette méthode ne permet de définir que les
 paramètres autorisés pour un algorithme donné, et les valeurs définies ne sont
 pas conservées si l'utilisateur change d'algorithme.
 
+Cette méthode n'est naturellement pas utilisable en interface TUI.
+
 Seconde méthode : utiliser une chaîne de caractères dans l'interface graphique
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -93,9 +108,12 @@ définition standard de dictionnaire, comme par exemple::
 
 C'est la manière recommandée pour définir des paramètres algorithmiques. Cette
 méthode permet en particulier de conserver des options ou des paramètres pour
-d'autres algorithmes que celui que l'on utilise au moment présent. Cela facilite
-le changement d'algorithme ou la conservation de valeurs par défaut différentes
-des défauts standards.
+d'autres algorithmes que celui que l'on utilise au moment présent. Cela
+facilite le changement d'algorithme ou la conservation de valeurs par défaut
+différentes des défauts standards.
+
+Dans l'interface textuelle TUI, le dictionnaire peut être simplement donné
+comme argument du mot-clé "*Parameters*".
 
 Troisième méthode : utiliser un fichier de script Python externe
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -123,3 +141,6 @@ Ce fichier script Python externe doit définir alors une variable au nom imposé
 Le fichier peut aussi contenir d'autres commandes Python. Cette méthode permet
 aussi, comme la précédente, de conserver des options ou des paramètres pour
 d'autres algorithmes que celui que l'on utilise.
+
+Dans l'interface textuelle TUI, le fichier peut être donné comme argument du
+mot-clé "*Script*".

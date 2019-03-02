@@ -326,7 +326,7 @@ l'exécution, pour améliorer l'adaptation du calcul ADAO dans le superviseur
 d'exécution de SALOME.
 
 Pour mettre en oeuvre ces "*observer*" de manière efficace, on se reportera aux
-:ref:`ref_observers_requirements`.
+:ref:`section_ref_observers_requirements`.
 
 Obtenir plus d'information lors du déroulement d'un calcul
 ----------------------------------------------------------
@@ -451,6 +451,13 @@ commandes ou tous les mots-clés. En général aussi, un fichier de cas ADAO d'u
 version ne peut pas être lu par une précédente version mineure ou majeure du
 module ADAO.
 
+Passer de la version 9.x à la 9.y avec y > x
+++++++++++++++++++++++++++++++++++++++++++++
+
+Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
+procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
+avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
+
 Passer de la version 8.5 à la 9.2
 +++++++++++++++++++++++++++++++++
 
@@ -465,7 +472,7 @@ syntaxe "*commande*" au lieu de la syntaxe fonctionnelle "*print(...)*". Dans
 ce cas, il est suggéré de corriger la syntaxe des fichiers utilisateurs dans
 l'environnement 8 avant de passer en environnement 9.
 
-Passer de la version 8.x à la 8.y avec x < y
+Passer de la version 8.x à la 8.y avec y > x
 ++++++++++++++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
@@ -501,7 +508,7 @@ Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
 avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
-Passer de la version 7.x à la 7.y avec x < y
+Passer de la version 7.x à la 7.y avec y > x
 ++++++++++++++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
@@ -531,7 +538,7 @@ objets de type liste ou tuple::
 
 Les scripts de post-processing doivent être modifiés.
 
-Passer de la version 6.x à la 6.y avec x < y
+Passer de la version 6.x à la 6.y avec y > x
 ++++++++++++++++++++++++++++++++++++++++++++
 
 Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La

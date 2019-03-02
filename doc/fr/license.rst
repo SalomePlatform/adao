@@ -27,6 +27,7 @@
 Licence et conditions d'utilisation
 ================================================================================
 
+.. highlight:: none
 .. index:: single: COPYING
 .. index:: single: LICENCE
 .. index:: single: SALOME
