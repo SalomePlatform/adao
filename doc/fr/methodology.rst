@@ -31,7 +31,8 @@ Cette section présente un méthodologie générique pour construire une étude
 d'Assimilation de Données ou d'Optimisation. Elle décrit les étapes
 conceptuelles pour établir de manière indépendante cette étude. Elle est
 indépendante de tout outil, mais le module ADAO permet de mettre en oeuvre
-efficacement une telle étude.
+efficacement une telle étude. Les notations sont les mêmes que celles utilisées
+dans :ref:`section_theory`.
 
 Procédure logique pour une étude
 --------------------------------
@@ -39,13 +40,13 @@ Procédure logique pour une étude
 Pour une étude générique d'Assimilation de Données ou d'Optimisation, les
 principales étapes méthodologiques peuvent être les suivantes:
 
-    - :ref:`section_m_step1`
-    - :ref:`section_m_step2`
-    - :ref:`section_m_step3`
-    - :ref:`section_m_step4`
-    - :ref:`section_m_step5`
-    - :ref:`section_m_step6`
-    - :ref:`section_m_step7`
+- :ref:`section_m_step1`
+- :ref:`section_m_step2`
+- :ref:`section_m_step3`
+- :ref:`section_m_step4`
+- :ref:`section_m_step5`
+- :ref:`section_m_step6`
+- :ref:`section_m_step7`
 
 Chaque étape est détaillée dans la section suivante.
 
@@ -153,7 +154,7 @@ Optimisation permettent d'améliorer l'information à propos de la représentati
 détaillée du système physique étudié.
 
 La connaissance *a-priori* de l'état du système peut être représentée en
-utilisant l'**ébauche**, notée :math:`\mathbf{x}^b`, et la **matrice de
+utilisant une **ébauche**, notée :math:`\mathbf{x}^b`, et la **matrice de
 covariance des erreurs d'ébauche**, notée :math:`\mathbf{B}`. Ces informations
 sont extrêmement importantes à compléter, en particulier pour obtenir des
 résultats signifiants en Assimilation de Données.

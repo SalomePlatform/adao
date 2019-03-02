@@ -159,8 +159,8 @@ Description simple du cadre méthodologique de l'assimilation de données
 .. index:: single: Blue
 
 On peut décrire ces démarches de manière simple. Par défaut, toutes les
-variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster, ou un
-champ discrétisé à reconstruire.
+variables sont des vecteurs, puisqu'il y a plusieurs paramètres à ajuster, ou
+un champ discrétisé à reconstruire.
 
 Selon les notations standards en assimilation de données, on note
 :math:`\mathbf{x}^a` les paramètres optimaux qui doivent être déterminés par
@@ -179,13 +179,14 @@ directement comparés aux observations :math:`\mathbf{y}^o` :
 
 .. math:: \mathbf{y} = H(\mathbf{x})
 
-De plus, on utilise l'opérateur linéarisé :math:`\mathbf{H}` pour représenter
-l'effet de l'opérateur complet :math:`H` autour d'un point de linéarisation (et
-on omettra ensuite de mentionner :math:`H` même si l'on peut le conserver). En
-réalité, on a déjà indiqué que la nature stochastique des variables est
-essentielle, provenant du fait que le modèle, l'ébauche et les observations sont
-tous incorrects. On introduit donc des erreurs d'observations additives, sous la
-forme d'un vecteur aléatoire :math:`\mathbf{\epsilon}^o` tel que :
+De plus, on utilise l'opérateur linéarisé (ou tangent) :math:`\mathbf{H}` pour
+représenter l'effet de l'opérateur complet :math:`H` autour d'un point de
+linéarisation (et on omettra ensuite de mentionner :math:`H` même si l'on peut
+le conserver). En réalité, on a déjà indiqué que la nature stochastique des
+variables est essentielle, provenant du fait que le modèle, l'ébauche et les
+observations sont tous incorrects. On introduit donc des erreurs d'observations
+additives, sous la forme d'un vecteur aléatoire :math:`\mathbf{\epsilon}^o` tel
+que :
 
 .. math:: \mathbf{y}^o = \mathbf{H} \mathbf{x}^t + \mathbf{\epsilon}^o
 
@@ -197,15 +198,14 @@ d'erreurs d'observation par l'expression :
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
-L'ébauche peut aussi être écrite formellement comme une fonction de la valeur
-vraie, en introduisant le vecteur d'erreurs :math:`\mathbf{\epsilon}^b` tel que
-:
+L'ébauche peut être écrite formellement comme une fonction de la valeur vraie,
+en introduisant le vecteur d'erreurs :math:`\mathbf{\epsilon}^b` tel que :
 
 .. math:: \mathbf{x}^b = \mathbf{x}^t + \mathbf{\epsilon}^b
 
-Les erreurs :math:`\mathbf{\epsilon}^b` sont aussi supposées de moyenne nulle,
-de la même manière que pour les observations. On définit la matrice
-:math:`\mathbf{B}` des covariances d'erreurs d'ébauche par :
+Les erreurs d'ébauche :math:`\mathbf{\epsilon}^b` sont aussi supposées de
+moyenne nulle, de la même manière que pour les observations. On définit la
+matrice :math:`\mathbf{B}` des covariances d'erreurs d'ébauche par :
 
 .. math:: \mathbf{B} = E[\mathbf{\epsilon}^b.{\mathbf{\epsilon}^b}^T]
 
@@ -253,15 +253,18 @@ L'avantage du filtrage est le calcul explicite du gain, pour produire ensuite la
 matrice *a posteriori* de covariance d'analyse.
 
 Dans ce cas statique simple, on peut montrer, sous une hypothèse de
-distributions gaussiennes d'erreurs (très peu restrictive en pratique), que les
-deux approches *variationnelle* et *de filtrage* donnent la même solution.
+distributions gaussiennes d'erreurs (très peu restrictive en pratique) et de
+linéarité de :math:`H`, que les deux approches *variationnelle* et *de
+filtrage* donnent la même solution.
 
-On indique que ces méthodes de "*3D-VAR*" et de "*BLUE*" peuvent être étendues à
-des problèmes dynamiques, sous les noms respectifs de "*4D-VAR*" et de "*filtre
-de Kalman*". Elles peuvent prendre en compte l'opérateur d'évolution pour
-établir aux bons pas de temps une analyse de l'écart entre les observations et
-les simulations et pour avoir, à chaque instant, la propagation de l'ébauche à
-travers le modèle d'évolution. Un grand nombre de variantes ont été développées
+On indique que ces méthodes de "*3D-VAR*" et de "*BLUE*" peuvent être étendues
+à des problèmes dynamiques, sous les noms respectifs de "*4D-VAR*" et de
+"*filtre de Kalman*". Elles doivent alors prendre en compte l'opérateur
+d'évolution pour établir aux bons pas de temps une analyse de l'écart entre les
+observations et les simulations et pour avoir, à chaque instant, la propagation
+de l'ébauche à travers le modèle d'évolution. De la même manière, ces méthodes
+peuvent aussi être utilisées dans le cas d'opérateurs d'observation ou
+d'évolution non linéaires. Un grand nombre de variantes ont été développées
 pour accroître la qualité numérique des méthodes ou pour prendre en compte des
 contraintes informatiques comme la taille ou la durée des calculs.
 
@@ -302,6 +305,10 @@ Approfondir l'estimation d'état par des méthodes d'optimisation
 
 .. index:: single: estimation d'état
 .. index:: single: méthodes d'optimisation
+.. index:: single: DerivativeFreeOptimization
+.. index:: single: ParticleSwarmOptimization
+.. index:: single: DifferentialEvolution
+.. index:: single: QuantileRegression
 
 Comme vu précédemment, dans un cas de simulation statique, l'assimilation
 variationnelle de données nécessite de minimiser la fonction objectif :math:`J`:
@@ -322,25 +329,28 @@ plus explicite des méthodes d'optimisation et leurs propriétés, peuvent être
 imaginées de deux manières.
 
 En premier lieu, les méthodes classiques d'optimisation impliquent l'usage de
-méthodes de minimisation variées basées sur un gradient. Elles sont extrêmement
-efficaces pour rechercher un minimum local isolé. Mais elles nécessitent que la
-fonctionnelle :math:`J` soit suffisamment régulière et différentiable, et elles
-ne sont pas en mesure de saisir des propriétés globales du problème de
-minimisation, comme par exemple : minimum global, ensemble de solutions
-équivalentes dues à une sur-paramétrisation, multiples minima locaux, etc. **Une
-méthode pour étendre les possibilités d'estimation consiste donc à utiliser
-l'ensemble des méthodes d'optimisation existantes, permettant la minimisation
-globale, diverses propriétés de robustesse de la recherche, etc**. Il existe de
-nombreuses méthodes de minimisation, comme les méthodes stochastiques,
-évolutionnaires, les heuristiques et méta-heuristiques pour les problèmes à
-valeurs réelles, etc. Elles peuvent traiter des fonctionnelles :math:`J` en
-partie irrégulières ou bruitées, peuvent caractériser des minima locaux, etc. Le
-principal désavantage de ces méthodes est un coût numérique souvent bien
-supérieur pour trouver les estimations d'états, et pas de garantie de
-convergence en temps fini. Ici, on ne mentionne que des méthodes qui sont
-disponibles dans le module ADAO : la *régression de quantile (Quantile
-Regression)* [WikipediaQR]_ et l'*optimisation par essaim de particules
-(Particle Swarm Optimization)* [WikipediaPSO]_.
+méthodes de minimisation variées souvent basées sur un gradient. Elles sont
+extrêmement efficaces pour rechercher un minimum local isolé. Mais elles
+nécessitent que la fonctionnelle :math:`J` soit suffisamment régulière et
+différentiable, et elles ne sont pas en mesure de saisir des propriétés
+globales du problème de minimisation, comme par exemple : minimum global,
+ensemble de solutions équivalentes dues à une sur-paramétrisation, multiples
+minima locaux, etc. **Une méthode pour étendre les possibilités d'estimation
+consiste donc à utiliser l'ensemble des méthodes d'optimisation existantes,
+permettant la minimisation globale, diverses propriétés de robustesse de la
+recherche, etc**. Il existe de nombreuses méthodes de minimisation, comme les
+méthodes stochastiques, évolutionnaires, les heuristiques et méta-heuristiques
+pour les problèmes à valeurs réelles, etc. Elles peuvent traiter des
+fonctionnelles :math:`J` en partie irrégulières ou bruitées, peuvent
+caractériser des minima locaux, etc. Les principaux désavantages de ces
+méthodes sont un coût numérique souvent bien supérieur pour trouver les
+estimations d'états, et fréquemment aucune garantie de convergence en temps
+fini. Ici, on ne mentionne que quelques méthodes disponibles dans ADAO :
+
+- l'*optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- l'*optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- l'*évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`),
+- la *régression de quantile (Quantile Regression ou QR)* (voir :ref:`section_ref_algorithm_QuantileRegression`).
 
 En second lieu, les méthodes d'optimisation cherchent usuellement à minimiser
 des mesures quadratiques d'erreurs, car les propriétés naturelles de ces
@@ -348,15 +358,18 @@ fonctions objectifs sont bien adaptées à l'optimisation classique par gradient
 Mais d'autres mesures d'erreurs peuvent être mieux adaptées aux problèmes de
 simulation de la physique réelle. Ainsi, **une autre manière d'étendre les
 possibilités d'estimation consiste à utiliser d'autres mesures d'erreurs à
-réduire**. Par exemple, on peut citer l'**erreur absolue**, l'**erreur
+réduire**. Par exemple, on peut citer une **erreur absolue**, une **erreur
 maximale**, etc. Ces mesures d'erreurs ne sont pas différentiables, mais
 certaines méthodes d'optimisation peuvent les traiter: heuristiques et
-méta-heuristiques pour les problèmes à valeurs réelles, etc. Comme précédemment,
-le principal désavantage de ces méthodes est un coût numérique souvent bien
-supérieur pour trouver les estimations d'états, et pas de garantie de
-convergence en temps fini. Ici encore, on ne mentionne que des méthodes qui sont
-disponibles dans le module ADAO : l'*optimisation par essaim de particules
-(Particle Swarm Optimization)* [WikipediaPSO]_.
+méta-heuristiques pour les problèmes à valeurs réelles, etc. Comme
+précédemment, les principaux désavantages de ces méthodes sont un coût
+numérique souvent bien supérieur pour trouver les estimations d'états, et pas
+de garantie de convergence en temps fini. Ici encore, on ne mentionne que
+quelques méthodes qui sont disponibles dans ADAO :
+
+- l'*optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- l'*optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- l'*évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`).
 
 Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
 sa recherche grâce au point d'entrée [WikipediaMO]_.

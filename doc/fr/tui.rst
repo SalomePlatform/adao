@@ -27,7 +27,7 @@
 .. _section_tui:
 
 ================================================================================
-**[DocR]** Interface de programmation textuelle pour l'utilisateur (API/TUI)
+**[DocR]** Interface textuelle pour l'utilisateur (TUI/API)
 ================================================================================
 
 Cette section présente des méthodes avancées d'usage du module ADAO à l'aide de
@@ -500,15 +500,15 @@ Paramétrer le calcul, les sorties, etc.
 **setObserver** (*Variable, Template, String, Script, Info*)
     Cette commande permet de définir un *observer* sur une variable courante ou
     finale du calcul. On se reportera à la description des
-    :ref:`ref_observers_requirements` pour avoir leur liste et leur format, et
-    à la :ref:`section_reference` pour savoir quelles sont les quantités
-    observables. On définit comme un "*String*" le corps de l'*observer*, en
-    utilisant une chaîne de caractères incluant si nécessaire des sauts de
-    lignes. On recommande d'utiliser les patrons disponibles par l'argument
-    "*Template*". Dans le cas d'une définition par "*Script*", le fichier
-    indiqué doit contenir uniquement le corps de la fonction, comme décrit dans
-    les :ref:`ref_observers_requirements`. La variable "*Info*" contient une
-    chaîne de caractère d'information ou une chaine vide.
+    :ref:`section_ref_observers_requirements` pour avoir leur liste et leur
+    format, et à la :ref:`section_reference` pour savoir quelles sont les
+    quantités observables. On définit comme un "*String*" le corps de
+    l'*observer*, en utilisant une chaîne de caractères incluant si nécessaire
+    des sauts de lignes. On recommande d'utiliser les patrons disponibles par
+    l'argument "*Template*". Dans le cas d'une définition par "*Script*", le
+    fichier indiqué doit contenir uniquement le corps de la fonction, comme
+    décrit dans les :ref:`section_ref_observers_requirements`. La variable
+    "*Info*" contient une chaîne de caractère d'information ou une chaine vide.
 
 Effectuer le calcul
 +++++++++++++++++++
