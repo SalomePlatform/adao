@@ -21,10 +21,10 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. _section_examples:
+.. _section_tutorials_in_salome:
 
 ================================================================================
-**[DocU]** Tutoriaux sur l'utilisation du module ADAO
+**[DocU]** Tutoriaux sur l'utilisation du module ADAO dans SALOME
 ================================================================================
 
 .. |eficas_new| image:: images/eficas_new.png
@@ -42,12 +42,12 @@
 
 Cette section présente quelques exemples d'utilisation du module ADAO dans
 SALOME. Le premier montre comment construire un cas simple d'assimilation de
-données définissant explicitement toutes les données d'entrée requises à travers
-l'interface graphique d'édition (GUI). Le second montre, sur le même cas,
-comment définir les données d'entrée à partir de sources externes à travers des
-scripts. On présente ici toujours des scripts Python car ils sont directement
-insérables dans les noeuds de script de YACS, mais les fichiers externes peuvent
-utiliser d'autres langages.
+données définissant explicitement toutes les données d'entrée requises à
+travers l'interface utilisateur graphique EFICAS (GUI). Le second montre, sur
+le même cas, comment définir les données d'entrée à partir de sources externes
+à travers des scripts. On présente ici toujours des scripts Python car ils sont
+directement insérables dans les noeuds de script de YACS, mais les fichiers
+externes peuvent utiliser d'autres langages.
 
 Les notations mathématiques utilisées ci-dessous sont expliquées dans la section
 :ref:`section_theory`.

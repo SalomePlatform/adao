@@ -26,11 +26,11 @@ include $(top_srcdir)/adm_local/make_common_starter.am
 DOCLANG       = fr
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-PAPER         =
+PAPER         = a4
 BUILDDIR      = $(top_builddir)/doc/build/$(DOCLANG)
 SRCDIR        = $(top_srcdir)/doc/$(DOCLANG)
 
-EXTRA_DIST = conf.py advanced.rst  examples.rst  index.rst  intro.rst  theory.rst  using.rst \
+EXTRA_DIST = conf.py advanced.rst index.rst intro.rst theory.rst tutorials_in_salome.rst gui_in_salome.rst \
 	     resources/ADAO.png \
 	     resources/ADAO_small.png \
 	     resources/ADAO_small_rouge.png \
@@ -71,8 +71,8 @@ clean-local:
 
 
 # Internal variables.
-PAPEROPT_a4     = -D latex_paper_size=a4
-PAPEROPT_letter = -D latex_paper_size=letter
+PAPEROPT_a4     = -D latex_elements.papersize='a4paper'
+PAPEROPT_letter = -D latex_elements.papersize='letterpaper'
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) $(SRCDIR)
 
 .PHONY: help clean html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest

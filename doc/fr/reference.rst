@@ -28,20 +28,20 @@
 ================================================================================
 
 Les sections suivantes présentent la description de référence des commandes et
-mots-clés ADAO disponibles à travers l'interface graphique (GUI) ou à travers
-des scripts. Les deux premières sections communes présentent les
-:ref:`section_reference_entry` et les :ref:`section_reference_special_entry`.
-Ensuite, on décrit successivement les :ref:`section_reference_assimilation` et
-les :ref:`section_reference_checking`.
+mots-clés ADAO disponibles à travers l'interface textuelle (TUI), graphique
+(GUI) ou à travers des scripts. Les deux premières sections communes présentent
+les :ref:`section_reference_entry` et les
+:ref:`section_reference_special_entry`. Ensuite, on décrit successivement les
+:ref:`section_reference_assimilation` et les :ref:`section_reference_checking`.
 
-Chaque commande ou mot-clé à définir par l'interface graphique (GUI) a des
-propriétés particulières. La première propriété est d'être *requise*,
-*optionnelle* ou simplement utile, décrivant un type d'entrée. La seconde
-propriété est d'être une variable "ouverte" avec un type fixé mais avec
-n'importe quelle valeur autorisée par le type, ou une variable "fermée", limitée
-à des valeurs spécifiées. L'éditeur graphique intégré disposant de capacités
-intrinsèques de validation, les propriétés des commandes ou mots-clés données à
-l'aide de l'interface graphique sont automatiquement correctes.
+Chaque commande ou mot-clé à définir par la TUI ou la GUI a des propriétés
+particulières. La première propriété est d'être *requise*, *optionnelle* ou
+simplement utile, décrivant un type d'entrée. La seconde propriété est d'être
+une variable "ouverte" avec un type fixé mais avec n'importe quelle valeur
+autorisée par le type, ou une variable "fermée", limitée à des valeurs
+spécifiées. L'éditeur graphique GUI intégré disposant de capacités intrinsèques
+de validation, les propriétés des commandes ou mots-clés données à l'aide de
+l'interface graphique sont automatiquement correctes.
 
 .. _section_reference_entry:
 
@@ -83,19 +83,19 @@ sont expliquées dans la section :ref:`section_theory`.
 **[DocR]** Cas d'assimilation de données ou d'optimisation
 ============================================================================================
 
-Cette section décrit les algorithmes d'assimilation de données ou d'optimisation
-disponibles dans ADAO, détaillant leurs caractéristiques d'utilisation et leurs
-options.
+Cette section décrit les algorithmes d'assimilation de données ou
+d'optimisation disponibles dans ADAO, détaillant leurs caractéristiques
+d'utilisation et leurs options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section
-:ref:`section_examples` et dans les fichiers d'exemple installés avec le module
-ADAO. Les notations mathématiques utilisées sont expliquées dans la section
-:ref:`section_theory`.
+:ref:`section_tutorials_in_salome`, dans la section
+:ref:`section_tutorials_in_python` et dans les fichiers d'exemple installés
+avec ADAO. Les notations mathématiques utilisées sont expliquées dans la
+section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
 
-   ref_assimilation_keywords
    ref_algorithm_3DVAR
    ref_algorithm_4DVAR
    ref_algorithm_Blue
@@ -110,7 +110,9 @@ ADAO. Les notations mathématiques utilisées sont expliquées dans la section
    ref_algorithm_NonLinearLeastSquares
    ref_algorithm_ParticleSwarmOptimization
    ref_algorithm_QuantileRegression
+   ref_algorithm_TabuSearch
    ref_algorithm_UnscentedKalmanFilter
+   ref_assimilation_keywords
 
 .. _section_reference_checking:
 
@@ -122,18 +124,20 @@ Cette section décrit les algorithmes de vérification disponibles dans ADAO,
 détaillant leurs caractéristiques d'utilisation et leurs options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section
-:ref:`section_examples` et dans les fichiers d'exemple installés avec le module
-ADAO. Les notations mathématiques utilisées sont expliquées dans la section
-:ref:`section_theory`.
+:ref:`section_tutorials_in_salome`, dans la section
+:ref:`section_tutorials_in_python` et dans les fichiers d'exemple installés
+avec ADAO. Les notations mathématiques utilisées sont expliquées dans la
+section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
 
-   ref_checking_keywords
    ref_algorithm_AdjointTest
    ref_algorithm_FunctionTest
    ref_algorithm_GradientTest
    ref_algorithm_LinearityTest
+   ref_algorithm_LocalSensitivityTest
    ref_algorithm_ObserverTest
    ref_algorithm_SamplingTest
    ref_algorithm_TangentTest
+   ref_checking_keywords

@@ -27,21 +27,6 @@
 Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'optimisation
 ----------------------------------------------------------------------------------------
 
-.. index:: single: Algorithm
-.. index:: single: AlgorithmParameters
-.. index:: single: ControlInput
-.. index:: single: Debug
-.. index:: single: InputVariables
-.. index:: single: Observer
-.. index:: single: Observers
-.. index:: single: Observer Template
-.. index:: single: OutputVariables
-.. index:: single: StudyName
-.. index:: single: StudyRepertory
-.. index:: single: UserDataInit
-.. index:: single: UserPostAnalysis
-.. index:: single: UserPostAnalysis Template
-
 Ce jeu de commandes est lié à la description d'un cas de calcul, qui est une
 procédure d'*Assimilation de Données* ou d'*Optimisation*. Les termes sont
 classés par ordre alphabétique, sauf le premier, qui décrit le choix entre le
@@ -49,91 +34,38 @@ calcul ou la vérification.
 
 Les différentes commandes sont les suivantes:
 
-  **ASSIMILATION_STUDY**
-    *Commande obligatoire*. C'est la commande générale qui décrit le cas
-    d'assimilation de données ou d'optimisation. Elle contient hiérarchiquement
-    toutes les autres commandes.
+.. include:: snippets/ASSIMILATION_STUDY.rst
 
-  AlgorithmParameters
-    *Commande obligatoire*. Elle définit l'algorithme d'assimilation de données
-    ou d'optimisation choisi par le mot-clé "*Algorithm*", et ses éventuels
-    paramètres optionnels. Les choix d'algorithmes sont disponibles à travers
-    l'interface graphique. Il existe par exemple le "3DVAR", le "Blue"... Chaque
-    algorithme est défini, plus loin, par une sous-section spécifique. De
-    manière facultative, la commande permet aussi d'ajouter des paramètres pour
-    contrôler l'algorithme. Leurs valeurs sont définies explicitement ou dans un
-    objet de type "*Dict*". On se reportera à la
-    :ref:`section_ref_options_Algorithm_Parameters` pour l'usage détaillé de
-    cette partie de la commande.
+.. include:: snippets/AlgorithmParameters.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/BackgroundError.rst
 
-  ControlInput
-    *Commande optionnelle*. Elle indique le vecteur de contrôle utilisé pour
-    forcer le modèle d'évolution à chaque pas, usuellement noté
-    :math:`\mathbf{U}`. Sa valeur est définie comme un objet de type "*Vector*"
-    ou de type "*VectorSerie*". Lorsqu'il n'y a pas de contrôle, sa valeur doit
-    être une chaîne vide ''.
+.. include:: snippets/ControlInput.rst
 
-  Debug
-    *Commande optionnelle*. Elle définit le niveau de sorties et d'informations
-    intermédiaires de débogage. Les choix sont limités entre 0 (pour False) et
-    1 (pour True).
+.. include:: snippets/Debug.rst
 
-  .. include:: snippets/EvolutionError.rst
+.. include:: snippets/EvolutionError.rst
 
-  .. include:: snippets/EvolutionModel.rst
+.. include:: snippets/EvolutionModel.rst
 
-  InputVariables
-    *Commande optionnelle*. Elle permet d'indiquer le nom et la taille des
-    variables physiques qui sont rassemblées dans le vecteur d'état. Cette
-    information est destinée à être utilisée dans le traitement algorithmique
-    interne des données.
+.. include:: snippets/InputVariables.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. include:: snippets/ObservationOperator.rst
 
-  Observers
-    *Commande optionnelle*. Elle permet de définir des observateurs internes,
-    qui sont des fonctions liées à une variable particulière, qui sont exécutées
-    chaque fois que cette variable est modifiée. C'est une manière pratique de
-    suivre des variables d'intérêt durant le processus d'assimilation de données
-    ou d'optimisation, en l'affichant ou en la traçant, etc. Des exemples
-    courants (squelettes) sont fournis pour aider l'utilisateur ou pour
-    faciliter l'élaboration d'un cas.
+.. include:: snippets/Observers.rst
 
-  OutputVariables
-    *Commande optionnelle*. Elle permet d'indiquer le nom et la taille des
-    variables physiques qui sont rassemblées dans le vecteur d'observation.
-    Cette information est destinée à être utilisée dans le traitement
-    algorithmique interne des données.
+.. include:: snippets/OutputVariables.rst
 
-  StudyName
-    *Commande obligatoire*. C'est une chaîne de caractères quelconque pour
-    décrire l'étude ADAO par un nom ou une déclaration.
+.. include:: snippets/StudyName.rst
 
-  StudyRepertory
-    *Commande optionnelle*. S'il existe, ce répertoire est utilisé comme base
-    pour les calculs, et il est utilisé pour trouver les fichiers de script,
-    donnés par nom sans répertoire, qui peuvent être utilisés pour définir
-    certaines variables.
+.. include:: snippets/StudyRepertory.rst
 
-  UserDataInit
-    *Commande optionnelle*. Elle permet d'initialiser certains paramètres ou
-    certaines données automatiquement avant le traitement de données d'entrée
-    pour l'assimilation de données ou l'optimisation. Pour cela, elle indique un
-    nom de fichier de script à exécuter avant d'entrer dans l'initialisation des
-    variables choisies.
+.. include:: snippets/UserDataInit.rst
 
-  UserPostAnalysis
-    *Commande optionnelle*. Elle permet de traiter des paramètres ou des
-    résultats après le déroulement de l'algorithme d'assimilation de données ou
-    d'optimisation. Sa valeur est définie comme un fichier script ou une chaîne
-    de caractères, permettant de produire directement du code de post-processing
-    dans un cas ADAO. Des exemples courants (squelettes) sont fournis pour aider
-    l'utilisateur ou pour faciliter l'élaboration d'un cas.
+.. include:: snippets/UserPostAnalysis.rst

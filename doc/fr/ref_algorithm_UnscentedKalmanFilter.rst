@@ -27,8 +27,8 @@
 Algorithme de calcul "*UnscentedKalmanFilter*"
 ----------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système dynamique par un
 filtre de Kalman "unscented", permettant d'éviter de devoir calculer les
@@ -47,116 +47,93 @@ l':ref:`section_ref_algorithm_KalmanFilter`, qui sont souvent largement moins
 coûteux en évaluation sur de petits systèmes. On peut vérifier la linéarité des
 opérateurs à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/EvolutionError.rst
 
-  .. include:: snippets/EvolutionError.rst
+.. include:: snippets/EvolutionModel.rst
 
-  .. include:: snippets/EvolutionModel.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+.. include:: snippets/BoundsWithExtremes.rst
 
-Les options de l'algorithme sont les suivantes:
+.. include:: snippets/ConstrainedBy.rst
 
-  .. include:: snippets/BoundsWithExtremes.rst
+.. include:: snippets/EstimationOf.rst
 
-  .. include:: snippets/ConstrainedBy.rst
+.. include:: snippets/AlphaBeta.rst
 
-  .. include:: snippets/EstimationOf.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  Alpha, Beta, Kappa, Reconditioner
-    .. index:: single: Alpha
-    .. index:: single: Beta
-    .. index:: single: Kappa
-    .. index:: single: Reconditioner
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "Innovation",
+  ].
 
-    Ces clés sont des paramètres de mise à l'échelle interne. "Alpha" requiert
-    une valeur comprise entre 1.e-4 et 1. "Beta" a une valeur optimale de 2 pour
-    une distribution *a priori* gaussienne. "Kappa" requiert une valeur entière,
-    dont la bonne valeur par défaut est obtenue en la mettant à 0.
-    "Reconditioner" requiert une valeur comprise entre 1.e-3 et 10, son défaut
-    étant 1.
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-    Exemple :
-    ``{"Alpha":1,"Beta":2,"Kappa":0,"Reconditioner":1}``
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-  StoreSupplementaryCalculations
+.. include:: snippets/Analysis.rst
 
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "Innovation"].
+.. include:: snippets/APosterioriCorrelations.rst
 
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+.. include:: snippets/APosterioriCovariance.rst
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/APosterioriStandardDeviations.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/APosterioriVariances.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CostFunctionJ.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/APosterioriCorrelations.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/APosterioriCovariance.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/APosterioriStandardDeviations.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/APosterioriVariances.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/BMA.rst
+- :ref:`section_ref_algorithm_KalmanFilter`
+- :ref:`section_ref_algorithm_ExtendedKalmanFilter`
+- :ref:`section_ref_algorithm_EnsembleKalmanFilter`
 
-  .. include:: snippets/CostFunctionJ.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-  .. include:: snippets/CostFunctionJb.rst
-
-  .. include:: snippets/CostFunctionJo.rst
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/Innovation.rst
-
-Voir aussi
-++++++++++
-
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_KalmanFilter`
-  - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
-  - :ref:`section_ref_algorithm_EnsembleKalmanFilter`
-
-Références bibliographiques :
-  - [WikipediaUKF]_
+- [WikipediaUKF]_

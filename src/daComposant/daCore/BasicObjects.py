@@ -1249,7 +1249,7 @@ class RegulationAndParameters(object):
             self.__P.update( dict(__Dict) )
         #
         if __Algo is not None:
-            self.__P.update( {"Algorithm":self.__A} )
+            self.__P.update( {"Algorithm":__Algo} )
 
     def get(self, key = None):
         "Vérifie l'existence d'une clé de variable ou de paramètres"

@@ -133,7 +133,7 @@ représentation graphique avec le module PARAVIS [#]_ ou d'autres modules, des
 actions de calcul pilotés par YACS [#]_ ou un autre module, etc.
 
 D'autres exemples d'utilisation sont aussi donnés en :ref:`section_u_step4` de
-la partie :ref:`section_using`, ou en partie :ref:`section_examples`.
+la partie :ref:`section_gui_in_salome`, ou en partie :ref:`section_tutorials_in_salome`.
 
 Conditionnalité des informations disponibles en sortie
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++

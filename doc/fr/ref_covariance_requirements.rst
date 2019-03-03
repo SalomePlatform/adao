@@ -26,19 +26,22 @@
 Exigences pour décrire les matrices de covariance
 -------------------------------------------------
 
+.. index:: single: setBackgroundError
+.. index:: single: setObservationError
+.. index:: single: setEvolutionError
 .. index:: single: matrice de covariance
 .. index:: single: covariances d'erreurs d'ébauche
 .. index:: single: covariances d'erreurs d'observation
 .. index:: single: covariances
 
-De manière générale, une matrice de covariance (ou une matrice de
-variance-covariance) doit être carrée, symétrique, semi-définie positive. Chacun
-de ses termes décrit la covariance des deux variables aléatoires correspondantes
-à sa position dans la matrice. La forme normalisée de la covariance est la
-corrélation linéaire. On peut écrire la relation suivante, entre une matrice de
-covariance :math:`\mathbf{M}` et ses matrices correspondantes de corrélation
-:math:`\mathbf{C}` (matrice pleine) et d'écart-type :math:`\mathbf{\Sigma}`
-(matrice diagonale):
+De manière générale, une matrice de variances-covariances, généralement appelée
+matrice de covariance, doit être carrée, symétrique et semi-définie positive.
+Chacun de ses termes décrit la covariance des deux variables aléatoires
+correspondantes à sa position dans la matrice. La forme normalisée de la
+covariance est la corrélation linéaire. On peut écrire la relation suivante,
+entre une matrice de covariance :math:`\mathbf{M}` et ses matrices
+correspondantes de corrélation :math:`\mathbf{C}` (matrice pleine) et
+d'écart-type :math:`\mathbf{\Sigma}` (matrice diagonale):
 
 .. math:: \mathbf{M} = \mathbf{\Sigma} * \mathbf{C} * \mathbf{\Sigma}
 
@@ -47,9 +50,10 @@ procédures d'assimilation de données ou d'optimisation. Les principales sont l
 matrice de covariance des erreurs d'ébauche, notée :math:`\mathbf{B}`, et la
 matrice de covariance des erreurs d'observation, notée :math:`\mathbf{R}`.
 
-Il y a 3 méthodes pratiques pour l'utilisateur pour fournir une matrice de
-covariance. La méthode est choisie à l'aide du mot-clé "*INPUT_TYPE*" de chaque
-matrice de covariance, comme montré dans la figure qui suit :
+Dans l'interface graphique EFICAS d'ADAO, il y a 3 méthodes pratiques pour
+l'utilisateur pour fournir une matrice de covariance. La méthode est choisie à
+l'aide du mot-clé "*INPUT_TYPE*" de chaque matrice de covariance, comme montré
+dans la figure qui suit :
 
   .. eficas_covariance_matrix:
   .. image:: images/eficas_covariance_matrix.png
@@ -57,6 +61,15 @@ matrice de covariance, comme montré dans la figure qui suit :
     :width: 100%
   .. centered::
     **Choisir la représentation d'une matrice de covariance**
+
+Dans l'interface textuelle (TUI) d'ADAO (voir la partie :ref:`section_tui`),
+les mêmes informations peuvent être données à l'aide de la commande adéquate
+"*setBackgroundError*", "*setObservationError*" ou "*setEvolutionError*" selon
+la grandeur physique à définir. Les autres arguments "*Matrix*",
+"*ScalarSparseMatrix*" et "*DiagonalSparseMatrix*" de la commande permettent de
+la définir comme décrit dans les sous-parties qui suivent. Ces informations
+peuvent aussi être fournies dans un script contenu en fichier externe (argument
+"*Script*").
 
 Première forme matricielle : utiliser la représentation "*Matrix*"
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -69,7 +82,7 @@ Première forme matricielle : utiliser la représentation "*Matrix*"
 La première forme est le défaut, et c'est la plus générale. La matrice de
 covariance :math:`\mathbf{M}` doit être entièrement spécifiée. Même si la
 matrice est symétrique par nature, la totalité de la matrice :math:`\mathbf{M}`
-doit être donnée.
+doit être fournie.
 
 .. math:: \mathbf{M} =  \begin{pmatrix}
     m_{11} & m_{12} & \cdots   & m_{1n} \\
@@ -117,7 +130,8 @@ décrite dans un fichier de script Python par::
 
     BackgroundError = 1.
 
-ou, mieux, par un "*String*" directement dans le cas ADAO.
+ou, mieux, par un argument "*String*" directement dans le cas graphique ou
+textuel ADAO.
 
 Troisième forme matricielle : utiliser la représentation "*DiagonalSparseMatrix*"
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -153,3 +167,6 @@ script Python par::
 ou::
 
     BackgroundError = numpy.ones(...)
+
+De la même manière que précédemment, on peut aussi définir cette matrice par
+un "*String*" directement dans le cas graphique ou textuel ADAO.

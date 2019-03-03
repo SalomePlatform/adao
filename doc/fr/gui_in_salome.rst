@@ -21,10 +21,10 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. _section_using:
+.. _section_gui_in_salome:
 
 ================================================================================
-**[DocU]** Utiliser le module ADAO
+**[DocR]** Interface graphique pour l'utilisateur (GUI/EFICAS)
 ================================================================================
 
 .. |eficas_new| image:: images/eficas_new.png
@@ -49,7 +49,7 @@ fournis dans les chapitres suivants. Il est complété par la description
 détaillée de l'ensemble des commandes et mots-clés dans la section
 :ref:`section_reference`, par des procédures avancées d'usage dans la section
 :ref:`section_advanced`, et par des exemples dans la section
-:ref:`section_examples`.
+:ref:`section_tutorials_in_salome`.
 
 Procédure logique pour construire un cas ADAO
 ---------------------------------------------
@@ -67,11 +67,11 @@ SALOME ou non.
 Fondamentalement, la procédure d'utilisation de ADAO comprend les étapes
 suivantes:
 
-    - :ref:`section_u_step1`
-    - :ref:`section_u_step2`
-    - :ref:`section_u_step3`
-    - :ref:`section_u_step4`
-    - :ref:`section_u_step5`
+- :ref:`section_u_step1`
+- :ref:`section_u_step2`
+- :ref:`section_u_step3`
+- :ref:`section_u_step4`
+- :ref:`section_u_step5`
 
 Chaque étape est détaillée dans la section suivante.
 
@@ -131,7 +131,7 @@ commandes ou les mots-clés obligatoires sont déjà présents, aucun d'eux ne p
 dans une liste de suggestions de ceux autorisés pour la commande principale, par
 exemple la commande "*ASSIMILATION_STUDY*". À titre d'exemple, on peut ajouter
 des paramètres dans le mot-clé "*AlgorithmParameters*", comme décrit dans la
-dernière partie de la section :ref:`section_examples`.
+dernière partie de la section :ref:`section_tutorials_in_salome`.
 
 A la fin de ces actions, lorsque tous les champs ou les mots-clés ont été
 correctement définis, chaque ligne de l'arborescence des commandes doit
@@ -231,7 +231,7 @@ problème d'évaluation par assimilation de données ou par optimisation, notée
 Une telle méthode peut être utilisée pour imprimer les résultats, ou pour les
 convertir dans des structures qui peuvent être nécessaires à un post-processing
 natif ou externe à SALOME. Un exemple simple est disponible dans la section
-:ref:`section_examples`.
+:ref:`section_tutorials_in_salome`.
 
 .. _section_u_step5:
 

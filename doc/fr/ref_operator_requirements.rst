@@ -26,6 +26,10 @@
 Exigences pour les fonctions décrivant un opérateur
 ---------------------------------------------------
 
+.. index:: single: setObservationOperator
+.. index:: single: setEvolutionModel
+.. index:: single: setControlModel
+
 Les opérateurs d'observation et d'évolution sont nécessaires pour mettre en
 oeuvre les procédures d'assimilation de données ou d'optimisation. Ils
 comprennent la simulation physique par des calculs numériques, mais aussi le
@@ -34,62 +38,79 @@ L'opérateur d'évolution est ici considéré dans sa forme incrémentale, qui
 représente la transition entre deux états successifs, et il est alors similaire
 à l'opérateur d'observation.
 
-Schématiquement, un opérateur doit donner une solution étant donné les
-paramètres d'entrée. Une partie des paramètres d'entrée peut être modifiée au
-cours de la procédure d'optimisation. Ainsi, la représentation mathématique d'un
-tel processus est une fonction. Il a été brièvement décrit dans la section
-:ref:`section_theory` et il est généralisée ici par la relation:
+Schématiquement, un opérateur :math:`O` a pour objet de restituer une solution
+pour des paramètres d'entrée spécifiés. Une partie des paramètres d'entrée peut
+être modifiée au cours de la procédure d'optimisation. Ainsi, la représentation
+mathématique d'un tel processus est une fonction. Il a été brièvement décrit
+dans la section :ref:`section_theory` et il est généralisé ici par la relation:
 
 .. math:: \mathbf{y} = O( \mathbf{x} )
 
-entre les pseudo-observations :math:`\mathbf{y}` et les paramètres
-:math:`\mathbf{x}` en utilisant l'opérateur d'observation ou d'évolution
-:math:`O`. La même représentation fonctionnelle peut être utilisée pour le
-modèle linéaire tangent :math:`\mathbf{O}` de :math:`O` et son adjoint
-:math:`\mathbf{O}^*`, qui sont aussi requis par certains algorithmes
+entre les pseudo-observations en sortie :math:`\mathbf{y}` et les paramètres
+d'entrée :math:`\mathbf{x}` en utilisant l'opérateur d'observation ou
+d'évolution :math:`O`. La même représentation fonctionnelle peut être utilisée
+pour le modèle linéaire tangent :math:`\mathbf{O}` de :math:`O` et son adjoint
+:math:`\mathbf{O}^*` qui sont aussi requis par certains algorithmes
 d'assimilation de données ou d'optimisation.
 
 En entrée et en sortie de ces opérateurs, les variables :math:`\mathbf{x}` et
-:math:`\mathbf{y}` ou leurs incréments sont mathématiquement des vecteurs, et
-ils sont donc passés comme des vecteurs non-orientés (de type liste ou vecteur
-Numpy) ou orientés (de type matrice Numpy).
+:math:`\mathbf{y}`, ou leurs incréments, sont mathématiquement des vecteurs, et
+ils peuvent donc être donnés par l'utilisateur comme des vecteurs non-orientés
+(de type liste ou vecteur Numpy) ou orientés (de type matrice Numpy).
 
-Ensuite, **pour décrire complètement un opérateur, l'utilisateur n'a qu'à
-fournir une fonction qui réalise uniquement l'opération fonctionnelle de manière
-complète**.
+Ainsi, **pour décrire de manière complète un opérateur, l'utilisateur n'a qu'à
+fournir une fonction qui réalise complètement et uniquement l'opération
+fonctionnelle**.
 
-Cette fonction est généralement donnée comme un script qui peut être exécuté
-dans un noeud YACS. Ce script peut aussi, sans différences, lancer des codes
-externes ou utiliser des appels et des méthodes internes SALOME. Si l'algorithme
-nécessite les 3 aspects de l'opérateur (forme directe, forme tangente et forme
-adjointe), l'utilisateur doit donner les 3 fonctions ou les approximer.
+Cette fonction est généralement donnée comme une fonction ou un script Python,
+qui peuvent en particulier être exécuté comme une fonction Python indépendante
+ou dans un noeud YACS. Cette fonction ou ce script peuvent, sans différences,
+lancer des codes externes ou utiliser des appels et des méthodes internes
+Python ou SALOME. Si l'algorithme nécessite les 3 aspects de l'opérateur (forme
+directe, forme tangente et forme adjointe), l'utilisateur doit donner les 3
+fonctions ou les approximer grâce à ADAO.
 
-Il existe 3 méthodes effectives pour l'utilisateur de fournir une représentation
-fonctionnelle de l'opérateur. Ces méthodes sont choisies dans le champ "*FROM*"
-de chaque opérateur ayant une valeur "*Function*" comme "*INPUT_TYPE*", comme le
-montre la figure suivante:
+Il existe pour l'utilisateur 3 méthodes effectives de fournir une représentation
+fonctionnelle de l'opérateur, qui diffèrent selon le type d'argument choisi:
+
+- :ref:`section_ref_operator_one`
+- :ref:`section_ref_operator_funcs`
+- :ref:`section_ref_operator_switch`
+
+Dans le cas de l'interface textuelle d'ADAO (TUI), seules les deux premières
+sont nécessaires car la troisième est incluse dans la seconde. Dans le cas de
+l'interface graphique EFICAS d'ADAO, ces méthodes sont choisies dans le champ
+"*FROM*" de chaque opérateur ayant une valeur "*Function*" comme
+"*INPUT_TYPE*", comme le montre la figure suivante:
 
   .. eficas_operator_function:
   .. image:: images/eficas_operator_function.png
     :align: center
     :width: 100%
   .. centered::
-    **Choisir une représentation fonctionnelle de l'opérateur**
+    **Choisir graphiquement une représentation fonctionnelle de l'opérateur**
 
-Première forme fonctionnelle : utiliser "*ScriptWithOneFunction*"
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_one:
 
+Première forme fonctionnelle : un seul opérateur direct
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: OneFunction
 .. index:: single: ScriptWithOneFunction
 .. index:: single: DirectOperator
 .. index:: single: DifferentialIncrement
 .. index:: single: CenteredFiniteDifference
 
-La première consiste à ne fournir qu'une seule fonction potentiellement non
-linéaire, et d'approximer les opérateurs tangent et adjoint. Ceci est fait en
-utilisant le mot-clé "*ScriptWithOneFunction*" pour la description de
-l'opérateur choisi dans l'interface graphique ADAO. L'utilisateur doit fournir
-la fonction dans un script, avec un nom obligatoire "*DirectOperator*". Par
-exemple, le script peut suivre le modèle suivant::
+La première consiste à ne fournir qu'une seule fonction, potentiellement non
+linéaire, et à approximer les opérateurs tangent et adjoint associés.
+
+Ceci est fait dans ADAO en utilisant dans l'interface graphique EFICAS le
+mot-clé "*ScriptWithOneFunction*" pour la description par un script. Dans
+l'interface textuelle, c'est le mot-clé "*OneFunction*", éventuellement combiné
+avec le mot-clé "*Script*" selon que c'est une fonction ou un script. Si c'est
+par script externe, l'utilisateur doit fournir un fichier contenant une
+fonction qui porte le nom obligatoire "*DirectOperator*". Par exemple, un
+script externe peut suivre le modèle générique suivant::
 
     def DirectOperator( X ):
         """ Opérateur direct de simulation non-linéaire """
@@ -100,18 +121,19 @@ exemple, le script peut suivre le modèle suivant::
 
 Dans ce cas, l'utilisateur doit aussi fournir une valeur pour l'incrément
 différentiel (ou conserver la valeur par défaut), en utilisant dans l'interface
-graphique (GUI) le mot-clé "*DifferentialIncrement*", qui a une valeur par
-défaut de 1%. Ce coefficient est utilisé dans l'approximation différences finies
-pour construire les opérateurs tangent et adjoint. L'ordre de l'approximation
-différences finies peut aussi être choisi à travers l'interface, en utilisant le
-mot-clé "*CenteredFiniteDifference*", avec 0 pour un schéma non centré du
-premier ordre (qui est la valeur par défaut), et avec 1 pour un schéma centré du
-second ordre (qui coûte numériquement deux fois plus cher que le premier ordre).
-Si nécessaire et si possible, on peut :ref:`subsection_ref_parallel_df`. Dans
-tous les cas, un mécanisme de cache interne permet de limiter le nombre
-d'évaluations de l'opérateur au minimum possible du point de vue de l'exécution
-séquentielle ou parallèle des approximations numériques des opérateurs tangent
-et adjoint, pour éviter des calculs redondants.
+graphique (GUI) ou textuelle (TUI) le mot-clé "*DifferentialIncrement*" comme
+paramètre, qui a une valeur par défaut de 1%. Ce coefficient est utilisé dans
+l'approximation différences finies pour construire les opérateurs tangent et
+adjoint. L'ordre de l'approximation différences finies peut aussi être choisi à
+travers l'interface, en utilisant le mot-clé "*CenteredFiniteDifference*", avec
+0 pour un schéma non centré du premier ordre (qui est la valeur par défaut), et
+avec 1 pour un schéma centré du second ordre (et qui coûte numériquement deux
+fois plus cher que le premier ordre). Si nécessaire et si possible, on peut
+:ref:`subsection_ref_parallel_df`. Dans tous les cas, un mécanisme de cache
+interne permet de limiter le nombre d'évaluations de l'opérateur au minimum
+possible du point de vue de l'exécution séquentielle ou parallèle des
+approximations numériques des opérateurs tangent et adjoint, pour éviter des
+calculs redondants.
 
 Cette première forme de définition de l'opérateur permet aisément de tester la
 forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la
@@ -120,29 +142,37 @@ l'algorithme ADAO de vérification "*FunctionTest*" (voir la section sur
 l':ref:`section_ref_algorithm_FunctionTest`) pour ce test.
 
 **Avertissement important :** le nom "*DirectOperator*" est obligatoire, et le
-type de l'argument ``X`` peut être une liste, un vecteur ou une matrice Numpy.
-La fonction utilisateur doit accepter et traiter tous ces cas.
+type de l'argument ``X`` peut être une liste de valeur réelles, un vecteur
+Numpy ou une matrice Numpy. La fonction utilisateur doit accepter et traiter
+tous ces cas.
 
-Seconde forme fonctionnelle : utiliser "*ScriptWithFunctions*"
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_funcs:
 
+Seconde forme fonctionnelle : trois opérateurs direct, tangent et adjoint
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: ThreeFunctions
 .. index:: single: ScriptWithFunctions
 .. index:: single: DirectOperator
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
 
-**En général, il est recommandé d'utiliser la première forme fonctionnelle
-plutôt que la seconde. Un petit accroissement de performances n'est pas une
-bonne raison pour utiliser l'implémentation détaillée de cette seconde forme
-fonctionnelle.**
+.. warning::
+
+  en général, il est recommandé d'utiliser la première forme fonctionnelle
+  plutôt que la seconde. Un petit accroissement de performances n'est pas une
+  bonne raison pour utiliser l'implémentation détaillée de cette seconde forme
+  fonctionnelle.
 
 La seconde consiste à fournir directement les trois opérateurs liés :math:`O`,
 :math:`\mathbf{O}` et :math:`\mathbf{O}^*`. C'est effectué en utilisant le
 mot-clé "*ScriptWithFunctions*" pour la description de l'opérateur choisi dans
-l'interface graphique (GUI) d'ADAO. L'utilisateur doit fournir trois fonctions
-dans un script, avec trois noms obligatoires "*DirectOperator*",
-"*TangentOperator*" et "*AdjointOperator*". Par exemple, le script peut suivre
-le squelette suivant::
+l'interface graphique EFICAS d'ADAO. Dans l'interface textuelle, c'est le
+mot-clé "*ThreeFunctions*", éventuellement combiné avec le mot-clé "*Script*"
+selon que c'est une fonction ou un script. L'utilisateur doit fournir dans un
+script trois fonctions, avec les trois noms obligatoires "*DirectOperator*",
+"*TangentOperator*" et "*AdjointOperator*". Par exemple, le script externe peut
+suivre le squelette suivant::
 
     def DirectOperator( X ):
         """ Opérateur direct de simulation non-linéaire """
@@ -151,15 +181,17 @@ le squelette suivant::
         ...
         return quelque chose comme Y
 
-    def TangentOperator( (X, dX) ):
+    def TangentOperator( paire = (X, dX) ):
         """ Opérateur linéaire tangent, autour de X, appliqué à dX """
+        X, dX = paire
         ...
         ...
         ...
         return quelque chose comme Y
 
-    def AdjointOperator( (X, Y) ):
+    def AdjointOperator( paire = (X, Y) ):
         """ Opérateur adjoint, autour de X, appliqué à Y """
+        X, Y = paire
         ...
         ...
         ...
@@ -169,46 +201,53 @@ Un nouvelle fois, cette seconde définition d'opérateur permet aisément de tes
 les formes fonctionnelles avant de les utiliser dans le cas ADAO, réduisant la
 complexité de l'implémentation de l'opérateur.
 
-Pour certains algorithmes, il faut que les fonctions tangente et adjointe puisse
-renvoyer les matrices équivalentes à l'opérateur linéaire. Dans ce cas, lorsque,
-respectivement, les arguments ``dX`` ou ``Y`` valent ``None``, l'utilisateur
-doit renvoyer la matrice associée.
+Pour certains algorithmes, il faut que les fonctions tangente et adjointe
+puisse renvoyer les matrices équivalentes à l'opérateur linéaire. Dans ce cas,
+lorsque, respectivement, les arguments ``dX`` ou ``Y`` valent ``None``, le
+script de l'utilisateur doit renvoyer la matrice associée.
 
 **Avertissement important :** les noms "*DirectOperator*", "*TangentOperator*"
 et "*AdjointOperator*" sont obligatoires, et le type des arguments ``X``,
-``Y``, ``dX`` peut être une liste, un vecteur ou une matrice Numpy.
-La fonction utilisateur doit accepter et traiter tous ces cas.
+``Y``, ``dX`` peut être une liste de valeur réelles, un vecteur Numpy ou une
+matrice Numpy. La fonction utilisateur doit accepter et traiter tous ces cas.
 
-Troisième forme fonctionnelle : utiliser "*ScriptWithSwitch*"
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_switch:
+
+Troisième forme fonctionnelle : trois opérateurs avec un branchement
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: ScriptWithSwitch
 .. index:: single: DirectOperator
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
 
-**Il est recommandé de ne pas utiliser cette troisième forme fonctionnelle sans
-une solide raison numérique ou physique. Un accroissement de performances n'est
-pas une bonne raison pour utiliser la complexité de cette troisième forme
-fonctionnelle. Seule une impossibilité à utiliser les première ou seconde formes
-justifie l'usage de la troisième.**
+.. warning::
 
-La troisième forme donne de plus grandes possibilités de contrôle de l'exécution
-des trois fonctions représentant l'opérateur, permettant un usage et un contrôle
-avancés sur chaque exécution du code de simulation. C'est réalisable en
-utilisant le mot-clé "*ScriptWithSwitch*" pour la description de l'opérateur à
-travers l'interface graphique (GUI) d'ADAO. L'utilisateur doit fournir un script
-unique aiguillant, selon un contrôle, l'exécution des formes directe, tangente
-et adjointe du code de simulation. L'utilisateur peut alors, par exemple,
-utiliser des approximations pour les codes tangent et adjoint, ou introduire une
-plus grande complexité du traitement des arguments des fonctions. Mais cette
-démarche sera plus difficile à implémenter et à déboguer.
+  il est recommandé de ne pas utiliser cette troisième forme fonctionnelle sans
+  une solide raison numérique ou physique. Un accroissement de performances
+  n'est pas une bonne raison pour utiliser la complexité de cette troisième
+  forme fonctionnelle. Seule une impossibilité à utiliser les première ou
+  seconde formes justifie l'usage de la troisième.
 
-Toutefois, si vous souhaitez utiliser cette troisième forme, on recommande de se
-baser sur le modèle suivant pour le script d'aiguillage. Il nécessite un fichier
-script ou un code externe nommé ici "*Physical_simulation_functions.py*",
-contenant trois fonctions nommées "*DirectOperator*", "*TangentOperator*" et
-"*AdjointOperator*" comme précédemment. Voici le squelette d'aiguillage::
+La troisième forme donne de plus grandes possibilités de contrôle de
+l'exécution des trois fonctions représentant l'opérateur, permettant un usage
+et un contrôle avancés sur chaque exécution du code de simulation. C'est
+réalisable en utilisant le mot-clé "*ScriptWithSwitch*" pour la description de
+l'opérateur à travers l'interface graphique EFICAS d'ADAO. Dans l'interface
+textuelle, il suffit d'utiliser le mot-clé "*ThreeFunctions*" précédent pour
+définir aussi ce cas, en indiquant les fonctions adéquates. L'utilisateur doit
+fournir un script unique aiguillant, selon un contrôle, l'exécution des formes
+directe, tangente et adjointe du code de simulation. L'utilisateur peut alors,
+par exemple, utiliser des approximations pour les codes tangent et adjoint, ou
+introduire une plus grande complexité du traitement des arguments des
+fonctions. Mais cette démarche sera plus difficile à implémenter et à déboguer.
+
+Toutefois, si vous souhaitez utiliser cette troisième forme, on recommande de
+se baser sur le modèle suivant pour le script d'aiguillage. Il nécessite un
+fichier script ou un code externe nommé ici
+"*Physical_simulation_functions.py*", contenant trois fonctions nommées
+"*DirectOperator*", "*TangentOperator*" et "*AdjointOperator*" comme
+précédemment. Voici le squelette d'aiguillage::
 
     import Physical_simulation_functions
     import numpy, logging, codecs, pickle
@@ -267,16 +306,19 @@ Cas spécial d'un opérateur d'évolution avec contrôle
 
 Dans certains cas, l'opérateur d'évolution ou d'observation doit être contrôlé
 par un contrôle d'entrée externe, qui est donné *a priori*. Dans ce cas, la
-forme générique du modèle incrémental est légèrement modifié comme suit:
+forme générique du modèle incrémental :math:`O` est légèrement modifiée comme
+suit:
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
 où :math:`\mathbf{u}` est le contrôle sur l'incrément d'état. En effet,
 l'opérateur direct doit être appliqué à une paire de variables :math:`(X,U)`.
-Schématiquement, l'opérateur doit être construit comme suit::
+Schématiquement, l'opérateur :math:`O` doit être construit comme une fonction
+applicable sur une paire:math:`\mathbf{(X, U)}` suit::
 
-    def DirectOperator( (X, U) ):
+    def DirectOperator( paire = (X, U) ):
         """ Opérateur direct de simulation non-linéaire """
+        X, U = paire
         ...
         ...
         ...
@@ -285,8 +327,10 @@ Schématiquement, l'opérateur doit être construit comme suit::
 Les opérateurs tangent et adjoint ont la même signature que précédemment, en
 notant que les dérivées doivent être faites seulement partiellement par rapport
 à :math:`\mathbf{x}`. Dans un tel cas de contrôle explicite, seule la deuxième
-forme fonctionnelle (en utilisant "*ScriptWithFunctions*") et la troisième forme
-fonctionnelle (en utilisant "*ScriptWithSwitch*") peuvent être utilisées.
+forme fonctionnelle (en utilisant "*ScriptWithFunctions*") et la troisième
+forme fonctionnelle (en utilisant "*ScriptWithSwitch*") peuvent être utilisées.
+
+.. _section_ref_operator_dimensionless:
 
 Remarques complémentaires sur l'adimensionnement des opérateurs
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -296,28 +340,75 @@ Remarques complémentaires sur l'adimensionnement des opérateurs
 
 Il est fréquent que les grandeurs physiques, en entrée ou en sortie des
 opérateurs, présentent des différences notables d'ordre de grandeur ou de taux
-de variation. Une manière d'éviter des difficultés numériques est d'utiliser, ou
-d'établir, un adimensionnement des calculs menés dans les opérateurs
+de variation. Une manière d'éviter des difficultés numériques est d'utiliser,
+ou d'établir, un adimensionnement des calculs menés dans les opérateurs
 [WikipediaND]_. Par principe, dans la mesure où la simulation de la physique
 devrait être la plus adimensionnée possible, il est en premier lieu recommandé
 d'utiliser les capacités existantes d'adimensionnement du code de calcul.
 
-Néanmoins, dans le cas courant où l'on ne peut en disposer, il est souvent utile
-d'environner le calcul pour l'adimensionner en entrée ou en sortie. Une manière
-simple de faire cela en entrée consiste à transformer les paramètres
+Néanmoins, dans le cas courant où l'on ne peut en disposer, il est souvent
+utile d'environner le calcul pour l'adimensionner en entrée ou en sortie. Une
+manière simple de faire cela en entrée consiste à transformer les paramètres
 :math:`\mathbf{x}` en argument d'une fonction comme "*DirectOperator*". On
-utilise le plus souvent les valeurs par défaut :math:`\mathbf{x}^b` (ébauche, ou
-valeur nominale). Pourvu que chaque composante de :math:`\mathbf{x}^b` soit non
-nulle, on peut en effet poser:
+utilise le plus souvent comme référence les valeurs par défaut
+:math:`\mathbf{x}^b` (ébauche, ou valeur nominale). Pourvu que chaque
+composante de :math:`\mathbf{x}^b` soit non nulle, on peut ensuite procéder par
+correction multiplicative. Pour cela, on peut par exemple poser:
 
 .. math:: \mathbf{x} = \mathbf{\alpha}\mathbf{x}^b
 
 et optimiser ensuite le paramètre multiplicatif :math:`\mathbf{\alpha}`. Ce
-paramètre a pour valeur par défaut (ou pour ébauche) un vecteur de 1. Attention,
-l'application d'une démarche d'adimensionnement nécessite aussi la modification
-des covariances d'erreurs associées dans la formulation ADAO du problème
-d'optimisation.
+paramètre a pour valeur par défaut (ou pour ébauche) un vecteur de 1. De
+manière similaire, on peut procéder par correction additive si c'est plus
+judicieux pour la physique sous-jacente. Ainsi, dans ce cas, on peut poser:
+
+.. math:: \mathbf{x} =\mathbf{x}^b + \mathbf{\alpha}
+
+et optimiser ensuite le paramètre additif :math:`\mathbf{\alpha}`. Cette fois,
+ce paramètre a pour valeur d'ébauche un vecteur de 0.
+
+Attention, l'application d'une démarche d'adimensionnement nécessite aussi la
+modification des covariances d'erreurs associées dans la formulation globale du
+problème d'optimisation.
 
 Une telle démarche suffit rarement à éviter tous les problèmes numériques, mais
 permet souvent d'améliorer beaucoup le conditionnement numérique de
 l'optimisation.
+
+Gestion explicite de fonctions "multiples"
+++++++++++++++++++++++++++++++++++++++++++
+
+.. warning::
+
+  il est fortement recommandé de ne pas utiliser cette gestion explicite de
+  fonctions "multiples" sans une très solide raison informatique pour le faire.
+  Cette gestion est déjà effectuée par défaut dans ADAO pour l'amélioration des
+  performances. Seul l'utilisateur très averti, cherchant à gérer des cas
+  particulièrement difficiles, peut s'intéresser à cette extension. En dépit de
+  sa simplicité, c'est au risque explicite de dégrader notablement les
+  performances.
+
+Il est possible, lorsque l'on fournit des fonctions d'opérateurs, de les
+définir comme des fonctions qui traitent non pas un seul argument, mais une
+série d'arguments, pour restituer en sortie la série des valeurs
+correspondantes. En pseudo-code, la fonction "multiple", ici nommée
+``MultiFunctionO``, représentant l'opérateur classique :math:`O` nommé
+"*DirectOperator*", effectue::
+
+    def MultiFunctionO( Inputs ):
+        """ Multiple ! """
+        Outputs = []
+        for X in Inputs:
+            Y = DirectOperator( X )
+            Outputs.append( Y )
+        return Outputs
+
+La longueur de la sortie (c'est-à-dire le nombre de valeurs calculées) est
+égale à la longueur de l'entrée (c'est-à-dire le nombre d'états dont on veut
+calculer la valeur par l'opérateur).
+
+Cette possibilité n'est disponible que dans l'interface textuelle d'ADAO. Pour
+cela, lors de la définition d'une fonction d'opérateur, en même temps que l'on
+définit de manière habituelle la fonction ou le script externe, il suffit
+d'indiquer en plus en argument par un booléen "*InputFunctionAsMulti*" que la
+définition est celle d'une fonction "multiple".

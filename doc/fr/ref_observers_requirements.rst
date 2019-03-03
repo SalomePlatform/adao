@@ -21,24 +21,26 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. _ref_observers_requirements:
+.. _section_ref_observers_requirements:
 
 Exigences pour les fonctions décrivant un "*observer*"
 ------------------------------------------------------
 
 .. index:: single: Observer
+.. index:: single: setObserver
 .. index:: single: Observer Template
 
-Certaines variables spéciales, internes à l'optimisation, utilisées au cours des
-calculs, peuvent être surveillées durant un calcul ADAO. Ces variables peuvent
-être affichées, tracées, enregistrées, etc. C'est réalisable en utilisant des
-"*observer*", parfois aussi appelés des "callback". Ce sont des scripts Python,
-qui sont chacun associés à une variable donnée. Ils sont activés à chaque
-modification de la variable.
+Certaines variables spéciales, internes à l'optimisation et utilisées au cours
+des calculs, peuvent être surveillées durant un calcul ADAO. Ces variables
+peuvent être affichées, tracées, enregistrées, etc. par l'utilisateur. C'est
+réalisable en utilisant des "*observer*", parfois aussi appelés des "callback".
+Ce sont des scripts Python, qui sont chacun associés à une variable donnée, et
+qui sont automatiquement activés à chaque modification de la variable.
 
-Il y a 3 méthodes pratiques pour intégrer un "*observer*" dans un cas ADAO. La
-méthode est choisie à l'aide du mot-clé "*NodeType*" de chaque entrée de type
-"*observer*", comme montré dans la figure qui suit :
+Dans l'interface graphique EFICAS d'ADAO, il y a 3 méthodes pratiques pour
+intégrer un "*observer*" dans un cas ADAO. La méthode est choisie à l'aide du
+mot-clé "*NodeType*" de chaque entrée de type "*observer*", comme montré dans
+la figure qui suit :
 
   .. eficas_observer_nodetype:
   .. image:: images/eficas_observer_nodetype.png
@@ -50,11 +52,21 @@ méthode est choisie à l'aide du mot-clé "*NodeType*" de chaque entrée de typ
 L'"*observer*" peut être fourni sous la forme d'un script explicite (entrée de
 type "*String*"), d'un script contenu dans un fichier externe (entrée de type
 "*Script*"), ou en utilisant un modèle (entrée de type "*Template*") fourni par
-défaut dans ADAO lors de l'usage de l'éditeur graphique. Ces derniers sont des
-scripts simples qui peuvent être adaptés par l'utilisateur, soit dans l'étape
-d'édition intégrée du cas, soit dans l'étape d'édition du schéma avant
-l'exécution, pour améliorer la performance du calcul ADAO dans le superviseur
-d'exécution de SALOME.
+défaut dans ADAO lors de l'usage de l'éditeur graphique EFICAS et détaillé dans
+la partie :ref:`section_ref_observers_templates` qui suit. Ces derniers sont
+des scripts simples qui peuvent être adaptés par l'utilisateur, soit dans
+l'étape d'édition intégrée du cas avec EFICAS, soit dans l'étape d'édition du
+schéma avant l'exécution, pour améliorer la performance du calcul ADAO dans le
+superviseur d'exécution de SALOME.
+
+Dans l'interface textuelle (TUI) d'ADAO (voir la partie :ref:`section_tui`),
+les mêmes informations peuvent être données à l'aide de la commande
+"*setObserver*" appliquée pour une variable données indiquée dans l'argument
+"*Variable*". Les autres arguments de cette commande permettent de le définir
+soit comme un template (argument "*Template*") désignant l'un des scripts
+détaillés dans la partie :ref:`section_ref_observers_templates`, soit comme un
+script explicite (argument "*String*"), soit comme un script contenu dans un
+fichier externe (argument "*Script*").
 
 Forme générale d'un script permettant de définir un *observer*
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -80,6 +92,8 @@ affichée à chaque étape de l'algorithme d'optimisation ou d'assimilation. Les
 de traitement complexe, d'analyse statistique, etc.
 
 On donne ci-après l'identifiant et le contenu de chaque modèle disponible.
+
+.. _section_ref_observers_templates:
 
 Inventaire des modèles d'*observer* disponibles ("*Template*")
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -164,7 +178,7 @@ Enregistre la série des valeurs de la variable dans un fichier du répertoire '
 Modèle **ValuePrinterAndSaver** :
 ..................................
 
-Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable.
 
 ::
 
@@ -186,7 +200,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la
 Modèle **ValueIndexPrinterAndSaver** :
 .......................................
 
-Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la valeur courante de la variable, en ajoutant son index.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable, en ajoutant son index.
 
 ::
 
@@ -208,7 +222,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier, la
 Modèle **ValueSeriePrinterAndSaver** :
 .......................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier la série des valeurs de la variable.
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp', la série des valeurs de la variable.
 
 ::
 
@@ -320,7 +334,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 Modèle **ValuePrinterSaverAndGnuPlotter** :
 ............................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la valeur courante de la variable .
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable .
 
 ::
 
@@ -353,7 +367,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et
 Modèle **ValueSeriePrinterSaverAndGnuPlotter** :
 .................................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier et affiche graphiquement la série des valeurs de la variable.
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la série des valeurs de la variable.
 
 ::
 

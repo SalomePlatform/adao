@@ -47,9 +47,13 @@ Bibliographie
 
 .. [Chakraborty08] Chakraborty U.K., *Advances in differential evolution*, Studies in computational intelligence, Vol.143, Springer, 2008
 
-.. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using monte carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), 10,143–10,162, 1994
+.. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using Monte Carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), 10,143–10,162, 1994
 
 .. [Evensen03] Evensen G., *The Ensemble Kalman Filter: theoretical formulation and practical implementation*, Seminar on Recent developments in data assimilation for atmosphere and ocean, ECMWF, 8 to 12 September 2003
+
+.. [Glover89] Glover F., *Tabu Search-Part I*, ORSA Journal on Computing, 1(2), pp.190-206, 1989
+
+.. [Glover90] Glover F., *Tabu Search-Part II*, ORSA Journal on Computing, 2(1), pp.4-32, 1990
 
 .. [Ide97] Ide K., Courtier P., Ghil M., Lorenc A. C., *Unified notation for data assimilation: operational, sequential and variational*, Journal of the Meteorological Society of Japan, 75(1B), pp.181-189, 1997
 
@@ -110,6 +114,8 @@ Bibliographie
 .. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
 
 .. [WikipediaTI] Wikipedia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
+
+.. [WikipediaTS] Wikipedia, *Tabu search*, https://en.wikipedia.org/wiki/Tabu_search
 
 .. [WikipediaUKF] Wikipedia, *Unscented Kalman Filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
 

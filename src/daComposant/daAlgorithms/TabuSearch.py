@@ -103,7 +103,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
-            listval  = ["BMA", "OMA", "OMB", "CurrentState", "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation", "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"]
+            listval  = [
+                "BMA",
+                "OMA",
+                "OMB",
+                "CurrentState",
+                "CostFunctionJ",
+                "CostFunctionJb",
+                "CostFunctionJo",
+                "Innovation",
+                "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentState",
+                "SimulatedObservationAtOptimum",
+                ]
             )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
