@@ -28,10 +28,10 @@
 ================================================================================
 
 This section presents a generic methodology to build a Data Assimilation or
-Optimization study. It describes the conceptual steps to build autonomously this
-study. It is not dependent of any tool, but the ADAO module allows to set up
-efficiently such a study, following :ref:`section_using`. Notations are the same
-than the ones used in :ref:`section_theory`.
+Optimization study. It describes the conceptual steps to build autonomously
+this study. It is not dependent of any tool, but the ADAO module allows to set
+up efficiently such a study. Notations are the same than the ones used in
+:ref:`section_theory`.
 
 Logical procedure for a study
 -----------------------------
@@ -39,13 +39,13 @@ Logical procedure for a study
 For a generic Data Assimilation or Optimization study, the main methodological
 steps can be the following:
 
-    - :ref:`section_m_step1`
-    - :ref:`section_m_step2`
-    - :ref:`section_m_step3`
-    - :ref:`section_m_step4`
-    - :ref:`section_m_step5`
-    - :ref:`section_m_step6`
-    - :ref:`section_m_step7`
+- :ref:`section_m_step1`
+- :ref:`section_m_step2`
+- :ref:`section_m_step3`
+- :ref:`section_m_step4`
+- :ref:`section_m_step5`
+- :ref:`section_m_step6`
+- :ref:`section_m_step7`
 
 Each step will be detailed in the next sections.
 

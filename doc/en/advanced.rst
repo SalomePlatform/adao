@@ -309,7 +309,7 @@ edition stage, or at the edition stage before execution, to improve the tuning
 of the ADAO calculation.
 
 To implement these "*observer*" efficiently, one can look to the
-:ref:`ref_observers_requirements`.
+:ref:`section_ref_observers_requirements`.
 
 Getting more information when running a calculation
 ---------------------------------------------------
@@ -424,6 +424,13 @@ is not guaranteed for all the commands or keywords. In general also, an ADAO
 case file for one version can not be read by a previous minor or major version
 of the ADAO module.
 
+Switching from 9.x to 9.y with y > x
+++++++++++++++++++++++++++++++++++++
+
+There is no known incompatibility for the ADAO case files. The upgrade procedure
+is to read the old ADAO case file with the new SALOME/ADAO module, and save it
+with a new name.
+
 Switching from 8.5 to 9.2
 +++++++++++++++++++++++++
 
@@ -437,7 +444,7 @@ printing "*print*" with "*command*" syntax instead of functional syntax
 "*print(...)*". In this case, it is suggested to correct the syntax of user
 files in environment 8 before switching to environment 9.
 
-Switching from 8.x to 8.y with x < y
+Switching from 8.x to 8.y with y > x
 ++++++++++++++++++++++++++++++++++++
 
 There is no known incompatibility for the ADAO case files. The upgrade procedure
@@ -472,7 +479,7 @@ There is no known incompatibility for the ADAO case files. The upgrade procedure
 is to read the old ADAO case file with the new SALOME/ADAO module, and save it
 with a new name.
 
-Switching from 7.x to 7.y with x < y
+Switching from 7.x to 7.y with y > x
 ++++++++++++++++++++++++++++++++++++
 
 There is no known incompatibility for the ADAO case files. The upgrade procedure
@@ -502,7 +509,7 @@ object::
 
 The post-processing scripts has to be modified.
 
-Switching from 6.x to 6.y with x < y
+Switching from 6.x to 6.y with y > x
 ++++++++++++++++++++++++++++++++++++
 
 There is no known incompatibility for the ADAO case file. The upgrade procedure

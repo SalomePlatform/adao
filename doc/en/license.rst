@@ -27,6 +27,7 @@
 License and requirements
 ================================================================================
 
+.. highlight:: none
 .. index:: single: COPYING
 .. index:: single: LICENSE
 .. index:: single: SALOME
