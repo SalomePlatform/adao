@@ -27,20 +27,19 @@
 Algorithme de calcul "*DifferentialEvolution*"
 ----------------------------------------------
 
-.. warning::
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo00.rst
 
-  dans sa présente version, cet algorithme est expérimental, et reste donc
-  susceptible de changements dans les prochaines versions.
-
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
 d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
 d'évolution différentielle. C'est une méthode qui n'utilise pas les dérivées de
 la fonctionnelle d'écart. Elle entre dans la même catégorie que
-l':ref:`section_ref_algorithm_DerivativeFreeOptimization` ou
-l':ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+l':ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+l':ref:`section_ref_algorithm_ParticleSwarmOptimization` ou
+l':ref:`section_ref_algorithm_TabuSearch`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
@@ -48,128 +47,125 @@ fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
 défaut est celle de moindres carrés pondérés augmentés, classiquement utilisée
 en assimilation de données.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+.. include:: snippets/Minimizer_DE.rst
 
-Les options de l'algorithme sont les suivantes:
+.. include:: snippets/BoundsWithExtremes.rst
 
-  .. include:: snippets/Minimizer_DE.rst
+.. include:: snippets/CrossOverProbability_CR.rst
 
-  .. include:: snippets/BoundsWithExtremes.rst
+.. include:: snippets/MaximumNumberOfSteps.rst
 
-  .. include:: snippets/CrossOverProbability_CR.rst
+.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
-  .. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MutationDifferentialWeight_F.rst
 
-  .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
+.. include:: snippets/PopulationSize.rst
 
-  .. include:: snippets/MutationDifferentialWeight_F.rst
+.. include:: snippets/QualityCriterion.rst
 
-  .. include:: snippets/PopulationSize.rst
+.. include:: snippets/SetSeed.rst
 
-  .. include:: snippets/QualityCriterion.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/SetSeed.rst
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
+  "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
+  "CurrentOptimum",
+  "CurrentState",
+  "IndexOfOptimum",
+  "Innovation",
+  "InnovationAtCurrentState",
+  "OMA",
+  "OMB",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentOptimum",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
-    "CostFunctionJAtCurrentOptimum", "CostFunctionJb",
-    "CostFunctionJbAtCurrentOptimum", "CostFunctionJo",
-    "CostFunctionJoAtCurrentOptimum", "CurrentOptimum", "CurrentState",
-    "IndexOfOptimum", "Innovation", "InnovationAtCurrentState", "OMA", "OMB",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentOptimum",
-    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+.. include:: snippets/Analysis.rst
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/CostFunctionJ.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/CostFunctionJb.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/CurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+.. include:: snippets/IndexOfOptimum.rst
 
-  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+.. include:: snippets/InnovationAtCurrentState.rst
 
-  .. include:: snippets/CurrentOptimum.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/IndexOfOptimum.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/InnovationAtCurrentState.rst
+.. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
+- :ref:`section_ref_algorithm_DerivativeFreeOptimization`
+- :ref:`section_ref_algorithm_ParticleSwarmOptimization`
+- :ref:`section_ref_algorithm_TabuSearch`
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
-
-Voir aussi
-++++++++++
-
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
-  - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
-
-Références bibliographiques :
-  - [Chakraborty08]_
-  - [Price05]_
-  - [Storn97]_
+- [Chakraborty08]_
+- [Price05]_
+- [Storn97]_

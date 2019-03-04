@@ -27,13 +27,11 @@
 Algorithme de calcul "*4DVAR*"
 ------------------------------
 
-.. warning::
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo00.rst
 
-  dans sa présente version, cet algorithme est expérimental, et reste donc
-  susceptible de changements dans les prochaines versions.
-
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système dynamique, par une
 méthode de minimisation variationnelle de la fonctionnelle :math:`J` d'écart
@@ -48,124 +46,116 @@ algorithmes de filtrage de Kalman et en particulier
 l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou
 l':ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/EvolutionError.rst
 
-  .. include:: snippets/EvolutionError.rst
+.. include:: snippets/EvolutionModel.rst
 
-  .. include:: snippets/EvolutionModel.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+Minimizer
+  .. index:: single: Minimizer
 
-Les options de l'algorithme sont les suivantes:
+  Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
+  défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
+  linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
+  (minimisation non linéaire sous contraintes), "CG" (minimisation non
+  linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
+  contraintes), "NCG" (minimisation de type gradient conjugué de Newton). Il
+  est fortement conseillé de conserver la valeur par défaut.
 
-  Minimizer
-    .. index:: single: Minimizer
+  Exemple :
+  ``{"Minimizer":"LBFGSB"}``
 
-    Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
-    défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
-    linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
-    (minimisation non linéaire sous contraintes), "CG" (minimisation non
-    linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
-    contraintes), "NCG" (minimisation de type gradient conjugué de Newton). Il
-    est fortement conseillé de conserver la valeur par défaut.
+.. include:: snippets/BoundsWithNone.rst
 
-    Exemple :
-    ``{"Minimizer":"LBFGSB"}``
+.. include:: snippets/ConstrainedBy.rst
 
-  .. include:: snippets/BoundsWithNone.rst
+.. include:: snippets/MaximumNumberOfSteps.rst
 
-  .. include:: snippets/ConstrainedBy.rst
+.. include:: snippets/CostDecrementTolerance.rst
 
-  .. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/EstimationOf.rst
 
-  .. include:: snippets/CostDecrementTolerance.rst
+.. include:: snippets/ProjectedGradientTolerance.rst
 
-  .. include:: snippets/EstimationOf.rst
+.. include:: snippets/GradientNormTolerance.rst
 
-  .. include:: snippets/ProjectedGradientTolerance.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/GradientNormTolerance.rst
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJbAtCurrentOptimum",
+  "CostFunctionJoAtCurrentOptimum",
+  "CurrentOptimum",
+  "CurrentState",
+  "IndexOfOptimum",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+  Exemple : ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
-    "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
-    "CurrentOptimum", "CurrentState", "IndexOfOptimum"].
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    Exemple : ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+.. include:: snippets/Analysis.rst
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/CostFunctionJ.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/CostFunctionJb.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/Analysis.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/CurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+.. include:: snippets/IndexOfOptimum.rst
 
-  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/CurrentOptimum.rst
+- :ref:`section_ref_algorithm_3DVAR`
+- :ref:`section_ref_algorithm_KalmanFilter`
+- :ref:`section_ref_algorithm_ExtendedKalmanFilter`
+- :ref:`section_ref_algorithm_EnsembleKalmanFilter`
 
-  .. include:: snippets/CurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-  .. include:: snippets/IndexOfOptimum.rst
-
-Voir aussi
-++++++++++
-
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_3DVAR`
-  - :ref:`section_ref_algorithm_KalmanFilter`
-  - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
-
-Références bibliographiques :
-  - [Byrd95]_
-  - [Morales11]_
-  - [Talagrand97]_
-  - [Zhu97]_
+- [Byrd95]_
+- [Morales11]_
+- [Talagrand97]_
+- [Zhu97]_

@@ -27,111 +27,104 @@
 Algorithme de calcul "*QuantileRegression*"
 -------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'estimer les quantiles conditionnels de la distribution
 des paramètres d'état, exprimés à l'aide d'un modèle des variables observées. Ce
 sont donc les quantiles sur les variables observées qui vont permettre de
 déterminer les paramètres de modèles satisfaisant aux conditions de quantiles.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+.. include:: snippets/Quantile.rst
 
-Les options de l'algorithme sont les suivantes:
+.. include:: snippets/MaximumNumberOfSteps.rst
 
-  .. include:: snippets/Quantile.rst
+.. include:: snippets/CostDecrementTolerance_6.rst
 
-  .. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/BoundsWithNone.rst
 
-  .. include:: snippets/CostDecrementTolerance_6.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/BoundsWithNone.rst
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "OMA",
+  "OMB",
+  "Innovation",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
-
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
-    "CostFunctionJb", "CostFunctionJo", "CurrentState", "OMA", "OMB",
-    "Innovation", "SimulatedObservationAtBackground",
-    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum"].
-
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Astuce pour cet algorithme :*
 
     Comme les commandes *"BackgroundError"* et *"ObservationError"* sont
     requises pour TOUS les algorithmes de calcul dans l'interface graphique,
-    vous devez fournir une valeur, malgré le fait que ces commandes ne sont pas
-    requises pour cet algorithme, et ne seront pas utilisées. La manière la
-    plus simple est de donner "1" comme un STRING pour les deux.
+    vous devez fournir une valeur, malgré le fait que ces commandes ne soient
+    pas nécessaires pour cet algorithme, et ne sont donc pas utilisées. La
+    manière la plus simple est de donner "1" comme un STRING pour les deux.
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/Analysis.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/BMA.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-Voir aussi
-++++++++++
-
-Références bibliographiques :
-  - [Buchinsky98]_
-  - [Cade03]_
-  - [Koenker00]_
-  - [Koenker01]_
-  - [WikipediaQR]_
+- [Buchinsky98]_
+- [Cade03]_
+- [Koenker00]_
+- [Koenker01]_
+- [WikipediaQR]_

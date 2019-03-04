@@ -27,8 +27,8 @@
 Algorithme de vérification "*GradientTest*"
 -------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet de vérifier la qualité du gradient de l'opérateur, en
 calculant un résidu dont les propriétés théoriques sont connues. Plusieurs
@@ -87,87 +87,72 @@ On observe le résidu, qui est basé sur une approximation du gradient :
 
 qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/CheckingPoint.rst
 
-  .. include:: snippets/CheckingPoint.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03Chck.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_checking_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+.. include:: snippets/AmplitudeOfInitialDirection.rst
 
-Les options de l'algorithme sont les suivantes:
+.. include:: snippets/EpsilonMinimumExponent.rst
 
-  .. include:: snippets/AmplitudeOfInitialDirection.rst
+.. include:: snippets/InitialDirection.rst
 
-  .. include:: snippets/EpsilonMinimumExponent.rst
+.. include:: snippets/SetSeed.rst
 
-  .. include:: snippets/InitialDirection.rst
+ResiduFormula
+  .. index:: single: ResiduFormula
 
-  .. include:: snippets/SetSeed.rst
+  Cette clé indique la formule de résidu qui doit être utilisée pour le test.
+  Le choix par défaut est "Taylor", et les choix possibles sont "Taylor"
+  (résidu du développement de Taylor normalisé de l'opérateur, qui doit
+  décroître comme le carré de la perturbation), "TaylorOnNorm" (résidu du
+  développement de Taylor rapporté à la perturbation de l'opérateur, qui doit
+  rester constant) et "Norm" (résidu obtenu en prenant la norme du
+  développement de Taylor à l'ordre 0, qui approxime le gradient, et qui doit
+  rester constant).
 
-  ResiduFormula
-    .. index:: single: ResiduFormula
+  Exemple :
+  ``{"ResiduFormula":"Taylor"}``
 
-    Cette clé indique la formule de résidu qui doit être utilisée pour le test.
-    Le choix par défaut est "Taylor", et les choix possibles sont "Taylor"
-    (résidu du développement de Taylor normalisé de l'opérateur, qui doit
-    décroître comme le carré de la perturbation), "TaylorOnNorm" (résidu du
-    développement de Taylor rapporté à la perturbation de l'opérateur, qui doit
-    rester constant) et "Norm" (résidu obtenu en prenant la norme du
-    développement de Taylor à l'ordre 0, qui approxime le gradient, et qui doit
-    rester constant).
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-    Exemple :
-    ``{"ResiduFormula":"Taylor"}``
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "CurrentState",
+  "Residu",
+  "SimulatedObservationAtCurrentState",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["CurrentState", "Residu",
-    "SimulatedObservationAtCurrentState"].
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+.. include:: snippets/Residu.rst
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/CurrentState.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/Residu.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
-
-Voir aussi
-++++++++++
-
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_FunctionTest`
-  - :ref:`section_ref_algorithm_LinearityTest`
-  - :ref:`section_ref_algorithm_TangentTest`
-  - :ref:`section_ref_algorithm_AdjointTest`
+- :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_LinearityTest`
+- :ref:`section_ref_algorithm_TangentTest`
+- :ref:`section_ref_algorithm_AdjointTest`
+- :ref:`section_ref_algorithm_LocalSensitivityTest`

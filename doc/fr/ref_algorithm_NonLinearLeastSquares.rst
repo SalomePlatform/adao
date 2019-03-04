@@ -27,8 +27,8 @@
 Algorithme de calcul "*NonLinearLeastSquares*"
 ----------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation d'état par minimisation variationnelle de
 la fonctionnelle :math:`J` d'écart classique de "Moindres Carrés" pondérés:
@@ -43,140 +43,123 @@ Dans tous les cas, il est recommandé de lui préférer
 l':ref:`section_ref_algorithm_3DVAR` pour sa stabilité comme pour son
 comportement lors de l'optimisation.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+Minimizer
+  .. index:: single: Minimizer
 
-Les options de l'algorithme sont les suivantes:
+  Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
+  défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
+  linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
+  (minimisation non linéaire sous contraintes), "CG" (minimisation non
+  linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
+  contraintes), "NCG" (minimisation de type gradient conjugué de Newton), "LM"
+  (minimisation non linéaire de type Levenberg-Marquard). Il est fortement
+  conseillé de conserver la valeur par défaut.
 
-  Minimizer
-    .. index:: single: Minimizer
+  Exemple :
+  ``{"Minimizer":"LBFGSB"}``
 
-    Cette clé permet de changer le minimiseur pour l'optimiseur. Le choix par
-    défaut est "LBFGSB", et les choix possibles sont "LBFGSB" (minimisation non
-    linéaire sous contraintes, voir [Byrd95]_, [Morales11]_ et [Zhu97]_), "TNC"
-    (minimisation non linéaire sous contraintes), "CG" (minimisation non
-    linéaire sans contraintes), "BFGS" (minimisation non linéaire sans
-    contraintes), "NCG" (minimisation de type gradient conjugué de Newton), "LM"
-    (minimisation non linéaire de type Levenberg-Marquard). Il est fortement
-    conseillé de conserver la valeur par défaut.
+.. include:: snippets/BoundsWithNone.rst
 
-    Exemple :
-    ``{"Minimizer":"LBFGSB"}``
+.. include:: snippets/MaximumNumberOfSteps.rst
 
-  .. include:: snippets/BoundsWithNone.rst
+.. include:: snippets/CostDecrementTolerance.rst
 
-  .. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/ProjectedGradientTolerance.rst
 
-  .. include:: snippets/CostDecrementTolerance.rst
+.. include:: snippets/GradientNormTolerance.rst
 
-  .. include:: snippets/ProjectedGradientTolerance.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/GradientNormTolerance.rst
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
+  "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
+  "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation",
+  "InnovationAtCurrentState", "OMA", "OMB",
+  "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
-
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ",
-    "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
-    "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation",
-    "InnovationAtCurrentState", "OMA", "OMB",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"].
-
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Astuce pour cet algorithme :*
 
     Comme la commande *"BackgroundError"* est requise pour TOUS les algorithmes
     de calcul dans l'interface graphique, vous devez fournir une valeur, malgré
-    le fait que cette commande n'est pas requise pour cet algorithme, et ne
-    sera pas utilisée. La manière la plus simple est de donner "1" comme un
-    STRING.
+    le fait que cette commande ne soit pas nécessaire pour cet algorithme, et
+    n'est donc pas utilisée. La manière la plus simple est de donner "1" comme
+    un STRING.
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/Analysis.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/BMA.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+.. include:: snippets/CurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/CurrentOptimum.rst
+.. include:: snippets/IndexOfOptimum.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/IndexOfOptimum.rst
+.. include:: snippets/InnovationAtCurrentState.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/InnovationAtCurrentState.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+- :ref:`section_ref_algorithm_3DVAR`
 
-Voir aussi
-++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_3DVAR`
-
-Références bibliographiques :
-  - [Byrd95]_
-  - [Morales11]_
-  - [Zhu97]_
+- [Byrd95]_
+- [Morales11]_
+- [Zhu97]_

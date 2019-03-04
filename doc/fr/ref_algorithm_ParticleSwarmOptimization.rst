@@ -27,15 +27,16 @@
 Algorithme de calcul "*ParticleSwarmOptimization*"
 --------------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
 d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
 d'essaim particulaire. C'est une méthode qui n'utilise pas les dérivées de la
 fonctionnelle d'écart. Elle entre dans la même catégorie que
-l':ref:`section_ref_algorithm_DerivativeFreeOptimization` ou
-l':ref:`section_ref_algorithm_DifferentialEvolution`.
+l':ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+l':ref:`section_ref_algorithm_DifferentialEvolution` ou
+l':ref:`section_ref_algorithm_TabuSearch`.
 
 C'est une méthode d'optimisation permettant la recherche du minimum global d'une
 fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
@@ -43,138 +44,132 @@ fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
 défaut est celle de moindres carrés pondérés augmentés, classiquement utilisée
 en assimilation de données.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
-
-Les options de l'algorithme sont les suivantes:
 .. index:: single: NumberOfInsects
 .. index:: single: SwarmVelocity
 .. index:: single: GroupRecallRate
 .. index:: single: QualityCriterion
 .. index:: single: BoxBounds
 
-  .. include:: snippets/MaximumNumberOfSteps_50.rst
+.. include:: snippets/MaximumNumberOfSteps_50.rst
 
-  .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
+.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
-  .. include:: snippets/QualityCriterion.rst
+.. include:: snippets/QualityCriterion.rst
 
-  NumberOfInsects
-    Cette clé indique le nombre d'insectes ou de particules dans l'essaim. La
-    valeur par défaut est 100, qui est une valeur par défaut usuelle pour cet
-    algorithme.
+NumberOfInsects
+  Cette clé indique le nombre d'insectes ou de particules dans l'essaim. La
+  valeur par défaut est 100, qui est une valeur par défaut usuelle pour cet
+  algorithme.
 
-    Exemple :
-    ``{"NumberOfInsects":100}``
+  Exemple :
+  ``{"NumberOfInsects":100}``
 
-  SwarmVelocity
-    Cette clé indique la part de la vitesse d'insecte qui est imposée par
-    l'essaim. C'est une valeur réelle positive. Le défaut est de 1.
+SwarmVelocity
+  Cette clé indique la part de la vitesse d'insecte qui est imposée par
+  l'essaim. C'est une valeur réelle positive. Le défaut est de 1.
 
-    Exemple :
-    ``{"SwarmVelocity":1.}``
+  Exemple :
+  ``{"SwarmVelocity":1.}``
 
-  GroupRecallRate
-    Cette clé indique le taux de rappel vers le meilleur insecte de l'essaim.
-    C'est une valeur réelle comprise entre 0 et 1. Le défaut est de 0.5.
+GroupRecallRate
+  Cette clé indique le taux de rappel vers le meilleur insecte de l'essaim.
+  C'est une valeur réelle comprise entre 0 et 1. Le défaut est de 0.5.
 
-    Exemple :
-    ``{"GroupRecallRate":0.5}``
+  Exemple :
+  ``{"GroupRecallRate":0.5}``
 
-  BoxBounds
-    Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-    incrément de  variable d'état optimisée (et non pas chaque variable d'état
-    elle-même). Les bornes doivent être données par une liste de liste de paires
-    de bornes inférieure/supérieure pour chaque incrément de variable, avec une
-    valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas une
-    valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
-    n'y a pas de valeurs par défaut.
+BoxBounds
+  Cette clé permet de définir des bornes supérieure et inférieure pour chaque
+  incrément de  variable d'état optimisée (et non pas chaque variable d'état
+  elle-même). Les bornes doivent être données par une liste de liste de paires
+  de bornes inférieure/supérieure pour chaque incrément de variable, avec une
+  valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas une
+  valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
+  n'y a pas de valeurs par défaut.
 
-    Exemple :
-    ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
+  Exemple :
+  ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
-  .. include:: snippets/SetSeed.rst
+.. include:: snippets/SetSeed.rst
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "OMA", "OMB", "Innovation",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "OMA",
+  "OMB",
+  "Innovation",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/Analysis.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/BMA.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+- :ref:`section_ref_algorithm_DerivativeFreeOptimization`
+- :ref:`section_ref_algorithm_DifferentialEvolution`
+- :ref:`section_ref_algorithm_TabuSearch`
 
-Voir aussi
-++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
-  - :ref:`section_ref_algorithm_DifferentialEvolution`
-
-Références bibliographiques :
-  - [WikipediaPSO]_
+- [WikipediaPSO]_

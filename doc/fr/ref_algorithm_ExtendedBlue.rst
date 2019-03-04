@@ -27,8 +27,8 @@
 Algorithme de calcul "*ExtendedBlue*"
 -------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de type BLUE étendu (Best Linear Unbiased
 Estimator, étendu) de l'état d'un système.
@@ -41,112 +41,107 @@ d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 En non-linéaire, il se rapproche de l':ref:`section_ref_algorithm_3DVAR`, sans
 lui être entièrement équivalent.
 
-Commandes requises et optionnelles
-++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-Les commandes requises générales, disponibles dans l'interface en édition, sont
-les suivantes:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-Les commandes optionnelles générales, disponibles dans l'interface en édition,
-sont indiquées dans la :ref:`section_ref_assimilation_keywords`. De plus, les
-paramètres de la commande "*AlgorithmParameters*" permettent d'indiquer les
-options particulières, décrites ci-après, de l'algorithme. On se reportera à la
-:ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
-commande.
+.. include:: snippets/NumberOfSamplesForQuantiles.rst
 
-Les options de l'algorithme sont les suivantes:
+.. include:: snippets/Quantiles.rst
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+.. include:: snippets/SetSeed.rst
 
-    Cette liste indique les noms des variables supplémentaires qui peuvent être
-    disponibles à la fin de l'algorithme. Cela implique potentiellement des
-    calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-    aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-    possibles sont dans la liste suivante : ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState",
-    "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation",
-    "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+.. include:: snippets/SimulationForQuantiles.rst
 
-    Exemple :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/Quantiles.rst
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme. Cela implique potentiellement des
+  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
+  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
+  possibles sont dans la liste suivante : [
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
+  "BMA",
+  "OMA",
+  "OMB",
+  "CurrentState",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "Innovation",
+  "SigmaBck2",
+  "SigmaObs2",
+  "MahalanobisConsistency",
+  "SimulationQuantiles",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum", 
+  ].
 
-  .. include:: snippets/SetSeed.rst
+  Exemple :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-  .. include:: snippets/NumberOfSamplesForQuantiles.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-  .. include:: snippets/SimulationForQuantiles.rst
+.. include:: snippets/Analysis.rst
 
-Informations et variables disponibles à la fin de l'algorithme
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-En sortie, après exécution de l'algorithme, on dispose d'informations et de
-variables issues du calcul. La description des
-:ref:`section_ref_output_variables` indique la manière de les obtenir par la
-méthode nommée ``get`` de la variable "*ADD*" du post-processing. Les variables
-d'entrée, mises à disposition de l'utilisateur en sortie pour faciliter
-l'écriture des procédures de post-processing, sont décrites dans
-l':ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/APosterioriCorrelations.rst
 
-Les sorties non conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/APosterioriCovariance.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/APosterioriStandardDeviations.rst
 
-Les sorties conditionnelles de l'algorithme sont les suivantes:
+.. include:: snippets/APosterioriVariances.rst
 
-  .. include:: snippets/APosterioriCorrelations.rst
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/APosterioriCovariance.rst
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/APosterioriStandardDeviations.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/APosterioriVariances.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/MahalanobisConsistency.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/SigmaBck2.rst
 
-  .. include:: snippets/MahalanobisConsistency.rst
+.. include:: snippets/SigmaObs2.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SigmaBck2.rst
+.. include:: snippets/SimulationQuantiles.rst
 
-  .. include:: snippets/SigmaObs2.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
-
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
-
-  .. include:: snippets/SimulationQuantiles.rst
-
-Voir aussi
-++++++++++
-
-Références vers d'autres sections :
-  - :ref:`section_ref_algorithm_Blue`
-  - :ref:`section_ref_algorithm_3DVAR`
-  - :ref:`section_ref_algorithm_LinearityTest`
+- :ref:`section_ref_algorithm_Blue`
+- :ref:`section_ref_algorithm_3DVAR`
+- :ref:`section_ref_algorithm_LinearityTest`
