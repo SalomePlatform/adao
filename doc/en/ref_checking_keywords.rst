@@ -27,16 +27,6 @@
 List of commands and keywords for an ADAO checking case
 -------------------------------------------------------
 
-.. index:: single: Algorithm
-.. index:: single: AlgorithmParameters
-.. index:: single: Debug
-.. index:: single: Observer
-.. index:: single: Observers
-.. index:: single: Observer Template
-.. index:: single: StudyName
-.. index:: single: StudyRepertory
-.. index:: single: UserDataInit
-
 This set of commands is related to the description of a checking case, that is a
 procedure to check required properties on information, used somewhere else by a
 calculation case. The terms are ordered in alphabetical order, except the first,
@@ -44,55 +34,26 @@ which describes the choice between calculation or checking.
 
 The different commands are the following:
 
-  **CHECKING_STUDY**
-    *Required command*. This is the general command describing the checking
-    case. It hierarchically contains all the other commands.
+.. include:: snippets/CHECKING_STUDY.rst
 
-  AlgorithmParameters
-    *Required command*. This indicates the checking algorithm chosen by the
-    keyword "*Algorithm*", and its potential optional parameters. The algorithm
-    choices are available through the GUI. There exists for example
-    "FunctionTest", "GradientTest"... Each algorithm is defined, below, by a
-    specific subsection. Optionaly, the command allows also to add some
-    parameters to control the algorithm. Their values are defined either
-    explicitly or in a "*Dict*" type object. See the
-    :ref:`section_ref_options_Algorithm_Parameters` for the detailed use of this
-    command part.
+.. include:: snippets/AlgorithmParameters.rst
 
-  .. include:: snippets/CheckingPoint.rst
+.. include:: snippets/CheckingPoint.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/BackgroundError.rst
 
-  Debug
-    *Optional command*. This define the level of trace and intermediary debug
-    information. The choices are limited between 0 (for False) and 1 (for
-    True).
+.. include:: snippets/Debug.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. include:: snippets/ObservationOperator.rst
 
-  Observers
-    *Optional command*. This command allows to set internal observers, that are
-    functions linked with a particular variable, which will be executed each
-    time this variable is modified. It is a convenient way to monitor variables
-    of interest during the data assimilation or optimization process, by
-    printing or plotting it, etc. Common templates are provided to help the user
-    to start or to quickly make his case.
+.. include:: snippets/Observers.rst
 
-  StudyName
-    *Required command*. This is an open string to describe the ADAO study by a
-    name or a sentence.
+.. include:: snippets/StudyName.rst
 
-  StudyRepertory
-    *Optional command*. If available, this directory is used as base name for
-    calculation, and used to find all the script files, given by name without
-    path, that can be used to define some other commands by scripts.
+.. include:: snippets/StudyRepertory.rst
 
-  UserDataInit
-    *Optional command*. This commands allows to initialize some parameters or
-    data automatically before algorithm input processing. It indicates a script
-    file name to be executed before entering in initialization phase of chosen
-    variables.
+.. include:: snippets/UserDataInit.rst
