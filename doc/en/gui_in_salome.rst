@@ -21,10 +21,10 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. _section_using:
+.. _section_gui_in_salome:
 
 ================================================================================
-**[DocU]** Using the ADAO module
+**[DocR]** Graphical User Interface for ADAO (GUI/EFICAS)
 ================================================================================
 
 .. |eficas_new| image:: images/eficas_new.png
@@ -48,7 +48,7 @@ describe the general progression to establish an ADAO case, the details being
 given in the following chapters. It is completed by the detailed description of
 all the commands and keywords in the section :ref:`section_reference`, by
 advanced usage procedures in the section :ref:`section_advanced`, and by
-examples in the section :ref:`section_examples`.
+examples in the section :ref:`section_tutorials_in_salome`.
 
 Logical procedure to build an ADAO case
 ---------------------------------------
@@ -64,11 +64,11 @@ data can already be available in SALOME or not.
 
 Basically, the procedure of using ADAO involves the following steps:
 
-    - :ref:`section_u_step1`
-    - :ref:`section_u_step2`
-    - :ref:`section_u_step3`
-    - :ref:`section_u_step4`
-    - :ref:`section_u_step5`
+- :ref:`section_u_step1`
+- :ref:`section_u_step2`
+- :ref:`section_u_step3`
+- :ref:`section_u_step4`
+- :ref:`section_u_step5`
 
 Each step will be detailed in the next section.
 
@@ -125,7 +125,7 @@ commands or keywords are already present, none of them can be suppressed.
 Optional keywords can be added by choosing them in a list of suggestions of
 allowed ones for the main command, for example the "*ASSIMILATION_STUDY*"
 command. As an example, one can add parameters in the "*AlgorithmParameters*"
-keyword, as described in the last part of the section :ref:`section_examples`.
+keyword, as described in the last part of the section :ref:`section_tutorials_in_salome`.
 
 At the end, when all fields or keywords have been correctly defined, each line
 of the commands tree must have a green flag. This indicates that the whole case
@@ -219,7 +219,7 @@ data assimilation or optimization evaluation problem, noted as
 
 Such method can be used to print results, or to convert these ones to
 structures that can be used in the native or external SALOME post-processing. A
-simple example is given in the section :ref:`section_examples`.
+simple example is given in the section :ref:`section_tutorials_in_salome`.
 
 .. _section_u_step5:
 

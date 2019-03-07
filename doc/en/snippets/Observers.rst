@@ -1,4 +1,6 @@
+.. index:: single: Observer
 .. index:: single: Observers
+.. index:: single: Observer Template
 
 Observers
   *List of functions linked to variables*. This command allows to set internal
