@@ -27,8 +27,8 @@
 Checking algorithm "*AdjointTest*"
 ----------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to check the quality of the adjoint operator, by
 calculating a residue with known theoretical properties.
@@ -44,73 +44,57 @@ that has to remain equal to zero at the calculation precision. One take
 :math:`\mathbf{y}` has to be in the image of :math:`F`. If it is not given, one
 take :math:`\mathbf{y} = F(\mathbf{x})`.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
+.. include:: snippets/CheckingPoint.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/CheckingPoint.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03Chck.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. include:: snippets/AmplitudeOfInitialDirection.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allow to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/EpsilonMinimumExponent.rst
 
-The options of the algorithm are the following:
+.. include:: snippets/InitialDirection.rst
 
-  .. include:: snippets/AmplitudeOfInitialDirection.rst
+.. include:: snippets/SetSeed.rst
 
-  .. include:: snippets/EpsilonMinimumExponent.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/InitialDirection.rst
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "CurrentState",
+  "Residu",
+  "SimulatedObservationAtCurrentState",
+  ].
 
-  .. include:: snippets/SetSeed.rst
+  Example :
+  ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["CurrentState", "Residu",
-    "SimulatedObservationAtCurrentState"].
+.. include:: snippets/Residu.rst
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/CurrentState.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-The unconditional outputs of the algorithm are the following:
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/Residu.rst
-
-The conditional outputs of the algorithm are the following:
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
-
-See also
-++++++++
-
-References to other sections:
-  - :ref:`section_ref_algorithm_FunctionTest`
-  - :ref:`section_ref_algorithm_LinearityTest`
-  - :ref:`section_ref_algorithm_TangentTest`
-  - :ref:`section_ref_algorithm_GradientTest`
+- :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_LinearityTest`
+- :ref:`section_ref_algorithm_TangentTest`
+- :ref:`section_ref_algorithm_GradientTest`
+- :ref:`section_ref_algorithm_LocalSensitivityTest`

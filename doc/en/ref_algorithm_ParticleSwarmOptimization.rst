@@ -27,151 +27,146 @@
 Calculation algorithm "*ParticleSwarmOptimization*"
 ---------------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization
 of a cost function :math:`J` by using an evolutionary strategy of particle
 swarm. It is a method that does not use the derivatives of the cost function.
 It falls in the same category than the
-:ref:`section_ref_algorithm_DerivativeFreeOptimization` or the
-:ref:`section_ref_algorithm_DifferentialEvolution`.
+:ref:`section_ref_algorithm_DerivativeFreeOptimization`, the
+:ref:`section_ref_algorithm_DifferentialEvolution` or the
+:ref:`section_ref_algorithm_TabuSearch`.
 
 This is an optimization method allowing for global minimum search of a general
 error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
 with or without weights. The default error function is the augmented weighted
 least squares function, classically used in data assimilation.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allows to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
-
-The options of the algorithm are the following:
 .. index:: single: NumberOfInsects
 .. index:: single: SwarmVelocity
 .. index:: single: GroupRecallRate
 .. index:: single: QualityCriterion
 .. index:: single: BoxBounds
 
-  .. include:: snippets/MaximumNumberOfSteps_50.rst
+.. include:: snippets/MaximumNumberOfSteps_50.rst
 
-  .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
+.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
-  .. include:: snippets/QualityCriterion.rst
+.. include:: snippets/QualityCriterion.rst
 
-  NumberOfInsects
-    This key indicates the number of insects or particles in the swarm. The
-    default is 100, which is a usual default for this algorithm.
+NumberOfInsects
+  This key indicates the number of insects or particles in the swarm. The
+  default is 100, which is a usual default for this algorithm.
 
-    Example :
-    ``{"NumberOfInsects":100}``
+  Example :
+  ``{"NumberOfInsects":100}``
 
-  SwarmVelocity
-    This key indicates the part of the insect velocity which is imposed by the
-    swarm. It is a positive floating point value. The default value is 1.
+SwarmVelocity
+  This key indicates the part of the insect velocity which is imposed by the
+  swarm. It is a positive floating point value. The default value is 1.
 
-    Example :
-    ``{"SwarmVelocity":1.}``
+  Example :
+  ``{"SwarmVelocity":1.}``
 
-  GroupRecallRate
-    This key indicates the recall rate at the best swarm insect. It is a
-    floating point value between 0 and 1. The default value is 0.5.
+GroupRecallRate
+  This key indicates the recall rate at the best swarm insect. It is a
+  floating point value between 0 and 1. The default value is 0.5.
 
-    Example :
-    ``{"GroupRecallRate":0.5}``
+  Example :
+  ``{"GroupRecallRate":0.5}``
 
-  BoxBounds
-    This key allows to define upper and lower bounds for *increments* on every
-    state variable being optimized (and not on state variables themselves).
-    Bounds have to be given by a list of list of pairs of lower/upper bounds for
-    each increment on variable, with extreme values every time there is no bound
-    (``None`` is not allowed when there is no bound). This key is required and
-    there is no default values.
+BoxBounds
+  This key allows to define upper and lower bounds for *increments* on every
+  state variable being optimized (and not on state variables themselves).
+  Bounds have to be given by a list of list of pairs of lower/upper bounds for
+  each increment on variable, with extreme values every time there is no bound
+  (``None`` is not allowed when there is no bound). This key is required and
+  there is no default values.
 
-    Example :
-    ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
+  Example :
+  ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
 
-  .. include:: snippets/SetSeed.rst
+.. include:: snippets/SetSeed.rst
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "OMA", "OMB", "Innovation",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "OMA",
+  "OMB",
+  "Innovation",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  Example :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/Analysis.rst
 
-The unconditional outputs of the algorithm are the following:
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/BMA.rst
 
-The conditional outputs of the algorithm are the following:
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+- :ref:`section_ref_algorithm_DerivativeFreeOptimization`
+- :ref:`section_ref_algorithm_DifferentialEvolution`
+- :ref:`section_ref_algorithm_TabuSearch`
 
-See also
-++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-References to other sections:
-  - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
-  - :ref:`section_ref_algorithm_DifferentialEvolution`
-
-Bibliographical references:
-  - [WikipediaPSO]_
+- [WikipediaPSO]_

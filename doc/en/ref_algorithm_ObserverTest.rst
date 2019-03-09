@@ -27,21 +27,18 @@
 Checking algorithm "*ObserverTest*"
 -----------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to verify an external function, given by the user, used as
 an *observer*. This external function can be applied to every of the variables
 that can be potentially observed. It is activated only on those who are
 explicitly associated with the *observer* in the interface.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
-
-  .. include:: snippets/Observers.rst
+.. include:: snippets/Observers.rst
 
 The general optional commands, available in the editing user interface, are
 indicated in :ref:`section_ref_assimilation_keywords`.

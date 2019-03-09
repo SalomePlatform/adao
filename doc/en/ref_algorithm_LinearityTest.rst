@@ -27,8 +27,8 @@
 Checking algorithm "*LinearityTest*"
 ------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to check the linear quality of the operator, by
 calculating a residue with known theoretical properties. Different residue
@@ -109,86 +109,70 @@ If it is equal to 0 only on part of the variation domain of increment
 :math:`\alpha`, it is on this sub-domain that the linearity hypothesis of
 :math:`F` is verified.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/CheckingPoint.rst
 
-  .. include:: snippets/CheckingPoint.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03Chck.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allow to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/AmplitudeOfInitialDirection.rst
 
-The options of the algorithm are the following:
+.. include:: snippets/EpsilonMinimumExponent.rst
 
-  .. include:: snippets/AmplitudeOfInitialDirection.rst
+.. include:: snippets/InitialDirection.rst
 
-  .. include:: snippets/EpsilonMinimumExponent.rst
+.. include:: snippets/SetSeed.rst
 
-  .. include:: snippets/InitialDirection.rst
+ResiduFormula
+  .. index:: single: ResiduFormula
 
-  .. include:: snippets/SetSeed.rst
+  This key indicates the residue formula that has to be used for the test. The
+  default choice is "CenteredDL", and the possible ones are "CenteredDL"
+  (residue of the difference between the function at nominal point and the
+  values with positive and negative increments, which has to stay very small),
+  "Taylor" (residue of the Taylor development of the operator normalized by
+  the nominal value, which has to stay very small), "NominalTaylor" (residue
+  of the order 1 approximations of the operator, normalized to the nominal
+  point, which has to stay close to 1), and "NominalTaylorRMS" (residue of the
+  order 1 approximations of the operator, normalized by RMS to the nominal
+  point, which has to stay close to 0).
 
-  ResiduFormula
-    .. index:: single: ResiduFormula
+  Example :
+  ``{"ResiduFormula":"CenteredDL"}``
 
-    This key indicates the residue formula that has to be used for the test. The
-    default choice is "CenteredDL", and the possible ones are "CenteredDL"
-    (residue of the difference between the function at nominal point and the
-    values with positive and negative increments, which has to stay very small),
-    "Taylor" (residue of the Taylor development of the operator normalized by
-    the nominal value, which has to stay very small), "NominalTaylor" (residue
-    of the order 1 approximations of the operator, normalized to the nominal
-    point, which has to stay close to 1), and "NominalTaylorRMS" (residue of the
-    order 1 approximations of the operator, normalized by RMS to the nominal
-    point, which has to stay close to 0).
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-    Example :
-    ``{"ResiduFormula":"CenteredDL"}``
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "CurrentState",
+  "Residu",
+  "SimulatedObservationAtCurrentState",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+  Example :
+  ``{"StoreSupplementaryCalculations":["CurrentState"]}``
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["CurrentState", "Residu",
-    "SimulatedObservationAtCurrentState"].
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["CurrentState"]}``
+.. include:: snippets/Residu.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/CurrentState.rst
 
-The unconditional outputs of the algorithm are the following:
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/Residu.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-The conditional outputs of the algorithm are the following:
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
-
-See also
-++++++++
-
-References to other sections:
-  - :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_FunctionTest`

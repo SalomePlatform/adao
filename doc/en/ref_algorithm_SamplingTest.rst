@@ -27,8 +27,8 @@
 Checking algorithm "*SamplingTest*"
 -----------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to calculate the values, linked to a :math:`\mathbf{x}`
 state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
@@ -52,123 +52,80 @@ for. One use for that, on the desired variable, the final saving through
 To perform distributed or more complex sampling, see OPENTURNS module available
 in SALOME.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/CheckingPoint.rst
 
-  .. include:: snippets/CheckingPoint.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03Chck.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allow to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/QualityCriterion.rst
 
-The options of the algorithm are the following:
-.. index:: single: SampleAsnUplet
-.. index:: single: SampleAsExplicitHyperCube
-.. index:: single: SampleAsMinMaxStepHyperCube
-.. index:: single: SampleAsIndependantRandomVariables
+.. include:: snippets/SampleAsExplicitHyperCube.rst
 
-  SampleAsnUplet
-    This key describes the calculations points as a list of n-uplets, each
-    n-uplet being a state.
+.. include:: snippets/SampleAsIndependantRandomVariables.rst
 
-    Example :
-    ``{"SampleAsnUplet":[[0,1,2,3],[4,3,2,1],[-2,3,-4,5]]}`` for 3 points in a state space of dimension 4
+.. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
-  SampleAsExplicitHyperCube
-    This key describes the calculations points as an hyper-cube, from a given
-    list of explicit sampling of each variable as a list. That is then a list of
-    lists, each of them being potentially of different size.
+.. include:: snippets/SampleAsnUplet.rst
 
-    Example : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` for a state space of dimension 2
+.. include:: snippets/SetDebug.rst
 
-  SampleAsMinMaxStepHyperCube
-    This key describes the calculations points as an hyper-cube, from a given
-    list of implicit sampling of each variable by a triplet *[min,max,step]*.
-    That is then a list of the same size than the one of the state. The bounds
-    are included.
+.. include:: snippets/SetSeed.rst
 
-    Example :
-    ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  SampleAsIndependantRandomVariables
-    This key describes the calculations points as an hyper-cube, for which the
-    points on each axis come from a independent random sampling of the axis
-    variable, under the specification of the distribution, its parameters and
-    the number of points in the sample, as a list ``['distribution',
-    [parameters], number]`` for each axis. The possible distributions are
-    'normal' of parameters (mean,std), 'lognormal' of parameters (mean,sigma),
-    'uniform' of parameters (low,high), or 'weibull' of parameter (shape). That
-    is then a list of the same size than the one of the state.
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "InnovationAtCurrentState",
+  "SimulatedObservationAtCurrentState",
+  ].
 
-    Example :
-    ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` for a state space of dimension 2
+  Example :
+  ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
 
-  .. include:: snippets/QualityCriterion.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-  .. include:: snippets/SetDebug.rst
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/SetSeed.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+.. include:: snippets/CostFunctionJo.rst
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "InnovationAtCurrentState",
-    "SimulatedObservationAtCurrentState"].
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["CostFunctionJ", "SimulatedObservationAtCurrentState"]}``
+.. include:: snippets/CurrentState.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/InnovationAtCurrentState.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-The unconditional outputs of the algorithm are the following:
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+- :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_LocalSensitivityTest`
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo08.rst
 
-  .. include:: snippets/CostFunctionJo.rst
-
-The conditional outputs of the algorithm are the following:
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/InnovationAtCurrentState.rst
-
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
-
-See also
-++++++++
-
-References to other sections:
-  - :ref:`section_ref_algorithm_FunctionTest`
-
-References to other SALOME modules:
-  - OPENTURNS, see the *User guide of OPENTURNS module* in the main "*Help*" menu of SALOME platform
+- OPENTURNS, see the *User guide of OPENTURNS module* in the main "*Help*" menu of SALOME platform

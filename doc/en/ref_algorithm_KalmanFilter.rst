@@ -27,8 +27,8 @@
 Calculation algorithm "*KalmanFilter*"
 --------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a dynamic system by a
 Kalman Filter.
@@ -43,91 +43,81 @@ In case of non-linearity, even slightly marked, it will be preferred the
 :ref:`section_ref_algorithm_UnscentedKalmanFilter` and the
 :ref:`section_ref_algorithm_UnscentedKalmanFilter` that are more powerful.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/EvolutionError.rst
 
-  .. include:: snippets/EvolutionError.rst
+.. include:: snippets/EvolutionModel.rst
 
-  .. include:: snippets/EvolutionModel.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allows to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/EstimationOf.rst
 
-The options of the algorithm are the following:
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/EstimationOf.rst
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "Innovation",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+  Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "Innovation"].
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    Example : ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+.. include:: snippets/Analysis.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/APosterioriCorrelations.rst
 
-The unconditional outputs of the algorithm are the following:
+.. include:: snippets/APosterioriCovariance.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/APosterioriStandardDeviations.rst
 
-The conditional outputs of the algorithm are the following:
+.. include:: snippets/APosterioriVariances.rst
 
-  .. include:: snippets/APosterioriCorrelations.rst
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/APosterioriCovariance.rst
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/APosterioriStandardDeviations.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/APosterioriVariances.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/CostFunctionJo.rst
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/Innovation.rst
-
-See also
-++++++++
-
-References to other sections:
-  - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
-  - :ref:`section_ref_algorithm_UnscentedKalmanFilter`
+- :ref:`section_ref_algorithm_ExtendedKalmanFilter`
+- :ref:`section_ref_algorithm_EnsembleKalmanFilter`
+- :ref:`section_ref_algorithm_UnscentedKalmanFilter`

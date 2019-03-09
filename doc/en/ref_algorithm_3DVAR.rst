@@ -27,8 +27,8 @@
 Calculation algorithm "*3DVAR*"
 -------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm performs a state estimation by variational minimization of the
 classical :math:`J` function in static data assimilation:
@@ -38,161 +38,169 @@ classical :math:`J` function in static data assimilation:
 which is usually designed as the "*3D-VAR*" function (see for example
 [Talagrand97]_).
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/ObservationError.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allows to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/BoundsWithNone.rst
 
-The options of the algorithm are the following:
+.. include:: snippets/CostDecrementTolerance.rst
 
-  Minimizer
-    .. index:: single: Minimizer
+.. include:: snippets/GradientNormTolerance.rst
 
-    This key allows to choose the optimization minimizer. The default choice is
-    "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
-    minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
-    constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
-    (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
-    strongly recommended to stay with the default.
+.. include:: snippets/MaximumNumberOfSteps.rst
 
-    Example :
-    ``{"Minimizer":"LBFGSB"}``
+Minimizer
+  .. index:: single: Minimizer
 
-  .. include:: snippets/BoundsWithNone.rst
+  This key allows to choose the optimization minimizer. The default choice is
+  "LBFGSB", and the possible ones are "LBFGSB" (nonlinear constrained
+  minimizer, see [Byrd95]_, [Morales11]_ and [Zhu97]_), "TNC" (nonlinear
+  constrained minimizer), "CG" (nonlinear unconstrained minimizer), "BFGS"
+  (nonlinear unconstrained minimizer), "NCG" (Newton CG minimizer). It is
+  strongly recommended to stay with the default.
 
-  .. include:: snippets/MaximumNumberOfSteps.rst
+  Example :
+  ``{"Minimizer":"LBFGSB"}``
 
-  .. include:: snippets/CostDecrementTolerance.rst
+.. include:: snippets/NumberOfSamplesForQuantiles.rst
 
-  .. include:: snippets/ProjectedGradientTolerance.rst
+.. include:: snippets/ProjectedGradientTolerance.rst
 
-  .. include:: snippets/GradientNormTolerance.rst
+.. include:: snippets/Quantiles.rst
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+.. include:: snippets/SetSeed.rst
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-    "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
-    "CurrentOptimum", "CurrentState", "IndexOfOptimum", "Innovation",
-    "InnovationAtCurrentState", "MahalanobisConsistency", "OMA", "OMB",
-    "SigmaObs2", "SimulatedObservationAtBackground",
-    "SimulatedObservationAtCurrentOptimum",
-    "SimulatedObservationAtCurrentState", "SimulatedObservationAtOptimum",
-    "SimulationQuantiles"].
+.. include:: snippets/SimulationForQuantiles.rst
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/Quantiles.rst
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
+  "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
+  "CurrentOptimum",
+  "CurrentState",
+  "IndexOfOptimum",
+  "Innovation",
+  "InnovationAtCurrentState",
+  "JacobianMatrixAtBackground",
+  "JacobianMatrixAtOptimum",
+  "KalmanGainAtOptimum",
+  "MahalanobisConsistency",
+  "OMA",
+  "OMB",
+  "SigmaObs2",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentOptimum",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  "SimulationQuantiles",
+  ].
 
-  .. include:: snippets/SetSeed.rst
+  Example :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-  .. include:: snippets/NumberOfSamplesForQuantiles.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-  .. include:: snippets/SimulationForQuantiles.rst
+.. include:: snippets/Analysis.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/CostFunctionJ.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/CostFunctionJb.rst
 
-The unconditional outputs of the algorithm are the following:
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/Analysis.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/APosterioriCorrelations.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. include:: snippets/APosterioriCovariance.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/APosterioriStandardDeviations.rst
 
-The conditional outputs of the algorithm are the following:
+.. include:: snippets/APosterioriVariances.rst
 
-  .. include:: snippets/APosterioriCorrelations.rst
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/APosterioriCovariance.rst
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-  .. include:: snippets/APosterioriStandardDeviations.rst
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-  .. include:: snippets/APosterioriVariances.rst
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/CurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+.. include:: snippets/IndexOfOptimum.rst
 
-  .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CurrentOptimum.rst
+.. include:: snippets/InnovationAtCurrentState.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/JacobianMatrixAtBackground.rst
 
-  .. include:: snippets/IndexOfOptimum.rst
+.. include:: snippets/JacobianMatrixAtOptimum.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/KalmanGainAtOptimum.rst
 
-  .. include:: snippets/InnovationAtCurrentState.rst
+.. include:: snippets/MahalanobisConsistency.rst
 
-  .. include:: snippets/MahalanobisConsistency.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SigmaObs2.rst
 
-  .. include:: snippets/SigmaObs2.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+.. include:: snippets/SimulationQuantiles.rst
 
-  .. include:: snippets/SimulationQuantiles.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-See also
-++++++++
+- :ref:`section_ref_algorithm_Blue`
+- :ref:`section_ref_algorithm_ExtendedBlue`
+- :ref:`section_ref_algorithm_LinearityTest`
 
-References to other sections:
-  - :ref:`section_ref_algorithm_Blue`
-  - :ref:`section_ref_algorithm_ExtendedBlue`
-  - :ref:`section_ref_algorithm_LinearityTest`
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-Bibliographical references:
-  - [Byrd95]_
-  - [Morales11]_
-  - [Talagrand97]_
-  - [Zhu97]_
+- [Byrd95]_
+- [Morales11]_
+- [Talagrand97]_
+- [Zhu97]_

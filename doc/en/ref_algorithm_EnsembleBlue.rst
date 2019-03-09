@@ -27,8 +27,8 @@
 Calculation algorithm "*EnsembleBlue*"
 --------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes a BLUE (Best Linear Unbiased Estimator, which is here an
 Aitken estimator) type estimation of the state of a system by an ensemble
@@ -40,69 +40,53 @@ but has to work also in "slightly" non-linear cases. One can verify the
 linearity of the observation operator with the help of the
 :ref:`section_ref_algorithm_LinearityTest`.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
+.. include:: snippets/Background.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationError.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. include:: snippets/SetSeed.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allows to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-The options of the algorithm are the following:
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "CurrentState",
+  "Innovation",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
-  .. include:: snippets/SetSeed.rst
+  Example :
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["CurrentState", "Innovation",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+.. include:: snippets/Analysis.rst
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["CurrentState", "Innovation"]}``
+.. include:: snippets/CurrentState.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/Innovation.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-The unconditional outputs of the algorithm are the following:
-
-  .. include:: snippets/Analysis.rst
-
-  .. include:: snippets/CurrentState.rst
-
-  .. include:: snippets/Innovation.rst
-
-See also
-++++++++
-
-References to other sections:
-  - :ref:`section_ref_algorithm_Blue`
+- :ref:`section_ref_algorithm_Blue`
+- :ref:`section_ref_algorithm_EnsembleKalmanFilter`

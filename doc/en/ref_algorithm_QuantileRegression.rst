@@ -27,57 +27,57 @@
 Calculation algorithm "*QuantileRegression*"
 --------------------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to estimate the conditional quantiles of the state
 parameters distribution, expressed with a model of the observed variables. These
 are then the quantiles on the observed variables which will allow to determine
 the model parameters that satisfy to the quantiles conditions.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/Background.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allows to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/Quantile.rst
 
-The options of the algorithm are the following:
+.. include:: snippets/MaximumNumberOfSteps.rst
 
-  .. include:: snippets/Quantile.rst
+.. include:: snippets/CostDecrementTolerance_6.rst
 
-  .. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/BoundsWithNone.rst
 
-  .. include:: snippets/CostDecrementTolerance_6.rst
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-  .. include:: snippets/BoundsWithNone.rst
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
+  "CurrentState",
+  "OMA",
+  "OMB",
+  "Innovation",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
-
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["BMA", "CostFunctionJ", "CostFunctionJb",
-    "CostFunctionJo", "CurrentState", "OMA", "OMB", "Innovation",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
-
-    Example :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  Example :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
 *Tips for this algorithm:*
 
@@ -86,51 +86,44 @@ The options of the algorithm are the following:
     value, even if these commands are not required for this algorithm, and will
     not be used. The simplest way is to give "1" as a STRING for both.
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/Analysis.rst
 
-The unconditional outputs of the algorithm are the following:
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/BMA.rst
 
-The conditional outputs of the algorithm are the following:
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/CurrentState.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulatedObservationAtCurrentState.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
 
-See also
-++++++++
-
-Bibliographical references:
-  - [Buchinsky98]_
-  - [Cade03]_
-  - [Koenker00]_
-  - [Koenker01]_
-  - [WikipediaQR]_
+- [Buchinsky98]_
+- [Cade03]_
+- [Koenker00]_
+- [Koenker01]_
+- [WikipediaQR]_

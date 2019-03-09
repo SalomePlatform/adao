@@ -128,7 +128,7 @@ other modules, for computing operations driven by YACS [#]_ or an another
 module, etc.
 
 Other usage examples are also given for :ref:`section_u_step4` of the
-:ref:`section_using` section, or in part :ref:`section_examples`.
+:ref:`section_gui_in_salome` section, or in part :ref:`section_tutorials_in_salome`.
 
 Cross compliance of the information available at the output
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

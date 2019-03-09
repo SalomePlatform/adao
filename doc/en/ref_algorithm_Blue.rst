@@ -27,8 +27,8 @@
 Calculation algorithm "*Blue*"
 ------------------------------
 
-Description
-+++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes a BLUE (Best Linear Unbiased Estimator) type estimation
 of the state of a system. More precisely, it is an Aitken estimator.
@@ -43,117 +43,131 @@ In case of non-linearity, even slightly marked, it will be easily preferred the
 :ref:`section_ref_algorithm_ExtendedBlue` or the
 :ref:`section_ref_algorithm_3DVAR`.
 
-Optional and required commands
-++++++++++++++++++++++++++++++
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo02.rst
 
+.. include:: snippets/Background.rst
 
-The general required commands, available in the editing user interface, are the
-following:
+.. include:: snippets/BackgroundError.rst
 
-  .. include:: snippets/Background.rst
+.. include:: snippets/Observation.rst
 
-  .. include:: snippets/BackgroundError.rst
+.. include:: snippets/ObservationError.rst
 
-  .. include:: snippets/Observation.rst
+.. include:: snippets/ObservationOperator.rst
 
-  .. include:: snippets/ObservationError.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo03AdOp.rst
 
-  .. include:: snippets/ObservationOperator.rst
+.. include:: snippets/NumberOfSamplesForQuantiles.rst
 
-The general optional commands, available in the editing user interface, are
-indicated in :ref:`section_ref_assimilation_keywords`. Moreover, the parameters
-of the command "*AlgorithmParameters*" allows to choose the specific options,
-described hereafter, of the algorithm. See
-:ref:`section_ref_options_Algorithm_Parameters` for the good use of this
-command.
+.. include:: snippets/Quantiles.rst
 
-The options of the algorithm are the following:
+.. include:: snippets/SetSeed.rst
 
-  StoreSupplementaryCalculations
-    .. index:: single: StoreSupplementaryCalculations
+.. include:: snippets/SimulationForQuantiles.rst
 
-    This list indicates the names of the supplementary variables that can be
-    available at the end of the algorithm. It involves potentially costly
-    calculations or memory consumptions. The default is a void list, none of
-    these variables being calculated and stored by default. The possible names
-    are in the following list: ["APosterioriCorrelations",
-    "APosterioriCovariance", "APosterioriStandardDeviations",
-    "APosterioriVariances", "BMA", "OMA", "OMB", "CurrentState",
-    "CostFunctionJ", "CostFunctionJb", "CostFunctionJo", "Innovation",
-    "SigmaBck2", "SigmaObs2", "MahalanobisConsistency", "SimulationQuantiles",
-    "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-    "SimulatedObservationAtOptimum"].
+StoreSupplementaryCalculations
+  .. index:: single: StoreSupplementaryCalculations
 
-    Example :
-    ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  This list indicates the names of the supplementary variables that can be
+  available at the end of the algorithm. It involves potentially costly
+  calculations or memory consumptions. The default is a void list, none of
+  these variables being calculated and stored by default. The possible names
+  are in the following list: [
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
+  "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
+  "CurrentOptimum",
+  "CurrentState",
+  "Innovation",
+  "MahalanobisConsistency",
+  "OMA",
+  "OMB",
+  "SigmaBck2",
+  "SigmaObs2",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentOptimum",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  "SimulationQuantiles",
+  ].
 
-  .. include:: snippets/Quantiles.rst
+  Example :
+  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
 
-  .. include:: snippets/SetSeed.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo04.rst
 
-  .. include:: snippets/NumberOfSamplesForQuantiles.rst
+.. include:: snippets/Analysis.rst
 
-  .. include:: snippets/SimulationForQuantiles.rst
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo05.rst
 
-Information and variables available at the end of the algorithm
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. include:: snippets/APosterioriCorrelations.rst
 
-At the output, after executing the algorithm, there are variables and
-information originating from the calculation. The description of
-:ref:`section_ref_output_variables` show the way to obtain them by the method
-named ``get`` of the variable "*ADD*" of the post-processing. The input
-variables, available to the user at the output in order to facilitate the
-writing of post-processing procedures, are described in the
-:ref:`subsection_r_o_v_Inventaire`.
+.. include:: snippets/APosterioriCovariance.rst
 
-The unconditional outputs of the algorithm are the following:
+.. include:: snippets/APosterioriStandardDeviations.rst
 
-  .. include:: snippets/Analysis.rst
+.. include:: snippets/APosterioriVariances.rst
 
-The conditional outputs of the algorithm are the following:
+.. include:: snippets/BMA.rst
 
-  .. include:: snippets/APosterioriCorrelations.rst
+.. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/APosterioriCovariance.rst
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
-  .. include:: snippets/APosterioriStandardDeviations.rst
+.. include:: snippets/CostFunctionJb.rst
 
-  .. include:: snippets/APosterioriVariances.rst
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
-  .. include:: snippets/BMA.rst
+.. include:: snippets/CostFunctionJo.rst
 
-  .. include:: snippets/CostFunctionJ.rst
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJb.rst
+.. include:: snippets/CurrentOptimum.rst
 
-  .. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/CurrentState.rst
 
-  .. include:: snippets/Innovation.rst
+.. include:: snippets/Innovation.rst
 
-  .. include:: snippets/MahalanobisConsistency.rst
+.. include:: snippets/MahalanobisConsistency.rst
 
-  .. include:: snippets/OMA.rst
+.. include:: snippets/OMA.rst
 
-  .. include:: snippets/OMB.rst
+.. include:: snippets/OMB.rst
 
-  .. include:: snippets/SigmaBck2.rst
+.. include:: snippets/SigmaBck2.rst
 
-  .. include:: snippets/SigmaObs2.rst
+.. include:: snippets/SigmaObs2.rst
 
-  .. include:: snippets/SimulatedObservationAtBackground.rst
+.. include:: snippets/SimulatedObservationAtBackground.rst
 
-  .. include:: snippets/SimulatedObservationAtOptimum.rst
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-  .. include:: snippets/SimulationQuantiles.rst
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
+.. include:: snippets/SimulatedObservationAtOptimum.rst
 
-See also
-++++++++
+.. include:: snippets/SimulationQuantiles.rst
 
-References to other sections:
-  - :ref:`section_ref_algorithm_ExtendedBlue`
-  - :ref:`section_ref_algorithm_3DVAR`
-  - :ref:`section_ref_algorithm_LinearityTest`
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo06.rst
 
-Bibliographical references:
-  - [Bouttier99]_
+- :ref:`section_ref_algorithm_ExtendedBlue`
+- :ref:`section_ref_algorithm_3DVAR`
+- :ref:`section_ref_algorithm_LinearityTest`
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
+
+- [Bouttier99]_
