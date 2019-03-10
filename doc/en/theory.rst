@@ -189,14 +189,14 @@ expression:
 
 .. math:: \mathbf{R} = E[\mathbf{\epsilon}^o.{\mathbf{\epsilon}^o}^T]
 
-The background can also be written formally as a function of the true value, by
+The background can be written formally as a function of the true value, by
 introducing the errors vector :math:`\mathbf{\epsilon}^b` such that:
 
 .. math:: \mathbf{x}^b = \mathbf{x}^t + \mathbf{\epsilon}^b
 
-The errors :math:`\mathbf{\epsilon}^b` are also assumed of zero mean, in the
-same manner as for observations. We define the :math:`\mathbf{B}` matrix of
-background error covariances by:
+The background errors :math:`\mathbf{\epsilon}^b` are also assumed of zero
+mean, in the same manner as for observations. We define the :math:`\mathbf{B}`
+matrix of background error covariances by:
 
 .. math:: \mathbf{B} = E[\mathbf{\epsilon}^b.{\mathbf{\epsilon}^b}^T]
 
@@ -243,17 +243,18 @@ The advantage of filtering is to explicitly calculate the gain, to produce then
 the *a posteriori* covariance analysis matrix.
 
 In this simple static case, we can show, under an assumption of Gaussian error
-distributions (very little restrictive in practice), that the two *variational*
-and *filtering* approaches give the same solution.
+distributions (very little restrictive in practice) and of :math:`H` linearity,
+that the two *variational* and *filtering* approaches give the same solution.
 
 It is indicated here that these methods of "*3D-VAR*" and "*BLUE*" may be
 extended to dynamic problems, called respectively "*4D-VAR*" and "*Kalman
-filter*". They can take into account the evolution operator to establish an
+filter*". They have to take into account the evolution operator to establish an
 analysis at the right time steps of the gap between observations and
 simulations, and to have, at every moment, the propagation of the background
-through the evolution model. Many other variants have been developed to improve
-the numerical quality of the methods or to take into account computer
-requirements such as calculation size and time.
+through the evolution model. In the same way, these methods can be used in case
+of non linear observation or evolution operators. Many other variants have been
+developed to improve the numerical quality of the methods or to take into
+account computer requirements such as calculation size and time.
 
 Going further in the data assimilation framework
 ------------------------------------------------
@@ -289,6 +290,10 @@ Going further in the state estimation by optimization methods
 
 .. index:: single: state estimation
 .. index:: single: optimization methods
+.. index:: single: DerivativeFreeOptimization
+.. index:: single: ParticleSwarmOptimization
+.. index:: single: DifferentialEvolution
+.. index:: single: QuantileRegression
 
 As seen before, in a static simulation case, the variational data assimilation
 requires to minimize the goal function :math:`J`:
@@ -306,34 +311,43 @@ reference general documents like [Tarantola87]_.
 State estimation possibilities extension, by using more explicitly optimization
 methods and their properties, can be imagined in two ways.
 
-First, classical optimization methods involves using various gradient-based
-minimizing procedures. They are extremely efficient to look for a single local
-minimum. But they require the goal function :math:`J` to be sufficiently regular
-and differentiable, and are not able to capture global properties of the
-minimization problem, for example: global minimum, set of equivalent solutions
-due to over-parametrization, multiple local minima, etc. **A way to extend
-estimation possibilities is then to use a whole range of optimizers, allowing
-global minimization, various robust search properties, etc**. There is a lot of
-minimizing methods, such as stochastic ones, evolutionary ones, heuristics and
-meta-heuristics for real-valued problems, etc. They can treat partially
-irregular or noisy function :math:`J`, can characterize local minima, etc. The
-main drawback is a greater numerical cost to find state estimates, and no
-guarantee of convergence in finite time. Here, we only point the following
-topics, as the methods are available in the ADAO module: *Quantile Regression*
-[WikipediaQR]_ and *Particle Swarm Optimization* [WikipediaPSO]_.
+First, classical optimization methods often involves using various
+gradient-based minimizing procedures. They are extremely efficient to look for
+a single local minimum. But they require the goal function :math:`J` to be
+sufficiently regular and differentiable, and are not able to capture global
+properties of the minimization problem, for example: global minimum, set of
+equivalent solutions due to over-parametrization, multiple local minima, etc.
+**A way to extend estimation possibilities is then to use a whole range of
+optimizers, allowing global minimization, various robust search properties,
+etc**. There is a lot of minimizing methods, such as stochastic ones,
+evolutionary ones, heuristics and meta-heuristics for real-valued problems,
+etc. They can treat partially irregular or noisy function :math:`J`, can
+characterize local minima, etc. The main drawbacks are a greater numerical cost
+to find state estimates, and often a lack of guarantee of convergence in finite
+time. Here, we only point the following topics, as the methods are available in
+ADAO:
+
+- *Derivative Free Optimization (or DFO)* (see :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- *Particle Swarm Optimization (or PSO)* (see :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- *Differential Evolution (or DE)* (see :ref:`section_ref_algorithm_DifferentialEvolution`),
+- *Quantile Regression (or QR)* (see :ref:`section_ref_algorithm_QuantileRegression`).
 
 Secondly, optimization methods try usually to minimize quadratic measures of
 errors, as the natural properties of such goal functions are well suited for
 classical gradient optimization. But other measures of errors can be more
 adapted to real physical simulation problems. Then, **an another way to extend
-estimation possibilities is to use other measures of errors to be reduced**. For
-example, we can cite *absolute error value*, *maximum error value*, etc. These
-error measures are not differentiable, but some optimization methods can deal
-with:  heuristics and meta-heuristics for real-valued problem, etc. As
+estimation possibilities is to use other measures of errors to be reduced**.
+For example, we can cite *absolute error value*, *maximum error value*, etc.
+These error measures are not differentiable, but some optimization methods can
+deal with:  heuristics and meta-heuristics for real-valued problem, etc. As
 previously, the main drawback remain a greater numerical cost to find state
-estimates, and no guarantee of convergence in finite time. Here again, we only
-point the following methods as it is available in the ADAO module: *Particle
-swarm optimization* [WikipediaPSO]_.
+estimates, and often a lack of guarantee of convergence in finite time. Here
+again, we only point the following methods as it is available in the ADAO
+module: *Particle swarm optimization* [WikipediaPSO]_.
+
+- *Derivative Free Optimization (or DFO)* (see :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- *Particle Swarm Optimization (or PSO)* (see :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- *Differential Evolution (or DE)* (see :ref:`section_ref_algorithm_DifferentialEvolution`).
 
 The reader interested in the subject of optimization can look at [WikipediaMO]_
 as a general entry point.

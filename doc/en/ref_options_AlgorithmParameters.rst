@@ -24,23 +24,35 @@
 .. index:: single: AlgorithmParameters
 .. index:: single: Parameters
 .. index:: single: Defaults
+.. index:: single: setAlgorithmParameters
 .. _section_ref_options_Algorithm_Parameters:
 
-Description of options of an algorithm in "*AlgorithmParameters*"
+Description of options of an algorithm by "*AlgorithmParameters*"
 -----------------------------------------------------------------
 
 Each algorithm can be controlled using some specific options or parameters. They
 are given through the "*Parameters*" optional command included in the mandatory
 command "*AlgorithmParameters*".
 
-There are 3 practical methods for the user to provide these options. The method
-is determined as follows in the graphical user interface:
+There are 3 practical methods for the user of the EFICAS graphical user
+interface of ADAO (GUI) to provide these options. The method is determined as
+follows in the EFICAS graphical user interface:
 
-#. firstly using the "*Parameters*" keyword in the "*AlgorithmParameters*" command, which allows to choose between "*Defaults*" (use of explicit pre-filled keywords by default parameters values) and "*Dict*" (use of a dictionary to fill the necessary keywords),
-#. then secondly, only in the "*Dict*" case of "*Parameters*", by the included keyword "*FROM*" which allows to choose between a string entry and a Python script file entry.
+#. firstly using the "*Parameters*" keyword in the "*AlgorithmParameters*"
+   command, which allows to choose between "*Defaults*" (use of explicit
+   pre-filled keywords by default parameters values) and "*Dict*" (use of a
+   dictionary to fill the necessary keywords),
+#. then secondly or thirdly, only in the "*Dict*" case of "*Parameters*", by
+   the included keyword "*FROM*" which allows to choose between a string entry
+   and a Python script file entry.
 
-If an option or a parameter is specified by the user for an algorithm that
-does not support it, the option is simply left unused and don't stop the
+These two last options can be also used in the ADAO textual interface (TUI),
+through the keywords "*Parameters*" and "*Script*" of the corresponding command
+"*AlgorithmParameters*" (see the :ref:`section_tui` part for detailed
+description).
+
+If an option or a parameter is specified by the user for an algorithm that does
+not support it, the option is simply ignored (left unused) and don't stop the
 treatment. The meaning of the acronyms or particular names can be found in the
 :ref:`genindex` or the :ref:`section_glossary`.
 
@@ -68,6 +80,8 @@ way. This method allows only to define authorized parameters for a given
 algorithm, and the defined values are not kept if the user changes the
 algorithm.
 
+This method is naturally not usable in TUI interface.
+
 Second method : using a string in the graphical interface
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -93,6 +107,9 @@ in particular to keep options or parameters for other algorithms than the
 currently used one. It is then easier to change of algorithm or to keep default
 values different of the standard defaults.
 
+In the textual interface TUI, the dictionary has only to be given as argument
+of the "*Parameters*" keyword.
+
 Third method : using an external Python script file
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -116,6 +133,9 @@ name "*AlgorithmParameters*", as in the following example::
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 
-The file can also contain other Python commands. This method also allows, as the
-previous one, to keep options or parameters for other algorithms than the
+The file can also contain other Python commands. This method also allows, as
+the previous one, to keep options or parameters for other algorithms than the
 currently used one.
+
+In the textual interface TUI, the file name has only to be given as argument of
+the "*Script*" keyword.

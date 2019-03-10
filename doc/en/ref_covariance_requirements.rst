@@ -26,18 +26,25 @@
 Requirements to describe covariance matrices
 --------------------------------------------
 
+.. index:: single: BackgroundError
+.. index:: single: ObservationError
+.. index:: single: EvolutionError
+.. index:: single: setBackgroundError
+.. index:: single: setObservationError
+.. index:: single: setEvolutionError
 .. index:: single: covariance matrix
 .. index:: single: background error covariances
 .. index:: single: observation error covariances
 .. index:: single: covariances
 
-In general, a covariance matrix (or a variance-covariance matrix) has to be
-squared, symmetric, semi-definite positive. Each of its terms describes the
-covariance of the two random variables corresponding to its position in the
-matrix. The normalized form of the covariance is the linear correlation. One can
-express the following relation, between a covariance matrix :math:`\mathbf{M}`
-and its corresponding correlation matrix :math:`\mathbf{C}` (full matrix) and
-standard deviation matrix :math:`\mathbf{\Sigma}` (diagonal matrix):
+In general, a variance-covariance matrix, generally called a covariance matrix,
+has to be squared, symmetric and semi-definite positive. Each of its terms
+describes the covariance of the two random variables corresponding to its
+position in the matrix. The normalized form of the covariance is the linear
+correlation. One can express the following relation, between a covariance
+matrix :math:`\mathbf{M}` and its corresponding correlation matrix
+:math:`\mathbf{C}` (full matrix) and standard deviation matrix
+:math:`\mathbf{\Sigma}` (diagonal matrix):
 
 .. math:: \mathbf{M} = \mathbf{\Sigma} * \mathbf{C} * \mathbf{\Sigma}
 
@@ -46,9 +53,10 @@ optimization procedures. The main ones are the background error covariance
 matrix, noted as :math:`\mathbf{B}`, and the observation error covariance matrix,
 noted as :math:`\mathbf{R}`.
 
-There are 3 practical methods for the user to provide a covariance matrix. The
-method is chosen by the "*INPUT_TYPE*" keyword of each defined covariance
-matrix, as shown by the following figure:
+In the graphical interface EFICAS of ADAO, there are 3 practical methods for
+the user to provide a covariance matrix. The method is chosen by the
+"*INPUT_TYPE*" keyword of each defined covariance matrix, as shown by the
+following figure:
 
   .. eficas_covariance_matrix:
   .. image:: images/eficas_covariance_matrix.png
@@ -57,6 +65,14 @@ matrix, as shown by the following figure:
   .. centered::
     **Choosing covariance matrix representation**
 
+In the textual interface (TUI) of ADAO (see the part :ref:`section_tui`), the
+same information can be given with the right command "*setBackgroundError*",
+"*setObservationError*" or "*setEvolutionError*" depending on the physical
+quantity to define. The other arguments "*Matrix*", "*ScalarSparseMatrix*" and
+"*DiagonalSparseMatrix*" of the command allow to define it as described in the
+following sub-parts. These information can also be given as a script in an
+external file (argument "*Script*").
+
 First matrix form: using "*Matrix*" representation
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -64,6 +80,9 @@ First matrix form: using "*Matrix*" representation
 .. index:: single: BackgroundError
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
+.. index:: single: setBackgroundError
+.. index:: single: setObservationError
+.. index:: single: setEvolutionError
 
 This first form is the default and more general one. The covariance matrix
 :math:`\mathbf{M}` has to be fully specified. Even if the matrix is symmetric by
@@ -94,6 +113,9 @@ Second matrix form: using "*ScalarSparseMatrix*" representation
 .. index:: single: BackgroundError
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
+.. index:: single: setBackgroundError
+.. index:: single: setObservationError
+.. index:: single: setEvolutionError
 
 On the opposite, this second form is a very simplified method to provide a
 matrix. The covariance matrix :math:`\mathbf{M}` is supposed to be a positive
@@ -115,7 +137,7 @@ file as::
 
     BackgroundError = 1.
 
-or, better, by a "*String*" directly in the ADAO case.
+or, better, by a "*String*" directly in the graphical or textual ADAO case.
 
 Third matrix form: using "*DiagonalSparseMatrix*" representation
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -124,6 +146,9 @@ Third matrix form: using "*DiagonalSparseMatrix*" representation
 .. index:: single: BackgroundError
 .. index:: single: EvolutionError
 .. index:: single: ObservationError
+.. index:: single: setBackgroundError
+.. index:: single: setObservationError
+.. index:: single: setEvolutionError
 
 This third form is also a simplified method to provide a matrix, but a little
 more powerful than the second one. The covariance matrix :math:`\mathbf{M}` is
@@ -149,3 +174,6 @@ python script file as::
 or::
 
     BackgroundError = numpy.ones(...)
+
+As previously indicated, one can also define this matrix by a "*String*"
+directly in the graphical or textual ADAO case.

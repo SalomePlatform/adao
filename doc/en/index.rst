@@ -32,9 +32,7 @@ ADAO documentation
    :alt: ADAO logo
 
 **The ADAO module provides data assimilation and optimization** features in
-Python [Python]_ or SALOME context [Salome]_. It is based on usage of other
-SALOME modules, namely YACS and EFICAS if they are available, and on usage of a
-generic underlying data assimilation library.
+Python [Python]_ or SALOME context [Salome]_.
 
 Briefly stated, Data Assimilation is a methodological framework to compute the
 optimal estimate of the inaccessible true value of a system state, eventually
@@ -42,25 +40,28 @@ over time. It uses information coming from experimental measurements or
 observations, and from numerical *a priori* models, including information about
 their errors. Parts of the framework are also known under the names of
 *parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
-interpolation*, etc. More details can be found in the section
-:ref:`section_theory`.
+interpolation*, *field reconstruction*, etc. More details can be found in the
+section :ref:`section_theory`.
 
 The documentation for this module is divided into several major categories,
-related to the theoretical documentation (indicated in the title by **[DocT]**),
-to the user documentation (indicated in the title by **[DocU]**), and to the
-reference documentation (indicated in the title by **[DocR]**).
+related to the theoretical documentation (indicated in the section title by
+**[DocT]**), to the user documentation (indicated in the section title by
+**[DocU]**), and to the reference documentation (indicated in the section title
+by **[DocR]**).
 
 The first part is the :ref:`section_intro`. The second part introduces
-:ref:`section_theory`, and their concepts, and the next part describes a
-:ref:`section_methodology`. The fourth part describes :ref:`section_using`, and
-the fifth part gives examples on ADAO usage as :ref:`section_examples`. Users
-interested in quick use of the module can stop before reading the rest, but a
-valuable use of the module requires to read and come back regularly to the
-fourth and tenth parts. The sixth part indicates the :ref:`section_advanced`,
-with how to obtain additional information or how to use non-GUI execution
-scripting. The seventh part gives a detailed :ref:`section_reference`, with four
-main sub-parts following, the last one giving a :ref:`section_tui` of the
-module. And, to respect the module requirements, be sure to read the part
+:ref:`section_theory`, and their concepts, and the next part describes the
+:ref:`section_methodology`. For a standard user, the next parts describe
+examples on ADAO usage as :ref:`section_tutorials_in_salome` or
+:ref:`section_tutorials_in_python`, then indicates the :ref:`section_advanced`,
+with how to obtain additional information or how to use non-GUI command
+execution scripting. Users interested in quick use of the module can stop
+before reading the rest, but a valuable use of the module requires to read and
+come back regularly to these parts. The following parts describe
+:ref:`section_gui_in_salome` and :ref:`section_tui`. The last main part gives a
+detailed :ref:`section_reference`, with three essential main sub-parts
+describing the details of commands and options of the algorithms. And, to
+comply with the module requirements, be sure to read the part
 :ref:`section_license`.
 
 In all this documentation, we use standard notations of linear algebra, data
@@ -70,8 +71,7 @@ written either normally, or with a condensed notation, consisting in the use of
 a space to separate values and a "``;``" to separate the rows, in a continuous
 line.
 
-Table of contents
------------------
+**Table of contents**
 
 .. toctree::
    :maxdepth: 2
@@ -79,17 +79,17 @@ Table of contents
    intro
    theory
    methodology
-   using
-   examples
+   tutorials_in_salome
+   tutorials_in_python
    advanced
-   reference
+   gui_in_salome
    tui
+   reference
    license
    glossary
    bibliography
 
-Indices and tables
-------------------
+**Indices and tables**
 
 * :ref:`genindex`
 * :ref:`search`

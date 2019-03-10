@@ -21,23 +21,26 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. _ref_observers_requirements:
+.. _section_ref_observers_requirements:
 
 Requirements for functions describing an "*observer*"
 -----------------------------------------------------
 
 .. index:: single: Observer
+.. index:: single: setObserver
 .. index:: single: Observer Template
 
-Some special variables, internal to the optimization process, used inside
-calculation, can be monitored during an ADAO calculation. These variables can be
-printed, plotted, saved, etc. It can be done using some "*observer*", sometimes
-also called "callback". They are Python scripts, each one associated to a given
-variable. They are activated for each variable modification.
+Some special variables, internal to the optimization process and used inside
+calculation, can be monitored during an ADAO calculation. These variables can
+be printed, plotted, saved, etc. by the user. This can be done using some
+"*observer*", sometimes also called "callback". They are Python scripts, each
+one associated to a given variable, and that are automatically activated for
+each variable modification.
 
-There are 3 practical methods to provide an "*observer*" in an ADAO case. The
-method is chosen with the "*NodeType*" keyword of each "*observer*" entry type, as
-shown in the following figure:
+In the graphical interface EFICAS of ADAO, there are 3 practical methods to
+provide an "*observer*" in an ADAO case. The method is chosen with the
+"*NodeType*" keyword of each "*observer*" entry type, as shown in the following
+figure:
 
   .. eficas_observer_nodetype:
   .. image:: images/eficas_observer_nodetype.png
@@ -46,16 +49,25 @@ shown in the following figure:
   .. centered::
     **Choosing for an "*observer*" its entry type**
 
-The "*observer*" can be given as a explicit script (entry of type "*String*"),
+The "*observer*" can be given as an explicit script (entry of type "*String*"),
 as a script in an external file (entry of type "*Script*"), or by using a
 template or pattern (entry of type"*Template*") available by default in ADAO
-when using the graphical editor. These templates are simple scripts that can be
-tuned by the user, either in the integrated edtition stage of the case, or in
-the edition stage of the schema before execution, to improve the ADAO case
-performance in the SALOME execution supervisor.
+when using the graphical editor and detailed in the following part
+:ref:`section_ref_observers_templates`. These templates are simple scripts that
+can be tuned by the user, either in the integrated edition stage of the case
+with EFICAS, or in the edition stage of the schema before execution, to improve
+the ADAO case performance in the SALOME execution supervisor YACS.
 
-General form of a script to define an *observer*
-++++++++++++++++++++++++++++++++++++++++++++++++
+In the textual interface (TUI) of ADAO (see the part :ref:`section_tui`), the
+same information can be given with the command "*setObserver*" applied to a
+specific variable indicated in the argument "*Variable*". The other arguments
+of this command allow to define the observer either as a template (argument
+"*Template*") representing one of the scripts detailed in the part
+:ref:`section_ref_observers_templates`, or as an explicit script (argument
+"*String*"), or as a script in an external file (argument "*Script*").
+
+General form for a script describing an *observer*
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To use this capability, the user must have or build scripts that have on
 standard input (that is, in the naming space) the variables ``var`` and
@@ -77,6 +89,8 @@ include graphical output, storage capacities, complex treatment, statistical
 analysis, etc.
 
 Hereinafter we give the identifier and the contents of each model available.
+
+.. _section_ref_observers_templates:
 
 Inventory of available *observer* models ("*Template*")
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -161,7 +175,7 @@ Save the value series of the variable in a file of the '/tmp' directory named 'v
 Template **ValuePrinterAndSaver** :
 ...................................
 
-Print on standard output and, in the same time save in a file, the current value of the variable.
+Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable.
 
 ::
 
@@ -183,7 +197,7 @@ Print on standard output and, in the same time save in a file, the current value
 Template **ValueIndexPrinterAndSaver** :
 ........................................
 
-Print on standard output and, in the same time save in a file, the current value of the variable, adding its index.
+Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable, adding its index.
 
 ::
 
@@ -205,7 +219,7 @@ Print on standard output and, in the same time save in a file, the current value
 Template **ValueSeriePrinterAndSaver** :
 ........................................
 
-Print on standard output and, in the same time, save in a file the value series of the variable.
+Print on standard output and, in the same time, save in a file of the '/tmp' directory, the value series of the variable.
 
 ::
 
@@ -317,7 +331,7 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 Template **ValuePrinterSaverAndGnuPlotter** :
 .............................................
 
-Print on standard output and, in the same, time save in a file and graphically plot the current value of the variable.
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable.
 
 ::
 
@@ -350,7 +364,7 @@ Print on standard output and, in the same, time save in a file and graphically p
 Template **ValueSeriePrinterSaverAndGnuPlotter** :
 ..................................................
 
-Print on standard output and, in the same, time save in a file and graphically plot the value series of the variable.
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable.
 
 ::
 

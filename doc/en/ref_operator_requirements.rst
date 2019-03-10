@@ -26,66 +26,88 @@
 Requirements for functions describing an operator
 -------------------------------------------------
 
-The operators for observation and evolution are required to implement the data
-assimilation or optimization procedures. They include the physical simulation by
-numerical calculations, but also the filtering and restriction to compare the
-simulation to observation. The evolution operator is considered here in its
-incremental form, representing the transition between two successive states, and
-is then similar to the observation operator.
+.. index:: single: setObservationOperator
+.. index:: single: setEvolutionModel
+.. index:: single: setControlModel
 
-Schematically, an operator has to give a output solution given the input
-parameters. Part of the input parameters can be modified during the optimization
-procedure. So the mathematical representation of such a process is a function.
-It was briefly described in the section :ref:`section_theory` and is generalized
-here by the relation:
+The operators for observation and evolution are required to implement the data
+assimilation or optimization procedures. They include the physical simulation
+by numerical calculations, but also the filtering and restriction to compare
+the simulation to observation. The evolution operator is considered here in its
+incremental form, representing the transition between two successive states,
+and is then similar to the observation operator.
+
+Schematically, an operator :math:`O` has to give a output solution for
+specified input parameters. Part of the input parameters can be modified during
+the optimization procedure. So the mathematical representation of such a
+process is a function. It was briefly described in the section
+:ref:`section_theory` and is generalized here by the relation:
 
 .. math:: \mathbf{y} = O( \mathbf{x} )
 
-between the pseudo-observations :math:`\mathbf{y}` and the parameters
-:math:`\mathbf{x}` using the observation or evolution operator :math:`O`. The
-same functional representation can be used for the linear tangent model
-:math:`\mathbf{O}` of :math:`O` and its adjoint :math:`\mathbf{O}^*`, also
-required by some data assimilation or optimization algorithms.
+between the pseudo-observations outputs :math:`\mathbf{y}` and the input
+parameters :math:`\mathbf{x}` using the observation or evolution operator
+:math:`O`. The same functional representation can be used for the linear
+tangent model :math:`\mathbf{O}` of :math:`O` and its adjoint
+:math:`\mathbf{O}^*`, also required by some data assimilation or optimization
+algorithms.
 
 On input and output of these operators, the :math:`\mathbf{x}` and
-:math:`\mathbf{y}` variables or their increments are mathematically vectors,
-and they are given as non-oriented vectors (of type list or Numpy array) or
-oriented ones (of type Numpy matrix).
+:math:`\mathbf{y}` variables, or their increments, are mathematically vectors,
+and they can be given by the user as non-oriented vectors (of type list or
+Numpy array) or oriented ones (of type Numpy matrix).
 
-Then, **to describe completely an operator, the user has only to provide a
-function that fully and only realize the functional operation**.
+Then, **to fully describe an operator, the user has only to provide a function
+that completely and only realize the functional operation**.
 
-This function is usually given as a script that can be executed in a YACS node.
-This script can without difference launch external codes or use internal SALOME
-calls and methods. If the algorithm requires the 3 aspects of the operator
-(direct form, tangent form and adjoint form), the user has to give the 3
-functions or to approximate them.
+This function is usually given as a Python function or script, that can be in
+particular executed as an independent Python function or in a YACS node. These
+function or script can, with no differences, launch external codes or use
+internal Python or SALOME calls and methods. If the algorithm requires the 3
+aspects of the operator (direct form, tangent form and adjoint form), the user
+has to give the 3 functions or to approximate them using ADAO.
 
-There are 3 practical methods for the user to provide an operator functional
-representation. These methods are chosen in the "*FROM*"  field of each operator
-having a "*Function*" value as "*INPUT_TYPE*", as shown by the following figure:
+There are for the user 3 practical methods to provide an operator functional
+representation, which are different depending on the chosen argument:
+
+- :ref:`section_ref_operator_one`
+- :ref:`section_ref_operator_funcs`
+- :ref:`section_ref_operator_switch`
+
+In case of ADAO scripted interface (TUI), only the first two are necessary
+because the third is included in the second. In case of ADAO graphical
+interface EFICAS, these methods are chosen in the "*FROM*"  field of each
+operator having a "*Function*" value as "*INPUT_TYPE*", as shown by the
+following figure:
 
   .. eficas_operator_function:
   .. image:: images/eficas_operator_function.png
     :align: center
     :width: 100%
   .. centered::
-    **Choosing an operator functional representation**
+    **Choosing graphically an operator functional representation**
 
-First functional form: using "*ScriptWithOneFunction*"
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_one:
 
+First functional form: one direct operator only
++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: OneFunction
 .. index:: single: ScriptWithOneFunction
 .. index:: single: DirectOperator
 .. index:: single: DifferentialIncrement
 .. index:: single: CenteredFiniteDifference
 
-The first one consist in providing only one potentially non-linear function, and
-to approximate the tangent and the adjoint operators. This is done by using the
-keyword "*ScriptWithOneFunction*" for the description of the chosen operator in
-the ADAO GUI. The user have to provide the function in a script, with a
-mandatory name "*DirectOperator*". For example, the script can follow the
-template::
+The first one consist in providing only one function, potentially non-linear,
+and to approximate the associated tangent and adjoint operators.
+
+This is done in ADAO by using in the graphical interface EFICAS the keyword
+"*ScriptWithOneFunction*" for the description by a script. In the textual
+interface, it is the keyword "*OneFunction*", possibly combined with "*Script*"
+keyword depending on whether it is a function or a script. If it is by external
+script, the user must provide a file containing a function that has the
+mandatory name "*DirectOperator*". For example, an external script can follow
+the generic template::
 
     def DirectOperator( X ):
         """ Direct non-linear simulation operator """
@@ -95,18 +117,19 @@ template::
         return Y=O(X)
 
 In this case, the user has also provide a value for the differential increment
-(or keep the default value), using through the GUI the keyword
-"*DifferentialIncrement*", which has a default value of 1%. This coefficient
-will be used in the finite differences approximation to build the tangent and
-adjoint operators. The finite differences approximation order can also be chosen
-through the GUI, using the keyword "*CenteredFiniteDifference*", with 0 for an
-uncentered schema of first order (which is the default value), and with 1 for a
-centered schema of second order (of twice the first order computational cost).
-If necessary and if possible, :ref:`subsection_ref_parallel_df` can be used. In
-all cases, an internal cache mechanism is used to restrict the number of
-operator evaluations at the minimum possible in a sequential or parallel
-execution scheme for numerical approximations of the tangent and adjoint
-operators, to avoid redundant calculations.
+(or keep the default value), using through the graphical interface (GUI) or
+textual one (TUI) the keyword "*DifferentialIncrement*" as parameter, which has
+a default value of 1%. This coefficient will be used in the finite differences
+approximation to build the tangent and adjoint operators. The finite
+differences approximation order can also be chosen through the GUI, using the
+keyword "*CenteredFiniteDifference*", with 0 for an uncentered schema of first
+order (which is the default value), and with 1 for a centered schema of second
+order (and of twice the first order computational cost). If necessary and if
+possible, :ref:`subsection_ref_parallel_df` can be used. In all cases, an
+internal cache mechanism is used to restrict the number of operator evaluations
+at the minimum possible in a sequential or parallel execution scheme for
+numerical approximations of the tangent and adjoint operators, to avoid
+redundant calculations.
 
 This first operator definition form allows easily to test the functional form
 before its use in an ADAO case, greatly reducing the complexity of operator
@@ -114,13 +137,16 @@ implementation. One can then use the "*FunctionTest*" ADAO checking algorithm
 (see the section on the :ref:`section_ref_algorithm_FunctionTest`) for this
 test.
 
-**Important warning:** the name "*DirectOperator*" is mandatory, and the type of
-the ``X`` argument can be either a list, a Numpy array or a Numpy 1D-matrix. The
-user function has to accept and treat all these cases.
+**Important warning:** the name "*DirectOperator*" is mandatory, and the type
+of the ``X`` argument can be either a list of float values, a Numpy array or a
+Numpy matrix. The user function has to accept and treat all these cases.
 
-Second functional form: using "*ScriptWithFunctions*"
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_funcs:
 
+Second functional form: three operators direct, tangent and adjoint
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. index:: single: ThreeFunctions
 .. index:: single: ScriptWithFunctions
 .. index:: single: DirectOperator
 .. index:: single: TangentOperator
@@ -133,9 +159,12 @@ detailed implementation as this second functional form.**
 The second one consist in providing directly the three associated operators
 :math:`O`, :math:`\mathbf{O}` and :math:`\mathbf{O}^*`. This is done by using
 the keyword "*ScriptWithFunctions*" for the description of the chosen operator
-in the ADAO GUI. The user have to provide three functions in one script, with
-three mandatory names "*DirectOperator*", "*TangentOperator*" and
-"*AdjointOperator*". For example, the script can follow the template::
+in the ADAO graphical interface EFICAS. In the textual interface, it is the
+keyword "*ThreeFunctions*", possibly combined with "*Script*" keyword depending
+on whether it is a function or a script. The user have to provide in one script
+three functions, with the three mandatory names "*DirectOperator*",
+"*TangentOperator*" and "*AdjointOperator*". For example, the external script
+can follow the template::
 
     def DirectOperator( X ):
         """ Direct non-linear simulation operator """
@@ -144,15 +173,17 @@ three mandatory names "*DirectOperator*", "*TangentOperator*" and
         ...
         return something like Y
 
-    def TangentOperator( (X, dX) ):
+    def TangentOperator( pair = (X, dX) ):
         """ Tangent linear operator, around X, applied to dX """
+        X, dX = pair
         ...
         ...
         ...
         return something like Y
 
-    def AdjointOperator( (X, Y) ):
+    def AdjointOperator( pair = (X, Y) ):
         """ Adjoint operator, around X, applied to Y """
+        X, Y = pair
         ...
         ...
         ...
@@ -164,23 +195,25 @@ operator implementation.
 
 For some algorithms, it is required that the tangent and adjoint functions can
 return the matrix equivalent to the linear operator. In this case, when
-respectively the ``dX`` or the ``Y`` arguments are ``None``, the user has to
-return the associated matrix.
+respectively the ``dX`` or the ``Y`` arguments are ``None``, the user script
+has to return the associated matrix.
 
 **Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
 "*AdjointOperator*" are mandatory, and the type of the ``X``, Y``, ``dX``
-arguments can be either a python list, a Numpy array or a Numpy 1D-matrix. The
-user has to treat these cases in his script.
+arguments can be either a list of float values, a Numpy array or a Numpy
+matrix. The user function has to treat these cases in his script.
 
-Third functional form: using "*ScriptWithSwitch*"
-+++++++++++++++++++++++++++++++++++++++++++++++++
+.. _section_ref_operator_switch:
+
+Third functional form: three operators with a switch
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: ScriptWithSwitch
 .. index:: single: DirectOperator
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
 
-**It is recommended not to use this third functional form without a solid
+**It is recommended not to use this third functional form without a strong
 numerical or physical reason. A performance improvement is not a good reason to
 use the implementation complexity of this third functional form. Only an
 inability to use the first or second forms justifies the use of the third.**
@@ -188,12 +221,14 @@ inability to use the first or second forms justifies the use of the third.**
 This third form give more possibilities to control the execution of the three
 functions representing the operator, allowing advanced usage and control over
 each execution of the simulation code. This is done by using the keyword
-"*ScriptWithSwitch*" for the description of the chosen operator in the ADAO GUI.
-The user have to provide a switch in one script to control the execution of the
-direct, tangent and adjoint forms of its simulation code. The user can then, for
-example, use other approximations for the tangent and adjoint codes, or
-introduce more complexity in the argument treatment of the functions. But it
-will be far more complicated to implement and debug.
+"*ScriptWithSwitch*" for the description of the chosen operator in the ADAO
+graphical interface EFICAS. In the textual interface, you only have to use the
+keyword "*ThreeFunctions*" above to also define this case, with the right
+functions. The user have to provide a switch in one script to control the
+execution of the direct, tangent and adjoint forms of its simulation code. The
+user can then, for example, use other approximations for the tangent and
+adjoint codes, or introduce more complexity in the argument treatment of the
+functions. But it will be far more complicated to implement and debug.
 
 If, however, you want to use this third form, we recommend using the following
 template for the switch. It requires an external script or code named here
@@ -252,12 +287,13 @@ All various modifications could be done from this template hypothesis.
 
 .. _section_ref_operator_control:
 
-Special case of controled evolution or observation operator
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Special case of controlled evolution or observation operator
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In some cases, the evolution or the observation operator is required to be
 controlled by an external input control, given *a priori*. In this case, the
-generic form of the incremental model is slightly modified as follows:
+generic form of the incremental model :math:`O` is slightly modified as
+follows:
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
@@ -265,8 +301,9 @@ where :math:`\mathbf{u}` is the control over one state increment. In fact, the
 direct operator has to be applied to a pair of variables :math:`(X,U)`.
 Schematically, the operator has to be set as::
 
-    def DirectOperator( (X, U) ):
+    def DirectOperator( pair = (X, U) ):
         """ Direct non-linear simulation operator """
+        X, U = pair
         ...
         ...
         ...
@@ -278,14 +315,16 @@ In such a case with explicit control, only the second functional form (using
 "*ScriptWithFunctions*") and third functional form (using "*ScriptWithSwitch*")
 can be used.
 
+.. _section_ref_operator_dimensionless:
+
 Additional notes on dimensionless transformation of operators
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Nondimensionalization
 .. index:: single: Dimensionless
 
-It is common that physical quantities, in input or output of the operators, have
-significant differences in magnitude or rate of change. One way to avoid
+It is common that physical quantities, in input or output of the operators,
+have significant differences in magnitude or rate of change. One way to avoid
 numerical difficulties is to use, or to set, a dimensionless version of
 calculations carried out in operators [WikipediaND]_. In principle, since
 physical simulation should be as dimensionless as possible, it is at first
@@ -296,14 +335,59 @@ to surround the calculation to remove dimension for input or output. A simple
 way to do this is to convert the input parameters :math:`\mathbf{x}` which are
 arguments of a function like "*DirectOperator*". One mostly use the default
 values :math:`\mathbf{x}^b` (background, or nominal value). Provided that each
-component of :math:`\mathbf{x}^b` is non zero, one can indeed put:
+component of :math:`\mathbf{x}^b` is non zero, one can indeed use a
+multiplicative correction. For this, one can for example state:
 
 .. math:: \mathbf{x} = \mathbf{\alpha}\mathbf{x}^b
 
 and then optimize the multiplicative parameter :math:`\mathbf{\alpha}`.  This
-parameter has as default value (or as background) a vector of 1. Be careful,
-applying a process of dimensionless transformation also requires changing the
-associated error covariances in an ADAO formulation of the optimization problem.
+parameter has as default value (or as background) a vector of 1. In the same
+way, one can use additive correction if it is more interesting from a physical
+point of view. In this case, one can state:
+
+.. math:: \mathbf{x} =\mathbf{x}^b + \mathbf{\alpha}
+
+and then optimize the additive parameter :math:`\mathbf{\alpha}`. In this case,
+the parameter has for background value a vector of 0.
+
+Be careful, applying a dimensionless transformation also requires changing the
+associated error covariances in an ADAO formulation of the optimization
+problem.
 
 Such a process is rarely enough to avoid all the numerical problems, but it
 often improves a lot the numeric conditioning of the optimization.
+
+Dealing explicitly with "multiple" functions
+++++++++++++++++++++++++++++++++++++++++++++
+
+.. warning::
+
+  it is strongly recommended not to use this explicit "multiple" functions
+  definition without a very strong computing justification. This treatment is
+  already done by default in ADAO to increase performances. Only the very
+  experienced user, seeking to manage particularly difficult cases, can be
+  interested in this extension. Despite its simplicity, there is an explicit
+  risk of significantly worsening performance.
+
+It is possible, when defining operator's functions, to set them as functions
+that treat not only one argument, but a series of arguments, to give back on
+output the corresponding value series. Writing it as pseudo-code, the
+"multiple" function, here named ``MultiFunctionO``, representing the classical
+operator :math:`O` named "*DirectOperator*", does::
+
+    def MultiFunctionO( Inputs ):
+        """ Multiple ! """
+        Outputs = []
+        for X in Inputs:
+            Y = DirectOperator( X )
+            Outputs.append( Y )
+        return Outputs
+
+The length of the output (that is, the number of calculated values) is equal to
+the length of the input (that is, the number of states for which one want to
+calculate the value by the operator).
+
+This possibility is only available in the textual interface for ADAO. For this,
+when defining an operator's function, in the same time one usually define the
+function or the external script, it can be set using a boolean parameter
+"*InputFunctionAsMulti*" that the definition is one of a "multiple" function.
