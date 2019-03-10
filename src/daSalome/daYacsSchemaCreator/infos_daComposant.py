@@ -64,27 +64,29 @@ AssimAlgos = [
     "3DVAR",
     "4DVAR",
     "Blue",
-    "DerivativeFreeOptimization",
     "ExtendedBlue",
     "EnsembleBlue",
     "KalmanFilter",
     "ExtendedKalmanFilter",
     "EnsembleKalmanFilter",
     "UnscentedKalmanFilter",
-    "LinearLeastSquares",
-    "NonLinearLeastSquares",
     "QuantileRegression",
+    "DerivativeFreeOptimization",
     "ParticleSwarmOptimization",
     "DifferentialEvolution",
+    "TabuSearch",
+    "LinearLeastSquares",
+    "NonLinearLeastSquares",
     ]
 CheckAlgos = [
     "FunctionTest",
     "LinearityTest",
     "GradientTest",
     "AdjointTest",
-    "ObserverTest",
     "TangentTest",
+    "LocalSensitivityTest",
     "SamplingTest",
+    "ObserverTest",
     ]
 
 AlgoDataRequirements = {}
@@ -99,11 +101,6 @@ AlgoDataRequirements["4DVAR"] = [
     "ObservationOperator",
     ]
 AlgoDataRequirements["Blue"] = [
-    "Background", "BackgroundError",
-    "Observation", "ObservationError",
-    "ObservationOperator",
-    ]
-AlgoDataRequirements["DerivativeFreeOptimization"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
@@ -138,12 +135,13 @@ AlgoDataRequirements["UnscentedKalmanFilter"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
-AlgoDataRequirements["LinearLeastSquares"] = [
-    "Observation", "ObservationError",
+AlgoDataRequirements["QuantileRegression"] = [
+    "Background",
+    "Observation",
     "ObservationOperator",
     ]
-AlgoDataRequirements["NonLinearLeastSquares"] = [
-    "Background",
+AlgoDataRequirements["DerivativeFreeOptimization"] = [
+    "Background", "BackgroundError",
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
@@ -157,9 +155,18 @@ AlgoDataRequirements["DifferentialEvolution"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
-AlgoDataRequirements["QuantileRegression"] = [
+AlgoDataRequirements["TabuSearch"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["LinearLeastSquares"] = [
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["NonLinearLeastSquares"] = [
     "Background",
-    "Observation",
+    "Observation", "ObservationError",
     "ObservationOperator",
     ]
 
@@ -179,11 +186,13 @@ AlgoDataRequirements["AdjointTest"] = [
     "CheckingPoint",
     "ObservationOperator",
     ]
-AlgoDataRequirements["ObserverTest"] = [
-    "Observers",
-    ]
 AlgoDataRequirements["TangentTest"] = [
     "CheckingPoint",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["LocalSensitivityTest"] = [
+    "CheckingPoint",
+    "Observation",
     "ObservationOperator",
     ]
 AlgoDataRequirements["SamplingTest"] = [
@@ -191,23 +200,27 @@ AlgoDataRequirements["SamplingTest"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
+AlgoDataRequirements["ObserverTest"] = [
+    "Observers",
+    ]
 
 AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["4DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
-AlgoType["DerivativeFreeOptimization"] = "Optim"
 AlgoType["ExtendedBlue"] = "Optim"
 AlgoType["EnsembleBlue"] = "Optim"
 AlgoType["KalmanFilter"] = "Optim"
 AlgoType["ExtendedKalmanFilter"] = "Optim"
 AlgoType["EnsembleKalmanFilter"] = "Optim"
 AlgoType["UnscentedKalmanFilter"] = "Optim"
-AlgoType["LinearLeastSquares"] = "Optim"
-AlgoType["NonLinearLeastSquares"] = "Optim"
+AlgoType["QuantileRegression"] = "Optim"
+AlgoType["DerivativeFreeOptimization"] = "Optim"
 AlgoType["ParticleSwarmOptimization"] = "Optim"
 AlgoType["DifferentialEvolution"] = "Optim"
-AlgoType["QuantileRegression"] = "Optim"
+AlgoType["TabuSearch"] = "Optim"
+AlgoType["LinearLeastSquares"] = "Optim"
+AlgoType["NonLinearLeastSquares"] = "Optim"
 
 # Variables qui sont partages avec le generateur de
 # catalogue Eficas
