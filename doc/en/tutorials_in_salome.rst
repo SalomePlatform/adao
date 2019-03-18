@@ -41,60 +41,69 @@
    :scale: 50%
 
 This section presents some examples on using the ADAO module in SALOME. The
-first one shows how to build a simple data assimilation case defining
+first one shows how to build a very simple data assimilation case defining
 explicitly all the required input data through the EFICAS graphical user
 interface (GUI). The second one shows, on the same case, how to define input
 data using external sources through scripts. We describe here always Python
 scripts because they can be directly inserted in YACS script nodes, but
 external files can use other languages.
 
-The mathematical notations used afterward are explained in the section
-:ref:`section_theory`.
+These examples are intentionally described in the same way than for the
+:ref:`section_tutorials_in_python` because they are similar to the ones that
+can be treated in the textual user interface in Python (TUI). The mathematical
+notations used afterward are explained in the section :ref:`section_theory`.
 
 Building an estimation case with explicit data definition
 ---------------------------------------------------------
 
-This simple example is a demonstration one, and describes how to set a BLUE
-estimation framework in order to get the *fully weighted least square estimated
-state* of a system from an observation of the state and from an *a priori*
-knowledge (or background) of this state. In other words, we look for the
-weighted middle between the observation and the background vectors. All the
+This very simple example is a demonstration one, and describes how to set a
+BLUE estimation framework in order to get the *fully weighted least square
+estimated state* of a system from an observation of the state and from an *a
+priori* knowledge (or background) of this state. In other words, we look for
+the weighted middle between the observation and the background vectors. All the
 numerical values of this example are arbitrary.
 
 Experimental setup
 ++++++++++++++++++
 
-We choose to operate in a 3-dimensional space. 3D is chosen in order to restrict
-the size of numerical object to explicitly enter by the user, but the problem is
-not dependent of the dimension and can be set in dimension 10, 100, 1000... The
-observation :math:`\mathbf{y}^o` is of value 1 in each direction, so::
+We choose to operate in a 3-dimensional observation space, that is we deal with
+3 simple measures. The 3 dimensionality is chosen in order to restrict the size
+of numerical object to be explicitly entered by the user, but the problem is
+not dependent of the dimension and can be set in observation dimension of 10,
+100, 1000... The observation :math:`\mathbf{y}^o` is of value 1 in each
+direction, so:
+::
 
     Yo = [1 1 1]
 
 The background state :math:`\mathbf{x}^b`, which represent some *a priori*
-knowledge or a mathematical regularization, is of value of 0 in each direction,
-which is::
+knowledge or a mathematical regularization, is chosen of value of 0 in each
+case, which leads to:
+::
 
     Xb = [0 0 0]
 
 Data assimilation requires information on errors covariances :math:`\mathbf{R}`
-and :math:`\mathbf{B}`, respectively for observation and background variables.
-We choose here to have uncorrelated errors (that is, diagonal matrices) and to
-have the same variance of 1 for all variables (that is, identity matrices). We
-set::
+and :math:`\mathbf{B}`, respectively for observation and background error
+variables. We choose here to have uncorrelated errors (that is, diagonal
+matrices) and to have the same variance of 1 for all variables (that is,
+identity matrices). We set:
+::
 
-    B = R = [1 0 0 ; 0 1 0 ; 0 0 1]
+    B = R = Id = [1 0 0 ; 0 1 0 ; 0 0 1]
 
 Last, we need an observation operator :math:`\mathbf{H}` to convert the
 background value in the space of observation values. Here, because the space
 dimensions are the same, we can choose the identity as the observation
-operator::
+operator:
+::
 
-    H = [1 0 0 ; 0 1 0 ; 0 0 1]
+    H = Id = [1 0 0 ; 0 1 0 ; 0 0 1]
 
 With such choices, the "Best Linear Unbiased Estimator" (BLUE) will be the
 average vector between :math:`\mathbf{y}^o` and :math:`\mathbf{x}^b`, named the
-*analysis*, denoted by :math:`\mathbf{x}^a`, and its value is::
+*analysis*, denoted by :math:`\mathbf{x}^a`, and its value is:
+::
 
     Xa = [0.5 0.5 0.5]
 
@@ -130,15 +139,15 @@ ADAO case, and you will see:
   .. centered::
     **The embedded editor for cases definition in module ADAO**
 
-Then, fill in the variables to build the ADAO case by using the experimental set
-up described above. All the technical information given above will be directly
-inserted in the ADAO case definition, by using the *String* type for all the
-variables. When the case definition is ready, save it to a "*JDC (\*.comm)*"
-native file somewhere in your path. Remember that other files will be also
-created near this first one, so it is better to make a specific directory for
-your case, and to save the file inside. The name of the file will appear in the
-"*Object browser*" window, under the "*ADAO*" menu. The final case definition
-looks like this:
+Then, fill in the variables to build the ADAO case by using the experimental
+set up described above. All the technical information given above will be
+directly inserted in the ADAO case definition, by using the *String* type for
+each variable. When the case definition is ready, save it to a "*JDC
+(\*.comm)*" native file somewhere in your path. Remember that other files will
+be also created near this first one, so it is better to make a specific
+directory for your case, and to save the file inside. The name of the file will
+appear in the "*Object browser*" window, under the "*ADAO*" menu. The final
+case definition looks like this:
 
   .. _adao_jdcexample01:
   .. image:: images/adao_jdcexample01.png
@@ -185,7 +194,8 @@ SALOME Python Object), and will print it on the standard output.
 To obtain this, the in-line script node need to have an input port of type
 "*pyobj*", named "*Study*" for example, that have to be linked graphically to
 the "*algoResults*" output port of the computation bloc. Then, the code to fill
-in the script node is::
+in the script node is:
+::
 
     Xa = Study.getResults().get("Analysis")[-1]
 
@@ -213,7 +223,8 @@ window in the YACS scheme as shown below:
     **YACS menu for Container Log, and dialog window showing the log**
 
 We verify that the result is correct by checking that the log dialog window
-contains the following line::
+contains the following line:
+::
 
     Analysis = [0.5, 0.5, 0.5]
 
@@ -238,17 +249,18 @@ field instead of "*Blue*".
 Building an estimation case with external data definition by scripts
 --------------------------------------------------------------------
 
-It is useful to get parts or all of the data from external definition, using
-Python script files to provide access to the data. As an example, we build here
-an ADAO case representing the same experimental setup as in the above example
-`Building an estimation case with explicit data definition`_, but using data
-from a single one external Python script file.
+It is useful to get parts or all of the ADAO case data from external
+definition, using Python script files to provide access to the data. As an
+example, we build here an ADAO case representing the same experimental setup as
+in the above example `Building an estimation case with explicit data
+definition`_, but using data from a single one external Python script file.
 
 First, we write the following script file, using conventional names for the
 required variables. Here, all the input variables are defined in the same
 script, but the user can choose to split the file in several ones, or to mix
 explicit data definition in the ADAO GUI and implicit data definition by
-external files. The present script file looks like::
+external files. The present script file looks like:
+::
 
     import numpy
     #
@@ -273,11 +285,11 @@ external files. The present script file looks like::
     ObservationOperator = numpy.identity(3)
 
 The names of the Python variables above are mandatory, in order to define the
-right case variables, but the Python script can be bigger and define classes,
-functions, file or database access, etc. with other names. Moreover, the above
-script shows different ways to define arrays and matrices, using list, string
-(as in Numpy or Octave), Numpy array type or Numpy matrix type, and Numpy
-special functions. All of these syntax are valid.
+right ADAO case variables, but the Python script can be bigger and define
+classes, functions, file or database access, etc. with other names. Moreover,
+the above script shows different ways to define arrays and matrices, using
+list, string (as in Numpy or Octave), Numpy array type or Numpy matrix type,
+and Numpy special functions. All of these syntax are valid.
 
 After saving this script in a file (named here "*script.py*" for the example)
 somewhere in your path, we use the graphical interface (GUI) to build the ADAO
@@ -299,13 +311,13 @@ case with explicit data definition`_ previous example.
 
 In fact, this script methodology is the easiest way to retrieve data from
 in-line or previous calculations, from static files, from database or from
-stream, all of them inside or outside of SALOME. It allows also to modify easily
-some input data, for example for debug purpose or for repetitive execution
-process, and it is the most versatile method in order to parametrize the input
-data. **But be careful, script methodology is not a "safe" procedure, in the
-sense that erroneous data, or errors in calculations, can be directly injected
-into the YACS scheme execution. The user have to carefully verify the content of
-his scripts.**
+stream, all of them inside or outside of SALOME. It allows also to modify
+easily some input data, for example for debug purpose or for repetitive
+execution process, and it is the most versatile method in order to parametrize
+the input data. **But be careful, script methodology is not a "safe" procedure,
+in the sense that erroneous data, or errors in calculations, can be directly
+injected into the ADAO case execution. The user have to carefully verify the
+content of his scripts.**
 
 Adding parameters to control the data assimilation algorithm
 ------------------------------------------------------------
@@ -330,7 +342,8 @@ of optionnal parameters, as here with the "*MaximumNumberOfSteps*":
 This dictionary can be defined, for example, in an external Python script
 file, using the mandatory variable name "*AlgorithmParameters*" for the
 dictionary. All the keys inside the dictionary are optional, they all have
-default values, and can exist without being used. For example::
+default values, and can exist without being used. For example:
+::
 
     AlgorithmParameters = {
         "Minimizer" : "LBFGSB", # Recommended
@@ -373,20 +386,23 @@ the size of numerical object shown in the scripts, but the problem is
 not dependent of the dimension.
 
 We choose a twin experiment context, using a known true state
-:math:`\mathbf{x}^t` but of arbitrary value::
+:math:`\mathbf{x}^t` but of arbitrary value:
+::
 
     Xt = [1 2 3]
 
 The background state :math:`\mathbf{x}^b`, which represent some *a priori*
 knowledge of the true state, is build as a normal random perturbation of 20% of
-the true state :math:`\mathbf{x}^t` for each component, which is::
+the true state :math:`\mathbf{x}^t` for each component, which is:
+::
 
     Xb = Xt + normal(0, 20%*Xt)
 
 To describe the background error covariances matrix :math:`\mathbf{B}`, we make
 as previously the hypothesis of uncorrelated errors (that is, a diagonal matrix,
 of size 3x3 because :math:`\mathbf{x}^b` is of lenght 3) and to have the same
-variance of 0.1 for all variables. We get::
+variance of 0.1 for all variables. We get:
+::
 
     B = 0.1 * diagonal( length(Xb) )
 
@@ -399,11 +415,13 @@ approximated gradient in this case.
 
 Being in twin experiments, the observation :math:`\mathbf{y}^o` and its error
 covariances matrix :math:`\mathbf{R}` are generated by using the true state
-:math:`\mathbf{x}^t` and the observation operator :math:`\mathbf{H}`::
+:math:`\mathbf{x}^t` and the observation operator :math:`\mathbf{H}`:
+::
 
     Yo = H( Xt )
 
-and, with an arbitrary standard deviation of 1% on each error component::
+and, with an arbitrary standard deviation of 1% on each error component:
+::
 
     R = 0.0001 * diagonal( length(Yo) )
 
@@ -424,7 +442,8 @@ standard directory.
 
 We first define the true state :math:`\mathbf{x}^t` and some convenient matrix
 building function, in a Python script file named
-``Physical_data_and_covariance_matrices.py``::
+``Physical_data_and_covariance_matrices.py``:
+::
 
     import numpy
     #
@@ -447,7 +466,8 @@ building function, in a Python script file named
 We can then define the background state :math:`\mathbf{x}^b` as a random
 perturbation of the true state, adding a *required ADAO variable* at the end of
 the script the definition, in order to export the defined value. It is done in a
-Python script file named ``Script_Background_xb.py``::
+Python script file named ``Script_Background_xb.py``:
+::
 
     from Physical_data_and_covariance_matrices import True_state
     import numpy
@@ -465,7 +485,8 @@ Python script file named ``Script_Background_xb.py``::
 In the same way, we define the background error covariance matrix
 :math:`\mathbf{B}` as a diagonal matrix, of the same diagonal length as the
 background of the true state, using the convenient function already defined. It
-is done in a Python script file named ``Script_BackgroundError_B.py``::
+is done in a Python script file named ``Script_BackgroundError_B.py``:
+::
 
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
     #
@@ -483,7 +504,8 @@ of the state. It is here defined in an external file named
 conveniently named here ``"DirectOperator"``. This function is user one,
 representing as programming function the :math:`\mathbf{H}` operator. We suppose
 this function is then given by the user. A simple skeleton is given here for
-convenience::
+convenience:
+::
 
     def DirectOperator( XX ):
         """ Direct non-linear simulation operator """
@@ -512,7 +534,8 @@ optimization ADAO framework alone.
 
 In this twin experiments framework, the observation :math:`\mathbf{y}^o` and its
 error covariances matrix :math:`\mathbf{R}` can be generated. It is done in two
-Python script files, the first one being named ``Script_Observation_yo.py``::
+Python script files, the first one being named ``Script_Observation_yo.py``:
+::
 
     from Physical_data_and_covariance_matrices import True_state
     from Physical_simulation_functions import DirectOperator
@@ -525,7 +548,8 @@ Python script files, the first one being named ``Script_Observation_yo.py``::
     # -----------------------------------
     Observation = list(yo)
 
-and the second one named ``Script_ObservationError_R.py``::
+and the second one named ``Script_ObservationError_R.py``:
+::
 
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
     from Physical_simulation_functions import DirectOperator
@@ -543,7 +567,8 @@ and the second one named ``Script_ObservationError_R.py``::
 As in previous examples, it can be useful to define some parameters for the data
 assimilation algorithm. For example, if we use the standard "*3DVAR*" algorithm,
 the following parameters can be defined in a Python script file named
-``Script_AlgorithmParameters.py``::
+``Script_AlgorithmParameters.py``:
+::
 
     # Creating the required ADAO variable
     # -----------------------------------
@@ -561,7 +586,8 @@ Finally, it is common to post-process the results, retrieving them after the
 data assimilation phase in order to analyze, print or show them. It requires to
 use a intermediary Python script file in order to extract these results at the
 end of the a data assimilation or optimization process. The following example
-Python script file, named ``Script_UserPostAnalysis.py``, illustrates the fact::
+Python script file, named ``Script_UserPostAnalysis.py``, illustrates the fact:
+::
 
     from Physical_data_and_covariance_matrices import True_state
     import numpy
@@ -617,7 +643,8 @@ an estimation case with explicit data definition`_ previous section.
 
 Using the simple linear operator :math:`\mathbf{H}` from the Python script file
 ``Physical_simulation_functions.py`` in the ADAO examples standard directory,
-the results will look like::
+the results will look like:
+::
 
     xt = [1 2 3]
     xa = [ 1.000014    2.000458  3.000390]

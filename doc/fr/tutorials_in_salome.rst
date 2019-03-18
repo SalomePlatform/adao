@@ -41,65 +41,72 @@
    :scale: 50%
 
 Cette section présente quelques exemples d'utilisation du module ADAO dans
-SALOME. Le premier montre comment construire un cas simple d'assimilation de
-données définissant explicitement toutes les données d'entrée requises à
+SALOME. Le premier montre comment construire un cas très simple d'assimilation
+de données définissant explicitement toutes les données d'entrée requises à
 travers l'interface utilisateur graphique EFICAS (GUI). Le second montre, sur
 le même cas, comment définir les données d'entrée à partir de sources externes
 à travers des scripts. On présente ici toujours des scripts Python car ils sont
 directement insérables dans les noeuds de script de YACS, mais les fichiers
 externes peuvent utiliser d'autres langages.
 
-Les notations mathématiques utilisées ci-dessous sont expliquées dans la section
-:ref:`section_theory`.
+Ces exemples sont intentionnellement décrits de manière semblables aux
+:ref:`section_tutorials_in_python` car ils sont similaires à ceux que l'on peut
+traiter dans l'interface textuelle Python (TUI). Les notations mathématiques
+utilisées ci-dessous sont expliquées dans la section :ref:`section_theory`.
 
 Construire un cas d'estimation avec une définition explicite des données
 ------------------------------------------------------------------------
 
-Cet exemple simple est un cas de démonstration, et il décrit comment mettre au
-point un environnement d'estimation par BLUE de manière à obtenir un *état
-estimé par méthode de moindres carrés pondérés* d'un système à partir d'une
-observation de l'état et d'une connaissance *a priori* (ou ébauche) de cet état.
-En d'autres termes, on cherche l'intermédiaire pondéré entre les vecteurs
-d'observation et d'ébauche. Toutes les valeurs numériques de cet exemple sont
-arbitraires.
+Cet exemple très simple est un cas de démonstration, et il décrit comment
+mettre au point un environnement d'estimation par BLUE de manière à obtenir un
+*état estimé par méthode de moindres carrés pondérés* d'un système à partir
+d'une observation de l'état et d'une connaissance *a priori* (ou ébauche) de
+cet état. En d'autres termes, on cherche l'intermédiaire pondéré entre les
+vecteurs d'observation et d'ébauche. Toutes les valeurs numériques de cet
+exemple sont arbitraires.
 
 Conditions d'expérience
 +++++++++++++++++++++++
 
-On choisit d'opérer dans un espace à 3 dimensions. La 3D est choisie de manière
-à restreindre la taille des objets numériques à entrer explicitement par
-l'utilisateur, mais le problème n'est pas dépendant de la dimension et peut être
-posé en dimension 10, 100, 1000... L'observation :math:`\mathbf{y}^o` vaut 1
-dans chaque direction, donc::
+On choisit d'opérer dans un espace d'observation à 3 dimensions, i.e on dispose
+de 3 mesures simples. La dimension 3 est choisie de manière à restreindre la
+taille des objets numériques à entrer explicitement par l'utilisateur, mais le
+problème n'est pas dépendant de la dimension et peut être posé en dimension
+d'observation de 10, 100, 1000... L'observation :math:`\mathbf{y}^o` vaut 1
+dans chaque direction, donc :
+::
 
     Yo = [1 1 1]
 
 L'ébauche :math:`\mathbf{x}^b` de l'état , qui représente une connaissance *a
-priori* ou une régularisation mathématique, vaut 0 dans chaque direction, ce qui
-donne donc::
+priori* ou une régularisation mathématique, est choisie comme valant 0 dans
+chaque cas, ce qui donne donc :
+::
 
     Xb = [0 0 0]
 
-La mise en oeuvre de l'assimilation de données requiert des informations sur les
-covariances d'erreur :math:`\mathbf{R}` et :math:`\mathbf{B}`, respectivement
-pour les variables d'observation et d'ébauche. On choisit ici des erreurs
-décorrélées (c'est-à-dire des matrices diagonales) et d'avoir la même variance
-de 1 pour toutes les variables (c'est-à-dire des matrices identité). On pose
-donc::
+La mise en oeuvre de l'assimilation de données requiert des informations sur
+les covariances d'erreur :math:`\mathbf{R}` et :math:`\mathbf{B}`,
+respectivement pour les variables d'erreur d'observation et d'ébauche. On
+choisit ici des erreurs décorrélées (c'est-à-dire des matrices diagonales) et
+d'avoir la même variance de 1 pour toutes les variables (c'est-à-dire des
+matrices identité). On pose donc :
+::
 
-    B = R = [1 0 0 ; 0 1 0 ; 0 0 1]
+    B = R = Id = [1 0 0 ; 0 1 0 ; 0 0 1]
 
 Enfin, on a besoin d'un opérateur d'observation :math:`\mathbf{H}` pour
 convertir l'état d'ébauche dans l'espace des observations. Ici, comme les
 dimensions d'espace sont les mêmes, on peut choisir l'identité comme opérateur
-d'observation::
+d'observation :
+::
 
-    H = [1 0 0 ; 0 1 0 ; 0 0 1]
+    H = Id = [1 0 0 ; 0 1 0 ; 0 0 1]
 
 Avec de tels choix, l'estimateur "Best Linear Unbiased Estimator" (BLUE) sera le
 vecteur moyen entre :math:`\mathbf{y}^o` et :math:`\mathbf{x}^b`, nommé
-*analysis*, noté :math:`\mathbf{x}^a`, et valant::
-
+*analysis*, noté :math:`\mathbf{x}^a`, et valant :
+::
 
     Xa = [0.5 0.5 0.5]
 
@@ -139,14 +146,14 @@ temps que l'"*Arbre d'étude*" de SALOME. On peut alors choisir le bouton
 Ensuite, il faut remplir les variables pour construire le cas ADAO en utilisant
 les conditions d'expérience décrites ci-dessus. L'ensemble des informations
 techniques données au-dessus sont à insérer directement dans la définition du
-cas ADAO, en utilisant le type *String* pour toutes les variables. Lorsque la
-définition du cas est prête, il faut l'enregistrer comme un fichier natif de ype
-"*JDC (\*.comm)*" à un endroit quelconque dans l'arborescence de l'utilisateur.
-Il faut bien se rappeler que d'autres fichiers seront aussi créés à côté de ce
-premier, donc il est judicieux de faire un répertoire spécifique pour ce cas, et
-d'enregistrer dedans le fichier. Le nom du fichier apparaît dans la fenêtre de
-l'"*Arbre d'étude*", sous le menu "*ADAO*". La définition finale du cas
-ressemble à :
+cas ADAO, en utilisant le type *String* pour chaque variable. Lorsque la
+définition du cas est prête, il faut l'enregistrer comme un fichier natif de
+ype "*JDC (\*.comm)*" à un endroit quelconque dans l'arborescence de
+l'utilisateur. Il faut bien se rappeler que d'autres fichiers seront aussi
+créés à côté de ce premier, donc il est judicieux de faire un répertoire
+spécifique pour ce cas, et d'enregistrer dedans le fichier. Le nom du fichier
+apparaît dans la fenêtre de l'"*Arbre d'étude*", sous le menu "*ADAO*". La
+définition finale du cas ressemble à :
 
   .. _adao_jdcexample01:
   .. image:: images/adao_jdcexample01.png
@@ -194,7 +201,8 @@ objet Python SALOME), et va l'afficher à la sortie standard.
 Pour obtenir ceci, ce noeud de script doit comporter un port d'entrée de type
 "*pyobj*", nommé "*Study*" par exemple, qui doit être relié graphiquement au
 port de sortie "*algoResults*" du bloc de calcul. Ensuite, le code pour remplir
-le noeud de script est::
+le noeud de script est :
+::
 
     Xa = Study.getResults().get("Analysis")[-1]
 
@@ -223,7 +231,8 @@ fenêtre "*proc*" du schéma YACS comme montré ci-dessous:
     **Menu YACS de la fenêtre de sortie, et boite de dialogue montrant la sortie**
 
 On vérifie que le résultat est correct en observant si la fenêtre de sortie
-contient la ligne suivante::
+contient la ligne suivante :
+::
 
     Analysis = [0.5, 0.5, 0.5]
 
@@ -248,10 +257,10 @@ Il n'y a qu'une seule commande qui change, avec "*3DVAR*" dans le champ
 Construire un cas d'estimation avec une définition de données externes par scripts
 ----------------------------------------------------------------------------------
 
-Il est utile d'acquérir une partie ou la totalité des données depuis une
-définition externe, en utilisant des scripts Python pour donner accès à ces
-données. À titre d'exemple, on construit ici un cas ADAO présentant le même
-dispositif expérimental que dans l'exemple ci-dessus `Construire un cas
+Il est utile d'acquérir une partie ou la totalité des données du cas ADAO
+depuis une définition externe, en utilisant des scripts Python pour donner
+accès à ces données. À titre d'exemple, on construit ici un cas ADAO présentant
+le même dispositif expérimental que dans l'exemple ci-dessus `Construire un cas
 d'estimation avec une définition explicite des données`_, mais en utilisant des
 données issues d'un unique fichier script Python externe.
 
@@ -260,7 +269,8 @@ conventionnels pour les variables requises. Ici toutes les variables sont
 définies dans le même script, mais l'utilisateur peut choisir de séparer le
 fichier en plusieurs autres, ou de mélanger une définition explicite des données
 dans l'interface graphique ADAO et une définition implicite dans des fichiers
-externes. Le fichier script actuel ressemble à::
+externes. Le fichier script actuel ressemble à :
+::
 
     import numpy
     #
@@ -284,14 +294,14 @@ externes. Le fichier script actuel ressemble à::
     # --------------------------------------------------
     ObservationOperator = numpy.identity(3)
 
-Les noms des variables Python sont obligatoires, de manière à définir les bonnes
-variables dans le cas, mais le script Python peut être plus conséquent et
-définir des classes, des fonctions, des accès à des fichiers ou des bases de
-données, etc. avec des noms différents. De plus, le fichier ci-dessus présente
-différentes manières de définir des vecteurs ou des matrices, utilisant des
-listes, des chaînes de caractères (comme dans Numpy ou Octave), des types
-vecteur ou matrice de Numpy, et des fonctions spéciales de Numpy. Toutes ces
-syntaxes sont valides.
+Les noms des variables Python sont obligatoires, de manière à définir les
+bonnes variables dans le cas ADAO, mais le script Python peut être plus
+conséquent et définir des classes, des fonctions, des accès à des fichiers ou
+des bases de données, etc. avec des noms différents. De plus, le fichier
+ci-dessus présente différentes manières de définir des vecteurs ou des
+matrices, utilisant des listes, des chaînes de caractères (comme dans Numpy ou
+Octave), des types vecteur ou matrice de Numpy, et des fonctions spéciales de
+Numpy. Toutes ces syntaxes sont valides.
 
 Après avoir enregistré ce script dans un fichier (nommé ici "*script.py*" pour
 l'exemple) à un endroit quelconque dans l'arborescence de l'utilisateur, on
@@ -321,7 +331,7 @@ des données d'entrée, par exemple à des fin de débogage ou pour des traiteme
 répétitifs, et c'est la méthode la plus polyvalente pour paramétrer les données
 d'entrée. **Mais attention, la méthodologie par scripts n'est pas une procédure
 "sûre", en ce sens que des données erronées ou des erreurs dans les calculs,
-peuvent être directement introduites dans l'exécution du schéma YACS.
+peuvent être directement introduites dans l'exécution du cas ADAO.
 L'utilisateur doit vérifier avec attention le contenu de ses scripts.**
 
 Ajout de paramètres pour contrôler l'algorithme d'assimilation de données
@@ -349,7 +359,8 @@ Le dictionnaire peut être défini, par exemple, dans un fichiers externe de
 script Python, en utilisant le nom obligatoire de variable
 "*AlgorithmParameters*" pour le dictionnaire. Toutes les clés dans le
 dictionnaire sont optionnelles, elles disposent toutes d'une valeur par défaut,
-et elles peuvent être présentes sans être utiles. Par exemple::
+et elles peuvent être présentes sans être utiles. Par exemple :
+::
 
     AlgorithmParameters = {
         "Minimizer" : "LBFGSB", # Recommended
@@ -397,21 +408,24 @@ l'objet numérique indiqué dans les scripts, mais le problème ne dépend pas d
 dimension.
 
 On choisit un contexte d'expériences jumelles, en utilisant un état vrai
-:math:`\mathbf{x}^t` connu, mais de valeur arbitraire::
+:math:`\mathbf{x}^t` connu, mais de valeur arbitraire :
+::
 
     Xt = [1 2 3]
 
 L'état d'ébauche :math:`\mathbf{x}^b`, qui représentent une connaissance *a
 priori* de l'état vrai, est construit comme une perturbation aléatoire
 gaussienne de 20% de l'état vrai :math:`\mathbf{x}^t` pour chaque composante,
-qui est::
+qui est :
+::
 
     Xb = Xt + normal(0, 20%*Xt)
 
 Pour décrire la matrice des covariances d'erreur d'ébauche math:`\mathbf{B}`, on
 fait comme précédemment l'hypothèse d'erreurs décorrélées (c'est-à-dire, une
 matrice diagonale, de taille 3x3 parce-que :math:`\mathbf{x}^b` est de taille 3)
-et d'avoir la même variance de 0,1 pour toutes les variables. On obtient::
+et d'avoir la même variance de 0,1 pour toutes les variables. On obtient :
+::
 
     B = 0.1 * diagonal( length(Xb) )
 
@@ -425,11 +439,13 @@ Mais on verra plus tard comment obtenir un gradient approché dans ce cas.
 Étant en expériences jumelles, les observations :math:`\mathbf{y}^o` et leur
 matrice de covariances d'erreurs :math:`\mathbf{R}` sont générées en utilisant
 l'état vrai :math:`\mathbf{x}^t` et l'opérateur d'observation
-:math:`\mathbf{H}`::
+:math:`\mathbf{H}` :
+::
 
     Yo = H( Xt )
 
-et, avec un écart-type arbitraire de 1% sur chaque composante de l'erreur::
+et, avec un écart-type arbitraire de 1% sur chaque composante de l'erreur :
+::
 
     R = 0.0001 * diagonal( length(Yo) )
 
@@ -451,7 +467,8 @@ exemples ADAO.
 
 On définit en premier lieu l'état vrai :math:`\mathbf{x}^t` et une fonction
 utiles à la construction de matrices, dans un fichier script Python nommé
-``Physical_data_and_covariance_matrices.py``::
+``Physical_data_and_covariance_matrices.py`` :
+::
 
     import numpy
     #
@@ -474,7 +491,8 @@ utiles à la construction de matrices, dans un fichier script Python nommé
 On définit ensuite l'état d'ébauche :math:`\mathbf{x}^b` comme une perturbation
 aléatoire de l'état vrai, en ajoutant une *variable ADAO requise* à la fin du
 script de définition, de manière à exporter la valeur définie. C'est réalisé
-dans un fichier de script Python nommé ``Script_Background_xb.py``::
+dans un fichier de script Python nommé ``Script_Background_xb.py`` :
+::
 
     from Physical_data_and_covariance_matrices import True_state
     import numpy
@@ -486,14 +504,15 @@ dans un fichier de script Python nommé ``Script_Background_xb.py``::
     xb = xt + abs(numpy.random.normal(0.,Standard_deviation,size=(len(xt),)))
     #
     # Creating the required ADAO variable
-    # ------------------------------------
+    # -----------------------------------
     Background = list(xb)
 
 De la même manière, on définit la matrice des covariances de l'erreur d'ébauche
 :math:`\mathbf{B}` comme une matrice diagonale, de la même longueur de diagonale
 que l'ébauche de la valeur vraie, en utilisant la fonction d'aide déjà définie.
 C'est réalisé dans un fichier script Python nommé
-``Script_BackgroundError_B.py``::
+``Script_BackgroundError_B.py`` :
+::
 
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
     #
@@ -511,7 +530,8 @@ comme une fonction de l'état. Il est ici défini dans un fichier externe nommé
 ``"DirectOperator"``. Cette fonction est une une fonction utilisateur,
 représentant de manière programmée l'opérateur :math:`\mathbf{H}`. On suppose
 que cette fonction est donnée par l'utilisateur. Un squelette simple est donné
-ici par facilité::
+ici par facilité :
+::
 
     def DirectOperator( XX ):
         """ Direct non-linear simulation operator """
@@ -542,7 +562,8 @@ l'environnement seul ADAO d'assimilation de données et d'optimisation.
 Dans cet environnement d'expériences jumelles, l'observation
 :math:`\mathbf{y}^o` et sa matrice des covariances d'erreur :math:`\mathbf{R}`
 peuvent être générées. C'est réalisé dans deux fichiers de script Python, le
-premier étant nommé ``Script_Observation_yo.py``::
+premier étant nommé ``Script_Observation_yo.py`` :
+::
 
     from Physical_data_and_covariance_matrices import True_state
     from Physical_simulation_functions import DirectOperator
@@ -555,7 +576,8 @@ premier étant nommé ``Script_Observation_yo.py``::
     # -----------------------------------
     Observation = list(yo)
 
-et le second nommé ``Script_ObservationError_R.py``::
+et le second nommé ``Script_ObservationError_R.py`` :
+::
 
     from Physical_data_and_covariance_matrices import True_state, Simple_Matrix
     from Physical_simulation_functions import DirectOperator
@@ -574,7 +596,8 @@ Comme dans les exemples précédents, il peut être utile de définir certains
 paramètres pour l'algorithme d'assimilation de données. Par exemple, si on
 utilise l'algorithme standard de "*3DVAR*", les paramètres suivants peuvent être
 définis dans un fichier de script Python nommé
-``Script_AlgorithmParameters.py``::
+``Script_AlgorithmParameters.py`` :
+::
 
     # Creating the required ADAO variable
     # -----------------------------------
@@ -593,7 +616,8 @@ phase d'assimilation de données de manière à les analyser, les afficher ou le
 représenter. Cela nécessite d'utiliser un fichier script Python intermédiaire de
 manière à extraire ces résultats à la fin de la procédure d'assimilation de
 données ou d'optimisation. L'exemple suivant de fichier script Python, nommé
-``Script_UserPostAnalysis.py``, illustre le fait::
+``Script_UserPostAnalysis.py``, illustre le fait :
+::
 
     from Physical_data_and_covariance_matrices import True_state
     import numpy
@@ -652,7 +676,8 @@ explicite des données`_.
 
 En utilisant l'opérateur linéaire simple :math:`\mathbf{H}` du fichier script
 Python ``Physical_simulation_functions.py`` disponible dans le répertoire
-standard des exemples, les résultats ressemblent à::
+standard des exemples, les résultats ressemblent à :
+::
 
     xt = [1 2 3]
     xa = [ 1.000014    2.000458  3.000390]
