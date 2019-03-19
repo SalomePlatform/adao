@@ -300,13 +300,16 @@ The available commands are:
 
 .. index:: single: setBackground
 
-**setBackground** (*Vector, VectorSerie, Script, Stored*)
-    This command allows to set the background :math:`\mathbf{x}^b`. Depending on
-    the algorithm, it can be defined as a simple vector by "*Vector*", or as a
-    vector list by "*VectorSerie*". If it is defined by a script in the
+**setBackground** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
+    This command allows to set the background :math:`\mathbf{x}^b`. Depending
+    on the algorithm, it can be defined as a simple vector by "*Vector*", or as
+    a vector list by "*VectorSerie*". If it is defined by a script in the
     "*Script*" keyword, the vector is of type "*Vector*" (by default) or
-    "*VectorSerie*" according to whether one of these variables is positioned to
-    "*True*".
+    "*VectorSerie*" according to whether one of these variables is positioned
+    to "*True*". If there is a data file given by "*DataFile*" (selecting, in
+    rows by default or in lines as chosen by "*ColMajor*", all the variables by
+    default or those from the list "*ColNames*"), the vector is of type
+    "*Vector*".
 
 .. index:: single: setBackgroundError
 
@@ -323,13 +326,16 @@ The available commands are:
 
 .. index:: single: setCheckingPoint
 
-**setCheckingPoint** (*Vector, VectorSerie, Script, Stored*)
+**setCheckingPoint** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
     This command allows to set a current point :math:`\mathbf{x}` used in a
     checking algorithm. Depending on the algorithm, it can be defined as a
     simple vector by "*Vector*", or as a vector list by "*VectorSerie*". If it
     is defined by a script in the "*Script*" keyword, the vector is of type
-    "*Vector*" (by default) or "*VectorSerie*" according to whether one of these
-    variables is positioned to "*True*".
+    "*Vector*" (by default) or "*VectorSerie*" according to whether one of
+    these variables is positioned to "*True*". If there is a data file given by
+    "*DataFile*" (selecting, in rows by default or in lines as chosen by
+    "*ColMajor*", all the variables by default or those from the list
+    "*ColNames*"), the vector is of type "*Vector*".
 
 .. index:: single: setControlModel
 
@@ -351,13 +357,16 @@ The available commands are:
 
 .. index:: single: setControlInput
 
-**setControlInput** (*Vector, VectorSerie, Script, Stored*)
+**setControlInput** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
     This command allows to set the control vector :math:`\mathbf{u}`. Depending
     on the algorithm, it can be defined as a simple vector by "*Vector*", or as
     a vector list by "*VectorSerie*". If it is defined by a script in the
     "*Script*" keyword, the vector is of type "*Vector*" (by default) or
-    "*VectorSerie*" according to whether one of these variables is positioned to
-    "*True*".
+    "*VectorSerie*" according to whether one of these variables is positioned
+    to "*True*". If there is a data file given by "*DataFile*" (selecting, in
+    rows by default or in lines as chosen by "*ColMajor*", all the variables by
+    default or those from the list "*ColNames*"), the vector is of type
+    "*Vector*".
 
 .. index:: single: setEvolutionError
 
@@ -391,13 +400,16 @@ The available commands are:
 
 .. index:: single: setObservation
 
-**setObservation** (*Vector, VectorSerie, Script, Stored*)
+**setObservation** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
     This command allows to set the observation vector :math:`\mathbf{y}^o`.
     Depending on the algorithm, it can be defined as a simple vector by
     "*Vector*", or as a vector list by "*VectorSerie*". If it is defined by a
     script in the "*Script*" keyword, the vector is of type "*Vector*" (by
     default) or "*VectorSerie*" according to whether one of these variables is
-    positioned to "*True*".
+    positioned to "*True*". If there is a data file given by "*DataFile*"
+    (selecting, in rows by default or in lines as chosen by "*ColMajor*", all
+    the variables by default or those from the list "*ColNames*"), the vector
+    is of type "*Vector*".
 
 .. index:: single: setObservationError
 
@@ -543,16 +555,16 @@ with these Python external case operations.
     This command allows to read or load a calculation case, from a file named
     "*FileName*" or a content in memory by "*Content*" or "*Object*". The
     "*Formater*" keyword can indicate "*TUI*" for commands of textual
-    application programming interface, and "*COM*" for commands of COMM type
-    coming from EFICAS interface for ADAO.
+    application programming interface (default), and "*COM*" for commands of
+    COMM type coming from EFICAS interface for ADAO.
 
 .. index:: single: dump
 
 **dump** (*FileName, Formater*)
     This command allows to save, in a file named "*FileName*", the commands of
     the current calculation case. The "*Formater*" keyword can indicate "*TUI*"
-    for commands of textual application programming interface, and "*YACS*" for
-    commands of type YACS.
+    for commands of textual application programming interface (default), and
+    "*YACS*" for commands of type YACS.
 
 .. index:: single: convert
 .. index:: single: FileNameFrom

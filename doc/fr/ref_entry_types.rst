@@ -92,13 +92,24 @@ caractères (un "*String*"), soit par un fichier script (un "*Script*"):
 **VectorSerie**
     Cela indique une variable qui doit être remplie comme une liste de vecteurs.
 
+.. index:: single: DataFile
+.. index:: single: ColNames
+.. index:: single: ColMajor
+
+**DataFile**, **ColNames**, **ColMajor**
+    Cela indique le nom d'un fichier de données de type texte (TXT, CSV,
+    TSV...) ou de type binaire (NPY, NPZ, SDF...), rangées en colonnes
+    (``ColMajor=False``) ou rangées en lignes (``ColMajor=True``), dont on
+    sélectionne toutes les variables ou uniquement celles de la liste
+    ``ColNames``.
+
 Lorsqu'une commande ou un mot-clé peut être rempli par un nom de fichier script
 désigné par le pseudo-type "*Script*", ce script doit présenter une variable ou
-une méthode que porte le même nom que la variable à remplir. En d'autres termes,
-lorsque l'on importe le script dans un noeud Python de YACS, il doit créer une
-variable du bon nom dans l'espace de nommage courant du noeud. Par exemple, un
-script Python rendant disponible la variable d'ébauche, nommée "*Background*",
-doit présenter la forme suivante::
+une méthode que porte le même nom que la variable à remplir. En d'autres
+termes, lorsque l'on importe le script dans une commande Python ou un noeud
+Python de YACS, il doit créer une variable du bon nom dans l'espace de nommage
+courant du noeud. Par exemple, un script Python rendant disponible la variable
+d'ébauche, nommée "*Background*", doit présenter la forme suivante::
 
     ...
     Background =...

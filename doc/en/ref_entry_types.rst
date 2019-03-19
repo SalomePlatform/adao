@@ -90,12 +90,23 @@ themselves may be either a data string (a "*String*"), or a script file (a
 **VectorSerie**
     This indicates a variable that has to be filled by a list of vectors.
 
+.. index:: single: DataFile
+.. index:: single: ColNames
+.. index:: single: ColMajor
+
+**DataFile**, **ColNames**, **ColMajor**
+    This indicates the file name for data of text type (TXT, CSV, TSV...) or
+    binary type (NPY, NPZ, SDF...), ordered in rows (``ColMajor=False``) or in
+    lines (``ColMajor=True``),of which is selected all the variables or only
+    those of ``ColNames`` list.
+
 When a command or keyword can be filled by a script file name, specified by the
 pseudo-type "*Script*", the script has to contain a variable or a method that
 has the same name as the one to be filled. In other words, when importing the
-script in a YACS Python node, it must create a variable of the good name in the
-current name space of the node. For example, a Python script making available
-the background variable, named "*Background*", must have the following form::
+script in a Python command or a YACS Python node, it must create a variable of
+the good name in the current name space of the node. For example, a Python
+script making available the background variable, named "*Background*", must
+have the following form::
 
     ...
     Background =...

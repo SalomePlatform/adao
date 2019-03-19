@@ -312,12 +312,16 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setBackground
 
-**setBackground** (*Vector, VectorSerie, Script, Stored*)
+**setBackground** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
     Cette commande permet de définir l'ébauche :math:`\mathbf{x}^b`. Selon les
     algorithmes, on peut la définir comme un vecteur simple par "*Vector*", ou
     comme une liste de vecteurs par "*VectorSerie*". Si on la définit par un
     script dans "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
-    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
+    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*". Si
+    on utilise un fichier de données par "*DataFile*" (en sélectionnant, en
+    colonne par défaut ou en ligne selon "*ColMajor*", toutes les variables par
+    défaut ou celles de la liste "*ColNames*"), le vecteur est de type
+    "*Vector*".
 
 .. index:: single: setBackgroundError
 
@@ -334,13 +338,17 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setCheckingPoint
 
-**setCheckingPoint** (*Vector, VectorSerie, Script, Stored*)
-    Cette commande permet de définir un point courant :math:`\mathbf{x}` utilisé
-    pour un algorithme de vérification. Selon les algorithmes, on peut le
-    définir comme un vecteur simple par "*Vector*", ou comme une liste de
+**setCheckingPoint** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
+    Cette commande permet de définir un point courant :math:`\mathbf{x}`
+    utilisé pour un algorithme de vérification. Selon les algorithmes, on peut
+    le définir comme un vecteur simple par "*Vector*", ou comme une liste de
     vecteurs par "*VectorSerie*". Si on le définit par un script dans
     "*Script*", le vecteur est de type "*Vector*" (par défaut) ou
-    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*".
+    "*VectorSerie*" selon que l'une de ces variables est placée à "*True*". Si
+    on utilise un fichier de données par "*DataFile*" (en sélectionnant, en
+    colonne par défaut ou en ligne selon "*ColMajor*", toutes les variables par
+    défaut ou celles de la liste "*ColNames*"), le vecteur est de type
+    "*Vector*".
 
 .. index:: single: setControlModel
 
@@ -363,13 +371,16 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setControlInput
 
-**setControlInput** (*Vector, VectorSerie, Script, Stored*)
+**setControlInput** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
     Cette commande permet de définir le vecteur de contrôle :math:`\mathbf{u}`.
     Selon les algorithmes, on peut le définir comme un vecteur simple par
     "*Vector*", ou comme une liste de vecteurs par "*VectorSerie*". Si on le
     définit par un script dans "*Script*", le vecteur est de type "*Vector*"
     (par défaut) ou "*VectorSerie*" selon que l'une de ces variables est placée
-    à "*True*".
+    à "*True*". Si on utilise un fichier de données par "*DataFile*" (en
+    sélectionnant, en colonne par défaut ou en ligne selon "*ColMajor*", toutes
+    les variables par défaut ou celles de la liste "*ColNames*"), le vecteur
+    est de type "*Vector*".
 
 .. index:: single: setEvolutionError
 
@@ -404,13 +415,16 @@ Les commandes disponibles sont les suivantes :
 
 .. index:: single: setObservation
 
-**setObservation** (*Vector, VectorSerie, Script, Stored*)
+**setObservation** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
     Cette commande permet de définir le vecteur d'observation
     :math:`\mathbf{y}^o`. Selon les algorithmes, on peut le définir comme un
     vecteur simple par "*Vector*", ou comme une liste de vecteurs par
     "*VectorSerie*". Si on le définit par un script dans "*Script*", le vecteur
     est de type "*Vector*" (par défaut) ou "*VectorSerie*" selon que l'une de
-    ces variables est placée à "*True*".
+    ces variables est placée à "*True*". Si on utilise un fichier de données
+    par "*DataFile*" (en sélectionnant, en colonne par défaut ou en ligne selon
+    "*ColMajor*", toutes les variables par défaut ou celles de la liste
+    "*ColNames*"), le vecteur est de type "*Vector*".
 
 .. index:: single: setObservationError
 
@@ -566,9 +580,9 @@ externes au cas.
     Cette commande permet de lire ou charger un cas d'étude, à partir d'un
     fichier "*FileName*" ou d'un contenu en mémoire par "*Content*" ou
     "*Object*". Le mot-clé "*Formater*" peut désigner le format "*TUI*" pour
-    les commandes du type interface de programmation textuelle, et le format
-    "*COM*" pour les commandes du type COMM provenant de l'interface ADAO de
-    type EFICAS.
+    les commandes du type interface de programmation textuelle (défaut), et le
+    format "*COM*" pour les commandes du type COMM provenant de l'interface
+    ADAO de type EFICAS.
 
 .. index:: single: dump
 
@@ -576,7 +590,7 @@ externes au cas.
     Cette commande permet d'enregistrer, dans un fichier "*FileName*", les
     commandes du cas d'étude en cours. Le mot-clé "*Formater*" peut désigner
     les formats "*TUI*" pour les commandes du type interface de programmation
-    textuelle, et "*YACS*" pour les commandes du type YACS.
+    textuelle (défaut), et "*YACS*" pour les commandes du type YACS.
 
 .. index:: single: convert
 .. index:: single: FileNameFrom
