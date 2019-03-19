@@ -64,17 +64,11 @@ de lire et de revenir régulièrement à ces parties. Les parties qui suivent
 expliquent comment utiliser une :ref:`section_gui_in_salome` ou une
 :ref:`section_tui`. La dernière grande partie détaille la
 :ref:`section_reference`, avec trois sous-parties essentielles qui la composent
-et qui décrivent les commandes et des options d'algorithmes. Enfin, pour
-respecter les exigences de licence du module, n'oubliez pas de lire la partie
-:ref:`section_license`.
-
-Dans cette documentation, on utilise les notations standards de l'algèbre
-linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
-l'optimisation. En particulier, les vecteurs sont écrits horizontalement ou
-verticalement sans faire la différence. Les matrices sont écrites soit
-normalement, ou avec une notation condensée, consistant à utiliser un espace
-pour séparer les valeurs, et un "``;``" pour séparer les lignes de la matrice,
-de façon continue sur une ligne.
+et qui décrivent les commandes et des options d'algorithmes. Un
+:ref:`section_glossary`, des :ref:`section_notations`, une
+:ref:`section_bibliography` et un :ref:`genindex` développés complètent le
+document. Enfin, pour respecter les exigences de licence du module, n'oubliez
+pas de lire la partie :ref:`section_license`.
 
 **Table des matières**
 
@@ -92,6 +86,7 @@ de façon continue sur une ligne.
    reference
    license
    glossary
+   notations
    bibliography
 
 **Index et tables**

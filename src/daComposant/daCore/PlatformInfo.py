@@ -48,6 +48,7 @@ import os
 import sys
 import platform
 import locale
+import logging
 
 # ==============================================================================
 class PlatformInfo(object):
@@ -282,6 +283,39 @@ def date2int( __date, __lang="FR" ):
     else:
         raise ValueError("Cannot convert \"%s\" as a D/M/Y H:M date"%d)
     return __number
+
+def checkFileNameConformity( __filename, __warnInsteadOfPrint=True ):
+    if sys.platform.startswith("win") and len(__filename) > 256:
+        __conform = False
+        __msg = (" For some shared or older file systems on Windows, a file "+\
+            "name longer than 256 characters can lead to access problems."+\
+            "\n  The name of the file in question is the following:"+\
+            "\n  %s")%(__filename,)
+        if __warnInsteadOfPrint: logging.warning(__msg)
+        else:                    print(__msg)
+    else:
+        __conform = True
+    #
+    return __conform
+
+def checkFileNameImportability( __filename, __warnInsteadOfPrint=True ):
+    if str(__filename).count(".") > 1:
+        __conform = False
+        __msg = (" The file name contains %i point(s) before the extension "+\
+            "separator, which can potentially lead to problems when "+\
+            "importing this file into Python, as it can then be recognized "+\
+            "as a sub-module (generating a \"ModuleNotFoundError\"). If it "+\
+            "is intentional, make sure that there is no module with the "+\
+            "same name as the part before the first point, and that there is "+\
+            "no \"__init__.py\" file in the same directory."+\
+            "\n  The name of the file in question is the following:"+\
+            "\n  %s")%(int(str(__filename).count(".")-1), __filename)
+        if __warnInsteadOfPrint: logging.warning(__msg)
+        else:                    print(__msg)
+    else:
+        __conform = True
+    #
+    return __conform
 
 # ==============================================================================
 class PathManagement(object):

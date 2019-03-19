@@ -60,16 +60,11 @@ before reading the rest, but a valuable use of the module requires to read and
 come back regularly to these parts. The following parts describe
 :ref:`section_gui_in_salome` and :ref:`section_tui`. The last main part gives a
 detailed :ref:`section_reference`, with three essential main sub-parts
-describing the details of commands and options of the algorithms. And, to
-comply with the module requirements, be sure to read the part
-:ref:`section_license`.
-
-In all this documentation, we use standard notations of linear algebra, data
-assimilation (as described in [Ide97]_) and optimization. In particular, vectors
-are written horizontally or vertically without making difference. Matrices are
-written either normally, or with a condensed notation, consisting in the use of
-a space to separate values and a "``;``" to separate the rows, in a continuous
-line.
+describing the details of commands and options of the algorithms. A
+:ref:`section_glossary`, some :ref:`section_notations`, a
+:ref:`section_bibliography` and an extensive :ref:`genindex` are included in
+the document. And, to comply with the module requirements, be sure to read the
+part :ref:`section_license`.
 
 **Table of contents**
 
@@ -87,6 +82,7 @@ line.
    reference
    license
    glossary
+   notations
    bibliography
 
 **Indices and tables**

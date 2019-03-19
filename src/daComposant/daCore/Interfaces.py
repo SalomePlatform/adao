@@ -516,6 +516,7 @@ class ImportFromScript(object):
             __basename = os.path.basename(__filename).rstrip(".py")
         else:
             __basename = __filename.rstrip(".py")
+        PlatformInfo.checkFileNameImportability( __basename+".py" )
         self.__basename = __basename
         self.__filenspace = __import__(__basename, globals(), locals(), [])
         self.__filestring = open(__filename,'r').read()
@@ -567,7 +568,7 @@ class ImportDetector(object):
             mimetypes.add_type('text/csv', '.csv')
             mimetypes.add_type('text/tab-separated-values', '.tsv')
     #
-    # File related f
+    # File related tests
     # ------------------
     def is_local_file(self):
         if os.path.isfile(os.path.realpath(self.__url)):
@@ -671,6 +672,7 @@ class ImportFromFile(object):
         self.__url = ImportDetector( Filename, Format)
         self.__url.raise_error_if_not_local_file()
         self._filename = self.__url.get_absolute_name()
+        PlatformInfo.checkFileNameConformity( self._filename )
         #
         self._format = self.__url.get_comprehensive_mime()
         #
