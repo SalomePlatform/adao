@@ -53,3 +53,11 @@ themselves. Some of them are briefly specified here, without being exhaustive:
 - extension ``.npy``  : data binary file of type Numpy mono-variable
 - extension ``.npz``  : data binary file of type Numpy multi-variables
 - extension ``.sdf``  : data binary file of type Scientific Data Format
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
+
+- [Asch16]_
+- [Bouttier99]_
+- [Ide97]_
+- [WikipediaMO]_

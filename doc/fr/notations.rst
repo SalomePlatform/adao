@@ -57,3 +57,11 @@ extensions des fichiers eux-mêmes. On en précise brièvement certaines ici, sa
 - extension ``.npy``  : fichier binaire de données de type Numpy mono-variable
 - extension ``.npz``  : fichier binaire de données de type Numpy multi-variables
 - extension ``.sdf``  : fichier binaire de données de type Scientific Data Format
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
+
+- [Asch16]_
+- [Bouttier99]_
+- [Ide97]_
+- [WikipediaMO]_
