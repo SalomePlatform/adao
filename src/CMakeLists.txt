@@ -20,14 +20,14 @@
 
 if(ADAO_SALOME_MODULE)
   
-  install(FILES daSalome/adaoBuilder.py daSalome/__init__.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao")
-  add_subdirectory(daComposant)
+  #install(FILES daSalome/adaoBuilder.py daSalome/__init__.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao")
   add_subdirectory(daSalome)
-  add_subdirectory(daEficas)
   
 else(ADAO_SALOME_MODULE)
   
-  install(FILES daSalome/adaoBuilder.py daSalome/__init__.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao")
+  #install(FILES daSalome/adaoBuilder.py daSalome/__init__.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao")
+  add_subdirectory(daSalome)
   add_subdirectory(daComposant)
+  add_subdirectory(daEficas)
 
 endif(ADAO_SALOME_MODULE)

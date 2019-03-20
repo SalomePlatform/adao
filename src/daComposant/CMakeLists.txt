@@ -18,4 +18,4 @@
 #
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
-install(DIRECTORY daCore daAlgorithms daNumerics DESTINATION ${ADAO_SCRIPT_PYTHON_SALOME}/adao)
+install(DIRECTORY daCore daAlgorithms daNumerics DESTINATION ${ADAO_SCRIPT_PYTHON}/adao)

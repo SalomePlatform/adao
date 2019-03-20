@@ -18,10 +18,17 @@
 #
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
-install(FILES ADAOGUI.py ADAO.py DESTINATION ${ADAO_SCRIPT_PYTHON_SALOME})
+if(ADAO_SALOME_MODULE)
 
-install(FILES daUtils/__init__.py daUtils/adaoEficasEvent.py daUtils/adaoLogger.py daUtils/enumerate.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao/daUtils")
+  install(FILES ADAOGUI.py ADAO.py DESTINATION ${ADAO_SCRIPT_PYTHON_SALOME})
+  
+else(ADAO_SALOME_MODULE)
 
-install(FILES daGuiImpl/__init__.py daGuiImpl/ADAOGUI_impl.py daGuiImpl/adaoGuiManager.py daGuiImpl/adaoGuiHelper.py daGuiImpl/adaoModuleHelper.py daGuiImpl/adaoStudyEditor.py daGuiImpl/adaoCase.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao/daGuiImpl")
+  install(FILES daUtils/__init__.py daUtils/adaoEficasEvent.py daUtils/adaoLogger.py daUtils/enumerate.py DESTINATION "${ADAO_SCRIPT_PYTHON}/adao/daUtils")
 
-install(FILES daEficasWrapper/__init__.py daEficasWrapper/adaoEficasWrapper.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao/daEficasWrapper")
+  install(FILES daGuiImpl/__init__.py daGuiImpl/ADAOGUI_impl.py daGuiImpl/adaoGuiManager.py daGuiImpl/adaoGuiHelper.py daGuiImpl/adaoModuleHelper.py daGuiImpl/adaoStudyEditor.py daGuiImpl/adaoCase.py DESTINATION "${ADAO_SCRIPT_PYTHON}/adao/daGuiImpl")
+
+  install(FILES daEficasWrapper/__init__.py daEficasWrapper/adaoEficasWrapper.py DESTINATION "${ADAO_SCRIPT_PYTHON}/adao/daEficasWrapper")
+
+endif(ADAO_SALOME_MODULE)
+

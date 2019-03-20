@@ -32,10 +32,10 @@
   </section>
   <section name="resources">
     <!-- Module resources -->
-    <parameter name="ADAO" value="${ADAO_ROOT_DIR}/share/salome/resources/adao"/>
+    <parameter name="ADAO" value="${ADAO_ENGINE_ROOT_DIR}/share/salome/resources/adao"/>
   </section>
   <section name="adao_help">
-    <parameter name="User's Guide/%1 module/(EN) User's Guide"           value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/en/index.html"/>
-    <parameter name="User's Guide/%1 module/(FR) Guide de l'utilisateur" value="${ADAO_ROOT_DIR}/share/doc/salome/gui/ADAO/fr/index.html"/>
+    <parameter name="User's Guide/%1 module/(EN) User's Guide"           value="${ADAO_ENGINE_ROOT_DIR}/share/doc/salome/gui/ADAO/en/index.html"/>
+    <parameter name="User's Guide/%1 module/(FR) Guide de l'utilisateur" value="${ADAO_ENGINE_ROOT_DIR}/share/doc/salome/gui/ADAO/fr/index.html"/>
   </section>
 </document>
