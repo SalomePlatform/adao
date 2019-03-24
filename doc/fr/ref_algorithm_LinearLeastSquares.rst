@@ -61,21 +61,28 @@ StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
   Cette liste indique les noms des variables supplémentaires qui peuvent être
-  disponibles à la fin de l'algorithme. Cela implique potentiellement des
-  calculs ou du stockage coûteux. La valeur par défaut est une liste vide,
-  aucune de ces variables n'étant calculée et stockée par défaut. Les noms
-  possibles sont dans la liste suivante : [
-  "OMA",
-  "CurrentState",
+  disponibles à la fin de l'algorithme, si elles sont initialement demandées par
+  l'utilisateur. Cela implique potentiellement des calculs ou du stockage
+  coûteux. La valeur par défaut est une liste vide, aucune de ces variables
+  n'étant calculée et stockée par défaut sauf les variables inconditionnelles.
+  Les noms possibles sont dans la liste suivante : [
+  "Analysis",
   "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
   "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
   "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
+  "CurrentOptimum",
+  "CurrentState",
+  "OMA",
+  "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
   "SimulatedObservationAtOptimum",
   ].
 
   Exemple :
-  ``{"StoreSupplementaryCalculations":["OMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 *Astuce pour cet algorithme :*
 
@@ -99,7 +106,29 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
+.. include:: snippets/Analysis.rst
+
+.. include:: snippets/CostFunctionJ.rst
+
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+
+.. include:: snippets/CostFunctionJb.rst
+
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+.. include:: snippets/CostFunctionJo.rst
+
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
+.. include:: snippets/CurrentOptimum.rst
+
+.. include:: snippets/CurrentState.rst
+
 .. include:: snippets/OMA.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtOptimum.rst
 
