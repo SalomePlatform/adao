@@ -83,16 +83,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
+                "Analysis",
                 "APosterioriCorrelations",
                 "APosterioriCovariance",
                 "APosterioriStandardDeviations",
                 "APosterioriVariances",
                 "BMA",
-                "CurrentState",
                 "CostFunctionJ",
                 "CostFunctionJb",
                 "CostFunctionJo",
-                "Innovation",
+                "CurrentState",
+                "InnovationAtCurrentState",
                 ]
             )
         self.defineRequiredParameter( # Pas de type
@@ -164,10 +165,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Initialisation
         # --------------
         Xn = Xb
-        if hasattr(B,"asfullmatrix"):
-            Pn = B.asfullmatrix(Xn.size)
-        else:
-            Pn = B
+        if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(Xn.size)
+        else:                         Pn = B
         #
         self.StoredVariables["Analysis"].store( Xn.A1 )
         if self._toStore("APosterioriCovariance"):
@@ -273,8 +272,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["Analysis"].store( Xn.A1 )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
-            if self._toStore("Innovation"):
-                self.StoredVariables["Innovation"].store( numpy.ravel( d.A1 ) )
+            if self._toStore("InnovationAtCurrentState"):
+                self.StoredVariables["InnovationAtCurrentState"].store( numpy.ravel( d.A1 ) )
             if self._parameters["StoreInternalVariables"] \
                 or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( Xn )
@@ -295,7 +294,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                         covarianceXa  = Pn
             else:
                 Xa = Xn
-            #
         #
         # Stockage supplementaire de l'optimum en estimation de parametres
         # ----------------------------------------------------------------
@@ -303,9 +301,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["Analysis"].store( Xa.A1 )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
-        #
-        if self._toStore("BMA"):
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+            if self._toStore("BMA"):
+                self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         #
         self._post_run(HO)
         return 0
