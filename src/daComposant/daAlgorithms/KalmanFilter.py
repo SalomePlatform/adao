@@ -62,8 +62,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentOptimum",
                 "CurrentState",
                 "IndexOfOptimum",
+                "InnovationAtCurrentAnalysis",
                 "InnovationAtCurrentState",
                 "PredictedState",
+                "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 ]
@@ -164,38 +166,40 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xn = Xn_predicted + Pn_predicted * Ha * _u
             Kn = Pn_predicted * Ha * (R + numpy.dot(Ht, Pn_predicted * Ha)).I
             Pn = Pn_predicted - Kn * Ht * Pn_predicted
+            Xa, _HXa = Xn, _HX # Pointeurs
             #
-            self.StoredVariables["Analysis"].store( Xn )
+            # ---> avec analysis
+            self.StoredVariables["Analysis"].store( Xa )
+            if self._toStore("SimulatedObservationAtCurrentAnalysis"):
+                self.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( _HXa )
+            if self._toStore("InnovationAtCurrentAnalysis"):
+                self.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
+            # ---> avec current state
             if self._parameters["StoreInternalVariables"] \
-                or self._toStore("CurrentState") \
-                or self._toStore("CurrentOptimum"):
+                or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( Xn )
             if self._toStore("PredictedState"):
                 self.StoredVariables["PredictedState"].store( Xn_predicted )
             if self._toStore("BMA"):
-                self.StoredVariables["BMA"].store( Xn_predicted - Xn )
+                self.StoredVariables["BMA"].store( Xn_predicted - Xa )
             if self._toStore("InnovationAtCurrentState"):
                 self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
             if self._toStore("SimulatedObservationAtCurrentState") \
                 or self._toStore("SimulatedObservationAtCurrentOptimum"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
+            # ---> autres
             if self._parameters["StoreInternalVariables"] \
                 or self._toStore("CostFunctionJ") \
                 or self._toStore("CostFunctionJb") \
                 or self._toStore("CostFunctionJo") \
                 or self._toStore("CurrentOptimum") \
                 or self._toStore("APosterioriCovariance"):
-                Jb  = float( 0.5 * (Xn - Xb).T * BI * (Xn - Xb) )
+                Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
                 Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
                 J   = Jb + Jo
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )
-                if self._parameters["EstimationOf"] == "Parameters" \
-                    and J < previousJMinimum:
-                    previousJMinimum  = J
-                    Xa                = Xn
-                    if self._toStore("APosterioriCovariance"): covarianceXa = Pn
                 #
                 if self._toStore("IndexOfOptimum") \
                     or self._toStore("CurrentOptimum") \
@@ -207,9 +211,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if self._toStore("IndexOfOptimum"):
                     self.StoredVariables["IndexOfOptimum"].store( IndexMin )
                 if self._toStore("CurrentOptimum"):
-                    self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
+                    self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["Analysis"][IndexMin] )
                 if self._toStore("SimulatedObservationAtCurrentOptimum"):
-                    self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
+                    self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentAnalysis"][IndexMin] )
                 if self._toStore("CostFunctionJbAtCurrentOptimum"):
                     self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
                 if self._toStore("CostFunctionJoAtCurrentOptimum"):
@@ -218,15 +222,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
+            if self._parameters["EstimationOf"] == "Parameters" \
+                and J < previousJMinimum:
+                previousJMinimum    = J
+                XaMin               = Xa
+                if self._toStore("APosterioriCovariance"):
+                    covarianceXaMin = Pn
         #
         # Stockage final supplémentaire de l'optimum en estimation de paramètres
         # ----------------------------------------------------------------------
         if self._parameters["EstimationOf"] == "Parameters":
-            self.StoredVariables["Analysis"].store( Xa.A1 )
+            self.StoredVariables["Analysis"].store( XaMin )
             if self._toStore("APosterioriCovariance"):
-                self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
+                self.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )
             if self._toStore("BMA"):
-                self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+                self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(XaMin) )
         #
         self._post_run(HO)
         return 0

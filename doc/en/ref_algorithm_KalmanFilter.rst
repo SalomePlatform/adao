@@ -89,8 +89,10 @@ StoreSupplementaryCalculations
   "CurrentOptimum",
   "CurrentState",
   "IndexOfOptimum",
+  "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
   "PredictedState",
+  "SimulatedObservationAtCurrentAnalysis",
   "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
   ].
@@ -136,9 +138,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/IndexOfOptimum.rst
 
+.. include:: snippets/InnovationAtCurrentAnalysis.rst
+
 .. include:: snippets/InnovationAtCurrentState.rst
 
 .. include:: snippets/PredictedState.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentAnalysis.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 

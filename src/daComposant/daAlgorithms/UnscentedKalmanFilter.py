@@ -172,7 +172,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._toStore("APosterioriCovariance"):
             self.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
-        Xa               = Xn
+        Xa = XaMin       = Xb
         previousJMinimum = numpy.finfo(float).max
         #
         for step in range(duration-1):
@@ -268,12 +268,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if self._parameters["Bounds"] is not None and self._parameters["ConstrainedBy"] == "EstimateProjection":
                 Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(self._parameters["Bounds"])[:,0])),axis=1)
                 Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
+            Xa = Xn # Pointeurs
             #
-            self.StoredVariables["Analysis"].store( Xn.A1 )
+            # ---> avec analysis
+            self.StoredVariables["Analysis"].store( Xa )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
+            # ---> avec current state
             if self._toStore("InnovationAtCurrentState"):
-                self.StoredVariables["InnovationAtCurrentState"].store( numpy.ravel( d.A1 ) )
+                self.StoredVariables["InnovationAtCurrentState"].store( d )
             if self._parameters["StoreInternalVariables"] \
                 or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( Xn )
@@ -281,28 +284,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 or self._toStore("CostFunctionJ") \
                 or self._toStore("CostFunctionJb") \
                 or self._toStore("CostFunctionJo"):
-                Jb  = 0.5 * (Xn - Xb).T * BI * (Xn - Xb)
-                Jo  = 0.5 * d.T * RI * d
-                J   = float( Jb ) + float( Jo )
+                Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+                Jo  = float( 0.5 * d.T * RI * d )
+                J   = Jb + Jo
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )
                 self.StoredVariables["CostFunctionJ" ].store( J )
-                if J < previousJMinimum:
-                    previousJMinimum  = J
-                    Xa                = Xn
-                    if self._toStore("APosterioriCovariance"):
-                        covarianceXa  = Pn
-            else:
-                Xa = Xn
+            if self._parameters["EstimationOf"] == "Parameters" \
+                and J < previousJMinimum:
+                previousJMinimum    = J
+                XaMin               = Xa
+                if self._toStore("APosterioriCovariance"):
+                    covarianceXaMin = Pn
         #
-        # Stockage supplementaire de l'optimum en estimation de parametres
-        # ----------------------------------------------------------------
+        # Stockage final supplémentaire de l'optimum en estimation de paramètres
+        # ----------------------------------------------------------------------
         if self._parameters["EstimationOf"] == "Parameters":
-            self.StoredVariables["Analysis"].store( Xa.A1 )
+            self.StoredVariables["Analysis"].store( XaMin )
             if self._toStore("APosterioriCovariance"):
-                self.StoredVariables["APosterioriCovariance"].store( covarianceXa )
+                self.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )
             if self._toStore("BMA"):
-                self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+                self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(XaMin) )
         #
         self._post_run(HO)
         return 0
