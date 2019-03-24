@@ -84,6 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
+                "Analysis",
                 "BMA",
                 "CostFunctionJ",
                 "CostFunctionJb",

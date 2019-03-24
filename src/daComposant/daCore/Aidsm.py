@@ -634,9 +634,10 @@ class Aidsm(object):
             if os.path.isdir(trypath):
                 for fname in os.listdir(trypath):
                     if os.path.isfile(os.path.join(trypath,fname)):
+                        root, ext = os.path.splitext(fname)
+                        if ext != ".py": continue
                         fc = open(os.path.join(trypath,fname)).read()
                         iselal = bool("class ElementaryAlgorithm" in fc)
-                        root, ext = os.path.splitext(fname)
                         if iselal and ext == '.py' and root != '__init__':
                             files.append(root)
         files.sort()
