@@ -78,10 +78,12 @@ StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
   This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm. It involves potentially costly
-  calculations or memory consumptions. The default is a void list, none of
-  these variables being calculated and stored by default. The possible names
-  are in the following list: [
+  available at the end of the algorithm, if they are initially required by the
+  user. It involves potentially costly calculations or memory consumptions. The
+  default is a void list, none of these variables being calculated and stored
+  by default excepted the unconditionnal variables. The possible names are in
+  the following list: [
+  "Analysis",
   "APosterioriCorrelations",
   "APosterioriCovariance",
   "APosterioriStandardDeviations",
@@ -91,11 +93,11 @@ StoreSupplementaryCalculations
   "CostFunctionJb",
   "CostFunctionJo",
   "CurrentState",
-  "Innovation",
+  "InnovationAtCurrentState",
   ].
 
   Example :
-  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
@@ -104,6 +106,8 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
+
+.. include:: snippets/Analysis.rst
 
 .. include:: snippets/APosterioriCorrelations.rst
 
@@ -123,7 +127,7 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
-.. include:: snippets/Innovation.rst
+.. include:: snippets/InnovationAtCurrentState.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

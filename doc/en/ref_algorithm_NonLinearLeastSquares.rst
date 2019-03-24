@@ -83,19 +83,34 @@ StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
   This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm. It involves potentially costly
-  calculations or memory consumptions. The default is a void list, none of
-  these variables being calculated and stored by default. The possible names
-  are in the following list: ["BMA", "CostFunctionJ",
-  "CostFunctionJb", "CostFunctionJo", "CostFunctionJAtCurrentOptimum",
-  "CostFunctionJbAtCurrentOptimum", "CostFunctionJoAtCurrentOptimum",
-  "CurrentState", "CurrentOptimum", "IndexOfOptimum", "Innovation",
-  "InnovationAtCurrentState", "OMA", "OMB",
-  "SimulatedObservationAtBackground", "SimulatedObservationAtCurrentState",
-  "SimulatedObservationAtOptimum", "SimulatedObservationAtCurrentOptimum"].
+  available at the end of the algorithm, if they are initially required by the
+  user. It involves potentially costly calculations or memory consumptions. The
+  default is a void list, none of these variables being calculated and stored
+  by default excepted the unconditionnal variables. The possible names are in
+  the following list: [
+  "Analysis",
+  "BMA",
+  "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
+  "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
+  "CurrentOptimum",
+  "CurrentState",
+  "IndexOfOptimum",
+  "Innovation",
+  "InnovationAtCurrentState",
+  "OMA",
+  "OMB",
+  "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentOptimum",
+  "SimulatedObservationAtCurrentState",
+  "SimulatedObservationAtOptimum",
+  ].
 
   Example :
-  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 *Tips for this algorithm:*
 
@@ -118,11 +133,19 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
+.. include:: snippets/Analysis.rst
+
 .. include:: snippets/BMA.rst
+
+.. include:: snippets/CostFunctionJ.rst
 
 .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
+.. include:: snippets/CostFunctionJb.rst
+
 .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+.. include:: snippets/CostFunctionJo.rst
 
 .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 

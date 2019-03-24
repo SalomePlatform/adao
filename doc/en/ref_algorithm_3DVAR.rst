@@ -89,10 +89,12 @@ StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
   This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm. It involves potentially costly
-  calculations or memory consumptions. The default is a void list, none of
-  these variables being calculated and stored by default. The possible names
-  are in the following list: [
+  available at the end of the algorithm, if they are initially required by the
+  user. It involves potentially costly calculations or memory consumptions. The
+  default is a void list, none of these variables being calculated and stored
+  by default excepted the unconditionnal variables. The possible names are in
+  the following list: [
+  "Analysis",
   "APosterioriCorrelations",
   "APosterioriCovariance",
   "APosterioriStandardDeviations",
@@ -124,7 +126,7 @@ StoreSupplementaryCalculations
   ].
 
   Example :
-  ``{"StoreSupplementaryCalculations":["BMA", "Innovation"]}``
+  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
@@ -140,6 +142,8 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
+.. include:: snippets/Analysis.rst
+
 .. include:: snippets/APosterioriCorrelations.rst
 
 .. include:: snippets/APosterioriCovariance.rst
@@ -150,9 +154,15 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/BMA.rst
 
+.. include:: snippets/CostFunctionJ.rst
+
 .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
+.. include:: snippets/CostFunctionJb.rst
+
 .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+.. include:: snippets/CostFunctionJo.rst
 
 .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 

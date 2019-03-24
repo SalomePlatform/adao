@@ -9,4 +9,6 @@ interface, or of the case in textual interface. The input variables, available
 to the user at the output in order to facilitate the writing of post-processing
 procedures, are described in the :ref:`subsection_r_o_v_Inventaire`.
 
+**Permanent outputs (non conditional)**
+
 The unconditional outputs of the algorithm are the following:
