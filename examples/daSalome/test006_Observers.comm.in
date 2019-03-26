@@ -1,6 +1,6 @@
 
 ASSIMILATION_STUDY(StudyName='test_observers',
-                   StudyRepertory='@prefix@/share/salome/adao_examples/daSalome',
+                   StudyRepertory='@prefix@/share/adao_examples/daSalome',
                    AlgorithmParameters=_F(Algorithm='3DVAR',
                                           Parameters='Dict',
                                           data=_F(FROM='Script',

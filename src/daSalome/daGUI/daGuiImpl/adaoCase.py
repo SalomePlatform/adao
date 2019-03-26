@@ -87,7 +87,7 @@ class AdaoCase:
       return "Please add ADAO_ENGINE_ROOT_DIR to your environnement."
 
     adao_path = os.environ["ADAO_ENGINE_ROOT_DIR"]
-    adao_exe = adao_path + "/bin/salome/AdaoYacsSchemaCreator.py"
+    adao_exe = adao_path + "/bin/AdaoYacsSchemaCreator.py"
     args = ["python", adao_exe, filename, self.yacs_filename]
     p = subprocess.Popen(args)
     (stdoutdata, stderrdata) = p.communicate()

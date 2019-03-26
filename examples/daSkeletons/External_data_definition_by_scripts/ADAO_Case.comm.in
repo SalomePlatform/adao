@@ -1,6 +1,6 @@
 
 ASSIMILATION_STUDY(StudyName='ADAO skeleton case',
-                   StudyRepertory='@prefix@/share/salome/adao_examples/daSkeletons/External_data_definition_by_scripts',
+                   StudyRepertory='@prefix@/share/adao_examples/daSkeletons/External_data_definition_by_scripts',
                    AlgorithmParameters=_F(Algorithm='3DVAR',
                                        Parameters='Dict',
                                        data=_F(FROM='Script',

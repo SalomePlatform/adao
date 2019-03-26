@@ -19,7 +19,7 @@
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
 if(ADAO_SALOME_MODULE)
-  install(FILES SalomeApp.xml ADAOCatalog.xml DESTINATION ${ADAO_RES})
+  install(FILES SalomeApp.xml ADAOCatalog.xml DESTINATION ${ADAO_RES_SALOME})
 else(ADAO_SALOME_MODULE)
   install(FILES ADAOSchemaCatalog.xml DESTINATION ${ADAO_RES})
 endif(ADAO_SALOME_MODULE)

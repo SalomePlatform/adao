@@ -126,7 +126,7 @@ SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
     else
       SALOMEDIR="<Répertoire principal d'installation de SALOME>"
       $SALOMEDIR/salome start -k -t
-      $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/salome/AdaoYacsSchemaCreator.py $USERFILE.py $USERFILE.xml"
+      $SALOMEDIR/salome shell -- "python $SALOMEDIR/bin/AdaoYacsSchemaCreator.py $USERFILE.py $USERFILE.xml"
       $SALOMEDIR/salome shell -- "driver $USERFILE.xml"
       $SALOMEDIR/salome shell killSalome.py
       rm -f $USERFILE.xml

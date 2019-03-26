@@ -19,7 +19,7 @@
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
 set(DOCLANG fr)
-set(DOC_DESTINATION "share/doc/salome/gui/ADAO/${DOCLANG}")
+set(DOC_DESTINATION "share/doc/gui/ADAO/${DOCLANG}")
 
 file(GLOB_RECURSE BEAUTIFUL_PNGS "${CMAKE_SOURCE_DIR}/doc/${DOCLANG}/*.png")
 install(FILES ${BEAUTIFUL_PNGS} DESTINATION ${ADAO_RES})

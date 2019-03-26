@@ -64,7 +64,7 @@ set(EXAMPLES_FILES_TO_INSTALL
   daSalome/test010_ADAO_Simple_AdjointTest.py
   )
 
-install(FILES ${EXAMPLES_FILES_TO_INSTALL} DESTINATION "share/salome/adao_examples/daSalome")
+install(FILES ${EXAMPLES_FILES_TO_INSTALL} DESTINATION "share/adao_examples/daSalome")
 
 SALOME_CONFIGURE_FILE(daSkeletons/External_data_definition_by_scripts/ADAO_Case.comm.in ADAO_Case.comm)
 
@@ -81,4 +81,4 @@ set(SKELETON_FILES_TO_INSTALL
   daSkeletons/External_data_definition_by_scripts/Script_Observation_yo.py
   )
 
-install(FILES ${SKELETON_FILES_TO_INSTALL} DESTINATION "share/salome/adao_examples/daSkeletons/External_data_definition_by_scripts")
+install(FILES ${SKELETON_FILES_TO_INSTALL} DESTINATION "share/adao_examples/daSkeletons/External_data_definition_by_scripts")

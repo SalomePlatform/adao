@@ -56,7 +56,7 @@ def create_yacs_proc(study_config):
   l.registerProcCataLoader()
   runtime = pilot.getRuntime()
   try:
-    catalogAd = runtime.loadCatalog("proc", os.environ["ADAO_ENGINE_ROOT_DIR"] + "/share/salome/resources/adao/ADAOSchemaCatalog.xml")
+    catalogAd = runtime.loadCatalog("proc", os.environ["ADAO_ENGINE_ROOT_DIR"] + "/share/resources/adao/ADAOSchemaCatalog.xml")
     runtime.addCatalog(catalogAd)
   except:
     raise ValueError("Exception in loading ADAO YACS Schema catalog")

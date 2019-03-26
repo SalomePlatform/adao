@@ -62,7 +62,7 @@ if sys.version.split()[0] < '3':
 # Indique la langue du catalogue utilisee pour les chaines d'aide : fr ou ang
 # lang = 'fr'
 # Traduction des labels de boutons ou autres
-translatorFichier = os.environ["ADAO_ROOT_DIR"] + "/share/salome/resources/adao/adao" # Ce nom sera complete par EFICAS avec _<LANG>.qm
+translatorFichier = os.environ["ADAO_ROOT_DIR"] + "/share/resources/adao/adao" # Ce nom sera complete par EFICAS avec _<LANG>.qm
 #
 # Pilotage des sous-fenetres d'EFICAS
 closeAutreCommande = True

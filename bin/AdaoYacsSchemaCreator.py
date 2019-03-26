@@ -31,8 +31,8 @@ logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(message)s')
 logging.debug("-- Starting AdaoYacsSchemaCreator --")
 
 # Check some basics variables
-if "ADAO_ROOT_DIR" not in os.environ:
-    logging.fatal("You have to define ADAO_ROOT_DIR")
+if "ADAO_ENGINE_ROOT_DIR" not in os.environ:
+    logging.fatal("You have to define ADAO_ENGINE_ROOT_DIR")
     sys.exit(1)
 
 try:
