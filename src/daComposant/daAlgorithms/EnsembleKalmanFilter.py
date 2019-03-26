@@ -181,26 +181,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             Xfm = numpy.asmatrix(numpy.ravel(Xn_predicted.mean(axis=1, dtype=mfp))).T
             Hfm = numpy.asmatrix(numpy.ravel(HX_predicted.mean(axis=1, dtype=mfp))).T
-            Af  = Xn_predicted - Xfm
-            Hf  = HX_predicted - Hfm
             #
             PfHT, HPfHT = 0., 0.
             for i in range(__m):
-                PfHT  += Af[:,i] * Hf[:,i].T
-                HPfHT += Hf[:,i] * Hf[:,i].T
+                Exfi = Xn_predicted[:,i] - Xfm
+                Eyfi = HX_predicted[:,i] - Hfm
+                PfHT  += Exfi * Eyfi.T
+                HPfHT += Eyfi * Eyfi.T
             PfHT  = (1./(__m-1)) * PfHT
             HPfHT = (1./(__m-1)) * HPfHT
+            K     = PfHT * ( R + HPfHT ).I
+            del PfHT, HPfHT
             #
-            K = PfHT * ( R + HPfHT ).I
-            #
-            Yo = numpy.asmatrix(numpy.zeros((__p,__m)))
             for i in range(__m):
                 ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn)).T
-                Yo[:,i] = Ynpu + ri
-            #
-            for i in range(__m):
-                Xn[:,i] = Xn_predicted[:,i] + K * (Yo[:,i] - HX_predicted[:,i])
-            del PfHT, HPfHT
+                Xn[:,i] = Xn_predicted[:,i] + K * (Ynpu + ri - HX_predicted[:,i])
             #
             Xa = Xn.mean(axis=1, dtype=mfp)
             #
@@ -268,13 +263,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if self._toStore("CostFunctionJAtCurrentOptimum"):
                     self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
             if self._toStore("APosterioriCovariance"):
-                Ht = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
-                Ht = Ht.reshape(__p,__n) # ADAO & check shape
-                Pf = 0.
+                Pn = 0.
                 for i in range(__m):
-                    Pf += Af[:,i] * Af[:,i].T
-                Pf = (1./(__m-1)) * Pf
-                Pn = (1. - K * Ht) * Pf
+                    Eai = Xn[:,i] - Xa
+                    Pn += Eai * Eai.T
+                Pn  = (1./(__m-1)) * Pn
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
             if self._parameters["EstimationOf"] == "Parameters" \
                 and J < previousJMinimum:

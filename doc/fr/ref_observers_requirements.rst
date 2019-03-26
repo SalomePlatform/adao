@@ -101,7 +101,7 @@ Inventaire des modèles d'*observer* disponibles ("*Template*")
 .. index:: single: ValuePrinter (Observer)
 
 Modèle **ValuePrinter** :
-..........................
+.........................
 
 Imprime sur la sortie standard la valeur courante de la variable.
 
@@ -112,7 +112,7 @@ Imprime sur la sortie standard la valeur courante de la variable.
 .. index:: single: ValueAndIndexPrinter (Observer)
 
 Modèle **ValueAndIndexPrinter** :
-..................................
+.................................
 
 Imprime sur la sortie standard la valeur courante de la variable, en ajoutant son index.
 
@@ -123,7 +123,7 @@ Imprime sur la sortie standard la valeur courante de la variable, en ajoutant so
 .. index:: single: ValueSeriePrinter (Observer)
 
 Modèle **ValueSeriePrinter** :
-...............................
+..............................
 
 Imprime sur la sortie standard la série des valeurs de la variable.
 
@@ -134,7 +134,7 @@ Imprime sur la sortie standard la série des valeurs de la variable.
 .. index:: single: ValueSaver (Observer)
 
 Modèle **ValueSaver** :
-........................
+.......................
 
 Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement.
 
@@ -155,7 +155,7 @@ Enregistre la valeur courante de la variable dans un fichier du répertoire '/tm
 .. index:: single: ValueSerieSaver (Observer)
 
 Modèle **ValueSerieSaver** :
-.............................
+............................
 
 Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape.
 
@@ -176,7 +176,7 @@ Enregistre la série des valeurs de la variable dans un fichier du répertoire '
 .. index:: single: ValuePrinterAndSaver (Observer)
 
 Modèle **ValuePrinterAndSaver** :
-..................................
+.................................
 
 Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable.
 
@@ -198,7 +198,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
 .. index:: single: ValueIndexPrinterAndSaver (Observer)
 
 Modèle **ValueIndexPrinterAndSaver** :
-.......................................
+......................................
 
 Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable, en ajoutant son index.
 
@@ -220,7 +220,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
 .. index:: single: ValueSeriePrinterAndSaver (Observer)
 
 Modèle **ValueSeriePrinterAndSaver** :
-.......................................
+......................................
 
 Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp', la série des valeurs de la variable.
 
@@ -242,7 +242,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 .. index:: single: ValueGnuPlotter (Observer)
 
 Modèle **ValueGnuPlotter** :
-.............................
+............................
 
 Affiche graphiquement avec Gnuplot la valeur courante de la variable.
 
@@ -264,7 +264,7 @@ Affiche graphiquement avec Gnuplot la valeur courante de la variable.
 .. index:: single: ValueSerieGnuPlotter (Observer)
 
 Modèle **ValueSerieGnuPlotter** :
-..................................
+.................................
 
 Affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 
@@ -286,7 +286,7 @@ Affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 .. index:: single: ValuePrinterAndGnuPlotter (Observer)
 
 Modèle **ValuePrinterAndGnuPlotter** :
-.......................................
+......................................
 
 Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la valeur courante de la variable.
 
@@ -309,7 +309,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 .. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
 
 Modèle **ValueSeriePrinterAndGnuPlotter** :
-............................................
+...........................................
 
 Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 
@@ -332,7 +332,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 .. index:: single: ValuePrinterSaverAndGnuPlotter (Observer)
 
 Modèle **ValuePrinterSaverAndGnuPlotter** :
-............................................
+...........................................
 
 Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable .
 
@@ -365,7 +365,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 .. index:: single: ValueSeriePrinterSaverAndGnuPlotter (Observer)
 
 Modèle **ValueSeriePrinterSaverAndGnuPlotter** :
-.................................................
+................................................
 
 Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la série des valeurs de la variable.
 
@@ -398,7 +398,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 .. index:: single: ValueMean (Observer)
 
 Modèle **ValueMean** :
-.......................
+......................
 
 Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
 
@@ -410,7 +410,7 @@ Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
 .. index:: single: ValueStandardError (Observer)
 
 Modèle **ValueStandardError** :
-................................
+...............................
 
 Imprime sur la sortie standard l'écart-type de la valeur courante de la variable.
 
@@ -422,7 +422,7 @@ Imprime sur la sortie standard l'écart-type de la valeur courante de la variabl
 .. index:: single: ValueVariance (Observer)
 
 Modèle **ValueVariance** :
-...........................
+..........................
 
 Imprime sur la sortie standard la variance de la valeur courante de la variable.
 
@@ -434,7 +434,7 @@ Imprime sur la sortie standard la variance de la valeur courante de la variable.
 .. index:: single: ValueL2Norm (Observer)
 
 Modèle **ValueL2Norm** :
-.........................
+........................
 
 Imprime sur la sortie standard la norme L2 de la valeur courante de la variable.
 
@@ -447,7 +447,7 @@ Imprime sur la sortie standard la norme L2 de la valeur courante de la variable.
 .. index:: single: ValueRMS (Observer)
 
 Modèle **ValueRMS** :
-......................
+.....................
 
 Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moyenne quadratique, de la valeur courante de la variable.
 
