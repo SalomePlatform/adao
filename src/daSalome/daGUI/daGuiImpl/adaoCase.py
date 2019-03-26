@@ -83,10 +83,10 @@ class AdaoCase:
       msg += "case with the ADAO/EFICAS editor."
       return msg
 
-    if "ADAO_ROOT_DIR" not in os.environ:
-      return "Please add ADAO_ROOT_DIR to your environnement."
+    if "ADAO_ENGINE_ROOT_DIR" not in os.environ:
+      return "Please add ADAO_ENGINE_ROOT_DIR to your environnement."
 
-    adao_path = os.environ["ADAO_ROOT_DIR"]
+    adao_path = os.environ["ADAO_ENGINE_ROOT_DIR"]
     adao_exe = adao_path + "/bin/salome/AdaoYacsSchemaCreator.py"
     args = ["python", adao_exe, filename, self.yacs_filename]
     p = subprocess.Popen(args)
