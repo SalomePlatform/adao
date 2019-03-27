@@ -21,7 +21,8 @@
 add_subdirectory(daGUI)
 
 if( NOT ADAO_SALOME_MODULE)
+
   install(DIRECTORY daYacsSchemaCreator daYacsIntegration DESTINATION "${ADAO_SCRIPT_PYTHON}/adao")
   install(FILES __init__.py adaoBuilder.py DESTINATION "${ADAO_SCRIPT_PYTHON}/adao")
 
-endif(ADAO_SALOME_MODULE)
+endif(NOT ADAO_SALOME_MODULE)

@@ -16,10 +16,20 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 if(ADAO_SALOME_MODULE)
+
   install(FILES SalomeApp.xml ADAOCatalog.xml DESTINATION ${ADAO_RES_SALOME})
+
 else(ADAO_SALOME_MODULE)
+
   install(FILES ADAOSchemaCatalog.xml DESTINATION ${ADAO_RES})
+  file(GLOB_RECURSE BUTTONS1 "${CMAKE_SOURCE_DIR}/doc/fr/resources/*.png")
+  install(FILES ${BUTTONS1} DESTINATION ${ADAO_RES})
+  file(GLOB_RECURSE BUTTONS2 "${CMAKE_SOURCE_DIR}/doc/fr/images/eficas*.png")
+  install(FILES ${BUTTONS2} DESTINATION ${ADAO_RES})
+  file(GLOB_RECURSE BUTTONS3 "${CMAKE_SOURCE_DIR}/doc/en/images/eficas*.png")
+  install(FILES ${BUTTONS3} DESTINATION ${ADAO_RES})
+
 endif(ADAO_SALOME_MODULE)

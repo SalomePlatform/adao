@@ -16,31 +16,18 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-set(DOCLANG fr)
-set(DOC_DESTINATION "share/doc/gui/ADAO/${DOCLANG}")
+set(DOC_LANG fr)
+set(DOC_DESTINATION "share/doc/gui/ADAO")
 
-file(GLOB_RECURSE BEAUTIFUL_PNGS "${CMAKE_SOURCE_DIR}/doc/${DOCLANG}/*.png")
-install(FILES ${BEAUTIFUL_PNGS} DESTINATION ${ADAO_RES})
-file(COPY conf.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/bin/module_version.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(GLOB_RECURSE RST_FILES "${CMAKE_SOURCE_DIR}/doc/${DOCLANG}/*.rst")
-file(COPY ${RST_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY resources snippets images DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ../${DOC_LANG} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/bin/module_version.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/${DOC_LANG})
 
-set(_cmd_options -c ${CMAKE_CURRENT_BINARY_DIR} -b html -d doctrees -D latex_paper_size=a4 ${CMAKE_CURRENT_BINARY_DIR} html)
-SALOME_ACCUMULATE_ENVIRONMENT(PYTHONPATH ${CMAKE_CURRENT_BINARY_DIR}) # for module_version.py for conf.py for sphinx
-SALOME_GENERATE_ENVIRONMENT_SCRIPT(_cmd env_script "${SPHINX_EXECUTABLE}" "${_cmd_options}")      
-add_custom_target(fr_tutorial_doc COMMAND ${_cmd})
-install(CODE "EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" --build ${PROJECT_BINARY_DIR} --target fr_tutorial_doc)")
+set(_cmd_options -c ${CMAKE_CURRENT_BINARY_DIR}/${DOC_LANG} -b html -d doctrees ${CMAKE_CURRENT_BINARY_DIR}/${DOC_LANG} html/${DOC_LANG})
+SALOME_ACCUMULATE_ENVIRONMENT(PYTHONPATH ${CMAKE_CURRENT_BINARY_DIR}/${DOC_LANG}/${DOC_LANG}) # for module_version.py for conf.py for sphinx
+SALOME_GENERATE_ENVIRONMENT_SCRIPT(_cmd env_script "${SPHINX_EXECUTABLE}" "${_cmd_options}")
+add_custom_target(${DOC_LANG}_doc COMMAND ${_cmd})
+install(CODE "EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" --build ${PROJECT_BINARY_DIR} --target ${DOC_LANG}_doc)")
 
-file(GLOB_RECURSE BEAUTIFUL_PNGS2 "${CMAKE_SOURCE_DIR}/doc/${DOCLANG}/images/*.png")
-INSTALL(CODE "file(GLOB BEAUTIFUL_HTML \"${CMAKE_CURRENT_BINARY_DIR}/html/*.html\")
-file(COPY \${BEAUTIFUL_HTML} DESTINATION ${CMAKE_INSTALL_PREFIX}/${DOC_DESTINATION})")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/_static" DESTINATION ${DOC_DESTINATION})
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/snippets" DESTINATION ${DOC_DESTINATION})
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/_sources" DESTINATION ${DOC_DESTINATION})
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/html/searchindex.js" DESTINATION ${DOC_DESTINATION})
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/html/objects.inv" DESTINATION ${DOC_DESTINATION})
-install(FILES ${BEAUTIFUL_PNGS2} DESTINATION ${DOC_DESTINATION}/_images)
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/html/${DOC_LANG}" DESTINATION ${DOC_DESTINATION})
