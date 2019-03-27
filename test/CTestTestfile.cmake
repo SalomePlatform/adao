@@ -18,23 +18,28 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-SET(SALOME_TEST_DRIVER "@CMAKE_INSTALL_PREFIX@/bin/salome/appliskel/salome_test_driver.py")
+SET(ADAO_ENGINE_ROOT_DIR $ENV{ADAO_ENGINE_ROOT_DIR})
+
+if(NOT ADAO_ENGINE_ROOT_DIR)
+  message(FATAL_ERROR "ADAO_ENGINE_ROOT_DIR environment variable has to be set before launching the tests.")
+endif(NOT ADAO_ENGINE_ROOT_DIR)
 
 SET(COMPONENT_NAME ADAO)
 SET(TIMEOUT        500)
 
 # Add all test subdirs
 SUBDIRS(
-    test1001
-    test1002
-    test6701
-    test6702
-    test6703
-    test6704
-    test6711
-    test6901
-    test6902
-    test6903
-    test6904
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test1001
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test1002
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6701
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6702
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6703
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6704
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6711
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6901
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6902
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6903
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6904
     )

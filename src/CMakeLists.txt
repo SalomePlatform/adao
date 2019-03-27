@@ -19,13 +19,11 @@
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
 if(ADAO_SALOME_MODULE)
-  
-  #install(FILES daSalome/adaoBuilder.py daSalome/__init__.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao")
+
   add_subdirectory(daSalome)
-  
+
 else(ADAO_SALOME_MODULE)
-  
-  #install(FILES daSalome/adaoBuilder.py daSalome/__init__.py DESTINATION "${ADAO_SCRIPT_PYTHON_SALOME}/adao")
+
   add_subdirectory(daSalome)
   add_subdirectory(daComposant)
   add_subdirectory(daEficas)
