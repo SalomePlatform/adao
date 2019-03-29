@@ -16,10 +16,14 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
+# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-SALOME_CONFIGURE_FILE(CTestTestfileInstall.cmake.in CTestTestfile.cmake)
+if(ADAO_SALOME_MODULE)
 
-install(DIRECTORY test1001 test1002 test6701 test6702 test6703 test6704 test6711 test6901 test6902 test6903 test6904 DESTINATION ${ADAO_BIN_TEST})
+  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CTestTestfile.cmake DESTINATION ${ADAO_BIN_TEST})
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CTestTestfile.cmake DESTINATION ${ADAO_BIN_TEST})
+else(ADAO_SALOME_MODULE)
+
+  install(DIRECTORY test1001 test1002 test6701 test6702 test6703 test6704 test6711 test6901 test6902 test6903 test6904 DESTINATION ${ADAO_TEST})
+
+endif(ADAO_SALOME_MODULE)
