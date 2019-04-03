@@ -165,6 +165,8 @@ class AdaoGenerator(PythonGenerator):
       data = self.dictMCVal[search_type + "STRING_DATA__STRING"]
     elif from_type == "Script":
       data = self.dictMCVal[search_type + "SCRIPT_DATA__SCRIPT_FILE"]
+    elif from_type == "DataFile":
+      data = self.dictMCVal[search_type + "DATA_DATA__DATA_FILE"]
     elif from_type == "ScriptWithSwitch":
       data = self.dictMCVal[search_type + "SCRIPTWITHSWITCH_DATA__SCRIPTWITHSWITCH_FILE"]
     elif from_type == "ScriptWithFunctions":
@@ -176,7 +178,7 @@ class AdaoGenerator(PythonGenerator):
     else:
       raise Exception('From Type unknown', from_type)
 
-    if from_type == "String" or from_type == "Script":
+    if from_type == "String" or from_type == "Script" or from_type == "DataFile":
       self.text_da += data_name + "_config = {}\n"
       self.text_da += data_name + "_config['Type'] = '" + data_type + "'\n"
       self.text_da += data_name + "_config['From'] = '" + from_type + "'\n"

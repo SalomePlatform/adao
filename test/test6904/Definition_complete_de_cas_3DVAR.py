@@ -143,8 +143,8 @@ class InTest(unittest.TestCase):
         # ----------
         ecart = assertAlmostEqualArrays(Xoptimum, [ 2., 3., 4.])
         #
-        print("  The maximal absolute error in the test is of %.2e."%ecart)
-        print("  The results are correct.")
+        print("The maximal absolute error in the test is of %.2e."%ecart)
+        print("The results are correct.")
         print("")
         #
         return Xoptimum
@@ -156,10 +156,10 @@ def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
     if msg is not None:
         print(msg)
     if delta is not None:
-        if ( (numpy.asarray(first) - numpy.asarray(second)) > float(delta) ).any():
+        if ( numpy.abs(numpy.asarray(first) - numpy.asarray(second)) > float(delta) ).any():
             raise AssertionError("%s != %s within %s places"%(first,second,delta))
     else:
-        if ( (numpy.asarray(first) - numpy.asarray(second)) > 10**(-int(places)) ).any():
+        if ( numpy.abs(numpy.asarray(first) - numpy.asarray(second)) > 10**(-int(places)) ).any():
             raise AssertionError("%s != %s within %i places"%(first,second,places))
     return max(abs(numpy.asarray(first) - numpy.asarray(second)))
 
