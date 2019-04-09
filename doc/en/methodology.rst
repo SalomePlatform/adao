@@ -54,8 +54,8 @@ Detailed procedure for a study
 
 .. _section_m_step1:
 
-STEP 1: Specifying the resolution of the physical problem and the parameters to adjust
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 1: Specify the resolution of the physical problem and the parameters to adjust
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 An essential knowledge about the studied physical system is the numerical
 simulation. It is often available through calculation case(s), and symbolized as
@@ -93,8 +93,8 @@ heavily use the postprocessing and extraction capacities of the simulation code.
 
 .. _section_m_step2:
 
-STEP 2: Specifying the criteria for physical results qualification
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 2: Specify the criteria for physical results qualification
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Because the studied system are real physical ones, it is of great importance to
 express the **physical information that can help to qualify a simulated system
@@ -119,8 +119,8 @@ of global quality of numerical results.
 
 .. _section_m_step3:
 
-STEP 3: Identifying and describe the available observations
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 3: Identify and describe the available observations
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 As the second main source of knowledge of the physical system to be studied, the
 **observations, or measures,** denoted as :math:`\mathbf{y}^o`, has to be
@@ -137,8 +137,8 @@ availability in database or not, data formats, application interfaces, etc.
 
 .. _section_m_step4:
 
-STEP 4: Specifying the DA/Optimization modeling elements (covariances, background...)
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 4: Specify the DA/Optimization modeling elements (covariances, background...)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Additional Data Assimilation or Optimization modeling elements allows to
 improve information about the fine physical representation of the studied
@@ -160,8 +160,8 @@ and the associated **evolution error covariance matrix**.
 
 .. _section_m_step5:
 
-STEP 5: Choosing the optimization algorithm and its parameters
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 5: Choose the optimization algorithm and its parameters
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Data Assimilation or Optimization requires to solve an optimization problem,
 more often modelized as a minimization problem. Depending on the availability of
@@ -184,8 +184,8 @@ the less possible the known default parameters.
 
 .. _section_m_step6:
 
-STEP 6: Conducting the optimization calculations and get the results
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 6: Conduct the optimization calculations and get the results
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 After setting up the Data Assimilation or Optimization study, the calculation
 has to be done in an efficient way.
@@ -207,8 +207,8 @@ the optimization process.
 
 .. _section_m_step7:
 
-STEP 7: Exploiting the results and qualify their physical properties
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+STEP 7: Exploit the results and qualify their physical properties
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Once getting the results, they have to be interpreted in terms of physical and
 numerical meaning. Even if the optimization calculation always give a new
