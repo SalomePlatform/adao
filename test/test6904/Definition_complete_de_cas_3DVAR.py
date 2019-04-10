@@ -55,7 +55,7 @@ def multisimulation( xserie ):
 observations = simulation((2, 3, 4))
 
 # ==============================================================================
-class InTest(unittest.TestCase):
+class Test_Adao(unittest.TestCase):
     def test1(self):
         print("""
         Full definition of a use case for the standard user
@@ -166,4 +166,5 @@ def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
 # ==============================================================================
 if __name__ == '__main__':
     print("\nAUTODIAGNOSTIC\n==============")
-    unittest.main()
+    sys.stderr = sys.stdout
+    unittest.main(verbosity=2)

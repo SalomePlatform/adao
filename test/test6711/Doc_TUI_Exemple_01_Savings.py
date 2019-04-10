@@ -21,64 +21,78 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
-import os, pprint
+import sys, os, pprint
+import unittest
 
 # ==============================================================================
-def test1():
-    """Test"""
-    from numpy import array, matrix
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
-    case.set( 'Background',          Vector=[0, 1, 2] )
-    case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
-    case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
-    case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
-    case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
-    case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
-    #
-    case.setObserver("Analysis", String="print('==> Nombre d analyses   : %i'%len(var))")
-    #
-    case.execute()
-    #
-    base_file = "output_test6711"
-    print("")
-    print("#===============================================================================")
-    #
-    print("#=== Restitution en dictionnaire basique =======================================")
-    case.get()
-    print("#===============================================================================")
-    #
-    print("#=== Restitution en fichier TUI ================================================")
-    # print(case.dump(FileName=base_file+"_TUI.py", Formater="TUI"))
-    case.dump(FileName=base_file+"_TUI.py", Formater="TUI")
-    print("#===============================================================================")
-    #
-    print("#=== Restitution en fichier SCD ================================================")
-    # print(case.dump(FileName=base_file+"_SCD.py", Formater="SCD"))
-    case.dump(FileName=base_file+"_SCD.py", Formater="SCD")
-    print("#===============================================================================")
-    #
-    #   print("#=== Restitution en fichier YACS ===============================================")
-    #   # print(case.dump(FileName=base_file+"_YACS.xml", Formater="YACS"))
-    #   case.dump(FileName=base_file+"_YACS.xml", Formater="YACS")
-    #   print("#===============================================================================")
-    #
-    print("")
-    cwd = os.getcwd()
-    for f in [
-        base_file+"_TUI.py",
-        base_file+"_SCD.py",
-        # base_file+"_YACS.xml",
-        ]:
-        if os.path.exists(os.path.abspath(cwd+"/"+f)):
-            print("#=== Fichier \"%s\" correctement généré"%f)
-            os.remove(os.path.abspath(cwd+"/"+f))
-        else:
-            raise ValueError("Fichier \"%s\" inexistant"%f)
-    print("")
-    #
-    return case.get("Analysis")[-1]
+class Test_Adao(unittest.TestCase):
+    def test1(self):
+        """Test"""
+        print("""Exemple de la doc :
+
+        Cas-test vérifiant les conversions
+        ++++++++++++++++++++++++++++++++++\n""")
+        #-----------------------------------------------------------------------
+        from numpy import array, matrix
+        from adao import adaoBuilder
+        case = adaoBuilder.New()
+        case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
+        case.set( 'Background',          Vector=[0, 1, 2] )
+        case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
+        case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
+        case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
+        case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
+        case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
+        #
+        case.setObserver("Analysis", String="print('==> Nombre d analyses   : %i'%len(var))")
+        #
+        case.execute()
+        #
+        base_file = "output_test6711"
+        print("")
+        print("#===============================================================================")
+        #
+        print("#=== Restitution en dictionnaire basique =======================================")
+        case.get()
+        print("#===============================================================================")
+        #
+        print("#=== Restitution en fichier TUI ================================================")
+        # print(case.dump(FileName=base_file+"_TUI.py", Formater="TUI"))
+        case.dump(FileName=base_file+"_TUI.py", Formater="TUI")
+        print("#===============================================================================")
+        #
+        print("#=== Restitution en fichier SCD ================================================")
+        # print(case.dump(FileName=base_file+"_SCD.py", Formater="SCD"))
+        case.dump(FileName=base_file+"_SCD.py", Formater="SCD")
+        print("#===============================================================================")
+        #
+        #   print("#=== Restitution en fichier YACS ===============================================")
+        #   # print(case.dump(FileName=base_file+"_YACS.xml", Formater="YACS"))
+        #   case.dump(FileName=base_file+"_YACS.xml", Formater="YACS")
+        #   print("#===============================================================================")
+        #
+        print("")
+        cwd = os.getcwd()
+        for f in [
+            base_file+"_TUI.py",
+            base_file+"_SCD.py",
+            # base_file+"_YACS.xml",
+            ]:
+            if os.path.exists(os.path.abspath(cwd+"/"+f)):
+                print("#=== Fichier \"%s\" correctement généré"%f)
+                os.remove(os.path.abspath(cwd+"/"+f))
+            else:
+                raise ValueError("Fichier \"%s\" inexistant"%f)
+        print("")
+        #-----------------------------------------------------------------------
+        xa = case.get("Analysis")[-1]
+        ecart = assertAlmostEqualArrays(xa, [0.25, 0.80, 0.95], places = 5)
+        #
+        print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
+        print("  Les résultats obtenus sont corrects.")
+        print("")
+        #
+        return xa
 
 # ==============================================================================
 def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
@@ -96,15 +110,6 @@ def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
 
 # ==============================================================================
 if __name__ == "__main__":
-    print('\n AUTODIAGNOSTIC\n')
-    print("""Exemple de la doc :
-
-    Cas-test vérifiant les conversions
-    ++++++++++++++++++++++++++++++++++
-""")
-    xa = test1()
-    ecart = assertAlmostEqualArrays(xa, [0.25, 0.80, 0.95], places = 5)
-    #
-    print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
-    print("  Les résultats obtenus sont corrects.")
-    print("")
+    print('\nAUTODIAGNOSTIC\n')
+    sys.stderr = sys.stdout
+    unittest.main(verbosity=2)

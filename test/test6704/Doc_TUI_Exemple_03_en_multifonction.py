@@ -21,6 +21,9 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
+import sys
+import unittest
+
 # ==============================================================================
 #
 # Construction artificielle d'un exemple de donnees utilisateur
@@ -51,62 +54,77 @@ def multisimulation( xserie ):
 observations = simulation((2, 3, 4))
 
 # ==============================================================================
-def test1():
-    "Test"
-    import numpy
-    from adao import adaoBuilder
-    #
-    # Mise en forme des entrees
-    # -------------------------
-    Xb = (alpha, beta, gamma)
-    Bounds = (
-        (alphamin, alphamax),
-        (betamin,  betamax ),
-        (gammamin, gammamax))
-    #
-    # TUI ADAO
-    # --------
-    case = adaoBuilder.New()
-    case.set(
-        'AlgorithmParameters',
-        Algorithm = '3DVAR',
-        Parameters = {
-            "Bounds":Bounds,
-            "MaximumNumberOfSteps":100,
-            "StoreSupplementaryCalculations":[
-                "CostFunctionJ",
-                "CurrentState",
-                "SimulatedObservationAtOptimum",
-                ],
-            }
-        )
-    case.set( 'Background', Vector = numpy.array(Xb), Stored = True )
-    case.set( 'Observation', Vector = numpy.array(observations) )
-    case.set( 'BackgroundError', ScalarSparseMatrix = 1.0e10 )
-    case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
-    case.set(
-        'ObservationOperator',
-        OneFunction = multisimulation,
-        Parameters  = {"DifferentialIncrement":0.0001},
-        InputFunctionAsMulti = True,
-        )
-    case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
-    case.execute()
-    #
-    # Exploitation independante
-    # -------------------------
-    Xbackground   = case.get("Background")
-    Xoptimum      = case.get("Analysis")[-1]
-    FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
-    J_values      = case.get("CostFunctionJ")[:]
-    print("")
-    print("Number of internal iterations...: %i"%len(J_values))
-    print("Initial state...................: %s"%(numpy.ravel(Xbackground),))
-    print("Optimal state...................: %s"%(numpy.ravel(Xoptimum),))
-    print("Simulation at optimal state.....: %s"%(numpy.ravel(FX_at_optimum),))
-    print("")
-    #
-    return case.get("Analysis")[-1]
+class Test_Adao(unittest.TestCase):
+    def test1(self):
+        "Test"
+        print("""Exemple de la doc :
+
+        Exploitation independante des resultats d'un cas de calcul
+        ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        """)
+        #---------------------------------------------------------------------------
+        import numpy
+        from adao import adaoBuilder
+        #
+        # Mise en forme des entrees
+        # -------------------------
+        Xb = (alpha, beta, gamma)
+        Bounds = (
+            (alphamin, alphamax),
+            (betamin,  betamax ),
+            (gammamin, gammamax))
+        #
+        # TUI ADAO
+        # --------
+        case = adaoBuilder.New()
+        case.set(
+            'AlgorithmParameters',
+            Algorithm = '3DVAR',
+            Parameters = {
+                "Bounds":Bounds,
+                "MaximumNumberOfSteps":100,
+                "StoreSupplementaryCalculations":[
+                    "CostFunctionJ",
+                    "CurrentState",
+                    "SimulatedObservationAtOptimum",
+                    ],
+                }
+            )
+        case.set( 'Background', Vector = numpy.array(Xb), Stored = True )
+        case.set( 'Observation', Vector = numpy.array(observations) )
+        case.set( 'BackgroundError', ScalarSparseMatrix = 1.0e10 )
+        case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
+        case.set(
+            'ObservationOperator',
+            OneFunction = multisimulation,
+            Parameters  = {"DifferentialIncrement":0.0001},
+            InputFunctionAsMulti = True,
+            )
+        case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
+        case.execute()
+        #
+        # Exploitation independante
+        # -------------------------
+        Xbackground   = case.get("Background")
+        Xoptimum      = case.get("Analysis")[-1]
+        FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
+        J_values      = case.get("CostFunctionJ")[:]
+        print("")
+        print("Number of internal iterations...: %i"%len(J_values))
+        print("Initial state...................: %s"%(numpy.ravel(Xbackground),))
+        print("Optimal state...................: %s"%(numpy.ravel(Xoptimum),))
+        print("Simulation at optimal state.....: %s"%(numpy.ravel(FX_at_optimum),))
+        print("")
+        #
+        #---------------------------------------------------------------------------
+        xa = case.get("Analysis")[-1]
+        ecart = assertAlmostEqualArrays(xa, [ 2., 3., 4.])
+        #
+        print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
+        print("  Les résultats obtenus sont corrects.")
+        print("")
+        #
+        return xa
 
 # ==============================================================================
 def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
@@ -125,14 +143,5 @@ def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
 # ==============================================================================
 if __name__ == "__main__":
     print('\nAUTODIAGNOSTIC\n')
-    print("""Exemple de la doc :
-
-    Exploitation independante des resultats d'un cas de calcul
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    """)
-    xa = test1()
-    ecart = assertAlmostEqualArrays(xa, [ 2., 3., 4.])
-    #
-    print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
-    print("  Les résultats obtenus sont corrects.")
-    print("")
+    sys.stderr = sys.stdout
+    unittest.main(verbosity=2)

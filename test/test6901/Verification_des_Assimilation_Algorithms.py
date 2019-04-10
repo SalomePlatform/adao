@@ -27,7 +27,7 @@ import numpy
 from adao import adaoBuilder
 
 # ==============================================================================
-class InTest(unittest.TestCase):
+class Test_Adao(unittest.TestCase):
     def test1(self):
         """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
         print(self.test1.__doc__)
@@ -205,4 +205,5 @@ def verify_similarity_of_algo_results(serie = [], Xa = {}, precision = 1.e-15):
 #===============================================================================
 if __name__ == "__main__":
     print("\nAUTODIAGNOSTIC\n==============")
-    unittest.main()
+    sys.stderr = sys.stdout
+    unittest.main(verbosity=2)

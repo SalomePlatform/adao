@@ -26,7 +26,7 @@ import numpy
 from adao import adaoBuilder
 
 # ==============================================================================
-class InTest(unittest.TestCase):
+class Test_Adao(unittest.TestCase):
     def test1(self):
         for algo in ("AdjointTest", "FunctionTest", "GradientTest", "LinearityTest", "TangentTest"):
             print("")
@@ -81,4 +81,5 @@ class InTest(unittest.TestCase):
 #===============================================================================
 if __name__ == "__main__":
     print("\nAUTODIAGNOSTIC\n==============")
-    unittest.main()
+    sys.stderr = sys.stdout
+    unittest.main(verbosity=2)
