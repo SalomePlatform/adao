@@ -21,6 +21,7 @@
 #
 
 import os
+import time
 import subprocess
 import traceback
 import SalomePyQt
@@ -66,8 +67,8 @@ class AdaoCase:
 
   def createYACSFile(self):
     rtn = ""
-    if (self.filename == ""):
-      return "You need to save your case to export it."
+    if (self.filename == "" or self.filename == "not yet defined"):
+      return "You need to save your case before exporting it."
 
     self.yacs_filename = self.filename[:self.filename.rfind(".")] + '.xml'
     yacs_filename_backup = self.filename[:self.filename.rfind(".")] + '.xml.back'
@@ -77,6 +78,10 @@ class AdaoCase:
     self.eficas_editor.modified = True
     self.eficas_editor.saveFile()
     filename = self.filename[:self.filename.rfind(".")] + '.py'
+    retry = 0
+    while (not os.path.exists(filename) and retry < 30):
+        time.sleep(0.1)
+        retry += 1
     if not os.path.exists(filename):
       msg =  "Cannot find the COMM/PY associated EFICAS/Python files for YACS\n"
       msg += "generation. Is your case correct? Try to close and re-open the\n"
