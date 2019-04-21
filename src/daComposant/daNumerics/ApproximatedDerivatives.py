@@ -194,7 +194,7 @@ class FDApproximation(object):
         4/ Chaque résultat, par composante, devient une colonne de la Jacobienne
 
         """
-        logging.debug("FDA Calcul de la Jacobienne")
+        logging.debug("FDA Début du calcul de la Jacobienne")
         logging.debug("FDA   Incrément de............: %s*X"%float(self.__increment))
         logging.debug("FDA   Approximation centrée...: %s"%(self.__centeredDF))
         #

@@ -147,12 +147,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         print("     %s\n"%("-"*75,))
         if self._parameters["SetDebug"]:
-            print("===> End evaluation, deactivating debug if necessary\n")
+            print("===> End of evaluation, deactivating debug if necessary\n")
             logging.getLogger().setLevel(CUR_LEVEL)
+        else:
+            print("===> End of evaluation, without deactivating debug\n")
         #
         if self._parameters["NumberOfRepetition"] > 1:
             msgs  = ("     %s\n"%("-"*75,))
-            msgs += ("\n===> Statistical analysis of the outputs obtained throught repeated evaluations\n")
+            msgs += ("\n===> Statistical analysis of the outputs obtained through sequential repeated evaluations\n")
             msgs += ("\n     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
             Yy = numpy.array( Ys )
             msgs += ("\n     Characteristics of the whole set of outputs Y:\n")

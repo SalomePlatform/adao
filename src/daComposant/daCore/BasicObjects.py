@@ -234,7 +234,7 @@ class Operator(object):
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
 
-    def appliedControledFormTo(self, paires, argsAsSerie = False ):
+    def appliedControledFormTo(self, paires, argsAsSerie = False):
         """
         Permet de restituer le résultat de l'application de l'opérateur à des
         paires (xValue, uValue). Cette méthode se contente d'appliquer, son
@@ -274,7 +274,7 @@ class Operator(object):
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
 
-    def appliedInXTo(self, paires, argsAsSerie = False ):
+    def appliedInXTo(self, paires, argsAsSerie = False):
         """
         Permet de restituer le résultat de l'application de l'opérateur à une
         série d'arguments xValue, sachant que l'opérateur est valable en
@@ -515,7 +515,7 @@ class FullOperator(object):
             self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
             del __matrice
         else:
-            raise ValueError("Improperly defined observation operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
+            raise ValueError("Improperly defined operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
         #
         if __appliedInX is not None:
             self.__FO["AppliedInX"] = {}
@@ -1842,9 +1842,11 @@ def MultiFonction( __xserie, _extraArguments = None, _sFunction = lambda x: x ):
     Pour une liste ordonnée de vecteurs en entrée, renvoie en sortie la liste
     correspondante de valeurs de la fonction en argument
     """
+    # Vérifications et définitions initiales
     if not PlatformInfo.isIterable( __xserie ):
         raise TypeError("MultiFonction not iterable unkown input type: %s"%(type(__xserie),))
     #
+    # Calculs effectifs
     __multiHX = []
     if _extraArguments is None:
         for __xvalue in __xserie:
