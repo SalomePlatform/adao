@@ -534,6 +534,7 @@ ici par facilité :
 ::
 
     def DirectOperator( XX ):
+        import numpy
         """ Direct non-linear simulation operator """
         #
         # --------------------------------------> EXAMPLE TO BE REMOVED
