@@ -30,7 +30,7 @@ from adao import adaoBuilder
 class Test_Adao(unittest.TestCase):
     def test1(self):
         """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur matriciel)"""
-        print(self.test1.__doc__)
+        print(self.test1.__doc__.strip()+"\n")
         Xa = {}
         for algo in ("3DVAR", "Blue", "ExtendedBlue", "LinearLeastSquares", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
             print("")

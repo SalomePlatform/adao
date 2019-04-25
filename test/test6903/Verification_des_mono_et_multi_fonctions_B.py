@@ -45,7 +45,7 @@ class Test_Adao(unittest.TestCase):
         Verification du fonctionnement identique pour les algorithmes temporels
         en utilisant une fonction lineaire et carree
         """
-        print(self.test1.__doc__)
+        print("\n        "+self.test1.__doc__.strip()+"\n")
         Xa = {}
         #
         for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):

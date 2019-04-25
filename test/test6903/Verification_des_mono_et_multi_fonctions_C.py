@@ -45,7 +45,7 @@ class Test_Adao(unittest.TestCase):
         Verification du fonctionnement identique pour les algorithmes autres
         en utilisant une fonction lineaire et carree
         """
-        print(self.test1.__doc__)
+        print("\n        "+self.test1.__doc__.strip()+"\n")
         Xa = {}
         #
         for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
