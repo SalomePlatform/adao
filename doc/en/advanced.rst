@@ -290,10 +290,57 @@ The most comprehensive cases, proposed in :ref:`subsection_tui_advanced`, can be
 executed in the same way, and they give the same result as in the standard
 Python interface.
 
+.. _section_advanced_execution_mode:
+
+Change the default execution mode of nodes in YACS
+--------------------------------------------------
+
+.. index:: single: YACS
+
+Various reasons may lead to want to change the default mode of node execution
+in YACS (see [#]_ for the correct use of these possibilities). This may be for
+performance reasons, or for example for reasons of resource conflicts.
+
+One may want to use this change in execution mode to extend the use of local
+computing resources or to set remote calculations for a node that requires it.
+This is particularly the case for a node that should use a simulation resource
+available on a cluster, for example.
+
+In addition, the various calculations that are carried out (user-provided
+operators, results retrieval functions, etc.) may also present conflicts if
+they are performed in a single process, and in particular in the main process
+of SALOME. This is the default YACS operating mode for performance and
+simplicity reasons. However, it is recommended to change this functioning when
+encountering execution instabilities or error messages in the graphical
+interface.
+
+In any case, in the YACS schema being edited, it is sufficient to change the
+execution mode of the node(s) that require it. They have to be executed in a
+new container created for the occasion (it is not enough to use the default
+container, it is explicitly necessary to create a new one) and whose properties
+are adapted to the intended use. The procedure is therefore as follows:
+
+#. Create a new YACS container, using the context menu in the tree view of the YACS schema (usually on the left),
+#. Adapt the characteristics of the container, for example by selecting a "*type*" property with the value "*multi*" for a truly parallel execution, or by choosing a remote computing resource defined by the "*Resource*" property, or by using advanced parameters,
+#. Graphically select in the central view the node whose execution mode you want to change,
+#. In the panel to the right of the node entries, unfold the execution choices (named "*Execution Mode*"), check the "*Container*" box instead of the "*YACS*" default, and choose the newly created container (it is usually named "*container0*"),
+#. Save the modified schema
+
+This can be repeated for each node that requires it, by reusing the same new
+container for all nodes, or by creating a new container for each node.
+
+.. warning::
+
+  this change in execution mode is extremely powerful and flexible. It is
+  therefore recommended that the user both use it, and at the same time be
+  attentive to the interaction of the different choices he makes, to avoid, for
+  example, an unintended performance deterioration, or computer conflicts that
+  are complicated to diagnose.
+
 .. _section_advanced_observer:
 
-Getting information on special variables during the ADAO calculation in YACS
------------------------------------------------------------------------------
+Getting information on special variables during the ADAO calculation
+--------------------------------------------------------------------
 
 .. index:: single: Observer
 .. index:: single: Observer Template
@@ -521,3 +568,5 @@ naming of operators used to for the observation operator. The new mandatory
 names are "*DirectOperator*", "*TangentOperator*" and "*AdjointOperator*", as
 described in the last subsection of the chapter :ref:`section_reference`. The
 operator script files has to be modified.
+
+.. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.

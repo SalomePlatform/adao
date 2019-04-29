@@ -189,8 +189,8 @@ schéma YACS, on obtient la représentation suivante du schéma ADAO généré :
     **Schéma YACS généré à partir du cas ADAO**
 
 Après ce point, toutes les modifications, exécutions et post-processing du
-schéma d'assimilation de données seront effectués dans le module YACS. De
-manière à vérifier les résultats d'une manière simple, on utilise le noeud
+schéma d'assimilation de données seront effectués dans le module YACS. De façon
+à vérifier les résultats d'une manière simple, on utilise le noeud
 "*UserPostAnalysis*" (ou on crée ici un nouveau noeud YACS par le sous-menu
 "*Noeud de script in-line*" dans la vue graphique de YACS).
 
@@ -217,8 +217,8 @@ mise au point d'une telle procédure de post-processing peut être réalisée da
 YACS pour la tester, et ensuite entièrement enregistrée dans un script Python
 qui peut être intégré au cas ADAO en utilisant le mot-clé "*UserPostAnalysis*".
 
-Ensuite, de manière classique dans YACS, le schéma doit être compilé, et ensuite
-être exécuté. Après la fin de l'exécution, les affichages sur la sortie standard
+Ensuite, de manière classique dans YACS, le schéma doit être compilé, et être
+exécuté. Après la fin de l'exécution, les affichages sur la sortie standard
 sont disponibles dans la fenêtre "*fenêtre de sortie de YACS*" (ou "*YACS
 Container Log*"), obtenue par clic droit à l'aide du menu contextuel de la
 fenêtre "*proc*" du schéma YACS comme montré ci-dessous:

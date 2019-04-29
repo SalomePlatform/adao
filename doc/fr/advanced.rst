@@ -305,10 +305,61 @@ Les cas plus complets, proposés dans les :ref:`subsection_tui_advanced`, peuven
 être exécutés de la même manière, et ils donnent le même résultat que dans
 l'interface API/TUI en Python standard.
 
+.. _section_advanced_execution_mode:
+
+Changer le mode par défaut d'exécution de noeuds dans YACS
+----------------------------------------------------------
+
+.. index:: single: YACS
+
+Diverses raisons peuvent conduire à vouloir modifier le mode par défaut
+d'exécution de noeuds dans YACS (voir [#]_ pour le bon usage de ces
+possibilités). Cela peut être pour des raisons de performances, ou par exemple
+pour des raisons de conflits de ressources.
+
+On peut vouloir utiliser ce changement de mode d'exécution pour étendre l'usage
+des ressources de calcul locales ou pour déporter les calculs d'un noeud qui le
+nécessite. C'est en particulier le cas d'un noeud qui devrait utiliser une
+ressource de simulation disponible sur un cluster par exemple.
+
+Par ailleurs, les divers calculs qui sont menés (opérateurs fournis par
+l'utilisateur, fonctions de restitution des résultats, etc.) peuvent aussi
+présenter des conflits s'ils sont exécutés dans un processus unique, et en
+particulier dans le processus principal de SALOME. C'est le fonctionnement par
+défaut de YACS pour des raisons de performances et de simplicité. Il est
+néanmoins recommandé de changer ce fonctionnement lorsque l'on rencontre des
+instabilités d'exécution ou des messages d'erreur au niveau de l'interface
+graphique.
+
+Dans tous les cas, dans le schéma YACS en édition, il suffit de changer le mode
+d'exécution du ou des noeuds qui le nécessitent. Il faut les exécuter dans un
+nouveau conteneur créé pour l'occasion (il ne suffit pas d'utiliser le
+conteneur par défaut, il faut explicitement en créer un nouveau) et dont les
+caractéristiques sont adaptées à l'usage visé. La démarche est donc la suivante
+:
+
+#. Créer un nouveau conteneur YACS, par utilisation du menu contextuel des "*Containers*" dans la vue arborescente du schéma YACS (usuellement à gauche),
+#. Adapter les caractéristiques du conteneur, en sélectionnant par exemple une propriété de "*type*" valant "*multi*" pour une exécution véritablement parallèle, ou en choisissant une ressource distante de calcul définie par la propriété de "*Resource*", ou en utilisant les paramètres avancés,
+#. Sélectionner graphiquement dans la vue centrale le noeud dont on veut changer le mode d'exécution,
+#. Dans le panneau à droite des entrées du noeud, déplier les choix d'exécution (nommés "*Execution Mode"*), cocher la case "*Container*" à la place du défaut "*YACS*", et choisir le conteneur nouvellement créé (il porte usuellement le nom "*container0*"),
+#. Enregistrer le schéma YACS modifié.
+
+On peut répéter cette démarche pour chaque noeud qui le nécessite, en
+réutilisant le même nouveau conteneur pour tous les noeuds, ou en créant un
+nouveau conteneur pour chaque noeud.
+
+.. warning::
+
+  ce changement de mode d'exécution est extrêmement puissant et souple. Il est
+  donc recommandé à l'utilisateur à la fois de l'utiliser, et en même temps
+  d'être attentif à l'interaction des différents choix qu'il effectue, pour
+  éviter par exemple une dégradation involontaire des performances, ou des
+  conflits informatiques compliqués à diagnostiquer.
+
 .. _section_advanced_observer:
 
-Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO en YACS
---------------------------------------------------------------------------------------
+Obtenir des informations sur des variables spéciales au cours d'un calcul ADAO
+------------------------------------------------------------------------------
 
 .. index:: single: Observer
 .. index:: single: Observer Template
@@ -551,3 +602,5 @@ d'observation par script. Les nouveaux noms requis sont "*DirectOperator*",
 "*TangentOperator*" et "*AdjointOperator*", comme décrit dans la quatrième
 partie du chapitre :ref:`section_reference`. Les fichiers de script d'opérateur
 doivent être modifiés.
+
+.. [#] Pour de plus amples informations sur YACS, voir le *module YACS* et son aide intégrée disponible dans le menu principal *Aide* de l'environnement SALOME.
