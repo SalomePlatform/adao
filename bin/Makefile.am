@@ -22,14 +22,15 @@
 
 include $(top_srcdir)/adm_local/make_common_starter.am
 
-bin_SCRIPTS = AdaoYacsSchemaCreator.py qtEficas_adao_study.py # AdaoCatalogGenerator.py module_version.py
+bin_SCRIPTS = AdaoYacsSchemaCreator.py gui_Adao_QT_Eficas.py # AdaoCatalogGenerator.py module_version.py
 
-EXTRA_DIST = AdaoYacsSchemaCreator.py qtEficas_adao_study.py.in # AdaoCatalogGenerator.py module_version.py
+EXTRA_DIST = AdaoYacsSchemaCreator.py gui_Adao_QT_Eficas.py # AdaoCatalogGenerator.py module_version.py
 
 ADAODIR = $(DESTDIR)$(salomepythondir)/adao
 
 install-data-hook:
 	@export PYTHONPATH="$(DESTDIR)${salomepythondir}:${PYTHONPATH}" && python${PYTHON_VERSION} $(top_srcdir)/bin/AdaoCatalogGenerator.py $(ADAODIR)/daEficas ADAO_Cata_V0.py
+	@chmod 755 $(top_srcdir)/bin/gui_Adao_QT_Eficas.py
 
 uninstall-hook:
 	@rm $(ADAODIR)/daEficas/ADAO_Cata_V0.py
