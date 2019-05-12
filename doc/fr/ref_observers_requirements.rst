@@ -441,7 +441,7 @@ Imprime sur la sortie standard la norme L2 de la valeur courante de la variable.
 ::
 
     import numpy
-    v = numpy.matrix( numpy.ravel( var[-1] ) )
+    v = numpy.ravel( var[-1] )
     print(str(info)+" "+str(float( numpy.linalg.norm(v) )))
 
 .. index:: single: ValueRMS (Observer)
@@ -454,5 +454,5 @@ Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moy
 ::
 
     import numpy
-    v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*(v*v.T)) )))
+    v = numpy.ravel( var[-1] )
+    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*numpy.dot(v,v)) )))

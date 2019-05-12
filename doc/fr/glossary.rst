@@ -47,6 +47,41 @@ Glossaire
       jour au fur et à mesure du déroulement du calcul, et en utilisant des
       "*Observers*" attachés à des variables de calcul.
 
+   système physique
+      C'est l'objet d'étude que l'on va représenter par simulation numérique,
+      et que l'on observe par des mesures.
+
+   simulateur numérique
+      Ensemble des relations numériques et des équations caractérisant le
+      système physique étudié.
+
+   simulation numérique
+      Mise en oeuvre calculatoire de l'ensemble constitué du simulateur
+      numérique et d'un jeu particulier de toutes les variables d'entrée et de
+      contrôle du simulateur. Ces variables permettent de mettre le simulateur
+      numérique en capacité de représenter numériquement le comportement du
+      système.
+
+   observations ou mesures
+      Ce sont des quantités qui proviennent d'instruments de mesures et qui
+      caractérisent le système physique à étudier. Ces quantités peuvent varier
+      en espace ou en temps, peuvent être ponctuelles ou intégrées. Elles sont
+      elles-mêmes caractérisées par leur nature de mesure, leur dimension, etc.
+
+   opérateur d'observation
+      C'est une transformation de l'état simulé en un ensemble de quantités
+      explicitement comparables aux observations.
+
+   conditions aux limites
+      Ce sont des variables particulières d'entrée et de contrôle du
+      simulateur, qui caractérisent la description du comportement du système
+      en bordure du domaine spatial de simulation.
+
+   conditions initiales
+      Ce sont des variables particulières d'entrée et de contrôle du
+      simulateur, qui caractérisent la description du comportement du système
+      en bordure initiale du domaine temporel de simulation.
+
    APosterioriCovariance
       Mot-clé indiquant la matrice de covariance des erreurs *a posteriori*
       d'analyse.
@@ -96,16 +131,17 @@ Glossaire
       "proche" de 1.
 
    analyse
-      L'état optimal estimé par une procédure d'assimilation de données ou
-      d'optimisation.
+      C'est l'état optimal de représentation du système estimé par une
+      procédure d'assimilation de données ou d'optimisation.
 
    background
       C'est le terme anglais pour désigner l'ébauche.
 
    ébauche
-      C'est l'état du système connu *a priori*, qui n'est pas optimal, et qui
-      est utilisé comme une estimation grossière, ou "la meilleure connue",
-      avant une estimation optimale.
+      C'est une part (choisie pour être modifiable) de la représentation de
+      l'état du système, représentation connue *a priori* ou initiale, qui
+      n'est pas optimale, et qui est utilisée comme une estimation grossière ou
+      comme "la meilleure connue", avant une estimation optimale.
 
    innovation
       Différence entre les observations et le résultat de la simulation basée

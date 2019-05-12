@@ -75,8 +75,8 @@ Reconstruction de champs ou interpolation de données
 .. index:: single: interpolation de champs
 
 La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
-partir d'un nombre restreint de mesures réelles, le champs physique qui est le
-plus *cohérent* avec ces mesures.
+partir d'un nombre restreint de mesures réelles, le (ou les) champ(s)
+physique(s) qui est (sont) le(s) plus *cohérent(s)* avec ces mesures.
 
 La *cohérence* est à comprendre en termes d'interpolation, c'est-à-dire que le
 champ que l'on cherche à reconstruire, en utilisant de l'assimilation de données

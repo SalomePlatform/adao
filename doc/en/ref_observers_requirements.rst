@@ -438,7 +438,7 @@ Print on standard output the L2 norm of the current value of the variable.
 ::
 
     import numpy
-    v = numpy.matrix( numpy.ravel( var[-1] ) )
+    v = numpy.ravel( var[-1] )
     print(str(info)+" "+str(float( numpy.linalg.norm(v) )))
 
 .. index:: single: ValueRMS (Observer)
@@ -451,5 +451,5 @@ Print on standard output the root mean square (RMS), or quadratic mean, of the c
 ::
 
     import numpy
-    v = numpy.matrix( numpy.ravel( var[-1] ) )
-    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*(v*v.T)) )))
+    v = numpy.ravel( var[-1] )
+    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*numpy.dot(v,v)) )))

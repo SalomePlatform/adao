@@ -44,6 +44,40 @@ Glossary
       through the "*YACS Container Log*" window, which is updated during the
       process, and using "*Observers*" attached to calculation variables.
 
+   physical system
+      This is the object of study that will be represented by numerical
+      simulation and observed by measurements.
+
+   digital simulator
+      All the numerical relationships and equations characterizing the physical
+      system studied.
+
+   numerical simulation
+      Computational implementation of the set composed of the numerical
+      simulator and a particular set of all the input and control variables of
+      the simulator. These variables enable the digital simulator to be able to
+      numerically represent the system's behaviour.
+
+   observations or measurements
+      These are quantities that come from measuring instruments and
+      characterize the physical system to be studied. These quantities can vary
+      in space or time, can be punctual or integrated. They are themselves
+      characterized by their measurement nature, size, etc.
+
+   observation operator
+      It is a transformation of the simulated state into a set of quantities
+      explicitly comparable to the observations.
+
+   boundary conditions
+      These are particular input and control variables of the simulator, which
+      characterize the description of the system's behaviour at the border of
+      the simulation spatial domain.
+
+   initial conditions
+      These are specific simulator input and control variables that
+      characterize the description of the system's behavior at the initial edge
+      of the simulation time domain.
+
    APosterioriCovariance
       Keyword to indicate the covariance matrix of *a posteriori* analysis
       errors.
@@ -93,12 +127,14 @@ Glossary
       to 1, a "good" estimation leading to a parameter "close" to 1.
 
    analysis
-      The optimal state estimation through a data assimilation or optimization
-      procedure.
+      It is the optimal state estimated through a data assimilation or
+      optimization procedure.
 
    background
-      The *a priori* known state, which is not optimal, and is used as a rough
-      estimate, or a "best estimate", before an optimal estimation.
+      It is a part (chosen to be modified) of the system state representation,
+      representation known *a priori* or initial one, which is not optimal, and
+      which is used as a rough estimate, or a "best estimate", before an
+      optimal estimation.
 
    innovation
       Difference between the observations and the result of the simulation based

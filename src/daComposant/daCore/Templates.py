@@ -212,14 +212,14 @@ ObserverTemplates.store(
     )
 ObserverTemplates.store(
     name    = "ValueL2Norm",
-    content = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint(str(info)+" "+str(float( numpy.linalg.norm(v) )))""",
+    content = """import numpy\nv = numpy.ravel( var[-1] )\nprint(str(info)+" "+str(float( numpy.linalg.norm(v) )))""",
     fr_FR   = "Imprime sur la sortie standard la norme L2 de la valeur courante de la variable",
     en_EN   = "Print on standard output the L2 norm of the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueRMS",
-    content = """import numpy\nv = numpy.matrix( numpy.ravel( var[-1] ) )\nprint(str(info)+" "+str(float( numpy.sqrt((1./v.size)*(v*v.T)) )))""",
+    content = """import numpy\nv = numpy.ravel( var[-1] )\nprint(str(info)+" "+str(float( numpy.sqrt((1./v.size)*numpy.dot(v,v)) )))""",
     fr_FR   = "Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moyenne quadratique, de la valeur courante de la variable",
     en_EN   = "Print on standard output the root mean square (RMS), or quadratic mean, of the current value of the variable",
     order   = "next",
