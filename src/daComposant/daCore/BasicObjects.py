@@ -607,6 +607,7 @@ class Algorithm(object):
         self._parameters = {"StoreSupplementaryCalculations":[]}
         self.__required_parameters = {}
         self.__required_inputs = {"RequiredInputValues":{"mandatory":(), "optional":()}}
+        self.__variable_names_not_public = {"nextStep":False} # Duplication dans AlgorithmAndParameters
         #
         self.StoredVariables = {}
         self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
@@ -655,6 +656,9 @@ class Algorithm(object):
         #
         # Mise a jour de self._parameters avec Parameters
         self.__setParameters(Parameters)
+        #
+        for k, v in self.__variable_names_not_public.items():
+            if k not in self._parameters:  self.__setParameters( {k:v} )
         #
         # Corrections et complements
         def __test_vvalue(argument, variable, argname):
@@ -890,6 +894,8 @@ class AlgorithmAndParameters(object):
             self.__P.update( {"Algorithm":self.__A} )
         #
         self.__setAlgorithm( self.__A )
+        #
+        self.__variable_names_not_public = {"nextStep":False} # Duplication dans Algorithm
 
     def updateParameters(self,
                  asDict     = None,
@@ -1005,7 +1011,9 @@ class AlgorithmAndParameters(object):
         elif key in self.__P:
             return self.__P[key]
         else:
-            return self.__P
+            allvariables = self.__P
+            for k in self.__variable_names_not_public: allvariables.pop(k, None)
+            return allvariables
 
     def pop(self, k, d):
         "Necessaire pour le pickling"
@@ -1052,7 +1060,10 @@ class AlgorithmAndParameters(object):
         return self.__algorithm.StoredVariables[ __V ].hasDataObserver()
 
     def keys(self):
-        return list(self.__algorithm.keys()) + list(self.__P.keys())
+        __allvariables = list(self.__algorithm.keys()) + list(self.__P.keys())
+        for k in self.__variable_names_not_public:
+            if k in __allvariables: __allvariables.remove(k)
+        return __allvariables
 
     def __contains__(self, key=None):
         "D.__contains__(k) -> True if D has a key k, else False"

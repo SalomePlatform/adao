@@ -118,10 +118,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Xn = Xb
         Pn = B
         #
-        self.StoredVariables["Analysis"].store( Xn.A1 )
-        if self._toStore("APosterioriCovariance"):
-            self.StoredVariables["APosterioriCovariance"].store( Pn.asfullmatrix(Xn.size) )
-            covarianceXa = Pn
+        if len(self.StoredVariables["Analysis"])==0 or not self._parameters["nextStep"]:
+            self.StoredVariables["Analysis"].store( numpy.ravel(Xn) )
+            if self._toStore("APosterioriCovariance"):
+                self.StoredVariables["APosterioriCovariance"].store( Pn.asfullmatrix(Xn.size) )
+                covarianceXa = Pn
+        #
         Xa               = Xn
         previousJMinimum = numpy.finfo(float).max
         #

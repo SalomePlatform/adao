@@ -164,15 +164,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Initialisation
         # --------------
+        __n = Xb.size
         Xn = Xb
-        if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(Xn.size)
+        if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
         else:                         Pn = B
         #
-        self.StoredVariables["Analysis"].store( Xn.A1 )
-        if self._toStore("APosterioriCovariance"):
-            self.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
-        Xa = XaMin       = Xb
+        if len(self.StoredVariables["Analysis"])==0 or not self._parameters["nextStep"]:
+            self.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+            if self._toStore("APosterioriCovariance"):
+                self.StoredVariables["APosterioriCovariance"].store( Pn )
+                covarianceXa = Pn
+        #
+        Xa               = Xb
+        XaMin            = Xb
         previousJMinimum = numpy.finfo(float).max
         #
         for step in range(duration-1):

@@ -122,8 +122,9 @@ class _TUIViewer(GenericCaseViewer):
                 if   k == "Stored"               and not __v: continue
                 if   k == "ColMajor"             and not __v: continue
                 if   k == "InputFunctionAsMulti" and not __v: continue
+                if   k == "nextStep"          and not __v: continue
                 if   k == "AvoidRC"              and     __v: continue
-                if   k == "noDetails":             continue
+                if   k == "noDetails":                        continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 if callable(__v): __text = self._missing%__v.__name__+__text
                 if isinstance(__v,dict):
@@ -393,7 +394,7 @@ class _SCDViewer(GenericCaseViewer):
                     __text += "%s_config['From'] = '%s'\n"%(__command,__f)
                     __text += "%s_config['Data'] = %s\n"%(__command,__v)
                     __text = __text.replace("''","'")
-                elif __k in ('Stored', 'Checked', 'ColMajor', 'InputFunctionAsMulti'):
+                elif __k in ('Stored', 'Checked', 'ColMajor', 'InputFunctionAsMulti', 'nextStep'):
                     if bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
                 elif __k in ('AvoidRC', 'noDetails'):

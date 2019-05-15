@@ -666,10 +666,11 @@ class Aidsm(object):
 
     # -----------------------------------------------------------
 
-    def execute(self, Executor=None, SaveCaseInFile=None):
+    def execute(self, Executor=None, SaveCaseInFile=None, nextStep=False):
         "Lancement du calcul"
         self.__case.register("execute",dir(),locals(),None,True)
-        Operator.CM.clearCache()
+        self.updateAlgorithmParameters(Parameters={"nextStep":bool(nextStep)})
+        if not nextStep: Operator.CM.clearCache()
         try:
             if   Executor == "YACS": self.__executeYACSScheme( SaveCaseInFile )
             else:                    self.__executePythonScheme( SaveCaseInFile )
@@ -751,7 +752,7 @@ class Aidsm(object):
             for k in self.__adaoObject['AlgorithmParameters'].keys():
                 if k == "Algorithm": continue
                 if k in self.__StoredInputs:
-                    raise ValueError("the key \"%s\s to be transfered for pickling will overwrite an existing one.")
+                    raise ValueError("The key \"%s\" to be transfered for pickling will overwrite an existing one."%(k,))
                 if self.__adaoObject['AlgorithmParameters'].hasObserver( k ):
                     self.__adaoObject['AlgorithmParameters'].removeObserver( k, "", True )
                 self.__StoredInputs[k] = self.__adaoObject['AlgorithmParameters'].pop(k, None)

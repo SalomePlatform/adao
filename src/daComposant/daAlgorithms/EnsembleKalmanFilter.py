@@ -140,11 +140,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
         else:                         Qn = Q
         #
-        self.StoredVariables["Analysis"].store( Xb.A1 )
-        if self._toStore("APosterioriCovariance"):
-            self.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
-        Xa = XaMin       = Xb
+        if len(self.StoredVariables["Analysis"])==0 or not self._parameters["nextStep"]:
+            self.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+            if self._toStore("APosterioriCovariance"):
+                self.StoredVariables["APosterioriCovariance"].store( Pn )
+                covarianceXa = Pn
+        #
+        Xa               = Xb
+        XaMin            = Xb
         previousJMinimum = numpy.finfo(float).max
         #
         # Predimensionnement
