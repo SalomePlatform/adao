@@ -172,7 +172,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["EstimationOf"] == "State":
                 for i in range(__m):
-                    qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn)).T
+                    qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
                     Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( M((Xn[:,i], Un)) )).T + qi
                     HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
@@ -197,7 +197,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             del PfHT, HPfHT
             #
             for i in range(__m):
-                ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn)).T
+                ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn, (1,1,1))).T
                 Xn[:,i] = Xn_predicted[:,i] + K * (Ynpu + ri - HX_predicted[:,i])
             #
             Xa = Xn.mean(axis=1, dtype=mfp)

@@ -276,7 +276,7 @@ class Persistence(object):
         élémentaires numpy.
         """
         try:
-            return [numpy.matrix(item).mean() for item in self.__values]
+            return [numpy.array(item).mean() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -291,9 +291,9 @@ class Persistence(object):
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return [numpy.matrix(item).std(ddof=ddof) for item in self.__values]
+                return [numpy.array(item).std(ddof=ddof) for item in self.__values]
             else:
-                return [numpy.matrix(item).std() for item in self.__values]
+                return [numpy.array(item).std() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -304,7 +304,7 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.matrix(item).sum() for item in self.__values]
+            return [numpy.array(item).sum() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -315,7 +315,7 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.matrix(item).min() for item in self.__values]
+            return [numpy.array(item).min() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -326,7 +326,7 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.matrix(item).max() for item in self.__values]
+            return [numpy.array(item).max() for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -460,6 +460,7 @@ class Persistence(object):
             eval(input('Please press return to continue...\n'))
 
     # ---------------------------------------------------------
+    # On pourrait aussi utiliser d'autres attributs d'un "array" comme "tofile"
     def mean(self):
         """
         Renvoie la moyenne sur toutes les valeurs sans tenir compte de la
@@ -534,9 +535,6 @@ class Persistence(object):
             return numpy.array(self.__values).cumsum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
-
-    # On pourrait aussi utiliser les autres attributs d'une "matrix", comme
-    # "tofile", "min"...
 
     def plot(self,
              steps    = None,

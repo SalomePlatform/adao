@@ -22,7 +22,7 @@
 
 import logging
 from daCore import BasicObjects
-import numpy, scipy.optimize
+import numpy, scipy.optimize, scipy.version
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -262,8 +262,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if self._parameters["Minimizer"] == "LBFGSB":
             # Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
-            import lbfgsbhlt
-            Minimum, J_optimal, Informations = lbfgsbhlt.fmin_l_bfgs_b(
+            if "0.19" <= scipy.version.version <= "1.1.0":
+                import lbfgsbhlt as optimiseur
+            else:
+                import scipy.optimize as optimiseur
+            Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,

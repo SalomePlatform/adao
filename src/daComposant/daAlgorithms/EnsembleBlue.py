@@ -77,7 +77,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         for npar in range(DiagonaleR.size):
             bruit = numpy.random.normal(0,DiagonaleR[npar],nb_ens)
             EnsembleY[npar,:] = Y[npar] + bruit
-        EnsembleY = numpy.matrix(EnsembleY)
         #
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
@@ -96,24 +95,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------
         for iens in range(nb_ens):
-            HXb = Hm * Xb[iens]
+            HXb = numpy.ravel(numpy.dot(Hm, Xb[iens]))
             if self._toStore("SimulatedObservationAtBackground"):
-                self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
-            d  = EnsembleY[:,iens] - HXb
+                self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
+            d  = numpy.ravel(EnsembleY[:,iens]) - HXb
             if self._toStore("Innovation"):
-                self.StoredVariables["Innovation"].store( numpy.ravel(d) )
-            Xa = Xb[iens] + K*d
+                self.StoredVariables["Innovation"].store( d )
+            Xa = numpy.ravel(Xb[iens]) + numpy.dot(K, d)
             self.StoredVariables["CurrentState"].store( Xa )
             if self._toStore("SimulatedObservationAtCurrentState"):
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm * Xa )
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.dot(Hm, Xa) )
         #
         # Fabrication de l'analyse
         # ------------------------
         Members = self.StoredVariables["CurrentState"][-nb_ens:]
-        Xa = numpy.matrix( Members ).mean(axis=0)
-        self.StoredVariables["Analysis"].store( Xa.A1 )
+        Xa = numpy.array( Members ).mean(axis=0)
+        self.StoredVariables["Analysis"].store( Xa )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel( Hm * Xa ) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.dot(Hm, Xa) )
         #
         self._post_run(HO)
         return 0
