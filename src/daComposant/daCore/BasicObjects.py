@@ -113,6 +113,7 @@ class Operator(object):
         fromMatrix           = None,
         avoidingRedundancy   = True,
         inputAsMultiFunction = False,
+        enableMultiProcess   = False,
         extraArguments       = None,
         ):
         """
@@ -131,13 +132,14 @@ class Operator(object):
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
         self.__AvoidRC   = bool( avoidingRedundancy )
         self.__inputAsMF = bool( inputAsMultiFunction )
+        self.__mpEnabled = bool( enableMultiProcess )
         self.__extraArgs = extraArguments
         if   fromMethod is not None and self.__inputAsMF:
             self.__Method = fromMethod # logtimer(fromMethod)
             self.__Matrix = None
             self.__Type   = "Method"
         elif fromMethod is not None and not self.__inputAsMF:
-            self.__Method = partial( MultiFonction, _sFunction=fromMethod)
+            self.__Method = partial( MultiFonction, _sFunction=fromMethod, _mpEnabled=self.__mpEnabled)
             self.__Matrix = None
             self.__Type   = "Method"
         elif fromMatrix is not None:
@@ -404,14 +406,18 @@ class FullOperator(object):
         __Parameters = {}
         if (asDict is not None) and isinstance(asDict, dict):
             __Parameters.update( asDict )
-            if "DifferentialIncrement" in asDict:
-                __Parameters["withIncrement"]  = asDict["DifferentialIncrement"]
-            if "CenteredFiniteDifference" in asDict:
-                __Parameters["withCenteredDF"] = asDict["CenteredFiniteDifference"]
-            if "EnableMultiProcessing" in asDict:
-                __Parameters["withmpEnabled"]  = asDict["EnableMultiProcessing"]
-            if "NumberOfProcesses" in asDict:
-                __Parameters["withmpWorkers"]  = asDict["NumberOfProcesses"]
+        # Priorité à EnableMultiProcessingInDerivatives=True
+        if "EnableMultiProcessing" in __Parameters and __Parameters["EnableMultiProcessing"]:
+            __Parameters["EnableMultiProcessingInDerivatives"] = True
+            __Parameters["EnableMultiProcessingInEvaluation"]  = False
+        if "EnableMultiProcessingInDerivatives"  not in __Parameters:
+            __Parameters["EnableMultiProcessingInDerivatives"]  = False
+        if __Parameters["EnableMultiProcessingInDerivatives"]:
+            __Parameters["EnableMultiProcessingInEvaluation"]  = False
+        if "EnableMultiProcessingInEvaluation"  not in __Parameters:
+            __Parameters["EnableMultiProcessingInEvaluation"]  = False
+        if "withIncrement" in __Parameters: # Temporaire
+            __Parameters["DifferentialIncrement"] = __Parameters["withIncrement"]
         #
         if asScript is not None:
             __Matrix, __Function = None, None
@@ -477,40 +483,39 @@ class FullOperator(object):
         if isinstance(__Function, dict) and \
                 ("useApproximatedDerivatives" in __Function) and bool(__Function["useApproximatedDerivatives"]) and \
                 ("Direct" in __Function) and (__Function["Direct"] is not None):
-            if "withCenteredDF"            not in __Function: __Function["withCenteredDF"]            = False
-            if "withIncrement"             not in __Function: __Function["withIncrement"]             = 0.01
-            if "withdX"                    not in __Function: __Function["withdX"]                    = None
-            if "withAvoidingRedundancy"    not in __Function: __Function["withAvoidingRedundancy"]    = avoidRC
-            if "withToleranceInRedundancy" not in __Function: __Function["withToleranceInRedundancy"] = 1.e-18
-            if "withLenghtOfRedundancy"    not in __Function: __Function["withLenghtOfRedundancy"]    = -1
-            if "withmpEnabled"             not in __Function: __Function["withmpEnabled"]             = False
-            if "withmpWorkers"             not in __Function: __Function["withmpWorkers"]             = None
-            if "withmfEnabled"             not in __Function: __Function["withmfEnabled"]             = inputAsMF
+            if "CenteredFiniteDifference"           not in __Function: __Function["CenteredFiniteDifference"]           = False
+            if "DifferentialIncrement"              not in __Function: __Function["DifferentialIncrement"]              = 0.01
+            if "withdX"                             not in __Function: __Function["withdX"]                             = None
+            if "withAvoidingRedundancy"             not in __Function: __Function["withAvoidingRedundancy"]             = avoidRC
+            if "withToleranceInRedundancy"          not in __Function: __Function["withToleranceInRedundancy"]          = 1.e-18
+            if "withLenghtOfRedundancy"             not in __Function: __Function["withLenghtOfRedundancy"]             = -1
+            if "NumberOfProcesses"                  not in __Function: __Function["NumberOfProcesses"]                  = None
+            if "withmfEnabled"                      not in __Function: __Function["withmfEnabled"]                      = inputAsMF
             from daNumerics.ApproximatedDerivatives import FDApproximation
             FDA = FDApproximation(
                 Function              = __Function["Direct"],
-                centeredDF            = __Function["withCenteredDF"],
-                increment             = __Function["withIncrement"],
+                centeredDF            = __Function["CenteredFiniteDifference"],
+                increment             = __Function["DifferentialIncrement"],
                 dX                    = __Function["withdX"],
                 avoidingRedundancy    = __Function["withAvoidingRedundancy"],
                 toleranceInRedundancy = __Function["withToleranceInRedundancy"],
                 lenghtOfRedundancy    = __Function["withLenghtOfRedundancy"],
-                mpEnabled             = __Function["withmpEnabled"],
-                mpWorkers             = __Function["withmpWorkers"],
+                mpEnabled             = __Function["EnableMultiProcessingInDerivatives"],
+                mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
                 )
-            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
             self.__FO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
-            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
             self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif asMatrix is not None:
             __matrice = numpy.matrix( __Matrix, numpy.float )
-            self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
             self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
             del __matrice
@@ -1848,29 +1853,69 @@ class CaseLogger(object):
         return __formater.load(__filename, __content, __object)
 
 # ==============================================================================
-def MultiFonction( __xserie, _extraArguments = None, _sFunction = lambda x: x ):
+def MultiFonction(
+        __xserie,
+        _extraArguments = None,
+        _sFunction      = lambda x: x,
+        _mpEnabled      = False,
+        _mpWorkers      = None,
+        ):
     """
     Pour une liste ordonnée de vecteurs en entrée, renvoie en sortie la liste
     correspondante de valeurs de la fonction en argument
     """
     # Vérifications et définitions initiales
+    # logging.debug("MULTF Internal multifonction calculations begin with function %s"%(_sFunction.__name__,))
     if not PlatformInfo.isIterable( __xserie ):
         raise TypeError("MultiFonction not iterable unkown input type: %s"%(type(__xserie),))
+    if _mpEnabled:
+        if (_mpWorkers is None) or (_mpWorkers is not None and _mpWorkers < 1):
+            __mpWorkers = None
+        else:
+            __mpWorkers = int(_mpWorkers)
+        try:
+            import multiprocessing
+            __mpEnabled = True
+        except ImportError:
+            __mpEnabled = False
+    else:
+        __mpEnabled = False
+        __mpWorkers = None
     #
     # Calculs effectifs
-    __multiHX = []
-    if _extraArguments is None:
-        for __xvalue in __xserie:
-            __multiHX.append( _sFunction( __xvalue ) )
-    elif _extraArguments is not None and isinstance(_extraArguments, (list, tuple, map)):
-        for __xvalue in __xserie:
-            __multiHX.append( _sFunction( __xvalue, *_extraArguments ) )
-    elif _extraArguments is not None and isinstance(_extraArguments, dict):
-        for __xvalue in __xserie:
-            __multiHX.append( _sFunction( __xvalue, **_extraArguments ) )
+    if __mpEnabled:
+        _jobs = []
+        if _extraArguments is None:
+            _jobs = __xserie
+        elif _extraArguments is not None and isinstance(_extraArguments, (list, tuple, map)):
+            for __xvalue in __xserie:
+                _jobs.append( [__xvalue, ] + list(_extraArguments) )
+        else:
+            raise TypeError("MultiFonction extra arguments unkown input type: %s"%(type(_extraArguments),))
+        # logging.debug("MULTF Internal multiprocessing calculations begin : evaluation of %i point(s)"%(len(_jobs),))
+        import multiprocessing
+        with multiprocessing.Pool(__mpWorkers) as pool:
+            __multiHX = pool.map( _sFunction, _jobs )
+            pool.close()
+            pool.join()
+        # logging.debug("MULTF Internal multiprocessing calculation end")
     else:
-        raise TypeError("MultiFonction extra arguments unkown input type: %s"%(type(_extraArguments),))
+        # logging.debug("MULTF Internal monoprocessing calculation begin")
+        __multiHX = []
+        if _extraArguments is None:
+            for __xvalue in __xserie:
+                __multiHX.append( _sFunction( __xvalue ) )
+        elif _extraArguments is not None and isinstance(_extraArguments, (list, tuple, map)):
+            for __xvalue in __xserie:
+                __multiHX.append( _sFunction( __xvalue, *_extraArguments ) )
+        elif _extraArguments is not None and isinstance(_extraArguments, dict):
+            for __xvalue in __xserie:
+                __multiHX.append( _sFunction( __xvalue, **_extraArguments ) )
+        else:
+            raise TypeError("MultiFonction extra arguments unkown input type: %s"%(type(_extraArguments),))
+        # logging.debug("MULTF Internal monoprocessing calculation end")
     #
+    # logging.debug("MULTF Internal multifonction calculations end")
     return __multiHX
 
 # ==============================================================================

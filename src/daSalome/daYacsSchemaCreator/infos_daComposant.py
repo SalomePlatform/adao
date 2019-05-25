@@ -86,6 +86,7 @@ CheckAlgos = [
     "TangentTest",
     "LocalSensitivityTest",
     "SamplingTest",
+    "ParallelFunctionTest",
     "ObserverTest",
     ]
 
@@ -198,6 +199,10 @@ AlgoDataRequirements["LocalSensitivityTest"] = [
 AlgoDataRequirements["SamplingTest"] = [
     "CheckingPoint", "BackgroundError",
     "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
+AlgoDataRequirements["ParallelFunctionTest"] = [
+    "CheckingPoint",
     "ObservationOperator",
     ]
 AlgoDataRequirements["ObserverTest"] = [
