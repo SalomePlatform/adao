@@ -268,6 +268,9 @@ class _COMViewer(GenericCaseViewer):
                         if __ifrom == 'Script':
                             __argumentsList.append([__itype,True])
                             __argumentsList.append(['Script',__idata['SCRIPT_FILE']])
+                        if __ifrom == 'DataFile':
+                            __argumentsList.append([__itype,True])
+                            __argumentsList.append(['DataFile',__idata['DATA_FILE']])
                         if __ifrom == 'ScriptWithOneFunction':
                             __argumentsList.append(['OneFunction',True])
                             __argumentsList.append(['Script',__idata.pop('SCRIPTWITHONEFUNCTION_FILE')])
@@ -686,6 +689,8 @@ class ImportFromFile(object):
                 self._delimiter = ","
             elif self.__filestring.count(";") > 1:
                 self._delimiter = ";"
+            else:
+                self._delimiter = None
         elif self._format == "text/tab-separated-values" or Format.upper() == "TSV":
             self._format = "text/tab-separated-values"
             self._delimiter = "\t"

@@ -407,6 +407,23 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
     <outport name="stored" type="bool"/>
   </inline>
 
+  <inline name="CreateNumpyVectorFromDataFile">
+    <script><code><![CDATA[
+import logging, sys, os
+logging.debug("CREATE YI Entering in CreateNumpyVectorFromDataFile")
+type = "Vector"
+
+if sys.version_info.major > 2: import adao
+from daCore.Interfaces import ImportFromFile as aif
+vector = aif(script).getvalue(columns)[1]
+]]></code></script>
+    <inport name="script" type="string"/>
+    <inport name="columns" type="stringvec"/>
+    <outport name="vector" type="pyobj"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
   <inline name="CreateNumpyVectorSerieFromString">
     <script><code><![CDATA[
 import numpy, logging
