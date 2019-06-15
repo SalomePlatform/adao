@@ -409,13 +409,13 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
 
   <inline name="CreateNumpyVectorFromDataFile">
     <script><code><![CDATA[
-import logging, sys, os
+import logging, sys, numpy
 logging.debug("CREATE YI Entering in CreateNumpyVectorFromDataFile")
 type = "Vector"
 
 if sys.version_info.major > 2: import adao
 from daCore.Interfaces import ImportFromFile as aif
-vector = aif(script).getvalue(columns)[1]
+vector = numpy.ravel( aif(script).getvalue(columns)[1] )
 ]]></code></script>
     <inport name="script" type="string"/>
     <inport name="columns" type="stringvec"/>
@@ -428,8 +428,16 @@ vector = aif(script).getvalue(columns)[1]
     <script><code><![CDATA[
 import numpy, logging
 logging.debug("CREATE YI Entering in CreateNumpyVectorSerieFromString")
-vector_in_list = eval(str(vector_in_string),{},{})
-vector = numpy.matrix(vector_in_list)
+# vector_in_list = eval(str(vector_in_string),{},{})
+# vector = numpy.matrix(vector_in_list)
+if (vector_in_string.find("array")>-1) or (vector_in_string.find("matrix")>-1):
+    vector_in_string=vector_in_string.replace("array","numpy.array")
+    vector_in_string=vector_in_string.replace("matrix","numpy.matrix")
+    exec("vector="+vector_in_string)
+    vector = numpy.matrix(vector)
+else:
+    vector_in_string=vector_in_string.replace("'","").replace('"','')
+    vector = numpy.matrix(vector_in_string)
 type = "VectorSerie"
 logging.debug("VectorSerie is %s"%vector)
 ]]></code></script>
@@ -459,6 +467,24 @@ if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index
 
 ]]></code></script>
     <inport name="script" type="string"/>
+    <outport name="type" type="string"/>
+    <outport name="stored" type="bool"/>
+  </inline>
+
+  <inline name="CreateNumpyVectorSerieFromDataFile">
+    <script><code><![CDATA[
+import logging, sys, numpy
+logging.debug("CREATE YI Entering in CreateNumpyVectorSerieFromDataFile")
+type = "VectorSerie"
+
+if sys.version_info.major > 2: import adao
+from daCore.Interfaces import ImportFromFile as aif
+if len(columns) == 0: columns = None
+vector = numpy.transpose( aif(script).getvalue(columns)[1] )
+]]></code></script>
+    <inport name="script" type="string"/>
+    <inport name="columns" type="stringvec"/>
+    <outport name="vector" type="pyobj"/>
     <outport name="type" type="string"/>
     <outport name="stored" type="bool"/>
   </inline>

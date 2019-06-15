@@ -52,7 +52,7 @@ AssimType["ControlInput"]        = ["Vector", "VectorSerie"]
 
 FromNumpyList = {}
 FromNumpyList["Vector"]               = ["String", "Script", "DataFile"]
-FromNumpyList["VectorSerie"]          = ["String", "Script"]
+FromNumpyList["VectorSerie"]          = ["String", "Script", "DataFile"]
 FromNumpyList["Matrix"]               = ["String", "Script"]
 FromNumpyList["ScalarSparseMatrix"]   = ["String", "Script"]
 FromNumpyList["DiagonalSparseMatrix"] = ["String", "Script"]
@@ -236,7 +236,7 @@ BasicDataInputs = ["String", "Script", "ScriptWithOneFunction", "ScriptWithFunct
 # Data input dict
 DataTypeDict = {}
 DataTypeDict["Vector"]               = ["String", "Script", "DataFile"]
-DataTypeDict["VectorSerie"]          = ["String", "Script"]
+DataTypeDict["VectorSerie"]          = ["String", "Script", "DataFile"]
 DataTypeDict["Matrix"]               = ["String", "Script"]
 DataTypeDict["ScalarSparseMatrix"]   = ["String", "Script"]
 DataTypeDict["DiagonalSparseMatrix"] = ["String", "Script"]

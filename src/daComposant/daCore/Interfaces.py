@@ -122,7 +122,7 @@ class _TUIViewer(GenericCaseViewer):
                 if   k == "Stored"               and not __v: continue
                 if   k == "ColMajor"             and not __v: continue
                 if   k == "InputFunctionAsMulti" and not __v: continue
-                if   k == "nextStep"          and not __v: continue
+                if   k == "nextStep"             and not __v: continue
                 if   k == "AvoidRC"              and     __v: continue
                 if   k == "noDetails":                        continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
@@ -260,7 +260,7 @@ class _COMViewer(GenericCaseViewer):
                     __itype = r['INPUT_TYPE']
                     __idata = r['data']
                     if 'FROM' in __idata:
-                        # String, Script, Template, ScriptWithOneFunction, ScriptWithFunctions
+                        # String, Script, DataFile, Template, ScriptWithOneFunction, ScriptWithFunctions
                         __ifrom = __idata['FROM']
                         __idata.pop('FROM','')
                         if __ifrom == 'String' or __ifrom == 'Template':
@@ -361,9 +361,20 @@ class _SCDViewer(GenericCaseViewer):
                 __local.pop(__k)
             for __k,__v in __local.items():
                 if __k == "Concept": continue
-                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local: continue
+                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local and __local['Script'] is not None: continue
+                if __k in ['Vector','VectorSerie'] and 'DataFile' in __local and __local['DataFile'] is not None: continue
                 if __k == 'Algorithm':
                     __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
+                elif __k == 'DataFile':
+                    __k = 'Vector'
+                    __f = 'DataFile'
+                    __v = "'"+repr(__v)+"'"
+                    for __lk in ['Vector','VectorSerie']:
+                        if __lk in __local and __local[__lk]: __k = __lk
+                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command,__f)
+                    __text += "%s_config['Data'] = %s\n"%(__command,__v)
+                    __text = __text.replace("''","'")
                 elif __k == 'Script':
                     __k = 'Vector'
                     __f = 'Script'
@@ -707,6 +718,8 @@ class ImportFromFile(object):
 
     def __getentete(self, __nblines = 3):
         "Lit l'entête du fichier pour trouver la définition des variables"
+        # La première ligne non vide non commentée est toujours considérée
+        # porter les labels de colonne, donc pas des valeurs
         __header, __varsline, __skiprows = [], "", 1
         if self._format in self.__binaryformats:
             pass
@@ -717,7 +730,7 @@ class ImportFromFile(object):
                     __header.append(__line)
                     __skiprows += 1
                     __line = fid.readline().strip()
-                __varsline = __line # Première ligne non commentée non vide
+                __varsline = __line
                 for i in range(max(0,__nblines)):
                     __header.append(fid.readline())
         return (__header, __varsline, __skiprows)
@@ -779,6 +792,9 @@ class ImportFromFile(object):
             with numpy.load(self._filename) as __allcolumns:
                 if self._colnames is None:
                     self._colnames = __allcolumns.files
+                for nom in self._colnames: # Si une variable demandée n'existe pas
+                    if nom not in __allcolumns.files:
+                        self._colnames = tuple( __allcolumns.files )
                 for nom in self._colnames:
                     if nom in __allcolumns.files:
                         if __columns is not None:
@@ -794,6 +810,8 @@ class ImportFromFile(object):
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, skiprows=self._skiprows)
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), skiprows=self._skiprows)
+            if __usecols is None: # Si une variable demandée n'existe pas
+                self._colnames = None
         #
         elif self._format == "application/dymola.sdf" and PlatformInfo.has_sdf:
             import sdf
@@ -817,12 +835,16 @@ class ImportFromFile(object):
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
+            if __usecols is None: # Si une variable demandée n'existe pas
+                self._colnames = None
         #
         elif self._format == "text/tab-separated-values":
             __usecols, __useindex = self.__getindices(self._colnames, self._colindex, self._delimiter)
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
+            if __usecols is None: # Si une variable demandée n'existe pas
+                self._colnames = None
         else:
             raise ValueError("Unkown file format \"%s\" or no reader available"%self._format)
         if __columns is None: __columns = ()
