@@ -90,3 +90,4 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_LinearityTest`
+- :ref:`section_ref_algorithm_ParallelFunctionTest`

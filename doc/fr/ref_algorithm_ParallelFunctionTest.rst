@@ -21,24 +21,26 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: FunctionTest
-.. _section_ref_algorithm_FunctionTest:
+.. index:: single: ParallelFunctionTest
+.. _section_ref_algorithm_ParallelFunctionTest:
 
-Checking algorithm "*FunctionTest*"
------------------------------------
+Algorithme de vérification "*ParallelFunctionTest*"
+---------------------------------------------------
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to verify that the observation operator is working
-correctly and that its call is compatible with its usage in ADAO algorithms. In
-practice, it allows to call one or several times the operator, activating or not
-the "debug" mode during execution.
+Cet algorithme permet de vérifier que l'opérateur d'observation fonctionne
+correctement en parallèle et que son appel se déroule de manière compatible
+avec son usage dans les algorithmes d'ADAO. De manière pratique, il permet
+d'appeler une ou plusieurs fois l'opérateur en parallèle, en activant ou non le
+mode "debug" lors de l'exécution.
 
-Statistics on input and output vectors for each execution of operator are given,
-and an another global statistic is given at the end of the checking algorithm.
-The precision of printed outputs can be controlled to facilitate automatic tests
-of operator.
+Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
+l'opérateur est indiquée, et une autre globale est fournie de manière
+récapitulative à la fin de l'algorithme de vérification. La précision
+d'affichage est contrôlable pour permettre l'automatisation des tests
+d'opérateur.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -59,23 +61,23 @@ of operator.
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm, if they are initially required by the
-  user. It involves potentially costly calculations or memory consumptions. The
-  default is a void list, none of these variables being calculated and stored
-  by default excepted the unconditionnal variables. The possible names are in
-  the following list: [
+  Cette liste indique les noms des variables supplémentaires qui peuvent être
+  disponibles à la fin de l'algorithme, si elles sont initialement demandées par
+  l'utilisateur. Cela implique potentiellement des calculs ou du stockage
+  coûteux. La valeur par défaut est une liste vide, aucune de ces variables
+  n'étant calculée et stockée par défaut sauf les variables inconditionnelles.
+  Les noms possibles sont dans la liste suivante : [
   "CurrentState",
   "SimulatedObservationAtCurrentState",
   ].
 
-  Example :
+  Exemple :
   ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
-*None*
+*Aucune*
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
@@ -87,5 +89,5 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
+- :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_LinearityTest`
-- :ref:`section_ref_algorithm_ParallelFunctionTest`

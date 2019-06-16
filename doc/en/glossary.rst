@@ -94,20 +94,25 @@ Glossary
       Keyword to indicate the standard errors diagonal matrix of *a posteriori*
       analysis errors.
 
-   BMA (Background minus Analysis)
-      Difference between the background state and the optimal state estimation,
-      noted as :math:`\mathbf{x}^b - \mathbf{x}^a`.
+   BMA
+      The acronym means *Background minus Analysis*. It is the difference
+      between the background state and the optimal state estimation,
+      corresponding to the mathematical expression :math:`\mathbf{x}^b -
+      \mathbf{x}^a`.
 
-   OMA (Observation minus Analysis)
-      Difference between the observations and the result of the simulation based
-      on the optimal state estimation, the analysis, filtered to be compatible
-      with the observation, noted as :math:`\mathbf{y}^o -
-      \mathbf{H}\mathbf{x}^a`.
+   OMA
+      The acronym means *Observation minus Analysis*. It is the difference
+      between the observations and the result of the simulation based on the
+      optimal state estimation, the analysis, filtered to be compatible with
+      the observation, corresponding to the mathematical expression
+      :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^a`.
 
-   OMB (Observation minus Background)
-      Difference between the observations and the result of the simulation based
-      on the background state, filtered to be compatible with the observation,
-      noted as :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^b`.
+   OMB
+      The acronym means *Observation minus Background*. It is the difference
+      between the observations and the result of the simulation based on the
+      background state, filtered to be compatible with the observation,
+      corresponding to the mathematical expression :math:`\mathbf{y}^o -
+      \mathbf{H}\mathbf{x}^b`.
 
    SigmaBck2
       Keyword to indicate the Desroziers-Ivanov parameter measuring the

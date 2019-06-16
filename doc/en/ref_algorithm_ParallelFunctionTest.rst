@@ -21,19 +21,19 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: FunctionTest
-.. _section_ref_algorithm_FunctionTest:
+.. index:: single: ParallelFunctionTest
+.. _section_ref_algorithm_ParallelFunctionTest:
 
-Checking algorithm "*FunctionTest*"
------------------------------------
+Checking algorithm "*ParallelFunctionTest*"
+-------------------------------------------
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to verify that the observation operator is working
-correctly and that its call is compatible with its usage in ADAO algorithms. In
-practice, it allows to call one or several times the operator, activating or not
-the "debug" mode during execution.
+correctly in parallel and that its call is compatible with its usage in ADAO
+algorithms. In practice, it allows to call one or several times the operator in
+parallel, activating or not the "debug" mode during execution.
 
 Statistics on input and output vectors for each execution of operator are given,
 and an another global statistic is given at the end of the checking algorithm.
@@ -87,5 +87,5 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
+- :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_LinearityTest`
-- :ref:`section_ref_algorithm_ParallelFunctionTest`

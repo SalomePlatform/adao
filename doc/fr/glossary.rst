@@ -98,19 +98,24 @@ Glossaire
       Mot-clé indiquant la matrice diagonale des écarts-types des erreurs *a
       posteriori* d'analyse.
 
-   BMA (Background minus Analysis)
-      Différence entre l'état d'ébauche et l'état optimal estimé, notée
-      :math:`\mathbf{x}^b - \mathbf{x}^a`.
+   BMA
+      L'acronyme signifie *Background moins Analysis*. C'est la différence
+      entre l'état d'ébauche et l'état optimal estimé, correspondant à
+      l'expression mathématique :math:`\mathbf{x}^b - \mathbf{x}^a`.
 
-   OMA (Observation minus Analysis)
-      Différence entre les observations et le résultat de la simulation basée
-      sur l'état optimal estimé, l'analyse, filtré pour être compatible avec les
-      observations, notée :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^a`.
+   OMA
+      L'acronyme signifie *Observation moins Analysis*. C'est la différence
+      entre les observations et le résultat de la simulation basée sur l'état
+      optimal estimé, l'analyse, filtré pour être compatible avec les
+      observations, correspondant à l'expression mathématique
+      :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^a`.
 
-   OMB (Observation minus Background)
-      Différence entre les observations et le résultat de la simulation basée
-      sur l'état d'ébauche,  filtré pour être compatible avec les observations,
-      notée :math:`\mathbf{y}^o - \mathbf{H}\mathbf{x}^b`.
+   OMB
+      L'acronyme signifie *Observation moins Background*. C'est la différence
+      entre les observations et le résultat de la simulation basée sur l'état
+      d'ébauche,  filtré pour être compatible avec les observations,
+      correspondant à l'expression mathématique :math:`\mathbf{y}^o -
+      \mathbf{H}\mathbf{x}^b`.
 
    SigmaBck2
       Mot-clé indiquant le paramètre de Desroziers-Ivanov mesurant la

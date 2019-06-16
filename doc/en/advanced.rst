@@ -501,7 +501,7 @@ with a new name.
 To make future developments easier, it is strongly recommended to ensure that
 your user scripts files use a Python 2 and a Python 3 compatible syntax. In
 particular, it is recommended to use the functional syntax for "*print*" and not
-the "*command*" syntax, for example:
+the "*command*" syntax, for example::
 
     # Python 2 & 3
     x, unit = 1., "cm"

@@ -138,6 +138,7 @@ section :ref:`section_theory`.
    ref_algorithm_LinearityTest
    ref_algorithm_LocalSensitivityTest
    ref_algorithm_ObserverTest
+   ref_algorithm_ParallelFunctionTest
    ref_algorithm_SamplingTest
    ref_algorithm_TangentTest
    ref_checking_keywords
