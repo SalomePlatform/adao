@@ -434,10 +434,11 @@ if (vector_in_string.find("array")>-1) or (vector_in_string.find("matrix")>-1):
     vector_in_string=vector_in_string.replace("array","numpy.array")
     vector_in_string=vector_in_string.replace("matrix","numpy.matrix")
     exec("vector="+vector_in_string)
-    vector = numpy.matrix(vector)
+    vector = numpy.array(vector)
 else:
     vector_in_string=vector_in_string.replace("'","").replace('"','')
-    vector = numpy.matrix(vector_in_string)
+    vector_in_list = eval(str(vector_in_string),{},{})
+    vector = numpy.array(vector_in_list)
 type = "VectorSerie"
 logging.debug("VectorSerie is %s"%vector)
 ]]></code></script>

@@ -31,7 +31,8 @@ import os, sys, numpy, copy
 import gzip, bz2
 
 from daCore.PlatformInfo import PathManagement ; PathManagement()
-from daCore.PlatformInfo import has_gnuplot
+from daCore.PlatformInfo import has_gnuplot, PlatformInfo
+mfp = PlatformInfo().MaximumPrecision()
 if has_gnuplot:
     import Gnuplot
 
@@ -276,7 +277,7 @@ class Persistence(object):
         élémentaires numpy.
         """
         try:
-            return [numpy.array(item).mean() for item in self.__values]
+            return [numpy.mean(item, dtype=mfp) for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -469,9 +470,9 @@ class Persistence(object):
         """
         try:
             if self.__basetype in [int, float]:
-                return float( numpy.array(self.__values).mean() )
+                return float( numpy.mean(self.__values, dtype=mfp) )
             else:
-                return numpy.array(self.__values).mean(axis=0)
+                return numpy.mean(self.__values, axis=0, dtype=mfp)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
