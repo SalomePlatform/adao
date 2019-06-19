@@ -23,97 +23,76 @@
 
 .. _section_ref_entry_types:
 
-Liste des types d'entrées possibles
------------------------------------
+Liste des types d'entrées possibles pour les variables utilisateurs
+-------------------------------------------------------------------
 
-Chaque variable ADAO présente un pseudo-type qui aide à la remplir et à la
-valider. Ces pseudo-types représentent explicitement des formes informatiques ou
-mathématiques simples. Deux pseudo-types, purement informatiques, permettent de
-désigner la manière dont on fournit les variables en entrée:
+Chaque variable à renseigner pour l'utilisation d'ADAO peut être représentée à
+l'aide de "pseudo-types" particuliers, qui aident à la remplir logiquement et à
+la valider informatiquement. Ces pseudo-types représentent explicitement des
+formes mathématiques (:ref:`section_ref_entry_types_math`) ou informatiques
+simples (:ref:`section_ref_entry_types_info`), que l'on détaille ici. On
+utilise aussi les :ref:`section_notations`, en même temps que les
+:ref:`section_ref_entry_types_names`.
 
-.. index:: single: Script
+.. _section_ref_entry_types_math:
 
-**Script**
-    Cela indique un script donné comme un fichier externe. Il peut être désigné
-    par un nom de fichier avec chemin complet ou seulement par un nom de fichier
-    sans le chemin. Si le fichier est donné uniquement par un nom sans chemin,
-    et si un répertoire d'étude est aussi indiqué, le fichier est recherché dans
-    le répertoire d'étude donné.
+Pseudo-types de représentation mathématique des données
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: String
+Les entrées sont décrites selon une logique la plus simple possible, de
+représentation mathématique, pour des algorithmes ou outils de calculs.
 
-**String**
-    Cela indique une chaîne de caractères fournissant une représentation
-    littérale d'une matrice, d'un vecteur ou d'une collection de vecteurs, comme
-    par exemple "1 2 ; 3 4" ou "[[1,2],[3,4]]" pour une matrice carrée de taille
-    2x2.
+.. include:: snippets/EntryTypeVector.rst
 
-Les différents autres pseudo-types sont les suivants. Les variables auxquelles
-ils s'appliquent peuvent elles-mêmes être données soit par une chaîne de
-caractères (un "*String*"), soit par un fichier script (un "*Script*"):
+.. include:: snippets/EntryTypeVectorSerie.rst
 
-.. index:: single: Dict
+.. include:: snippets/EntryTypeMatrix.rst
 
-**Dict**
-    Cela indique une variable qui doit être remplie avec un dictionnaire Python
-    ``{"clé":"valeur"...}``.
+.. include:: snippets/EntryTypeFunction.rst
 
-.. index:: single: Function
+.. include:: snippets/EntryTypeDict.rst
 
-**Function**
-    Cela indique une variable qui doit être donnée comme une fonction Python.
-    Les fonctions sont des entrées spéciales décrites par des
-    :ref:`section_ref_operator_requirements`.
+Les variables auxquelles ces pseudo-types s'appliquent peuvent elles-mêmes être
+données à l'aide des descriptions informatiques qui suivent.
 
-.. index:: single: Matrix
+.. _section_ref_entry_types_info:
 
-**Matrix**
-    Cela indique une variable qui doit être donnée comme une matrice.
+Pseudo-types de description informatique des données
+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: ScalarSparseMatrix
+Trois pseudo-types, purement informatiques, permettent de désigner la manière
+dont on fournit les variables en entrée.
 
-**ScalarSparseMatrix**
-    Cela indique une variable qui doit être donnée comme un nombre unique (qui
-    sera ensuite utilisé pour multiplier une matrice identité).
+.. include:: snippets/EntryTypeScript.rst
 
-.. index:: single: DiagonalSparseMatrix
+.. include:: snippets/EntryTypeString.rst
 
-**DiagonalSparseMatrix**
-    Cela indique une variable qui doit doit être donnée comme un vecteur, (qui
-    sera ensuite utilisé comme la diagonale d'une matrice carrée).
+.. include:: snippets/EntryTypeDataFile.rst
 
-.. index:: single: Vector
+.. _section_ref_entry_types_names:
 
-**Vector**
-    Cela indique une variable qui doit être remplie comme un vecteur.
+Informations sur les noms imposés pour les entrées par fichier
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: VectorSerie
+Lorsqu'une commande ou un mot-clé peuvent être renseignés à l'aide d'un fichier
+script désigné par le pseudo-type "*Script*", ce script doit présenter une
+variable ou une méthode qui porte le même nom que la variable à remplir. En
+d'autres termes, lorsque l'on importe un tel script dans une commande Python ou
+un noeud Python de YACS, il doit créer une variable du bon nom dans l'espace de
+nommage courant du noeud. Par exemple, un script Python rendant disponible la
+variable d'ébauche, nommée "*Background*", doit présenter la forme suivante ::
 
-**VectorSerie**
-    Cela indique une variable qui doit être remplie comme une liste de vecteurs.
-
-.. index:: single: DataFile
-.. index:: single: ColNames
-.. index:: single: ColMajor
-
-**DataFile**, **ColNames**, **ColMajor**
-    Cela indique le nom d'un fichier de données de type texte (TXT, CSV,
-    TSV...) ou de type binaire (NPY, NPZ, SDF...), rangées en colonnes
-    (``ColMajor=False``) ou rangées en lignes (``ColMajor=True``), dont on
-    sélectionne toutes les variables ou uniquement celles de la liste
-    ``ColNames``.
-
-Lorsqu'une commande ou un mot-clé peut être rempli par un nom de fichier script
-désigné par le pseudo-type "*Script*", ce script doit présenter une variable ou
-une méthode que porte le même nom que la variable à remplir. En d'autres
-termes, lorsque l'on importe le script dans une commande Python ou un noeud
-Python de YACS, il doit créer une variable du bon nom dans l'espace de nommage
-courant du noeud. Par exemple, un script Python rendant disponible la variable
-d'ébauche, nommée "*Background*", doit présenter la forme suivante::
-
+    ...
     ...
     Background =...
     ...
+    ...
 
-Son importation permet ainsi de créer la variable "*Background*". Les points
-"..." symbolisent du code quelconque autour de ce début particulier de ligne.
+Son importation permet ainsi de créer la variable "*Background*" dans l'espace
+de nommage courant. Les points "..." symbolisent du code quelconque autour de
+ce début particulier de ligne.
+
+De la même manière, lorsqu'un vecteur particulier peut être renseigné à l'aide
+d'un fichier de données désigné par le pseudo-type "*DataFile*", les
+informations présentes dans le fichier "*DataFile*" doivent porter le nom du
+vecteur à charger.

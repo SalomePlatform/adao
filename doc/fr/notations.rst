@@ -23,8 +23,8 @@
 
 .. _section_notations:
 
-Notations et conventions
-========================
+Notations et conventions communes
+=================================
 
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de

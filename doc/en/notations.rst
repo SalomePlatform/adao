@@ -23,8 +23,8 @@
 
 .. _section_notations:
 
-Notations and conventions
-=========================
+Notations and common conventions
+================================
 
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization.

@@ -26,91 +26,72 @@
 List of possible input types
 ----------------------------
 
-Each ADAO variable has a pseudo-type to help filling it and validation. These
-pseudo-types explicitly represent some simple computing or mathematical types.
-Two pseudo-types, purely computing ones, allows to designate how the input
-variables are provided:
+Each variable to be entered for the use of ADAO can be represented by means of
+particular "pseudo-types", which help to logically fill it in and validate it
+computationaly. These pseudo-types explicitly represent mathematical forms
+(:ref:`section_ref_entry_types_math`) or simple computer forms
+(:ref:`section_ref_entry_types_info`), which are detailed here.
+:ref:`section_notations` are also used, together with
+:ref:`section_ref_entry_types_names`.
 
-.. index:: single: Script
+.. _section_ref_entry_types_math:
 
-**Script**
-    This indicates a script given as an external file. It can be described by a
-    full absolute path name or only by the file name without path. If the file
-    is given only by a file name without path, and if a study directory is also
-    indicated, the file is searched in the given study directory.
+Pseudo-types of mathematical representation of data
++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: String
+The inputs are described according to the simplest possible logic, in
+mathematical representation, for algorithms or calculation tools.
 
-**String**
-    This indicates a string giving a literal representation of a matrix, a
-    vector or a vector series, such as "1 2 ; 3 4" or "[[1,2],[3,4]]" for a
-    square 2x2 matrix.
+.. include:: snippets/EntryTypeVector.rst
 
-The various other pseudo-types are as follows. The variables they apply
-themselves may be either a data string (a "*String*"), or a script file (a
-"*Script*"):
+.. include:: snippets/EntryTypeVectorSerie.rst
 
-.. index:: single: Dict
+.. include:: snippets/EntryTypeMatrix.rst
 
-**Dict**
-    This indicates a variable that has to be filled by a Python dictionary
-    ``{"key":"value...}``.
+.. include:: snippets/EntryTypeFunction.rst
 
-.. index:: single: Function
+.. include:: snippets/EntryTypeDict.rst
 
-**Function**
-    This indicates a variable that has to be filled by a Python function. The
-    functions are special entries described by the
-    :ref:`section_ref_operator_requirements`.
+The variables to which these pseudo-types apply can themselves be given using
+the following computer descriptions.
 
-.. index:: single: Matrix
+.. _section_ref_entry_types_info:
 
-**Matrix**
-    This indicates a variable that has to be filled by a matrix.
+Pseudo-types of digital data description
+++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: ScalarSparseMatrix
+Three pseudo-types, purely computer-based, are used to specify the way in which
+input variables are provided.
 
-**ScalarSparseMatrix**
-    This indicates a variable that has to be filled by a unique number (which
-    will be used to multiply an identity matrix).
+.. include:: snippets/EntryTypeScript.rst
 
-.. index:: single: DiagonalSparseMatrix
+.. include:: snippets/EntryTypeString.rst
 
-**DiagonalSparseMatrix**
-    This indicates a variable that has to be filled by a vector (which will be
-    used as the diagonal of a square matrix).
+.. include:: snippets/EntryTypeDataFile.rst
 
-.. index:: single: Vector
+.. _section_ref_entry_types_names:
 
-**Vector**
-    This indicates a variable that has to be filled by a vector.
+Information on the names required for file entries
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. index:: single: VectorSerie
+When a command or keyword can be entered using a script file identified by the
+pseudo-type "*Script*", this script must contain a variable or method that has
+the same name than the variable to be completed. In other words, when importing
+such a script into a Python command or Python node, it must create a variable
+of the correct name in the current namespace of the node. For example, a Python
+script making available the draft variable, named "*Background*", must have the
+following form::
 
-**VectorSerie**
-    This indicates a variable that has to be filled by a list of vectors.
-
-.. index:: single: DataFile
-.. index:: single: ColNames
-.. index:: single: ColMajor
-
-**DataFile**, **ColNames**, **ColMajor**
-    This indicates the file name for data of text type (TXT, CSV, TSV...) or
-    binary type (NPY, NPZ, SDF...), ordered in rows (``ColMajor=False``) or in
-    lines (``ColMajor=True``),of which is selected all the variables or only
-    those of ``ColNames`` list.
-
-When a command or keyword can be filled by a script file name, specified by the
-pseudo-type "*Script*", the script has to contain a variable or a method that
-has the same name as the one to be filled. In other words, when importing the
-script in a Python command or a YACS Python node, it must create a variable of
-the good name in the current name space of the node. For example, a Python
-script making available the background variable, named "*Background*", must
-have the following form::
-
+    ...
     ...
     Background =...
     ...
+    ...
 
-Its import allows the creation of the variable "*Background*". The dots "..."
-symbolize any code around this particular beginning of the line.
+Its import thus makes it possible to create the variable "*Background*" in the
+current namespace. The dots"..." symbolize any code around this particular line
+beginning.
+
+Similarly, when a particular vector can be filled in using a data file
+designated by the pseudo-type "*DataFile*", the information in the file
+"*DataFile*" must be named after the vector to be loaded.
