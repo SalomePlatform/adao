@@ -147,6 +147,9 @@ class Persistence(object):
         "x.__len__() <==> len(x)"
         return len(self.__values)
 
+    def name(self):
+        return self.__name
+
     def __getitem__(self, index=None ):
         "x.__getitem__(y) <==> x[y]"
         return copy.copy(self.__values[index])

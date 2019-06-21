@@ -87,6 +87,7 @@ CheckAlgos = [
     "LocalSensitivityTest",
     "SamplingTest",
     "ParallelFunctionTest",
+    "InputValuesTest",
     "ObserverTest",
     ]
 
@@ -207,6 +208,9 @@ AlgoDataRequirements["ParallelFunctionTest"] = [
     ]
 AlgoDataRequirements["ObserverTest"] = [
     "Observers",
+    ]
+AlgoDataRequirements["InputValuesTest"] = [
+    "CheckingPoint",
     ]
 
 AlgoType = {}
