@@ -125,8 +125,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             or self._toStore("APosterioriCovariance"):
             BI = B.getI()
             RI = R.getI()
-        BIdemi = B.choleskyI()
-        RIdemi = R.choleskyI()
+        # BIdemi = B.choleskyI()
+        # RIdemi = R.choleskyI()
         #
         # Initialisation
         # --------------

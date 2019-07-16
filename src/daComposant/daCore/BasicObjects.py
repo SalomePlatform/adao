@@ -32,11 +32,8 @@ import logging
 import copy
 import numpy
 from functools import partial
-from daCore import Persistence
-from daCore import PlatformInfo
-from daCore import Interfaces
+from daCore import Persistence, PlatformInfo, Interfaces
 from daCore import Templates
-from daCore.Interfaces import ImportFromScript, ImportFromFile
 
 # ==============================================================================
 class CacheManager(object):
@@ -422,16 +419,16 @@ class FullOperator(object):
         if asScript is not None:
             __Matrix, __Function = None, None
             if asMatrix:
-                __Matrix = ImportFromScript(asScript).getvalue( self.__name )
+                __Matrix = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
             elif asOneFunction:
-                __Function = { "Direct":ImportFromScript(asScript).getvalue( "DirectOperator" ) }
+                __Function = { "Direct":Interfaces.ImportFromScript(asScript).getvalue( "DirectOperator" ) }
                 __Function.update({"useApproximatedDerivatives":True})
                 __Function.update(__Parameters)
             elif asThreeFunctions:
                 __Function = {
-                    "Direct" :ImportFromScript(asScript).getvalue( "DirectOperator" ),
-                    "Tangent":ImportFromScript(asScript).getvalue( "TangentOperator" ),
-                    "Adjoint":ImportFromScript(asScript).getvalue( "AdjointOperator" ),
+                    "Direct" :Interfaces.ImportFromScript(asScript).getvalue( "DirectOperator" ),
+                    "Tangent":Interfaces.ImportFromScript(asScript).getvalue( "TangentOperator" ),
+                    "Adjoint":Interfaces.ImportFromScript(asScript).getvalue( "AdjointOperator" ),
                     }
                 __Function.update(__Parameters)
         else:
@@ -491,8 +488,8 @@ class FullOperator(object):
             if "withLenghtOfRedundancy"             not in __Function: __Function["withLenghtOfRedundancy"]             = -1
             if "NumberOfProcesses"                  not in __Function: __Function["NumberOfProcesses"]                  = None
             if "withmfEnabled"                      not in __Function: __Function["withmfEnabled"]                      = inputAsMF
-            from daNumerics.ApproximatedDerivatives import FDApproximation
-            FDA = FDApproximation(
+            from daCore import NumericObjects
+            FDA = NumericObjects.FDApproximation(
                 Function              = __Function["Direct"],
                 centeredDF            = __Function["CenteredFiniteDifference"],
                 increment             = __Function["DifferentialIncrement"],
@@ -520,7 +517,7 @@ class FullOperator(object):
             self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
             del __matrice
         else:
-            raise ValueError("Improperly defined operator, it requires at minima either a matrix, a Direct for approximate derivatives or a Tangent/Adjoint pair.")
+            raise ValueError("The %s object is improperly defined or undefined, it requires at minima either a matrix, a Direct operator for approximate derivatives or a Tangent/Adjoint operators pair. Please check your operator input."%self.__name)
         #
         if __appliedInX is not None:
             self.__FO["AppliedInX"] = {}
@@ -541,11 +538,11 @@ class FullOperator(object):
 
     def __repr__(self):
         "x.__repr__() <==> repr(x)"
-        return repr(self.__V)
+        return repr(self.__FO)
 
     def __str__(self):
         "x.__str__() <==> str(x)"
-        return str(self.__V)
+        return str(self.__FO)
 
 # ==============================================================================
 class Algorithm(object):
@@ -613,6 +610,8 @@ class Algorithm(object):
         self.__required_parameters = {}
         self.__required_inputs = {"RequiredInputValues":{"mandatory":(), "optional":()}}
         self.__variable_names_not_public = {"nextStep":False} # Duplication dans AlgorithmAndParameters
+        self.__canonical_parameter_name = {} # Correspondance "lower"->"correct"
+        self.__canonical_stored_name = {}    # Correspondance "lower"->"correct"
         #
         self.StoredVariables = {}
         self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
@@ -653,6 +652,9 @@ class Algorithm(object):
         self.StoredVariables["SimulatedObservationAtCurrentState"]   = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
         self.StoredVariables["SimulatedObservationAtOptimum"]        = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
+        #
+        for k in self.StoredVariables:
+            self.__canonical_stored_name[k.lower()] = k
 
     def _pre_run(self, Parameters, Xb=None, Y=None, R=None, B=None, Q=None ):
         "Pré-calcul"
@@ -750,13 +752,16 @@ class Algorithm(object):
         des classes de persistance.
         """
         if key is not None:
-            return self.StoredVariables[key]
+            return self.StoredVariables[self.__canonical_stored_name[key.lower()]]
         else:
             return self.StoredVariables
 
     def __contains__(self, key=None):
         "D.__contains__(k) -> True if D has a key k, else False"
-        return key in self.StoredVariables
+        if key is None or key.lower() not in self.__canonical_stored_name:
+            return False
+        else:
+            return self.__canonical_stored_name[key.lower()] in self.StoredVariables
 
     def keys(self):
         "D.keys() -> list of D's keys"
@@ -767,8 +772,8 @@ class Algorithm(object):
 
     def pop(self, k, d):
         "D.pop(k[,d]) -> v, remove specified key and return the corresponding value"
-        if hasattr(self, "StoredVariables"):
-            return self.StoredVariables.pop(k, d)
+        if hasattr(self, "StoredVariables") and k.lower() in self.__canonical_stored_name:
+            return self.StoredVariables.pop(self.__canonical_stored_name[k.lower()], d)
         else:
             try:
                 msg = "'%s'"%k
@@ -803,6 +808,7 @@ class Algorithm(object):
             "listval"  : listval,
             "message"  : message,
             }
+        self.__canonical_parameter_name[name.lower()] = name
         logging.debug("%s %s (valeur par défaut = %s)", self._name, message, self.setParameterValue(name))
 
     def getRequiredParameters(self, noDetails=True):
@@ -819,11 +825,12 @@ class Algorithm(object):
         """
         Renvoie la valeur d'un paramètre requis de manière contrôlée
         """
-        default  = self.__required_parameters[name]["default"]
-        typecast = self.__required_parameters[name]["typecast"]
-        minval   = self.__required_parameters[name]["minval"]
-        maxval   = self.__required_parameters[name]["maxval"]
-        listval  = self.__required_parameters[name]["listval"]
+        __k = self.__canonical_parameter_name[name.lower()]
+        default  = self.__required_parameters[__k]["default"]
+        typecast = self.__required_parameters[__k]["typecast"]
+        minval   = self.__required_parameters[__k]["minval"]
+        maxval   = self.__required_parameters[__k]["maxval"]
+        listval  = self.__required_parameters[__k]["listval"]
         #
         if value is None and default is None:
             __val = None
@@ -832,19 +839,23 @@ class Algorithm(object):
             else:                __val = typecast( default )
         else:
             if typecast is None: __val = value
-            else:                __val = typecast( value )
+            else:
+                try:
+                    __val = typecast( value )
+                except:
+                    raise ValueError("The value '%s' for the parameter named '%s' can not be correctly evaluated with type '%s'."%(value, __k, typecast))
         #
         if minval is not None and (numpy.array(__val, float) < minval).any():
-            raise ValueError("The parameter named \"%s\" of value \"%s\" can not be less than %s."%(name, __val, minval))
+            raise ValueError("The parameter named '%s' of value '%s' can not be less than %s."%(__k, __val, minval))
         if maxval is not None and (numpy.array(__val, float) > maxval).any():
-            raise ValueError("The parameter named \"%s\" of value \"%s\" can not be greater than %s."%(name, __val, maxval))
+            raise ValueError("The parameter named '%s' of value '%s' can not be greater than %s."%(__k, __val, maxval))
         if listval is not None:
             if typecast is list or typecast is tuple or isinstance(__val,list) or isinstance(__val,tuple):
                 for v in __val:
                     if v not in listval:
-                        raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%(v, name, listval))
+                        raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%(v, __k, listval))
             elif __val not in listval:
-                raise ValueError("The value \"%s\" of the parameter named \"%s\" is not allowed, it has to be in the list %s."%( __val, name,listval))
+                raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%( __val, __k,listval))
         return __val
 
     def requireInputArguments(self, mandatory=(), optional=()):
@@ -890,7 +901,7 @@ class AlgorithmAndParameters(object):
         self.updateParameters( asDict, asScript )
         #
         if asAlgorithm is None and asScript is not None:
-            __Algo = ImportFromScript(asScript).getvalue( "Algorithm" )
+            __Algo = Interfaces.ImportFromScript(asScript).getvalue( "Algorithm" )
         else:
             __Algo = asAlgorithm
         #
@@ -908,7 +919,7 @@ class AlgorithmAndParameters(object):
                 ):
         "Mise a jour des parametres"
         if asDict is None and asScript is not None:
-            __Dict = ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
+            __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
         else:
             __Dict = asDict
         #
@@ -1254,12 +1265,12 @@ class RegulationAndParameters(object):
         self.__P          = {}
         #
         if asAlgorithm is None and asScript is not None:
-            __Algo = ImportFromScript(asScript).getvalue( "Algorithm" )
+            __Algo = Interfaces.ImportFromScript(asScript).getvalue( "Algorithm" )
         else:
             __Algo = asAlgorithm
         #
         if asDict is None and asScript is not None:
-            __Dict = ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
+            __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
         else:
             __Dict = asDict
         #
@@ -1321,7 +1332,7 @@ class DataObserver(object):
         elif (asTemplate is not None) and (asTemplate in Templates.ObserverTemplates):
             __FunctionText = Templates.ObserverTemplates[asTemplate]
         elif asScript is not None:
-            __FunctionText = ImportFromScript(asScript).getstring()
+            __FunctionText = Interfaces.ImportFromScript(asScript).getstring()
         else:
             __FunctionText = ""
         __Function = ObserverF(__FunctionText)
@@ -1378,10 +1389,10 @@ class State(object):
           contenant des valeurs en colonnes, elles-mêmes nommées "colNames"
           (s'il n'y a pas de nom de colonne indiquée, on cherche une colonne
           nommée "name"), on récupère les colonnes et on les range ligne après
-          ligne (colMajor=False) ou colonne après colonne (colMajor=True). La
-          variable résultante est de type "asVector" (par défaut) ou
-          "asPersistentVector" selon que l'une de ces variables est placée à
-          "True".
+          ligne (colMajor=False, par défaut) ou colonne après colonne
+          (colMajor=True). La variable résultante est de type "asVector" (par
+          défaut) ou "asPersistentVector" selon que l'une de ces variables est
+          placée à "True".
         """
         self.__name       = str(name)
         self.__check      = bool(toBeChecked)
@@ -1394,25 +1405,25 @@ class State(object):
         if asScript is not None:
             __Vector, __Series = None, None
             if asPersistentVector:
-                __Series = ImportFromScript(asScript).getvalue( self.__name )
+                __Series = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
             else:
-                __Vector = ImportFromScript(asScript).getvalue( self.__name )
+                __Vector = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
         elif asDataFile is not None:
             __Vector, __Series = None, None
             if asPersistentVector:
                 if colNames is not None:
-                    __Series = ImportFromFile(asDataFile).getvalue( colNames )[1]
+                    __Series = Interfaces.ImportFromFile(asDataFile).getvalue( colNames )[1]
                 else:
-                    __Series = ImportFromFile(asDataFile).getvalue( [self.__name,] )[1]
-                if bool(colMajor) and not ImportFromFile(asDataFile).getformat() == "application/numpy.npz":
+                    __Series = Interfaces.ImportFromFile(asDataFile).getvalue( [self.__name,] )[1]
+                if bool(colMajor) and not Interfaces.ImportFromFile(asDataFile).getformat() == "application/numpy.npz":
                     __Series = numpy.transpose(__Series)
-                elif not bool(colMajor) and ImportFromFile(asDataFile).getformat() == "application/numpy.npz":
+                elif not bool(colMajor) and Interfaces.ImportFromFile(asDataFile).getformat() == "application/numpy.npz":
                     __Series = numpy.transpose(__Series)
             else:
                 if colNames is not None:
-                    __Vector = ImportFromFile(asDataFile).getvalue( colNames )[1]
+                    __Vector = Interfaces.ImportFromFile(asDataFile).getvalue( colNames )[1]
                 else:
-                    __Vector = ImportFromFile(asDataFile).getvalue( [self.__name,] )[1]
+                    __Vector = Interfaces.ImportFromFile(asDataFile).getvalue( [self.__name,] )[1]
                 if bool(colMajor):
                     __Vector = numpy.ravel(__Vector, order = "F")
                 else:
@@ -1442,7 +1453,7 @@ class State(object):
                 self.shape       = (self.shape[0],1)
             self.size        = self.shape[0] * self.shape[1]
         else:
-            raise ValueError("The %s object is improperly defined, it requires at minima either a vector, a list/tuple of vectors or a persistent object. Please check your vector input."%self.__name)
+            raise ValueError("The %s object is improperly defined or undefined, it requires at minima either a vector, a list/tuple of vectors or a persistent object. Please check your vector input."%self.__name)
         #
         if scheduledBy is not None:
             self.__T = scheduledBy
@@ -1514,13 +1525,13 @@ class Covariance(object):
         if asScript is not None:
             __Matrix, __Scalar, __Vector, __Object = None, None, None, None
             if asEyeByScalar:
-                __Scalar = ImportFromScript(asScript).getvalue( self.__name )
+                __Scalar = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
             elif asEyeByVector:
-                __Vector = ImportFromScript(asScript).getvalue( self.__name )
+                __Vector = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
             elif asCovObject:
-                __Object = ImportFromScript(asScript).getvalue( self.__name )
+                __Object = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
             else:
-                __Matrix = ImportFromScript(asScript).getvalue( self.__name )
+                __Matrix = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
         else:
             __Matrix, __Scalar, __Vector, __Object = asCovariance, asEyeByScalar, asEyeByVector, asCovObject
         #
