@@ -267,6 +267,11 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.getInputPort("columns").edInitPy((key,)) # On impose le concept, et le schéma YACS est ammendable
+        if "ColMajor" in data_config:
+            colmajor = bool(data_config["ColMajor"])
+        else:
+            colmajor = False
+        back_node.getInputPort("colmajor").edInitPy(colmajor) # On impose le concept, et le schéma YACS est ammendable
         ADAO_Case.edAddChild(back_node)
         # Set content of the node
         back_node_script = back_node.getScript()
@@ -349,6 +354,11 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("script").edInitPy(data_config["Data"])
         back_node.getInputPort("columns").edInitPy(()) # On impose aucun nom et le schéma YACS est ammendable
+        if "ColMajor" in data_config:
+            colmajor = bool(data_config["ColMajor"])
+        else:
+            colmajor = False
+        back_node.getInputPort("colmajor").edInitPy(colmajor) # On impose le concept, et le schéma YACS est ammendable
         ADAO_Case.edAddChild(back_node)
         # Set content of the node
         back_node_script = back_node.getScript()

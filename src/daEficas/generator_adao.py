@@ -185,6 +185,8 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_config['Data'] = '" + data      + "'\n"
       if search_text+"Stored" in self.dictMCVal.keys():
         self.text_da += data_name + "_config['Stored'] = '" +  str(self.dictMCVal[search_text+"Stored"])  + "'\n"
+      if search_type+"DATA_DATA__ColMajor" in self.dictMCVal.keys():
+        self.text_da += data_name + "_config['ColMajor'] = '" +  str(self.dictMCVal[search_type+"DATA_DATA__ColMajor"])  + "'\n"
       self.text_da += "study_config['" + data_name + "'] = " + data_name + "_config\n"
 
     if from_type == "ScriptWithSwitch":

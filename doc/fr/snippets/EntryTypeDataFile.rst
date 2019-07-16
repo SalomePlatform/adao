@@ -18,13 +18,15 @@
       ".npy", multi-variables dans un fichier NumpyZ à extension ".npz").
 
     Par défaut, les valeurs d'une variable doivent être rangées en colonnes
-    ("ColMajor=False"), mais elles peuvent aussi être rangées en lignes
+    pour être acquises ligne d'enregistrement par ligne d'enregistrement
+    ("ColMajor=False"), mais elles peuvent aussi être rangées en lignes pour
+    être acquises colonne d'enregistrement par colonne d'enregistrement
     ("ColMajor=True").
 
-    Sans précision ou avec une liste vide pour les noms de variable, on utilise
-    les valeurs toutes les variables, mais on peut aussi sélectionner
-    uniquement celles des variables indiquées dans la liste indiquée de noms
-    dans "ColNames".
+    Sans précision ou avec une liste vide pour les noms de variables, on
+    utilise les valeurs toutes les variables, mais on peut aussi sélectionner
+    uniquement celles des variables indiquées dans la liste de noms fournie
+    dans "ColNames". Les noms de variable sont toujours en entête de colonne.
 
     Exemple de fichier CSV pour la variable "*Observation*" en "*DataFile*" ::
 

@@ -29,13 +29,18 @@ AnalysisData = {}
 AnalysisFromList = ["String", "Script"]
 
 # -- Infos from daCore --
-AssimData = ["Background", "BackgroundError",
-             "Observation", "ObservationError",
-             "ObservationOperator",
-             "EvolutionModel", "EvolutionError",
-             "AlgorithmParameters",
-             "CheckingPoint", "ControlInput",
-             ]
+AssimData = [
+    "Background",
+    "BackgroundError",
+    "Observation",
+    "ObservationError",
+    "ObservationOperator",
+    "EvolutionModel",
+    "EvolutionError",
+    "AlgorithmParameters",
+    "CheckingPoint",
+    "ControlInput",
+    ]
 
 AssimType = {}
 AssimType["Background"]          = ["Vector", "VectorSerie"]

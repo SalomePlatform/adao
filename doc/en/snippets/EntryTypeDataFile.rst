@@ -15,13 +15,15 @@
     - in binary format (single-variable in a Numpy file with a ".npy"
       extension, multi-variables in a NumpyZ file with a ".npz" extension)
 
-    By default, the values of a variable has to be ordered in rows
-    ("ColMajor=False"), but they can also be ordered in lines
+    By default, the values of a variable has to be ordered in rows to be
+    acquired record line by record line ("ColMajor=False"), but they can also
+    be ordered in lines to be acquired record row by record row
     ("ColMajor=True").
 
     Without information or with a void list, all the values of all the
     variables are used, but one can also select only the ones of the variables
-    that are indicated in the name list in "ColNames".
+    that are indicated in the name list "ColNames". the variable names are
+    always as header of columns.
 
     Example of CSV file for "*Observation*" variable in "*DataFile*" ::
 

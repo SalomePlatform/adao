@@ -415,10 +415,14 @@ type = "Vector"
 
 if sys.version_info.major > 2: import adao
 from daCore.Interfaces import ImportFromFile as aif
-vector = numpy.ravel( aif(script).getvalue(columns)[1] )
+if colmajor:
+    vector = numpy.ravel( numpy.transpose( aif(script).getvalue(columns)[1] ) )
+else:
+    vector = numpy.ravel( aif(script).getvalue(columns)[1] )
 ]]></code></script>
     <inport name="script" type="string"/>
     <inport name="columns" type="stringvec"/>
+    <inport name="colmajor" type="bool"/>
     <outport name="vector" type="pyobj"/>
     <outport name="type" type="string"/>
     <outport name="stored" type="bool"/>
@@ -481,10 +485,14 @@ type = "VectorSerie"
 if sys.version_info.major > 2: import adao
 from daCore.Interfaces import ImportFromFile as aif
 if len(columns) == 0: columns = None
-vector = numpy.transpose( aif(script).getvalue(columns)[1] )
+if colmajor:
+    aif(script).getvalue(columns)[1]
+else:
+    vector = numpy.transpose( aif(script).getvalue(columns)[1] )
 ]]></code></script>
     <inport name="script" type="string"/>
     <inport name="columns" type="stringvec"/>
+    <inport name="colmajor" type="bool"/>
     <outport name="vector" type="pyobj"/>
     <outport name="type" type="string"/>
     <outport name="stored" type="bool"/>
