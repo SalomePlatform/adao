@@ -32,7 +32,7 @@ from Traducteur.inseremocle  import *
 from Traducteur.movemocle    import *
 from Traducteur.renamemocle  import *
 
-version_out = "V9_3_0"
+version_out = "V9_4_0"
 
 usage="""Usage: python %(prog)s [args]
 
@@ -40,13 +40,9 @@ Typical use is:
   python %(prog)s --infile=xxxx.comm --outfile=yyyy.comm"""
 
 atraiter = (
-    "ASSIMILATION_STUDY",
-    "CHECKING_STUDY",
     )
 
 dict_erreurs = {
-    "ASSIMILATION_STUDY":"Changements dans l'arbre et dans les noms",
-    "CHECKING_STUDY":"Changements dans l'arbre et dans les noms",
     }
 
 sys.dict_erreurs=dict_erreurs
@@ -59,27 +55,11 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
         jdc  = getJDCFromTexte(texte,atraiter)
     else:
         raise ValueError("Traduction du JDC impossible")
-
-    #Parse les mocles des commandes
-    parseKeywords(jdc.root)
-    GenereErreurPourCommande(jdc,('Algorithm','AlgorithmParameters','FunctionDict'))
     # ==========================================================================
 
-    for command in atraiter:
-        # Insere le MC s'il n'existe pas
-        chercheOperInsereFacteurSiRegle(jdc, command, "AlgorithmParameters",((("AlgorithmParameters",),"nexistepasMCFParmi"),))
-        # Deplace le MC
-        moveMotClefInOperToFact(jdc, command, "Algorithm", "AlgorithmParameters", plusieursFois=False)
-        # Renomme le MC
-        renameMotCleInFact(jdc, command, "AlgorithmParameters", "INPUT_TYPE", "Parameters")
-        # Renomme le MC
-        renameMotCle(jdc, command, "Study_name", "StudyName")
-        renameMotCle(jdc, command, "Study_repertory", "StudyRepertory")
 
     # ==========================================================================
     fsrc = jdc.getSource()
-    fsrc = re.sub( "FunctionDict", "ScriptWithSwitch", fsrc )
-    fsrc = re.sub( "FUNCTIONDICT_FILE", "SCRIPTWITHSWITCH_FILE", fsrc )
     fsrc = re.sub( "#VERSION_CATALOGUE:.*:FIN VERSION_CATALOGUE", "#VERSION_CATALOGUE:%s:FIN VERSION_CATALOGUE"%version_out, fsrc)
     fsrc = re.sub( "#CHECKSUM.*FIN CHECKSUM", "", fsrc )
     #
