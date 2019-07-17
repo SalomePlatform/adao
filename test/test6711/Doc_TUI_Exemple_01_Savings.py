@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 "Verification d'un exemple de la documentation"
 
-import sys, os, pprint
+import sys, os, tempfile
 import unittest
 
 # ==============================================================================
@@ -44,45 +44,47 @@ class Test_Adao(unittest.TestCase):
         case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
         case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
         #
-        case.setObserver("Analysis", String="print('==> Nombre d analyses   : %i'%len(var))")
+        case.setObserver("Analysis", String="print('  ==> Nombre d analyses   : %i'%len(var))")
         #
         case.execute()
         #
-        base_file = "output_test6711"
+        #-----------------------------------------------------------------------
         print("")
-        print("#===============================================================================")
-        #
-        print("#=== Restitution en dictionnaire basique =======================================")
-        case.get()
-        print("#===============================================================================")
-        #
-        print("#=== Restitution en fichier TUI ================================================")
-        # print(case.dump(FileName=base_file+"_TUI.py", Formater="TUI"))
-        case.dump(FileName=base_file+"_TUI.py", Formater="TUI")
-        print("#===============================================================================")
-        #
-        print("#=== Restitution en fichier SCD ================================================")
-        # print(case.dump(FileName=base_file+"_SCD.py", Formater="SCD"))
-        case.dump(FileName=base_file+"_SCD.py", Formater="SCD")
-        print("#===============================================================================")
-        #
-        #   print("#=== Restitution en fichier YACS ===============================================")
-        #   # print(case.dump(FileName=base_file+"_YACS.xml", Formater="YACS"))
-        #   case.dump(FileName=base_file+"_YACS.xml", Formater="YACS")
-        #   print("#===============================================================================")
-        #
-        print("")
-        cwd = os.getcwd()
-        for f in [
-            base_file+"_TUI.py",
-            base_file+"_SCD.py",
-            # base_file+"_YACS.xml",
-            ]:
-            if os.path.exists(os.path.abspath(cwd+"/"+f)):
-                print("#=== Fichier \"%s\" correctement généré"%f)
-                os.remove(os.path.abspath(cwd+"/"+f))
+        print("  #============================================================")
+        print("  #=== Export du cas")
+        print("  #============================================================")
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            base_file = os.path.join(tmpdirname, "output_test6711")
+            print("  #=== Répertoire temporaire créé")
+            #
+            fname = base_file+"_TUI.py"
+            case.dump(FileName=fname, Formater="TUI")
+            print("  #=== Restitution en fichier TUI")
+            if os.path.exists(fname) and filesize(fname) > 500:
+                print("  #    Fichier TUI correctement généré, de taille %i bytes"%filesize(fname))
             else:
-                raise ValueError("Fichier \"%s\" inexistant"%f)
+                raise ValueError("Fichier TUI incorrect ou inexistant")
+            #
+            fname = base_file+"_SCD.py"
+            case.dump(FileName=fname, Formater="SCD")
+            print("  #=== Restitution en fichier SCD")
+            if os.path.exists(fname) and filesize(fname) > 500:
+                print("  #    Fichier SCD correctement généré, de taille %i bytes"%filesize(fname))
+            else:
+                raise ValueError("Fichier SCD incorrect ou inexistant")
+            #
+            try:
+                fname = base_file+"_YACS.xml"
+                case.dump(FileName=fname, Formater="YACS")
+                print("  #=== Restitution en fichier YACS")
+                if os.path.exists(fname) and filesize(fname) > 500:
+                    print("  #    Fichier YACS correctement généré, de taille %i bytes"%filesize(fname))
+                else:
+                    raise ValueError("Fichier YACS incorrect ou inexistant")
+            except:
+                pass
+        print("  #=== Répertoire temporaire supprimé")
+        print("  #============================================================")
         print("")
         #-----------------------------------------------------------------------
         xa = case.get("Analysis")[-1]
@@ -95,6 +97,10 @@ class Test_Adao(unittest.TestCase):
         return xa
 
 # ==============================================================================
+def filesize(name):
+    statinfo = os.stat(name)
+    return statinfo.st_size # Bytes
+
 def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):
     "Compare two vectors, like unittest.assertAlmostEqual"
     import numpy
