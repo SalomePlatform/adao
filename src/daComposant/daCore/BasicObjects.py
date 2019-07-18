@@ -655,19 +655,24 @@ class Algorithm(object):
         #
         for k in self.StoredVariables:
             self.__canonical_stored_name[k.lower()] = k
+        #
+        for k, v in self.__variable_names_not_public.items():
+            self.__canonical_parameter_name[k.lower()] = k
+        self.__canonical_parameter_name["algorithm"] = "Algorithm"
+        self.__canonical_parameter_name["storesupplementarycalculations"] = "StoreSupplementaryCalculations"
 
     def _pre_run(self, Parameters, Xb=None, Y=None, R=None, B=None, Q=None ):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
-        logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
+        logging.debug("%s Taille mémoire utilisée de %.0f Mio"%(self._name, self._m.getUsedMemory("Mio")))
         #
-        # Mise a jour de self._parameters avec Parameters
-        self.__setParameters(Parameters)
-        #
+        # Mise a jour des paramètres internes avec le contenu de Parameters, en
+        # reprenant les valeurs par défauts pour toutes celles non définies
+        self.__setParameters(Parameters, reset=True)
         for k, v in self.__variable_names_not_public.items():
             if k not in self._parameters:  self.__setParameters( {k:v} )
         #
-        # Corrections et complements
+        # Corrections et compléments
         def __test_vvalue(argument, variable, argname):
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
@@ -856,6 +861,7 @@ class Algorithm(object):
                         raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%(v, __k, listval))
             elif __val not in listval:
                 raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%( __val, __k,listval))
+        #
         return __val
 
     def requireInputArguments(self, mandatory=(), optional=()):
@@ -865,16 +871,24 @@ class Algorithm(object):
         self.__required_inputs["RequiredInputValues"]["mandatory"] = tuple( mandatory )
         self.__required_inputs["RequiredInputValues"]["optional"]  = tuple( optional )
 
-    def __setParameters(self, fromDico={}):
+    def __setParameters(self, fromDico={}, reset=False):
         """
         Permet de stocker les paramètres reçus dans le dictionnaire interne.
         """
         self._parameters.update( fromDico )
+        __inverse_fromDico_keys = {}
+        for k in fromDico.keys():
+            if k.lower() in self.__canonical_parameter_name:
+                __inverse_fromDico_keys[self.__canonical_parameter_name[k.lower()]] = k
+        #~ __inverse_fromDico_keys = dict([(self.__canonical_parameter_name[k.lower()],k) for k in fromDico.keys()])
+        __canonic_fromDico_keys = __inverse_fromDico_keys.keys()
         for k in self.__required_parameters.keys():
-            if k in fromDico.keys():
-                self._parameters[k] = self.setParameterValue(k,fromDico[k])
-            else:
+            if k in __canonic_fromDico_keys:
+                self._parameters[k] = self.setParameterValue(k,fromDico[__inverse_fromDico_keys[k]])
+            elif reset:
                 self._parameters[k] = self.setParameterValue(k)
+            else:
+                pass
             logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
 
 # ==============================================================================

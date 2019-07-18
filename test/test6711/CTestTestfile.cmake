@@ -21,6 +21,7 @@
 
 SET(TEST_NAMES
   Doc_TUI_Exemple_01_Savings
+  Doc_TUI_Exemple_02_Arguments
   )
 
 FOREACH(tfile ${TEST_NAMES})
