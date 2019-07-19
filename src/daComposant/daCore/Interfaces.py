@@ -645,7 +645,6 @@ class ImportDetector(object):
     def get_extension(self):
         return self.__end
 
-# ==============================================================================
 class ImportFromFile(object):
     """
     Obtention de variables disrétisées en 1D, définies par une ou des variables
@@ -870,7 +869,6 @@ class ImportFromFile(object):
     def getformat(self):
         return self._format
 
-# ==============================================================================
 class ImportScalarLinesFromFile(ImportFromFile):
     """
     Importation de fichier contenant des variables scalaires nommées. Le
@@ -963,6 +961,73 @@ class ImportScalarLinesFromFile(ImportFromFile):
         __bounds     = tuple(__bounds)
         #
         return (__names, __thevalue, __bounds)
+
+# ==============================================================================
+class EficasGUI(object):
+    """
+    Lancement autonome de l'interface EFICAS/ADAO
+    """
+    def __init__(self, __addpath = None):
+        # Chemin pour l'installation (ordre important)
+        if "EFICAS_ROOT" in os.environ:
+            __EFICAS_ROOT = os.environ["EFICAS_ROOT"]
+            __path_ok = True
+        else:
+            print("\nKeyError:\n"+\
+                "  the required environment variable EFICAS_ROOT is unknown.\n"+\
+                "  You have either to be in SALOME environment, or to set this\n"+\
+                "  variable in your environment to the right path \"<...>\" to find\n"+\
+                "  an installed EFICAS application. For example:\n"+\
+                "    EFICAS_ROOT=\"<...>\" %s"%__file__
+                )
+            __path_ok = False
+        try:
+            import adao
+            __path_ok = True
+        except ImportError:
+            print("\nImportError:\n"+\
+                "  the required ADAO library can not be found to be imported.\n"+\
+                "  You have either to be in ADAO environment, or to be in SALOME\n"+\
+                "  environment, or to set manually in your Python 3 environment the\n"+\
+                "  right path \"<...>\" to find an installed ADAO application. For\n"+\
+                "  example:\n"+\
+                "    PYTHONPATH=\"<...>:${PYTHONPATH}\" %s"%__file__
+                )
+            __path_ok = False
+        try:
+            import PyQt5
+            __path_ok = True
+        except ImportError:
+            print("\nImportError:\n"+\
+                "  the required PyQt5 library can not be found to be imported.\n"+\
+                "  You have either to have a raisonable up-to-date Python 3\n"+\
+                "  installation (less than 5 years), or to be in SALOME environment."
+                )
+            __path_ok = False
+        if not __path_ok:
+            print("\nWarning:\n"+\
+                "  It seems you have some troubles with your installation. It may\n"+\
+                "  exists other errors than are not explained as above, like some\n"+\
+                "  incomplete or obsolete Python 3 and module installation.\n"+\
+                "  \n"+\
+                "  Please correct the above error(s) before launching the\n"+\
+                "  standalone EFICAS/ADAO interface \"%s\"\n"%__file__
+                  )
+            sys.exit(2)
+        else:
+            print("Launching the standalone EFICAS/ADAO interface...")
+        logging.debug("All the ADAO/EFICAS/QT5 paths have been found")
+        sys.path.insert(0,__EFICAS_ROOT)
+        sys.path.insert(0,os.path.join(adao.adao_py_dir,"daEficas"))
+        if __addpath is not None and os.path.exists(os.path.abspath(__addpath)):
+            sys.path.insert(0,os.path.abspath(__addpath))
+        logging.debug("All the paths have been correctly set up")
+        #
+    def gui(self):
+        logging.debug("Launching the standalone EFICAS/ADAO interface...")
+        from daEficas import prefs
+        from InterfaceQT4 import eficas_go
+        eficas_go.lanceEficas(code=prefs.code)
 
 # ==============================================================================
 if __name__ == "__main__":
