@@ -58,6 +58,14 @@ class New(_Aidsm):
     def __init__(self, name = ""):
         _Aidsm.__init__(self, name)
 
+class Gui(object):
+    """
+    Generic ADAO GUI builder
+    """
+    def __init__(self):
+        from daCore.Interfaces import EficasGUI
+        EficasGUI().gui()
+
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC \n')

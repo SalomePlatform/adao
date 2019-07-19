@@ -25,6 +25,5 @@
    Launching the standalone EFICAS/ADAO interface
 """
 
-import adao
-from daCore.Interfaces import EficasGUI
-EficasGUI().gui()
+from adao import adaoBuilder
+adaoBuilder.Gui()

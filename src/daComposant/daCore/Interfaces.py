@@ -1007,7 +1007,7 @@ class EficasGUI(object):
         if not __path_ok:
             print("\nWarning:\n"+\
                 "  It seems you have some troubles with your installation. It may\n"+\
-                "  exists other errors than are not explained as above, like some\n"+\
+                "  exists other errors that are not explained as above, like some\n"+\
                 "  incomplete or obsolete Python 3 and module installation.\n"+\
                 "  \n"+\
                 "  Please correct the above error(s) before launching the\n"+\
@@ -1015,8 +1015,7 @@ class EficasGUI(object):
                   )
             sys.exit(2)
         else:
-            print("Launching the standalone EFICAS/ADAO interface...")
-        logging.debug("All the ADAO/EFICAS/QT5 paths have been found")
+            logging.debug("All the ADAO/EFICAS/QT5 paths have been found")
         sys.path.insert(0,__EFICAS_ROOT)
         sys.path.insert(0,os.path.join(adao.adao_py_dir,"daEficas"))
         if __addpath is not None and os.path.exists(os.path.abspath(__addpath)):
