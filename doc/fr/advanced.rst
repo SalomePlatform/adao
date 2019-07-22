@@ -41,7 +41,7 @@ paire de fichiers ".comm/.py", qui se trouvent dans le répertoire ``<Répertoir
 du fichier JDC ADAO>``) automatiquement en utilisant un script de commandes
 Shell "type" contenant toutes les étapes requises. Si la commande principale de
 lancement de SALOME, nommée ``salome``, n'est pas couramment accessible dans un
-terminal courant, l'utilisateur doit savoir où se trouvent les principaux
+terminal standard, l'utilisateur doit savoir où se trouvent les principaux
 fichiers de lancement de SALOME, et en particulier ce fichier ``salome``. Le
 répertoire dans lequel ce fichier réside est symboliquement nommé ``<Répertoire
 principal d'installation de SALOME>`` et doit être remplacé par le bon dans le
@@ -305,6 +305,32 @@ Les cas plus complets, proposés dans les :ref:`subsection_tui_advanced`, peuven
 être exécutés de la même manière, et ils donnent le même résultat que dans
 l'interface API/TUI en Python standard.
 
+.. _section_advanced_eficas_gui:
+
+Utiliser l'interface graphique EFICAS comme une commande TUI d'ADAO
+-------------------------------------------------------------------
+
+Pour faciliter l'édition rapide avec EFICAS d'un fichier de commandes ADAO
+(JDC, ou paire de fichiers ".comm/.py", qui se trouvent ensemble dans un
+répertoire), on peut lancer l'interface graphique depuis l'interpréteur Python.
+Pour cela, dans un interpréteur Python obtenu depuis le "SALOME shell", on
+utilise les commandes suivantes::
+
+    from adao import adaoBuilder
+    adaoBuilder.Gui()
+
+si nécessaire, des messages explicites permettent d'identifier les variables
+d'environnement requises qui seraient absentes. Cette commande ne doit
+néanmoins pas être lancée dans la console Python de SALOME (car dans ce cas il
+suffit d'activer le module...), mais elle peut l'être dans une session "SALOME
+shell" obtenue depuis le menu "Outils/Extensions" de SALOME. Pour mémoire, le
+moyen le plus simple d'obtenir un interpréteur Python inclu dans une session
+"SALOME shell" est de lancer la commande suivante dans un terminal::
+
+    $SALOMEDIR/salome shell -- python
+
+avec ``SALOMEDIR`` le ``<Répertoire principal d'installation de SALOME>``.
+
 .. _section_advanced_execution_mode:
 
 Changer le mode par défaut d'exécution de noeuds dans YACS
@@ -378,6 +404,8 @@ d'exécution de SALOME.
 
 Pour mettre en oeuvre ces "*observer*" de manière efficace, on se reportera aux
 :ref:`section_ref_observers_requirements`.
+
+.. _section_advanced_logging:
 
 Obtenir plus d'information lors du déroulement d'un calcul
 ----------------------------------------------------------
@@ -483,6 +511,8 @@ parallélisme...
 On rappelle aussi qu'il faut choisir dans YACS un container par défaut de type
 "*multi*" pour le lancement du schéma, pour permettre une exécution
 véritablement parallèle.
+
+.. _subsection_new_adao_version:
 
 Passer d'une version d'ADAO à une nouvelle
 ------------------------------------------

@@ -76,6 +76,8 @@ class Aidsm(object):
         for ename in ("Observer",):
             self.__adaoObject[ename]   = []
             self.__StoredInputs[ename] = []
+        self.__StoredInputs["Name"] = self.__name
+        self.__StoredInputs["Directory"] = self.__directory
         #
         # Récupère le chemin du répertoire parent et l'ajoute au path
         # (Cela complète l'action de la classe PathManagement dans PlatformInfo,

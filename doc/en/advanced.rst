@@ -290,6 +290,32 @@ The most comprehensive cases, proposed in :ref:`subsection_tui_advanced`, can be
 executed in the same way, and they give the same result as in the standard
 Python interface.
 
+.. _section_advanced_eficas_gui:
+
+Using the EFICAS graphical interface as an ADAO TUI command
+-----------------------------------------------------------
+
+To make it easier to quickly edit an ADAO command file with EFICAS (JDC, or
+pair of files ".comm/.py", that are together in a directory), you can launch
+the graphical user interface from the Python interpreter. To do this, in a
+Python interpreter obtained from the "SALOME shell", the following commands are
+used::
+
+    from adao import adaoBuilder
+    adaoBuilder.Gui()
+
+If necessary, explicit messages can be used to identify the required
+environment variables that are missing. However, this command should not be run
+in the SALOME Python console (because in this case it is enough to activate the
+module...) but it can be done in a "SALOME shell" session obtained from the
+"Tools/Extensions" menu of SALOME. As a reminder, the easiest way to get a
+Python interpreter included in a "SALOME shell" session is to run the following
+command in a terminal::
+
+    $SALOMEDIR/salome shell -- python
+
+with ``SALOMEDIR`` the ``<SALOME main installation directory>``.
+
 .. _section_advanced_execution_mode:
 
 Change the default execution mode of nodes in YACS
@@ -357,6 +383,8 @@ of the ADAO calculation.
 
 To implement these "*observer*" efficiently, one can look to the
 :ref:`section_ref_observers_requirements`.
+
+.. _section_advanced_logging:
 
 Getting more information when running a calculation
 ---------------------------------------------------
@@ -453,6 +481,8 @@ operator function before and during enabling parallelism...
 
 It is also recalled that one have to choose the type "*multi*" for the default
 container in order to launch the scheme, to allow a really parallel execution.
+
+.. _subsection_new_adao_version:
 
 Switching from a version of ADAO to a newer one
 -----------------------------------------------

@@ -969,64 +969,75 @@ class EficasGUI(object):
     """
     def __init__(self, __addpath = None):
         # Chemin pour l'installation (ordre important)
+        self.__msg = ""
+        self.__path_settings_ok = False
+        #----------------
         if "EFICAS_ROOT" in os.environ:
             __EFICAS_ROOT = os.environ["EFICAS_ROOT"]
             __path_ok = True
         else:
-            print("\nKeyError:\n"+\
+            self.__msg += "\nKeyError:\n"+\
                 "  the required environment variable EFICAS_ROOT is unknown.\n"+\
-                "  You have either to be in SALOME environment, or to set this\n"+\
-                "  variable in your environment to the right path \"<...>\" to find\n"+\
-                "  an installed EFICAS application. For example:\n"+\
-                "    EFICAS_ROOT=\"<...>\" %s"%__file__
-                )
+                "  You have either to be in SALOME environment, or to set\n"+\
+                "  this variable in your environment to the right path \"<...>\"\n"+\
+                "  to find an installed EFICAS application. For example:\n"+\
+                "      EFICAS_ROOT=\"<...>\" command\n"
             __path_ok = False
         try:
             import adao
-            __path_ok = True
+            __path_ok = True and __path_ok
         except ImportError:
-            print("\nImportError:\n"+\
+            self.__msg += "\nImportError:\n"+\
                 "  the required ADAO library can not be found to be imported.\n"+\
                 "  You have either to be in ADAO environment, or to be in SALOME\n"+\
                 "  environment, or to set manually in your Python 3 environment the\n"+\
                 "  right path \"<...>\" to find an installed ADAO application. For\n"+\
                 "  example:\n"+\
-                "    PYTHONPATH=\"<...>:${PYTHONPATH}\" %s"%__file__
-                )
+                "      PYTHONPATH=\"<...>:${PYTHONPATH}\" command\n"
             __path_ok = False
         try:
             import PyQt5
-            __path_ok = True
+            __path_ok = True and __path_ok
         except ImportError:
-            print("\nImportError:\n"+\
+            self.__msg += "\nImportError:\n"+\
                 "  the required PyQt5 library can not be found to be imported.\n"+\
                 "  You have either to have a raisonable up-to-date Python 3\n"+\
-                "  installation (less than 5 years), or to be in SALOME environment."
-                )
+                "  installation (less than 5 years), or to be in SALOME environment.\n"
             __path_ok = False
+        #----------------
         if not __path_ok:
-            print("\nWarning:\n"+\
-                "  It seems you have some troubles with your installation. It may\n"+\
-                "  exists other errors that are not explained as above, like some\n"+\
-                "  incomplete or obsolete Python 3 and module installation.\n"+\
+            self.__msg += "\nWarning:\n"+\
+                "  It seems you have some troubles with your installation.\n"+\
+                "  Be aware that some other errors may exist, that are not\n"+\
+                "  explained as above, like some incomplete or obsolete\n"+\
+                "  Python 3, or incomplete module installation.\n"+\
                 "  \n"+\
                 "  Please correct the above error(s) before launching the\n"+\
-                "  standalone EFICAS/ADAO interface \"%s\"\n"%__file__
-                  )
-            sys.exit(2)
+                "  standalone EFICAS/ADAO interface.\n"
+            logging.debug("Some of the ADAO/EFICAS/QT5 paths have not been found")
+            self.__path_settings_ok = False
         else:
             logging.debug("All the ADAO/EFICAS/QT5 paths have been found")
-        sys.path.insert(0,__EFICAS_ROOT)
-        sys.path.insert(0,os.path.join(adao.adao_py_dir,"daEficas"))
-        if __addpath is not None and os.path.exists(os.path.abspath(__addpath)):
-            sys.path.insert(0,os.path.abspath(__addpath))
-        logging.debug("All the paths have been correctly set up")
-        #
+            self.__path_settings_ok = True
+        #----------------
+        if self.__path_settings_ok:
+            sys.path.insert(0,__EFICAS_ROOT)
+            sys.path.insert(0,os.path.join(adao.adao_py_dir,"daEficas"))
+            if __addpath is not None and os.path.exists(os.path.abspath(__addpath)):
+                sys.path.insert(0,os.path.abspath(__addpath))
+            logging.debug("All the paths have been correctly set up")
+        else:
+            print(self.__msg)
+            logging.debug("Errors in path settings have been found")
+
     def gui(self):
-        logging.debug("Launching the standalone EFICAS/ADAO interface...")
-        from daEficas import prefs
-        from InterfaceQT4 import eficas_go
-        eficas_go.lanceEficas(code=prefs.code)
+        if self.__path_settings_ok:
+            logging.debug("Launching standalone EFICAS/ADAO interface...")
+            from daEficas import prefs
+            from InterfaceQT4 import eficas_go
+            eficas_go.lanceEficas(code=prefs.code)
+        else:
+            logging.debug("Can not launch standalone EFICAS/ADAO interface for path errors.")
 
 # ==============================================================================
 if __name__ == "__main__":

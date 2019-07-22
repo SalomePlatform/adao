@@ -25,7 +25,8 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import os, numpy, time, copy, types, sys, math, logging
+import os, time, copy, types, sys, logging
+import math, numpy, scipy
 from daCore.BasicObjects import Operator
 from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
