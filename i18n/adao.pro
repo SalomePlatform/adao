@@ -7,11 +7,15 @@
 # find ../src -name '*.py' | grep -v tests/ | sed 's#^\.#SOURCES += .#g' ; \
 # echo
 #
-# Create/update the .ts files with:
-# pylupdate5 adao.pro
-# geany adao_*.ts # Pour traiter si necessaire les "obsolete"
-# linguist adao_*.ts
-# lrelease adao.pro
+# Creer ou remettre a jour les fichiers TS avec :
+#   pylupdate5 adao.pro
+#   geany adao_*.ts # Pour traiter si necessaire les "obsolete"
+#   linguist adao_*.ts
+#   lrelease adao.pro
+#
+# Pour refaire facilement les fichiers QM a partir des fichiers TS :
+#   lrelease -qm adao_en.qm adao_en.ts
+#   lrelease -qm adao_fr.qm adao_fr.ts
 #
 # Debut des sources
 

@@ -144,7 +144,7 @@ def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
         ),
     DATA_DATA = BLOC ( condition = " FROM in ( 'DataFile', ) ",
         DATA_FILE = SIMP(statut = "o", typ = ("FichierNoAbs",'CSV Text Files (*.csv);;TSV Text Files (*.tsv);;TXT Text Files (*.txt);;NPY Binary Numpy Files (*.npy);;NPZ Binary Numpy Files (*.npz);;All Files (*)", ',), validators=[OnlyStr(), FunctionVal(ColDataFileExtVal)], fr="En attente d'un nom de fichier de données, avec ou sans le chemin complet pour le trouver, contenant ou plusieurs colonnes pour définir un unique vecteur continu", ang="Waiting for a data file name, with or without the full path to find it, containing one or more columns to define a unique continuous vector"),
-        ColMajor = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0, fr="Variables en colonnes acquises par ligne (0) ou par colonne (1)", ang="Variables in columns acquired by line (0) or by column (1)"),
+        ColMajor = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0, fr="Variables en colonnes acquises ligne par ligne (0) ou colonne par colonne (1)", ang="Variables in columns acquired line by line (0) or column by column (1)"),
         ),
     STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
         STRING = SIMP(statut = "o", typ = "TXM",{ms_default} fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),

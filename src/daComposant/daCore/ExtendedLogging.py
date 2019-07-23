@@ -24,9 +24,8 @@
     Ce module permet de mettre en place un logging utilisable partout dans
     l'application, par défaut à la console, et si nécessaire dans un fichier.
 
-    Il doit être appelé en premier dans AssimilationStudy (mais pas directement
-    dans les applications utilisateurs), en l'important et en instanciant un
-    objet :
+    Il doit être appelé en premier dans Aidsm (mais pas directement dans les
+    applications utilisateurs), en l'important et en instanciant un objet :
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging()
 
     Par défaut, seuls les messages du niveau WARNING ou au-delà sont disponibles
@@ -35,7 +34,7 @@
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging(level=20)
 
     On peut éventuellement demander à l'objet de sortir aussi les messages dans
-    un fichier (noms par défaut : AssimilationStudy.log, niveau NOTSET) :
+    un fichier (noms par défaut : Aidsm.log, niveau NOTSET) :
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging().setLogfile()
 
     Si on veut changer le nom du fichier ou le niveau global de message, il faut
