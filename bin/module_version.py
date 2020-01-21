@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2019 EDF R&D
+# Copyright (C) 2008-2020 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
@@ -29,9 +29,9 @@ __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
 name     = "ADAO"
-version  = "9.4.0"
-year     = "2019"
-date     = "vendredi 29 novembre 2019, 12:12:12 (UTC+0100)"
+version  = "9.5.0"
+year     = "2020"
+date     = "vendredi 27 mars 2020, 12:12:12 (UTC+0100)"
 
 longname = name + ", a module for Data Assimilation and Optimization"
 cata     = "V" + version.replace(".","_")

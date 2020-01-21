@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2019 EDF R&D
+# Copyright (C) 2008-2020 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -29,21 +29,22 @@ set(DAEFICAS_FILES
   __init__.py
   ${CMAKE_CURRENT_BINARY_DIR}/prefs_ADAO.py
   prefs.py
-  traduitADAOsansToV9_4_0.py
-  traduitADAOV7_4_0ToV9_4_0.py
-  traduitADAOV7_5_0ToV9_4_0.py
-  traduitADAOV7_5_1ToV9_4_0.py
-  traduitADAOV7_6_0ToV9_4_0.py
-  traduitADAOV7_7_0ToV9_4_0.py
-  traduitADAOV7_8_0ToV9_4_0.py
-  traduitADAOV8_1_0ToV9_4_0.py
-  traduitADAOV8_2_0ToV9_4_0.py
-  traduitADAOV8_3_0ToV9_4_0.py
-  traduitADAOV8_4_0ToV9_4_0.py
-  traduitADAOV8_5_0ToV9_4_0.py
-  traduitADAOV8_6_0ToV9_4_0.py
-  traduitADAOV9_2_0ToV9_4_0.py
-  traduitADAOV9_3_0ToV9_4_0.py
+  traduitADAOsansToV9_5_0.py
+  traduitADAOV7_4_0ToV9_5_0.py
+  traduitADAOV7_5_0ToV9_5_0.py
+  traduitADAOV7_5_1ToV9_5_0.py
+  traduitADAOV7_6_0ToV9_5_0.py
+  traduitADAOV7_7_0ToV9_5_0.py
+  traduitADAOV7_8_0ToV9_5_0.py
+  traduitADAOV8_1_0ToV9_5_0.py
+  traduitADAOV8_2_0ToV9_5_0.py
+  traduitADAOV8_3_0ToV9_5_0.py
+  traduitADAOV8_4_0ToV9_5_0.py
+  traduitADAOV8_5_0ToV9_5_0.py
+  traduitADAOV8_6_0ToV9_5_0.py
+  traduitADAOV9_2_0ToV9_5_0.py
+  traduitADAOV9_3_0ToV9_5_0.py
+  traduitADAOV9_4_0ToV9_5_0.py
   )
 
 install(FILES ${DAEFICAS_FILES} DESTINATION "${ADAO_SCRIPT_PYTHON}/adao/daEficas")

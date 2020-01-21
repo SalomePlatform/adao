@@ -1,5 +1,5 @@
 <!--
-  Copyright (C) 2008-2019 EDF R&D
+  Copyright (C) 2008-2020 EDF R&D
 
   This file is part of SALOME ADAO module
 
@@ -28,7 +28,7 @@
     <parameter name="icon"          value="ADAO.png"/>
     <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
-    <parameter name="version"       value="9.3.0"/>
+    <parameter name="version"       value="9.5.0"/>
   </section>
   <section name="resources">
     <!-- Module resources -->

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2019 EDF R&D
+# Copyright (C) 2008-2020 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
@@ -34,20 +34,21 @@ mypkgpython_PYTHON = \
 		__init__.py \
 		prefs_ADAO.py \
 		prefs.py \
-		traduitADAOsansToV9_4_0.py \
-		traduitADAOV7_4_0ToV9_4_0.py \
-		traduitADAOV7_5_0ToV9_4_0.py \
-		traduitADAOV7_5_1ToV9_4_0.py \
-		traduitADAOV7_6_0ToV9_4_0.py \
-		traduitADAOV7_7_0ToV9_4_0.py \
-		traduitADAOV7_8_0ToV9_4_0.py \
-		traduitADAOV8_1_0ToV9_4_0.py \
-		traduitADAOV8_2_0ToV9_4_0.py \
-		traduitADAOV8_3_0ToV9_4_0.py \
-		traduitADAOV8_4_0ToV9_4_0.py \
-		traduitADAOV8_5_0ToV9_4_0.py \
-		traduitADAOV8_6_0ToV9_4_0.py \
-		traduitADAOV9_2_0ToV9_4_0.py \
-		traduitADAOV9_3_0ToV9_4_0.py
+		traduitADAOsansToV9_5_0.py \
+		traduitADAOV7_4_0ToV9_5_0.py \
+		traduitADAOV7_5_0ToV9_5_0.py \
+		traduitADAOV7_5_1ToV9_5_0.py \
+		traduitADAOV7_6_0ToV9_5_0.py \
+		traduitADAOV7_7_0ToV9_5_0.py \
+		traduitADAOV7_8_0ToV9_5_0.py \
+		traduitADAOV8_1_0ToV9_5_0.py \
+		traduitADAOV8_2_0ToV9_5_0.py \
+		traduitADAOV8_3_0ToV9_5_0.py \
+		traduitADAOV8_4_0ToV9_5_0.py \
+		traduitADAOV8_5_0ToV9_5_0.py \
+		traduitADAOV8_6_0ToV9_5_0.py \
+		traduitADAOV9_2_0ToV9_5_0.py \
+		traduitADAOV9_3_0ToV9_5_0.py \
+		traduitADAOV9_4_0ToV9_5_0.py
 
 EXTRA_DIST = prefs_ADAO.py.in
