@@ -334,7 +334,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 Modèle **ValuePrinterSaverAndGnuPlotter** :
 ...........................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable .
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable.
 
 ::
 
