@@ -57,6 +57,7 @@ class FDApproximation(object):
     centrées si le booléen "centeredDF" est vrai.
     """
     def __init__(self,
+            name                  = "FDApproximation",
             Function              = None,
             centeredDF            = False,
             increment             = 0.01,
@@ -68,6 +69,7 @@ class FDApproximation(object):
             mpWorkers             = None,
             mfEnabled             = False,
             ):
+        self.__name = str(name)
         if mpEnabled:
             try:
                 import multiprocessing
@@ -112,7 +114,7 @@ class FDApproximation(object):
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
                 self.__userFunction__path = os.path.dirname(mod)
                 del mod
-                self.__userOperator = Operator( fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
+                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
                 self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
             elif isinstance(Function,types.MethodType):
                 logging.debug("FDA Calculs en multiprocessing : MethodType")
@@ -126,12 +128,12 @@ class FDApproximation(object):
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
                 self.__userFunction__path = os.path.dirname(mod)
                 del mod
-                self.__userOperator = Operator( fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
+                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
                 self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
             else:
                 raise TypeError("User defined function or method has to be provided for finite differences approximation.")
         else:
-            self.__userOperator = Operator( fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
+            self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
             self.__userFunction = self.__userOperator.appliedTo
         #
         self.__centeredDF = bool(centeredDF)

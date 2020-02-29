@@ -45,38 +45,47 @@ class CacheManager(object):
                  lenghtOfRedundancy    = -1,
                 ):
         """
-        Les caractéristiques de tolérance peuvent être modifées à la création.
+        Les caractéristiques de tolérance peuvent être modifiées à la création.
         """
-        self.__tolerBP  = float(toleranceInRedundancy)
-        self.__lenghtOR = int(lenghtOfRedundancy)
-        self.__initlnOR = self.__lenghtOR
+        self.__tolerBP   = float(toleranceInRedundancy)
+        self.__lenghtOR  = int(lenghtOfRedundancy)
+        self.__initlnOR  = self.__lenghtOR
+        self.__seenNames = []
+        self.__enabled   = True
         self.clearCache()
 
     def clearCache(self):
         "Vide le cache"
-        self.__listOPCV = [] # Operator Previous Calculated Points, Results, Point Norms
+        self.__listOPCV = [] # Previous Calculated Points, Results, Point Norms, Operator
+        self.__seenNames = []
         # logging.debug("CM Tolerance de determination des doublons : %.2e", self.__tolerBP)
 
-    def wasCalculatedIn(self, xValue ): #, info="" ):
+    def wasCalculatedIn(self, xValue, oName="" ): #, info="" ):
         "Vérifie l'existence d'un calcul correspondant à la valeur"
         __alc = False
         __HxV = None
-        for i in range(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
-            if not hasattr(xValue, 'size') or (xValue.size != self.__listOPCV[i][0].size):
-                # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé", xValue.shape,i,self.__listOPCP[i].shape)
-                continue
-            if numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCV[i][0]) < self.__tolerBP * self.__listOPCV[i][2]:
-                __alc  = True
-                __HxV = self.__listOPCV[i][1]
-                # logging.debug("CM Cas%s déja calculé, portant le numéro %i", info, i)
-                break
+        if self.__enabled:
+            for i in range(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
+                if not hasattr(xValue, 'size') or (str(oName) != self.__listOPCV[i][3]) or (xValue.size != self.__listOPCV[i][0].size):
+                    # logging.debug("CM Différence de la taille %s de X et de celle %s du point %i déjà calculé", xValue.shape,i,self.__listOPCP[i].shape)
+                    pass
+                elif numpy.linalg.norm(numpy.ravel(xValue) - self.__listOPCV[i][0]) < self.__tolerBP * self.__listOPCV[i][2]:
+                    __alc  = True
+                    __HxV = self.__listOPCV[i][1]
+                    # logging.debug("CM Cas%s déja calculé, portant le numéro %i", info, i)
+                    break
         return __alc, __HxV
 
-    def storeValueInX(self, xValue, HxValue ):
-        "Stocke un calcul correspondant à la valeur"
+    def storeValueInX(self, xValue, HxValue, oName="" ):
+        "Stocke pour un opérateur o un calcul Hx correspondant à la valeur x"
         if self.__lenghtOR < 0:
             self.__lenghtOR = 2 * xValue.size + 2
             self.__initlnOR = self.__lenghtOR
+            self.__seenNames.append(str(oName))
+        if str(oName) not in self.__seenNames: # Etend la liste si nouveau
+            self.__lenghtOR += 2 * xValue.size + 2
+            self.__initlnOR += self.__lenghtOR
+            self.__seenNames.append(str(oName))
         while len(self.__listOPCV) > self.__lenghtOR:
             # logging.debug("CM Réduction de la liste des cas à %i éléments par suppression du premier", self.__lenghtOR)
             self.__listOPCV.pop(0)
@@ -84,16 +93,19 @@ class CacheManager(object):
             copy.copy(numpy.ravel(xValue)),
             copy.copy(HxValue),
             numpy.linalg.norm(xValue),
+            str(oName),
             ) )
 
     def disable(self):
         "Inactive le cache"
         self.__initlnOR = self.__lenghtOR
         self.__lenghtOR = 0
+        self.__enabled  = False
 
     def enable(self):
         "Active le cache"
         self.__lenghtOR = self.__initlnOR
+        self.__enabled  = True
 
 # ==============================================================================
 class Operator(object):
@@ -106,6 +118,7 @@ class Operator(object):
     CM = CacheManager()
     #
     def __init__(self,
+        name                 = "GenericOperator",
         fromMethod           = None,
         fromMatrix           = None,
         avoidingRedundancy   = True,
@@ -118,6 +131,7 @@ class Operator(object):
         deux mots-clé, soit une fonction ou un multi-fonction python, soit une
         matrice.
         Arguments :
+        - name : nom d'opérateur
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
         - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants
@@ -126,6 +140,7 @@ class Operator(object):
         - extraArguments : arguments supplémentaires passés à la fonction de
           base et ses dérivées (tuple ou dictionnaire)
         """
+        self.__name      = str(name)
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
         self.__AvoidRC   = bool( avoidingRedundancy )
         self.__inputAsMF = bool( inputAsMultiFunction )
@@ -191,14 +206,14 @@ class Operator(object):
             for i in range(len(_HValue)):
                 HxValue.append( numpy.asmatrix( numpy.ravel( _HValue[i] ) ).T )
                 if self.__AvoidRC:
-                    Operator.CM.storeValueInX(_xValue[i],HxValue[-1])
+                    Operator.CM.storeValueInX(_xValue[i],HxValue[-1],self.__name)
         else:
             HxValue = []
             _xserie = []
             _hindex = []
             for i, xv in enumerate(_xValue):
                 if self.__AvoidRC:
-                    __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xv)
+                    __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xv,self.__name)
                 else:
                     __alreadyCalculated = False
                 #
@@ -228,7 +243,7 @@ class Operator(object):
                     _hv = _hserie.pop(0)
                     HxValue[i] = _hv
                     if self.__AvoidRC:
-                        Operator.CM.storeValueInX(_xv,_hv)
+                        Operator.CM.storeValueInX(_xv,_hv,self.__name)
         #
         if argsAsSerie: return HxValue
         else:           return HxValue[-1]
@@ -490,6 +505,7 @@ class FullOperator(object):
             if "withmfEnabled"                      not in __Function: __Function["withmfEnabled"]                      = inputAsMF
             from daCore import NumericObjects
             FDA = NumericObjects.FDApproximation(
+                name                  = self.__name,
                 Function              = __Function["Direct"],
                 centeredDF            = __Function["CenteredFiniteDifference"],
                 increment             = __Function["DifferentialIncrement"],
@@ -501,20 +517,20 @@ class FullOperator(object):
                 mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
                 )
-            self.__FO["Direct"]  = Operator( fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
-            self.__FO["Adjoint"] = Operator( fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
-            self.__FO["Direct"]  = Operator( fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
-            self.__FO["Adjoint"] = Operator( fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif asMatrix is not None:
             __matrice = numpy.matrix( __Matrix, numpy.float )
-            self.__FO["Direct"]  = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
-            self.__FO["Adjoint"] = Operator( fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Direct"]  = Operator( name = self.__name,           fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
             del __matrice
         else:
             raise ValueError("The %s object is improperly defined or undefined, it requires at minima either a matrix, a Direct operator for approximate derivatives or a Tangent/Adjoint operators pair. Please check your operator input."%self.__name)
