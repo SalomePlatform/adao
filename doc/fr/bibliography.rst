@@ -103,6 +103,10 @@ Bibliographie
 
 .. [WikipediaDA] Wikipedia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
 
+.. [WikipediaKF] Wikipedia, *Kalman Filter*, https://en.wikipedia.org/wiki/Kalman_filter
+
+.. [WikipediaEKF] Wikipedia, *Extended Kalman Filter*, https://en.wikipedia.org/wiki/Extended_Kalman_filter
+
 .. [WikipediaEnKF] Wikipedia, *Ensemble Kalman Filter*, http://en.wikipedia.org/wiki/Ensemble_Kalman_filter
 
 .. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization

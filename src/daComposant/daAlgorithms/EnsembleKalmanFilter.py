@@ -74,10 +74,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJoAtCurrentOptimum",
                 "CurrentOptimum",
                 "CurrentState",
+                "ForecastState",
                 "IndexOfOptimum",
                 "InnovationAtCurrentAnalysis",
                 "InnovationAtCurrentState",
-                "PredictedState",
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
@@ -223,8 +223,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if self._parameters["StoreInternalVariables"] \
                 or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( Xn )
-            if self._toStore("PredictedState"):
-                self.StoredVariables["PredictedState"].store( Xn_predicted )
+            if self._toStore("ForecastState"):
+                self.StoredVariables["ForecastState"].store( Xn_predicted )
             if self._toStore("BMA"):
                 self.StoredVariables["BMA"].store( Xn_predicted - Xa )
             if self._toStore("InnovationAtCurrentState"):

@@ -38,6 +38,17 @@ cases which are linear, even if it sometimes works in "slightly" non-linear
 cases. One can verify the linearity of the operators with the help of
 the :ref:`section_ref_algorithm_LinearityTest`.
 
+Conceptually, we can represent the temporal pattern of action of the operators
+for this algorithm in the following way, with **H** the observation operator
+and **M** the evolution operator :
+
+  .. _schema_temporel_KF:
+  .. image:: images/schema_temporel_KF.png
+    :align: center
+    :width: 50%
+  .. centered::
+    **Timeline of steps in Kalman filter assimilation**
+
 In case of non-linearity, even slightly marked, it will be preferred the
 :ref:`section_ref_algorithm_ExtendedKalmanFilter`, or the
 :ref:`section_ref_algorithm_UnscentedKalmanFilter` and the
@@ -88,10 +99,10 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
   "IndexOfOptimum",
   "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
-  "PredictedState",
   "SimulatedObservationAtCurrentAnalysis",
   "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
@@ -136,13 +147,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastState.rst
+
 .. include:: snippets/IndexOfOptimum.rst
 
 .. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
-
-.. include:: snippets/PredictedState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentAnalysis.rst
 
@@ -156,3 +167,8 @@ StoreSupplementaryCalculations
 - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
 - :ref:`section_ref_algorithm_EnsembleKalmanFilter`
 - :ref:`section_ref_algorithm_UnscentedKalmanFilter`
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
+
+- [WikipediaKF]_

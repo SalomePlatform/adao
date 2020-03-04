@@ -34,6 +34,17 @@ Cet algorithme réalise une estimation de l'état d'un système dynamique par un
 filtre de Kalman étendu, utilisant un calcul non linéaire de l'état et de
 l'évolution incrémentale (processus).
 
+Conceptuellement, on peut représenter le schéma temporel d'action des
+opérateurs pour cet algorithme de la manière suivante, avec **H** l'opérateur
+d'observation et **M** l'opérateur d'évolution :
+
+  .. _schema_temporel_KF:
+  .. image:: images/schema_temporel_KF.png
+    :align: center
+    :width: 50%
+  .. centered::
+    **Schéma temporel des étapes en assimilation par filtre de Kalman**
+
 Dans le cas d'opérateurs réellement non-linéaires, on peut aisément utiliser
 l':ref:`section_ref_algorithm_EnsembleKalmanFilter` ou
 l':ref:`section_ref_algorithm_UnscentedKalmanFilter`, qui sont souvent
@@ -90,10 +101,10 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
   "IndexOfOptimum",
   "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
-  "PredictedState",
   "SimulatedObservationAtCurrentAnalysis",
   "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
@@ -138,13 +149,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastState.rst
+
 .. include:: snippets/IndexOfOptimum.rst
 
 .. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
-
-.. include:: snippets/PredictedState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentAnalysis.rst
 
@@ -158,3 +169,8 @@ StoreSupplementaryCalculations
 - :ref:`section_ref_algorithm_KalmanFilter`
 - :ref:`section_ref_algorithm_EnsembleKalmanFilter`
 - :ref:`section_ref_algorithm_UnscentedKalmanFilter`
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
+
+- [WikipediaEKF]_

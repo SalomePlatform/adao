@@ -95,10 +95,10 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
   "IndexOfOptimum",
   "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
-  "PredictedState",
   "SimulatedObservationAtCurrentAnalysis",
   "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
@@ -143,13 +143,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastState.rst
+
 .. include:: snippets/IndexOfOptimum.rst
 
 .. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
-
-.. include:: snippets/PredictedState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentAnalysis.rst
 

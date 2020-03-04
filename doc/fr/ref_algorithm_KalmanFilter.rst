@@ -38,6 +38,17 @@ incrémentale (processus) linéaires, même s'il fonctionne parfois dans les cas
 "faiblement" non-linéaire. On peut vérifier la linéarité de l'opérateur
 d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
+Conceptuellement, on peut représenter le schéma temporel d'action des
+opérateurs pour cet algorithme de la manière suivante, avec **H** l'opérateur
+d'observation et **M** l'opérateur d'évolution :
+
+  .. _schema_temporel_KF:
+  .. image:: images/schema_temporel_KF.png
+    :align: center
+    :width: 50%
+  .. centered::
+    **Schéma temporel des étapes en assimilation par filtre de Kalman**
+
 En cas de non-linéarité, même peu marquée, on lui préférera
 l':ref:`section_ref_algorithm_ExtendedKalmanFilter`, ou
 l':ref:`section_ref_algorithm_EnsembleKalmanFilter` et
@@ -88,10 +99,10 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
   "IndexOfOptimum",
   "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
-  "PredictedState",
   "SimulatedObservationAtCurrentAnalysis",
   "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
@@ -136,13 +147,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastState.rst
+
 .. include:: snippets/IndexOfOptimum.rst
 
 .. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
-
-.. include:: snippets/PredictedState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentAnalysis.rst
 
@@ -156,3 +167,8 @@ StoreSupplementaryCalculations
 - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
 - :ref:`section_ref_algorithm_EnsembleKalmanFilter`
 - :ref:`section_ref_algorithm_UnscentedKalmanFilter`
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo07.rst
+
+- [WikipediaKF]_

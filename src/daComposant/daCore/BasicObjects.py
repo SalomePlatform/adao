@@ -606,7 +606,7 @@ class Algorithm(object):
             - MahalanobisConsistency : indicateur de consistance des covariances
             - OMA : Observation moins Analyse : Y - Xa
             - OMB : Observation moins Background : Y - Xb
-            - PredictedState : état prédit courant lors d'itérations
+            - ForecastState : état prédit courant lors d'itérations
             - Residu : dans le cas des algorithmes de vérification
             - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
             - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
@@ -644,10 +644,11 @@ class Algorithm(object):
         self.StoredVariables["CostFunctionJoAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJoAtCurrentOptimum")
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
         self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
         self.StoredVariables["GradientOfCostFunctionJb"]             = Persistence.OneVector(name = "GradientOfCostFunctionJb")
         self.StoredVariables["GradientOfCostFunctionJo"]             = Persistence.OneVector(name = "GradientOfCostFunctionJo")
-        self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name = "IndexOfOptimum")
+        self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name  = "IndexOfOptimum")
         self.StoredVariables["Innovation"]                           = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["InnovationAtCurrentAnalysis"]          = Persistence.OneVector(name = "InnovationAtCurrentAnalysis")
         self.StoredVariables["InnovationAtCurrentState"]             = Persistence.OneVector(name = "InnovationAtCurrentState")
@@ -658,7 +659,6 @@ class Algorithm(object):
         self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
-        self.StoredVariables["PredictedState"]                       = Persistence.OneVector(name = "PredictedState")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
         self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
         self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")

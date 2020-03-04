@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Définit les versions approximées des opérateurs tangents et adjoints.
+    Définit les objets numériques génériques.
 """
 __author__ = "Jean-Philippe ARGAUD"
 
