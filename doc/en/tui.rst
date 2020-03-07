@@ -290,6 +290,8 @@ the inputs in GUI interface, as described in section of
 :ref:`section_ref_entry_types`. The verification of the adequacy of variables is
 done either on their definition, or at runtime.
 
+.. index:: single: Stored
+
 In each command, the boolean keyword "*Stored*" indicates whether you optionally
 want to store the quantity defined, for disposal during calculation or at the
 output. The default is not to store, and it is recommended to keep this default.
@@ -508,18 +510,23 @@ Perform the calculation
 .. index:: single: execute
 .. index:: single: Executor
 .. index:: single: SaveCaseInFile
+.. index:: single: nextStep
 
-**execute** (*Executor, SaveCaseInFile*)
+**execute** (*Executor, SaveCaseInFile, nextStep*)
     This command launches the complete calculation in the execution environment
-    chosen by the keyword *Executor*. This environment can be the current
-    Python interpreter, without interaction with YACS (using the value
-    "*Python*"), or the one of YACS (using the value "*YACS*" [YACS]_). If a
-    file is given in the keyword *SaveCaseInFile*, it will be used to save the
-    associated version of commands file for the given execution environment.
-    During the execution, the usual outputs (standard and error) are the one of
-    the chosen environment. If necessary (and if possible), the ADAO algorithms
-    internal parallelism, the parallelism of YACS, and the internal parallelism
-    of the simulation code(s) used, are available.
+    chosen by the keyword *Executor*, which is defined by default with respect
+    of the launching environment. This environment can be the current Python
+    interpreter, without interaction with YACS (using the value "*Python*"), or
+    the one of YACS (using the value "*YACS*" [YACS]_). If a file is given in
+    the keyword *SaveCaseInFile*, it will be used to save the associated
+    version of commands file for the given execution environment. The boolean
+    keyword "*nextStep*" indicates whether the run starts from the result of
+    the previous run without storing it (value "*True*") or not (value
+    "*False*", by default). During the execution, the usual outputs (standard
+    and error) are the one of the chosen environment. If necessary (and if
+    possible), the ADAO algorithms internal parallelism, the parallelism of
+    YACS, and the internal parallelism of the simulation code(s) used, are
+    available.
 
 Get the calculation results separately
 ++++++++++++++++++++++++++++++++++++++

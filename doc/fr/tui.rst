@@ -301,6 +301,8 @@ entrées en interface GUI, décrits dans la section des
 :ref:`section_ref_entry_types`. La vérification de l'adéquation des grandeurs se
 fait soit lors de leur définition, soit lors de l'exécution.
 
+.. index:: single: Stored
+
 Dans chaque commande, le mot-clé booléen "*Stored*" permet d'indiquer si l'on
 veut éventuellement la stocker la grandeur définie, pour en disposer en cours de
 calcul ou en sortie. Le choix par défaut est de ne pas stocker, et il est
@@ -530,19 +532,23 @@ Effectuer le calcul
 .. index:: single: execute
 .. index:: single: Executor
 .. index:: single: SaveCaseInFile
+.. index:: single: nextStep
 
-**execute** (*Executor, SaveCaseInFile*)
+**execute** (*Executor, SaveCaseInFile, nextStep*)
     Cette commande lance le calcul complet dans l'environnement d'exécution
-    choisi par le mot-clé *Executor*. Cet environnement peut être celui de
+    choisi par le mot-clé *Executor*, qui est défini par défaut selon
+    l'environnement de lancement. Cet environnement peut être celui de
     l'interpréteur Python, sans interaction avec YACS (demandé par la valeur
     "*Python*"), ou celui de YACS (demandé par la valeur "*YACS*" [YACS]_). Si
     un fichier est indiqué dans le mot-clé *SaveCaseInFile*, il sera utilisé
     pour enregistrer la version associée du fichier de commande pour
-    l'environnement d'exécution requis. Lors de l'exécution, les sorties
-    courantes (standard et d'erreur) sont celles de l'environnement choisi. On
-    dispose si nécessaire (ou si possible) du parallélisme interne des
-    algorithmes dans ADAO, du parallélisme de YACS, et du parallélisme interne
-    du ou des codes de simulation utilisés.
+    l'environnement d'exécution requis. Le mot-clé booléen "*nextStep*" indique
+    que l'exécution repart du résultat de la précédente exécution sans la
+    stocker (valeur "*True*") ou non (valeur "*False*", par défaut). Lors de
+    l'exécution, les sorties courantes (standard et d'erreur) sont celles de
+    l'environnement choisi. On dispose si nécessaire (ou si possible) du
+    parallélisme interne des algorithmes dans ADAO, du parallélisme de YACS, et
+    du parallélisme interne du ou des codes de simulation utilisés.
 
 Obtenir séparément les résultats de calcul
 ++++++++++++++++++++++++++++++++++++++++++
