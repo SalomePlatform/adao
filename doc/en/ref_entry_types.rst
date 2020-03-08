@@ -34,6 +34,10 @@ computationaly. These pseudo-types explicitly represent mathematical forms
 :ref:`section_notations` are also used, together with
 :ref:`section_ref_entry_types_names`.
 
+The explicit :ref:`section_ref_algorithm_InputValuesTest` test is designed so
+that the user can specifically check some entries, with the same analysis and
+criteria as during the usual setup of a study.
+
 .. _section_ref_entry_types_math:
 
 Pseudo-types of mathematical representation of data

@@ -49,6 +49,6 @@ sont indiquées dans la :ref:`section_ref_checking_keywords`.
     Comme les commandes *"CheckingPoint"* et *"ObservationOperator"* sont
     requises pour TOUS les algorithmes de vérification dans l'interface, vous
     devez fournir une valeur, malgré le fait que ces commandes ne soient pas
-    nécessaires pour cet algorithme, et ne sont donc pas utilisées. La manière
-    la plus simple est de donner "1" comme un STRING pour les deux,
+    nécessaires pour ce test, et ne sont donc pas utilisées. La manière la plus
+    simple est de donner "1" comme un STRING pour les deux,
     l'*"ObservationOperator"* devant être de type *Matrix*.

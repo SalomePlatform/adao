@@ -36,10 +36,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = 0,
             )
         self.defineRequiredParameter(
-            name     = "PrintValuesFor",
+            name     = "PrintAllValuesFor",
             default  = [],
             typecast = tuple,
-            message  = "Liste de vecteurs dont les valeurs sont à imprimer",
+            message  = "Liste de noms de vecteurs dont les valeurs détaillées sont à imprimer",
+            listval  = [
+                "Background",
+                "CheckingPoint",
+                "Observation",
+                ]
+            )
+        self.defineRequiredParameter(
+            name     = "ShowInformationOnlyFor",
+            default  = ["Background", "CheckingPoint", "Observation"],
+            typecast = tuple,
+            message  = "Liste de noms de vecteurs dont les informations synthétiques sont à imprimer",
             listval  = [
                 "Background",
                 "CheckingPoint",
@@ -63,12 +74,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         numpy.set_printoptions(precision=_p)
         #
         def __buildPrintableVectorProperties( __name, __vector ):
-            if __vector is None:   return ""
-            if len(__vector) == 0: return ""
-            if hasattr(__vector,"name") and __name != __vector.name():
-                    return ""
+            if __vector is None:                                         return ""
+            if len(__vector) == 0:                                       return ""
+            if hasattr(__vector,"name") and __name != __vector.name():   return ""
+            if __name not in self._parameters["ShowInformationOnlyFor"]: return ""
             #
-            __title = "Information for %svector:"%(str(__name)+" ",)
+            if hasattr(__vector,"mins"):
+                __title = "Information for %svector series:"%(str(__name)+" ",)
+            else:
+                __title = "Information for %svector:"%(str(__name)+" ",)
             msgs = "\n"
             msgs += ("===> "+__title+"\n")
             msgs += ("     "+("-"*len(__title))+"\n")
@@ -94,7 +108,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += ("       Serie of maximum values...: %s\n")%numpy.array(__vector.maxs())
             else:
                 msgs += ("       Maximum of vector.........: %12."+str(_p)+"e\n")%__vector.max()
-            if self._parameters["SetDebug"] or __name in self._parameters["PrintValuesFor"]:
+            if self._parameters["SetDebug"] or __name in self._parameters["PrintAllValuesFor"]:
                 msgs += ("\n")
                 msgs += ("     Printing all values :\n")
                 msgs += ("%s"%(__vector,))

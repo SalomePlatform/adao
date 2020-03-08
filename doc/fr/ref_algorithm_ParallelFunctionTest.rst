@@ -40,7 +40,8 @@ Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
 l'opérateur est indiquée, et une autre globale est fournie de manière
 récapitulative à la fin de l'algorithme de vérification. La précision
 d'affichage est contrôlable pour permettre l'automatisation des tests
-d'opérateur.
+d'opérateur. Il peut être aussi utile de vérifier préalablement les entrées
+elles-mêmes avec le test prévu :ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -90,4 +91,5 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_InputValuesTest`
 - :ref:`section_ref_algorithm_LinearityTest`

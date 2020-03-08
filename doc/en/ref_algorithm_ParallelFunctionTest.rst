@@ -35,10 +35,12 @@ correctly in parallel and that its call is compatible with its usage in ADAO
 algorithms. In practice, it allows to call one or several times the operator in
 parallel, activating or not the "debug" mode during execution.
 
-Statistics on input and output vectors for each execution of operator are given,
-and an another global statistic is given at the end of the checking algorithm.
-The precision of printed outputs can be controlled to facilitate automatic tests
-of operator.
+Statistics on input and output vectors for each execution of operator are
+given, and an another global statistic is given at the end of the checking
+algorithm. The precision of printed outputs can be controlled to facilitate
+automatic tests of operator. It may also be useful to check the entries
+themselves beforehand with the intended test
+:ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -88,4 +90,5 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_InputValuesTest`
 - :ref:`section_ref_algorithm_LinearityTest`

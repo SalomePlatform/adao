@@ -34,6 +34,10 @@ simples (:ref:`section_ref_entry_types_info`), que l'on détaille ici. On
 utilise aussi les :ref:`section_notations`, en même temps que les
 :ref:`section_ref_entry_types_names`.
 
+Le test explicite :ref:`section_ref_algorithm_InputValuesTest` est prévu pour
+que l'utilisateur puisse vérifier spécifiquement certaines entrées, avec les
+mêmes analyses et critères que lors de la mise en place usuelle d'une étude.
+
 .. _section_ref_entry_types_math:
 
 Pseudo-types de représentation mathématique des données

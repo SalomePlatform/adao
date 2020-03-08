@@ -753,7 +753,7 @@ class Algorithm(object):
                     _EI = numpy.diag(1./numpy.sqrt(numpy.diag(_A)))
                     _C = numpy.dot(_EI, numpy.dot(_A, _EI))
                     self.StoredVariables["APosterioriCorrelations"].store( _C )
-        if _oH is not None:
+        if _oH is not None and "Direct" in _oH and "Tangent" in _oH and "Adjoint" in _oH:
             logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i", self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
             logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i", self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))

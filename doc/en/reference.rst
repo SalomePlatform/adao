@@ -134,6 +134,7 @@ The mathematical notations used afterward are explained in the section
    ref_algorithm_AdjointTest
    ref_algorithm_FunctionTest
    ref_algorithm_GradientTest
+   ref_algorithm_InputValuesTest
    ref_algorithm_LinearityTest
    ref_algorithm_LocalSensitivityTest
    ref_algorithm_ObserverTest

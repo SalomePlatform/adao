@@ -47,6 +47,6 @@ indicated in :ref:`section_ref_assimilation_keywords`.
 
     Because *"CheckingPoint"* and *"ObservationOperator"* are required commands
     for ALL checking algorithms in the interface, you have to provide a value
-    for them, despite the fact that these commands are not required for
-    *"ObserverTest"*, and will not be used. The easiest way is to give "1" as a
-    STRING for both, *"ObservationOperator"* having to be of type *Matrix*.
+    for them, despite the fact that these commands are not required for this
+    test, and will not be used. The easiest way is to give "1" as a STRING for
+    both, *"ObservationOperator"* having to be of type *Matrix*.
