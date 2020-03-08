@@ -171,7 +171,7 @@ can follow the template::
         ...
         ...
         ...
-        return something like Y
+        return "a vector similar to Y"
 
     def TangentOperator( pair = (X, dX) ):
         """ Tangent linear operator, around X, applied to dX """
@@ -179,7 +179,7 @@ can follow the template::
         ...
         ...
         ...
-        return something like Y
+        return "a vector similar to Y"
 
     def AdjointOperator( pair = (X, Y) ):
         """ Adjoint operator, around X, applied to Y """
@@ -187,16 +187,40 @@ can follow the template::
         ...
         ...
         ...
-        return something like X
+        return "a vector similar to X"
 
 Another time, this second operator definition allow easily to test the
 functional forms before their use in an ADAO case, reducing the complexity of
 operator implementation.
 
-For some algorithms, it is required that the tangent and adjoint functions can
-return the matrix equivalent to the linear operator. In this case, when
-respectively the ``dX`` or the ``Y`` arguments are ``None``, the user script
-has to return the associated matrix.
+For some algorithms (in particular filters without ensemble), it is required
+that the tangent and adjoint functions can return the matrix equivalent to the
+linear operator. In this case, when respectively the ``dX`` or the ``Y``
+arguments are ``None``, the user script has to return the associated matrix.
+The templates of the "*TangentOperator*" and "*AddOperator*" functions then
+become the following::
+
+    def TangentOperator( pair = (X, dX) ):
+        """ Tangent linear operator, around X, applied to dX """
+        X, dX = pair
+        ...
+        ...
+        ...
+        if dX is None or len(dX) == 0:
+            return "the matrix of the tangent linear operator"
+        else:
+            return "a vector similar to Y"
+
+    def AdjointOperator( pair = (X, Y) ):
+        """ Adjoint operator, around X, applied to Y """
+        X, Y = pair
+        ...
+        ...
+        ...
+        if Y is None or len(Y) == 0:
+            return "the adjoint linear operator matrix"
+        else:
+            return "a vector similar to X"
 
 **Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
 "*AdjointOperator*" are mandatory, and the type of the ``X``, Y``, ``dX``

@@ -179,7 +179,7 @@ suivre le squelette suivant::
         ...
         ...
         ...
-        return quelque chose comme Y
+        return "un vecteur similaire à Y"
 
     def TangentOperator( paire = (X, dX) ):
         """ Opérateur linéaire tangent, autour de X, appliqué à dX """
@@ -187,7 +187,7 @@ suivre le squelette suivant::
         ...
         ...
         ...
-        return quelque chose comme Y
+        return "un vecteur similaire à Y"
 
     def AdjointOperator( paire = (X, Y) ):
         """ Opérateur adjoint, autour de X, appliqué à Y """
@@ -195,16 +195,40 @@ suivre le squelette suivant::
         ...
         ...
         ...
-        return quelque chose comme X
+        return "un vecteur similaire à X"
 
 Un nouvelle fois, cette seconde définition d'opérateur permet aisément de tester
 les formes fonctionnelles avant de les utiliser dans le cas ADAO, réduisant la
 complexité de l'implémentation de l'opérateur.
 
-Pour certains algorithmes, il faut que les fonctions tangente et adjointe
-puisse renvoyer les matrices équivalentes à l'opérateur linéaire. Dans ce cas,
-lorsque, respectivement, les arguments ``dX`` ou ``Y`` valent ``None``, le
-script de l'utilisateur doit renvoyer la matrice associée.
+Pour certains algorithmes (en particulier les filtres non ensemblistes), il
+faut que les fonctions tangente et adjointe puisse renvoyer les matrices
+équivalentes à l'opérateur linéaire. Dans ce cas, lorsque, respectivement, les
+arguments ``dX`` ou ``Y`` valent ``None``, le script de l'utilisateur doit
+renvoyer la matrice associée. Les squelettes des fonctions "*TangentOperator*"
+et "*AdjointOperator*" deviennent alors les suivants::
+
+    def TangentOperator( paire = (X, dX) ):
+        """ Opérateur linéaire tangent, autour de X, appliqué à dX """
+        X, dX = paire
+        ...
+        ...
+        ...
+        if dX is None or len(dX) == 0:
+            return "la matrice de l'opérateur linéaire tangent"
+        else:
+            return "un vecteur similaire à Y"
+
+    def AdjointOperator( paire = (X, Y) ):
+        """ Opérateur adjoint, autour de X, appliqué à Y """
+        X, Y = paire
+        ...
+        ...
+        ...
+        if Y is None or len(Y) == 0:
+            return "la matrice de l'opérateur linéaire adjoint"
+        else:
+            return "un vecteur similaire à X"
 
 **Avertissement important :** les noms "*DirectOperator*", "*TangentOperator*"
 et "*AdjointOperator*" sont obligatoires, et le type des arguments ``X``,
