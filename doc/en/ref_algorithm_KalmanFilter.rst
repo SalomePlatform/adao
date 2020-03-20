@@ -39,8 +39,9 @@ cases. One can verify the linearity of the operators with the help of
 the :ref:`section_ref_algorithm_LinearityTest`.
 
 Conceptually, we can represent the temporal pattern of action of the operators
-for this algorithm in the following way, with **H** the observation operator
-and **M** the evolution operator :
+for this algorithm in the following way, with **x** the state, **P** the state
+error covariance, **H** the observation operator and **M** the evolution
+operator :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -49,10 +50,18 @@ and **M** the evolution operator :
   .. centered::
     **Timeline of steps in Kalman filter assimilation**
 
+We notice that there is no analysis performed at the initial time step
+(numbered 0 in the time indexing) because there is no forecast at this time
+(the background is stored as a pseudo analysis at the initial time step). If
+the observations are provided in series by the user, the first one is therefore
+not used.
+
 In case of non-linearity, even slightly marked, it will be preferred the
 :ref:`section_ref_algorithm_ExtendedKalmanFilter`, or the
 :ref:`section_ref_algorithm_UnscentedKalmanFilter` and the
-:ref:`section_ref_algorithm_UnscentedKalmanFilter` that are more powerful.
+:ref:`section_ref_algorithm_UnscentedKalmanFilter` that are more powerful. One
+can verify the linearity of the operators
+with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

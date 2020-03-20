@@ -35,8 +35,9 @@ extended Kalman Filter, using a non-linear calculation of the state and the
 incremental evolution (process).
 
 Conceptually, we can represent the temporal pattern of action of the operators
-for this algorithm in the following way, with **H** the observation operator
-and **M** the evolution operator :
+for this algorithm in the following way, with **x** the state, **P** the state
+error covariance, **H** the observation operator and **M** the evolution
+operator :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -44,6 +45,12 @@ and **M** the evolution operator :
     :width: 50%
   .. centered::
     **Timeline of steps in Kalman filter assimilation**
+
+We notice that there is no analysis performed at the initial time step
+(numbered 0 in the time indexing) because there is no forecast at this time
+(the background is stored as a pseudo analysis at the initial time step). If
+the observations are provided in series by the user, the first one is therefore
+not used.
 
 In case of really non-linear operators, one can easily use the
 :ref:`section_ref_algorithm_EnsembleKalmanFilter` or the

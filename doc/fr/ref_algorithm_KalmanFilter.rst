@@ -39,8 +39,9 @@ incrémentale (processus) linéaires, même s'il fonctionne parfois dans les cas
 d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
 Conceptuellement, on peut représenter le schéma temporel d'action des
-opérateurs pour cet algorithme de la manière suivante, avec **H** l'opérateur
-d'observation et **M** l'opérateur d'évolution :
+opérateurs de cet algorithme de la manière suivante, avec **x** l'état, **P**
+la covariance d'erreur d'état, **H** l'opérateur d'observation et **M**
+l'opérateur d'évolution :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -49,10 +50,18 @@ d'observation et **M** l'opérateur d'évolution :
   .. centered::
     **Schéma temporel des étapes en assimilation par filtre de Kalman**
 
+On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
+(numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
+instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
+observations sont fournies en série par l'utilisateur, la première n'est donc
+pas utilisée.
+
 En cas de non-linéarité, même peu marquée, on lui préférera
 l':ref:`section_ref_algorithm_ExtendedKalmanFilter`, ou
 l':ref:`section_ref_algorithm_EnsembleKalmanFilter` et
 l':ref:`section_ref_algorithm_UnscentedKalmanFilter` qui sont plus puissants.
+On peut vérifier la linéarité des opérateurs à l'aide de
+l':ref:`section_ref_algorithm_LinearityTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

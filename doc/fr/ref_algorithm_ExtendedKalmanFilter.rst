@@ -35,8 +35,9 @@ filtre de Kalman étendu, utilisant un calcul non linéaire de l'état et de
 l'évolution incrémentale (processus).
 
 Conceptuellement, on peut représenter le schéma temporel d'action des
-opérateurs pour cet algorithme de la manière suivante, avec **H** l'opérateur
-d'observation et **M** l'opérateur d'évolution :
+opérateurs de cet algorithme de la manière suivante, avec **x** l'état, **P**
+la covariance d'erreur d'état, **H** l'opérateur d'observation et **M**
+l'opérateur d'évolution :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -44,6 +45,12 @@ d'observation et **M** l'opérateur d'évolution :
     :width: 50%
   .. centered::
     **Schéma temporel des étapes en assimilation par filtre de Kalman**
+
+On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
+(numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
+instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
+observations sont fournies en série par l'utilisateur, la première n'est donc
+pas utilisée.
 
 Dans le cas d'opérateurs réellement non-linéaires, on peut aisément utiliser
 l':ref:`section_ref_algorithm_EnsembleKalmanFilter` ou

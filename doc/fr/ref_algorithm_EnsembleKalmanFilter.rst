@@ -37,9 +37,15 @@ comme dans les filtres de Kalman simple ou étendu.
 
 Il s'applique aux cas d'opérateurs d'observation et d'évolution incrémentale
 (processus) non-linéaires et présente d'excellentes qualités de robustesse et
-de performances. Il peut être comparé à
+de performances. Il peut être rapproché de
 l':ref:`section_ref_algorithm_UnscentedKalmanFilter` dont les qualités sont
 similaires pour les systèmes non-linéaires.
+
+On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
+(numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
+instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
+observations sont fournies en série par l'utilisateur, la première n'est donc
+pas utilisée.
 
 Dans le cas d'opérateurs linéaires ou "faiblement" non-linéaire, on peut
 aisément utiliser l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou même

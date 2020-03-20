@@ -40,6 +40,12 @@ operators with excellent robustness and performance qualities. It can be
 compared to the :ref:`section_ref_algorithm_UnscentedKalmanFilter`, whose
 qualities are similar for non-linear systems.
 
+We notice that there is no analysis performed at the initial time step
+(numbered 0 in the time indexing) because there is no forecast at this time
+(the background is stored as a pseudo analysis at the initial time step). If
+the observations are provided in series by the user, the first one is therefore
+not used.
+
 In case of linear of "slightly" non-linear operators, one can easily use the
 :ref:`section_ref_algorithm_ExtendedKalmanFilter` or even the
 :ref:`section_ref_algorithm_KalmanFilter`, which are often far less expensive
