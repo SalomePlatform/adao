@@ -74,6 +74,8 @@ if(ADAO_PYTHON_MODULE)
 
 else(ADAO_PYTHON_MODULE)
 
+  include(SalomeSetupPlatform)
+
   # ADAO_SALOME_MODULE
   install(FILES COPYING.txt README.txt DESTINATION $ENV{CURRENT_SOFTWARE_INSTALL_DIR})
 
@@ -81,6 +83,7 @@ else(ADAO_PYTHON_MODULE)
   find_package(SalomeOmniORBPy REQUIRED)
   find_package(SalomeKERNEL REQUIRED)
   KERNEL_WITH_CORBA()
+  add_definitions(${OMNIORB_DEFINITIONS})
 
   if(NOT ADAO_PYTHON_ROOT_DIR)
     message(FATAL_ERROR "ADAO_PYTHON_ROOT_DIR cmake variable has to be set if ADAO_SALOME_MODULE option is ON.")
