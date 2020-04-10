@@ -70,10 +70,11 @@ et qui décrivent les commandes et des options d'algorithmes. Un
 document. Enfin, pour respecter les exigences de licence du module, n'oubliez
 pas de lire la partie :ref:`section_license`.
 
-**Table des matières**
-
 .. toctree::
+   :caption: Table des matières
+   :name: mastertoc
    :maxdepth: 2
+   :numbered: 2
 
    intro
    theory
@@ -93,5 +94,3 @@ pas de lire la partie :ref:`section_license`.
 
 * :ref:`genindex`
 * :ref:`search`
-
-.. * :ref:`section_glossary`

@@ -29,7 +29,7 @@ Introduction à ADAO
 
 Le but du module ADAO est **d'aider à l'usage de l'assimilation de données ou
 de l'optimisation en lien avec d'autres modules ou codes de simulation dans un
-contexte Python [Python]_ ou SALOME [Salome]_**. Le module ADAO fournit une
+contexte Python** [Python]_ **ou SALOME** [Salome]_. Le module ADAO fournit une
 interface simple à des algorithmes classiques d'assimilation de données ou
 d'optimisation, ainsi que de tests ou vérifications. Il permet d'intégrer leur
 usage dans une étude Python ou SALOME. Les modules utilisateurs de calcul ou de

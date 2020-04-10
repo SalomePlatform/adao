@@ -28,8 +28,8 @@ Introduction to ADAO
 ================================================================================
 
 The aim of the ADAO module is **to help using data assimilation or optimization
-methodology in conjunction with other modules or simulation codes in Python
-[Python]_ or SALOME context [Salome]_**. The ADAO module provides a simple
+methodology in conjunction with other modules or simulation codes in Python**
+[Python]_ **or SALOME context** [Salome]_. The ADAO module provides a simple
 interface to some standard algorithms of data assimilation or optimization, as
 well as test or verification ones. It allows integration of their use in a
 Python or SALOME study. Calculation or simulation user modules have to provide

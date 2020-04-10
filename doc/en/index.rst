@@ -66,10 +66,11 @@ describing the details of commands and options of the algorithms. A
 the document. And, to comply with the module requirements, be sure to read the
 part :ref:`section_license`.
 
-**Table of contents**
-
 .. toctree::
+   :caption: Table of contents
+   :name: mastertoc
    :maxdepth: 2
+   :numbered: 2
 
    intro
    theory
@@ -89,5 +90,3 @@ part :ref:`section_license`.
 
 * :ref:`genindex`
 * :ref:`search`
-
-.. * :ref:`section_glossary`
