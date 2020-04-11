@@ -1,4 +1,6 @@
 Python (TUI) use example
 ++++++++++++++++++++++++
 
-Here is a very simple use of the algorithm, written in :ref:`section_tui`.
+Here is a very simple use of the given algorithm, written in :ref:`section_tui`,
+and from which input information allow to define an equivalent cas in graphical
+interface.
