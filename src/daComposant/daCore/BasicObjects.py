@@ -331,7 +331,7 @@ class Operator(object):
         if self.__Matrix is not None:
             self.__addOneMatrixCall()
             mValue = [self.__Matrix,]
-        elif ValueForMethodForm is not "UnknownVoidValue": # Ne pas utiliser "None"
+        elif not isinstance(ValueForMethodForm,str) or ValueForMethodForm != "UnknownVoidValue": # Ne pas utiliser "None"
             mValue = []
             if argsAsSerie:
                 self.__addOneMethodCall( len(ValueForMethodForm) )
@@ -624,7 +624,10 @@ class Algorithm(object):
         self._name = str( name )
         self._parameters = {"StoreSupplementaryCalculations":[]}
         self.__required_parameters = {}
-        self.__required_inputs = {"RequiredInputValues":{"mandatory":(), "optional":()}}
+        self.__required_inputs = {
+            "RequiredInputValues":{"mandatory":(), "optional":()},
+            "ClassificationTags":[],
+            }
         self.__variable_names_not_public = {"nextStep":False} # Duplication dans AlgorithmAndParameters
         self.__canonical_parameter_name = {} # Correspondance "lower"->"correct"
         self.__canonical_stored_name = {}    # Correspondance "lower"->"correct"
@@ -882,10 +885,24 @@ class Algorithm(object):
 
     def requireInputArguments(self, mandatory=(), optional=()):
         """
-        Permet d'imposer des arguments requises en entrée
+        Permet d'imposer des arguments de calcul requis en entrée.
         """
         self.__required_inputs["RequiredInputValues"]["mandatory"] = tuple( mandatory )
         self.__required_inputs["RequiredInputValues"]["optional"]  = tuple( optional )
+
+    def getInputArguments(self):
+        """
+        Permet d'obtenir les listes des arguments de calcul requis en entrée.
+        """
+        return self.__required_inputs["RequiredInputValues"]["mandatory"], self.__required_inputs["RequiredInputValues"]["optional"]
+
+    def setAttributes(self, tags=()):
+        """
+        Permet d'adjoindre des attributs comme les tags de classification.
+        Renvoie la liste actuelle dans tous les cas.
+        """
+        self.__required_inputs["ClassificationTags"].extend( tags )
+        return self.__required_inputs["ClassificationTags"]
 
     def __setParameters(self, fromDico={}, reset=False):
         """
