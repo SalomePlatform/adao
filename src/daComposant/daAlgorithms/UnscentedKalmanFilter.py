@@ -104,6 +104,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             mandatory= ("Xb", "Y", "HO", "R", "B" ),
             optional = ("U", "EM", "CM", "Q"),
             )
+        self.setAttributes(tags=(
+            "DataAssimilation",
+            "NonLinear",
+            "Filter",
+            "Ensemble",
+            "Dynamic",
+            ))
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, R, B, Q)
