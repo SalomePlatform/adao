@@ -1086,6 +1086,14 @@ class AlgorithmAndParameters(object):
         "Renvoie la liste des paramètres requis selon l'algorithme"
         return self.__algorithm.getRequiredParameters(noDetails)
 
+    def getAlgorithmInputArguments(self):
+        "Renvoie la liste des entrées requises selon l'algorithme"
+        return self.__algorithm.getInputArguments()
+
+    def getAlgorithmAttributes(self):
+        "Renvoie la liste des attributs selon l'algorithme"
+        return self.__algorithm.setAttributes()
+
     def setObserver(self, __V, __O, __I, __S):
         if self.__algorithm is None \
             or isinstance(self.__algorithm, dict) \

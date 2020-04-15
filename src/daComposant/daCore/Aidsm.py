@@ -593,6 +593,12 @@ class Aidsm(object):
             elif Concept == "AlgorithmRequiredParameters" and self.__adaoObject["AlgorithmParameters"] is not None:
                 return self.__adaoObject["AlgorithmParameters"].getAlgorithmRequiredParameters(noDetails)
                 #
+            elif Concept == "AlgorithmRequiredInputs" and self.__adaoObject["AlgorithmParameters"] is not None:
+                return self.__adaoObject["AlgorithmParameters"].getAlgorithmInputArguments()
+                #
+            elif Concept == "AlgorithmAttributes" and self.__adaoObject["AlgorithmParameters"] is not None:
+                return self.__adaoObject["AlgorithmParameters"].getAlgorithmAttributes()
+                #
             else:
                 raise ValueError("The requested key \"%s\" does not exists as an input or a stored variable."%Concept)
         else:
