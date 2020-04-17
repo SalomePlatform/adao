@@ -165,6 +165,15 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulationQuantiles.rst
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. literalinclude:: scripts/simple_Blue.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_Blue.res
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_ExtendedBlue`

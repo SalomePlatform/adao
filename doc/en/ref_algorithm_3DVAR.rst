@@ -201,6 +201,15 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulationQuantiles.rst
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. literalinclude:: scripts/simple_3DVAR.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_3DVAR.res
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_Blue`
