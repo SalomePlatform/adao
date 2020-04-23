@@ -20,9 +20,6 @@
 
 cmake_minimum_required(VERSION 2.6)
 
-# Ensure a proper linker behavior:
-CMAKE_POLICY(SET CMP0003 NEW)
-
 project(ADAO)
 
 include(CMakeDependentOption)
@@ -49,7 +46,7 @@ set(ADAO_TEST "share/test/adao")
 set(CONFIGURATION_ROOT_DIR $ENV{CONFIGURATION_ROOT_DIR} CACHE PATH "Path to the Salome CMake configuration files")
 if(EXISTS ${CONFIGURATION_ROOT_DIR})
   list(APPEND CMAKE_MODULE_PATH "${CONFIGURATION_ROOT_DIR}/cmake")
-  include(SalomeMacros)
+  include(SalomeMacros NO_POLICY_SCOPE)
 else()
   message(FATAL_ERROR "We absolutely need the Salome CMake configuration files, please define CONFIGURATION_ROOT_DIR !")
 endif()
