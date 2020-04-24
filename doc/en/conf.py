@@ -99,6 +99,7 @@ else:
 html_title       = doctitle
 html_static_path = ['_static']
 html_show_sourcelink = False
+html_search_language = language
 
 # -- Options for HTMLHelp output -----------------------------------------------
 htmlhelp_basename = 'ADAOdoc'
