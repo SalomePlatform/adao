@@ -37,7 +37,7 @@ sys.path.insert(0,INSTALLDIR)
 repIni=os.path.dirname(os.path.abspath(__file__))
 #
 # Sert comme directory initial des QFileDialog
-initialdir=os.environ["PWD"]
+initialdir = os.getcwd()
 #
 # Traductions et codages
 #
