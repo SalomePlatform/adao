@@ -12,14 +12,17 @@ def QuadFunction( coefficients ):
         y_points.append( a*x*x + b*x + c )
     return array(y_points)
 #
+Xb   = array([1., 1., 1.])
+Yobs = array([57, 2, 3, 17, 192])
+#
 print("Iterative resolution of the calibration problem")
 print("-----------------------.-----------------------")
 print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
-case.setBackground( Vector = array([1., 1., 1.]), Stored=True )
+case.setBackground( Vector = Xb, Stored=True )
 case.setBackgroundError( ScalarSparseMatrix = 1.e6 )
-case.setObservation( Vector=array([57, 2, 3, 17, 192]), Stored=True )
+case.setObservation( Vector = Yobs, Stored=True )
 case.setObservationError( ScalarSparseMatrix = 1. )
 case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
