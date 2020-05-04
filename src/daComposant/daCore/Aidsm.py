@@ -500,8 +500,8 @@ class Aidsm(object):
             Parameters = None,
             Script     = None):
         "Mise a jour d'un concept de calcul"
-        if "AlgorithmParameters" not in self.__adaoObject:
-            raise ValueError("No algorithm registred, ask for one before updating parameters")
+        if "AlgorithmParameters" not in self.__adaoObject or self.__adaoObject["AlgorithmParameters"] is None:
+            raise ValueError("\n\nNo algorithm registred, set one before updating parameters or executing\n")
         self.__adaoObject["AlgorithmParameters"].updateParameters(
             asDict        = Parameters,
             asScript      = self.__with_directory(Script),
