@@ -44,6 +44,8 @@ Les différentes commandes sont les suivantes:
 
 .. include:: snippets/Debug.rst
 
+.. include:: snippets/ExecuteInContainer.rst
+
 .. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationError.rst

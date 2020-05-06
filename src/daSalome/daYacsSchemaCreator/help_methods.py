@@ -69,6 +69,10 @@ def check_study(study_config):
       raise ValueError("\n\n Study repertory should be an absolute path\n"+
                            " Repertory provided is %s\n" % repertory)
 
+  # ExecuteInContainer
+  if "ExecuteInContainer" not in study_config:
+    study_config["ExecuteInContainer"] = "No"
+
   # Check if all the data is provided
   for key in AlgoDataRequirements[study_config["Algorithm"]]:
     if key not in study_config.keys():

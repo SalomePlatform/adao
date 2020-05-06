@@ -50,6 +50,8 @@ Les différentes commandes sont les suivantes:
 
 .. include:: snippets/EvolutionModel.rst
 
+.. include:: snippets/ExecuteInContainer.rst
+
 .. include:: snippets/InputVariables.rst
 
 .. include:: snippets/Observation.rst

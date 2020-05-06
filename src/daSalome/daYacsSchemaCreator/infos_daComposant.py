@@ -329,5 +329,7 @@ ObserversList = [
     "Residu",
     ]
 
-# Regulation : # of containers, 0 for no container
-UseYACSContainer = 1
+# Global regulation of separate container execution with priority on user:
+#   0 for no separate execution container possibility
+#   1 for separate execution container possibility
+UseSeparateContainer = 1

@@ -145,6 +145,13 @@ class AdaoGenerator(PythonGenerator):
     # Extraction du StudyRepertory
     if "__"+self.type_of_study+"__StudyRepertory" in self.dictMCVal.keys():
       self.text_da += "study_config['Repertory'] = '" + self.dictMCVal["__"+self.type_of_study+"__StudyRepertory"] + "'\n"
+
+    # Extraction du ExecuteInContainer
+    if "__"+self.type_of_study+"__ExecuteInContainer" in self.dictMCVal.keys():
+      self.text_da += "study_config['ExecuteInContainer'] = '" + str(self.dictMCVal["__"+self.type_of_study+"__ExecuteInContainer"]) + "'\n"
+    else:
+      self.text_da += "study_config['ExecuteInContainer'] = 'No'\n"
+
     # Extraction de UserPostAnalysis
     if "__"+self.type_of_study+"__UserPostAnalysis__FROM" in self.dictMCVal.keys():
       self.add_UserPostAnalysis()

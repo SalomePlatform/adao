@@ -77,8 +77,25 @@ def create_yacs_proc(study_config):
   else:
     base_repertory = ""
     repertory = False
-  if UseYACSContainer:
+  if "ExecuteInContainer" in list(study_config.keys()):
+    if study_config["ExecuteInContainer"] == "Mono":
+      ExecuteInContainer = True
+      ExecuteInModeMulti = False
+    elif study_config["ExecuteInContainer"] == "Multi":
+      ExecuteInContainer = True
+      ExecuteInModeMulti = True
+    else: # cas "No"
+      ExecuteInContainer = False
+      ExecuteInModeMulti = False
+  else:
+    ExecuteInContainer = False
+    ExecuteInModeMulti = False
+  if ExecuteInContainer and bool(UseSeparateContainer):
     mycontainer = proc.createContainer("AdaoContainer")
+    if ExecuteInModeMulti:
+      # type : multi pour creer un nouveau container pour chaque noeud
+      # type : mono pour réutiliser le même container (defaut)
+      mycontainer.setProperty("type","multi")
 
   # Create ADAO case bloc
   ADAO_Case = runtime.createBloc("ADAO_Case_Bloc")
@@ -111,6 +128,9 @@ def create_yacs_proc(study_config):
   CAS_node.getInputPort("OutputVariablesSizes").edInitPy(OutputVariablesSizes)
 
   ADAO_Case.edAddChild(CAS_node)
+  if ExecuteInContainer and bool(UseSeparateContainer):
+    CAS_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+    CAS_node.setContainer(mycontainer)
 
   # Adding an observer init node if an user defines some
   factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
@@ -131,6 +151,9 @@ def create_yacs_proc(study_config):
     ADAO_Case.edAddChild(init_observers_node)
     ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("has_observers"), CAS_node.getInputPort("has_observers"))
     ADAO_Case.edAddDFLink(init_observers_node.getOutputPort("observers"), CAS_node.getInputPort("observers"))
+  if ExecuteInContainer and bool(UseSeparateContainer):
+    init_observers_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+    init_observers_node.setContainer(mycontainer)
 
   # Step 0.5: Find if there is a user init node
   init_config = {}
@@ -145,6 +168,9 @@ def create_yacs_proc(study_config):
     init_node_script += "init_data = user_script_module.init_data\n"
     init_node.setScript(init_node_script)
     ADAO_Case.edAddChild(init_node)
+    if ExecuteInContainer and bool(UseSeparateContainer):
+      init_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      init_node.setContainer(mycontainer)
 
   # Step 1: get input data from user configuration
 
@@ -164,6 +190,9 @@ def create_yacs_proc(study_config):
         _Internal_Add_dir_script_ports( back_node, data_config["Data"], repertory, base_repertory, t_string)
         back_node.edAddOutputPort(key, t_pyobj)
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if key in init_config["Target"]:
@@ -192,6 +221,9 @@ def create_yacs_proc(study_config):
         back_node.getInputPort("dict_in_string").edInitPy(data_config["Data"])
         back_node.edAddOutputPort(key, t_pyobj)
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if key in init_config["Target"]:
@@ -212,6 +244,9 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if "Stored" in data_config:
@@ -239,6 +274,9 @@ def create_yacs_proc(study_config):
         _Internal_Add_dir_script_ports( back_node, data_config["Data"], repertory, base_repertory, t_string)
         back_node.edAddOutputPort(key, t_pyobj)
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if key in init_config["Target"]:
@@ -273,6 +311,9 @@ def create_yacs_proc(study_config):
             colmajor = False
         back_node.getInputPort("colmajor").edInitPy(colmajor) # On impose le concept, et le schéma YACS est ammendable
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if "Stored" in data_config:
@@ -299,6 +340,9 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("vector_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if "Stored" in data_config:
@@ -326,6 +370,9 @@ def create_yacs_proc(study_config):
         _Internal_Add_dir_script_ports( back_node, data_config["Data"], repertory, base_repertory, t_string)
         back_node.edAddOutputPort(key, t_pyobj)
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if key in init_config["Target"]:
@@ -360,6 +407,9 @@ def create_yacs_proc(study_config):
             colmajor = False
         back_node.getInputPort("colmajor").edInitPy(colmajor) # On impose le concept, et le schéma YACS est ammendable
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if "Stored" in data_config:
@@ -386,6 +436,9 @@ def create_yacs_proc(study_config):
         back_node = factory_back_node.cloneNode("Get" + key)
         back_node.getInputPort("matrix_in_string").edInitPy(data_config["Data"])
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if "Stored" in data_config:
@@ -413,6 +466,9 @@ def create_yacs_proc(study_config):
         _Internal_Add_dir_script_ports( back_node, data_config["Data"], repertory, base_repertory, t_string)
         back_node.edAddOutputPort(key, t_pyobj)
         ADAO_Case.edAddChild(back_node)
+        if ExecuteInContainer and bool(UseSeparateContainer):
+          back_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+          back_node.setContainer(mycontainer)
         # Set content of the node
         back_node_script = back_node.getScript()
         if "Stored" in data_config:
@@ -478,9 +534,6 @@ def create_yacs_proc(study_config):
       break
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if UseYACSContainer:
-      opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
-      opt_script_nodeOO.setContainer(mycontainer)
     if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(script_filename))):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
@@ -509,9 +562,6 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if UseYACSContainer:
-      opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
-      opt_script_nodeOO.setContainer(mycontainer)
     if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(script_filename))):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
@@ -594,9 +644,6 @@ def create_yacs_proc(study_config):
 
     # We create a new pyscript node
     opt_script_nodeOO = runtime.createScriptNode("", "FunctionNodeOO")
-    if UseYACSContainer:
-      opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
-      opt_script_nodeOO.setContainer(mycontainer)
     if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(script_filename))):
       script_filename = os.path.join(base_repertory, os.path.basename(script_filename))
     try:
@@ -626,10 +673,10 @@ def create_yacs_proc(study_config):
     node_script += """except NameError:\n"""
     node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
     if sys.version_info.major < 3:
-        node_script += """from daNumerics import ApproximatedDerivatives\n"""
+        node_script += """from daCore import NumericObjects\n"""
     else:
-        node_script += """from adao.daNumerics import ApproximatedDerivatives\n"""
-    node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
+        node_script += """from adao.daCore import NumericObjects\n"""
+    node_script += """FDA = NumericObjects.FDApproximation(\n"""
     node_script += """    Function   = DirectOperator,\n"""
     node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
     node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
@@ -676,6 +723,10 @@ def create_yacs_proc(study_config):
   else:
     factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
     opt_script_nodeOO = factory_opt_script_node.cloneNode("FakeFunctionNode")
+  #
+  if ExecuteInContainer and bool(UseSeparateContainer):
+    opt_script_nodeOO.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+    opt_script_nodeOO.setContainer(mycontainer)
 
   # Check if we have a python script for OptimizerLoopNode
   if "EvolutionModel" in list(study_config.keys()):
@@ -830,10 +881,10 @@ def create_yacs_proc(study_config):
       node_script += """except NameError:\n"""
       node_script += """    raise ValueError("ComputationFunctionNode: DirectOperator not found in the imported user script file")\n"""
       if sys.version_info.major < 3:
-          node_script += """from daNumerics import ApproximatedDerivatives\n"""
+          node_script += """from daCore import NumericObjects\n"""
       else:
-          node_script += """from adao.daNumerics import ApproximatedDerivatives\n"""
-      node_script += """FDA = ApproximatedDerivatives.FDApproximation(\n"""
+          node_script += """from adao.daCore import NumericObjects\n"""
+      node_script += """FDA = NumericObjects.FDApproximation(\n"""
       node_script += """    Function   = DirectOperator,\n"""
       node_script += """    increment  = %s,\n"""%str(ScriptWithOneFunction['DifferentialIncrement'])
       node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
@@ -882,6 +933,10 @@ def create_yacs_proc(study_config):
     else:
       factory_opt_script_node = catalogAd.getNodeFromNodeMap("FakeOptimizerLoopNode")
       opt_script_nodeEM = factory_opt_script_node.cloneNode("FakeFunctionNode")
+    #
+    if ExecuteInContainer and bool(UseSeparateContainer):
+      opt_script_nodeEM.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      opt_script_nodeEM.setContainer(mycontainer)
 
   # Add computation bloc
   if "Observers" in list(study_config.keys()):
@@ -891,6 +946,9 @@ def create_yacs_proc(study_config):
     # Add a node that permits to configure the switch
     factory_read_for_switch_node = catalogAd.getNodeFromNodeMap("ReadForSwitchNode")
     read_for_switch_node = factory_read_for_switch_node.cloneNode("ReadForSwitch")
+    if ExecuteInContainer and bool(UseSeparateContainer):
+      read_for_switch_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      read_for_switch_node.setContainer(mycontainer)
     execution_bloc.edAddChild(read_for_switch_node)
     ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
 
@@ -928,6 +986,9 @@ def create_yacs_proc(study_config):
 
       factory_extract_data_node = catalogAd.getNodeFromNodeMap("ExtractDataNode")
       extract_data_node = factory_extract_data_node.cloneNode("ExtractData")
+      if ExecuteInContainer and bool(UseSeparateContainer):
+        extract_data_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+        extract_data_node.setContainer(mycontainer)
       observer_bloc.edAddChild(extract_data_node)
       ADAO_Case.edAddDFLink(read_for_switch_node.getOutputPort("data"), extract_data_node.getInputPort("data"))
 
@@ -942,12 +1003,18 @@ def create_yacs_proc(study_config):
         factory_observation_node = catalogAd.getNodeFromNodeMap("ObservationNodeFile")
         observation_node = factory_observation_node.cloneNode("Observation")
         _Internal_Add_dir_script_ports( observation_node, observer_cfg["Script"], repertory, base_repertory, t_string)
+      if ExecuteInContainer and bool(UseSeparateContainer):
+        observation_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+        observation_node.setContainer(mycontainer)
       observer_bloc.edAddChild(observation_node)
       ADAO_Case.edAddDFLink(extract_data_node.getOutputPort("var"), observation_node.getInputPort("var"))
       ADAO_Case.edAddDFLink(extract_data_node.getOutputPort("info"), observation_node.getInputPort("info"))
 
       factory_end_observation_node = catalogAd.getNodeFromNodeMap("EndObservationNode")
       end_observation_node = factory_end_observation_node.cloneNode("EndObservation")
+      if ExecuteInContainer and bool(UseSeparateContainer):
+        end_observation_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+        end_observation_node.setContainer(mycontainer)
       observer_bloc.edAddChild(end_observation_node)
       ADAO_Case.edAddCFLink(observation_node, end_observation_node)
       ADAO_Case.edAddDFLink(end_observation_node.getOutputPort("output"), optimizer_node.edGetPortForOutPool())
@@ -959,6 +1026,9 @@ def create_yacs_proc(study_config):
     # Add a node that permits to configure the switch
     factory_read_for_switch_node = catalogAd.getNodeFromNodeMap("ReadForSwitchNode")
     read_for_switch_node = factory_read_for_switch_node.cloneNode("ReadForSwitch")
+    if ExecuteInContainer and bool(UseSeparateContainer):
+      read_for_switch_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+      read_for_switch_node.setContainer(mycontainer)
     execution_bloc.edAddChild(read_for_switch_node)
     ADAO_Case.edAddDFLink(optimizer_node.edGetSamplePort(), read_for_switch_node.getInputPort("data"))
 
@@ -1009,6 +1079,9 @@ def create_yacs_proc(study_config):
     if analysis_config["From"] == "String":
       factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
       analysis_node = factory_analysis_node.cloneNode("UsePostAnalysis")
+      if ExecuteInContainer and bool(UseSeparateContainer):
+        analysis_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+        analysis_node.setContainer(mycontainer)
       default_script = analysis_node.getScript()
       final_script = default_script + analysis_config["Data"]
       analysis_node.setScript(final_script)
@@ -1030,6 +1103,9 @@ def create_yacs_proc(study_config):
     elif analysis_config["From"] == "Script":
       factory_analysis_node = catalogAd.getNodeFromNodeMap("SimpleUserAnalysis")
       analysis_node = factory_analysis_node.cloneNode("UserPostAnalysis")
+      if ExecuteInContainer and bool(UseSeparateContainer):
+        analysis_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
+        analysis_node.setContainer(mycontainer)
       default_script = analysis_node.getScript()
       analysis_file_name = analysis_config["Data"]
       if repertory and os.path.exists(os.path.join(base_repertory, os.path.basename(analysis_file_name))):
