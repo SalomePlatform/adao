@@ -49,7 +49,7 @@ def DirectOperator( XX ):
     return numpy.array( HX )
 
 # ==============================================================================
-from adao.daNumerics.ApproximatedDerivatives import FDApproximation
+from adao.daCore.NumericObjects import FDApproximation
 FDA = FDApproximation( DirectOperator )
 TangentOperator = FDA.TangentOperator
 AdjointOperator = FDA.AdjointOperator
