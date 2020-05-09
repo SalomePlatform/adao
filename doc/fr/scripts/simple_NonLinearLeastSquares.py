@@ -21,12 +21,11 @@ print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
 case.setBackground( Vector = Xb, Stored=True )
-case.setBackgroundError( ScalarSparseMatrix = 1.e6 )
 case.setObservation( Vector = Yobs, Stored=True )
 case.setObservationError( ScalarSparseMatrix = 1. )
 case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
-    Algorithm='3DVAR',
+    Algorithm='NonLinearLeastSquares',
     Parameters={
         'StoreSupplementaryCalculations': [
             'CurrentState',

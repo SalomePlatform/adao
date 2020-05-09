@@ -115,9 +115,9 @@ StoreSupplementaryCalculations
 *Tips for this algorithm:*
 
     As the *"BackgroundError"* command is required for ALL the calculation
-    algorithms in the interface, you have to provide a value, even if this
-    command is not required for this algorithm, and will not be used. The
-    simplest way is to give "1" as a STRING.
+    algorithms in the graphical interface ADAO EFICAS, you have to provide a
+    value, even if this command is not required for this algorithm, and will
+    not be used. The simplest way is to give "1" as a STRING.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
@@ -170,6 +170,15 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtOptimum.rst
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. literalinclude:: scripts/simple_NonLinearLeastSquares.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_NonLinearLeastSquares.res
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

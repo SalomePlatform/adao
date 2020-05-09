@@ -3,7 +3,7 @@
 from numpy import array, ravel
 def QuadFunction( coefficients ):
     """
-    Function : y = a x^2 + b x + c
+    Simulation : y = a x^2 + b x + c
     """
     a, b, c = list(ravel(coefficients))
     x_points = (-5, 0, 1, 3, 10)

@@ -15,18 +15,17 @@ def QuadFunction( coefficients ):
 Xb   = array([1., 1., 1.])
 Yobs = array([57, 2, 3, 17, 192])
 #
-print("Résolution itérative du problème de calibration")
+print("Iterative resolution of the calibration problem")
 print("-----------------------.-----------------------")
 print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
 case.setBackground( Vector = Xb, Stored=True )
-case.setBackgroundError( ScalarSparseMatrix = 1.e6 )
 case.setObservation( Vector = Yobs, Stored=True )
 case.setObservationError( ScalarSparseMatrix = 1. )
 case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
-    Algorithm='3DVAR',
+    Algorithm='NonLinearLeastSquares',
     Parameters={
         'StoreSupplementaryCalculations': [
             'CurrentState',
@@ -34,7 +33,7 @@ case.setAlgorithmParameters(
         },
     )
 case.setObserver(
-    Info="  État intermédiaire en itération courante :",
+    Info="  Intermediate state at the current iteration:",
     Template='ValuePrinter',
     Variable='CurrentState',
     )
@@ -43,15 +42,15 @@ print("")
 #
 #-------------------------------------------------------------------------------
 #
-print("Calibration de %i coefficients pour une forme quadratique 1D sur %i mesures"%(
+print("Calibration of %i coefficients in a 1D quadratic function on %i measures"%(
     len(case.get('Background')),
     len(case.get('Observation')),
     ))
-print("------------------------------------------------------------------------")
+print("---------------------------------------------------------------------")
 print("")
-print("Vecteur observation.......................:", ravel(case.get('Observation')))
-print("État ébauche a priori.....................:", ravel(case.get('Background')))
+print("Observation vector.................:", ravel(case.get('Observation')))
+print("A priori background state..........:", ravel(case.get('Background')))
 print("")
-print("Coefficients théoriques attendus..........:", ravel((2,-1,2)))
+print("Expected theoretical coefficients..:", ravel((2,-1,2)))
 print("")
-print("Coefficients résultants de la calibration.:", ravel(case.get('Analysis')[-1]))
+print("Calibration resulting coefficients.:", ravel(case.get('Analysis')[-1]))
