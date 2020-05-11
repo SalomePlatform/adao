@@ -92,17 +92,18 @@ exclude_trees    = ['snippets',]
 # -- Options for HTML output ---------------------------------------------------
 
 if use_rtd_theme:
-    html_theme   = "sphinx_rtd_theme"
+    html_theme       = "sphinx_rtd_theme"
 else:
-    html_theme   = 'default' if __lv < LooseVersion("1.3.0") else 'classic'
+    html_theme       = 'default' if __lv < LooseVersion("1.3.0") else 'classic'
 #
-html_title       = doctitle
-html_static_path = ['_static']
+html_title           = doctitle
+html_static_path     = ['_static']
 html_show_sourcelink = False
 html_search_language = language
+html_favicon         = 'resources/ADAO_favicon.ico'
 
 # -- Options for HTMLHelp output -----------------------------------------------
-htmlhelp_basename = 'ADAOdoc'
+htmlhelp_basename    = 'ADAOdoc'
 
 # -- Options for LaTeX output --------------------------------------------------
 
