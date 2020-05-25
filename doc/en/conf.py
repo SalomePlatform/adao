@@ -24,7 +24,7 @@
 
 import sys, os, time, sphinx, logging
 
-# -- ADAO version information --------------------------------------------------
+# -- Module version information --------------------------------------------------
 
 try:
     sys.path.append(os.path.abspath("../../bin"))
@@ -103,7 +103,8 @@ html_search_language = language
 html_favicon         = 'resources/ADAO_favicon.ico'
 
 # -- Options for HTMLHelp output -----------------------------------------------
-htmlhelp_basename    = 'ADAOdoc'
+
+htmlhelp_basename    = module_version.name+'doc'
 
 # -- Options for LaTeX output --------------------------------------------------
 
@@ -113,23 +114,25 @@ latex_elements = {
     'figure_align': 'htbp',
 }
 latex_documents = [
-  ('index', 'ADAO.tex', doctitle,
+  ('index', '%s.tex'%module_version.name, doctitle,
    author, 'manual'),
 ]
 
 # -- Options for manual page output --------------------------------------------
 
 man_pages = [
-    (master_doc, 'adao', doctitle,
+    (master_doc, '%s'%module_version.name, doctitle,
      [author], 1)
 ]
 
 # -- Options for Texinfo output ------------------------------------------------
+
 texinfo_documents = [
-    (master_doc, 'ADAO', doctitle,
-     author, 'ADAO', docfull,
+    (master_doc, '%s'%module_version.name, doctitle,
+     author, '%s'%module_version.name, docfull,
      'Miscellaneous'),
 ]
+
 # -- Options for Epub output ---------------------------------------------------
 
 epub_title         = doctitle
@@ -140,9 +143,13 @@ epub_exclude_files = ['search.html']
 
 # -- Options for PDF output ----------------------------------------------------
 
-pdf_documents = [
-    ('contents', u'ADAO', u'ADAO', author, dict(pdf_compressed = True)),
-]
+pdf_documents = [(
+    'contents',
+    u'%s'%module_version.name,
+    u'%s'%module_version.name,
+    author,
+    dict(pdf_compressed = True),
+),]
 pdf_stylesheets = ['sphinx','kerning','a4']
 pdf_compressed = True
 pdf_inline_footnotes = True
