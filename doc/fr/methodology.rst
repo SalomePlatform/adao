@@ -38,7 +38,8 @@ Procédure logique pour une étude
 --------------------------------
 
 Pour une étude générique d'Assimilation de Données ou d'Optimisation, les
-principales étapes méthodologiques peuvent être les suivantes:
+principales étapes méthodologiques peuvent être les suivantes, chacune des
+étapes étant détaillée dans la section qui suit :
 
 - :ref:`section_m_step1`
 - :ref:`section_m_step2`
@@ -48,7 +49,17 @@ principales étapes méthodologiques peuvent être les suivantes:
 - :ref:`section_m_step6`
 - :ref:`section_m_step7`
 
-Chaque étape est détaillée dans la section suivante.
+Si on veut illustrer ces étapes méthodologiques du point de vue d'une étude
+appliquée à un système ou un problème industriel, le schéma suivant fait
+correspondre ces étapes méthodologiques avec les étapes classiques dans une
+étude :
+
+  .. _meth_steps_in_study:
+  .. image:: images/meth_steps_in_study.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **Les étapes méthodologiques requises lors d'une démarche d'étude appliquée à un système ou un problème industriel**
 
 Procédure détaillée pour une étude
 ----------------------------------

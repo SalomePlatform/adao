@@ -259,14 +259,25 @@ account computer requirements such as calculation size and time.
 Going further in the data assimilation framework
 ------------------------------------------------
 
-.. index:: single: state estimation
-.. index:: single: parameter estimation
-.. index:: single: inverse problems
+.. index:: single: adjustment
+.. index:: single: artificial intelligence
 .. index:: single: Bayesian estimation
-.. index:: single: optimal interpolation
-.. index:: single: mathematical regularization
-.. index:: single: regularization methods
+.. index:: single: calibration
 .. index:: single: data smoothing
+.. index:: single: data-driven
+.. index:: single: field interpolation
+.. index:: single: inverse problems
+.. index:: single: inversion
+.. index:: single: machine learning
+.. index:: single: mathematical regularization
+.. index:: single: meta-heuristics
+.. index:: single: model reduction
+.. index:: single: optimal interpolation
+.. index:: single: parameter estimation
+.. index:: single: quadratic optimization
+.. index:: single: regularization methods
+.. index:: single: state estimation
+.. index:: single: variational optimization
 
 To get more information about the data assimilation techniques, the reader can
 consult introductory documents like [Talagrand97]_ or [Argaud09]_, on-line
@@ -284,6 +295,16 @@ Some aspects of data assimilation are also known as *state estimation*,
 *parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
 interpolation*, *mathematical regularization*, *data smoothing*, etc. These
 terms can be used in bibliographical searches.
+
+Some aspects of data assimilation are also known by other names. Without being
+exhaustive, we can mention the names of *calibration*, *adjustment*, *state
+estimation*, *parameter estimation*, *inverse problems* or *inversion*,
+*Bayesian estimation*, *field interpolation* or *optimal interpolation*,
+*variational optimization*, *quadratic optimization*, *mathematical
+regularization*, *meta-heuristics for optimization*, *model reduction*, *data
+smoothing*, *data-driven* modeling, model and data learning (*Machine Learning*
+and *Artificial Intelligence*), etc. These terms can be used in bibliographic
+searches.
 
 Going further in the state estimation by optimization methods
 -------------------------------------------------------------

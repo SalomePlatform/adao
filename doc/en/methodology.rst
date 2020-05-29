@@ -37,7 +37,7 @@ Logical procedure for a study
 -----------------------------
 
 For a generic Data Assimilation or Optimization study, the main methodological
-steps can be the following:
+steps may be as follows, each of which is detailed in the following section:
 
 - :ref:`section_m_step1`
 - :ref:`section_m_step2`
@@ -47,7 +47,16 @@ steps can be the following:
 - :ref:`section_m_step6`
 - :ref:`section_m_step7`
 
-Each step will be detailed in the next sections.
+To illustrate these methodological steps from the perspective of a study
+applied to an industrial system or problem, the following diagram depicts these
+methodological steps in relation to the typical steps in a study:
+
+  .. _meth_steps_in_study:
+  .. image:: images/meth_steps_in_study.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **The methodological steps required during a study approach applied to an industrial system or problem**
 
 Detailed procedure for a study
 ------------------------------

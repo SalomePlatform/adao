@@ -271,14 +271,26 @@ contraintes informatiques comme la taille ou la durée des calculs.
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------
 
+.. index:: single: apprentissage
+.. index:: single: calibration
+.. index:: single: data-driven
+.. index:: single: estimation bayésienne
 .. index:: single: estimation d'état
 .. index:: single: estimation de paramètres
-.. index:: single: problèmes inverses
-.. index:: single: estimation bayésienne
+.. index:: single: intelligence artificielle
+.. index:: single: interpolation de champs
 .. index:: single: interpolation optimale
-.. index:: single: régularisation mathématique
+.. index:: single: inversion
+.. index:: single: lissage de données
+.. index:: single: machine learning
+.. index:: single: méta-heuristiques
 .. index:: single: méthodes de régularisation
-.. index:: single: méthodes de lissage
+.. index:: single: optimisation quadratique
+.. index:: single: optimisation variationnelle
+.. index:: single: problèmes inverses
+.. index:: single: recalage
+.. index:: single: réduction de modèles
+.. index:: single: régularisation mathématique
 
 Pour obtenir de plus amples informations sur les techniques d'assimilation de
 données, le lecteur peut consulter les documents introductifs comme
@@ -294,11 +306,17 @@ Il y a de nombreux champs d'applications scientifiques et technologiques dans
 lesquels l'utilisation efficace des données observées, mais incomplètes, est
 cruciale.
 
-Certains aspects de l'assimilation de données sont aussi connus sous les noms
-d'*estimation d'état*, d'*estimation de paramètres*, de *problèmes inverses*,
-d'*estimation bayésienne*, d'*interpolation optimale*, de *régularisation
-mathématique*, de *lissage de données*, etc. Ces termes peuvent être utilisés
-dans les recherches bibliographiques.
+Certains aspects de l'assimilation de données sont aussi connus sous d'autres
+noms. Sans être exhaustif, on peut mentionner les noms de *calibration*, de
+*recalage*, d'*estimation d'état*, d'*estimation de paramètres*, de *problèmes
+inverses* ou d'*inversion*, d'*estimation bayésienne*, d'*interpolation de
+champs* ou d'*interpolation optimale*, d'*optimisation variationnelle*,
+d'*optimisation quadratique*, de *régularisation mathématique*, de
+*méta-heuristiques* d'optimisation, de *réduction de modèles*, de *lissage de
+données*, de pilotage des modèles par les données (« *data-driven* »),
+d’*apprentissage* de modèles et de données (*Machine Learning* et Intelligence
+Artificielle), etc. Ces termes peuvent être utilisés dans les recherches
+bibliographiques.
 
 Approfondir l'estimation d'état par des méthodes d'optimisation
 ---------------------------------------------------------------
