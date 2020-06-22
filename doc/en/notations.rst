@@ -44,7 +44,7 @@ File type and naming conventions rely heavily on the extensions of the files
 themselves. Some of them are briefly specified here, without being exhaustive:
 
 - extension ``.py``   : data or commands text file of Python source type
-- extension ``.comm`` : commands text file of EFICAS type
+- extension ``.comm`` : commands text file of ADAO EFICAS type
 - extension ``.xml``  : data text file of XML type or commands (for YACS, not exclusive)
 - extension ``.txt``  : data text file with space separator
 - extension ``.dat``  : data text file with space separator

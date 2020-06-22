@@ -307,11 +307,11 @@ l'interface API/TUI en Python standard.
 
 .. _section_advanced_eficas_gui:
 
-Utiliser l'interface graphique EFICAS comme une commande TUI d'ADAO
--------------------------------------------------------------------
+Utiliser l'interface graphique EFICAS d'ADAO comme une commande TUI d'ADAO
+--------------------------------------------------------------------------
 
-Pour faciliter l'édition rapide avec EFICAS d'un fichier de commandes ADAO
-(JDC, ou paire de fichiers ".comm/.py", qui se trouvent ensemble dans un
+Pour faciliter l'édition rapide avec EFICAS d'ADAO d'un fichier de commandes
+ADAO (JDC, ou paire de fichiers ".comm/.py", qui se trouvent ensemble dans un
 répertoire), on peut lancer l'interface graphique depuis l'interpréteur Python.
 Pour cela, dans un interpréteur Python obtenu depuis le "SALOME shell", on
 utilise les commandes suivantes::

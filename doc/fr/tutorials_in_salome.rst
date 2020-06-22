@@ -458,12 +458,11 @@ Squelettes des scripts décrivant les conditions d'expérience
 On donne ici les éléments essentiels de chaque script utilisé par la suite pour
 construire le cas ADAO. On rappelle que l'utilisation de ces scripts dans de
 réels fichiers Python nécessite de définir correctement le chemin de modules ou
-des codes importés (même si le module est dans le même répertoire que le fichier
-Python qui l'importe. On indique le chemin à renseigner en utilisant la mention
-``"# INSERT PHYSICAL SCRIPT PATH"``), l'encodage si nécessaire, etc. Les noms de
-fichiers indiqués pour les scripts qui suivent sont arbitraires. Des exemples
-complets de fichiers scripts sont disponibles dans le répertoire standard des
-exemples ADAO.
+des codes importés (même si le module est dans le même répertoire que le
+fichier Python qui l'importe. On doit aussi indiquer l'encodage si nécessaire,
+etc. Les noms de fichiers indiqués pour les scripts qui suivent sont
+arbitraires. Des exemples complets de fichiers scripts sont disponibles dans le
+répertoire standard des exemples ADAO.
 
 On définit en premier lieu l'état vrai :math:`\mathbf{x}^t` et une fonction
 utiles à la construction de matrices, dans un fichier script Python nommé
@@ -550,7 +549,8 @@ ici par facilité :
 
 On n'a pas besoin des opérateurs linéaires associés ``"TangentOperator"`` et
 ``"AdjointOperator"`` car ils vont être approximés en utilisant les capacités
-d'ADAO.
+d'ADAO. Des informations détaillées sur ces opérateurs peuvent être trouvées
+dans les :ref:`section_ref_operator_requirements`.
 
 On insiste sur le fait que ces opérateurs non-linéaire ``"DirectOperator"``,
 linéaire tangent ``"TangentOperator"`` et linéaire adjoint ``"AdjointOperator"``
@@ -609,6 +609,9 @@ définis dans un fichier de script Python nommé
             [ None, None ],          # Bound on the first parameter
             [ 0., 4. ],              # Bound on the second parameter
             [ 0., None ],            # Bound on the third parameter
+            ],
+        "StoreSupplementaryCalculations" : [
+            "CurrentState",
             ],
     }
 
@@ -677,7 +680,8 @@ explicite des données`_.
 
 En utilisant l'opérateur linéaire simple :math:`\mathbf{H}` du fichier script
 Python ``Physical_simulation_functions.py`` disponible dans le répertoire
-standard des exemples, les résultats ressemblent à :
+standard des exemples, les résultats ressemblent à (cela peut dépendre du
+système) :
 ::
 
     xt = [1 2 3]

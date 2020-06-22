@@ -101,13 +101,13 @@ First functional form: one direct operator only
 The first one consist in providing only one function, potentially non-linear,
 and to approximate the associated tangent and adjoint operators.
 
-This is done in ADAO by using in the graphical interface EFICAS the keyword
-"*ScriptWithOneFunction*" for the description by a script. In the textual
-interface, it is the keyword "*OneFunction*", possibly combined with "*Script*"
-keyword depending on whether it is a function or a script. If it is by external
-script, the user must provide a file containing a function that has the
-mandatory name "*DirectOperator*". For example, an external script can follow
-the generic template::
+This is done in ADAO by using, in the ADAO graphical interface EFICAS, the
+keyword "*ScriptWithOneFunction*" for the description by a script. In the
+textual interface, it is the keyword "*OneFunction*", possibly combined with
+"*Script*" keyword depending on whether it is a function or a script. If it is
+by external script, the user must provide a file containing a function that has
+the mandatory name "*DirectOperator*". For example, an external script can
+follow the generic template::
 
     def DirectOperator( X ):
         """ Direct non-linear simulation operator """

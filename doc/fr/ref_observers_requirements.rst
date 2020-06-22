@@ -52,12 +52,12 @@ la figure qui suit :
 L'"*observer*" peut être fourni sous la forme d'un script explicite (entrée de
 type "*String*"), d'un script contenu dans un fichier externe (entrée de type
 "*Script*"), ou en utilisant un modèle (entrée de type "*Template*") fourni par
-défaut dans ADAO lors de l'usage de l'éditeur graphique EFICAS et détaillé dans
-la partie :ref:`section_ref_observers_templates` qui suit. Ces derniers sont
-des scripts simples qui peuvent être adaptés par l'utilisateur, soit dans
-l'étape d'édition intégrée du cas avec EFICAS, soit dans l'étape d'édition du
-schéma avant l'exécution, pour améliorer la performance du calcul ADAO dans le
-superviseur d'exécution de SALOME.
+défaut dans ADAO lors de l'usage de l'éditeur graphique EFICAS d'ADAO et
+détaillé dans la partie :ref:`section_ref_observers_templates` qui suit. Ces
+derniers sont des scripts simples qui peuvent être adaptés par l'utilisateur,
+soit dans l'étape d'édition intégrée du cas avec EFICAS d'ADAO, soit dans
+l'étape d'édition du schéma avant l'exécution, pour améliorer la performance du
+calcul ADAO dans le superviseur d'exécution de SALOME.
 
 Dans l'interface textuelle (TUI) d'ADAO (voir la partie :ref:`section_tui`),
 les mêmes informations peuvent être données à l'aide de la commande

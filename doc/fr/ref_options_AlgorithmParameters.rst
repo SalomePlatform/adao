@@ -36,7 +36,7 @@ incluse dans la commande obligatoire "*AlgorithmParameters*".
 
 Il y a 3 méthodes pratiques pour l'utilisateur de l'interface graphique EFICAS
 d'ADAO (GUI) pour fournir ces options. La méthode est déterminée de la manière
-suivante dans l'interface graphique EFICAS :
+suivante dans l'interface graphique EFICAS d'ADAO :
 
 #. premièrement à l'aide du mot-clé "*Parameters*" dans la commande
    "*AlgorithmParameters*", qui permet de choisir entre "*Defaults*"

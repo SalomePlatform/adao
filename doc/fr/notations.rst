@@ -48,7 +48,7 @@ extensions des fichiers eux-mêmes. On en précise brièvement certaines ici, sa
 être exhaustifs :
 
 - extension ``.py``   : fichier texte de données ou commandes de type source Python
-- extension ``.comm`` : fichier texte de données de commandes EFICAS
+- extension ``.comm`` : fichier texte de données de commandes EFICAS d'ADAO
 - extension ``.xml``  : fichier texte de données de type XML (pour YACS, non exclusif)
 - extension ``.txt``  : fichier texte de données à séparateur espace
 - extension ``.dat``  : fichier texte de données à séparateur espace

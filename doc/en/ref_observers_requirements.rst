@@ -55,8 +55,8 @@ template or pattern (entry of type"*Template*") available by default in ADAO
 when using the graphical editor and detailed in the following part
 :ref:`section_ref_observers_templates`. These templates are simple scripts that
 can be tuned by the user, either in the integrated edition stage of the case
-with EFICAS, or in the edition stage of the schema before execution, to improve
-the ADAO case performance in the SALOME execution supervisor YACS.
+with ADAO EFICAS, or in the edition stage of the schema before execution, to
+improve the ADAO case performance in the SALOME execution supervisor YACS.
 
 In the textual interface (TUI) of ADAO (see the part :ref:`section_tui`), the
 same information can be given with the command "*setObserver*" applied to a

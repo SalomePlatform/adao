@@ -433,12 +433,11 @@ Skeletons of the scripts describing the setup
 
 We give here the essential parts of each script used afterward to build the
 ADAO case. Remember that using these scripts in real Python files requires to
-correctly define the path to imported modules or codes (even if the module is in
-the same directory that the importing Python file. We indicate the path
-adjustment using the mention ``"# INSERT PHYSICAL SCRIPT PATH"``), the encoding
-if necessary, etc. The indicated file names for the following scripts are
-arbitrary. Examples of complete file scripts are available in the ADAO examples
-standard directory.
+correctly define the path to imported modules or codes (even if the module is
+in the same directory that the importing Python file. One have to mention the
+encoding if necessary, etc. The indicated file names for the following scripts
+are arbitrary. Examples of complete file scripts are available in the ADAO
+examples standard directory.
 
 We first define the true state :math:`\mathbf{x}^t` and some convenient matrix
 building function, in a Python script file named
@@ -523,7 +522,9 @@ convenience:
         return numpy.array( HX )
 
 We does not need the linear companion operators ``"TangentOperator"`` and
-``"AdjointOperator"`` because they will be approximated using ADAO capabilities.
+``"AdjointOperator"`` because they will be approximated using ADAO
+capabilities. Detailed information on these operators can be found in the
+:ref:`section_ref_operator_requirements`.
 
 We insist on the fact that these non-linear operator ``"DirectOperator"``,
 tangent operator ``"TangentOperator"`` and adjoint operator
@@ -580,6 +581,9 @@ the following parameters can be defined in a Python script file named
             [ None, None ],          # Bound on the first parameter
             [ 0., 4. ],              # Bound on the second parameter
             [ 0., None ],            # Bound on the third parameter
+            ],
+        "StoreSupplementaryCalculations" : [
+            "CurrentState",
             ],
     }
 
@@ -644,7 +648,7 @@ an estimation case with explicit data definition`_ previous section.
 
 Using the simple linear operator :math:`\mathbf{H}` from the Python script file
 ``Physical_simulation_functions.py`` in the ADAO examples standard directory,
-the results will look like:
+the results will look like (it may depend on the system):
 ::
 
     xt = [1 2 3]

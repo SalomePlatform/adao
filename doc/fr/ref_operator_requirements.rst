@@ -104,8 +104,8 @@ Première forme fonctionnelle : un seul opérateur direct
 La première consiste à ne fournir qu'une seule fonction, potentiellement non
 linéaire, et à approximer les opérateurs tangent et adjoint associés.
 
-Ceci est fait dans ADAO en utilisant dans l'interface graphique EFICAS le
-mot-clé "*ScriptWithOneFunction*" pour la description par un script. Dans
+Ceci est fait dans ADAO en utilisant, dans l'interface graphique EFICAS d'ADAO,
+le mot-clé "*ScriptWithOneFunction*" pour la description par un script. Dans
 l'interface textuelle, c'est le mot-clé "*OneFunction*", éventuellement combiné
 avec le mot-clé "*Script*" selon que c'est une fonction ou un script. Si c'est
 par script externe, l'utilisateur doit fournir un fichier contenant une

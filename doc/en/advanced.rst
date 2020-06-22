@@ -292,11 +292,11 @@ Python interface.
 
 .. _section_advanced_eficas_gui:
 
-Using the EFICAS graphical interface as an ADAO TUI command
------------------------------------------------------------
+Using the ADAO EFICAS graphical interface as an ADAO TUI command
+----------------------------------------------------------------
 
-To make it easier to quickly edit an ADAO command file with EFICAS (JDC, or
-pair of files ".comm/.py", that are together in a directory), you can launch
+To make it easier to quickly edit an ADAO command file with ADAO EFICAS (JDC,
+or pair of files ".comm/.py", that are together in a directory), you can launch
 the graphical user interface from the Python interpreter. To do this, in a
 Python interpreter obtained from the "SALOME shell", the following commands are
 used::

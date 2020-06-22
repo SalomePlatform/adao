@@ -36,7 +36,7 @@ command "*AlgorithmParameters*".
 
 There are 3 practical methods for the user of the EFICAS graphical user
 interface of ADAO (GUI) to provide these options. The method is determined as
-follows in the EFICAS graphical user interface:
+follows in the ADAO EFICAS graphical user interface:
 
 #. firstly using the "*Parameters*" keyword in the "*AlgorithmParameters*"
    command, which allows to choose between "*Defaults*" (use of explicit

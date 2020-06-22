@@ -118,7 +118,7 @@ StoreSupplementaryCalculations
 *Astuce pour cet algorithme :*
 
     Comme la commande *"BackgroundError"* est requise pour TOUS les algorithmes
-    de calcul dans l'interface graphique ADAO EFICAS, vous devez fournir une
+    de calcul dans l'interface graphique EFICAS d'ADAO, vous devez fournir une
     valeur, malgré le fait que cette commande ne soit pas nécessaire pour cet
     algorithme, et n'est donc pas utilisée. La manière la plus simple est de
     donner "1" comme un STRING.

@@ -30,7 +30,7 @@
 Cette section présente un méthodologie générique pour construire une étude
 d'Assimilation de Données ou d'Optimisation. Elle décrit les étapes
 conceptuelles pour établir de manière indépendante cette étude. Elle est
-indépendante de tout outil, mais le module ADAO permet de mettre en oeuvre
+indépendante de tout outil, mais le module ADAO permet de mettre en œuvre
 efficacement une telle étude. Les notations sont les mêmes que celles utilisées
 dans :ref:`section_theory`.
 
@@ -92,7 +92,7 @@ En pratique, les méthodes d'optimisation peuvent requérir une information de
 type gradient de la simulation par rapport aux inconnues. Dans ce cas, le
 gradient explicite du code doit être donné, ou le gradient numérique doit être
 établi. Sa qualité est en relation avec la stabilité ou la régularité du code de
-simulation, et elle doit être vérifiée avec soin avant de mettre en oeuvre les
+simulation, et elle doit être vérifiée avec soin avant de mettre en œuvre les
 calculs d'optimisation. Des conditions spécifiques doivent être utilisées pour
 ces vérifications.
 
