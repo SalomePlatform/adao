@@ -50,6 +50,7 @@ class Aidsm(object):
         self.__PostAnalysis = []
         #
         self.__Concepts = [
+        self.__Concepts = [ # Liste exhaustive
             "AlgorithmParameters",
             "Background",
             "CheckingPoint",
@@ -75,7 +76,7 @@ class Aidsm(object):
             self.__adaoObject[ename] = {}
         for ename in ("Observer",):
             self.__adaoObject[ename]   = []
-            self.__StoredInputs[ename] = []
+            self.__StoredInputs[ename] = [] # Vide par defaut
         self.__StoredInputs["Name"] = self.__name
         self.__StoredInputs["Directory"] = self.__directory
         #
@@ -516,10 +517,12 @@ class Aidsm(object):
         Concept = "RegulationParameters"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = RegulationAndParameters(
-            name          = Concept,
-            asAlgorithm   = Algorithm,
-            asDict        = Parameters,
-            asScript      = self.__with_directory(Script),
+            name        = Concept,
+            asAlgorithm = Algorithm,
+            asDict      = Parameters,
+            asScript    = self.__with_directory(Script),
+            )
+        return 0
             )
         return 0
 

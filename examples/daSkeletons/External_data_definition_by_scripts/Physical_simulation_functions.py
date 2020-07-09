@@ -37,14 +37,14 @@ import os, numpy, time
 def DirectOperator( XX ):
     """ Direct non-linear simulation operator """
     #
-    # --------------------------------------> EXAMPLE TO BE REMOVED
+    # ------------------------------------------> EXAMPLE TO BE REMOVED
     if isinstance(XX, type(numpy.matrix([]))):  # EXAMPLE TO BE REMOVED
-        HX = XX.A1.tolist()                 # EXAMPLE TO BE REMOVED
+        HX = XX.A1.tolist()                     # EXAMPLE TO BE REMOVED
     elif isinstance(XX, type(numpy.array([]))): # EXAMPLE TO BE REMOVED
-        HX = numpy.matrix(XX).A1.tolist()   # EXAMPLE TO BE REMOVED
-    else:                                   # EXAMPLE TO BE REMOVED
-        HX = XX                             # EXAMPLE TO BE REMOVED
-    # --------------------------------------> EXAMPLE TO BE REMOVED
+        HX = numpy.matrix(XX).A1.tolist()       # EXAMPLE TO BE REMOVED
+    else:                                       # EXAMPLE TO BE REMOVED
+        HX = numpy.ravel(XX)                    # EXAMPLE TO BE REMOVED
+    # ------------------------------------------> EXAMPLE TO BE REMOVED
     #
     return numpy.array( HX )
 

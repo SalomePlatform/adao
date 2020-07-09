@@ -39,7 +39,7 @@ from daCore import Templates
 # ==============================================================================
 class GenericCaseViewer(object):
     """
-    Gestion des commandes de creation d'une vue de cas
+    Gestion des commandes de création d'une vue de cas
     """
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
@@ -52,10 +52,10 @@ class GenericCaseViewer(object):
         self._object       = __object
         self._missing = """raise ValueError("This case requires beforehand to import or define the variable named <%s>. When corrected, remove this command, correct and uncomment the following one.")\n# """
     def _append(self, *args):
-        "Transformation de commande individuelle en enregistrement"
+        "Transformation d'une commande individuelle en un enregistrement"
         raise NotImplementedError()
     def _extract(self, *args):
-        "Transformation d'enregistrement en commande individuelle"
+        "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         raise NotImplementedError()
     def _finalize(self, __upa=None):
         "Enregistrement du final"
@@ -93,7 +93,7 @@ class GenericCaseViewer(object):
 
 class _TUIViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas ADAO TUI (Cas<->TUI)
+    Établissement des commandes d'un cas ADAO TUI (Cas<->TUI)
     """
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
@@ -137,7 +137,7 @@ class _TUIViewer(GenericCaseViewer):
             __text += ")"
             self._addLine(__text)
     def _extract(self, __multilines="", __object=None):
-        "Transformation un enregistrement en une commande individuelle"
+        "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         __is_case = False
         __commands = []
         __multilines = __multilines.replace("\r\n","\n")
@@ -156,7 +156,7 @@ class _TUIViewer(GenericCaseViewer):
 
 class _COMViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
+    Établissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
     """
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
@@ -171,10 +171,12 @@ class _COMViewer(GenericCaseViewer):
             for command in self._content:
                 self._append(*command)
     def _extract(self, __multilines=None, __object=None):
-        "Transformation un enregistrement en une commande individuelle"
+        "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         if __multilines is not None:
-            __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
-            __multilines = __multilines.replace("CHECKING_STUDY",    "dict")
+            if "ASSIMILATION_STUDY" in __multilines:
+                __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
+            if "CHECKING_STUDY" in __multilines:
+                __multilines = __multilines.replace("CHECKING_STUDY",    "dict")
             __multilines = __multilines.replace("_F(",               "dict(")
             __multilines = __multilines.replace(",),);",             ",),)")
         __fulllines = ""
@@ -199,6 +201,10 @@ class _COMViewer(GenericCaseViewer):
                 __commands.append( "set( Concept='Name', String='%s')"%(str(r),) )
             elif   __command == "StudyRepertory":
                 __commands.append( "set( Concept='Directory', String='%s')"%(str(r),) )
+            elif   __command == "Debug" and str(r) == "0":
+                __commands.append( "set( Concept='NoDebug' )" )
+            elif   __command == "Debug" and str(r) == "1":
+                __commands.append( "set( Concept='Debug' )" )
             #
             elif __command == "UserPostAnalysis" and type(r) is dict:
                 if 'STRING' in r:
@@ -291,10 +297,12 @@ class _COMViewer(GenericCaseViewer):
 
 class _SCDViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas SCD (Study Config Dictionary/Cas->SCD)
+    Établissement des commandes d'un cas SCD (Study Config Dictionary/Cas->SCD)
+
+    Remarque : le fichier généré est différent de celui obtenu par EFICAS
     """
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
+        "Initialisation et enregistrement de l'entête"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Input for ADAO converter to YACS\n#")
@@ -363,6 +371,7 @@ class _SCDViewer(GenericCaseViewer):
                 if __k == "Concept": continue
                 if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local and __local['Script'] is not None: continue
                 if __k in ['Vector','VectorSerie'] and 'DataFile' in __local and __local['DataFile'] is not None: continue
+                if __k == 'Parameters' and not (__command in ['AlgorithmParameters','SupplementaryParameters']): continue
                 if __k == 'Algorithm':
                     __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
                 elif __k == 'DataFile':

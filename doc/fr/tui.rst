@@ -304,7 +304,7 @@ fait soit lors de leur définition, soit lors de l'exécution.
 .. index:: single: Stored
 
 Dans chaque commande, le mot-clé booléen "*Stored*" permet d'indiquer si l'on
-veut éventuellement la stocker la grandeur définie, pour en disposer en cours de
+veut éventuellement stocker la grandeur définie, pour en disposer en cours de
 calcul ou en sortie. Le choix par défaut est de ne pas stocker, et il est
 recommandé de conserver cette valeur par défaut. En effet, pour un cas de calcul
 TUI, on dispose déjà souvent des grandeurs données en entrées qui sont présentes
