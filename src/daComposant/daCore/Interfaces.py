@@ -109,6 +109,8 @@ class _TUIViewer(GenericCaseViewer):
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command is not None and __keys is not None and __local is not None:
+            if "Concept" in __keys:
+                logging.debug("TUI Order processed: %s"%(__local["Concept"],))
             __text  = ""
             if __pre is not None:
                 __text += "%s = "%__pre
@@ -116,6 +118,7 @@ class _TUIViewer(GenericCaseViewer):
             if "self" in __keys: __keys.remove("self")
             if __command not in ("set","get") and "Concept" in __keys: __keys.remove("Concept")
             for k in __keys:
+                if k not in __local: continue
                 __v = __local[k]
                 if __v is None: continue
                 if   k == "Checked"              and not __v: continue
@@ -305,8 +308,7 @@ class _SCDViewer(GenericCaseViewer):
         "Initialisation et enregistrement de l'entête"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
-        self._addLine("#\n# Input for ADAO converter to YACS\n#")
-        self._addLine("from numpy import array, matrix")
+        self._addLine("#\n# Input for ADAO converter to SCD\n#")
         self._addLine("#")
         self._addLine("study_config = {}")
         self._addLine("study_config['StudyType'] = 'ASSIMILATION_STUDY'")
@@ -330,6 +332,7 @@ class _SCDViewer(GenericCaseViewer):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command == "set": __command = __local["Concept"]
         else:                  __command = __command.replace("set", "", 1)
+        logging.debug("SCD Order processed: %s"%(__command))
         #
         __text  = None
         if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get', 'Name'):
@@ -363,6 +366,8 @@ class _SCDViewer(GenericCaseViewer):
             __text += "%s_config = {}\n"%__command
             __local.pop('self','')
             __to_be_removed = []
+            __vectorIsDataFile = False
+            __vectorIsScript = False
             for __k,__v in __local.items():
                 if __v is None: __to_be_removed.append(__k)
             for __k in __to_be_removed:
@@ -384,6 +389,7 @@ class _SCDViewer(GenericCaseViewer):
                     __text += "%s_config['From'] = '%s'\n"%(__command,__f)
                     __text += "%s_config['Data'] = %s\n"%(__command,__v)
                     __text = __text.replace("''","'")
+                    __vectorIsDataFile = True
                 elif __k == 'Script':
                     __k = 'Vector'
                     __f = 'Script'
@@ -417,6 +423,7 @@ class _SCDViewer(GenericCaseViewer):
                     __text += "%s_config['From'] = '%s'\n"%(__command,__f)
                     __text += "%s_config['Data'] = %s\n"%(__command,__v)
                     __text = __text.replace("''","'")
+                    __vectorIsScript = True
                 elif __k in ('Stored', 'Checked', 'ColMajor', 'InputFunctionAsMulti', 'nextStep'):
                     if bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
@@ -424,6 +431,8 @@ class _SCDViewer(GenericCaseViewer):
                     if not bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
                 else:
+                    if __k == 'Vector' and __vectorIsScript: continue
+                    if __k == 'Vector' and __vectorIsDataFile: continue
                     if __k == 'Parameters': __k = "Dict"
                     if isinstance(__v,Persistence.Persistence): __v = __v.values()
                     if callable(__v): __text = self._missing%__v.__name__+__text
@@ -502,8 +511,8 @@ class _YACSViewer(GenericCaseViewer):
         if not PlatformInfo.has_salome or \
             not PlatformInfo.has_adao:
             raise ImportError(
-                "Unable to get SALOME or ADAO environnement variables for YACS conversion.\n"+\
-                "Please load the right environnement before trying to use it.")
+                "Unable to get SALOME or ADAO environnement for YACS conversion.\n"+\
+                "Please load the right SALOME environnement before trying to use it.")
         else:
             from daYacsSchemaCreator.run import create_schema_from_content
         # -----

@@ -27,8 +27,8 @@ import os
 import traceback
 import logging
 import tempfile
-from daYacsSchemaCreator.methods import *
-from daYacsSchemaCreator.help_methods import *
+from daYacsSchemaCreator.methods import create_yacs_proc, write_yacs_proc
+from daYacsSchemaCreator.help_methods import check_study
 
 def create_schema(config_file, config_content, yacs_schema_filename):
 
