@@ -307,16 +307,16 @@ lesquels l'utilisation efficace des données observées, mais incomplètes, est
 cruciale.
 
 Certains aspects de l'assimilation de données sont aussi connus sous d'autres
-noms. Sans être exhaustif, on peut mentionner les noms de *calibration*, de
-*recalage*, d'*estimation d'état*, d'*estimation de paramètres*, de *problèmes
-inverses* ou d'*inversion*, d'*estimation bayésienne*, d'*interpolation de
-champs* ou d'*interpolation optimale*, d'*optimisation variationnelle*,
-d'*optimisation quadratique*, de *régularisation mathématique*, de
-*méta-heuristiques* d'optimisation, de *réduction de modèles*, de *lissage de
-données*, de pilotage des modèles par les données (« *data-driven* »),
-d’*apprentissage* de modèles et de données (*Machine Learning* et Intelligence
-Artificielle), etc. Ces termes peuvent être utilisés dans les recherches
-bibliographiques.
+noms. Sans être exhaustif, on peut mentionner les noms de *calage* ou de
+*recalage*, de *calibration*, d'*estimation d'état*, d'*estimation de
+paramètres*, de *problèmes inverses* ou d'*inversion*, d'*estimation
+bayésienne*, d'*interpolation de champs* ou d'*interpolation optimale*,
+d'*optimisation variationnelle*, d'*optimisation quadratique*, de
+*régularisation mathématique*, de *méta-heuristiques* d'optimisation, de
+*réduction de modèles*, de *lissage de données*, de pilotage des modèles par
+les données (« *data-driven* »), d’*apprentissage* de modèles et de données
+(*Machine Learning* et Intelligence Artificielle), etc. Ces termes peuvent être
+utilisés dans les recherches bibliographiques.
 
 Approfondir l'estimation d'état par des méthodes d'optimisation
 ---------------------------------------------------------------
