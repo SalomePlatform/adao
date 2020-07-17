@@ -59,8 +59,13 @@ class GenericCaseViewer(object):
         raise NotImplementedError()
     def _finalize(self, __upa=None):
         "Enregistrement du final"
-        if __upa is not None and len(__upa)>0:
+        __hasNotExecute = True
+        for l in self._lineSerie:
+            if "%s.execute"%(self._objname,) in l: __hasNotExecute = False
+        if __hasNotExecute:
             self._lineSerie.append("%s.execute()"%(self._objname,))
+        if __upa is not None and len(__upa)>0:
+            __upa = __upa.replace("ADD.",str(self._objname)+".")
             self._lineSerie.append(__upa)
     def _addLine(self, line=""):
         "Ajoute un enregistrement individuel"
@@ -136,8 +141,8 @@ class _TUIViewer(GenericCaseViewer):
                 numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
                 __text += "%s=%s, "%(k,repr(__v))
                 numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
-            __text.rstrip(", ")
-            __text += ")"
+            __text = __text.rstrip(", ")
+            __text += " )"
             self._addLine(__text)
     def _extract(self, __multilines="", __object=None):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
@@ -175,11 +180,17 @@ class _COMViewer(GenericCaseViewer):
                 self._append(*command)
     def _extract(self, __multilines=None, __object=None):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
+        __suppparameters = {}
         if __multilines is not None:
             if "ASSIMILATION_STUDY" in __multilines:
+                __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
                 __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
-            if "CHECKING_STUDY" in __multilines:
+            elif "CHECKING_STUDY" in __multilines:
+                __suppparameters.update({'StudyType':"CHECKING_STUDY"})
                 __multilines = __multilines.replace("CHECKING_STUDY",    "dict")
+            else:
+                __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
+            #
             __multilines = __multilines.replace("_F(",               "dict(")
             __multilines = __multilines.replace(",),);",             ",),)")
         __fulllines = ""
@@ -208,18 +219,29 @@ class _COMViewer(GenericCaseViewer):
                 __commands.append( "set( Concept='NoDebug' )" )
             elif   __command == "Debug" and str(r) == "1":
                 __commands.append( "set( Concept='Debug' )" )
+            elif   __command == "ExecuteInContainer":
+                __suppparameters.update({'ExecuteInContainer':r})
             #
             elif __command == "UserPostAnalysis" and type(r) is dict:
                 if 'STRING' in r:
-                    __UserPostAnalysis = r['STRING']
+                    __UserPostAnalysis = r['STRING'].replace("ADD.",str(self._objname)+".")
+                    __commands.append( "set( Concept='UserPostAnalysis', String=\"\"\"%s\"\"\" )"%(__UserPostAnalysis,) )
                 elif 'SCRIPT_FILE' in r and os.path.exists(r['SCRIPT_FILE']):
                     __UserPostAnalysis = open(r['SCRIPT_FILE'],'r').read()
-                elif 'Template' in r and 'ValueTemplate' in r:
+                    __commands.append( "set( Concept='UserPostAnalysis', Script='%s' )"%(r['SCRIPT_FILE'],) )
+                elif 'Template' in r and not 'ValueTemplate' in r:
                     # AnalysisPrinter...
+                    if r['Template'] not in Templates.UserPostAnalysisTemplates:
+                        raise ValueError("User post-analysis template \"%s\" does not exist."%(r['Template'],))
+                    else:
+                        __UserPostAnalysis = Templates.UserPostAnalysisTemplates[r['Template']]
+                    __commands.append( "set( Concept='UserPostAnalysis', Template='%s' )"%(r['Template'],) )
+                elif 'Template' in r and 'ValueTemplate' in r:
+                    # Le template ayant pu être modifié, donc on ne prend que le ValueTemplate...
                     __UserPostAnalysis = r['ValueTemplate']
+                    __commands.append( "set( Concept='UserPostAnalysis', String=\"\"\"%s\"\"\" )"%(__UserPostAnalysis,) )
                 else:
                     __UserPostAnalysis = ""
-                __UserPostAnalysis = __UserPostAnalysis.replace("ADD",self._objname)
             #
             elif __command == "AlgorithmParameters" and type(r) is dict and 'Algorithm' in r:
                 if 'data' in r and r['Parameters'] == 'Dict':
@@ -293,6 +315,8 @@ class _COMViewer(GenericCaseViewer):
                 __arguments = ["%s = %s"%(k,repr(v)) for k,v in __argumentsList]
                 __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
         #
+        __commands.append( "set( Concept='%s', Parameters=%s )"%('SupplementaryParameters', repr(__suppparameters)))
+        #
         # ----------------------------------------------------------------------
         __commands.sort() # Pour commencer par 'AlgorithmParameters'
         __commands.append(__UserPostAnalysis)
@@ -307,14 +331,23 @@ class _SCDViewer(GenericCaseViewer):
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entête"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
+        #
+        if __content is not None:
+            for command in __content:
+                if command[0] == "set": __command = command[2]["Concept"]
+                else:                   __command = command[0].replace("set", "", 1)
+                if __command == 'Name':
+                    self._name = command[2]["String"]
+        #
+        self.__DebugCommandNotSet = True
+        self.__ObserverCommandNotSet = True
+        self.__UserPostAnalysisNotSet = True
+        #
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Input for ADAO converter to SCD\n#")
         self._addLine("#")
         self._addLine("study_config = {}")
-        self._addLine("study_config['StudyType'] = 'ASSIMILATION_STUDY'")
         self._addLine("study_config['Name'] = '%s'"%self._name)
-        self._addLine("observers = {}")
-        self._addLine("study_config['Observers'] = observers")
         self._addLine("#")
         self._addLine("inputvariables_config = {}")
         self._addLine("inputvariables_config['Order'] =['adao_default']")
@@ -337,11 +370,19 @@ class _SCDViewer(GenericCaseViewer):
         __text  = None
         if __command in (None, 'execute', 'executePythonScheme', 'executeYACSScheme', 'get', 'Name'):
             return
+        elif __command in ['Directory',]:
+            __text  = "#\nstudy_config['Repertory'] = %s"%(repr(__local['String']))
         elif __command in ['Debug', 'setDebug']:
             __text  = "#\nstudy_config['Debug'] = '1'"
+            self.__DebugCommandNotSet = False
         elif __command in ['NoDebug', 'setNoDebug']:
             __text  = "#\nstudy_config['Debug'] = '0'"
+            self.__DebugCommandNotSet = False
         elif __command in ['Observer', 'setObserver']:
+            if self.__ObserverCommandNotSet:
+                self._addLine("observers = {}")
+                self._addLine("study_config['Observers'] = observers")
+                self.__ObserverCommandNotSet = False
             __obs   = __local['Variable']
             self._numobservers += 1
             __text  = "#\n"
@@ -360,6 +401,20 @@ class _SCDViewer(GenericCaseViewer):
             else:
                 __text += "observers['%s']['info'] = \"\"\"%s\"\"\"\n"%(__obs, __obs)
             __text += "observers['%s']['number'] = %s"%(__obs, self._numobservers)
+        elif __command in ['UserPostAnalysis', 'setUserPostAnalysis']:
+            __text  = "#\n"
+            __text += "Analysis_config = {}\n"
+            if __local['String'] is not None:
+                __text += "Analysis_config['From'] = 'String'\n"
+                __text += "Analysis_config['Data'] = \"\"\"%s\"\"\"\n"%(__local['String'],)
+            if __local['Script'] is not None:
+                __text += "Analysis_config['From'] = 'Script'\n"
+                __text += "Analysis_config['Data'] = \"\"\"%s\"\"\"\n"%(__local['Script'],)
+            if __local['Template'] is not None and __local['Template'] in Templates.UserPostAnalysisTemplates:
+                __text += "Analysis_config['From'] = 'String'\n"
+                __text += "Analysis_config['Data'] = \"\"\"%s\"\"\"\n"%(Templates.UserPostAnalysisTemplates[__local['Template']],)
+            __text += "study_config['UserPostAnalysis'] = Analysis_config"
+            self.__UserPostAnalysisNotSet = False
         elif __local is not None: # __keys is not None and
             numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
             __text  = "#\n"

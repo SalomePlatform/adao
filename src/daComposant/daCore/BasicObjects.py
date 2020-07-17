@@ -1382,19 +1382,11 @@ class DataObserver(object):
         else:
             raise ValueError("setting an observer has to be done over a variable name or a list of variable names.")
         #
-        if asString is not None:
-            __FunctionText = asString
-        elif (asTemplate is not None) and (asTemplate in Templates.ObserverTemplates):
-            __FunctionText = Templates.ObserverTemplates[asTemplate]
-        elif asScript is not None:
-            __FunctionText = Interfaces.ImportFromScript(asScript).getstring()
-        else:
-            __FunctionText = ""
-        __Function = ObserverF(__FunctionText)
-        #
         if asObsObject is not None:
             self.__O = asObsObject
         else:
+            __FunctionText = str(UserScript('Observer', asTemplate, asString, asScript))
+            __Function = Observer2Func(__FunctionText)
             self.__O = __Function.getfunc()
         #
         for k in range(len(self.__V)):
@@ -1412,6 +1404,89 @@ class DataObserver(object):
     def __str__(self):
         "x.__str__() <==> str(x)"
         return str(self.__V)+"\n"+str(self.__O)
+
+# ==============================================================================
+class UserScript(object):
+    """
+    Classe générale d'interface de type texte de script utilisateur
+    """
+    def __init__(self,
+                 name       = "GenericUserScript",
+                 asTemplate = None,
+                 asString   = None,
+                 asScript   = None,
+                ):
+        """
+        """
+        self.__name       = str(name)
+        #
+        if asString is not None:
+            self.__F = asString
+        elif self.__name == "UserPostAnalysis" and (asTemplate is not None) and (asTemplate in Templates.UserPostAnalysisTemplates):
+            self.__F = Templates.UserPostAnalysisTemplates[asTemplate]
+        elif self.__name == "Observer" and (asTemplate is not None) and (asTemplate in Templates.ObserverTemplates):
+            self.__F = Templates.ObserverTemplates[asTemplate]
+        elif asScript is not None:
+            self.__F = Interfaces.ImportFromScript(asScript).getstring()
+        else:
+            self.__F = ""
+
+    def __repr__(self):
+        "x.__repr__() <==> repr(x)"
+        return repr(self.__F)
+
+    def __str__(self):
+        "x.__str__() <==> str(x)"
+        return str(self.__F)
+
+# ==============================================================================
+class ExternalParameters(object):
+    """
+    Classe générale d'interface de type texte de script utilisateur
+    """
+    def __init__(self,
+                 name        = "GenericExternalParameters",
+                 asDict      = None,
+                 asScript    = None,
+                ):
+        """
+        """
+        self.__name = str(name)
+        self.__P    = {}
+        #
+        self.updateParameters( asDict, asScript )
+
+    def updateParameters(self,
+                 asDict     = None,
+                 asScript   = None,
+                ):
+        "Mise a jour des parametres"
+        if asDict is None and asScript is not None:
+            __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "ExternalParameters" )
+        else:
+            __Dict = asDict
+        #
+        if __Dict is not None:
+            self.__P.update( dict(__Dict) )
+
+    def get(self, key = None):
+        if key in self.__P:
+            return self.__P[key]
+        else:
+            return list(self.__P.keys())
+
+    def keys(self):
+        return list(self.__P.keys())
+
+    def pop(self, k, d):
+        return self.__P.pop(k, d)
+
+    def items(self):
+        return self.__P.items()
+
+    def __contains__(self, key=None):
+        "D.__contains__(k) -> True if D has a key k, else False"
+        return key in self.__P
 
 # ==============================================================================
 class State(object):
@@ -1855,7 +1930,7 @@ class Covariance(object):
         return self.shape[0]
 
 # ==============================================================================
-class ObserverF(object):
+class Observer2Func(object):
     """
     Creation d'une fonction d'observateur a partir de son texte
     """
