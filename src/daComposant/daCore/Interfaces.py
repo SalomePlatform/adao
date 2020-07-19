@@ -506,13 +506,16 @@ class _SCDViewer(GenericCaseViewer):
             self._switchoff = False
     def _finalize(self, *__args):
         self.__loadVariablesByScript()
-        self._addLine("#")
-        self._addLine("Analysis_config = {}")
-        self._addLine("Analysis_config['From'] = 'String'")
-        self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
-        self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
-        self._addLine("print('Analysis:',xa)\"\"\"")
-        self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
+        if self.__DebugCommandNotSet:
+            self._addLine("#\nstudy_config['Debug'] = '0'")
+        if self.__UserPostAnalysisNotSet:
+            self._addLine("#")
+            self._addLine("Analysis_config = {}")
+            self._addLine("Analysis_config['From'] = 'String'")
+            self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
+            self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
+            self._addLine("print('Analysis:',xa)\"\"\"")
+            self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
     def __loadVariablesByScript(self):
         __ExecVariables = {} # Necessaire pour recuperer la variable
         exec("\n".join(self._lineSerie), __ExecVariables)
@@ -542,6 +545,20 @@ class _SCDViewer(GenericCaseViewer):
             __text += "AlgorithmParameters_config['From'] = 'String'\n"
             __text += "AlgorithmParameters_config['Data'] = '{}'\n"
             self._addLine(__text)
+        if 'SupplementaryParameters' in study_config and \
+                isinstance(study_config['SupplementaryParameters'], dict) and \
+                "From" in study_config['SupplementaryParameters'] and \
+                study_config['SupplementaryParameters']["From"] == 'String' and \
+                "Data" in study_config['SupplementaryParameters']:
+            __dict = eval(study_config['SupplementaryParameters']["Data"])
+            if 'ExecuteInContainer' in __dict:
+                self._addLine("#\nstudy_config['ExecuteInContainer'] = '%s'"%__dict['ExecuteInContainer'])
+            else:
+                self._addLine("#\nstudy_config['ExecuteInContainer'] = 'No'")
+            if 'StudyType' in __dict:
+                self._addLine("#\nstudy_config['StudyType'] = '%s'"%__dict['StudyType'])
+            if 'StudyType' in __dict and __dict['StudyType'] != "ASSIMILATION_STUDY":
+                self.__UserPostAnalysisNotSet = False
         del study_config
 
 class _YACSViewer(GenericCaseViewer):

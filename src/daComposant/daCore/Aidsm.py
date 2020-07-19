@@ -32,6 +32,7 @@ import sys
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
 from daCore.BasicObjects import RegulationAndParameters, CaseLogger
+from daCore.BasicObjects import UserScript, ExternalParameters
 from daCore import PlatformInfo
 #
 from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
@@ -49,32 +50,33 @@ class Aidsm(object):
         self.__StoredInputs = {}
         self.__PostAnalysis = []
         #
-        self.__Concepts = [
         self.__Concepts = [ # Liste exhaustive
             "AlgorithmParameters",
             "Background",
+            "BackgroundError",
             "CheckingPoint",
             "ControlInput",
-            "Observation",
-            "BackgroundError",
-            "ObservationError",
-            "EvolutionError",
-            "ObservationOperator",
-            "EvolutionModel",
             "ControlModel",
-            "Name",
-            "Directory",
             "Debug",
+            "Directory",
+            "EvolutionError",
+            "EvolutionModel",
+            "Name",
             "NoDebug",
-            "RegulationParameters",
+            "Observation",
+            "ObservationError",
+            "ObservationOperator",
             "Observer",
+            "RegulationParameters",
+            "SupplementaryParameters",
+            "UserPostAnalysis",
             ]
         #
         for ename in self.__Concepts:
             self.__adaoObject[ename] = None
         for ename in ("ObservationOperator", "EvolutionModel", "ControlModel"):
             self.__adaoObject[ename] = {}
-        for ename in ("Observer",):
+        for ename in ("Observer", "UserPostAnalysis"):
             self.__adaoObject[ename]   = []
             self.__StoredInputs[ename] = [] # Vide par defaut
         self.__StoredInputs["Name"] = self.__name
@@ -140,6 +142,10 @@ class Aidsm(object):
                 self.setNoDebug()
             elif Concept == "Observer":
                 self.setObserver( Variable, Template, String, Script, Info, ObjectFunction, Scheduler )
+            elif Concept == "UserPostAnalysis":
+                self.setUserPostAnalysis( Template, String, Script )
+            elif Concept == "SupplementaryParameters":
+                self.setSupplementaryParameters( Parameters, Script )
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
@@ -523,6 +529,30 @@ class Aidsm(object):
             asScript    = self.__with_directory(Script),
             )
         return 0
+
+    def setSupplementaryParameters(self,
+            Parameters = None,
+            Script     = None):
+        "Definition d'un concept de calcul"
+        Concept = "SupplementaryParameters"
+        self.__case.register("set"+Concept, dir(), locals())
+        self.__adaoObject[Concept] = ExternalParameters(
+            name     = Concept,
+            asDict   = Parameters,
+            asScript = self.__with_directory(Script),
+            )
+        return 0
+
+    def updateSupplementaryParameters(self,
+            Parameters = None,
+            Script     = None):
+        "Mise a jour d'un concept de calcul"
+        Concept = "SupplementaryParameters"
+        if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
+            self.__adaoObject[Concept] = ExternalParameters(name = Concept)
+        self.__adaoObject[Concept].updateParameters(
+            asDict   = Parameters,
+            asScript = self.__with_directory(Script),
             )
         return 0
 
@@ -575,6 +605,20 @@ class Aidsm(object):
             else:
                 return self.__adaoObject["AlgorithmParameters"].removeObserver( ename, ObjectFunction )
 
+    def setUserPostAnalysis(self,
+            Template       = None,
+            String         = None,
+            Script         = None):
+        "Definition d'un concept de calcul"
+        Concept = "UserPostAnalysis"
+        self.__case.register("set"+Concept, dir(), locals())
+        self.__adaoObject[Concept].append( repr(UserScript(
+            name        = Concept,
+            asTemplate  = Template,
+            asString    = String,
+            asScript    = self.__with_directory(Script),
+            )))
+
     # -----------------------------------------------------------
 
     def get(self, Concept=None, noDetails=True ):
@@ -602,14 +646,23 @@ class Aidsm(object):
             elif Concept == "AlgorithmAttributes" and self.__adaoObject["AlgorithmParameters"] is not None:
                 return self.__adaoObject["AlgorithmParameters"].getAlgorithmAttributes()
                 #
+            elif self.__adaoObject["SupplementaryParameters"] is not None and Concept == "SupplementaryParameters":
+                return self.__adaoObject["SupplementaryParameters"].get()
+                #
+            elif self.__adaoObject["SupplementaryParameters"] is not None and Concept in self.__adaoObject["SupplementaryParameters"]:
+                return self.__adaoObject["SupplementaryParameters"].get( Concept )
+                #
             else:
                 raise ValueError("The requested key \"%s\" does not exists as an input or a stored variable."%Concept)
         else:
             allvariables = {}
             allvariables.update( {"AlgorithmParameters":self.__adaoObject["AlgorithmParameters"].get()} )
+            if self.__adaoObject["SupplementaryParameters"] is not None:
+                allvariables.update( {"SupplementaryParameters":self.__adaoObject["SupplementaryParameters"].get()} )
             # allvariables.update( self.__adaoObject["AlgorithmParameters"].get() )
             allvariables.update( self.__StoredInputs )
             allvariables.pop('Observer', None)
+            allvariables.pop('UserPostAnalysis', None)
             return allvariables
 
     # -----------------------------------------------------------
@@ -628,9 +681,13 @@ class Aidsm(object):
             variables = []
             if len(list(self.__adaoObject["AlgorithmParameters"].keys())) > 0:
                 variables.extend(list(self.__adaoObject["AlgorithmParameters"].keys()))
+            if self.__adaoObject["SupplementaryParameters"] is not None and \
+                len(list(self.__adaoObject["SupplementaryParameters"].keys())) > 0:
+                variables.extend(list(self.__adaoObject["SupplementaryParameters"].keys()))
             if len(list(self.__StoredInputs.keys())) > 0:
                 variables.extend( list(self.__StoredInputs.keys()) )
             variables.remove('Observer')
+            variables.remove('UserPostAnalysis')
             variables.sort()
             return variables
 
@@ -721,7 +778,7 @@ class Aidsm(object):
         __commands = self.__case.load(FileName, Content, Object, Formater)
         from numpy import array, matrix
         for __command in __commands:
-            if __command.find("set")>-1 and __command.find("set_")<0:
+            if (__command.find("set")>-1 and __command.find("set_")<0) or 'UserPostAnalysis' in __command:
                 exec("self."+__command)
             else:
                 self.__PostAnalysis.append(__command)
