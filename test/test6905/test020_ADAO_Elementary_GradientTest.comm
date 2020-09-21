@@ -1,0 +1,20 @@
+
+CHECKING_STUDY(StudyName='Elementary gradient test',
+               StudyRepertory='/home/test/ADAO',
+               ExecuteInContainer='Mono',
+               AlgorithmParameters=_F(Algorithm='GradientTest',
+                                      Parameters='Dict',
+                                      data=_F(FROM='Script',
+                                              SCRIPT_FILE='test020_Observation_and_Simulation.py',),),
+               CheckingPoint=_F(Stored=0,
+                                INPUT_TYPE='Vector',
+                                data=_F(FROM='Script',
+                                        SCRIPT_FILE='test020_Observation_and_Simulation.py',),),
+               ObservationOperator=_F(Stored=0,
+                                      INPUT_TYPE='Function',
+                                      data=_F(FROM='ScriptWithOneFunction',
+                                              SCRIPTWITHONEFUNCTION_FILE='test020_Observation_and_Simulation.py',
+                                              DifferentialIncrement=1e-06,
+                                              CenteredFiniteDifference=0,),),);
+#VERSION_CATALOGUE:V9_5_0:FIN VERSION_CATALOGUE
+#CHECKSUM:fb1ae3548f568cc1b97abf3fd9cc0c1e  -:FIN CHECKSUM

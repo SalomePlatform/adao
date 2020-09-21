@@ -42,4 +42,5 @@ SUBDIRS(
     ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6902
     ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6903
     ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6904
+    ${ADAO_ENGINE_ROOT_DIR}/share/test/adao/test6905
     )

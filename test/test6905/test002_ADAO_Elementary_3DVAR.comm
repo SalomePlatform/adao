@@ -1,0 +1,27 @@
+
+ASSIMILATION_STUDY(StudyName='Elementary algoritmic test',
+                   AlgorithmParameters=_F(Algorithm='3DVAR',),
+                   Background=_F(Stored=0,
+                                 INPUT_TYPE='Vector',
+                                 data=_F(FROM='String',
+                                         STRING='0 0 0',),),
+                   BackgroundError=_F(Stored=0,
+                                      INPUT_TYPE='Matrix',
+                                      data=_F(FROM='String',
+                                              STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),
+                   Observation=_F(Stored=0,
+                                  INPUT_TYPE='Vector',
+                                  data=_F(FROM='String',
+                                          STRING='1 1 1',),),
+                   ObservationError=_F(Stored=0,
+                                       INPUT_TYPE='Matrix',
+                                       data=_F(FROM='String',
+                                               STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),
+                   ObservationOperator=_F(Stored=0,
+                                          INPUT_TYPE='Matrix',
+                                          data=_F(FROM='String',
+                                                  STRING='1 0 0 ; 0 1 0 ; 0 0 1',),),
+                   UserPostAnalysis=_F(FROM='String',
+                                       STRING='print("Analysis [0.5,0.5,0.5]:",ADD.get("Analysis")[-1])',),);
+#VERSION_CATALOGUE:V9_6_0:FIN VERSION_CATALOGUE
+#CHECKSUM:2f94cae3606cc1c7ad04aceb05588fdf  -:FIN CHECKSUM

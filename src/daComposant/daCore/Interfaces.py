@@ -624,7 +624,8 @@ class ImportFromScript(object):
         PlatformInfo.checkFileNameImportability( __basename+".py" )
         self.__basename = __basename
         self.__filenspace = __import__(__basename, globals(), locals(), [])
-        self.__filestring = open(__filename,'r').read()
+        with open(__filename,'r') as fid:
+            self.__filestring = fid.read()
     def getvalue(self, __varname=None, __synonym=None ):
         "Renvoie la variable demandee par son nom ou son synonyme"
         if __varname is None:

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2020 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -18,12 +20,32 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-if(ADAO_SALOME_MODULE)
+dimension = 5
 
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CTestTestfile.cmake DESTINATION ${ADAO_BIN_TEST})
+Background = [-1. for i in range(dimension)]
 
-else(ADAO_SALOME_MODULE)
+Observation = [1. for i in range(dimension)]
 
-  install(DIRECTORY test1001 test1002 test6701 test6702 test6703 test6704 test6711 test6901 test6902 test6903 test6904 test6905 DESTINATION ${ADAO_TEST})
+sigmaB2 = 1.
+BackgroundError = [[0. for i in range(dimension)] for i in range(dimension)]
+for i in range(dimension):
+    BackgroundError[i][i] = sigmaB2
 
-endif(ADAO_SALOME_MODULE)
+sigmaO2 = 1.
+ObservationError = [[0. for i in range(dimension)] for i in range(dimension)]
+for i in range(dimension):
+    ObservationError[i][i] = sigmaO2
+
+ObservationOperator = [[0. for i in range(dimension)] for i in range(dimension)]
+# dimension * [ dimension * [0.] ]
+for i in range(dimension):
+    ObservationOperator[i][i] = 2.
+for i in range(dimension-1):
+    ObservationOperator[i+1][i] = -1.
+    ObservationOperator[i][i+1] = -1.
+
+AlgorithmParameters = {
+    "SetSeed" : 1000,
+    "Minimizer" : "LBFGSB",
+    "MaximumNumberOfSteps" : 15,
+    }

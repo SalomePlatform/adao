@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # Copyright (C) 2008-2020 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -18,12 +20,26 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-if(ADAO_SALOME_MODULE)
+#===============================================================================
+import numpy
+ObservationError = numpy.matrix('1 0 ; 0 1')
+Background = numpy.array([1, 1])
 
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CTestTestfile.cmake DESTINATION ${ADAO_BIN_TEST})
+def DirectOperator(x):
+    return numpy.array(x)
+def TangentOperator(paire):
+    x,dx = paire
+    return numpy.array(dx)
+def AdjointOperator(paire):
+    x,dy = paire
+    return numpy.array(dy)
 
-else(ADAO_SALOME_MODULE)
-
-  install(DIRECTORY test1001 test1002 test6701 test6702 test6703 test6704 test6711 test6901 test6902 test6903 test6904 test6905 DESTINATION ${ADAO_TEST})
-
-endif(ADAO_SALOME_MODULE)
+#===============================================================================
+if __name__ == "__main__":
+    print("\nAUTODIAGNOSTIC\n==============")
+    print("ObservationError = %s"%(ObservationError,))
+    print("Background       = %s"%(Background,))
+    print("DirectOperator   = %s"%(DirectOperator([2,5,3]),))
+    print("TangentOperator  = %s"%(TangentOperator(([2,5,3],[1,1,1])),))
+    print("AdjointOperator  = %s"%(AdjointOperator(([2,5,3],[0,0,0])),))
+    print("")

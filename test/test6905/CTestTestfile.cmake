@@ -1,9 +1,11 @@
 # Copyright (C) 2008-2020 EDF R&D
 #
+# This file is part of SALOME ADAO module
+#
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
 # License as published by the Free Software Foundation; either
-# version 2.1 of the License.
+# version 2.1 of the License, or (at your option) any later version.
 #
 # This library is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,14 +18,15 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-# Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-if(ADAO_SALOME_MODULE)
+SET(TEST_NAMES
+  Verification_de_conversion_de_COMM_en_TUI
+  Verification_de_conversion_de_COMM_en_SCD
+  )
 
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CTestTestfile.cmake DESTINATION ${ADAO_BIN_TEST})
-
-else(ADAO_SALOME_MODULE)
-
-  install(DIRECTORY test1001 test1002 test6701 test6702 test6703 test6704 test6711 test6901 test6902 test6903 test6904 test6905 DESTINATION ${ADAO_TEST})
-
-endif(ADAO_SALOME_MODULE)
+FOREACH(tfile ${TEST_NAMES})
+  SET(TEST_NAME ADAO_${tfile})
+  ADD_TEST(${TEST_NAME} python ${tfile}.py)
+  #ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ${tfile}.py)
+  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES LABELS "${COMPONENT_NAME}")
+ENDFOREACH()
