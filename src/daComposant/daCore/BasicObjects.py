@@ -680,7 +680,7 @@ class Algorithm(object):
         self.__canonical_parameter_name["algorithm"] = "Algorithm"
         self.__canonical_parameter_name["storesupplementarycalculations"] = "StoreSupplementaryCalculations"
 
-    def _pre_run(self, Parameters, Xb=None, Y=None, R=None, B=None, Q=None ):
+    def _pre_run(self, Parameters, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None ):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
         logging.debug("%s Taille mémoire utilisée de %.0f Mio"%(self._name, self._m.getUsedMemory("Mio")))
@@ -691,35 +691,56 @@ class Algorithm(object):
         for k, v in self.__variable_names_not_public.items():
             if k not in self._parameters:  self.__setParameters( {k:v} )
         #
-        # Corrections et compléments
-        def __test_vvalue(argument, variable, argname):
+        # Corrections et compléments des vecteurs
+        def __test_vvalue(argument, variable, argname, symbol=None):
+            if symbol is None: symbol = variable
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    raise ValueError("%s %s vector %s has to be properly defined!"%(self._name,argname,variable))
+                    raise ValueError("%s %s vector %s is not set and has to be properly defined!"%(self._name,argname,symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s vector %s is not set, but is optional."%(self._name,argname,variable))
+                    logging.debug("%s %s vector %s is not set, but is optional."%(self._name,argname,symbol))
                 else:
-                    logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,variable))
+                    logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,symbol))
             else:
-                logging.debug("%s %s vector %s is set, and its size is %i."%(self._name,argname,variable,numpy.array(argument).size))
+                logging.debug("%s %s vector %s is set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
             return 0
         __test_vvalue( Xb, "Xb", "Background or initial state" )
         __test_vvalue( Y,  "Y",  "Observation" )
+        __test_vvalue( U,  "U",  "Control" )
         #
-        def __test_cvalue(argument, variable, argname):
+        # Corrections et compléments des covariances
+        def __test_cvalue(argument, variable, argname, symbol=None):
+            if symbol is None: symbol = variable
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    raise ValueError("%s %s error covariance matrix %s has to be properly defined!"%(self._name,argname,variable))
+                    raise ValueError("%s %s error covariance matrix %s is not set and has to be properly defined!"%(self._name,argname,symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s error covariance matrix %s is not set, but is optional."%(self._name,argname,variable))
+                    logging.debug("%s %s error covariance matrix %s is not set, but is optional."%(self._name,argname,symbol))
                 else:
-                    logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name,argname,variable))
+                    logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name,argname,symbol))
             else:
-                logging.debug("%s %s error covariance matrix %s is set."%(self._name,argname,variable))
+                logging.debug("%s %s error covariance matrix %s is set."%(self._name,argname,symbol))
             return 0
-        __test_cvalue( R, "R", "Observation" )
         __test_cvalue( B, "B", "Background" )
+        __test_cvalue( R, "R", "Observation" )
         __test_cvalue( Q, "Q", "Evolution" )
+        #
+        # Corrections et compléments des opérateurs
+        def __test_ovalue(argument, variable, argname, symbol=None):
+            if symbol is None: symbol = variable
+            if argument is None or (isinstance(argument,dict) and len(argument)==0):
+                if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
+                    raise ValueError("%s %s operator %s is not set and has to be properly defined!"%(self._name,argname,symbol))
+                elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
+                    logging.debug("%s %s operator %s is not set, but is optional."%(self._name,argname,symbol))
+                else:
+                    logging.debug("%s %s operator %s is not set, but is not required."%(self._name,argname,symbol))
+            else:
+                logging.debug("%s %s operator %s is set."%(self._name,argname,symbol))
+            return 0
+        __test_ovalue( HO, "HO", "Observation", "H" )
+        __test_ovalue( EM, "EM", "Evolution", "M" )
+        __test_ovalue( CM, "CM", "Control Model", "C" )
         #
         if ("Bounds" in self._parameters) and isinstance(self._parameters["Bounds"], (list, tuple)) and (len(self._parameters["Bounds"]) > 0):
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))

@@ -65,11 +65,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ))
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters, Xb, Y, R, B, Q)
+        self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        Hm = HO["Tangent"].asMatrix(None)
+        Hm = HO["Tangent"].asMatrix(Xb)
         Hm = Hm.reshape(Y.size,-1) # ADAO & check shape
-        Ha = HO["Adjoint"].asMatrix(None)
+        Ha = HO["Adjoint"].asMatrix(Xb)
         Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
         #
         RI = R.getI()

@@ -120,16 +120,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ))
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
-        self._pre_run(Parameters, Xb, Y, R, B, Q)
+        self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         if ("BoxBounds" in self._parameters) and isinstance(self._parameters["BoxBounds"], (list, tuple)) and (len(self._parameters["BoxBounds"]) > 0):
             BoxBounds = self._parameters["BoxBounds"]
-            logging.debug("%s Prise en compte des bornes d'incréments de paramètres effectuee"%(self._name,))
+            logging.debug("%s Prise en compte des bornes d'incréments de paramètres effectuée"%(self._name,))
         else:
-            raise ValueError("Particle Swarm Optimization requires bounds on all variables to be given.")
+            raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given (BoxBounds).")
         BoxBounds   = numpy.array(BoxBounds)
         if numpy.isnan(BoxBounds).any():
-            raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given, \"None\" is not allowed. The actual increments bounds are:\n%s"%BoxBounds)
+            raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given (BoxBounds), \"None\" is not allowed. The actual increments bounds are:\n%s"%BoxBounds)
         #
         Phig = float( self._parameters["GroupRecallRate"] )
         Phip = 1. - Phig

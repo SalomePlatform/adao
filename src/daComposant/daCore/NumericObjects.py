@@ -483,6 +483,7 @@ def mmqr(
         #
         variables = variables + step
         if bounds is not None:
+            # Attention : boucle infinie à éviter si un intervalle est trop petit
             while( (variables < numpy.ravel(numpy.asmatrix(bounds)[:,0])).any() or (variables > numpy.ravel(numpy.asmatrix(bounds)[:,1])).any() ):
                 step      = step/2.
                 variables = variables - step

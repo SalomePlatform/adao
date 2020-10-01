@@ -30,34 +30,28 @@ __doc__ = """
     """
 __author__ = "Jean-Philippe ARGAUD"
 #
+# ==============================================================================
+#
 import os, numpy, time
 #
-# ==============================================================================
-#
 def DirectOperator( XX ):
-    """ Direct non-linear simulation operator """
-    #
-    # ------------------------------------------> EXAMPLE TO BE REMOVED
-    if isinstance(XX, type(numpy.matrix([]))):  # EXAMPLE TO BE REMOVED
-        HX = XX.A1.tolist()                     # EXAMPLE TO BE REMOVED
-    elif isinstance(XX, type(numpy.array([]))): # EXAMPLE TO BE REMOVED
-        HX = numpy.matrix(XX).A1.tolist()       # EXAMPLE TO BE REMOVED
-    else:                                       # EXAMPLE TO BE REMOVED
-        HX = numpy.ravel(XX)                    # EXAMPLE TO BE REMOVED
-    # ------------------------------------------> EXAMPLE TO BE REMOVED
-    #
-    return numpy.array( HX )
-
-# ==============================================================================
-from adao.daCore.NumericObjects import FDApproximation
-FDA = FDApproximation( DirectOperator )
-TangentOperator = FDA.TangentOperator
-AdjointOperator = FDA.AdjointOperator
-
+    # Opérateur identité
+    return numpy.ravel(XX)
+#
+def TangentOperator(paire  ):
+    # Opérateur identité
+    (XX, dX) = paire
+    return numpy.ravel(dX)
+#
+def AdjointOperator( paire ):
+    # Opérateur identité
+    (XX, YY) = paire
+    return numpy.ravel(YY)
+#
 # ==============================================================================
 if __name__ == "__main__":
 
-    print("")
+    print()
     print("AUTODIAGNOSTIC")
     print("==============")
 
@@ -66,4 +60,4 @@ if __name__ == "__main__":
 
     FX = DirectOperator( X0 )
     print("FX =", FX)
-    print("")
+    print()
