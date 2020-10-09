@@ -189,8 +189,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # --- > Par principe, M = Id, Q = 0
                 Xn_predicted = Xn
             #
-            Xfm = numpy.asmatrix(numpy.ravel(Xn_predicted.mean(axis=1, dtype=mfp))).T
-            Hfm = numpy.asmatrix(numpy.ravel(HX_predicted.mean(axis=1, dtype=mfp))).T
+            Xfm = numpy.asmatrix(numpy.ravel(Xn_predicted.mean(axis=1, dtype=mfp).astype('float'))).T
+            Hfm = numpy.asmatrix(numpy.ravel(HX_predicted.mean(axis=1, dtype=mfp).astype('float'))).T
             #
             PfHT, HPfHT = 0., 0.
             for i in range(__m):
@@ -207,7 +207,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn, (1,1,1))).T
                 Xn[:,i] = Xn_predicted[:,i] + K * (Ynpu + ri - HX_predicted[:,i])
             #
-            Xa = Xn.mean(axis=1, dtype=mfp)
+            Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
             #
             if self._parameters["StoreInternalVariables"] \
                 or self._toStore("CostFunctionJ") \

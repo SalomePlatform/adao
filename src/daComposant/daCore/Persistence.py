@@ -280,7 +280,7 @@ class Persistence(object):
         élémentaires numpy.
         """
         try:
-            return [numpy.mean(item, dtype=mfp) for item in self.__values]
+            return [numpy.mean(item, dtype=mfp).astype('float') for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -295,9 +295,9 @@ class Persistence(object):
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return [numpy.array(item).std(ddof=ddof) for item in self.__values]
+                return [numpy.array(item).std(ddof=ddof, dtype=mfp).astype('float') for item in self.__values]
             else:
-                return [numpy.array(item).std() for item in self.__values]
+                return [numpy.array(item).std(dtype=mfp).astype('float') for item in self.__values]
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -472,10 +472,7 @@ class Persistence(object):
         les types élémentaires numpy.
         """
         try:
-            if self.__basetype in [int, float]:
-                return float( numpy.mean(self.__values, dtype=mfp) )
-            else:
-                return numpy.mean(self.__values, axis=0, dtype=mfp)
+            return numpy.mean(self.__values, axis=0, dtype=mfp).astype('float')
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -490,9 +487,9 @@ class Persistence(object):
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return numpy.array(self.__values).std(ddof=ddof,axis=0)
+                return numpy.array(self.__values).std(ddof=ddof,axis=0).astype('float')
             else:
-                return numpy.array(self.__values).std(axis=0)
+                return numpy.array(self.__values).std(axis=0).astype('float')
         except:
             raise TypeError("Base type is incompatible with numpy")
 
