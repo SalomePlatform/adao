@@ -93,7 +93,7 @@ class PlatformInfo(object):
             if hasattr(platform, 'linux_distribution'):
                 __msg += "\n%s%30s : %s" %(__prefix,
                     "platform.linux_distribution",str(platform.linux_distribution()))
-            else:
+            elif hasattr(platform, 'dist'):
                 __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
         elif sys.platform.startswith('darwin'):
             if hasattr(platform, 'mac_ver'):
@@ -104,7 +104,7 @@ class PlatformInfo(object):
                     if (platform.mac_ver()[0].split('.')[1] == key):
                         __msg += "\n%s%30s : %s" %(__prefix,
                             "platform.mac_ver",str(platform.mac_ver()[0]+"(" + macosx_dict[key]+")"))
-            else:
+            elif hasattr(platform, 'dist'):
                 __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
         elif os.name == 'nt':
             __msg += "\n%s%30s : %s" %(__prefix,"platform.win32_ver",platform.win32_ver()[1])

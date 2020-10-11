@@ -623,7 +623,10 @@ class ImportFromScript(object):
             __basename = __filename.rstrip(".py")
         PlatformInfo.checkFileNameImportability( __basename+".py" )
         self.__basename = __basename
-        self.__filenspace = __import__(__basename, globals(), locals(), [])
+        try:
+            self.__filenspace = __import__(__basename, globals(), locals(), [])
+        except NameError:
+            self.__filenspace = ""
         with open(__filename,'r') as fid:
             self.__filestring = fid.read()
     def getvalue(self, __varname=None, __synonym=None ):
