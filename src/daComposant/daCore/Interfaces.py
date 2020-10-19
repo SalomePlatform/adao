@@ -273,13 +273,13 @@ class _COMViewer(GenericCaseViewer):
                     if __idata['NodeType'] == 'Template' and 'Template' in __idata:
                         __template = __idata['Template']
                         if 'Info' in __idata:
-                            __info = ", Info='%s'"%(__idata['Info'],)
+                            __info = ", Info=\"\"\"%s\"\"\""%(__idata['Info'],)
                         else:
                             __info = ""
-                        __commands.append( "set( Concept='Observer', Variable='%s', Template='%s'%s )"%(sk,__template,__info) )
+                        __commands.append( "set( Concept='Observer', Variable='%s', Template=\"\"\"%s\"\"\"%s )"%(sk,__template,__info) )
                     if __idata['NodeType'] == 'String' and 'Value' in __idata:
                         __value =__idata['Value']
-                        __commands.append( "set( Concept='Observer', Variable='%s', String='%s' )"%(sk,__value) )
+                        __commands.append( "set( Concept='Observer', Variable='%s', String=\"\"\"%s\"\"\" )"%(sk,__value) )
             #
             # Background, ObservationError, ObservationOperator...
             elif type(r) is dict:
