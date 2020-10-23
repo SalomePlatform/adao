@@ -34,6 +34,12 @@ reasons:
 """
 
 import adao
+if not hasattr(adao, "adao_py_dir"):
+    if hasattr(adao, "__file__"):
+        lieu = " A potential candidate file is %s."%repr(adao.__file__)
+    else:
+        lieu = ""
+    raise ImportError("\n\nFailed to activate module ADAO. Is it perhaps because you own a personnal perturbating file \'adao.py\' somewhere in your PATH?%s Rename, remove or move it before retrying to launch SALOME/ADAO.\n"%lieu)
 from daGuiImpl import ADAOGUI_impl as GuiImpl
 from daUtils import adaoLogger
 
