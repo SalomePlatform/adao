@@ -455,24 +455,28 @@ Accélérer les calculs de dérivées numériques en utilisant un mode parallèl
 Lors de la définition d'un opérateur, comme décrit dans le chapitre des
 :ref:`section_ref_operator_requirements`, l'utilisateur peut choisir la forme
 fonctionnelle "*ScriptWithOneFunction*". Cette forme conduit explicitement à
-approximer les opérateurs tangent et adjoint par un calcul par différences
-finies. Il requiert de nombreux appels à l'opérateur direct (fonction définie
-par l'utilisateur), au moins autant de fois que la dimension du vecteur d'état.
-Ce sont ces appels qui peuvent être potentiellement exécutés en parallèle.
+approximer les opérateurs tangent et adjoint (s'ils sont nécessaires) par un
+calcul par différences finies. Cela requiert de nombreux appels à l'opérateur
+direct (qui est la fonction définie par l'utilisateur), au moins autant de fois
+que la dimension du vecteur d'état. Ce sont ces appels qui peuvent être
+potentiellement exécutés en parallèle.
 
-Sous certaines conditions, il est alors possible d'accélérer les calculs de
-dérivées numériques en utilisant un mode parallèle pour l'approximation par
-différences finies. Lors de la définition d'un cas ADAO, c'est effectué en
-ajoutant le mot-clé optionnel "*EnableMultiProcessing*", mis à "1", de la
-commande "*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur. Le mode
-parallèle utilise uniquement des ressources locales (à la fois multi-coeurs ou
-multi-processeurs) de l'ordinateur sur lequel SALOME est en train de tourner,
-demandant autant de ressources que disponible. Si nécessaire, on peut réduire
-les ressources disponibles en limitant le nombre possible de processus
-parallèles grâce au mot-clé optionnel "*NumberOfProcesses*", que l'on met au
-maximum souhaité (ou à "0" pour le contrôle automatique, qui est la valeur par
-défaut). Par défaut, ce mode parallèle est désactivé
-("*EnableMultiProcessing=0*").
+Sous certaines conditions (décrites juste après), il est possible d'accélérer
+les calculs de dérivées numériques en utilisant un mode parallèle pour
+l'approximation par différences finies. Lors de la définition d'un cas ADAO,
+c'est effectué en ajoutant le mot-clé optionnel "*EnableMultiProcessing*", mis
+à "*1*" ou à "*True*". Ce mot-clé est inclus à la commande
+"*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur par interface
+graphique, ou aux "*Parameters*" accompagnant la commande "*OneFunction*" par
+interface textuelle. Par défaut, ce mode parallèle est désactivé
+("*EnableMultiProcessing=0*"). Le mode parallèle utilise uniquement des
+ressources locales (à la fois multi-coeurs ou multi-processeurs) de
+l'ordinateur sur lequel l'exécution est en train de se dérouler, demandant par
+défaut autant de ressources que disponible. Si nécessaire, on peut réduire les
+ressources disponibles en limitant le nombre possible de processus parallèles
+grâce au mot-clé optionnel "*NumberOfProcesses*", que l'on met au nombre
+maximal souhaité (ou à "*0*" pour le contrôle automatique, qui est la valeur
+par défaut).
 
 Les principales conditions pour réaliser ces calculs parallèles viennent de la
 fonction définie par l'utilisateur, qui représente l'opérateur direct. Cette

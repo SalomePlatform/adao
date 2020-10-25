@@ -430,23 +430,26 @@ Accelerating numerical derivatives calculations by using a parallel mode
 
 When setting an operator, as described in
 :ref:`section_ref_operator_requirements`, the user can choose a functional form
-"*ScriptWithOneFunction*". This form explicitly leads to approximate the tangent
-and adjoint operators by a finite differences calculation. It requires several
-calls to the direct operator (user defined function), at least as many times as
-the dimension of the state vector. This are these calls that can potentially be
-executed in parallel.
+"*ScriptWithOneFunction*". This form explicitly leads to approximate the
+tangent and adjoint operators (if they are required) by a finite differences
+calculation. It requires several calls to the direct operator (which is the
+user defined function), at least as many times as the dimension of the state
+vector. This are these calls that can potentially be executed in parallel.
 
-Under some conditions, it is then possible to accelerate the numerical
-derivatives calculations by using a parallel mode for the finite differences
-approximation. When setting up an ADAO case, it is done by adding the optional
-keyword "*EnableMultiProcessing*", set to "1", for the "*SCRIPTWITHONEFUNCTION*"
-command in the operator definition. The parallel mode will only use local
-resources (both multi-cores or multi-processors) of the computer on which SALOME
-is running, requiring as many resources as available. If necessary, one can
-reduce the available ressources by limiting the possible number of parallel
-processes using the keyword "*NumberOfProcesses*", set to desired maximum (or to
-"0" for automatic control, which is the default value). By default, this
-parallel mode is disabled ("*EnableMultiProcessing=0*").
+Under some conditions (described right after), it is then possible to
+accelerate the numerical derivatives calculations by using a parallel mode for
+the finite differences approximation. When setting up an ADAO case, it is done
+by adding the optional keyword "*EnableMultiProcessing*", set to "1" or
+"*True*". This keyword is included in the "*SCRIPTWITHONEFUNCTION*" command in
+the operator definition by graphical interface, or in the "*Parameters*"
+accompanying the command "*OneFunction*" by textual interaface. By default,
+this parallel mode is disabled ("*EnableMultiProcessing=0*"). The parallel mode
+will only use local resources (both multi-cores or multi-processors) of the
+computer on which execution is running, requiring by default as many resources
+as available. If necessary, one can reduce the available ressources by limiting
+the possible number of parallel processes using the keyword
+"*NumberOfProcesses*", set to desired maximum number (or to "0" for automatic
+control, which is the default value).
 
 The main conditions to perform parallel calculations come from the user defined
 function, that represents the direct operator. This function has at least to be
