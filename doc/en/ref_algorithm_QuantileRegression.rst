@@ -100,8 +100,6 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CostFunctionJo.rst
 
-.. include:: snippets/CurrentIterationNumber.rst
-
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
