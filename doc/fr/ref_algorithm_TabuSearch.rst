@@ -95,10 +95,11 @@ StoreSupplementaryCalculations
   Les noms possibles sont dans la liste suivante : [
   "Analysis",
   "BMA",
-  "CurrentState",
   "CostFunctionJ",
   "CostFunctionJb",
   "CostFunctionJo",
+  "CurrentIterationNumber",
+  "CurrentState",
   "Innovation",
   "OMA",
   "OMB",
@@ -128,13 +129,15 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/BMA.rst
 
-.. include:: snippets/CurrentState.rst
-
 .. include:: snippets/CostFunctionJ.rst
 
 .. include:: snippets/CostFunctionJb.rst
 
 .. include:: snippets/CostFunctionJo.rst
+
+.. include:: snippets/CurrentIterationNumber.rst
+
+.. include:: snippets/CurrentState.rst
 
 .. include:: snippets/Innovation.rst
 

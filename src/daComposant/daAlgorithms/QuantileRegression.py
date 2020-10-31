@@ -73,6 +73,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJ",
                 "CostFunctionJb",
                 "CostFunctionJo",
+                "CurrentIterationNumber",
                 "CurrentState",
                 "Innovation",
                 "OMA",
@@ -129,6 +130,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Jb  = 0.
             Jo  = 0.
             J   = Jb + Jo
+            #
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

@@ -66,6 +66,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
                 "CostFunctionJoAtCurrentOptimum",
+                "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
                 "ForecastState",
@@ -134,6 +135,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Pn = B
         #
         if len(self.StoredVariables["Analysis"])==0 or not self._parameters["nextStep"]:
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
             self.StoredVariables["Analysis"].store( numpy.ravel(Xn) )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn.asfullmatrix(Xn.size) )
@@ -201,6 +203,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Pn = Pn_predicted - Kn * Ht * Pn_predicted
             Xa, _HXa = Xn, _HX # Pointeurs
             #
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
             # ---> avec analysis
             self.StoredVariables["Analysis"].store( Xa )
             if self._toStore("SimulatedObservationAtCurrentAnalysis"):
@@ -265,6 +268,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Stockage final supplémentaire de l'optimum en estimation de paramètres
         # ----------------------------------------------------------------------
         if self._parameters["EstimationOf"] == "Parameters":
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
             self.StoredVariables["Analysis"].store( XaMin )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )

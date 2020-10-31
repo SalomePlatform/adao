@@ -106,10 +106,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "Analysis",
                 "BMA",
-                "CurrentState",
                 "CostFunctionJ",
                 "CostFunctionJb",
                 "CostFunctionJo",
+                "CurrentIterationNumber",
+                "CurrentState",
                 "Innovation",
                 "OMA",
                 "OMB",
@@ -247,6 +248,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _HmX = Hm( numpy.asmatrix(numpy.ravel( _Best )).T )
                 _HmX = numpy.asmatrix(numpy.ravel( _HmX )).T
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HmX )
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             self.StoredVariables["CostFunctionJb"].store( 0. )
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( _qualityBest )

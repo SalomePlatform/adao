@@ -99,6 +99,7 @@ StoreSupplementaryCalculations
   "CostFunctionJbAtCurrentOptimum",
   "CostFunctionJo",
   "CostFunctionJoAtCurrentOptimum",
+  "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
   "ForecastState",
@@ -144,6 +145,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CostFunctionJo.rst
 
 .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
+.. include:: snippets/CurrentIterationNumber.rst
 
 .. include:: snippets/CurrentOptimum.rst
 

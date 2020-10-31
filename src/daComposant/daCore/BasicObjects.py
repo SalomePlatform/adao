@@ -591,6 +591,7 @@ class Algorithm(object):
             - CostFunctionJbAtCurrentOptimum : partie ébauche à l'état optimal courant lors d'itérations
             - CostFunctionJo : partie observations de la fonction-coût : Jo
             - CostFunctionJoAtCurrentOptimum : partie observations à l'état optimal courant lors d'itérations
+            - CurrentIterationNumber : numéro courant d'itération dans les algorithmes itératifs, à partir de 0
             - CurrentOptimum : état optimal courant lors d'itérations
             - CurrentState : état courant lors d'itérations
             - GradientOfCostFunctionJ  : gradient de la fonction-coût globale
@@ -645,6 +646,7 @@ class Algorithm(object):
         self.StoredVariables["CostFunctionJbAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJbAtCurrentOptimum")
         self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
         self.StoredVariables["CostFunctionJoAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJoAtCurrentOptimum")
+        self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name = "CurrentIterationNumber")
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
         self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")

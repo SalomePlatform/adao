@@ -99,6 +99,7 @@ StoreSupplementaryCalculations
   "CostFunctionJ",
   "CostFunctionJb",
   "CostFunctionJo",
+  "CurrentIterationNumber",
   "CurrentState",
   "InnovationAtCurrentState",
   ].
@@ -131,6 +132,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CostFunctionJb.rst
 
 .. include:: snippets/CostFunctionJo.rst
+
+.. include:: snippets/CurrentIterationNumber.rst
 
 .. include:: snippets/CurrentState.rst
 

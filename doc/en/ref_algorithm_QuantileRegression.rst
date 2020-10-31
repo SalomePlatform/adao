@@ -69,6 +69,7 @@ StoreSupplementaryCalculations
   "CostFunctionJ",
   "CostFunctionJb",
   "CostFunctionJo",
+  "CurrentIterationNumber",
   "CurrentState",
   "Innovation",
   "OMA",
@@ -99,6 +100,8 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CostFunctionJo.rst
 
+.. include:: snippets/CurrentIterationNumber.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
@@ -111,6 +114,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CostFunctionJb.rst
 
 .. include:: snippets/CostFunctionJo.rst
+
+.. include:: snippets/CurrentIterationNumber.rst
 
 .. include:: snippets/CurrentState.rst
 

@@ -97,6 +97,7 @@ StoreSupplementaryCalculations
   "CostFunctionJAtCurrentOptimum",
   "CostFunctionJbAtCurrentOptimum",
   "CostFunctionJoAtCurrentOptimum",
+  "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
   "IndexOfOptimum",
@@ -144,6 +145,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
 .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
+.. include:: snippets/CurrentIterationNumber.rst
 
 .. include:: snippets/CurrentOptimum.rst
 

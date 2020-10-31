@@ -97,6 +97,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
                 "CostFunctionJoAtCurrentOptimum",
+                "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
                 "IndexOfOptimum",
@@ -214,6 +215,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Jo = Jo + _YmHMX.T * RI * _YmHMX
             Jo  = 0.5 * Jo
             J   = float( Jb ) + float( Jo )
+            #
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )

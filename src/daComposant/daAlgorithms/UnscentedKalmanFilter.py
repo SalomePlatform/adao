@@ -92,6 +92,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJ",
                 "CostFunctionJb",
                 "CostFunctionJo",
+                "CurrentIterationNumber",
                 "CurrentState",
                 "InnovationAtCurrentState",
                 ]
@@ -281,6 +282,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(self._parameters["Bounds"])[:,1])),axis=1)
             Xa = Xn # Pointeurs
             #
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
             # ---> avec analysis
             self.StoredVariables["Analysis"].store( Xa )
             if self._toStore("APosterioriCovariance"):
@@ -311,6 +313,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Stockage final supplémentaire de l'optimum en estimation de paramètres
         # ----------------------------------------------------------------------
         if self._parameters["EstimationOf"] == "Parameters":
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
             self.StoredVariables["Analysis"].store( XaMin )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )

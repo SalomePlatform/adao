@@ -94,10 +94,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "Analysis",
                 "BMA",
-                "CurrentState",
                 "CostFunctionJ",
                 "CostFunctionJb",
                 "CostFunctionJo",
+                "CurrentIterationNumber",
+                "CurrentState",
                 "Innovation",
                 "OMA",
                 "OMB",
@@ -219,6 +220,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 qBest = copy.copy( quality )
         logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(Best), str(qBest)))
         #
+        self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( Best )
         self.StoredVariables["CostFunctionJb"].store( 0. )
@@ -245,6 +247,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                         qBest = copy.copy( quality )
             logging.debug("%s Etape %i, Insecte = %s, Qualité = %s"%(self._name, n, str(Best), str(qBest)))
             #
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( Best )
             if self._toStore("SimulatedObservationAtCurrentState"):
