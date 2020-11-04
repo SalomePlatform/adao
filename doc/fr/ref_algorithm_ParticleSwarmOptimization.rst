@@ -60,51 +60,19 @@ en assimilation de données.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. index:: single: NumberOfInsects
-.. index:: single: SwarmVelocity
-.. index:: single: GroupRecallRate
-.. index:: single: QualityCriterion
-.. index:: single: BoxBounds
-
 .. include:: snippets/MaximumNumberOfSteps_50.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
 .. include:: snippets/QualityCriterion.rst
 
-NumberOfInsects
-  Cette clé indique le nombre d'insectes ou de particules dans l'essaim. La
-  valeur par défaut est 100, qui est une valeur par défaut usuelle pour cet
-  algorithme.
+.. include:: snippets/NumberOfInsects.rst
 
-  Exemple :
-  ``{"NumberOfInsects":100}``
+.. include:: snippets/SwarmVelocity.rst
 
-SwarmVelocity
-  Cette clé indique la part de la vitesse d'insecte qui est imposée par
-  l'essaim. C'est une valeur réelle positive. Le défaut est de 1.
+.. include:: snippets/GroupRecallRate.rst
 
-  Exemple :
-  ``{"SwarmVelocity":1.}``
-
-GroupRecallRate
-  Cette clé indique le taux de rappel vers le meilleur insecte de l'essaim.
-  C'est une valeur réelle comprise entre 0 et 1. Le défaut est de 0.5.
-
-  Exemple :
-  ``{"GroupRecallRate":0.5}``
-
-BoxBounds
-  Cette clé permet de définir des bornes supérieure et inférieure pour chaque
-  incrément de  variable d'état optimisée (et non pas chaque variable d'état
-  elle-même). Les bornes doivent être données par une liste de liste de paires
-  de bornes inférieure/supérieure pour chaque incrément de variable, avec une
-  valeur extrême chaque fois qu'il n'y a pas de borne (``None`` n'est pas une
-  valeur autorisée lorsqu'il n'y a pas de borne). Cette clé est requise et il
-  n'y a pas de valeurs par défaut.
-
-  Exemple :
-  ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
+.. include:: snippets/BoxBounds.rst
 
 .. include:: snippets/SetSeed.rst
 

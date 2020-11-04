@@ -59,49 +59,19 @@ least squares function, classically used in data assimilation.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. index:: single: NumberOfInsects
-.. index:: single: SwarmVelocity
-.. index:: single: GroupRecallRate
-.. index:: single: QualityCriterion
-.. index:: single: BoxBounds
-
 .. include:: snippets/MaximumNumberOfSteps_50.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
 .. include:: snippets/QualityCriterion.rst
 
-NumberOfInsects
-  This key indicates the number of insects or particles in the swarm. The
-  default is 100, which is a usual default for this algorithm.
+.. include:: snippets/NumberOfInsects.rst
 
-  Example :
-  ``{"NumberOfInsects":100}``
+.. include:: snippets/SwarmVelocity.rst
 
-SwarmVelocity
-  This key indicates the part of the insect velocity which is imposed by the
-  swarm. It is a positive floating point value. The default value is 1.
+.. include:: snippets/GroupRecallRate.rst
 
-  Example :
-  ``{"SwarmVelocity":1.}``
-
-GroupRecallRate
-  This key indicates the recall rate at the best swarm insect. It is a
-  floating point value between 0 and 1. The default value is 0.5.
-
-  Example :
-  ``{"GroupRecallRate":0.5}``
-
-BoxBounds
-  This key allows to define upper and lower bounds for *increments* on every
-  state variable being optimized (and not on state variables themselves).
-  Bounds have to be given by a list of list of pairs of lower/upper bounds for
-  each increment on variable, with extreme values every time there is no bound
-  (``None`` is not allowed when there is no bound). This key is required and
-  there is no default values.
-
-  Example :
-  ``{"BoxBounds":[[-0.5,0.5], [0.01,2.], [0.,1.e99], [-1.e99,1.e99]]}``
+.. include:: snippets/BoxBounds.rst
 
 .. include:: snippets/SetSeed.rst
 
