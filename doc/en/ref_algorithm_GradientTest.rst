@@ -109,14 +109,15 @@ which has to remain stable until the calculation precision is reached.
 ResiduFormula
   .. index:: single: ResiduFormula
 
-  This key indicates the residue formula that has to be used for the test. The
-  default choice is "Taylor", and the possible ones are "Taylor" (normalized
-  residue of the Taylor development of the operator, which has to decrease
-  with the square power of the perturbation), "TaylorOnNorm" (residue of the
-  Taylor development of the operator with respect to the perturbation to the
-  square, which has to remain constant) and "Norm" (residue obtained by taking
-  the norm of the Taylor development at zero order approximation, which
-  approximate the gradient, and which has to remain constant).
+  *Predefined name*. This key indicates the residue formula that has to be
+  used for the test. The default choice is "Taylor", and the possible ones are
+  "Taylor" (normalized residue of the Taylor development of the operator, which
+  has to decrease with the square power of the perturbation), "TaylorOnNorm"
+  (residue of the Taylor development of the operator with respect to the
+  perturbation to the square, which has to remain constant) and "Norm" (residue
+  obtained by taking the norm of the Taylor development at zero order
+  approximation, which approximate the gradient, and which has to remain
+  constant).
 
   Example :
   ``{"ResiduFormula":"Taylor"}``
@@ -124,12 +125,12 @@ ResiduFormula
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm, if they are initially required by the
-  user. It involves potentially costly calculations or memory consumptions. The
-  default is a void list, none of these variables being calculated and stored
-  by default excepted the unconditionnal variables. The possible names are in
-  the following list: [
+  *List of names*. This list indicates the names of the supplementary variables
+  that can be available during or at the end of the algorithm, if they are
+  initially required by the user. It involves potentially costly calculations
+  or memory consumptions. The default is a void list, none of these variables
+  being calculated and stored by default excepted the unconditionnal variables.
+  The possible names are in the following list: [
   "CurrentState",
   "Residu",
   "SimulatedObservationAtCurrentState",

@@ -1,9 +1,9 @@
 .. index:: single: Minimizer
 
 Minimizer
-  This key allows to choose the optimization strategy for the minimizer. The
-  default choice is "BEST1BIN", and the possible ones, among the multiples
-  crossover and mutation strategies, are
+  *Predefined name*. This key allows to choose the optimization strategy for
+  the minimizer. The default choice is "BEST1BIN", and the possible ones, among
+  the multiples crossover and mutation strategies, are
   "BEST1BIN",
   "BEST1EXP",
   "RAND1EXP",

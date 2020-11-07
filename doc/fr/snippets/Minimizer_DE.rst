@@ -1,10 +1,10 @@
 .. index:: single: Minimizer
 
 Minimizer
-  Cette clé permet de changer la stratégie de minimisation pour l'optimiseur.
-  Le choix par défaut est "BEST1BIN", et les choix possibles sont les
-  multiples variables pour les stratégies de croisement et mutation, décrites
-  par les clés
+  *Nom prédéfini*. Cette clé permet de changer la stratégie de minimisation
+  pour l'optimiseur. Le choix par défaut est "BEST1BIN", et les choix possibles
+  sont les multiples variables pour les stratégies de croisement et mutation,
+  décrites par les clés
   "BEST1BIN",
   "BEST1EXP",
   "RAND1EXP",

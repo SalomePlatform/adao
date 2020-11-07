@@ -130,16 +130,16 @@ If it is equal to 0 only on part of the variation domain of increment
 ResiduFormula
   .. index:: single: ResiduFormula
 
-  This key indicates the residue formula that has to be used for the test. The
-  default choice is "CenteredDL", and the possible ones are "CenteredDL"
-  (residue of the difference between the function at nominal point and the
-  values with positive and negative increments, which has to stay very small),
-  "Taylor" (residue of the Taylor development of the operator normalized by
-  the nominal value, which has to stay very small), "NominalTaylor" (residue
-  of the order 1 approximations of the operator, normalized to the nominal
-  point, which has to stay close to 1), and "NominalTaylorRMS" (residue of the
-  order 1 approximations of the operator, normalized by RMS to the nominal
-  point, which has to stay close to 0).
+  *Predefined name*. This key indicates the residue formula that has to be
+  used for the test. The default choice is "CenteredDL", and the possible ones
+  are "CenteredDL" (residue of the difference between the function at nominal
+  point and the values with positive and negative increments, which has to stay
+  very small), "Taylor" (residue of the Taylor development of the operator
+  normalized by the nominal value, which has to stay very small),
+  "NominalTaylor" (residue of the order 1 approximations of the operator,
+  normalized to the nominal point, which has to stay close to 1), and
+  "NominalTaylorRMS" (residue of the order 1 approximations of the operator,
+  normalized by RMS to the nominal point, which has to stay close to 0).
 
   Example :
   ``{"ResiduFormula":"CenteredDL"}``
@@ -147,12 +147,12 @@ ResiduFormula
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm, if they are initially required by the
-  user. It involves potentially costly calculations or memory consumptions. The
-  default is a void list, none of these variables being calculated and stored
-  by default excepted the unconditionnal variables. The possible names are in
-  the following list: [
+  *List of names*. This list indicates the names of the supplementary variables
+  that can be available during or at the end of the algorithm, if they are
+  initially required by the user. It involves potentially costly calculations
+  or memory consumptions. The default is a void list, none of these variables
+  being calculated and stored by default excepted the unconditionnal variables.
+  The possible names are in the following list: [
   "CurrentState",
   "Residu",
   "SimulatedObservationAtCurrentState",

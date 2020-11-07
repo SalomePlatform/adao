@@ -129,12 +129,12 @@ de F est vérifiée.
 ResiduFormula
   .. index:: single: ResiduFormula
 
-  Cette clé indique la formule de résidu qui doit être utilisée pour le test.
-  Le choix par défaut est "CenteredDL", et les choix possibles sont
-  "CenteredDL" (résidu de la différence entre la fonction au point nominal et
-  ses valeurs avec des incréments positif et négatif, qui doit rester très
-  faible), "Taylor" (résidu du développement de Taylor de l'opérateur
-  normalisé par sa valeur nominal, qui doit rester très faible),
+  *Nom prédéfini*. Cette clé indique la formule de résidu qui doit être
+  utilisée pour le test. Le choix par défaut est "CenteredDL", et les choix
+  possibles sont "CenteredDL" (résidu de la différence entre la fonction au
+  point nominal et ses valeurs avec des incréments positif et négatif, qui doit
+  rester très faible), "Taylor" (résidu du développement de Taylor de
+  l'opérateur normalisé par sa valeur nominal, qui doit rester très faible),
   "NominalTaylor" (résidu de l'approximation à l'ordre 1 de l'opérateur,
   normalisé au point nominal, qui doit rester proche de 1), et
   "NominalTaylorRMS" (résidu de l'approximation à l'ordre 1 de l'opérateur,
@@ -147,12 +147,13 @@ ResiduFormula
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  Cette liste indique les noms des variables supplémentaires qui peuvent être
-  disponibles à la fin de l'algorithme, si elles sont initialement demandées par
-  l'utilisateur. Cela implique potentiellement des calculs ou du stockage
-  coûteux. La valeur par défaut est une liste vide, aucune de ces variables
-  n'étant calculée et stockée par défaut sauf les variables inconditionnelles.
-  Les noms possibles sont dans la liste suivante : [
+  *Liste de noms*. Cette liste indique les noms des variables supplémentaires
+  qui peuvent être disponibles au cours du déroulement ou à la fin de
+  l'algorithme, si elles sont initialement demandées par l'utilisateur. Cela
+  implique potentiellement des calculs ou du stockage coûteux. La valeur par
+  défaut est une liste vide, aucune de ces variables n'étant calculée et
+  stockée par défaut sauf les variables inconditionnelles. Les noms possibles
+  sont dans la liste suivante : [
   "CurrentState",
   "Residu",
   "SimulatedObservationAtCurrentState",

@@ -73,12 +73,12 @@ One take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm, if they are initially required by the
-  user. It involves potentially costly calculations or memory consumptions. The
-  default is a void list, none of these variables being calculated and stored
-  by default excepted the unconditionnal variables. The possible names are in
-  the following list: [
+  *List of names*. This list indicates the names of the supplementary variables
+  that can be available during or at the end of the algorithm, if they are
+  initially required by the user. It involves potentially costly calculations
+  or memory consumptions. The default is a void list, none of these variables
+  being calculated and stored by default excepted the unconditionnal variables.
+  The possible names are in the following list: [
   "CurrentState",
   "Residu",
   "SimulatedObservationAtCurrentState",

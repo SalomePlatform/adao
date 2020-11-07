@@ -64,12 +64,12 @@ Example :* ``numpy.ones(<number of observations>)``
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  This list indicates the names of the supplementary variables that can be
-  available at the end of the algorithm, if they are initially required by the
-  user. It involves potentially costly calculations or memory consumptions. The
-  default is a void list, none of these variables being calculated and stored
-  by default excepted the unconditionnal variables. The possible names are in
-  the following list: [
+  *List of names*. This list indicates the names of the supplementary variables
+  that can be available during or at the end of the algorithm, if they are
+  initially required by the user. It involves potentially costly calculations
+  or memory consumptions. The default is a void list, none of these variables
+  being calculated and stored by default excepted the unconditionnal variables.
+  The possible names are in the following list: [
   "CurrentState",
   "JacobianMatrixAtCurrentState",
   "SimulatedObservationAtCurrentState",

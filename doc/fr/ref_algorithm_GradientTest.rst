@@ -108,14 +108,14 @@ qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 ResiduFormula
   .. index:: single: ResiduFormula
 
-  Cette clé indique la formule de résidu qui doit être utilisée pour le test.
-  Le choix par défaut est "Taylor", et les choix possibles sont "Taylor"
-  (résidu du développement de Taylor normalisé de l'opérateur, qui doit
-  décroître comme le carré de la perturbation), "TaylorOnNorm" (résidu du
-  développement de Taylor rapporté à la perturbation de l'opérateur, qui doit
-  rester constant) et "Norm" (résidu obtenu en prenant la norme du
-  développement de Taylor à l'ordre 0, qui approxime le gradient, et qui doit
-  rester constant).
+  *Nom prédéfini*. Cette clé indique la formule de résidu qui doit être
+  utilisée pour le test. Le choix par défaut est "Taylor", et les choix
+  possibles sont "Taylor" (résidu du développement de Taylor normalisé de
+  l'opérateur, qui doit décroître comme le carré de la perturbation),
+  "TaylorOnNorm" (résidu du développement de Taylor rapporté à la perturbation
+  de l'opérateur, qui doit rester constant) et "Norm" (résidu obtenu en prenant
+  la norme du développement de Taylor à l'ordre 0, qui approxime le gradient,
+  et qui doit rester constant).
 
   Exemple :
   ``{"ResiduFormula":"Taylor"}``
@@ -123,12 +123,13 @@ ResiduFormula
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  Cette liste indique les noms des variables supplémentaires qui peuvent être
-  disponibles à la fin de l'algorithme, si elles sont initialement demandées par
-  l'utilisateur. Cela implique potentiellement des calculs ou du stockage
-  coûteux. La valeur par défaut est une liste vide, aucune de ces variables
-  n'étant calculée et stockée par défaut sauf les variables inconditionnelles.
-  Les noms possibles sont dans la liste suivante : [
+  *Liste de noms*. Cette liste indique les noms des variables supplémentaires
+  qui peuvent être disponibles au cours du déroulement ou à la fin de
+  l'algorithme, si elles sont initialement demandées par l'utilisateur. Cela
+  implique potentiellement des calculs ou du stockage coûteux. La valeur par
+  défaut est une liste vide, aucune de ces variables n'étant calculée et
+  stockée par défaut sauf les variables inconditionnelles. Les noms possibles
+  sont dans la liste suivante : [
   "CurrentState",
   "Residu",
   "SimulatedObservationAtCurrentState",

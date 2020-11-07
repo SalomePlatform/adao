@@ -74,12 +74,13 @@ On prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  Cette liste indique les noms des variables supplémentaires qui peuvent être
-  disponibles à la fin de l'algorithme, si elles sont initialement demandées par
-  l'utilisateur. Cela implique potentiellement des calculs ou du stockage
-  coûteux. La valeur par défaut est une liste vide, aucune de ces variables
-  n'étant calculée et stockée par défaut sauf les variables inconditionnelles.
-  Les noms possibles sont dans la liste suivante : [
+  *Liste de noms*. Cette liste indique les noms des variables supplémentaires
+  qui peuvent être disponibles au cours du déroulement ou à la fin de
+  l'algorithme, si elles sont initialement demandées par l'utilisateur. Cela
+  implique potentiellement des calculs ou du stockage coûteux. La valeur par
+  défaut est une liste vide, aucune de ces variables n'étant calculée et
+  stockée par défaut sauf les variables inconditionnelles. Les noms possibles
+  sont dans la liste suivante : [
   "CurrentState",
   "Residu",
   "SimulatedObservationAtCurrentState",

@@ -1,7 +1,7 @@
 .. index:: single: ProjectedGradientTolerance
 
 ProjectedGradientTolerance
-  Cette clé indique une valeur limite, conduisant à arrêter le processus
+  *Valeur réelle*. Cette clé indique une valeur limite, conduisant à arrêter le processus
   itératif d'optimisation lorsque toutes les composantes du gradient projeté
   sont en-dessous de cette limite. C'est utilisé uniquement par les
   optimiseurs sous contraintes. Le défaut est -1, qui désigne le défaut
