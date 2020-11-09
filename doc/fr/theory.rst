@@ -100,19 +100,20 @@ temps précédent. On doit donc faire la reconstruction d'un champ en tout point
 de l'espace, de manière "cohérente" avec les équations d'évolution et avec les
 mesures aux précédents pas de temps.
 
-Identification de paramètres, ajustement de modèles, calibration
-----------------------------------------------------------------
+Identification de paramètres, ajustement de modèles, calage
+-----------------------------------------------------------
 
 .. index:: single: identification de paramètres
 .. index:: single: ajustement de paramètres
 .. index:: single: ajustement de modèles
-.. index:: single: calibration
+.. index:: single: recalage
+.. index:: single: calage
 .. index:: single: ébauche
 .. index:: single: régularisation
 .. index:: single: problèmes inverses
 
-L'**identification (ou l'ajustement) de paramètres** par assimilation de données
-est une forme de calibration d'état qui utilise simultanément les mesures
+L'**identification (ou l'ajustement) de paramètres** par assimilation de
+données est une forme de calage d'état qui utilise simultanément les mesures
 physiques et une estimation *a priori* des paramètres (appelée l'"*ébauche*")
 d'état que l'on cherche à identifier, ainsi qu'une caractérisation de leurs
 erreurs. De ce point de vue, cette démarche utilise toutes les informations
@@ -121,16 +122,17 @@ réalistes sur les erreurs, pour trouver l'"*estimation optimale*" de l'état
 vrai. On peut noter, en termes d'optimisation, que l'ébauche réalise la
 "*régularisation*", au sens mathématique de Tikhonov [Tikhonov77]_
 [WikipediaTI]_, du problème principal d'identification de paramètres. On peut
-aussi désigner cette démarche comme une résolution de type "*problème inverse*".
+aussi désigner cette démarche comme une résolution de type "*problème
+inverse*".
 
 En pratique, les deux écarts (ou incréments) observés "*calculs-mesures*" et
-"*calculs-ébauche*" sont combinés pour construire la correction de calibration
-des paramètres ou des conditions initiales. L'ajout de ces deux incréments
-requiert une pondération relative, qui est choisie pour refléter la confiance
-que l'on donne à chaque information utilisée. Cette confiance est représentée
-par la covariance des erreurs sur l'ébauche et sur les observations. Ainsi
-l'aspect stochastique des informations est essentiel pour construire une
-fonction d'erreur pour la calibration.
+"*calculs-ébauche*" sont combinés pour construire la correction de calage des
+paramètres ou des conditions initiales. L'ajout de ces deux incréments requiert
+une pondération relative, qui est choisie pour refléter la confiance que l'on
+donne à chaque information utilisée. Cette confiance est représentée par la
+covariance des erreurs sur l'ébauche et sur les observations. Ainsi l'aspect
+stochastique des informations est essentiel pour construire une fonction
+d'erreur pour le calage.
 
 Un exemple simple d'identification de paramètres provient de tout type de
 simulation physique impliquant un modèle paramétré. Par exemple, une simulation
@@ -164,29 +166,30 @@ un champ discrétisé à reconstruire.
 
 Selon les notations standards en assimilation de données, on note
 :math:`\mathbf{x}^a` les paramètres optimaux qui doivent être déterminés par
-calibration, :math:`\mathbf{y}^o` les observations (ou les mesures
-expérimentales) auxquelles on doit comparer les sorties de simulation,
-:math:`\mathbf{x}^b` l'ébauche (valeurs *a priori*, ou valeurs de
-régularisation) des paramètres cherchés, :math:`\mathbf{x}^t` les paramètres
-inconnus idéaux qui donneraient exactement les observations (en supposant que
-toutes les erreurs soient nulles et que le modèle soit exact) en sortie.
+calage, :math:`\mathbf{y}^o` les observations (ou les mesures expérimentales)
+auxquelles on doit comparer les sorties de simulation, :math:`\mathbf{x}^b`
+l'ébauche (valeurs *a priori*, ou valeurs de régularisation) des paramètres
+cherchés, :math:`\mathbf{x}^t` les paramètres inconnus idéaux qui donneraient
+exactement les observations (en supposant que toutes les erreurs soient nulles
+et que le modèle soit exact) en sortie.
 
 Dans le cas le plus simple, qui est statique, les étapes de simulation et
 d'observation peuvent être combinées en un unique opérateur d'observation noté
-:math:`H` (linéaire ou non-linéaire). Il transforme formellement les paramètres
-:math:`\mathbf{x}` en entrée en résultats :math:`\mathbf{y}`, qui peuvent être
-directement comparés aux observations :math:`\mathbf{y}^o` :
+:math:`\mathcal{H}` (linéaire ou non-linéaire). Il transforme formellement les
+paramètres :math:`\mathbf{x}` en entrée en résultats :math:`\mathbf{y}`, qui
+peuvent être directement comparés aux observations :math:`\mathbf{y}^o` :
 
-.. math:: \mathbf{y} = H(\mathbf{x})
+.. math:: \mathbf{y} = \mathcal{H}(\mathbf{x})
 
 De plus, on utilise l'opérateur linéarisé (ou tangent) :math:`\mathbf{H}` pour
-représenter l'effet de l'opérateur complet :math:`H` autour d'un point de
-linéarisation (et on omettra ensuite de mentionner :math:`H` même si l'on peut
-le conserver). En réalité, on a déjà indiqué que la nature stochastique des
-variables est essentielle, provenant du fait que le modèle, l'ébauche et les
-observations sont tous incorrects. On introduit donc des erreurs d'observations
-additives, sous la forme d'un vecteur aléatoire :math:`\mathbf{\epsilon}^o` tel
-que :
+représenter l'effet de l'opérateur complet :math:`\mathcal{H}` autour d'un
+point de linéarisation (et on omettra usuellement ensuite de mentionner
+:math:`\mathcal{H}`, même si l'on peut le conserver, pour ne mentionner que
+:math:`\mathbf{H}`). En réalité, on a déjà indiqué que la nature stochastique
+des variables est essentielle, provenant du fait que le modèle, l'ébauche et
+les observations sont tous incorrects. On introduit donc des erreurs
+d'observations additives, sous la forme d'un vecteur aléatoire
+:math:`\mathbf{\epsilon}^o` tel que :
 
 .. math:: \mathbf{y}^o = \mathbf{H} \mathbf{x}^t + \mathbf{\epsilon}^o
 
@@ -254,8 +257,8 @@ matrice *a posteriori* de covariance d'analyse.
 
 Dans ce cas statique simple, on peut montrer, sous une hypothèse de
 distributions gaussiennes d'erreurs (très peu restrictive en pratique) et de
-linéarité de :math:`H`, que les deux approches *variationnelle* et *de
-filtrage* donnent la même solution.
+linéarité de :math:`\mathcal{H}`, que les deux approches *variationnelle* et
+*de filtrage* donnent la même solution.
 
 On indique que ces méthodes de "*3D-VAR*" et de "*BLUE*" peuvent être étendues
 à des problèmes dynamiques, sous les noms respectifs de "*4D-VAR*" et de
@@ -271,7 +274,9 @@ contraintes informatiques comme la taille ou la durée des calculs.
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------
 
+.. index:: single: ajustement de paramètres
 .. index:: single: apprentissage
+.. index:: single: calage
 .. index:: single: calibration
 .. index:: single: data-driven
 .. index:: single: estimation bayésienne
@@ -309,14 +314,14 @@ cruciale.
 Certains aspects de l'assimilation de données sont aussi connus sous d'autres
 noms. Sans être exhaustif, on peut mentionner les noms de *calage* ou de
 *recalage*, de *calibration*, d'*estimation d'état*, d'*estimation de
-paramètres*, de *problèmes inverses* ou d'*inversion*, d'*estimation
-bayésienne*, d'*interpolation de champs* ou d'*interpolation optimale*,
-d'*optimisation variationnelle*, d'*optimisation quadratique*, de
-*régularisation mathématique*, de *méta-heuristiques* d'optimisation, de
-*réduction de modèles*, de *lissage de données*, de pilotage des modèles par
-les données (« *data-driven* »), d’*apprentissage* de modèles et de données
-(*Machine Learning* et Intelligence Artificielle), etc. Ces termes peuvent être
-utilisés dans les recherches bibliographiques.
+paramètres*, d'*ajustement de paramètres*, de *problèmes inverses* ou
+d'*inversion*, d'*estimation bayésienne*, d'*interpolation de champs* ou
+d'*interpolation optimale*, d'*optimisation variationnelle*, d'*optimisation
+quadratique*, de *régularisation mathématique*, de *méta-heuristiques*
+d'optimisation, de *réduction de modèles*, de *lissage de données*, de pilotage
+des modèles par les données (« *data-driven* »), d’*apprentissage* de modèles
+et de données (*Machine Learning* et Intelligence Artificielle), etc. Ces
+termes peuvent être utilisés dans les recherches bibliographiques.
 
 Approfondir l'estimation d'état par des méthodes d'optimisation
 ---------------------------------------------------------------

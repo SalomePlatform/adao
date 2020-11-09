@@ -164,17 +164,18 @@ parameters that would give exactly the observations (assuming that the errors
 are zero and the model is exact) as output.
 
 In the simplest case, which is static, the steps of simulation and of
-observation can be combined into a single observation operator noted :math:`H`
-(linear or nonlinear). It transforms the input parameters :math:`\mathbf{x}` to
-results :math:`\mathbf{y}`, to be directly compared to observations
-:math:`\mathbf{y}^o`:
+observation can be combined into a single observation operator noted
+:math:`\mathcal{H}` (linear or nonlinear). It transforms the input parameters
+:math:`\mathbf{x}` to results :math:`\mathbf{y}`, to be directly compared to
+observations :math:`\mathbf{y}^o`:
 
-.. math:: \mathbf{y} = H(\mathbf{x})
+.. math:: \mathbf{y} = \mathcal{H}(\mathbf{x})
 
 Moreover, we use the linearized operator :math:`\mathbf{H}` to represent the
-effect of the full operator :math:`H` around a linearization point (and we omit
-thereafter to mention :math:`H` even if it is possible to keep it). In reality,
-we have already indicated that the stochastic nature of variables is essential,
+effect of the full operator :math:`\mathcal{H}` around a linearization point
+(and we will usually omit thereafter to mention :math:`\mathcal{H}`, even if it
+is possible to keep it, to mention only :math:`\mathbf{H}`). In reality, we
+have already indicated that the stochastic nature of variables is essential,
 coming from the fact that model, background and observations are all incorrect.
 We therefore introduce errors of observations additively, in the form of a
 random vector :math:`\mathbf{\epsilon}^o` such that:
@@ -243,8 +244,9 @@ The advantage of filtering is to explicitly calculate the gain, to produce then
 the *a posteriori* covariance analysis matrix.
 
 In this simple static case, we can show, under an assumption of Gaussian error
-distributions (very little restrictive in practice) and of :math:`H` linearity,
-that the two *variational* and *filtering* approaches give the same solution.
+distributions (very little restrictive in practice) and of :math:`\mathcal{H}`
+linearity, that the two *variational* and *filtering* approaches give the same
+solution.
 
 It is indicated here that these methods of "*3D-VAR*" and "*BLUE*" may be
 extended to dynamic problems, called respectively "*4D-VAR*" and "*Kalman
@@ -273,6 +275,7 @@ Going further in the data assimilation framework
 .. index:: single: meta-heuristics
 .. index:: single: model reduction
 .. index:: single: optimal interpolation
+.. index:: single: parameter adjustment
 .. index:: single: parameter estimation
 .. index:: single: quadratic optimization
 .. index:: single: regularization methods
@@ -298,13 +301,13 @@ terms can be used in bibliographical searches.
 
 Some aspects of data assimilation are also known by other names. Without being
 exhaustive, we can mention the names of *calibration*, *adjustment*, *state
-estimation*, *parameter estimation*, *inverse problems* or *inversion*,
-*Bayesian estimation*, *field interpolation* or *optimal interpolation*,
-*variational optimization*, *quadratic optimization*, *mathematical
-regularization*, *meta-heuristics for optimization*, *model reduction*, *data
-smoothing*, *data-driven* modeling, model and data learning (*Machine Learning*
-and *Artificial Intelligence*), etc. These terms can be used in bibliographic
-searches.
+estimation*, *parameter estimation*, *parameter adjustment*, *inverse problems*
+or *inversion*, *Bayesian estimation*, *field interpolation* or *optimal
+interpolation*, *variational optimization*, *quadratic optimization*,
+*mathematical regularization*, *meta-heuristics for optimization*, *model
+reduction*, *data smoothing*, *data-driven* modeling, model and data learning
+(*Machine Learning* and *Artificial Intelligence*), etc. These terms can be
+used in bibliographic searches.
 
 Going further in the state estimation by optimization methods
 -------------------------------------------------------------
