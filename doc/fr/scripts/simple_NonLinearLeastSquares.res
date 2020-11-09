@@ -1,5 +1,5 @@
-Résolution itérative du problème de calibration
------------------------.-----------------------
+Résolution itérative du problème de calage
+------------------------------------------
 
   État intermédiaire en itération courante : [1. 1. 1.]
   État intermédiaire en itération courante : [1.99739508 1.07086406 1.01346638]
@@ -27,12 +27,12 @@ Résolution itérative du problème de calibration
   État intermédiaire en itération courante : [ 2.00000014 -1.00000309  2.00000249]
   État intermédiaire en itération courante : [ 2.         -0.99999995  2.00000015]
 
-Calibration de 3 coefficients pour une forme quadratique 1D sur 5 mesures
-------------------------------------------------------------------------
+Calage de 3 coefficients pour une forme quadratique 1D sur 5 mesures
+--------------------------------------------------------------------
 
-Vecteur observation.......................: [ 57.   2.   3.  17. 192.]
-État ébauche a priori.....................: [1. 1. 1.]
+Vecteur d'observation.............: [ 57.   2.   3.  17. 192.]
+État d'ébauche a priori...........: [1. 1. 1.]
 
-Coefficients théoriques attendus..........: [ 2 -1  2]
+Coefficients théoriques attendus..: [ 2 -1  2]
 
-Coefficients résultants de la calibration.: [ 2.         -0.99999995  2.00000015]
+Coefficients résultants du calage.: [ 2.         -0.99999995  2.00000015]

@@ -15,8 +15,8 @@ def QuadFunction( coefficients ):
 Xb   = array([1., 1., 1.])
 Yobs = array([57, 2, 3, 17, 192])
 #
-print("Résolution itérative du problème de calibration")
-print("-----------------------.-----------------------")
+print("Résolution itérative du problème de calage")
+print("------------------------------------------")
 print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
@@ -42,15 +42,15 @@ print("")
 #
 #-------------------------------------------------------------------------------
 #
-print("Calibration de %i coefficients pour une forme quadratique 1D sur %i mesures"%(
+print("Calage de %i coefficients pour une forme quadratique 1D sur %i mesures"%(
     len(case.get('Background')),
     len(case.get('Observation')),
     ))
-print("------------------------------------------------------------------------")
+print("--------------------------------------------------------------------")
 print("")
-print("Vecteur observation.......................:", ravel(case.get('Observation')))
-print("État ébauche a priori.....................:", ravel(case.get('Background')))
+print("Vecteur d'observation.............:", ravel(case.get('Observation')))
+print("État d'ébauche a priori...........:", ravel(case.get('Background')))
 print("")
-print("Coefficients théoriques attendus..........:", ravel((2,-1,2)))
+print("Coefficients théoriques attendus..:", ravel((2,-1,2)))
 print("")
-print("Coefficients résultants de la calibration.:", ravel(case.get('Analysis')[-1]))
+print("Coefficients résultants du calage.:", ravel(case.get('Analysis')[-1]))

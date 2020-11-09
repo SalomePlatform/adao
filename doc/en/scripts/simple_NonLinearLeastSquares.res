@@ -1,5 +1,5 @@
 Iterative resolution of the calibration problem
------------------------.-----------------------
+-----------------------------------------------
 
   Intermediate state at the current iteration: [1. 1. 1.]
   Intermediate state at the current iteration: [1.99739508 1.07086406 1.01346638]
@@ -28,7 +28,7 @@ Iterative resolution of the calibration problem
   Intermediate state at the current iteration: [ 2.         -0.99999995  2.00000015]
 
 Calibration of 3 coefficients in a 1D quadratic function on 5 measures
----------------------------------------------------------------------
+----------------------------------------------------------------------
 
 Observation vector.................: [ 57.   2.   3.  17. 192.]
 A priori background state..........: [1. 1. 1.]

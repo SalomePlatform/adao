@@ -16,7 +16,7 @@ Xb   = array([1., 1., 1.])
 Yobs = array([57, 2, 3, 17, 192])
 #
 print("Iterative resolution of the calibration problem")
-print("-----------------------.-----------------------")
+print("-----------------------------------------------")
 print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
@@ -46,7 +46,7 @@ print("Calibration of %i coefficients in a 1D quadratic function on %i measures"
     len(case.get('Background')),
     len(case.get('Observation')),
     ))
-print("---------------------------------------------------------------------")
+print("----------------------------------------------------------------------")
 print("")
 print("Observation vector.................:", ravel(case.get('Observation')))
 print("A priori background state..........:", ravel(case.get('Background')))
