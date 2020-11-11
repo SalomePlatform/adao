@@ -195,6 +195,8 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo09.rst
 
+.. include:: scripts/simple_3DVAR.rst
+
 .. literalinclude:: scripts/simple_3DVAR.py
 
 .. include:: snippets/Header2Algo10.rst
