@@ -169,6 +169,8 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo09.rst
 
+.. include:: scripts/simple_Blue.rst
+
 .. literalinclude:: scripts/simple_Blue.py
 
 .. include:: snippets/Header2Algo10.rst
