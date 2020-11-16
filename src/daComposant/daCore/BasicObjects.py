@@ -30,6 +30,7 @@ import os
 import sys
 import logging
 import copy
+import time
 import numpy
 from functools import partial
 from daCore import Persistence, PlatformInfo, Interfaces
@@ -686,6 +687,7 @@ class Algorithm(object):
         "Pré-calcul"
         logging.debug("%s Lancement", self._name)
         logging.debug("%s Taille mémoire utilisée de %.0f Mio"%(self._name, self._m.getUsedMemory("Mio")))
+        self._getTimeState(reset=True)
         #
         # Mise a jour des paramètres internes avec le contenu de Parameters, en
         # reprenant les valeurs par défauts pour toutes celles non définies
@@ -783,6 +785,7 @@ class Algorithm(object):
             logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i", self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
             logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i", self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
+        logging.debug("%s Durées d'utilisation CPU de %.1fs et elapsed de %.1fs", self._name, self._getTimeState()[0], self._getTimeState()[1])
         logging.debug("%s Terminé", self._name)
         return 0
 
@@ -946,6 +949,19 @@ class Algorithm(object):
             else:
                 pass
             logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
+
+    def _getTimeState(self, reset=False):
+        """
+        Initialise ou restitue le temps de calcul (cpu/elapsed) à la seconde
+        """
+        if reset:
+            self.__initial_cpu_time      = time.process_time()
+            self.__initial_elapsed_time  = time.perf_counter()
+            return 0., 0.
+        else:
+            self.__cpu_time     = time.process_time() - self.__initial_cpu_time
+            self.__elapsed_time = time.perf_counter() - self.__initial_elapsed_time
+            return self.__cpu_time, self.__elapsed_time
 
 # ==============================================================================
 class AlgorithmAndParameters(object):
