@@ -253,9 +253,12 @@ def uniq( __sequence ):
 
 def isIterable( __sequence, __check = False, __header = "" ):
     """
-    Vérification que l'argument est un itérable
+    Vérification que l'argument est un itérable interne.
+    Remarque : pour permettre le test correct en MultiFonctions,
+    - Ne pas accepter comme itérable un "numpy.ndarray"
+    - Ne pas accepter comme itérable avec hasattr(__sequence, "__iter__")
     """
-    if  isinstance( __sequence, (list, tuple, map) ):
+    if  isinstance( __sequence, (list, tuple, map, dict) ):
         __isOk = True
     elif type(__sequence).__name__ in ('generator','range'):
         __isOk = True
@@ -310,8 +313,9 @@ def checkFileNameImportability( __filename, __warnInsteadOfPrint=True ):
             "no \"__init__.py\" file in the same directory."+\
             "\n  The name of the file in question is the following:"+\
             "\n  %s")%(int(str(__filename).count(".")-1), __filename)
-        if __warnInsteadOfPrint: logging.warning(__msg)
-        else:                    print(__msg)
+        if __warnInsteadOfPrint is None: pass
+        elif __warnInsteadOfPrint:       logging.warning(__msg)
+        else:                            print(__msg)
     else:
         __conform = True
     #
