@@ -311,6 +311,12 @@ Il y a de nombreux champs d'applications scientifiques et technologiques dans
 lesquels l'utilisation efficace des données observées, mais incomplètes, est
 cruciale.
 
+Certains aspects de l'assimilation des données sont également connus sous le
+nom d'*estimation d'état*, d'*estimation de paramètres*, de *problèmes inverses*,
+d'*estimation bayésienne*, d'*interpolation optimale*, de *régularisation mathématique*,
+de *lissage des données*, etc. Ces termes peuvent être utilisés dans les recherches
+bibliographiques.
+
 Certains aspects de l'assimilation de données sont aussi connus sous d'autres
 noms. Sans être exhaustif, on peut mentionner les noms de *calage* ou de
 *recalage*, de *calibration*, d'*estimation d'état*, d'*estimation de
@@ -332,11 +338,12 @@ Approfondir l'estimation d'état par des méthodes d'optimisation
 .. index:: single: ParticleSwarmOptimization
 .. index:: single: DifferentialEvolution
 .. index:: single: QuantileRegression
+.. index:: single: QualityCriterion
 
 Comme vu précédemment, dans un cas de simulation statique, l'assimilation
 variationnelle de données nécessite de minimiser la fonction objectif :math:`J`:
 
-.. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
+.. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
 qui est dénommée la fonctionnelle du "*3D-VAR*". Elle peut être vue comme la
 forme étendue d'une *minimisation moindres carrés*, obtenue en ajoutant un terme
@@ -358,7 +365,7 @@ nécessitent que la fonctionnelle :math:`J` soit suffisamment régulière et
 différentiable, et elles ne sont pas en mesure de saisir des propriétés
 globales du problème de minimisation, comme par exemple : minimum global,
 ensemble de solutions équivalentes dues à une sur-paramétrisation, multiples
-minima locaux, etc. **Une méthode pour étendre les possibilités d'estimation
+minima locaux, etc. **Une démarche pour étendre les possibilités d'estimation
 consiste donc à utiliser l'ensemble des méthodes d'optimisation existantes,
 permettant la minimisation globale, diverses propriétés de robustesse de la
 recherche, etc**. Il existe de nombreuses méthodes de minimisation, comme les
@@ -381,14 +388,49 @@ fonctions objectifs sont bien adaptées à l'optimisation classique par gradient
 Mais d'autres mesures d'erreurs peuvent être mieux adaptées aux problèmes de
 simulation de la physique réelle. Ainsi, **une autre manière d'étendre les
 possibilités d'estimation consiste à utiliser d'autres mesures d'erreurs à
-réduire**. Par exemple, on peut citer une **erreur absolue**, une **erreur
-maximale**, etc. Ces mesures d'erreurs ne sont pas différentiables, mais
-certaines méthodes d'optimisation peuvent les traiter: heuristiques et
-méta-heuristiques pour les problèmes à valeurs réelles, etc. Comme
-précédemment, les principaux désavantages de ces méthodes sont un coût
-numérique souvent bien supérieur pour trouver les estimations d'états, et pas
-de garantie de convergence en temps fini. Ici encore, on ne mentionne que
-quelques méthodes qui sont disponibles dans ADAO :
+réduire**. Par exemple, on peut citer une *erreur en valeur absolue*, une
+*erreur maximale*, etc. On donne précisément ci-dessous les cas les plus
+classiques de mesures d'erreurs, en indiquant leur identifiant dans ADAO pour
+la sélection éventuelle d'un critère de qualité :
+
+- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés et augmentés (qui est la fonctionnelle de base par défaut de tous les algorithmes en assimilation de données, souvent nommée la fonctionnelle du "*3D-VAR*", et qui est connue pour les critères de qualité dans ADAO sous les noms de "*AugmentedWeightedLeastSquares*", "*AWLS*" ou "*DA*") est :
+
+    .. index:: single: AugmentedWeightedLeastSquares (QualityCriterion)
+    .. index:: single: AWLS (QualityCriterion)
+    .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
+
+- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés (qui est le carré de la norme pondérée :math:`L^2` de l'innovation, avec un coefficient :math:`1/2` pour être homogène à la précédente, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*WeightedLeastSquares*" ou "*WLS*") est :
+
+    .. index:: single: WeightedLeastSquares (QualityCriterion)
+    .. index:: single: WLS (QualityCriterion)
+    .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
+
+- la fonction objectif pour la mesure d'erreur par moindres carrés (qui est le carré de la norme :math:`L^2` de l'innovation, avec un coefficient :math:`1/2` pour être homogène aux précédentes, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*LeastSquares*", "*LS*" ou "*L2*") est :
+
+    .. index:: single: LeastSquares (QualityCriterion)
+    .. index:: single: LS (QualityCriterion)
+    .. index:: single: L2 (QualityCriterion)
+    .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})=\frac{1}{2}||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^2}^2
+
+- la fonction objectif pour la mesure d'erreur en valeur absolue (qui est la norme :math:`L^1` de l'innovation, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*AbsoluteValue*" ou "*L1*") est :
+
+    .. index:: single: AbsoluteValue (QualityCriterion)
+    .. index:: single: L1 (QualityCriterion)
+    .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^1}
+
+- la fonction objectif pour la mesure d'erreur maximale (qui est la norme :math:`L^{\infty}` de l'innovation, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*MaximumError*" ou "*ME*") est :
+
+    .. index:: single: MaximumError (QualityCriterion)
+    .. index:: single: ME (QualityCriterion)
+    .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^{\infty}}
+
+Ces mesures d'erreurs peuvent ne être pas différentiables comme pour les deux
+dernières, mais certaines méthodes d'optimisation peuvent quand même les
+traiter : heuristiques et méta-heuristiques pour les problèmes à valeurs
+réelles, etc. Comme précédemment, les principaux désavantages de ces méthodes
+sont un coût numérique souvent bien supérieur pour trouver les estimations
+d'états, et pas de garantie de convergence en temps fini. Ici encore, on ne
+mentionne que quelques méthodes qui sont disponibles dans ADAO :
 
 - l'*optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
 - l'*optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
