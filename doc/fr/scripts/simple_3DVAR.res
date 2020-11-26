@@ -1,5 +1,5 @@
-Résolution itérative du problème de calage
-------------------------------------------
+Résolution variationnelle du problème de calage
+-----------------------------------------------
 
   État intermédiaire en itération courante : [1. 1. 1.]
   État intermédiaire en itération courante : [1.99739508 1.07086406 1.01346638]

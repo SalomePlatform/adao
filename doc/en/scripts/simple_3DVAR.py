@@ -15,8 +15,8 @@ def QuadFunction( coefficients ):
 Xb   = array([1., 1., 1.])
 Yobs = array([57, 2, 3, 17, 192])
 #
-print("Iterative resolution of the calibration problem")
-print("-----------------------------------------------")
+print("Variational resolution of the calibration problem")
+print("-------------------------------------------------")
 print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
