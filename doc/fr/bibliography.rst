@@ -101,6 +101,8 @@ Bibliographie
 
 .. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
 
+.. [Welch06] Welch G., Bishop G., *An Introduction to the Kalman Filter*, University of North Carolina at Chapel Hill, Department of Computer Science, TR 95-041, 2006, http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
+
 .. [WikipediaDA] Wikipedia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
 
 .. [WikipediaKF] Wikipedia, *Kalman Filter*, https://en.wikipedia.org/wiki/Kalman_filter
