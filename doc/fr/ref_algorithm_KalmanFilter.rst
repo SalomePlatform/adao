@@ -175,6 +175,11 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_KalmanFilter1.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_ExtendedKalmanFilter`
