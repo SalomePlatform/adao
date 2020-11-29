@@ -178,6 +178,12 @@ StoreSupplementaryCalculations
 
 .. include:: scripts/simple_KalmanFilter1.rst
 
+.. literalinclude:: scripts/simple_KalmanFilter1.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_KalmanFilter1.res
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
