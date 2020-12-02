@@ -185,6 +185,18 @@ StoreSupplementaryCalculations
 
 .. literalinclude:: scripts/simple_KalmanFilter1.res
 
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_KalmanFilter1_state:
+.. image:: scripts/simple_KalmanFilter1_state.png
+  :align: center
+  :width: 90%
+
+.. _simple_KalmanFilter1_variance:
+.. image:: scripts/simple_KalmanFilter1_variance.png
+  :align: center
+  :width: 90%
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
