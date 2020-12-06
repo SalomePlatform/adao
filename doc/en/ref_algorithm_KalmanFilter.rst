@@ -196,6 +196,10 @@ StoreSupplementaryCalculations
   :align: center
   :width: 90%
 
+.. include:: scripts/simple_KalmanFilter2.rst
+
+.. literalinclude:: scripts/simple_KalmanFilter2.py
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
