@@ -201,6 +201,22 @@ StoreSupplementaryCalculations
 
 .. literalinclude:: scripts/simple_KalmanFilter2.py
 
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_KalmanFilter2.res
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_KalmanFilter2_state:
+.. image:: scripts/simple_KalmanFilter2_state.png
+  :align: center
+  :width: 90%
+
+.. _simple_KalmanFilter2_variance:
+.. image:: scripts/simple_KalmanFilter2_variance.png
+  :align: center
+  :width: 90%
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
@@ -211,4 +227,5 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst
 
+- [Welch06]_
 - [WikipediaKF]_

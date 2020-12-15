@@ -171,18 +171,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                     _Innovation = _Innovation - Cm * Un
             #
-            _A = R + numpy.dot(Ht, Pn_predicted * Ha)
-            _u = numpy.linalg.solve( _A , _Innovation )
-            Xn = Xn_predicted + Pn_predicted * Ha * _u
-            Kn = Pn_predicted * Ha * (R + numpy.dot(Ht, Pn_predicted * Ha)).I
+            Kn = Pn_predicted * Ha * numpy.linalg.inv(R + numpy.dot(Ht, Pn_predicted * Ha))
+            Xn = Xn_predicted + Kn * _Innovation
             Pn = Pn_predicted - Kn * Ht * Pn_predicted
-            Xa, _HXa = Xn, _HX # Pointeurs
+            Xa = Xn # Pointeurs
             #
             self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
             # ---> avec analysis
             self.StoredVariables["Analysis"].store( Xa )
             if self._toStore("SimulatedObservationAtCurrentAnalysis"):
-                self.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( _HXa )
+                self.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( Ht * Xn )
             if self._toStore("InnovationAtCurrentAnalysis"):
                 self.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
             # ---> avec current state
