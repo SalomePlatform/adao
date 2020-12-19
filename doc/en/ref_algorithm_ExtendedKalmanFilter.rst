@@ -34,17 +34,16 @@ This algorithm realizes an estimation of the state of a dynamic system by a
 extended Kalman Filter, using a non-linear calculation of the state and the
 incremental evolution (process).
 
-Conceptually, we can represent the temporal pattern of action of the operators
-for this algorithm in the following way, with **x** the state, **P** the state
-error covariance, **H** the observation operator and **M** the evolution
-operator :
+Conceptually, we can represent the temporal pattern of action of the evolution
+operator for this algorithm in the following way, with **x** the state and
+**P** the state error covariance :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
     :align: center
-    :width: 50%
+    :width: 100%
   .. centered::
-    **Timeline of steps in Kalman filter assimilation**
+    **Timeline of steps in extended Kalman filter assimilation**
 
 We notice that there is no analysis performed at the initial time step
 (numbered 0 in the time indexing) because there is no forecast at this time

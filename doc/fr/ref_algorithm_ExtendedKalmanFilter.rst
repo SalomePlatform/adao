@@ -34,17 +34,16 @@ Cet algorithme réalise une estimation de l'état d'un système dynamique par un
 filtre de Kalman étendu, utilisant un calcul non linéaire de l'état et de
 l'évolution incrémentale (processus).
 
-Conceptuellement, on peut représenter le schéma temporel d'action des
-opérateurs de cet algorithme de la manière suivante, avec **x** l'état, **P**
-la covariance d'erreur d'état, **H** l'opérateur d'observation et **M**
-l'opérateur d'évolution :
+Conceptuellement, on peut représenter le schéma temporel d'action de
+l'opérateur d'évolution de cet algorithme de la manière suivante, avec **x**
+l'état et **P** la covariance d'erreur d'état :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
     :align: center
-    :width: 50%
+    :width: 100%
   .. centered::
-    **Schéma temporel des étapes en assimilation par filtre de Kalman**
+    **Schéma temporel des étapes en assimilation par filtre de Kalman étendu**
 
 On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
 (numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet

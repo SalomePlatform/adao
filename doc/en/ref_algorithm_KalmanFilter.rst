@@ -38,15 +38,14 @@ cases which are linear, even if it sometimes works in "slightly" non-linear
 cases. One can verify the linearity of the operators with the help of
 the :ref:`section_ref_algorithm_LinearityTest`.
 
-Conceptually, we can represent the temporal pattern of action of the operators
-for this algorithm in the following way, with **x** the state, **P** the state
-error covariance, **H** the observation operator and **M** the evolution
-operator :
+Conceptually, we can represent the temporal pattern of action of the evolution
+operator for this algorithm in the following way, with **x** the state and
+**P** the state error covariance :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
     :align: center
-    :width: 50%
+    :width: 100%
   .. centered::
     **Timeline of steps in Kalman filter assimilation**
 

@@ -38,15 +38,14 @@ incrémentale (processus) linéaires, même s'il fonctionne parfois dans les cas
 "faiblement" non-linéaire. On peut vérifier la linéarité de l'opérateur
 d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
-Conceptuellement, on peut représenter le schéma temporel d'action des
-opérateurs de cet algorithme de la manière suivante, avec **x** l'état, **P**
-la covariance d'erreur d'état, **H** l'opérateur d'observation et **M**
-l'opérateur d'évolution :
+Conceptuellement, on peut représenter le schéma temporel d'action de
+l'opérateur d'évolution de cet algorithme de la manière suivante, avec **x**
+l'état et **P** la covariance d'erreur d'état :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
     :align: center
-    :width: 50%
+    :width: 100%
   .. centered::
     **Schéma temporel des étapes en assimilation par filtre de Kalman**
 
