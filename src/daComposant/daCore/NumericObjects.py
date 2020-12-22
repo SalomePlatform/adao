@@ -508,5 +508,416 @@ def mmqr(
     return variables, Ecart, [n,p,iteration,increment,0]
 
 # ==============================================================================
+def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+    """
+    Stochastic EnKF (Envensen 1994, Burgers 1998)
+
+    selfA est identique au "self" d'algorithme appelant et contient les
+    valeurs.
+    """
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        selfA._parameters["StoreInternalVariables"] = True
+    #
+    # Opérateurs
+    # ----------
+    H = HO["Direct"].appliedControledFormTo
+    #
+    if selfA._parameters["EstimationOf"] == "State":
+        M = EM["Direct"].appliedControledFormTo
+    #
+    if CM is not None and "Tangent" in CM and U is not None:
+        Cm = CM["Tangent"].asMatrix(Xb)
+    else:
+        Cm = None
+    #
+    # Nombre de pas identique au nombre de pas d'observations
+    # -------------------------------------------------------
+    if hasattr(Y,"stepnumber"):
+        duration = Y.stepnumber()
+        __p = numpy.cumprod(Y.shape())[-1]
+    else:
+        duration = 2
+        __p = numpy.array(Y).size
+    #
+    # Précalcul des inversions de B et R
+    # ----------------------------------
+    if selfA._parameters["StoreInternalVariables"] \
+        or selfA._toStore("CostFunctionJ") \
+        or selfA._toStore("CostFunctionJb") \
+        or selfA._toStore("CostFunctionJo") \
+        or selfA._toStore("CurrentOptimum") \
+        or selfA._toStore("APosterioriCovariance"):
+        BI = B.getI()
+        RI = R.getI()
+    #
+    # Initialisation
+    # --------------
+    __n = Xb.size
+    __m = selfA._parameters["NumberOfMembers"]
+    Xn = numpy.asmatrix(numpy.dot( Xb.reshape(__n,1), numpy.ones((1,__m)) ))
+    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
+    else:                         Pn = B
+    if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
+    else:                         Rn = R
+    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
+    else:                         Qn = Q
+    #
+    if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+            covarianceXa = Pn
+    #
+    previousJMinimum = numpy.finfo(float).max
+    #
+    # Predimensionnement
+    Xn_predicted = numpy.asmatrix(numpy.zeros((__n,__m)))
+    HX_predicted = numpy.asmatrix(numpy.zeros((__p,__m)))
+    #
+    for step in range(duration-1):
+        if hasattr(Y,"store"):
+            Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+        else:
+            Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+        #
+        if U is not None:
+            if hasattr(U,"store") and len(U)>1:
+                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+            elif hasattr(U,"store") and len(U)==1:
+                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+            else:
+                Un = numpy.asmatrix(numpy.ravel( U )).T
+        else:
+            Un = None
+        #
+        if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
+            for i in range(__m):
+                qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
+                Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( M((Xn[:,i], Un)) )).T + qi
+                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
+                Xn_predicted = Xn_predicted + Cm * Un
+        elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
+            # --- > Par principe, M = Id, Q = 0
+            Xn_predicted = Xn
+            for i in range(__m):
+                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+        #
+        # Mean of forecast and observation of forecast
+        Xfm  = numpy.asmatrix(numpy.ravel(Xn_predicted.mean(axis=1, dtype=mfp).astype('float'))).T
+        Hfm  = numpy.asmatrix(numpy.ravel(HX_predicted.mean(axis=1, dtype=mfp).astype('float'))).T
+        #
+        PfHT, HPfHT = 0., 0.
+        for i in range(__m):
+            Exfi = Xn_predicted[:,i] - Xfm
+            Eyfi = HX_predicted[:,i] - Hfm
+            PfHT  += Exfi * Eyfi.T
+            HPfHT += Eyfi * Eyfi.T
+        PfHT  = (1./(__m-1)) * PfHT
+        HPfHT = (1./(__m-1)) * HPfHT
+        K     = PfHT * ( R + HPfHT ).I
+        del PfHT, HPfHT
+        #
+        for i in range(__m):
+            ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn, (1,1,1))).T
+            Xn[:,i] = Xn_predicted[:,i] + K * (Ynpu + ri - HX_predicted[:,i])
+        #
+        Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        #
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CostFunctionJ") \
+            or selfA._toStore("CostFunctionJb") \
+            or selfA._toStore("CostFunctionJo") \
+            or selfA._toStore("APosterioriCovariance") \
+            or selfA._toStore("InnovationAtCurrentAnalysis") \
+            or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
+            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+            _HXa = numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
+            _Innovation = Ynpu - _HXa
+        #
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        # ---> avec analysis
+        selfA.StoredVariables["Analysis"].store( Xa )
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( _HXa )
+        if selfA._toStore("InnovationAtCurrentAnalysis"):
+            selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
+        # ---> avec current state
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CurrentState"):
+            selfA.StoredVariables["CurrentState"].store( Xn )
+        if selfA._toStore("ForecastState"):
+            selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+        if selfA._toStore("BMA"):
+            selfA.StoredVariables["BMA"].store( Xn_predicted - Xa )
+        if selfA._toStore("InnovationAtCurrentState"):
+            selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
+        if selfA._toStore("SimulatedObservationAtCurrentState") \
+            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
+        # ---> autres
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CostFunctionJ") \
+            or selfA._toStore("CostFunctionJb") \
+            or selfA._toStore("CostFunctionJo") \
+            or selfA._toStore("CurrentOptimum") \
+            or selfA._toStore("APosterioriCovariance"):
+            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            J   = Jb + Jo
+            selfA.StoredVariables["CostFunctionJb"].store( Jb )
+            selfA.StoredVariables["CostFunctionJo"].store( Jo )
+            selfA.StoredVariables["CostFunctionJ" ].store( J )
+            #
+            if selfA._toStore("IndexOfOptimum") \
+                or selfA._toStore("CurrentOptimum") \
+                or selfA._toStore("CostFunctionJAtCurrentOptimum") \
+                or selfA._toStore("CostFunctionJbAtCurrentOptimum") \
+                or selfA._toStore("CostFunctionJoAtCurrentOptimum") \
+                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+            if selfA._toStore("IndexOfOptimum"):
+                selfA.StoredVariables["IndexOfOptimum"].store( IndexMin )
+            if selfA._toStore("CurrentOptimum"):
+                selfA.StoredVariables["CurrentOptimum"].store( selfA.StoredVariables["Analysis"][IndexMin] )
+            if selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"][IndexMin] )
+            if selfA._toStore("CostFunctionJbAtCurrentOptimum"):
+                selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJb"][IndexMin] )
+            if selfA._toStore("CostFunctionJoAtCurrentOptimum"):
+                selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJo"][IndexMin] )
+            if selfA._toStore("CostFunctionJAtCurrentOptimum"):
+                selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
+        if selfA._toStore("APosterioriCovariance"):
+            Eai = (1/numpy.sqrt(__m-1)) * (Xn - Xa.reshape((__n,-1))) # Anomalies
+            Pn = Eai @ Eai.T
+            Pn = 0.5 * (Pn + Pn.T)
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+        if selfA._parameters["EstimationOf"] == "Parameters" \
+            and J < previousJMinimum:
+            previousJMinimum    = J
+            XaMin               = Xa
+            if selfA._toStore("APosterioriCovariance"):
+                covarianceXaMin = Pn
+    #
+    # Stockage final supplémentaire de l'optimum en estimation de paramètres
+    # ----------------------------------------------------------------------
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["Analysis"].store( XaMin )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )
+        if selfA._toStore("BMA"):
+            selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(XaMin) )
+    #
+    return 0
+
+# ==============================================================================
+def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+    """
+    Ensemble-Transform EnKF (ETKF or Deterministic EnKF: Bishop 2001, Hunt 2007)
+
+    selfA est identique au "self" d'algorithme appelant et contient les
+    valeurs.
+    """
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        selfA._parameters["StoreInternalVariables"] = True
+    #
+    # Opérateurs
+    # ----------
+    H = HO["Direct"].appliedControledFormTo
+    #
+    if selfA._parameters["EstimationOf"] == "State":
+        M = EM["Direct"].appliedControledFormTo
+    #
+    if CM is not None and "Tangent" in CM and U is not None:
+        Cm = CM["Tangent"].asMatrix(Xb)
+    else:
+        Cm = None
+    #
+    # Nombre de pas identique au nombre de pas d'observations
+    # -------------------------------------------------------
+    if hasattr(Y,"stepnumber"):
+        duration = Y.stepnumber()
+        __p = numpy.cumprod(Y.shape())[-1]
+    else:
+        duration = 2
+        __p = numpy.array(Y).size
+    #
+    # Précalcul des inversions de B et R
+    # ----------------------------------
+    if selfA._parameters["StoreInternalVariables"] \
+        or selfA._toStore("CostFunctionJ") \
+        or selfA._toStore("CostFunctionJb") \
+        or selfA._toStore("CostFunctionJo") \
+        or selfA._toStore("CurrentOptimum") \
+        or selfA._toStore("APosterioriCovariance"):
+        BI = B.getI()
+        RI = R.getI()
+    RIdemi = R.choleskyI()
+    #
+    # Initialisation
+    # --------------
+    __n = Xb.size
+    __m = selfA._parameters["NumberOfMembers"]
+    Xn = numpy.asmatrix(numpy.dot( Xb.reshape(__n,1), numpy.ones((1,__m)) ))
+    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
+    else:                         Pn = B
+    if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
+    else:                         Rn = R
+    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
+    else:                         Qn = Q
+    #
+    if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+            covarianceXa = Pn
+    #
+    previousJMinimum = numpy.finfo(float).max
+    #
+    # Predimensionnement
+    Xn_predicted = numpy.asmatrix(numpy.zeros((__n,__m)))
+    HX_predicted = numpy.asmatrix(numpy.zeros((__p,__m)))
+    #
+    for step in range(duration-1):
+        if hasattr(Y,"store"):
+            Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+        else:
+            Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+        #
+        if U is not None:
+            if hasattr(U,"store") and len(U)>1:
+                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+            elif hasattr(U,"store") and len(U)==1:
+                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+            else:
+                Un = numpy.asmatrix(numpy.ravel( U )).T
+        else:
+            Un = None
+        #
+        if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
+            for i in range(__m):
+                qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
+                Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( M((Xn[:,i], Un)) )).T + qi
+                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
+                Xn_predicted = Xn_predicted + Cm * Un
+        elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
+            # --- > Par principe, M = Id, Q = 0
+            Xn_predicted = Xn
+            for i in range(__m):
+                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+        #
+        # Mean of forecast and observation of forecast
+        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
+        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
+        #
+        EaX   = (Xn_predicted - Xfm.reshape((__n,-1))) / numpy.sqrt(__m-1)
+        EaHX  = (HX_predicted - Hfm.reshape((__p,-1))) / numpy.sqrt(__m-1)
+        #
+        mS    = RIdemi * EaHX
+        delta = RIdemi * ( Ynpu.reshape((__p,-1)) - Hfm.reshape((__p,-1)) )
+        mT    = numpy.linalg.inv( numpy.eye(__m) + mS.T @ mS )
+        vw    = mT @ mS.transpose() @ delta
+        #
+        Tdemi = numpy.linalg.cholesky(mT)
+        mU    = numpy.eye(__m)
+        #
+        Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
+        #
+        Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        #
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CostFunctionJ") \
+            or selfA._toStore("CostFunctionJb") \
+            or selfA._toStore("CostFunctionJo") \
+            or selfA._toStore("APosterioriCovariance") \
+            or selfA._toStore("InnovationAtCurrentAnalysis") \
+            or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
+            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+            _HXa = numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
+            _Innovation = Ynpu - _HXa
+        #
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        # ---> avec analysis
+        selfA.StoredVariables["Analysis"].store( Xa )
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( _HXa )
+        if selfA._toStore("InnovationAtCurrentAnalysis"):
+            selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
+        # ---> avec current state
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CurrentState"):
+            selfA.StoredVariables["CurrentState"].store( Xn )
+        if selfA._toStore("ForecastState"):
+            selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+        if selfA._toStore("BMA"):
+            selfA.StoredVariables["BMA"].store( Xn_predicted - Xa )
+        if selfA._toStore("InnovationAtCurrentState"):
+            selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
+        if selfA._toStore("SimulatedObservationAtCurrentState") \
+            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
+        # ---> autres
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CostFunctionJ") \
+            or selfA._toStore("CostFunctionJb") \
+            or selfA._toStore("CostFunctionJo") \
+            or selfA._toStore("CurrentOptimum") \
+            or selfA._toStore("APosterioriCovariance"):
+            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            J   = Jb + Jo
+            selfA.StoredVariables["CostFunctionJb"].store( Jb )
+            selfA.StoredVariables["CostFunctionJo"].store( Jo )
+            selfA.StoredVariables["CostFunctionJ" ].store( J )
+            #
+            if selfA._toStore("IndexOfOptimum") \
+                or selfA._toStore("CurrentOptimum") \
+                or selfA._toStore("CostFunctionJAtCurrentOptimum") \
+                or selfA._toStore("CostFunctionJbAtCurrentOptimum") \
+                or selfA._toStore("CostFunctionJoAtCurrentOptimum") \
+                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+            if selfA._toStore("IndexOfOptimum"):
+                selfA.StoredVariables["IndexOfOptimum"].store( IndexMin )
+            if selfA._toStore("CurrentOptimum"):
+                selfA.StoredVariables["CurrentOptimum"].store( selfA.StoredVariables["Analysis"][IndexMin] )
+            if selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"][IndexMin] )
+            if selfA._toStore("CostFunctionJbAtCurrentOptimum"):
+                selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJb"][IndexMin] )
+            if selfA._toStore("CostFunctionJoAtCurrentOptimum"):
+                selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJo"][IndexMin] )
+            if selfA._toStore("CostFunctionJAtCurrentOptimum"):
+                selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
+        if selfA._toStore("APosterioriCovariance"):
+            Eai = (1/numpy.sqrt(__m-1)) * (Xn - Xa.reshape((__n,-1))) # Anomalies
+            Pn = Eai @ Eai.T
+            Pn = 0.5 * (Pn + Pn.T)
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+        if selfA._parameters["EstimationOf"] == "Parameters" \
+            and J < previousJMinimum:
+            previousJMinimum    = J
+            XaMin               = Xa
+            if selfA._toStore("APosterioriCovariance"):
+                covarianceXaMin = Pn
+    #
+    # Stockage final supplémentaire de l'optimum en estimation de paramètres
+    # ----------------------------------------------------------------------
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["Analysis"].store( XaMin )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )
+        if selfA._toStore("BMA"):
+            selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(XaMin) )
+    #
+    return 0
+
+# ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')
