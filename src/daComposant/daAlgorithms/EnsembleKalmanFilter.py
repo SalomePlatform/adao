@@ -50,6 +50,51 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
+            name     = "InflationType",
+            default  = "MultiplicativeOnAnalysisCovariance",
+            typecast = str,
+            message  = "Méthode d'inflation d'ensemble",
+            listval  = [
+                "MultiplicativeOnAnalysisCovariance",
+                "MultiplicativeOnBackgroundCovariance",
+                "MultiplicativeOnAnalysisAnomalies",
+                "MultiplicativeOnBackgroundAnomalies",
+                "AdditiveOnBackgroundCovariance",
+                "AdditiveOnAnalysisCovariance",
+                "HybridOnBackgroundCovariance",
+                ],
+            )
+        self.defineRequiredParameter(
+            name     = "InflationFactor",
+            default  = 1.,
+            typecast = float,
+            message  = "Facteur d'inflation",
+            minval   = 0.,
+            )
+        self.defineRequiredParameter(
+            name     = "LocalizationType",
+            default  = "SchurLocalization",
+            typecast = str,
+            message  = "Méthode d'inflation d'ensemble",
+            listval  = [
+                "CovarianceLocalization",
+                "DomainLocalization",
+                "SchurLocalization",
+                "GaspariCohnLocalization",
+                ],
+            )
+        self.defineRequiredParameter(
+            name     = "LocalizationFactor",
+            default  = 1.,
+            typecast = float,
+            message  = "Facteur de localisation",
+            minval   = 0.,
+            )
+        self.defineRequiredParameter( # Pas de type
+            name     = "LocalizationMatrix",
+            message  = "Matrice de localisation ou de distances",
+            )
+        self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",

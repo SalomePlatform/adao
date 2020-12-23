@@ -508,6 +508,71 @@ def mmqr(
     return variables, Ecart, [n,p,iteration,increment,0]
 
 # ==============================================================================
+def CovarianceInflation(
+        InputCovOrEns,
+        InflationType   = None,
+        InflationFactor = None,
+        BackgroundCov   = None,
+        ):
+    """
+    Inflation applicable soit sur Pb ou Pa, soit sur les ensembles EXb ou EXa
+
+    Synthèse : Hunt 2007, section 2.3.5
+    """
+    if InflationFactor is None:
+        return InputCovOrEns
+    else:
+        InflationFactor = float(InflationFactor)
+    #
+    if InflationType in ["MultiplicativeOnAnalysisCovariance", "MultiplicativeOnBackgroundCovariance"]:
+        if InflationFactor < 1.:
+            raise ValueError("Inflation factor for multiplicative inflation has to be greater or equal than 1.")
+        if InflationFactor < 1.+mpr:
+            return InputCovOrEns
+        OutputCovOrEns = InflationFactor**2 * InputCovOrEns
+    #
+    elif InflationType in ["MultiplicativeOnAnalysisAnomalies", "MultiplicativeOnBackgroundAnomalies"]:
+        if InflationFactor < 1.:
+            raise ValueError("Inflation factor for multiplicative inflation has to be greater or equal than 1.")
+        if InflationFactor < 1.+mpr:
+            return InputCovOrEns
+        InputCovOrEnsMean = InputCovOrEns.mean(axis=1, dtype=mfp).astype('float')
+        OutputCovOrEns = InputCovOrEnsMean[:,numpy.newaxis] \
+            + InflationFactor * (InputCovOrEns - InputCovOrEnsMean[:,numpy.newaxis])
+    #
+    elif InflationType in ["AdditiveOnBackgroundCovariance", "AdditiveOnAnalysisCovariance"]:
+        if InflationFactor < 0.:
+            raise ValueError("Inflation factor for additive inflation has to be greater or equal than 0.")
+        if InflationFactor < mpr:
+            return InputCovOrEns
+        __n, __m = numpy.asarray(InputCovOrEns).shape
+        if __n != __m:
+            raise ValueError("Additive inflation can only be applied to squared (covariance) matrix.")
+        OutputCovOrEns = (1. - InflationFactor) * InputCovOrEns + InflationFactor * numpy.eye(__n)
+    #
+    elif InflationType == "HybridOnBackgroundCovariance":
+        if InflationFactor < 0.:
+            raise ValueError("Inflation factor for hybrid inflation has to be greater or equal than 0.")
+        if InflationFactor < mpr:
+            return InputCovOrEns
+        __n, __m = numpy.asarray(InputCovOrEns).shape
+        if __n != __m:
+            raise ValueError("Additive inflation can only be applied to squared (covariance) matrix.")
+        if BackgroundCov is None:
+            raise ValueError("Background covariance matrix B has to be given for hybrid inflation.")
+        if InputCovOrEns.shape != BackgroundCov.shape:
+            raise ValueError("Ensemble covariance matrix has to be of same size than background covariance matrix B.")
+        OutputCovOrEns = (1. - InflationFactor) * InputCovOrEns + InflationFactor * BackgroundCov
+    #
+    elif InflationType == "Relaxation":
+        raise NotImplementedError("InflationType Relaxation")
+    #
+    else:
+        raise ValueError("Error in inflation type, '%s' is not a valid keyword."%InflationType)
+    #
+    return OutputCovOrEns
+
+# ==============================================================================
 def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
     Stochastic EnKF (Envensen 1994, Burgers 1998)
@@ -590,6 +655,12 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         else:
             Un = None
         #
+        if selfA._parameters["InflationType"] == "MultiplicativeOnBackgroundAnomalies":
+            Xn = CovarianceInflation( Xn,
+                selfA._parameters["InflationType"],
+                selfA._parameters["InflationFactor"],
+                )
+        #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
             for i in range(__m):
                 qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
@@ -622,6 +693,12 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         for i in range(__m):
             ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn, (1,1,1))).T
             Xn[:,i] = Xn_predicted[:,i] + K * (Ynpu + ri - HX_predicted[:,i])
+        #
+        if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
+            Xn = CovarianceInflation( Xn,
+                selfA._parameters["InflationType"],
+                selfA._parameters["InflationFactor"],
+                )
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
         #
@@ -797,6 +874,12 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         else:
             Un = None
         #
+        if selfA._parameters["InflationType"] == "MultiplicativeOnBackgroundAnomalies":
+            Xn = CovarianceInflation( Xn,
+                selfA._parameters["InflationType"],
+                selfA._parameters["InflationFactor"],
+                )
+        #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
             for i in range(__m):
                 qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
@@ -827,6 +910,12 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         mU    = numpy.eye(__m)
         #
         Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
+        #
+        if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
+            Xn = CovarianceInflation( Xn,
+                selfA._parameters["InflationType"],
+                selfA._parameters["InflationFactor"],
+                )
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
         #
