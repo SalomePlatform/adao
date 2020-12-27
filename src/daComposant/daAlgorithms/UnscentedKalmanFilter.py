@@ -102,7 +102,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste des valeurs de bornes",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
             optional = ("U", "EM", "CM", "Q"),
             )
         self.setAttributes(tags=(
@@ -178,14 +178,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:                         Pn = B
         #
         if len(self.StoredVariables["Analysis"])==0 or not self._parameters["nextStep"]:
-            self.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["Analysis"]) )
+            self.StoredVariables["Analysis"].store( numpy.ravel(Xn) )
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn )
                 covarianceXa = Pn
+                if self._parameters["EstimationOf"] == "Parameters":
+                    covarianceXaMin = Pn
         #
-        Xa               = Xb
-        XaMin            = Xb
-        previousJMinimum = numpy.finfo(float).max
+        if self._parameters["EstimationOf"] == "Parameters":
+            XaMin            = Xn
+            previousJMinimum = numpy.finfo(float).max
         #
         for step in range(duration-1):
             if hasattr(Y,"store"):

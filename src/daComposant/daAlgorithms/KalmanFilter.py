@@ -131,9 +131,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if self._toStore("APosterioriCovariance"):
                 self.StoredVariables["APosterioriCovariance"].store( Pn.asfullmatrix(Xn.size) )
                 covarianceXa = Pn
+                if self._parameters["EstimationOf"] == "Parameters":
+                    covarianceXaMin = Pn
         #
-        Xa               = Xn
-        previousJMinimum = numpy.finfo(float).max
+        if self._parameters["EstimationOf"] == "Parameters":
+            XaMin            = Xn
+            previousJMinimum = numpy.finfo(float).max
         #
         for step in range(duration-1):
             if hasattr(Y,"store"):
