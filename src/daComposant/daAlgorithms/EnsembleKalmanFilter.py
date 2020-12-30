@@ -33,7 +33,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "StochasticEnKF",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["StochasticEnKF",  "DeterministicEnKF", "ETKF"],
+            listval  = [
+                "StochasticEnKF",
+                "ETKF",
+                "ETKF-KFF",
+                ],
             )
         self.defineRequiredParameter(
             name     = "NumberOfMembers",
@@ -152,8 +156,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if self._parameters["Minimizer"] == "StochasticEnKF":
             NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
-        elif self._parameters["Minimizer"] in ["DeterministicEnKF", "ETKF"]:
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        elif self._parameters["Minimizer"] in ["ETKF", "ETKF-KFF"]:
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula")
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #

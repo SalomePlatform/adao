@@ -791,7 +791,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
-def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
     """
     Ensemble-Transform EnKF (ETKF or Deterministic EnKF: Bishop 2001, Hunt 2007)
 
@@ -832,7 +832,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         or selfA._toStore("APosterioriCovariance"):
         BI = B.getI()
         RI = R.getI()
-    RIdemi = R.choleskyI()
     #
     # Initialisation
     # --------------
@@ -898,18 +897,25 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
         Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
         #
-        EaX   = (Xn_predicted - Xfm.reshape((__n,-1))) / numpy.sqrt(__m-1)
-        EaHX  = (HX_predicted - Hfm.reshape((__p,-1))) / numpy.sqrt(__m-1)
+        EaX   = (Xn_predicted - Xfm.reshape((__n,-1)))
+        EaHX  = (HX_predicted - Hfm.reshape((__p,-1)))
         #
-        mS    = RIdemi * EaHX
-        delta = RIdemi * ( Ynpu.reshape((__p,-1)) - Hfm.reshape((__p,-1)) )
-        mT    = numpy.linalg.inv( numpy.eye(__m) + mS.T @ mS )
-        vw    = mT @ mS.transpose() @ delta
-        #
-        Tdemi = numpy.linalg.cholesky(mT)
-        mU    = numpy.eye(__m)
-        #
-        Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
+        #--------------------------
+        if KorV == "KalmanFilterFormula":
+            EaX    = EaX / numpy.sqrt(__m-1)
+            RIdemi = R.choleskyI()
+            mS    = RIdemi * EaHX / numpy.sqrt(__m-1)
+            delta = RIdemi * ( Ynpu.reshape((__p,-1)) - Hfm.reshape((__p,-1)) )
+            mT    = numpy.linalg.inv( numpy.eye(__m) + mS.T @ mS )
+            vw    = mT @ mS.transpose() @ delta
+            #
+            Tdemi = numpy.real(scipy.linalg.sqrtm(mT))
+            mU    = numpy.eye(__m)
+            #
+            Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
+        #--------------------------
+        else:
+            raise ValueError("KorV has to be chosen as either \"KalmanFilterFormula\" or \"Variational\".")
         #
         if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
             Xn = CovarianceInflation( Xn,
@@ -918,6 +924,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 )
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \

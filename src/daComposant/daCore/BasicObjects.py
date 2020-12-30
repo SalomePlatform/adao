@@ -1826,6 +1826,30 @@ class Covariance(object):
         elif self.isobject() and hasattr(self.__C,"choleskyI"):
             return Covariance(self.__name+"H", asCovObject   = self.__C.choleskyI() )
 
+    def sqrtm(self):
+        "Racine carrée matricielle"
+        if   self.ismatrix():
+            import scipy
+            return Covariance(self.__name+"C", asCovariance  = scipy.linalg.sqrtm(self.__C) )
+        elif self.isvector():
+            return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__C ) )
+        elif self.isscalar():
+            return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C,"sqrt"):
+            return Covariance(self.__name+"C", asCovObject   = self.__C.sqrt() )
+
+    def sqrtmI(self):
+        "Inversion de la racine carrée matricielle"
+        if   self.ismatrix():
+            import scipy
+            return Covariance(self.__name+"H", asCovariance  = scipy.linalg.sqrtm(self.__C).I )
+        elif self.isvector():
+            return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
+        elif self.isscalar():
+            return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C,"sqrtI"):
+            return Covariance(self.__name+"H", asCovObject   = self.__C.sqrtI() )
+
     def diag(self, msize=None):
         "Diagonale de la matrice"
         if   self.ismatrix():
