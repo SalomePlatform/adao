@@ -26,7 +26,7 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import os, time, copy, types, sys, logging
-import math, numpy, scipy
+import math, numpy, scipy, scipy.optimize
 from daCore.BasicObjects import Operator
 from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
@@ -913,6 +913,30 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             mU    = numpy.eye(__m)
             #
             Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
+        #--------------------------
+        elif KorV == "Variational":
+            RI     = R.getI()
+            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            def CostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _J  = 0.5 * (__m-1) * w.T @ w + 0.5 * _A.T * RI * _A
+                return float(_J)
+            def GradientOfCostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _GradJ = (__m-1) * w.reshape((__m,1)) - EaHX.T * RI * _A
+                return numpy.ravel(_GradJ)
+            vw = scipy.optimize.fmin_cg(
+                f           = CostFunction,
+                x0          = numpy.zeros(__m),
+                fprime      = GradientOfCostFunction,
+                args        = (),
+                disp        = False,
+                )
+            #
+            Pta = numpy.linalg.inv( (__m-1)*numpy.eye(__m) + EaHX.T * RI * EaHX )
+            EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
+            #
+            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
         else:
             raise ValueError("KorV has to be chosen as either \"KalmanFilterFormula\" or \"Variational\".")
