@@ -94,15 +94,19 @@ class Test_Adao(unittest.TestCase):
             backends_KO = []
             backend_now = matplotlib.get_backend()
 
-            for backend in ['bidon', 'pdf', 'pgf', 'Qt4Agg', 'GTK', 'GTKAgg', 'ps',
-                            'agg', 'cairo', 'MacOSX', 'GTKCairo', 'WXAgg',
-                            'template', 'TkAgg', 'GTK3Cairo', 'GTK3Agg', 'svg',
-                            'WebAgg', 'CocoaAgg', 'emf', 'gdk', 'WX']:
+            for backend in ['bidon', 'MacOSX', 'Qt5Agg', 'GTK3Agg', 'TkAgg', 'WxAgg', 'Agg',
+                            'Qt5', 'Qt5Cairo', 'GTK3Cairo', 'TkCairo', 'WxCairo', 'Cairo',
+                            'ps', 'pdf', 'svg', 'Template', 'WebAgg',
+                            'Qt4', 'Qt4Agg', 'Qt4Cairo', 'Wx', 'pgf', 'GTK',
+                            'GTKAgg', 'GTKCairo', 'Cocoa', 'CocoaAgg', 'emf', 'gdk',
+                           ]:
                 try:
                     matplotlib.use(backend)
                     backends_OK.append(backend)
                 except ValueError:
                     backends_KO.append(backend)
+            backends_OK.sort()
+            backends_KO.sort()
             #
             print("  Backends disponibles pour Matplotlib %s :"%mplversion)
             print("    Defaut initial......: '%s'"%backend_now)

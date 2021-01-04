@@ -963,6 +963,20 @@ class Algorithm(object):
             self.__elapsed_time = time.perf_counter() - self.__initial_elapsed_time
             return self.__cpu_time, self.__elapsed_time
 
+    def _StopOnTimeLimit(self, X=None, withReason=False):
+        "Stop criteria on time limit: True/False [+ Reason]"
+        c, e = self._getTimeState()
+        if "MaximumCpuTime" in self._parameters and c > self._parameters["MaximumCpuTime"]:
+            __SC, __SR = True, "Reached maximum CPU time (%.1fs > %.1fs)"%(c, self._parameters["MaximumCpuTime"])
+        elif "MaximumElapsedTime" in self._parameters and e > self._parameters["MaximumElapsedTime"]:
+            __SC, __SR = True, "Reached maximum elapsed time (%.1fs > %.1fs)"%(e, self._parameters["MaximumElapsedTime"])
+        else:
+            __SC, __SR = False, ""
+        if withReason:
+            return __SC, __SR
+        else:
+            return __SC
+
 # ==============================================================================
 class AlgorithmAndParameters(object):
     """
