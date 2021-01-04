@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2020 EDF R&D
+# Copyright (C) 2008-2021 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
 if(ADAO_SALOME_MODULE)
 
   install(FILES ADAOGUI.py ADAO.py DESTINATION ${ADAO_SCRIPT_PYTHON_SALOME})
-  
+
 else(ADAO_SALOME_MODULE)
 
   install(FILES daUtils/__init__.py daUtils/adaoEficasEvent.py daUtils/adaoLogger.py daUtils/enumerate.py DESTINATION "${ADAO_SCRIPT_PYTHON}/adao/daUtils")
