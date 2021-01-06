@@ -880,18 +880,22 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
                 )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
+            EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
             for i in range(__m):
                 qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
-                Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( M((Xn[:,i], Un)) )).T + qi
-                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+                Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( EMX[i] )).T + qi
+            EHX = H( [(Xn_predicted[:,i], Un) for i in range(__m)], argsAsSerie = True )
+            for i in range(__m):
+                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( EHX[i] )).T
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
+            EHX = H( [(Xn_predicted[:,i], Un) for i in range(__m)], argsAsSerie = True )
             for i in range(__m):
-                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( EHX[i] )).T
         #
         # Mean of forecast and observation of forecast
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')

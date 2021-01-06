@@ -266,28 +266,28 @@ class Operator(object):
         PlatformInfo.isIterable( _xuValue, True, " in Operator.appliedControledFormTo" )
         #
         if self.__Matrix is not None:
-            HxValue = []
+            _HxValue = []
             for paire in _xuValue:
                 _xValue, _uValue = paire
                 self.__addOneMatrixCall()
-                HxValue.append( self.__Matrix * _xValue )
+                _HxValue.append( self.__Matrix * _xValue )
         else:
-            HxValue = []
+            _HxValue = []
+            _xuArgs = []
             for paire in _xuValue:
-                _xuValue = []
                 _xValue, _uValue = paire
                 if _uValue is not None:
-                    _xuValue.append( paire )
+                    _xuArgs.append( paire )
                 else:
-                    _xuValue.append( _xValue )
-            self.__addOneMethodCall( len(_xuValue) )
+                    _xuArgs.append( _xValue )
+            self.__addOneMethodCall( len(_xuArgs) )
             if self.__extraArgs is None:
-                HxValue = self.__Method( _xuValue ) # Calcul MF
+                _HxValue = self.__Method( _xuArgs ) # Calcul MF
             else:
-                HxValue = self.__Method( _xuValue, self.__extraArgs ) # Calcul MF
+                _HxValue = self.__Method( _xuArgs, self.__extraArgs ) # Calcul MF
         #
-        if argsAsSerie: return HxValue
-        else:           return HxValue[-1]
+        if argsAsSerie: return _HxValue
+        else:           return _HxValue[-1]
 
     def appliedInXTo(self, paires, argsAsSerie = False):
         """
