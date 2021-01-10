@@ -35,10 +35,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Minimiseur utilisé",
             listval  = [
                 "StochasticEnKF",
-                "ETKF",     # Default ETKF
+                "ETKF",
                 "ETKF-KFF",
                 "ETKF-VAR",
-                "ETKF-N",   # Default ETKF-N
+                "ETKF-N",
                 "ETKF-N-11",
                 "ETKF-N-15",
                 "ETKF-N-16",
@@ -159,15 +159,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
+        #--------------------------
         if self._parameters["Minimizer"] == "StochasticEnKF":
             NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
+        #--------------------------
+        # Default ETKF = ETKF-KFF
         elif self._parameters["Minimizer"] in ["ETKF-KFF", "ETKF"]:
             NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula")
         #
         elif self._parameters["Minimizer"] == "ETKF-VAR":
             NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="Variational")
         #
+        #--------------------------
+        # Default ETKF-N = ETKF-N-16
         elif self._parameters["Minimizer"] == "ETKF-N-11":
             NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize11")
         #

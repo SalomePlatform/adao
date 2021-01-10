@@ -179,7 +179,7 @@ class Operator(object):
         "Renvoie le type"
         return self.__Type
 
-    def appliedTo(self, xValue, HValue = None, argsAsSerie = False):
+    def appliedTo(self, xValue, HValue = None, argsAsSerie = False, returnSerieAsArrayMatrix = False):
         """
         Permet de restituer le résultat de l'application de l'opérateur à une
         série d'arguments xValue. Cette méthode se contente d'appliquer, chaque
@@ -203,13 +203,13 @@ class Operator(object):
         #
         if _HValue is not None:
             assert len(_xValue) == len(_HValue), "Incompatible number of elements in xValue and HValue"
-            HxValue = []
+            _HxValue = []
             for i in range(len(_HValue)):
-                HxValue.append( numpy.asmatrix( numpy.ravel( _HValue[i] ) ).T )
+                _HxValue.append( numpy.asmatrix( numpy.ravel( _HValue[i] ) ).T )
                 if self.__AvoidRC:
-                    Operator.CM.storeValueInX(_xValue[i],HxValue[-1],self.__name)
+                    Operator.CM.storeValueInX(_xValue[i],_HxValue[-1],self.__name)
         else:
-            HxValue = []
+            _HxValue = []
             _xserie = []
             _hindex = []
             for i, xv in enumerate(_xValue):
@@ -230,7 +230,7 @@ class Operator(object):
                         _xserie.append( xv )
                         _hindex.append(  i )
                         _hv = None
-                HxValue.append( _hv )
+                _HxValue.append( _hv )
             #
             if len(_xserie)>0 and self.__Matrix is None:
                 if self.__extraArgs is None:
@@ -242,14 +242,17 @@ class Operator(object):
                 for i in _hindex:
                     _xv = _xserie.pop(0)
                     _hv = _hserie.pop(0)
-                    HxValue[i] = _hv
+                    _HxValue[i] = _hv
                     if self.__AvoidRC:
                         Operator.CM.storeValueInX(_xv,_hv,self.__name)
         #
-        if argsAsSerie: return HxValue
-        else:           return HxValue[-1]
+        if returnSerieAsArrayMatrix:
+            _HxValue = numpy.stack([numpy.ravel(_hv) for _hv in _HxValue], axis=1)
+        #
+        if argsAsSerie: return _HxValue
+        else:           return _HxValue[-1]
 
-    def appliedControledFormTo(self, paires, argsAsSerie = False):
+    def appliedControledFormTo(self, paires, argsAsSerie = False, returnSerieAsArrayMatrix = False):
         """
         Permet de restituer le résultat de l'application de l'opérateur à des
         paires (xValue, uValue). Cette méthode se contente d'appliquer, son
@@ -272,7 +275,6 @@ class Operator(object):
                 self.__addOneMatrixCall()
                 _HxValue.append( self.__Matrix * _xValue )
         else:
-            _HxValue = []
             _xuArgs = []
             for paire in _xuValue:
                 _xValue, _uValue = paire
@@ -286,10 +288,13 @@ class Operator(object):
             else:
                 _HxValue = self.__Method( _xuArgs, self.__extraArgs ) # Calcul MF
         #
+        if returnSerieAsArrayMatrix:
+            _HxValue = numpy.stack([numpy.ravel(_hv) for _hv in _HxValue], axis=1)
+        #
         if argsAsSerie: return _HxValue
         else:           return _HxValue[-1]
 
-    def appliedInXTo(self, paires, argsAsSerie = False):
+    def appliedInXTo(self, paires, argsAsSerie = False, returnSerieAsArrayMatrix = False):
         """
         Permet de restituer le résultat de l'application de l'opérateur à une
         série d'arguments xValue, sachant que l'opérateur est valable en
@@ -310,20 +315,23 @@ class Operator(object):
         PlatformInfo.isIterable( _nxValue, True, " in Operator.appliedInXTo" )
         #
         if self.__Matrix is not None:
-            HxValue = []
+            _HxValue = []
             for paire in _nxValue:
                 _xNominal, _xValue = paire
                 self.__addOneMatrixCall()
-                HxValue.append( self.__Matrix * _xValue )
+                _HxValue.append( self.__Matrix * _xValue )
         else:
             self.__addOneMethodCall( len(_nxValue) )
             if self.__extraArgs is None:
-                HxValue = self.__Method( _nxValue ) # Calcul MF
+                _HxValue = self.__Method( _nxValue ) # Calcul MF
             else:
-                HxValue = self.__Method( _nxValue, self.__extraArgs ) # Calcul MF
+                _HxValue = self.__Method( _nxValue, self.__extraArgs ) # Calcul MF
         #
-        if argsAsSerie: return HxValue
-        else:           return HxValue[-1]
+        if returnSerieAsArrayMatrix:
+            _HxValue = numpy.stack([numpy.ravel(_hv) for _hv in _HxValue], axis=1)
+        #
+        if argsAsSerie: return _HxValue
+        else:           return _HxValue[-1]
 
     def asMatrix(self, ValueForMethodForm = "UnknownVoidValue", argsAsSerie = False):
         """
