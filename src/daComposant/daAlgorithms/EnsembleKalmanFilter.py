@@ -38,6 +38,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ETKF",     # Default ETKF
                 "ETKF-KFF",
                 "ETKF-VAR",
+                "ETKF-N",   # Default ETKF-N
+                "ETKF-N-11",
+                "ETKF-N-15",
+                "ETKF-N-16",
                 ],
             )
         self.defineRequiredParameter(
@@ -163,6 +167,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         elif self._parameters["Minimizer"] == "ETKF-VAR":
             NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="Variational")
+        #
+        elif self._parameters["Minimizer"] == "ETKF-N-11":
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize11")
+        #
+        elif self._parameters["Minimizer"] == "ETKF-N-15":
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize15")
+        #
+        elif self._parameters["Minimizer"] in ["ETKF-N-16", "ETKF-N"]:
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize16")
+        #
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #

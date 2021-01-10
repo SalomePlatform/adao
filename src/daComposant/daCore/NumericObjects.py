@@ -832,6 +832,10 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
         or selfA._toStore("APosterioriCovariance"):
         BI = B.getI()
         RI = R.getI()
+    elif KorV != "KalmanFilterFormula":
+        RI = R.getI()
+    if KorV == "KalmanFilterFormula":
+        RIdemi = R.choleskyI()
     #
     # Initialisation
     # --------------
@@ -907,7 +911,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
         #--------------------------
         if KorV == "KalmanFilterFormula":
             EaX    = EaX / numpy.sqrt(__m-1)
-            RIdemi = R.choleskyI()
             mS    = RIdemi * EaHX / numpy.sqrt(__m-1)
             delta = RIdemi * ( Ynpu.reshape((__p,-1)) - Hfm.reshape((__p,-1)) )
             mT    = numpy.linalg.inv( numpy.eye(__m) + mS.T @ mS )
@@ -919,15 +922,18 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
         #--------------------------
         elif KorV == "Variational":
-            RI     = R.getI()
             HXfm = H((Xfm, Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _J  = 0.5 * (__m-1) * w.T @ w + 0.5 * _A.T * RI * _A
+                _Jo = 0.5 * _A.T * RI * _A
+                _Jb = 0.5 * (__m-1) * w.T @ w
+                _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _GradJ = (__m-1) * w.reshape((__m,1)) - EaHX.T * RI * _A
+                _GardJo = - EaHX.T * RI * _A
+                _GradJb = (__m-1) * w.reshape((__m,1))
+                _GradJ  = _GardJo + _GradJb
                 return numpy.ravel(_GradJ)
             vw = scipy.optimize.fmin_cg(
                 f           = CostFunction,
@@ -937,13 +943,116 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Pta = numpy.linalg.inv( (__m-1)*numpy.eye(__m) + EaHX.T * RI * EaHX )
+            Hto = EaHX.T * RI * EaHX
+            Htb = (__m-1) * numpy.eye(__m)
+            Hta = Hto + Htb
+            #
+            Pta = numpy.linalg.inv( Hta )
+            EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
+            #
+            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+        #--------------------------
+        elif KorV == "FiniteSize11": # Jauge Boc2011
+            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            def CostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _Jo = 0.5 * _A.T * RI * _A
+                _Jb = 0.5 * __m * math.log(1 + 1/__m + w.T @ w)
+                _J  = _Jo + _Jb
+                return float(_J)
+            def GradientOfCostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _GardJo = - EaHX.T * RI * _A
+                _GradJb = __m * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w)
+                _GradJ  = _GardJo + _GradJb
+                return numpy.ravel(_GradJ)
+            vw = scipy.optimize.fmin_cg(
+                f           = CostFunction,
+                x0          = numpy.zeros(__m),
+                fprime      = GradientOfCostFunction,
+                args        = (),
+                disp        = False,
+                )
+            #
+            Hto = EaHX.T * RI * EaHX
+            Htb = __m * \
+                ( (1 + 1/__m + vw.T @ vw) * numpy.eye(__m) - 2 * vw @ vw.T ) \
+                / (1 + 1/__m + vw.T @ vw)**2
+            Hta = Hto + Htb
+            #
+            Pta = numpy.linalg.inv( Hta )
+            EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
+            #
+            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+        #--------------------------
+        elif KorV == "FiniteSize15": # Jauge Boc2015
+            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            def CostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _Jo = 0.5 * _A.T * RI * _A
+                _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w)
+                _J  = _Jo + _Jb
+                return float(_J)
+            def GradientOfCostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _GardJo = - EaHX.T * RI * _A
+                _GradJb = (__m+1) * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w)
+                _GradJ  = _GardJo + _GradJb
+                return numpy.ravel(_GradJ)
+            vw = scipy.optimize.fmin_cg(
+                f           = CostFunction,
+                x0          = numpy.zeros(__m),
+                fprime      = GradientOfCostFunction,
+                args        = (),
+                disp        = False,
+                )
+            #
+            Hto = EaHX.T * RI * EaHX
+            Htb = (__m+1) * \
+                ( (1 + 1/__m + vw.T @ vw) * numpy.eye(__m) - 2 * vw @ vw.T ) \
+                / (1 + 1/__m + vw.T @ vw)**2
+            Hta = Hto + Htb
+            #
+            Pta = numpy.linalg.inv( Hta )
+            EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
+            #
+            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+        #--------------------------
+        elif KorV == "FiniteSize16": # Jauge Boc2016
+            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            def CostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _Jo = 0.5 * _A.T * RI * _A
+                _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w / (__m-1))
+                _J  = _Jo + _Jb
+                return float(_J)
+            def GradientOfCostFunction(w):
+                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _GardJo = - EaHX.T * RI * _A
+                _GradJb = ((__m+1) / (__m-1)) * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w / (__m-1))
+                _GradJ  = _GardJo + _GradJb
+                return numpy.ravel(_GradJ)
+            vw = scipy.optimize.fmin_cg(
+                f           = CostFunction,
+                x0          = numpy.zeros(__m),
+                fprime      = GradientOfCostFunction,
+                args        = (),
+                disp        = False,
+                )
+            #
+            Hto = EaHX.T * RI * EaHX
+            Htb = ((__m+1) / (__m-1)) * \
+                ( (1 + 1/__m + vw.T @ vw / (__m-1)) * numpy.eye(__m) - 2 * vw @ vw.T / (__m-1) ) \
+                / (1 + 1/__m + vw.T @ vw / (__m-1))**2
+            Hta = Hto + Htb
+            #
+            Pta = numpy.linalg.inv( Hta )
             EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
             #
             Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
         else:
-            raise ValueError("KorV has to be chosen as either \"KalmanFilterFormula\" or \"Variational\".")
+            raise ValueError("KorV has to be chosen in the authorized methods list.")
         #
         if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
             Xn = CovarianceInflation( Xn,
