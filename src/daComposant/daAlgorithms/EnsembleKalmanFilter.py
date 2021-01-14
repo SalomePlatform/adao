@@ -44,6 +44,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ETKF-N-16",
                 "MLEF",
                 "MLEF-B",
+                "MLEF-T",
                 ],
             )
         self.defineRequiredParameter(
@@ -188,6 +189,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Default MLEF = MLEF-B
         elif self._parameters["Minimizer"] in ["MLEF-B", "MLEF"]:
             NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
+        #
+        elif self._parameters["Minimizer"] == "MLEF-T":
+            NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
         #
         #--------------------------
         else:

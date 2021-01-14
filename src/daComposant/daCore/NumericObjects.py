@@ -1262,6 +1262,8 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
             #
             if BnotT:
                 EE = vx.reshape((__n,-1)) + _epsilon * EaX # 7:
+            else:
+                EE = vx.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta # 8:
             #
             EZ = H( [(EE[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
@@ -1271,6 +1273,8 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
             #
             if BnotT:
                 EY = (EZ - ybar) / _epsilon # 11:
+            else:
+                EY = ( (EZ - ybar) @ numpy.linalg.inv(Ta) ) / numpy.sqrt(__m-1) # 12:
             #
             GradJ = numpy.ravel(vw.reshape((__m,1)) - EY.transpose() @ (RI * (Ynpu - ybar))) # 13:
             mH = numpy.eye(__m) + EY.transpose() @ (RI * EY) # 14:
