@@ -1233,6 +1233,12 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
         else:
             Un = None
         #
+        if selfA._parameters["InflationType"] == "MultiplicativeOnBackgroundAnomalies":
+            Xn = CovarianceInflation( Xn,
+                selfA._parameters["InflationType"],
+                selfA._parameters["InflationFactor"],
+                )
+        #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
             EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
             for i in range(__m):
@@ -1288,6 +1294,12 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
             Ta = numpy.linalg.inv(numpy.real(scipy.linalg.sqrtm( mH ))) # 20:
         #
         Xn = vx.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta @ Ua # 21:
+        #
+        if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
+            Xn = CovarianceInflation( Xn,
+                selfA._parameters["InflationType"],
+                selfA._parameters["InflationFactor"],
+                )
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
         #--------------------------
