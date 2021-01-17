@@ -182,13 +182,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self._toStore("CurrentState") or \
                 self._toStore("CurrentOptimum"):
                 self.StoredVariables["CurrentState"].store( _X )
-            Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
+            Jb  = float( 0.5 * (_X - Xb).T * BI * (_X - Xb) )
             self.DirectCalculation = [None,]
             self.DirectInnovation  = [None,]
             Jo  = 0.
             _Xn = _X
             for step in range(0,duration-1):
-                self.DirectCalculation.append( _Xn )
                 if hasattr(Y,"store"):
                     _Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
                 else:
@@ -210,11 +209,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, None) ) )).T
                 elif self._parameters["EstimationOf"] == "Parameters":
                     _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, _Un) ) )).T - CmUn(_Xn, _Un)
+                #
+                # Stockage de l'état
+                self.DirectCalculation.append( _Xn )
                 self.DirectInnovation.append( _YmHMX )
+                #
                 # Ajout dans la fonctionnelle d'observation
-                Jo = Jo + _YmHMX.T * RI * _YmHMX
-            Jo  = 0.5 * Jo
-            J   = float( Jb ) + float( Jo )
+                Jo = Jo + 0.5 * float( _YmHMX.T * RI * _YmHMX )
+            J = Jb + Jo
             #
             self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             self.StoredVariables["CostFunctionJb"].store( Jb )
@@ -255,8 +257,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 # Calcul du gradient par etat adjoint
                 GradJo = GradJo + Ha * RI * _YmHMX # Equivaut pour Ha lineaire à : Ha( (_Xn, RI * _YmHMX) )
                 GradJo = Ma * GradJo               # Equivaut pour Ma lineaire à : Ma( (_Xn, GradJo) )
-            GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) - numpy.ravel( GradJo ) ).T
-            return GradJ.A1
+            GradJ = numpy.ravel( GradJb ) - numpy.ravel( GradJo )
+            return GradJ
         #
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------

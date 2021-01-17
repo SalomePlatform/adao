@@ -662,27 +662,31 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
+            EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
             for i in range(__m):
-                qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
-                Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( M((Xn[:,i], Un)) )).T + qi
-                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+                qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn)
+                Xn_predicted[:,i] = (numpy.ravel( EMX[i] ) + qi).reshape((__n,-1))
+            HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
-            for i in range(__m):
-                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( H((Xn_predicted[:,i], Un)) )).T
+            HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
         #
         # Mean of forecast and observation of forecast
-        Xfm  = numpy.asmatrix(numpy.ravel(Xn_predicted.mean(axis=1, dtype=mfp).astype('float'))).T
-        Hfm  = numpy.asmatrix(numpy.ravel(HX_predicted.mean(axis=1, dtype=mfp).astype('float'))).T
+        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
+        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
         #
         PfHT, HPfHT = 0., 0.
         for i in range(__m):
-            Exfi = Xn_predicted[:,i] - Xfm
-            Eyfi = HX_predicted[:,i] - Hfm
+            Exfi = Xn_predicted[:,i] - Xfm.reshape((__n,-1))
+            Eyfi = (HX_predicted[:,i] - Hfm).reshape((__p,1))
             PfHT  += Exfi * Eyfi.T
             HPfHT += Eyfi * Eyfi.T
         PfHT  = (1./(__m-1)) * PfHT
@@ -691,8 +695,8 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         del PfHT, HPfHT
         #
         for i in range(__m):
-            ri = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__p), Rn, (1,1,1))).T
-            Xn[:,i] = Xn_predicted[:,i] + K * (Ynpu + ri - HX_predicted[:,i])
+            ri = numpy.random.multivariate_normal(numpy.zeros(__p), Rn)
+            Xn[:,i] = Xn_predicted[:,i] + K @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i]).reshape((__p,1))
         #
         if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
             Xn = CovarianceInflation( Xn,
@@ -886,27 +890,27 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
             EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
             for i in range(__m):
-                qi = numpy.asmatrix(numpy.random.multivariate_normal(numpy.zeros(__n), Qn, (1,1,1))).T
-                Xn_predicted[:,i] = numpy.asmatrix(numpy.ravel( EMX[i] )).T + qi
-            EHX = H( [(Xn_predicted[:,i], Un) for i in range(__m)], argsAsSerie = True )
-            for i in range(__m):
-                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( EHX[i] )).T
+                qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn)
+                Xn_predicted[:,i] = (numpy.ravel( EMX[i] ) + qi).reshape((__n,-1))
+            HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
-            EHX = H( [(Xn_predicted[:,i], Un) for i in range(__m)], argsAsSerie = True )
-            for i in range(__m):
-                HX_predicted[:,i] = numpy.asmatrix(numpy.ravel( EHX[i] )).T
+            HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
         #
         # Mean of forecast and observation of forecast
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
         Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
         #
-        EaX   = (Xn_predicted - Xfm.reshape((__n,-1)))
-        EaHX  = (HX_predicted - Hfm.reshape((__p,-1)))
+        EaX   = numpy.matrix(Xn_predicted - Xfm.reshape((__n,-1)))
+        EaHX  = numpy.matrix(HX_predicted - Hfm.reshape((__p,-1)))
         #
         #--------------------------
         if KorV == "KalmanFilterFormula":
