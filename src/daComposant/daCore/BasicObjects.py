@@ -850,7 +850,7 @@ class Algorithm(object):
         """
         raise NotImplementedError("Mathematical assimilation calculation has not been implemented!")
 
-    def defineRequiredParameter(self, name = None, default = None, typecast = None, message = None, minval = None, maxval = None, listval = None):
+    def defineRequiredParameter(self, name = None, default = None, typecast = None, message = None, minval = None, maxval = None, listval = None, listadv = None):
         """
         Permet de définir dans l'algorithme des paramètres requis et leurs
         caractéristiques par défaut.
@@ -864,6 +864,7 @@ class Algorithm(object):
             "minval"   : minval,
             "maxval"   : maxval,
             "listval"  : listval,
+            "listadv"  : listadv,
             "message"  : message,
             }
         self.__canonical_parameter_name[name.lower()] = name
@@ -889,6 +890,7 @@ class Algorithm(object):
         minval   = self.__required_parameters[__k]["minval"]
         maxval   = self.__required_parameters[__k]["maxval"]
         listval  = self.__required_parameters[__k]["listval"]
+        listadv  = self.__required_parameters[__k]["listadv"]
         #
         if value is None and default is None:
             __val = None
@@ -907,12 +909,14 @@ class Algorithm(object):
             raise ValueError("The parameter named '%s' of value '%s' can not be less than %s."%(__k, __val, minval))
         if maxval is not None and (numpy.array(__val, float) > maxval).any():
             raise ValueError("The parameter named '%s' of value '%s' can not be greater than %s."%(__k, __val, maxval))
-        if listval is not None:
+        if listval is not None or listadv is not None:
             if typecast is list or typecast is tuple or isinstance(__val,list) or isinstance(__val,tuple):
                 for v in __val:
-                    if v not in listval:
+                    if listval is not None and v in listval: continue
+                    elif listadv is not None and v in listadv: continue
+                    else:
                         raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%(v, __k, listval))
-            elif __val not in listval:
+            elif not (listval is not None and __val in listval) and not (listadv is not None and __val in listadv):
                 raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%( __val, __k,listval))
         #
         return __val
