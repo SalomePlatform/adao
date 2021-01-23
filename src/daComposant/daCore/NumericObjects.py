@@ -626,7 +626,7 @@ def CovarianceInflation(
     return OutputCovOrEns
 
 # ==============================================================================
-def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     """
     Stochastic EnKF (Envensen 1994, Burgers 1998)
 
@@ -736,20 +736,25 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
         Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
         #
-        PfHT, HPfHT = 0., 0.
-        for i in range(__m):
-            Exfi = Xn_predicted[:,i] - Xfm.reshape((__n,-1))
-            Eyfi = (HX_predicted[:,i] - Hfm).reshape((__p,1))
-            PfHT  += Exfi * Eyfi.T
-            HPfHT += Eyfi * Eyfi.T
-        PfHT  = (1./(__m-1)) * PfHT
-        HPfHT = (1./(__m-1)) * HPfHT
-        K     = PfHT * ( R + HPfHT ).I
-        del PfHT, HPfHT
-        #
-        for i in range(__m):
-            ri = numpy.random.multivariate_normal(numpy.zeros(__p), Rn)
-            Xn[:,i] = Xn_predicted[:,i] + K @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i]).reshape((__p,1))
+        #--------------------------
+        if VariantM == "KalmanFilterFormula":
+            PfHT, HPfHT = 0., 0.
+            for i in range(__m):
+                Exfi = Xn_predicted[:,i] - Xfm.reshape((__n,-1))
+                Eyfi = (HX_predicted[:,i] - Hfm).reshape((__p,1))
+                PfHT  += Exfi * Eyfi.T
+                HPfHT += Eyfi * Eyfi.T
+            PfHT  = (1./(__m-1)) * PfHT
+            HPfHT = (1./(__m-1)) * HPfHT
+            K     = PfHT * ( R + HPfHT ).I
+            del PfHT, HPfHT
+            #
+            for i in range(__m):
+                ri = numpy.random.multivariate_normal(numpy.zeros(__p), Rn)
+                Xn[:,i] = Xn_predicted[:,i] + K @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i]).reshape((__p,1))
+        #--------------------------
+        else:
+            raise ValueError("VariantM has to be chosen in the authorized methods list.")
         #
         if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
             Xn = CovarianceInflation( Xn,

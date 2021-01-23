@@ -167,7 +167,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         # Default EnKF = StochasticEnKF
         if self._parameters["Minimizer"] in ["StochasticEnKF", "EnKF"]:
-            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula")
         #
         #--------------------------
         # Default ETKF = ETKF-KFF
