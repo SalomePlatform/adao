@@ -508,6 +508,59 @@ def mmqr(
     return variables, Ecart, [n,p,iteration,increment,0]
 
 # ==============================================================================
+def BackgroundEnsembleGeneration( _bgcenter, _bgcovariance, _nbmembers, _withSVD = True):
+    "Génération d'un ensemble d'ébauches aléatoires de taille _nbmembers-1"
+    def __CenteredRandomAnomalies(Zr, N):
+        """
+        Génère une matrice de N anomalies aléatoires centrées sur Zr selon les
+        notes manuscrites de MB et conforme au code de PS avec eps = -1
+        """
+        eps = -1
+        Q = numpy.eye(N-1)-numpy.ones((N-1,N-1))/numpy.sqrt(N)/(numpy.sqrt(N)-eps)
+        Q = numpy.concatenate((Q, [eps*numpy.ones(N-1)/numpy.sqrt(N)]), axis=0)
+        R, _ = numpy.linalg.qr(numpy.random.normal(size = (N-1,N-1)))
+        Q = numpy.dot(Q,R)
+        Zr = numpy.dot(Q,Zr)
+        return Zr.T
+    #
+    if _nbmembers < 1:
+        raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(_nbmembers),))
+    if _bgcovariance is None:
+        BackgroundEnsemble = numpy.tile( numpy.ravel(_bgcenter)[:,None], _nbmembers)
+    else:
+        if _withSVD:
+            U, s, V = numpy.linalg.svd(_bgcovariance, full_matrices=False)
+            _nbctl = numpy.ravel(_bgcenter).size
+            if _nbmembers > _nbctl:
+                _Z = numpy.concatenate((numpy.dot(
+                    numpy.diag(numpy.sqrt(s[:_nbctl])), V[:_nbctl]),
+                    numpy.random.multivariate_normal(numpy.zeros(_nbctl),_bgcovariance,_nbmembers-1-_nbctl)), axis = 0)
+            else:
+                _Z = numpy.dot(numpy.diag(numpy.sqrt(s[:_nbmembers-1])), V[:_nbmembers-1])
+            _Zca = __CenteredRandomAnomalies(_Z, _nbmembers)
+            BackgroundEnsemble = numpy.ravel(_bgcenter)[:,None] + _Zca
+        else:
+            if max(abs(_bgcovariance.flatten())) > 0:
+                _nbctl = numpy.ravel(_bgcenter).size
+                _Z = numpy.random.multivariate_normal(numpy.zeros(_nbctl),_bgcovariance,_nbmembers-1)
+                _Zca = __CenteredRandomAnomalies(_Z, _nbmembers)
+                BackgroundEnsemble = numpy.ravel(_bgcenter)[:,None] + _Zca
+            else:
+                BackgroundEnsemble = numpy.tile( numpy.ravel(_bgcenter)[:,None], _nbmembers)
+    #
+    return BackgroundEnsemble
+
+# ==============================================================================
+def EnsembleCenteredAnomalies( _ensemble, _optmean = None):
+    "Renvoie les anomalies centrées à partir d'un ensemble TailleEtat*NbMembres"
+    if _optmean is None:
+        Em = numpy.asarray(_ensemble).mean(axis=1, dtype=mfp).astype('float')[:,numpy.newaxis]
+    else:
+        Em = numpy.ravel(_optmean)[:,numpy.newaxis]
+    #
+    return numpy.asarray(_ensemble) - Em
+
+# ==============================================================================
 def CovarianceInflation(
         InputCovOrEns,
         InflationType   = None,
@@ -619,13 +672,13 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
-    Xn = numpy.asmatrix(numpy.dot( Xb.reshape(__n,1), numpy.ones((1,__m)) ))
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
     else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
+    Xn = numpy.asmatrix(numpy.dot( Xb.reshape((__n,1)), numpy.ones((1,__m)) ))
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -705,6 +758,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 )
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -1202,13 +1256,13 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
     # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
-    Xn = numpy.asmatrix(numpy.dot( Xb.reshape(__n,1), numpy.ones((1,__m)) ))
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
     else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
+    Xn = BackgroundEnsembleGeneration( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -1218,9 +1272,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
     #
     previousJMinimum = numpy.finfo(float).max
     #
-    # Predimensionnement
-    Xn_predicted = numpy.asmatrix(numpy.zeros((__n,__m)))
-    #
+    Xn_predicted = numpy.zeros((__n,__m))
     for step in range(duration-1):
         if hasattr(Y,"store"):
             Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
