@@ -43,11 +43,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listadv  = [
                 "ETKF-KFF",
                 "ETKF-VAR",
-                "EnKF-N",
-                "ETKF-N-11", "EnKF-N-11",
-                "ETKF-N-15", "EnKF-N-15",
-                "ETKF-N-16", "EnKF-N-16",
-                "MLEF-B",
+                "ETKF-N-11",
+                "ETKF-N-15",
+                "ETKF-N-16",
                 "MLEF-T",
                 ],
             )
@@ -174,21 +172,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         # Default ETKF = ETKF-KFF
         elif self._parameters["Minimizer"] in ["ETKF-KFF", "ETKF"]:
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula")
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula")
         #
         elif self._parameters["Minimizer"] == "ETKF-VAR":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="Variational")
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="Variational")
         #
         #--------------------------
         # Default ETKF-N = ETKF-N-16
         elif self._parameters["Minimizer"] == "ETKF-N-11":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize11")
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize11")
         #
         elif self._parameters["Minimizer"] == "ETKF-N-15":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize15")
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize15")
         #
         elif self._parameters["Minimizer"] in ["ETKF-N-16", "ETKF-N"]:
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="FiniteSize16")
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize16")
         #
         #--------------------------
         # Default MLEF = MLEF-B

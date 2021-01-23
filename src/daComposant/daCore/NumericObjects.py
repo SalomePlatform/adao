@@ -849,7 +849,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
-def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
+def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     """
     Ensemble-Transform EnKF (ETKF or Deterministic EnKF: Bishop 2001, Hunt 2007)
 
@@ -890,22 +890,22 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
         or selfA._toStore("APosterioriCovariance"):
         BI = B.getI()
         RI = R.getI()
-    elif KorV != "KalmanFilterFormula":
+    elif VariantM != "KalmanFilterFormula":
         RI = R.getI()
-    if KorV == "KalmanFilterFormula":
+    if VariantM == "KalmanFilterFormula":
         RIdemi = R.choleskyI()
     #
     # Initialisation
     # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
-    Xn = numpy.asmatrix(numpy.dot( Xb.reshape(__n,1), numpy.ones((1,__m)) ))
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
     else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
+    Xn = numpy.asmatrix(numpy.dot( Xb.reshape((__n,1)), numpy.ones((1,__m)) ))
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -917,7 +917,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
     #
     # Predimensionnement
     Xn_predicted = numpy.asmatrix(numpy.zeros((__n,__m)))
-    HX_predicted = numpy.asmatrix(numpy.zeros((__p,__m)))
     #
     for step in range(duration-1):
         if hasattr(Y,"store"):
@@ -963,11 +962,12 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
         Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
         #
+        # Anomalies
         EaX   = numpy.matrix(Xn_predicted - Xfm.reshape((__n,-1)))
         EaHX  = numpy.matrix(HX_predicted - Hfm.reshape((__p,-1)))
         #
         #--------------------------
-        if KorV == "KalmanFilterFormula":
+        if VariantM == "KalmanFilterFormula":
             EaX    = EaX / numpy.sqrt(__m-1)
             mS    = RIdemi * EaHX / numpy.sqrt(__m-1)
             delta = RIdemi * ( Ynpu.reshape((__p,-1)) - Hfm.reshape((__p,-1)) )
@@ -979,7 +979,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             #
             Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
         #--------------------------
-        elif KorV == "Variational":
+        elif VariantM == "Variational":
             HXfm = H((Xfm, Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
@@ -1010,7 +1010,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             #
             Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
-        elif KorV == "FiniteSize11": # Jauge Boc2011
+        elif VariantM == "FiniteSize11": # Jauge Boc2011
             HXfm = H((Xfm, Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
@@ -1043,7 +1043,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             #
             Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
-        elif KorV == "FiniteSize15": # Jauge Boc2015
+        elif VariantM == "FiniteSize15": # Jauge Boc2015
             HXfm = H((Xfm, Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
@@ -1076,7 +1076,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             #
             Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
-        elif KorV == "FiniteSize16": # Jauge Boc2016
+        elif VariantM == "FiniteSize16": # Jauge Boc2016
             HXfm = H((Xfm, Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
@@ -1110,7 +1110,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, KorV="KalmanFilterFormula"):
             Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
         else:
-            raise ValueError("KorV has to be chosen in the authorized methods list.")
+            raise ValueError("VariantM has to be chosen in the authorized methods list.")
         #
         if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
             Xn = CovarianceInflation( Xn,
