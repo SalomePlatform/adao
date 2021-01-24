@@ -1215,7 +1215,8 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     return 0
 
 # ==============================================================================
-def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1.e-7, _jmax=15000):
+def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
+    BnotT=False, _epsilon=1.e-3, _e=1.e-7, _jmax=15000):
     """
     Maximum Likelihood Ensemble Filter (EnKF/MLEF Zupanski 2005, Bocquet 2013)
 
@@ -1280,9 +1281,9 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
     Xn_predicted = numpy.zeros((__n,__m))
     for step in range(duration-1):
         if hasattr(Y,"store"):
-            Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+            Ynpu = numpy.ravel( Y[step+1] )[:,None]
         else:
-            Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+            Ynpu = numpy.ravel( Y )[:,None]
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -1301,10 +1302,10 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
                 )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
-            EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
+            EMX = M( [(Xn[:,i,numpy.newaxis], Un) for i in range(__m)], argsAsSerie = True )
             for i in range(__m):
                 qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn)
-                Xn_predicted[:,i] = (numpy.ravel( EMX[i] ) + qi).reshape((__n,-1))
+                Xn_predicted[:,i] = numpy.ravel( EMX[i] ) + qi
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
@@ -1312,49 +1313,52 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
         #
-        # Mean of forecast and observation of forecast
-        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
-        #
-        EaX   = (Xn_predicted - Xfm.reshape((__n,-1))) / numpy.sqrt(__m-1)
-        #
         #--------------------------
-        Ua = numpy.eye(__m)
-        Ta = numpy.eye(__m)
-        #
-        __j = 0 # 4:
-        vw = numpy.zeros(__m) # 4:
-        Deltaw = 1
-        while numpy.linalg.norm(Deltaw) >= _e or __j >= _jmax: # 5: et 19:
-            vx = numpy.ravel(Xfm) + EaX @ vw # 6:
-            #
-            if BnotT:
-                EE = vx.reshape((__n,-1)) + _epsilon * EaX # 7:
-            else:
-                EE = vx.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta # 8:
-            #
-            EZ = H( [(EE[:,i], Un) for i in range(__m)],
-                argsAsSerie = True,
-                returnSerieAsArrayMatrix = True )
-            #
-            ybar = EZ.mean(axis=1, dtype=mfp).astype('float').reshape((__p,-1)) # 10: Observation mean
-            #
-            if BnotT:
-                EY = (EZ - ybar) / _epsilon # 11:
-            else:
-                EY = ( (EZ - ybar) @ numpy.linalg.inv(Ta) ) / numpy.sqrt(__m-1) # 12:
-            #
-            GradJ = numpy.ravel(vw.reshape((__m,1)) - EY.transpose() @ (RI * (Ynpu - ybar))) # 13:
-            mH = numpy.eye(__m) + EY.transpose() @ (RI * EY) # 14:
-            Deltaw = numpy.linalg.solve(mH,GradJ) # 15:
-            vw = vw - Deltaw # 16:
+        if VariantM == "MLEF13":
+            Xfm = numpy.asarray(Xn_predicted.mean(axis=1, dtype=mfp).astype('float'))
+            EaX = numpy.asarray((Xn_predicted - Xfm.reshape((__n,-1))) / numpy.sqrt(__m-1))
+            Ua  = numpy.eye(__m)
+            __j = 0
+            Deltaw = 1
             if not BnotT:
-                Ta = numpy.linalg.inv(numpy.real(scipy.linalg.sqrtm( mH ))) # 17:
-            __j = __j + 1 # 18:
-        #
-        if BnotT:
-            Ta = numpy.linalg.inv(numpy.real(scipy.linalg.sqrtm( mH ))) # 20:
-        #
-        Xn = vx.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta @ Ua # 21:
+                Ta  = numpy.eye(__m)
+            vw  = numpy.zeros(__m)
+            while numpy.linalg.norm(Deltaw) >= _e and __j <= _jmax:
+                vx1 = numpy.ravel(Xfm) + EaX @ vw
+                #
+                if BnotT:
+                    E1 = vx1.reshape((__n,-1)) + _epsilon * EaX
+                else:
+                    E1 = vx1.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta
+                #
+                HE2 = H( [(E1[:,i,numpy.newaxis], Un) for i in range(__m)],
+                    argsAsSerie = True,
+                    returnSerieAsArrayMatrix = True )
+                vy2 = HE2.mean(axis=1, dtype=mfp).astype('float').reshape((__p,-1))
+                #
+                if BnotT:
+                    EaY = (HE2 - vy2) / _epsilon
+                else:
+                    EaY = ( (HE2 - vy2) @ numpy.linalg.inv(Ta) ) / numpy.sqrt(__m-1)
+                #
+                GradJ = numpy.ravel(vw[:,None] - EaY.transpose() @ (RI * ( Ynpu - vy2 )))
+                mH = numpy.eye(__m) + EaY.transpose() @ (RI * EaY)
+                Deltaw = - numpy.linalg.solve(mH,GradJ)
+                #
+                vw = vw + Deltaw
+                #
+                if not BnotT:
+                    Ta = numpy.real(scipy.linalg.sqrtm(numpy.linalg.inv( mH )))
+                #
+                __j = __j + 1
+            #
+            if BnotT:
+                Ta = numpy.real(scipy.linalg.sqrtm(numpy.linalg.inv( mH )))
+            #
+            Xn = vx1.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta @ Ua
+        #--------------------------
+        else:
+            raise ValueError("VariantM has to be chosen in the authorized methods list.")
         #
         if selfA._parameters["InflationType"] == "MultiplicativeOnAnalysisAnomalies":
             Xn = CovarianceInflation( Xn,
@@ -1362,7 +1366,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
         #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
@@ -1430,7 +1434,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False, _epsilon=1.e-1, _e=1
             if selfA._toStore("CostFunctionJAtCurrentOptimum"):
                 selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
         if selfA._toStore("APosterioriCovariance"):
-            Eai = (1/numpy.sqrt(__m-1)) * (Xn - Xa.reshape((__n,-1))) # Anomalies
+            Eai = numpy.asarray((Xn - Xa.reshape((__n,-1))) / numpy.sqrt(__m-1)) # Anomalies
             Pn = Eai @ Eai.T
             Pn = 0.5 * (Pn + Pn.T)
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
