@@ -39,6 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ETKF",
                 "ETKF-N",
                 "MLEF",
+                "IEnKF",
                 ],
             listadv  = [
                 "ETKF-KFF",
@@ -48,6 +49,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ETKF-N-16",
                 "MLEF-T",
                 "MLEF-B",
+                "IEnKF-T",
                 ],
             )
         self.defineRequiredParameter(
@@ -198,6 +200,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
         #
         #--------------------------
+        # Default IEnKF = IEnKF-T
+        elif self._parameters["Minimizer"] in ["IEnKF-T", "IEnKF"]:
+            NumericObjects.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
+        #
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #
