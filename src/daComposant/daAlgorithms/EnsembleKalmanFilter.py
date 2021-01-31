@@ -50,6 +50,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MLEF-T",
                 "MLEF-B",
                 "IEnKF-T",
+                "IEnKF-B",
+                "IEKF",
                 ],
             )
         self.defineRequiredParameter(
@@ -204,6 +206,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Minimizer"] in ["IEnKF-T", "IEnKF"]:
             NumericObjects.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
         #
+        elif self._parameters["Minimizer"] in ["IEnKF-B", "IEKF"]:
+            NumericObjects.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
+        #
+        #--------------------------
         else:
             raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
         #

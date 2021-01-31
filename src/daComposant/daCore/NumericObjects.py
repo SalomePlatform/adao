@@ -1594,6 +1594,10 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             #
             A2 = EnsembleCenteredAnomalies( E2 )
             #
+            if BnotT:
+                Ta = numpy.real(scipy.linalg.sqrtm(numpy.linalg.inv( mH )))
+                A2 = numpy.sqrt(__m-1) * A2 @ Ta / _epsilon
+            #
             Xn = vx2 + A2
         #--------------------------
         else:
