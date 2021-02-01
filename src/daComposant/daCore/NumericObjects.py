@@ -508,8 +508,24 @@ def mmqr(
     return variables, Ecart, [n,p,iteration,increment,0]
 
 # ==============================================================================
-def BackgroundEnsembleGeneration( _bgcenter, _bgcovariance, _nbmembers, _withSVD = True):
-    "Génération d'un ensemble d'ébauches aléatoires de taille _nbmembers-1"
+def EnsembleOfCenteredPerturbations( _bgcenter, _bgcovariance, _nbmembers ):
+    "Génération d'un ensemble de taille _nbmembers-1 d'états aléatoires centrés"
+    #
+    _bgcenter = numpy.ravel(_bgcenter)[:,None]
+    if _nbmembers < 1:
+        raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(_nbmembers),))
+    #
+    if _bgcovariance is None:
+        BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers)
+    else:
+        _Z = numpy.random.multivariate_normal(numpy.zeros(_bgcenter.size), _bgcovariance, size=_nbmembers).T
+        BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers) + _Z
+    #
+    return BackgroundEnsemble
+
+# ==============================================================================
+def EnsembleOfBackgroundPerturbations( _bgcenter, _bgcovariance, _nbmembers, _withSVD = True):
+    "Génération d'un ensemble de taille _nbmembers-1 d'états aléatoires centrés"
     def __CenteredRandomAnomalies(Zr, N):
         """
         Génère une matrice de N anomalies aléatoires centrées sur Zr selon les
@@ -523,14 +539,15 @@ def BackgroundEnsembleGeneration( _bgcenter, _bgcovariance, _nbmembers, _withSVD
         Zr = numpy.dot(Q,Zr)
         return Zr.T
     #
+    _bgcenter = numpy.ravel(_bgcenter)[:,None]
     if _nbmembers < 1:
         raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(_nbmembers),))
     if _bgcovariance is None:
-        BackgroundEnsemble = numpy.tile( numpy.ravel(_bgcenter)[:,None], _nbmembers)
+        BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers)
     else:
         if _withSVD:
             U, s, V = numpy.linalg.svd(_bgcovariance, full_matrices=False)
-            _nbctl = numpy.ravel(_bgcenter).size
+            _nbctl = _bgcenter.size
             if _nbmembers > _nbctl:
                 _Z = numpy.concatenate((numpy.dot(
                     numpy.diag(numpy.sqrt(s[:_nbctl])), V[:_nbctl]),
@@ -538,20 +555,20 @@ def BackgroundEnsembleGeneration( _bgcenter, _bgcovariance, _nbmembers, _withSVD
             else:
                 _Z = numpy.dot(numpy.diag(numpy.sqrt(s[:_nbmembers-1])), V[:_nbmembers-1])
             _Zca = __CenteredRandomAnomalies(_Z, _nbmembers)
-            BackgroundEnsemble = numpy.ravel(_bgcenter)[:,None] + _Zca
+            BackgroundEnsemble = _bgcenter + _Zca
         else:
             if max(abs(_bgcovariance.flatten())) > 0:
-                _nbctl = numpy.ravel(_bgcenter).size
+                _nbctl = _bgcenter.size
                 _Z = numpy.random.multivariate_normal(numpy.zeros(_nbctl),_bgcovariance,_nbmembers-1)
                 _Zca = __CenteredRandomAnomalies(_Z, _nbmembers)
-                BackgroundEnsemble = numpy.ravel(_bgcenter)[:,None] + _Zca
+                BackgroundEnsemble = _bgcenter + _Zca
             else:
-                BackgroundEnsemble = numpy.tile( numpy.ravel(_bgcenter)[:,None], _nbmembers)
+                BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers)
     #
     return BackgroundEnsemble
 
 # ==============================================================================
-def EnsembleCenteredAnomalies( _ensemble, _optmean = None):
+def EnsembleOfAnomalies( _ensemble, _optmean = None):
     "Renvoie les anomalies centrées à partir d'un ensemble TailleEtat*NbMembres"
     if _optmean is None:
         Em = numpy.asarray(_ensemble).mean(axis=1, dtype=mfp).astype('float')[:,numpy.newaxis]

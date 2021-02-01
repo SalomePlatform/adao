@@ -224,7 +224,8 @@ class Operator(object):
                 else:
                     if self.__Matrix is not None:
                         self.__addOneMatrixCall()
-                        _hv = self.__Matrix * xv
+                        _xv = numpy.matrix(numpy.ravel(xv)).T
+                        _hv = self.__Matrix * _xv
                     else:
                         self.__addOneMethodCall()
                         _xserie.append( xv )
@@ -272,6 +273,7 @@ class Operator(object):
             _HxValue = []
             for paire in _xuValue:
                 _xValue, _uValue = paire
+                _xValue = numpy.matrix(numpy.ravel(_xValue)).T
                 self.__addOneMatrixCall()
                 _HxValue.append( self.__Matrix * _xValue )
         else:
@@ -318,6 +320,7 @@ class Operator(object):
             _HxValue = []
             for paire in _nxValue:
                 _xNominal, _xValue = paire
+                _xValue = numpy.matrix(numpy.ravel(_xValue)).T
                 self.__addOneMatrixCall()
                 _HxValue.append( self.__Matrix * _xValue )
         else:
