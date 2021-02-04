@@ -695,7 +695,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
-    Xn = numpy.asmatrix(numpy.dot( Xb.reshape((__n,1)), numpy.ones((1,__m)) ))
+    Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -705,15 +705,11 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     #
     previousJMinimum = numpy.finfo(float).max
     #
-    # Predimensionnement
-    Xn_predicted = numpy.asmatrix(numpy.zeros((__n,__m)))
-    HX_predicted = numpy.asmatrix(numpy.zeros((__p,__m)))
-    #
     for step in range(duration-1):
         if hasattr(Y,"store"):
-            Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,-1))
         else:
-            Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+            Ynpu = numpy.ravel( Y ).reshape((__p,-1))
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -732,10 +728,11 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
-            EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
-            for i in range(__m):
-                qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn)
-                Xn_predicted[:,i] = (numpy.ravel( EMX[i] ) + qi).reshape((__n,-1))
+            EMX = M( [(Xn[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
+            qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
+            Xn_predicted = EMX + qi
             HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
@@ -750,25 +747,37 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 returnSerieAsArrayMatrix = True )
         #
         # Mean of forecast and observation of forecast
-        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
-        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
+        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
+        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
         #
         #--------------------------
-        if VariantM == "KalmanFilterFormula":
+        if VariantM == "KalmanFilterFormula05":
             PfHT, HPfHT = 0., 0.
             for i in range(__m):
-                Exfi = Xn_predicted[:,i] - Xfm.reshape((__n,-1))
-                Eyfi = (HX_predicted[:,i] - Hfm).reshape((__p,1))
+                Exfi = Xn_predicted[:,i] - Xfm
+                Eyfi = HX_predicted[:,i] - Hfm
                 PfHT  += Exfi * Eyfi.T
                 HPfHT += Eyfi * Eyfi.T
             PfHT  = (1./(__m-1)) * PfHT
             HPfHT = (1./(__m-1)) * HPfHT
-            K     = PfHT * ( R + HPfHT ).I
+            Kn     = PfHT * ( R + HPfHT ).I
             del PfHT, HPfHT
             #
             for i in range(__m):
                 ri = numpy.random.multivariate_normal(numpy.zeros(__p), Rn)
-                Xn[:,i] = Xn_predicted[:,i] + K @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i]).reshape((__p,1))
+                Xn[:,i] = Xn_predicted[:,i] + numpy.ravel(Kn @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i])).T
+        #--------------------------
+        elif VariantM == "KalmanFilterFormula16":
+            EpY   = EnsembleOfCenteredPerturbations(Ynpu, Rn, __m)
+            EpYm  = EpY.mean(axis=1, dtype=mfp).astype('float').reshape((__p,-1))
+            #
+            EaX   = EnsembleOfAnomalies( Xn_predicted ) / numpy.sqrt(__m-1)
+            EaY = (HX_predicted - Hfm - EpY + EpYm) / numpy.sqrt(__m-1)
+            #
+            Kn = EaX @ EaX.T @ numpy.linalg.inv( EaY @ EaY.T)
+            #
+            for i in range(__m):
+                Xn[:,i] = Xn_predicted[:,i] + Kn @ (numpy.ravel(EpY[:,i]) - HX_predicted[:,i])
         #--------------------------
         else:
             raise ValueError("VariantM has to be chosen in the authorized methods list.")
@@ -779,7 +788,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
         #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \

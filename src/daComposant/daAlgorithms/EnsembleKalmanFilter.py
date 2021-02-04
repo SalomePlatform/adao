@@ -34,7 +34,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Minimiseur utilisé",
             listval  = [
-                "StochasticEnKF",
                 "EnKF",
                 "ETKF",
                 "ETKF-N",
@@ -42,6 +41,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "IEnKF",
                 ],
             listadv  = [
+                "StochasticEnKF",
+                "EnKF-05",
+                "EnKF-16",
                 "ETKF-KFF",
                 "ETKF-VAR",
                 "ETKF-N-11",
@@ -170,9 +172,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        # Default EnKF = StochasticEnKF
-        if self._parameters["Minimizer"] in ["StochasticEnKF", "EnKF"]:
-            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula")
+        # Default EnKF = EnKF-16 = StochasticEnKF
+        if   self._parameters["Minimizer"] in ["EnKF-05"]:
+            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula05")
+        #
+        elif self._parameters["Minimizer"] in ["EnKF-16", "StochasticEnKF", "EnKF"]:
+            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16")
         #
         #--------------------------
         # Default ETKF = ETKF-KFF
