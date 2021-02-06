@@ -814,9 +814,9 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             or selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
-            selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+            selfA.StoredVariables["ForecastState"].store( EMX )
         if selfA._toStore("BMA"):
-            selfA.StoredVariables["BMA"].store( Xn_predicted - Xa )
+            selfA.StoredVariables["BMA"].store( EMX - Xa.reshape((__n,1)) )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
         if selfA._toStore("SimulatedObservationAtCurrentState") \
@@ -856,7 +856,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             if selfA._toStore("CostFunctionJAtCurrentOptimum"):
                 selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
         if selfA._toStore("APosterioriCovariance"):
-            Eai = (1/numpy.sqrt(__m-1)) * (Xn - Xa.reshape((__n,-1))) # Anomalies
+            Eai = EnsembleOfAnomalies( Xn ) / numpy.sqrt(__m-1) # Anomalies
             Pn = Eai @ Eai.T
             Pn = 0.5 * (Pn + Pn.T)
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
@@ -936,7 +936,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
-    Xn = numpy.asmatrix(numpy.dot( Xb.reshape((__n,1)), numpy.ones((1,__m)) ))
+    Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -946,14 +946,11 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     #
     previousJMinimum = numpy.finfo(float).max
     #
-    # Predimensionnement
-    Xn_predicted = numpy.asmatrix(numpy.zeros((__n,__m)))
-    #
     for step in range(duration-1):
         if hasattr(Y,"store"):
-            Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,-1))
         else:
-            Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+            Ynpu = numpy.ravel( Y ).reshape((__p,-1))
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -972,10 +969,11 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
-            EMX = M( [(Xn[:,i], Un) for i in range(__m)], argsAsSerie = True )
-            for i in range(__m):
-                qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn)
-                Xn_predicted[:,i] = (numpy.ravel( EMX[i] ) + qi).reshape((__n,-1))
+            EMX = M( [(Xn[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
+            qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
+            Xn_predicted = EMX + qi
             HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
@@ -990,36 +988,36 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 returnSerieAsArrayMatrix = True )
         #
         # Mean of forecast and observation of forecast
-        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float')
-        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float')
+        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
+        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
         #
         # Anomalies
-        EaX   = numpy.matrix(Xn_predicted - Xfm.reshape((__n,-1)))
-        EaHX  = numpy.matrix(HX_predicted - Hfm.reshape((__p,-1)))
+        EaX   = EnsembleOfAnomalies( Xn_predicted )
+        EaHX  = numpy.matrix(HX_predicted - Hfm)
         #
         #--------------------------
         if VariantM == "KalmanFilterFormula":
-            EaX    = EaX / numpy.sqrt(__m-1)
             mS    = RIdemi * EaHX / numpy.sqrt(__m-1)
-            delta = RIdemi * ( Ynpu.reshape((__p,-1)) - Hfm.reshape((__p,-1)) )
+            delta = RIdemi * ( Ynpu - Hfm )
             mT    = numpy.linalg.inv( numpy.eye(__m) + mS.T @ mS )
             vw    = mT @ mS.transpose() @ delta
             #
             Tdemi = numpy.real(scipy.linalg.sqrtm(mT))
             mU    = numpy.eye(__m)
             #
-            Xn = Xfm.reshape((__n,-1)) + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
+            EaX   = EaX / numpy.sqrt(__m-1)
+            Xn    = Xfm + EaX @ ( vw.reshape((__m,-1)) + numpy.sqrt(__m-1) * Tdemi @ mU )
         #--------------------------
         elif VariantM == "Variational":
-            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _Jo = 0.5 * _A.T * RI * _A
                 _Jb = 0.5 * (__m-1) * w.T @ w
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _GardJo = - EaHX.T * RI * _A
                 _GradJb = (__m-1) * w.reshape((__m,1))
                 _GradJ  = _GardJo + _GradJb
@@ -1039,18 +1037,18 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             Pta = numpy.linalg.inv( Hta )
             EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
             #
-            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+            Xn  = Xfm + EaX @ (vw[:,None] + EWa)
         #--------------------------
         elif VariantM == "FiniteSize11": # Jauge Boc2011
-            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _Jo = 0.5 * _A.T * RI * _A
                 _Jb = 0.5 * __m * math.log(1 + 1/__m + w.T @ w)
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _GardJo = - EaHX.T * RI * _A
                 _GradJb = __m * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w)
                 _GradJ  = _GardJo + _GradJb
@@ -1072,18 +1070,18 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             Pta = numpy.linalg.inv( Hta )
             EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
             #
-            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+            Xn  = Xfm + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
         elif VariantM == "FiniteSize15": # Jauge Boc2015
-            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _Jo = 0.5 * _A.T * RI * _A
                 _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w)
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _GardJo = - EaHX.T * RI * _A
                 _GradJb = (__m+1) * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w)
                 _GradJ  = _GardJo + _GradJb
@@ -1105,18 +1103,18 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             Pta = numpy.linalg.inv( Hta )
             EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
             #
-            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+            Xn  = Xfm + EaX @ (vw.reshape((__m,-1)) + EWa)
         #--------------------------
         elif VariantM == "FiniteSize16": # Jauge Boc2016
-            HXfm = H((Xfm, Un)) # Eventuellement Hfm
+            HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _Jo = 0.5 * _A.T * RI * _A
                 _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w / (__m-1))
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
-                _A  = Ynpu.reshape((__p,-1)) - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
+                _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
                 _GardJo = - EaHX.T * RI * _A
                 _GradJb = ((__m+1) / (__m-1)) * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w / (__m-1))
                 _GradJ  = _GardJo + _GradJb
@@ -1138,7 +1136,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             Pta = numpy.linalg.inv( Hta )
             EWa = numpy.real(scipy.linalg.sqrtm((__m-1)*Pta)) # Partie imaginaire ~= 10^-18
             #
-            Xn = Xfm.reshape((__n,-1)) + EaX @ (vw.reshape((__m,-1)) + EWa)
+            Xn  = Xfm + EaX @ (vw[:,None] + EWa)
         #--------------------------
         else:
             raise ValueError("VariantM has to be chosen in the authorized methods list.")
@@ -1149,7 +1147,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float')
+        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
         #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
@@ -1175,11 +1173,11 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             or selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
-            selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+            selfA.StoredVariables["ForecastState"].store( EMX )
         if selfA._toStore("BMA"):
-            selfA.StoredVariables["BMA"].store( Xn_predicted - Xa )
+            selfA.StoredVariables["BMA"].store( EMX - Xa.reshape((__n,1)) )
         if selfA._toStore("InnovationAtCurrentState"):
-            selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
+            selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu.reshape((__p,1)) )
         if selfA._toStore("SimulatedObservationAtCurrentState") \
             or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
@@ -1217,7 +1215,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             if selfA._toStore("CostFunctionJAtCurrentOptimum"):
                 selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
         if selfA._toStore("APosterioriCovariance"):
-            Eai = (1/numpy.sqrt(__m-1)) * (Xn - Xa.reshape((__n,-1))) # Anomalies
+            Eai = EnsembleOfAnomalies( Xn ) / numpy.sqrt(__m-1) # Anomalies
             Pn = Eai @ Eai.T
             Pn = 0.5 * (Pn + Pn.T)
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
@@ -1294,7 +1292,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
-    Xn = BackgroundEnsembleGeneration( Xb, None, __m )
+    Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -1304,12 +1302,11 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     #
     previousJMinimum = numpy.finfo(float).max
     #
-    Xn_predicted = numpy.zeros((__n,__m))
     for step in range(duration-1):
         if hasattr(Y,"store"):
-            Ynpu = numpy.ravel( Y[step+1] )[:,None]
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,-1))
         else:
-            Ynpu = numpy.ravel( Y )[:,None]
+            Ynpu = numpy.ravel( Y ).reshape((__p,-1))
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -1328,10 +1325,11 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
                 )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
-            EMX = M( [(Xn[:,i,numpy.newaxis], Un) for i in range(__m)], argsAsSerie = True )
-            for i in range(__m):
-                qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn)
-                Xn_predicted[:,i] = numpy.ravel( EMX[i] ) + qi
+            EMX = M( [(Xn[:,i], Un) for i in range(__m)],
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True )
+            qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
+            Xn_predicted = EMX + qi
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
@@ -1341,8 +1339,8 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
         #
         #--------------------------
         if VariantM == "MLEF13":
-            Xfm = numpy.asarray(Xn_predicted.mean(axis=1, dtype=mfp).astype('float'))
-            EaX = numpy.asarray((Xn_predicted - Xfm.reshape((__n,-1))) / numpy.sqrt(__m-1))
+            Xfm = numpy.ravel(Xn_predicted.mean(axis=1, dtype=mfp).astype('float'))
+            EaX = EnsembleOfAnomalies( Xn_predicted ) / numpy.sqrt(__m-1)
             Ua  = numpy.eye(__m)
             __j = 0
             Deltaw = 1
@@ -1350,12 +1348,12 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
                 Ta  = numpy.eye(__m)
             vw  = numpy.zeros(__m)
             while numpy.linalg.norm(Deltaw) >= _e and __j <= _jmax:
-                vx1 = numpy.ravel(Xfm) + EaX @ vw
+                vx1 = (Xfm + EaX @ vw).reshape((__n,-1))
                 #
                 if BnotT:
-                    E1 = vx1.reshape((__n,-1)) + _epsilon * EaX
+                    E1 = vx1 + _epsilon * EaX
                 else:
-                    E1 = vx1.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta
+                    E1 = vx1 + numpy.sqrt(__m-1) * EaX @ Ta
                 #
                 HE2 = H( [(E1[:,i,numpy.newaxis], Un) for i in range(__m)],
                     argsAsSerie = True,
@@ -1381,7 +1379,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             if BnotT:
                 Ta = numpy.real(scipy.linalg.sqrtm(numpy.linalg.inv( mH )))
             #
-            Xn = vx1.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta @ Ua
+            Xn = vx1 + numpy.sqrt(__m-1) * EaX @ Ta @ Ua
         #--------------------------
         else:
             raise ValueError("VariantM has to be chosen in the authorized methods list.")
@@ -1418,14 +1416,14 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             or selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
-            selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+            selfA.StoredVariables["ForecastState"].store( EMX )
         if selfA._toStore("BMA"):
-            selfA.StoredVariables["BMA"].store( Xn_predicted - Xa )
-        #~ if selfA._toStore("InnovationAtCurrentState"):
-            #~ selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
-        #~ if selfA._toStore("SimulatedObservationAtCurrentState") \
-            #~ or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            #~ selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
+            selfA.StoredVariables["BMA"].store( EMX - Xa.reshape((__n,1)) )
+        if selfA._toStore("InnovationAtCurrentState"):
+            selfA.StoredVariables["InnovationAtCurrentState"].store( - HE2 + Ynpu.reshape((__p,-1)) )
+        if selfA._toStore("SimulatedObservationAtCurrentState") \
+            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HE2 )
         # ---> autres
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -1460,7 +1458,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             if selfA._toStore("CostFunctionJAtCurrentOptimum"):
                 selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
         if selfA._toStore("APosterioriCovariance"):
-            Eai = numpy.asarray((Xn - Xa.reshape((__n,-1))) / numpy.sqrt(__m-1)) # Anomalies
+            Eai = EnsembleOfAnomalies( Xn ) / numpy.sqrt(__m-1) # Anomalies
             Pn = Eai @ Eai.T
             Pn = 0.5 * (Pn + Pn.T)
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
@@ -1537,7 +1535,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     else:                         Rn = R
     if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
     else:                         Qn = Q
-    Xn = BackgroundEnsembleGeneration( Xb, Pn, __m )
+    Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
@@ -1549,9 +1547,9 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     #
     for step in range(duration-1):
         if hasattr(Y,"store"):
-            Ynpu = numpy.ravel( Y[step+1] )[:,None]
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,-1))
         else:
-            Ynpu = numpy.ravel( Y )[:,None]
+            Ynpu = numpy.ravel( Y ).reshape((__p,-1))
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -1571,21 +1569,20 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         #
         #--------------------------
         if VariantM == "IEnKF12":
-            Xfm = numpy.asarray(Xn.mean(axis=1, dtype=mfp).astype('float'))
-            EaX = numpy.asarray((Xn - Xfm.reshape((__n,-1))) / numpy.sqrt(__m-1))
-            # EaX = EnsembleCenteredAnomalies( Xn ) / numpy.sqrt(__m-1)
+            Xfm = numpy.ravel(Xn.mean(axis=1, dtype=mfp).astype('float'))
+            EaX = EnsembleOfAnomalies( Xn ) / numpy.sqrt(__m-1)
             __j = 0
             Deltaw = 1
             if not BnotT:
                 Ta  = numpy.eye(__m)
             vw  = numpy.zeros(__m)
             while numpy.linalg.norm(Deltaw) >= _e and __j <= _jmax:
-                vx1 = numpy.ravel(Xfm) + EaX @ vw
+                vx1 = (Xfm + EaX @ vw).reshape((__n,-1))
                 #
                 if BnotT:
-                    E1 = vx1.reshape((__n,-1)) + _epsilon * EaX
+                    E1 = vx1 + _epsilon * EaX
                 else:
-                    E1 = vx1.reshape((__n,-1)) + numpy.sqrt(__m-1) * EaX @ Ta
+                    E1 = vx1 + numpy.sqrt(__m-1) * EaX @ Ta
                 #
                 if selfA._parameters["EstimationOf"] == "State": # Forecast + Q
                     E2 = M( [(E1[:,i,numpy.newaxis], Un) for i in range(__m)],
@@ -1618,7 +1615,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
                 #
                 __j = __j + 1
             #
-            A2 = EnsembleCenteredAnomalies( E2 )
+            A2 = EnsembleOfAnomalies( E2 )
             #
             if BnotT:
                 Ta = numpy.real(scipy.linalg.sqrtm(numpy.linalg.inv( mH )))
@@ -1660,15 +1657,15 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( Xn )
-        #~ if selfA._toStore("ForecastState"):
-            #~ selfA.StoredVariables["ForecastState"].store( Xn_predicted )
-        #~ if selfA._toStore("BMA"):
-            #~ selfA.StoredVariables["BMA"].store( Xn_predicted - Xa )
-        #~ if selfA._toStore("InnovationAtCurrentState"):
-            #~ selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu.reshape((__p,-1)) )
-        #~ if selfA._toStore("SimulatedObservationAtCurrentState") \
-            #~ or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            #~ selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
+        if selfA._toStore("ForecastState"):
+            selfA.StoredVariables["ForecastState"].store( E2 )
+        if selfA._toStore("BMA"):
+            selfA.StoredVariables["BMA"].store( E2 - Xa )
+        if selfA._toStore("InnovationAtCurrentState"):
+            selfA.StoredVariables["InnovationAtCurrentState"].store( - HE2 + Ynpu.reshape((__p,-1)) )
+        if selfA._toStore("SimulatedObservationAtCurrentState") \
+            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HE2 )
         # ---> autres
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -1703,7 +1700,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             if selfA._toStore("CostFunctionJAtCurrentOptimum"):
                 selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
         if selfA._toStore("APosterioriCovariance"):
-            Eai = numpy.asarray((Xn - Xa.reshape((__n,-1))) / numpy.sqrt(__m-1)) # Anomalies
+            Eai = EnsembleOfAnomalies( Xn ) / numpy.sqrt(__m-1) # Anomalies
             Pn = Eai @ Eai.T
             Pn = 0.5 * (Pn + Pn.T)
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
