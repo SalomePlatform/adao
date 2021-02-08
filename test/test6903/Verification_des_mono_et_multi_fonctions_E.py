@@ -76,7 +76,8 @@ class Test_Adao(unittest.TestCase):
         print("\n        "+self.test1.__doc__.strip()+"\n")
         Xa = {}
         #
-        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+        #~ for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
             print("")
             msg = "Algorithme en test en MonoFonction : %s"%algo
             print(msg+"\n"+"-"*len(msg))
@@ -95,7 +96,8 @@ class Test_Adao(unittest.TestCase):
             Xa["Mono/"+algo] = adaopy.get("Analysis")[-1]
             del adaopy
         #
-        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+        #~ for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
             print("")
             msg = "Algorithme en test en MultiFonction : %s"%algo
             print(msg+"\n"+"-"*len(msg))
@@ -117,7 +119,8 @@ class Test_Adao(unittest.TestCase):
         print("")
         msg = "Tests des ecarts attendus :"
         print(msg+"\n"+"="*len(msg))
-        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+        #~ for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
+        for algo in ("ExtendedKalmanFilter", "KalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
             verify_similarity_of_algo_results(("Multi/"+algo, "Mono/"+algo), Xa, 1.e-20)
         print("  Les resultats obtenus sont corrects.")
         print("")
