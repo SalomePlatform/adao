@@ -748,14 +748,14 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #
         # Mean of forecast and observation of forecast
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
-        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
+        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,-1))
         #
         #--------------------------
         if VariantM == "KalmanFilterFormula05":
             PfHT, HPfHT = 0., 0.
             for i in range(__m):
-                Exfi = Xn_predicted[:,i] - Xfm
-                Eyfi = HX_predicted[:,i] - Hfm
+                Exfi = Xn_predicted[:,i].reshape((__n,-1)) - Xfm
+                Eyfi = HX_predicted[:,i].reshape((__p,-1)) - Hfm
                 PfHT  += Exfi * Eyfi.T
                 HPfHT += Eyfi * Eyfi.T
             PfHT  = (1./(__m-1)) * PfHT
@@ -765,7 +765,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             #
             for i in range(__m):
                 ri = numpy.random.multivariate_normal(numpy.zeros(__p), Rn)
-                Xn[:,i] = Xn_predicted[:,i] + numpy.ravel(Kn @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i])).T
+                Xn[:,i] = numpy.ravel(Xn_predicted[:,i]) + Kn @ (numpy.ravel(Ynpu) + ri - HX_predicted[:,i])
         #--------------------------
         elif VariantM == "KalmanFilterFormula16":
             EpY   = EnsembleOfCenteredPerturbations(Ynpu, Rn, __m)
@@ -774,10 +774,10 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             EaX   = EnsembleOfAnomalies( Xn_predicted ) / numpy.sqrt(__m-1)
             EaY = (HX_predicted - Hfm - EpY + EpYm) / numpy.sqrt(__m-1)
             #
-            Kn = EaX @ EaX.T @ numpy.linalg.inv( EaY @ EaY.T)
+            Kn = EaX @ EaY.T @ numpy.linalg.inv( EaY @ EaY.T)
             #
             for i in range(__m):
-                Xn[:,i] = Xn_predicted[:,i] + Kn @ (numpy.ravel(EpY[:,i]) - HX_predicted[:,i])
+                Xn[:,i] = numpy.ravel(Xn_predicted[:,i]) + Kn @ (numpy.ravel(EpY[:,i]) - HX_predicted[:,i])
         #--------------------------
         else:
             raise ValueError("VariantM has to be chosen in the authorized methods list.")
@@ -993,7 +993,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #
         # Anomalies
         EaX   = EnsembleOfAnomalies( Xn_predicted )
-        EaHX  = numpy.matrix(HX_predicted - Hfm)
+        EaHX  = numpy.array(HX_predicted - Hfm)
         #
         #--------------------------
         if VariantM == "KalmanFilterFormula":
@@ -1012,13 +1012,13 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _Jo = 0.5 * _A.T * RI * _A
+                _Jo = 0.5 * _A.T @ (RI * _A)
                 _Jb = 0.5 * (__m-1) * w.T @ w
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _GardJo = - EaHX.T * RI * _A
+                _GardJo = - EaHX.T @ (RI * _A)
                 _GradJb = (__m-1) * w.reshape((__m,1))
                 _GradJ  = _GardJo + _GradJb
                 return numpy.ravel(_GradJ)
@@ -1030,7 +1030,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T * RI * EaHX
+            Hto = EaHX.T @ (RI * EaHX)
             Htb = (__m-1) * numpy.eye(__m)
             Hta = Hto + Htb
             #
@@ -1043,13 +1043,13 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _Jo = 0.5 * _A.T * RI * _A
+                _Jo = 0.5 * _A.T @ (RI * _A)
                 _Jb = 0.5 * __m * math.log(1 + 1/__m + w.T @ w)
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _GardJo = - EaHX.T * RI * _A
+                _GardJo = - EaHX.T @ (RI * _A)
                 _GradJb = __m * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w)
                 _GradJ  = _GardJo + _GradJb
                 return numpy.ravel(_GradJ)
@@ -1061,7 +1061,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T * RI * EaHX
+            Hto = EaHX.T @ (RI * EaHX)
             Htb = __m * \
                 ( (1 + 1/__m + vw.T @ vw) * numpy.eye(__m) - 2 * vw @ vw.T ) \
                 / (1 + 1/__m + vw.T @ vw)**2
@@ -1082,7 +1082,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 return float(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _GardJo = - EaHX.T * RI * _A
+                _GardJo = - EaHX.T @ (RI * _A)
                 _GradJb = (__m+1) * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w)
                 _GradJ  = _GardJo + _GradJb
                 return numpy.ravel(_GradJ)
@@ -1094,7 +1094,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T * RI * EaHX
+            Hto = EaHX.T @ (RI * EaHX)
             Htb = (__m+1) * \
                 ( (1 + 1/__m + vw.T @ vw) * numpy.eye(__m) - 2 * vw @ vw.T ) \
                 / (1 + 1/__m + vw.T @ vw)**2
@@ -1109,13 +1109,13 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _Jo = 0.5 * _A.T * RI * _A
+                _Jo = 0.5 * _A.T @ (RI * _A)
                 _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w / (__m-1))
                 _J  = _Jo + _Jb
                 return float(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,-1)) - (EaHX @ w).reshape((__p,-1))
-                _GardJo = - EaHX.T * RI * _A
+                _GardJo = - EaHX.T @ (RI * _A)
                 _GradJb = ((__m+1) / (__m-1)) * w.reshape((__m,1)) / (1 + 1/__m + w.T @ w / (__m-1))
                 _GradJ  = _GardJo + _GradJb
                 return numpy.ravel(_GradJ)
@@ -1127,7 +1127,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T * RI * EaHX
+            Hto = EaHX.T @ (RI * EaHX)
             Htb = ((__m+1) / (__m-1)) * \
                 ( (1 + 1/__m + vw.T @ vw / (__m-1)) * numpy.eye(__m) - 2 * vw @ vw.T / (__m-1) ) \
                 / (1 + 1/__m + vw.T @ vw / (__m-1))**2
