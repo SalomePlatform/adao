@@ -75,6 +75,8 @@ filters, specially the :ref:`section_ref_algorithm_ExtendedKalmanFilter` or the
 
 .. include:: snippets/GradientNormTolerance.rst
 
+.. include:: snippets/InitializationPoint.rst
+
 .. include:: snippets/MaximumNumberOfSteps.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst

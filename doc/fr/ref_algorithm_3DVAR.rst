@@ -61,6 +61,8 @@ qui est usuellement désignée comme la fonctionnelle "*3D-VAR*" (voir par exemp
 
 .. include:: snippets/GradientNormTolerance.rst
 
+.. include:: snippets/InitializationPoint.rst
+
 .. include:: snippets/MaximumNumberOfSteps.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst

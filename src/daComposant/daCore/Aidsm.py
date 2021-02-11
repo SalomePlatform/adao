@@ -507,12 +507,14 @@ class Aidsm(object):
             Parameters = None,
             Script     = None):
         "Mise a jour d'un concept de calcul"
-        if "AlgorithmParameters" not in self.__adaoObject or self.__adaoObject["AlgorithmParameters"] is None:
+        Concept = "AlgorithmParameters"
+        if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
             raise ValueError("\n\nNo algorithm registred, set one before updating parameters or executing\n")
-        self.__adaoObject["AlgorithmParameters"].updateParameters(
+        self.__adaoObject[Concept].updateParameters(
             asDict        = Parameters,
             asScript      = self.__with_directory(Script),
             )
+        # RaJ du register
         return 0
 
     def setRegulationParameters(self,

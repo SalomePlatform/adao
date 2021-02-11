@@ -138,6 +138,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.defineRequiredParameter(
+            name     = "InitializationPoint",
+            typecast = numpy.ravel,
+            message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
+            )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B" ),
             )
@@ -236,9 +241,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) + numpy.ravel( GradJo ) ).T
             return GradJ.A1
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de démarrage de l'optimisation
         # ------------------------------------
-        Xini = numpy.ravel(Xb)
+        if self._parameters["InitializationPoint"] is not None:
+            __ipt = numpy.ravel(self._parameters["InitializationPoint"])
+            if __ipt.size != numpy.ravel(Xb).size:
+                raise ValueError("Incompatible size %i of forced initial point to replace the Xb of size %i" \
+                    %(__ipt.size,numpy.ravel(Xb).size))
+            else:
+                Xini = __ipt
+        else:
+            Xini = numpy.ravel(Xb)
         #
         # Minimisation de la fonctionnelle
         # --------------------------------

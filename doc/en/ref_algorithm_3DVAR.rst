@@ -60,6 +60,8 @@ which is usually designed as the "*3D-VAR*" function (see for example
 
 .. include:: snippets/GradientNormTolerance.rst
 
+.. include:: snippets/InitializationPoint.rst
+
 .. include:: snippets/MaximumNumberOfSteps.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst
