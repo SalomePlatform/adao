@@ -87,10 +87,8 @@ pas de lire la partie :ref:`section_license`.
    reference
    license
    glossary
+   genindex
    notations
    bibliography
 
-**Index et tables**
-
-* :ref:`genindex`
 * :ref:`search`

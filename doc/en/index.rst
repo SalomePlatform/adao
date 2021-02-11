@@ -83,10 +83,8 @@ part :ref:`section_license`.
    reference
    license
    glossary
+   genindex
    notations
    bibliography
 
-**Indices and tables**
-
-* :ref:`genindex`
 * :ref:`search`

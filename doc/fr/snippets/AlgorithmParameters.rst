@@ -2,8 +2,8 @@
 .. index:: single: AlgorithmParameters
 
 AlgorithmParameters
-  *Commande obligatoire*. Elle définit l'algorithme d'assimilation de données
-  ou d'optimisation choisi par le mot-clé "*Algorithm*", et ses éventuels
+  *Dictionnaire*. La variable définit l'algorithme d'assimilation de données ou
+  d'optimisation choisi par le mot-clé "*Algorithm*", et ses éventuels
   paramètres optionnels. Les choix d'algorithmes sont disponibles à travers
   l'interface graphique. Il existe par exemple le "3DVAR", le "Blue"... Chaque
   algorithme est défini, plus loin, par une sous-section spécifique. De manière

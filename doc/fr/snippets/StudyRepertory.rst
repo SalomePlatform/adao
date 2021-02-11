@@ -1,7 +1,7 @@
 .. index:: single: StudyRepertory
 
 StudyRepertory
-  *Commande optionnelle*. S'il existe, ce répertoire est utilisé comme base
-  pour les calculs, et il est utilisé pour trouver les fichiers de script,
-  donnés par nom sans répertoire, qui peuvent être utilisés pour définir
-  certaines variables.
+  *Chaîne de caractères*. Si il existe, le répertoire désigné par cette chaîne
+  de caractères est utilisé comme base pour les calculs, et il est aussi
+  utilisé pour trouver les fichiers de script qui sont définis par nom sans
+  répertoire, qui peuvent définir certaines variables.

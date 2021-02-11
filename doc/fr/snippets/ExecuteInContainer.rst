@@ -1,7 +1,7 @@
 .. index:: single: ExecuteInContainer
 
 ExecuteInContainer
-  *Commande optionnelle*. Cette variable permet de choisir le mode d'exécution
+  *Chaîne de caractères*. Cette variable permet de choisir le mode d'exécution
   dans YACS en container spécifique. En son absence ou si sa valeur est "No",
   il n'est pas utilisé de container séparé pour l'exécution et elle se déroule
   dans le processus principal de YACS. Si sa valeur est "Mono", un container
