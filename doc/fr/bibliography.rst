@@ -47,7 +47,11 @@ Bibliographie
 
 .. [Chakraborty08] Chakraborty U.K., *Advances in differential evolution*, Studies in computational intelligence, Vol.143, Springer, 2008
 
-.. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using Monte Carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), 10,143–10,162, 1994
+.. [Das11] Das S., Suganthan P. N., *Differential Evolution: A Survey of the State-of-the-art*, IEEE Transactions on Evolutionary Computation, 15(1), pp.4-31, 2011
+
+.. [Das16] Das S., Mullick S. S., Suganthan P. N., *Recent Advances in Differential Evolution - An Updated Survey*, Swarm and Evolutionary Computation, 27, pp.1-30, 2016
+
+.. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using Monte Carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), pp.10143–10162, 1994
 
 .. [Evensen03] Evensen G., *The Ensemble Kalman Filter: theoretical formulation and practical implementation*, Seminar on Recent developments in data assimilation for atmosphere and ocean, ECMWF, 8 to 12 September 2003
 

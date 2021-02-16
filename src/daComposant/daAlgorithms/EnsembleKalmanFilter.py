@@ -80,8 +80,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MultiplicativeOnBackgroundCovariance",
                 "MultiplicativeOnAnalysisAnomalies",
                 "MultiplicativeOnBackgroundAnomalies",
-                "AdditiveOnBackgroundCovariance",
                 "AdditiveOnAnalysisCovariance",
+                "AdditiveOnBackgroundCovariance",
                 "HybridOnBackgroundCovariance",
                 ],
             )
@@ -98,9 +98,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Méthode d'inflation d'ensemble",
             listval  = [
+                "SchurLocalization",
+                ],
+            listadv  = [
                 "CovarianceLocalization",
                 "DomainLocalization",
-                "SchurLocalization",
                 "GaspariCohnLocalization",
                 ],
             )

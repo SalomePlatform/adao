@@ -610,7 +610,7 @@ def CovarianceInflation(
         OutputCovOrEns = InputCovOrEnsMean[:,numpy.newaxis] \
             + InflationFactor * (InputCovOrEns - InputCovOrEnsMean[:,numpy.newaxis])
     #
-    elif InflationType in ["AdditiveOnBackgroundCovariance", "AdditiveOnAnalysisCovariance"]:
+    elif InflationType in ["AdditiveOnAnalysisCovariance", "AdditiveOnBackgroundCovariance"]:
         if InflationFactor < 0.:
             raise ValueError("Inflation factor for additive inflation has to be greater or equal than 0.")
         if InflationFactor < mpr:

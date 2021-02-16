@@ -183,5 +183,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo07.rst
 
 - [Chakraborty08]_
+- [Das11]_
+- [Das16]_
 - [Price05]_
 - [Storn97]_

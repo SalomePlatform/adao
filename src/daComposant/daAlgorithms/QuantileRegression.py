@@ -41,7 +41,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "MMQR",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["MMQR"],
+            listval  = ["MMQR",],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",

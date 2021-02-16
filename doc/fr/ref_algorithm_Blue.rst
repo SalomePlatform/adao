@@ -31,8 +31,8 @@ Algorithme de calcul "*Blue*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de type BLUE (Best Linear Unbiased
-Estimator) de l'état d'un système. De manière précise, c'est un estimateur
-d'Aitken.
+Estimator) de l'état d'un système. C'est une estimation linéaire, sans biais et
+optimale. De manière technique, c'est un estimateur d'Aitken.
 
 Cet algorithme est toujours le plus rapide de l'ensemble des algorithmes
 d'assimilation d'ADAO. Il est théoriquement réservé aux cas d'opérateurs
@@ -43,6 +43,17 @@ l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 En cas de non-linéarité, même peu marquée, on lui préférera aisément
 l':ref:`section_ref_algorithm_ExtendedBlue` ou
 l':ref:`section_ref_algorithm_3DVAR`.
+
+.. index:: single: Optimal Interpolation
+
+Remarque complémentaire : une simplification algébrique du BLUE conduit à la
+méthode d'interpolation optimale, nommée "*Optimal Interpolation*" ou "*OI*".
+C'est une méthode très simple et peu coûteuse, spécialement adaptée aux
+problèmes de très (très) grande taille, mais dont l'inconvénient est de fournir
+un résultat d'analyse globalement sous-optimal et bruité, voire incohérent. Le
+moyen d'éviter ces désavantages est d'adapter très précisément les éléments de
+la méthode à chaque modèle physique. Pour ces raisons, cette méthode n'est donc
+pas proposée.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

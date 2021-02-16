@@ -2,10 +2,10 @@
 .. index:: single: Forecast
 
 SimulatedObservationAtOptimum
-  *Liste de vecteurs*. Chaque élément est un vecteur d'observation simulé par
+  *Liste de vecteurs*. Chaque élément est un vecteur d'observation obtenu par
   l'opérateur d'observation à partir de l'analyse ou de l'état optimal
-  :math:`\mathbf{x}^a`. C'est la prévision à partir de l'analyse ou de l'état
-  optimal, et elle est parfois appellée "*Forecast*".
+  :math:`\mathbf{x}^a`. C'est l'observation de la prévision à partir de
+  l'analyse ou de l'état optimal, et elle est parfois appellée "*Forecast*".
 
   Exemple :
   ``hxa = ADD.get("SimulatedObservationAtOptimum")[-1]``

@@ -33,7 +33,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "BOBYQA",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["BOBYQA", "COBYLA", "NEWUOA", "POWELL", "SIMPLEX", "SUBPLEX"],
+            listval  = [
+                "BOBYQA",
+                "COBYLA",
+                "NEWUOA",
+                "POWELL",
+                "SIMPLEX",
+                "SUBPLEX",
+                ],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",

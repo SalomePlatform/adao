@@ -7,3 +7,6 @@ InitializationPoint
   Dans le cas où il est fourni, il ne remplace l'ébauche que pour
   l'initialisation. Sa valeur doit permettre de construire un vecteur de taille
   identique à l'ébauche.
+
+  Exemple :
+  ``{"InitializationPoint":[1, 2, 3, 4, 5]}``

@@ -74,11 +74,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "AugmentedWeightedLeastSquares",
             typecast = str,
             message  = "Critère de qualité utilisé",
-            listval  = ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA",
-                        "WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS",
-                        "LeastSquares","LS","L2",
-                        "AbsoluteValue","L1",
-                        "MaximumError","ME"],
+            listval  = [
+                "AugmentedWeightedLeastSquares","AWLS","DA",
+                "WeightedLeastSquares","WLS",
+                "LeastSquares","LS","L2",
+                "AbsoluteValue","L1",
+                "MaximumError","ME"],
+            listadv  = [
+                "AugmentedPonderatedLeastSquares","APLS",
+                "PonderatedLeastSquares","PLS",
+                ]
             )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",

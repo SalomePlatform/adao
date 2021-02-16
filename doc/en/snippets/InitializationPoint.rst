@@ -6,3 +6,6 @@ InitializationPoint
   not required and is equal to the background :math:`\mathbf{x}^b`. If
   provided, it replaces the background only for initialization. Its value must
   allow to build a vector of the same size as the background.
+
+  Example :
+  ``{"InitializationPoint":[1, 2, 3, 4, 5]}``
