@@ -38,6 +38,7 @@ case.setObserver(
     Template='ValuePrinter',
     Variable='Analysis',
     )
+#
 case.execute()
 Xa = case.get("Analysis")
 Pa = case.get("APosterioriCovariance")

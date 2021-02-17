@@ -22,6 +22,7 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: 3DVAR
+.. index:: single: 3D-Var
 .. _section_ref_algorithm_3DVAR:
 
 Algorithme de calcul "*3DVAR*"
@@ -36,8 +37,9 @@ statique:
 
 .. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-H(\mathbf{x}))^T.\mathbf{R}^{-1}.(\mathbf{y}^o-H(\mathbf{x}))
 
-qui est usuellement désignée comme la fonctionnelle "*3D-VAR*" (voir par exemple
-[Talagrand97]_).
+qui est usuellement désignée comme la fonctionnelle "*3D-Var*" (voir par
+exemple [Talagrand97]_). Les dénominations "*3D-Var*", "*3D-VAR*" et "*3DVAR*"
+sont équivalentes.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

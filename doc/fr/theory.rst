@@ -223,7 +223,7 @@ classiquement à minimiser la fonction :math:`J` suivante :
 
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-:math:`J` est classiquement désignée comme la fonctionnelle "*3D-VAR*" en
+:math:`J` est classiquement désignée comme la fonctionnelle "*3D-Var*" en
 assimilation de données (voir par exemple [Talagrand97]_) ou comme la
 fonctionnelle de régularisation de Tikhonov généralisée en optimisation (voir
 par exemple [WikipediaTI]_). Comme les matrices de covariance :math:`\mathbf{B}`
@@ -260,8 +260,8 @@ distributions gaussiennes d'erreurs (très peu restrictive en pratique) et de
 linéarité de :math:`\mathcal{H}`, que les deux approches *variationnelle* et
 *de filtrage* donnent la même solution.
 
-On indique que ces méthodes de "*3D-VAR*" et de "*BLUE*" peuvent être étendues
-à des problèmes dynamiques, sous les noms respectifs de "*4D-VAR*" et de
+On indique que ces méthodes de "*3D-Var*" et de "*BLUE*" peuvent être étendues
+à des problèmes dynamiques, sous les noms respectifs de "*4D-Var*" et de
 "*filtre de Kalman*". Elles doivent alors prendre en compte l'opérateur
 d'évolution pour établir aux bons pas de temps une analyse de l'écart entre les
 observations et les simulations et pour avoir, à chaque instant, la propagation
@@ -345,7 +345,7 @@ variationnelle de données nécessite de minimiser la fonction objectif :math:`J
 
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-qui est dénommée la fonctionnelle du "*3D-VAR*". Elle peut être vue comme la
+qui est dénommée la fonctionnelle du "*3D-Var*". Elle peut être vue comme la
 forme étendue d'une *minimisation moindres carrés*, obtenue en ajoutant un terme
 de régularisation utilisant :math:`\mathbf{x}-\mathbf{x}^b`, et en pondérant les
 différences par les deux matrices de covariances :math:`\mathbf{B}` et
@@ -393,7 +393,7 @@ réduire**. Par exemple, on peut citer une *erreur en valeur absolue*, une
 classiques de mesures d'erreurs, en indiquant leur identifiant dans ADAO pour
 la sélection éventuelle d'un critère de qualité :
 
-- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés et augmentés (qui est la fonctionnelle de base par défaut de tous les algorithmes en assimilation de données, souvent nommée la fonctionnelle du "*3D-VAR*", et qui est connue pour les critères de qualité dans ADAO sous les noms de "*AugmentedWeightedLeastSquares*", "*AWLS*" ou "*DA*") est :
+- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés et augmentés (qui est la fonctionnelle de base par défaut de tous les algorithmes en assimilation de données, souvent nommée la fonctionnelle du "*3D-Var*", et qui est connue pour les critères de qualité dans ADAO sous les noms de "*AugmentedWeightedLeastSquares*", "*AWLS*" ou "*DA*") est :
 
     .. index:: single: AugmentedWeightedLeastSquares (QualityCriterion)
     .. index:: single: AWLS (QualityCriterion)

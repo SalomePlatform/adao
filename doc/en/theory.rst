@@ -212,7 +212,7 @@ minimize the following function :math:`J`:
 
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-:math:`J` is classically designed as the "*3D-VAR*" functional in data
+:math:`J` is classically designed as the "*3D-Var*" functional in data
 assimlation (see for example [Talagrand97]_) or as the generalized Tikhonov
 regularization functional in optimization (see for example [WikipediaTI]_).
 Since :math:`\mathbf{B}` and :math:`\mathbf{R}` covariance matrices are
@@ -248,8 +248,8 @@ distributions (very little restrictive in practice) and of :math:`\mathcal{H}`
 linearity, that the two *variational* and *filtering* approaches give the same
 solution.
 
-It is indicated here that these methods of "*3D-VAR*" and "*BLUE*" may be
-extended to dynamic problems, called respectively "*4D-VAR*" and "*Kalman
+It is indicated here that these methods of "*3D-Var*" and "*BLUE*" may be
+extended to dynamic problems, called respectively "*4D-Var*" and "*Kalman
 filter*". They have to take into account the evolution operator to establish an
 analysis at the right time steps of the gap between observations and
 simulations, and to have, at every moment, the propagation of the background
@@ -325,7 +325,7 @@ requires to minimize the goal function :math:`J`:
 
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-which is named the "*3D-VAR*" objective function. It can be seen as a *least
+which is named the "*3D-Var*" objective function. It can be seen as a *least
 squares minimization* extented form, obtained by adding a regularizing term
 using :math:`\mathbf{x}-\mathbf{x}^b`, and by weighting the differences using
 :math:`\mathbf{B}` and :math:`\mathbf{R}` the two covariance matrices. The
@@ -367,7 +367,7 @@ The most classical instances of error measurements are recalled or specified
 below, indicating their identifiers in ADAO for the possible selection of a
 quality criterion:
 
-- the objective function for the augmented weighted least squares error measurement (which is the basic default functional in all data assimilation algorithms, often named "*3DVAR*" objective function, and which is known for the quality criteria in ADAO as "*AugmentedWeightedLeastSquares*", "*AWLS*" or "*DA*") is:
+- the objective function for the augmented weighted least squares error measurement (which is the basic default functional in all data assimilation algorithms, often named "*3D-Var*" objective function, and which is known for the quality criteria in ADAO as "*AugmentedWeightedLeastSquares*", "*AWLS*" or "*DA*") is:
 
     .. index:: single: AugmentedWeightedLeastSquares (QualityCriterion)
     .. index:: single: AWLS (QualityCriterion)

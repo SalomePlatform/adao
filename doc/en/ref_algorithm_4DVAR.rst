@@ -22,6 +22,7 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: 4DVAR
+.. index:: single: 4D-Var
 .. _section_ref_algorithm_4DVAR:
 
 Calculation algorithm "*4DVAR*"
@@ -39,10 +40,11 @@ assimilation:
 
 .. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\sum_{t\in T}(\mathbf{y^o}(t)-H(\mathbf{x},t))^T.\mathbf{R}^{-1}.(\mathbf{y^o}(t)-H(\mathbf{x},t))
 
-which is usually designed as the "*4D-VAR*" function (see for example
-[Talagrand97]_). It is well suited in cases of non-linear observation and
-evolution operators, its application domain is similar to the one of Kalman
-filters, specially the :ref:`section_ref_algorithm_ExtendedKalmanFilter` or the
+which is usually designed as the "*4D-Var*" functional (see for example
+[Talagrand97]_). The terms "*4D-Var*", "*4D-VAR*" and "*4DVAR*" are equivalent.
+It is well suited in cases of non-linear observation and evolution operators,
+its application domain is similar to the one of Kalman filters, specially the
+:ref:`section_ref_algorithm_ExtendedKalmanFilter` or the
 :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 .. ------------------------------------ ..

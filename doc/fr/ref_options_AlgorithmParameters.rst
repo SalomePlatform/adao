@@ -56,7 +56,7 @@ partie :ref:`section_tui` pour une description détaillée).
 Si une option ou un paramètre est spécifié par l'utilisateur pour un algorithme
 qui ne la supporte pas, cette option est simplement ignorée (laissée
 inutilisée) et ne bloque pas le traitement. La signification des acronymes ou
-des noms particuliers peut être trouvée dans l':ref:`genindex` ou dans le
+des noms particuliers peut être trouvée dans l'index ou dans le
 :ref:`section_glossary`.
 
 Première méthode : utiliser les mots-clés explicites pré-remplis

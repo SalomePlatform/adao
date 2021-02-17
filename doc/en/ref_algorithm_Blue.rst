@@ -45,6 +45,7 @@ In case of non-linearity, even slightly marked, it will be easily preferred the
 :ref:`section_ref_algorithm_3DVAR`.
 
 .. index:: single: Optimal Interpolation
+.. index:: single: OI
 
 Additional remark: an algebraic simplification of the BLUE leads to the optimal
 interpolation method, named "*Optimal Interpolation*" or "*OI*". It is a very

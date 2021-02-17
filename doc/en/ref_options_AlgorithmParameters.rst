@@ -54,7 +54,7 @@ description).
 If an option or a parameter is specified by the user for an algorithm that does
 not support it, the option is simply ignored (left unused) and don't stop the
 treatment. The meaning of the acronyms or particular names can be found in the
-:ref:`genindex` or the :ref:`section_glossary`.
+index or the :ref:`section_glossary`.
 
 First method : using explicit pre-filled keywords
 +++++++++++++++++++++++++++++++++++++++++++++++++

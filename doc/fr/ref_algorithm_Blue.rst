@@ -45,6 +45,7 @@ l':ref:`section_ref_algorithm_ExtendedBlue` ou
 l':ref:`section_ref_algorithm_3DVAR`.
 
 .. index:: single: Optimal Interpolation
+.. index:: single: OI
 
 Remarque complémentaire : une simplification algébrique du BLUE conduit à la
 méthode d'interpolation optimale, nommée "*Optimal Interpolation*" ou "*OI*".

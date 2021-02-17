@@ -22,6 +22,7 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: 3DVAR
+.. index:: single: 3D-Var
 .. _section_ref_algorithm_3DVAR:
 
 Calculation algorithm "*3DVAR*"
@@ -35,8 +36,8 @@ classical :math:`J` function in static data assimilation:
 
 .. math:: J(\mathbf{x})=(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+(\mathbf{y}^o-H(\mathbf{x}))^T.\mathbf{R}^{-1}.(\mathbf{y}^o-H(\mathbf{x}))
 
-which is usually designed as the "*3D-VAR*" function (see for example
-[Talagrand97]_).
+which is usually designed as the "*3D-Var*" function (see for example
+[Talagrand97]_). The terms "*3D-Var*", "*3D-VAR*" and "*3DVAR*" are equivalent.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
