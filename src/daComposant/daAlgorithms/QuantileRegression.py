@@ -87,6 +87,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.defineRequiredParameter(
+            name     = "InitializationPoint",
+            typecast = numpy.ravel,
+            message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
+            )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO" ),
             )
@@ -104,13 +109,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Utilisation éventuelle d'un vecteur H(Xb) précalculé
         # ----------------------------------------------------
         if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
-            HXb = Hm( Xb, HO["AppliedInX"]["HXb"])
+            HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
         else:
             HXb = Hm( Xb )
         HXb = numpy.asmatrix(numpy.ravel( HXb )).T
-        #
-        # Calcul de l'innovation
-        # ----------------------
         if Y.size != HXb.size:
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
@@ -121,7 +123,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ------------------------------
         def CostFunction(x):
             _X  = numpy.asmatrix(numpy.ravel( x )).T
-            if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
+            if self._parameters["StoreInternalVariables"] or \
+                self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( _X )
             _HX = Hm( _X )
             _HX = numpy.asmatrix(numpy.ravel( _HX )).T
@@ -142,12 +145,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Hg = HO["Tangent"].asMatrix( _X )
             return Hg
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
+        # Point de démarrage de l'optimisation
         # ------------------------------------
-        if isinstance(Xb, type(numpy.matrix([]))):
-            Xini = Xb.A1.tolist()
+        if self._parameters["InitializationPoint"] is not None:
+            __ipt = numpy.ravel(self._parameters["InitializationPoint"])
+            if __ipt.size != numpy.ravel(Xb).size:
+                raise ValueError("Incompatible size %i of forced initial point to replace the Xb of size %i" \
+                    %(__ipt.size,numpy.ravel(Xb).size))
+            else:
+                Xini = __ipt
         else:
-            Xini = list(Xb)
+            Xini = numpy.ravel(Xb)
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -175,16 +183,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         if self._toStore("OMA") or \
             self._toStore("SimulatedObservationAtOptimum"):
-            HXa = Hm(Xa)
+            HXa = Hm( Xa )
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._toStore("Innovation"):
             self.StoredVariables["Innovation"].store( numpy.ravel(d) )
         if self._toStore("BMA"):
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb - Xa) )
+            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( numpy.ravel(Y - HXa) )
+            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if self._toStore("OMB"):
             self.StoredVariables["OMB"].store( numpy.ravel(d) )
         if self._toStore("SimulatedObservationAtBackground"):
