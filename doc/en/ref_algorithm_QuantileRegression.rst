@@ -47,13 +47,15 @@ the model parameters that satisfy to the quantiles conditions.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/Quantile.rst
-
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/BoundsWithNone.rst
 
 .. include:: snippets/CostDecrementTolerance_6.rst
 
-.. include:: snippets/BoundsWithNone.rst
+.. include:: snippets/InitializationPoint.rst
+
+.. include:: snippets/MaximumNumberOfSteps.rst
+
+.. include:: snippets/Quantile.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
