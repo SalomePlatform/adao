@@ -32,7 +32,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Variant",
             default  = "EnKF",
             typecast = str,
-            message  = "Minimiseur utilisé",
+            message  = "Variant ou formulation de la méthode",
             listval  = [
                 "EnKF",
                 "ETKF",
@@ -175,7 +175,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         #--------------------------
         # Default EnKF = EnKF-16 = StochasticEnKF
-        if   self._parameters["Variant"] in ["EnKF-05"]:
+        if   self._parameters["Variant"] == "EnKF-05":
             NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula05")
         #
         elif self._parameters["Variant"] in ["EnKF-16", "StochasticEnKF", "EnKF"]:
@@ -218,7 +218,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         #--------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Minimizer"])
+            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
         self._post_run(HO)
         return 0
