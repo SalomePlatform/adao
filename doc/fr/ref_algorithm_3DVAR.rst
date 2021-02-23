@@ -124,6 +124,8 @@ StoreSupplementaryCalculations
   Exemple :
   ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
+.. include:: snippets/Variant_3DVAR.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
@@ -220,6 +222,11 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo07.rst
 
 - [Byrd95]_
+- [Cohn98]_
+- [Courtier94]_
+- [LeDimet86]_
+- [Lorenc86]_
+- [Lorenc88]_
 - [Morales11]_
 - [Talagrand97]_
 - [Zhu97]_

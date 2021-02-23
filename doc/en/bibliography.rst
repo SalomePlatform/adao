@@ -47,6 +47,10 @@ Bibliography
 
 .. [Chakraborty08] Chakraborty U.K., *Advances in differential evolution*, Studies in computational intelligence, Vol.143, Springer, 2008
 
+.. [Cohn98] Cohn S. E., Da Silva A., Guo J., Sienkiewicz M., Lamich D., *Assessing the effects of data selection with the DAO Physical-space Statistical Analysis System*, Monthly Weather Review, 126, pp.2913–2926, 1998
+
+.. [Courtier94] Courtier P., Thépaut J.-N., Hollingsworth A., *A strategy for operational implementation of 4D-Var, using an incremental approach*, Quarterly Journal of the Royal Meteorological Society, 120, pp.1367–1387, 1994
+
 .. [Das11] Das S., Suganthan P. N., *Differential Evolution: A Survey of the State-of-the-art*, IEEE Transactions on Evolutionary Computation, 15(1), pp.4-31, 2011
 
 .. [Das16] Das S., Mullick S. S., Suganthan P. N., *Recent Advances in Differential Evolution - An Updated Survey*, Swarm and Evolutionary Computation, 27, pp.1-30, 2016
@@ -68,6 +72,12 @@ Bibliography
 .. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, http://www.econ.uiuc.edu/~roger/research/intro/intro.html
 
 .. [Koenker01] Koenker R., Hallock K. F., *Quantile Regression*, Journal of Economic Perspectives, 15(4), pp.143-156, 2001
+
+.. [LeDimet86] Le Dimet F.-X., Talagrand 0., *Variational algorithms for analysis and assimilation of meteorological observations*, Tellus, 38A, pp.97-110, 1986
+
+.. [Lorenc86] Lorenc A. C., *Analysis methods for numerical weather prediction*, Quarterly Journal of the Royal Meteorological Society, 112, pp.1177-1194, 1986
+
+.. [Lorenc88] Lorenc A. C., *Optimal nonlinear objective analysis*, Quarterly Journal of the Royal Meteorological Society, 114, pp.205–240, 1988
 
 .. [Morales11] Morales J. L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
 

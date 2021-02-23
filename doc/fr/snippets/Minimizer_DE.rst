@@ -1,4 +1,15 @@
-.. index:: single: Minimizer
+.. index::
+    single: Minimizer
+    pair: Minimizer ; BEST1BIN",
+    pair: Minimizer ; BEST1EXP",
+    pair: Minimizer ; RAND1EXP",
+    pair: Minimizer ; RANDTOBEST1EXP
+    pair: Minimizer ; BEST2EXP
+    pair: Minimizer ; RAND2EXP
+    pair: Minimizer ; RANDTOBEST1BIN
+    pair: Minimizer ; BEST2BIN
+    pair: Minimizer ; RAND2BIN
+    pair: Minimizer ; RAND1BIN
 
 Minimizer
   *Nom prédéfini*. Cette clé permet de changer la stratégie de minimisation
@@ -7,14 +18,14 @@ Minimizer
   décrites par les clés
   "BEST1BIN",
   "BEST1EXP",
-  "RAND1EXP",
-  "RANDTOBEST1EXP",
+  "BEST2BIN",
   "BEST2EXP",
+  "RAND1BIN",
+  "RAND1EXP",
+  "RAND2BIN",
   "RAND2EXP",
   "RANDTOBEST1BIN",
-  "BEST2BIN",
-  "RAND2BIN",
-  "RAND1BIN".
+  "RANDTOBEST1EXP".
   Il est fortement conseillé de conserver la valeur par défaut.
 
   Exemple :
