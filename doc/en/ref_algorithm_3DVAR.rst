@@ -39,6 +39,21 @@ classical :math:`J` function in static data assimilation:
 which is usually designed as the "*3D-Var*" function (see for example
 [Talagrand97]_). The terms "*3D-Var*", "*3D-VAR*" and "*3DVAR*" are equivalent.
 
+There exists various variants of this algorithm. The following stable and robust formulations are proposed here:
+
+.. index::
+    pair: Variant ; 3DVAR
+    pair: Variant ; 3DVAR-VAN
+    pair: Variant ; 3DVAR-Incr
+    pair: Variant ; 3DVAR-PSAS
+
+- "3DVAR" (3D Variational analysis, see [Lorenc86]_, [LeDimet86]_, [Talagrand97]_), original and very robust algorithm,
+- "3DVAR-VAN" (3D Variational Analysis with No inversion of B, see [Lorenc88]_), similar algorithm but avoiding inversion of the covariance matrix B,
+- "3DVAR-Incr" (Incremental 3DVAR, see [Courtier94]_), cheaper algorithm but involving an approximation of non-linear operators,
+- "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR, see [Courtier97]_, [Cohn98]_), algorithm sometimes more cheap because it operates in another space, but involving an approximation of non-linear operators.
+
+It is recommended to use the original 3DVAR.
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

@@ -31,11 +31,11 @@ Bibliographie
 
 .. [Asch16] Asch M., Bocquet M., Nodet M., *Data Assimilation - Methods, Algorithms and Applications*, SIAM, 2016
 
-.. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and http://rpython.r-forge.r-project.org/
-
-.. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999
+.. [Bishop01] Bishop C. H., Etherton B. J., Majumdar S. J., *Adaptive sampling with the ensemble transform Kalman filter. Part I: theoretical aspects*, Monthly Weather Review, 129, pp.420–436, 2001
 
 .. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014
+
+.. [Bouttier99] Bouttier B., Courtier P., *Data assimilation concepts and methods*, Meteorological Training Course Lecture Series, ECMWF, 1999
 
 .. [Buchinsky98] Buchinsky M., *Recent Advances in Quantile Regression Models: A Practical Guidline for Empirical Research*, Journal of Human Resources, 33(1), pp.88-126, 1998
 
@@ -51,6 +51,8 @@ Bibliographie
 
 .. [Courtier94] Courtier P., Thépaut J.-N., Hollingsworth A., *A strategy for operational implementation of 4D-Var, using an incremental approach*, Quarterly Journal of the Royal Meteorological Society, 120, pp.1367–1387, 1994
 
+.. [Courtier97] Courtier P., *Dual formulation of four-dimensional variational assimilation*, Quarterly Journal of the Royal Meteorological Society, 123, pp.2449-2461, 1997
+
 .. [Das11] Das S., Suganthan P. N., *Differential Evolution: A Survey of the State-of-the-art*, IEEE Transactions on Evolutionary Computation, 15(1), pp.4-31, 2011
 
 .. [Das16] Das S., Mullick S. S., Suganthan P. N., *Recent Advances in Differential Evolution - An Updated Survey*, Swarm and Evolutionary Computation, 27, pp.1-30, 2016
@@ -58,6 +60,8 @@ Bibliographie
 .. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using Monte Carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), pp.10143–10162, 1994
 
 .. [Evensen03] Evensen G., *The Ensemble Kalman Filter: theoretical formulation and practical implementation*, Seminar on Recent developments in data assimilation for atmosphere and ocean, ECMWF, 8 to 12 September 2003
+
+.. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and http://rpython.r-forge.r-project.org/
 
 .. [Glover89] Glover F., *Tabu Search-Part I*, ORSA Journal on Computing, 1(2), pp.190-206, 1989
 
@@ -140,6 +144,8 @@ Bibliographie
 .. [WikipediaUKF] Wikipedia, *Unscented Kalman Filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
 
 .. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 23(4), pp.550-560, 1997
+
+.. [Zupanski05] Zupanski M., *Maximum likelihood ensemble filter: Theoretical aspects*, Monthly Weather Review, 133, pp.1710–1726, 2005
 
 *Nota Bene* : un lien vers la version française de chaque page Wikipédia se
 trouve dans le sous-menu "*Languages*". Les deux versions sont complémentaires

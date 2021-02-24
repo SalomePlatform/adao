@@ -52,12 +52,19 @@ In case of linear of "slightly" non-linear operators, one can easily use the
 to evaluate on small systems. One can verify the linearity of the operators
 with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
-There exists a lot of variants of this algorithm. Stable and robust ones are proposed here:
+There exists a lot of variants of this algorithm. The following stable and robust formulations are proposed here:
 
-- "EnKF" (Ensemble Kalman Filter), original stochastic algorithm, allowing consistent treatment of non-linear evolution operator,
+.. index::
+    pair: Variant ; EnKF
+    pair: Variant ; ETKF
+    pair: Variant ; ETKF-N
+    pair: Variant ; MLEF
+    pair: Variant ; IEnKF
+
+- "EnKF" (Ensemble Kalman Filter, see [Evensen94]_), original stochastic algorithm, allowing consistent treatment of non-linear evolution operator,
 - "ETKF" (Ensemble-Transform Kalman Filter), deterministic EnKF algorithm, allowing treatment of non-linear evolution operator with a lot less members (one recommends to use a number of members on the order of 10 or even sometimes less),
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), ETKF algorithm of "finite size N", yhat doesn't need inflation that is often required with the other algorithms,
-- "MLEF" (Maximum Likelihood Kalman Filter), deterministic EnKF scheme, allowing in addition the consistent treament of non-linear observation operator,
+- "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF scheme, allowing in addition the consistent treament of non-linear observation operator,
 - "IEnKF" (Iterative_EnKF), deterministic EnKF scheme, improving treament of operators non-linearities.
 
 Without being a universal recommandation, one recommend to use EnKF as a reference algorithm, and the other algorithms (in this order) as means to obtain less costly data assimilation with hopefully the same quality.
@@ -191,4 +198,5 @@ StoreSupplementaryCalculations
 - [Evensen94]_
 - [Burgers98]_
 - [Evensen03]_
+- [Zupanski05]_
 - [WikipediaEnKF]_

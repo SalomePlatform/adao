@@ -41,6 +41,21 @@ qui est usuellement désignée comme la fonctionnelle "*3D-Var*" (voir par
 exemple [Talagrand97]_). Les dénominations "*3D-Var*", "*3D-VAR*" et "*3DVAR*"
 sont équivalentes.
 
+Il existe diverses variantes de cet algorithme. On propose ici des formulations stables et robustes suivantes :
+
+.. index::
+    pair: Variant ; 3DVAR
+    pair: Variant ; 3DVAR-VAN
+    pair: Variant ; 3DVAR-Incr
+    pair: Variant ; 3DVAR-PSAS
+
+- "3DVAR" (3D Variational analysis, voir [Lorenc86]_, [LeDimet86]_, [Talagrand97]_), algorithme d'origine et très robuste,
+- "3DVAR-VAN" (3D Variational Analysis with No inversion of B, voir [Lorenc88]_), algorithme similaire mais permettant d'éviter l'inversion de la matrice de covariance B,
+- "3DVAR-Incr" (Incremental 3DVAR, voir [Courtier94]_), algorithme plus économique mais impliquant une approximation des opérateurs non-linéaires,
+- "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR, voir [Courtier97]_, [Cohn98]_), algorithme parfois plus économique car opérant dans un autre espace, mais impliquant une approximation des opérateurs non-linéaires.
+
+On recommande d'utiliser le 3DVAR d'origine.
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

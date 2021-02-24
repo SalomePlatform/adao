@@ -82,9 +82,9 @@ part :ref:`section_license`.
    tui
    reference
    license
+   bibliography
+   notations
    glossary
    genindex
-   notations
-   bibliography
 
 * :ref:`search`

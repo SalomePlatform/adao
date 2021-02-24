@@ -86,9 +86,9 @@ pas de lire la partie :ref:`section_license`.
    tui
    reference
    license
+   bibliography
+   notations
    glossary
    genindex
-   notations
-   bibliography
 
 * :ref:`search`
