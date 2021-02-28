@@ -101,6 +101,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
+        self.defineRequiredParameter(
+            name     = "InitializationPoint",
+            typecast = numpy.ravel,
+            message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
+            )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R"),
             )
@@ -223,7 +228,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Point de démarrage de l'optimisation : Xini = Xb
         # ------------------------------------
-        Xini = numpy.ravel(Xb)
+        Xini = self._parameters["InitializationPoint"]
         #
         # Minimisation de la fonctionnelle
         # --------------------------------

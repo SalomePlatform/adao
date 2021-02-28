@@ -684,13 +684,7 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     # Point de démarrage de l'optimisation
     # ------------------------------------
-    if selfA._parameters["InitializationPoint"] is not None:
-        Xini = numpy.ravel(selfA._parameters["InitializationPoint"])
-        if Xini.size != numpy.ravel(Xb).size:
-            raise ValueError("Incompatible size %i of forced initial point to replace the Xb of size %i" \
-                %(Xini.size,numpy.ravel(Xb).size))
-    else:
-        Xini = numpy.ravel(Xb)
+    Xini = selfA._parameters["InitializationPoint"]
     #
     # Définition de la fonction-coût
     # ------------------------------
@@ -1235,13 +1229,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     RI = R.getI()
     #
     # Point de démarrage de l'optimisation
-    if selfA._parameters["InitializationPoint"] is not None:
-        Xini = numpy.ravel(selfA._parameters["InitializationPoint"])
-        if Xini.size != numpy.ravel(Xb).size:
-            raise ValueError("Incompatible size %i of forced initial point to replace the Xb of size %i" \
-                %(Xini.size,numpy.ravel(Xb).size))
-    else:
-        Xini = numpy.ravel(Xb)
+    Xini = selfA._parameters["InitializationPoint"]
     #
     HXb = numpy.asmatrix(numpy.ravel( Hm( Xb ) )).T
     Innovation = Y - HXb
@@ -1251,7 +1239,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     iOuter = 0
     J      = 1./mpr
     DeltaJ = 1./mpr
-    Xr     = Xini[:,None]
+    Xr     = Xini.reshape((-1,1))
     while abs(DeltaJ) >= selfA._parameters["CostDecrementTolerance"] and iOuter <= selfA._parameters["MaximumNumberOfSteps"]:
         #
         # Inner Loop

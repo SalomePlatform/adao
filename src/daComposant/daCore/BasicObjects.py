@@ -764,6 +764,19 @@ class Algorithm(object):
         else:
             self._parameters["Bounds"] = None
         #
+        # Corrections et compléments de l'initialisation en X
+        if  "InitializationPoint" in self._parameters:
+            if Xb is not None:
+                if self._parameters["InitializationPoint"] is not None and hasattr(self._parameters["InitializationPoint"],'size'):
+                    if self._parameters["InitializationPoint"].size != numpy.ravel(Xb).size:
+                        raise ValueError("Incompatible size %i of forced initial point that have to replace the background of size %i" \
+                            %(self._parameters["InitializationPoint"].size,numpy.ravel(Xb).size))
+                    # Obtenu par typecast : numpy.ravel(self._parameters["InitializationPoint"])
+                else:
+                    self._parameters["InitializationPoint"] = numpy.ravel(Xb)
+            else:
+                if self._parameters["InitializationPoint"] is None:
+                    raise ValueError("Forced initial point can not be set without any given Background or required value")
         if logging.getLogger().level < logging.WARNING:
             self._parameters["optiprint"], self._parameters["optdisp"] = 1, 1
             if PlatformInfo.has_scipy:

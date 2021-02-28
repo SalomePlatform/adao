@@ -718,8 +718,8 @@ class OneMatrix(Persistence):
 
 class OneList(Persistence):
     """
-    Classe de stockage d'une liste de valeurs hétérogènes (list) par pas. Ne pas
-    utiliser cette classe pour des données numériques homogènes, mais
+    Classe de stockage d'une liste de valeurs hétérogènes (list) par pas. Ne
+    pas utiliser cette classe pour des données numériques homogènes, mais
     "OneVector".
     """
     def __init__(self, name="", unit="", basetype = list):
@@ -733,8 +733,8 @@ class OneNoType(Persistence):
     """
     Classe de stockage d'un objet sans modification (cast) de type. Attention,
     selon le véritable type de l'objet stocké à chaque pas, les opérations
-    arithmétiques à base de numpy peuvent être invalides ou donner des résultats
-    inattendus. Cette classe n'est donc à utiliser qu'à bon escient
+    arithmétiques à base de numpy peuvent être invalides ou donner des
+    résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
     volontairement, et pas du tout par défaut.
     """
     def __init__(self, name="", unit="", basetype = NoType):
@@ -753,9 +753,9 @@ class CompositePersistence(object):
         """
         name : nom courant
 
-        La gestion interne des données est exclusivement basée sur les variables
-        initialisées ici (qui ne sont pas accessibles depuis l'extérieur des
-        objets comme des attributs) :
+        La gestion interne des données est exclusivement basée sur les
+        variables initialisées ici (qui ne sont pas accessibles depuis
+        l'extérieur des objets comme des attributs) :
         __StoredObjects : objets de type persistence collectés dans cet objet
         """
         self.__name = str(name)
@@ -791,8 +791,8 @@ class CompositePersistence(object):
 
     def add_object(self, name=None, persistenceType=Persistence, basetype=None ):
         """
-        Ajoute dans les objets stockables un nouvel objet défini par son nom, son
-        type de Persistence et son type de base à chaque pas.
+        Ajoute dans les objets stockables un nouvel objet défini par son nom,
+        son type de Persistence et son type de base à chaque pas.
         """
         if name is None: raise ValueError("Object name is required for adding an object.")
         if name in self.__StoredObjects.keys():
