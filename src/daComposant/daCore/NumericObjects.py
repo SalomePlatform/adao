@@ -643,6 +643,55 @@ def CovarianceInflation(
     return OutputCovOrEns
 
 # ==============================================================================
+def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
+    """
+    Chapeau : 3DVAR multi-pas et multi-méthodes
+    """
+    #
+    # Initialisation
+    # --------------
+    Xn = numpy.ravel(Xb).reshape((-1,1))
+    #
+    if selfA._parameters["EstimationOf"] == "State":
+        M = EM["Direct"].appliedTo
+        #
+        if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+            selfA.StoredVariables["Analysis"].store( Xn )
+            if selfA._toStore("APosterioriCovariance"):
+                if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(Xn.size)
+                else:                         Pn = B
+                selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+            if selfA._toStore("ForecastState"):
+                selfA.StoredVariables["ForecastState"].store( Xn )
+    #
+    if hasattr(Y,"stepnumber"):
+        duration = Y.stepnumber()
+    else:
+        duration = 2
+    #
+    # Multi-pas
+    # ---------
+    for step in range(duration-1):
+        if hasattr(Y,"store"):
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((-1,1))
+        else:
+            Ynpu = numpy.ravel( Y ).reshape((-1,1))
+        #
+        if selfA._parameters["EstimationOf"] == "State": # Forecast
+            Xn = selfA.StoredVariables["Analysis"][-1]
+            Xn_predicted = M( Xn )
+            if selfA._toStore("ForecastState"):
+                selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+        elif selfA._parameters["EstimationOf"] == "Parameters": # No forecast
+            # --- > Par principe, M = Id, Q = 0
+            Xn_predicted = Xn
+        Xn_predicted = numpy.ravel(Xn_predicted).reshape((-1,1))
+        #
+        oneCycle(selfA, Xn_predicted, Ynpu, U, HO, None, None, R, B, None)
+    #
+    return 0
+
+# ==============================================================================
 def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
     3DVAR (Bouttier 1999, Courtier 1993)

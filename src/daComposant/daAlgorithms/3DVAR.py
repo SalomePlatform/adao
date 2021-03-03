@@ -53,8 +53,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             listadv  = [
                 "3DVAR-Std",
-                "Incr3DVAR",
                 ],
+            )
+        self.defineRequiredParameter(
+            name     = "EstimationOf",
+            default  = "Parameters",
+            typecast = str,
+            message  = "Estimation d'état ou de paramètres",
+            listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
@@ -111,6 +117,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",
                 "InnovationAtCurrentState",
@@ -179,16 +186,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         # Default 3DVAR
         if   self._parameters["Variant"] in ["3DVAR", "3DVAR-Std"]:
-            NumericObjects.std3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.std3dvar)
         #
         elif self._parameters["Variant"] == "3DVAR-VAN":
-            NumericObjects.van3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.van3dvar)
         #
         elif self._parameters["Variant"] in ["3DVAR-Incr", "Incr3DVAR"]:
-            NumericObjects.incr3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.incr3dvar)
         #
         elif self._parameters["Variant"] == "3DVAR-PSAS":
-            NumericObjects.psas3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.psas3dvar)
+        #
         #
         #--------------------------
         else:
