@@ -53,6 +53,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             listadv  = [
                 "3DVAR-Std",
+                "OneCycle3DVAR-Std",
                 ],
             )
         self.defineRequiredParameter(
@@ -197,6 +198,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] == "3DVAR-PSAS":
             NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.psas3dvar)
         #
+        #--------------------------
+        elif self._parameters["Variant"] == "OneCycle3DVAR-Std":
+            NumericObjects.std3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

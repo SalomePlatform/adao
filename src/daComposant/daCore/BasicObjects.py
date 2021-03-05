@@ -759,6 +759,7 @@ class Algorithm(object):
         __test_ovalue( EM, "EM", "Evolution", "M" )
         __test_ovalue( CM, "CM", "Control Model", "C" )
         #
+        # Corrections et compléments des bornes
         if ("Bounds" in self._parameters) and isinstance(self._parameters["Bounds"], (list, tuple)) and (len(self._parameters["Bounds"]) > 0):
             logging.debug("%s Prise en compte des bornes effectuee"%(self._name,))
         else:
@@ -777,6 +778,12 @@ class Algorithm(object):
             else:
                 if self._parameters["InitializationPoint"] is None:
                     raise ValueError("Forced initial point can not be set without any given Background or required value")
+        #
+        # Correction pour pallier a un bug de TNC sur le retour du Minimum
+        if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
+            self.setParameterValue("StoreInternalVariables",True)
+        #
+        # Verbosité et logging
         if logging.getLogger().level < logging.WARNING:
             self._parameters["optiprint"], self._parameters["optdisp"] = 1, 1
             if PlatformInfo.has_scipy:

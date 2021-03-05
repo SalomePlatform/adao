@@ -700,10 +700,6 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     valeurs.
     """
     #
-    # Correction pour pallier a un bug de TNC sur le retour du Minimum
-    if "Minimizer" in selfA._parameters and selfA._parameters["Minimizer"] == "TNC":
-        selfA.setParameterValue("StoreInternalVariables",True)
-    #
     # Opérateurs
     # ----------
     Hm = HO["Direct"].appliedTo
@@ -872,7 +868,7 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # ----------------------
     Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
     #
-    selfA.StoredVariables["Analysis"].store( Xa.A1 )
+    selfA.StoredVariables["Analysis"].store( Xa )
     #
     if selfA._toStore("OMA") or \
         selfA._toStore("SigmaObs2") or \
@@ -987,10 +983,6 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     selfA est identique au "self" d'algorithme appelant et contient les
     valeurs.
     """
-    #
-    # Correction pour pallier a un bug de TNC sur le retour du Minimum
-    if "Minimizer" in selfA._parameters and selfA._parameters["Minimizer"] == "TNC":
-        selfA.setParameterValue("StoreInternalVariables",True)
     #
     # Initialisations
     # ---------------
@@ -1262,10 +1254,6 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     selfA est identique au "self" d'algorithme appelant et contient les
     valeurs.
     """
-    #
-    # Correction pour pallier a un bug de TNC sur le retour du Minimum
-    if "Minimizer" in selfA._parameters and selfA._parameters["Minimizer"] == "TNC":
-        selfA.setParameterValue("StoreInternalVariables",True)
     #
     # Initialisations
     # ---------------
@@ -1555,10 +1543,6 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     selfA est identique au "self" d'algorithme appelant et contient les
     valeurs.
     """
-    #
-    # Correction pour pallier a un bug de TNC sur le retour du Minimum
-    if "Minimizer" in selfA._parameters and selfA._parameters["Minimizer"] == "TNC":
-        selfA.setParameterValue("StoreInternalVariables",True)
     #
     # Initialisations
     # ---------------
@@ -1891,7 +1875,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
-        selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+        selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
@@ -2132,7 +2116,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
-        selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+        selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
@@ -2182,7 +2166,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #
         # Mean of forecast and observation of forecast
         Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__n,-1))
-        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
+        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,-1))
         #
         # Anomalies
         EaX   = EnsembleOfAnomalies( Xn_predicted )
@@ -2488,7 +2472,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
-        selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+        selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
@@ -2731,7 +2715,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
-        selfA.StoredVariables["Analysis"].store( numpy.ravel(Xb) )
+        selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
             covarianceXa = Pn
