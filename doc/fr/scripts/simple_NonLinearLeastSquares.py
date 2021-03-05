@@ -27,6 +27,7 @@ case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
     Algorithm='NonLinearLeastSquares',
     Parameters={
+        'MaximumNumberOfSteps': 100,
         'StoreSupplementaryCalculations': [
             'CurrentState',
             ],

@@ -62,6 +62,8 @@ for its stability as for its behavior during optimization.
 
 .. include:: snippets/GradientNormTolerance.rst
 
+.. include:: snippets/InitializationPoint.rst
+
 .. include:: snippets/MaximumNumberOfSteps.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst

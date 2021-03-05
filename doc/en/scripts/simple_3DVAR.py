@@ -28,6 +28,7 @@ case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
     Algorithm='3DVAR',
     Parameters={
+        'MaximumNumberOfSteps': 100,
         'StoreSupplementaryCalculations': [
             'CurrentState',
             ],
