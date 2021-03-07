@@ -39,7 +39,8 @@ classical :math:`J` function in static data assimilation:
 which is usually designed as the "*3D-Var*" function (see for example
 [Talagrand97]_). The terms "*3D-Var*", "*3D-VAR*" and "*3DVAR*" are equivalent.
 
-There exists various variants of this algorithm. The following stable and robust formulations are proposed here:
+There exists various variants of this algorithm. The following stable and
+robust formulations are proposed here:
 
 .. index::
     pair: Variant ; 3DVAR
@@ -47,12 +48,14 @@ There exists various variants of this algorithm. The following stable and robust
     pair: Variant ; 3DVAR-Incr
     pair: Variant ; 3DVAR-PSAS
 
-- "3DVAR" (3D Variational analysis, see [Lorenc86]_, [LeDimet86]_, [Talagrand97]_), original and very robust algorithm,
-- "3DVAR-VAN" (3D Variational Analysis with No inversion of B, see [Lorenc88]_), similar algorithm but avoiding inversion of the covariance matrix B,
-- "3DVAR-Incr" (Incremental 3DVAR, see [Courtier94]_), cheaper algorithm but involving an approximation of non-linear operators,
-- "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR, see [Courtier97]_, [Cohn98]_), algorithm sometimes more cheap because it operates in another space, but involving an approximation of non-linear operators.
+- "3DVAR" (3D Variational analysis, see [Lorenc86]_, [LeDimet86]_, [Talagrand97]_), original classical algorithm and very robust, which operates in the model space,
+- "3DVAR-VAN" (3D Variational Analysis with No inversion of B, see [Lorenc88]_), similar algorithm, which operates in the model space, but avoiding inversion of the covariance matrix B,
+- "3DVAR-Incr" (Incremental 3DVAR, see [Courtier94]_), cheaper algorithm than the previous ones, but involving an approximation of non-linear operators,
+- "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR, see [Courtier97]_, [Cohn98]_), algorithm sometimes cheaper because it operates in the observation space, but involving an approximation of non-linear operators.
 
-It is recommended to use the original 3DVAR.
+It is highly recommended to use the original "3DVAR". The "3DVAR" and
+"3DVAR-Incr" algorithms (and not the others) allow modification of the
+initialization point for the minimization, but it is not recommended.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

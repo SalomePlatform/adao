@@ -53,6 +53,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             listadv  = [
                 "3DVAR-Std",
+                "Incr3DVAR",
                 "OneCycle3DVAR-Std",
                 ],
             )
