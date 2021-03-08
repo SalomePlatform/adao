@@ -83,8 +83,9 @@ sont expliquées dans la section :ref:`section_theory`.
 **[DocR]** Cas d'assimilation de données ou d'optimisation
 ============================================================================================
 
-Cette section décrit les algorithmes d'assimilation de données ou
-d'optimisation disponibles dans ADAO, détaillant leurs caractéristiques
+Cette section décrit les choix algorithmiques pour utiliser des méthodes
+d'assimilation de données, des méthodes d'optimisation ou des méthodes avec
+réduction, disponibles dans ADAO, détaillant leurs caractéristiques
 d'utilisation et leurs options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section

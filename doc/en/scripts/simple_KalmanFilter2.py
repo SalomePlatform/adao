@@ -35,6 +35,8 @@ case.setObserver(
     Variable='Analysis',
     )
 #
+# Loop to obtain an analysis at each observation arrival
+#
 XaStep, VaStep = 0., 1.
 for i in range(1,len(Yobs)):
     case.setBackground         (Vector             = "%s"%float(XaStep))

@@ -199,6 +199,7 @@ StoreSupplementaryCalculations
 
 - [Evensen94]_
 - [Burgers98]_
+- [Bishop01]_
 - [Evensen03]_
 - [Zupanski05]_
 - [WikipediaEnKF]_

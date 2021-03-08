@@ -83,8 +83,9 @@ the section :ref:`section_theory`.
 **[DocR]** Data assimilation or optimization calculation cases
 ============================================================================================
 
-This section describes the data assimilation or optimization algorithms
-available in ADAO, detailing their usage characteristics and their options.
+This section describes algorithmic choices to use data assimilation methods,
+optimization methods or methods with reduction, available in ADAO, detailing
+their usage characteristics and their options.
 
 Some examples on these commands usage are available in the section
 :ref:`section_tutorials_in_salome`, in the section

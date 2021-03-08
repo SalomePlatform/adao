@@ -21,7 +21,6 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: CHECKING_STUDY
 .. _section_ref_checking_keywords:
 
 Liste des commandes et mots-clés pour un cas de vérification
@@ -29,12 +28,16 @@ Liste des commandes et mots-clés pour un cas de vérification
 
 Ce jeu de commandes est lié à la description d'un cas de vérification, qui est
 une procédure pour vérifier les propriétés d'une information requise, utilisée
-ailleurs par un cas de calcul. Les termes sont classés par ordre alphabétique,
-sauf le premier, qui décrit le choix entre le calcul ou la vérification.
+ailleurs par un cas de calcul.
 
-Les différentes commandes sont les suivantes:
+Le premier terme décrit le choix entre un calcul ou une vérification. Dans
+l'interface graphique, la vérification est désigné obligatoirement par la
+commande:
 
 .. include:: snippets/CHECKING_STUDY.rst
+
+Les autres termes sont classés par ordre alphabétique. Les différentes
+commandes sont les suivantes:
 
 .. include:: snippets/AlgorithmParameters.rst
 

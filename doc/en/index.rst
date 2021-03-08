@@ -40,8 +40,10 @@ over time. It uses information coming from experimental measurements or
 observations, and from numerical *a priori* models, including information about
 their errors. Parts of the framework are also known under the names of
 *parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
-interpolation*, *field reconstruction*, etc. More details can be found in the
-section :ref:`section_theory`.
+interpolation*, *field reconstruction*, etc. The ADAO module currently offers
+more than 100 different algorithmic methods and allows the study of about 350
+distinct applied problems. More details can be found in the section
+:ref:`section_theory`.
 
 The documentation for this module is divided into several major categories,
 related to the theoretical documentation (indicated in the section title by
@@ -62,7 +64,7 @@ come back regularly to these parts. The following parts describe
 detailed :ref:`section_reference`, with three essential main sub-parts
 describing the details of commands and options of the algorithms. A
 :ref:`section_glossary`, some :ref:`section_notations`, a
-:ref:`section_bibliography` and an extensive :ref:`genindex` are included in
+:ref:`section_bibliography` and an extensive index are included in
 the document. And, to comply with the module requirements, be sure to read the
 part :ref:`section_license`.
 

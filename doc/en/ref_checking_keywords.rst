@@ -21,7 +21,6 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: CHECKING_STUDY
 .. _section_ref_checking_keywords:
 
 List of commands and keywords for an ADAO checking case
@@ -29,12 +28,15 @@ List of commands and keywords for an ADAO checking case
 
 This set of commands is related to the description of a checking case, that is a
 procedure to check required properties on information, used somewhere else by a
-calculation case. The terms are ordered in alphabetical order, except the first,
-which describes the choice between calculation or checking.
+calculation case.
 
-The different commands are the following:
+The first term describes the choice between calculation or checking. In the
+graphical interface, the verification is imperatively indicated by the command:
 
 .. include:: snippets/CHECKING_STUDY.rst
+
+The other terms are ordered in alphabetical order. The different commands are
+the following:
 
 .. include:: snippets/AlgorithmParameters.rst
 

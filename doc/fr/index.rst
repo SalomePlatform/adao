@@ -41,9 +41,10 @@ provenant de mesures expérimentales, ou observations, et de modèles numérique
 *a priori*, y compris des informations sur leurs erreurs. Certaines des
 méthodes incluses dans ce cadre sont également connues sous les noms
 d'*estimation de paramètres*, de *problèmes inverses*, d'*estimation
-bayésienne*, d'*interpolation optimale*, de *reconstruction de champs*, etc. De
-plus amples détails peuvent être trouvés dans la partie proposant
-:ref:`section_theory`.
+bayésienne*, d'*interpolation optimale*, de *reconstruction de champs*, etc. Le
+module ADAO offre actuellement plus de 100 méthodes algorithmiques différentes
+et permet l'étude d'environ 350 problèmes appliqués distincts. De plus amples
+détails peuvent être trouvés dans la partie proposant :ref:`section_theory`.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la documentation théorique (indiquée dans le titre de section par
@@ -66,9 +67,9 @@ expliquent comment utiliser une :ref:`section_gui_in_salome` ou une
 :ref:`section_reference`, avec trois sous-parties essentielles qui la composent
 et qui décrivent les commandes et des options d'algorithmes. Un
 :ref:`section_glossary`, des :ref:`section_notations`, une
-:ref:`section_bibliography` et un :ref:`genindex` développés complètent le
-document. Enfin, pour respecter les exigences de licence du module, n'oubliez
-pas de lire la partie :ref:`section_license`.
+:ref:`section_bibliography` et un index développé complètent le document.
+Enfin, pour respecter les exigences de licence du module, n'oubliez pas de lire
+la partie :ref:`section_license`.
 
 .. toctree::
    :caption: Table des matières

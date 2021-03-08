@@ -28,7 +28,7 @@ Introduction to ADAO
 ================================================================================
 
 The aim of the ADAO module is **to help using data assimilation or optimization
-methodology in conjunction with other modules or simulation codes in Python**
+methodology, in conjunction with other modules or simulation codes, in Python**
 [Python]_ **or SALOME context** [Salome]_. The ADAO module provides a simple
 interface to some standard algorithms of data assimilation or optimization, as
 well as test or verification ones. It allows integration of their use in a
@@ -37,17 +37,17 @@ one or more specific calling methods in order to be callable in the Python or
 SALOME framework. All the SALOME modules can be used through Python or YACS
 integration.
 
-Its main objective is **to provide the use of various standard data
-assimilation or optimization methods, while remaining easy to setup, and
-providing a simplified path to help the implementation**. For the end user, who
-has previously collected information on his physical problem, the environment
-allows him to have an approach focused on simply declaring this information to
-build a valid ADAO case, to evaluate it, and to draw the physical results he
-needs
+Its main objective is **to provide the use of standard and robust data
+assimilation or optimization methods, in an efficient way, while remaining easy
+to setup, and providing a simplified path to help the implementation**. For the
+end user, who has previously collected information on his physical problem, the
+environment allows him to have an approach focused on simply declaring this
+information to build a valid ADAO case, to evaluate it, and to draw the
+physical results he needs
 
 The module covers a wide variety of practical applications, in a robust way,
 allowing real engineering applications, but also quick experimental methodology
 setup to be performed. Its methodological and numerical scalability give way to
-extend its applied domain. It is based on usage of other SALOME modules, namely
-YACS and EFICAS if they are available, and on usage of a generic underlying
-data assimilation library.
+extend its applied domain. It is based on usage of other Python or SALOME
+modules, in particular YACS and EFICAS if they are available, and on usage of a
+generic underlying data assimilation library.
