@@ -41,7 +41,7 @@ try:
   import adao
   import daEficas
   import daYacsSchemaCreator
-  import daCore.AssimilationStudy
+  import daCore.Aidsm
   import daYacsSchemaCreator.infos_daComposant as infos
 except:
   logging.fatal("Import of ADAO python modules failed !" +
@@ -49,7 +49,10 @@ except:
   traceback.print_exc()
   sys.exit(1)
 
+#===============================================================================
+
 #----------- Templates Part ---------------#
+
 begin_catalog_file = """# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2008-2021 EDF R&D
@@ -85,7 +88,7 @@ from Accas import *
 JdC = JDC_CATA (
     code = '%s',
     execmodul = None,
-    regles = ( AU_MOINS_UN ('ASSIMILATION_STUDY','CHECKING_STUDY'), AU_PLUS_UN ('ASSIMILATION_STUDY','CHECKING_STUDY')),
+    regles = ( AU_MOINS_UN ('ASSIMILATION_STUDY','OPTIMIZATION_STUDY','REDUCTION_STUDY','CHECKING_STUDY'), AU_PLUS_UN ('ASSIMILATION_STUDY','OPTIMIZATION_STUDY','REDUCTION_STUDY','CHECKING_STUDY')),
     )
 VERSION_CATALOGUE='%s'
 
@@ -314,6 +317,52 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
     Observers           = F_Observers("f")
     )
 
+OPTIMIZATION_STUDY = PROC(nom="OPTIMIZATION_STUDY",
+    op=None,
+    repetable           = "n",
+    StudyName           = SIMP(statut="o", typ = "TXM", defaut="ADAO Calculation Case"),
+    StudyRepertory      = SIMP(statut="f", typ = "Repertoire", validators=FunctionVal(ChDir), min=1, max=1),
+    Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
+    ExecuteInContainer  = SIMP(statut="f", typ = "TXM", min=1, max=1, defaut = "No", into=("No", "Mono", "Multi")),
+    AlgorithmParameters = F_AlgorithmParameters("o",({optim_names}), AlgorithmParametersInNS),
+    Background          = F_Background("o", BackgroundInNS),
+    BackgroundError     = F_BackgroundError("f", BackgroundErrorInNS),
+    Observation         = F_Observation("o", ObservationInNS),
+    ObservationError    = F_ObservationError("f", ObservationErrorInNS),
+    ObservationOperator = F_ObservationOperator("o"),
+    EvolutionModel      = F_EvolutionModel("f"),
+    EvolutionError      = F_EvolutionError("f", EvolutionErrorInNS),
+    ControlInput        = F_ControlInput("f"),
+    UserDataInit        = F_Init("f"),
+    UserPostAnalysis    = F_UserPostAnalysis("o"),
+    InputVariables      = F_variables("f"),
+    OutputVariables     = F_variables("f"),
+    Observers           = F_Observers("f")
+    )
+
+REDUCTION_STUDY = PROC(nom="REDUCTION_STUDY",
+    op=None,
+    repetable           = "n",
+    StudyName           = SIMP(statut="o", typ = "TXM", defaut="ADAO Calculation Case"),
+    StudyRepertory      = SIMP(statut="f", typ = "Repertoire", validators=FunctionVal(ChDir), min=1, max=1),
+    Debug               = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0),
+    ExecuteInContainer  = SIMP(statut="f", typ = "TXM", min=1, max=1, defaut = "No", into=("No", "Mono", "Multi")),
+    AlgorithmParameters = F_AlgorithmParameters("o",({reduc_names}), AlgorithmParametersInNS),
+    Background          = F_Background("o", BackgroundInNS),
+    BackgroundError     = F_BackgroundError("o", BackgroundErrorInNS),
+    Observation         = F_Observation("o", ObservationInNS),
+    ObservationError    = F_ObservationError("o", ObservationErrorInNS),
+    ObservationOperator = F_ObservationOperator("o"),
+    EvolutionModel      = F_EvolutionModel("f"),
+    EvolutionError      = F_EvolutionError("f", EvolutionErrorInNS),
+    ControlInput        = F_ControlInput("f"),
+    UserDataInit        = F_Init("f"),
+    UserPostAnalysis    = F_UserPostAnalysis("o"),
+    InputVariables      = F_variables("f"),
+    OutputVariables     = F_variables("f"),
+    Observers           = F_Observers("f")
+    )
+
 CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
     op=None,
     repetable           = "n",
@@ -335,7 +384,7 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
 
 #----------- End of Templates Part ---------------#
 
-
+#===============================================================================
 
 #----------- Begin generation script -----------#
 
@@ -352,29 +401,39 @@ args = my_parser.parse_args()
 # Generates into a string
 mem_file = io.StringIO()
 
-# Start file
+# Initial step: On ouvre le fichier
 from time import strftime
 mem_file.write(unicode(begin_catalog_file, 'utf-8').format(**{'date':strftime("%Y-%m-%d %H:%M:%S")}))
 
-# Step initial: on obtient la liste des algos
+# Step 0: on obtient la liste des algos
 algos_names = ""
+optim_names = ""
+reduc_names = ""
 check_names = ""
 decl_algos  = ""
-assim_study_object = daCore.AssimilationStudy.AssimilationStudy()
+algal_names = ""
+assim_study_object = daCore.Aidsm.Aidsm()
 algos_list = assim_study_object.get_available_algorithms()
 del assim_study_object
 for algo_name in algos_list:
   if algo_name in infos.AssimAlgos:
     logging.debug("An assimilation algorithm is found: " + algo_name)
     algos_names += "\"" + algo_name + "\", "
-  elif algo_name in infos.CheckAlgos:
+  if algo_name in infos.OptimizationAlgos:
+    logging.debug("An optimization algorithm is found: " + algo_name)
+    optim_names += "\"" + algo_name + "\", "
+  if algo_name in infos.ReductionAlgos:
+    logging.debug("A reduction algorithm is found: " + algo_name)
+    reduc_names += "\"" + algo_name + "\", "
+  if algo_name in infos.CheckAlgos:
     logging.debug("A checking algorithm is found: " + algo_name)
     check_names += "\"" + algo_name + "\", "
-  else:
-    logging.debug("This algorithm is not considered: " + algo_name)
+  if algo_name in infos.AssimAlgos+infos.OptimizationAlgos+infos.ReductionAlgos+infos.CheckAlgos:
+    # Pour filtrer sur les algorithmes vraiment interfacés, car il peut y en avoir moins que "algos_list"
+    algal_names += "\"" + algo_name + "\", "
 
-# Step 1: A partir des infos, on cree les fonctions qui vont permettre
-# d'entrer les donnees utilisateur
+# Step 1: A partir des infos, on crée les fonctions qui vont permettre
+# d'entrer les données utilisateur
 for data_input_name in infos.DataTypeDict:
   logging.debug('A data input Type is found: ' + data_input_name)
   data_name = data_input_name
@@ -382,11 +441,11 @@ for data_input_name in infos.DataTypeDict:
   data_default = ""
   ms_default = ""
 
-  # On recupere les differentes facon d'entrer les donnees
+  # On récupère les différentes façon d'entrer les données
   for basic_type in infos.DataTypeDict[data_input_name]:
     data_into += "\"" + basic_type + "\", "
 
-  # On choisit le default
+  # On choisit le défaut
   data_default = "\"" + infos.DataTypeDefaultDict[data_input_name] + "\""
   if data_input_name in infos.DataSValueDefaultDict:
     ms_default = " defaut=\"" + infos.DataSValueDefaultDict[data_input_name] + "\","
@@ -396,10 +455,10 @@ for data_input_name in infos.DataTypeDict:
     'data_into'    : data_into,
     'data_default' : data_default,
     'ms_default'   : ms_default,
-    'algos_names'  : algos_names+check_names,
+    #~ 'algos_names'  : algal_names,
     }))
 
-# Step 2: On cree les fonctions qui permettent de rentrer les donnees des algorithmes
+# Step 2: On crée les fonctions qui permettent de rentrer les données des algorithmes
 for assim_data_input_name in infos.AssimDataDict:
   logging.debug("An input function data input is found: " + assim_data_input_name)
   # assim_name = assim_data_input_name
@@ -425,7 +484,7 @@ for assim_data_input_name in infos.AssimDataDict:
     'default_choice' : default_choice,
     }))
 
-# Step 3: On ajoute les fonctions representant les options possibles
+# Step 3: On ajoute les fonctions représentant les options possibles
 for opt_name in infos.OptDict:
   logging.debug("An optional node is found: " + opt_name)
   data_name = opt_name
@@ -446,14 +505,14 @@ for opt_name in infos.OptDict:
     'data_into'    : data_into,
     'data_default' : data_default,
     'ms_default'   : ms_default,
-    'algos_names'  : algos_names+check_names,
+    #~ 'algos_names'  : algal_names,
     }))
 
-# Step 4: On ajoute la methode optionnelle init
-# TODO uniformiser avec le step 3
+# Step 3bis: On ajoute la méthode optionnelle init
+#            TODO si possible uniformiser avec le step 3
 mem_file.write(unicode(init_method, 'utf-8'))
 
-# Step 5: Add observers
+# Step 4: On ajoute les observers
 decl_choices = ""
 for obs_var in infos.ObserversList:
   decl_choices += observers_choice.format(**{'var_name':obs_var})
@@ -462,12 +521,11 @@ mem_file.write(unicode(observers_method, 'utf-8').format(**{
   'decl_choices' : decl_choices,
   }))
 
-# Step 5: Add algorithmic choices
-
-all_names = eval((algos_names+check_names))
+# Step 5: On ajoute les choix algorithmiques
+all_names = eval((algal_names))
 all_algo_defaults = ""
 for algo in all_names:
-    assim_study_object = daCore.AssimilationStudy.AssimilationStudy()
+    assim_study_object = daCore.Aidsm.Aidsm()
     assim_study_object.setAlgorithmParameters(Algorithm=algo)
     par_dict = assim_study_object.get("AlgorithmRequiredParameters",False)
     par_keys = sorted(par_dict.keys())
@@ -505,14 +563,16 @@ for algo in all_names:
             })
 mem_file.write(unicode(algo_choices, 'utf-8').format(**{'all_algo_defaults':unicode(all_algo_defaults, 'utf-8')}))
 
-# Final step: Add algorithm and assim_study
+# Step 6: On ajoute l'algorithme et le assim_study
 mem_file.write(unicode(assim_study, 'utf-8').format(**{
   'algos_names':algos_names,
+  'optim_names':optim_names,
+  'reduc_names':reduc_names,
   'check_names':check_names,
   'decl_algos':decl_algos,
   }))
 
-# Write file
+# Final step: On écrit le fichier
 if sys.version_info.major > 2:
     with open(os.path.join(args.catalog_path, args.catalog_name), "w", encoding='utf8') as final_file:
         final_file.write(mem_file.getvalue())
@@ -520,3 +580,7 @@ else:
     with open(os.path.join(args.catalog_path, args.catalog_name), "wr") as final_file:
         final_file.write(mem_file.getvalue().encode('utf-8'))
 mem_file.close()
+
+#----------- End generation script -----------#
+
+#===============================================================================

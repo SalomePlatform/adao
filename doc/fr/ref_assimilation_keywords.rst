@@ -21,20 +21,29 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: ASSIMILATION_STUDY
 .. _section_ref_assimilation_keywords:
 
 Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'optimisation
 ----------------------------------------------------------------------------------------
 
 Ce jeu de commandes est lié à la description d'un cas de calcul, qui est une
-procédure d'*Assimilation de Données* ou d'*Optimisation*. Les termes sont
-classés par ordre alphabétique, sauf le premier, qui décrit le choix entre le
-calcul ou la vérification.
+procédure d'*Assimilation de Données*, de *Méthodes avec Réduction* ou de
+méthodes *Optimisation*.
 
-Les différentes commandes sont les suivantes:
+Le premier terme décrit le choix entre un calcul ou une vérification. Dans
+l'interface graphique, chacun des trois types de calculs, individuellement
+plutôt orientés soit *assimilation de données*, soit "méthodes d'optimisation*,
+"soit *méthodes avec réduction* (sachant que certains sont simultanément dans
+plusieurs catégories), est impérativement désigné par l'une ces commandes:
 
 .. include:: snippets/ASSIMILATION_STUDY.rst
+
+.. include:: snippets/OPTIMIZATION_STUDY.rst
+
+.. include:: snippets/REDUCTION_STUDY.rst
+
+Les autres termes sont classés par ordre alphabétique. Les différentes
+commandes sont les suivantes:
 
 .. include:: snippets/AlgorithmParameters.rst
 

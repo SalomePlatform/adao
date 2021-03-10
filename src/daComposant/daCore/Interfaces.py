@@ -185,6 +185,12 @@ class _COMViewer(GenericCaseViewer):
             if "ASSIMILATION_STUDY" in __multilines:
                 __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
                 __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
+            elif "OPTIMIZATION_STUDY" in __multilines:
+                __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
+                __multilines = __multilines.replace("OPTIMIZATION_STUDY",    "dict")
+            elif "REDUCTION_STUDY" in __multilines:
+                __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
+                __multilines = __multilines.replace("REDUCTION_STUDY",    "dict")
             elif "CHECKING_STUDY" in __multilines:
                 __suppparameters.update({'StudyType':"CHECKING_STUDY"})
                 __multilines = __multilines.replace("CHECKING_STUDY",    "dict")

@@ -95,16 +95,23 @@ class AdaoGenerator(PythonGenerator):
 
   def generate_da(self):
 
-    if "__CHECKING_STUDY__StudyName" in self.dictMCVal.keys():
-      self.type_of_study = "CHECKING_STUDY"
-    else:
-      self.type_of_study = "ASSIMILATION_STUDY"
-
     self.text_da += "#-*- coding: utf-8 -*-\n"
     self.text_da += "study_config = {}\n"
 
     # Extraction de Study_type
-    self.text_da += "study_config['StudyType'] = '" + self.type_of_study + "'\n"
+    if "__CHECKING_STUDY__StudyName" in self.dictMCVal.keys():
+      self.type_of_study = "CHECKING_STUDY"
+      self.text_da += "study_config['StudyType'] = '\"CHECKING_STUDY\"'\n"
+    elif "__OPTIMIZATION_STUDY__StudyName" in self.dictMCVal.keys():
+      self.type_of_study = "OPTIMIZATION_STUDY"
+      self.text_da += "study_config['StudyType'] = '\"ASSIMILATION_STUDY\"'\n"
+    elif "__REDUCTION_STUDY__StudyName" in self.dictMCVal.keys():
+      self.type_of_study = "REDUCTION_STUDY"
+      self.text_da += "study_config['StudyType'] = '\"ASSIMILATION_STUDY\"'\n"
+    else:
+      self.type_of_study = "ASSIMILATION_STUDY"
+      self.text_da += "study_config['StudyType'] = '\"ASSIMILATION_STUDY\"'\n"
+
     # Extraction de StudyName
     self.text_da += "study_config['Name'] = '" + self.dictMCVal["__"+self.type_of_study+"__StudyName"] + "'\n"
     # Extraction de Debug

@@ -21,18 +21,28 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: ASSIMILATION_STUDY
 .. _section_ref_assimilation_keywords:
 
 List of commands and keywords for an ADAO calculation case
 ----------------------------------------------------------
 
 This set of commands is related to the description of a calculation case,
-that is a *Data Assimilation* procedure or an *Optimization* procedure. The
-terms are ordered in alphabetical order, except the first, which describes
-choice between calculation or checking.
+that is a *Data Assimilation* procedure or an *Optimization* procedure.
 
-The different commands are the following:
+The first term describes the choice between calculation or checking. In the
+graphical interface, each of the three types of calculation, individually more
+oriented to *data assimilation*, *optimization methods* or *methods with
+reduction* (some algorithms are simultaneously in various categories), is
+imperatively indicated by one of these commands:
+
+.. include:: snippets/ASSIMILATION_STUDY.rst
+
+.. include:: snippets/OPTIMIZATION_STUDY.rst
+
+.. include:: snippets/REDUCTION_STUDY.rst
+
+The other terms are ordered in alphabetical order. The different commands are
+the following:
 
 .. include:: snippets/ASSIMILATION_STUDY.rst
 

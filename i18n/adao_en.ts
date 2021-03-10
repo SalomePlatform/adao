@@ -4,7 +4,15 @@
     <name>@default</name>
     <message>
         <source>ASSIMILATION_STUDY</source>
-        <translation>Data assimilation or optimization</translation>
+        <translation>Data assimilation</translation>
+    </message>
+    <message>
+        <source>OPTIMIZATION_STUDY</source>
+        <translation>Optimisation methods</translation>
+    </message>
+    <message>
+        <source>REDUCTION_STUDY</source>
+        <translation>Methods with reduction</translation>
     </message>
     <message>
         <source>CHECKING_STUDY</source>
