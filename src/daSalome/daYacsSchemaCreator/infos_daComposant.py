@@ -85,6 +85,7 @@ AssimAlgos = [
     ]
 OptimizationAlgos = [
     "Blue",
+    "3DVAR",
     "DerivativeFreeOptimization",
     "DifferentialEvolution",
     "KalmanFilter",

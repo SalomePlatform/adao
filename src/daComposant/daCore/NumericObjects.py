@@ -645,7 +645,7 @@ def CovarianceInflation(
 # ==============================================================================
 def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     """
-    Chapeau : 3DVAR multi-pas et multi-méthodes
+    3DVAR multi-pas et multi-méthodes
     """
     #
     # Initialisation
@@ -694,19 +694,17 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
 # ==============================================================================
 def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
-    3DVAR (Bouttier 1999, Courtier 1993)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    3DVAR
     """
     #
+    # Initialisations
+    # ---------------
+    #
     # Opérateurs
-    # ----------
     Hm = HO["Direct"].appliedTo
     Ha = HO["Adjoint"].appliedInXTo
     #
     # Utilisation éventuelle d'un vecteur H(Xb) précalculé
-    # ----------------------------------------------------
     if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
         HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
     else:
@@ -723,12 +721,10 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         selfA.StoredVariables["JacobianMatrixAtBackground"].store( HtMb )
     #
     # Précalcul des inversions de B et R
-    # ----------------------------------
     BI = B.getI()
     RI = R.getI()
     #
     # Point de démarrage de l'optimisation
-    # ------------------------------------
     Xini = selfA._parameters["InitializationPoint"]
     #
     # Définition de la fonction-coût
@@ -978,14 +974,13 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
 # ==============================================================================
 def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
-    3DVAR variational analysis with no inversion of B (Huang 2000)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    3DVAR variational analysis with no inversion of B
     """
     #
     # Initialisations
     # ---------------
+    #
+    # Opérateurs
     Hm = HO["Direct"].appliedTo
     Ha = HO["Adjoint"].appliedInXTo
     #
@@ -1249,10 +1244,7 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
 # ==============================================================================
 def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
-    3DVAR incrémental (Courtier 1994, 1997)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    3DVAR incrémental
     """
     #
     # Initialisations
@@ -1538,10 +1530,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
 # ==============================================================================
 def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
-    3DVAR PSAS (Huang 2000)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    3DVAR PSAS
     """
     #
     # Initialisations
@@ -1629,7 +1618,6 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     nbPreviousSteps = selfA.StoredVariables["CostFunctionJ"].stepnumber()
     #
     if selfA._parameters["Minimizer"] == "LBFGSB":
-        # Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
         if "0.19" <= scipy.version.version <= "1.1.0":
             import lbfgsbhlt as optimiseur
         else:
@@ -1820,12 +1808,243 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
+def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+    """
+    4DVAR
+    """
+    #
+    # Initialisations
+    # ---------------
+    #
+    # Opérateurs
+    Hm = HO["Direct"].appliedControledFormTo
+    Mm = EM["Direct"].appliedControledFormTo
+    #
+    if CM is not None and "Tangent" in CM and U is not None:
+        Cm = CM["Tangent"].asMatrix(Xb)
+    else:
+        Cm = None
+    #
+    def Un(_step):
+        if U is not None:
+            if hasattr(U,"store") and 1<=_step<len(U) :
+                _Un = numpy.asmatrix(numpy.ravel( U[_step] )).T
+            elif hasattr(U,"store") and len(U)==1:
+                _Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+            else:
+                _Un = numpy.asmatrix(numpy.ravel( U )).T
+        else:
+            _Un = None
+        return _Un
+    def CmUn(_xn,_un):
+        if Cm is not None and _un is not None: # Attention : si Cm est aussi dans M, doublon !
+            _Cm   = Cm.reshape(_xn.size,_un.size) # ADAO & check shape
+            _CmUn = _Cm * _un
+        else:
+            _CmUn = 0.
+        return _CmUn
+    #
+    # Remarque : les observations sont exploitées à partir du pas de temps
+    # numéro 1, et sont utilisées dans Yo comme rangées selon ces indices.
+    # Donc le pas 0 n'est pas utilisé puisque la première étape commence
+    # avec l'observation du pas 1.
+    #
+    # Nombre de pas identique au nombre de pas d'observations
+    if hasattr(Y,"stepnumber"):
+        duration = Y.stepnumber()
+    else:
+        duration = 2
+    #
+    # Précalcul des inversions de B et R
+    BI = B.getI()
+    RI = R.getI()
+    #
+    # Point de démarrage de l'optimisation
+    Xini = selfA._parameters["InitializationPoint"]
+    #
+    # Définition de la fonction-coût
+    # ------------------------------
+    selfA.DirectCalculation = [None,] # Le pas 0 n'est pas observé
+    selfA.DirectInnovation  = [None,] # Le pas 0 n'est pas observé
+    def CostFunction(x):
+        _X  = numpy.asmatrix(numpy.ravel( x )).T
+        if selfA._parameters["StoreInternalVariables"] or \
+            selfA._toStore("CurrentState") or \
+            selfA._toStore("CurrentOptimum"):
+            selfA.StoredVariables["CurrentState"].store( _X )
+        Jb  = float( 0.5 * (_X - Xb).T * BI * (_X - Xb) )
+        selfA.DirectCalculation = [None,]
+        selfA.DirectInnovation  = [None,]
+        Jo  = 0.
+        _Xn = _X
+        for step in range(0,duration-1):
+            if hasattr(Y,"store"):
+                _Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+            else:
+                _Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+            _Un = Un(step)
+            #
+            # Etape d'évolution
+            if selfA._parameters["EstimationOf"] == "State":
+                _Xn = Mm( (_Xn, _Un) ) + CmUn(_Xn, _Un)
+            elif selfA._parameters["EstimationOf"] == "Parameters":
+                pass
+            #
+            if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+                _Xn = numpy.max(numpy.hstack((_Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
+                _Xn = numpy.min(numpy.hstack((_Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            #
+            # Etape de différence aux observations
+            if selfA._parameters["EstimationOf"] == "State":
+                _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, None) ) )).T
+            elif selfA._parameters["EstimationOf"] == "Parameters":
+                _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, _Un) ) )).T - CmUn(_Xn, _Un)
+            #
+            # Stockage de l'état
+            selfA.DirectCalculation.append( _Xn )
+            selfA.DirectInnovation.append( _YmHMX )
+            #
+            # Ajout dans la fonctionnelle d'observation
+            Jo = Jo + 0.5 * float( _YmHMX.T * RI * _YmHMX )
+        J = Jb + Jo
+        #
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
+        selfA.StoredVariables["CostFunctionJb"].store( Jb )
+        selfA.StoredVariables["CostFunctionJo"].store( Jo )
+        selfA.StoredVariables["CostFunctionJ" ].store( J )
+        if selfA._toStore("IndexOfOptimum") or \
+            selfA._toStore("CurrentOptimum") or \
+            selfA._toStore("CostFunctionJAtCurrentOptimum") or \
+            selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
+            selfA._toStore("CostFunctionJoAtCurrentOptimum"):
+            IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+        if selfA._toStore("IndexOfOptimum"):
+            selfA.StoredVariables["IndexOfOptimum"].store( IndexMin )
+        if selfA._toStore("CurrentOptimum"):
+            selfA.StoredVariables["CurrentOptimum"].store( selfA.StoredVariables["CurrentState"][IndexMin] )
+        if selfA._toStore("CostFunctionJAtCurrentOptimum"):
+            selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
+        if selfA._toStore("CostFunctionJbAtCurrentOptimum"):
+            selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJb"][IndexMin] )
+        if selfA._toStore("CostFunctionJoAtCurrentOptimum"):
+            selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJo"][IndexMin] )
+        return J
+    #
+    def GradientOfCostFunction(x):
+        _X      = numpy.asmatrix(numpy.ravel( x )).T
+        GradJb  = BI * (_X - Xb)
+        GradJo  = 0.
+        for step in range(duration-1,0,-1):
+            # Etape de récupération du dernier stockage de l'évolution
+            _Xn = selfA.DirectCalculation.pop()
+            # Etape de récupération du dernier stockage de l'innovation
+            _YmHMX = selfA.DirectInnovation.pop()
+            # Calcul des adjoints
+            Ha = HO["Adjoint"].asMatrix(ValueForMethodForm = _Xn)
+            Ha = Ha.reshape(_Xn.size,_YmHMX.size) # ADAO & check shape
+            Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = _Xn)
+            Ma = Ma.reshape(_Xn.size,_Xn.size) # ADAO & check shape
+            # Calcul du gradient par etat adjoint
+            GradJo = GradJo + Ha * RI * _YmHMX # Equivaut pour Ha lineaire à : Ha( (_Xn, RI * _YmHMX) )
+            GradJo = Ma * GradJo               # Equivaut pour Ma lineaire à : Ma( (_Xn, GradJo) )
+        GradJ = numpy.ravel( GradJb ) - numpy.ravel( GradJo )
+        return GradJ
+    #
+    # Minimisation de la fonctionnelle
+    # --------------------------------
+    nbPreviousSteps = selfA.StoredVariables["CostFunctionJ"].stepnumber()
+    #
+    if selfA._parameters["Minimizer"] == "LBFGSB":
+        if "0.19" <= scipy.version.version <= "1.1.0":
+            import lbfgsbhlt as optimiseur
+        else:
+            import scipy.optimize as optimiseur
+        Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
+            func        = CostFunction,
+            x0          = Xini,
+            fprime      = GradientOfCostFunction,
+            args        = (),
+            bounds      = selfA._parameters["Bounds"],
+            maxfun      = selfA._parameters["MaximumNumberOfSteps"]-1,
+            factr       = selfA._parameters["CostDecrementTolerance"]*1.e14,
+            pgtol       = selfA._parameters["ProjectedGradientTolerance"],
+            iprint      = selfA._parameters["optiprint"],
+            )
+        nfeval = Informations['funcalls']
+        rc     = Informations['warnflag']
+    elif selfA._parameters["Minimizer"] == "TNC":
+        Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
+            func        = CostFunction,
+            x0          = Xini,
+            fprime      = GradientOfCostFunction,
+            args        = (),
+            bounds      = selfA._parameters["Bounds"],
+            maxfun      = selfA._parameters["MaximumNumberOfSteps"],
+            pgtol       = selfA._parameters["ProjectedGradientTolerance"],
+            ftol        = selfA._parameters["CostDecrementTolerance"],
+            messages    = selfA._parameters["optmessages"],
+            )
+    elif selfA._parameters["Minimizer"] == "CG":
+        Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
+            f           = CostFunction,
+            x0          = Xini,
+            fprime      = GradientOfCostFunction,
+            args        = (),
+            maxiter     = selfA._parameters["MaximumNumberOfSteps"],
+            gtol        = selfA._parameters["GradientNormTolerance"],
+            disp        = selfA._parameters["optdisp"],
+            full_output = True,
+            )
+    elif selfA._parameters["Minimizer"] == "NCG":
+        Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
+            f           = CostFunction,
+            x0          = Xini,
+            fprime      = GradientOfCostFunction,
+            args        = (),
+            maxiter     = selfA._parameters["MaximumNumberOfSteps"],
+            avextol     = selfA._parameters["CostDecrementTolerance"],
+            disp        = selfA._parameters["optdisp"],
+            full_output = True,
+            )
+    elif selfA._parameters["Minimizer"] == "BFGS":
+        Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
+            f           = CostFunction,
+            x0          = Xini,
+            fprime      = GradientOfCostFunction,
+            args        = (),
+            maxiter     = selfA._parameters["MaximumNumberOfSteps"],
+            gtol        = selfA._parameters["GradientNormTolerance"],
+            disp        = selfA._parameters["optdisp"],
+            full_output = True,
+            )
+    else:
+        raise ValueError("Error in Minimizer name: %s"%selfA._parameters["Minimizer"])
+    #
+    IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+    MinJ     = selfA.StoredVariables["CostFunctionJ"][IndexMin]
+    #
+    # Correction pour pallier a un bug de TNC sur le retour du Minimum
+    # ----------------------------------------------------------------
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
+        Minimum = selfA.StoredVariables["CurrentState"][IndexMin]
+    #
+    # Obtention de l'analyse
+    # ----------------------
+    Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
+    #
+    selfA.StoredVariables["Analysis"].store( Xa )
+    #
+    # Calculs et/ou stockages supplémentaires
+    # ---------------------------------------
+    if selfA._toStore("BMA"):
+        selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
+    #
+    return 0
+
+# ==============================================================================
 def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     """
-    Stochastic EnKF (Envensen 1994, Burgers 1998)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    Stochastic EnKF
     """
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
@@ -2059,10 +2278,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
 # ==============================================================================
 def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     """
-    Ensemble-Transform EnKF (ETKF or Deterministic EnKF: Bishop 2001, Hunt 2007)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    Ensemble-Transform EnKF
     """
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
@@ -2419,10 +2635,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
 def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     BnotT=False, _epsilon=1.e-3, _e=1.e-7, _jmax=15000):
     """
-    Maximum Likelihood Ensemble Filter (EnKF/MLEF Zupanski 2005, Bocquet 2013)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    Maximum Likelihood Ensemble Filter
     """
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
@@ -2662,10 +2875,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
 def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     BnotT=False, _epsilon=1.e-3, _e=1.e-7, _jmax=15000):
     """
-    Iterative EnKF (Sakov 2012, Sakov 2018)
-
-    selfA est identique au "self" d'algorithme appelant et contient les
-    valeurs.
+    Iterative EnKF
     """
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
