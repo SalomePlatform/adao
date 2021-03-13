@@ -101,7 +101,7 @@ def create_yacs_proc(study_config):
   ADAO_Case = runtime.createBloc("ADAO_Case_Bloc")
   proc.edAddChild(ADAO_Case)
 
-  # Step 0: create AssimilationStudyObject
+  # Step 0: create assimilation study object
   factory_CAS_node = catalogAd.getNodeFromNodeMap("CreateAssimilationStudy")
   CAS_node = factory_CAS_node.cloneNode("CreateAssimilationStudy")
   CAS_node.getInputPort("Name").edInitPy(study_config["Name"])
@@ -132,7 +132,7 @@ def create_yacs_proc(study_config):
     CAS_node.setExecutionMode(SALOMERuntime.PythonNode.REMOTE_STR)
     CAS_node.setContainer(mycontainer)
 
-  # Adding an observer init node if an user defines some
+  # Add an observer init node if an user defines some
   factory_init_observers_node = catalogAd.getNodeFromNodeMap("SetObserversNode")
   init_observers_node = factory_init_observers_node.cloneNode("SetObservers")
   if "Observers" in list(study_config.keys()):

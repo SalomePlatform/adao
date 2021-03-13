@@ -22,7 +22,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-from daCore.AssimilationStudy import AssimilationStudy
+from daCore.Aidsm import Aidsm
 #from daCore import Logging
 import logging
 
@@ -36,7 +36,7 @@ class daStudy:
 
   def __init__(self, name, algorithm, debug):
 
-    self.ADD = AssimilationStudy(name)
+    self.ADD = Aidsm(name)
     self.algorithm = algorithm
     self.algorithm_dict = None
     self.Background = None
@@ -91,7 +91,7 @@ class daStudy:
     return self.ADD
 
   #--------------------------------------
-  # Methods to initialize AssimilationStudy
+  # Methods to initialize assimilation study
 
   def setYIBackgroundType(self, Type):
     if Type == "Vector":

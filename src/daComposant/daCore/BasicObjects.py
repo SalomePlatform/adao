@@ -1775,7 +1775,7 @@ class Covariance(object):
         elif __Object is not None:
             self.__is_object = True
             self.__C         = __Object
-            for at in ("getT","getI","diag","trace","__add__","__sub__","__neg__","__mul__","__rmul__"):
+            for at in ("getT","getI","diag","trace","__add__","__sub__","__neg__","__matmul__","__mul__","__rmatmul__","__rmul__"):
                 if not hasattr(self.__C,at):
                     raise ValueError("The matrix given for %s as an object has no attribute \"%s\". Please check your object input."%(self.__name,at))
             if hasattr(self.__C,"shape"):
@@ -1918,14 +1918,14 @@ class Covariance(object):
     def asfullmatrix(self, msize=None):
         "Matrice pleine"
         if   self.ismatrix():
-            return self.__C
+            return numpy.asarray(self.__C)
         elif self.isvector():
-            return numpy.matrix( numpy.diag(self.__C), float )
+            return numpy.asarray( numpy.diag(self.__C), float )
         elif self.isscalar():
             if msize is None:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
-                return numpy.matrix( self.__C * numpy.eye(int(msize)), float )
+                return numpy.asarray( self.__C * numpy.eye(int(msize)), float )
         elif self.isobject() and hasattr(self.__C,"asfullmatrix"):
             return self.__C.asfullmatrix()
 
@@ -1984,6 +1984,36 @@ class Covariance(object):
         "x.__neg__() <==> -x"
         return - self.__C
 
+    def __matmul__(self, other):
+        "x.__mul__(y) <==> x@y"
+        if   self.ismatrix() and isinstance(other, (int, float)):
+            return numpy.asarray(self.__C) * other
+        elif self.ismatrix() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
+            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+                return numpy.ravel(self.__C @ numpy.ravel(other))
+            elif numpy.asarray(other).shape[0] == self.shape[1]: # Matrice
+                return numpy.asarray(self.__C) @ numpy.asarray(other)
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asarray(other).shape,self.__name))
+        elif self.isvector() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
+            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+                return numpy.ravel(self.__C) * numpy.ravel(other)
+            elif numpy.asarray(other).shape[0] == self.shape[1]: # Matrice
+                return numpy.ravel(self.__C).reshape((-1,1)) * numpy.asarray(other)
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
+        elif self.isscalar() and isinstance(other,numpy.matrix):
+            return numpy.asarray(self.__C * other)
+        elif self.isscalar() and isinstance(other, (list, numpy.ndarray, tuple)):
+            if len(numpy.asarray(other).shape) == 1 or numpy.asarray(other).shape[1] == 1 or numpy.asarray(other).shape[0] == 1:
+                return self.__C * numpy.ravel(other)
+            else:
+                return self.__C * numpy.asarray(other)
+        elif self.isobject():
+            return self.__C.__matmul__(other)
+        else:
+            raise NotImplementedError("%s covariance matrix __matmul__ method not available for %s type!"%(self.__name,type(other)))
+
     def __mul__(self, other):
         "x.__mul__(y) <==> x*y"
         if   self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
@@ -2013,6 +2043,31 @@ class Covariance(object):
             return self.__C.__mul__(other)
         else:
             raise NotImplementedError("%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
+
+    def __rmatmul__(self, other):
+        "x.__rmul__(y) <==> y@x"
+        if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
+            return other * self.__C
+        elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
+            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+                return numpy.asmatrix(numpy.ravel(other)) * self.__C
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+                return numpy.asmatrix(other) * self.__C
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
+        elif self.isvector() and isinstance(other,numpy.matrix):
+            if numpy.ravel(other).size == self.shape[0]: # Vecteur
+                return numpy.asmatrix(numpy.ravel(other) * self.__C)
+            elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
+                return numpy.asmatrix(numpy.array(other) * self.__C)
+            else:
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
+        elif self.isscalar() and isinstance(other,numpy.matrix):
+            return other * self.__C
+        elif self.isobject():
+            return self.__C.__rmatmul__(other)
+        else:
+            raise NotImplementedError("%s covariance matrix __rmatmul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __rmul__(self, other):
         "x.__rmul__(y) <==> y*x"

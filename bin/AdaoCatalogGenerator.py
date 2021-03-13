@@ -411,7 +411,7 @@ optim_names = ""
 reduc_names = ""
 check_names = ""
 decl_algos  = ""
-algal_names = ""
+adao_all_names = ""
 assim_study_object = daCore.Aidsm.Aidsm()
 algos_list = assim_study_object.get_available_algorithms()
 del assim_study_object
@@ -430,7 +430,7 @@ for algo_name in algos_list:
     check_names += "\"" + algo_name + "\", "
   if algo_name in infos.AssimAlgos+infos.OptimizationAlgos+infos.ReductionAlgos+infos.CheckAlgos:
     # Pour filtrer sur les algorithmes vraiment interfacés, car il peut y en avoir moins que "algos_list"
-    algal_names += "\"" + algo_name + "\", "
+    adao_all_names += "\"" + algo_name + "\", "
 
 # Step 1: A partir des infos, on crée les fonctions qui vont permettre
 # d'entrer les données utilisateur
@@ -455,7 +455,6 @@ for data_input_name in infos.DataTypeDict:
     'data_into'    : data_into,
     'data_default' : data_default,
     'ms_default'   : ms_default,
-    #~ 'algos_names'  : algal_names,
     }))
 
 # Step 2: On crée les fonctions qui permettent de rentrer les données des algorithmes
@@ -505,7 +504,6 @@ for opt_name in infos.OptDict:
     'data_into'    : data_into,
     'data_default' : data_default,
     'ms_default'   : ms_default,
-    #~ 'algos_names'  : algal_names,
     }))
 
 # Step 3bis: On ajoute la méthode optionnelle init
@@ -522,7 +520,7 @@ mem_file.write(unicode(observers_method, 'utf-8').format(**{
   }))
 
 # Step 5: On ajoute les choix algorithmiques
-all_names = eval((algal_names))
+all_names = eval((adao_all_names))
 all_algo_defaults = ""
 for algo in all_names:
     assim_study_object = daCore.Aidsm.Aidsm()

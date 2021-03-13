@@ -612,7 +612,7 @@ if sys.version_info.major > 2: import adao
 def loads( data ):
   return pickle.loads(codecs.decode(data.encode(), "base64"))
 logging.debug("TERMINATE Entering in ExtractData/Node")
-from daCore.AssimilationStudy import AssimilationStudy
+from daCore.Aidsm import Aidsm
 var = None
 info = None
 for param in data["specificParameters"]:

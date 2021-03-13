@@ -35,7 +35,8 @@ import traceback
 import codecs
 
 # Pour disposer des classes dans l'espace de nommage lors du pickle
-from daCore.AssimilationStudy import AssimilationStudy
+from daCore.Aidsm import Aidsm
+from daCore.AssimilationStudy import AssimilationStudy # JPA à résorber
 from daYacsIntegration import daStudy
 
 def dumps( data ):
