@@ -34,15 +34,18 @@ mfp = PlatformInfo().MaximumPrecision()
 # logging.getLogger().setLevel(logging.DEBUG)
 
 # ==============================================================================
-def ExecuteFunction( paire ):
-    assert len(paire) == 2, "Incorrect number of arguments"
-    X, funcrepr = paire
+def ExecuteFunction( triplet ):
+    assert len(triplet) == 3, "Incorrect number of arguments"
+    X, xArgs, funcrepr = triplet
     __X = numpy.asmatrix(numpy.ravel( X )).T
     __sys_path_tmp = sys.path ; sys.path.insert(0,funcrepr["__userFunction__path"])
     __module = __import__(funcrepr["__userFunction__modl"], globals(), locals(), [])
     __fonction = getattr(__module,funcrepr["__userFunction__name"])
     sys.path = __sys_path_tmp ; del __sys_path_tmp
-    __HX  = __fonction( __X )
+    if isinstance(xArgs, dict):
+        __HX  = __fonction( __X, **xArgs )
+    else:
+        __HX  = __fonction( __X )
     return numpy.ravel( __HX )
 
 # ==============================================================================
@@ -62,6 +65,7 @@ class FDApproximation(object):
             centeredDF            = False,
             increment             = 0.01,
             dX                    = None,
+            extraArguments        = None,
             avoidingRedundancy    = True,
             toleranceInRedundancy = 1.e-18,
             lenghtOfRedundancy    = -1,
@@ -70,6 +74,7 @@ class FDApproximation(object):
             mfEnabled             = False,
             ):
         self.__name = str(name)
+        self.__extraArgs = extraArguments
         if mpEnabled:
             try:
                 import multiprocessing
@@ -114,7 +119,7 @@ class FDApproximation(object):
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
                 self.__userFunction__path = os.path.dirname(mod)
                 del mod
-                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
+                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled, extraArguments = self.__extraArgs )
                 self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
             elif isinstance(Function,types.MethodType):
                 logging.debug("FDA Calculs en multiprocessing : MethodType")
@@ -128,12 +133,12 @@ class FDApproximation(object):
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
                 self.__userFunction__path = os.path.dirname(mod)
                 del mod
-                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
+                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled, extraArguments = self.__extraArgs )
                 self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
             else:
                 raise TypeError("User defined function or method has to be provided for finite differences approximation.")
         else:
-            self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled )
+            self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled, extraArguments = self.__extraArgs )
             self.__userFunction = self.__userOperator.appliedTo
         #
         self.__centeredDF = bool(centeredDF)
@@ -160,9 +165,12 @@ class FDApproximation(object):
         return __ac, __iac
 
     # ---------------------------------------------------------
-    def DirectOperator(self, X ):
+    def DirectOperator(self, X, **extraArgs ):
         """
         Calcul du direct à l'aide de la fonction fournie.
+
+        NB : les extraArgs sont là pour assurer la compatibilité d'appel, mais
+        ne doivent pas être données ici à la fonction utilisateur.
         """
         logging.debug("FDA Calcul DirectOperator (explicite)")
         if self.__mfEnabled:
@@ -249,8 +257,8 @@ class FDApproximation(object):
                         _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
                         _X_moins_dXi[i] = _X[i] - _dXi
                         #
-                        _jobs.append( (_X_plus_dXi,  funcrepr) )
-                        _jobs.append( (_X_moins_dXi, funcrepr) )
+                        _jobs.append( (_X_plus_dXi,  self.__extraArgs, funcrepr) )
+                        _jobs.append( (_X_moins_dXi, self.__extraArgs, funcrepr) )
                     #
                     import multiprocessing
                     self.__pool = multiprocessing.Pool(self.__mpWorkers)
@@ -303,12 +311,12 @@ class FDApproximation(object):
                         "__userFunction__name" : self.__userFunction__name,
                     }
                     _jobs = []
-                    _jobs.append( (_X.A1, funcrepr) )
+                    _jobs.append( (_X.A1, self.__extraArgs, funcrepr) )
                     for i in range( len(_dX) ):
                         _X_plus_dXi    = numpy.array( _X.A1, dtype=float )
                         _X_plus_dXi[i] = _X[i] + _dX[i]
                         #
-                        _jobs.append( (_X_plus_dXi, funcrepr) )
+                        _jobs.append( (_X_plus_dXi, self.__extraArgs, funcrepr) )
                     #
                     import multiprocessing
                     self.__pool = multiprocessing.Pool(self.__mpWorkers)
@@ -372,9 +380,12 @@ class FDApproximation(object):
         return _Jacobienne
 
     # ---------------------------------------------------------
-    def TangentOperator(self, paire ):
+    def TangentOperator(self, paire, **extraArgs ):
         """
         Calcul du tangent à l'aide de la Jacobienne.
+
+        NB : les extraArgs sont là pour assurer la compatibilité d'appel, mais
+        ne doivent pas être données ici à la fonction utilisateur.
         """
         if self.__mfEnabled:
             assert len(paire) == 1, "Incorrect lenght of arguments"
@@ -401,9 +412,12 @@ class FDApproximation(object):
             else:                return _HtX.A1
 
     # ---------------------------------------------------------
-    def AdjointOperator(self, paire ):
+    def AdjointOperator(self, paire, **extraArgs ):
         """
         Calcul de l'adjoint à l'aide de la Jacobienne.
+
+        NB : les extraArgs sont là pour assurer la compatibilité d'appel, mais
+        ne doivent pas être données ici à la fonction utilisateur.
         """
         if self.__mfEnabled:
             assert len(paire) == 1, "Incorrect lenght of arguments"

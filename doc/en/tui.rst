@@ -88,14 +88,14 @@ free to the user choice::
     case = adaoBuilder.New()
 
 It is recommended to import by default the ``numpy`` module or some of its
-embedded constructors such as the ``array`` one, to make easier its upcoming use
-in the commands.
+embedded constructors such as the ``array`` one, to make easier its upcoming
+use in the commands.
 
 Thereafter, the case has to be build by preparing and storing the data that
 define the study. The commands order does not matter, it is sufficient that all
-the concepts, required by the algorithm used, are present. The user can refer to
-the :ref:`section_reference` and its subparts to get details about commands by
-algorithm. Here, we define successively the chosen data assimilation or
+the concepts, required by the algorithm used, are present. The user can refer
+to the :ref:`section_reference` and its subparts to get details about commands
+by algorithm. Here, we define successively the chosen data assimilation or
 optimization algorithm and its parameters, then the *a priori* state
 :math:`\mathbf{x}^b` (named ``Background``) and its errors covariance
 :math:`\mathbf{B}` (named ``BackgroundError``), and after that, the observation
@@ -115,8 +115,8 @@ As a remark, vector or matrix inputs can be given as objects of type ``str``,
 For these last two cases, one has only to import Numpy module before.
 
 After that, one has to define the operators :math:`H` of observation and
-possibly :math:`M` of evolution. In all cases, linear or non-linear, they can be
-defined as functions. In the simple case of a linear operator, one can also
+possibly :math:`M` of evolution. In all cases, linear or non-linear, they can
+be defined as functions. In the simple case of a linear operator, one can also
 define it using the matrix that corresponds to the linear operator. In the most
 simple present case of a linear operator, we use the following syntax for an
 operator from :math:`\mathbf{R}^3` into itself::
@@ -127,11 +127,12 @@ In the most frequent case of a non-linear operator of :math:`\mathbf{R}^n` into
 :math:`\mathbf{R}^p`, it has to be previously available as a Python function,
 known in the current name space, which takes a ``numpy`` vector (or an ordered
 list) of size :math:`n` as input and which returns as output a ``numpy`` vector
-of size :math:`p`. When the non-linear operator is the only one to be defined by
-the keyword "*OneFunction*", its adjoint is directly established by numerical
-calculations and it can be parametrized by the keyword "*Parameters*". The
-following example shows a ``simulation`` function (which realizes here the same
-linear operator than above) and record it in the ADAO case::
+of size :math:`p`. When the non-linear operator is the only one to be defined
+by the keyword "*OneFunction*", its adjoint is directly established by
+numerical calculations and it can be parametrized by the keyword
+"*Parameters*". The following example shows a ``simulation`` function (which
+realizes here the same linear operator than above) and record it in the ADAO
+case::
 
     import numpy
     def simulation(x):
@@ -155,9 +156,9 @@ definition::
 
     case.set( 'Observer', Variable="Analysis", Template="ValuePrinter" )
 
-Finally, when all the required information are available in the ADAO calculation
-case named ``case``, it can be executed in a very simple way in the environment
-of the Python interpreter::
+Finally, when all the required information are available in the ADAO
+calculation case named ``case``, it can be executed in a very simple way in the
+environment of the Python interpreter::
 
     case.execute()
 
@@ -171,12 +172,12 @@ Such an interface being written in Python, it is possible to use all the power
 of the language to enter more complex data than explicit declaration.
 
 The registering of input data supports various variable types, but in addition,
-these inputs can come from variables currently available in the name space of the
-script. It is then easy to use previously calculated variables or obtained by
-importing "user" scripts. If for example the observations are available as a
+these inputs can come from variables currently available in the name space of
+the script. It is then easy to use previously calculated variables or obtained
+by importing "user" scripts. If for example the observations are available as a
 list in an external Python file named ``observations.py`` under the name
-``table``, the registering of the observations in the ADAO TUI calculation
-case can be done by the following operations::
+``table``, the registering of the observations in the ADAO TUI calculation case
+can be done by the following operations::
 
     from observations import table
     case.set( 'Observation', Vector=table )
@@ -185,9 +186,10 @@ The first line imports the ``table`` variable from the external file, and the
 second one register directly this table as the "*Observation*" data.
 
 The simplicity of this recording demonstrates the ease of obtaining
-computational data from external sources, files or computing flows achievable in
-Python. As usual, it is recommended to the user to check its data before saving
-them in the ADAO TUI calculation case to avoid errors complicated to correct.
+computational data from external sources, files or computing flows achievable
+in Python. As usual, it is recommended to the user to check its data before
+saving them in the ADAO TUI calculation case to avoid errors complicated to
+correct.
 
 Obtain and use the results of calculation in a richer way
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -228,17 +230,18 @@ In the TUI interface of ADAO module, we follow usual Python conventions and
 recommendations to make the distinction between public objects, and private or
 reserved ones because of implementation details. In practice, every object or
 function name beginning with at least one "**_**" sign is private in the usual
-programming sense ("*private*"). Nevertheless, the absence of such a sign at the
-beginning of a name does not designate it as public. In general, in Python, and
-unlike other languages, you can access private objects or functions. This can
-sometimes be useful, but such use in your codes will lead to crashes without
-warning in future versions. It is strongly recommended not to do so.
+programming sense ("*private*"). Nevertheless, the absence of such a sign at
+the beginning of a name does not designate it as public. In general, in Python,
+and unlike other languages, you can access private objects or functions. This
+can sometimes be useful, but such use in your codes will lead to crashes
+without warning in future versions. It is strongly recommended not to do so.
 
 To clarify and facilitate the use of the module for scripting, **this section
 therefore defines the application programming interface (API) for textual user
 interface (TUI) by a comprehensive and restricted manner**. Use in scripts of
-ADAO objects or functions other than those defined here is strongly discouraged,
-as this will likely lead to crashes without warning in future versions.
+ADAO objects or functions other than those defined here is strongly
+discouraged, as this will likely lead to crashes without warning in future
+versions.
 
 Equivalent syntax calls for commands
 ++++++++++++++++++++++++++++++++++++
@@ -251,8 +254,8 @@ The definition of data during the ADAO TUI calculation case creation supports
 - or use the command ``setXXXXX`` containing the arguments of the command to
   apply.
 
-To illustrate this equivalence, we take the example of two commands that lead to
-the same result::
+To illustrate this equivalence, we take the example of two commands that lead
+to the same result::
 
     case.set( 'Background', Vector=[0, 1, 2] )
 
@@ -260,8 +263,8 @@ and::
 
     case.setBackground( Vector=[0, 1, 2] )
 
-The choice of one or the other syntaxes is freely left to the user, according to
-its context of use. In the following, for clarity, we define the controls
+The choice of one or the other syntaxes is freely left to the user, according
+to its context of use. In the following, for clarity, we define the controls
 according to the second syntax.
 
 Creating a calculation case in TUI text interface
@@ -277,8 +280,8 @@ name being let free to the user choice)::
     case = adaoBuilder.New()
 
 It is recommended by default to always import the ``numpy`` module (or some of
-its embedded constructors such as the ``array`` one) to make easier its upcoming
-use in the commands.
+its embedded constructors such as the ``array`` one) to make easier its
+upcoming use in the commands.
 
 Defining the calculation data
 +++++++++++++++++++++++++++++
@@ -287,19 +290,20 @@ The following commands are used to define the data of an ADAO TUI calculation
 case. The pseudo-type of the arguments is similar and consistent with those of
 the inputs in GUI interface, as described in section of
 :ref:`section_reference_entry` and in particular by the
-:ref:`section_ref_entry_types`. The verification of the adequacy of variables is
-done either on their definition, or at runtime.
+:ref:`section_ref_entry_types`. The verification of the adequacy of variables
+is done either on their definition, or at runtime.
 
 .. index:: single: Stored
 
-In each command, the boolean keyword "*Stored*" indicates whether you optionally
-want to store the quantity defined, for disposal during calculation or at the
-output. The default is not to store, and it is recommended to keep this default.
-Indeed, for a TUI calculation case, the quantity given in entries are often
-available in the current name space of the case.
+In each command, the boolean keyword "*Stored*" indicates whether you
+optionally want to store the quantity defined, for disposal during calculation
+or at the output. The default is not to store, and it is recommended to keep
+this default. Indeed, for a TUI calculation case, the quantity given in entries
+are often available in the current name space of the case.
 
 The available commands are:
 
+.. index:: single: Background
 .. index:: single: setBackground
 
 **setBackground** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
@@ -313,19 +317,21 @@ The available commands are:
     default or those from the list "*ColNames*"), the vector is of type
     "*Vector*".
 
+.. index:: single: BackgroundError
 .. index:: single: setBackgroundError
 
 **setBackgroundError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
-    This command allows to set the matrix :math:`\mathbf{B}` of background error
-    covariance. The matrix may be completely defined by the "*Matrix*" keyword,
-    or in a sparse way, by a diagonal matrix whose unique variance is given on
-    the diagonal by "*ScalarSparseMatrix*", or by a diagonal matrix which one
-    gives the vector of variances located on the diagonal by
+    This command allows to set the matrix :math:`\mathbf{B}` of background
+    error covariance. The matrix may be completely defined by the "*Matrix*"
+    keyword, or in a sparse way, by a diagonal matrix whose unique variance is
+    given on the diagonal by "*ScalarSparseMatrix*", or by a diagonal matrix
+    which one gives the vector of variances located on the diagonal by
     "*DiagonalSparseMatrix*". If it is defined by a script in "*Script*", the
     matrix is of type "*Matrix*" (by default), "*ScalarSparseMatrix*" or
     "*DiagonalSparseMatrix*" according to whether one of these variables is
     positioned to "*True*".
 
+.. index:: single: CheckingPoint
 .. index:: single: setCheckingPoint
 
 **setCheckingPoint** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
@@ -339,24 +345,29 @@ The available commands are:
     "*ColMajor*", all the variables by default or those from the list
     "*ColNames*"), the vector is of type "*Vector*".
 
+.. index:: single: ControlModel
 .. index:: single: setControlModel
+.. index:: single: ExtraArguments
 
-**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArgs, Stored*)
+**setControlModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArguments, Stored*)
     This command allows to set the control operator :math:`O`, which represents
     an external linear input control of the evolution or observation operator.
     One can refer to the :ref:`section_ref_operator_control`. Its value is
     defined as an object of type function or of type "*Matrix*". For the
     function case, various functional forms may be used, as described in the
     :ref:`section_ref_operator_requirements`, and entered by "*OneFunction*" or
-    "*ThreeFunctions*" keywords.  If it is defined by a script in the "*Script*"
-    keyword, the operator is of type "*Matrix*", "*OneFunction*" or
-    "*ThreeFunctions*" according to whether one of these variables is positioned
-    to "*True*". The control parameters of the adjoint numerical approximation,
-    in the "*OneFunction*"case, can be given by a dictionary through the
-    "*Parameters*" keyword. Potential entries of this dictionary are
-    "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the one
-    of graphical interface).
+    "*ThreeFunctions*" keywords.  If it is defined by a script in the
+    "*Script*" keyword, the operator is of type "*Matrix*", "*OneFunction*" or
+    "*ThreeFunctions*" according to whether one of these variables is
+    positioned to "*True*". The control parameters of the adjoint numerical
+    approximation, in the "*OneFunction*"case, can be given by a dictionary
+    through the "*Parameters*" keyword. Potential entries of this dictionary
+    are "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the
+    one of graphical interface). If the operator requires some complementary
+    fixed arguments, they can be given through the variable "*ExtraArguments*"
+    as a named parameters dictionary.
 
+.. index:: single: ControlInput
 .. index:: single: setControlInput
 
 **setControlInput** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
@@ -370,6 +381,7 @@ The available commands are:
     default or those from the list "*ColNames*"), the vector is of type
     "*Vector*".
 
+.. index:: single: EvolutionError
 .. index:: single: setEvolutionError
 
 **setEvolutionError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
@@ -383,23 +395,29 @@ The available commands are:
     "*DiagonalSparseMatrix*" according to whether one of these variables is
     positioned to "*True*".
 
+.. index:: single: EvolutionModel
 .. index:: single: setEvolutionModel
+.. index:: single: ExtraArguments
 
-**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArgs, Stored*)
-    This command allows to set the evolution operator :math:`M`, which describes
-    an elementary evolution step. Its value is defined as an object of type
-    function or of type "*Matrix*". For the function case, various functional
-    forms may be used, as described in the
+**setEvolutionModel** (*Matrix, OneFunction, ThreeFunctions, Parameters, Script, ExtraArguments, Stored*)
+    This command allows to set the evolution operator :math:`M`, which
+    describes an elementary evolution step. Its value is defined as an object
+    of type function or of type "*Matrix*". For the function case, various
+    functional forms may be used, as described in the
     :ref:`section_ref_operator_requirements`, and entered by "*OneFunction*" or
-    "*ThreeFunctions*" keywords.  If it is defined by a script in the "*Script*"
-    keyword, the operator is of type "*Matrix*", "*OneFunction*" or
-    "*ThreeFunctions*" according to whether one of these variables is positioned
-    to "*True*". The control parameters of the adjoint numerical approximation,
-    in the "*OneFunction*"case, can be given by a dictionary through the
-    "*Parameters*" keyword. Potential entries of this dictionary are
-    "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the one
-    of graphical interface).
+    "*ThreeFunctions*" keywords.  If it is defined by a script in the
+    "*Script*" keyword, the operator is of type "*Matrix*", "*OneFunction*" or
+    "*ThreeFunctions*" according to whether one of these variables is
+    positioned to "*True*". The control parameters of the adjoint numerical
+    approximation, in the "*OneFunction*"case, can be given by a dictionary
+    through the "*Parameters*" keyword. Potential entries of this dictionary
+    are "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the
+    one of graphical interface). If the operator requires some complementary
+    fixed arguments in addition to the state :math:`\mathbf{x}`, they can be
+    given through the variable "*ExtraArguments*" as a named parameters
+    dictionary.
 
+.. index:: single: Observation
 .. index:: single: setObservation
 
 **setObservation** (*Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored*)
@@ -413,6 +431,7 @@ The available commands are:
     the variables by default or those from the list "*ColNames*"), the vector
     is of type "*Vector*".
 
+.. index:: single: ObservationError
 .. index:: single: setObservationError
 
 **setObservationError** (*Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Script, Stored*)
@@ -426,25 +445,30 @@ The available commands are:
     "*DiagonalSparseMatrix*" according to whether one of these variables is
     positioned to "*True*".
 
+.. index:: single: ObservationOperator
 .. index:: single: setObservationOperator
+.. index:: single: ExtraArguments
 
-**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, ExtraArgs, Stored*)
+**setObservationOperator** (*Matrix, OneFunction, ThreeFunctions, AppliedInXb, Parameters, Script, ExtraArguments, Stored*)
     This command allows to set the evolution operator :math:`H`, which
     transforms the input parameters :math:`\mathbf{x}` in results
     :math:`\mathbf{y}` that are compared to observations :math:`\mathbf{y}^o`.
     Its value is defined as an object of type function or of type "*Matrix*".
-    For the function case, various functional forms may be used, as described in
-    the :ref:`section_ref_operator_requirements`, and entered by "*OneFunction*"
-    or "*ThreeFunctions*" keywords.  If it is defined by a script in the
-    "*Script*" keyword, the operator is of type "*Matrix*", "*OneFunction*" or
-    "*ThreeFunctions*" according to whether one of these variables is positioned
-    to "*True*". When the :math:`H` operator evaluated in :math:`\mathbf{x}^b`
-    is available, it can be given using "*AppliedInXb*" and will be considered
-    as a vector. The control parameters of the adjoint numerical approximation,
-    in the "*OneFunction*"case, can be given by a dictionary through the
-    "*Parameters*" keyword. Potential entries of this dictionary are
-    "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the one
-    of graphical interface).
+    For the function case, various functional forms may be used, as described
+    in the :ref:`section_ref_operator_requirements`, and entered by
+    "*OneFunction*" or "*ThreeFunctions*" keywords.  If it is defined by a
+    script in the "*Script*" keyword, the operator is of type "*Matrix*",
+    "*OneFunction*" or "*ThreeFunctions*" according to whether one of these
+    variables is positioned to "*True*". When the :math:`H` operator evaluated
+    in :math:`\mathbf{x}^b` is available, it can be given using "*AppliedInXb*"
+    and will be considered as a vector. The control parameters of the adjoint
+    numerical approximation, in the "*OneFunction*"case, can be given by a
+    dictionary through the "*Parameters*" keyword. Potential entries of this
+    dictionary are "*DifferentialIncrement*", "*CenteredFiniteDifference*"
+    (similar to the one of graphical interface). If the operator requires some
+    complementary fixed arguments in addition to the state :math:`\mathbf{x}`,
+    they can be given through the variable "*ExtraArguments*" as a named
+    parameters dictionary.
 
 .. index:: single: set
 
@@ -459,16 +483,17 @@ The available commands are:
 Setting the calculation, outputs, etc.
 ++++++++++++++++++++++++++++++++++++++
 
+.. index:: single: AlgorithmParameters
 .. index:: single: setAlgorithmParameters
 
 **setAlgorithmParameters** (*Algorithm, Parameters, Script*)
     This command allows to choose the calculation or the verification algorithm
-    by the argument "*Algorithm*" in the form of an algorithm name (it is useful
-    to refer to the :ref:`section_reference_assimilation` and to the
+    by the argument "*Algorithm*" in the form of an algorithm name (it is
+    useful to refer to the :ref:`section_reference_assimilation` and to the
     :ref:`section_reference_checking`) and to define the calculation parameters
     by the argument "*Parameters*". In the case of a definition by "*Script*",
-    the file must contain the two variables "*Algorithm*" and "*Parameters*" (or
-    "*AlgorithmParameters*" equivalently).
+    the file must contain the two variables "*Algorithm*" and "*Parameters*"
+    (or "*AlgorithmParameters*" equivalently).
 
 .. index:: single: setName
 
@@ -490,6 +515,7 @@ Setting the calculation, outputs, etc.
 **setNoDebug** ()
     This command disables the detailed information mode when running.
 
+.. index:: single: Observer
 .. index:: single: setObserver
 
 **setObserver** (*Variable, Template, String, Script, Info*)
@@ -503,6 +529,21 @@ Setting the calculation, outputs, etc.
     file must contain only the body of the function, as  described in the
     :ref:`section_ref_observers_requirements`. The "*Info*" variable contains
     an information string or can be void.
+
+.. index:: single: UserPostAnalysis
+.. index:: single: setUserPostAnalysis
+.. index:: single: setUserPostAnalysis Template
+
+**setUserPostAnalysis** (*Template, String, Script*)
+    This command allows to define the treatment of parameters or results after
+    the calculation algorithm has been performed. Its value is defined as a
+    predefined pattern name, a script file or a string. This allows to produce
+    directly post-processing code in an ADAO case. It is possible to use
+    patterns available by argument "*Template*" (which can be
+    "*AnalysisPrinter*", "*AnalysisSaver*" and "*AnalysisPrinterAndSaver*"). In
+    the case of a definition by "*Script*", the specified file must contain
+    only the commands that could have been put after the execution of the
+    calculation.
 
 Perform the calculation
 +++++++++++++++++++++++

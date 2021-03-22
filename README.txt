@@ -15,7 +15,7 @@ and from numerical *a priori* models, including information about their
 errors. Parts of the framework are also known under the names of
 *parameter estimation*, *inverse problems*, *Bayesian estimation*,
 *optimal interpolation*, etc. More details can be found in the full
-ADAO documentation (see http://www.salome-platform.org/).
+ADAO documentation (see https://www.salome-platform.org/).
 
 Only the use of ADAO text programming interface (API/TUI) is introduced
 here. This interface gives ability to create a calculation object in a
@@ -55,11 +55,14 @@ the script execution entry of the menu) is the following::
 More advanced examples of ADAO TUI calculation case
 ---------------------------------------------------
 
-Real cases involves observations loaded from files, operators
-explicitly defined as generic functions including physical simulators,
-time dependant information in order to deal with forecast analysis in
-addition to calibration or re-analysis. More details can be found in
-the full ADAO documentation (see http://www.salome-platform.org/).
+Real cases involve observations loaded from files, operators explicitly
+defined as generic functions including physical simulators, time dependant
+information in order to deal with forecast analysis in addition to calibration
+or re-analysis. More details can be found in the full ADAO documentation (see
+documentation on the reference site https://www.salome-platform.org/, with
+https://docs.salome-platform.org/latest/gui/ADAO/en/index.html for english or
+https://docs.salome-platform.org/latest/gui/ADAO/fr/index.html for french, both
+being equivalents).
 
 License and requirements
 ------------------------

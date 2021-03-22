@@ -524,6 +524,7 @@ class FullOperator(object):
                 centeredDF            = __Function["CenteredFiniteDifference"],
                 increment             = __Function["DifferentialIncrement"],
                 dX                    = __Function["withdX"],
+                extraArguments        = self.__extraArgs,
                 avoidingRedundancy    = __Function["withAvoidingRedundancy"],
                 toleranceInRedundancy = __Function["withToleranceInRedundancy"],
                 lenghtOfRedundancy    = __Function["withLenghtOfRedundancy"],
@@ -2194,14 +2195,7 @@ def MultiFonction(
     #
     # Calculs effectifs
     if __mpEnabled:
-        _jobs = []
-        if _extraArguments is None:
-            _jobs = __xserie
-        elif _extraArguments is not None and isinstance(_extraArguments, (list, tuple, map)):
-            for __xvalue in __xserie:
-                _jobs.append( [__xvalue, ] + list(_extraArguments) )
-        else:
-            raise TypeError("MultiFonction extra arguments unkown input type: %s"%(type(_extraArguments),))
+        _jobs = __xserie
         # logging.debug("MULTF Internal multiprocessing calculations begin : evaluation of %i point(s)"%(len(_jobs),))
         import multiprocessing
         with multiprocessing.Pool(__mpWorkers) as pool:
