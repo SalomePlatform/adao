@@ -92,6 +92,10 @@ Sans pouvoir prétendre à l'universalité, on recommande d'utiliser l'EnKF comm
 
 .. include:: snippets/EstimationOf.rst
 
+.. include:: snippets/InflationFactor.rst
+
+.. include:: snippets/InflationType.rst
+
 .. include:: snippets/NumberOfMembers.rst
 
 .. include:: snippets/SetSeed.rst

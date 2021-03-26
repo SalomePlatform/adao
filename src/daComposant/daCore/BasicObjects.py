@@ -661,7 +661,8 @@ class Algorithm(object):
         self.StoredVariables["CostFunctionJbAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJbAtCurrentOptimum")
         self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
         self.StoredVariables["CostFunctionJoAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJoAtCurrentOptimum")
-        self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name = "CurrentIterationNumber")
+        self.StoredVariables["CurrentEnsembleState"]                 = Persistence.OneMatrix(name = "CurrentEnsembleState")
+        self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name  = "CurrentIterationNumber")
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
         self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
@@ -676,6 +677,7 @@ class Algorithm(object):
         self.StoredVariables["JacobianMatrixAtCurrentState"]         = Persistence.OneMatrix(name = "JacobianMatrixAtCurrentState")
         self.StoredVariables["JacobianMatrixAtOptimum"]              = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")
         self.StoredVariables["KalmanGainAtOptimum"]                  = Persistence.OneMatrix(name = "KalmanGainAtOptimum")
+        self.StoredVariables["LastEnsembleForecastState"]            = Persistence.OneMatrix(name = "LastEnsembleForecastState")
         self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
@@ -1835,12 +1837,12 @@ class Covariance(object):
     def getI(self):
         "Inversion"
         if   self.ismatrix():
-            return Covariance(self.__name+"I", asCovariance  = self.__C.I )
+            return Covariance(self.__name+"I", asCovariance  = numpy.linalg.inv(self.__C) )
         elif self.isvector():
             return Covariance(self.__name+"I", asEyeByVector = 1. / self.__C )
         elif self.isscalar():
             return Covariance(self.__name+"I", asEyeByScalar = 1. / self.__C )
-        elif self.isobject():
+        elif self.isobject() and hasattr(self.__C,"getI"):
             return Covariance(self.__name+"I", asCovObject   = self.__C.getI() )
         else:
             return None # Indispensable
@@ -1853,8 +1855,10 @@ class Covariance(object):
             return Covariance(self.__name+"T", asEyeByVector = self.__C )
         elif self.isscalar():
             return Covariance(self.__name+"T", asEyeByScalar = self.__C )
-        elif self.isobject():
+        elif self.isobject() and hasattr(self.__C,"getT"):
             return Covariance(self.__name+"T", asCovObject   = self.__C.getT() )
+        else:
+            raise AttributeError("the %s covariance matrix has no getT attribute."%(self.__name,))
 
     def cholesky(self):
         "Décomposition de Cholesky"
@@ -1866,41 +1870,49 @@ class Covariance(object):
             return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__C ) )
         elif self.isobject() and hasattr(self.__C,"cholesky"):
             return Covariance(self.__name+"C", asCovObject   = self.__C.cholesky() )
+        else:
+            raise AttributeError("the %s covariance matrix has no cholesky attribute."%(self.__name,))
 
     def choleskyI(self):
         "Inversion de la décomposition de Cholesky"
         if   self.ismatrix():
-            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.cholesky(self.__C).I )
+            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.inv(numpy.linalg.cholesky(self.__C)) )
         elif self.isvector():
             return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
         elif self.isscalar():
             return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
         elif self.isobject() and hasattr(self.__C,"choleskyI"):
             return Covariance(self.__name+"H", asCovObject   = self.__C.choleskyI() )
+        else:
+            raise AttributeError("the %s covariance matrix has no choleskyI attribute."%(self.__name,))
 
     def sqrtm(self):
         "Racine carrée matricielle"
         if   self.ismatrix():
             import scipy
-            return Covariance(self.__name+"C", asCovariance  = scipy.linalg.sqrtm(self.__C) )
+            return Covariance(self.__name+"C", asCovariance  = numpy.real(scipy.linalg.sqrtm(self.__C)) )
         elif self.isvector():
             return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__C ) )
         elif self.isscalar():
             return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__C ) )
-        elif self.isobject() and hasattr(self.__C,"sqrt"):
-            return Covariance(self.__name+"C", asCovObject   = self.__C.sqrt() )
+        elif self.isobject() and hasattr(self.__C,"sqrtm"):
+            return Covariance(self.__name+"C", asCovObject   = self.__C.sqrtm() )
+        else:
+            raise AttributeError("the %s covariance matrix has no sqrtm attribute."%(self.__name,))
 
     def sqrtmI(self):
         "Inversion de la racine carrée matricielle"
         if   self.ismatrix():
             import scipy
-            return Covariance(self.__name+"H", asCovariance  = scipy.linalg.sqrtm(self.__C).I )
+            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.inv(numpy.real(scipy.linalg.sqrtm(self.__C))) )
         elif self.isvector():
             return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
         elif self.isscalar():
             return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
-        elif self.isobject() and hasattr(self.__C,"sqrtI"):
-            return Covariance(self.__name+"H", asCovObject   = self.__C.sqrtI() )
+        elif self.isobject() and hasattr(self.__C,"sqrtmI"):
+            return Covariance(self.__name+"H", asCovObject   = self.__C.sqrtmI() )
+        else:
+            raise AttributeError("the %s covariance matrix has no sqrtmI attribute."%(self.__name,))
 
     def diag(self, msize=None):
         "Diagonale de la matrice"
@@ -1913,8 +1925,10 @@ class Covariance(object):
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
                 return self.__C * numpy.ones(int(msize))
-        elif self.isobject():
+        elif self.isobject() and hasattr(self.__C,"diag"):
             return self.__C.diag()
+        else:
+            raise AttributeError("the %s covariance matrix has no diag attribute."%(self.__name,))
 
     def asfullmatrix(self, msize=None):
         "Matrice pleine"
@@ -1929,6 +1943,8 @@ class Covariance(object):
                 return numpy.asarray( self.__C * numpy.eye(int(msize)), float )
         elif self.isobject() and hasattr(self.__C,"asfullmatrix"):
             return self.__C.asfullmatrix()
+        else:
+            raise AttributeError("the %s covariance matrix has no asfullmatrix attribute."%(self.__name,))
 
     def trace(self, msize=None):
         "Trace de la matrice"
@@ -1943,6 +1959,8 @@ class Covariance(object):
                 return self.__C * int(msize)
         elif self.isobject():
             return self.__C.trace()
+        else:
+            raise AttributeError("the %s covariance matrix has no trace attribute."%(self.__name,))
 
     def getO(self):
         return self

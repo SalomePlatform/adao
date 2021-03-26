@@ -91,6 +91,10 @@ Without being a universal recommandation, one recommend to use EnKF as a referen
 
 .. include:: snippets/EstimationOf.rst
 
+.. include:: snippets/InflationFactor.rst
+
+.. include:: snippets/InflationType.rst
+
 .. include:: snippets/NumberOfMembers.rst
 
 .. include:: snippets/SetSeed.rst

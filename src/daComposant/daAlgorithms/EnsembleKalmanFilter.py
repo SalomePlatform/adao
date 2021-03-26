@@ -72,17 +72,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "InflationType",
-            default  = "MultiplicativeOnAnalysisCovariance",
+            default  = "MultiplicativeOnAnalysisAnomalies",
             typecast = str,
             message  = "Méthode d'inflation d'ensemble",
             listval  = [
-                "MultiplicativeOnAnalysisCovariance",
-                "MultiplicativeOnBackgroundCovariance",
                 "MultiplicativeOnAnalysisAnomalies",
                 "MultiplicativeOnBackgroundAnomalies",
+                ],
+            listadv  = [
+                "MultiplicativeOnAnalysisCovariance",
+                "MultiplicativeOnBackgroundCovariance",
                 "AdditiveOnAnalysisCovariance",
                 "AdditiveOnBackgroundCovariance",
                 "HybridOnBackgroundCovariance",
+                "Relaxation",
                 ],
             )
         self.defineRequiredParameter(
@@ -93,29 +96,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = 0.,
             )
         self.defineRequiredParameter(
-            name     = "LocalizationType",
-            default  = "SchurLocalization",
-            typecast = str,
-            message  = "Méthode d'inflation d'ensemble",
-            listval  = [
-                "SchurLocalization",
-                ],
-            listadv  = [
-                "CovarianceLocalization",
-                "DomainLocalization",
-                "GaspariCohnLocalization",
-                ],
+            name     = "SmootherLagL",
+            default  = 1,
+            typecast = int,
+            message  = "Nombre d'intervalles de temps de lissage dans le passé",
+            minval   = 1,
             )
         self.defineRequiredParameter(
-            name     = "LocalizationFactor",
-            default  = 1.,
-            typecast = float,
-            message  = "Facteur de localisation",
-            minval   = 0.,
-            )
-        self.defineRequiredParameter( # Pas de type
-            name     = "LocalizationMatrix",
-            message  = "Matrice de localisation ou de distances",
+            name     = "SmootherShiftS",
+            default  = 1,
+            typecast = int,
+            message  = "Nombre d'intervalles de temps de décalage de lissage",
+            minval   = 1,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -156,7 +148,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-                ]
+                ],
+            listadv  = [
+                "CurrentEnsembleState",
+                "LastEnsembleForecastState",
+                ],
             )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
