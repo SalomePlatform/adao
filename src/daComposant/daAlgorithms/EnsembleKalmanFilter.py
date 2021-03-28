@@ -39,6 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ETKF-N",
                 "MLEF",
                 "IEnKF",
+                "EnKS",
                 ],
             listadv  = [
                 "StochasticEnKF",
@@ -53,6 +54,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MLEF-B",
                 "IEnKF-T",
                 "IEnKF-B",
+                "EnKS-KFF",
                 "IEKF",
                 ],
             )
@@ -97,17 +99,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "SmootherLagL",
-            default  = 1,
+            default  = 0,
             typecast = int,
             message  = "Nombre d'intervalles de temps de lissage dans le passé",
-            minval   = 1,
-            )
-        self.defineRequiredParameter(
-            name     = "SmootherShiftS",
-            default  = 1,
-            typecast = int,
-            message  = "Nombre d'intervalles de temps de décalage de lissage",
-            minval   = 1,
+            minval   = 0,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -151,7 +146,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             listadv  = [
                 "CurrentEnsembleState",
-                "LastEnsembleForecastState",
                 ],
             )
         self.requireInputArguments(
@@ -211,6 +205,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         elif self._parameters["Variant"] in ["IEnKF-B", "IEKF"]:
             NumericObjects.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
+        #
+        #--------------------------
+        # Default EnKS = EnKS-KFF
+        elif self._parameters["Variant"] in ["EnKS-KFF", "EnKS"]:
+            NumericObjects.enks(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterFormula")
         #
         #--------------------------
         else:

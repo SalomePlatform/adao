@@ -677,7 +677,6 @@ class Algorithm(object):
         self.StoredVariables["JacobianMatrixAtCurrentState"]         = Persistence.OneMatrix(name = "JacobianMatrixAtCurrentState")
         self.StoredVariables["JacobianMatrixAtOptimum"]              = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")
         self.StoredVariables["KalmanGainAtOptimum"]                  = Persistence.OneMatrix(name = "KalmanGainAtOptimum")
-        self.StoredVariables["LastEnsembleForecastState"]            = Persistence.OneMatrix(name = "LastEnsembleForecastState")
         self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
