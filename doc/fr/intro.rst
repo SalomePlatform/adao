@@ -34,7 +34,7 @@ une interface simple à des algorithmes classiques d'assimilation de données ou
 d'optimisation, ainsi que de tests ou vérifications. Il permet d'intégrer leur
 usage dans une étude Python ou SALOME. Les modules utilisateurs de calcul ou de
 simulation doivent fournir une ou plusieurs méthodes d'appel spécifiques afin
-d'être appelable dans le cadre Python ou SALOME. En environnement SALOME, tous
+d'être appelables dans le cadre Python ou SALOME. En environnement SALOME, tous
 les modules natifs peuvent être utilisés grâce à l'intégration en Python ou en
 YACS.
 

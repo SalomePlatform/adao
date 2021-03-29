@@ -197,7 +197,7 @@ plus complexes.
 Le principal complément nécessaire dans un schéma YACS est une étape de
 post-processing. L'évaluation du résultat doit être réalisée dans le contexte
 physique de simulation utilisé par la procédure d'assimilation de données. Le
-post-processing peut être fournit à travers le mot-clé "*UserPostAnalysis*"
+post-processing peut être fourni à travers le mot-clé "*UserPostAnalysis*"
 d'ADAO sous la forme d'un fichier de script ou d'une chaîne de caractères, par
 des patrons ("templates"), ou peut être construit comme des noeuds YACS. Ces
 deux manières de construire le post-processing peuvent utiliser toutes les
@@ -217,7 +217,7 @@ node") ou un script fourni à travers le mot-clé "*UserPostAnalysis*"::
 
 "*Analysis*" est un objet complexe, similaire à une liste de valeurs calculées à
 chaque étape du calcul d'assimilation. Pour obtenir et afficher l'évaluation
-optimale de l'état par assimilation de données, dans un script fournit par
+optimale de l'état par assimilation de données, dans un script fourni par
 l'intermédiaire du mot-clé "*UserPostAnalysis*", on peut utiliser::
 
     Xa = ADD.get("Analysis")[-1]

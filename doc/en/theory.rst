@@ -294,11 +294,6 @@ but is widely used in other scientific domains. There are several fields in
 science and technology where the effective use of observed but incomplete data
 is crucial.
 
-Some aspects of data assimilation are also known as *state estimation*,
-*parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
-interpolation*, *mathematical regularization*, *data smoothing*, etc. These
-terms can be used in bibliographical searches.
-
 Some aspects of data assimilation are also known by other names. Without being
 exhaustive, we can mention the names of *calibration*, *adjustment*, *state
 estimation*, *parameter estimation*, *parameter adjustment*, *inverse problems*

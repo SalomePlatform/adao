@@ -278,7 +278,7 @@ Les autres étapes et résultats sont exactement les mêmes que dans l'exemple
 précédent :ref:`section_tutorials_in_python_explicit`.
 
 Dans la pratique, cette démarche par scripts est la manière la plus facile pour
-récupérer des information depuis des calculs en ligne ou préalables, depuis des
+récupérer des informations depuis des calculs en ligne ou préalables, depuis des
 fichiers statiques, depuis des bases de données ou des flux informatiques,
 chacun pouvant être dans ou hors SALOME. Cela permet aussi de modifier aisément
 des données d'entrée, par exemple à des fin de débogage ou pour des traitements

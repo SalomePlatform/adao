@@ -56,7 +56,7 @@ méthodes d'optimisation peuvent être vues dans ADAO comme un moyen d'étendre
 les applications d'assimilation de données. Elles seront présentées de cette
 façon dans la section pour `Approfondir l'estimation d'état par des méthodes
 d'optimisation`_, mais elles sont beaucoup plus générales et peuvent être
-utilisés sans les concepts d'assimilation de données.
+utilisées sans les concepts d'assimilation de données.
 
 Deux types principaux d'applications existent en assimilation de données, qui
 sont couverts par le même formalisme : l'**identification de paramètres** et la
@@ -144,7 +144,7 @@ simulation de la poutre corresponde aux mesures, en y incluant la connaissance
 des erreurs.
 
 Toutes les grandeurs représentant la description de la physique dans un modèle
-sont susceptibles d'être calibrés dans une démarche d'assimilation de données,
+sont susceptibles d'être calibrées dans une démarche d'assimilation de données,
 que ce soient des paramètres de modèles, des conditions initiales ou des
 conditions aux limites. Leur prise en compte simultanée est largement facilitée
 par la démarche d'assimilation de données, permettant de traiter objectivement
@@ -310,12 +310,6 @@ géo-sciences, mais est largement utilisée dans d'autres domaines scientifiques
 Il y a de nombreux champs d'applications scientifiques et technologiques dans
 lesquels l'utilisation efficace des données observées, mais incomplètes, est
 cruciale.
-
-Certains aspects de l'assimilation des données sont également connus sous le
-nom d'*estimation d'état*, d'*estimation de paramètres*, de *problèmes inverses*,
-d'*estimation bayésienne*, d'*interpolation optimale*, de *régularisation mathématique*,
-de *lissage des données*, etc. Ces termes peuvent être utilisés dans les recherches
-bibliographiques.
 
 Certains aspects de l'assimilation de données sont aussi connus sous d'autres
 noms. Sans être exhaustif, on peut mentionner les noms de *calage* ou de

@@ -324,7 +324,7 @@ précédent `Construire un cas d'estimation avec une définition explicite des
 données`_.
 
 Dans la pratique, cette démarche par scripts est la manière la plus facile pour
-récupérer des information depuis des calculs en ligne ou préalables, depuis des
+récupérer des informations depuis des calculs en ligne ou préalables, depuis des
 fichiers statiques, depuis des bases de données ou des flux informatiques,
 chacun pouvant être dans ou hors SALOME. Cela permet aussi de modifier aisément
 des données d'entrée, par exemple à des fin de débogage ou pour des traitements
@@ -344,7 +344,7 @@ du cas ADAO, qui est un mot-clé de la commande générale de cas (à choisir en
 "*ASSIMILATION_STUDY*", "*OPTIMIZATION_STUDY*" ou "*REDUCTION_STUDY*"). Ce
 mot-clé nécessite une définition explicite des valeurs à partir de valeurs par
 défaut, ou à partir d'un dictionnaire Python, contenant des paires clé/valeur.
-La liste des paramètres optionnels possibles sont donnés dans la section
+La liste des paramètres optionnels possibles est donnée dans la section
 :ref:`section_reference` et ses sous-sections. On recommande d'utiliser la
 définition explicite de valeurs à partir de la liste par défaut de paramètres
 optionnels, comme ici avec le "*MaximumNumberOfSteps*":
@@ -356,7 +356,7 @@ optionnels, comme ici avec le "*MaximumNumberOfSteps*":
   .. centered::
     **Ajouter des paramètres pour contrôler l'algorithme et les sorties**
 
-Le dictionnaire peut être défini, par exemple, dans un fichiers externe de
+Le dictionnaire peut être défini, par exemple, dans un fichier externe de
 script Python, en utilisant le nom obligatoire de variable
 "*AlgorithmParameters*" pour le dictionnaire. Toutes les clés dans le
 dictionnaire sont optionnelles, elles disposent toutes d'une valeur par défaut,
@@ -414,7 +414,7 @@ On choisit un contexte d'expériences jumelles, en utilisant un état vrai
 
     Xt = [1 2 3]
 
-L'état d'ébauche :math:`\mathbf{x}^b`, qui représentent une connaissance *a
+L'état d'ébauche :math:`\mathbf{x}^b`, qui représente une connaissance *a
 priori* de l'état vrai, est construit comme une perturbation aléatoire
 gaussienne de 20% de l'état vrai :math:`\mathbf{x}^t` pour chaque composante,
 qui est :
@@ -434,7 +434,7 @@ On suppose qu'il existe un opérateur d'observation :math:`\mathbf{H}`, qui peut
 être non linéaire. Dans une procédure réelle de recalage ou de problème inverse,
 les codes de simulation physique sont intégrés dans l'opérateur d'observation.
 On a également besoin de connaître son gradient par rapport à chaque variable
-estimée, ce qui est une information rarement connu avec les codes industriels.
+estimée, ce qui est une information rarement connue avec les codes industriels.
 Mais on verra plus tard comment obtenir un gradient approché dans ce cas.
 
 Étant en expériences jumelles, les observations :math:`\mathbf{y}^o` et leur
@@ -527,10 +527,10 @@ C'est réalisé dans un fichier script Python nommé
 Pour poursuivre, on a besoin de l'opérateur d'observation :math:`\mathbf{H}`
 comme une fonction de l'état. Il est ici défini dans un fichier externe nommé
 ``"Physical_simulation_functions.py"``, qui doit contenir une fonction appelée
-``"DirectOperator"``. Cette fonction est une une fonction utilisateur,
-représentant de manière programmée l'opérateur :math:`\mathbf{H}`. On suppose
-que cette fonction est donnée par l'utilisateur. Un squelette simple est donné
-ici par facilité :
+``"DirectOperator"``. Cette fonction est une fonction utilisateur, représentant
+de manière programmée l'opérateur :math:`\mathbf{H}`. On suppose que cette
+fonction est donnée par l'utilisateur. Un squelette simple est donné ici par
+facilité :
 ::
 
     def DirectOperator( XX ):

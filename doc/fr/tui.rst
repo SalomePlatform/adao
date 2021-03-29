@@ -93,8 +93,8 @@ constructeurs particuliers comme celui d'``array``, pour faciliter ensuite son
 usage dans les commandes elle-mêmes.
 
 Ensuite, le cas doit être construit par une préparation et un enregistrement
-des données définissant l'étude. L'ordre de ces commande n'a pas d'importance,
-il suffit que les concepts requis par l'algorithme utilisé soient présentes. On
+des données définissant l'étude. L'ordre de ces commandes n'a pas d'importance,
+il suffit que les concepts requis par l'algorithme utilisé soient présents. On
 se reportera à :ref:`section_reference` et à ses sous-parties pour avoir le
 détail des commandes par algorithme. Ici, on définit successivement
 l'algorithme d'assimilation de données ou d'optimisation choisi et ses
@@ -242,7 +242,7 @@ pratique, tout nom d'objet ou de fonction commençant par au moins un signe "_"
 est privé au sens courant de programmation ("*private*"). Néanmoins, l'absence
 d'un tel signe au début d'un nom ne le désigne pas comme public. De manière
 générale, en Python, et contrairement à d'autres langages, on peut accéder aux
-objets ou aux fonction privés. Cela peut parfois être utile, mais un tel usage
+objets ou aux fonctions privés. Cela peut parfois être utile, mais un tel usage
 dans vos codes conduira à des plantages sans avertissement lors de futures
 versions. Il est donc fortement recommandé de ne pas le faire.
 

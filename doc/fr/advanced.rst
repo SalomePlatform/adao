@@ -77,7 +77,7 @@ Shell suivant::
 
 Il faut ensuite le rendre exécutable pour l'exécuter.
 
-Un exemple une peu plus complet consiste à lancer l'exécution d'un schéma YACS
+Un exemple un peu plus complet consiste à lancer l'exécution d'un schéma YACS
 indiqué par l'utilisateur, en ayant préalablement vérifié sa disponibilité. Pour
 cela, en remplaçant le texte ``<Répertoire principal d'installation de
 SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
