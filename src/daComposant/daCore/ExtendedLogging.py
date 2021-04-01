@@ -34,7 +34,7 @@
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging(level=20)
 
     On peut éventuellement demander à l'objet de sortir aussi les messages dans
-    un fichier (noms par défaut : Aidsm.log, niveau NOTSET) :
+    un fichier (noms par défaut : AdaoOutputLogfile.log, niveau NOTSET) :
         import ExtendedLogging ; ExtendedLogging.ExtendedLogging().setLogfile()
 
     Si on veut changer le nom du fichier ou le niveau global de message, il faut
@@ -79,7 +79,7 @@ import functools
 import time
 from daCore import PlatformInfo
 
-LOGFILE = os.path.join(os.path.abspath(os.curdir),"AssimilationStudy.log")
+LOGFILE = os.path.join(os.path.abspath(os.curdir),"AdaoOutputLogfile.log")
 
 # ==============================================================================
 class ExtendedLogging(object):

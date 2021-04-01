@@ -116,6 +116,12 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"sys.getfilesystemencoding",str(sys.getfilesystemencoding()))
         __msg += "\n%s%30s : %s" %(__prefix,"locale.getdefaultlocale",str(locale.getdefaultlocale()))
         __msg += "\n"
+        __msg += "\n%s%30s : %s" %(__prefix,"os.cpu_count",os.cpu_count())
+        if hasattr(os, 'sched_getaffinity'):
+            __msg += "\n%s%30s : %s" %(__prefix,"len(os.sched_getaffinity(0))",len(os.sched_getaffinity(0)))
+        else:
+            __msg += "\n%s%30s : %s" %(__prefix,"len(os.sched_getaffinity(0))","Unsupported on this platform")
+        __msg += "\n"
         __msg += "\n%s%30s : %s" %(__prefix,"platform.node",platform.node())
         __msg += "\n%s%30s : %s" %(__prefix,"os.path.expanduser",os.path.expanduser('~'))
         return __msg

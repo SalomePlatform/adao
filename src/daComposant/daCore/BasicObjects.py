@@ -624,6 +624,7 @@ class Algorithm(object):
             - OMB : Observation moins Background : Y - Xb
             - ForecastState : état prédit courant lors d'itérations
             - Residu : dans le cas des algorithmes de vérification
+            - SampledStateForQuantiles : échantillons d'états pour l'estimation des quantiles
             - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
             - SigmaObs2 : indicateur de correction optimale des erreurs d'observation
             - SimulatedObservationAtBackground : l'état observé H(Xb) à l'ébauche
@@ -681,6 +682,7 @@ class Algorithm(object):
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
+        self.StoredVariables["SampledStateForQuantiles"]             = Persistence.OneMatrix(name = "SampledStateForQuantiles")
         self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
         self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")
         self.StoredVariables["SimulatedObservationAtBackground"]     = Persistence.OneVector(name = "SimulatedObservationAtBackground")

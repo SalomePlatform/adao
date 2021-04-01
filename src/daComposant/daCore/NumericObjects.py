@@ -599,9 +599,6 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     EnKS
     """
     #
-    # Initialisations
-    # ---------------
-    #
     # Opérateurs
     H = HO["Direct"].appliedControledFormTo
     #
@@ -616,6 +613,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     # Précalcul des inversions de B et R
     RIdemi = R.sqrtmI()
     #
+    # Durée d'observation et tailles
     LagL = selfA._parameters["SmootherLagL"]
     if (not hasattr(Y,"store")) or (not hasattr(Y,"stepnumber")):
         raise ValueError("Fixed-lag smoother requires a series of observation")
@@ -723,6 +721,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
             raise ValueError("VariantM has to be chosen in the authorized methods list.")
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( EnsembleErrorCovariance(EXn) )
