@@ -1760,15 +1760,20 @@ class Covariance(object):
             __Matrix, __Scalar, __Vector, __Object = asCovariance, asEyeByScalar, asEyeByVector, asCovObject
         #
         if __Scalar is not None:
-            if numpy.matrix(__Scalar).size != 1:
-                raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.matrix(__Scalar).size)
+            if isinstance(__Scalar, str):
+                __Scalar = __Scalar.replace(";"," ").replace(","," ").split()
+                if len(__Scalar) > 0: __Scalar = __Scalar[0]
+            if numpy.array(__Scalar).size != 1:
+                raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.array(__Scalar).size)
             self.__is_scalar = True
             self.__C         = numpy.abs( float(__Scalar) )
             self.shape       = (0,0)
             self.size        = 0
         elif __Vector is not None:
+            if isinstance(__Vector, str):
+                __Vector = __Vector.replace(";"," ").replace(","," ").split()
             self.__is_vector = True
-            self.__C         = numpy.abs( numpy.array( numpy.ravel( numpy.matrix(__Vector, float ) ) ) )
+            self.__C         = numpy.abs( numpy.array( numpy.ravel( __Vector ), dtype=float ) )
             self.shape       = (self.__C.size,self.__C.size)
             self.size        = self.__C.size**2
         elif __Matrix is not None:
@@ -1931,6 +1936,22 @@ class Covariance(object):
         else:
             raise AttributeError("the %s covariance matrix has no diag attribute."%(self.__name,))
 
+    def trace(self, msize=None):
+        "Trace de la matrice"
+        if   self.ismatrix():
+            return numpy.trace(self.__C)
+        elif self.isvector():
+            return float(numpy.sum(self.__C))
+        elif self.isscalar():
+            if msize is None:
+                raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
+            else:
+                return self.__C * int(msize)
+        elif self.isobject():
+            return self.__C.trace()
+        else:
+            raise AttributeError("the %s covariance matrix has no trace attribute."%(self.__name,))
+
     def asfullmatrix(self, msize=None):
         "Matrice pleine"
         if   self.ismatrix():
@@ -1947,21 +1968,9 @@ class Covariance(object):
         else:
             raise AttributeError("the %s covariance matrix has no asfullmatrix attribute."%(self.__name,))
 
-    def trace(self, msize=None):
-        "Trace de la matrice"
-        if   self.ismatrix():
-            return numpy.trace(self.__C)
-        elif self.isvector():
-            return float(numpy.sum(self.__C))
-        elif self.isscalar():
-            if msize is None:
-                raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
-            else:
-                return self.__C * int(msize)
-        elif self.isobject():
-            return self.__C.trace()
-        else:
-            raise AttributeError("the %s covariance matrix has no trace attribute."%(self.__name,))
+    def assparsematrix(self):
+        "Valeur sparse"
+        return self.__C
 
     def getO(self):
         return self
