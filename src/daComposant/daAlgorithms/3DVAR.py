@@ -129,6 +129,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MahalanobisConsistency",
                 "OMA",
                 "OMB",
+                "SampledStateForQuantiles",
                 "SigmaObs2",
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentOptimum",

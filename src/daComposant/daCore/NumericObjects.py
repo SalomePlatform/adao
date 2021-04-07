@@ -1583,19 +1583,23 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("SimulationQuantiles"):
         nech = selfA._parameters["NumberOfSamplesForQuantiles"]
         HXa  = numpy.matrix(numpy.ravel( HXa )).T
+        EXr  = None
         YfQ  = None
         for i in range(nech):
             if selfA._parameters["SimulationForQuantiles"] == "Linear":
                 dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
                 dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
                 Yr = HXa + dYr
+                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
             elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
                 Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
                 Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
             if YfQ is None:
                 YfQ = Yr
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
             else:
                 YfQ = numpy.hstack((YfQ,Yr))
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
         YfQ.sort(axis=-1)
         YQ = None
         for quantile in selfA._parameters["Quantiles"]:
@@ -1604,6 +1608,8 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if YQ is None: YQ = YfQ[:,indice]
             else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
         selfA.StoredVariables["SimulationQuantiles"].store( YQ )
+        if selfA._toStore("SampledStateForQuantiles"):
+            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):
@@ -2227,19 +2233,23 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("SimulationQuantiles"):
         nech = selfA._parameters["NumberOfSamplesForQuantiles"]
         HXa  = numpy.matrix(numpy.ravel( HXa )).T
+        EXr  = None
         YfQ  = None
         for i in range(nech):
             if selfA._parameters["SimulationForQuantiles"] == "Linear":
                 dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
                 dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
                 Yr = HXa + dYr
+                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
             elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
                 Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
                 Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
             if YfQ is None:
                 YfQ = Yr
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
             else:
                 YfQ = numpy.hstack((YfQ,Yr))
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
         YfQ.sort(axis=-1)
         YQ = None
         for quantile in selfA._parameters["Quantiles"]:
@@ -2248,6 +2258,8 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if YQ is None: YQ = YfQ[:,indice]
             else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
         selfA.StoredVariables["SimulationQuantiles"].store( YQ )
+        if selfA._toStore("SampledStateForQuantiles"):
+            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):
@@ -2264,7 +2276,6 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         selfA._parameters["StoreInternalVariables"] = True
     #
     # Opérateurs
-    # ----------
     H = HO["Direct"].appliedControledFormTo
     #
     if selfA._parameters["EstimationOf"] == "State":
@@ -2275,8 +2286,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     else:
         Cm = None
     #
-    # Nombre de pas identique au nombre de pas d'observations
-    # -------------------------------------------------------
+    # Durée d'observation et tailles
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
         __p = numpy.cumprod(Y.shape())[-1]
@@ -2285,7 +2295,6 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         __p = numpy.array(Y).size
     #
     # Précalcul des inversions de B et R
-    # ----------------------------------
     if selfA._parameters["StoreInternalVariables"] \
         or selfA._toStore("CostFunctionJ") \
         or selfA._toStore("CostFunctionJb") \
@@ -2295,10 +2304,9 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         BI = B.getI()
         RI = R.getI()
     #
-    # Initialisation
-    # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
+    #
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
     else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
@@ -2738,19 +2746,23 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("SimulationQuantiles"):
         nech = selfA._parameters["NumberOfSamplesForQuantiles"]
         HXa  = numpy.matrix(numpy.ravel( HXa )).T
+        EXr  = None
         YfQ  = None
         for i in range(nech):
             if selfA._parameters["SimulationForQuantiles"] == "Linear":
                 dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
                 dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
                 Yr = HXa + dYr
+                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
             elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
                 Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
                 Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
             if YfQ is None:
                 YfQ = Yr
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
             else:
                 YfQ = numpy.hstack((YfQ,Yr))
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
         YfQ.sort(axis=-1)
         YQ = None
         for quantile in selfA._parameters["Quantiles"]:
@@ -2759,6 +2771,8 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if YQ is None: YQ = YfQ[:,indice]
             else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
         selfA.StoredVariables["SimulationQuantiles"].store( YQ )
+        if selfA._toStore("SampledStateForQuantiles"):
+            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):
@@ -3242,19 +3256,23 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("SimulationQuantiles"):
         nech = selfA._parameters["NumberOfSamplesForQuantiles"]
         HXa  = numpy.matrix(numpy.ravel( HXa )).T
+        EXr  = None
         YfQ  = None
         for i in range(nech):
             if selfA._parameters["SimulationForQuantiles"] == "Linear":
                 dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
                 dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
                 Yr = HXa + dYr
+                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
             elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
                 Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
                 Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
             if YfQ is None:
                 YfQ = Yr
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
             else:
                 YfQ = numpy.hstack((YfQ,Yr))
+                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
         YfQ.sort(axis=-1)
         YQ = None
         for quantile in selfA._parameters["Quantiles"]:
@@ -3263,6 +3281,8 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if YQ is None: YQ = YfQ[:,indice]
             else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
         selfA.StoredVariables["SimulationQuantiles"].store( YQ )
+        if selfA._toStore("SampledStateForQuantiles"):
+            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):
