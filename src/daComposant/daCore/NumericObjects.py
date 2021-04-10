@@ -514,19 +514,70 @@ def EnsembleOfAnomalies( Ensemble, OptMean = None, Normalisation = 1.):
     return Normalisation * (numpy.asarray(Ensemble) - __Em)
 
 # ==============================================================================
-def EnsembleErrorCovariance( Ensemble ):
-    "Renvoie la covariance d'ensemble"
-    __Anomalies = EnsembleOfAnomalies( Ensemble )
-    __n, __m = numpy.asarray(__Anomalies).shape
-    # Estimation empirique
-    __Covariance = (__Anomalies @ __Anomalies.T) / (__m-1)
-    # Assure la symétrie
-    __Covariance = (__Covariance + __Covariance.T) * 0.5
-    # Assure la positivité
-    __epsilon    = mpr*numpy.trace(__Covariance)
-    __Covariance = __Covariance + __epsilon * numpy.identity(__n)
+def EnsembleErrorCovariance( Ensemble, __quick = False ):
+    "Renvoie l'estimation empirique de la covariance d'ensemble"
+    if __quick:
+        # Covariance rapide mais rarement définie positive
+        __Covariance = numpy.cov(Ensemble)
+    else:
+        # Résultat souvent identique à numpy.cov, mais plus robuste
+        __n, __m = numpy.asarray(Ensemble).shape
+        __Anomalies = EnsembleOfAnomalies( Ensemble )
+        # Estimation empirique
+        __Covariance = (__Anomalies @ __Anomalies.T) / (__m-1)
+        # Assure la symétrie
+        __Covariance = (__Covariance + __Covariance.T) * 0.5
+        # Assure la positivité
+        __epsilon    = mpr*numpy.trace(__Covariance)
+        __Covariance = __Covariance + __epsilon * numpy.identity(__n)
     #
     return __Covariance
+
+# ==============================================================================
+def EnsemblePerturbationWithGivenCovariance( __Ensemble, __Covariance, __Seed=None ):
+    "Ajout d'une perturbation à chaque membre d'un ensemble selon une covariance prescrite"
+    if hasattr(__Covariance,"assparsematrix"):
+        if (abs(__Ensemble).mean() > mpr) and (abs(__Covariance.assparsematrix())/abs(__Ensemble).mean() < mpr).all():
+            # Traitement d'une covariance nulle ou presque
+            return __Ensemble
+        if (abs(__Ensemble).mean() <= mpr) and (abs(__Covariance.assparsematrix()) < mpr).all():
+            # Traitement d'une covariance nulle ou presque
+            return __Ensemble
+    else:
+        if (abs(__Ensemble).mean() > mpr) and (abs(__Covariance)/abs(__Ensemble).mean() < mpr).all():
+            # Traitement d'une covariance nulle ou presque
+            return __Ensemble
+        if (abs(__Ensemble).mean() <= mpr) and (abs(__Covariance) < mpr).all():
+            # Traitement d'une covariance nulle ou presque
+            return __Ensemble
+    #
+    __n, __m = __Ensemble.shape
+    if __Seed is not None: numpy.random.seed(__Seed)
+    #
+    if hasattr(__Covariance,"isscalar") and __Covariance.isscalar():
+        # Traitement d'une covariance multiple de l'identité
+        __zero = 0.
+        __std  = numpy.sqrt(__Covariance.assparsematrix())
+        __Ensemble += numpy.random.normal(__zero, __std, size=(__m,__n)).T
+    #
+    elif hasattr(__Covariance,"isvector") and __Covariance.isvector():
+        # Traitement d'une covariance diagonale avec variances non identiques
+        __zero = numpy.zeros(__n)
+        __std  = numpy.sqrt(__Covariance.assparsematrix())
+        __Ensemble += numpy.asarray([numpy.random.normal(__zero, __std) for i in range(__m)]).T
+    #
+    elif hasattr(__Covariance,"ismatrix") and __Covariance.ismatrix():
+        # Traitement d'une covariance pleine
+        __Ensemble += numpy.random.multivariate_normal(numpy.zeros(__n), __Covariance.asfullmatrix(__n), size=__m).T
+    #
+    elif isinstance(__Covariance, numpy.ndarray):
+        # Traitement d'une covariance numpy pleine, sachant qu'on arrive ici en dernier
+        __Ensemble += numpy.random.multivariate_normal(numpy.zeros(__n), __Covariance, size=__m).T
+    #
+    else:
+        raise ValueError("Error in ensemble perturbation with inadequate covariance specification")
+    #
+    return __Ensemble
 
 # ==============================================================================
 def CovarianceInflation(
@@ -626,8 +677,6 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     #
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
     else:                         Pn = B
-    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
-    else:                         Qn = Q
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
@@ -674,7 +723,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
                 EL = M( [(EL[:,i], Un) for i in range(__m)],
                     argsAsSerie = True,
                     returnSerieAsArrayMatrix = True )
-                EL = EL + numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
+                EL = EnsemblePerturbationWithGivenCovariance( EL, Q )
                 EZ = H( [(EL[:,i], Un) for i in range(__m)],
                     argsAsSerie = True,
                     returnSerieAsArrayMatrix = True )
@@ -784,8 +833,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     __m = selfA._parameters["NumberOfMembers"]
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
     else:                         Pn = B
-    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
-    else:                         Qn = Q
     Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #~ Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
     #
@@ -823,8 +870,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             EMX = M( [(Xn[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
-            qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
-            Xn_predicted = EMX + qi
+            Xn_predicted = EnsemblePerturbationWithGivenCovariance( EMX, Q )
             HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
@@ -1666,8 +1712,6 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
-    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
-    else:                         Qn = Q
     Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
@@ -1704,8 +1748,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             EMX = M( [(Xn[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
-            qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
-            Xn_predicted = EMX + qi
+            Xn_predicted = EnsemblePerturbationWithGivenCovariance( EMX, Q )
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
@@ -2311,8 +2354,6 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
-    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
-    else:                         Qn = Q
     Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
@@ -2349,8 +2390,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             EMX = M( [(Xn[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
-            qi = numpy.random.multivariate_normal(numpy.zeros(__n), Qn, size=__m).T
-            Xn_predicted = EMX + qi
+            Xn_predicted = EnsemblePerturbationWithGivenCovariance( EMX, Q )
             HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
