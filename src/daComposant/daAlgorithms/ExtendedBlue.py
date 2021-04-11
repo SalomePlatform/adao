@@ -226,16 +226,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
                     dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
                     Yr = HXa + dYr
-                    if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
+                    if self._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
                 elif self._parameters["SimulationForQuantiles"] == "NonLinear":
                     Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
                     Yr = numpy.matrix(numpy.ravel( H( Xr ) )).T
                 if YfQ is None:
                     YfQ = Yr
-                    if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
+                    if self._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
                 else:
                     YfQ = numpy.hstack((YfQ,Yr))
-                    if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
+                    if self._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
             YfQ.sort(axis=-1)
             YQ = None
             for quantile in self._parameters["Quantiles"]:
@@ -244,8 +244,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if YQ is None: YQ = YfQ[:,indice]
                 else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
             self.StoredVariables["SimulationQuantiles"].store( YQ )
-            if selfA._toStore("SampledStateForQuantiles"):
-                selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
+            if self._toStore("SampledStateForQuantiles"):
+                self.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
         if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
         if self._toStore("SimulatedObservationAtCurrentState"):
