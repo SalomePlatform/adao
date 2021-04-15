@@ -1667,35 +1667,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
     if selfA._toStore("SimulationQuantiles"):
-        nech = selfA._parameters["NumberOfSamplesForQuantiles"]
-        HXa  = numpy.matrix(numpy.ravel( HXa )).T
-        EXr  = None
-        YfQ  = None
-        for i in range(nech):
-            if selfA._parameters["SimulationForQuantiles"] == "Linear":
-                dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
-                dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
-                Yr = HXa + dYr
-                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
-            elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
-                Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
-                Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
-            if YfQ is None:
-                YfQ = Yr
-                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
-            else:
-                YfQ = numpy.hstack((YfQ,Yr))
-                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
-        YfQ.sort(axis=-1)
-        YQ = None
-        for quantile in selfA._parameters["Quantiles"]:
-            if not (0. <= float(quantile) <= 1.): continue
-            indice = int(nech * float(quantile) - 1./nech)
-            if YQ is None: YQ = YfQ[:,indice]
-            else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
-        selfA.StoredVariables["SimulationQuantiles"].store( YQ )
-        if selfA._toStore("SampledStateForQuantiles"):
-            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
+        QuantilesEstimations(selfA, A, Xa, HXa, Hm, HtM)
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):
@@ -2314,35 +2286,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
     if selfA._toStore("SimulationQuantiles"):
-        nech = selfA._parameters["NumberOfSamplesForQuantiles"]
-        HXa  = numpy.matrix(numpy.ravel( HXa )).T
-        EXr  = None
-        YfQ  = None
-        for i in range(nech):
-            if selfA._parameters["SimulationForQuantiles"] == "Linear":
-                dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
-                dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
-                Yr = HXa + dYr
-                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
-            elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
-                Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
-                Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
-            if YfQ is None:
-                YfQ = Yr
-                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
-            else:
-                YfQ = numpy.hstack((YfQ,Yr))
-                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
-        YfQ.sort(axis=-1)
-        YQ = None
-        for quantile in selfA._parameters["Quantiles"]:
-            if not (0. <= float(quantile) <= 1.): continue
-            indice = int(nech * float(quantile) - 1./nech)
-            if YQ is None: YQ = YfQ[:,indice]
-            else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
-        selfA.StoredVariables["SimulationQuantiles"].store( YQ )
-        if selfA._toStore("SampledStateForQuantiles"):
-            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
+        QuantilesEstimations(selfA, A, Xa, HXa, Hm, HtM)
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):
@@ -3306,35 +3250,7 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
     if selfA._toStore("SimulationQuantiles"):
-        nech = selfA._parameters["NumberOfSamplesForQuantiles"]
-        HXa  = numpy.matrix(numpy.ravel( HXa )).T
-        EXr  = None
-        YfQ  = None
-        for i in range(nech):
-            if selfA._parameters["SimulationForQuantiles"] == "Linear":
-                dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
-                dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
-                Yr = HXa + dYr
-                if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
-            elif selfA._parameters["SimulationForQuantiles"] == "NonLinear":
-                Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
-                Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
-            if YfQ is None:
-                YfQ = Yr
-                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
-            else:
-                YfQ = numpy.hstack((YfQ,Yr))
-                if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
-        YfQ.sort(axis=-1)
-        YQ = None
-        for quantile in selfA._parameters["Quantiles"]:
-            if not (0. <= float(quantile) <= 1.): continue
-            indice = int(nech * float(quantile) - 1./nech)
-            if YQ is None: YQ = YfQ[:,indice]
-            else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
-        selfA.StoredVariables["SimulationQuantiles"].store( YQ )
-        if selfA._toStore("SampledStateForQuantiles"):
-            selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
+        QuantilesEstimations(selfA, A, Xa, HXa, Hm, HtM)
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
     if selfA._toStore("SimulatedObservationAtOptimum"):

@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import logging
-from daCore import BasicObjects
+from daCore import BasicObjects, NumericObjects
 import numpy
 
 # ==============================================================================
@@ -216,36 +216,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._toStore("MahalanobisConsistency"):
             self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
         if self._toStore("SimulationQuantiles"):
-            nech = self._parameters["NumberOfSamplesForQuantiles"]
             HtM  = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
             HtM  = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
-            EXr  = None
-            YfQ  = None
-            for i in range(nech):
-                if self._parameters["SimulationForQuantiles"] == "Linear":
-                    dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
-                    dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
-                    Yr = HXa + dYr
-                    if self._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
-                elif self._parameters["SimulationForQuantiles"] == "NonLinear":
-                    Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
-                    Yr = numpy.matrix(numpy.ravel( H( Xr ) )).T
-                if YfQ is None:
-                    YfQ = Yr
-                    if self._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
-                else:
-                    YfQ = numpy.hstack((YfQ,Yr))
-                    if self._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
-            YfQ.sort(axis=-1)
-            YQ = None
-            for quantile in self._parameters["Quantiles"]:
-                if not (0. <= float(quantile) <= 1.): continue
-                indice = int(nech * float(quantile) - 1./nech)
-                if YQ is None: YQ = YfQ[:,indice]
-                else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
-            self.StoredVariables["SimulationQuantiles"].store( YQ )
-            if self._toStore("SampledStateForQuantiles"):
-                self.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
+            NumericObjects.QuantilesEstimations(self, A, Xa, HXa, H, HtM)
         if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
         if self._toStore("SimulatedObservationAtCurrentState"):
