@@ -132,6 +132,7 @@ StoreSupplementaryCalculations
   "MahalanobisConsistency",
   "OMA",
   "OMB",
+  "SampledStateForQuantiles",
   "SigmaObs2",
   "SimulatedObservationAtBackground",
   "SimulatedObservationAtCurrentOptimum",
@@ -208,6 +209,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/OMA.rst
 
 .. include:: snippets/OMB.rst
+
+.. include:: snippets/SampledStateForQuantiles.rst
 
 .. include:: snippets/SigmaObs2.rst
 
