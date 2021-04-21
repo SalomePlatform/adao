@@ -26,16 +26,16 @@ import unittest
 
 # ==============================================================================
 #
-# Versions minimales Calibre9/Jessie
-# ----------------------------------
-minimal_python_version     = "2.7.9"
-minimal_numpy_version      = "1.8.2"
-minimal_scipy_version      = "0.14.0"
-minimal_matplotlib_version = "1.4.2"
+# Versions minimales pour ADAO
+# ----------------------------
+minimal_python_version     = "3.5.0"
+minimal_numpy_version      = "1.14.0"
+minimal_scipy_version      = "0.19.0"
+minimal_matplotlib_version = "2.2.0"
 minimal_nlopt_version      = "2.4.2"
 #
 # ==============================================================================
-class Test_Adao(unittest.TestCase):
+class Test_Versions(unittest.TestCase):
     def test1_minimalVersion(self):
         "Affichage des versions minimales"
         print("  Les versions minimales attendues sont :")
@@ -94,12 +94,26 @@ class Test_Adao(unittest.TestCase):
             backends_KO = []
             backend_now = matplotlib.get_backend()
 
-            for backend in ['bidon', 'MacOSX', 'Qt5Agg', 'GTK3Agg', 'TkAgg', 'WxAgg', 'Agg',
-                            'Qt5', 'Qt5Cairo', 'GTK3Cairo', 'TkCairo', 'WxCairo', 'Cairo',
-                            'ps', 'pdf', 'svg', 'Template', 'WebAgg',
-                            'Qt4', 'Qt4Agg', 'Qt4Cairo', 'Wx', 'pgf', 'GTK',
-                            'GTKAgg', 'GTKCairo', 'Cocoa', 'CocoaAgg', 'emf', 'gdk',
-                           ]:
+            for backend in [
+                'bidon', # Pour vérifier le test uniquement
+                'Agg',
+                'Cocoa',
+                'CocoaAgg',
+                'GTK',
+                'GTKAgg',
+                'Qt4',
+                'Qt4Agg',
+                'Qt5',
+                'Qt5Agg',
+                'Template',
+                'TkAgg',
+                'emf',
+                'gdk',
+                'pdf',
+                'pgf',
+                'ps',
+                'svg',
+                ]:
                 try:
                     matplotlib.use(backend)
                     backends_OK.append(backend)
