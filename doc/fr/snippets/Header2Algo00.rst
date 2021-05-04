@@ -1,4 +1,5 @@
 .. warning::
 
-  dans sa présente version, cet algorithme est expérimental, et reste donc
-  susceptible de changements dans les prochaines versions.
+  dans la présente version, cet algorithme ou certaines de ses variantes sont
+  expérimentaux, et restent donc susceptibles de changements dans les
+  prochaines versions.

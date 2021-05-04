@@ -28,6 +28,9 @@ Calculation algorithm "*EnsembleKalmanFilter*"
 ----------------------------------------------
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo00.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a dynamic system by a
@@ -52,7 +55,8 @@ In case of linear of "slightly" non-linear operators, one can easily use the
 to evaluate on small systems. One can verify the linearity of the operators
 with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
-There exists a lot of variants of this algorithm. The following stable and robust formulations are proposed here:
+There exists a lot of variants of this algorithm. The following stable and
+robust formulations are proposed here:
 
 .. index::
     pair: Variant ; EnKF
@@ -67,7 +71,9 @@ There exists a lot of variants of this algorithm. The following stable and robus
 - "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF scheme, allowing in addition the consistent treament of non-linear observation operator,
 - "IEnKF" (Iterative_EnKF), deterministic EnKF scheme, improving treament of operators non-linearities.
 
-Without being a universal recommandation, one recommend to use EnKF as a reference algorithm, and the other algorithms (in this order) as means to obtain less costly data assimilation with hopefully the same quality.
+Without being a universal recommandation, one recommend to use "EnKF" as a
+reference algorithm, and the other algorithms (in this order) as means to
+obtain less costly data assimilation with hopefully the same quality.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

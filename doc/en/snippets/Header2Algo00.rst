@@ -1,4 +1,4 @@
 .. warning::
 
-  in its present version, this algorithm is experimental, and therefore remains
-  subject to changes in future versions.
+   in this particular version, this algorithm or some of its variants are
+   experimental, and therefore remain subject to change in future versions.
