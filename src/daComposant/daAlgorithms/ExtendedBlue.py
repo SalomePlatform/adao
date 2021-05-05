@@ -92,8 +92,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SimulationForQuantiles",
             default  = "Linear",
             typecast = str,
-            message  = "Type de simulation pour l'estimation des quantiles",
+            message  = "Type de simulation en estimation des quantiles",
             listval  = ["Linear", "NonLinear"]
+            )
+        self.defineRequiredParameter( # Pas de type
+            name     = "QBounds",
+            message  = "Liste des paires de bornes pour les états utilisés en estimation des quantiles",
+            )
+        self.defineRequiredParameter(
+            name     = "ConstrainedBy",
+            default  = "EstimateProjection",
+            typecast = str,
+            message  = "Prise en compte des contraintes",
+            listval  = ["EstimateProjection"],
             )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),

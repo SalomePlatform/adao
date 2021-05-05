@@ -649,20 +649,40 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
     "Estimation des quantiles a posteriori (selfA est modifié)"
     nbsamples = selfA._parameters["NumberOfSamplesForQuantiles"]
     #
+    # Traitement des bornes
+    if "QBounds" in selfA._parameters: LBounds = selfA._parameters["QBounds"] # Prioritaire
+    else:                              LBounds = selfA._parameters["Bounds"]  # Défaut raisonnable
+    if LBounds is not None:
+        def NoneRemove(paire):
+            bmin, bmax = paire
+            if bmin is None: bmin = numpy.finfo('float').min
+            if bmax is None: bmax = numpy.finfo('float').max
+            return [bmin, bmax]
+        LBounds = numpy.matrix( [NoneRemove(paire) for paire in LBounds] )
+    #
     # Échantillonnage des états
     YfQ  = None
     EXr  = None
-    if selfA._parameters["SimulationForQuantiles"] == "Linear":
+    if selfA._parameters["SimulationForQuantiles"] == "Linear" and HXa is not None:
         HXa  = numpy.matrix(numpy.ravel( HXa )).T
     for i in range(nbsamples):
         if selfA._parameters["SimulationForQuantiles"] == "Linear" and HtM is not None:
-            dXr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A) - Xa.A1).T
+            dXr = numpy.matrix(numpy.random.multivariate_normal(numpy.ravel(Xa),A) - numpy.ravel(Xa)).T
+            if LBounds is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+                dXr = numpy.max(numpy.hstack((dXr,LBounds[:,0]) - Xa),axis=1)
+                dXr = numpy.min(numpy.hstack((dXr,LBounds[:,1]) - Xa),axis=1)
             dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
             Yr = HXa + dYr
-            if selfA._toStore("SampledStateForQuantiles"): Xr = Xa+dXr
+            if selfA._toStore("SampledStateForQuantiles"): Xr = Xa + dXr
         elif selfA._parameters["SimulationForQuantiles"] == "NonLinear" and Hm is not None:
-            Xr = numpy.matrix(numpy.random.multivariate_normal(Xa.A1,A)).T
+            Xr = numpy.matrix(numpy.random.multivariate_normal(numpy.ravel(Xa),A)).T
+            if LBounds is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+                Xr = numpy.max(numpy.hstack((Xr,LBounds[:,0])),axis=1)
+                Xr = numpy.min(numpy.hstack((Xr,LBounds[:,1])),axis=1)
             Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
+        else:
+            raise ValueError("Quantile simulations has only to be Linear or NonLinear.")
+        #
         if YfQ is None:
             YfQ = Yr
             if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
