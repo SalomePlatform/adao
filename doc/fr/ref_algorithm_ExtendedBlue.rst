@@ -65,6 +65,8 @@ lui être entièrement équivalent.
 
 .. include:: snippets/SimulationForQuantiles.rst
 
+.. include:: snippets/StateBoundsForQuantilesWithNone.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

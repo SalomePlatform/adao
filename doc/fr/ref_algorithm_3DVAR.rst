@@ -97,6 +97,8 @@ initial de leur minimisation, mais ce n'est pas recommandé.
 
 .. include:: snippets/SimulationForQuantiles.rst
 
+.. include:: snippets/StateBoundsForQuantilesWithNone.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

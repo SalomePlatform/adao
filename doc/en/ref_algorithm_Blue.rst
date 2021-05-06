@@ -79,6 +79,8 @@ these reasons, this method is not proposed nor recommended.
 
 .. include:: snippets/SimulationForQuantiles.rst
 
+.. include:: snippets/StateBoundsForQuantilesWithNone.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

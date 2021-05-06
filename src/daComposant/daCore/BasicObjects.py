@@ -768,7 +768,7 @@ class Algorithm(object):
             logging.debug("%s Bounds taken into account"%(self._name,))
         else:
             self._parameters["Bounds"] = None
-        if ("QBounds" in self._parameters) and isinstance(self._parameters["QBounds"], (list, tuple)) and (len(self._parameters["QBounds"]) > 0):
+        if ("StateBoundsForQuantiles" in self._parameters) and isinstance(self._parameters["StateBoundsForQuantiles"], (list, tuple)) and (len(self._parameters["StateBoundsForQuantiles"]) > 0):
             logging.debug("%s Bounds for quantiles states taken into account"%(self._name,))
             # Attention : contrairement à Bounds, pas de défaut à None, sinon on ne peut pas être sans bornes
         #
@@ -1398,11 +1398,11 @@ class AlgorithmAndParameters(object):
             raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself." \
                 %(len(self.__P["Bounds"]),max(__Xb_shape)))
         #
-        if ("QBounds" in self.__P) \
-            and (isinstance(self.__P["QBounds"], list) or isinstance(self.__P["QBounds"], tuple)) \
-            and (len(self.__P["QBounds"]) != max(__Xb_shape)):
+        if ("StateBoundsForQuantiles" in self.__P) \
+            and (isinstance(self.__P["StateBoundsForQuantiles"], list) or isinstance(self.__P["StateBoundsForQuantiles"], tuple)) \
+            and (len(self.__P["StateBoundsForQuantiles"]) != max(__Xb_shape)):
             raise ValueError("The number \"%s\" of bound pairs for the quantile state (X) components is different of the size \"%s\" of the state itself." \
-                %(len(self.__P["QBounds"]),max(__Xb_shape)))
+                %(len(self.__P["StateBoundsForQuantiles"]),max(__Xb_shape)))
         #
         return 1
 

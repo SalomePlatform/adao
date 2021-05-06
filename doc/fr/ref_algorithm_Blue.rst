@@ -80,6 +80,8 @@ pas proposée.
 
 .. include:: snippets/SimulationForQuantiles.rst
 
+.. include:: snippets/StateBoundsForQuantilesWithNone.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

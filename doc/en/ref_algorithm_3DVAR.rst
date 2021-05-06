@@ -95,6 +95,8 @@ initialization point for the minimization, but it is not recommended.
 
 .. include:: snippets/SimulationForQuantiles.rst
 
+.. include:: snippets/StateBoundsForQuantilesWithNone.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

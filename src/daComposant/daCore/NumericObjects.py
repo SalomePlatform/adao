@@ -650,8 +650,12 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
     nbsamples = selfA._parameters["NumberOfSamplesForQuantiles"]
     #
     # Traitement des bornes
-    if "QBounds" in selfA._parameters: LBounds = selfA._parameters["QBounds"] # Prioritaire
-    else:                              LBounds = selfA._parameters["Bounds"]  # Défaut raisonnable
+    if "StateBoundsForQuantiles" in selfA._parameters:
+        LBounds = selfA._parameters["StateBoundsForQuantiles"] # Prioritaire
+    elif "Bounds" in selfA._parameters:
+        LBounds = selfA._parameters["Bounds"]  # Défaut raisonnable
+    else:
+        LBounds = None
     if LBounds is not None:
         def NoneRemove(paire):
             bmin, bmax = paire
@@ -668,7 +672,7 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
     for i in range(nbsamples):
         if selfA._parameters["SimulationForQuantiles"] == "Linear" and HtM is not None:
             dXr = numpy.matrix(numpy.random.multivariate_normal(numpy.ravel(Xa),A) - numpy.ravel(Xa)).T
-            if LBounds is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+            if LBounds is not None: # "EstimateProjection" par défaut
                 dXr = numpy.max(numpy.hstack((dXr,LBounds[:,0]) - Xa),axis=1)
                 dXr = numpy.min(numpy.hstack((dXr,LBounds[:,1]) - Xa),axis=1)
             dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
@@ -676,7 +680,7 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
             if selfA._toStore("SampledStateForQuantiles"): Xr = Xa + dXr
         elif selfA._parameters["SimulationForQuantiles"] == "NonLinear" and Hm is not None:
             Xr = numpy.matrix(numpy.random.multivariate_normal(numpy.ravel(Xa),A)).T
-            if LBounds is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+            if LBounds is not None: # "EstimateProjection" par défaut
                 Xr = numpy.max(numpy.hstack((Xr,LBounds[:,0])),axis=1)
                 Xr = numpy.min(numpy.hstack((Xr,LBounds[:,1])),axis=1)
             Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
