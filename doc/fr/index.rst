@@ -42,9 +42,10 @@ provenant de mesures expérimentales, ou observations, et de modèles numérique
 méthodes incluses dans ce cadre sont également connues sous les noms
 d'*estimation de paramètres*, de *problèmes inverses*, d'*estimation
 bayésienne*, d'*interpolation optimale*, de *reconstruction de champs*, etc. Le
-module ADAO offre actuellement plus de 100 méthodes algorithmiques différentes
-et permet l'étude d'environ 350 problèmes appliqués distincts. De plus amples
-détails peuvent être trouvés dans la partie proposant :ref:`section_theory`.
+module ADAO offre actuellement plus d'une centaine de méthodes algorithmiques
+différentes et permet l'étude d'environ 350 problèmes appliqués distincts. De
+plus amples détails peuvent être trouvés dans la partie proposant
+:ref:`section_theory`.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la documentation théorique (indiquée dans le titre de section par

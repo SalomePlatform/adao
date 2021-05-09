@@ -41,7 +41,7 @@ In other words, data assimilation merges measurement data of a system, that are
 the observations, with *a priori* system physical and mathematical knowledge,
 embedded in numerical models. The goal is to obtain the best possible estimate
 of the system real state and of its stochastic properties. Note that this real
-state (or "*true state*") can not be reached, but can only be estimated.
+state (or "*true state*") cannot usually be reached, but can only be estimated.
 Moreover, despite the fact that the used information are stochastic by nature,
 data assimilation provides deterministic techniques in order to perform very
 efficiently the estimation.
@@ -54,12 +54,13 @@ extend data assimilation applications. They will be introduced this way in the
 section `Going further in the state estimation by optimization methods`_, but
 they are far more general and can be used without data assimilation concepts.
 
-Two main types of applications exist in data assimilation, being covered by the
-same formalism: **parameters identification** and **fields reconstruction**.
-Before introducing the `Simple description of the data assimilation
-methodological framework`_ in a next section, we describe briefly these two
-types. At the end, some references allow `Going further in the data assimilation
-framework`_.
+Two main types of applications exist in data assimilation, which are covered by
+the same formalism: **fields reconstruction** and **parameters identification**.
+These are also referred to as **state estimation** and **parameters estimation**
+respectively. Before introducing the `Simple description of the data
+assimilation methodological framework`_ in a next section, these two types of
+applications are briefly described. At the end, some references allow `Going
+further in the data assimilation framework`_.
 
 Fields reconstruction or measures interpolation
 -----------------------------------------------
@@ -67,6 +68,7 @@ Fields reconstruction or measures interpolation
 .. index:: single: fields reconstruction
 .. index:: single: measures interpolation
 .. index:: single: fields interpolation
+.. index:: single: state estimation
 
 **Fields reconstruction (or interpolation)** consists in finding, from a
 restricted set of real measures, the physical field which is the most
@@ -78,10 +80,10 @@ to fit at best the measures, while remaining constrained by the overall field
 calculation. The calculation is thus an *a priori* estimation of the field that
 we seek to identify.
 
-If the system evolves in time, the reconstruction has to be established on every
-time step, of the field as a whole. The interpolation process in this case is
-more complicated since it is temporal, and not only in terms of instantaneous
-values of the field.
+If the system evolves over time, the reconstruction of the whole field has to
+be established at each time step, taking into account the information over a
+time window. The interpolation process is more complicated in this case because
+it is temporal, and not only in terms of instantaneous field values.
 
 A simple example of fields reconstruction comes from meteorology, in which one
 look for value of variables such as temperature or pressure in all points of the
@@ -104,6 +106,7 @@ Parameters identification, models adjustment, calibration
 .. index:: single: background
 .. index:: single: regularization
 .. index:: single: inverse problems
+.. index:: single: parameters estimation
 
 The **identification (or adjustment) of parameters** by data assimilation is a
 form of state calibration which uses both the physical measurement and an *a
@@ -249,14 +252,15 @@ linearity, that the two *variational* and *filtering* approaches give the same
 solution.
 
 It is indicated here that these methods of "*3D-Var*" and "*BLUE*" may be
-extended to dynamic problems, called respectively "*4D-Var*" and "*Kalman
-filter*". They have to take into account the evolution operator to establish an
-analysis at the right time steps of the gap between observations and
-simulations, and to have, at every moment, the propagation of the background
-through the evolution model. In the same way, these methods can be used in case
-of non linear observation or evolution operators. Many other variants have been
-developed to improve the numerical quality of the methods or to take into
-account computer requirements such as calculation size and time.
+extended to dynamic or time-related problems, called respectively "*4D-Var*"
+and "*Kalman filter (KF)*" and their derivatives. They have to take into
+account an evolution operator to establish an analysis at the right time steps
+of the gap between observations and simulations, and to have, at every moment,
+the propagation of the background through the evolution model. In the same way,
+these methods can be used in case of non linear observation or evolution
+operators. Many other variants have been developed to improve the numerical
+quality of the methods or to take into account computer requirements such as
+calculation size and time.
 
 Going further in the data assimilation framework
 ------------------------------------------------
@@ -287,7 +291,8 @@ consult introductory documents like [Talagrand97]_ or [Argaud09]_, on-line
 training courses or lectures like [Bouttier99]_ and [Bocquet04]_ (along with
 other materials coming from geosciences applications), or general documents
 like [Talagrand97]_, [Tarantola87]_, [Asch16]_, [Kalnay03]_, [Ide97]_,
-[Tikhonov77]_ and [WikipediaDA]_.
+[Tikhonov77]_ and [WikipediaDA]_. In a more mathematical way, one can also
+consult [Lions68]_, [Jazwinski70]_.
 
 Note that data assimilation is not restricted to meteorology or geo-sciences,
 but is widely used in other scientific domains. There are several fields in

@@ -33,7 +33,7 @@
 .. index:: single: observation
 .. index:: single: a priori
 
-L'**assimilation de données** est un cadre général bien établi pour le calcul de
+**L'assimilation de données** est un cadre général bien établi pour le calcul de
 l'estimation optimale de l'état réel d'un système, au cours du temps si
 nécessaire. Il utilise les valeurs obtenues en combinant des observations et des
 modèles *a priori*, incluant de plus des informations sur leurs erreurs.
@@ -41,12 +41,13 @@ modèles *a priori*, incluant de plus des informations sur leurs erreurs.
 En d'autres termes, l'assimilation de données est un moyen de fusionner les
 données mesurées d'un système, qui sont les observations, avec des
 connaissances physique et mathématique *a priori* du système, intégrées dans
-les modèles numériques. L'objectif est d'obtenir la meilleure estimation possible
-de l'état réel du système et de ses propriétés stochastiques. On note que cet
-état réel (ou "*état vrai*") ne peut être atteint, mais peut seulement être
-estimé. De plus, malgré le fait que les informations utilisées sont
-stochastiques par nature, l'assimilation de données fournit des techniques
-déterministes afin de réaliser l'estimation de manière très efficace.
+les modèles numériques. L'objectif est d'obtenir la meilleure estimation
+possible de l'état réel du système et de ses propriétés stochastiques. On note
+que cet état réel (ou "*état vrai*") ne peut être habituellement atteint, mais
+peut seulement être estimé. De plus, malgré le fait que les informations
+utilisées sont stochastiques par nature, l'assimilation de données fournit des
+techniques déterministes afin de réaliser l'estimation de manière très
+efficace.
 
 Comme l'assimilation de données cherche l'estimation la **meilleure possible**,
 la démarche technique sous-jacente intègre toujours de l'optimisation afin de
@@ -59,13 +60,14 @@ d'optimisation`_, mais elles sont beaucoup plus générales et peuvent être
 utilisées sans les concepts d'assimilation de données.
 
 Deux types principaux d'applications existent en assimilation de données, qui
-sont couverts par le même formalisme : l'**identification de paramètres** et la
-**reconstruction de champs**. Avant d'introduire la `Description simple du cadre
-méthodologique de l'assimilation de données`_ dans une prochaine section, nous
-décrivons brièvement ces deux types d'applications. A la fin de ce chapitre,
-quelques références permettent d'`Approfondir le cadre méthodologique de
-l'assimilation de données`_ et d'`Approfondir l'estimation d'état par des
-méthodes d'optimisation`_.
+sont couverts par le même formalisme : la **reconstruction de champs** et
+**l'identification de paramètres**. On parle aussi respectivement
+**d'estimation d'états** et **d'estimation de paramètres**. Avant d'introduire
+la `Description simple du cadre méthodologique de l'assimilation de données`_
+dans une prochaine section, on décrit brièvement ces deux types d'applications.
+A la fin de ce chapitre, quelques références permettent d'`Approfondir le cadre
+méthodologique de l'assimilation de données`_ et d'`Approfondir l'estimation
+d'état par des méthodes d'optimisation`_.
 
 Reconstruction de champs ou interpolation de données
 ----------------------------------------------------
@@ -73,6 +75,7 @@ Reconstruction de champs ou interpolation de données
 .. index:: single: reconstruction de champs
 .. index:: single: interpolation de données
 .. index:: single: interpolation de champs
+.. index:: single: estimation d'états
 
 La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
 partir d'un nombre restreint de mesures réelles, le (ou les) champ(s)
@@ -84,9 +87,10 @@ sur les mesures, doit s'adapter au mieux aux mesures, tout en restant contraint
 par la simulation globale du champ. Le champ calculé est donc une estimation *a
 priori* du champ que l'on cherche à identifier.
 
-Si le système évolue dans le temps, la reconstruction doit être établie à chaque
-pas de temps, du champ dans son ensemble. Le processus d'interpolation est dans
-ce cas plus compliqué car il est temporel, et plus seulement en termes de
+Si le système évolue dans le temps, la reconstruction du champ dans son
+ensemble doit être établie à chaque pas de temps, en tenant compte des
+informations sur une fenêtre temporelle. Le processus d'interpolation est plus
+compliqué dans ce cas car il est temporel, et plus seulement en termes de
 valeurs instantanées du champ.
 
 Un exemple simple de reconstruction de champs provient de la météorologie, dans
@@ -111,14 +115,15 @@ Identification de paramètres, ajustement de modèles, calage
 .. index:: single: ébauche
 .. index:: single: régularisation
 .. index:: single: problèmes inverses
+.. index:: single: estimation de paramètres
 
-L'**identification (ou l'ajustement) de paramètres** par assimilation de
+**L'identification (ou l'ajustement) de paramètres** par assimilation de
 données est une forme de calage d'état qui utilise simultanément les mesures
-physiques et une estimation *a priori* des paramètres (appelée l'"*ébauche*")
+physiques et une estimation *a priori* des paramètres (appelée "*l'ébauche*")
 d'état que l'on cherche à identifier, ainsi qu'une caractérisation de leurs
 erreurs. De ce point de vue, cette démarche utilise toutes les informations
 disponibles sur le système physique, avec des hypothèses restrictives mais
-réalistes sur les erreurs, pour trouver l'"*estimation optimale*" de l'état
+réalistes sur les erreurs, pour trouver "*l'estimation optimale*" de l'état
 vrai. On peut noter, en termes d'optimisation, que l'ébauche réalise la
 "*régularisation*", au sens mathématique de Tikhonov [Tikhonov77]_
 [WikipediaTI]_, du problème principal d'identification de paramètres. On peut
@@ -261,15 +266,16 @@ linéarité de :math:`\mathcal{H}`, que les deux approches *variationnelle* et
 *de filtrage* donnent la même solution.
 
 On indique que ces méthodes de "*3D-Var*" et de "*BLUE*" peuvent être étendues
-à des problèmes dynamiques, sous les noms respectifs de "*4D-Var*" et de
-"*filtre de Kalman*". Elles doivent alors prendre en compte l'opérateur
-d'évolution pour établir aux bons pas de temps une analyse de l'écart entre les
-observations et les simulations et pour avoir, à chaque instant, la propagation
-de l'ébauche à travers le modèle d'évolution. De la même manière, ces méthodes
-peuvent aussi être utilisées dans le cas d'opérateurs d'observation ou
-d'évolution non linéaires. Un grand nombre de variantes ont été développées
-pour accroître la qualité numérique des méthodes ou pour prendre en compte des
-contraintes informatiques comme la taille ou la durée des calculs.
+à des problèmes dynamiques ou temporels, sous les noms respectifs de "*4D-Var*"
+et de "*Filtre de Kalman (KF)*" et leurs dérivés. Elles doivent alors prendre
+en compte un opérateur d'évolution pour établir aux bons pas de temps une
+analyse de l'écart entre les observations et les simulations et pour avoir, à
+chaque instant, la propagation de l'ébauche à travers le modèle d'évolution. De
+la même manière, ces méthodes peuvent aussi être utilisées dans le cas
+d'opérateurs d'observation ou d'évolution non linéaires. Un grand nombre de
+variantes ont été développées pour accroître la qualité numérique des méthodes
+ou pour prendre en compte des contraintes informatiques comme la taille ou la
+durée des calculs.
 
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------
@@ -303,7 +309,8 @@ données, le lecteur peut consulter les documents introductifs comme
 [Bouttier99]_ et [Bocquet04]_ (ainsi que d'autres documents issus des
 applications des géosciences), ou des documents généraux comme [Talagrand97]_,
 [Tarantola87]_, [Asch16]_, [Kalnay03]_, [Ide97]_, [Tikhonov77]_ et
-[WikipediaDA]_.
+[WikipediaDA]_. De manière plus mathématique, on pourra aussi consulter
+[Lions68]_, [Jazwinski70]_.
 
 On note que l'assimilation de données n'est pas limitée à la météorologie ou aux
 géo-sciences, mais est largement utilisée dans d'autres domaines scientifiques.
@@ -313,13 +320,13 @@ cruciale.
 
 Certains aspects de l'assimilation de données sont aussi connus sous d'autres
 noms. Sans être exhaustif, on peut mentionner les noms de *calage* ou de
-*recalage*, de *calibration*, d'*estimation d'état*, d'*estimation de
-paramètres*, d'*ajustement de paramètres*, de *problèmes inverses* ou
-d'*inversion*, d'*estimation bayésienne*, d'*interpolation de champs* ou
-d'*interpolation optimale*, d'*optimisation variationnelle*, d'*optimisation
+*recalage*, de *calibration*, *d'estimation d'état*, *d'estimation de
+paramètres*, *d'ajustement de paramètres*, de *problèmes inverses* ou
+*d'inversion*, *d'estimation bayésienne*, *d'interpolation de champs* ou
+*d'interpolation optimale*, *d'optimisation variationnelle*, *d'optimisation
 quadratique*, de *régularisation mathématique*, de *méta-heuristiques*
 d'optimisation, de *réduction de modèles*, de *lissage de données*, de pilotage
-des modèles par les données (« *data-driven* »), d’*apprentissage* de modèles
+des modèles par les données (« *data-driven* »), *d'apprentissage* de modèles
 et de données (*Machine Learning* et Intelligence Artificielle), etc. Ces
 termes peuvent être utilisés dans les recherches bibliographiques.
 

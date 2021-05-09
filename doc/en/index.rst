@@ -41,8 +41,8 @@ observations, and from numerical *a priori* models, including information about
 their errors. Parts of the framework are also known under the names of
 *parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
 interpolation*, *field reconstruction*, etc. The ADAO module currently offers
-more than 100 different algorithmic methods and allows the study of about 350
-distinct applied problems. More details can be found in the section
+more than one hundred different algorithmic methods and allows the study of
+about 350 distinct applied problems. More details can be found in the section
 :ref:`section_theory`.
 
 The documentation for this module is divided into several major categories,

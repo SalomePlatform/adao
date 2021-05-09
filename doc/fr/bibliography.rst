@@ -57,6 +57,8 @@ Bibliographie
 
 .. [Das16] Das S., Mullick S. S., Suganthan P. N., *Recent Advances in Differential Evolution - An Updated Survey*, Swarm and Evolutionary Computation, 27, pp.1-30, 2016
 
+.. [Dautray85] Dautray R., Lions J.-L., et al., *Analyse mathématique et calcul numérique pour les sciences et les techniques*, Tome 1 à 9, Masson, 1985-1988
+
 .. [Evensen94] Evensen G., *Sequential data assimilation with a nonlinear quasi-geostrophic model using Monte Carlo methods to forecast error statistics*, Journal of Geophysical Research, 99(C5), pp.10143–10162, 1994
 
 .. [Evensen03] Evensen G., *The Ensemble Kalman Filter: theoretical formulation and practical implementation*, Seminar on Recent developments in data assimilation for atmosphere and ocean, ECMWF, 8 to 12 September 2003
@@ -69,6 +71,8 @@ Bibliographie
 
 .. [Ide97] Ide K., Courtier P., Ghil M., Lorenc A. C., *Unified notation for data assimilation: operational, sequential and variational*, Journal of the Meteorological Society of Japan, 75(1B), pp.181-189, 1997
 
+.. [Jazwinski70] Jazwinski A. H., *Stochastic Processes and Filtering Theory*,  Academic Press, 1970
+
 .. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, http://ab-initio.mit.edu/nlopt
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
@@ -78,6 +82,8 @@ Bibliographie
 .. [Koenker01] Koenker R., Hallock K. F., *Quantile Regression*, Journal of Economic Perspectives, 15(4), pp.143-156, 2001
 
 .. [LeDimet86] Le Dimet F.-X., Talagrand 0., *Variational algorithms for analysis and assimilation of meteorological observations*, Tellus, 38A, pp.97-110, 1986
+
+.. [Lions68] Lions J.-L., *Contrôle optimal de systèmes gouvernés par des équations aux dérivées partielles*, Dunod, 1968
 
 .. [Lorenc86] Lorenc A. C., *Analysis methods for numerical weather prediction*, Quarterly Journal of the Royal Meteorological Society, 112, pp.1177-1194, 1986
 
