@@ -1,4 +1,6 @@
 .. index:: single: BackgroundError
+.. index:: single: ScalarSparseMatrix
+.. index:: single: DiagonalSparseMatrix
 
 BackgroundError
   *Matrice*. La variable désigne la matrice de covariance des erreurs

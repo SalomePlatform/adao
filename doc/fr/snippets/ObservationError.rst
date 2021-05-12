@@ -1,4 +1,6 @@
 .. index:: single: ObservationError
+.. index:: single: ScalarSparseMatrix
+.. index:: single: DiagonalSparseMatrix
 
 ObservationError
   *Matrice*. La variable désigne la matrice de covariance des erreurs *a

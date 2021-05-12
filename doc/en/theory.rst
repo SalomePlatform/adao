@@ -143,6 +143,35 @@ consideration is greatly facilitated by the data assimilation framework, which
 makes it possible to objectively process a heterogeneous set of available
 information.
 
+Joint estimation of states and parameters
+-----------------------------------------
+
+.. index:: single: joint estimation of states and parameters
+
+It is sometimes necessary, when considering the two previous types of
+applications, to need to simultaneously estimate states (fields) and parameters
+characterising a physical phenomenon. This is known as **joint estimation of
+states and parameters**.
+
+Without going into the advanced methods to solve this problem, we can mention
+the conceptually very simple approach of considering the vector of states to be
+interpolated as *augmented* by the vector of parameters to be calibrated. The
+assimilation or optimization algorithms can then be applied to the augmented
+vector. Valid for moderate nonlinearities in the simulation, this simple method
+extends the optimization space, and thus leads to larger problems, but it is
+often possible to reduce the representation to numerically computable cases.
+Without exhaustiveness, the separated variables optimization, the reduced rank
+filtering, or the specific treatment of covariance matrices, are common
+techniques to avoid this dimension problem. We note that, in the temporal case,
+the evolution of the parameters to be estimated is simply the identity.
+
+To go further, we refer to the mathematical methods of optimization and
+augmentation developed in many books or specialized articles, finding their
+origin for example in [Lions68]_, [Jazwinski70]_ or [Dautray85]_. In particular
+in the case of more marked nonlinearities during the numerical simulation of
+the states, it is advisable to treat in a more complete but also more complex
+way the problem of joint estimation of states and parameters.
+
 Simple description of the data assimilation methodological framework
 --------------------------------------------------------------------
 
@@ -261,6 +290,30 @@ these methods can be used in case of non linear observation or evolution
 operators. Many other variants have been developed to improve the numerical
 quality of the methods or to take into account computer requirements such as
 calculation size and time.
+
+A schematic view of Data Assimilation and Optimization approaches
+-----------------------------------------------------------------
+
+To help the reader get an idea of the approaches that can be used with ADAO in
+Data Assimilation and Optimization, we propose here a simplified scheme
+describing an arbitrary classification of methods. It is partially and freely
+inspired by [Asch16]_ (Figure 1.5).
+
+  .. _meth_steps_in_study:
+  .. image:: images/meth_ad_and_opt.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **A simplified classification of methods that can be used with ADAO in Data Assimilation and Optimization**
+
+It is deliberately simple to remain readable, the dashed lines showing some of
+the simplifications. For example, it does not specifically mention the methods
+with reductions, some of which were variations of the basic methods shown here,
+nor does it mention the more detailed extensions. It also omits the test
+methods available in ADAO and useful for the study.
+
+Each method mentioned in this diagram is the subject of a specific descriptive
+section in the chapter on :ref:`section_reference_assimilation`.
 
 Going further in the data assimilation framework
 ------------------------------------------------
@@ -411,3 +464,102 @@ it is available in the ADAO module:
 
 The reader interested in the subject of optimization can look at [WikipediaMO]_
 as a general entry point.
+
+Reduction methods and reduced optimization
+------------------------------------------
+
+.. index:: single: reduction
+.. index:: single: reduction methods
+.. index:: single: reduced methods
+.. index:: single: reduced space
+.. index:: single: neutral sub-space
+.. index:: single: SVD
+.. index:: single: POD
+.. index:: single: PCA
+.. index:: single: Kahrunen-Loeve
+.. index:: single: RBM
+.. index:: single: EIM
+.. index:: single: Fourier
+.. index:: single: wavelets
+.. index:: single: EOF
+.. index:: single: sparse
+
+Data assimilation and optimization approaches always imply a certain amount of
+reiteration of a unitary numerical simulation representing the physics that is
+to be treated. In order to handle this physics as well as possible, this
+elementary numerical simulation is often of large size, even huge, and leads to
+an extremely high computational cost when it is repeated. The complete physical
+simulation is often called "*high fidelity simulation*" (or "*full scale
+simulation*").
+
+In a generic way, **reduction methods thus aim at reducing the computational
+cost of the optimization while controlling as much as possible the numerical
+error implied by this reduction**.
+
+To establish this, one seeks to reduce at least one of the ingredients that
+make up the data assimilation or optimization problem. One can thus classify
+the reduction methods according to the ingredient on which they operate,
+knowing that some methods deal with several of them. A rough classification is
+provided here, which the reader can complete by reading general mathematical
+books or articles, or those specialized in his physics.
+
+Reduction of data assimilation or optimization algorithms:
+    the optimization algorithms themselves can generate significant
+    computational costs to process numerical information. Various methods can
+    be used to reduce their algorithmic cost, for example by working in the
+    most suitable reduced space for optimization, or by using multi-level
+    optimization techniques. ADAO has such techniques that are included in
+    variants of classical algorithms, leading to exact or approximate but
+    numerically more efficient resolutions. By default, the algorithmic options
+    chosen in ADAO are always the most efficient when they do not impact the
+    quality of the optimization.
+
+Reduction of the representation of covariances:
+    in data assimilation algorithms, covariances are the most expensive
+    quantities to handle or to store, often becoming the limiting quantities
+    from the point of view of the computational cost. Many methods try to use a
+    reduced representation of these matrices (leading sometimes but not
+    necessarily to reduce the dimension of the optimization space).
+    Classically, factorization, decomposition (spectral, Fourier, wavelets...)
+    or ensemble estimation (EOF...) techniques, or combinations, are used to
+    reduce the numerical load of these covariances in the computations. ADAO
+    uses some of these techniques, in combination with sparse computation
+    techniques, to make the handling of covariance matrices more efficient.
+
+Reduction of the physical model:
+    the simplest way to reduce the cost of the unit calculation consists in
+    reducing the simulation model itself, by representing it in a more economic
+    way. Numerous methods allow this reduction of models by ensuring a more or
+    less rigorous control of the approximation error generated by the
+    reduction. The use of simplified models of the physics allows a reduction
+    but without always producing an error control. On the contrary, all
+    decomposition methods (Fourier, wavelets, SVD, POD, PCA, Kahrunen-Loeve,
+    RBM, EIM, etc.) aim at a reduction of the representation space with an
+    explicit error control. Although they are very frequently used, they must
+    nevertheless be completed by a fine analysis of the interaction with the
+    optimization algorithm in which the reduced computation is inserted, in
+    order to avoid instabilities, discrepancies or inconsistencies that are
+    notoriously harmful. ADAO fully supports the use of this type of reduction
+    method, even if it is often necessary to establish this generic independent
+    reduction prior to the optimization.
+
+Reduction of the data assimilation or optimization space:
+    the size of the optimization space depends greatly on the type of problem
+    treated (estimation of states or parameters) but also on the number of
+    observations available to conduct the data assimilation. It is therefore
+    sometimes possible to conduct the optimization in the smallest space by
+    adapting the internal formulation of the optimization algorithms. When it
+    is possible and judicious, ADAO integrates this kind of reduced formulation
+    to improve the numerical performance without reducing the quality of the
+    optimization.
+
+Combining multiple reductions:
+    many advanced algorithms seek to combine multiple reduction techniques
+    simultaneously. However, it is difficult to have both generic and robust
+    methods, and to use several very efficient reduction techniques at the same
+    time. ADAO integrates some of the most robust methods, but this aspect is
+    still largely the subject of research and development.
+
+One can end this quick overview of reduction methods by pointing out that their
+use is ubiquitous in real applications and in numerical tools, and that ADAO
+allows to use proven methods without even knowing it.

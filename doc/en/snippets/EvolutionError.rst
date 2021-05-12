@@ -1,4 +1,6 @@
 .. index:: single: EvolutionError
+.. index:: single: ScalarSparseMatrix
+.. index:: single: DiagonalSparseMatrix
 
 EvolutionError
   *Matrix*. The variable indicates the evolution error covariance matrix,
