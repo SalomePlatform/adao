@@ -29,25 +29,26 @@ Introduction to ADAO
 
 The aim of the ADAO module is **to help using data assimilation or optimization
 methodology, in conjunction with other modules or simulation codes, in Python**
-[Python]_ **or SALOME context** [Salome]_. The ADAO module provides a simple
-interface to some standard algorithms of data assimilation or optimization, as
-well as test or verification ones. It allows integration of their use in a
-Python or SALOME study. Calculation or simulation user modules have to provide
-one or more specific calling methods in order to be callable in the Python or
-SALOME framework. All the SALOME modules can be used through Python or YACS
-integration.
+[Python]_ **or SALOME context** [Salome]_. It provides a simple interface to
+many robust and powerful data assimilation or optimization algorithms, with or
+without reduction, as well as testing and verification aids. It allows to
+integrate these tools in a Python or SALOME study.
 
-Its main objective is **to provide the use of standard and robust data
-assimilation or optimization methods, in an efficient way, while remaining easy
-to setup, and providing a simplified path to help the implementation**. For the
-end user, who has previously collected information on his physical problem, the
-environment allows him to have an approach focused on simply declaring this
-information to build a valid ADAO case, to evaluate it, and to draw the
-physical results he needs
+Its main objective is to **provide the use of standard and robust data
+assimilation or optimization methods, in a usual numerical simulation study
+approach, in an efficient way, while remaining easy to setup, and by providing
+a simplified approach to help the implementation**. For the end user, who has
+previously collected information on his physical problem, the environment
+allows him to have an approach centered on the simple declaration of this
+information to build a valid ADAO case, to then evaluate it, and to get the
+physical results he needs.
 
 The module covers a wide variety of practical applications, in a robust way,
-allowing real engineering applications, but also quick experimental methodology
-setup to be performed. Its methodological and numerical scalability give way to
-extend its applied domain. It is based on usage of other Python or SALOME
-modules, in particular YACS and EFICAS if they are available, and on usage of a
-generic underlying data assimilation library.
+allowing for real world engineering applications, and also for performing quick
+methodological experimentation. It is based on the use of other Python or
+SALOME modules, in particular YACS and EFICAS if available, and on the use of
+an underlying generic data assimilation library and tools. The computational or
+simulation user modules must provide one or more specific calling methods in
+order to be callable in the Python or SALOME framework. In the SALOME
+environment, all native modules can be used through integration in Python or
+YACS.
