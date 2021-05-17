@@ -75,17 +75,18 @@ Reconstruction de champs ou interpolation de données
 .. index:: single: reconstruction de champs
 .. index:: single: interpolation de données
 .. index:: single: interpolation de champs
-.. index:: single: estimation d'états
+.. index:: single: estimation d'état
 
 La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
 partir d'un nombre restreint de mesures réelles, le (ou les) champ(s)
 physique(s) qui est (sont) le(s) plus *cohérent(s)* avec ces mesures.
 
 La *cohérence* est à comprendre en termes d'interpolation, c'est-à-dire que le
-champ que l'on cherche à reconstruire, en utilisant de l'assimilation de données
-sur les mesures, doit s'adapter au mieux aux mesures, tout en restant contraint
-par la simulation globale du champ. Le champ calculé est donc une estimation *a
-priori* du champ que l'on cherche à identifier.
+champ que l'on cherche à reconstruire, en utilisant de l'assimilation de
+données sur les mesures, doit s'adapter au mieux aux mesures, tout en restant
+contraint par la simulation globale du champ. Le champ calculé est donc une
+estimation *a priori* du champ que l'on cherche à identifier. On parle aussi
+**d'estimation d'état** dans ce cas.
 
 Si le système évolue dans le temps, la reconstruction du champ dans son
 ensemble doit être établie à chaque pas de temps, en tenant compte des
@@ -168,15 +169,17 @@ conjointe d'états et de paramètres**.
 Sans rentrer ici dans les méthodes avancées pour résoudre ce problème, on peut
 mentionner la démarche conceptuellement très simple consistant à considérer le
 vecteur des états à interpoler comme *augmenté* par le vecteur des paramètres à
-caler. Les algorithmes d'assimilation ou d'optimisation peuvent ensuite être
-appliqués au vecteur augmenté. Valable dans le cas de non-linéarités modérées
-dans la simulation, cette méthode simple étend l'espace d'optimisation, et
-conduit donc à des problèmes plus gros, mais il est souvent possible de réduire
-la représentation pour revenir à des cas numériquement calculables. Sans
-exhaustivité, l'optimisation à variables séparées, le filtrage de rang réduit,
-ou le traitement spécifique des matrices de covariances, sont des techniques
-courantes pour éviter ce problème de dimension. On note que, dans le cas
-temporel, l'évolution des paramètres à estimer est simplement l'identité.
+caler. On note que l'on est globalement en *estimation d'état* ou
+*reconstruction de champs*, et que dans le cas temporel, l'évolution des
+paramètres à estimer est simplement l'identité. Les algorithmes d'assimilation
+ou d'optimisation peuvent ensuite être appliqués au vecteur augmenté. Valable
+dans le cas de non-linéarités modérées dans la simulation, cette méthode simple
+étend l'espace d'optimisation, et conduit donc à des problèmes plus gros, mais
+il est souvent possible de réduire la représentation pour revenir à des cas
+numériquement calculables. Sans exhaustivité, l'optimisation à variables
+séparées, le filtrage de rang réduit, ou le traitement spécifique des matrices
+de covariances, sont des techniques courantes pour éviter ce problème de
+dimension.
 
 Pour aller plus loin, on se référera aux méthodes mathématiques d'optimisation
 et d'augmentation développées dans de nombreux ouvrages ou articles
@@ -321,17 +324,35 @@ librement inspiré de [Asch16]_ (Figure 1.5).
     :align: center
     :width: 75%
   .. centered::
-    **Une classification simplifiée de méthodes utilisables avec ADAO en Assimilation de Données et et en Optimisation**
+    **Une classification simplifiée de méthodes utilisables avec ADAO en Assimilation de Données et en Optimisation (les acronymes et les liens descriptifs internes sont énumérés ci-dessous)**
 
 Il est volontairement simple pour rester lisible, les lignes tiretées montrant
-certaines des simplifications. Ce schéma omet par exemple de citer
-spécifiquement les méthodes avec réductions, dont une partie sont des variantes
-de méthodes de base indiquées ici, ou de citer les extensions les plus
-détaillées. Il omet de même les méthodes de tests disponibles dans ADAO et
+certaines des simplifications ou extensions. Ce schéma omet par exemple de
+citer spécifiquement les méthodes avec réductions, dont une partie sont des
+variantes de méthodes de base indiquées ici, ou de citer les extensions les
+plus détaillées. Il omet de même les méthodes de tests disponibles dans ADAO et
 utiles pour la mise en étude.
 
 Chaque méthode citée dans ce schéma fait l'objet d'une partie descriptive
-spécifique dans le chapitre des :ref:`section_reference_assimilation`.
+spécifique dans le chapitre des :ref:`section_reference_assimilation`. Les
+acronymes cités dans le schéma ont la signification indiquée dans les pointeurs
+associés :
+
+- 3D-Var : :ref:`section_ref_algorithm_3DVAR`,
+- 4D-Var : :ref:`section_ref_algorithm_4DVAR`,
+- Blue : :ref:`section_ref_algorithm_Blue`,
+- DiffEvol : :ref:`section_ref_algorithm_DifferentialEvolution`,
+- EKF : :ref:`section_ref_algorithm_ExtendedKalmanFilter`,
+- EnKF : :ref:`section_ref_algorithm_EnsembleKalmanFilter`,
+- DFO : :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+- Incr-Var : Incremental version Variational optimisation,
+- KF : :ref:`section_ref_algorithm_KalmanFilter`,
+- LLS : :ref:`section_ref_algorithm_LinearLeastSquares`,
+- NLLS : :ref:`section_ref_algorithm_NonLinearLeastSquares`,
+- QR : :ref:`section_ref_algorithm_QuantileRegression`,
+- Swarm : :ref:`section_ref_algorithm_ParticleSwarmOptimization`,
+- Tabu : :ref:`section_ref_algorithm_TabuSearch`,
+- UKF : :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------

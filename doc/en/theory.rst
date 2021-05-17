@@ -78,7 +78,7 @@ This *consistency* is to understand in terms of interpolation, that is to say
 that the field we want to reconstruct, using data assimilation on measures, has
 to fit at best the measures, while remaining constrained by the overall field
 calculation. The calculation is thus an *a priori* estimation of the field that
-we seek to identify.
+we seek to identify. One also speaks of **state estimation** in this case.
 
 If the system evolves over time, the reconstruction of the whole field has to
 be established at each time step, taking into account the information over a
@@ -155,15 +155,16 @@ states and parameters**.
 
 Without going into the advanced methods to solve this problem, we can mention
 the conceptually very simple approach of considering the vector of states to be
-interpolated as *augmented* by the vector of parameters to be calibrated. The
-assimilation or optimization algorithms can then be applied to the augmented
-vector. Valid for moderate nonlinearities in the simulation, this simple method
-extends the optimization space, and thus leads to larger problems, but it is
-often possible to reduce the representation to numerically computable cases.
-Without exhaustiveness, the separated variables optimization, the reduced rank
-filtering, or the specific treatment of covariance matrices, are common
-techniques to avoid this dimension problem. We note that, in the temporal case,
-the evolution of the parameters to be estimated is simply the identity.
+interpolated as *augmented* by the vector of parameters to be calibrated. It
+can be noted that we are in *state estimation* or *reconstruction of fields*,
+and that in the temporal case, the evolution of the parameters to estimate is
+simply the identity. The assimilation or optimization algorithms can then be
+applied to the augmented vector. Valid for moderate nonlinearities in the
+simulation, this simple method extends the optimization space, and thus leads
+to larger problems, but it is often possible to reduce the representation to
+numerically computable cases. Without exhaustiveness, the separated variables
+optimization, the reduced rank filtering, or the specific treatment of
+covariance matrices, are common techniques to avoid this dimension problem.
 
 To go further, we refer to the mathematical methods of optimization and
 augmentation developed in many books or specialized articles, finding their
@@ -304,16 +305,34 @@ inspired by [Asch16]_ (Figure 1.5).
     :align: center
     :width: 75%
   .. centered::
-    **A simplified classification of methods that can be used with ADAO in Data Assimilation and Optimization**
+    **A simplified classification of methods that can be used with ADAO in Data Assimilation and Optimization (acronyms and internal descriptive links are listed below)**
 
 It is deliberately simple to remain readable, the dashed lines showing some of
-the simplifications. For example, it does not specifically mention the methods
-with reductions, some of which were variations of the basic methods shown here,
-nor does it mention the more detailed extensions. It also omits the test
-methods available in ADAO and useful for the study.
+the simplifications or extensions. For example, it does not specifically
+mention the methods with reductions, some of which were variations of the basic
+methods shown here, nor does it mention the more detailed extensions. It also
+omits the test methods available in ADAO and useful for the study.
 
 Each method mentioned in this diagram is the subject of a specific descriptive
-section in the chapter on :ref:`section_reference_assimilation`.
+section in the chapter on :ref:`section_reference_assimilation`. The acronyms
+mentioned in the diagram have the meaning indicated in the associated internal
+links:
+
+- 3D-Var: :ref:`section_ref_algorithm_3DVAR`,
+- 4D-Var: :ref:`section_ref_algorithm_4DVAR`,
+- Blue: :ref:`section_ref_algorithm_Blue`,
+- DiffEvol : :ref:`section_ref_algorithm_DifferentialEvolution`,
+- EKF: :ref:`section_ref_algorithm_ExtendedKalmanFilter`,
+- EnKF: :ref:`section_ref_algorithm_EnsembleKalmanFilter`,
+- DFO: :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+- Incr-Var: Incremental version Variational optimisation,
+- KF: :ref:`section_ref_algorithm_KalmanFilter`,
+- LLS: :ref:`section_ref_algorithm_LinearLeastSquares`,
+- NLLS: :ref:`section_ref_algorithm_NonLinearLeastSquares`,
+- QR: :ref:`section_ref_algorithm_QuantileRegression`,
+- Swarm: :ref:`section_ref_algorithm_ParticleSwarmOptimization`,
+- Tabu: :ref:`section_ref_algorithm_TabuSearch`,
+- UKF: :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 Going further in the data assimilation framework
 ------------------------------------------------

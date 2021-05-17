@@ -58,7 +58,7 @@ tel qu'il est déclaré ici et dans les fichiers sources::
 
 En outre, on demande que toute publication ou présentation décrivant des travaux
 utilisant ce module, ou tout produit commercial ou non l'utilisant, cite au
-moins l'une des références ci-dessous :
+moins l'une des références ci-dessous en ajoutant l'année en cours :
 
     * *ADAO, a module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
