@@ -804,6 +804,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
             vZm   = EZ.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
             #
             mS    = RIdemi @ EnsembleOfAnomalies( EZ, vZm, 1./math.sqrt(__m-1) )
+            mS    = mS.reshape((-1,__m)) # Pour dimension 1
             delta = RIdemi @ ( Ynpu - vZm )
             mT    = numpy.linalg.inv( numpy.identity(__m) + mS.T @ mS )
             vw    = mT @ mS.T @ delta
@@ -959,6 +960,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #--------------------------
         if VariantM == "KalmanFilterFormula":
             mS    = RIdemi * EaHX / math.sqrt(__m-1)
+            mS    = mS.reshape((-1,__m)) # Pour dimension 1
             delta = RIdemi * ( Ynpu - Hfm )
             mT    = numpy.linalg.inv( numpy.identity(__m) + mS.T @ mS )
             vw    = mT @ mS.T @ delta
@@ -991,7 +993,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T @ (RI * EaHX)
+            Hto = EaHX.T @ (RI * EaHX).reshape((-1,__m))
             Htb = (__m-1) * numpy.identity(__m)
             Hta = Hto + Htb
             #
@@ -1022,7 +1024,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T @ (RI * EaHX)
+            Hto = EaHX.T @ (RI * EaHX).reshape((-1,__m))
             Htb = __m * \
                 ( (1 + 1/__m + vw.T @ vw) * numpy.identity(__m) - 2 * vw @ vw.T ) \
                 / (1 + 1/__m + vw.T @ vw)**2
@@ -1055,7 +1057,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T @ (RI * EaHX)
+            Hto = EaHX.T @ (RI * EaHX).reshape((-1,__m))
             Htb = (__m+1) * \
                 ( (1 + 1/__m + vw.T @ vw) * numpy.identity(__m) - 2 * vw @ vw.T ) \
                 / (1 + 1/__m + vw.T @ vw)**2
@@ -1088,7 +1090,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 disp        = False,
                 )
             #
-            Hto = EaHX.T @ (RI * EaHX)
+            Hto = EaHX.T @ (RI * EaHX).reshape((-1,__m))
             Htb = ((__m+1) / (__m-1)) * \
                 ( (1 + 1/__m + vw.T @ vw / (__m-1)) * numpy.identity(__m) - 2 * vw @ vw.T / (__m-1) ) \
                 / (1 + 1/__m + vw.T @ vw / (__m-1))**2
@@ -1320,7 +1322,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
                     EaY = ( (HE2 - vy2) @ numpy.linalg.inv(Ta) ) / math.sqrt(__m-1)
                 #
                 GradJ = numpy.ravel(vw[:,None] - EaY.transpose() @ (RI * ( Ynpu - vy1 )))
-                mH = numpy.identity(__m) + EaY.transpose() @ (RI * EaY)
+                mH = numpy.identity(__m) + EaY.transpose() @ (RI * EaY).reshape((-1,__m))
                 Deltaw = - numpy.linalg.solve(mH,GradJ)
                 #
                 vw = vw + Deltaw
@@ -1821,7 +1823,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
                     EaY = ( (HE2 - vy2) @ numpy.linalg.inv(Ta) ) / math.sqrt(__m-1)
                 #
                 GradJ = numpy.ravel(vw[:,None] - EaY.transpose() @ (RI * ( Ynpu - vy2 )))
-                mH = numpy.identity(__m) + EaY.transpose() @ (RI * EaY)
+                mH = numpy.identity(__m) + EaY.transpose() @ (RI * EaY).reshape((-1,__m))
                 Deltaw = - numpy.linalg.solve(mH,GradJ)
                 #
                 vw = vw + Deltaw

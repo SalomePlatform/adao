@@ -90,9 +90,10 @@ The license for this module is the GNU Lesser General Public License
 
     See http://www.salome-platform.org/
 
-In addition, we require that all publication or presentation describing
-work using this software, or all commercial or not products using it,
-quote at least one of the references given below:
+In addition, it is requested that any publication or presentation describing
+work using this module, or any commercial or non-commercial product using it,
+cite at least one of at least one of the references below with the current year
+added:
 
     * *ADAO, a module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
