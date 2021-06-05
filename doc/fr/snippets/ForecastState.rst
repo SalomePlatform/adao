@@ -1,9 +1,9 @@
 .. index:: single: ForecastState
 
 ForecastState
-  *Liste de vecteurs*. Chaque élément est un vecteur d'état prévu par le modèle
-  dans le cas d'un filtre itératif, au cours du déroulement itératif de
-  l'algorithme utilisé.
+  *Liste de vecteurs*. Chaque élément est un vecteur d'état (ou un ensemble de
+  vecteurs d'états selon l'algorithme) prévu(s) par le modèle au cours du
+  déroulement itératif temporel de l'algorithme utilisé.
 
   Exemple :
-  ``Xp = ADD.get("ForecastState")[:]``
+  ``Xf = ADD.get("ForecastState")[:]``
