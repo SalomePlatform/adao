@@ -28,7 +28,7 @@
     <parameter name="icon"          value="ADAO.png"/>
     <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
-    <parameter name="version"       value="9.7.0"/>
+    <parameter name="version"       value="9.8.0"/>
   </section>
   <section name="resources">
     <!-- Module resources -->
