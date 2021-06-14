@@ -622,6 +622,7 @@ class Algorithm(object):
             - MahalanobisConsistency : indicateur de consistance des covariances
             - OMA : Observation moins Analyse : Y - Xa
             - OMB : Observation moins Background : Y - Xb
+            - ForecastCovariance : covariance de l'état prédit courant lors d'itérations
             - ForecastState : état prédit courant lors d'itérations
             - Residu : dans le cas des algorithmes de vérification
             - SampledStateForQuantiles : échantillons d'états pour l'estimation des quantiles
@@ -666,6 +667,7 @@ class Algorithm(object):
         self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name  = "CurrentIterationNumber")
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["ForecastCovariance"]                   = Persistence.OneMatrix(name = "ForecastCovariance")
         self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
         self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
         self.StoredVariables["GradientOfCostFunctionJb"]             = Persistence.OneVector(name = "GradientOfCostFunctionJb")

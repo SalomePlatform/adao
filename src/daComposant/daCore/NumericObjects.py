@@ -504,10 +504,15 @@ def EnsembleOfBackgroundPerturbations( _bgcenter, _bgcovariance, _nbmembers, _wi
     return BackgroundEnsemble
 
 # ==============================================================================
+def EnsembleMean( __Ensemble ):
+    "Renvoie la moyenne empirique d'un ensemble"
+    return numpy.asarray(__Ensemble).mean(axis=1, dtype=mfp).astype('float').reshape((-1,1))
+
+# ==============================================================================
 def EnsembleOfAnomalies( Ensemble, OptMean = None, Normalisation = 1.):
-    "Renvoie les anomalies centrées à partir d'un ensemble TailleEtat*NbMembres"
+    "Renvoie les anomalies centrées à partir d'un ensemble"
     if OptMean is None:
-        __Em = numpy.asarray(Ensemble).mean(axis=1, dtype=mfp).astype('float').reshape((-1,1))
+        __Em = EnsembleMean( Ensemble )
     else:
         __Em = numpy.ravel(OptMean).reshape((-1,1))
     #
@@ -857,7 +862,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         selfA._parameters["StoreInternalVariables"] = True
     #
     # Opérateurs
-    # ----------
     H = HO["Direct"].appliedControledFormTo
     #
     if selfA._parameters["EstimationOf"] == "State":
@@ -868,8 +872,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     else:
         Cm = None
     #
-    # Nombre de pas identique au nombre de pas d'observations
-    # -------------------------------------------------------
+    # Durée d'observation et tailles
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
         __p = numpy.cumprod(Y.shape())[-1]
@@ -878,7 +881,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         __p = numpy.array(Y).size
     #
     # Précalcul des inversions de B et R
-    # ----------------------------------
     if selfA._parameters["StoreInternalVariables"] \
         or selfA._toStore("CostFunctionJ") \
         or selfA._toStore("CostFunctionJb") \
@@ -892,8 +894,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     if VariantM == "KalmanFilterFormula":
         RIdemi = R.sqrtmI()
     #
-    # Initialisation
-    # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
@@ -1211,7 +1211,6 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         selfA._parameters["StoreInternalVariables"] = True
     #
     # Opérateurs
-    # ----------
     H = HO["Direct"].appliedControledFormTo
     #
     if selfA._parameters["EstimationOf"] == "State":
@@ -1222,8 +1221,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     else:
         Cm = None
     #
-    # Nombre de pas identique au nombre de pas d'observations
-    # -------------------------------------------------------
+    # Durée d'observation et tailles
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
         __p = numpy.cumprod(Y.shape())[-1]
@@ -1232,7 +1230,6 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         __p = numpy.array(Y).size
     #
     # Précalcul des inversions de B et R
-    # ----------------------------------
     if selfA._parameters["StoreInternalVariables"] \
         or selfA._toStore("CostFunctionJ") \
         or selfA._toStore("CostFunctionJb") \
@@ -1242,8 +1239,6 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         BI = B.getI()
     RI = R.getI()
     #
-    # Initialisation
-    # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
@@ -1711,7 +1706,6 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
         selfA._parameters["StoreInternalVariables"] = True
     #
     # Opérateurs
-    # ----------
     H = HO["Direct"].appliedControledFormTo
     #
     if selfA._parameters["EstimationOf"] == "State":
@@ -1722,8 +1716,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     else:
         Cm = None
     #
-    # Nombre de pas identique au nombre de pas d'observations
-    # -------------------------------------------------------
+    # Durée d'observation et tailles
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
         __p = numpy.cumprod(Y.shape())[-1]
@@ -1732,7 +1725,6 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
         __p = numpy.array(Y).size
     #
     # Précalcul des inversions de B et R
-    # ----------------------------------
     if selfA._parameters["StoreInternalVariables"] \
         or selfA._toStore("CostFunctionJ") \
         or selfA._toStore("CostFunctionJb") \
@@ -1742,8 +1734,6 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
         BI = B.getI()
     RI = R.getI()
     #
-    # Initialisation
-    # --------------
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
     if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
@@ -2020,7 +2010,6 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     """
     #
     # Initialisation
-    # --------------
     Xn = numpy.ravel(Xb).reshape((-1,1))
     #
     if selfA._parameters["EstimationOf"] == "State":
@@ -2041,7 +2030,6 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
         duration = 2
     #
     # Multi-pas
-    # ---------
     for step in range(duration-1):
         if hasattr(Y,"store"):
             Ynpu = numpy.ravel( Y[step+1] ).reshape((-1,1))
