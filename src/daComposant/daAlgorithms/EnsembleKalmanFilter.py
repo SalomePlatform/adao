@@ -136,6 +136,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "ForecastCovariance",
                 "ForecastState",
                 "IndexOfOptimum",
                 "InnovationAtCurrentAnalysis",

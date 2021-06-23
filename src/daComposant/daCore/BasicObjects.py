@@ -641,6 +641,7 @@ class Algorithm(object):
         #
         self._name = str( name )
         self._parameters = {"StoreSupplementaryCalculations":[]}
+        self.__internal_state = {}
         self.__required_parameters = {}
         self.__required_inputs = {
             "RequiredInputValues":{"mandatory":(), "optional":()},
@@ -995,6 +996,25 @@ class Algorithm(object):
             else:
                 pass
             logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
+
+    def _setInternalState(self, key=None, value=None, fromDico={}, reset=False):
+        """
+        Permet de stocker des variables nommées constituant l'état interne
+        """
+        if reset: # Vide le dictionnaire préalablement
+            self.__internal_state = {}
+        if key is not None and value is not None:
+            self.__internal_state[key] = value
+        self.__internal_state.update( dict(fromDico) )
+
+    def _getInternalState(self, key=None):
+        """
+        Restitue un état interne sous la forme d'un dictionnaire de variables nommées
+        """
+        if key is not None and key in self.__internal_state:
+            return self.__internal_state[key]
+        else:
+            return self.__internal_state
 
     def _getTimeState(self, reset=False):
         """

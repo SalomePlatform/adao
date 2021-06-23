@@ -744,13 +744,13 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
     #
-    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
-    else:                         Pn = B
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
-            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
+            if hasattr(B,"asfullmatrix"):
+                selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(__n) )
+            else:
+                selfA.StoredVariables["APosterioriCovariance"].store( B )
     #
     # Calcul direct initial (on privilégie la mémorisation au recalcul)
     __seed = numpy.random.get_state()
@@ -896,20 +896,23 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
-    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
-    else:                         Pn = B
-    Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
-    #~ Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
-            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
+            if hasattr(B,"asfullmatrix"):
+                selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(__n) )
+            else:
+                selfA.StoredVariables["APosterioriCovariance"].store( B )
+        selfA._setInternalState("seed", numpy.random.get_state())
+    elif selfA._parameters["nextStep"]:
+        Xn = selfA._getInternalState("Xn")
     #
     previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
+        numpy.random.set_state(selfA._getInternalState("seed"))
         if hasattr(Y,"store"):
             Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
         else:
@@ -944,7 +947,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 Xn_predicted = Xn_predicted + Cm * Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
-            Xn_predicted = Xn
+            Xn_predicted = EMX = Xn
             HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
@@ -1112,6 +1115,9 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
         #--------------------------
+        selfA._setInternalState("Xn", Xn)
+        selfA._setInternalState("seed", numpy.random.get_state())
+        #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -1137,8 +1143,10 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
             selfA.StoredVariables["ForecastState"].store( EMX )
+        if selfA._toStore("ForecastCovariance"):
+            selfA.StoredVariables["ForecastCovariance"].store( EnsembleErrorCovariance(EMX) )
         if selfA._toStore("BMA"):
-            selfA.StoredVariables["BMA"].store( EMX - Xa.reshape((__n,1)) )
+            selfA.StoredVariables["BMA"].store( EMX - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
         if selfA._toStore("SimulatedObservationAtCurrentState") \
@@ -1184,7 +1192,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             previousJMinimum    = J
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
-                covarianceXaMin = Pn
+                covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
         # ---> Pour les smoothers
         if selfA._toStore("CurrentEnsembleState"):
             selfA.StoredVariables["CurrentEnsembleState"].store( Xn )
@@ -1241,23 +1249,25 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
-    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
-    else:                         Pn = B
-    if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
-    else:                         Rn = R
-    if hasattr(Q,"asfullmatrix"): Qn = Q.asfullmatrix(__n)
-    else:                         Qn = Q
-    Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
+        else:                         Pn = B
+        Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
-            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
+            if hasattr(B,"asfullmatrix"):
+                selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(__n) )
+            else:
+                selfA.StoredVariables["APosterioriCovariance"].store( B )
+        selfA._setInternalState("seed", numpy.random.get_state())
+    elif selfA._parameters["nextStep"]:
+        Xn = selfA._getInternalState("Xn")
     #
     previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
+        numpy.random.set_state(selfA._getInternalState("seed"))
         if hasattr(Y,"store"):
             Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
         else:
@@ -1346,6 +1356,9 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
         #--------------------------
+        selfA._setInternalState("Xn", Xn)
+        selfA._setInternalState("seed", numpy.random.get_state())
+        #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -1371,6 +1384,8 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
             selfA.StoredVariables["ForecastState"].store( E2 )
+        if selfA._toStore("ForecastCovariance"):
+            selfA.StoredVariables["ForecastCovariance"].store( EnsembleErrorCovariance(E2) )
         if selfA._toStore("BMA"):
             selfA.StoredVariables["BMA"].store( E2 - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
@@ -1418,7 +1433,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             previousJMinimum    = J
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
-                covarianceXaMin = Pn
+                covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
     #
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
@@ -1736,21 +1751,23 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
-    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
-    else:                         Pn = B
-    if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
-    else:                         Rn = R
-    Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
-            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
+            if hasattr(B,"asfullmatrix"):
+                selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(__n) )
+            else:
+                selfA.StoredVariables["APosterioriCovariance"].store( B )
+        selfA._setInternalState("seed", numpy.random.get_state())
+    elif selfA._parameters["nextStep"]:
+        Xn = selfA._getInternalState("Xn")
     #
     previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
+        numpy.random.set_state(selfA._getInternalState("seed"))
         if hasattr(Y,"store"):
             Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
         else:
@@ -1782,7 +1799,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
                 Xn_predicted = Xn_predicted + Cm * Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
-            Xn_predicted = Xn
+            Xn_predicted = EMX = Xn
         #
         #--------------------------
         if VariantM == "MLEF13":
@@ -1839,6 +1856,9 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
         #--------------------------
+        selfA._setInternalState("Xn", Xn)
+        selfA._setInternalState("seed", numpy.random.get_state())
+        #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -1864,6 +1884,8 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
             selfA.StoredVariables["ForecastState"].store( EMX )
+        if selfA._toStore("ForecastCovariance"):
+            selfA.StoredVariables["ForecastCovariance"].store( EnsembleErrorCovariance(EMX) )
         if selfA._toStore("BMA"):
             selfA.StoredVariables["BMA"].store( EMX - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
@@ -1911,7 +1933,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             previousJMinimum    = J
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
-                covarianceXaMin = Pn
+                covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
     #
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
@@ -2010,19 +2032,23 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     """
     #
     # Initialisation
-    Xn = numpy.ravel(Xb).reshape((-1,1))
-    #
     if selfA._parameters["EstimationOf"] == "State":
         M = EM["Direct"].appliedTo
         #
         if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+            Xn = numpy.ravel(Xb).reshape((-1,1))
             selfA.StoredVariables["Analysis"].store( Xn )
             if selfA._toStore("APosterioriCovariance"):
-                if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(Xn.size)
-                else:                         Pn = B
-                selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+                if hasattr(B,"asfullmatrix"):
+                    selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(Xn.size) )
+                else:
+                    selfA.StoredVariables["APosterioriCovariance"].store( B )
             if selfA._toStore("ForecastState"):
                 selfA.StoredVariables["ForecastState"].store( Xn )
+        elif selfA._parameters["nextStep"]:
+            Xn = selfA._getInternalState("Xn")
+    else:
+        Xn = numpy.ravel(Xb).reshape((-1,1))
     #
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
@@ -2037,7 +2063,6 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
             Ynpu = numpy.ravel( Y ).reshape((-1,1))
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast
-            Xn = selfA.StoredVariables["Analysis"][-1]
             Xn_predicted = M( Xn )
             if selfA._toStore("ForecastState"):
                 selfA.StoredVariables["ForecastState"].store( Xn_predicted )
@@ -2047,6 +2072,10 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
         Xn_predicted = numpy.ravel(Xn_predicted).reshape((-1,1))
         #
         oneCycle(selfA, Xn_predicted, Ynpu, U, HO, None, None, R, B, None)
+        #
+        Xn = selfA.StoredVariables["Analysis"][-1]
+        #--------------------------
+        selfA._setInternalState("Xn", Xn)
     #
     return 0
 
@@ -2309,7 +2338,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
-def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
+def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"):
     """
     Stochastic EnKF
     """
@@ -2348,21 +2377,25 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
     #
-    if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
-    else:                         Pn = B
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
-    Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
-            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
-            covarianceXa = Pn
+            if hasattr(B,"asfullmatrix"):
+                selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(__n) )
+            else:
+                selfA.StoredVariables["APosterioriCovariance"].store( B )
+        selfA._setInternalState("seed", numpy.random.get_state())
+    elif selfA._parameters["nextStep"]:
+        Xn = selfA._getInternalState("Xn")
     #
     previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
+        numpy.random.set_state(selfA._getInternalState("seed"))
         if hasattr(Y,"store"):
             Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
         else:
@@ -2397,7 +2430,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 Xn_predicted = Xn_predicted + Cm * Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
-            Xn_predicted = Xn
+            Xn_predicted = EMX = Xn
             HX_predicted = H( [(Xn_predicted[:,i], Un) for i in range(__m)],
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True )
@@ -2446,6 +2479,9 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #
         Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
         #--------------------------
+        selfA._setInternalState("Xn", Xn)
+        selfA._setInternalState("seed", numpy.random.get_state())
+        #--------------------------
         #
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
@@ -2471,6 +2507,8 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
             selfA.StoredVariables["ForecastState"].store( EMX )
+        if selfA._toStore("ForecastCovariance"):
+            selfA.StoredVariables["ForecastCovariance"].store( EnsembleErrorCovariance(EMX) )
         if selfA._toStore("BMA"):
             selfA.StoredVariables["BMA"].store( EMX - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
@@ -2518,7 +2556,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             previousJMinimum    = J
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
-                covarianceXaMin = Pn
+                covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
     #
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
