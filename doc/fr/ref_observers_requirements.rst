@@ -33,49 +33,72 @@ Exigences pour les fonctions décrivant un "*observer*"
 Certaines variables spéciales, internes à l'optimisation et utilisées au cours
 des calculs, peuvent être surveillées durant un calcul ADAO. Ces variables
 peuvent être affichées, tracées, enregistrées, etc. par l'utilisateur. C'est
-réalisable en utilisant des "*observer*", parfois aussi appelés des "callback".
-Ce sont des scripts Python, qui sont chacun associés à une variable donnée, et
-qui sont automatiquement activés à chaque modification de la variable.
+réalisable en utilisant des "*observer*", parfois aussi appelés des "callback"
+sur une variable. Ce sont des fonctions Python spéciales, qui sont chacune
+associées à une variable donnée, comme décrit conceptuellement dans la figure
+suivante :
+
+  .. ref_observer_simple:
+  .. image:: images/ref_observer_simple.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **Définition conceptuelle d'une fonction "observer"**
+
+Ces fonctions "*observer*" sont décrites dans les sous-sections suivantes.
+
+Enregistrer et activer une fonction "*observer*"
+++++++++++++++++++++++++++++++++++++++++++++++++
 
 Dans l'interface graphique EFICAS d'ADAO, il y a 3 méthodes pratiques pour
-intégrer un "*observer*" dans un cas ADAO. La méthode est choisie à l'aide du
-mot-clé "*NodeType*" de chaque entrée de type "*observer*", comme montré dans
-la figure qui suit :
+intégrer une fonction "*observer*" dans un cas ADAO. La méthode est choisie à
+l'aide du mot-clé "*NodeType*" de chaque entrée de type "*observer*", comme
+montré dans la figure qui suit :
 
   .. eficas_observer_nodetype:
   .. image:: images/eficas_observer_nodetype.png
     :align: center
     :width: 100%
   .. centered::
-    **Choisir pour un "*observer*" son type d'entrée**
+    **Choisir son type d'entrée pour une fonction "observer"**
 
-L'"*observer*" peut être fourni sous la forme d'un script explicite (entrée de
-type "*String*"), d'un script contenu dans un fichier externe (entrée de type
-"*Script*"), ou en utilisant un modèle (entrée de type "*Template*") fourni par
-défaut dans ADAO lors de l'usage de l'éditeur graphique EFICAS d'ADAO et
-détaillé dans la partie :ref:`section_ref_observers_templates` qui suit. Ces
-derniers sont des scripts simples qui peuvent être adaptés par l'utilisateur,
-soit dans l'étape d'édition intégrée du cas avec EFICAS d'ADAO, soit dans
-l'étape d'édition du schéma avant l'exécution, pour améliorer la performance du
-calcul ADAO dans le superviseur d'exécution de SALOME.
+Une fonction "*observer*" peut être fourni sous la forme d'un script explicite
+(entrée de type "*String*"), d'un script contenu dans un fichier externe
+(entrée de type "*Script*"), ou en utilisant un modèle (entrée de type
+"*Template*") fourni par défaut dans ADAO lors de l'usage de l'éditeur
+graphique EFICAS d'ADAO et détaillé dans la partie
+:ref:`section_ref_observers_templates` qui suit. Ces derniers sont des scripts
+simples qui peuvent être adaptés par l'utilisateur, soit dans l'étape d'édition
+intégrée du cas avec EFICAS d'ADAO, soit dans l'étape d'édition du schéma avant
+l'exécution, pour améliorer la performance du calcul ADAO dans le superviseur
+d'exécution de SALOME.
 
 Dans l'interface textuelle (TUI) d'ADAO (voir la partie :ref:`section_tui`),
 les mêmes informations peuvent être données à l'aide de la commande
-"*setObserver*" appliquée pour une variable données indiquée dans l'argument
-"*Variable*". Les autres arguments de cette commande permettent de le définir
-soit comme un template (argument "*Template*") désignant l'un des scripts
-détaillés dans la partie :ref:`section_ref_observers_templates`, soit comme un
-script explicite (argument "*String*"), soit comme un script contenu dans un
-fichier externe (argument "*Script*").
+"*setObserver*" appliquée pour une variable donnée indiquée en utilisant
+l'argument "*Variable*". Les autres arguments de cette commande permettent de
+définir un "*observer*" soit comme un template (argument "*Template*")
+désignant l'un des scripts détaillés dans la partie
+:ref:`section_ref_observers_templates`, soit comme un script explicite
+(argument "*String*"), soit comme un script contenu dans un fichier externe
+(argument "*Script*").
 
-Forme générale d'un script permettant de définir un *observer*
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Forme générale d'un script permettant de définir une fonction "*observer*"
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Pour pouvoir utiliser cette capacité, l'utilisateur doit disposer ou construire
-des scripts utilisant en entrée standard (i.e. disponible dans l'espace de
-nommage) les variables ``var`` et ``info``. La variable ``var`` est à utiliser
-comme un objet de type liste/tuple, contenant la variable d'intérêt indicée par
-l'étape de mise à jour.
+Une fonction "*observer*" est un script Python spécial, associé à une variable
+donnée, et qui est automatiquement activée à chaque modification de la variable
+lors du calcul. Chaque fonction (soigneusement établie) qui s'applique à la
+variable sélectionnée peut être utilisée. De nombreuses fonctions "*observer*"
+sont disponibles par défaut.
+
+Pour pouvoir utiliser directement cette capacité "*observer*", l'utilisateur
+doit utiliser ou construire un script utilisant en entrée standard (i.e.
+disponible dans l'espace de nommage) les variables ``var`` et ``info``. La
+variable ``var`` est à utiliser comme un objet de type liste/tuple, contenant
+l'historique de la variable d'intérêt, indicé par les pas d'itérations. Seul le
+corps de la fonction "*observer*" doit être spécifié par l'utilisateur, pas
+l'appel de fonction lui-même.
 
 A titre d'exemple, voici un script très simple (similaire au modèle
 "*ValuePrinter*"), utilisable pour afficher la valeur d'une variable
@@ -87,16 +110,27 @@ Stockées comme un fichier Python ou une chaîne de caractères explicite, ces
 lignes de script peuvent être associées à chaque variable présente dans le
 mot-clé "*SELECTION*" de la commande "*Observers*" du cas ADAO : "*Analysis*",
 "*CurrentState*", "*CostFunction*"... La valeur courante de la variable sera
-affichée à chaque étape de l'algorithme d'optimisation ou d'assimilation. Les
-"*observer*" peuvent inclure des capacités d'affichage graphique, de stockage,
-de traitement complexe, d'analyse statistique, etc.
+par exemple affichée à chaque étape de l'algorithme d'optimisation ou
+d'assimilation. Les "*observer*" peuvent inclure des capacités d'affichage
+graphique, de stockage, de traitement complexe, d'analyse statistique, etc. Si
+une variable, à laquelle est lié un "*observer*", n'est pas requise dans le
+calcul et par l'utilisateur, l'exécution de cet "*observer*" n'est tout
+simplement jamais activée.
 
-On donne ci-après l'identifiant et le contenu de chaque modèle disponible.
+.. warning::
+    Si les modèles disponibles par défaut ne sont pas utilisés, il revient à
+    l'utilisateur de faire des scripts de fonctions soigneusement établis ou
+    des programmes externes qui ne se plantent pas avant d'être enregistrés
+    comme une fonction "*observer*". Le débogage peut sinon être vraiment
+    difficile !
+
+On donne ci-après l'identifiant et le contenu de tous les modèles "*observer*"
+disponibles.
 
 .. _section_ref_observers_templates:
 
-Inventaire des modèles d'*observer* disponibles ("*Template*")
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Inventaire des modèles de fonctions "*observer*" disponibles ("*Template*")
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: ValuePrinter (Observer)
 

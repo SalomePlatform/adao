@@ -33,12 +33,24 @@ Requirements for functions describing an "*observer*"
 Some special variables, internal to the optimization process and used inside
 calculation, can be monitored during an ADAO calculation. These variables can
 be printed, plotted, saved, etc. by the user. This can be done using some
-"*observer*", sometimes also called "callback". They are Python scripts, each
-one associated to a given variable, and that are automatically activated for
-each variable modification.
+"*observer*", sometimes also called "callback" on a variable. They are special
+Python functions, each one associated with a given variable, as conceptually
+described in the following figure:
+
+  .. ref_observer_simple:
+  .. image:: images/ref_observer_simple.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **Conceptual definition of an "observer" function**
+
+These "*observer*" functions are described in the next subsections.
+
+Register and activate of an "*observer*" function
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 In the graphical interface EFICAS of ADAO, there are 3 practical methods to
-provide an "*observer*" in an ADAO case. The method is chosen with the
+provide an "*observer*" function in an ADAO case. The method is chosen with the
 "*NodeType*" keyword of each "*observer*" entry type, as shown in the following
 figure:
 
@@ -47,12 +59,12 @@ figure:
     :align: center
     :width: 100%
   .. centered::
-    **Choosing for an "*observer*" its entry type**
+    **Choosing its entry type for an "observer" function**
 
-The "*observer*" can be given as an explicit script (entry of type "*String*"),
-as a script in an external file (entry of type "*Script*"), or by using a
-template or pattern (entry of type"*Template*") available by default in ADAO
-when using the graphical editor and detailed in the following part
+The "*observer*" function can be given as an explicit script (entry of type
+"*String*"), as a script in an external file (entry of type "*Script*"), or by
+using a template or pattern (entry of type"*Template*") available by default in
+ADAO when using the graphical editor and detailed in the following part
 :ref:`section_ref_observers_templates`. These templates are simple scripts that
 can be tuned by the user, either in the integrated edition stage of the case
 with ADAO EFICAS, or in the edition stage of the schema before execution, to
@@ -60,40 +72,56 @@ improve the ADAO case performance in the SALOME execution supervisor YACS.
 
 In the textual interface (TUI) of ADAO (see the part :ref:`section_tui`), the
 same information can be given with the command "*setObserver*" applied to a
-specific variable indicated in the argument "*Variable*". The other arguments
-of this command allow to define the observer either as a template (argument
-"*Template*") representing one of the scripts detailed in the part
-:ref:`section_ref_observers_templates`, or as an explicit script (argument
-"*String*"), or as a script in an external file (argument "*Script*").
+specific variable indicated using the "*Variable*" argument. The other
+arguments of this command allow to define an "*observer*" either as a template
+("*Template*" argument) representing one of the scripts detailed in the part
+:ref:`section_ref_observers_templates`, or as an explicit script ("*String*"
+argument), or as a script in an external file ("*Script*" argument).
 
-General form for a script describing an *observer*
-++++++++++++++++++++++++++++++++++++++++++++++++++
+General form for a script describing an "*observer*" function
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-To use this capability, the user must have or build scripts that have on
-standard input (that is, in the naming space) the variables ``var`` and
-``info``. The variable ``var`` is to be used as an object of list/tuple type,
-that contains the variable of interest indexed by the updating step.
+An "*observer*" function is a special Python script, associated with a given
+variable, and that is automatically activated for each variable modification
+during calculation. Every (carefully established) function that applies to the
+selected variable can be used. Many "*observer*" functions are available by
+default.
 
-As an example, here is a very simple script (similar to the model
-"*ValuePrinter*"), that can be used to print the value of the monitored
-variable::
+To use directly this "*observer*" capability, the user must use or build a
+script that have on standard input (that is, in the naming space) the variables
+``var`` and ``info``. The variable ``var`` is to be used as an object of
+list/tuple type, that contains the history of the variable of interest, indexed
+by the iterating steps. Only the body of the "*observer*" function has to be
+specified by the user, not the function call itself.
+
+As an example, here is a very simple script (similar to the "*ValuePrinter*"
+template), that can be used to print the value of the monitored variable::
 
     print("    --->",info," Value =",var[-1])
 
 Stored as a Python file or as an explicit string, these script lines can be
 associated to each variable found in the keyword "*SELECTION*" of the
 "*Observers*" command of the ADAO case: "*Analysis*", "*CurrentState*",
-"*CostFunction*"... The current value of the variable will be printed at each
-step of the optimization or data assimilation algorithm. The "*observer*" can
-include graphical output, storage capacities, complex treatment, statistical
-analysis, etc.
+"*CostFunction*"... The current value of the variable will for example be
+printed at each step of the optimization or data assimilation algorithm. The
+"*observer*" can include graphical output, storage capacities, complex
+treatment, statistical analysis, etc. If the variable, to which the
+"*observer*" is linked, is not required in the calculation and by the user, the
+execution of this "*observer*" is simply never activated.
 
-Hereinafter we give the identifier and the contents of each model available.
+.. warning::
+    If not using the default available templates, it is up to the user to make
+    carefully established function scripts or external programs that do not
+    crash before being registered as an "*observer*" function. The debugging
+    can otherwise be really difficult!
+
+Hereinafter we give the identifier and the contents of all the available
+"*observer*" models.
 
 .. _section_ref_observers_templates:
 
-Inventory of available *observer* models ("*Template*")
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Inventory of available "*observer*" function models ("*Template*")
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: ValuePrinter (Observer)
 

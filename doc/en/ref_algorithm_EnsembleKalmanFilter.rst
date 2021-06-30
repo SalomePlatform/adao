@@ -69,7 +69,7 @@ robust formulations are proposed here:
 - "ETKF" (Ensemble-Transform Kalman Filter), deterministic EnKF algorithm, allowing treatment of non-linear evolution operator with a lot less members (one recommends to use a number of members on the order of 10 or even sometimes less),
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), ETKF algorithm of "finite size N", yhat doesn't need inflation that is often required with the other algorithms,
 - "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF scheme, allowing in addition the consistent treament of non-linear observation operator,
-- "IEnKF" (Iterative_EnKF), deterministic EnKF scheme, improving treament of operators non-linearities.
+- "IEnKF" (Iterative EnKF), deterministic EnKF scheme, improving treament of operators non-linearities.
 
 Without being a universal recommandation, one recommend to use "EnKF" as a
 reference algorithm, and the other algorithms (in this order) as means to
@@ -129,6 +129,7 @@ StoreSupplementaryCalculations
   "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastCovariance",
   "ForecastState",
   "IndexOfOptimum",
   "InnovationAtCurrentAnalysis",
@@ -180,6 +181,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/ForecastCovariance.rst
 
 .. include:: snippets/ForecastState.rst
 
