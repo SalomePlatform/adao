@@ -8,7 +8,8 @@ execution of a Kalman step at the arrival of each observation provided
 iteratively. The keyword "*nextStep*", included in the execution order, allows
 to not store the background in duplicate of the previous analysis.
 
-In a completely similar way to the reanalysis, the estimate is made in
-displaying intermediate results during iterative filtering. Thanks to these
-intermediate information, one can also obtain the graphs illustrating the
-estimation of the state and the associated *a posteriori* error covariance.
+In an entirely similar way to the reanalysis (knowing that intermediate results
+can be displayed, which are omitted here for simplicity), estimation gives the
+same results during iterative filtering. Thanks to these intermediate
+information, one can also obtain the graphs illustrating the estimation of the
+state and the associated *a posteriori* error covariance.

@@ -14,6 +14,9 @@ print("")
 from adao import adaoBuilder
 case = adaoBuilder.New('')
 #
+case.setBackground         (Vector             = [0.])
+case.setBackgroundError    (ScalarSparseMatrix = 1.)
+#
 case.setObservationOperator(Matrix             = [1.])
 case.setObservationError   (ScalarSparseMatrix = 0.1**2)
 #
@@ -29,28 +32,19 @@ case.setAlgorithmParameters(
             ],
         },
     )
-case.setObserver(
-    Info="  État analysé à l'observation courante :",
-    Template='ValuePrinter',
-    Variable='Analysis',
-    )
 #
 # Boucle pour obtenir une analyse à l'arrivée de chaque observation
 #
-XaStep, VaStep = 0., 1.
 for i in range(1,len(Yobs)):
-    case.setBackground         (Vector             = "%s"%float(XaStep))
-    case.setBackgroundError    (ScalarSparseMatrix = "%s"%float(VaStep))
-    case.setObservation        (Vector             = Yobs[i])
+    case.setObservation(Vector = Yobs[i])
     case.execute( nextStep = True )
-    XaStep = case.get("Analysis")[-1]
-    VaStep = case.get("APosterioriCovariance")[-1]
 #
 Xa = case.get("Analysis")
 Pa = case.get("APosterioriCovariance")
 #
+print("  État analysé à l'observation finale :", Xa[-1])
 print("")
-print("  Variance a posteriori finale :",Pa[-1])
+print("  Variance a posteriori finale :", Pa[-1])
 print("")
 #
 #-------------------------------------------------------------------------------
