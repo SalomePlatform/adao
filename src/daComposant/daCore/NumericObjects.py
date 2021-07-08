@@ -3441,6 +3441,224 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
+def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+    """
+    Unscented Kalman Filter
+    """
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        selfA._parameters["StoreInternalVariables"] = True
+    #
+    L     = Xb.size
+    Alpha = selfA._parameters["Alpha"]
+    Beta  = selfA._parameters["Beta"]
+    if selfA._parameters["Kappa"] == 0:
+        if selfA._parameters["EstimationOf"] == "State":
+            Kappa = 0
+        elif selfA._parameters["EstimationOf"] == "Parameters":
+            Kappa = 3 - L
+    else:
+        Kappa = selfA._parameters["Kappa"]
+    Lambda = float( Alpha**2 ) * ( L + Kappa ) - L
+    Gamma  = math.sqrt( L + Lambda )
+    #
+    Ww = []
+    Ww.append( 0. )
+    for i in range(2*L):
+        Ww.append( 1. / (2.*(L + Lambda)) )
+    #
+    Wm = numpy.array( Ww )
+    Wm[0] = Lambda / (L + Lambda)
+    Wc = numpy.array( Ww )
+    Wc[0] = Lambda / (L + Lambda) + (1. - Alpha**2 + Beta)
+    #
+    # Opérateurs
+    Hm = HO["Direct"].appliedControledFormTo
+    #
+    if selfA._parameters["EstimationOf"] == "State":
+        Mm = EM["Direct"].appliedControledFormTo
+    #
+    if CM is not None and "Tangent" in CM and U is not None:
+        Cm = CM["Tangent"].asMatrix(Xb)
+    else:
+        Cm = None
+    #
+    # Durée d'observation et tailles
+    if hasattr(Y,"stepnumber"):
+        duration = Y.stepnumber()
+        __p = numpy.cumprod(Y.shape())[-1]
+    else:
+        duration = 2
+        __p = numpy.array(Y).size
+    #
+    # Précalcul des inversions de B et R
+    if selfA._parameters["StoreInternalVariables"] \
+        or selfA._toStore("CostFunctionJ") \
+        or selfA._toStore("CostFunctionJb") \
+        or selfA._toStore("CostFunctionJo"):
+        BI = B.getI()
+        RI = R.getI()
+    #
+    __n = Xb.size
+    #
+    if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
+        Xn = Xb
+        if hasattr(B,"asfullmatrix"):
+            Pn = B.asfullmatrix(__n)
+        else:
+            Pn = B
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["Analysis"].store( Xb )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+    elif selfA._parameters["nextStep"]:
+        Xn = selfA._getInternalState("Xn")
+        Pn = selfA._getInternalState("Pn")
+    #
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        XaMin            = Xn
+        previousJMinimum = numpy.finfo(float).max
+    #
+    for step in range(duration-1):
+        if hasattr(Y,"store"):
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
+        else:
+            Ynpu = numpy.ravel( Y ).reshape((__p,1))
+        #
+        if U is not None:
+            if hasattr(U,"store") and len(U)>1:
+                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+            elif hasattr(U,"store") and len(U)==1:
+                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+            else:
+                Un = numpy.asmatrix(numpy.ravel( U )).T
+        else:
+            Un = None
+        #
+        Pndemi = numpy.linalg.cholesky(Pn)
+        Xnp = numpy.hstack([Xn, Xn+Gamma*Pndemi, Xn-Gamma*Pndemi])
+        nbSpts = 2*Xn.size+1
+        #
+        if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+            for point in range(nbSpts):
+                Xnp[:,point] = numpy.max(numpy.hstack((Xnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
+                Xnp[:,point] = numpy.min(numpy.hstack((Xnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+        #
+        XEtnnp = []
+        for point in range(nbSpts):
+            if selfA._parameters["EstimationOf"] == "State":
+                XEtnnpi = numpy.asmatrix(numpy.ravel( Mm( (Xnp[:,point], Un) ) )).T
+                if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                    Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
+                    XEtnnpi = XEtnnpi + Cm * Un
+                if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+                    XEtnnpi = numpy.max(numpy.hstack((XEtnnpi,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
+                    XEtnnpi = numpy.min(numpy.hstack((XEtnnpi,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            elif selfA._parameters["EstimationOf"] == "Parameters":
+                # --- > Par principe, M = Id, Q = 0
+                XEtnnpi = Xnp[:,point]
+            XEtnnp.append( XEtnnpi )
+        XEtnnp = numpy.hstack( XEtnnp )
+        #
+        Xncm = numpy.matrix( XEtnnp.getA()*numpy.array(Wm) ).sum(axis=1)
+        #
+        if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+            Xncm = numpy.max(numpy.hstack((Xncm,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
+            Xncm = numpy.min(numpy.hstack((Xncm,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+        #
+        if selfA._parameters["EstimationOf"] == "State":        Pnm = Q
+        elif selfA._parameters["EstimationOf"] == "Parameters": Pnm = 0.
+        for point in range(nbSpts):
+            Pnm += Wc[i] * (XEtnnp[:,point]-Xncm) * (XEtnnp[:,point]-Xncm).T
+        #
+        if selfA._parameters["EstimationOf"] == "Parameters" and selfA._parameters["Bounds"] is not None:
+            Pnmdemi = selfA._parameters["Reconditioner"] * numpy.linalg.cholesky(Pnm)
+        else:
+            Pnmdemi = numpy.linalg.cholesky(Pnm)
+        #
+        Xnnp = numpy.hstack([Xncm, Xncm+Gamma*Pnmdemi, Xncm-Gamma*Pnmdemi])
+        #
+        if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+            for point in range(nbSpts):
+                Xnnp[:,point] = numpy.max(numpy.hstack((Xnnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
+                Xnnp[:,point] = numpy.min(numpy.hstack((Xnnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+        #
+        Ynnp = []
+        for point in range(nbSpts):
+            if selfA._parameters["EstimationOf"] == "State":
+                Ynnpi = numpy.asmatrix(numpy.ravel( Hm( (Xnnp[:,point], None) ) )).T
+            elif selfA._parameters["EstimationOf"] == "Parameters":
+                Ynnpi = numpy.asmatrix(numpy.ravel( Hm( (Xnnp[:,point], Un) ) )).T
+            Ynnp.append( Ynnpi )
+        Ynnp = numpy.hstack( Ynnp )
+        #
+        Yncm = numpy.matrix( Ynnp.getA()*numpy.array(Wm) ).sum(axis=1)
+        #
+        Pyyn = R
+        Pxyn = 0.
+        for point in range(nbSpts):
+            Pyyn += Wc[i] * (Ynnp[:,point]-Yncm) * (Ynnp[:,point]-Yncm).T
+            Pxyn += Wc[i] * (Xnnp[:,point]-Xncm) * (Ynnp[:,point]-Yncm).T
+        #
+        _Innovation  = Ynpu - Yncm
+        if selfA._parameters["EstimationOf"] == "Parameters":
+            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
+                _Innovation = _Innovation - Cm * Un
+        #
+        Kn = Pxyn * Pyyn.I
+        Xn = Xncm + Kn * _Innovation
+        Pn = Pnm - Kn * Pyyn * Kn.T
+        #
+        if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+            Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
+            Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+        #
+        Xa = Xn # Pointeurs
+        #--------------------------
+        selfA._setInternalState("Xn", Xn)
+        selfA._setInternalState("Pn", Pn)
+        #--------------------------
+        #
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        # ---> avec analysis
+        selfA.StoredVariables["Analysis"].store( Xa )
+        # ---> avec current state
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CurrentState"):
+            selfA.StoredVariables["CurrentState"].store( Xn )
+        if selfA._toStore("InnovationAtCurrentState"):
+            selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
+        if selfA._parameters["StoreInternalVariables"] \
+            or selfA._toStore("CostFunctionJ") \
+            or selfA._toStore("CostFunctionJb") \
+            or selfA._toStore("CostFunctionJo"):
+            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            J   = Jb + Jo
+            selfA.StoredVariables["CostFunctionJb"].store( Jb )
+            selfA.StoredVariables["CostFunctionJo"].store( Jo )
+            selfA.StoredVariables["CostFunctionJ" ].store( J )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
+        if selfA._parameters["EstimationOf"] == "Parameters" \
+            and J < previousJMinimum:
+            previousJMinimum    = J
+            XaMin               = Xa
+            if selfA._toStore("APosterioriCovariance"):
+                covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
+    #
+    # Stockage final supplémentaire de l'optimum en estimation de paramètres
+    # ----------------------------------------------------------------------
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["Analysis"].store( XaMin )
+        if selfA._toStore("APosterioriCovariance"):
+            selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )
+        if selfA._toStore("BMA"):
+            selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(XaMin) )
+    #
+    return 0
+
+# ==============================================================================
 def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
     3DVAR variational analysis with no inversion of B

@@ -22,12 +22,23 @@
 
 import logging
 from daCore import BasicObjects, NumericObjects
-import numpy
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "EXTENDEDKALMANFILTER")
+        self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "EKF",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "EKF",
+                ],
+            listadv  = [
+                "CEKF",
+                ],
+            )
         self.defineRequiredParameter(
             name     = "ConstrainedBy",
             default  = "EstimateProjection",
