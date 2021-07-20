@@ -72,7 +72,7 @@ with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/BoundsWithExtremes.rst
+.. include:: snippets/BoundsWithNone.rst
 
 .. include:: snippets/ConstrainedBy.rst
 

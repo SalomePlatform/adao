@@ -29,13 +29,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "EXTENDEDKALMANFILTER")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "EKF",
+            default  = "CEKF",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "EKF",
-                ],
-            listadv  = [
                 "CEKF",
                 ],
             )
@@ -109,8 +107,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        NumericObjects.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        # Default EKF
         #--------------------------
+        if   self._parameters["Variant"] == "EKF":
+            NumericObjects.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        #
+        #--------------------------
+        # Default CEKF
+        elif self._parameters["Variant"] == "CEKF":
+            NumericObjects.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        #
+        #--------------------------
+        else:
+            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
         self._post_run(HO)
         return 0

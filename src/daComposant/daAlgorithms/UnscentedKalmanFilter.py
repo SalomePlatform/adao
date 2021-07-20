@@ -101,11 +101,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "APosterioriVariances",
                 "BMA",
                 "CostFunctionJ",
+                "CostFunctionJAtCurrentOptimum",
                 "CostFunctionJb",
+                "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
+                "CostFunctionJoAtCurrentOptimum",
                 "CurrentIterationNumber",
+                "CurrentOptimum",
                 "CurrentState",
+                "ForecastCovariance",
+                "ForecastState",
+                "IndexOfOptimum",
+                "InnovationAtCurrentAnalysis",
                 "InnovationAtCurrentState",
+                "SimulatedObservationAtCurrentAnalysis",
+                "SimulatedObservationAtCurrentOptimum",
+                "SimulatedObservationAtCurrentState",
                 ]
             )
         self.defineRequiredParameter( # Pas de type

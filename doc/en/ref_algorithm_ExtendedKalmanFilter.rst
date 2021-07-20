@@ -77,7 +77,7 @@ the operators with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/BoundsWithExtremes.rst
+.. include:: snippets/BoundsWithNone.rst
 
 .. include:: snippets/ConstrainedBy.rst
 
@@ -119,6 +119,8 @@ StoreSupplementaryCalculations
 
   Example :
   ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+
+.. include:: snippets/Variant_EKF.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
