@@ -96,11 +96,22 @@ StoreSupplementaryCalculations
   "APosterioriVariances",
   "BMA",
   "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
   "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
   "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
   "CurrentIterationNumber",
+  "CurrentOptimum",
   "CurrentState",
+  "ForecastCovariance",
+  "ForecastState",
+  "IndexOfOptimum",
+  "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
+  "SimulatedObservationAtCurrentAnalysis",
+  "SimulatedObservationAtCurrentOptimum",
+  "SimulatedObservationAtCurrentState",
   ].
 
   Example :
@@ -128,15 +139,37 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CostFunctionJ.rst
 
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+
 .. include:: snippets/CostFunctionJb.rst
+
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
 .. include:: snippets/CostFunctionJo.rst
 
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
 .. include:: snippets/CurrentIterationNumber.rst
+
+.. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastCovariance.rst
+
+.. include:: snippets/ForecastState.rst
+
+.. include:: snippets/IndexOfOptimum.rst
+
+.. include:: snippets/InnovationAtCurrentAnalysis.rst
+
 .. include:: snippets/InnovationAtCurrentState.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentAnalysis.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

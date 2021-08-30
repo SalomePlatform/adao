@@ -662,37 +662,36 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
     else:
         LBounds = None
     if LBounds is not None:
-        LBounds = numpy.asmatrix(ForceNumericBounds( LBounds ))
+        LBounds = ForceNumericBounds( LBounds )
+    _Xa = numpy.ravel(Xa)
     #
     # Échantillonnage des états
     YfQ  = None
     EXr  = None
-    if selfA._parameters["SimulationForQuantiles"] == "Linear" and HXa is not None:
-        HXa  = numpy.matrix(numpy.ravel( HXa )).T
     for i in range(nbsamples):
-        if selfA._parameters["SimulationForQuantiles"] == "Linear" and HtM is not None:
-            dXr = numpy.matrix(numpy.random.multivariate_normal(numpy.ravel(Xa),A) - numpy.ravel(Xa)).T
+        if selfA._parameters["SimulationForQuantiles"] == "Linear" and HtM is not None and HXa is not None:
+            dXr = (numpy.random.multivariate_normal(_Xa,A) - _Xa).reshape((-1,1))
             if LBounds is not None: # "EstimateProjection" par défaut
-                dXr = numpy.max(numpy.hstack((dXr,LBounds[:,0]) - Xa),axis=1)
-                dXr = numpy.min(numpy.hstack((dXr,LBounds[:,1]) - Xa),axis=1)
-            dYr = numpy.matrix(numpy.ravel( HtM * dXr )).T
-            Yr = HXa + dYr
-            if selfA._toStore("SampledStateForQuantiles"): Xr = Xa + dXr
+                dXr = numpy.max(numpy.hstack((dXr,LBounds[:,0].reshape((-1,1))) - Xa),axis=1)
+                dXr = numpy.min(numpy.hstack((dXr,LBounds[:,1].reshape((-1,1))) - Xa),axis=1)
+            dYr = HtM @ dXr
+            Yr = HXa.reshape((-1,1)) + dYr
+            if selfA._toStore("SampledStateForQuantiles"): Xr = _Xa + numpy.ravel(dXr)
         elif selfA._parameters["SimulationForQuantiles"] == "NonLinear" and Hm is not None:
-            Xr = numpy.matrix(numpy.random.multivariate_normal(numpy.ravel(Xa),A)).T
+            Xr = numpy.random.multivariate_normal(_Xa,A)
             if LBounds is not None: # "EstimateProjection" par défaut
-                Xr = numpy.max(numpy.hstack((Xr,LBounds[:,0])),axis=1)
-                Xr = numpy.min(numpy.hstack((Xr,LBounds[:,1])),axis=1)
-            Yr = numpy.matrix(numpy.ravel( Hm( Xr ) )).T
+                Xr = numpy.max(numpy.hstack((Xr.reshape((-1,1)),LBounds[:,0].reshape((-1,1)))),axis=1)
+                Xr = numpy.min(numpy.hstack((Xr.reshape((-1,1)),LBounds[:,1].reshape((-1,1)))),axis=1)
+            Yr = Hm( Xr )
         else:
             raise ValueError("Quantile simulations has only to be Linear or NonLinear.")
         #
         if YfQ is None:
-            YfQ = Yr
-            if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.ravel(Xr)
+            YfQ = Yr.reshape((-1,1))
+            if selfA._toStore("SampledStateForQuantiles"): EXr = Xr.reshape((-1,1))
         else:
-            YfQ = numpy.hstack((YfQ,Yr))
-            if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.vstack((EXr,numpy.ravel(Xr)))
+            YfQ = numpy.hstack((YfQ,Yr.reshape((-1,1))))
+            if selfA._toStore("SampledStateForQuantiles"): EXr = numpy.hstack((EXr,Xr.reshape((-1,1))))
     #
     # Extraction des quantiles
     YfQ.sort(axis=-1)
@@ -700,11 +699,12 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
     for quantile in selfA._parameters["Quantiles"]:
         if not (0. <= float(quantile) <= 1.): continue
         indice = int(nbsamples * float(quantile) - 1./nbsamples)
-        if YQ is None: YQ = YfQ[:,indice]
-        else:          YQ = numpy.hstack((YQ,YfQ[:,indice]))
-    selfA.StoredVariables["SimulationQuantiles"].store( YQ )
+        if YQ is None: YQ = YfQ[:,indice].reshape((-1,1))
+        else:          YQ = numpy.hstack((YQ,YfQ[:,indice].reshape((-1,1))))
+    if YQ is not None: # Liste non vide de quantiles
+        selfA.StoredVariables["SimulationQuantiles"].store( YQ )
     if selfA._toStore("SampledStateForQuantiles"):
-        selfA.StoredVariables["SampledStateForQuantiles"].store( EXr.T )
+        selfA.StoredVariables["SampledStateForQuantiles"].store( EXr )
     #
     return 0
 
@@ -1844,6 +1844,9 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
                 covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
+        # ---> Pour les smoothers
+        if selfA._toStore("CurrentEnsembleState"):
+            selfA.StoredVariables["CurrentEnsembleState"].store( Xn )
     #
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
@@ -2344,6 +2347,9 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
                 covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
+        # ---> Pour les smoothers
+        if selfA._toStore("CurrentEnsembleState"):
+            selfA.StoredVariables["CurrentEnsembleState"].store( Xn )
     #
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
@@ -2791,13 +2797,12 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
     else:                         Rn = R
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
-        Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
+        if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
+        else:                         Pn = B
+        Xn = EnsembleOfBackgroundPerturbations( Xb, Pn, __m )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
-            if hasattr(B,"asfullmatrix"):
-                selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(__n) )
-            else:
-                selfA.StoredVariables["APosterioriCovariance"].store( B )
+            selfA.StoredVariables["APosterioriCovariance"].store( Pn )
         selfA._setInternalState("seed", numpy.random.get_state())
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
@@ -2967,6 +2972,9 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
             XaMin               = Xa
             if selfA._toStore("APosterioriCovariance"):
                 covarianceXaMin = selfA.StoredVariables["APosterioriCovariance"][-1]
+        # ---> Pour les smoothers
+        if selfA._toStore("CurrentEnsembleState"):
+            selfA.StoredVariables["CurrentEnsembleState"].store( Xn )
     #
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
@@ -2998,7 +3006,7 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
     else:
         HXb = Hm( Xb )
-    HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+    HXb = HXb.reshape((-1,1))
     if Y.size != HXb.size:
         raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
     if max(Y.shape) != max(HXb.shape):
@@ -3019,13 +3027,12 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # Définition de la fonction-coût
     # ------------------------------
     def CostFunction(x):
-        _X  = numpy.asmatrix(numpy.ravel( x )).T
+        _X  = numpy.ravel( x ).reshape((-1,1))
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        _HX = Hm( _X )
-        _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+        _HX = Hm( _X ).reshape((-1,1))
         _Innovation = Y - _HX
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -3033,8 +3040,8 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
         #
-        Jb  = float( 0.5 * (_X - Xb).T * BI * (_X - Xb) )
-        Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+        Jb  = float( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
+        Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
         J   = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
@@ -3063,9 +3070,9 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         return J
     #
     def GradientOfCostFunction(x):
-        _X      = numpy.asmatrix(numpy.ravel( x )).T
+        _X      = numpy.ravel( x ).reshape((-1,1))
         _HX     = Hm( _X )
-        _HX     = numpy.asmatrix(numpy.ravel( _HX )).T
+        _HX     = numpy.ravel( _HX ).reshape((-1,1))
         GradJb  = BI * (_X - Xb)
         GradJo  = - Ha( (_X, RI * (Y - _HX)) )
         GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
@@ -3149,9 +3156,8 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
         Minimum = selfA.StoredVariables["CurrentState"][IndexMin]
     #
-    # Obtention de l'analyse
-    # ----------------------
-    Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
+    Xa = Minimum
+    #--------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )
     #
@@ -3166,8 +3172,6 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         else:
             HXa = Hm( Xa )
     #
-    # Calcul de la covariance d'analyse
-    # ---------------------------------
     if selfA._toStore("APosterioriCovariance") or \
         selfA._toStore("SimulationQuantiles") or \
         selfA._toStore("JacobianMatrixAtOptimum") or \
@@ -3184,13 +3188,11 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         HessienneI = []
         nb = Xa.size
         for i in range(nb):
-            _ee    = numpy.matrix(numpy.zeros(nb)).T
+            _ee    = numpy.zeros(nb)
             _ee[i] = 1.
             _HtEE  = numpy.dot(HtM,_ee)
-            _HtEE  = numpy.asmatrix(numpy.ravel( _HtEE )).T
-            HessienneI.append( numpy.ravel( BI*_ee + HaM * (RI * _HtEE) ) )
-        HessienneI = numpy.matrix( HessienneI )
-        A = HessienneI.I
+            HessienneI.append( numpy.ravel( BI * _ee.reshape((-1,1)) + HaM * (RI * _HtEE.reshape((-1,1))) ) )
+        A = numpy.linalg.inv(numpy.array( HessienneI ))
         if min(A.shape) != max(A.shape):
             raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(selfA._name,str(A.shape)))
         if (numpy.diag(A) < 0).any():
@@ -3209,32 +3211,30 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         elif (Y.size >  Xb.size): KG = (BI + numpy.dot(HaM, RI * HtM)).I * HaM * RI
         selfA.StoredVariables["KalmanGainAtOptimum"].store( KG )
     #
-    # Calculs et/ou stockages supplémentaires
-    # ---------------------------------------
     if selfA._toStore("Innovation") or \
         selfA._toStore("SigmaObs2") or \
         selfA._toStore("MahalanobisConsistency") or \
         selfA._toStore("OMB"):
         d  = Y - HXb
     if selfA._toStore("Innovation"):
-        selfA.StoredVariables["Innovation"].store( numpy.ravel(d) )
+        selfA.StoredVariables["Innovation"].store( d )
     if selfA._toStore("BMA"):
         selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
     if selfA._toStore("OMA"):
         selfA.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
     if selfA._toStore("OMB"):
-        selfA.StoredVariables["OMB"].store( numpy.ravel(d) )
+        selfA.StoredVariables["OMB"].store( d )
     if selfA._toStore("SigmaObs2"):
         TraceR = R.trace(Y.size)
-        selfA.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(Y)).T-numpy.asmatrix(numpy.ravel(HXa)).T)) ) / TraceR )
+        selfA.StoredVariables["SigmaObs2"].store( float( (d.T @ (numpy.ravel(Y)-numpy.ravel(HXa))) ) / TraceR )
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/d.size ) )
     if selfA._toStore("SimulationQuantiles"):
         QuantilesEstimations(selfA, A, Xa, HXa, Hm, HtM)
     if selfA._toStore("SimulatedObservationAtBackground"):
-        selfA.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+        selfA.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
     if selfA._toStore("SimulatedObservationAtOptimum"):
-        selfA.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
+        selfA.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
     #
     return 0
 
