@@ -39,8 +39,8 @@ cases. One can verify the linearity of the operators with the help of
 the :ref:`section_ref_algorithm_LinearityTest`.
 
 Conceptually, we can represent the temporal pattern of action of the evolution
-operator for this algorithm in the following way, with **x** the state and
-**P** the state error covariance :
+and observation operators in this algorithm in the following way, with **x**
+the state and **P** the state error covariance :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png

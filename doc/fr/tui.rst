@@ -654,6 +654,29 @@ externes au cas.
     autre les commandes établissant le cas de calcul en cours. Certains
     formats ne sont disponibles qu'en entrée ou qu'en sortie.
 
+De plus, on peut obtenir une information simple sur le cas d'étude tel que
+défini par l'utilisateur en utilisant directement la commande "*print*" de Python
+sur le cas, à toute étape lors de sa construction. Par exemple::
+
+    from numpy import array, matrix
+    from adao import adaoBuilder
+    case = adaoBuilder.New()
+    case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
+    case.set( 'Background',          Vector=[0, 1, 2] )
+    print(case)
+
+dont le résultat est ici::
+
+    ================================================================================
+    ADAO Study report
+    ================================================================================
+
+      - AlgorithmParameters command has been set with values:
+            Algorithm='3DVAR'
+
+      - Background command has been set with values:
+            Vector=[0, 1, 2]
+
 .. _subsection_tui_advanced:
 
 Exemples plus avancés de cas de calcul TUI ADAO

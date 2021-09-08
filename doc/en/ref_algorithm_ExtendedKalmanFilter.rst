@@ -35,8 +35,8 @@ extended Kalman Filter, using a non-linear calculation of the state and the
 incremental evolution (process).
 
 Conceptually, we can represent the temporal pattern of action of the evolution
-operator for this algorithm in the following way, with **x** the state and
-**P** the state error covariance :
+and observation operators in this algorithm in the following way, with **x**
+the state and **P** the state error covariance :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png

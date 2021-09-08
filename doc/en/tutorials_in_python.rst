@@ -29,11 +29,11 @@
 
 This section presents some examples on using the ADAO module in Python. The
 first one shows how to build a very simple data assimilation case defining
-explicitly all the required input data through the textual user interface
-(TUI). The second one shows, on the same case, how to define input data using
-external sources through scripts. We describe here always Python scripts
-because they can be directly inserted in script definitions of Python
-interface, but external files can use other languages.
+explicitly all the required input data through the textual user interface (TUI)
+described in :ref:`section_tui`. The second one shows, on the same case, how to
+define input data using external sources through scripts. We describe here
+always Python scripts because they can be directly inserted in script
+definitions of Python interface, but external files can use other languages.
 
 These examples are intentionally described in the same way than for the
 :ref:`section_tutorials_in_salome` because they are similar to the ones that

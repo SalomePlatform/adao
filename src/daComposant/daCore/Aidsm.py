@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Normalized interface for ADAO scripting (generic API)
+    Normalized interface for ADAO scripting (generic API).
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["Aidsm"]
@@ -815,6 +815,11 @@ class Aidsm(object):
     def __dir__(self):
         "Clarifie la visibilité des méthodes"
         return ['set', 'get', 'execute', 'dump', 'load', '__doc__', '__init__', '__module__']
+
+    def __str__(self):
+        "Représentation pour impression (mais pas repr)"
+        msg  = self.dump(None, "SimpleReportInPlainTxt")
+        return msg
 
     def prepare_to_pickle(self):
         "Retire les variables non pickelisables, avec recopie efficace"

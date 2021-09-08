@@ -30,11 +30,12 @@
 Cette section présente quelques exemples d'utilisation du module ADAO en
 Python. Le premier montre comment construire un cas simple d'assimilation de
 données définissant explicitement toutes les données d'entrée requises à
-travers l'interface utilisateur textuelle (TUI). Le second montre, sur le même
-cas, comment définir les données d'entrée à partir de sources externes à
-travers des scripts. On présente ici toujours des scripts Python car ils sont
-directement insérables dans les définitions de script de l'interface Python,
-mais les fichiers externes peuvent utiliser d'autres langages.
+travers l'interface utilisateur textuelle (TUI) décrite en partie
+:ref:`section_tui`. Le second montre, sur le même cas, comment définir les
+données d'entrée à partir de sources externes à travers des scripts. On
+présente ici toujours des scripts Python car ils sont directement insérables
+dans les définitions de script de l'interface Python, mais les fichiers
+externes peuvent utiliser d'autres langages.
 
 Ces exemples sont intentionnellement décrits de manière semblables aux
 :ref:`section_tutorials_in_salome` car ils sont similaires à ceux que l'on peut

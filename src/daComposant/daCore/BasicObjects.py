@@ -2161,7 +2161,7 @@ class Covariance(object):
 # ==============================================================================
 class Observer2Func(object):
     """
-    Creation d'une fonction d'observateur a partir de son texte
+    Création d'une fonction d'observateur a partir de son texte
     """
     def __init__(self, corps=""):
         self.__corps = corps
@@ -2175,7 +2175,7 @@ class Observer2Func(object):
 # ==============================================================================
 class CaseLogger(object):
     """
-    Conservation des commandes de creation d'un cas
+    Conservation des commandes de création d'un cas
     """
     def __init__(self, __name="", __objname="case", __addViewers=None, __addLoaders=None):
         self.__name     = str(__name)
@@ -2186,6 +2186,9 @@ class CaseLogger(object):
             "TUI" :Interfaces._TUIViewer,
             "SCD" :Interfaces._SCDViewer,
             "YACS":Interfaces._YACSViewer,
+            "SimpleReportInRst":Interfaces._SimpleReportInRstViewer,
+            "SimpleReportInHtml":Interfaces._SimpleReportInHtmlViewer,
+            "SimpleReportInPlainTxt":Interfaces._SimpleReportInPlainTxtViewer,
             }
         self.__loaders = {
             "TUI" :Interfaces._TUIViewer,

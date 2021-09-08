@@ -35,6 +35,7 @@ import copy
 from daCore import Persistence
 from daCore import PlatformInfo
 from daCore import Templates
+from daCore import Reporting
 
 # ==============================================================================
 class GenericCaseViewer(object):
@@ -609,6 +610,76 @@ class _YACSViewer(GenericCaseViewer):
         __text = __fid.read()
         __fid.close()
         return __text
+
+# ==============================================================================
+class _ReportViewer(GenericCaseViewer):
+    """
+    Partie commune de restitution simple
+    """
+    def __init__(self, __name="", __objname="case", __content=None, __object=None):
+        "Initialisation et enregistrement de l'entete"
+        GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
+        self._r = Reporting.ReportStorage()
+        self._r.clear()
+        if self._name == "":
+            self._r.append("ADAO Study report", "title")
+        else:
+            self._r.append(str(self._name), "title")
+        if self._content is not None:
+            for command in self._content:
+                self._append(*command)
+    def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
+        "Transformation d'une commande individuelle en un enregistrement"
+        if __command is not None and __keys is not None and __local is not None:
+            if __command in ("set","get") and "Concept" in __keys: __command = __local["Concept"]
+            __text  = ""
+            __text += "<i>%s</i> command has been set"%str(__command.replace("set",""))
+            __ktext = ""
+            for k in __keys:
+                if k not in __local: continue
+                __v = __local[k]
+                if __v is None: continue
+                if   k == "Checked"              and not __v: continue
+                if   k == "Stored"               and not __v: continue
+                if   k == "ColMajor"             and not __v: continue
+                if   k == "InputFunctionAsMulti" and not __v: continue
+                if   k == "nextStep"             and not __v: continue
+                if   k == "AvoidRC"              and     __v: continue
+                if   k == "noDetails":                        continue
+                if   k == "Concept":                          continue
+                if   k == "self":                             continue
+                if isinstance(__v,Persistence.Persistence): __v = __v.values()
+                numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
+                __ktext += "\n        %s=%s, "%(k,repr(__v))
+                numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+            if len(__ktext) > 0:
+                __text += " with values:" + __ktext
+            __text = __text.rstrip(", ")
+            self._r.append(__text, "uli")
+    def _finalize(self, __upa=None):
+        "Enregistrement du final"
+        raise NotImplementedError()
+
+class _SimpleReportInRstViewer(_ReportViewer):
+    """
+    Restitution simple en RST
+    """
+    def _finalize(self, __upa=None):
+        self._lineSerie.append(Reporting.ReportViewInRst(self._r).__str__())
+
+class _SimpleReportInHtmlViewer(_ReportViewer):
+    """
+    Restitution simple en HTML
+    """
+    def _finalize(self, __upa=None):
+        self._lineSerie.append(Reporting.ReportViewInHtml(self._r).__str__())
+
+class _SimpleReportInPlainTxtViewer(_ReportViewer):
+    """
+    Restitution simple en TXT
+    """
+    def _finalize(self, __upa=None):
+        self._lineSerie.append(Reporting.ReportViewInPlainTxt(self._r).__str__())
 
 # ==============================================================================
 class ImportFromScript(object):

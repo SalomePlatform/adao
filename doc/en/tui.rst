@@ -627,6 +627,29 @@ with these Python external case operations.
     one the commands establishing the current calculation case. Some formats
     are only available as input or as output.
 
+In addition, simple information about the case study as defined by the user can
+be obtained by using the Python "*print*" command directly on the case, at any
+stage during its design. For example::
+
+    from numpy import array, matrix
+    from adao import adaoBuilder
+    case = adaoBuilder.New()
+    case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
+    case.set( 'Background',          Vector=[0, 1, 2] )
+    print(case)
+
+which result is here::
+
+    ================================================================================
+    ADAO Study report
+    ================================================================================
+
+      - AlgorithmParameters command has been set with values:
+            Algorithm='3DVAR'
+
+      - Background command has been set with values:
+            Vector=[0, 1, 2]
+
 .. _subsection_tui_advanced:
 
 More advanced examples of ADAO TUI calculation case
