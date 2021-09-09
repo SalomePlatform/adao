@@ -230,3 +230,43 @@ state to represent the physical system.
 Besides this analysis that has to be done for each Data Assimilation or
 Optimization study, it can be worth to exploit the optimization results as part
 of a more complete study of the physical system of interest.
+
+.. _section_methodology_twin:
+
+To test a data assimilation chain: the twin experiments
+-------------------------------------------------------
+
+.. index:: single: data assimilation chain
+.. index:: single: twin experiments
+
+When developing an assimilation study, the various steps described above form
+what is known as a "data assimilation chain". The testing and analysis of this
+chain are critical to assess the confidence in the overall approach of the
+study.
+
+For this purpose, twin experiments are a classical and very useful tool, which
+allows to place oneself in a particular environment where simulations and
+expected errors can be controlled. Thus, methodological or numerical
+difficulties can be separated and identified, then corrected.
+
+The twin experiment approach can be schematized by the following figure, which
+presents the objective and the means of the approach:
+
+  .. _meth_twin_experiments:
+  .. image:: images/meth_twin_experiments.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **The twin experiment approach to test and analyze a data assimilation (DA) chain**
+
+To simplify, the general approach to using the twin experiments methodology can
+be described as follows:
+
+- we choose in an arbitrary way a state called "true", which must be valid for the simulation ;
+- we then elaborate "pseudo-observations" from the simulation of the true state, by sampling the simulation in a similar way to real observations ;
+- we eventually incorporate noise, either in the true state, or in the pseudo-observations, or in the computational chain, and this in a coherent way with the hypotheses of elaboration of the chain, to see its effect on a specific part of the chain ;
+- we then analyze, according to the noise assumptions applied, the ability of the chain to recover the true state or expected differences.
+
+Thus, the methodology of twin experiments, applied several times and with
+different controlled hypotheses of noise or error, allows to verify step by
+step each component of the complete data assimilation chain.

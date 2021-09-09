@@ -408,7 +408,8 @@ On continue à opérer dans un espace à 3 dimensions, afin de limiter la taille
 l'objet numérique indiqué dans les scripts, mais le problème ne dépend pas de la
 dimension.
 
-On choisit un contexte d'expériences jumelles, en utilisant un état vrai
+On choisit un contexte d'expériences jumelles (voir la démarche
+:ref:`section_methodology_twin`), en utilisant un état vrai
 :math:`\mathbf{x}^t` connu, mais de valeur arbitraire :
 ::
 

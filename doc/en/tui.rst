@@ -675,7 +675,8 @@ The hypothesis of the user case are the following ones. It is assumed:
 
 In order to try in a simple way this example of TUI calculation case, we choose
 for example the following entries, perfectly arbitrary, by building the
-observations by simulation in order to set a twin experiments case::
+observations by simulation in order to set a twin experiments case (for
+information, see the approach :ref:`section_methodology_twin`)::
 
     #
     # Artificial building of an example of user data

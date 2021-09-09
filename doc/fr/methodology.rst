@@ -250,3 +250,45 @@ Au-delà de cette analyse qui doit être réalisée pour chaque étude d'Assimil
 de Données ou d'Optimisation, il est très utile d'exploiter les résultats
 d'optimisation comme une partie intégrée dans une étude plus complète du système
 physique d'intérêt.
+
+.. _section_methodology_twin:
+
+Pour tester une chaîne d'assimilation de données : les expériences jumelles
+---------------------------------------------------------------------------
+
+.. index:: single: chaîne d'assimilation de données
+.. index:: single: expériences jumelles
+
+Lors de la mise au point d'une étude d'assimilation, les différentes étapes
+décrites ci-dessus forment ce que l'on appelle une "chaîne d'assimilation de
+données". Les tests et l'analyse de cette chaîne sont essentiels pour évaluer
+la confiance que l'on peut avoir dans la démarche globale de l'étude.
+
+Pour cela, les expériences jumelles forment un outil classique et très utile,
+qui permet de se placer dans un environnement particulier où les simulations et
+les erreurs attendues peuvent être contrôlées. Ainsi, les difficultés
+méthodologiques ou numériques peuvent être séparées et identifiées, puis
+corrigées.
+
+On peut schématiser l'approche par expériences jumelles par la figure qui suit,
+qui présente l'objectif et les moyens de la démarche :
+
+  .. _meth_twin_experiments:
+  .. image:: images/meth_twin_experiments.png
+    :align: center
+    :width: 75%
+  .. centered::
+    **La démarche d'expériences jumelles pour tester et analyser une chaîne d'assimilation de données (AD)**
+
+Pour simplifier, on peut décrire l'approche générale pour appliquer la
+méthodologie d'expériences jumelles de la manière suivante :
+
+- on choisit de manière arbitraire un état dit "vrai", qui doit être valide pour la simulation ;
+- on élabore ensuite des "pseudo-observations" à partir de la simulation de l'état vrai, en échantillonnant la simulation de manière similaire à de vraies observations ;
+- on incorpore éventuellement du bruit, soit dans l'état vrai, soit dans les pseudo-observations, soit dans la chaîne de calcul, et cela de manière cohérente avec les hypothèses d'élaboration de la chaîne, pour voir son effet sur une partie spécifique de la chaîne ;
+- on analyse ensuite, selon les hypothèses de bruit appliquées, la capacité de la chaîne à retrouver l'état vrai ou des différences attendues.
+
+Ainsi, la méthodologie d'expériences jumelles, appliquée plusieurs fois et avec
+des hypothèses contrôlées de bruit ou d'erreur différentes, permet alors de
+vérifier étape par étape chacune des composantes de la chaîne complète
+d'assimilation de données.

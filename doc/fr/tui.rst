@@ -701,9 +701,10 @@ Les hypothèses du cas utilisateur sont les suivantes. On suppose :
 #. que l'utilisateur dispose en Python d'une fonction de simulation physique appelée ``simulation``, préalablement (bien) testée, qui transforme les 3 paramètres en résultats similaires aux observations,
 #. que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
 
-Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne par
-exemple les entrées suivantes, parfaitement arbitraires, en construisant les
-observations par simulation pour se placer dans un cas d'expériences jumelles::
+Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne
+par exemple les entrées suivantes, parfaitement arbitraires, en construisant
+les observations par simulation pour se placer dans un cas d'expériences
+jumelles (pour mémoire, voir la démarche :ref:`section_methodology_twin`)::
 
     #
     # Construction artificielle d'un exemple de données utilisateur

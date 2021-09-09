@@ -387,8 +387,9 @@ We continue to operate in a 3-dimensional space, in order to restrict
 the size of numerical object shown in the scripts, but the problem is
 not dependent of the dimension.
 
-We choose a twin experiment context, using a known true state
-:math:`\mathbf{x}^t` but of arbitrary value:
+We choose a twin experiment context (see the approach
+:ref:`section_methodology_twin`), using a known true state :math:`\mathbf{x}^t`
+but of arbitrary value:
 ::
 
     Xt = [1 2 3]
