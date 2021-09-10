@@ -650,7 +650,7 @@ class _ReportViewer(GenericCaseViewer):
                 if   k == "self":                             continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
-                __ktext += "\n        %s=%s, "%(k,repr(__v))
+                __ktext += "\n        %s = %s, "%(k,repr(__v))
                 numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
             if len(__ktext) > 0:
                 __text += " with values:" + __ktext

@@ -723,6 +723,7 @@ def ForceNumericBounds( __Bounds ):
 
 # ==============================================================================
 def RecentredBounds( __Bounds, __Center):
+    "Recentre les bornes autour de 0, sauf si globalement None"
     # Conserve une valeur par défaut à None s'il n'y a pas de bornes
     if __Bounds is None: return None
     # Recentre les valeurs numériques de bornes
@@ -3659,7 +3660,7 @@ def stdkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
 # ==============================================================================
 def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
-    Unscented Kalman Filter
+    Constrained Unscented Kalman Filter
     """
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True

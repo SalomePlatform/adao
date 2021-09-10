@@ -10,5 +10,5 @@ PrintAllValuesFor
   "Observation",
   ].
 
-  Exemple :
+  Example :
   ``{"PrintAllValuesFor":["Background"]}``

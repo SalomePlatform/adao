@@ -11,5 +11,5 @@ ShowInformationOnlyFor
   "Observation",
   ].
 
-  Exemple :
+  Example :
   ``{"ShowInformationOnlyFor":["Background"]}``

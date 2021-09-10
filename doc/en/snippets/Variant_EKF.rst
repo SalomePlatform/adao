@@ -10,5 +10,5 @@ Variant
   "EKF" (Extended Kalman Filter),
   "CEKF" (Constrained Extended Kalman Filter).
 
-  Exemple :
+  Example :
   ``{"Variant":"CEKF"}``

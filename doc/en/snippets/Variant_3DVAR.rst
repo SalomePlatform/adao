@@ -15,5 +15,5 @@ Variant
   "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR),
   It is highly recommended to keep the default value.
 
-  Exemple :
+  Example :
   ``{"Variant":"3DVAR"}``

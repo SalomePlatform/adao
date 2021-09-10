@@ -13,5 +13,5 @@ StateBoundsForQuantiles
   bounds are used for the states used in the quantile simulation regardless of
   the optimization bounds defined.
 
-  Exemple :
+  Example :
   ``{"StateBoundsForQuantiles":[[2.,5.],[1.e-2,10.],[-30.,None],[None,None]]}``
