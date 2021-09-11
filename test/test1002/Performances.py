@@ -48,6 +48,7 @@ class Test_Adao(unittest.TestCase):
         print("")
         return True
 
+    #~ @unittest.skip("Debug")
     def test_Numpy01(self, dimension = 10000, precision = 1.e-17, repetitions = 10):
         "Test Numpy"
         __d = int(dimension)
@@ -70,6 +71,7 @@ class Test_Adao(unittest.TestCase):
         print("")
         del A, x, b
 
+    #~ @unittest.skip("Debug")
     def test_Numpy02(self, dimension = 3000, precision = 1.e-17, repetitions = 100):
         "Test Numpy"
         __d = int(dimension)
@@ -87,6 +89,7 @@ class Test_Adao(unittest.TestCase):
         print("")
         del A, x, b
 
+    #~ @unittest.skip("Debug")
     def test_Scipy01(self, dimension = 3000, precision = 1.e-17, repetitions = 10):
         "Test Scipy"
         __d = int(dimension)

@@ -716,9 +716,9 @@ def ForceNumericBounds( __Bounds ):
     # Converti toutes les bornes individuelles None à +/- l'infini
     __Bounds = numpy.asarray( __Bounds, dtype=float )
     if len(__Bounds.shape) != 2 or min(__Bounds.shape) <= 0 or __Bounds.shape[1] != 2:
-        raise ValueError("Incorrectly defined bounds data")
-    __Bounds[numpy.isnan(__Bounds)[:,0],0] = -sys.float_info.max
-    __Bounds[numpy.isnan(__Bounds)[:,1],1] =  sys.float_info.max
+        raise ValueError("Incorrectly shaped bounds data")
+    __Bounds[numpy.isnan(__Bounds[:,0]),0] = -sys.float_info.max
+    __Bounds[numpy.isnan(__Bounds[:,1]),1] =  sys.float_info.max
     return __Bounds
 
 # ==============================================================================
@@ -728,6 +728,33 @@ def RecentredBounds( __Bounds, __Center):
     if __Bounds is None: return None
     # Recentre les valeurs numériques de bornes
     return ForceNumericBounds( __Bounds ) - numpy.ravel( __Center ).transpose((-1,1))
+
+# ==============================================================================
+def ApplyBounds( __Vector, __Bounds, __newClip = True):
+    "Applique des bornes numériques à un point"
+    # Conserve une valeur par défaut s'il n'y a pas de bornes
+    if __Bounds is None: return __Vector
+    #
+    if not isinstance(__Vector, numpy.ndarray): # Is an array
+        raise ValueError("Incorrect array definition of vector data")
+    if not isinstance(__Bounds, numpy.ndarray): # Is an array
+        raise ValueError("Incorrect array definition of bounds data")
+    if 2*__Vector.size != __Bounds.size: # Is a 2 column array of vector lenght
+        raise ValueError("Incorrect bounds number to be applied for this vector")
+    if len(__Bounds.shape) != 2 or min(__Bounds.shape) <= 0 or __Bounds.shape[1] != 2:
+        raise ValueError("Incorrectly shaped bounds data")
+    #
+    if __newClip:
+        __Vector = __Vector.clip(
+            __Bounds[:,0].reshape(__Vector.shape),
+            __Bounds[:,1].reshape(__Vector.shape),
+            )
+    else:
+        __Vector = numpy.max(numpy.hstack((__Vector.reshape((-1,1)),numpy.asmatrix(__Bounds)[:,0])),axis=1)
+        __Vector = numpy.min(numpy.hstack((__Vector.reshape((-1,1)),numpy.asmatrix(__Bounds)[:,1])),axis=1)
+        __Vector = numpy.asarray(__Vector)
+    #
+    return __Vector
 
 # ==============================================================================
 def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
@@ -816,8 +843,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Un = None
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-            Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-            Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            Xn = ApplyBounds( Xn, selfA._parameters["Bounds"] )
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
             Xn_predicted = numpy.ravel( M( (Xn, Un) ) ).reshape((__n,1))
@@ -831,8 +857,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Pn_predicted = Pn
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-            Xn_predicted = numpy.max(numpy.hstack((Xn_predicted,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-            Xn_predicted = numpy.min(numpy.hstack((Xn_predicted,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            Xn_predicted = ApplyBounds( Xn_predicted, selfA._parameters["Bounds"] )
         #
         if selfA._parameters["EstimationOf"] == "State":
             HX_predicted = numpy.ravel( H( (Xn_predicted, None) ) ).reshape((__p,1))
@@ -848,8 +873,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Pn = Pn_predicted - Kn * Ht * Pn_predicted
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-            Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-            Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            Xn = ApplyBounds( Xn, selfA._parameters["Bounds"] )
         #
         Xa = Xn # Pointeurs
         #--------------------------
@@ -3323,9 +3347,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 pass
             #
             if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-                __Bounds = ForceNumericBounds( selfA._parameters["Bounds"] )
-                _Xn = numpy.max(numpy.hstack((_Xn,numpy.asmatrix(__Bounds)[:,0])),axis=1)
-                _Xn = numpy.min(numpy.hstack((_Xn,numpy.asmatrix(__Bounds)[:,1])),axis=1)
+                _Xn = ApplyBounds( _Xn, ForceNumericBounds(selfA._parameters["Bounds"]) )
             #
             # Etape de différence aux observations
             if selfA._parameters["EstimationOf"] == "State":
@@ -3760,8 +3782,7 @@ def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             for point in range(nbSpts):
-                Xnp[:,point] = numpy.max(numpy.hstack((Xnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-                Xnp[:,point] = numpy.min(numpy.hstack((Xnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+                Xnp[:,point] = ApplyBounds( Xnp[:,point], selfA._parameters["Bounds"] )
         #
         XEtnnp = []
         for point in range(nbSpts):
@@ -3771,8 +3792,7 @@ def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                     XEtnnpi = XEtnnpi + Cm * Un
                 if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-                    XEtnnpi = numpy.max(numpy.hstack((XEtnnpi,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-                    XEtnnpi = numpy.min(numpy.hstack((XEtnnpi,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+                    XEtnnpi = ApplyBounds( XEtnnpi, selfA._parameters["Bounds"] )
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 XEtnnpi = Xnp[:,point]
@@ -3782,8 +3802,7 @@ def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Xncm = numpy.matrix( XEtnnp.getA()*numpy.array(Wm) ).sum(axis=1)
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-            Xncm = numpy.max(numpy.hstack((Xncm,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-            Xncm = numpy.min(numpy.hstack((Xncm,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            Xncm = ApplyBounds( Xncm, selfA._parameters["Bounds"] )
         #
         if selfA._parameters["EstimationOf"] == "State":        Pnm = Q
         elif selfA._parameters["EstimationOf"] == "Parameters": Pnm = 0.
@@ -3799,8 +3818,7 @@ def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             for point in range(nbSpts):
-                Xnnp[:,point] = numpy.max(numpy.hstack((Xnnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-                Xnnp[:,point] = numpy.min(numpy.hstack((Xnnp[:,point],numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+                Xnnp[:,point] = ApplyBounds( Xnnp[:,point], selfA._parameters["Bounds"] )
         #
         Ynnp = []
         for point in range(nbSpts):
@@ -3829,8 +3847,7 @@ def uckf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Pn = Pnm - Kn * Pyyn * Kn.T
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-            Xn = numpy.max(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,0])),axis=1)
-            Xn = numpy.min(numpy.hstack((Xn,numpy.asmatrix(selfA._parameters["Bounds"])[:,1])),axis=1)
+            Xn = ApplyBounds( Xn, selfA._parameters["Bounds"] )
         #
         Xa = Xn # Pointeurs
         #--------------------------
