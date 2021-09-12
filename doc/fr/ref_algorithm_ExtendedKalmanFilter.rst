@@ -58,6 +58,15 @@ largement plus adaptés aux comportements non-linéaires mais plus coûteux. On
 peut vérifier la linéarité des opérateurs à l'aide de
 l':ref:`section_ref_algorithm_LinearityTest`.
 
+.. index::
+    pair: Variant ; EKF
+    pair: Variant ; CEKF
+
+On fait une différence entre le filtre de Kalman étendu tenant compte de
+bornes sur les états (la variante nommée "CEKF", qui est recommandée et qui est
+utilisée par défaut), et le filtre de Kalman étendu conduit sans
+aucune contrainte (la variante nommée "EKF", qui n'est pas recommandée).
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

@@ -57,6 +57,15 @@ In case of really non-linear operators, one can easily use the
 adapted to non-linear behavior but more costly. One can verify the linearity of
 the operators with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
+.. index::
+    pair: Variant ; EKF
+    pair: Variant ; CEKF
+
+A difference is made between the extended Kalman filter taking into account
+bounds on the states (the variant named "CEKF", which is recommended and used
+by default), and the extended Kalman filter conducted without any constraint
+(the variant named "EKF", which is not recommended).
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

@@ -52,6 +52,15 @@ In case of linear of "slightly" non-linear operators, one can easily use the
 to evaluate on small systems. One can verify the linearity of the operators
 with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
+.. index::
+    pair: Variant ; UKF
+    pair: Variant ; CUKF
+
+A difference is made between the "unscented" Kalman filter taking into account
+bounds on the states (the variant named "CUKF", which is recommended and used
+by default), and the "unscented" Kalman filter conducted without any constraint
+(the variant named "UKF", which is not recommended).
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
@@ -116,6 +125,8 @@ StoreSupplementaryCalculations
 
   Example :
   ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+
+.. include:: snippets/Variant_UKF.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
