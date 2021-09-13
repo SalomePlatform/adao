@@ -296,10 +296,10 @@ Using the ADAO EFICAS graphical interface as an ADAO TUI command
 ----------------------------------------------------------------
 
 To make it easier to quickly edit an ADAO command file with ADAO EFICAS (JDC,
-or pair of files ".comm/.py", that are together in a directory), you can launch
-the graphical user interface from the Python interpreter. To do this, in a
-Python interpreter obtained from the "SALOME shell", the following commands are
-used::
+or pair of files ".comm/.py", that are together in a user study directory), you
+can launch the graphical user interface from the Python interpreter. To do
+this, in a Python interpreter obtained from the "SALOME shell", the following
+commands are used::
 
     from adao import adaoBuilder
     adaoBuilder.Gui()
@@ -307,10 +307,10 @@ used::
 If necessary, explicit messages can be used to identify the required
 environment variables that are missing. However, this command should not be run
 in the SALOME Python console (because in this case it is enough to activate the
-module...) but it can be done in a "SALOME shell" session obtained from the
-"Tools/Extensions" menu of SALOME. As a reminder, the easiest way to get a
-Python interpreter included in a "SALOME shell" session is to run the following
-command in a terminal::
+module since we already are in the graphical environment...) but it can be done
+in a "SALOME shell" session obtained from the "Tools/Extensions" menu of
+SALOME. As a reminder, the easiest way to get a Python interpreter included in
+a "SALOME shell" session is to run the following command in a terminal::
 
     $SALOMEDIR/salome shell -- python
 

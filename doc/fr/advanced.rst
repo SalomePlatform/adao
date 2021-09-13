@@ -66,7 +66,8 @@ L'exemple le plus simple consiste uniquement à lancer l'exécution d'un schéma
 YACS donné, qui a préalablement été généré par l'utilisateur en interface
 graphique. Dans ce cas, en ayant pris soin de remplacer les textes contenus
 entre les symboles ``<...>``, il suffit d'enregistrer le script de commandes
-Shell suivant::
+Shell suivant :
+::
 
     #!/bin/bash
     USERDIR="<Répertoire du fichier JDC ADAO>"
@@ -80,7 +81,8 @@ Il faut ensuite le rendre exécutable pour l'exécuter.
 Un exemple un peu plus complet consiste à lancer l'exécution d'un schéma YACS
 indiqué par l'utilisateur, en ayant préalablement vérifié sa disponibilité. Pour
 cela, en remplaçant le texte ``<Répertoire principal d'installation de
-SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
+SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant :
+::
 
     #!/bin/bash
     if (test $# != 1)
@@ -106,7 +108,8 @@ commandes ADAO (JDC, ou paire de fichiers ".comm/.py") en un schéma YACS associ
 (fichier ".xml"). A la fin du script, on choisit aussi de supprimer le fichier
 de ``<Schéma xml YACS ADAO>`` car c'est un fichier généré. Pour cela, en ayant
 bien pris soin de remplacer le texte ``<Répertoire principal d'installation de
-SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant::
+SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant :
+::
 
     #!/bin/bash
     if (test $# != 1)
@@ -146,7 +149,8 @@ informations) à travers un exemple simple. Comme décrit dans la documentation,
 un schéma XML peut être chargé en python. On donne ici une séquence complète de
 commandes pour tester la validité du schéma avant de l'exécuter, ajoutant des
 lignes supplémentaires initiales pour charger de manière explicite le catalogue
-de types pour éviter d'obscures difficultés::
+de types pour éviter d'obscures difficultés :
+::
 
     #-*- coding: utf-8 -*-
     import pilot
@@ -204,7 +208,8 @@ d'utiliser les calculs ADAO dans l'environnement **R** (voir [R]_ pour plus de
 détails). Ce dernier est disponible dans SALOME en lançant l'interpréteur R dans
 le shell "``salome shell``". Il faut de plus disposer, en R, du package
 "*rPython*", qui peut si nécessaire être installé par l'utilisateur à l'aide de
-la commande R suivante::
+la commande R suivante :
+::
 
     #-*- coding: utf-8 -*-
     #
@@ -220,7 +225,8 @@ Les calculs ADAO définis en interface textuelle (API/TUI, voir la
 utilisant des données et des informations depuis R. La démarche est illustrée
 sur :ref:`subsection_tui_example`, proposé dans la description de l'interface
 API/TUI. Dans l'interpréteur R, on peut exécuter les commandes suivantes,
-directement issues de l'exemple simple::
+directement issues de l'exemple simple :
+::
 
     #-*- coding: utf-8 -*-
     #
@@ -241,7 +247,8 @@ directement issues de l'exemple simple::
         case.execute()
     ")
 
-dont le résultat est::
+dont le résultat est :
+::
 
     Analysis [ 0.25000264  0.79999797  0.94999939]
 
@@ -255,7 +262,8 @@ ADAO. On se reportera à la documentation [GilBellosta15]_ pour la mise en
 oeuvre. On peut transformer l'exemple ci-dessus pour utiliser des données
 provenant de R pour alimenter les trois variables d'ébauche, d'observation et
 d'opérateur d'observation. On récupère à la fin l'état optimal dans une variable
-R aussi. Les autres lignes sont identiques. L'exemple devient ainsi::
+R aussi. Les autres lignes sont identiques. L'exemple devient ainsi :
+::
 
     #-*- coding: utf-8 -*-
     #
@@ -312,20 +320,23 @@ Utiliser l'interface graphique EFICAS d'ADAO comme une commande TUI d'ADAO
 
 Pour faciliter l'édition rapide avec EFICAS d'ADAO d'un fichier de commandes
 ADAO (JDC, ou paire de fichiers ".comm/.py", qui se trouvent ensemble dans un
-répertoire), on peut lancer l'interface graphique depuis l'interpréteur Python.
-Pour cela, dans un interpréteur Python obtenu depuis le "SALOME shell", on
-utilise les commandes suivantes::
+répertoire d'étude de l'utilisateur), on peut lancer l'interface graphique
+directement depuis l'interpréteur Python. Pour cela, dans un interpréteur
+Python obtenu depuis le "SALOME shell", on utilise les commandes suivantes :
+::
 
     from adao import adaoBuilder
     adaoBuilder.Gui()
 
-si nécessaire, des messages explicites permettent d'identifier les variables
+Si nécessaire, des messages explicites permettent d'identifier les variables
 d'environnement requises qui seraient absentes. Cette commande ne doit
 néanmoins pas être lancée dans la console Python de SALOME (car dans ce cas il
-suffit d'activer le module...), mais elle peut l'être dans une session "SALOME
-shell" obtenue depuis le menu "Outils/Extensions" de SALOME. Pour mémoire, le
-moyen le plus simple d'obtenir un interpréteur Python inclu dans une session
-"SALOME shell" est de lancer la commande suivante dans un terminal::
+suffit d'activer le module puisque l'on est déjà dans l'interface
+graphique...), mais elle peut l'être dans une session "SALOME shell" obtenue
+depuis le menu "Outils/Extensions" de SALOME. Pour mémoire, le moyen le plus
+simple d'obtenir un interpréteur Python inclu dans une session "SALOME shell"
+est de lancer la commande suivante dans un terminal :
+::
 
     $SALOMEDIR/salome shell -- python
 
@@ -429,7 +440,8 @@ Les différents niveaux de logging sont : "*DEBUG*", "*INFO*", "*WARNING*",
 "*ERROR*", "*CRITICAL*". Toutes les informations associées à un niveau sont
 affichées à tous les niveaux au-dessus de celui-ci (inclut). La méthode la plus
 facile consiste à changer le niveau de surveillance en utilisant les lignes
-Python suivantes::
+Python suivantes :
+::
 
     import logging
     logging.getLogger().setLevel(logging.DEBUG)
@@ -568,19 +580,22 @@ Pour faciliter les futures évolutions, il est fortement recommandé de veiller 
 ce que vos fichiers scripts utilisateurs utilisent une syntaxe compatible avec
 Python 2 et avec Python 3. En particulier, on recommande d'utiliser la syntaxe
 fonctionnelle pour les "*print*" et non pas la syntaxe "*commande*", comme par
-exemple::
+exemple :
+::
 
     # Python 2 & 3
     x, unit = 1., "cm"
     print( "x = %s %s"%(str(x),str(unit)) )
 
-ou::
+ou :
+::
 
     # Python 2 & 3
     x, unit = 1., "cm"
     print( "x = {0} {1}".format(str(x),str(unit)) )
 
-plutôt que::
+plutôt que :
+::
 
     # Python 2 uniquement
     x, unit = 1., "cm"
@@ -610,13 +625,15 @@ le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 Il y a une incompatibilité introduite dans les fichiers de script de
 post-processing ou d'observers. L'ancienne syntaxe pour interroger un objet
 résultat, comme celui d'analyse "*Analysis*" (fourni dans un script à travers le
-mot-clé "*UserPostAnalysis*"), était par exemple::
+mot-clé "*UserPostAnalysis*"), était par exemple :
+::
 
     Analysis = ADD.get("Analysis").valueserie(-1)
     Analysis = ADD.get("Analysis").valueserie()
 
 La nouvelle syntaxe est entièrement compatible avec celle (classique) pour les
-objets de type liste ou tuple::
+objets de type liste ou tuple :
+::
 
     Analysis = ADD.get("Analysis")[-1]
     Analysis = ADD.get("Analysis")[:]

@@ -37,7 +37,7 @@ mfp = PlatformInfo().MaximumPrecision()
 def ExecuteFunction( triplet ):
     assert len(triplet) == 3, "Incorrect number of arguments"
     X, xArgs, funcrepr = triplet
-    __X = numpy.asmatrix(numpy.ravel( X )).T
+    __X = numpy.ravel( X ).reshape((-1,1))
     __sys_path_tmp = sys.path ; sys.path.insert(0,funcrepr["__userFunction__path"])
     __module = __import__(funcrepr["__userFunction__modl"], globals(), locals(), [])
     __fonction = getattr(__module,funcrepr["__userFunction__name"])
@@ -149,7 +149,7 @@ class FDApproximation(object):
         if dX is None:
             self.__dX     = None
         else:
-            self.__dX     = numpy.asmatrix(numpy.ravel( dX )).T
+            self.__dX     = numpy.ravel( dX )
         logging.debug("FDA Reduction des doublons de calcul : %s"%self.__avoidRC)
         if self.__avoidRC:
             logging.debug("FDA Tolerance de determination des doublons : %.2e"%self.__tolerBP)
@@ -176,8 +176,7 @@ class FDApproximation(object):
         if self.__mfEnabled:
             _HX = self.__userFunction( X, argsAsSerie = True )
         else:
-            _X = numpy.asmatrix(numpy.ravel( X )).T
-            _HX = numpy.ravel(self.__userFunction( _X ))
+            _HX = numpy.ravel(self.__userFunction( numpy.ravel(X) ))
         #
         return _HX
 
@@ -214,12 +213,14 @@ class FDApproximation(object):
         if X is None or len(X)==0:
             raise ValueError("Nominal point X for approximate derivatives can not be None or void (given X: %s)."%(str(X),))
         #
-        _X = numpy.asmatrix(numpy.ravel( X )).T
+        _X = numpy.ravel( X )
         #
         if self.__dX is None:
             _dX  = self.__increment * _X
         else:
-            _dX = numpy.asmatrix(numpy.ravel( self.__dX )).T
+            _dX = numpy.ravel( self.__dX )
+        assert len(_X) == len(_dX), "Inconsistent dX increment length with respect to the X one"
+        assert _X.size == _dX.size, "Inconsistent dX increment size with respect to the X one"
         #
         if (_dX == 0.).any():
             moyenne = _dX.mean()
@@ -234,7 +235,7 @@ class FDApproximation(object):
             __bidon, __alreadyCalculatedI = self.__doublon__(_dX, self.__listJPCI, self.__listJPIN, None)
             if __alreadyCalculatedP == __alreadyCalculatedI > -1:
                 __alreadyCalculated, __i = True, __alreadyCalculatedP
-                logging.debug("FDA Cas J déja calculé, récupération du doublon %i"%__i)
+                logging.debug("FDA Cas J déjà calculé, récupération du doublon %i"%__i)
         #
         if __alreadyCalculated:
             logging.debug("FDA   Calcul Jacobienne (par récupération du doublon %i)"%__i)
@@ -252,9 +253,9 @@ class FDApproximation(object):
                     _jobs = []
                     for i in range( len(_dX) ):
                         _dXi            = _dX[i]
-                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi     = numpy.array( _X, dtype=float )
                         _X_plus_dXi[i]  = _X[i] + _dXi
-                        _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_moins_dXi    = numpy.array( _X, dtype=float )
                         _X_moins_dXi[i] = _X[i] - _dXi
                         #
                         _jobs.append( (_X_plus_dXi,  self.__extraArgs, funcrepr) )
@@ -274,9 +275,9 @@ class FDApproximation(object):
                     _xserie = []
                     for i in range( len(_dX) ):
                         _dXi            = _dX[i]
-                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi     = numpy.array( _X, dtype=float )
                         _X_plus_dXi[i]  = _X[i] + _dXi
-                        _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_moins_dXi    = numpy.array( _X, dtype=float )
                         _X_moins_dXi[i] = _X[i] - _dXi
                         #
                         _xserie.append( _X_plus_dXi )
@@ -292,9 +293,9 @@ class FDApproximation(object):
                     _Jacobienne  = []
                     for i in range( _dX.size ):
                         _dXi            = _dX[i]
-                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi     = numpy.array( _X, dtype=float )
                         _X_plus_dXi[i]  = _X[i] + _dXi
-                        _X_moins_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_moins_dXi    = numpy.array( _X, dtype=float )
                         _X_moins_dXi[i] = _X[i] - _dXi
                         #
                         _HX_plus_dXi    = self.DirectOperator( _X_plus_dXi )
@@ -311,9 +312,9 @@ class FDApproximation(object):
                         "__userFunction__name" : self.__userFunction__name,
                     }
                     _jobs = []
-                    _jobs.append( (_X.A1, self.__extraArgs, funcrepr) )
+                    _jobs.append( (_X, self.__extraArgs, funcrepr) )
                     for i in range( len(_dX) ):
-                        _X_plus_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi    = numpy.array( _X, dtype=float )
                         _X_plus_dXi[i] = _X[i] + _dX[i]
                         #
                         _jobs.append( (_X_plus_dXi, self.__extraArgs, funcrepr) )
@@ -332,9 +333,9 @@ class FDApproximation(object):
                     #
                 elif self.__mfEnabled:
                     _xserie = []
-                    _xserie.append( _X.A1 )
+                    _xserie.append( _X )
                     for i in range( len(_dX) ):
-                        _X_plus_dXi    = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi    = numpy.array( _X, dtype=float )
                         _X_plus_dXi[i] = _X[i] + _dX[i]
                         #
                         _xserie.append( _X_plus_dXi )
@@ -352,7 +353,7 @@ class FDApproximation(object):
                     _HX = self.DirectOperator( _X )
                     for i in range( _dX.size ):
                         _dXi            = _dX[i]
-                        _X_plus_dXi     = numpy.array( _X.A1, dtype=float )
+                        _X_plus_dXi     = numpy.array( _X, dtype=float )
                         _X_plus_dXi[i]  = _X[i] + _dXi
                         #
                         _HX_plus_dXi = self.DirectOperator( _X_plus_dXi )
@@ -360,7 +361,7 @@ class FDApproximation(object):
                         _Jacobienne.append( numpy.ravel(( _HX_plus_dXi - _HX ) / _dXi) )
                 #
             #
-            _Jacobienne = numpy.asmatrix( numpy.vstack( _Jacobienne ) ).T
+            _Jacobienne = numpy.transpose( numpy.vstack( _Jacobienne ) )
             if self.__avoidRC:
                 if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
                 while len(self.__listJPCP) > self.__lenghtRJ:
@@ -406,10 +407,10 @@ class FDApproximation(object):
             #
             # Calcul de la valeur linéarisée de H en X appliqué à dX
             # ------------------------------------------------------
-            _dX = numpy.asmatrix(numpy.ravel( dX )).T
+            _dX = numpy.ravel( dX )
             _HtX = numpy.dot(_Jacobienne, _dX)
-            if self.__mfEnabled: return [_HtX.A1,]
-            else:                return _HtX.A1
+            if self.__mfEnabled: return [_HtX,]
+            else:                return _HtX
 
     # ---------------------------------------------------------
     def AdjointOperator(self, paire, **extraArgs ):
@@ -438,10 +439,10 @@ class FDApproximation(object):
             #
             # Calcul de la valeur de l'adjoint en X appliqué à Y
             # --------------------------------------------------
-            _Y = numpy.asmatrix(numpy.ravel( Y )).T
+            _Y = numpy.ravel( Y )
             _HaY = numpy.dot(_JacobienneT, _Y)
-            if self.__mfEnabled: return [_HaY.A1,]
-            else:                return _HaY.A1
+            if self.__mfEnabled: return [_HaY,]
+            else:                return _HaY
 
 # ==============================================================================
 def EnsembleOfCenteredPerturbations( _bgcenter, _bgcovariance, _nbmembers ):
@@ -850,7 +851,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
-            Pn_predicted = Q + Mt * Pn * Ma
+            Pn_predicted = Q + Mt * (Pn * Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
@@ -1543,7 +1544,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
-            Pn_predicted = Q + Mt * Pn * Ma
+            Pn_predicted = Q + Mt * (Pn * Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
@@ -3400,8 +3401,8 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = _Xn)
             Ma = Ma.reshape(_Xn.size,_Xn.size) # ADAO & check shape
             # Calcul du gradient par état adjoint
-            GradJo = GradJo + Ha * RI * _YmHMX # Équivaut pour Ha linéaire à : Ha( (_Xn, RI * _YmHMX) )
-            GradJo = Ma * GradJo               # Équivaut pour Ma linéaire à : Ma( (_Xn, GradJo) )
+            GradJo = GradJo + Ha * (RI * _YmHMX) # Équivaut pour Ha linéaire à : Ha( (_Xn, RI * _YmHMX) )
+            GradJo = Ma * GradJo                 # Équivaut pour Ma linéaire à : Ma( (_Xn, GradJo) )
         GradJ = numpy.ravel( GradJb ) - numpy.ravel( GradJo )
         return GradJ
     #
@@ -3485,7 +3486,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     # Obtention de l'analyse
     # ----------------------
-    Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
+    Xa = Minimum
     #
     selfA.StoredVariables["Analysis"].store( Xa )
     #
@@ -3578,7 +3579,7 @@ def stdkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm * Un
-            Pn_predicted = Q + Mt * Pn * Ma
+            Pn_predicted = Q + Mt * (Pn * Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
