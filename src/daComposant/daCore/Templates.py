@@ -230,21 +230,21 @@ UserPostAnalysisTemplates = TemplateStorage()
 
 UserPostAnalysisTemplates.store(
     name    = "AnalysisPrinter",
-    content = """import numpy\nxa=numpy.ravel(ADD.get('Analysis')[-1])\nprint('Analysis:',xa)""",
+    content = """print('# Post-analysis')\nimport numpy\nxa=numpy.ravel(ADD.get('Analysis')[-1])\nprint('Analysis',xa)""",
     fr_FR   = "Imprime sur la sortie standard la valeur optimale",
     en_EN   = "Print on standard output the optimal value",
     order   = "next",
     )
 UserPostAnalysisTemplates.store(
     name    = "AnalysisSaver",
-    content = """import numpy\nxa=numpy.ravel(ADD.get('Analysis')[-1])\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    content = """print('# Post-analysis')\nimport numpy\nxa=numpy.ravel(ADD.get('Analysis')[-1])\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
     fr_FR   = "Enregistre la valeur optimale dans un fichier du répertoire '/tmp' nommé 'analysis.txt'",
     en_EN   = "Save the optimal value in a file of the '/tmp' directory named 'analysis.txt'",
     order   = "next",
     )
 UserPostAnalysisTemplates.store(
     name    = "AnalysisPrinterAndSaver",
-    content = """import numpy\nxa=numpy.ravel(ADD.get('Analysis')[-1])\nprint 'Analysis:',xa\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    content = """print('# Post-analysis')\nimport numpy\nxa=numpy.ravel(ADD.get('Analysis')[-1])\nprint 'Analysis',xa\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur optimale",
     en_EN   = "Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value",
     order   = "next",

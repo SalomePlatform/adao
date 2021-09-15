@@ -28,6 +28,7 @@ __all__ = ["Aidsm"]
 
 import os
 import sys
+import inspect
 #
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
@@ -42,7 +43,8 @@ import logging
 class Aidsm(object):
     """ ADAO Internal Data Structure Model """
     def __init__(self, name = "", addViewers=None):
-        self.__name = str(name)
+        self.__name         = str(name)
+        self.__objname      = None
         self.__directory    = None
         self.__case = CaseLogger(self.__name, "case", addViewers)
         #
@@ -759,6 +761,9 @@ class Aidsm(object):
         if FileName is not None:
             self.dump( FileName, "TUI")
         self.__adaoObject["AlgorithmParameters"].executePythonScheme( self.__adaoObject )
+        if "UserPostAnalysis" in self.__adaoObject and len(self.__adaoObject["UserPostAnalysis"])>0:
+            __Upa = eval("\n".join([str(val).replace("ADD.","self.") for val in self.__adaoObject["UserPostAnalysis"]]))
+            exec(__Upa, {}, {'self':self})
         return 0
 
     def __executeYACSScheme(self, FileName=None):
@@ -781,7 +786,7 @@ class Aidsm(object):
         from numpy import array, matrix
         for __command in __commands:
             if (__command.find("set")>-1 and __command.find("set_")<0) or 'UserPostAnalysis' in __command:
-                exec("self."+__command)
+                exec("self."+__command, {}, locals())
             else:
                 self.__PostAnalysis.append(__command)
         return self
@@ -811,6 +816,20 @@ class Aidsm(object):
         else:
             __fullpath = __filename
         return __fullpath
+
+    def __retrieve_objname(self):
+        "Ne pas utiliser dans le __init__, la variable appelante n'existe pas encore"
+        __names  = []
+        for level in reversed(inspect.stack()):
+            __names += [name for name, value in level.frame.f_locals.items() if value is self]
+        __names += [name for name, value in globals().items() if value is self]
+        __names.remove('self') # Devrait toujours être trouvé, donc pas d'erreur
+        if len(__names) > 0:
+            logging.debug("Cet objet est appelé par au moins une variable :",__names)
+            self.__objname = __names[0]
+        else:
+            self.__objname = "ADD"
+        return self.__objname
 
     def __dir__(self):
         "Clarifie la visibilité des méthodes"

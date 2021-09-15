@@ -37,7 +37,9 @@ graphical interface (GUI). When one wants to elaborate "by hand" the TUI
 calculation case, it is recommended to extensively use all the ADAO module
 documentation, and to go back if necessary to the graphical interface (GUI), to
 get all the elements allowing to correctly set the commands. The general used
-notions and terms are defined in :ref:`section_theory`.
+notions and terms are defined in :ref:`section_theory`. As in the graphical
+interface, we point out that the TUI approach is intended to create and manage
+a single calculation case.
 
 .. _subsection_tui_creating:
 
@@ -516,7 +518,9 @@ Setting the calculation, outputs, etc.
     This command disables the detailed information mode when running.
 
 .. index:: single: Observer
+.. index:: single: Observer Template
 .. index:: single: setObserver
+.. index:: single: setObserver Template
 
 **setObserver** (*Variable, Template, String, Script, Info*)
     This command allows to set an *observer* on the current or final
@@ -531,19 +535,21 @@ Setting the calculation, outputs, etc.
     an information string or can be void.
 
 .. index:: single: UserPostAnalysis
+.. index:: single: UserPostAnalysis Template
 .. index:: single: setUserPostAnalysis
 .. index:: single: setUserPostAnalysis Template
 
 **setUserPostAnalysis** (*Template, String, Script*)
     This command allows to define the treatment of parameters or results after
-    the calculation algorithm has been performed. Its value is defined as a
-    predefined pattern name, a script file or a string. This allows to produce
-    directly post-processing code in an ADAO case. It is possible to use
-    patterns available by argument "*Template*" (which can be
+    the calculation algorithm has been performed. Its value is defined either
+    as a predefined pattern name, or as a script file name, or as a string.
+    This allows to produce directly post-processing code in an ADAO case. It is
+    possible to use patterns available by argument "*Template*" (which can be
     "*AnalysisPrinter*", "*AnalysisSaver*" and "*AnalysisPrinterAndSaver*"). In
     the case of a definition by "*Script*", the specified file must contain
     only the commands that could have been put after the execution of the
-    calculation.
+    calculation. Important note: this processing is only performed when the
+    case is executed in TUI or exported to YACS.
 
 Perform the calculation
 +++++++++++++++++++++++

@@ -38,7 +38,9 @@ cas de calcul TUI, on recommande de bien s'appuyer sur l'ensemble de la
 documentation du module ADAO, et de se reporter si nécessaire à l'interface
 graphique (GUI), pour disposer de l'ensemble des éléments permettant de
 renseigner correctement les commandes. Les notions générales et termes utilisés
-ici sont définis dans :ref:`section_theory`.
+ici sont définis dans :ref:`section_theory`. Comme dans l'interface graphique,
+on note que la démarche en TUI est destinée à créer et gérer un unique cas de
+calcul.
 
 .. _subsection_tui_creating:
 
@@ -539,7 +541,9 @@ Paramétrer le calcul, les sorties, etc.
     l'exécution.
 
 .. index:: single: Observer
+.. index:: single: Observer Template
 .. index:: single: setObserver
+.. index:: single: setObserver Template
 
 **setObserver** (*Variable, Template, String, Script, Info*)
     Cette commande permet de définir un *observer* sur une variable courante ou
@@ -555,19 +559,22 @@ Paramétrer le calcul, les sorties, etc.
     "*Info*" contient une chaîne de caractère d'information ou une chaine vide.
 
 .. index:: single: UserPostAnalysis
+.. index:: single: UserPostAnalysis Template
 .. index:: single: setUserPostAnalysis
 .. index:: single: setUserPostAnalysis Template
 
 **setUserPostAnalysis** (*Template, String, Script*)
     Cette commande permet de définir le traitement des paramètres ou des
     résultats après le déroulement de l'algorithme de calcul. Sa valeur est
-    définie comme nom de patron prédéfini, un fichier script ou une chaîne de
-    caractères. Cela permet de produire directement du code de post-processing
-    dans un cas ADAO. On peut d'utiliser les patrons disponibles par l'argument
-    "*Template*" (qui peut valoir "*AnalysisPrinter*", "*AnalysisSaver*" et
-    "*AnalysisPrinterAndSaver*"). Dans le cas d'une définition par "*Script*",
-    le fichier indiqué doit contenir uniquement les commandes que l'on aurait
-    pu mettre à la suite de l'exécution du calcul.
+    définie soit par un nom de patron prédéfini, soit par un nom de fichier
+    script, soit par une chaîne de caractères. Cela permet de produire
+    directement du code de post-processing dans un cas ADAO. On peut d'utiliser
+    les patrons disponibles par l'argument "*Template*" (qui peut valoir
+    "*AnalysisPrinter*", "*AnalysisSaver*" et "*AnalysisPrinterAndSaver*").
+    Dans le cas d'une définition par "*Script*", le fichier indiqué doit
+    contenir uniquement les commandes que l'on aurait pu mettre à la suite de
+    l'exécution du calcul. Remarque importante : ce traitement n'est exécuté
+    que lorsque le cas est exécuté en TUI ou exporté en YACS.
 
 Effectuer le calcul
 +++++++++++++++++++
