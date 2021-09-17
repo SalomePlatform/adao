@@ -97,16 +97,16 @@ calculs d'optimisation. Des conditions spécifiques doivent être utilisées pou
 ces vérifications.
 
 Un **opérateur d'observation** est toujours requis, en complément à l'opérateur
-de simulation. Cet opérateur d'observation, noté :math:`H` ou inclus dedans,
-doit convertir les sorties de la simulation numérique en quelque-chose qui est
-directement comparable aux observations. C'est un opérateur essentiel, car il
-est le moyen pratique de comparer les simulations et les observations. C'est
-usuellement réalisé par échantillonnage, projection ou intégration, des sorties
-de simulation, mais cela peut être plus compliqué. Souvent, du fait que
-l'opérateur d'observation fasse directement suite à celui de simulation dans un
-schéma simple d'assimilation de données, cet opérateur d'observation utilise
-fortement les capacités de post-traitement et d'extraction du code de
-simulation.
+de simulation, ou parfois directement inclus dedans. Cet opérateur
+d'observation, noté :math:`H`, doit convertir les sorties de la simulation
+numérique en quelque-chose qui est directement comparable aux observations.
+C'est un opérateur essentiel, car il est le moyen réel pratique de comparer les
+simulations et les observations. C'est usuellement réalisé par échantillonnage,
+projection ou intégration, des sorties de simulation, mais cela peut être plus
+compliqué. Souvent, du fait que l'opérateur d'observation fasse directement
+suite à celui de simulation dans un schéma simple d'assimilation de données,
+cet opérateur d'observation utilise fortement les capacités de post-traitement
+et d'extraction du code de simulation.
 
 .. _section_m_step2:
 

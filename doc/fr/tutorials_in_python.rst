@@ -210,7 +210,7 @@ conventionnels pour les variables requises. Ici toutes les variables sont
 définies dans le même script, mais l'utilisateur peut choisir de séparer le
 fichier en plusieurs autres, ou de mélanger une définition explicite des
 données dans l'interface textuelle ADAO et une définition implicite dans des
-fichiers externes. Le fichier script actuel ressemble à:
+fichiers externes. Le fichier script actuel ressemble à :
 ::
 
     import numpy

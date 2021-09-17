@@ -63,7 +63,7 @@ mathématiques utilisées sont expliquées dans la section :ref:`section_theory`
 .. _section_reference_special_entry:
 
 ========================================================================================
-**[DocR]** Entrées spéciales : fonctions, matrices, "*observer*"
+**[DocR]** Entrées spéciales : fonctions, matrices, "*observer*", post-traitement
 ========================================================================================
 
 Cette section décrit les entrées spéciales, comme les formes fonctionnelles ou
@@ -76,6 +76,7 @@ sont expliquées dans la section :ref:`section_theory`.
    ref_operator_requirements
    ref_covariance_requirements
    ref_observers_requirements
+   ref_userpostanalysis_requirements
 
 .. _section_reference_assimilation:
 

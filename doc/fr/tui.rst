@@ -573,7 +573,9 @@ Paramétrer le calcul, les sorties, etc.
     "*AnalysisPrinter*", "*AnalysisSaver*" et "*AnalysisPrinterAndSaver*").
     Dans le cas d'une définition par "*Script*", le fichier indiqué doit
     contenir uniquement les commandes que l'on aurait pu mettre à la suite de
-    l'exécution du calcul. Remarque importante : ce traitement n'est exécuté
+    l'exécution du calcul. On se reportera à la description des
+    :ref:`section_ref_userpostanalysis_requirements` pour avoir la liste des
+    modèles et leur format. Remarque importante : ce traitement n'est exécuté
     que lorsque le cas est exécuté en TUI ou exporté en YACS.
 
 Effectuer le calcul

@@ -63,7 +63,7 @@ are explained in the section :ref:`section_theory`.
 .. _section_reference_special_entry:
 
 ========================================================================================
-**[DocR]** Special entries: functions, matrices, "*observer*"
+**[DocR]** Special entries: functions, matrices, "*observer*", post-processing
 ========================================================================================
 
 This section describes the special entries, as the functional or matrix forms,
@@ -76,6 +76,7 @@ the section :ref:`section_theory`.
    ref_operator_requirements
    ref_covariance_requirements
    ref_observers_requirements
+   ref_userpostanalysis_requirements
 
 .. _section_reference_assimilation:
 

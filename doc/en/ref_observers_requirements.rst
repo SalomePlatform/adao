@@ -63,8 +63,9 @@ figure:
 
 The "*observer*" function can be given as an explicit script (entry of type
 "*String*"), as a script in an external file (entry of type "*Script*"), or by
-using a template or pattern (entry of type"*Template*") available by default in
-ADAO when using the graphical editor and detailed in the following part
+using a template or pattern (entry of type"*Template*"). The templates are
+available by default in ADAO using the graphical interface EFICAS or the text
+interface TUI, and are detailed in the following
 :ref:`section_ref_observers_templates`. These templates are simple scripts that
 can be tuned by the user, either in the integrated edition stage of the case
 with ADAO EFICAS, or in the edition stage of the schema before execution, to
@@ -125,8 +126,8 @@ Inventory of available "*observer*" function models ("*Template*")
 
 .. index:: single: ValuePrinter (Observer)
 
-Template **ValuePrinter** :
-...........................
+Template **ValuePrinter**
+.........................
 
 Print on standard output the current value of the variable.
 
@@ -136,8 +137,8 @@ Print on standard output the current value of the variable.
 
 .. index:: single: ValueAndIndexPrinter (Observer)
 
-Template **ValueAndIndexPrinter** :
-...................................
+Template **ValueAndIndexPrinter**
+.................................
 
 Print on standard output the current value of the variable, adding its index.
 
@@ -147,8 +148,8 @@ Print on standard output the current value of the variable, adding its index.
 
 .. index:: single: ValueSeriePrinter (Observer)
 
-Template **ValueSeriePrinter** :
-................................
+Template **ValueSeriePrinter**
+..............................
 
 Print on standard output the value series of the variable.
 
@@ -158,8 +159,8 @@ Print on standard output the value series of the variable.
 
 .. index:: single: ValueSaver (Observer)
 
-Template **ValueSaver** :
-.........................
+Template **ValueSaver**
+.......................
 
 Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
 
@@ -179,8 +180,8 @@ Save the current value of the variable in a file of the '/tmp' directory named '
 
 .. index:: single: ValueSerieSaver (Observer)
 
-Template **ValueSerieSaver** :
-..............................
+Template **ValueSerieSaver**
+............................
 
 Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
 
@@ -200,8 +201,8 @@ Save the value series of the variable in a file of the '/tmp' directory named 'v
 
 .. index:: single: ValuePrinterAndSaver (Observer)
 
-Template **ValuePrinterAndSaver** :
-...................................
+Template **ValuePrinterAndSaver**
+.................................
 
 Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable.
 
@@ -222,8 +223,8 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
 
 .. index:: single: ValueIndexPrinterAndSaver (Observer)
 
-Template **ValueIndexPrinterAndSaver** :
-........................................
+Template **ValueIndexPrinterAndSaver**
+......................................
 
 Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable, adding its index.
 
@@ -244,8 +245,8 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
 
 .. index:: single: ValueSeriePrinterAndSaver (Observer)
 
-Template **ValueSeriePrinterAndSaver** :
-........................................
+Template **ValueSeriePrinterAndSaver**
+......................................
 
 Print on standard output and, in the same time, save in a file of the '/tmp' directory, the value series of the variable.
 
@@ -266,8 +267,8 @@ Print on standard output and, in the same time, save in a file of the '/tmp' dir
 
 .. index:: single: ValueGnuPlotter (Observer)
 
-Template **ValueGnuPlotter** :
-..............................
+Template **ValueGnuPlotter**
+............................
 
 Graphically plot with Gnuplot the current value of the variable.
 
@@ -288,8 +289,8 @@ Graphically plot with Gnuplot the current value of the variable.
 
 .. index:: single: ValueSerieGnuPlotter (Observer)
 
-Template **ValueSerieGnuPlotter** :
-...................................
+Template **ValueSerieGnuPlotter**
+.................................
 
 Graphically plot with Gnuplot the value series of the variable.
 
@@ -310,8 +311,8 @@ Graphically plot with Gnuplot the value series of the variable.
 
 .. index:: single: ValuePrinterAndGnuPlotter (Observer)
 
-Template **ValuePrinterAndGnuPlotter** :
-........................................
+Template **ValuePrinterAndGnuPlotter**
+......................................
 
 Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable.
 
@@ -333,8 +334,8 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 
 .. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
 
-Template **ValueSeriePrinterAndGnuPlotter** :
-.............................................
+Template **ValueSeriePrinterAndGnuPlotter**
+...........................................
 
 Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable.
 
@@ -356,8 +357,8 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 
 .. index:: single: ValuePrinterSaverAndGnuPlotter (Observer)
 
-Template **ValuePrinterSaverAndGnuPlotter** :
-.............................................
+Template **ValuePrinterSaverAndGnuPlotter**
+...........................................
 
 Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable.
 
@@ -389,8 +390,8 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
 
 .. index:: single: ValueSeriePrinterSaverAndGnuPlotter (Observer)
 
-Template **ValueSeriePrinterSaverAndGnuPlotter** :
-..................................................
+Template **ValueSeriePrinterSaverAndGnuPlotter**
+................................................
 
 Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable.
 
@@ -422,8 +423,8 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
 
 .. index:: single: ValueMean (Observer)
 
-Template **ValueMean** :
-........................
+Template **ValueMean**
+......................
 
 Print on standard output the mean of the current value of the variable.
 
@@ -434,8 +435,8 @@ Print on standard output the mean of the current value of the variable.
 
 .. index:: single: ValueStandardError (Observer)
 
-Template **ValueStandardError** :
-.................................
+Template **ValueStandardError**
+...............................
 
 Print on standard output the standard error of the current value of the variable.
 
@@ -446,8 +447,8 @@ Print on standard output the standard error of the current value of the variable
 
 .. index:: single: ValueVariance (Observer)
 
-Template **ValueVariance** :
-............................
+Template **ValueVariance**
+..........................
 
 Print on standard output the variance of the current value of the variable.
 
@@ -458,8 +459,8 @@ Print on standard output the variance of the current value of the variable.
 
 .. index:: single: ValueL2Norm (Observer)
 
-Template **ValueL2Norm** :
-..........................
+Template **ValueL2Norm**
+........................
 
 Print on standard output the L2 norm of the current value of the variable.
 
@@ -471,8 +472,8 @@ Print on standard output the L2 norm of the current value of the variable.
 
 .. index:: single: ValueRMS (Observer)
 
-Template **ValueRMS** :
-.......................
+Template **ValueRMS**
+.....................
 
 Print on standard output the root mean square (RMS), or quadratic mean, of the current value of the variable.
 

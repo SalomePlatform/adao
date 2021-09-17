@@ -58,9 +58,9 @@
 
 .. warning::
 
-    Il est recommandé de vérifier les fichiers textes ou binaires, avant de les
-    utiliser en entrée de ce type. Diverses vérifications sont effectuées au
-    chargement, mais la variété des erreurs potentielles est grande. Dans la
-    pratique, en respectant les exigences de nommage des variables et de
-    commentaires, des fichiers textes issus de programmes ou de tableurs sont
-    (la plupart du temps) compatibles.
+    Il est recommandé, avant de les utiliser en entrée de ce type, de bien
+    vérifier les fichiers textes ou binaires. Diverses vérifications sont
+    effectuées au chargement, mais la variété des erreurs potentielles est
+    grande. Dans la pratique, en respectant les exigences de nommage des
+    variables et de commentaires, des fichiers textes issus de programmes ou de
+    tableurs classiques sont (la plupart du temps) compatibles.

@@ -56,8 +56,8 @@
 
 .. warning::
 
-    It is recommended to check text or binary files before using them as an
-    input of this type. Various checks are carried out on loading, but the
-    variety of potential errors is great. In practice, by respecting the
+    It is recommended, before using them as an input of this type, to carefully
+    check text or binary files . Various checks are carried out on loading, but
+    the variety of potential errors is great. In practice, by respecting the
     requirements for naming variables and comments, text files from programs or
     spreadsheets are (most of the time) compatible.

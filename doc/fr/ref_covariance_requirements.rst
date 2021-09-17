@@ -94,7 +94,8 @@ doit être fournie.
 Cela peut être réalisé soit par un vecteur ou une matrice Numpy, soit par une
 liste de listes de valeurs (c'est-à-dire une liste de lignes). Par exemple, une
 matrice simple diagonale unitaire de covariances des erreurs d'ébauche
-:math:`\mathbf{B}` peut être décrite dans un fichier de script Python par::
+:math:`\mathbf{B}` peut être décrite dans un fichier de script Python par :
+::
 
     BackgroundError = [[1, 0 ... 0], [0, 1 ... 0] ... [0, 0 ... 1]]
 
@@ -126,7 +127,8 @@ Le multiplicateur :math:`m` doit être un nombre réel ou entier positif (s'il
 est négatif, ce qui est impossible car une matrice de covariance est positive,
 il est convertit en nombre positif). Par exemple, une simple matrice diagonale
 unitaire de covariances des erreurs d'ébauche :math:`\mathbf{B}` peut être
-décrite dans un fichier de script Python par::
+décrite dans un fichier de script Python par :
+::
 
     BackgroundError = 1.
 
@@ -160,11 +162,13 @@ une liste, soit par une liste de listes de valeurs positives (dans tous les cas,
 si certaines valeurs sont négatives, elles sont converties en valeurs
 positives). Par exemple, un matrice simple diagonale unitaire des covariances
 des erreurs d'ébauche :math:`\mathbf{B}` peut être décrite dans un fichier de
-script Python par::
+script Python par :
+::
 
     BackgroundError = [1, 1 ... 1]
 
-ou::
+ou:
+::
 
     BackgroundError = numpy.ones(...)
 

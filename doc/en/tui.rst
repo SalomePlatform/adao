@@ -548,8 +548,10 @@ Setting the calculation, outputs, etc.
     "*AnalysisPrinter*", "*AnalysisSaver*" and "*AnalysisPrinterAndSaver*"). In
     the case of a definition by "*Script*", the specified file must contain
     only the commands that could have been put after the execution of the
-    calculation. Important note: this processing is only performed when the
-    case is executed in TUI or exported to YACS.
+    calculation.  We refer to the description of
+    :ref:`section_ref_userpostanalysis_requirements` for the list of templates
+    and their format. Important note: this processing is only performed when
+    the case is executed in TUI or exported to YACS.
 
 Perform the calculation
 +++++++++++++++++++++++
@@ -670,7 +672,7 @@ Independent holding of the results of a calculation case
 The objective is to perform in TUI the setting of data for an ADAO calculation
 case, its execution, and then the retrieving of the results to follow on a
 independent holding of these results (this last step not being described here,
-because it depends on the the user).
+because it depends on the user).
 
 The hypothesis of the user case are the following ones. It is assumed:
 

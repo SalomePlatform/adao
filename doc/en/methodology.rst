@@ -91,14 +91,15 @@ before establishing optimization calculations. Specific conditions has to be
 used for these checkings.
 
 An **observation operator** is always required, in complement of the simulation
-operator. This observation operator, denoted as :math:`H` or included in, has to
-convert the numerical simulation outputs into something that is directly
-comparable to observations. It is an essential operator, as it is the practical
-way to compare simulations and observations. It is usually done by sampling,
-projection or integration, of the simulation outputs, but it can be more
-complicated. Often, because the observation operator directly follows the
-simulation one in simple data assimilation schemes, this observation operator
-heavily use the postprocessing and extraction capacities of the simulation code.
+operator, or sometimes directly included in. This observation operator, denoted
+as :math:`H`, has to convert the numerical simulation outputs into something
+that is directly comparable to observations. It is an essential operator, as it
+is the real practical way to compare simulations and observations. It is
+usually done by sampling, projection or integration, of the simulation outputs,
+but it can be more complicated. Often, because the observation operator
+directly follows the simulation one in simple data assimilation schemes, this
+observation operator heavily use the postprocessing and extraction capacities
+of the simulation code.
 
 .. _section_m_step2:
 
