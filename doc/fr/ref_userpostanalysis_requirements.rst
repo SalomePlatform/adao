@@ -92,7 +92,8 @@ Une série de commandes de post-traitement est un script Python spécial, qui es
 automatiquement activée à la fin des calculs d'estimation dans ADAO. Toutes les
 commandes Python, qu'un utilisateur peut ajouter après un calcul ADAO en
 interface graphique TUI, peuvent faire partie de ce post-traitement. Plusieurs
-modèles de série de commandes sont disponibles par défaut.
+modèles de série de commandes sont disponibles par défaut, essentiellement pour
+donner un exemple le plus simple possible d'enregistrement de ces séries.
 
 Pour être utilisable de manière automatique, il est requis tout appel du cas de
 calcul ADAO, pour récupérer une variable, se fasse uniquement avec le nom

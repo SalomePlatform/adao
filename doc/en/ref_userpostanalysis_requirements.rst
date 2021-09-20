@@ -91,7 +91,8 @@ A set of post-processing commands is a special Python script, which is
 automatically activated at the end of the estimation calculations in ADAO. Any
 Python commands, which a user can add after a TUI calculation in ADAO, can be
 part of this post-processing. Several command set templates are available by
-default.
+default,essentially to give the simplest possible example of recording these
+series.
 
 To be usable in an automatic way, it is required that any call of the ADAO
 calculation case, to recover a variable, is done only with the reserved name

@@ -68,8 +68,9 @@ robust formulations are proposed here:
 - "EnKF" (Ensemble Kalman Filter, see [Evensen94]_), original stochastic algorithm, allowing consistent treatment of non-linear evolution operator,
 - "ETKF" (Ensemble-Transform Kalman Filter), deterministic EnKF algorithm, allowing treatment of non-linear evolution operator with a lot less members (one recommends to use a number of members on the order of 10 or even sometimes less),
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), ETKF algorithm of "finite size N", yhat doesn't need inflation that is often required with the other algorithms,
-- "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF scheme, allowing in addition the consistent treament of non-linear observation operator,
-- "IEnKF" (Iterative EnKF), deterministic EnKF scheme, improving treament of operators non-linearities.
+- "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF algorithm, allowing in addition the consistent treament of non-linear observation operator,
+- "IEnKF" (Iterative EnKF), deterministic EnKF algorithm, improving treament of operators non-linearities
+- "EnKS" (Ensemble Kalman Smoother), smoothing algorithm with a fixed time lag L.
 
 Without being a universal recommandation, one recommend to use "EnKF" as a
 reference algorithm, and the other algorithms (in this order) as means to
@@ -104,6 +105,8 @@ obtain less costly data assimilation with hopefully the same quality.
 .. include:: snippets/NumberOfMembers.rst
 
 .. include:: snippets/SetSeed.rst
+
+.. include:: snippets/SmootherLagL.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

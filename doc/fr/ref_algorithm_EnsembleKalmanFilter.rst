@@ -69,8 +69,9 @@ formulations stables et robustes suivantes :
 - "EnKF" (Ensemble Kalman Filter, voir [Evensen94]_), algorithme stochastique original, permettant de traiter de manière consistante un opérateur d'évolution non-linéaire,
 - "ETKF" (Ensemble-Transform Kalman Filter), algorithme déterministe d'EnKF, permettant de traiter un opérateur d'évolution non-linéaire avec beaucoup moins de membres (on recommande d'utiliser un nombre de membres de l'ordre de 10 ou même parfois moins),
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), algorithme d'ETKF dit de "taille finie N", évitant de recourir à une inflation souvent nécessaire avec les autres algorithmes,
-- "MLEF" (Maximum Likelihood Kalman Filter, voir [Zupanski05]_), schéma déterministe d'EnKF, permettant en plus de traiter de manière consistante un opérateur d'observation non-linéaire),
-- "IEnKF" (Iterative EnKF), schéma déterministe d'EnKF, améliorant le traitement des non-linéarités des opérateurs.
+- "MLEF" (Maximum Likelihood Kalman Filter, voir [Zupanski05]_), algorithme déterministe d'EnKF, permettant en plus de traiter de manière consistante un opérateur d'observation non-linéaire),
+- "IEnKF" (Iterative EnKF), algorithme déterministe d'EnKF, améliorant le traitement des non-linéarités des opérateurs,
+- "EnKS" (Ensemble Kalman Smoother), algorithme de lissage avec un décalage fixe.
 
 Sans pouvoir prétendre à l'universalité, on recommande d'utiliser l'"EnKF"
 comme référence, et les autres algorithmes (dans l'ordre) comme des moyens pour
@@ -106,6 +107,8 @@ obtenir une assimilation de données plus économique et de qualité
 .. include:: snippets/NumberOfMembers.rst
 
 .. include:: snippets/SetSeed.rst
+
+.. include:: snippets/SmootherLagL.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
