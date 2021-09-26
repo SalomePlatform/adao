@@ -762,7 +762,9 @@ class Aidsm(object):
             self.dump( FileName, "TUI")
         self.__adaoObject["AlgorithmParameters"].executePythonScheme( self.__adaoObject )
         if "UserPostAnalysis" in self.__adaoObject and len(self.__adaoObject["UserPostAnalysis"])>0:
-            __Upa = eval("\n".join([str(val).replace("ADD.","self.") for val in self.__adaoObject["UserPostAnalysis"]]))
+            self.__objname = self.__retrieve_objname()
+            __Upa = [str(val).replace("ADD.","self.").replace(self.__objname+".","self.") for val in self.__adaoObject["UserPostAnalysis"]]
+            __Upa = eval("\n".join(__Upa))
             exec(__Upa, {}, {'self':self})
         return 0
 

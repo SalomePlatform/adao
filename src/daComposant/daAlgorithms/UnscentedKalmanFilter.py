@@ -29,12 +29,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "UNSCENTEDKALMANFILTER")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "CUKF",
+            default  = "2UKF",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "UKF",
-                "CUKF",
+                "2UKF",
                 ],
             )
         self.defineRequiredParameter(
@@ -143,9 +143,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NumericObjects.uskf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        # Default CUKF
-        elif self._parameters["Variant"] == "CUKF":
-            NumericObjects.uckf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        # Default 2UKF
+        elif self._parameters["Variant"] == "2UKF":
+            NumericObjects.c2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

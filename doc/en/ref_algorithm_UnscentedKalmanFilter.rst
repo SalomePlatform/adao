@@ -54,10 +54,10 @@ with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
 .. index::
     pair: Variant ; UKF
-    pair: Variant ; CUKF
+    pair: Variant ; 2UKF
 
 A difference is made between the "unscented" Kalman filter taking into account
-bounds on the states (the variant named "CUKF", which is recommended and used
+bounds on the states (the variant named "2UKF", which is recommended and used
 by default), and the "unscented" Kalman filter conducted without any constraint
 (the variant named "UKF", which is not recommended).
 

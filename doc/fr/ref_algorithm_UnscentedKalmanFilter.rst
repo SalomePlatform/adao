@@ -55,10 +55,10 @@ opérateurs à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
 .. index::
     pair: Variant ; UKF
-    pair: Variant ; CUKF
+    pair: Variant ; 2UKF
 
 On fait une différence entre le filtre de Kalman "unscented" tenant compte de
-bornes sur les états (la variante nommée "CUKF", qui est recommandée et qui est
+bornes sur les états (la variante nommée "2UKF", qui est recommandée et qui est
 utilisée par défaut), et le filtre de Kalman "unscented" conduit sans
 aucune contrainte (la variante nommée "UKF", qui n'est pas recommandée).
 
