@@ -73,8 +73,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       debug("tabChanged " + str(index))
       # This signal is also emit when a new case is created/added
       # On regarde que le dictionnaire contient l'index
-      if index in self.viewmanager.dict_editors.keys():
-        self.notifyObserver(EficasEvent.EVENT_TYPES.TABCHANGED, callbackId=self.viewmanager.dict_editors[index])
+      if index in self.viewmanager.dictEditors.keys():
+        self.notifyObserver(EficasEvent.EVENT_TYPES.TABCHANGED, callbackId=self.viewmanager.dictEditors[index])
 
 #######
 #
@@ -89,7 +89,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       qtEficas.Appli.fileNew(self)
       index = self.viewmanager.myQtab.currentIndex()
       adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-      adao_case.setEditor(self.viewmanager.dict_editors[index])
+      adao_case.setEditor(self.viewmanager.dictEditors[index])
       self.notifyObserver(EficasEvent.EVENT_TYPES.NEW, callbackId=adao_case)
 
     def adaoFileSave(self, adao_case):
@@ -98,8 +98,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       if ok:
         index = self.viewmanager.myQtab.currentIndex()
         adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-        adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-        adao_case.setEditor(self.viewmanager.dict_editors[index])
+        adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+        adao_case.setEditor(self.viewmanager.dictEditors[index])
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def adaoFileSaveAs(self, adao_case):
@@ -108,8 +108,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       if ok:
         index = self.viewmanager.myQtab.currentIndex()
         adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-        adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-        adao_case.setEditor(self.viewmanager.dict_editors[index])
+        adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+        adao_case.setEditor(self.viewmanager.dictEditors[index])
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def adaoFileOpen(self, adao_case):
@@ -121,14 +121,14 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         if self.viewmanager.myQtab.count() > tab_number:
           index = self.viewmanager.myQtab.currentIndex()
           adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-          adao_case.filename      = str(self.viewmanager.dict_editors[index].fichier)
-          adao_case.setEditor(self.viewmanager.dict_editors[index])
+          adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+          adao_case.setEditor(self.viewmanager.dictEditors[index])
           self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN, callbackId=adao_case)
 
     def adaoFileClose(self, adao_case):
 
         index = self.viewmanager.myQtab.currentIndex()
-        close_editor = self.viewmanager.dict_editors[index]
+        close_editor = self.viewmanager.dictEditors[index]
         res = self.viewmanager.handleClose(self)
         if res != 2: # l utilsateur a annule
           if close_editor.fichier is None:
@@ -147,8 +147,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def selectCase(self, editor):
       rtn = False
-      for indexEditor in self.viewmanager.dict_editors.keys():
-        if editor is self.viewmanager.dict_editors[indexEditor]:
+      for indexEditor in self.viewmanager.dictEditors.keys():
+        if editor is self.viewmanager.dictEditors[indexEditor]:
           self.viewmanager.myQtab.setCurrentIndex(indexEditor)
           rtn = True
           break
@@ -158,7 +158,7 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       index = self.viewmanager.myQtab.currentIndex()
       editor = None
       if index >= 0:
-        editor = self.viewmanager.dict_editors[index]
+        editor = self.viewmanager.dictEditors[index]
       return editor
 
 

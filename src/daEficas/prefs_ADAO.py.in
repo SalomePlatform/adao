@@ -71,6 +71,7 @@ else:
 # Pilotage des sous-fenetres d'EFICAS
 closeAutreCommande = True
 closeFrameRechercheCommande = True
+closeFrameRechercheCommandeSurPageDesCommandes = True
 closeEntete = True
 closeArbre = True
 taille = 800
