@@ -56,7 +56,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ]
             )
         self.requireInputArguments(
-            mandatory= ("Y", "HO", "R"),
+            mandatory= ("Y", "HO"),
+            optional = ("R"),
             )
         self.setAttributes(tags=(
             "Optimization",
@@ -72,13 +73,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ha = HO["Adjoint"].asMatrix(Xb)
         Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
         #
-        RI = R.getI()
+        if R is None:
+            RI = 1.
+        else:
+            RI = R.getI()
         #
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
         K = (Ha * RI * Hm).I * Ha * RI
         Xa =  K * Y
-        self.StoredVariables["Analysis"].store( Xa.A1 )
+        self.StoredVariables["Analysis"].store( Xa )
         #
         # Calcul de la fonction coût
         # --------------------------
@@ -109,19 +113,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
+            self.StoredVariables["CurrentState"].store( Xa )
         if self._toStore("CurrentOptimum"):
-            self.StoredVariables["CurrentOptimum"].store( numpy.ravel(Xa) )
+            self.StoredVariables["CurrentOptimum"].store( Xa )
         if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+            self.StoredVariables["OMA"].store( oma )
         if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( HXa )
         if self._toStore("SimulatedObservationAtCurrentOptimum"):
-            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( HXa )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
         self._post_run(HO)
         return 0

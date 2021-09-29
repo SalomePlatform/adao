@@ -546,7 +546,7 @@ for algo in all_names:
         elif pt is float:
             algo_parameters += """        %s = SIMP(statut="f", typ="R"%s%s, min=1, max=1, defaut=%s, fr="%s"),\n"""%(pn,vi,vs,float(pd),pm)
         elif pt is bool:
-            algo_parameters += """        %s = SIMP(statut="f", typ="I", min=1, max=1, defaut=%s, fr="%s"),\n"""%(pn,int(pd),pm)
+            algo_parameters += """        %s = SIMP(statut="f", typ="I", into=(0, 1), min=1, max=1, defaut=%s, fr="%s"),\n"""%(pn,int(pd),pm)
         elif pt is str and "listval" in par_dict[pn]:
             algo_parameters += """        %s = SIMP(statut="f", typ="TXM", min=1, max=1, defaut="%s", into=%s, fr="%s"),\n"""%(pn,pd,par_dict[pn]["listval"],pm)
         elif pt is tuple and "listval" in par_dict[pn]:

@@ -183,6 +183,8 @@ class _COMViewer(GenericCaseViewer):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         __suppparameters = {}
         if __multilines is not None:
+            if 'adaoBuilder' in __multilines:
+                raise ValueError("Impossible to load given content as an ADAO COMM one (Hint: it's perhaps not a COMM input, but a TUI one).")
             if "ASSIMILATION_STUDY" in __multilines:
                 __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
                 __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
