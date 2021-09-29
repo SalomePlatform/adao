@@ -59,6 +59,7 @@ UI_ELT_IDS = Enumerate([
         'VALIDATE_ADAOCASE_ID',
         'SHOWTREE_ADAOCASE_ID',
         'CLOSE_ADAOCASE_ID',
+        'TUI_EXPORT_ID',
         'YACS_EXPORT_ID',
         ],offset=6950)
 
@@ -71,6 +72,7 @@ ACTIONS_MAP={
     UI_ELT_IDS.SHOWTREE_ADAOCASE_ID:"showTreeAdaoCase",
     UI_ELT_IDS.CLOSE_ADAOCASE_ID:"closeAdaoCase",
     UI_ELT_IDS.YACS_EXPORT_ID:"exportCaseToYACS",
+    UI_ELT_IDS.TUI_EXPORT_ID:"exportTUIFile",
 }
 
 
@@ -321,7 +323,7 @@ class AdaoCaseManager(EficasObserver):
 #######
 #
 # Gestion de l'affichage de l'arbre EFICAS
-# 1: la fonction showTreeAdaoCase est appelee par le GUI SALOME
+# 1: la fonction showTreeAdaoCase est appelée par le GUI SALOME
 #
 #######
 
@@ -337,9 +339,10 @@ class AdaoCaseManager(EficasObserver):
 #######
 #
 # Gestion de la connexion avec YACS
-# 1: la fonction exportCaseToYACS exporte l'etude vers YACS
+# 1: la fonction exportCaseToYACS exporte l'étude vers YACS
 #
 #######
+
   def exportCaseToYACS(self):
     adaoLogger.debug("Export du cas vers YACS")
 
@@ -356,6 +359,29 @@ class AdaoCaseManager(EficasObserver):
             adaoGuiHelper.gui_warning(SalomePyQt.SalomePyQt().getDesktop(), msg)
         else:
           adaoGuiHelper.gui_warning(SalomePyQt.SalomePyQt().getDesktop(), "ADAO/EFICAS case can't be exported to ADAO/YACS, it is incomplete or invalid. Please return to ADAO/EFICAS edition stage.")
+        break
+
+#######
+#
+# Gestion de l'export en TUI
+# 1: la fonction exportTUIFile exporte l'étude en TUI
+#
+#######
+
+  def exportTUIFile(self):
+    adaoLogger.debug("Export du cas en TUI")
+
+    # A priori, l'utilisateur s'attend a exporter le cas qui est ouvert
+    # dans le GUI d'Eficas
+    self.harmonizeSelectionFromEficas()
+    salomeStudyItem = adaoGuiHelper.getSelectedItem()
+    for case_name, adao_case in self.cases.items():
+      if hasattr(salomeStudyItem,"GetID") and adao_case.salome_study_item.GetID() == salomeStudyItem.GetID():
+        if adao_case.isOk():
+          msg = adao_case.exportTUIFile()
+          adaoGuiHelper.gui_information(SalomePyQt.SalomePyQt().getDesktop(), msg)
+        else:
+          adaoGuiHelper.gui_warning(SalomePyQt.SalomePyQt().getDesktop(), "ADAO/EFICAS case can't be exported to ADAO/TUI, it is incomplete or invalid. Please return to ADAO/EFICAS edition stage.")
         break
 
 #######
@@ -436,6 +462,9 @@ class AdaoGuiUiComponentBuilder:
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.SHOWTREE_ADAOCASE_ID, "Show tree", "Show tree", "Show the commands tree", "eficas_tree.png" )
+        sgPyQt.createMenu(a, mid)
+        sgPyQt.createTool(a, tid)
+        a = sgPyQt.createAction( UI_ELT_IDS.TUI_EXPORT_ID, "Export to TUI", "Export to TUI", "Generate an ADAO TUI version of this case", "eficas_totui.png" )
         sgPyQt.createMenu(a, mid)
         sgPyQt.createTool(a, tid)
         a = sgPyQt.createAction( UI_ELT_IDS.CLOSE_ADAOCASE_ID, "Close case", "Close case", "Close an ADAO case", "eficas_close.png" )
