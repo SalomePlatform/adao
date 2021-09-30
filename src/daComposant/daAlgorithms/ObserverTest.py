@@ -68,7 +68,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.StoredVariables["SigmaObs2"].store( 1. )
         self.StoredVariables["SigmaBck2"].store( 1. )
         self.StoredVariables["MahalanobisConsistency"].store( 1. )
-        self.StoredVariables["SimulationQuantiles"].store( numpy.matrix((__YY,__YY,__YY)) )
+        self.StoredVariables["SimulationQuantiles"].store( numpy.array((__YY,__YY,__YY)) )
         self.StoredVariables["SimulatedObservationAtBackground"].store( __YY )
         self.StoredVariables["SimulatedObservationAtCurrentState"].store( __YY )
         self.StoredVariables["SimulatedObservationAtOptimum"].store( __YY )

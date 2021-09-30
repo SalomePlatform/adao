@@ -890,7 +890,7 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         XEtnnp = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
-                XEtnnpi = numpy.asmatrix(numpy.ravel( Mm( (Xnp[:,point], Un) ) )).T
+                XEtnnpi = numpy.asarray( Mm( (Xnp[:,point], Un) ) ).reshape((-1,1))
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                     XEtnnpi = XEtnnpi + Cm * Un
@@ -899,10 +899,10 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 XEtnnpi = Xnp[:,point]
-            XEtnnp.append( XEtnnpi )
-        XEtnnp = numpy.hstack( XEtnnp )
+            XEtnnp.append( numpy.ravel(XEtnnpi).reshape((-1,1)) )
+        XEtnnp = numpy.concatenate( XEtnnp, axis=1 )
         #
-        Xncm = numpy.matrix( XEtnnp.getA()*numpy.array(Wm) ).sum(axis=1)
+        Xncm = ( XEtnnp * Wm ).sum(axis=1)
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             Xncm = ApplyBounds( Xncm, selfA._parameters["Bounds"] )
@@ -910,14 +910,14 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         if selfA._parameters["EstimationOf"] == "State":        Pnm = Q
         elif selfA._parameters["EstimationOf"] == "Parameters": Pnm = 0.
         for point in range(nbSpts):
-            Pnm += Wc[i] * (XEtnnp[:,point]-Xncm) * (XEtnnp[:,point]-Xncm).T
+            Pnm += Wc[i] * ((XEtnnp[:,point]-Xncm).reshape((-1,1)) * (XEtnnp[:,point]-Xncm))
         #
         if selfA._parameters["EstimationOf"] == "Parameters" and selfA._parameters["Bounds"] is not None:
             Pnmdemi = selfA._parameters["Reconditioner"] * numpy.real(scipy.linalg.sqrtm(Pnm))
         else:
             Pnmdemi = numpy.real(scipy.linalg.sqrtm(Pnm))
         #
-        Xnnp = numpy.hstack([Xncm, Xncm+Gamma*Pnmdemi, Xncm-Gamma*Pnmdemi])
+        Xnnp = numpy.hstack([Xncm.reshape((-1,1)), Xncm.reshape((-1,1))+Gamma*Pnmdemi, Xncm.reshape((-1,1))-Gamma*Pnmdemi])
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             for point in range(nbSpts):
@@ -926,27 +926,27 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Ynnp = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
-                Ynnpi = numpy.asmatrix(numpy.ravel( Hm( (Xnnp[:,point], None) ) )).T
+                Ynnpi = Hm( (Xnnp[:,point], None) )
             elif selfA._parameters["EstimationOf"] == "Parameters":
-                Ynnpi = numpy.asmatrix(numpy.ravel( Hm( (Xnnp[:,point], Un) ) )).T
-            Ynnp.append( Ynnpi )
-        Ynnp = numpy.hstack( Ynnp )
+                Ynnpi = Hm( (Xnnp[:,point], Un) )
+            Ynnp.append( numpy.ravel(Ynnpi).reshape((-1,1)) )
+        Ynnp = numpy.concatenate( Ynnp, axis=1 )
         #
-        Yncm = numpy.matrix( Ynnp.getA()*numpy.array(Wm) ).sum(axis=1)
+        Yncm = ( Ynnp * Wm ).sum(axis=1)
         #
         Pyyn = R
         Pxyn = 0.
         for point in range(nbSpts):
-            Pyyn += Wc[i] * (Ynnp[:,point]-Yncm) * (Ynnp[:,point]-Yncm).T
-            Pxyn += Wc[i] * (Xnnp[:,point]-Xncm) * (Ynnp[:,point]-Yncm).T
+            Pyyn += Wc[i] * ((Ynnp[:,point]-Yncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
+            Pxyn += Wc[i] * ((Xnnp[:,point]-Xncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
         #
-        _Innovation  = Ynpu - Yncm
+        _Innovation  = Ynpu - Yncm.reshape((-1,1))
         if selfA._parameters["EstimationOf"] == "Parameters":
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                 _Innovation = _Innovation - Cm * Un
         #
         Kn = Pxyn * Pyyn.I
-        Xn = Xncm + Kn * _Innovation
+        Xn = Xncm.reshape((-1,1)) + Kn * _Innovation
         Pn = Pnm - Kn * Pyyn * Kn.T
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
@@ -988,7 +988,7 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
             Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -1300,11 +1300,11 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
-                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                Un = numpy.asmatrix(numpy.ravel( U )).T
+                Un = numpy.ravel( U ).reshape((-1,1))
         else:
             Un = None
         #
@@ -1442,11 +1442,11 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
-                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                Un = numpy.asmatrix(numpy.ravel( U )).T
+                Un = numpy.ravel( U ).reshape((-1,1))
         else:
             Un = None
         #
@@ -4001,51 +4001,51 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         XEtnnp = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
-                XEtnnpi = numpy.asmatrix(numpy.ravel( Mm( (Xnp[:,point], Un) ) )).T
+                XEtnnpi = numpy.asarray( Mm( (Xnp[:,point], Un) ) ).reshape((-1,1))
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
                     XEtnnpi = XEtnnpi + Cm * Un
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 XEtnnpi = Xnp[:,point]
-            XEtnnp.append( XEtnnpi )
-        XEtnnp = numpy.hstack( XEtnnp )
+            XEtnnp.append( numpy.ravel(XEtnnpi).reshape((-1,1)) )
+        XEtnnp = numpy.concatenate( XEtnnp, axis=1 )
         #
-        Xncm = numpy.matrix( XEtnnp.getA()*numpy.array(Wm) ).sum(axis=1)
+        Xncm = ( XEtnnp * Wm ).sum(axis=1)
         #
         if selfA._parameters["EstimationOf"] == "State":        Pnm = Q
         elif selfA._parameters["EstimationOf"] == "Parameters": Pnm = 0.
         for point in range(nbSpts):
-            Pnm += Wc[i] * (XEtnnp[:,point]-Xncm) * (XEtnnp[:,point]-Xncm).T
+            Pnm += Wc[i] * ((XEtnnp[:,point]-Xncm).reshape((-1,1)) * (XEtnnp[:,point]-Xncm))
         #
         Pnmdemi = numpy.real(scipy.linalg.sqrtm(Pnm))
         #
-        Xnnp = numpy.hstack([Xncm, Xncm+Gamma*Pnmdemi, Xncm-Gamma*Pnmdemi])
+        Xnnp = numpy.hstack([Xncm.reshape((-1,1)), Xncm.reshape((-1,1))+Gamma*Pnmdemi, Xncm.reshape((-1,1))-Gamma*Pnmdemi])
         #
         Ynnp = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
-                Ynnpi = numpy.asmatrix(numpy.ravel( Hm( (Xnnp[:,point], None) ) )).T
+                Ynnpi = Hm( (Xnnp[:,point], None) )
             elif selfA._parameters["EstimationOf"] == "Parameters":
-                Ynnpi = numpy.asmatrix(numpy.ravel( Hm( (Xnnp[:,point], Un) ) )).T
-            Ynnp.append( Ynnpi )
-        Ynnp = numpy.hstack( Ynnp )
+                Ynnpi = Hm( (Xnnp[:,point], Un) )
+            Ynnp.append( numpy.ravel(Ynnpi).reshape((-1,1)) )
+        Ynnp = numpy.concatenate( Ynnp, axis=1 )
         #
-        Yncm = numpy.matrix( Ynnp.getA()*numpy.array(Wm) ).sum(axis=1)
+        Yncm = ( Ynnp * Wm ).sum(axis=1)
         #
         Pyyn = R
         Pxyn = 0.
         for point in range(nbSpts):
-            Pyyn += Wc[i] * (Ynnp[:,point]-Yncm) * (Ynnp[:,point]-Yncm).T
-            Pxyn += Wc[i] * (Xnnp[:,point]-Xncm) * (Ynnp[:,point]-Yncm).T
+            Pyyn += Wc[i] * ((Ynnp[:,point]-Yncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
+            Pxyn += Wc[i] * ((Xnnp[:,point]-Xncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
         #
-        _Innovation  = Ynpu - Yncm
+        _Innovation  = Ynpu - Yncm.reshape((-1,1))
         if selfA._parameters["EstimationOf"] == "Parameters":
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                 _Innovation = _Innovation - Cm * Un
         #
         Kn = Pxyn * Pyyn.I
-        Xn = Xncm + Kn * _Innovation
+        Xn = Xncm.reshape((-1,1)) + Kn * _Innovation
         Pn = Pnm - Kn * Pyyn * Kn.T
         #
         Xa = Xn # Pointeurs
@@ -4084,7 +4084,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
             Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )

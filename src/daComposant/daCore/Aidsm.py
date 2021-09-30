@@ -763,9 +763,9 @@ class Aidsm(object):
         self.__adaoObject["AlgorithmParameters"].executePythonScheme( self.__adaoObject )
         if "UserPostAnalysis" in self.__adaoObject and len(self.__adaoObject["UserPostAnalysis"])>0:
             self.__objname = self.__retrieve_objname()
-            __Upa = [str(val).replace("ADD.","self.").replace(self.__objname+".","self.") for val in self.__adaoObject["UserPostAnalysis"]]
+            __Upa = map(str, self.__adaoObject["UserPostAnalysis"])
             __Upa = eval("\n".join(__Upa))
-            exec(__Upa, {}, {'self':self})
+            exec(__Upa, {}, {'self':self, 'ADD':self, 'case':self, 'adaopy':self, self.__objname:self})
         return 0
 
     def __executeYACSScheme(self, FileName=None):

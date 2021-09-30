@@ -226,7 +226,7 @@ class Operator(object):
                 else:
                     if self.__Matrix is not None:
                         self.__addOneMatrixCall()
-                        _xv = numpy.matrix(numpy.ravel(xv)).T
+                        _xv = numpy.ravel(xv).reshape((-1,1))
                         _hv = self.__Matrix * _xv
                     else:
                         self.__addOneMethodCall()
