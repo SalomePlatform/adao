@@ -75,11 +75,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Critère de qualité utilisé",
             listval  = [
-                "AugmentedWeightedLeastSquares","AWLS","DA",
-                "WeightedLeastSquares","WLS",
-                "LeastSquares","LS","L2",
-                "AbsoluteValue","L1",
-                "MaximumError","ME"],
+                "DA",
+                "AugmentedWeightedLeastSquares", "AWLS",
+                "WeightedLeastSquares", "WLS",
+                "LeastSquares", "LS", "L2",
+                "AbsoluteValue", "L1",
+                "MaximumError", "ME",
+                ],
             listadv  = [
                 "AugmentedPonderatedLeastSquares","APLS",
                 "PonderatedLeastSquares","PLS",
