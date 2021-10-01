@@ -66,7 +66,7 @@ class GenericCaseViewer(object):
         if __hasNotExecute:
             self._lineSerie.append("%s.execute()"%(self._objname,))
         if __upa is not None and len(__upa)>0:
-            __upa = __upa.replace("ADD.",str(self._objname)+".")
+            __upa = __upa.replace("ADD",str(self._objname))
             self._lineSerie.append(__upa)
     def _addLine(self, line=""):
         "Ajoute un enregistrement individuel"
@@ -233,7 +233,7 @@ class _COMViewer(GenericCaseViewer):
             #
             elif __command == "UserPostAnalysis" and type(r) is dict:
                 if 'STRING' in r:
-                    __UserPostAnalysis = r['STRING'].replace("ADD.",str(self._objname)+".")
+                    __UserPostAnalysis = r['STRING'].replace("ADD",str(self._objname))
                     __commands.append( "set( Concept='UserPostAnalysis', String=\"\"\"%s\"\"\" )"%(__UserPostAnalysis,) )
                 elif 'SCRIPT_FILE' in r and os.path.exists(r['SCRIPT_FILE']):
                     __UserPostAnalysis = open(r['SCRIPT_FILE'],'r').read()

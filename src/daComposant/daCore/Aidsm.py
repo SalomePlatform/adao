@@ -78,6 +78,10 @@ class Aidsm(object):
             self.__adaoObject[ename] = None
         for ename in ("ObservationOperator", "EvolutionModel", "ControlModel"):
             self.__adaoObject[ename] = {}
+        for ename in ("BackgroundError", "ObservationError"):
+            self.__adaoObject[ename] = Covariance(ename, asEyeByScalar = 1.)
+        for ename in ("EvolutionError",):
+            self.__adaoObject[ename] = Covariance(ename, asEyeByScalar = 1.e-16)
         for ename in ("Observer", "UserPostAnalysis"):
             self.__adaoObject[ename]   = []
             self.__StoredInputs[ename] = [] # Vide par defaut

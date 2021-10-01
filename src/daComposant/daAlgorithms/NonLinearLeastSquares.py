@@ -107,8 +107,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO"),
-            optional = ("R"),
+            mandatory= ("Xb", "Y", "HO", "R"),
             )
         self.setAttributes(tags=(
             "Optimization",
@@ -136,13 +135,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         #
-        if R is None:
-            RI = 1.
-            RdemiI = 1.
-        else:
-            RI = R.getI()
-            if self._parameters["Minimizer"] == "LM":
-                RdemiI = R.choleskyI()
+        RI = R.getI()
+        if self._parameters["Minimizer"] == "LM":
+            RdemiI = R.choleskyI()
         #
         # Définition de la fonction-coût
         # ------------------------------

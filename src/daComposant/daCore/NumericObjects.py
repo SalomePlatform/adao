@@ -2171,15 +2171,11 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     # Initialisations
     # ---------------
-    #
-    # Opérateur non-linéaire pour la boucle externe
     Hm = HO["Direct"].appliedTo
     #
-    # Précalcul des inversions de B et R
     BI = B.getI()
     RI = R.getI()
     #
-    # Point de démarrage de l'optimisation
     Xini = selfA._parameters["InitializationPoint"]
     #
     HXb = numpy.asmatrix(numpy.ravel( Hm( Xb ) )).T
@@ -2729,6 +2725,7 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     """
     #
     # Initialisation
+    # --------------
     if selfA._parameters["EstimationOf"] == "State":
         M = EM["Direct"].appliedTo
         #
@@ -2784,11 +2781,8 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     # Initialisations
     # ---------------
-    #
-    # Opérateurs
     Hm = HO["Direct"].appliedTo
     #
-    # Utilisation éventuelle d'un vecteur H(Xb) précalculé
     if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
         HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
     else:
@@ -2809,7 +2803,6 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     HBHTpR = R + Ht * BHT
     Innovation = Y - HXb
     #
-    # Point de démarrage de l'optimisation
     Xini = numpy.zeros(Xb.shape)
     #
     # Définition de la fonction-coût
@@ -3255,12 +3248,9 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     # Initialisations
     # ---------------
-    #
-    # Opérateurs
     Hm = HO["Direct"].appliedTo
     Ha = HO["Adjoint"].appliedInXTo
     #
-    # Utilisation éventuelle d'un vecteur H(Xb) précalculé
     if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
         HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
     else:
@@ -3276,11 +3266,9 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         HtMb = HtMb.reshape(Y.size,Xb.size) # ADAO & check shape
         selfA.StoredVariables["JacobianMatrixAtBackground"].store( HtMb )
     #
-    # Précalcul des inversions de B et R
     BI = B.getI()
     RI = R.getI()
     #
-    # Point de démarrage de l'optimisation
     Xini = selfA._parameters["InitializationPoint"]
     #
     # Définition de la fonction-coût
@@ -4138,16 +4126,12 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     # Initialisations
     # ---------------
-    #
-    # Opérateurs
     Hm = HO["Direct"].appliedTo
     Ha = HO["Adjoint"].appliedInXTo
     #
-    # Précalcul des inversions de B et R
     BT = B.getT()
     RI = R.getI()
     #
-    # Point de démarrage de l'optimisation
     Xini = numpy.zeros(Xb.shape)
     #
     # Définition de la fonction-coût
