@@ -726,7 +726,12 @@ class Algorithm(object):
                 else:
                     logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,symbol))
             else:
-                logging.debug("%s %s vector %s is set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
+                if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
+                    logging.debug("%s %s vector %s is required and set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
+                elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
+                    logging.debug("%s %s vector %s is optional and set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
+                else:
+                    logging.debug("%s %s vector %s is set although neither required nor optional, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
             return 0
         __test_vvalue( Xb, "Xb", "Background or initial state" )
         __test_vvalue( Y,  "Y",  "Observation" )
@@ -743,7 +748,12 @@ class Algorithm(object):
                 else:
                     logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name,argname,symbol))
             else:
-                logging.debug("%s %s error covariance matrix %s is set."%(self._name,argname,symbol))
+                if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
+                    logging.debug("%s %s error covariance matrix %s is required and set."%(self._name,argname,symbol))
+                elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
+                    logging.debug("%s %s error covariance matrix %s is optional and set."%(self._name,argname,symbol))
+                else:
+                    logging.debug("%s %s error covariance matrix %s is set although neither required nor optional."%(self._name,argname,symbol))
             return 0
         __test_cvalue( B, "B", "Background" )
         __test_cvalue( R, "R", "Observation" )
@@ -760,7 +770,12 @@ class Algorithm(object):
                 else:
                     logging.debug("%s %s operator %s is not set, but is not required."%(self._name,argname,symbol))
             else:
-                logging.debug("%s %s operator %s is set."%(self._name,argname,symbol))
+                if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
+                    logging.debug("%s %s operator %s is required and set."%(self._name,argname,symbol))
+                elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
+                    logging.debug("%s %s operator %s is optional and set."%(self._name,argname,symbol))
+                else:
+                    logging.debug("%s %s operator %s is set although neither required nor optional."%(self._name,argname,symbol))
             return 0
         __test_ovalue( HO, "HO", "Observation", "H" )
         __test_ovalue( EM, "EM", "Evolution", "M" )
