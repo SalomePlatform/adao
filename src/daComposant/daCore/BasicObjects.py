@@ -125,6 +125,7 @@ class Operator(object):
         fromMethod           = None,
         fromMatrix           = None,
         avoidingRedundancy   = True,
+        reducingMemoryUse    = False,
         inputAsMultiFunction = False,
         enableMultiProcess   = False,
         extraArguments       = None,
@@ -138,6 +139,8 @@ class Operator(object):
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.matrix
         - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants
+        - reducingMemoryUse : booléen forçant (ou pas) des calculs moins
+          gourmands en mémoire
         - inputAsMultiFunction : booléen indiquant une fonction explicitement
           définie (ou pas) en multi-fonction
         - extraArguments : arguments supplémentaires passés à la fonction de
@@ -145,7 +148,8 @@ class Operator(object):
         """
         self.__name      = str(name)
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
-        self.__AvoidRC   = bool( avoidingRedundancy )
+        self.__reduceM   = bool( reducingMemoryUse )
+        self.__avoidRC   = bool( avoidingRedundancy )
         self.__inputAsMF = bool( inputAsMultiFunction )
         self.__mpEnabled = bool( enableMultiProcess )
         self.__extraArgs = extraArguments
@@ -172,7 +176,7 @@ class Operator(object):
 
     def enableAvoidingRedundancy(self):
         "Active le cache"
-        if self.__AvoidRC:
+        if self.__avoidRC:
             Operator.CM.enable()
         else:
             Operator.CM.disable()
@@ -208,14 +212,14 @@ class Operator(object):
             _HxValue = []
             for i in range(len(_HValue)):
                 _HxValue.append( numpy.asmatrix( numpy.ravel( _HValue[i] ) ).T )
-                if self.__AvoidRC:
+                if self.__avoidRC:
                     Operator.CM.storeValueInX(_xValue[i],_HxValue[-1],self.__name)
         else:
             _HxValue = []
             _xserie = []
             _hindex = []
             for i, xv in enumerate(_xValue):
-                if self.__AvoidRC:
+                if self.__avoidRC:
                     __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xv,self.__name)
                 else:
                     __alreadyCalculated = False
@@ -246,7 +250,7 @@ class Operator(object):
                     _xv = _xserie.pop(0)
                     _hv = _hserie.pop(0)
                     _HxValue[i] = _hv
-                    if self.__AvoidRC:
+                    if self.__avoidRC:
                         Operator.CM.storeValueInX(_xv,_hv,self.__name)
         #
         if returnSerieAsArrayMatrix:
@@ -417,7 +421,7 @@ class FullOperator(object):
                  asDict           = None, # Parameters
                  appliedInX       = None,
                  extraArguments   = None,
-                 avoidRC          = True,
+                 performancePrf   = None,
                  inputAsMF        = False,# Fonction(s) as Multi-Functions
                  scheduledBy      = None,
                  toBeChecked      = False,
@@ -444,6 +448,15 @@ class FullOperator(object):
             __Parameters["EnableMultiProcessingInEvaluation"]  = False
         if "withIncrement" in __Parameters: # Temporaire
             __Parameters["DifferentialIncrement"] = __Parameters["withIncrement"]
+        # Le défaut est équivalent à "ReducedOverallRequirements"
+        __reduceM, __avoidRC = True, True
+        if performancePrf is not None:
+            if   performancePrf == "ReducedAmountOfCalculation":
+                __reduceM, __avoidRC = False, True
+            elif performancePrf == "ReducedMemoryFootprint":
+                __reduceM, __avoidRC = True, False
+            elif performancePrf == "NoSavings":
+                __reduceM, __avoidRC = False, False
         #
         if asScript is not None:
             __Matrix, __Function = None, None
@@ -512,7 +525,8 @@ class FullOperator(object):
             if "CenteredFiniteDifference"           not in __Function: __Function["CenteredFiniteDifference"]           = False
             if "DifferentialIncrement"              not in __Function: __Function["DifferentialIncrement"]              = 0.01
             if "withdX"                             not in __Function: __Function["withdX"]                             = None
-            if "withAvoidingRedundancy"             not in __Function: __Function["withAvoidingRedundancy"]             = avoidRC
+            if "withReducingMemoryUse"              not in __Function: __Function["withReducingMemoryUse"]              = __reduceM
+            if "withAvoidingRedundancy"             not in __Function: __Function["withAvoidingRedundancy"]             = __avoidRC
             if "withToleranceInRedundancy"          not in __Function: __Function["withToleranceInRedundancy"]          = 1.e-18
             if "withLenghtOfRedundancy"             not in __Function: __Function["withLenghtOfRedundancy"]             = -1
             if "NumberOfProcesses"                  not in __Function: __Function["NumberOfProcesses"]                  = None
@@ -525,6 +539,7 @@ class FullOperator(object):
                 increment             = __Function["DifferentialIncrement"],
                 dX                    = __Function["withdX"],
                 extraArguments        = self.__extraArgs,
+                reducingMemoryUse     = __Function["withReducingMemoryUse"],
                 avoidingRedundancy    = __Function["withAvoidingRedundancy"],
                 toleranceInRedundancy = __Function["withToleranceInRedundancy"],
                 lenghtOfRedundancy    = __Function["withLenghtOfRedundancy"],
@@ -532,20 +547,20 @@ class FullOperator(object):
                 mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
                 )
-            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = FDA.DirectOperator,  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = FDA.TangentOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
-            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = FDA.AdjointOperator, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = FDA.DirectOperator,  reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = FDA.TangentOperator, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = FDA.AdjointOperator, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
-            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = __Function["Direct"],  avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = __Function["Tangent"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
-            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = __Function["Adjoint"], avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = __Function["Direct"],  reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = __Function["Tangent"], reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = __Function["Adjoint"], reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif asMatrix is not None:
             __matrice = numpy.matrix( __Matrix, numpy.float )
-            self.__FO["Direct"]  = Operator( name = self.__name,           fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMatrix = __matrice,   avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
-            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMatrix = __matrice.T, avoidingRedundancy = avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Direct"]  = Operator( name = self.__name,           fromMatrix = __matrice,   reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMatrix = __matrice,   reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMatrix = __matrice.T, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF )
             del __matrice
         else:
             raise ValueError("The %s object is improperly defined or undefined, it requires at minima either a matrix, a Direct operator for approximate derivatives or a Tangent/Adjoint operators pair. Please check your operator input."%self.__name)
@@ -1010,7 +1025,10 @@ class Algorithm(object):
                 self._parameters[k] = self.setParameterValue(k)
             else:
                 pass
-            logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
+            if hasattr(self._parameters[k],"__len__") and len(self._parameters[k]) > 100:
+                logging.debug("%s %s de longueur %s", self._name, self.__required_parameters[k]["message"], len(self._parameters[k]))
+            else:
+                logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
 
     def _setInternalState(self, key=None, value=None, fromDico={}, reset=False):
         """

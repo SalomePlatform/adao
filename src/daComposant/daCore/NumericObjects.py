@@ -66,6 +66,7 @@ class FDApproximation(object):
             increment             = 0.01,
             dX                    = None,
             extraArguments        = None,
+            reducingMemoryUse     = False,
             avoidingRedundancy    = True,
             toleranceInRedundancy = 1.e-18,
             lenghtOfRedundancy    = -1,
@@ -75,6 +76,7 @@ class FDApproximation(object):
             ):
         self.__name = str(name)
         self.__extraArgs = extraArguments
+        #
         if mpEnabled:
             try:
                 import multiprocessing
@@ -88,11 +90,11 @@ class FDApproximation(object):
             self.__mpWorkers = None
         logging.debug("FDA Calculs en multiprocessing : %s (nombre de processus : %s)"%(self.__mpEnabled,self.__mpWorkers))
         #
-        if mfEnabled:
-            self.__mfEnabled = True
-        else:
-            self.__mfEnabled = False
+        self.__mfEnabled = bool(mfEnabled)
         logging.debug("FDA Calculs en multifonctions : %s"%(self.__mfEnabled,))
+        #
+        self.__rmEnabled = bool(reducingMemoryUse)
+        logging.debug("FDA Calculs avec réduction mémoire : %s"%(self.__rmEnabled,))
         #
         if avoidingRedundancy:
             self.__avoidRC = True
@@ -105,6 +107,9 @@ class FDApproximation(object):
             self.__listJPIN = [] # Jacobian Previous Calculated Increment Norms
         else:
             self.__avoidRC = False
+        logging.debug("FDA Calculs avec réduction des doublons : %s"%self.__avoidRC)
+        if self.__avoidRC:
+            logging.debug("FDA Tolérance de détermination des doublons : %.2e"%self.__tolerBP)
         #
         if self.__mpEnabled:
             if isinstance(Function,types.FunctionType):
@@ -150,9 +155,6 @@ class FDApproximation(object):
             self.__dX     = None
         else:
             self.__dX     = numpy.ravel( dX )
-        logging.debug("FDA Reduction des doublons de calcul : %s"%self.__avoidRC)
-        if self.__avoidRC:
-            logging.debug("FDA Tolerance de determination des doublons : %.2e"%self.__tolerBP)
 
     # ---------------------------------------------------------
     def __doublon__(self, e, l, n, v=None):
@@ -163,6 +165,29 @@ class FDApproximation(object):
                 if v is not None: logging.debug("FDA Cas%s déja calculé, récupération du doublon %i"%(v,__iac))
                 break
         return __ac, __iac
+
+    # ---------------------------------------------------------
+    def __listdotwith__(self, __LMatrix, __dotWith = None, __dotTWith = None):
+        "Produit incrémental d'une matrice liste de colonnes avec un vecteur"
+        if not isinstance(__LMatrix, (list,tuple)):
+            raise TypeError("Columnwise list matrix has not the proper type: %s"%type(__LMatrix))
+        if __dotWith is not None:
+            __Idwx = numpy.ravel( __dotWith )
+            assert len(__LMatrix) == __Idwx.size, "Incorrect size of elements"
+            __Produit = numpy.zeros(__LMatrix[0].size)
+            for i, col in enumerate(__LMatrix):
+                __Produit += float(__Idwx[i]) * col
+            return __Produit
+        elif __dotTWith is not None:
+            _Idwy = numpy.ravel( __dotTWith ).T
+            assert __LMatrix[0].size == _Idwy.size, "Incorrect size of elements"
+            __Produit = numpy.zeros(len(__LMatrix))
+            for i, col in enumerate(__LMatrix):
+                __Produit[i] = float( _Idwy @ col)
+            return __Produit
+        else:
+            __Produit = None
+        return __Produit
 
     # ---------------------------------------------------------
     def DirectOperator(self, X, **extraArgs ):
@@ -181,7 +206,7 @@ class FDApproximation(object):
         return _HX
 
     # ---------------------------------------------------------
-    def TangentMatrix(self, X ):
+    def TangentMatrix(self, X, dotWith = None, dotTWith = None ):
         """
         Calcul de l'opérateur tangent comme la Jacobienne par différences finies,
         c'est-à-dire le gradient de H en X. On utilise des différences finies
@@ -240,6 +265,11 @@ class FDApproximation(object):
         if __alreadyCalculated:
             logging.debug("FDA   Calcul Jacobienne (par récupération du doublon %i)"%__i)
             _Jacobienne = self.__listJPCR[__i]
+            logging.debug("FDA Fin du calcul de la Jacobienne")
+            if dotWith is not None:
+                return numpy.dot(_Jacobienne,   numpy.ravel( dotWith ))
+            elif dotTWith is not None:
+                return numpy.dot(_Jacobienne.T, numpy.ravel( dotTWith ))
         else:
             logging.debug("FDA   Calcul Jacobienne (explicite)")
             if self.__centeredDF:
@@ -359,24 +389,29 @@ class FDApproximation(object):
                         _HX_plus_dXi = self.DirectOperator( _X_plus_dXi )
                         #
                         _Jacobienne.append( numpy.ravel(( _HX_plus_dXi - _HX ) / _dXi) )
-                #
             #
-            _Jacobienne = numpy.transpose( numpy.vstack( _Jacobienne ) )
-            if self.__avoidRC:
-                if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
-                while len(self.__listJPCP) > self.__lenghtRJ:
-                    self.__listJPCP.pop(0)
-                    self.__listJPCI.pop(0)
-                    self.__listJPCR.pop(0)
-                    self.__listJPPN.pop(0)
-                    self.__listJPIN.pop(0)
-                self.__listJPCP.append( copy.copy(_X) )
-                self.__listJPCI.append( copy.copy(_dX) )
-                self.__listJPCR.append( copy.copy(_Jacobienne) )
-                self.__listJPPN.append( numpy.linalg.norm(_X) )
-                self.__listJPIN.append( numpy.linalg.norm(_Jacobienne) )
-        #
-        logging.debug("FDA Fin du calcul de la Jacobienne")
+            if (dotWith is not None) or (dotTWith is not None):
+                __Produit = self.__listdotwith__(_Jacobienne, dotWith, dotTWith)
+            else:
+                __Produit = None
+            if __Produit is None or self.__avoidRC:
+                _Jacobienne = numpy.transpose( numpy.vstack( _Jacobienne ) )
+                if self.__avoidRC:
+                    if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
+                    while len(self.__listJPCP) > self.__lenghtRJ:
+                        self.__listJPCP.pop(0)
+                        self.__listJPCI.pop(0)
+                        self.__listJPCR.pop(0)
+                        self.__listJPPN.pop(0)
+                        self.__listJPIN.pop(0)
+                    self.__listJPCP.append( copy.copy(_X) )
+                    self.__listJPCI.append( copy.copy(_dX) )
+                    self.__listJPCR.append( copy.copy(_Jacobienne) )
+                    self.__listJPPN.append( numpy.linalg.norm(_X) )
+                    self.__listJPIN.append( numpy.linalg.norm(_Jacobienne) )
+            logging.debug("FDA Fin du calcul de la Jacobienne")
+            if __Produit is not None:
+                return __Produit
         #
         return _Jacobienne
 
@@ -389,26 +424,25 @@ class FDApproximation(object):
         ne doivent pas être données ici à la fonction utilisateur.
         """
         if self.__mfEnabled:
-            assert len(paire) == 1, "Incorrect lenght of arguments"
+            assert len(paire) == 1, "Incorrect length of arguments"
             _paire = paire[0]
             assert len(_paire) == 2, "Incorrect number of arguments"
         else:
             assert len(paire) == 2, "Incorrect number of arguments"
             _paire = paire
         X, dX = _paire
-        _Jacobienne = self.TangentMatrix( X )
         if dX is None or len(dX) == 0:
             #
             # Calcul de la forme matricielle si le second argument est None
             # -------------------------------------------------------------
+            _Jacobienne = self.TangentMatrix( X )
             if self.__mfEnabled: return [_Jacobienne,]
             else:                return _Jacobienne
         else:
             #
             # Calcul de la valeur linéarisée de H en X appliqué à dX
             # ------------------------------------------------------
-            _dX = numpy.ravel( dX )
-            _HtX = numpy.dot(_Jacobienne, _dX)
+            _HtX = self.TangentMatrix( X, dotWith = dX )
             if self.__mfEnabled: return [_HtX,]
             else:                return _HtX
 
@@ -421,26 +455,25 @@ class FDApproximation(object):
         ne doivent pas être données ici à la fonction utilisateur.
         """
         if self.__mfEnabled:
-            assert len(paire) == 1, "Incorrect lenght of arguments"
+            assert len(paire) == 1, "Incorrect length of arguments"
             _paire = paire[0]
             assert len(_paire) == 2, "Incorrect number of arguments"
         else:
             assert len(paire) == 2, "Incorrect number of arguments"
             _paire = paire
         X, Y = _paire
-        _JacobienneT = self.TangentMatrix( X ).T
         if Y is None or len(Y) == 0:
             #
             # Calcul de la forme matricielle si le second argument est None
             # -------------------------------------------------------------
+            _JacobienneT = self.TangentMatrix( X ).T
             if self.__mfEnabled: return [_JacobienneT,]
             else:                return _JacobienneT
         else:
             #
             # Calcul de la valeur de l'adjoint en X appliqué à Y
             # --------------------------------------------------
-            _Y = numpy.ravel( Y )
-            _HaY = numpy.dot(_JacobienneT, _Y)
+            _HaY = self.TangentMatrix( X, dotTWith = Y )
             if self.__mfEnabled: return [_HaY,]
             else:                return _HaY
 

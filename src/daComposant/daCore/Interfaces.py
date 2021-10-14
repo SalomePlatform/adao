@@ -132,7 +132,7 @@ class _TUIViewer(GenericCaseViewer):
                 if   k == "ColMajor"             and not __v: continue
                 if   k == "InputFunctionAsMulti" and not __v: continue
                 if   k == "nextStep"             and not __v: continue
-                if   k == "AvoidRC"              and     __v: continue
+                if   k == "PerformanceProfile"   and     __v: continue
                 if   k == "noDetails":                        continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 if callable(__v): __text = self._missing%__v.__name__+__text
@@ -491,7 +491,7 @@ class _SCDViewer(GenericCaseViewer):
                 elif __k in ('Stored', 'Checked', 'ColMajor', 'InputFunctionAsMulti', 'nextStep'):
                     if bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
-                elif __k in ('AvoidRC', 'noDetails'):
+                elif __k in ('PerformanceProfile', 'noDetails'):
                     if not bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
                 else:
@@ -646,7 +646,7 @@ class _ReportViewer(GenericCaseViewer):
                 if   k == "ColMajor"             and not __v: continue
                 if   k == "InputFunctionAsMulti" and not __v: continue
                 if   k == "nextStep"             and not __v: continue
-                if   k == "AvoidRC"              and     __v: continue
+                if   k == "PerformanceProfile"   and     __v: continue
                 if   k == "noDetails":                        continue
                 if   k == "Concept":                          continue
                 if   k == "self":                             continue

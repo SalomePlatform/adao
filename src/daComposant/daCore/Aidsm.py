@@ -99,7 +99,6 @@ class Aidsm(object):
             Concept              = None, # Premier argument
             Algorithm            = None,
             AppliedInXb          = None,
-            AvoidRC              = True,
             Checked              = False,
             ColMajor             = False,
             ColNames             = None,
@@ -113,6 +112,7 @@ class Aidsm(object):
             ObjectMatrix         = None,
             OneFunction          = None,
             Parameters           = None,
+            PerformanceProfile   = None,
             ScalarSparseMatrix   = None,
             Scheduler            = None,
             Script               = None,
@@ -156,13 +156,13 @@ class Aidsm(object):
                 self.setObservationOperator(
                     Matrix, OneFunction, ThreeFunctions, AppliedInXb,
                     Parameters, Script, ExtraArguments,
-                    Stored, AvoidRC, InputFunctionAsMulti, Checked )
+                    Stored, PerformanceProfile, InputFunctionAsMulti, Checked )
             elif Concept in ("EvolutionModel", "ControlModel"):
                 commande = getattr(self,"set"+Concept)
                 commande(
                     Matrix, OneFunction, ThreeFunctions,
                     Parameters, Script, Scheduler, ExtraArguments,
-                    Stored, AvoidRC, InputFunctionAsMulti, Checked )
+                    Stored, PerformanceProfile, InputFunctionAsMulti, Checked )
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
         except Exception as e:
@@ -368,7 +368,7 @@ class Aidsm(object):
             Script               = None,
             ExtraArguments       = None,
             Stored               = False,
-            AvoidRC              = True,
+            PerformanceProfile   = None,
             InputFunctionAsMulti = False,
             Checked              = False):
         "Definition d'un concept de calcul"
@@ -383,7 +383,7 @@ class Aidsm(object):
             asDict           = Parameters,
             appliedInX       = AppliedInXb,
             extraArguments   = ExtraArguments,
-            avoidRC          = AvoidRC,
+            performancePrf   = PerformanceProfile,
             inputAsMF        = InputFunctionAsMulti,
             scheduledBy      = None,
             toBeChecked      = Checked,
@@ -401,7 +401,7 @@ class Aidsm(object):
             Scheduler            = None,
             ExtraArguments       = None,
             Stored               = False,
-            AvoidRC              = True,
+            PerformanceProfile   = None,
             InputFunctionAsMulti = False,
             Checked              = False):
         "Definition d'un concept de calcul"
@@ -416,7 +416,7 @@ class Aidsm(object):
             asDict           = Parameters,
             appliedInX       = None,
             extraArguments   = ExtraArguments,
-            avoidRC          = AvoidRC,
+            performancePrf   = PerformanceProfile,
             inputAsMF        = InputFunctionAsMulti,
             scheduledBy      = Scheduler,
             toBeChecked      = Checked,
@@ -434,7 +434,7 @@ class Aidsm(object):
             Scheduler            = None,
             ExtraArguments       = None,
             Stored               = False,
-            AvoidRC              = True,
+            PerformanceProfile   = None,
             InputFunctionAsMulti = False,
             Checked              = False):
         "Definition d'un concept de calcul"
@@ -449,7 +449,7 @@ class Aidsm(object):
             asDict           = Parameters,
             appliedInX       = None,
             extraArguments   = ExtraArguments,
-            avoidRC          = AvoidRC,
+            performancePrf   = PerformanceProfile,
             inputAsMF        = InputFunctionAsMulti,
             scheduledBy      = Scheduler,
             toBeChecked      = Checked,
