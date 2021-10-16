@@ -180,10 +180,19 @@ StoreSupplementaryCalculations
 
 .. literalinclude:: scripts/simple_NonLinearLeastSquares.res
 
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_NonLinearLeastSquares:
+.. image:: scripts/simple_NonLinearLeastSquares.png
+  :align: center
+  :width: 90%
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
+- :ref:`section_ref_algorithm_LinearLeastSquares`
 - :ref:`section_ref_algorithm_3DVAR`
+- :ref:`section_ref_algorithm_LinearityTest`
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst

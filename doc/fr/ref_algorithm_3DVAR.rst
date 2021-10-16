@@ -237,6 +237,13 @@ StoreSupplementaryCalculations
 
 .. literalinclude:: scripts/simple_3DVAR.res
 
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_3DVAR:
+.. image:: scripts/simple_3DVAR.png
+  :align: center
+  :width: 90%
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 

@@ -8,9 +8,11 @@ de coefficients :math:`\mathbf{x}`, et fournit en sortie le vecteur
 internes prédéfinis dans le modèle. Le calage s'effectue sur la base d'un jeu
 initial de coefficients (état d'ébauche désigné par ``Xb`` dans l'exemple), et
 avec l'information :math:`\mathbf{y}^o` (désignée par ``Yobs`` dans l'exemple)
-de 5 mesures obtenues à ces mêmes points de contrôle internes. On privilégie
-les observations au détriment de l'ébauche par l'indication d'une très
-importante variance d'erreur d'ébauche, ici de :math:`10^{6}`.
+de 5 mesures obtenues à ces mêmes points de contrôle internes. On se place en
+expériences jumelles (voir :ref:`section_methodology_twin`) et les mesures sont
+parfaites. On privilégie les observations au détriment de l'ébauche par
+l'indication d'une très importante variance d'erreur d'ébauche, ici de
+:math:`10^{6}`.
 
 L'ajustement s'effectue en affichant des résultats intermédiaires lors de
 l'optimisation itérative.
