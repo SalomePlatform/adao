@@ -77,6 +77,8 @@ initialization point for the minimization, but it is not recommended.
 
 .. include:: snippets/CostDecrementTolerance.rst
 
+.. include:: snippets/EstimationOf_Parameters.rst
+
 .. include:: snippets/GradientNormTolerance.rst
 
 .. include:: snippets/InitializationPoint.rst

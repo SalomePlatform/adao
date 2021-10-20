@@ -88,6 +88,7 @@ exclude_patterns = [
 pygments_style   = None
 templates_path   = ['_templates']
 exclude_trees    = ['snippets',]
+numfig           = True
 
 # -- Options for HTML output ---------------------------------------------------
 

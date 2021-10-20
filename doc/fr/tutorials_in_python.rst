@@ -27,6 +27,10 @@
 **[DocU]** Tutoriaux sur l'utilisation du module ADAO dans Python
 ================================================================================
 
+.. |eficas_totui| image:: images/eficas_totui.png
+   :align: middle
+   :scale: 50%
+
 Cette section présente quelques exemples d'utilisation du module ADAO en
 Python. Le premier montre comment construire un cas simple d'assimilation de
 données définissant explicitement toutes les données d'entrée requises à
@@ -39,8 +43,17 @@ externes peuvent utiliser d'autres langages.
 
 Ces exemples sont intentionnellement décrits de manière semblables aux
 :ref:`section_tutorials_in_salome` car ils sont similaires à ceux que l'on peut
-traiter dans l'interface graphique SALOME. Les notations mathématiques
-utilisées ci-dessous sont expliquées dans la section :ref:`section_theory`.
+traiter dans l'interface graphique SALOME. On peut d'ailleurs directement
+obtenir une forme scriptée d'un cas construit dans l'interface graphique à
+l'aide du bouton d'export TUI |eficas_totui| intégré dans l'interface. Les
+notations mathématiques utilisées ci-dessous sont expliquées dans la section
+:ref:`section_theory`.
+
+D'autres exemples simples, et leurs illustrations, sont insérés à la fin de la
+documentation de référence de certains algorithmes. C'est le cas, de manière
+non limitative, des :ref:`section_ref_algorithm_3DVAR`,
+:ref:`section_ref_algorithm_KalmanFilter` et
+:ref:`section_ref_algorithm_ExtendedBlue`.
 
 .. _section_tutorials_in_python_explicit:
 

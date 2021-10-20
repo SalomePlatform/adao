@@ -390,14 +390,16 @@ Getting more information when running a calculation
 ---------------------------------------------------
 
 .. index:: single: Logging
+.. index:: single: Debug
+.. index:: single: setDebug
 
 When running a calculation, useful data and messages are logged. There are two
 ways to obtain theses information.
 
 The first one, and the preferred way, is to use the built-in variable "*Debug*"
-available in every ADAO case. It is available through the edition GUI of the
-module. Setting it to "*1*" will send messages in the log window of the YACS
-scheme execution.
+available in every ADAO case. It can be reached in the module's graphical user
+interface (GUI) as well as in the textual interface (TUI). Setting it to "*1*"
+will send messages in the log window of the YACS scheme execution.
 
 The second one consist in using the "*logging*" native module of Python (see the
 Python documentation http://docs.python.org/library/logging.html for more
@@ -415,10 +417,11 @@ following Python lines::
 The standard logging module default level is "*WARNING*", the default level in
 the ADAO module is "*INFO*".
 
-It is also recommended to include some logging or debug mechanisms in the
-simulation code, and use them in conjunction with the two previous methods. But
-be careful not to store too big variables because it cost time, whatever logging
-level is chosen (that is, even if these variables are not printed).
+It is also recommended to include logging monitoring or debugging mechanisms in
+the user's physical simulation code, and to exploit them in conjunction with
+the previous two methods. But be careful not to store "too big" variables
+because it cost time or memory, whatever logging level is chosen (that is, even
+if these variables are not printed).
 
 .. _subsection_ref_parallel_df:
 

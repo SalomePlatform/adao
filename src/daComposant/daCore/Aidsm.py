@@ -829,9 +829,8 @@ class Aidsm(object):
         for level in reversed(inspect.stack()):
             __names += [name for name, value in level.frame.f_locals.items() if value is self]
         __names += [name for name, value in globals().items() if value is self]
-        __names.remove('self') # Devrait toujours être trouvé, donc pas d'erreur
+        while 'self' in __names: __names.remove('self') # Devrait toujours être trouvé, donc pas d'erreur
         if len(__names) > 0:
-            logging.debug("Cet objet est appelé par au moins une variable :",__names)
             self.__objname = __names[0]
         else:
             self.__objname = "ADD"

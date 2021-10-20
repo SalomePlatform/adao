@@ -39,11 +39,11 @@ optimal estimate of the inaccessible true value of a system state, eventually
 over time. It uses information coming from experimental measurements or
 observations, and from numerical *a priori* models, including information about
 their errors. Parts of the framework are also known under the names of
-*parameter estimation*, *inverse problems*, *Bayesian estimation*, *optimal
-interpolation*, *field reconstruction*, etc. The ADAO module currently offers
-more than one hundred different algorithmic methods and allows the study of
-about 350 distinct applied problems. More details can be found in the section
-:ref:`section_theory`.
+*inverse problems*, *parameter estimation*, *Bayesian estimation*, *optimal
+interpolation*, *field reconstruction*, etc. More details can be found in the
+section :ref:`section_theory`. The ADAO module currently offers more than one
+hundred different algorithmic methods and allows the study of about 350
+distinct applied problems.
 
 The documentation for this module is divided into several major categories,
 related to the theoretical documentation (indicated in the section title by

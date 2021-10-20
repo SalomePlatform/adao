@@ -98,7 +98,7 @@ obtenir une assimilation de données plus économique et de qualité
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 .. include:: snippets/InflationFactor.rst
 

@@ -74,7 +74,7 @@ l':ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 .. include:: snippets/CostDecrementTolerance.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 .. include:: snippets/GradientNormTolerance.rst
 

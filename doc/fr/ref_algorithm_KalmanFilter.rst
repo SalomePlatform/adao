@@ -47,7 +47,7 @@ suivante, avec **x** l'état et **P** la covariance d'erreur d'état :
     :align: center
     :width: 100%
   .. centered::
-    **Schéma temporel des étapes en assimilation par filtre de Kalman**
+    **Schéma temporel des étapes en assimilation de données par filtre de Kalman**
 
 On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
 (numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
@@ -82,7 +82,7 @@ l':ref:`section_ref_algorithm_LinearityTest`.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

@@ -47,7 +47,7 @@ the state and **P** the state error covariance :
     :align: center
     :width: 100%
   .. centered::
-    **Timeline of steps in Kalman filter assimilation**
+    **Timeline of steps in Kalman filter data assimilation**
 
 We notice that there is no analysis performed at the initial time step
 (numbered 0 in the time indexing) because there is no forecast at this time
@@ -82,7 +82,7 @@ with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

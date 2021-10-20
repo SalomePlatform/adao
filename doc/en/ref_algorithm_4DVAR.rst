@@ -73,7 +73,7 @@ its application domain is similar to the one of Kalman filters, specially the
 
 .. include:: snippets/CostDecrementTolerance.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 .. include:: snippets/GradientNormTolerance.rst
 

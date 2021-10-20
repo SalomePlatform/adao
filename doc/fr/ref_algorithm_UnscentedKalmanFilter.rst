@@ -86,7 +86,7 @@ aucune contrainte (la variante nommée "UKF", qui n'est pas recommandée).
 
 .. include:: snippets/ConstrainedBy.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 .. include:: snippets/AlphaBeta.rst
 

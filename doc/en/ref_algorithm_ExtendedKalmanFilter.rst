@@ -43,7 +43,7 @@ the state and **P** the state error covariance :
     :align: center
     :width: 100%
   .. centered::
-    **Timeline of steps in extended Kalman filter assimilation**
+    **Timeline of steps in extended Kalman filter data assimilation**
 
 We notice that there is no analysis performed at the initial time step
 (numbered 0 in the time indexing) because there is no forecast at this time
@@ -90,7 +90,7 @@ by default), and the extended Kalman filter conducted without any constraint
 
 .. include:: snippets/ConstrainedBy.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

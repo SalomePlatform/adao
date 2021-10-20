@@ -7,4 +7,4 @@ EstimationOf
   est "State".
 
   Exemple :
-  ``{"EstimationOf":"Parameters"}``
+  ``{"EstimationOf":"State"}``

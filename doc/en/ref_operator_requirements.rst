@@ -87,6 +87,17 @@ following figure:
   .. centered::
     **Choosing graphically an operator functional representation**
 
+In ADAO textual interface (TUI), in the specific case illustrated above, the
+same approach is taken by writing :
+::
+
+    ...
+    case.set( 'ObservationOperator',
+        OneFunction = True,
+        Script = 'scripts_for_JDC.py'
+        )
+    ...
+
 .. _section_ref_operator_one:
 
 First functional form: one direct operator only

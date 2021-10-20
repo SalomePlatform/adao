@@ -79,6 +79,8 @@ initial de leur minimisation, mais ce n'est pas recommandé.
 
 .. include:: snippets/CostDecrementTolerance.rst
 
+.. include:: snippets/EstimationOf_Parameters.rst
+
 .. include:: snippets/GradientNormTolerance.rst
 
 .. include:: snippets/InitializationPoint.rst

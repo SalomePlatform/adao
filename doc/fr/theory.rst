@@ -32,6 +32,7 @@
 .. index:: single: état vrai
 .. index:: single: observation
 .. index:: single: a priori
+.. index:: single: EstimationOf
 
 **L'assimilation de données** est un cadre général bien établi pour le calcul de
 l'estimation optimale de l'état réel d'un système, au cours du temps si
@@ -60,14 +61,23 @@ d'optimisation`_, mais elles sont beaucoup plus générales et peuvent être
 utilisées sans les concepts d'assimilation de données.
 
 Deux types principaux d'applications existent en assimilation de données, qui
-sont couverts par le même formalisme : la **reconstruction de champs** et
-**l'identification de paramètres**. On parle aussi respectivement
-**d'estimation d'états** et **d'estimation de paramètres**. Avant d'introduire
-la `Description simple du cadre méthodologique de l'assimilation de données`_
-dans une prochaine section, on décrit brièvement ces deux types d'applications.
-A la fin de ce chapitre, quelques références permettent d'`Approfondir le cadre
-méthodologique de l'assimilation de données`_ et d'`Approfondir l'estimation
-d'état par des méthodes d'optimisation`_.
+sont couverts par le même formalisme : la **reconstruction de champs** (voir
+`Reconstruction de champs ou interpolation de données`_) et **l'identification
+de paramètres** (voir `Identification de paramètres, ajustement de modèles, ou
+calage`_). On parle aussi respectivement **d'estimation d'état** et
+**d'estimation de paramètres**, et l'on peut aussi estimer les deux de manière
+conjointe si nécessaire (voir `Estimation conjointe d'états et de
+paramètres`_). Dans ADAO, certains algorithmes peuvent être utilisés soit en
+estimation d'état, soit en estimation de paramètres. Cela se fait simplement en
+changeant l'option requise "*EstimationOf*" dans les paramètres des
+algorithmes. Avant d'introduire la `Description simple du cadre méthodologique
+de l'assimilation de données`_ dans une prochaine section, on décrit brièvement
+ces deux types d'applications. A la fin de ce chapitre, quelques informations
+permettent d'aller plus loin pour `Approfondir le cadre méthodologique de
+l'assimilation de données`_ et `Approfondir l'estimation d'état par des
+méthodes d'optimisation`_, ainsi que pour `Approfondir l'assimilation de
+données pour la dynamique`_ et avoir un `Aperçu des méthodes de réduction et de
+l'optimisation réduite`_.
 
 Reconstruction de champs ou interpolation de données
 ----------------------------------------------------
@@ -76,6 +86,7 @@ Reconstruction de champs ou interpolation de données
 .. index:: single: interpolation de données
 .. index:: single: interpolation de champs
 .. index:: single: estimation d'état
+.. index:: single: ébauche
 
 La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
 partir d'un nombre restreint de mesures réelles, le (ou les) champ(s)
@@ -105,8 +116,8 @@ temps précédent. On doit donc faire la reconstruction d'un champ en tout point
 de l'espace, de manière "cohérente" avec les équations d'évolution et avec les
 mesures aux précédents pas de temps.
 
-Identification de paramètres, ajustement de modèles, calage
------------------------------------------------------------
+Identification de paramètres, ajustement de modèles, ou calage
+--------------------------------------------------------------
 
 .. index:: single: identification de paramètres
 .. index:: single: ajustement de paramètres
@@ -159,6 +170,7 @@ un ensemble hétérogène d'informations à disposition.
 Estimation conjointe d'états et de paramètres
 ---------------------------------------------
 
+.. index:: single: jointe (estimation d'états et de paramètres)
 .. index:: single: estimation conjointe d'états et de paramètres
 
 Il parfois nécessaire, en considérant les deux types d'applications
@@ -170,16 +182,18 @@ Sans rentrer ici dans les méthodes avancées pour résoudre ce problème, on pe
 mentionner la démarche conceptuellement très simple consistant à considérer le
 vecteur des états à interpoler comme *augmenté* par le vecteur des paramètres à
 caler. On note que l'on est globalement en *estimation d'état* ou
-*reconstruction de champs*, et que dans le cas temporel, l'évolution des
-paramètres à estimer est simplement l'identité. Les algorithmes d'assimilation
-ou d'optimisation peuvent ensuite être appliqués au vecteur augmenté. Valable
-dans le cas de non-linéarités modérées dans la simulation, cette méthode simple
-étend l'espace d'optimisation, et conduit donc à des problèmes plus gros, mais
-il est souvent possible de réduire la représentation pour revenir à des cas
-numériquement calculables. Sans exhaustivité, l'optimisation à variables
-séparées, le filtrage de rang réduit, ou le traitement spécifique des matrices
-de covariances, sont des techniques courantes pour éviter ce problème de
-dimension.
+*reconstruction de champs*, et que dans le cas temporel de l'identification de
+paramètres, l'évolution des paramètres à estimer est simplement l'identité. Les
+algorithmes d'assimilation ou d'optimisation peuvent ensuite être appliqués au
+vecteur augmenté. Valable dans le cas de non-linéarités modérées dans la
+simulation, cette méthode simple étend l'espace d'optimisation, et conduit donc
+à des problèmes plus gros, mais il est souvent possible de réduire la
+représentation pour revenir à des cas numériquement calculables. Sans
+exhaustivité, l'optimisation à variables séparées, le filtrage de rang réduit,
+ou le traitement spécifique des matrices de covariances, sont des techniques
+courantes pour éviter ce problème de dimension. Dans le cas temporel, on verra
+ci-après des indications pour une `Estimation conjointe d'état et de paramètres
+en dynamique`_.
 
 Pour aller plus loin, on se référera aux méthodes mathématiques d'optimisation
 et d'augmentation développées dans de nombreux ouvrages ou articles
@@ -304,12 +318,13 @@ On indique que ces méthodes de "*3D-Var*" et de "*BLUE*" peuvent être étendue
 et de "*Filtre de Kalman (KF)*" et leurs dérivés. Elles doivent alors prendre
 en compte un opérateur d'évolution pour établir aux bons pas de temps une
 analyse de l'écart entre les observations et les simulations et pour avoir, à
-chaque instant, la propagation de l'ébauche à travers le modèle d'évolution. De
-la même manière, ces méthodes peuvent aussi être utilisées dans le cas
-d'opérateurs d'observation ou d'évolution non linéaires. Un grand nombre de
-variantes ont été développées pour accroître la qualité numérique des méthodes
-ou pour prendre en compte des contraintes informatiques comme la taille ou la
-durée des calculs.
+chaque instant, la propagation de l'ébauche à travers le modèle d'évolution. On
+se reportera à la section suivante pour `Approfondir l'assimilation de données
+pour la dynamique`_. De la même manière, ces méthodes peuvent aussi être
+utilisées dans le cas d'opérateurs d'observation ou d'évolution non linéaires.
+Un grand nombre de variantes ont été développées pour accroître la qualité
+numérique des méthodes ou pour prendre en compte des contraintes informatiques
+comme la taille ou la durée des calculs.
 
 Une vue schématique des approches d'Assimilation de Données et d'Optimisation
 -----------------------------------------------------------------------------
@@ -517,8 +532,203 @@ mentionne que quelques méthodes qui sont disponibles dans ADAO :
 Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
 sa recherche grâce au point d'entrée [WikipediaMO]_.
 
-Méthodes de réduction et optimisation réduite
----------------------------------------------
+Approfondir l'assimilation de données pour la dynamique
+-------------------------------------------------------
+
+.. index:: single: dynamique (système)
+.. index:: single: système dynamique
+.. index:: single: évolution temporelle
+.. index:: single: EDO (Équation Différentielle Ordinaire)
+.. index:: single: ODE (Ordinary Differential Equation)
+.. index:: single: EstimationOf
+
+On peut analyser un système en évolution temporelle (dynamique) à l'aide de
+l'assimilation de données, pour tenir compte explicitement de l'écoulement du
+temps dans l'estimation d'état ou de paramètres. On introduit ici brièvement la
+problématique, et certains outils théoriques ou pratiques, pour faciliter le
+traitement utilisateur de telles situations. On indique néanmoins que la
+variété des problématiques physiques et utilisateur est grande, et qu'il est
+donc recommandé d'adapter le traitement aux contraintes, qu'elles soient
+physiques, numériques ou informatiques.
+
+Forme générale de systèmes dynamiques
++++++++++++++++++++++++++++++++++++++
+
+Les systèmes en évolution temporelle peuvent être étudiés ou représentés à
+l'aide de systèmes dynamiques. Dans ce cas, il est aisé de concevoir l'analyse
+de leur comportement à l'aide de l'assimilation de données (c'est même dans ce
+cas précis que la démarche d'assimilation de données a initialement été
+largement développée).
+
+On formalise de manière simple le cadre de simulation numérique. Un système
+dynamique simple sur l'état :math:`\mathbf{x}` peut être décrit sous la forme :
+
+.. math:: \forall t \in \mathbb{R}^{+}, \frac{d\mathbf{x}}{dt} = \mathcal{D}(\mathbf{x},\mathbf{u},t)
+
+où :math:`\mathbf{x}` est le vecteur d'état inconnu, :math:`\mathbf{u}` est un
+vecteur de contrôle externe connu, et :math:`\mathcal{D}` l'opérateur
+(éventuellement non linéaire) de la dynamique du système. C'est une Équation
+Différentielle Ordinaire (EDO, ou ODE en anglais), du premier ordre, sur
+l'état. En temps discret, ce système dynamique peut être écrit sous la forme
+suivante :
+
+.. math:: \forall n \in \mathbb{N}, \mathbf{x}_{n+1} = M(\mathbf{x}_{n},\mathbf{u}_{n},t_n\rightarrow t_{n+1})
+
+pour une indexation :math:`t_n` des temps discrets avec :math:`n\in\mathbb{N}`.
+:math:`M` est l'opérateur d'évolution discret issu de :math:`\mathcal{D}`.
+Usuellement, on omet la notation du temps dans l'opérateur d'évolution
+:math:`M`. L'approximation de l'opérateur :math:`\mathcal{D}` par :math:`M`
+introduit (ou ajoute, si elle existe déjà) une erreur de modèle
+:math:`\epsilon`.
+
+On peut alors caractériser deux types d'estimations en dynamique, que l'on
+décrit ci-après sur le système dynamique en temps discret : `Estimation d'état
+en dynamique`_ et `Estimation de paramètres en dynamique`_. Combinés, les deux
+types peuvent permettre de faire une `Estimation conjointe d'état et de
+paramètres en dynamique`_. Dans ADAO, certains algorithmes peuvent être
+utilisés soit en estimation d'état, soit en estimation de paramètres. Cela se
+fait simplement en changeant l'option requise "*EstimationOf*" dans les
+paramètres des algorithmes.
+
+Estimation d'état en dynamique
+++++++++++++++++++++++++++++++
+
+L'estimation d'état peut être conduite par assimilation de données sur la
+version en temps discret du système dynamique, écrit sous la forme suivante :
+
+.. math:: \mathbf{x}_{n+1} = M(\mathbf{x}_{n},\mathbf{u}_{n}) + \mathbf{\epsilon}_{n}
+
+.. math:: \mathbf{y}_{n} = H(\mathbf{x}_{n}) + \mathbf{\nu}_{n}
+
+où :math:`\mathbf{x}` est l'état à estimer du système, :math:`\mathbf{x}_{n}`
+et :math:`\mathbf{y}_{n}` sont respectivement l'état (calculé) non observé et
+(mesuré) observé du système, :math:`M` et :math:`H` sont respectivement les
+opérateurs d'évolution incrémentale et d'observation,
+:math:`\mathbf{\epsilon}_{n}` et :math:`\mathbf{\nu}_{n}` sont respectivement
+les bruits ou erreurs d'évolution et d'observation, et :math:`\mathbf{u}_{n}`
+est un contrôle externe connu. Les deux opérateurs :math:`M` et :math:`H` sont
+directement utilisables en assimilation de données avec ADAO.
+
+Estimation de paramètres en dynamique
++++++++++++++++++++++++++++++++++++++
+
+L'estimation de paramètres s'écrit un peu différemment pour être conduite par
+assimilation de données. Toujours sur la version en temps discret du système
+dynamique, on recherche une correspondance :math:`G` ("mapping") non-linéaire,
+paramétrée par :math:`\mathbf{a}`, entre des entrées :math:`\mathbf{x}_{n}` et
+des mesures :math:`\mathbf{y}_{n}` à chaque pas :math:`t_n`, l'erreur à
+contrôler en fonction des paramètres :math:`\mathbf{a}` étant
+:math:`\mathbf{y}_{n}-G(\mathbf{x}_{n},\mathbf{a})`. On peut procéder par
+optimisation sur cette erreur, avec régularisation, ou par filtrage en écrivant
+le problème représenté en estimation d'état :
+
+.. math:: \mathbf{a}_{n+1} = \mathbf{a}_{n} + \mathbf{\epsilon}_{n}
+
+.. math:: \mathbf{y}_{n} = G(\mathbf{x}_{n},\mathbf{a}_{n}) + \mathbf{\nu}_{n}
+
+où, cette fois, les choix des modèles d'erreurs d'évolution et d'observation
+:math:`\mathbf{\epsilon}_{n}` et :math:`\mathbf{\nu}_{n}` conditionnent la
+performance de la convergence et du suivi des observations. L'estimation des
+paramètres :math:`\mathbf{a}` se fait par utilisation de paires
+:math:`(\mathbf{x}_{n},\mathbf{y}_{n})` d'entrées et de sorties
+correspondantes.
+
+Dans ce cas de l'estimation de paramètres, pour appliquer les méthodes
+d'assimilation de données, on impose donc l'hypothèse que l'opérateur
+d'évolution est l'identité (*Remarque : il n'est donc pas utilisé, mais doit
+être déclaré dans ADAO, par exemple en matrice à 1*), et l'opérateur
+d'observation est :math:`G`.
+
+Estimation conjointe d'état et de paramètres en dynamique
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Un cas spécial concerne l'estimation conjointe d'état et de paramètres utilisés
+dans un système dynamique. On cherche à estimer conjointement l'état
+:math:`\mathbf{x}` (qui dépend du temps) et les paramètres :math:`\mathbf{a}`
+(qui ne dépendent pas du temps). Il existe plusieurs manières de traiter ce
+problème, mais la plus générale consiste à utiliser un vecteur d'état augmenté
+par les paramètres, et à étendre les opérateurs en conséquence.
+
+Pour cela, en utilisant les notations des deux sous-sections précédentes, on
+définit la variable auxiliaire :math:`\mathbf{w}` telle que :
+
+.. math:: \mathbf{w} = \left[
+    \begin{array}{c}
+    \mathbf{x} \\
+    \mathbf{a}
+    \end{array}
+    \right]
+    = \left[
+    \begin{array}{c}
+    \mathbf{w}_{|x} \\
+    \mathbf{w}_{|a}
+    \end{array}
+    \right]
+
+et les opérateurs d'évolution :math:`\tilde{M}` et d'observation
+:math:`\tilde{H}` associés au problème augmenté :
+
+.. math:: \tilde{M}(\mathbf{w},\mathbf{u}) = \left[
+    \begin{array}{c}
+    M(\mathbf{w}_{|x},\mathbf{u}) \\
+    \mathbf{w}_{|a}
+    \end{array}
+    \right]
+    = \left[
+    \begin{array}{c}
+    M(\mathbf{x},\mathbf{u}) \\
+    \mathbf{a}
+    \end{array}
+    \right]
+
+.. math:: \tilde{H}(\mathbf{w}) = \left[
+    \begin{array}{c}
+    H(\mathbf{w}_{|x}) \\
+    G(\mathbf{w}_{|x},\mathbf{w}_{|a})
+    \end{array}
+    \right]
+    = \left[
+    \begin{array}{c}
+    H(\mathbf{x}) \\
+    G(\mathbf{x},\mathbf{a})
+    \end{array}
+    \right]
+
+Avec ces notations, en étendant les variables de bruit
+:math:`\mathbf{\epsilon}` et :math:`\mathbf{\nu}` de manière adéquate, le
+problème d'estimation conjointe en temps discret d'état :math:`\mathbf{x}` et
+de paramètres :math:`\mathbf{a}`, à travers la variable conjointe
+:math:`\mathbf{w}`, s'écrit alors :
+
+.. math:: \mathbf{w}_{n+1} = \tilde{M}(\mathbf{w}_{n},\mathbf{u}_{n}) + \mathbf{\epsilon}_{n}
+
+.. math:: \mathbf{y}_{n} = \tilde{H}(\mathbf{w}_{n}) + \mathbf{\nu}_{n}
+
+Les opérateurs d'évolution incrémentale et d'observation sont donc
+respectivement les opérateurs augmentés :math:`\tilde{M}` et :math:`\tilde{H}`,
+et sont directement utilisables en assimilation de données avec ADAO.
+
+Schéma conceptuel pour l'assimilation de données en dynamique
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Pour compléter la description, on peut représenter la démarche d'assimilation
+de données de manière spécifiquement dynamique à l'aide d'un schéma temporel,
+qui décrit l'action des opérateurs d'évolution (:math:`M` ou :math:`\tilde{M}`)
+et d'observation (:math:`H` ou :math:`\tilde{H}`) lors de la simulation
+discrète. Une représentation possible est la suivante :
+
+  .. _schema_d_AD_temporel:
+  .. image:: images/schema_temporel_KF.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Schéma d'action des opérateurs pour l'assimilation de données en dynamique**
+
+Les concepts décrits dans ce schéma peuvent directement et simplement être
+utilisés dans ADAO.
+
+Aperçu des méthodes de réduction et de l'optimisation réduite
+-------------------------------------------------------------
 
 .. index:: single: réduction
 .. index:: single: méthodes de réduction

@@ -422,14 +422,17 @@ Obtenir plus d'information lors du déroulement d'un calcul
 ----------------------------------------------------------
 
 .. index:: single: Logging
+.. index:: single: Debug
+.. index:: single: setDebug
 
 Lors du déroulement d'un calcul, des données et messages utiles sont
 disponibles. Il y a deux manières d'obtenir ces informations.
 
 La première, et la manière préférentielle, est d'utiliser la variable interne
-"*Debug*" disponible dans chaque cas ADAO. Elle est atteignable dans l'interface
-graphique d'édition du module. La mettre à "*1*" permet d'envoyer des messages
-dans la fenêtre de sortie de l'exécution dans YACS ("*YACS Container Log*").
+"*Debug*" disponible dans chaque cas ADAO. Elle est atteignable dans
+l'interface graphique d'édition (GUI) du module comme dans l'interface
+textuelle (TUI). La mettre à "*1*" permet d'envoyer des messages dans la
+fenêtre de sortie de l'exécution dans YACS ("*YACS Container Log*").
 
 La seconde consiste à utiliser le module Python natif "*logging*" (voir la
 documentation Python http://docs.python.org/library/logging.html pour de plus
@@ -450,11 +453,11 @@ Le niveau par défaut standard de surveillance par logging est "*WARNING*", le
 niveau par défaut dans le module ADAO est "*INFO*".
 
 Il est aussi recommandé d'inclure de la surveillance par logging ou des
-mécanismes de débogage dans le code de simulation, et de les utiliser en
-conjonction avec les deux méthodes précédentes. Néanmoins, il convient d'être
-prudent dans le stockage de "grosses" variables car cela coûte du temps,
-quel que soit le niveau de surveillance choisi (c'est-à-dire même si ces
-variables ne sont pas affichées).
+mécanismes de débogage dans le code de simulation physique de l'utilisateur, et
+de les exploiter en conjonction avec les deux méthodes précédentes. Néanmoins,
+il convient d'être prudent dans le stockage de "grosses" variables car cela
+coûte du temps ou de la mémoire, quel que soit le niveau de surveillance choisi
+(c'est-à-dire même si ces variables ne sont pas affichées).
 
 .. _subsection_ref_parallel_df:
 

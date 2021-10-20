@@ -29,16 +29,19 @@
 
 .. |eficas_new| image:: images/eficas_new.png
    :align: middle
-   :scale: 50%
+   :scale: 75%
 .. |eficas_save| image:: images/eficas_save.png
    :align: middle
-   :scale: 50%
+   :scale: 75%
 .. |eficas_saveas| image:: images/eficas_saveas.png
+   :align: middle
+   :scale: 75%
+.. |eficas_totui| image:: images/eficas_totui.png
    :align: middle
    :scale: 50%
 .. |eficas_yacs| image:: images/eficas_yacs.png
    :align: middle
-   :scale: 50%
+   :scale: 75%
 
 This section presents some examples on using the ADAO module in SALOME. The
 first one shows how to build a very simple data assimilation case defining

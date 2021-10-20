@@ -31,6 +31,7 @@
 .. index:: single: true state
 .. index:: single: observation
 .. index:: single: a priori
+.. index:: single: EstimationOf
 
 **Data Assimilation** is a general well established framework for computing the
 optimal estimate of the true state of a system, over time if necessary. It uses
@@ -55,12 +56,21 @@ section `Going further in the state estimation by optimization methods`_, but
 they are far more general and can be used without data assimilation concepts.
 
 Two main types of applications exist in data assimilation, which are covered by
-the same formalism: **fields reconstruction** and **parameters identification**.
-These are also referred to as **state estimation** and **parameters estimation**
-respectively. Before introducing the `Simple description of the data
-assimilation methodological framework`_ in a next section, these two types of
-applications are briefly described. At the end, some references allow `Going
-further in the data assimilation framework`_.
+the same formalism: **fields reconstruction** (see `Fields reconstruction or
+measures interpolation`_) and **parameters identification** (see `Parameters
+identification, models adjustment, or calibration`_). These are also referred
+to as **state estimation** and **parameters estimation** respectively, and one
+can if necessary elaborate joint estimation of both (see `Joint state and
+parameter estimation in dynamics`_). In ADAO, some algorithms can be used
+either in state estimation or in parameter estimation. This is done simply by
+changing the required option "*EstimationOf*" in the algorithm parameters.
+Before introducing the `Simple description of the data assimilation
+methodological framework`_ in a next section, these two types of applications
+are briefly described. At the end, some detailed information allow `Going
+further in the data assimilation framework`_ and `Going further in the state
+estimation by optimization methods`_, as well as `Going further in data
+assimilation for dynamics`_  and having an `Overview of reduction methods and
+of reduced optimization`_.
 
 Fields reconstruction or measures interpolation
 -----------------------------------------------
@@ -69,6 +79,7 @@ Fields reconstruction or measures interpolation
 .. index:: single: measures interpolation
 .. index:: single: fields interpolation
 .. index:: single: state estimation
+.. index:: single: background
 
 **Fields reconstruction (or interpolation)** consists in finding, from a
 restricted set of real measures, the physical field which is the most
@@ -96,8 +107,8 @@ One must therefore make the reconstruction of a field at any point in space, in
 a "consistent" manner with the evolution equations and with the measures of the
 previous time steps.
 
-Parameters identification, models adjustment, calibration
----------------------------------------------------------
+Parameters identification, models adjustment, or calibration
+------------------------------------------------------------
 
 .. index:: single: parameters identification
 .. index:: single: parameters adjustment
@@ -157,14 +168,16 @@ Without going into the advanced methods to solve this problem, we can mention
 the conceptually very simple approach of considering the vector of states to be
 interpolated as *augmented* by the vector of parameters to be calibrated. It
 can be noted that we are in *state estimation* or *reconstruction of fields*,
-and that in the temporal case, the evolution of the parameters to estimate is
-simply the identity. The assimilation or optimization algorithms can then be
-applied to the augmented vector. Valid for moderate nonlinearities in the
-simulation, this simple method extends the optimization space, and thus leads
-to larger problems, but it is often possible to reduce the representation to
-numerically computable cases. Without exhaustiveness, the separated variables
-optimization, the reduced rank filtering, or the specific treatment of
-covariance matrices, are common techniques to avoid this dimension problem.
+and that in the temporal case of parameters identification, the evolution of
+the parameters to estimate is simply the identity. The assimilation or
+optimization algorithms can then be applied to the augmented vector. Valid for
+moderate nonlinearities in the simulation, this simple method extends the
+optimization space, and thus leads to larger problems, but it is often possible
+to reduce the representation to numerically computable cases. Without
+exhaustiveness, the separated variables optimization, the reduced rank
+filtering, or the specific treatment of covariance matrices, are common
+techniques to avoid this dimension problem. In the temporal case, we will see
+below indications for a `Joint state and parameter estimation in dynamics`_.
 
 To go further, we refer to the mathematical methods of optimization and
 augmentation developed in many books or specialized articles, finding their
@@ -286,11 +299,12 @@ extended to dynamic or time-related problems, called respectively "*4D-Var*"
 and "*Kalman filter (KF)*" and their derivatives. They have to take into
 account an evolution operator to establish an analysis at the right time steps
 of the gap between observations and simulations, and to have, at every moment,
-the propagation of the background through the evolution model. In the same way,
-these methods can be used in case of non linear observation or evolution
-operators. Many other variants have been developed to improve the numerical
-quality of the methods or to take into account computer requirements such as
-calculation size and time.
+the propagation of the background through the evolution model. The next section
+provides information on `Going further in data assimilation for dynamics`_. In
+the same way, these methods can be used in case of non linear observation or
+evolution operators. Many other variants have been developed to improve the
+numerical quality of the methods or to take into account computer requirements
+such as calculation size and time.
 
 A schematic view of Data Assimilation and Optimization approaches
 -----------------------------------------------------------------
@@ -484,8 +498,196 @@ it is available in the ADAO module:
 The reader interested in the subject of optimization can look at [WikipediaMO]_
 as a general entry point.
 
-Reduction methods and reduced optimization
-------------------------------------------
+Going further in data assimilation for dynamics
+-----------------------------------------------
+
+.. index:: single: dynamic (system)
+.. index:: single: system dynamic
+.. index:: single: temporal evolution
+.. index:: single: ODE (Ordinary Differential Equation)
+.. index:: single: EstimationOf
+
+We can analyze a system in temporal evolution (dynamics) with the help of data
+assimilation, in order to explicitly take into account the flow of time in the
+estimation of states or parameters. We briefly introduce here the problematic,
+and some theoretical or practical tools, to facilitate the user treatment of
+such situations. It is nevertheless indicated that the variety of physical and
+user problems is large, and that it is therefore recommended to adapt the
+treatment to the constraints, whether they are physical, numerical or
+computational.
+
+General form of dynamic systems
++++++++++++++++++++++++++++++++
+
+Systems in temporal evolution can be studied or represented using dynamic
+systems. In this case, it is easy to conceive the analysis of their behavior
+with the help of data assimilation (it is even in this precise case that the
+data assimilation approach was initially widely developed).
+
+We formalize the numerical simulation framework in a simple way. A simple
+dynamic system dynamic system on the state :math:`\mathbf{x}` can be described
+in the form:
+
+.. math:: \forall t \in \mathbb{R}^{+}, \frac{d\mathbf{x}}{dt} = \mathcal{D}(\mathbf{x},\mathbf{u},t)
+
+where :math:`\mathbf{x}` is the unknown state vector, :math:`\mathbf{u}` is a
+known external control vector, and :math:`\mathcal{D}` is the (possibly
+non-linear) operator of the system dynamics. It is an Ordinary Differential
+Equation (ODE), of the first order, on the state. In discrete time, this
+dynamical system can be written in the following form:
+
+.. math:: \forall n \in \mathbb{N}, \mathbf{x}_{n+1} = M(\mathbf{x}_{n},\mathbf{u}_{n},t_n\rightarrow t_{n+1})
+
+for an indexing :math:`t_n` of discrete times with :math:`n\in\mathbf{N}`.
+:math:`M` is the discrete evolution operator obtained from :math:`\mathcal{D}`.
+Usually, we omit the time notation in the evolution operator :math:`M`.
+Approximating the :math:`\mathcal{D}` operator by :math:`M` introduces (or
+adds, if it already exists) a :math:`\epsilon` model error.
+
+We can then characterize two types of estimates in dynamics, which we describe
+hereafter on the discrete time dynamical system: `State estimation in
+dynamics`_ and `Parameter estimation in dynamics`_. Combined, the two types can
+be used to make a `Joint state and parameter estimation in dynamics`_. In ADAO,
+some algorithms can be used either in state estimation or in parameter
+estimation. This is done simply by changing the required option
+"*EstimationOf*" in the algorithm parameters.
+
+State estimation in dynamics
+++++++++++++++++++++++++++++
+
+The state estimation can be conducted by data assimilation on the discrete time
+version of the dynamical system, written in the following form:
+
+.. math:: \mathbf{x}_{n+1} = M(\mathbf{x}_{n},\mathbf{u}_{n}) + \mathbf{\epsilon}_{n}
+
+.. math:: \mathbf{y}_{n} = H(\mathbf{x}_{n}) + \mathbf{\nu}_{n}
+
+where :math:`\mathbf{x}` is the system state to be estimated,
+:math:`\mathbf{x}_{n}` and :math:`\mathbf{y}_{n}` are respectively the
+(computed) unobserved and (measured) observed state of the system, :math:`M`
+and :math:`H` are the incremental evolution and observation operators,
+respectively, :math:`\mathbf{\epsilon}_{n}` and :math:`\mathbf{\nu}_{n}` are
+the evolution and observation noise or error, respectively, and
+:math:`\mathbf{u}_{n}` is a known external control. The two operators :math:`M`
+and :math:`H` are directly usable in data assimilation with ADAO.
+
+Parameter estimation in dynamics
+++++++++++++++++++++++++++++++++
+
+The parameter estimation can be written a differently to be solved by data
+assimilation. Still on the discrete time version of the dynamical system, we
+look for a nonlinear :math:`G` mapping, parameterized by :math:`\mathbf{a}`,
+between inputs :math:`\mathbf{x}_{n}` and measurements :math:`\mathbf{y}_{n}`
+at each step :math:`t_n`, the error to be controlled as a function of
+parameters :math:`\mathbf{y}_{n}` being
+:math:`\mathbf{y}_{n}-G(\mathbf{x}_{n},\mathbf{a})`. We can proceed by
+optimization on this error, with regularization, or by filtering by writing the
+problem represented in state estimation:
+
+.. math:: \mathbf{a}_{n+1} = \mathbf{a}_{n} + \mathbf{\epsilon}_{n}
+
+.. math:: \mathbf{y}_{n} = G(\mathbf{x}_{n},\mathbf{a}_{n}) + \mathbf{\nu}_{n}
+
+where, this time, the choices of the evolution and observation error models
+:math:`\mathbf{\epsilon}_{n}` and :math:`\mathbf{\nu}_{n}` condition the
+performance of convergence and observation tracking. The estimation of the
+parameters :math:`\mathbf{a}` is done by using pairs
+:math:`(\mathbf{x}_{n},\mathbf{y}_{n})` of corresponding inputs and outputs.
+
+In this case of parameter estimation, in order to apply data assimilation
+methods, we therefore impose the hypothesis that the evolution operator is the
+identity (*Note: it is therefore not used, but must be declared in ADAO, for
+example as a 1 matrix*), and the observation operator is :math:`G`.
+
+Joint state and parameter estimation in dynamics
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+A special case concerns the joint estimation of state and parameters used in a
+dynamic system. One seeks to jointly estimate the state :math:`\mathbf{x}`
+(which depends on time) and the parameters :math:`\mathbf{a}` (which does not
+depend on time). There are several ways to deal with this problem, but the most
+general one is to use a state vector augmented by the parameters, and to extend
+the operators accordingly.
+
+To do this, using the notations of the previous two subsections, we define the
+auxiliary variable :math:`\mathbf{w}` such that:
+
+.. math:: \mathbf{w} = \left[
+    \begin{array}{c}
+    \mathbf{x} \\
+    \mathbf{a}
+    \end{array}
+    \right]
+    = \left[
+    \begin{array}{c}
+    \mathbf{w}_{|x} \\
+    \mathbf{w}_{|a}
+    \end{array}
+    \right]
+
+and the operators of evolution :math:`\tilde{M}` and observation
+:math:`\tilde{H}` associated to the augmented problem:
+
+.. math:: \tilde{M}(\mathbf{w},\mathbf{u}) = \left[
+    \begin{array}{c}
+    M(\mathbf{w}_{|x},\mathbf{u}) \\
+    \mathbf{w}_{|a}
+    \end{array}
+    \right]
+    = \left[
+    \begin{array}{c}
+    M(\mathbf{x},\mathbf{u}) \\
+    \mathbf{a}
+    \end{array}
+    \right]
+
+.. math:: \tilde{H}(\mathbf{w}) = \left[
+    \begin{array}{c}
+    H(\mathbf{w}_{|x}) \\
+    G(\mathbf{w}_{|x},\mathbf{w}_{|a})
+    \end{array}
+    \right]
+    = \left[
+    \begin{array}{c}
+    H(\mathbf{x}) \\
+    G(\mathbf{x},\mathbf{a})
+    \end{array}
+    \right]
+
+With these notations, by extending the noise variables
+:math:`\mathbf{\epsilon}` and :math:`\mathbf{\nu}` appropriately, the joint
+state :math:`\mathbf{x}` and parameters :math:`\mathbf{a}` discrete-time
+estimation problem, using the joint variable :math:`\mathbf{w}`, is then
+written:
+
+.. math:: \mathbf{w}_{n+1} = \tilde{M}(\mathbf{w}_{n},\mathbf{u}_{n}) + \mathbf{\epsilon}_{n}
+
+.. math:: \mathbf{y}_{n} = \tilde{H}(\mathbf{w}_{n}) + \mathbf{\nu}_{n}
+
+The incremental evolution and observation operators are therefore respectively
+the augmented operators :math:`\tilde{M}` and :math:`\tilde{H}`, and are
+directly usable in data assimilation with ADAO.
+
+Conceptual scheme for data assimilation in dynamics
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+To complete the description, we can represent the data assimilation process in
+a dynamics specific way using a temporal scheme, which describes the action of
+the evolution (:math:`M` or :math:`\tilde{M}`) and observation (:math:`H` or
+:math:`\tilde{H}`) operators during the discrete simulation. A possible
+representation is as follows:
+
+  .. _schema_d_AD_temporel:
+  .. image:: images/schema_temporel_KF.png
+    :align: center
+    :width: 100%
+  .. centered::
+    **Timeline of steps for data assimilation operators in dynamics**
+
+The concepts described in this diagram can be directly and simply used in ADAO.
+
+Overview of reduction methods and of reduced optimization
+---------------------------------------------------------
 
 .. index:: single: reduction
 .. index:: single: reduction methods

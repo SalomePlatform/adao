@@ -39,13 +39,12 @@ l'estimation optimale de la valeur réelle (inaccessible) de l'état d'un
 système, éventuellement au cours du temps. Il utilise des informations
 provenant de mesures expérimentales, ou observations, et de modèles numériques
 *a priori*, y compris des informations sur leurs erreurs. Certaines des
-méthodes incluses dans ce cadre sont également connues sous les noms
-d'*estimation de paramètres*, de *problèmes inverses*, d'*estimation
-bayésienne*, d'*interpolation optimale*, de *reconstruction de champs*, etc. Le
+méthodes incluses dans ce cadre sont également connues sous les noms de
+*problèmes inverses*, *estimation de paramètres*, *estimation bayésienne*,
+*interpolation optimale*, *reconstruction de champs*, etc. De plus amples
+détails peuvent être trouvés dans la partie proposant :ref:`section_theory`. Le
 module ADAO offre actuellement plus d'une centaine de méthodes algorithmiques
-différentes et permet l'étude d'environ 350 problèmes appliqués distincts. De
-plus amples détails peuvent être trouvés dans la partie proposant
-:ref:`section_theory`.
+différentes et permet l'étude d'environ 350 problèmes appliqués distincts.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la documentation théorique (indiquée dans le titre de section par

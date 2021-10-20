@@ -29,16 +29,19 @@
 
 .. |eficas_new| image:: images/eficas_new.png
    :align: middle
-   :scale: 50%
+   :scale: 75%
 .. |eficas_save| image:: images/eficas_save.png
    :align: middle
-   :scale: 50%
+   :scale: 75%
 .. |eficas_saveas| image:: images/eficas_saveas.png
+   :align: middle
+   :scale: 75%
+.. |eficas_totui| image:: images/eficas_totui.png
    :align: middle
    :scale: 50%
 .. |eficas_yacs| image:: images/eficas_yacs.png
    :align: middle
-   :scale: 50%
+   :scale: 75%
 
 Cette section présente quelques exemples d'utilisation du module ADAO dans
 SALOME. Le premier montre comment construire un cas très simple d'assimilation
@@ -103,8 +106,8 @@ d'observation :
 
     H = Id = [1 0 0 ; 0 1 0 ; 0 0 1]
 
-Avec de tels choix, l'estimateur "Best Linear Unbiased Estimator" (BLUE) sera le
-vecteur moyen entre :math:`\mathbf{y}^o` et :math:`\mathbf{x}^b`, nommé
+Avec de tels choix, l'estimateur "Best Linear Unbiased Estimator" (BLUE) sera
+le vecteur moyen entre :math:`\mathbf{y}^o` et :math:`\mathbf{x}^b`, nommé
 *analysis*, noté :math:`\mathbf{x}^a`, et valant :
 ::
 
@@ -132,8 +135,8 @@ menu approprié de module de SALOME, et on voit :
     **Activation du module ADAO dans SALOME**
 
 Choisir le bouton "*Nouveau*" dans cette fenêtre. On obtient directement
-l'interface de l'éditeur intégré de cas pour la définition de variables, en même
-temps que l'"*Arbre d'étude*" de SALOME. On peut alors choisir le bouton
+l'interface de l'éditeur intégré de cas pour la définition de variables, en
+même temps que l'"*Arbre d'étude*" de SALOME. On peut alors choisir le bouton
 "*Nouveau*" |eficas_new| pour créer un nouveau cas ADAO, et on voit :
 
   .. _adao_viewer:
@@ -162,11 +165,11 @@ définition finale du cas ressemble à :
   .. centered::
     **Définition des conditions d'expérience choisies pour le cas ADAO**
 
-Pour poursuivre, on a besoin de générer le schéma YACS à partir de la définition
-du cas ADAO. Pour faire cela, on peut activer le menu contextuel par click droit
-sur le nom du cas dans la fenêtre de l'"*Arbre d'étude*", et choisir le
-sous-menu "*Exporter vers YACS*" (ou le bouton "*Exporter vers YACS*"
-|eficas_yacs|) comme ci-dessous :
+Pour poursuivre, on a besoin de générer le schéma YACS à partir de la
+définition du cas ADAO. Pour faire cela, on peut activer le menu contextuel par
+click droit sur le nom du cas dans la fenêtre de l'"*Arbre d'étude*", et
+choisir le sous-menu "*Exporter vers YACS*" (ou le bouton "*Exporter vers
+YACS*" |eficas_yacs|) comme ci-dessous :
 
   .. _adao_exporttoyacs00:
   .. image:: images/adao_exporttoyacs.png
@@ -175,11 +178,12 @@ sous-menu "*Exporter vers YACS*" (ou le bouton "*Exporter vers YACS*"
   .. centered::
     **Sous-menu contextuel "*Exporter vers YACS*" pour générer le schéma YACS à partir du cas ADAO**
 
-Cette commande conduit à la génération d'un schéma YACS, à l'activation du module
-YACS dans SALOME, et à ouvrir le nouveau schéma dans l'interface graphique du
-module YACS [#]_. Après avoir éventuellement réorganisé les noeuds en utilisant
-le sous-menu contextuel "*arranger les noeuds locaux*" de la vue graphique du
-schéma YACS, on obtient la représentation suivante du schéma ADAO généré :
+Cette commande conduit à la génération d'un schéma YACS, à l'activation du
+module YACS dans SALOME, et à ouvrir le nouveau schéma dans l'interface
+graphique du module YACS [#]_. Après avoir éventuellement réorganisé les noeuds
+en utilisant le sous-menu contextuel "*arranger les noeuds locaux*" de la vue
+graphique du schéma YACS, on obtient la représentation suivante du schéma ADAO
+généré :
 
   .. _yacs_generatedscheme:
   .. image:: images/yacs_generatedscheme.png
@@ -195,8 +199,8 @@ schéma d'assimilation de données seront effectués dans le module YACS. De fa�
 "*Noeud de script in-line*" dans la vue graphique de YACS).
 
 Ce noeud de script va récupérer l'analyse issue de l'assimilation de données
-depuis le port de sortie "*algoResults*" du bloc de calcul (qui donne accés à un
-objet Python SALOME), et va l'afficher à la sortie standard.
+depuis le port de sortie "*algoResults*" du bloc de calcul (qui donne accés à
+un objet Python SALOME), et va l'afficher à la sortie standard.
 
 Pour obtenir ceci, ce noeud de script doit comporter un port d'entrée de type
 "*pyobj*", nommé "*Study*" par exemple, qui doit être relié graphiquement au
@@ -210,18 +214,19 @@ le noeud de script est :
     print("Analysis =",Xa)
     print()
 
-Le schéma YACS (initial ou complété) peut être enregistré (en écrasant le schéma
-généré si la commande ou le bouton "*Enregistrer*" sont utilisés, ou sinon avec
-un nom nouveau par la commande "*Enregistrer sous*"). De manière pratique, la
-mise au point d'une telle procédure de post-processing peut être réalisée dans
-YACS pour la tester, et ensuite entièrement enregistrée dans un script Python
-qui peut être intégré au cas ADAO en utilisant le mot-clé "*UserPostAnalysis*".
+Le schéma YACS (initial ou complété) peut être enregistré (en écrasant le
+schéma généré si la commande ou le bouton "*Enregistrer*" sont utilisés, ou
+sinon avec un nom nouveau par la commande "*Enregistrer sous*"). De manière
+pratique, la mise au point d'une telle procédure de post-processing peut être
+réalisée dans YACS pour la tester, et ensuite entièrement enregistrée dans un
+script Python qui peut être intégré au cas ADAO en utilisant le mot-clé
+"*UserPostAnalysis*".
 
 Ensuite, de manière classique dans YACS, le schéma doit être compilé, et être
 exécuté. Après la fin de l'exécution, les affichages sur la sortie standard
 sont disponibles dans la fenêtre "*fenêtre de sortie de YACS*" (ou "*YACS
 Container Log*"), obtenue par clic droit à l'aide du menu contextuel de la
-fenêtre "*proc*" du schéma YACS comme montré ci-dessous:
+fenêtre "*proc*" du schéma YACS comme montré ci-dessous :
 
   .. _yacs_containerlog:
   .. image:: images/yacs_containerlog.png
@@ -239,10 +244,10 @@ contient la ligne suivante :
 comme montré dans l'image précédente.
 
 Pour étendre cet exemple, on peut remarquer que le même problème résolu par un
-algorithme de 3DVAR donne le même résultat. Cet algorithme peut être choisi lors
-de l'étape de construction du cas ADAO, avant d'entrer dans l'étape YACS. Le cas
-ADAO en 3DVAR est entièrement similaire au cas algorithmique du BLUE, comme
-montré dans la figure suivante:
+algorithme de 3DVAR donne le même résultat. Cet algorithme peut être choisi
+lors de l'étape de construction du cas ADAO, avant d'entrer dans l'étape YACS.
+Le cas ADAO en 3DVAR est entièrement similaire au cas algorithmique du BLUE,
+comme montré dans la figure suivante :
 
   .. _adao_jdcexample02:
   .. image:: images/adao_jdcexample02.png
@@ -267,9 +272,9 @@ données issues d'un unique fichier script Python externe.
 En premier lieu, on écrit le fichier script suivant, utilisant des noms
 conventionnels pour les variables requises. Ici toutes les variables sont
 définies dans le même script, mais l'utilisateur peut choisir de séparer le
-fichier en plusieurs autres, ou de mélanger une définition explicite des données
-dans l'interface graphique ADAO et une définition implicite dans des fichiers
-externes. Le fichier script actuel ressemble à :
+fichier en plusieurs autres, ou de mélanger une définition explicite des
+données dans l'interface graphique ADAO et une définition implicite dans des
+fichiers externes. Le fichier script actuel ressemble à :
 ::
 
     import numpy
@@ -310,7 +315,7 @@ pour compléter le cas est similaire à celle de l'exemple précédent à part l
 fait que, au lieu de choisir l'option "*String*" pour le mot-clé "*FROM*" de
 chaque variable, on choisit l'option "*Script*". Cela conduit à une entrée
 "*SCRIPT_DATA/SCRIPT_FILE*" dans l'arbre graphique, permettant de choisir un
-fichier de la manière suivante:
+fichier de la manière suivante :
 
   .. _adao_scriptentry01:
   .. image:: images/adao_scriptentry01.png
@@ -324,8 +329,8 @@ précédent `Construire un cas d'estimation avec une définition explicite des
 données`_.
 
 Dans la pratique, cette démarche par scripts est la manière la plus facile pour
-récupérer des informations depuis des calculs en ligne ou préalables, depuis des
-fichiers statiques, depuis des bases de données ou des flux informatiques,
+récupérer des informations depuis des calculs en ligne ou préalables, depuis
+des fichiers statiques, depuis des bases de données ou des flux informatiques,
 chacun pouvant être dans ou hors SALOME. Cela permet aussi de modifier aisément
 des données d'entrée, par exemple à des fin de débogage ou pour des traitements
 répétitifs, et c'est la méthode la plus polyvalente pour paramétrer les données
@@ -347,7 +352,7 @@ défaut, ou à partir d'un dictionnaire Python, contenant des paires clé/valeur
 La liste des paramètres optionnels possibles est donnée dans la section
 :ref:`section_reference` et ses sous-sections. On recommande d'utiliser la
 définition explicite de valeurs à partir de la liste par défaut de paramètres
-optionnels, comme ici avec le "*MaximumNumberOfSteps*":
+optionnels, comme ici avec le "*MaximumNumberOfSteps*" :
 
   .. _adao_scriptentry02:
   .. image:: images/adao_scriptentry02.png
@@ -404,9 +409,9 @@ exemples de squelettes ADAO sous le nom de
 Conditions d'expérience
 +++++++++++++++++++++++
 
-On continue à opérer dans un espace à 3 dimensions, afin de limiter la taille de
-l'objet numérique indiqué dans les scripts, mais le problème ne dépend pas de la
-dimension.
+On continue à opérer dans un espace à 3 dimensions, afin de limiter la taille
+de l'objet numérique indiqué dans les scripts, mais le problème ne dépend pas
+de la dimension.
 
 On choisit un contexte d'expériences jumelles (voir la démarche
 :ref:`section_methodology_twin`), en utilisant un état vrai
@@ -423,20 +428,21 @@ qui est :
 
     Xb = Xt + normal(0, 20%*Xt)
 
-Pour décrire la matrice des covariances d'erreur d'ébauche math:`\mathbf{B}`, on
-fait comme précédemment l'hypothèse d'erreurs décorrélées (c'est-à-dire, une
-matrice diagonale, de taille 3x3 parce-que :math:`\mathbf{x}^b` est de taille 3)
-et d'avoir la même variance de 0,1 pour toutes les variables. On obtient :
+Pour décrire la matrice des covariances d'erreur d'ébauche math:`\mathbf{B}`,
+on fait comme précédemment l'hypothèse d'erreurs décorrélées (c'est-à-dire, une
+matrice diagonale, de taille 3x3 parce-que :math:`\mathbf{x}^b` est de taille
+3) et d'avoir la même variance de 0,1 pour toutes les variables. On obtient :
 ::
 
     B = 0.1 * diagonal( length(Xb) )
 
 On suppose qu'il existe un opérateur d'observation :math:`\mathbf{H}`, qui peut
-être non linéaire. Dans une procédure réelle de recalage ou de problème inverse,
-les codes de simulation physique sont intégrés dans l'opérateur d'observation.
-On a également besoin de connaître son gradient par rapport à chaque variable
-estimée, ce qui est une information rarement connue avec les codes industriels.
-Mais on verra plus tard comment obtenir un gradient approché dans ce cas.
+être non linéaire. Dans une procédure réelle de recalage ou de problème
+inverse, les codes de simulation physique sont intégrés dans l'opérateur
+d'observation. On a également besoin de connaître son gradient par rapport à
+chaque variable estimée, ce qui est une information rarement connue avec les
+codes industriels. Mais on verra plus tard comment obtenir un gradient approché
+dans ce cas.
 
 Étant en expériences jumelles, les observations :math:`\mathbf{y}^o` et leur
 matrice de covariances d'erreurs :math:`\mathbf{R}` sont générées en utilisant
@@ -509,9 +515,9 @@ dans un fichier de script Python nommé ``Script_Background_xb.py`` :
     Background = list(xb)
 
 De la même manière, on définit la matrice des covariances de l'erreur d'ébauche
-:math:`\mathbf{B}` comme une matrice diagonale, de la même longueur de diagonale
-que l'ébauche de la valeur vraie, en utilisant la fonction d'aide déjà définie.
-C'est réalisé dans un fichier script Python nommé
+:math:`\mathbf{B}` comme une matrice diagonale, de la même longueur de
+diagonale que l'ébauche de la valeur vraie, en utilisant la fonction d'aide
+déjà définie. C'est réalisé dans un fichier script Python nommé
 ``Script_BackgroundError_B.py`` :
 ::
 
@@ -555,12 +561,13 @@ d'ADAO. Des informations détaillées sur ces opérateurs peuvent être trouvée
 dans les :ref:`section_ref_operator_requirements`.
 
 On insiste sur le fait que ces opérateurs non-linéaire ``"DirectOperator"``,
-linéaire tangent ``"TangentOperator"`` et linéaire adjoint ``"AdjointOperator"``
-proviennent de la connaissance de la physique, incluant le code de simulation de
-référence physique, et doivent être soigneusement mis au point par l'utilisateur
-de l'assimilation de données ou de l'optimisation. Les erreurs de simulation ou
-d'usage des opérateurs ne peuvent pas être détectés ou corrigés par
-l'environnement seul ADAO d'assimilation de données et d'optimisation.
+linéaire tangent ``"TangentOperator"`` et linéaire adjoint
+``"AdjointOperator"`` proviennent de la connaissance de la physique, incluant
+le code de simulation de référence physique, et doivent être soigneusement mis
+au point par l'utilisateur de l'assimilation de données ou de l'optimisation.
+Les erreurs de simulation ou d'usage des opérateurs ne peuvent pas être
+détectés ou corrigés par l'environnement seul ADAO d'assimilation de données et
+d'optimisation.
 
 Dans cet environnement d'expériences jumelles, l'observation
 :math:`\mathbf{y}^o` et sa matrice des covariances d'erreur :math:`\mathbf{R}`
@@ -644,7 +651,7 @@ données ou d'optimisation. L'exemple suivant de fichier script Python, nommé
     print()
 
 Finalement, on obtient la description de l'ensemble des conditions
-d'expériences à travers la série de fichiers listée ici:
+d'expériences à travers la série de fichiers listée ici :
 
 #.      ``Physical_data_and_covariance_matrices.py``
 #.      ``Physical_simulation_functions.py``
@@ -658,7 +665,7 @@ d'expériences à travers la série de fichiers listée ici:
 On insiste ici sur le fait que tous ces scripts sont écrits par l'utilisateur et
 ne peuvent être testés automatiquement par ADAO. Ainsi, l'utilisateur est tenu
 de vérifier les scripts (et en particulier leurs entrées/sorties) afin de
-limiter les difficultés de débogage. On rappelle que: **la méthodologie par
+limiter les difficultés de débogage. On rappelle que : **la méthodologie par
 scripts n'est pas une procédure "sûre", en ce sens que des données erronées ou
 des erreurs dans les calculs, peuvent être directement introduites dans
 l'exécution du schéma YACS.**

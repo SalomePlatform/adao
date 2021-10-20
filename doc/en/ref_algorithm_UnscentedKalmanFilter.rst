@@ -85,7 +85,7 @@ by default), and the "unscented" Kalman filter conducted without any constraint
 
 .. include:: snippets/ConstrainedBy.rst
 
-.. include:: snippets/EstimationOf.rst
+.. include:: snippets/EstimationOf_State.rst
 
 .. include:: snippets/AlphaBeta.rst
 

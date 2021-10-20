@@ -81,7 +81,7 @@ Dans le cas de l'interface textuelle d'ADAO (TUI), seules les deux premières
 sont nécessaires car la troisième est incluse dans la seconde. Dans le cas de
 l'interface graphique EFICAS d'ADAO, ces méthodes sont choisies dans le champ
 "*FROM*" de chaque opérateur ayant une valeur "*Function*" comme
-"*INPUT_TYPE*", comme le montre la figure suivante:
+"*INPUT_TYPE*", comme le montre la figure suivante :
 
   .. eficas_operator_function:
   .. image:: images/eficas_operator_function.png
@@ -89,6 +89,17 @@ l'interface graphique EFICAS d'ADAO, ces méthodes sont choisies dans le champ
     :width: 100%
   .. centered::
     **Choisir graphiquement une représentation fonctionnelle de l'opérateur**
+
+En interface textuelle d'ADAO (TUI), dans le cas précis illustré ci-dessus, on
+réalise la même démarche en écrivant :
+::
+
+    ...
+    case.set( 'ObservationOperator',
+        OneFunction = True,
+        Script = 'scripts_for_JDC.py'
+        )
+    ...
 
 .. _section_ref_operator_one:
 
