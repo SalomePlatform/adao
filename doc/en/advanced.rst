@@ -357,7 +357,7 @@ container for all nodes, or by creating a new container for each node.
 
 .. warning::
 
-  this change in execution mode is extremely powerful and flexible. It is
+  This change in execution mode is extremely powerful and flexible. It is
   therefore recommended that the user both use it, and at the same time be
   attentive to the interaction of the different choices he makes, to avoid, for
   example, an unintended performance deterioration, or computer conflicts that
@@ -483,7 +483,7 @@ operator function before and during enabling parallelism...
 
 .. warning::
 
-  in case of doubt, it is recommended NOT TO ACTIVATE this parallelism.
+  In case of doubt, it is recommended NOT TO ACTIVATE this parallelism.
 
 It is also recalled that one have to choose the type "*multi*" for the default
 container in order to launch the scheme, to allow a really parallel execution.

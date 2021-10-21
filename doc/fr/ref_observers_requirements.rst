@@ -119,6 +119,7 @@ calcul et par l'utilisateur, l'exécution de cet "*observer*" n'est tout
 simplement jamais activée.
 
 .. warning::
+
     Si les modèles disponibles par défaut ne sont pas utilisés, il revient à
     l'utilisateur de faire des scripts de fonctions soigneusement établis ou
     des programmes externes qui ne se plantent pas avant d'être enregistrés

@@ -70,9 +70,9 @@ Examples of Python scripts to obtain or treat the outputs
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Template
-.. index:: single: AnalysisPrinter
-.. index:: single: AnalysisSaver
-.. index:: single: AnalysisPrinterAndSaver
+.. index:: single: AnalysisPrinter (UserPostAnalysis)
+.. index:: single: AnalysisSaver (UserPostAnalysis)
+.. index:: single: AnalysisPrinterAndSaver (UserPostAnalysis)
 
 These examples present Python commands or scripts which allow to obtain or to
 treat the output of an algorithm run. To help the user, they are directly
@@ -84,10 +84,11 @@ case by a "*Script*" type input) or can exist as a string, including line feeds
 be build from these simple examples, the main objective being to help the user
 to elaborate the exact procedure he needs in output.
 
-The first example (named "*AnalysisPrinter*" in the inputs of type
-"*Template*") consists in printing, in the standard log output, the value of the
-analysis or the optimal state, noted as :math:`\mathbf{x}^a` in the section
-:ref:`section_theory`. It is realized by the commands::
+The first example (named "*AnalysisPrinter*" in the inputs of type "*Template*"
+for "*UserPostAnalysis*" section) consists in printing, in the standard log
+output, the value of the analysis or the optimal state, noted as
+:math:`\mathbf{x}^a` in the section :ref:`section_theory`. It is realized by
+the commands::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
@@ -97,9 +98,10 @@ The ``numpy.ravel`` function is here to be sure that the ``xa`` variable will
 contain a real unidimensional vector, whatever the previous computing choices
 are.
 
-A second example (named "*AnalysisSaver*" in the inputs of type  "*Template*")
-consists in saving on file the value of the analysis or the optimal state
-:math:`\mathbf{x}^a`. It is realized by the commands::
+A second example (named "*AnalysisSaver*" in the inputs of type  "*Template*"
+for "*UserPostAnalysis*" section) consists in saving on file the value of the
+analysis or the optimal state :math:`\mathbf{x}^a`. It is realized by the
+commands::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
@@ -110,9 +112,10 @@ consists in saving on file the value of the analysis or the optimal state
 The chosen recording file is a text one named ``/tmp/analysis.txt``.
 
 It is easy to combine these two examples by building a third one (named
-"*AnalysisPrinterAndSaver*" in the inputs of type  "*Template*"). It consists in
-simultaneously printing in the standard log output and in saving on file the
-value of :math:`\mathbf{x}^a`. It is realized by the commands::
+"*AnalysisPrinterAndSaver*" in the inputs of type  "*Template*" for
+"*UserPostAnalysis*" section). It consists in simultaneously printing in the
+standard log output and in saving on file the value of :math:`\mathbf{x}^a`. It
+is realized by the commands::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])

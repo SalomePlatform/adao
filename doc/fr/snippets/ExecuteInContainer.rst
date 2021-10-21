@@ -13,5 +13,5 @@ ExecuteInContainer
 
   .. warning::
 
-    dans sa présente version, cet commande est expérimentale, et reste donc
+    Dans sa présente version, cet commande est expérimentale, et reste donc
     susceptible de changements dans les prochaines versions.

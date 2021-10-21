@@ -170,7 +170,7 @@ Seconde forme fonctionnelle : trois opérateurs direct, tangent et adjoint
 
 .. warning::
 
-  en général, il est recommandé d'utiliser la première forme fonctionnelle
+  En général, il est recommandé d'utiliser la première forme fonctionnelle
   plutôt que la seconde. Un petit accroissement de performances n'est pas une
   bonne raison pour utiliser l'implémentation détaillée de cette seconde forme
   fonctionnelle.
@@ -258,7 +258,7 @@ Troisième forme fonctionnelle : trois opérateurs avec un branchement
 
 .. warning::
 
-  il est recommandé de ne pas utiliser cette troisième forme fonctionnelle sans
+  Il est recommandé de ne pas utiliser cette troisième forme fonctionnelle sans
   une solide raison numérique ou physique. Un accroissement de performances
   n'est pas une bonne raison pour utiliser la complexité de cette troisième
   forme fonctionnelle. Seule une impossibilité à utiliser les première ou
@@ -282,7 +282,8 @@ se baser sur le modèle suivant pour le script d'aiguillage. Il nécessite un
 fichier script ou un code externe nommé ici
 "*Physical_simulation_functions.py*", contenant trois fonctions nommées
 "*DirectOperator*", "*TangentOperator*" et "*AdjointOperator*" comme
-précédemment. Voici le squelette d'aiguillage::
+précédemment. Voici le squelette d'aiguillage:
+::
 
     import Physical_simulation_functions
     import numpy, logging, codecs, pickle
@@ -342,14 +343,15 @@ Cas spécial d'un opérateur d'évolution avec contrôle
 Dans certains cas, l'opérateur d'évolution ou d'observation doit être contrôlé
 par un contrôle d'entrée externe, qui est donné *a priori*. Dans ce cas, la
 forme générique du modèle incrémental :math:`O` est légèrement modifiée comme
-suit:
+suit :
 
 .. math:: \mathbf{y} = O( \mathbf{x}, \mathbf{u})
 
 où :math:`\mathbf{u}` est le contrôle sur l'incrément d'état. En effet,
 l'opérateur direct doit être appliqué à une paire de variables :math:`(X,U)`.
 Schématiquement, l'opérateur :math:`O` doit être construit comme une fonction
-applicable sur une paire:math:`\mathbf{(X, U)}` suit::
+applicable sur une paire :math:`\mathbf{(X, U)}` comme suit :
+::
 
     def DirectOperator( paire = (X, U) ):
         """ Opérateur direct de simulation non-linéaire """
@@ -388,14 +390,14 @@ manière simple de faire cela en entrée consiste à transformer les paramètres
 utilise le plus souvent comme référence les valeurs par défaut
 :math:`\mathbf{x}^b` (ébauche, ou valeur nominale). Pourvu que chaque
 composante de :math:`\mathbf{x}^b` soit non nulle, on peut ensuite procéder par
-correction multiplicative. Pour cela, on peut par exemple poser:
+correction multiplicative. Pour cela, on peut par exemple poser :
 
 .. math:: \mathbf{x} = \mathbf{\alpha}\mathbf{x}^b
 
 et optimiser ensuite le paramètre multiplicatif :math:`\mathbf{\alpha}`. Ce
 paramètre a pour valeur par défaut (ou pour ébauche) un vecteur de 1. De
 manière similaire, on peut procéder par correction additive si c'est plus
-judicieux pour la physique sous-jacente. Ainsi, dans ce cas, on peut poser:
+judicieux pour la physique sous-jacente. Ainsi, dans ce cas, on peut poser :
 
 .. math:: \mathbf{x} =\mathbf{x}^b + \mathbf{\alpha}
 
@@ -415,7 +417,7 @@ Gestion explicite de fonctions "multiples"
 
 .. warning::
 
-  il est fortement recommandé de ne pas utiliser cette gestion explicite de
+  Il est fortement recommandé de ne pas utiliser cette gestion explicite de
   fonctions "multiples" sans une très solide raison informatique pour le faire.
   Cette gestion est déjà effectuée par défaut dans ADAO pour l'amélioration des
   performances. Seul l'utilisateur très averti, cherchant à gérer des cas
@@ -428,7 +430,8 @@ définir comme des fonctions qui traitent non pas un seul argument, mais une
 série d'arguments, pour restituer en sortie la série des valeurs
 correspondantes. En pseudo-code, la fonction "multiple", ici nommée
 ``MultiFunctionO``, représentant l'opérateur classique :math:`O` nommé
-"*DirectOperator*", effectue::
+"*DirectOperator*", effectue :
+::
 
     def MultiFunctionO( Inputs ):
         """ Multiple ! """

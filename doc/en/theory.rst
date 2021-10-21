@@ -539,10 +539,11 @@ dynamical system can be written in the following form:
 .. math:: \forall n \in \mathbb{N}, \mathbf{x}_{n+1} = M(\mathbf{x}_{n},\mathbf{u}_{n},t_n\rightarrow t_{n+1})
 
 for an indexing :math:`t_n` of discrete times with :math:`n\in\mathbf{N}`.
-:math:`M` is the discrete evolution operator obtained from :math:`\mathcal{D}`.
-Usually, we omit the time notation in the evolution operator :math:`M`.
-Approximating the :math:`\mathcal{D}` operator by :math:`M` introduces (or
-adds, if it already exists) a :math:`\epsilon` model error.
+:math:`M` is the discrete evolution operator, symbolically obtained from
+:math:`\mathcal{D}` by the discretization scheme. Usually, we omit the time
+notation in the evolution operator :math:`M`. Approximating the
+:math:`\mathcal{D}` operator by :math:`M` introduces (or adds, if it already
+exists) a :math:`\epsilon` model error.
 
 We can then characterize two types of estimates in dynamics, which we describe
 hereafter on the discrete time dynamical system: `State estimation in
@@ -564,7 +565,7 @@ version of the dynamical system, written in the following form:
 
 where :math:`\mathbf{x}` is the system state to be estimated,
 :math:`\mathbf{x}_{n}` and :math:`\mathbf{y}_{n}` are respectively the
-(computed) unobserved and (measured) observed state of the system, :math:`M`
+computed (unobserved) and measured (observed) state of the system, :math:`M`
 and :math:`H` are the incremental evolution and observation operators,
 respectively, :math:`\mathbf{\epsilon}_{n}` and :math:`\mathbf{\nu}_{n}` are
 the evolution and observation noise or error, respectively, and
@@ -588,11 +589,13 @@ problem represented in state estimation:
 
 .. math:: \mathbf{y}_{n} = G(\mathbf{x}_{n},\mathbf{a}_{n}) + \mathbf{\nu}_{n}
 
-where, this time, the choices of the evolution and observation error models
+where, this time, the choice of the evolution and observation error models
 :math:`\mathbf{\epsilon}_{n}` and :math:`\mathbf{\nu}_{n}` condition the
-performance of convergence and observation tracking. The estimation of the
-parameters :math:`\mathbf{a}` is done by using pairs
-:math:`(\mathbf{x}_{n},\mathbf{y}_{n})` of corresponding inputs and outputs.
+performance of convergence and observation tracking (while the error
+representations come from the behavior of the physics in the case of state
+estimation). The estimation of the parameters :math:`\mathbf{a}` is done by
+using pairs :math:`(\mathbf{x}_{n},\mathbf{y}_{n})` of corresponding inputs and
+outputs.
 
 In this case of parameter estimation, in order to apply data assimilation
 methods, we therefore impose the hypothesis that the evolution operator is the
@@ -604,10 +607,10 @@ Joint state and parameter estimation in dynamics
 
 A special case concerns the joint estimation of state and parameters used in a
 dynamic system. One seeks to jointly estimate the state :math:`\mathbf{x}`
-(which depends on time) and the parameters :math:`\mathbf{a}` (which does not
-depend on time). There are several ways to deal with this problem, but the most
-general one is to use a state vector augmented by the parameters, and to extend
-the operators accordingly.
+(which depends on time) and the parameters :math:`\mathbf{a}` (which here does
+not depend on time). There are several ways to deal with this problem, but the
+most general one is to use a state vector augmented by the parameters, and to
+extend the operators accordingly.
 
 To do this, using the notations of the previous two subsections, we define the
 auxiliary variable :math:`\mathbf{w}` such that:
@@ -664,9 +667,10 @@ written:
 
 .. math:: \mathbf{y}_{n} = \tilde{H}(\mathbf{w}_{n}) + \mathbf{\nu}_{n}
 
-The incremental evolution and observation operators are therefore respectively
-the augmented operators :math:`\tilde{M}` and :math:`\tilde{H}`, and are
-directly usable in data assimilation with ADAO.
+where :math:`\mathbf{w}_{n}=[\mathbf{x}_n~~\mathbf{a}_n]^T`. The incremental
+evolution and observation operators are therefore respectively the augmented
+operators :math:`\tilde{M}` and :math:`\tilde{H}`, and are directly usable in
+data assimilation with ADAO.
 
 Conceptual scheme for data assimilation in dynamics
 +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -713,9 +717,9 @@ an extremely high computational cost when it is repeated. The complete physical
 simulation is often called "*high fidelity simulation*" (or "*full scale
 simulation*").
 
-In a generic way, **reduction methods thus aim at reducing the computational
-cost of the optimization while controlling as much as possible the numerical
-error implied by this reduction**.
+In a generic way, **different strategies to reduce the cost of the optimization
+calculation exist, and some of them also allow to control the numerical error
+implied by this reduction**.
 
 To establish this, one seeks to reduce at least one of the ingredients that
 make up the data assimilation or optimization problem. One can thus classify
@@ -781,6 +785,6 @@ Combining multiple reductions:
     time. ADAO integrates some of the most robust methods, but this aspect is
     still largely the subject of research and development.
 
-One can end this quick overview of reduction methods by pointing out that their
+One can end this quick overview of reduction methods highlighting that their
 use is ubiquitous in real applications and in numerical tools, and that ADAO
 allows to use proven methods without even knowing it.

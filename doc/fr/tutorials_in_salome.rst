@@ -428,7 +428,7 @@ qui est :
 
     Xb = Xt + normal(0, 20%*Xt)
 
-Pour décrire la matrice des covariances d'erreur d'ébauche math:`\mathbf{B}`,
+Pour décrire la matrice des covariances d'erreur d'ébauche :math:`\mathbf{B}`,
 on fait comme précédemment l'hypothèse d'erreurs décorrélées (c'est-à-dire, une
 matrice diagonale, de taille 3x3 parce-que :math:`\mathbf{x}^b` est de taille
 3) et d'avoir la même variance de 0,1 pour toutes les variables. On obtient :

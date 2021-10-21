@@ -163,9 +163,11 @@ Second functional form: three operators direct, tangent and adjoint
 .. index:: single: TangentOperator
 .. index:: single: AdjointOperator
 
-**In general, it is recommended to use the first functional form rather than
-the second one. A small performance improvement is not a good reason to use a
-detailed implementation as this second functional form.**
+.. warning::
+
+  In general, it is recommended to use the first functional form rather than
+  the second one. A small performance improvement is not a good reason to use a
+  detailed implementation as this second functional form.
 
 The second one consist in providing directly the three associated operators
 :math:`O`, :math:`\mathbf{O}` and :math:`\mathbf{O}^*`. This is done by using
@@ -334,7 +336,8 @@ follows:
 
 where :math:`\mathbf{u}` is the control over one state increment. In fact, the
 direct operator has to be applied to a pair of variables :math:`(X,U)`.
-Schematically, the operator has to be set as::
+Schematically, the operator :math:`O` has to be set up as a function applicable
+on a pair :math:`\mathbf{(X, U)}` as follows::
 
     def DirectOperator( pair = (X, U) ):
         """ Direct non-linear simulation operator """
@@ -397,7 +400,7 @@ Dealing explicitly with "multiple" functions
 
 .. warning::
 
-  it is strongly recommended not to use this explicit "multiple" functions
+  It is strongly recommended not to use this explicit "multiple" functions
   definition without a very strong computing justification. This treatment is
   already done by default in ADAO to increase performances. Only the very
   experienced user, seeking to manage particularly difficult cases, can be

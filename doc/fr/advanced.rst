@@ -387,7 +387,7 @@ nouveau conteneur pour chaque noeud.
 
 .. warning::
 
-  ce changement de mode d'exécution est extrêmement puissant et souple. Il est
+  Ce changement de mode d'exécution est extrêmement puissant et souple. Il est
   donc recommandé à l'utilisateur à la fois de l'utiliser, et en même temps
   d'être attentif à l'interaction des différents choix qu'il effectue, pour
   éviter par exemple une dégradation involontaire des performances, ou des
@@ -525,7 +525,7 @@ parallélisme...
 
 .. warning::
 
-  en cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.
+  En cas de doute, il est recommandé de NE PAS ACTIVER ce parallélisme.
 
 On rappelle aussi qu'il faut choisir dans YACS un container par défaut de type
 "*multi*" pour le lancement du schéma, pour permettre une exécution

@@ -111,6 +111,7 @@ treatment, statistical analysis, etc. If the variable, to which the
 execution of this "*observer*" is simply never activated.
 
 .. warning::
+
     If not using the default available templates, it is up to the user to make
     carefully established function scripts or external programs that do not
     crash before being registered as an "*observer*" function. The debugging

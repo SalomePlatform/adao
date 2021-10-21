@@ -72,9 +72,9 @@ Exemples de scripts Python pour obtenir ou traiter les sorties
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. index:: single: Template
-.. index:: single: AnalysisPrinter
-.. index:: single: AnalysisSaver
-.. index:: single: AnalysisPrinterAndSaver
+.. index:: single: AnalysisPrinter (UserPostAnalysis)
+.. index:: single: AnalysisSaver (UserPostAnalysis)
+.. index:: single: AnalysisPrinterAndSaver (UserPostAnalysis)
 
 Ces exemples présentent des commandes ou scripts Python qui permettent d'obtenir
 ou de traiter les sorties d'une exécution d'algorithme. Pour aider
@@ -89,9 +89,10 @@ l'objectif étant surtout d'aider l'utilisateur à effectuer le traitement exact
 dont il a besoin en sortie.
 
 Le premier exemple (appelé "*AnalysisPrinter*" dans les entrées de type
-"*Template*") consiste à afficher, dans la sortie standard d'exécution, la
-valeur de l'analyse ou de l'état optimal, noté :math:`\mathbf{x}^a` dans la
-partie :ref:`section_theory`. Cela se réalise par les commandes::
+"*Template*" pour la section "*UserPostAnalysis*") consiste à afficher, dans la
+sortie standard d'exécution, la valeur de l'analyse ou de l'état optimal, noté
+:math:`\mathbf{x}^a` dans la partie :ref:`section_theory`. Cela se réalise par
+les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
@@ -102,8 +103,9 @@ un vrai vecteur unidimensionnel, quels que soient les choix informatiques
 précédents.
 
 Un second exemple (appelé "*AnalysisSaver*" dans les entrées de type
-"*Template*") consiste à enregistrer sur fichier la valeur de l'analyse ou de
-l'état optimal :math:`\mathbf{x}^a`. Cela se réalise par les commandes::
+"*Template*" pour la section "*UserPostAnalysis*") consiste à enregistrer sur
+fichier la valeur de l'analyse ou de l'état optimal :math:`\mathbf{x}^a`. Cela
+se réalise par les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])
@@ -114,10 +116,10 @@ l'état optimal :math:`\mathbf{x}^a`. Cela se réalise par les commandes::
 Le fichier d'enregistrement choisi est un fichier texte ``/tmp/analysis.txt``.
 
 Il est aisé de combiner ces deux exemples pour en construire un troisième
-(appelé "*AnalysisPrinterAndSaver*" dans les entrées de type "*Template*"). Il
-consiste à simultanément afficher dans la sortie standard d'exécution et à
-enregistrer sur fichier la valeur de :math:`\mathbf{x}^a`. Cela se réalise par
-les commandes::
+(appelé "*AnalysisPrinterAndSaver*" dans les entrées de type "*Template*" pour
+la section "*UserPostAnalysis*"). Il consiste à simultanément afficher dans la
+sortie standard d'exécution et à enregistrer sur fichier la valeur de
+:math:`\mathbf{x}^a`. Cela se réalise par les commandes::
 
     import numpy
     xa=numpy.ravel(ADD.get('Analysis')[-1])

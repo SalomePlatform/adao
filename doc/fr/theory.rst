@@ -575,13 +575,13 @@ suivante :
 .. math:: \forall n \in \mathbb{N}, \mathbf{x}_{n+1} = M(\mathbf{x}_{n},\mathbf{u}_{n},t_n\rightarrow t_{n+1})
 
 pour une indexation :math:`t_n` des temps discrets avec :math:`n\in\mathbb{N}`.
-:math:`M` est l'opérateur d'évolution discret issu de :math:`\mathcal{D}`.
-Usuellement, on omet la notation du temps dans l'opérateur d'évolution
-:math:`M`. L'approximation de l'opérateur :math:`\mathcal{D}` par :math:`M`
-introduit (ou ajoute, si elle existe déjà) une erreur de modèle
-:math:`\epsilon`.
+:math:`M` est l'opérateur d'évolution discret, issu symboliquement de
+:math:`\mathcal{D}` par le schéma de discrétisation. Usuellement, on omet la
+notation du temps dans l'opérateur d'évolution :math:`M`. L'approximation de
+l'opérateur :math:`\mathcal{D}` par :math:`M` introduit (ou ajoute, si elle
+existe déjà) une erreur de modèle :math:`\epsilon`.
 
-On peut alors caractériser deux types d'estimations en dynamique, que l'on
+On peut alors caractériser deux types d'estimation en dynamique, que l'on
 décrit ci-après sur le système dynamique en temps discret : `Estimation d'état
 en dynamique`_ et `Estimation de paramètres en dynamique`_. Combinés, les deux
 types peuvent permettre de faire une `Estimation conjointe d'état et de
@@ -601,8 +601,8 @@ version en temps discret du système dynamique, écrit sous la forme suivante :
 .. math:: \mathbf{y}_{n} = H(\mathbf{x}_{n}) + \mathbf{\nu}_{n}
 
 où :math:`\mathbf{x}` est l'état à estimer du système, :math:`\mathbf{x}_{n}`
-et :math:`\mathbf{y}_{n}` sont respectivement l'état (calculé) non observé et
-(mesuré) observé du système, :math:`M` et :math:`H` sont respectivement les
+et :math:`\mathbf{y}_{n}` sont respectivement l'état calculé (non observé) et
+mesuré (observé) du système, :math:`M` et :math:`H` sont respectivement les
 opérateurs d'évolution incrémentale et d'observation,
 :math:`\mathbf{\epsilon}_{n}` et :math:`\mathbf{\nu}_{n}` sont respectivement
 les bruits ou erreurs d'évolution et d'observation, et :math:`\mathbf{u}_{n}`
@@ -626,12 +626,13 @@ le problème représenté en estimation d'état :
 
 .. math:: \mathbf{y}_{n} = G(\mathbf{x}_{n},\mathbf{a}_{n}) + \mathbf{\nu}_{n}
 
-où, cette fois, les choix des modèles d'erreurs d'évolution et d'observation
-:math:`\mathbf{\epsilon}_{n}` et :math:`\mathbf{\nu}_{n}` conditionnent la
-performance de la convergence et du suivi des observations. L'estimation des
-paramètres :math:`\mathbf{a}` se fait par utilisation de paires
-:math:`(\mathbf{x}_{n},\mathbf{y}_{n})` d'entrées et de sorties
-correspondantes.
+où, cette fois, le choix des modèles d'erreurs d'évolution et d'observation
+:math:`\mathbf{\epsilon}_{n}` et :math:`\mathbf{\nu}_{n}` conditionne la
+performance de la convergence et du suivi des observations (alors que les
+représentations d'erreurs proviennent du comportement de la physique dans le
+cas de l'estimation d'état). L'estimation des paramètres :math:`\mathbf{a}` se
+fait par utilisation de paires :math:`(\mathbf{x}_{n},\mathbf{y}_{n})`
+d'entrées et de sorties correspondantes.
 
 Dans ce cas de l'estimation de paramètres, pour appliquer les méthodes
 d'assimilation de données, on impose donc l'hypothèse que l'opérateur
@@ -645,7 +646,7 @@ Estimation conjointe d'état et de paramètres en dynamique
 Un cas spécial concerne l'estimation conjointe d'état et de paramètres utilisés
 dans un système dynamique. On cherche à estimer conjointement l'état
 :math:`\mathbf{x}` (qui dépend du temps) et les paramètres :math:`\mathbf{a}`
-(qui ne dépendent pas du temps). Il existe plusieurs manières de traiter ce
+(qui ici ne dépendent pas du temps). Il existe plusieurs manières de traiter ce
 problème, mais la plus générale consiste à utiliser un vecteur d'état augmenté
 par les paramètres, et à étendre les opérateurs en conséquence.
 
@@ -704,9 +705,10 @@ de paramètres :math:`\mathbf{a}`, à travers la variable conjointe
 
 .. math:: \mathbf{y}_{n} = \tilde{H}(\mathbf{w}_{n}) + \mathbf{\nu}_{n}
 
-Les opérateurs d'évolution incrémentale et d'observation sont donc
-respectivement les opérateurs augmentés :math:`\tilde{M}` et :math:`\tilde{H}`,
-et sont directement utilisables en assimilation de données avec ADAO.
+avec :math:`\mathbf{w}_{n}=[\mathbf{x}_n~~\mathbf{a}_n]^T`. Les opérateurs
+d'évolution incrémentale et d'observation sont donc respectivement les
+opérateurs augmentés :math:`\tilde{M}` et :math:`\tilde{H}`, et sont
+directement utilisables en assimilation de données avec ADAO.
 
 Schéma conceptuel pour l'assimilation de données en dynamique
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -754,9 +756,9 @@ et conduit à un coût calcul extrêmement important dès lors qu'il est répét
 simulation physique complète est souvent appelée "*simulation haute fidélité*"
 (ou "*full scale simulation*").
 
-De manière générale, **les méthodes de réduction visent donc à réduire le coût de
-calcul de l'optimisation tout en contrôlant au mieux l'erreur numérique
-impliquée par cette réduction**.
+De manière générale, **différentes stratégies de réduction du coût du calcul
+d'optimisation existent, et certaines permettent également de contrôler au
+mieux l'erreur numérique impliquée par cette réduction**.
 
 Pour établir cela, on cherche à réduire au moins l'un des ingrédients qui
 composent le problème d'assimilation de données ou d'optimisation. On peut
@@ -828,7 +830,7 @@ Combinaison de plusieurs réductions :
     certaines méthodes parmi les plus robustes, mais cet aspect fait toujours
     largement l'objet de recherches et d'évolutions.
 
-On peut terminer ce rapide tour d'horizon des méthodes de réduction par le fait
-que leur usage est omni-présent dans les applications réelles et dans les
-outils numériques, et qu'ADAO permet d'utiliser les méthodes éprouvées sans
-même le savoir.
+On peut terminer ce rapide tour d'horizon des méthodes de réduction en
+soulignant que leur usage est omni-présent dans les applications réelles et
+dans les outils numériques, et qu'ADAO permet d'utiliser des méthodes éprouvées
+sans même le savoir.

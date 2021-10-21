@@ -12,5 +12,5 @@ ExecuteInContainer
 
   .. warning::
 
-    in its present version, this command is experimental, and therefore remains
+    In its present version, this command is experimental, and therefore remains
     subject to changes in future versions.
