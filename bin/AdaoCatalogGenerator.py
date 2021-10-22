@@ -96,7 +96,7 @@ def NoCheckInNS(filename):
     return 1
 NoCheckInNS.info = u""
 def DirectOperatorInNS(filename):
-    if os.path.exists(filename):
+    if os.path.isfile(filename):
         fc = open(filename, 'r').readlines()
         cr = re.compile("^def[\s]*DirectOperator[\s]*\(")
         for ln in fc:
@@ -107,7 +107,7 @@ def DirectOperatorInNS(filename):
     return 0
 DirectOperatorInNS.info = u"The Python file has to contain explicitly a \\"DirectOperator\\" function definition with only one vector as argument."
 def TangentOperatorInNS(filename):
-    if os.path.exists(filename):
+    if os.path.isfile(filename):
         fc = open(filename, 'r').readlines()
         cr = re.compile("^def[\s]*TangentOperator[\s]*\(")
         for ln in fc:
@@ -118,7 +118,7 @@ def TangentOperatorInNS(filename):
     return 0
 TangentOperatorInNS.info = u"The Python file has to contain explicitly a \\"TangentOperator\\" function definition with only one pair of vectors as argument."
 def AdjointOperatorInNS(filename):
-    if os.path.exists(filename):
+    if os.path.isfile(filename):
         fc = open(filename, 'r').readlines()
         cr = re.compile("^def[\s]*AdjointOperator[\s]*\(")
         for ln in fc:
@@ -130,7 +130,7 @@ def AdjointOperatorInNS(filename):
 AdjointOperatorInNS.info = u"The Python file has to contain explicitly an \\"AdjointOperator\\" function definition with only one pair of vectors as argument."
 def ColDataFileExtVal(filename):
     __readable = (".csv", ".tsv", ".txt", ".npy", ".npz")
-    if os.path.exists(filename) and os.path.splitext(filename)[1] in __readable:
+    if os.path.isfile(filename) and os.path.splitext(filename)[1] in __readable:
         return 1
     return 0
 ColDataFileExtVal.info = u"The data file has to contain explicitly one or more number columns with separator, or one variable, that can fit in a unique continuous vector."
@@ -150,7 +150,7 @@ def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
         ColMajor = SIMP(statut="f", typ = "I", into=(0, 1), defaut=0, fr="Variables en colonnes acquises ligne par ligne (0) ou colonne par colonne (1)", ang="Variables in columns acquired line by line (0) or column by column (1)"),
         ),
     STRING_DATA = BLOC ( condition = " FROM in ( 'String', ) ",
-        STRING = SIMP(statut = "o", typ = "TXM",{ms_default} fr="En attente d'une chaine de caractères entre guillements. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
+        STRING = SIMP(statut = "o", typ = "TXM",{ms_default} fr="En attente d'une chaîne de caractères entre guillemets. Pour construire un vecteur ou une matrice, ce doit être une suite de nombres, utilisant un espace ou une virgule pour séparer deux éléments et un point-virgule pour séparer deux lignes", ang="Waiting for a string in quotes. To build a vector or a matrix, it has to be a float serie, using a space or comma to separate two elements in a line, a semi-colon to separate rows"),
         ),
     SCRIPTWITHFUNCTIONS_DATA = BLOC ( condition = " FROM in ( 'ScriptWithFunctions', ) ",
         SCRIPTWITHFUNCTIONS_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=[OnlyStr(), FileExtVal('py'), FunctionVal(DirectOperatorInNS), FunctionVal(TangentOperatorInNS), FunctionVal(AdjointOperatorInNS)], fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant en variables internes trois fonctions de calcul nommées DirectOperator, TangentOperator et AdjointOperator", ang="Waiting for a script file name, with or without the full path to find it, containing as internal variables three computation functions named DirectOperator, TangentOperator and AdjointOperator"),
@@ -200,7 +200,7 @@ def F_Init(statut) : return FACT(statut = statut,
 
 assim_data_method = """
 def {assim_name}InNS(filename):
-    if os.path.exists(filename):
+    if os.path.isfile(filename):
         fc = open(filename, 'r').readlines()
         cr = re.compile("^{assim_name}[\s]*=")
         for ln in fc:
@@ -260,7 +260,7 @@ def F_Observers(statut) : return FACT(
 
 algo_choices = """
 def AlgorithmParametersInNS(filename):
-    if os.path.exists(filename):
+    if os.path.isfile(filename):
         fc = open(filename, 'r').readlines()
         cr = re.compile("^AlgorithmParameters[\s]*=")
         for ln in fc:
@@ -306,8 +306,8 @@ ASSIMILATION_STUDY = PROC(nom="ASSIMILATION_STUDY",
     BackgroundError     = F_BackgroundError("o", BackgroundErrorInNS),
     Observation         = F_Observation("o", ObservationInNS),
     ObservationError    = F_ObservationError("o", ObservationErrorInNS),
-    ObservationOperator = F_ObservationOperator("o"),
-    EvolutionModel      = F_EvolutionModel("f"),
+    ObservationOperator = F_ObservationOperator("o", ObservationOperatorInNS),
+    EvolutionModel      = F_EvolutionModel("f", EvolutionModelInNS),
     EvolutionError      = F_EvolutionError("f", EvolutionErrorInNS),
     ControlInput        = F_ControlInput("f"),
     UserDataInit        = F_Init("f"),
@@ -329,8 +329,8 @@ OPTIMIZATION_STUDY = PROC(nom="OPTIMIZATION_STUDY",
     BackgroundError     = F_BackgroundError("f", BackgroundErrorInNS),
     Observation         = F_Observation("o", ObservationInNS),
     ObservationError    = F_ObservationError("f", ObservationErrorInNS),
-    ObservationOperator = F_ObservationOperator("o"),
-    EvolutionModel      = F_EvolutionModel("f"),
+    ObservationOperator = F_ObservationOperator("o", ObservationOperatorInNS),
+    EvolutionModel      = F_EvolutionModel("f", EvolutionModelInNS),
     EvolutionError      = F_EvolutionError("f", EvolutionErrorInNS),
     ControlInput        = F_ControlInput("f"),
     UserDataInit        = F_Init("f"),
@@ -352,8 +352,8 @@ REDUCTION_STUDY = PROC(nom="REDUCTION_STUDY",
     BackgroundError     = F_BackgroundError("o", BackgroundErrorInNS),
     Observation         = F_Observation("o", ObservationInNS),
     ObservationError    = F_ObservationError("o", ObservationErrorInNS),
-    ObservationOperator = F_ObservationOperator("o"),
-    EvolutionModel      = F_EvolutionModel("f"),
+    ObservationOperator = F_ObservationOperator("o", ObservationOperatorInNS),
+    EvolutionModel      = F_EvolutionModel("f", EvolutionModelInNS),
     EvolutionError      = F_EvolutionError("f", EvolutionErrorInNS),
     ControlInput        = F_ControlInput("f"),
     UserDataInit        = F_Init("f"),
@@ -376,7 +376,7 @@ CHECKING_STUDY = PROC(nom="CHECKING_STUDY",
     BackgroundError     = F_BackgroundError("f", BackgroundErrorInNS),
     Observation         = F_Observation("f", ObservationInNS),
     ObservationError    = F_ObservationError("f", ObservationErrorInNS),
-    ObservationOperator = F_ObservationOperator("o"),
+    ObservationOperator = F_ObservationOperator("o", ObservationOperatorInNS),
     UserDataInit        = F_Init("f"),
     Observers           = F_Observers("f")
     )
