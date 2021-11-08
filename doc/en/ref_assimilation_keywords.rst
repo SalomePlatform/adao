@@ -23,11 +23,16 @@
 
 .. _section_ref_assimilation_keywords:
 
-List of commands and keywords for an ADAO calculation case
-----------------------------------------------------------
+List of commands and keywords for data assimilation or optimisation case
+------------------------------------------------------------------------
 
-This set of commands is related to the description of a calculation case,
-that is a *Data Assimilation* procedure or an *Optimization* procedure.
+We summarize here all the commands available to describe a calculation case by
+avoiding the particularities of each algorithm. It is therefore a common
+inventory of commands.
+
+The set of commands for an data assimilation or optimisation case is related to
+the description of a calculation case, that is a *Data Assimilation* procedure
+or an *Optimization* procedure.
 
 The first term describes the choice between calculation or checking. In the
 graphical interface, each of the three types of calculation, individually more
@@ -41,10 +46,9 @@ imperatively indicated by one of these commands:
 
 .. include:: snippets/REDUCTION_STUDY.rst
 
-The other terms are ordered in alphabetical order. The different commands are
-the following:
-
-.. include:: snippets/ASSIMILATION_STUDY.rst
+The other nested terms are listed in alphabetical order. They are not
+necessarily required for all algorithms. The different commands are the
+following:
 
 .. include:: snippets/AlgorithmParameters.rst
 

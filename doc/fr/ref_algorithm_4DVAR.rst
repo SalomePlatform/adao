@@ -89,13 +89,16 @@ l':ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  *Liste de noms*. Cette liste indique les noms des variables supplémentaires
+  *Liste de noms*. Cette liste indique les noms des variables supplémentaires,
   qui peuvent être disponibles au cours du déroulement ou à la fin de
-  l'algorithme, si elles sont initialement demandées par l'utilisateur. Cela
-  implique potentiellement des calculs ou du stockage coûteux. La valeur par
-  défaut est une liste vide, aucune de ces variables n'étant calculée et
-  stockée par défaut sauf les variables inconditionnelles. Les noms possibles
-  sont dans la liste suivante : [
+  l'algorithme, si elles sont initialement demandées par l'utilisateur. Leur
+  disponibilité implique, potentiellement, des calculs ou du stockage coûteux.
+  La valeur par défaut est donc une liste vide, aucune de ces variables n'étant
+  calculée et stockée par défaut (sauf les variables inconditionnelles). Les
+  noms possibles pour les variables supplémentaires sont dans la liste suivante
+  (la description détaillée de chaque variable nommée est donnée dans la suite
+  de cette documentation par algorithme spécifique, dans la sous-partie
+  "*Informations et variables disponibles à la fin de l'algorithme*") : [
   "Analysis",
   "BMA",
   "CostFunctionJ",

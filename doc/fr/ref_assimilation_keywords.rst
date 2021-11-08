@@ -26,9 +26,13 @@
 Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'optimisation
 ----------------------------------------------------------------------------------------
 
-Ce jeu de commandes est lié à la description d'un cas de calcul, qui est une
-procédure d'*Assimilation de Données*, de *Méthodes avec Réduction* ou de
-méthodes *Optimisation*.
+On résume ici l'ensemble des commandes disponibles pour décrire un cas de
+calcul en évitant les particularités de chaque algorithme. C'est donc un
+inventaire commun des commandes.
+
+Le jeu de commandes pour un cas d'assimilation de données ou d'optimisation est
+lié à la description d'un cas de calcul, qui est une procédure d'*Assimilation
+de Données*, de *Méthodes avec Réduction* ou de méthodes *Optimisation*.
 
 Le premier terme décrit le choix entre un calcul ou une vérification. Dans
 l'interface graphique, chacun des trois types de calculs, individuellement
@@ -42,8 +46,9 @@ plusieurs catégories), est impérativement désigné par l'une ces commandes:
 
 .. include:: snippets/REDUCTION_STUDY.rst
 
-Les autres termes sont classés par ordre alphabétique. Les différentes
-commandes sont les suivantes:
+Les autres termes imbriqués sont classés par ordre alphabétique. Ils ne sont
+pas obligatoirement requis pour tous les algorithmes. Les différentes commandes
+sont les suivantes:
 
 .. include:: snippets/AlgorithmParameters.rst
 
