@@ -41,15 +41,15 @@ J           = ADD.get("CostFunctionJ")[:]
 #
 # Verifying the results by printing
 # ---------------------------------
-print("")
-print("obs = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Observation").A1])))
-print("")
-print("xb  = [%s]"%(", ".join(["%.4f"%v for v in ADD.get("Background").A1])))
+print()
+print("obs = [%s]"%(", ".join(["%.4f"%v for v in numpy.ravel(ADD.get("Observation"))])))
+print()
+print("xb  = [%s]"%(", ".join(["%.4f"%v for v in numpy.ravel(ADD.get("Background"))])))
 print("xt  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xt)])))
 print("xa  = [%s]"%(", ".join(["%.4f"%v for v in numpy.array(xa)])))
-print("")
+print()
 for i in range( len(x_series) ):
-    print("Step %2i : J = %.4e     X = [%s]"%(i, J[i], ", ".join(["%.4f"%v for v in x_series[i]])))
-print("")
+    print("Step %2i : J = %.4e  et  X = [%s]"%(i, J[i], ", ".join(["%.4f"%v for v in x_series[i]])))
+print()
 #
 # ==============================================================================

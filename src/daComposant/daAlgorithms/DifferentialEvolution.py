@@ -187,8 +187,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
                 if BI is None or RI is None:
                     raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
-                Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
-                Jo  = 0.5 * (_Innovation).T * RI * (_Innovation)
+                Jb  = 0.5 * (_X - Xb).T * (BI * (_X - Xb))
+                Jo  = 0.5 * _Innovation.T * (RI * _Innovation)
             elif QualityMeasure in ["WeightedLeastSquares","WLS"]:
                 if RI is None:
                     raise ValueError("Observation error covariance matrix has to be properly defined!")
@@ -262,7 +262,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
-        if self._toStore("OMA") or self._toStore("SimulatedObservationAtOptimum"):
+        if self._toStore("OMA") or \
+            self._toStore("SimulatedObservationAtOptimum"):
             if self._toStore("SimulatedObservationAtCurrentState"):
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
             elif self._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -270,20 +271,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 HXa = Hm(Xa)
         if self._toStore("Innovation") or \
-           self._toStore("OMB"):
-            d  = Y - HXb
+            self._toStore("OMB") or \
+            self._toStore("SimulatedObservationAtBackground"):
+            HXb = Hm(Xb)
+            Innovation  = Y - HXb
         if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+            self.StoredVariables["Innovation"].store( Innovation )
         if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+            self.StoredVariables["OMB"].store( Innovation )
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(Hm(Xb)) )
+            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
         self._post_run()
         return 0

@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import os, time, copy, types, sys, logging
 import math, numpy, scipy, scipy.optimize, scipy.version
-from daCore.BasicObjects import Operator
+from daCore.BasicObjects import Operator, Covariance, PartialAlgorithm
 from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
 mfp = PlatformInfo().MaximumPrecision()
@@ -486,12 +486,12 @@ def EnsembleOfCenteredPerturbations( _bgcenter, _bgcovariance, _nbmembers ):
         raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(_nbmembers),))
     #
     if _bgcovariance is None:
-        BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers)
+        _Perturbations = numpy.tile( _bgcenter, _nbmembers)
     else:
         _Z = numpy.random.multivariate_normal(numpy.zeros(_bgcenter.size), _bgcovariance, size=_nbmembers).T
-        BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers) + _Z
+        _Perturbations = numpy.tile( _bgcenter, _nbmembers) + _Z
     #
-    return BackgroundEnsemble
+    return _Perturbations
 
 # ==============================================================================
 def EnsembleOfBackgroundPerturbations( _bgcenter, _bgcovariance, _nbmembers, _withSVD = True):
@@ -513,29 +513,29 @@ def EnsembleOfBackgroundPerturbations( _bgcenter, _bgcovariance, _nbmembers, _wi
     if _nbmembers < 1:
         raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(_nbmembers),))
     if _bgcovariance is None:
-        BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers)
+        _Perturbations = numpy.tile( _bgcenter, _nbmembers)
     else:
         if _withSVD:
-            U, s, V = numpy.linalg.svd(_bgcovariance, full_matrices=False)
+            _U, _s, _V = numpy.linalg.svd(_bgcovariance, full_matrices=False)
             _nbctl = _bgcenter.size
             if _nbmembers > _nbctl:
                 _Z = numpy.concatenate((numpy.dot(
-                    numpy.diag(numpy.sqrt(s[:_nbctl])), V[:_nbctl]),
+                    numpy.diag(numpy.sqrt(_s[:_nbctl])), _V[:_nbctl]),
                     numpy.random.multivariate_normal(numpy.zeros(_nbctl),_bgcovariance,_nbmembers-1-_nbctl)), axis = 0)
             else:
-                _Z = numpy.dot(numpy.diag(numpy.sqrt(s[:_nbmembers-1])), V[:_nbmembers-1])
+                _Z = numpy.dot(numpy.diag(numpy.sqrt(_s[:_nbmembers-1])), _V[:_nbmembers-1])
             _Zca = __CenteredRandomAnomalies(_Z, _nbmembers)
-            BackgroundEnsemble = _bgcenter + _Zca
+            _Perturbations = _bgcenter + _Zca
         else:
             if max(abs(_bgcovariance.flatten())) > 0:
                 _nbctl = _bgcenter.size
                 _Z = numpy.random.multivariate_normal(numpy.zeros(_nbctl),_bgcovariance,_nbmembers-1)
                 _Zca = __CenteredRandomAnomalies(_Z, _nbmembers)
-                BackgroundEnsemble = _bgcenter + _Zca
+                _Perturbations = _bgcenter + _Zca
             else:
-                BackgroundEnsemble = numpy.tile( _bgcenter, _nbmembers)
+                _Perturbations = numpy.tile( _bgcenter, _nbmembers)
     #
-    return BackgroundEnsemble
+    return _Perturbations
 
 # ==============================================================================
 def EnsembleMean( __Ensemble ):
@@ -799,7 +799,7 @@ def ApplyBounds( __Vector, __Bounds, __newClip = True):
     if not isinstance(__Bounds, numpy.ndarray): # Is an array
         raise ValueError("Incorrect array definition of bounds data")
     if 2*__Vector.size != __Bounds.size: # Is a 2 column array of vector lenght
-        raise ValueError("Incorrect bounds number to be applied for this vector")
+        raise ValueError("Incorrect bounds number (%i) to be applied for this vector (of size %i)"%(__Bounds.size,__Vector.size))
     if len(__Bounds.shape) != 2 or min(__Bounds.shape) <= 0 or __Bounds.shape[1] != 2:
         raise ValueError("Incorrectly shaped bounds data")
     #
@@ -814,6 +814,31 @@ def ApplyBounds( __Vector, __Bounds, __newClip = True):
         __Vector = numpy.asarray(__Vector)
     #
     return __Vector
+
+# ==============================================================================
+def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Betaf):
+    "Recentre l'ensemble Xn autour de l'analyse 3DVAR"
+    #
+    Xf = EnsembleMean( __EnXf )
+    Pf = Covariance( asCovariance=EnsembleErrorCovariance(__EnXf) )
+    Pf = (1 - __Betaf) * __B + __Betaf * Pf
+    #
+    selfB = PartialAlgorithm("3DVAR")
+    selfB._parameters["Minimizer"] = "LBFGSB"
+    selfB._parameters["MaximumNumberOfSteps"] = 15000
+    selfB._parameters["CostDecrementTolerance"] = 1.e-7
+    selfB._parameters["ProjectedGradientTolerance"] = -1
+    selfB._parameters["GradientNormTolerance"] = 1.e-05
+    selfB._parameters["StoreInternalVariables"] = False
+    selfB._parameters["optiprint"] = -1
+    selfB._parameters["optdisp"] = 0
+    selfB._parameters["Bounds"] = None
+    selfB._parameters["InitializationPoint"] = Xf
+    std3dvar(selfB, Xf, __Ynpu, None, __HO, None, None, __R, Pf, None)
+    Xa = selfB.get("Analysis")[-1].reshape((-1,1))
+    del selfB
+    #
+    return Xa + EnsembleOfAnomalies( __EnXn )
 
 # ==============================================================================
 def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
@@ -926,7 +951,7 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 XEtnnpi = numpy.asarray( Mm( (Xnp[:,point], Un) ) ).reshape((-1,1))
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
-                    XEtnnpi = XEtnnpi + Cm * Un
+                    XEtnnpi = XEtnnpi + Cm @ Un
                 if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
                     XEtnnpi = ApplyBounds( XEtnnpi, selfA._parameters["Bounds"] )
             elif selfA._parameters["EstimationOf"] == "Parameters":
@@ -976,7 +1001,7 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         _Innovation  = Ynpu - Yncm.reshape((-1,1))
         if selfA._parameters["EstimationOf"] == "Parameters":
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
-                _Innovation = _Innovation - Cm * Un
+                _Innovation = _Innovation - Cm @ Un
         #
         Kn = Pxyn * Pyyn.I
         Xn = Xncm.reshape((-1,1)) + Kn * _Innovation
@@ -1020,7 +1045,7 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
             Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
@@ -1160,7 +1185,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Xn_predicted = numpy.ravel( M( (Xn, Un) ) ).reshape((__n,1))
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm * Un
+                Xn_predicted = Xn_predicted + Cm @ Un
             Pn_predicted = Q + Mt * (Pn * Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
@@ -1177,7 +1202,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             HX_predicted = numpy.ravel( H( (Xn_predicted, Un) ) ).reshape((__p,1))
             _Innovation  = Ynpu - HX_predicted
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
-                _Innovation = _Innovation - Cm * Un
+                _Innovation = _Innovation - Cm @ Un
         #
         Kn = Pn_predicted * Ha * numpy.linalg.inv(R + numpy.dot(Ht, Pn_predicted * Ha))
         Xn = Xn_predicted + Kn * _Innovation
@@ -1353,7 +1378,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
                     returnSerieAsArrayMatrix = True )
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                    EZ = EZ + Cm * Un
+                    EZ = EZ + Cm @ Un
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 EZ = H( [(EL[:,i], Un) for i in range(__m)],
@@ -1409,7 +1434,10 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     return 0
 
 # ==============================================================================
-def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
+def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
+    VariantM="KalmanFilterFormula",
+    Hybrid=None,
+    ):
     """
     Ensemble-Transform EnKF
     """
@@ -1499,7 +1527,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 returnSerieAsArrayMatrix = True )
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm * Un
+                Xn_predicted = Xn_predicted + Cm @ Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = EMX = Xn
@@ -1508,8 +1536,8 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 returnSerieAsArrayMatrix = True )
         #
         # Mean of forecast and observation of forecast
-        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
-        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
+        Xfm  = EnsembleMean( Xn_predicted )
+        Hfm  = EnsembleMean( HX_predicted )
         #
         # Anomalies
         EaX   = EnsembleOfAnomalies( Xn_predicted, Xfm )
@@ -1597,7 +1625,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             HXfm = H((Xfm[:,None], Un)) # Eventuellement Hfm
             def CostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,1)) - (EaHX @ w).reshape((__p,1))
-                _Jo = 0.5 * _A.T * RI * _A
+                _Jo = 0.5 * _A.T * (RI * _A)
                 _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w)
                 _J  = _Jo + _Jb
                 return float(_J)
@@ -1668,7 +1696,11 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
+        if Hybrid == "E3DVAR":
+            betaf = selfA._parameters["HybridCovarianceEquilibrium"]
+            Xn = Apply3DVarRecentringOnEnsemble(Xn, EMX, Ynpu, HO, R, B, betaf)
+        #
+        Xa = EnsembleMean( Xn )
         #--------------------------
         selfA._setInternalState("Xn", Xn)
         selfA._setInternalState("seed", numpy.random.get_state())
@@ -1682,7 +1714,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             or selfA._toStore("InnovationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            _HXa = numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
+            _HXa = numpy.ravel( H((Xa, Un)) ).reshape((-1,1))
             _Innovation = Ynpu - _HXa
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
@@ -1714,8 +1746,8 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula"):
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -1853,7 +1885,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Xn_predicted = numpy.ravel( M( (Xn, Un) ) ).reshape((__n,1))
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm * Un
+                Xn_predicted = Xn_predicted + Cm @ Un
             Pn_predicted = Q + Mt * (Pn * Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
@@ -1867,7 +1899,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             HX_predicted = numpy.ravel( H( (Xn_predicted, Un) ) ).reshape((__p,1))
             _Innovation  = Ynpu - HX_predicted
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
-                _Innovation = _Innovation - Cm * Un
+                _Innovation = _Innovation - Cm @ Un
         #
         Kn = Pn_predicted * Ha * numpy.linalg.inv(R + numpy.dot(Ht, Pn_predicted * Ha))
         Xn = Xn_predicted + Kn * _Innovation
@@ -2021,11 +2053,11 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
-                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                Un = numpy.asmatrix(numpy.ravel( U )).T
+                Un = numpy.ravel( U ).reshape((-1,1))
         else:
             Un = None
         #
@@ -2100,7 +2132,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
+        Xa = EnsembleMean( Xn )
         #--------------------------
         selfA._setInternalState("Xn", Xn)
         selfA._setInternalState("seed", numpy.random.get_state())
@@ -2114,7 +2146,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             or selfA._toStore("InnovationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            _HXa = numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
+            _HXa = numpy.ravel( H((Xa, Un)) ).reshape((-1,1))
             _Innovation = Ynpu - _HXa
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
@@ -2146,8 +2178,8 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -2211,7 +2243,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     #
     Xini = selfA._parameters["InitializationPoint"]
     #
-    HXb = numpy.asmatrix(numpy.ravel( Hm( Xb ) )).T
+    HXb = numpy.ravel( Hm( Xb ) ).reshape((-1,1))
     Innovation = Y - HXb
     #
     # Outer Loop
@@ -2230,13 +2262,13 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(dx):
-            _dX  = numpy.asmatrix(numpy.ravel( dx )).T
+            _dX  = numpy.ravel( dx ).reshape((-1,1))
             if selfA._parameters["StoreInternalVariables"] or \
                 selfA._toStore("CurrentState") or \
                 selfA._toStore("CurrentOptimum"):
                 selfA.StoredVariables["CurrentState"].store( Xb + _dX )
-            _HdX = Ht * _dX
-            _HdX = numpy.asmatrix(numpy.ravel( _HdX )).T
+            _HdX = Ht @ _dX
+            _HdX = numpy.ravel( _HdX ).reshape((-1,1))
             _dInnovation = Innovation - _HdX
             if selfA._toStore("SimulatedObservationAtCurrentState") or \
                 selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -2244,8 +2276,8 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if selfA._toStore("InnovationAtCurrentState"):
                 selfA.StoredVariables["InnovationAtCurrentState"].store( _dInnovation )
             #
-            Jb  = float( 0.5 * _dX.T * BI * _dX )
-            Jo  = float( 0.5 * _dInnovation.T * RI * _dInnovation )
+            Jb  = float( 0.5 * _dX.T * (BI * _dX) )
+            Jo  = float( 0.5 * _dInnovation.T * (RI * _dInnovation) )
             J   = Jb + Jo
             #
             selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
@@ -2274,11 +2306,11 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             return J
         #
         def GradientOfCostFunction(dx):
-            _dX          = numpy.asmatrix(numpy.ravel( dx )).T
-            _HdX         = Ht * _dX
-            _HdX         = numpy.asmatrix(numpy.ravel( _HdX )).T
+            _dX          = numpy.ravel( dx )
+            _HdX         = Ht @ _dX
+            _HdX         = numpy.ravel( _HdX ).reshape((-1,1))
             _dInnovation = Innovation - _HdX
-            GradJb       = BI * _dX
+            GradJb       = BI @ _dX
             GradJo       = - Ht.T @ (RI * _dInnovation)
             GradJ        = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
             return GradJ
@@ -2435,8 +2467,10 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
-def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
-    BnotT=False, _epsilon=1.e-3, _e=1.e-7, _jmax=15000):
+def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
+    VariantM="MLEF13", BnotT=False, _epsilon=1.e-3, _e=1.e-7, _jmax=15000,
+    Hybrid=None,
+    ):
     """
     Maximum Likelihood Ensemble Filter
     """
@@ -2498,11 +2532,11 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
-                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                Un = numpy.asmatrix(numpy.ravel( U )).T
+                Un = numpy.ravel( U ).reshape((-1,1))
         else:
             Un = None
         #
@@ -2519,7 +2553,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             Xn_predicted = EnsemblePerturbationWithGivenCovariance( EMX, Q )
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm * Un
+                Xn_predicted = Xn_predicted + Cm @ Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = EMX = Xn
@@ -2577,7 +2611,11 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
+        if Hybrid == "E3DVAR":
+            betaf = selfA._parameters["HybridCovarianceEquilibrium"]
+            Xn = Apply3DVarRecentringOnEnsemble(Xn, EMX, Ynpu, HO, R, B, betaf)
+        #
+        Xa = EnsembleMean( Xn )
         #--------------------------
         selfA._setInternalState("Xn", Xn)
         selfA._setInternalState("seed", numpy.random.get_state())
@@ -2591,7 +2629,7 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             or selfA._toStore("InnovationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            _HXa = numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
+            _HXa = numpy.ravel( H((Xa, Un)) ).reshape((-1,1))
             _Innovation = Ynpu - _HXa
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
@@ -2623,8 +2661,8 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="MLEF13",
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -2719,7 +2757,7 @@ def mmqr(
         iteration += 1
         #
         Derivees  = numpy.array(fprime(variables))
-        Derivees  = Derivees.reshape(n,p) # Necessaire pour remettre en place la matrice si elle passe par des tuyaux YACS
+        Derivees  = Derivees.reshape(n,p) # ADAO & check shape
         DeriveesT = Derivees.transpose()
         M         =   numpy.dot( DeriveesT , (numpy.array(numpy.matrix(p*[poids,]).T)*Derivees) )
         SM        =   numpy.transpose(numpy.dot( DeriveesT , veps ))
@@ -2760,7 +2798,11 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     # Initialisation
     # --------------
     if selfA._parameters["EstimationOf"] == "State":
-        M = EM["Direct"].appliedTo
+        M = EM["Direct"].appliedControledFormTo
+        if CM is not None and "Tangent" in CM and U is not None:
+            Cm = CM["Tangent"].asMatrix(Xb)
+        else:
+            Cm = None
         #
         if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
             Xn = numpy.ravel(Xb).reshape((-1,1))
@@ -2789,16 +2831,29 @@ def multi3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
         else:
             Ynpu = numpy.ravel( Y ).reshape((-1,1))
         #
+        if U is not None:
+            if hasattr(U,"store") and len(U)>1:
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
+            elif hasattr(U,"store") and len(U)==1:
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
+            else:
+                Un = numpy.ravel( U ).reshape((-1,1))
+        else:
+            Un = None
+        #
         if selfA._parameters["EstimationOf"] == "State": # Forecast
-            Xn_predicted = M( Xn )
+            Xn_predicted = M( (Xn, Un) )
             if selfA._toStore("ForecastState"):
                 selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
+                Xn_predicted = Xn_predicted + Cm @ Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # No forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
         Xn_predicted = numpy.ravel(Xn_predicted).reshape((-1,1))
         #
-        oneCycle(selfA, Xn_predicted, Ynpu, U, HO, None, None, R, B, None)
+        oneCycle(selfA, Xn_predicted, Ynpu, None, HO, None, None, R, B, None)
         #
         Xn = selfA.StoredVariables["Analysis"][-1]
         #--------------------------
@@ -2820,7 +2875,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
     else:
         HXb = Hm( Xb )
-    HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+    HXb = numpy.ravel( HXb ).reshape((-1,1))
     if Y.size != HXb.size:
         raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
     if max(Y.shape) != max(HXb.shape):
@@ -3039,7 +3094,10 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     return 0
 
 # ==============================================================================
-def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"):
+def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
+    VariantM="KalmanFilterFormula16",
+    Hybrid=None,
+    ):
     """
     Stochastic EnKF
     """
@@ -3103,11 +3161,11 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
-                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                Un = numpy.asmatrix(numpy.ravel( U )).T
+                Un = numpy.ravel( U ).reshape((-1,1))
         else:
             Un = None
         #
@@ -3127,7 +3185,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
                 returnSerieAsArrayMatrix = True )
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm * Un
+                Xn_predicted = Xn_predicted + Cm @ Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = EMX = Xn
@@ -3136,8 +3194,8 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
                 returnSerieAsArrayMatrix = True )
         #
         # Mean of forecast and observation of forecast
-        Xfm  = Xn_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
-        Hfm  = HX_predicted.mean(axis=1, dtype=mfp).astype('float').reshape((__p,1))
+        Xfm  = EnsembleMean( Xn_predicted )
+        Hfm  = EnsembleMean( HX_predicted )
         #
         #--------------------------
         if VariantM == "KalmanFilterFormula05":
@@ -3177,7 +3235,11 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
                 selfA._parameters["InflationFactor"],
                 )
         #
-        Xa = Xn.mean(axis=1, dtype=mfp).astype('float').reshape((__n,1))
+        if Hybrid == "E3DVAR":
+            betaf = selfA._parameters["HybridCovarianceEquilibrium"]
+            Xn = Apply3DVarRecentringOnEnsemble(Xn, EMX, Ynpu, HO, R, B, betaf)
+        #
+        Xa = EnsembleMean( Xn )
         #--------------------------
         selfA._setInternalState("Xn", Xn)
         selfA._setInternalState("seed", numpy.random.get_state())
@@ -3191,7 +3253,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
             or selfA._toStore("InnovationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
             or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            _HXa = numpy.asmatrix(numpy.ravel( H((Xa, Un)) )).T
+            _HXa = numpy.ravel( H((Xa, Un)) ).reshape((-1,1))
             _Innovation = Ynpu - _HXa
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
@@ -3223,8 +3285,8 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16"
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -3524,18 +3586,18 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     def Un(_step):
         if U is not None:
             if hasattr(U,"store") and 1<=_step<len(U) :
-                _Un = numpy.asmatrix(numpy.ravel( U[_step] )).T
+                _Un = numpy.ravel( U[_step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                _Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                _Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                _Un = numpy.asmatrix(numpy.ravel( U )).T
+                _Un = numpy.ravel( U ).reshape((-1,1))
         else:
             _Un = None
         return _Un
     def CmUn(_xn,_un):
         if Cm is not None and _un is not None: # Attention : si Cm est aussi dans M, doublon !
             _Cm   = Cm.reshape(_xn.size,_un.size) # ADAO & check shape
-            _CmUn = _Cm * _un
+            _CmUn = (_Cm @ _un).reshape((-1,1))
         else:
             _CmUn = 0.
         return _CmUn
@@ -3563,26 +3625,26 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     selfA.DirectCalculation = [None,] # Le pas 0 n'est pas observé
     selfA.DirectInnovation  = [None,] # Le pas 0 n'est pas observé
     def CostFunction(x):
-        _X  = numpy.asmatrix(numpy.ravel( x )).T
+        _X  = numpy.ravel( x ).reshape((-1,1))
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        Jb  = float( 0.5 * (_X - Xb).T * BI * (_X - Xb) )
+        Jb  = float( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
         selfA.DirectCalculation = [None,]
         selfA.DirectInnovation  = [None,]
         Jo  = 0.
         _Xn = _X
         for step in range(0,duration-1):
             if hasattr(Y,"store"):
-                _Ynpu = numpy.asmatrix(numpy.ravel( Y[step+1] )).T
+                _Ynpu = numpy.ravel( Y[step+1] ).reshape((-1,1))
             else:
-                _Ynpu = numpy.asmatrix(numpy.ravel( Y )).T
+                _Ynpu = numpy.ravel( Y ).reshape((-1,1))
             _Un = Un(step)
             #
             # Etape d'évolution
             if selfA._parameters["EstimationOf"] == "State":
-                _Xn = Mm( (_Xn, _Un) ) + CmUn(_Xn, _Un)
+                _Xn = Mm( (_Xn, _Un) ).reshape((-1,1)) + CmUn(_Xn, _Un)
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 pass
             #
@@ -3591,16 +3653,16 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             #
             # Etape de différence aux observations
             if selfA._parameters["EstimationOf"] == "State":
-                _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, None) ) )).T
+                _YmHMX = _Ynpu - numpy.ravel( Hm( (_Xn, None) ) ).reshape((-1,1))
             elif selfA._parameters["EstimationOf"] == "Parameters":
-                _YmHMX = _Ynpu - numpy.asmatrix(numpy.ravel( Hm( (_Xn, _Un) ) )).T - CmUn(_Xn, _Un)
+                _YmHMX = _Ynpu - numpy.ravel( Hm( (_Xn, _Un) ) ).reshape((-1,1)) - CmUn(_Xn, _Un)
             #
             # Stockage de l'état
             selfA.DirectCalculation.append( _Xn )
             selfA.DirectInnovation.append( _YmHMX )
             #
             # Ajout dans la fonctionnelle d'observation
-            Jo = Jo + 0.5 * float( _YmHMX.T * RI * _YmHMX )
+            Jo = Jo + 0.5 * float( _YmHMX.T * (RI * _YmHMX) )
         J = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
@@ -3626,7 +3688,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         return J
     #
     def GradientOfCostFunction(x):
-        _X      = numpy.asmatrix(numpy.ravel( x )).T
+        _X      = numpy.ravel( x ).reshape((-1,1))
         GradJb  = BI * (_X - Xb)
         GradJo  = 0.
         for step in range(duration-1,0,-1):
@@ -3805,19 +3867,19 @@ def stdkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
-                Un = numpy.asmatrix(numpy.ravel( U[step] )).T
+                Un = numpy.ravel( U[step] ).reshape((-1,1))
             elif hasattr(U,"store") and len(U)==1:
-                Un = numpy.asmatrix(numpy.ravel( U[0] )).T
+                Un = numpy.ravel( U[0] ).reshape((-1,1))
             else:
-                Un = numpy.asmatrix(numpy.ravel( U )).T
+                Un = numpy.ravel( U ).reshape((-1,1))
         else:
             Un = None
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
-            Xn_predicted = Mt * Xn
+            Xn_predicted = Mt @ Xn
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm * Un
+                Xn_predicted = Xn_predicted + Cm @ Un
             Pn_predicted = Q + Mt * (Pn * Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
@@ -3825,13 +3887,13 @@ def stdkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Pn_predicted = Pn
         #
         if selfA._parameters["EstimationOf"] == "State":
-            HX_predicted = Ht * Xn_predicted
+            HX_predicted = Ht @ Xn_predicted
             _Innovation  = Ynpu - HX_predicted
         elif selfA._parameters["EstimationOf"] == "Parameters":
-            HX_predicted = Ht * Xn_predicted
+            HX_predicted = Ht @ Xn_predicted
             _Innovation  = Ynpu - HX_predicted
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
-                _Innovation = _Innovation - Cm * Un
+                _Innovation = _Innovation - Cm @ Un
         #
         Kn = Pn_predicted * Ha * numpy.linalg.inv(R + numpy.dot(Ht, Pn_predicted * Ha))
         Xn = Xn_predicted + Kn * _Innovation
@@ -3872,8 +3934,8 @@ def stdkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -4025,7 +4087,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 XEtnnpi = numpy.asarray( Mm( (Xnp[:,point], Un) ) ).reshape((-1,1))
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
-                    XEtnnpi = XEtnnpi + Cm * Un
+                    XEtnnpi = XEtnnpi + Cm @ Un
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
                 XEtnnpi = Xnp[:,point]
@@ -4063,7 +4125,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         _Innovation  = Ynpu - Yncm.reshape((-1,1))
         if selfA._parameters["EstimationOf"] == "Parameters":
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
-                _Innovation = _Innovation - Cm * Un
+                _Innovation = _Innovation - Cm @ Un
         #
         Kn = Pxyn * Pyyn.I
         Xn = Xncm.reshape((-1,1)) + Kn * _Innovation
@@ -4104,7 +4166,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
             Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
@@ -4170,14 +4232,14 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # Définition de la fonction-coût
     # ------------------------------
     def CostFunction(v):
-        _V = numpy.asmatrix(numpy.ravel( v )).T
+        _V = numpy.ravel( v ).reshape((-1,1))
         _X = Xb + B * _V
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
         _HX = Hm( _X )
-        _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+        _HX = numpy.ravel( _HX ).reshape((-1,1))
         _Innovation = Y - _HX
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -4185,8 +4247,8 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
         #
-        Jb  = float( 0.5 * _V.T * BT * _V )
-        Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+        Jb  = float( 0.5 * _V.T * (BT * _V) )
+        Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
         J   = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )

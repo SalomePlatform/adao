@@ -40,6 +40,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MLEF",
                 "IEnKF",
                 "EnKS",
+                "E3DVAR",
                 ],
             listadv  = [
                 "StochasticEnKF",
@@ -56,6 +57,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "IEnKF-B",
                 "EnKS-KFF",
                 "IEKF",
+                "E3DVAR-EnKF",
+                "E3DVAR-ETKF",
+                "E3DVAR-MLEF",
                 ],
             )
         self.defineRequiredParameter(
@@ -103,6 +107,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = int,
             message  = "Nombre d'intervalles de temps de lissage dans le passé",
             minval   = 0,
+            )
+        self.defineRequiredParameter(
+            name     = "HybridCovarianceEquilibrium",
+            default  = 0.5,
+            typecast = float,
+            message  = "Facteur d'équilibre entre la covariance statique et la covariance d'ensemble",
+            minval   = 0.,
+            maxval   = 1.,
             )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -211,6 +223,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Default EnKS = EnKS-KFF
         elif self._parameters["Variant"] in ["EnKS-KFF", "EnKS"]:
             NumericObjects.enks(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterFormula")
+        #
+        #--------------------------
+        # Default E3DVAR = E3DVAR-EnKF
+        elif self._parameters["Variant"] in ["E3DVAR-EnKF", "E3DVAR"]:
+            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
+        #
+        elif self._parameters["Variant"] == "E3DVAR-ETKF":
+            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
+        #
+        elif self._parameters["Variant"] == "E3DVAR-MLEF":
+            NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
         #
         #--------------------------
         else:

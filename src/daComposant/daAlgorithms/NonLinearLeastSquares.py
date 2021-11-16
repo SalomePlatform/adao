@@ -33,7 +33,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "LBFGSB",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS", "LM"],
+            listval  = [
+                "LBFGSB",
+                "TNC",
+                "CG",
+                "NCG",
+                "BFGS",
+                "LM",
+                ],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
@@ -99,7 +106,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
-            message  = "Liste des valeurs de bornes",
+            message  = "Liste des paires de bornes",
             )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
@@ -118,18 +125,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        # Opérateurs
-        # ----------
+        # Initialisations
+        # ---------------
         Hm = HO["Direct"].appliedTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
-        # ----------------------------------------------------
         if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
             HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
         else:
             HXb = Hm( Xb )
-        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+        HXb = HXb.reshape((-1,1))
         if Y.size != HXb.size:
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
@@ -139,16 +144,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["Minimizer"] == "LM":
             RdemiI = R.choleskyI()
         #
+        Xini = self._parameters["InitializationPoint"]
+        #
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(x):
-            _X  = numpy.asmatrix(numpy.ravel( x )).T
+            _X  = numpy.ravel( x ).reshape((-1,1))
             if self._parameters["StoreInternalVariables"] or \
                 self._toStore("CurrentState") or \
                 self._toStore("CurrentOptimum"):
                 self.StoredVariables["CurrentState"].store( _X )
-            _HX = Hm( _X )
-            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            _HX = Hm( _X ).reshape((-1,1))
             _Innovation = Y - _HX
             if self._toStore("SimulatedObservationAtCurrentState") or \
                 self._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -157,7 +163,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
             #
             Jb  = 0.
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             #
             self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
@@ -186,21 +192,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             return J
         #
         def GradientOfCostFunction(x):
-            _X      = numpy.asmatrix(numpy.ravel( x )).T
-            _HX     = Hm( _X )
-            _HX     = numpy.asmatrix(numpy.ravel( _HX )).T
+            _X      = x.reshape((-1,1))
+            _HX     = Hm( _X ).reshape((-1,1))
             GradJb  = 0.
             GradJo  = - Ha( (_X, RI * (Y - _HX)) )
-            GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) + numpy.ravel( GradJo ) ).T
-            return GradJ.A1
+            GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
+            return GradJ
         #
         def CostFunctionLM(x):
-            _X  = numpy.asmatrix(numpy.ravel( x )).T
-            _HX = Hm( _X )
-            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            _X  = numpy.ravel( x ).reshape((-1,1))
+            _HX = Hm( _X ).reshape((-1,1))
             _Innovation = Y - _HX
             Jb  = 0.
-            Jo  = float( 0.5 * _Innovation.T * RI * _Innovation )
+            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             if self._parameters["StoreInternalVariables"] or \
                 self._toStore("CurrentState"):
@@ -212,24 +216,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             return numpy.ravel( RdemiI*_Innovation )
         #
         def GradientOfCostFunctionLM(x):
-            _X      = numpy.asmatrix(numpy.ravel( x )).T
-            _HX     = Hm( _X )
-            _HX     = numpy.asmatrix(numpy.ravel( _HX )).T
-            GradJb  = 0.
-            GradJo  = - Ha( (_X, RI * (Y - _HX)) )
-            GradJ   = numpy.asmatrix( numpy.ravel( GradJb ) + numpy.ravel( GradJo ) ).T
+            _X      = x.reshape((-1,1))
             return - RdemiI*HO["Tangent"].asMatrix( _X )
-        #
-        # Point de démarrage de l'optimisation : Xini = Xb
-        # ------------------------------------
-        Xini = self._parameters["InitializationPoint"]
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
         nbPreviousSteps = self.StoredVariables["CostFunctionJ"].stepnumber()
         #
         if self._parameters["Minimizer"] == "LBFGSB":
-            # Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
             if "0.19" <= scipy.version.version <= "1.1.0":
                 import lbfgsbhlt as optimiseur
             else:
@@ -315,9 +309,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
             Minimum = self.StoredVariables["CurrentState"][IndexMin]
         #
-        # Obtention de l'analyse
-        # ----------------------
-        Xa = numpy.asmatrix(numpy.ravel( Minimum )).T
+        Xa = Minimum
+        #--------------------------
         #
         self.StoredVariables["Analysis"].store( Xa )
         #
@@ -330,20 +323,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 HXa = Hm( Xa )
         #
-        #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._toStore("Innovation") or \
             self._toStore("OMB"):
-            d  = Y - HXb
+            Innovation  = Y - HXb
         if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( d )
+            self.StoredVariables["Innovation"].store( Innovation )
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( d )
+            self.StoredVariables["OMB"].store( Innovation )
         if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):

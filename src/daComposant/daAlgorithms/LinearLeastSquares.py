@@ -80,7 +80,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
-        K = (Ha * RI * Hm).I * Ha * RI
+        K = (Ha * (RI * Hm)).I * Ha * RI
         Xa =  K * Y
         self.StoredVariables["Analysis"].store( Xa )
         #
@@ -101,7 +101,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
             self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum"):
             Jb  = 0.
-            Jo  = float( 0.5 * oma.T * RI * oma )
+            Jo  = float( 0.5 * oma.T * (RI * oma) )
             J   = Jb + Jo
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )

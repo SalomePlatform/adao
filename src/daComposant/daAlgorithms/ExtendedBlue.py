@@ -117,38 +117,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ha = Ha.reshape(Xb.size,Y.size) # ADAO & check shape
         H  = HO["Direct"].appliedTo
         #
-        # Utilisation éventuelle d'un vecteur H(Xb) précalculé
-        # ----------------------------------------------------
         if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
             HXb = H( Xb, HO["AppliedInX"]["HXb"])
         else:
             HXb = H( Xb )
-        HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+        HXb = HXb.reshape((-1,1))
         if Y.size != HXb.size:
             raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
         if max(Y.shape) != max(HXb.shape):
             raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
         #
-        # Précalcul des inversions de B et R
-        # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Calcul de l'innovation
-        # ----------------------
-        d  = Y - HXb
+        Innovation  = Y - HXb
         #
         # Calcul de la matrice de gain et de l'analyse
         # --------------------------------------------
         if Y.size <= Xb.size:
             _A = R + numpy.dot(Hm, B * Ha)
-            _u = numpy.linalg.solve( _A , d )
+            _u = numpy.linalg.solve( _A , Innovation )
             Xa = Xb + B * Ha * _u
         else:
             _A = BI + numpy.dot(Ha, RI * Hm)
-            _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI * d) )
+            _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI * Innovation) )
             Xa = Xb + _u
-        self.StoredVariables["Analysis"].store( Xa.A1 )
+        self.StoredVariables["Analysis"].store( Xa )
         #
         # Calcul de la fonction coût
         # --------------------------
@@ -163,15 +157,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self._toStore("SimulatedObservationAtCurrentState") or \
             self._toStore("SimulatedObservationAtOptimum") or \
             self._toStore("SimulationQuantiles"):
-            HXa  = numpy.matrix(numpy.ravel( H( Xa ) )).T
+            HXa  = H( Xa ).reshape((-1,1))
             oma = Y - HXa
         if self._parameters["StoreInternalVariables"] or \
             self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
             self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
             self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
             self._toStore("MahalanobisConsistency"):
-            Jb  = float( 0.5 * (Xa - Xb).T * BI * (Xa - Xb) )
-            Jo  = float( 0.5 * oma.T * RI * oma )
+            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = float( 0.5 * oma.T * (RI * oma) )
             J   = Jb + Jo
             self.StoredVariables["CostFunctionJb"].store( Jb )
             self.StoredVariables["CostFunctionJo"].store( Jo )
@@ -201,36 +195,36 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( numpy.ravel(Xa) )
+            self.StoredVariables["CurrentState"].store( Xa )
         if self._toStore("CurrentOptimum"):
-            self.StoredVariables["CurrentOptimum"].store( numpy.ravel(Xa) )
+            self.StoredVariables["CurrentOptimum"].store( Xa )
         if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+            self.StoredVariables["Innovation"].store( Innovation )
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( numpy.ravel(oma) )
+            self.StoredVariables["OMA"].store( oma )
         if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+            self.StoredVariables["OMB"].store( Innovation )
         if self._toStore("SigmaObs2"):
             TraceR = R.trace(Y.size)
-            self.StoredVariables["SigmaObs2"].store( float( (d.T * (numpy.asmatrix(numpy.ravel(oma)).T)) ) / TraceR )
+            self.StoredVariables["SigmaObs2"].store( float( Innovation.T @ oma ) / TraceR )
         if self._toStore("SigmaBck2"):
-            self.StoredVariables["SigmaBck2"].store( float( (d.T * Hm * (Xa - Xb))/(Hm * B * Hm.T).trace() ) )
+            self.StoredVariables["SigmaBck2"].store( float( (Innovation.T @ (Hm @ (Xa - Xb)))/(Hm * (B * Hm.T)).trace() ) )
         if self._toStore("MahalanobisConsistency"):
-            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/d.size ) )
+            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/Innovation.size ) )
         if self._toStore("SimulationQuantiles"):
             HtM  = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
             HtM  = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
             NumericObjects.QuantilesEstimations(self, A, Xa, HXa, H, HtM)
         if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( HXa )
         if self._toStore("SimulatedObservationAtCurrentOptimum"):
-            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( HXa )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
         self._post_run(HO)
         return 0

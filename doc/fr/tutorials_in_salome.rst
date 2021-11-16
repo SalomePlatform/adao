@@ -194,9 +194,9 @@ généré :
 
 Après ce point, toutes les modifications, exécutions et post-processing du
 schéma d'assimilation de données seront effectués dans le module YACS. De façon
-à vérifier les résultats d'une manière simple, on utilise le noeud
-"*UserPostAnalysis*" (ou on crée ici un nouveau noeud YACS par le sous-menu
-"*Noeud de script in-line*" dans la vue graphique de YACS).
+à vérifier les résultats d'une manière simple, on peut utiliser le noeud
+"*UserPostAnalysis*" (ou on crée un nouveau noeud YACS par le sous-menu "*Noeud
+de script in-line*" dans la vue graphique de YACS).
 
 Ce noeud de script va récupérer l'analyse issue de l'assimilation de données
 depuis le port de sortie "*algoResults*" du bloc de calcul (qui donne accés à
@@ -236,7 +236,7 @@ fenêtre "*proc*" du schéma YACS comme montré ci-dessous :
     **Menu YACS de la fenêtre de sortie, et boite de dialogue montrant la sortie**
 
 On vérifie que le résultat est correct en observant si la fenêtre de sortie
-contient la ligne suivante :
+contient des informations identiques à la ligne suivante :
 ::
 
     Analysis = [0.5, 0.5, 0.5]

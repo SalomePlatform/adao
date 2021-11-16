@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 study_config = {}
 study_config['StudyType'] = 'ASSIMILATION_STUDY'
 study_config['Name'] = 'Test'
@@ -48,13 +48,14 @@ outputvariables_config['Order'] = ['adao_default']
 outputvariables_config['adao_default'] = -1
 study_config['OutputVariables'] = outputvariables_config
 study_config['Repertory'] = '@prefix@/share/adao_examples/daSalome'
+study_config['ExecuteInContainer'] = 'No'
 Analysis_config = {}
 Analysis_config['From'] = 'String'
 Analysis_config['Data'] = """import numpy
 Xb = ADD.get("Background")
 Xa = ADD.get("Analysis")[-1]
 print()
-print("Size of Background...........= %i"%len(Xb.A1))
+print("Size of Background...........= %i"%len(Xb))
 print("Size of Analysis.............= %i"%len(Xa))
 print("Min, mean, max of Analysis...= %8.3f, %8.3f, %8.3f"%(min(Xa),numpy.mean(Xa),max(Xa)))
 print()

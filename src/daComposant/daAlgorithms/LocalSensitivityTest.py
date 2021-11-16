@@ -79,7 +79,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
                 HXb = HO["AppliedInX"]["HXb"]
             else:
-                HXb = Ht * Xb
+                HXb = Ht @ Xb
             HXb = numpy.asmatrix(numpy.ravel( HXb )).T
             if Y.size != HXb.size:
                 raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))

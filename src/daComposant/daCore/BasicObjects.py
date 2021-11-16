@@ -137,7 +137,7 @@ class Operator(object):
         Arguments :
         - name : nom d'opérateur
         - fromMethod : argument de type fonction Python
-        - fromMatrix : argument adapté au constructeur numpy.matrix
+        - fromMatrix : argument adapté au constructeur numpy.array/matrix
         - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants
         - reducingMemoryUse : booléen forçant (ou pas) des calculs moins
           gourmands en mémoire
@@ -163,7 +163,9 @@ class Operator(object):
             self.__Type   = "Method"
         elif fromMatrix is not None:
             self.__Method = None
-            self.__Matrix = numpy.matrix( fromMatrix, numpy.float )
+            if isinstance(fromMatrix, str):
+               fromMatrix = PlatformInfo.strmatrix2liststr( fromMatrix )
+            self.__Matrix = numpy.asarray( fromMatrix, dtype=float )
             self.__Type   = "Matrix"
         else:
             self.__Method = None
@@ -211,7 +213,7 @@ class Operator(object):
             assert len(_xValue) == len(_HValue), "Incompatible number of elements in xValue and HValue"
             _HxValue = []
             for i in range(len(_HValue)):
-                _HxValue.append( numpy.asmatrix( numpy.ravel( _HValue[i] ) ).T )
+                _HxValue.append( _HValue[i] )
                 if self.__avoidRC:
                     Operator.CM.storeValueInX(_xValue[i],_HxValue[-1],self.__name)
         else:
@@ -230,8 +232,7 @@ class Operator(object):
                 else:
                     if self.__Matrix is not None:
                         self.__addOneMatrixCall()
-                        _xv = numpy.ravel(xv).reshape((-1,1))
-                        _hv = self.__Matrix * _xv
+                        _hv = self.__Matrix @ numpy.ravel(xv)
                     else:
                         self.__addOneMethodCall()
                         _xserie.append( xv )
@@ -279,9 +280,8 @@ class Operator(object):
             _HxValue = []
             for paire in _xuValue:
                 _xValue, _uValue = paire
-                _xValue = numpy.matrix(numpy.ravel(_xValue)).T
                 self.__addOneMatrixCall()
-                _HxValue.append( self.__Matrix * _xValue )
+                _HxValue.append( self.__Matrix @ numpy.ravel(_xValue) )
         else:
             _xuArgs = []
             for paire in _xuValue:
@@ -326,9 +326,8 @@ class Operator(object):
             _HxValue = []
             for paire in _nxValue:
                 _xNominal, _xValue = paire
-                _xValue = numpy.matrix(numpy.ravel(_xValue)).T
                 self.__addOneMatrixCall()
-                _HxValue.append( self.__Matrix * _xValue )
+                _HxValue.append( self.__Matrix @ numpy.ravel(_xValue) )
         else:
             self.__addOneMethodCall( len(_nxValue) )
             if self.__extraArgs is None:
@@ -354,7 +353,7 @@ class Operator(object):
             if argsAsSerie:
                 self.__addOneMethodCall( len(ValueForMethodForm) )
                 for _vfmf in ValueForMethodForm:
-                    mValue.append( numpy.matrix( self.__Method(((_vfmf, None),)) ) )
+                    mValue.append( self.__Method(((_vfmf, None),)) )
             else:
                 self.__addOneMethodCall()
                 mValue = self.__Method(((ValueForMethodForm, None),))
@@ -557,7 +556,9 @@ class FullOperator(object):
             self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = __Function["Tangent"], reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
             self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = __Function["Adjoint"], reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
         elif asMatrix is not None:
-            __matrice = numpy.matrix( __Matrix, numpy.float )
+            if isinstance(__Matrix, str):
+                __Matrix = PlatformInfo.strmatrix2liststr( __Matrix )
+            __matrice = numpy.asarray( __Matrix, dtype=float )
             self.__FO["Direct"]  = Operator( name = self.__name,           fromMatrix = __matrice,   reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMatrix = __matrice,   reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF )
             self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMatrix = __matrice.T, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF )
@@ -1077,6 +1078,45 @@ class Algorithm(object):
             return __SC
 
 # ==============================================================================
+class PartialAlgorithm(object):
+    """
+    Classe pour mimer "Algorithm" du point de vue stockage, mais sans aucune
+    action avancée comme la vérification . Pour les méthodes reprises ici,
+    le fonctionnement est identique à celles de la classe "Algorithm".
+    """
+    def __init__(self, name):
+        self._name = str( name )
+        self._parameters = {"StoreSupplementaryCalculations":[]}
+        #
+        self.StoredVariables = {}
+        self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
+        self.StoredVariables["CostFunctionJ"]                        = Persistence.OneScalar(name = "CostFunctionJ")
+        self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
+        self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
+        self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name  = "CurrentIterationNumber")
+        #
+        self.__canonical_stored_name = {}
+        for k in self.StoredVariables:
+            self.__canonical_stored_name[k.lower()] = k
+
+    def _toStore(self, key):
+        "True if in StoreSupplementaryCalculations, else False"
+        return key in self._parameters["StoreSupplementaryCalculations"]
+
+    def get(self, key=None):
+        """
+        Renvoie l'une des variables stockées identifiée par la clé, ou le
+        dictionnaire de l'ensemble des variables disponibles en l'absence de
+        clé. Ce sont directement les variables sous forme objet qui sont
+        renvoyées, donc les méthodes d'accès à l'objet individuel sont celles
+        des classes de persistance.
+        """
+        if key is not None:
+            return self.StoredVariables[self.__canonical_stored_name[key.lower()]]
+        else:
+            return self.StoredVariables
+
+# ==============================================================================
 class AlgorithmAndParameters(object):
     """
     Classe générale d'interface d'action pour l'algorithme et ses paramètres
@@ -1431,9 +1471,9 @@ class AlgorithmAndParameters(object):
         if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
             if self.__algorithmName in ["EnsembleBlue",]:
                 asPersistentVector = self.__Xb.reshape((-1,min(__B_shape)))
-                self.__Xb = Persistence.OneVector("Background", basetype=numpy.matrix)
+                self.__Xb = Persistence.OneVector("Background")
                 for member in asPersistentVector:
-                    self.__Xb.store( numpy.matrix( numpy.ravel(member), numpy.float ).T )
+                    self.__Xb.store( numpy.asarray(member, dtype=float) )
                 __Xb_shape = min(__B_shape)
             else:
                 raise ValueError("Shape characteristic of a priori errors covariance matrix (B) \"%s\" and background (Xb) \"%s\" are incompatible."%(__B_shape,__Xb_shape))
@@ -1721,16 +1761,22 @@ class State(object):
         #
         if __Vector is not None:
             self.__is_vector = True
-            self.__V         = numpy.matrix( numpy.asmatrix(__Vector).A1, numpy.float ).T
+            if isinstance(__Vector, str):
+               __Vector = PlatformInfo.strvect2liststr( __Vector )
+            self.__V         = numpy.ravel(numpy.asarray( __Vector, dtype=float )).reshape((-1,1))
             self.shape       = self.__V.shape
             self.size        = self.__V.size
         elif __Series is not None:
             self.__is_series  = True
             if isinstance(__Series, (tuple, list, numpy.ndarray, numpy.matrix, str)):
-                self.__V = Persistence.OneVector(self.__name, basetype=numpy.matrix)
-                if isinstance(__Series, str): __Series = eval(__Series)
+                #~ self.__V = Persistence.OneVector(self.__name, basetype=numpy.matrix)
+                self.__V = Persistence.OneVector(self.__name)
+                if isinstance(__Series, str):
+                    __Series = PlatformInfo.strmatrix2liststr(__Series)
                 for member in __Series:
-                    self.__V.store( numpy.matrix( numpy.asmatrix(member).A1, numpy.float ).T )
+                    if isinstance(member, str):
+                        member = PlatformInfo.strvect2liststr( member )
+                    self.__V.store(numpy.asarray( member, dtype=float ))
             else:
                 self.__V = __Series
             if isinstance(self.__V.shape, (tuple, list)):
@@ -1825,7 +1871,7 @@ class Covariance(object):
         #
         if __Scalar is not None:
             if isinstance(__Scalar, str):
-                __Scalar = __Scalar.replace(";"," ").replace(","," ").split()
+                __Scalar = PlatformInfo.strvect2liststr( __Scalar )
                 if len(__Scalar) > 0: __Scalar = __Scalar[0]
             if numpy.array(__Scalar).size != 1:
                 raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.array(__Scalar).size)
@@ -1835,9 +1881,9 @@ class Covariance(object):
             self.size        = 0
         elif __Vector is not None:
             if isinstance(__Vector, str):
-                __Vector = __Vector.replace(";"," ").replace(","," ").split()
+                __Vector = PlatformInfo.strvect2liststr( __Vector )
             self.__is_vector = True
-            self.__C         = numpy.abs( numpy.array( numpy.ravel( __Vector ), dtype=float ) )
+            self.__C         = numpy.abs( numpy.ravel(numpy.asarray( __Vector, dtype=float )) )
             self.shape       = (self.__C.size,self.__C.size)
             self.size        = self.__C.size**2
         elif __Matrix is not None:
@@ -2019,14 +2065,14 @@ class Covariance(object):
     def asfullmatrix(self, msize=None):
         "Matrice pleine"
         if   self.ismatrix():
-            return numpy.asarray(self.__C)
+            return numpy.asarray(self.__C, dtype=float)
         elif self.isvector():
-            return numpy.asarray( numpy.diag(self.__C), float )
+            return numpy.asarray( numpy.diag(self.__C), dtype=float )
         elif self.isscalar():
             if msize is None:
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
-                return numpy.asarray( self.__C * numpy.eye(int(msize)), float )
+                return numpy.asarray( self.__C * numpy.eye(int(msize)), dtype=float )
         elif self.isobject() and hasattr(self.__C,"asfullmatrix"):
             return self.__C.asfullmatrix()
         else:
@@ -2181,6 +2227,8 @@ class Covariance(object):
             else:
                 raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
+            return other * self.__C
+        elif self.isscalar() and isinstance(other,float):
             return other * self.__C
         elif self.isobject():
             return self.__C.__rmul__(other)

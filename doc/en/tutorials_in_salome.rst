@@ -186,7 +186,7 @@ generated ADAO scheme:
 
 After that point, all the modifications, executions and post-processing of the
 data assimilation scheme will be done in the YACS module. In order to check the
-result in a simple way, we use the "*UserPostAnalysis*" node (or we create here
+result in a simple way, we can use the "*UserPostAnalysis*" node (or we create
 a new YACS node by using the "*in-line script node*" sub-menu of the YACS
 graphical view).
 
@@ -226,7 +226,7 @@ window in the YACS scheme as shown below:
     **YACS menu for Container Log, and dialog window showing the log**
 
 We verify that the result is correct by checking that the log dialog window
-contains the following line:
+contains information similar to the following line:
 ::
 
     Analysis = [0.5, 0.5, 0.5]

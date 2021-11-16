@@ -49,6 +49,7 @@ import sys
 import platform
 import locale
 import logging
+import re
 
 # ==============================================================================
 class PlatformInfo(object):
@@ -292,6 +293,34 @@ def date2int( __date, __lang="FR" ):
     else:
         raise ValueError("Cannot convert \"%s\" as a D/M/Y H:M date"%d)
     return __number
+
+def strvect2liststr( __strvect ):
+    """
+    Fonction de secours, conversion d'une chaîne de caractères de
+    représentation de vecteur en une liste de chaînes de caractères de
+    représentation de flottants
+    """
+    for s in ("array", "matrix", "list", "tuple", "[", "]", "(", ")"):
+        __strvect = __strvect.replace(s,"")  # Rien
+    for s in (",", ";"):
+        __strvect = __strvect.replace(s," ") # Blanc
+    return __strvect.split()
+
+def strmatrix2liststr( __strvect ):
+    """
+    Fonction de secours, conversion d'une chaîne de caractères de
+    représentation de matrice en une liste de chaînes de caractères de
+    représentation de flottants
+    """
+    for s in ("array", "matrix", "list", "tuple", "[", "(", "'", '"'):
+        __strvect = __strvect.replace(s,"")  # Rien
+    __strvect = __strvect.replace(","," ") # Blanc
+    for s in ("]", ")"):
+        __strvect = __strvect.replace(s,";") # "]" et ")" par ";"
+    __strvect = re.sub(';\s*;',';',__strvect)
+    __strvect = __strvect.rstrip(";") # Après ^ et avant v
+    __strmat = [l.split() for l in __strvect.split(";")]
+    return __strmat
 
 def checkFileNameConformity( __filename, __warnInsteadOfPrint=True ):
     if sys.platform.startswith("win") and len(__filename) > 256:

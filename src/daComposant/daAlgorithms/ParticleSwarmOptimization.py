@@ -143,12 +143,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Phip = 1. - Phig
         logging.debug("%s Taux de rappel au meilleur insecte du groupe (entre 0 et 1) = %s et à la meilleure position précédente (son complémentaire à 1) = %s"%(self._name, str(Phig), str(Phip)))
         #
-        # Opérateur d'observation
-        # -----------------------
         Hm = HO["Direct"].appliedTo
         #
-        # Précalcul des inversions de B et R
-        # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
@@ -183,17 +179,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             return J
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
-        # ------------------------------------
-        if isinstance(Xb, type(numpy.matrix([]))):
-            Xini = Xb.A1.tolist()
-        elif Xb is not None:
-            Xini = list(Xb)
+        if Xb is not None:
+            Xini = numpy.ravel(Xb)
         else:
             Xini = numpy.zeros(len(BoxBounds[:,0]))
         #
-        # Initialisation des bornes
-        # -------------------------
         SpaceUp  = BoxBounds[:,1] + Xini
         SpaceLow = BoxBounds[:,0] + Xini
         nbparam  = len(SpaceUp)
@@ -286,17 +276,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+            self.StoredVariables["Innovation"].store( d )
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
         if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+            self.StoredVariables["OMB"].store( d )
         if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
         self._post_run(HO)
         return 0

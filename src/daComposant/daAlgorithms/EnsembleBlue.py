@@ -41,6 +41,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
                 "Analysis",
+                "CurrentOptimum",
                 "CurrentState",
                 "Innovation",
                 "SimulatedObservationAtBackground",
@@ -86,39 +87,42 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
-        Hm = HO["Tangent"].asMatrix(None)
-        Hm = Hm.reshape(Y.size,Xb[0].size) # ADAO & check shape
-        Ha = HO["Adjoint"].asMatrix(None)
-        Ha = Ha.reshape(Xb[0].size,Y.size) # ADAO & check shape
+        Xbm = Xb.mean()
+        Hm = HO["Tangent"].asMatrix(Xbm)
+        Hm = Hm.reshape(Y.size,Xbm.size) # ADAO & check shape
+        Ha = HO["Adjoint"].asMatrix(Xbm)
+        Ha = Ha.reshape(Xbm.size,Y.size) # ADAO & check shape
         #
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------
         if Y.size <= Xb[0].size:
-            K  = B * Ha * (R + Hm * B * Ha).I
+            K  = B * Ha * (R + Hm * (B * Ha)).I
         else:
-            K = (BI + Ha * RI * Hm).I * Ha * RI
+            K = (BI + Ha * (RI * Hm)).I * Ha * RI
         #
         # Calcul du BLUE pour chaque membre de l'ensemble
         # -----------------------------------------------
         for iens in range(nb_ens):
-            HXb = numpy.ravel(numpy.dot(Hm, Xb[iens]))
+            HXb = Hm @ Xb[iens]
             if self._toStore("SimulatedObservationAtBackground"):
                 self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
-            d  = numpy.ravel(EnsembleY[:,iens]) - HXb
+            Innovation  = numpy.ravel(EnsembleY[:,iens]) - numpy.ravel(HXb)
             if self._toStore("Innovation"):
-                self.StoredVariables["Innovation"].store( d )
-            Xa = numpy.ravel(Xb[iens]) + numpy.dot(K, d)
+                self.StoredVariables["Innovation"].store( Innovation )
+            Xa = Xb[iens] + K @ Innovation
             self.StoredVariables["CurrentState"].store( Xa )
             if self._toStore("SimulatedObservationAtCurrentState"):
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.dot(Hm, Xa) )
+                self.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm @ numpy.ravel(Xa) )
         #
         # Fabrication de l'analyse
         # ------------------------
         Members = self.StoredVariables["CurrentState"][-nb_ens:]
         Xa = numpy.array( Members ).mean(axis=0)
         self.StoredVariables["Analysis"].store( Xa )
+        if self._toStore("CurrentOptimum"):
+            self.StoredVariables["CurrentOptimum"].store( Xa )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.dot(Hm, Xa) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( Hm @ numpy.ravel(Xa) )
         #
         self._post_run(HO)
         return 0
