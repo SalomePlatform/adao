@@ -522,7 +522,7 @@ class _SCDViewer(GenericCaseViewer):
             self._addLine("Analysis_config = {}")
             self._addLine("Analysis_config['From'] = 'String'")
             self._addLine("Analysis_config['Data'] = \"\"\"import numpy")
-            self._addLine("xa=numpy.ravel(ADD.get('Analysis')[-1])")
+            self._addLine("xa=ADD.get('Analysis')[-1]")
             self._addLine("print('Analysis:',xa)\"\"\"")
             self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
     def __loadVariablesByScript(self):

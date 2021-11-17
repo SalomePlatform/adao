@@ -40,7 +40,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MLEF",
                 "IEnKF",
                 "EnKS",
-                "E3DVAR",
                 ],
             listadv  = [
                 "StochasticEnKF",
@@ -57,6 +56,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "IEnKF-B",
                 "EnKS-KFF",
                 "IEKF",
+                "E3DVAR",
                 "E3DVAR-EnKF",
                 "E3DVAR-ETKF",
                 "E3DVAR-MLEF",

@@ -136,7 +136,7 @@ def ColDataFileExtVal(filename):
 ColDataFileExtVal.info = u"The data file has to contain explicitly one or more number columns with separator, or one variable, that can fit in a unique continuous vector."
 """%(module_version.name,module_version.cata)
 
-# Important : validators=[...] pour que les conditions soient traitees simultanement, en "ET", et pas en "OU" (choisi dans le cas du tuple a la place de la liste)
+# Important : validators=[...] pour que les conditions soient traitées simultanément, en "ET", et pas en "OU" (choisi dans le cas du tuple a la place de la liste)
 # validators=[OnlyStr(), FileExtVal('py'), FunctionVal(fv)]
 data_method = """
 def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
