@@ -902,6 +902,7 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         RI = R.getI()
     #
     __n = Xb.size
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = Xb
@@ -1131,6 +1132,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         RI = R.getI()
     #
     __n = Xb.size
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = Xb
@@ -1479,6 +1481,8 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
+    previousJMinimum = numpy.finfo(float).max
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
@@ -1491,8 +1495,6 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
         selfA._setInternalState("seed", numpy.random.get_state())
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
-    #
-    previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
         numpy.random.set_state(selfA._getInternalState("seed"))
@@ -1834,6 +1836,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         RI = R.getI()
     #
     __n = Xb.size
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = Xb
@@ -2027,6 +2030,8 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
+    previousJMinimum = numpy.finfo(float).max
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         if hasattr(B,"asfullmatrix"): Pn = B.asfullmatrix(__n)
@@ -2041,8 +2046,6 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         selfA._setInternalState("seed", numpy.random.get_state())
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
-    #
-    previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
         numpy.random.set_state(selfA._getInternalState("seed"))
@@ -2508,6 +2511,8 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
+    previousJMinimum = numpy.finfo(float).max
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = EnsembleOfBackgroundPerturbations( Xb, None, __m )
@@ -2520,8 +2525,6 @@ def mlef(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
         selfA._setInternalState("seed", numpy.random.get_state())
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
-    #
-    previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
         numpy.random.set_state(selfA._getInternalState("seed"))
@@ -3135,6 +3138,8 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
     #
     __n = Xb.size
     __m = selfA._parameters["NumberOfMembers"]
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
+    previousJMinimum = numpy.finfo(float).max
     #
     if hasattr(R,"asfullmatrix"): Rn = R.asfullmatrix(__p)
     else:                         Rn = R
@@ -3149,8 +3154,6 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
         selfA._setInternalState("seed", numpy.random.get_state())
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
-    #
-    previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
         numpy.random.set_state(selfA._getInternalState("seed"))
@@ -3839,6 +3842,7 @@ def stdkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         RI = R.getI()
     #
     __n = Xb.size
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = Xb
@@ -4042,6 +4046,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         RI = R.getI()
     #
     __n = Xb.size
+    nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
         Xn = Xb
