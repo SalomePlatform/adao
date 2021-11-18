@@ -711,7 +711,7 @@ class OneVector(Persistence):
 
 class OneMatrix(Persistence):
     """
-    Classe de stockage d'une matrice de valeurs (numpy.matrix) par pas.
+    Classe de stockage d'une matrice de valeurs homogènes par pas.
     """
     def __init__(self, name="", unit="", basetype = numpy.matrix):
         Persistence.__init__(self, name, unit, basetype)

@@ -89,21 +89,20 @@ General form of a script to define a dedicated post-processing
 
 A set of post-processing commands is a special Python script, which is
 automatically activated at the end of the estimation calculations in ADAO. Any
-Python commands, which a user can add after a TUI calculation in ADAO, can be
+Python commands, which a user can add after a GUI calculation in ADAO, can be
 part of this post-processing. Several command set templates are available by
 default,essentially to give the simplest possible example of recording these
 series.
 
 To be usable in an automatic way, it is required that any call of the ADAO
 calculation case, to recover a variable, is done only with the reserved name
-"*ADD*". As an example, here is a very simple script (similar to the
+"*ADD*". As an example, here is a very simple script (very similar to the
 "*ValuePrinter*" template), usable to display the value of the optimal
 estimate::
 
-    print('# Post-analysis')
     import numpy
     xa = numpy.ravel(ADD.get('Analysis')[-1])
-    print('Analysis',xa)
+    print('  === Analysis =',xa)
 
 If the command "*ADD.get(...)*", used to obtain a result variable, does not use
 the reserved name "*ADD*" for the calculation case, then the call will lead to
@@ -140,7 +139,7 @@ Print on standard output the optimal value.
 
     print('# Post-analysis')
     import numpy
-    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    xa=ADD.get('Analysis')[-1]
     print('Analysis',xa)
 
 .. index:: single: AnalysisSaver (Observer)
@@ -154,7 +153,7 @@ Save the optimal value in a file of the '/tmp' directory named 'analysis.txt'.
 
     print('# Post-analysis')
     import numpy
-    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    xa=ADD.get('Analysis')[-1]
     f='/tmp/analysis.txt'
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
@@ -170,7 +169,54 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
 
     print('# Post-analysis')
     import numpy
-    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    xa=ADD.get('Analysis')[-1]
+    print 'Analysis',xa
+    f='/tmp/analysis.txt'
+    print('Analysis saved in "%s"'%f)
+    numpy.savetxt(f,xa)
+
+.. index:: single: AnalysisSeriePrinter (Observer)
+
+Modèle **AnalysisSeriePrinter**
+...............................
+
+Print on standard output the optimal value series.
+
+::
+
+    print('# Post-analysis')
+    import numpy
+    xa=ADD.get('Analysis')
+    print('Analysis',xa)
+
+.. index:: single: AnalysisSerieSaver (Observer)
+
+Modèle **AnalysisSerieSaver**
+.............................
+
+Save the optimal value series in a file of the '/tmp' directory named 'analysis.txt'.
+
+::
+
+    print('# Post-analysis')
+    import numpy
+    xa=ADD.get('Analysis')
+    f='/tmp/analysis.txt'
+    print('Analysis saved in "%s"'%f)
+    numpy.savetxt(f,xa)
+
+.. index:: single: AnalysisSeriePrinterAndSaver (Observer)
+
+Modèle **AnalysisSeriePrinterAndSaver**
+.......................................
+
+Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value series.
+
+::
+
+    print('# Post-analysis')
+    import numpy
+    xa=ADD.get('Analysis')
     print 'Analysis',xa
     f='/tmp/analysis.txt'
     print('Analysis saved in "%s"'%f)

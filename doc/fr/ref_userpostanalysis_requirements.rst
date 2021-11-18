@@ -91,21 +91,20 @@ Forme générale d'un script permettant de définir un post-traitement dédié
 Une série de commandes de post-traitement est un script Python spécial, qui est
 automatiquement activée à la fin des calculs d'estimation dans ADAO. Toutes les
 commandes Python, qu'un utilisateur peut ajouter après un calcul ADAO en
-interface graphique TUI, peuvent faire partie de ce post-traitement. Plusieurs
+interface graphique GUI, peuvent faire partie de ce post-traitement. Plusieurs
 modèles de série de commandes sont disponibles par défaut, essentiellement pour
 donner un exemple le plus simple possible d'enregistrement de ces séries.
 
 Pour être utilisable de manière automatique, il est requis tout appel du cas de
 calcul ADAO, pour récupérer une variable, se fasse uniquement avec le nom
-réservé "*ADD*". A titre d'exemple, voici un script très simple (similaire au
-modèle "*ValuePrinter*"), utilisable pour afficher la valeur de l'estimation
+réservé "*ADD*". A titre d'exemple, voici un script très simple (très similaire
+au modèle "*ValuePrinter*"), utilisable pour afficher la valeur de l'estimation
 optimale :
 ::
 
-    print('# Post-analysis')
     import numpy
     xa = numpy.ravel(ADD.get('Analysis')[-1])
-    print('Analysis',xa)
+    print('  === Analysis =',xa)
 
 Si la commande "*ADD.get(...)*", utilisée pour l'obtention d'une variable
 résultat, n'utilise pas le nom réservé "*ADD*" pour le cas de calcul, alors
@@ -144,7 +143,7 @@ Imprime sur la sortie standard la valeur optimale.
 
     print('# Post-analysis')
     import numpy
-    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    xa=ADD.get('Analysis')[-1]
     print('Analysis',xa)
 
 .. index:: single: AnalysisSaver (Observer)
@@ -158,7 +157,7 @@ Enregistre la valeur optimale dans un fichier du répertoire '/tmp' nommé 'anal
 
     print('# Post-analysis')
     import numpy
-    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    xa=ADD.get('Analysis')[-1]
     f='/tmp/analysis.txt'
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
@@ -174,7 +173,54 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
 
     print('# Post-analysis')
     import numpy
-    xa=numpy.ravel(ADD.get('Analysis')[-1])
+    xa=ADD.get('Analysis')[-1]
+    print 'Analysis',xa
+    f='/tmp/analysis.txt'
+    print('Analysis saved in "%s"'%f)
+    numpy.savetxt(f,xa)
+
+.. index:: single: AnalysisSeriePrinter (Observer)
+
+Modèle **AnalysisSeriePrinter**
+...............................
+
+Imprime sur la sortie standard la série des valeurs optimales.
+
+::
+
+    print('# Post-analysis')
+    import numpy
+    xa=ADD.get('Analysis')
+    print('Analysis',xa)
+
+.. index:: single: AnalysisSerieSaver (Observer)
+
+Modèle **AnalysisSerieSaver**
+.............................
+
+Enregistre la série des valeurs optimales dans un fichier du répertoire '/tmp' nommé 'analysis.txt'.
+
+::
+
+    print('# Post-analysis')
+    import numpy
+    xa=ADD.get('Analysis')
+    f='/tmp/analysis.txt'
+    print('Analysis saved in "%s"'%f)
+    numpy.savetxt(f,xa)
+
+.. index:: single: AnalysisSeriePrinterAndSaver (Observer)
+
+Modèle **AnalysisSeriePrinterAndSaver**
+.......................................
+
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la série des valeurs optimales.
+
+::
+
+    print('# Post-analysis')
+    import numpy
+    xa=ADD.get('Analysis')
     print 'Analysis',xa
     f='/tmp/analysis.txt'
     print('Analysis saved in "%s"'%f)

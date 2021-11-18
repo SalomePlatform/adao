@@ -72,6 +72,7 @@ StoreSupplementaryCalculations
   sub-section "*Information and variables available at the end of the
   algorithm*"): [
   "Analysis",
+  "CurrentOptimum",
   "CurrentState",
   "Innovation",
   "SimulatedObservationAtBackground",
@@ -95,6 +96,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo05.rst
 
 .. include:: snippets/Analysis.rst
+
+.. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
 

@@ -72,6 +72,7 @@ StoreSupplementaryCalculations
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
   "Analysis",
+  "CurrentOptimum",
   "CurrentState",
   "Innovation",
   "SimulatedObservationAtBackground",
@@ -95,6 +96,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo05.rst
 
 .. include:: snippets/Analysis.rst
+
+.. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
 
