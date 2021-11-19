@@ -174,7 +174,7 @@ def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
             ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')[-1]\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
             ),
         AnalysisPrinterAndSaver = BLOC (condition = " Template == 'AnalysisPrinterAndSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')[-1]\\nprint 'Analysis:',xa\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
+            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')[-1]\\nprint('Analysis:',xa)\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
             ),
         AnalysisSeriePrinter = BLOC (condition = " Template == 'AnalysisSeriePrinter' ",
             ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nprint('Analysis:',xa)" ),
@@ -183,7 +183,7 @@ def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
             ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
             ),
         AnalysisSeriePrinterAndSaver = BLOC (condition = " Template == 'AnalysisSeriePrinterAndSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nprint 'Analysis:',xa\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
+            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nprint('Analysis:',xa)\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
             ),
         ),
     )

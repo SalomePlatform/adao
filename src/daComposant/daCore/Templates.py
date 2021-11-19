@@ -59,10 +59,6 @@ class TemplateStorage(object):
         __keys = sorted(self.__values.keys())
         return __keys
 
-    # def has_key(self, name):
-    #     "D.has_key(k) -> True if D has a key k, else False"
-    #     return name in self.__values
-
     def __contains__(self, name):
         "D.__contains__(k) -> True if D has a key k, else False"
         return name in self.__values
@@ -244,7 +240,7 @@ UserPostAnalysisTemplates.store(
     )
 UserPostAnalysisTemplates.store(
     name    = "AnalysisPrinterAndSaver",
-    content = """print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')[-1]\nprint 'Analysis',xa\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    content = """print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')[-1]\nprint('Analysis',xa)\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur optimale",
     en_EN   = "Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value",
     order   = "next",
@@ -265,7 +261,7 @@ UserPostAnalysisTemplates.store(
     )
 UserPostAnalysisTemplates.store(
     name    = "AnalysisSeriePrinterAndSaver",
-    content = """print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')\nprint 'Analysis',xa\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    content = """print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')\nprint('Analysis',xa)\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la série des valeurs optimales",
     en_EN   = "Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value series",
     order   = "next",
