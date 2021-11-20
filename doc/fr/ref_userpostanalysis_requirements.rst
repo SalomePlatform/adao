@@ -174,7 +174,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
     print('# Post-analysis')
     import numpy
     xa=ADD.get('Analysis')[-1]
-    print 'Analysis',xa
+    print('Analysis',xa)
     f='/tmp/analysis.txt'
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
@@ -221,7 +221,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
     print('# Post-analysis')
     import numpy
     xa=ADD.get('Analysis')
-    print 'Analysis',xa
+    print('Analysis',xa)
     f='/tmp/analysis.txt'
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
