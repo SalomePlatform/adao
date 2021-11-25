@@ -136,6 +136,21 @@ def ColDataFileExtVal(filename):
 ColDataFileExtVal.info = u"The data file has to contain explicitly one or more number columns with separator, or one variable, that can fit in a unique continuous vector."
 """%(module_version.name,module_version.cata)
 
+# --------------------------------------
+
+from daCore.Templates import UserPostAnalysisTemplates
+upa_list = UserPostAnalysisTemplates.keys_in_presentation_order()
+upa_list = '"%s"'%str('", "'.join(upa_list))
+upa_cont = ""
+for k in UserPostAnalysisTemplates.keys_in_presentation_order():
+    upa_cont += """        %s = BLOC (condition = " Template == '%s' ",\n"""%(k,k)
+    upa_cont += """            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "%s", fr="%s", ang="%s" ),\n"""%(
+        UserPostAnalysisTemplates[k].replace("\n","\\n").replace('"','\\"'),
+        UserPostAnalysisTemplates.getdoc(k, "fr_FR"),
+        UserPostAnalysisTemplates.getdoc(k, "en_EN"),
+        )
+    upa_cont += """            ),\n"""
+
 # Important : validators=[...] pour que les conditions soient traitées simultanément, en "ET", et pas en "OU" (choisi dans le cas du tuple a la place de la liste)
 # validators=[OnlyStr(), FileExtVal('py'), FunctionVal(fv)]
 data_method = """
@@ -165,29 +180,16 @@ def F_{data_name}(statut, fv=NoCheckInNS) : return FACT(
     SCRIPTWITHSWITCH_DATA = BLOC ( condition = " FROM in ( 'ScriptWithSwitch', ) ",
         SCRIPTWITHSWITCH_FILE = SIMP(statut = "o", typ = "FichierNoAbs", validators=[OnlyStr(), FileExtVal('py')], fr="En attente d'un nom de fichier script, avec ou sans le chemin complet pour le trouver, contenant un switch pour les calculs direct, tangent et adjoint", ang="Waiting for a script file name, with or without the full path to find it, containing a switch for direct, tangent and adjoint computations"),
         ),
-    TEMPLATE_DATA =  BLOC (condition = " FROM in ( 'Template', ) ",
-        Template = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "AnalysisPrinter", into=("AnalysisPrinter", "AnalysisSaver", "AnalysisPrinterAndSaver", "AnalysisSeriePrinter", "AnalysisSerieSaver", "AnalysisSeriePrinterAndSaver")),
-        AnalysisPrinter = BLOC (condition = " Template == 'AnalysisPrinter' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')[-1]\\nprint('Analysis:',xa)" ),
-            ),
-        AnalysisSaver = BLOC (condition = " Template == 'AnalysisSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')[-1]\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
-            ),
-        AnalysisPrinterAndSaver = BLOC (condition = " Template == 'AnalysisPrinterAndSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')[-1]\\nprint('Analysis:',xa)\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
-            ),
-        AnalysisSeriePrinter = BLOC (condition = " Template == 'AnalysisSeriePrinter' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nprint('Analysis:',xa)" ),
-            ),
-        AnalysisSerieSaver = BLOC (condition = " Template == 'AnalysisSerieSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
-            ),
-        AnalysisSeriePrinterAndSaver = BLOC (condition = " Template == 'AnalysisSeriePrinterAndSaver' ",
-            ValueTemplate = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "print('# Post-analysis')\\nimport numpy\\nxa=ADD.get('Analysis')\\nprint('Analysis:',xa)\\nf='/tmp/analysis.txt'\\nprint('Analysis saved in \\"%s\\"'%f)\\nnumpy.savetxt(f,xa)" ),
-            ),
-        ),
+"""+\
+"""    TEMPLATE_DATA =  BLOC (condition = " FROM in ( 'Template', ) ",
+        Template = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "AnalysisPrinter", into=(%s)),
+"""%(upa_list,)+\
+upa_cont+\
+"""        ),
     )
 """
+
+# --------------------------------------
 
 init_method = """
 def F_InitChoice() : return  ("Background",
@@ -244,6 +246,8 @@ observers_choice = """
             ),
         ),"""
 
+# --------------------------------------
+
 from daCore.Templates import ObserverTemplates
 observers_list = ObserverTemplates.keys_in_presentation_order()
 observers_list = '"%s"'%str('", "'.join(observers_list))
@@ -256,6 +260,7 @@ for k in ObserverTemplates.keys_in_presentation_order():
         ObserverTemplates.getdoc(k, "en_EN"),
         )
     observers_cont += """                    ),\n"""
+
 observers_method = """
 def F_ObserverTemplate() : return BLOC(condition = " NodeType == 'Template' ",
                 Template = SIMP(statut = "o", typ = "TXM", min=1, max=1, defaut = "ValuePrinter", into=(%s)),
@@ -266,6 +271,8 @@ def F_Observers(statut) : return FACT(
     SELECTION = SIMP(statut="o", defaut=[], typ="TXM", min=0, max="**", homo="SansOrdreNiDoublon", validators=NoRepeat(), into=({choices})),{decl_choices}
     )
 """%(observers_list,observers_cont)
+
+# --------------------------------------
 
 algo_choices = """
 def AlgorithmParametersInNS(filename):
@@ -290,6 +297,8 @@ one_algo_choices = """
     Parameters{algo_name} = BLOC (condition = " (Parameters == 'Defaults') and (Algorithm == '{algo_name}') ",
         statut="f",
 {algo_parameters}        ),"""
+
+# --------------------------------------
 
 assim_study = """
 def F_variables(statut) : return FACT(
