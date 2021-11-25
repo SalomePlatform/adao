@@ -5,17 +5,18 @@ ADAO: A module for Data Assimilation and Optimization
 About
 -----
 
-**The ADAO module provides data assimilation and optimization**
-features in Python or SALOME context (see
-http://www.salome-platform.org/). Briefly stated, Data Assimilation is
-a methodological framework to compute the optimal estimate of the
-inaccessible true value of a system state, eventually over time. It
-uses information coming from experimental measurements or observations,
-and from numerical *a priori* models, including information about their
-errors. Parts of the framework are also known under the names of
-*parameter estimation*, *inverse problems*, *Bayesian estimation*,
-*optimal interpolation*, etc. More details can be found in the full
-ADAO documentation (see https://www.salome-platform.org/).
+**The ADAO module provides data assimilation and optimization** features in
+Python or SALOME context (see http://www.salome-platform.org/). Briefly stated,
+Data Assimilation is a methodological framework to compute the optimal estimate
+of the inaccessible true value of a system state, eventually over time. It uses
+information coming from experimental measurements or observations, and from
+numerical *a priori* models, including information about their errors. Parts of
+the framework are also known under the names of *calibration*, *adjustment*,
+*state estimation*, *parameter estimation*, *parameter adjustment*, *inverse
+problems*, *Bayesian estimation*, *optimal interpolation*, *mathematical
+regularization*, *meta-heuristics for optimization*, *model reduction*, *data
+smoothing*, etc. More details can be found in the full ADAO documentation (see
+https://www.salome-platform.org/).
 
 Only the use of ADAO text programming interface (API/TUI) is introduced
 here. This interface gives ability to create a calculation object in a

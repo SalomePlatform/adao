@@ -23,8 +23,8 @@
 
 .. _section_ref_covariance_requirements:
 
-Exigences pour décrire les matrices de covariance
--------------------------------------------------
+Conditions requises pour décrire des matrices de covariance
+-----------------------------------------------------------
 
 .. index:: single: setBackgroundError
 .. index:: single: setObservationError

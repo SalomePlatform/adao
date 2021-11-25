@@ -561,7 +561,8 @@ cas précis que la démarche d'assimilation de données a initialement été
 largement développée).
 
 On formalise de manière simple le cadre de simulation numérique. Un système
-dynamique simple sur l'état :math:`\mathbf{x}` peut être décrit sous la forme :
+dynamique simple sur l'état :math:`\mathbf{x}` peut être décrit en temps
+continu sous la forme :
 
 .. math:: \forall t \in \mathbb{R}^{+}, \frac{d\mathbf{x}}{dt} = \mathcal{D}(\mathbf{x},\mathbf{u},t)
 

@@ -11,9 +11,11 @@
 
     - in text format (simple text in a file with a ".txt" or ".dat" extension,
       text with comma delimiter in a file with a ".csv" extension, text with
-      tabulation delimiter in a file with a ".tsv" extension)
+      tabulation delimiter in a file with a ".tsv" extension), named here TXT,
+      CSV, TSV or DAT.
     - in binary format (single-variable in a Numpy file with a ".npy"
-      extension, multi-variables in a NumpyZ file with a ".npz" extension)
+      extension, multi-variables in a NumpyZ file with a ".npz" extension),
+      named here NPY or NPZ.
 
     By default, the values of a variable has to be ordered in rows to be
     acquired record line by record line ("ColMajor=False"), but they can also

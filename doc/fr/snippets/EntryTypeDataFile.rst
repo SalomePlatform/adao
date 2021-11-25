@@ -13,9 +13,10 @@
     - en format texte (texte simple dans un fichier à extension ".txt" ou
       ".dat", texte à séparateur virgule ou point-virgule dans un fichier à
       extension ".csv", texte à séparateur tabulation dans un fichier à
-      extension ".tsv")
+      extension ".tsv"), nommé ici TXT, CSV, TSV ou DAT.
     - en format binaire (mono-variable dans un fichier Numpy à extension
-      ".npy", multi-variables dans un fichier NumpyZ à extension ".npz").
+      ".npy", multi-variables dans un fichier NumpyZ à extension ".npz"),
+      nommé ici NPY ou NPZ.
 
     Par défaut, les valeurs d'une variable doivent être rangées en colonnes
     pour être acquises ligne d'enregistrement par ligne d'enregistrement

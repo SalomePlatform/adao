@@ -23,8 +23,8 @@
 
 .. _section_ref_userpostanalysis_requirements:
 
-Exigences pour décrire un post-traitement dédié après calcul ADAO
------------------------------------------------------------------
+Conditions requises pour décrire un post-traitement dédié après calcul ADAO
+---------------------------------------------------------------------------
 
 .. index:: single: Post-Traitement
 .. index:: single: UserPostAnalysis

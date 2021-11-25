@@ -23,8 +23,8 @@
 
 .. _section_ref_operator_requirements:
 
-Exigences pour les fonctions décrivant un opérateur
----------------------------------------------------
+Conditions requises pour les fonctions décrivant un opérateur
+-------------------------------------------------------------
 
 .. index:: single: setObservationOperator
 .. index:: single: setEvolutionModel

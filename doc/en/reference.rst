@@ -45,13 +45,13 @@ given through this interface are automatically correct.
 
 .. _section_reference_entry:
 
-========================================================================================
+================================================================================
 **[DocR]** General entries and outputs
-========================================================================================
+================================================================================
 
-This section describes in general the different possibilities of entry types and
-output variables that can be used. The mathematical notations used afterwards
-are explained in the section :ref:`section_theory`.
+This section describes in a very general way the different options of input
+types and output variables. The mathematical notations used are explained in
+section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -62,17 +62,18 @@ are explained in the section :ref:`section_theory`.
 
 .. _section_reference_special_entry:
 
-========================================================================================
-**[DocR]** Special entries: functions, matrices, "*observer*", post-processing
-========================================================================================
+============================================================================================
+**[DocR]** Special entries: measurements, functions, matrices, "*observer*", post-processing
+============================================================================================
 
-This section describes the special entries, as the functional or matrix forms,
-that can be used. The mathematical notations used afterwards are explained in
-the section :ref:`section_theory`.
+This section describes special inputs, such as functional or matrix forms, and
+the requirements for using them. The mathematical concepts and notations
+related to these inputs are explained in section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
 
+   ref_observations_requirements
    ref_operator_requirements
    ref_covariance_requirements
    ref_observers_requirements
@@ -80,18 +81,18 @@ the section :ref:`section_theory`.
 
 .. _section_reference_assimilation:
 
-============================================================================================
+================================================================================
 **[DocR]** Data assimilation or optimization calculation cases
-============================================================================================
+================================================================================
 
 This section describes algorithmic choices to use data assimilation methods,
 optimization methods or methods with reduction, available in ADAO, detailing
-their usage characteristics and their options.
+their characteristics and their options.
 
 Some examples on these commands usage are available in the section
 :ref:`section_tutorials_in_salome`, in the section
 :ref:`section_tutorials_in_python` and in the sample files installed with ADAO.
-The mathematical notations used afterward are explained in the section
+The mathematical concepts and notations used are explained in the section
 :ref:`section_theory`.
 
 .. toctree::
@@ -127,7 +128,7 @@ their usage characteristics and their options.
 Some examples on these commands usage are available in the section
 :ref:`section_tutorials_in_salome`, in the section
 :ref:`section_tutorials_in_python` and in the sample files installed with ADAO.
-The mathematical notations used afterward are explained in the section
+The mathematical concepts and notations used are explained in the section
 :ref:`section_theory`.
 
 .. toctree::

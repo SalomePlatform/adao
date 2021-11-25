@@ -526,7 +526,7 @@ data assimilation approach was initially widely developed).
 
 We formalize the numerical simulation framework in a simple way. A simple
 dynamic system dynamic system on the state :math:`\mathbf{x}` can be described
-in the form:
+in continuous time in the form:
 
 .. math:: \forall t \in \mathbb{R}^{+}, \frac{d\mathbf{x}}{dt} = \mathcal{D}(\mathbf{x},\mathbf{u},t)
 

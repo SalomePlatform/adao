@@ -23,8 +23,8 @@
 
 .. _section_ref_observers_requirements:
 
-Exigences pour les fonctions décrivant un "*observer*"
-------------------------------------------------------
+Conditions requises pour les fonctions décrivant un "*observer*"
+----------------------------------------------------------------
 
 .. index:: single: Observer
 .. index:: single: setObserver

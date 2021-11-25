@@ -45,13 +45,13 @@ l'interface graphique sont automatiquement correctes.
 
 .. _section_reference_entry:
 
-========================================================================================
+================================================================================
 **[DocR]** Entrées et sorties générales
-========================================================================================
+================================================================================
 
-Cette section décrit de manière générale les différentes possibilités de types
-d'entrées et de variables de sortie que l'on peut utiliser. Les notations
-mathématiques utilisées sont expliquées dans la section :ref:`section_theory`.
+Cette section décrit de manière générale les différentes options de types
+d'entrées et de variables de sortie. Les notations mathématiques utilisées sont
+expliquées dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -62,17 +62,19 @@ mathématiques utilisées sont expliquées dans la section :ref:`section_theory`
 
 .. _section_reference_special_entry:
 
-========================================================================================
-**[DocR]** Entrées spéciales : fonctions, matrices, "*observer*", post-traitement
-========================================================================================
+==========================================================================================
+**[DocR]** Entrées spéciales : mesures, fonctions, matrices, "*observer*", post-traitement
+==========================================================================================
 
 Cette section décrit les entrées spéciales, comme les formes fonctionnelles ou
-matricielles, que l'on peut utiliser. Les notations mathématiques utilisées
-sont expliquées dans la section :ref:`section_theory`.
+matricielles, et les conditions requises pour les utiliser. Les notions et
+notations mathématiques relatives à ces entrées sont expliquées dans la section
+:ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
 
+   ref_observations_requirements
    ref_operator_requirements
    ref_covariance_requirements
    ref_observers_requirements
@@ -80,20 +82,20 @@ sont expliquées dans la section :ref:`section_theory`.
 
 .. _section_reference_assimilation:
 
-============================================================================================
+================================================================================
 **[DocR]** Cas d'assimilation de données ou d'optimisation
-============================================================================================
+================================================================================
 
 Cette section décrit les choix algorithmiques pour utiliser des méthodes
 d'assimilation de données, des méthodes d'optimisation ou des méthodes avec
-réduction, disponibles dans ADAO, détaillant leurs caractéristiques
-d'utilisation et leurs options.
+réduction, disponibles dans ADAO, en détaillant leurs caractéristiques et leurs
+options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section
 :ref:`section_tutorials_in_salome`, dans la section
 :ref:`section_tutorials_in_python` et dans les fichiers d'exemple installés
-avec ADAO. Les notations mathématiques utilisées sont expliquées dans la
-section :ref:`section_theory`.
+avec ADAO. Les notions et notations mathématiques utilisées sont expliquées
+dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -128,8 +130,8 @@ détaillant leurs caractéristiques d'utilisation et leurs options.
 Des exemples sur l'usage de ces commandes sont disponibles dans la section
 :ref:`section_tutorials_in_salome`, dans la section
 :ref:`section_tutorials_in_python` et dans les fichiers d'exemple installés
-avec ADAO. Les notations mathématiques utilisées sont expliquées dans la
-section :ref:`section_theory`.
+avec ADAO. Les notions et notations mathématiques utilisées sont expliquées
+dans la section :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
