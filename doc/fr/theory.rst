@@ -792,7 +792,7 @@ Réduction de la représentation des covariances :
     ondelettes...) ou d'estimation d'ensemble (EOF...), ou des combinaisons,
     pour réduire la charge numérique de ces covariances dans les calculs. ADAO
     utilise certaines de ces techniques, en combinaison avec des techniques de
-    calcul creux ("sparse"), pour rendre plus efficace la manipulation des
+    calcul creux ("*sparse*"), pour rendre plus efficace la manipulation des
     matrices de covariance.
 
 Réduction du modèle physique :

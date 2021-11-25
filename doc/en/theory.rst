@@ -161,7 +161,7 @@ Joint estimation of states and parameters
 
 It is sometimes necessary, when considering the two previous types of
 applications, to need to simultaneously estimate states (fields) and parameters
-characterising a physical phenomenon. This is known as **joint estimation of
+characterizing a physical phenomenon. This is known as **joint estimation of
 states and parameters**.
 
 Without going into the advanced methods to solve this problem, we can mention
