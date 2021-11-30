@@ -333,8 +333,8 @@ of the general case ommand (to choose between "*ASSIMILATION_STUDY*",
 explicit definition of the values from default ones, or from a Python
 dictionary, containing some key/value pairs. The list of possible optional
 parameters are given in the section :ref:`section_reference` and its
-subsections. The recommandation is to use the explicit definition of values
-from the default list of optionnal parameters, as here with the
+subsections. The recommendation is to use the explicit definition of values
+from the default list of optional parameters, as here with the
 "*MaximumNumberOfSteps*":
 
   .. _adao_scriptentry02:

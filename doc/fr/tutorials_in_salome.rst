@@ -151,7 +151,7 @@ les conditions d'expérience décrites ci-dessus. L'ensemble des informations
 techniques données au-dessus sont à insérer directement dans la définition du
 cas ADAO, en utilisant le type *String* pour chaque variable. Lorsque la
 définition du cas est prête, il faut l'enregistrer comme un fichier natif de
-ype "*JDC (\*.comm)*" à un endroit quelconque dans l'arborescence de
+type "*JDC (\*.comm)*" à un endroit quelconque dans l'arborescence de
 l'utilisateur. Il faut bien se rappeler que d'autres fichiers seront aussi
 créés à côté de ce premier, donc il est judicieux de faire un répertoire
 spécifique pour ce cas, et d'enregistrer dedans le fichier. Le nom du fichier
@@ -167,7 +167,7 @@ définition finale du cas ressemble à :
 
 Pour poursuivre, on a besoin de générer le schéma YACS à partir de la
 définition du cas ADAO. Pour faire cela, on peut activer le menu contextuel par
-click droit sur le nom du cas dans la fenêtre de l'"*Arbre d'étude*", et
+clic droit sur le nom du cas dans la fenêtre de l'"*Arbre d'étude*", et
 choisir le sous-menu "*Exporter vers YACS*" (ou le bouton "*Exporter vers
 YACS*" |eficas_yacs|) comme ci-dessous :
 
