@@ -786,7 +786,7 @@ def RecentredBounds( __Bounds, __Center):
     # Conserve une valeur par défaut à None s'il n'y a pas de bornes
     if __Bounds is None: return None
     # Recentre les valeurs numériques de bornes
-    return ForceNumericBounds( __Bounds ) - numpy.ravel( __Center ).transpose((-1,1))
+    return ForceNumericBounds( __Bounds ) - numpy.ravel( __Center ).reshape((-1,1))
 
 # ==============================================================================
 def ApplyBounds( __Vector, __Bounds, __newClip = True):
