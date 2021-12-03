@@ -741,7 +741,7 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
             if LBounds is not None: # "EstimateProjection" par défaut
                 Xr = numpy.max(numpy.hstack((Xr.reshape((-1,1)),LBounds[:,0].reshape((-1,1)))),axis=1)
                 Xr = numpy.min(numpy.hstack((Xr.reshape((-1,1)),LBounds[:,1].reshape((-1,1)))),axis=1)
-            Yr = Hm( Xr )
+            Yr = numpy.asarray(Hm( Xr ))
         else:
             raise ValueError("Quantile simulations has only to be Linear or NonLinear.")
         #
@@ -2244,9 +2244,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     BI = B.getI()
     RI = R.getI()
     #
-    Xini = selfA._parameters["InitializationPoint"]
-    #
-    HXb = numpy.ravel( Hm( Xb ) ).reshape((-1,1))
+    HXb = numpy.asarray(Hm( Xb )).reshape((-1,1))
     Innovation = Y - HXb
     #
     # Outer Loop
@@ -2254,7 +2252,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     iOuter = 0
     J      = 1./mpr
     DeltaJ = 1./mpr
-    Xr     = Xini.reshape((-1,1))
+    Xr     = numpy.asarray(selfA._parameters["InitializationPoint"]).reshape((-1,1))
     while abs(DeltaJ) >= selfA._parameters["CostDecrementTolerance"] and iOuter <= selfA._parameters["MaximumNumberOfSteps"]:
         #
         # Inner Loop
@@ -2265,13 +2263,12 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         # Définition de la fonction-coût
         # ------------------------------
         def CostFunction(dx):
-            _dX  = numpy.ravel( dx ).reshape((-1,1))
+            _dX  = numpy.asarray(dx).reshape((-1,1))
             if selfA._parameters["StoreInternalVariables"] or \
                 selfA._toStore("CurrentState") or \
                 selfA._toStore("CurrentOptimum"):
                 selfA.StoredVariables["CurrentState"].store( Xb + _dX )
-            _HdX = Ht @ _dX
-            _HdX = numpy.ravel( _HdX ).reshape((-1,1))
+            _HdX = (Ht @ _dX).reshape((-1,1))
             _dInnovation = Innovation - _HdX
             if selfA._toStore("SimulatedObservationAtCurrentState") or \
                 selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -2310,8 +2307,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         #
         def GradientOfCostFunction(dx):
             _dX          = numpy.ravel( dx )
-            _HdX         = Ht @ _dX
-            _HdX         = numpy.ravel( _HdX ).reshape((-1,1))
+            _HdX         = (Ht @ _dX).reshape((-1,1))
             _dInnovation = Innovation - _HdX
             GradJb       = BI @ _dX
             GradJo       = - Ht.T @ (RI * _dInnovation)
@@ -2330,7 +2326,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 import scipy.optimize as optimiseur
             Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
                 func        = CostFunction,
-                x0          = numpy.zeros(Xini.size),
+                x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb),
@@ -2344,7 +2340,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         elif selfA._parameters["Minimizer"] == "TNC":
             Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
                 func        = CostFunction,
-                x0          = numpy.zeros(Xini.size),
+                x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb),
@@ -2356,7 +2352,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         elif selfA._parameters["Minimizer"] == "CG":
             Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
                 f           = CostFunction,
-                x0          = numpy.zeros(Xini.size),
+                x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 maxiter     = selfA._parameters["MaximumNumberOfSteps"],
@@ -2367,7 +2363,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         elif selfA._parameters["Minimizer"] == "NCG":
             Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
                 f           = CostFunction,
-                x0          = numpy.zeros(Xini.size),
+                x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 maxiter     = selfA._parameters["MaximumNumberOfSteps"],
@@ -2378,7 +2374,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         elif selfA._parameters["Minimizer"] == "BFGS":
             Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
                 f           = CostFunction,
-                x0          = numpy.zeros(Xini.size),
+                x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 maxiter     = selfA._parameters["MaximumNumberOfSteps"],
@@ -2875,9 +2871,9 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     Hm = HO["Direct"].appliedTo
     #
     if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
-        HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
+        HXb = numpy.asarray(Hm( Xb, HO["AppliedInX"]["HXb"] ))
     else:
-        HXb = Hm( Xb )
+        HXb = numpy.asarray(Hm( Xb ))
     HXb = numpy.ravel( HXb ).reshape((-1,1))
     if Y.size != HXb.size:
         raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
@@ -2894,12 +2890,12 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     HBHTpR = R + Ht * BHT
     Innovation = Y - HXb
     #
-    Xini = numpy.zeros(Xb.shape)
+    Xini = numpy.zeros(Y.size)
     #
     # Définition de la fonction-coût
     # ------------------------------
     def CostFunction(w):
-        _W = w.reshape((-1,1))
+        _W = numpy.asarray(w).reshape((-1,1))
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
@@ -2940,7 +2936,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         return J
     #
     def GradientOfCostFunction(w):
-        _W = w.reshape((-1,1))
+        _W = numpy.asarray(w).reshape((-1,1))
         GradJb  = HBHTpR @ _W
         GradJo  = - Innovation
         GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
@@ -2960,7 +2956,6 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             x0          = Xini,
             fprime      = GradientOfCostFunction,
             args        = (),
-            bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb),
             maxfun      = selfA._parameters["MaximumNumberOfSteps"]-1,
             factr       = selfA._parameters["CostDecrementTolerance"]*1.e14,
             pgtol       = selfA._parameters["ProjectedGradientTolerance"],
@@ -2974,7 +2969,6 @@ def psas3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             x0          = Xini,
             fprime      = GradientOfCostFunction,
             args        = (),
-            bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb),
             maxfun      = selfA._parameters["MaximumNumberOfSteps"],
             pgtol       = selfA._parameters["ProjectedGradientTolerance"],
             ftol        = selfA._parameters["CostDecrementTolerance"],
@@ -3350,9 +3344,9 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     Ha = HO["Adjoint"].appliedInXTo
     #
     if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
-        HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
+        HXb = numpy.asarray(Hm( Xb, HO["AppliedInX"]["HXb"] ))
     else:
-        HXb = Hm( Xb )
+        HXb = numpy.asarray(Hm( Xb ))
     HXb = HXb.reshape((-1,1))
     if Y.size != HXb.size:
         raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
@@ -3372,12 +3366,12 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # Définition de la fonction-coût
     # ------------------------------
     def CostFunction(x):
-        _X  = numpy.ravel( x ).reshape((-1,1))
+        _X  = numpy.asarray(x).reshape((-1,1))
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        _HX = Hm( _X ).reshape((-1,1))
+        _HX = numpy.asarray(Hm( _X )).reshape((-1,1))
         _Innovation = Y - _HX
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -3415,8 +3409,8 @@ def std3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         return J
     #
     def GradientOfCostFunction(x):
-        _X      = x.reshape((-1,1))
-        _HX     = Hm( _X ).reshape((-1,1))
+        _X      = numpy.asarray(x).reshape((-1,1))
+        _HX     = numpy.asarray(Hm( _X )).reshape((-1,1))
         GradJb  = BI * (_X - Xb)
         GradJo  = - Ha( (_X, RI * (Y - _HX)) )
         GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
@@ -3628,7 +3622,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     selfA.DirectCalculation = [None,] # Le pas 0 n'est pas observé
     selfA.DirectInnovation  = [None,] # Le pas 0 n'est pas observé
     def CostFunction(x):
-        _X  = numpy.ravel( x ).reshape((-1,1))
+        _X  = numpy.asarray(x).reshape((-1,1))
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
@@ -3691,7 +3685,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         return J
     #
     def GradientOfCostFunction(x):
-        _X      = numpy.ravel( x ).reshape((-1,1))
+        _X      = numpy.asarray(x).reshape((-1,1))
         GradJb  = BI * (_X - Xb)
         GradJo  = 0.
         for step in range(duration-1,0,-1):
@@ -4232,19 +4226,18 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     BT = B.getT()
     RI = R.getI()
     #
-    Xini = numpy.zeros(Xb.shape)
+    Xini = numpy.zeros(Xb.size)
     #
     # Définition de la fonction-coût
     # ------------------------------
     def CostFunction(v):
-        _V = numpy.ravel( v ).reshape((-1,1))
-        _X = Xb + B * _V
+        _V = numpy.asarray(v).reshape((-1,1))
+        _X = Xb + (B @ _V).reshape((-1,1))
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        _HX = Hm( _X )
-        _HX = numpy.ravel( _HX ).reshape((-1,1))
+        _HX = numpy.asarray(Hm( _X )).reshape((-1,1))
         _Innovation = Y - _HX
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -4282,9 +4275,9 @@ def van3dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         return J
     #
     def GradientOfCostFunction(v):
-        _V = v.reshape((-1,1))
+        _V = numpy.asarray(v).reshape((-1,1))
         _X = Xb + (B @ _V).reshape((-1,1))
-        _HX     = Hm( _X ).reshape((-1,1))
+        _HX     = numpy.asarray(Hm( _X )).reshape((-1,1))
         GradJb  = BT * _V
         GradJo  = - Ha( (_X, RI * (Y - _HX)) )
         GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )

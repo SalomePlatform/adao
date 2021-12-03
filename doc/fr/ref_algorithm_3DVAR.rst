@@ -53,7 +53,7 @@ stables et robustes suivantes :
 - "3DVAR" (3D Variational analysis, voir [Lorenc86]_, [LeDimet86]_, [Talagrand97]_), algorithme classique d'origine, très robuste, opérant dans l'espace du modèle,
 - "3DVAR-VAN" (3D Variational Analysis with No inversion of B, voir [Lorenc88]_), algorithme similaire, opérant dans l'espace du modèle, mais permettant d'éviter l'inversion de la matrice de covariance B,
 - "3DVAR-Incr" (Incremental 3DVAR, voir [Courtier94]_), algorithme plus économique que les précédents, mais impliquant une approximation des opérateurs non-linéaires,
-- "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR, voir [Courtier97]_, [Cohn98]_), algorithme parfois plus économique car opérant dans l'espace des observations, mais impliquant une approximation des opérateurs non-linéaires.
+- "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR, voir [Courtier97]_, [Cohn98]_), algorithme parfois plus économique car opérant dans l'espace des observations, mais impliquant une approximation des opérateurs non-linéaires et ne permettant pas la prise en compte de bornes.
 
 On recommande fortement d'utiliser le "3DVAR" d'origine. Les algorithmes
 "3DVAR" et "3DVAR-Incr" (et pas les autres) permettent la modification du point
