@@ -216,7 +216,7 @@ les calculs doivent être conduits de manière efficace.
 
 Comme l'optimisation requiert usuellement un grand nombre de simulations
 physiques élémentaires du système, les calculs sont souvent effectués dans un
-environnement de calculs hautes performances (HPC, ou Hight Performance
+environnement de calculs hautes performances (HPC, ou High Performance
 Computing) pour réduire le temps complet d'utilisateur. Même si le problème
 d'optimisation est petit, le temps de simulation du système physique peut être
 long, nécessitant des ressources de calcul conséquentes. Ces besoins doivent

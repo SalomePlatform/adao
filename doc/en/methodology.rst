@@ -201,7 +201,7 @@ After setting up the Data Assimilation or Optimization study, the calculation
 has to be done in an efficient way.
 
 Because optimizing usually involves a lot of elementary physical simulation of
-the system, the calculations are often done in Hight Performance Computing (HPC)
+the system, the calculations are often done in High Performance Computing (HPC)
 environment to reduce the overall user time. Even if the optimization problem is
 small, the physical system simulation time can be long, requiring efficient
 computing resources. These requirements have to be taken into account early
