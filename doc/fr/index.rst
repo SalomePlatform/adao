@@ -74,6 +74,7 @@ et qui décrivent les commandes et des options d'algorithmes. Un
 Enfin, pour respecter les exigences de licence du module, n'oubliez pas de lire
 la partie :ref:`section_license`.
 
+
 .. toctree::
    :caption: Table des matières
    :name: mastertoc
