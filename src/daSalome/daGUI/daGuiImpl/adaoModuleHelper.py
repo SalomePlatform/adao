@@ -29,7 +29,6 @@ __all__ = [
     "modulePixmap",
     "verbose",
     "getORB",
-    "getNS",
     "getLCC",
     "getStudyManager",
     "getEngine",
@@ -41,6 +40,7 @@ __all__ = [
 from omniORB import CORBA
 from SALOME_NamingServicePy import SALOME_NamingServicePy_i
 from LifeCycleCORBA import LifeCycleCORBA
+import salome
 import SALOMEDS
 import SALOMEDS_Attributes_idl
 from salome.kernel.studyedit import getStudyEditor
@@ -119,47 +119,23 @@ def verbose():
 ###
 # Get ORB reference
 ###
-__orb__ = None
 def getORB():
-    global __orb__
-    if __orb__ is None:
-        __orb__ = CORBA.ORB_init( [''], CORBA.ORB_ID )
-        pass
-    return __orb__
-
-###
-# Get naming service instance
-###
-__naming_service__ = None
-def getNS():
-    global __naming_service__
-    if __naming_service__ is None:
-        __naming_service__ = SALOME_NamingServicePy_i( getORB() )
-        pass
-    return __naming_service__
+    salome.salome_init()
+    return salome.orb
 
 ##
 # Get life cycle CORBA instance
 ##
-__lcc__ = None
 def getLCC():
-    global __lcc__
-    if __lcc__ is None:
-        __lcc__ = LifeCycleCORBA( getORB() )
-        pass
-    return __lcc__
+    salome.salome_init()
+    return salome.lcc
 
 ##
 # Get study manager
 ###
-__study_manager__ = None
 def getStudyManager():
-    global __study_manager__
-    if __study_manager__ is None:
-        obj = getNS().Resolve( '/myStudyManager' )
-        __study_manager__ = obj._narrow( SALOMEDS.StudyManager )
-        pass
-    return __study_manager__
+    salome.salome_init()
+    return salome.myStudy
 
 ###
 # Get OMA engine
