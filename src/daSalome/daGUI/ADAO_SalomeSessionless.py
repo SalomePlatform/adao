@@ -1,5 +1,8 @@
-#  -*- coding: iso-8859-1 -*-
-# Copyright (C) 2021  CEA/DEN, EDF R&D
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2021-2022 CEA/DEN, EDF R&D
+#
+# This file is part of SALOME ADAO module
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -46,4 +49,4 @@ def buildInstance(orb):
     servant = ADAO(orb, poa, conObj, "FactoryServer", "ADAO_inst_1", "ADAO")
     ret = servant.getCorbaRef()
     KernelServices.RegisterCompo("ADAO", ret)
-    return ret, orb 
+    return ret, orb
