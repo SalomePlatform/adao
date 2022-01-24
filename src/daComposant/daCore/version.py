@@ -27,9 +27,10 @@ __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
 name     = "ADAO"
-version  = "9.8.0"
-year     = "2021"
-date     = "lundi 01 novembre 2021, 12:12:12 (UTC+0100)"
+version  = "9.9.0"
+year     = "2022"
+date     = "lundi 02 mai 2022, 12:12:12 (UTC+0100)"
 
 longname = name + ", a module for Data Assimilation and Optimization"
 cata     = "V" + version.replace(".","_")
+__version__ = version

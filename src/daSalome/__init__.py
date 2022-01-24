@@ -127,7 +127,7 @@ import os, sys, logging
 adao_py_dir = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, adao_py_dir)
 
-from daCore.version import name, version, year, date
+from daCore.version import name, version, year, date, __version__
 try:
     from daYacsIntegration.daOptimizerLoop import *
 except:

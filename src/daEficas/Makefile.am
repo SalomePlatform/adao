@@ -34,24 +34,25 @@ mypkgpython_PYTHON = \
 		__init__.py \
 		prefs_ADAO.py \
 		prefs.py \
-		traduitADAOsansToV9_8_0.py \
-		traduitADAOV7_4_0ToV9_8_0.py \
-		traduitADAOV7_5_0ToV9_8_0.py \
-		traduitADAOV7_5_1ToV9_8_0.py \
-		traduitADAOV7_6_0ToV9_8_0.py \
-		traduitADAOV7_7_0ToV9_8_0.py \
-		traduitADAOV7_8_0ToV9_8_0.py \
-		traduitADAOV8_1_0ToV9_8_0.py \
-		traduitADAOV8_2_0ToV9_8_0.py \
-		traduitADAOV8_3_0ToV9_8_0.py \
-		traduitADAOV8_4_0ToV9_8_0.py \
-		traduitADAOV8_5_0ToV9_8_0.py \
-		traduitADAOV8_6_0ToV9_8_0.py \
-		traduitADAOV9_2_0ToV9_8_0.py \
-		traduitADAOV9_3_0ToV9_8_0.py \
-		traduitADAOV9_4_0ToV9_8_0.py \
-		traduitADAOV9_5_0ToV9_8_0.py \
-		traduitADAOV9_6_0ToV9_8_0.py \
-		traduitADAOV9_7_0ToV9_8_0.py
+		traduitADAOsansToV9_9_0.py \
+		traduitADAOV7_4_0ToV9_9_0.py \
+		traduitADAOV7_5_0ToV9_9_0.py \
+		traduitADAOV7_5_1ToV9_9_0.py \
+		traduitADAOV7_6_0ToV9_9_0.py \
+		traduitADAOV7_7_0ToV9_9_0.py \
+		traduitADAOV7_8_0ToV9_9_0.py \
+		traduitADAOV8_1_0ToV9_9_0.py \
+		traduitADAOV8_2_0ToV9_9_0.py \
+		traduitADAOV8_3_0ToV9_9_0.py \
+		traduitADAOV8_4_0ToV9_9_0.py \
+		traduitADAOV8_5_0ToV9_9_0.py \
+		traduitADAOV8_6_0ToV9_9_0.py \
+		traduitADAOV9_2_0ToV9_9_0.py \
+		traduitADAOV9_3_0ToV9_9_0.py \
+		traduitADAOV9_4_0ToV9_9_0.py \
+		traduitADAOV9_5_0ToV9_9_0.py \
+		traduitADAOV9_6_0ToV9_9_0.py \
+		traduitADAOV9_7_0ToV9_9_0.py \
+		traduitADAOV9_8_0ToV9_9_0.py
 
 EXTRA_DIST = prefs_ADAO.py.in
