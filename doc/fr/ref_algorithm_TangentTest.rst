@@ -65,6 +65,8 @@ On prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
 
 .. include:: snippets/AmplitudeOfInitialDirection.rst
 
+.. include:: snippets/AmplitudeOfTangentPerturbation.rst
+
 .. include:: snippets/EpsilonMinimumExponent.rst
 
 .. include:: snippets/InitialDirection.rst
