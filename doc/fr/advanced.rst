@@ -531,6 +531,91 @@ On rappelle aussi qu'il faut choisir dans YACS un container par défaut de type
 "*multi*" pour le lancement du schéma, pour permettre une exécution
 véritablement parallèle.
 
+.. _subsection_iterative_convergence_control:
+
+Contrôler la convergence pour des cas de calculs et algorithmes itératifs
+-------------------------------------------------------------------------
+
+.. index:: single: Convergence
+.. index:: single: Convergence itérative
+
+Il existe de nombreuses raisons de vouloir contrôler la convergence des cas de
+calculs ou algorithmes disponibles dans ADAO. Par exemple, on peut vouloir de
+la *reproductibilité* des solutions optimales, une *qualité* certifiée, une
+*stabilité* des conditions de recherche optimale en études, une *économie du
+temps de calcul* global, etc. De plus, on remarque que les méthodes utilisées
+dans ADAO sont fréquemment itératives, renforçant l'intérêt de ce contrôle de
+convergence.
+
+Par défaut, **les cas de calculs ou algorithmes disponibles dans ADAO donnent
+accès à de multiples moyens de contrôler leur convergence, spécialement adaptés
+à chaque méthode**. Ces moyens de contrôle sont issus de la théorie classique
+de l'optimisation et des capacités de chaque algorithme. Les valeurs par défaut
+des contrôles sont choisies pour assurer une recherche optimale de qualité sur
+des fonctions de simulation aux comportements "*standards*" (régularité,
+qualité physique et numérique...), ce qui n'est pas forcément la propriété
+principale des simulations réelles en raison de contraintes variées. Il est
+donc tout à fait normal d'adapter les critères de convergence aux cas d'études
+rencontrés, mais c'est une démarche d'expertise que d'établir la bonne
+adaptation.
+
+Il existe des manières assez génériques de contrôler la recherche optimale et
+la convergence des algorithmes. On en indique ici les plus utiles, de manière
+non exhaustive, et avec l'importante réserve qu'il y a fréquemment des
+exceptions aux recommandations formulées. Pour aller plus loin, ces
+informations génériques sont impérativement à compléter par les informations
+spécifiques à chaque algorithme ou cas de calcul, indiquées dans la
+documentation des différents :ref:`section_reference_assimilation`.
+
+**Un premier moyen est de limiter le nombre d'itérations par défaut dans les
+processus de recherches itératives**. Même si ce n'est pas la meilleure manière
+théorique de contrôler l'algorithme, elle est très efficace dans un processus
+d'étude réelle. Pour cela, le mot-clé "*MaximumNumberOfSteps*" existe dans tous
+les cas de calculs qui le supportent, et sa valeur par défaut est usuellement
+fixée à un équivalent de l'infini pour que ce ne soit pas le critère d'arrêt.
+C'est le cas pour les calculs à base de méthodes variationnelles comme les
+:ref:`section_ref_algorithm_3DVAR`, :ref:`section_ref_algorithm_4DVAR` et
+:ref:`section_ref_algorithm_NonLinearLeastSquares`, mais c'est aussi le cas
+pour d'autres comme les :ref:`section_ref_algorithm_DerivativeFreeOptimization`
+ou :ref:`section_ref_algorithm_QuantileRegression`. Dans la pratique, on
+recommande une valeur comprise entre 10 et 30 pour rendre ce paramètre de
+contrôle effectif et obtenir quand même une recherche optimale de bonne
+qualité. Pour une recherche optimale de qualité suffisante, il convient de ne
+pas fixer cette restriction trop strictement, c'est-à-dire qu'une limite de 30
+devrait être mieux que 10.
+
+**Un second moyen de contrôle de la convergence est d'adapter la tolérance de
+décroissance relative dans la minimisation de la fonctionnelle de coût
+considérée**. Cette tolérance est contrôlée par le mot-clé
+"*CostDecrementTolerance*" dans les algorithmes qui le supportent. La valeur
+par défaut est plutôt stricte, elle est choisie pour un contrôle théorique de
+convergence lorsque les simulations numériques sont d'une qualité numérique
+importante. Dans la pratique, elle peut être adaptée sans hésitation pour
+valoir entre :math:`10^{-5}` et :math:`10^{-2}`. Cette adaptation permet en
+particulier de réduire ou d'éviter les difficultés de recherche optimale qui se
+manifestent par de nombreuses itérations successives portant sur des états
+presque identiques.
+
+**Un troisième moyen d'améliorer la convergence est d'adapter le réglage par
+défaut de l'approximation par différences finies, essentiellement pour
+l'opérateur d'observation**. Le contrôle de cette propriété se fait à l'aide du
+mot-clé "*DifferentialIncrement*" qui paramètre la définition à l'aide de la
+:ref:`section_ref_operator_one`. Sa valeur par défaut est de 1%, et il peut
+généralement être ajusté entre :math:`10^{-5}` et :math:`10^{-3}` (même s'il
+est sage de vérifier soigneusement la pertinence de sa valeur, il est aisé dans
+ADAO de modifier ce paramètre). Le critère de convergence doit ensuite être
+ajusté de telle sorte qu'il ne surpasse pas l'ordre de grandeur de cette
+approximation. En pratique, on peut se contenter de fixer le critère
+"*CostDecrementTolerance*" à peu près à la même précision (c'est-à-dire avec un
+ordre de grandeur de plus ou de moins) que le critère
+"*DifferentialIncrement*".
+
+Par expérience, il n'est *a priori* pas recommandé d'utiliser d'autres moyens
+de contrôler la convergence, même s'il en existe. Ces ajustements de paramètres
+sont simples à mettre en œuvre, et il est favorable de les essayer (en
+expériences jumelles ou pas) car ils résolvent de nombreux problèmes rencontrés
+en pratique.
+
 .. _subsection_new_adao_version:
 
 Passer d'une version d'ADAO à une nouvelle

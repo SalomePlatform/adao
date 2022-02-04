@@ -144,7 +144,9 @@ fois plus cher que le premier ordre). Si nécessaire et si possible, on peut
 interne permet de limiter le nombre d'évaluations de l'opérateur au minimum
 possible du point de vue de l'exécution séquentielle ou parallèle des
 approximations numériques des opérateurs tangent et adjoint, pour éviter des
-calculs redondants.
+calculs redondants. On se reportera à la partie permettant de
+:ref:`subsection_iterative_convergence_control` pour connaître l'interaction
+avec les paramètres relatifs à la convergence.
 
 Cette première forme de définition de l'opérateur permet aisément de tester la
 forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la

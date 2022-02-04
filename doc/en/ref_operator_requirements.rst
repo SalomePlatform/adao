@@ -140,7 +140,9 @@ possible, :ref:`subsection_ref_parallel_df` can be used. In all cases, an
 internal cache mechanism is used to restrict the number of operator evaluations
 at the minimum possible in a sequential or parallel execution scheme for
 numerical approximations of the tangent and adjoint operators, to avoid
-redundant calculations.
+redundant calculations. One can refer to the section dealing with
+:ref:`subsection_iterative_convergence_control` to discover the interaction
+with the convergence parameters.
 
 This first operator definition form allows easily to test the functional form
 before its use in an ADAO case, greatly reducing the complexity of operator

@@ -488,6 +488,83 @@ operator function before and during enabling parallelism...
 It is also recalled that one have to choose the type "*multi*" for the default
 container in order to launch the scheme, to allow a really parallel execution.
 
+.. _subsection_iterative_convergence_control:
+
+Convergence control for calculation cases and iterative algorithms
+------------------------------------------------------------------
+
+.. index:: single: Convergence
+.. index:: single: Iterative convergence
+
+There are many reasons to want to control the convergence of available
+calculation cases or algorithms in ADAO. For example, one may want
+*repeatability* of optimal solutions, certified *quality*, *stability* of
+optimal search conditions in studies, *saving of global computation time*, etc.
+Moreover, we notice that the methods used in ADAO are frequently iterative,
+reinforcing the interest of this convergence control.
+
+By default, **the available calculation cases or algorithms in ADAO give access
+to multiple ways to control their convergence, specially adapted to each
+method**. These controls are derived from classical optimization theory and
+from the possibilities of each algorithm. The default values of the controls
+are chosen to ensure an optimal search for high quality simulation functions
+with "*standard*" behavior (regularity, physical and numerical quality...),
+which is not necessarily the main property of real simulations due to various
+constraints. It is therefore quite normal to adapt the convergence criteria to
+the study cases encountered, but it is an expert approach to establish the
+correct adaptation.
+
+There are fairly generic ways to control the optimal search and the convergence
+of algorithms. We indicate here the most useful ones, in a non-exhaustive way,
+and with the significant restriction that there are many exceptions to the
+recommendations made. To go further, this generic information must be completed
+by the information specific to each algorithm or calculation case, indicated in
+the documentation of the different :ref:`section_reference_assimilation`.
+
+**A first way is to limit the default number of iterations in the iterative
+search processes**. Even if this is not the best theoretical way to control the
+algorithm, it is very effective in a real study process. For this purpose, the
+keyword "*MaximumNumberOfSteps*" exists in all cases of calculations that
+support it, and its default value is usually set to an equivalent of infinity
+so that it is not the stopping criterion. This is the case for calculations
+based on variational methods such as :ref:`section_ref_algorithm_3DVAR`,
+:ref:`section_ref_algorithm_4DVAR` and
+:ref:`section_ref_algorithm_NonLinearLeastSquares`, but this is also the case
+for other ones like the :ref:`section_ref_algorithm_DerivativeFreeOptimization`
+or :ref:`section_ref_algorithm_QuantileRegression`. In practice, a value
+between 10 and 30 is recommended to make this control parameter effective and
+still obtain an optimal search of good quality. For an optimal search of
+sufficient quality, this restriction should not be set too strictly, i.e. a
+limit of 30 should be better than 10.
+
+**A second way to control convergence is to adapt the relative decrement
+tolerance in the minimization of the cost functional considered**. This
+tolerance is controlled by the keyword "*CostDecrementTolerance*" in the
+algorithms that support it. The default value is rather strict, it is chosen
+for a theoretical convergence control when the numerical simulations are of
+high numerical quality. In practice, it can be adapted without hesitation to be
+between :math:`10^{-5}` and :math:`10^{-2}`. This adaptation allows in
+particular to reduce or avoid the difficulties of optimal search which are
+manifested by many successive iterations on almost identical states.
+
+**A third way to improve convergence is to adapt the default setting of the
+finite difference approximation, primarily for the observation operator**. The
+control of this property is done with the keyword "*DifferentialIncrement*"
+which sets the definition using the :ref:`section_ref_operator_one`. Its
+default value is 1%, and it can usually be adjusted between :math:`10^{-5}` and
+:math:`10^{-3}` (although it is wise to check carefully the relevance of its
+value, it is easy in ADAO to change this parameter). The convergence criterion
+must then be adjusted so that it does not exceed the order of magnitude of this
+approximation. In practice, it is sufficient to set the
+"*CostDecrementTolerance*" criterion to approximately the same precision (i.e.
+with an order of magnitude more or less) as the "*DifferentialIncrement*"
+criterion.
+
+From experience, it is *a priori* not recommended to use other means to control
+convergence, even if they exist. These parameter adjustments are simple to
+implement, and it is favorable to try them (in twin experiments or not) because
+they solve many problems encountered in practice.
+
 .. _subsection_new_adao_version:
 
 Switching from a version of ADAO to a newer one
