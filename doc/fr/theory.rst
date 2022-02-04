@@ -76,7 +76,7 @@ ces deux types d'applications. A la fin de ce chapitre, quelques informations
 permettent d'aller plus loin pour `Approfondir le cadre méthodologique de
 l'assimilation de données`_ et `Approfondir l'estimation d'état par des
 méthodes d'optimisation`_, ainsi que pour `Approfondir l'assimilation de
-données pour la dynamique`_ et avoir un `Aperçu des méthodes de réduction et de
+données pour la dynamique`_ et avoir `Un aperçu des méthodes de réduction et de
 l'optimisation réduite`_.
 
 Reconstruction de champs ou interpolation de données
@@ -343,10 +343,11 @@ librement inspiré de [Asch16]_ (Figure 1.5).
 
 Il est volontairement simple pour rester lisible, les lignes tiretées montrant
 certaines des simplifications ou extensions. Ce schéma omet par exemple de
-citer spécifiquement les méthodes avec réductions, dont une partie sont des
-variantes de méthodes de base indiquées ici, ou de citer les extensions les
-plus détaillées. Il omet de même les méthodes de tests disponibles dans ADAO et
-utiles pour la mise en étude.
+citer spécifiquement les méthodes avec réductions (dont il est donné ci-après
+`Un aperçu des méthodes de réduction et de l'optimisation réduite`_), dont une
+partie sont des variantes de méthodes de base indiquées ici, ou de citer les
+extensions les plus détaillées. Il omet de même les méthodes de tests
+disponibles dans ADAO et utiles pour la mise en étude.
 
 Chaque méthode citée dans ce schéma fait l'objet d'une partie descriptive
 spécifique dans le chapitre des :ref:`section_reference_assimilation`. Les
@@ -368,6 +369,114 @@ associés :
 - Swarm : :ref:`section_ref_algorithm_ParticleSwarmOptimization`,
 - Tabu : :ref:`section_ref_algorithm_TabuSearch`,
 - UKF : :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
+
+Un aperçu des méthodes de réduction et de l'optimisation réduite
+----------------------------------------------------------------
+
+.. index:: single: réduction
+.. index:: single: méthodes de réduction
+.. index:: single: méthodes réduites
+.. index:: single: espace réduit
+.. index:: single: sous-espace neutre
+.. index:: single: SVD
+.. index:: single: POD
+.. index:: single: PCA
+.. index:: single: Kahrunen-Loeve
+.. index:: single: RBM
+.. index:: single: EIM
+.. index:: single: Fourier
+.. index:: single: ondelettes
+.. index:: single: EOF
+.. index:: single: sparse
+
+Les démarches d'assimilation de données et d'optimisation impliquent toujours
+une certaine réitération d'une simulation numérique unitaire représentant la
+physique que l'on veut traiter. Pour traiter au mieux cette physique, cette
+simulation numérique unitaire est souvent de taille importante voire imposante,
+et conduit à un coût calcul extrêmement important dès lors qu'il est répété. La
+simulation physique complète est souvent appelée "*simulation haute fidélité*"
+(ou "*full scale simulation*").
+
+Pour éviter cette difficulté pratique, **différentes stratégies de réduction du
+coût du calcul d'optimisation existent, et certaines permettent également de
+contrôler au mieux l'erreur numérique impliquée par cette réduction**. Ces
+stratégies sont intégrées de manière transparente à certaines des méthodes
+d'ADAO ou font l'objet d'algorithmes particuliers.
+
+Pour établir une telle démarche, on cherche à réduire au moins l'un des
+ingrédients qui composent le problème d'assimilation de données ou
+d'optimisation. On peut ainsi classer les méthodes de réduction selon
+l'ingrédient sur lequel elles opèrent, en sachant que certaines méthodes
+portent sur plusieurs d'entre eux. On indique ici une classification grossière,
+que le lecteur peut compléter par la lecture d'ouvrages ou d'articles généraux
+en mathématiques ou spécialisés pour sa physique.
+
+Réduction des algorithmes d'assimilation de données ou d'optimisation :
+    les algorithmes d'optimisation eux-mêmes peuvent engendrer des coûts de
+    calculs importants pour traiter les informations numériques. Diverses
+    méthodes permettent de réduire leur coût algorithmique, par exemple en
+    travaillant dans l'espace réduit le plus adéquat pour l'optimisation, ou en
+    utilisant des techniques d'optimisation multi-niveaux. ADAO dispose de
+    telles techniques qui sont incluses dans les variantes d'algorithmes
+    classiques, conduisant à des résolutions exactes ou approximées mais
+    numériquement plus efficaces. Par défaut, les options algorithmiques
+    choisies par défaut dans ADAO sont toujours les plus performantes
+    lorsqu'elles n'impactent pas la qualité de l'optimisation.
+
+Réduction de la représentation des covariances :
+    dans les algorithmes d'assimilation de données, ce sont les covariances qui
+    sont les grandeurs les plus coûteuses à manipuler ou à stocker, devenant
+    souvent les quantités limitantes du point de vue du coût de calcul. De
+    nombreuses méthodes cherchent donc à utiliser une représentation réduite de
+    ces matrices (conduisant parfois mais pas obligatoirement à réduire aussi
+    la dimension l'espace d'optimisation). On utilise classiquement des
+    techniques de factorisation, de décomposition (spectrale, Fourier,
+    ondelettes...) ou d'estimation d'ensemble (EOF...), ou des combinaisons,
+    pour réduire la charge numérique de ces covariances dans les calculs. ADAO
+    utilise certaines de ces techniques, en combinaison avec des techniques de
+    calcul creux ("*sparse*"), pour rendre plus efficace la manipulation des
+    matrices de covariance.
+
+Réduction du modèle physique :
+    la manière la plus simple de réduire le coût du calcul unitaire consiste à
+    réduire le modèle de simulation lui-même, en le représentant de manière
+    numériquement plus économique. De nombreuses méthodes permettent cette
+    réduction de modèles en assurant un contrôle plus ou moins strict de
+    l'erreur d'approximation engendrée par la réduction. L'usage de modèles
+    simplifiés de la physique permet une réduction mais sans toujours produire
+    un contrôle d'erreur. Au contraire, toutes les méthodes de décomposition
+    (Fourier, ondelettes, SVD, POD, PCA, Kahrunen-Loeve, RBM, EIM, etc.) visent
+    ainsi une réduction de l'espace de représentation avec un contrôle d'erreur
+    explicite. Très fréquemment utilisées, elles doivent néanmoins être
+    complétées par une analyse fine de l'interaction avec l'algorithme
+    d'optimisation dans lequel le calcul réduit est inséré, pour éviter des
+    instabilités, incohérences ou inconsistances notoirement préjudiciables.
+    ADAO supporte complètement l'usage de ce type de méthode de réduction, même
+    s'il est souvent nécessaire d'établir cette réduction indépendante
+    générique préalablement à l'optimisation.
+
+Réduction de l'espace d'assimilation de données ou d'optimisation :
+    la taille de l'espace d'optimisation dépend grandement du type de problème
+    traité (estimation d'états ou de paramètres) mais aussi du nombre
+    d'observations dont on dispose pour conduire l'assimilation de données. Il
+    est donc parfois possible de conduire l'optimisation dans l'espace le plus
+    petit par une adaptation de la formulation interne des algorithmes
+    d'optimisation. Lorsque c'est possible et judicieux, ADAO intègre ce genre
+    de formulation réduite pour améliorer la performance numérique sans
+    amoindrir la qualité de l'optimisation.
+
+Combinaison de plusieurs réductions :
+    de nombreux algorithmes avancés cherchent à combiner simultanément
+    plusieurs techniques de réduction. Néanmoins, il est difficile de disposer
+    à la fois de méthodes génériques et robustes, et d'utiliser en même temps
+    de plusieurs techniques très performantes de réduction. ADAO intègre
+    certaines méthodes parmi les plus robustes, mais cet aspect fait toujours
+    largement l'objet de recherches et d'évolutions.
+
+On peut terminer ce rapide tour d'horizon des méthodes de réduction en
+soulignant que leur usage est omni-présent dans les applications réelles et
+dans les outils numériques, et qu'ADAO permet d'utiliser des méthodes éprouvées
+sans même le savoir.
 
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------
@@ -729,109 +838,3 @@ discrète. Une représentation possible est la suivante :
 
 Les concepts décrits dans ce schéma peuvent directement et simplement être
 utilisés dans ADAO.
-
-Aperçu des méthodes de réduction et de l'optimisation réduite
--------------------------------------------------------------
-
-.. index:: single: réduction
-.. index:: single: méthodes de réduction
-.. index:: single: méthodes réduites
-.. index:: single: espace réduit
-.. index:: single: sous-espace neutre
-.. index:: single: SVD
-.. index:: single: POD
-.. index:: single: PCA
-.. index:: single: Kahrunen-Loeve
-.. index:: single: RBM
-.. index:: single: EIM
-.. index:: single: Fourier
-.. index:: single: ondelettes
-.. index:: single: EOF
-.. index:: single: sparse
-
-Les démarches d'assimilation de données et d'optimisation impliquent toujours
-une certaine réitération d'une simulation numérique unitaire représentant la
-physique que l'on veut traiter. Pour traiter au mieux cette physique, cette
-simulation numérique unitaire est souvent de taille importante voire imposante,
-et conduit à un coût calcul extrêmement important dès lors qu'il est répété. La
-simulation physique complète est souvent appelée "*simulation haute fidélité*"
-(ou "*full scale simulation*").
-
-De manière générale, **différentes stratégies de réduction du coût du calcul
-d'optimisation existent, et certaines permettent également de contrôler au
-mieux l'erreur numérique impliquée par cette réduction**.
-
-Pour établir cela, on cherche à réduire au moins l'un des ingrédients qui
-composent le problème d'assimilation de données ou d'optimisation. On peut
-ainsi classer les méthodes de réduction selon l'ingrédient sur lequel elles
-opèrent, en sachant que certaines méthodes portent sur plusieurs d'entre eux.
-On indique ici une classification grossière, que le lecteur peut compléter par
-la lecture d'ouvrages ou d'articles généraux en mathématiques ou spécialisés
-pour sa physique.
-
-Réduction des algorithmes d'assimilation de données ou d'optimisation :
-    les algorithmes d'optimisation eux-mêmes peuvent engendrer des coûts de
-    calculs importants pour traiter les informations numériques. Diverses
-    méthodes permettent de réduire leur coût algorithmique, par exemple en
-    travaillant dans l'espace réduit le plus adéquat pour l'optimisation, ou en
-    utilisant des techniques d'optimisation multi-niveaux. ADAO dispose de
-    telles techniques qui sont incluses dans les variantes d'algorithmes
-    classiques, conduisant à des résolutions exactes ou approximées mais
-    numériquement plus efficaces. Par défaut, les options algorithmiques
-    choisies par défaut dans ADAO sont toujours les plus performantes
-    lorsqu'elles n'impactent pas la qualité de l'optimisation.
-
-Réduction de la représentation des covariances :
-    dans les algorithmes d'assimilation de données, ce sont les covariances qui
-    sont les grandeurs les plus coûteuses à manipuler ou à stocker, devenant
-    souvent les quantités limitantes du point de vue du coût de calcul. De
-    nombreuses méthodes cherchent donc à utiliser une représentation réduite de
-    ces matrices (conduisant parfois mais pas obligatoirement à réduire aussi
-    la dimension l'espace d'optimisation). On utilise classiquement des
-    techniques de factorisation, de décomposition (spectrale, Fourier,
-    ondelettes...) ou d'estimation d'ensemble (EOF...), ou des combinaisons,
-    pour réduire la charge numérique de ces covariances dans les calculs. ADAO
-    utilise certaines de ces techniques, en combinaison avec des techniques de
-    calcul creux ("*sparse*"), pour rendre plus efficace la manipulation des
-    matrices de covariance.
-
-Réduction du modèle physique :
-    la manière la plus simple de réduire le coût du calcul unitaire consiste à
-    réduire le modèle de simulation lui-même, en le représentant de manière
-    numériquement plus économique. De nombreuses méthodes permettent cette
-    réduction de modèles en assurant un contrôle plus ou moins strict de
-    l'erreur d'approximation engendrée par la réduction. L'usage de modèles
-    simplifiés de la physique permet une réduction mais sans toujours produire
-    un contrôle d'erreur. Au contraire, toutes les méthodes de décomposition
-    (Fourier, ondelettes, SVD, POD, PCA, Kahrunen-Loeve, RBM, EIM, etc.) visent
-    ainsi une réduction de l'espace de représentation avec un contrôle d'erreur
-    explicite. Très fréquemment utilisées, elles doivent néanmoins être
-    complétées par une analyse fine de l'interaction avec l'algorithme
-    d'optimisation dans lequel le calcul réduit est inséré, pour éviter des
-    instabilités, incohérences ou inconsistances notoirement préjudiciables.
-    ADAO supporte complètement l'usage de ce type de méthode de réduction, même
-    s'il est souvent nécessaire d'établir cette réduction indépendante
-    générique préalablement à l'optimisation.
-
-Réduction de l'espace d'assimilation de données ou d'optimisation :
-    la taille de l'espace d'optimisation dépend grandement du type de problème
-    traité (estimation d'états ou de paramètres) mais aussi du nombre
-    d'observations dont on dispose pour conduire l'assimilation de données. Il
-    est donc parfois possible de conduire l'optimisation dans l'espace le plus
-    petit par une adaptation de la formulation interne des algorithmes
-    d'optimisation. Lorsque c'est possible et judicieux, ADAO intègre ce genre
-    de formulation réduite pour améliorer la performance numérique sans
-    amoindrir la qualité de l'optimisation.
-
-Combinaison de plusieurs réductions :
-    de nombreux algorithmes avancés cherchent à combiner simultanément
-    plusieurs techniques de réduction. Néanmoins, il est difficile de disposer
-    à la fois de méthodes génériques et robustes, et d'utiliser en même temps
-    de plusieurs techniques très performantes de réduction. ADAO intègre
-    certaines méthodes parmi les plus robustes, mais cet aspect fait toujours
-    largement l'objet de recherches et d'évolutions.
-
-On peut terminer ce rapide tour d'horizon des méthodes de réduction en
-soulignant que leur usage est omni-présent dans les applications réelles et
-dans les outils numériques, et qu'ADAO permet d'utiliser des méthodes éprouvées
-sans même le savoir.
