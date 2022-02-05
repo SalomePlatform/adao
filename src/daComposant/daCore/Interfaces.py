@@ -652,7 +652,7 @@ class _ReportViewer(GenericCaseViewer):
                 if   k == "self":                             continue
                 if isinstance(__v,Persistence.Persistence): __v = __v.values()
                 numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
-                __ktext += "\n        %s = %s, "%(k,repr(__v))
+                __ktext += "\n        %s = %s,"%(k,repr(__v))
                 numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
             if len(__ktext) > 0:
                 __text += " with values:" + __ktext
@@ -902,7 +902,7 @@ class ImportFromFile(object):
                     __header.append(__line)
                     __skiprows += 1
                     __line = fid.readline().strip()
-                __varsline = __line
+                __varsline = __line # Ligne de labels par convention
                 for i in range(max(0,__nblines)):
                     __header.append(fid.readline())
         return (__header, __varsline, __skiprows)
@@ -950,7 +950,7 @@ class ImportFromFile(object):
         return self.__supportedformats
 
     def getvalue(self, ColNames=None, ColIndex=None ):
-        "Renvoie la ou les variables demandees par la liste de leurs noms"
+        "Renvoie la ou les variables demandées par la liste de leurs noms"
         # Uniquement si mise à jour
         if ColNames is not None: self._colnames = tuple(ColNames)
         if ColIndex is not None: self._colindex = str(ColIndex)
@@ -1061,7 +1061,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
             raise ValueError("Unkown file format \"%s\""%self._format)
     #
     def getvalue(self, VarNames = None, HeaderNames=()):
-        "Renvoie la ou les variables demandees par la liste de leurs noms"
+        "Renvoie la ou les variables demandées par la liste de leurs noms"
         if VarNames is not None: __varnames = tuple(VarNames)
         else:                    __varnames = None
         #
@@ -1095,7 +1095,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
             for i in range(1,len(HeaderNames)):
                 __converters[i] = __replaceNone
         else:
-            raise ValueError("Can not find names of columns for initial values. Wrong first line is:\n            \"%s\""%__firstline)
+            raise ValueError("Can not find names of columns for initial values. Wrong first line is:\n            \"%s\""%self._varsline)
         #
         if self._format == "text/plain":
             __content = numpy.loadtxt(self._filename, dtype = __dtypes, usecols = __usecols, skiprows = self._skiprows, converters = __converters)

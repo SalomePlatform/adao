@@ -22,10 +22,7 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-import sys
-import os
-import traceback
-import logging
+import os, sys, logging
 logging.basicConfig(level=logging.WARNING, format='%(levelname)-8s %(message)s')
 
 logging.debug("-- Starting AdaoYacsSchemaCreator --")

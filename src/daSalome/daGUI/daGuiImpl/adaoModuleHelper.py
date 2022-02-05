@@ -37,6 +37,7 @@ __all__ = [
     "getObjectID",
     ]
 
+import os
 from omniORB import CORBA
 from SALOME_NamingServicePy import SALOME_NamingServicePy_i
 from LifeCycleCORBA import LifeCycleCORBA

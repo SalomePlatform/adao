@@ -169,7 +169,7 @@ class Aidsm(object):
             if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
             else: msg = ""
             raise ValueError(("during settings, the following error occurs:\n"+\
-                              "\n%s %s\n\nSee also the potential messages, "+\
+                              "\n%s%s\n\nSee also the potential messages, "+\
                               "which can show the origin of the above error, "+\
                               "in the launching terminal.")%(str(e),msg))
 

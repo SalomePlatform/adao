@@ -27,8 +27,7 @@
 """
 # Modules Python
 # print "passage dans la surcharge de configuration pour Adao"
-import os, sys, string, types, re
-import traceback
+import os
 from PyQt5.QtGui  import *
 
 # Modules Eficas

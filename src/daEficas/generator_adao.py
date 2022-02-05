@@ -23,7 +23,6 @@
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 from generator.generator_python import PythonGenerator
-import traceback
 import logging
 
 def entryPoint():
@@ -69,7 +68,7 @@ class AdaoGenerator(PythonGenerator):
       self.logger.debug("EFICAS case is not valid, python command file for YACS schema generation cannot be created")
       self.logger.debug(self.text_da)
       self.dictMCVal = {}
-      # traceback.print_exc()
+      # import traceback ; traceback.print_exc()
     return self.text_comm
 
   def writeDefault(self, fn):

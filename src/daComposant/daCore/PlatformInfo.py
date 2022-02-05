@@ -98,13 +98,18 @@ class PlatformInfo(object):
                 __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
         elif sys.platform.startswith('darwin'):
             if hasattr(platform, 'mac_ver'):
-                __macosxv = {'5': 'Leopard',       '6': 'Snow Leopard', '7': 'Lion',
-                             '8': 'Mountain Lion', '9': 'Mavericks',   '10': 'Yosemite',
-                             '11': 'El Capitan',  '12': 'Sierra'}
+                __macosxv = {
+                     '0': 'Cheetah',       '1': 'Puma',         '2': 'Jaguar',
+                     '3': 'Panther',       '4': 'Tiger',        '5': 'Leopard',
+                     '6': 'Snow Leopard',  '7': 'Lion',         '8': 'Mountain Lion',
+                     '9': 'Mavericks',    '10': 'Yosemite',    '11': 'El Capitan',
+                    '12': 'Sierra',       '13': 'High Sierra', '14': 'Mojave',
+                    '15': 'Catalina',     '16': 'Big Sur',     '17': 'Monterey',
+                    }
                 for key in __macosxv:
                     if (platform.mac_ver()[0].split('.')[1] == key):
                         __msg += "\n%s%30s : %s" %(__prefix,
-                            "platform.mac_ver",str(platform.mac_ver()[0]+"(" + macosx_dict[key]+")"))
+                            "platform.mac_ver",str(platform.mac_ver()[0]+"(" + __macosxv[key]+")"))
             elif hasattr(platform, 'dist'):
                 __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
         elif os.name == 'nt':

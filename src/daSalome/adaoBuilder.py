@@ -55,8 +55,8 @@ class New(_Aidsm):
     """
     Generic ADAO TUI builder
     """
-    def __init__(self, name = ""):
-        _Aidsm.__init__(self, name)
+    def __init__(self, __name = ""):
+        _Aidsm.__init__(self, __name)
 
 class Gui(object):
     """

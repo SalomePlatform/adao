@@ -21,14 +21,14 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Définit des outils de persistence et d'enregistrement de séries de valeurs
+    Définit des outils de persistance et d'enregistrement de séries de valeurs
     pour analyse ultérieure ou utilisation de calcul.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import os, sys, numpy, copy
-import gzip, bz2
+import os, numpy, copy, math
+import gzip, bz2, pickle
 
 from daCore.PlatformInfo import PathManagement ; PathManagement()
 from daCore.PlatformInfo import has_gnuplot, PlatformInfo
@@ -36,18 +36,10 @@ mfp = PlatformInfo().MaximumPrecision()
 if has_gnuplot:
     import Gnuplot
 
-if sys.version_info.major < 3:
-    range = xrange
-    iLong = long
-    import cPickle as pickle
-else:
-    iLong = int
-    import pickle
-
 # ==============================================================================
 class Persistence(object):
     """
-    Classe générale de persistence définissant les accesseurs nécessaires
+    Classe générale de persistance définissant les accesseurs nécessaires
     (Template)
     """
     def __init__(self, name="", unit="", basetype=str):
@@ -105,7 +97,7 @@ class Persistence(object):
 
     def pop(self, item=None):
         """
-        Retire une valeur enregistree par son index de stockage. Sans argument,
+        Retire une valeur enregistrée par son index de stockage. Sans argument,
         retire le dernier objet enregistre.
         """
         if item is not None:
@@ -255,18 +247,18 @@ class Persistence(object):
                 return allKeys
 
     # ---------------------------------------------------------
-    # Pour compatibilite
+    # Pour compatibilité
     def stepnumber(self):
         "Nombre de pas"
         return len(self.__values)
 
-    # Pour compatibilite
+    # Pour compatibilité
     def stepserie(self, **kwargs):
         "Nombre de pas filtrés"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return __indexOfFilteredItems
 
-    # Pour compatibilite
+    # Pour compatibilité
     def steplist(self, **kwargs):
         "Nombre de pas filtrés"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
@@ -487,9 +479,9 @@ class Persistence(object):
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return numpy.array(self.__values).std(ddof=ddof,axis=0).astype('float')
+                return numpy.asarray(self.__values).std(ddof=ddof,axis=0).astype('float')
             else:
-                return numpy.array(self.__values).std(axis=0).astype('float')
+                return numpy.asarray(self.__values).std(axis=0).astype('float')
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -500,7 +492,7 @@ class Persistence(object):
         les types élémentaires numpy.
         """
         try:
-            return numpy.array(self.__values).sum(axis=0)
+            return numpy.asarray(self.__values).sum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -511,7 +503,7 @@ class Persistence(object):
         les types élémentaires numpy.
         """
         try:
-            return numpy.array(self.__values).min(axis=0)
+            return numpy.asarray(self.__values).min(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -522,7 +514,7 @@ class Persistence(object):
         les types élémentaires numpy.
         """
         try:
-            return numpy.array(self.__values).max(axis=0)
+            return numpy.asarray(self.__values).max(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -533,7 +525,7 @@ class Persistence(object):
         les types élémentaires numpy.
         """
         try:
-            return numpy.array(self.__values).cumsum(axis=0)
+            return numpy.asarray(self.__values).cumsum(axis=0)
         except:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -627,7 +619,7 @@ class Persistence(object):
         elif isinstance(Scheduler,range):  # Considéré comme un itérateur
             Schedulers = Scheduler
         elif isinstance(Scheduler,(list,tuple)):   # Considéré comme des index explicites
-            Schedulers = [iLong(i) for i in Scheduler] # map( long, Scheduler )
+            Schedulers = [int(i) for i in Scheduler] # map( long, Scheduler )
         else:                              # Dans tous les autres cas, activé par défaut
             Schedulers = range( 0, maxiter )
         #

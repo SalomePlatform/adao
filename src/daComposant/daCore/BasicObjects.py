@@ -1925,12 +1925,12 @@ class Covariance(object):
             raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your vector input."%(self.__name,))
         if self.ismatrix() and (self.__check or logging.getLogger().level < logging.WARNING):
             try:
-                L = numpy.linalg.cholesky( self.__C )
+                numpy.linalg.cholesky( self.__C )
             except:
                 raise ValueError("The %s covariance matrix is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
         if self.isobject() and (self.__check or logging.getLogger().level < logging.WARNING):
             try:
-                L = self.__C.cholesky()
+                self.__C.cholesky()
             except:
                 raise ValueError("The %s covariance object is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
 
@@ -2340,7 +2340,6 @@ def MultiFonction(
     if __mpEnabled:
         _jobs = __xserie
         # logging.debug("MULTF Internal multiprocessing calculations begin : evaluation of %i point(s)"%(len(_jobs),))
-        import multiprocessing
         with multiprocessing.Pool(__mpWorkers) as pool:
             __multiHX = pool.map( _sFunction, _jobs )
             pool.close()
