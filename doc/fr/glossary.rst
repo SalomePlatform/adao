@@ -142,7 +142,7 @@ Glossaire
    background
       C'est le terme anglais pour désigner l'ébauche.
 
-   ébauche
+   ebauche
       C'est une part (choisie pour être modifiable) de la représentation de
       l'état du système, représentation connue *a priori* ou initiale, qui
       n'est pas optimale, et qui est utilisée comme une estimation grossière ou

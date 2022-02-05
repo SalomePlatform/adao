@@ -548,17 +548,19 @@ particular to reduce or avoid the difficulties of optimal search which are
 manifested by many successive iterations on almost identical states.
 
 **A third way to improve convergence is to adapt the default setting of the
-finite difference approximation, primarily for the observation operator**. The
-control of this property is done with the keyword "*DifferentialIncrement*"
-which sets the definition using the :ref:`section_ref_operator_one`. Its
-default value is 1%, and it can usually be adjusted between :math:`10^{-5}` and
-:math:`10^{-3}` (although it is wise to check carefully the relevance of its
-value, it is easy in ADAO to change this parameter). The convergence criterion
-must then be adjusted so that it does not exceed the order of magnitude of this
-approximation. In practice, it is sufficient to set the
-"*CostDecrementTolerance*" criterion to approximately the same precision (i.e.
-with an order of magnitude more or less) as the "*DifferentialIncrement*"
-criterion.
+finite difference approximation, primarily for the observation operator and a
+single-operator representation**. The control of this property is done with the
+keyword "*DifferentialIncrement*" which sets the definition using the
+:ref:`section_ref_operator_one`. Its default value is 1%, and it can usually be
+adjusted between :math:`10^{-5}` and :math:`10^{-3}` (although it is wise to
+check carefully the relevance of its value, it is easy in ADAO to change this
+parameter). The convergence criterion must then be adjusted so that it does not
+exceed the order of magnitude of this approximation. In practice, it is
+sufficient to set the "*CostDecrementTolerance*" criterion to approximately the
+same precision (i.e. with an order of magnitude more or less) as the
+"*DifferentialIncrement*" criterion. This way of improvement is also to be
+completed with analyses using the :ref:`section_ref_algorithm_LinearityTest`
+and :ref:`section_ref_algorithm_GradientTest`.
 
 From experience, it is *a priori* not recommended to use other means to control
 convergence, even if they exist. These parameter adjustments are simple to

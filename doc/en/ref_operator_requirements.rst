@@ -397,6 +397,8 @@ problem.
 Such a process is rarely enough to avoid all the numerical problems, but it
 often improves a lot the numeric conditioning of the optimization.
 
+.. index:: single: InputFunctionAsMulti
+
 Dealing explicitly with "multiple" functions
 ++++++++++++++++++++++++++++++++++++++++++++
 
@@ -407,7 +409,7 @@ Dealing explicitly with "multiple" functions
   already done by default in ADAO to increase performances. Only the very
   experienced user, seeking to manage particularly difficult cases, can be
   interested in this extension. Despite its simplicity, there is an explicit
-  risk of significantly worsening performance.
+  risk of significantly worsening performance, or getting weird runtime errors.
 
 It is possible, when defining operator's functions, to set them as functions
 that treat not only one argument, but a series of arguments, to give back on
@@ -427,7 +429,17 @@ The length of the output (that is, the number of calculated values) is equal to
 the length of the input (that is, the number of states for which one want to
 calculate the value by the operator).
 
-This possibility is only available in the textual interface for ADAO. For this,
-when defining an operator's function, in the same time one usually define the
-function or the external script, it can be set using a boolean parameter
-"*InputFunctionAsMulti*" that the definition is one of a "multiple" function.
+This possibility is only available in the TUI textual interface for ADAO. For
+this, when defining an operator's function, in the same time one usually define
+the function or the external script, it can be set using an additional boolean
+parameter "*InputFunctionAsMulti*" that the definition is one of a "multiple"
+function. For example, if it is the observation operator that is defined in
+this way, one should write (knowing that all other optional commands remain
+unchanged):
+::
+
+    case.set( 'ObservationOperator',
+        OneFunction          = MultiFunctionO,
+        ...
+        InputFunctionAsMulti = True,
+        )

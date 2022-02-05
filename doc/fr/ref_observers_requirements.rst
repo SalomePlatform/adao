@@ -180,9 +180,9 @@ Enregistre la valeur courante de la variable dans un fichier du répertoire '/tm
     v=numpy.array(var[-1], ndmin=1)
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -198,12 +198,12 @@ Enregistre la série des valeurs de la variable dans un fichier du répertoire '
 ::
 
     import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
+    v=numpy.array(var[:], ndmin=1)
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -223,9 +223,9 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
     print(str(info)+" "+str(v))
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -245,9 +245,9 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
     print(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -263,13 +263,13 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 ::
 
     import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
+    v=numpy.array(var[:], ndmin=1)
     print(str(info)+" "+str(v))
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -288,13 +288,13 @@ Affiche graphiquement avec Gnuplot la valeur courante de la variable.
     v=numpy.array(var[-1], ndmin=1)
     global ifig, gp
     try:
-        ifig += 1
-        gp(' set style data lines')
+        ifig+=1
+        gp('set style data lines')
     except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp(' set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
+        ifig=0
+        gp=Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueSerieGnuPlotter (Observer)
@@ -307,16 +307,16 @@ Affiche graphiquement avec Gnuplot la série des valeurs de la variable.
 ::
 
     import numpy, Gnuplot
-    v=numpy.array(var[:],  ndmin=1)
+    v=numpy.array(var[:], ndmin=1)
     global ifig, gp
     try:
-        ifig += 1
-        gp(' set style data lines')
+        ifig+=1
+        gp('set style data lines')
     except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp(' set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
+        ifig=0
+        gp=Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterAndGnuPlotter (Observer)
@@ -328,18 +328,18 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 
 ::
 
-    print(str(info)+" "+str(var[-1]))
+    print(str(info)+' '+str(var[-1]))
     import numpy, Gnuplot
     v=numpy.array(var[-1], ndmin=1)
     global ifig,gp
     try:
-        ifig += 1
-        gp(' set style data lines')
+        ifig+=1
+        gp('set style data lines')
     except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp(' set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
+        ifig=0
+        gp=Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
@@ -351,18 +351,18 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 
 ::
 
-    print(str(info)+" "+str(var[:]))
+    print(str(info)+' '+str(var[:]))
     import numpy, Gnuplot
-    v=numpy.array(var[:],  ndmin=1)
+    v=numpy.array(var[:], ndmin=1)
     global ifig,gp
     try:
-        ifig += 1
-        gp(' set style data lines')
+        ifig+=1
+        gp('set style data lines')
     except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp(' set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
+        ifig=0
+        gp=Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterSaverAndGnuPlotter (Observer)
@@ -374,14 +374,14 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 
 ::
 
-    print(str(info)+" "+str(var[-1]))
+    print(str(info)+' '+str(var[-1]))
     import numpy, re
     v=numpy.array(var[-1], ndmin=1)
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -389,13 +389,13 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
     import Gnuplot
     global ifig,gp
     try:
-        ifig += 1
-        gp(' set style data lines')
+        ifig+=1
+        gp('set style data lines')
     except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp(' set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
+        ifig=0
+        gp=Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueSeriePrinterSaverAndGnuPlotter (Observer)
@@ -407,14 +407,14 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 
 ::
 
-    print(str(info)+" "+str(var[:]))
+    print(str(info)+' '+str(var[:]))
     import numpy, re
-    v=numpy.array(var[:],  ndmin=1)
+    v=numpy.array(var[:], ndmin=1)
     global istep
     try:
-        istep += 1
+        istep+=1
     except:
-        istep = 0
+        istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
     f=re.sub('\s','_',f)
     print('Value saved in "%s"'%f)
@@ -422,13 +422,13 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
     import Gnuplot
     global ifig,gp
     try:
-        ifig += 1
-        gp(' set style data lines')
+        ifig+=1
+        gp('set style data lines')
     except:
-        ifig = 0
-        gp = Gnuplot.Gnuplot(persist=1)
-        gp(' set style data lines')
-    gp('set title  "%s (Figure %i)"'%(info,ifig))
+        ifig=0
+        gp=Gnuplot.Gnuplot(persist=1)
+        gp('set style data lines')
+    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueMean (Observer)
@@ -441,7 +441,7 @@ Imprime sur la sortie standard la moyenne de la valeur courante de la variable.
 ::
 
     import numpy
-    print(str(info)+" "+str(numpy.nanmean(var[-1])))
+    print(str(info)+' '+str(numpy.nanmean(var[-1])))
 
 .. index:: single: ValueStandardError (Observer)
 
@@ -453,7 +453,7 @@ Imprime sur la sortie standard l'écart-type de la valeur courante de la variabl
 ::
 
     import numpy
-    print(str(info)+" "+str(numpy.nanstd(var[-1])))
+    print(str(info)+' '+str(numpy.nanstd(var[-1])))
 
 .. index:: single: ValueVariance (Observer)
 
@@ -465,7 +465,7 @@ Imprime sur la sortie standard la variance de la valeur courante de la variable.
 ::
 
     import numpy
-    print(str(info)+" "+str(numpy.nanvar(var[-1])))
+    print(str(info)+' '+str(numpy.nanvar(var[-1])))
 
 .. index:: single: ValueL2Norm (Observer)
 
@@ -478,7 +478,7 @@ Imprime sur la sortie standard la norme L2 de la valeur courante de la variable.
 
     import numpy
     v = numpy.ravel( var[-1] )
-    print(str(info)+" "+str(float( numpy.linalg.norm(v) )))
+    print(str(info)+' '+str(float( numpy.linalg.norm(v) )))
 
 .. index:: single: ValueRMS (Observer)
 
@@ -491,4 +491,4 @@ Imprime sur la sortie standard la racine de la moyenne des carrés (RMS), ou moy
 
     import numpy
     v = numpy.ravel( var[-1] )
-    print(str(info)+" "+str(float( numpy.sqrt((1./v.size)*numpy.dot(v,v)) )))
+    print(str(info)+' '+str(float( numpy.sqrt((1./v.size)*numpy.dot(v,v)) )))

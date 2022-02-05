@@ -29,7 +29,7 @@
 
 .. index:: single: Data Assimilation
 .. index:: single: assimilation de données
-.. index:: single: état vrai
+.. index:: single: etat vrai
 .. index:: single: observation
 .. index:: single: a priori
 .. index:: single: EstimationOf
@@ -86,7 +86,7 @@ Reconstruction de champs ou interpolation de données
 .. index:: single: interpolation de données
 .. index:: single: interpolation de champs
 .. index:: single: estimation d'état
-.. index:: single: ébauche
+.. index:: single: ebauche
 
 La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
 partir d'un nombre restreint de mesures réelles, le (ou les) champ(s)
@@ -124,7 +124,7 @@ Identification de paramètres, ajustement de modèles, ou calage
 .. index:: single: ajustement de modèles
 .. index:: single: recalage
 .. index:: single: calage
-.. index:: single: ébauche
+.. index:: single: ebauche
 .. index:: single: régularisation
 .. index:: single: problèmes inverses
 .. index:: single: estimation de paramètres
@@ -206,7 +206,7 @@ d'états et de paramètres.
 Description simple du cadre méthodologique de l'assimilation de données
 -----------------------------------------------------------------------
 
-.. index:: single: ébauche
+.. index:: single: ebauche
 .. index:: single: covariances d'erreurs d'ébauche
 .. index:: single: covariances d'erreurs d'observation
 .. index:: single: covariances
@@ -646,7 +646,7 @@ Approfondir l'assimilation de données pour la dynamique
 
 .. index:: single: dynamique (système)
 .. index:: single: système dynamique
-.. index:: single: évolution temporelle
+.. index:: single: evolution temporelle
 .. index:: single: EDO (Équation Différentielle Ordinaire)
 .. index:: single: ODE (Ordinary Differential Equation)
 .. index:: single: EstimationOf

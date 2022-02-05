@@ -414,6 +414,8 @@ Une telle démarche suffit rarement à éviter tous les problèmes numériques, 
 permet souvent d'améliorer beaucoup le conditionnement numérique de
 l'optimisation.
 
+.. index:: single: InputFunctionAsMulti
+
 Gestion explicite de fonctions "multiples"
 ++++++++++++++++++++++++++++++++++++++++++
 
@@ -425,7 +427,7 @@ Gestion explicite de fonctions "multiples"
   performances. Seul l'utilisateur très averti, cherchant à gérer des cas
   particulièrement difficiles, peut s'intéresser à cette extension. En dépit de
   sa simplicité, c'est au risque explicite de dégrader notablement les
-  performances.
+  performances, ou d'avoir des erreurs d'exécution étranges.
 
 Il est possible, lorsque l'on fournit des fonctions d'opérateurs, de les
 définir comme des fonctions qui traitent non pas un seul argument, mais une
@@ -447,8 +449,18 @@ La longueur de la sortie (c'est-à-dire le nombre de valeurs calculées) est
 égale à la longueur de l'entrée (c'est-à-dire le nombre d'états dont on veut
 calculer la valeur par l'opérateur).
 
-Cette possibilité n'est disponible que dans l'interface textuelle d'ADAO. Pour
-cela, lors de la définition d'une fonction d'opérateur, en même temps que l'on
-définit de manière habituelle la fonction ou le script externe, il suffit
-d'indiquer en plus en argument par un booléen "*InputFunctionAsMulti*" que la
-définition est celle d'une fonction "multiple".
+Cette possibilité n'est disponible que dans l'interface textuelle TUI d'ADAO.
+Pour cela, lors de la définition d'une fonction d'opérateur, en même temps que
+l'on définit de manière habituelle la fonction ou le script externe, il suffit
+d'indiquer en plus en argument par un booléen supplémentaire
+"*InputFunctionAsMulti*" que la définition est celle d'une fonction "multiple".
+Par exemple, si c'est l'opérateur d'observation que l'on définit de cette
+manière, il faut écrire (sachant que toutes les autres commandes optionnelles
+restent inchangées) :
+::
+
+    case.set( 'ObservationOperator',
+        OneFunction          = MultiFunctionO,
+        ...
+        InputFunctionAsMulti = True,
+        )

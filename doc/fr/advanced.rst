@@ -598,8 +598,9 @@ presque identiques.
 
 **Un troisième moyen d'améliorer la convergence est d'adapter le réglage par
 défaut de l'approximation par différences finies, essentiellement pour
-l'opérateur d'observation**. Le contrôle de cette propriété se fait à l'aide du
-mot-clé "*DifferentialIncrement*" qui paramètre la définition à l'aide de la
+l'opérateur d'observation et une représentation en mono-opérateur**. Le
+contrôle de cette propriété se fait à l'aide du mot-clé
+"*DifferentialIncrement*" qui paramètre la définition à l'aide de la
 :ref:`section_ref_operator_one`. Sa valeur par défaut est de 1%, et il peut
 généralement être ajusté entre :math:`10^{-5}` et :math:`10^{-3}` (même s'il
 est sage de vérifier soigneusement la pertinence de sa valeur, il est aisé dans
@@ -608,7 +609,9 @@ ajusté de telle sorte qu'il ne surpasse pas l'ordre de grandeur de cette
 approximation. En pratique, on peut se contenter de fixer le critère
 "*CostDecrementTolerance*" à peu près à la même précision (c'est-à-dire avec un
 ordre de grandeur de plus ou de moins) que le critère
-"*DifferentialIncrement*".
+"*DifferentialIncrement*". Ce moyen d'amélioration est aussi à compléter
+d'analyses à l'aide des :ref:`section_ref_algorithm_LinearityTest` et
+:ref:`section_ref_algorithm_GradientTest`.
 
 Par expérience, il n'est *a priori* pas recommandé d'utiliser d'autres moyens
 de contrôler la convergence, même s'il en existe. Ces ajustements de paramètres
