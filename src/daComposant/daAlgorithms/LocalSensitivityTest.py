@@ -20,9 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import sys, logging
-from daCore import BasicObjects, PlatformInfo
-import numpy, copy
+import logging, numpy
+from daCore import BasicObjects
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):

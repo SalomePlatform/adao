@@ -20,8 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
+from daCore import BasicObjects
+from daAlgorithms.Atoms import c2ukf, uskf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -38,18 +38,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             )
         self.defineRequiredParameter(
-            name     = "ConstrainedBy",
-            default  = "EstimateProjection",
-            typecast = str,
-            message  = "Prise en compte des contraintes",
-            listval  = ["EstimateProjection"],
-            )
-        self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
             listval  = ["State", "Parameters"],
+            )
+        self.defineRequiredParameter(
+            name     = "ConstrainedBy",
+            default  = "EstimateProjection",
+            typecast = str,
+            message  = "Prise en compte des contraintes",
+            listval  = ["EstimateProjection"],
             )
         self.defineRequiredParameter(
             name     = "Alpha",
@@ -140,12 +140,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Default UKF
         #--------------------------
         if   self._parameters["Variant"] == "UKF":
-            NumericObjects.uskf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            uskf.uskf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         # Default 2UKF
         elif self._parameters["Variant"] == "2UKF":
-            NumericObjects.c2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            c2ukf.c2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

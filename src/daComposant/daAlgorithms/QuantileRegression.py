@@ -20,9 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
 import numpy
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import mmqr
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -153,7 +153,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Minimisation de la fonctionnelle
         # --------------------------------
         if self._parameters["Minimizer"] == "MMQR":
-            Minimum, J_optimal, Informations = NumericObjects.mmqr(
+            Minimum, J_optimal, Informations = mmqr.mmqr(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,

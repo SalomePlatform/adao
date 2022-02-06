@@ -20,13 +20,11 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import sys, logging
+import logging
 from daCore import BasicObjects, PlatformInfo
 import numpy, copy
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
-if sys.version_info.major > 2:
-    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -86,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         __marge =  5*u" "
         _p = self._parameters["NumberOfPrintedDigits"]
         if len(self._parameters["ResultTitle"]) > 0:
-            __rt = unicode(self._parameters["ResultTitle"])
+            __rt = str(self._parameters["ResultTitle"])
             msgs  = u"\n"
             msgs +=  __marge + "====" + "="*len(__rt) + "====\n"
             msgs +=  __marge + "    " + __rt + "\n"

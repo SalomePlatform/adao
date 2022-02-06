@@ -20,8 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import copy, logging, itertools
-import numpy
+import numpy, logging, itertools
 from daCore import BasicObjects
 from daCore.PlatformInfo import PlatformInfo
 mfp = PlatformInfo().MaximumPrecision()
@@ -137,7 +136,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     raise ValueError("For dimension %i, the distribution name \"%s\" is not allowed, please choose in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]"%(i,dim[0]))
                 else:
                     distribution = getattr(numpy.random,str(dim[0]),'normal')
-                    parameters   = dim[1]
                     coordinatesList.append(distribution(*dim[1], size=max(1,int(dim[2]))))
             sampleList = itertools.product(*coordinatesList)
         else:

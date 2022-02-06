@@ -764,12 +764,9 @@ class ImportDetector(object):
         else:
             return False
     def is_not_local_file(self):
-        if not os.path.isfile(os.path.realpath(self.__url)):
-            return True
-        else:
-            return False
+        return not self.is_local_file()
     def raise_error_if_not_local_file(self):
-        if not os.path.isfile(os.path.realpath(self.__url)):
+        if self.is_not_local_file():
             raise ValueError("The name or the url of the file object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
         else:
             return False
@@ -782,12 +779,9 @@ class ImportDetector(object):
         else:
             return False
     def is_not_local_dir(self):
-        if not os.path.isdir(self.__url):
-            return True
-        else:
-            return False
+        return not self.is_local_dir()
     def raise_error_if_not_local_dir(self):
-        if not os.path.isdir(self.__url):
+        if self.is_not_local_dir():
             raise ValueError("The name or the url of the directory object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
         else:
             return False

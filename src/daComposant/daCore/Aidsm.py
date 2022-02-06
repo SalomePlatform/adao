@@ -166,7 +166,7 @@ class Aidsm(object):
             else:
                 raise ValueError("the variable named '%s' is not allowed."%str(Concept))
         except Exception as e:
-            if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
+            if isinstance(e, SyntaxError): msg = " at %s: %s"%(e.offset, e.text)
             else: msg = ""
             raise ValueError(("during settings, the following error occurs:\n"+\
                               "\n%s%s\n\nSee also the potential messages, "+\

@@ -20,9 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
-import numpy, scipy.optimize, scipy.version
+import numpy
+from daCore import BasicObjects
+from daAlgorithms.Atoms import std4dvar
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -126,7 +126,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "EM", "R", "B" ),
-            optional = ("U", "CM"),
+            optional = ("U", "CM", "Q"),
             )
         self.setAttributes(tags=(
             "DataAssimilation",
@@ -141,7 +141,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         # Default 4DVAR
         if   self._parameters["Variant"] in ["4DVAR", "4DVAR-Std"]:
-            NumericObjects.std4dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            std4dvar.std4dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

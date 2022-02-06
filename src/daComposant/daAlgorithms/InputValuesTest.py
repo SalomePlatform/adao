@@ -20,7 +20,6 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import sys, logging
 import numpy
 from daCore import BasicObjects
 

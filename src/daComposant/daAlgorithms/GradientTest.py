@@ -20,12 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import sys, logging
+import math, numpy
 from daCore import BasicObjects, PlatformInfo
-import numpy, math
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
-if sys.version_info.major > 2:
-    unicode = str
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -129,7 +126,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
         if self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
+            self.StoredVariables["CurrentState"].store( numpy.ravel(X) )
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
@@ -215,7 +212,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
         #
         if len(self._parameters["ResultTitle"]) > 0:
-            __rt = unicode(self._parameters["ResultTitle"])
+            __rt = str(self._parameters["ResultTitle"])
             msgs  = u"\n"
             msgs += __marge + "====" + "="*len(__rt) + "====\n"
             msgs += __marge + "    " + __rt + "\n"
