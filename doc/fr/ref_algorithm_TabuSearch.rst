@@ -66,6 +66,8 @@ liste de longueur finie.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
+.. include:: snippets/BoundsWithNone.rst
+
 .. include:: snippets/LengthOfTabuList.rst
 
 .. include:: snippets/MaximumNumberOfSteps_50.rst

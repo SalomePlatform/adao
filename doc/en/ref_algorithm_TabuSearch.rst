@@ -64,6 +64,8 @@ Positions already explored are kept in a list of finite length.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
+.. include:: snippets/BoundsWithNone.rst
+
 .. include:: snippets/LengthOfTabuList.rst
 
 .. include:: snippets/MaximumNumberOfSteps_50.rst

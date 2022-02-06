@@ -58,8 +58,8 @@ with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
 A difference is made between the "unscented" Kalman filter taking into account
 bounds on the states (the variant named "2UKF", which is recommended and used
-by default), and the "unscented" Kalman filter conducted without any constraint
-(the variant named "UKF", which is not recommended).
+by default), and the canonical "unscented" Kalman filter conducted without any
+constraint (the variant named "UKF", which is not recommended).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
