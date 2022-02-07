@@ -20,8 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
+from daCore import BasicObjects
+from daAlgorithms.Atoms import cekf, exkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -110,12 +110,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Default EKF
         #--------------------------
         if   self._parameters["Variant"] == "EKF":
-            NumericObjects.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            exkf.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         # Default CEKF
         elif self._parameters["Variant"] == "CEKF":
-            NumericObjects.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            cekf.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

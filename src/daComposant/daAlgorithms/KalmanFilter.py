@@ -20,9 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
-import numpy
+from daCore import BasicObjects
+from daAlgorithms.Atoms import stdkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -87,7 +86,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        NumericObjects.stdkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        stdkf.stdkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #--------------------------
         #
         self._post_run(HO)

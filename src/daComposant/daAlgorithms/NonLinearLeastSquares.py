@@ -20,14 +20,24 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects
-import numpy, scipy.optimize, scipy.version
+import numpy
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import ecwnlls
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "NONLINEARLEASTSQUARES")
+        self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "NonLinearLeastSquares",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "NonLinearLeastSquares",
+                "OneCorrection",
+                ],
+            )
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "LBFGSB",
@@ -41,6 +51,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "BFGS",
                 "LM",
                 ],
+            )
+        self.defineRequiredParameter(
+            name     = "EstimationOf",
+            default  = "Parameters",
+            typecast = str,
+            message  = "Estimation d'état ou de paramètres",
+            listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfSteps",
@@ -93,8 +110,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",
+                "InnovationAtCurrentAnalysis",
                 "InnovationAtCurrentState",
                 "OMA",
                 "OMB",
@@ -115,6 +134,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R"),
+            optional = ("U", "EM", "CM", "Q"),
             )
         self.setAttributes(tags=(
             "Optimization",
@@ -125,221 +145,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        # Initialisations
-        # ---------------
-        Hm = HO["Direct"].appliedTo
-        Ha = HO["Adjoint"].appliedInXTo
-        #
-        if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
-            HXb = Hm( Xb, HO["AppliedInX"]["HXb"] )
-        else:
-            HXb = Hm( Xb )
-        HXb = HXb.reshape((-1,1))
-        if Y.size != HXb.size:
-            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
-        if max(Y.shape) != max(HXb.shape):
-            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
-        #
-        RI = R.getI()
-        if self._parameters["Minimizer"] == "LM":
-            RdemiI = R.choleskyI()
-        #
-        Xini = self._parameters["InitializationPoint"]
-        #
-        # Définition de la fonction-coût
-        # ------------------------------
-        def CostFunction(x):
-            _X  = numpy.ravel( x ).reshape((-1,1))
-            if self._parameters["StoreInternalVariables"] or \
-                self._toStore("CurrentState") or \
-                self._toStore("CurrentOptimum"):
-                self.StoredVariables["CurrentState"].store( _X )
-            _HX = Hm( _X ).reshape((-1,1))
-            _Innovation = Y - _HX
-            if self._toStore("SimulatedObservationAtCurrentState") or \
-                self._toStore("SimulatedObservationAtCurrentOptimum"):
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
-            if self._toStore("InnovationAtCurrentState"):
-                self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
-            #
-            Jb  = 0.
-            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
-            J   = Jb + Jo
-            #
-            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
-            if self._toStore("IndexOfOptimum") or \
-                self._toStore("CurrentOptimum") or \
-                self._toStore("CostFunctionJAtCurrentOptimum") or \
-                self._toStore("CostFunctionJbAtCurrentOptimum") or \
-                self._toStore("CostFunctionJoAtCurrentOptimum") or \
-                self._toStore("SimulatedObservationAtCurrentOptimum"):
-                IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
-            if self._toStore("IndexOfOptimum"):
-                self.StoredVariables["IndexOfOptimum"].store( IndexMin )
-            if self._toStore("CurrentOptimum"):
-                self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
-            if self._toStore("SimulatedObservationAtCurrentOptimum"):
-                self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
-            if self._toStore("CostFunctionJbAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )
-            if self._toStore("CostFunctionJoAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
-            if self._toStore("CostFunctionJAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )
-            return J
-        #
-        def GradientOfCostFunction(x):
-            _X      = x.reshape((-1,1))
-            _HX     = Hm( _X ).reshape((-1,1))
-            GradJb  = 0.
-            GradJo  = - Ha( (_X, RI * (Y - _HX)) )
-            GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
-            return GradJ
-        #
-        def CostFunctionLM(x):
-            _X  = numpy.ravel( x ).reshape((-1,1))
-            _HX = Hm( _X ).reshape((-1,1))
-            _Innovation = Y - _HX
-            Jb  = 0.
-            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
-            J   = Jb + Jo
-            if self._parameters["StoreInternalVariables"] or \
-                self._toStore("CurrentState"):
-                self.StoredVariables["CurrentState"].store( _X )
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
-            #
-            return numpy.ravel( RdemiI*_Innovation )
-        #
-        def GradientOfCostFunctionLM(x):
-            _X      = x.reshape((-1,1))
-            return - RdemiI*HO["Tangent"].asMatrix( _X )
-        #
-        # Minimisation de la fonctionnelle
-        # --------------------------------
-        nbPreviousSteps = self.StoredVariables["CostFunctionJ"].stepnumber()
-        #
-        if self._parameters["Minimizer"] == "LBFGSB":
-            if "0.19" <= scipy.version.version <= "1.1.0":
-                import lbfgsbhlt as optimiseur
-            else:
-                import scipy.optimize as optimiseur
-            Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
-                func        = CostFunction,
-                x0          = Xini,
-                fprime      = GradientOfCostFunction,
-                args        = (),
-                bounds      = self._parameters["Bounds"],
-                maxfun      = self._parameters["MaximumNumberOfSteps"]-1,
-                factr       = self._parameters["CostDecrementTolerance"]*1.e14,
-                pgtol       = self._parameters["ProjectedGradientTolerance"],
-                iprint      = self._parameters["optiprint"],
-                )
-            nfeval = Informations['funcalls']
-            rc     = Informations['warnflag']
-        elif self._parameters["Minimizer"] == "TNC":
-            Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
-                func        = CostFunction,
-                x0          = Xini,
-                fprime      = GradientOfCostFunction,
-                args        = (),
-                bounds      = self._parameters["Bounds"],
-                maxfun      = self._parameters["MaximumNumberOfSteps"],
-                pgtol       = self._parameters["ProjectedGradientTolerance"],
-                ftol        = self._parameters["CostDecrementTolerance"],
-                messages    = self._parameters["optmessages"],
-                )
-        elif self._parameters["Minimizer"] == "CG":
-            Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
-                f           = CostFunction,
-                x0          = Xini,
-                fprime      = GradientOfCostFunction,
-                args        = (),
-                maxiter     = self._parameters["MaximumNumberOfSteps"],
-                gtol        = self._parameters["GradientNormTolerance"],
-                disp        = self._parameters["optdisp"],
-                full_output = True,
-                )
-        elif self._parameters["Minimizer"] == "NCG":
-            Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
-                f           = CostFunction,
-                x0          = Xini,
-                fprime      = GradientOfCostFunction,
-                args        = (),
-                maxiter     = self._parameters["MaximumNumberOfSteps"],
-                avextol     = self._parameters["CostDecrementTolerance"],
-                disp        = self._parameters["optdisp"],
-                full_output = True,
-                )
-        elif self._parameters["Minimizer"] == "BFGS":
-            Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
-                f           = CostFunction,
-                x0          = Xini,
-                fprime      = GradientOfCostFunction,
-                args        = (),
-                maxiter     = self._parameters["MaximumNumberOfSteps"],
-                gtol        = self._parameters["GradientNormTolerance"],
-                disp        = self._parameters["optdisp"],
-                full_output = True,
-                )
-        elif self._parameters["Minimizer"] == "LM":
-            Minimum, cov_x, infodict, mesg, rc = scipy.optimize.leastsq(
-                func        = CostFunctionLM,
-                x0          = Xini,
-                Dfun        = GradientOfCostFunctionLM,
-                args        = (),
-                ftol        = self._parameters["CostDecrementTolerance"],
-                maxfev      = self._parameters["MaximumNumberOfSteps"],
-                gtol        = self._parameters["GradientNormTolerance"],
-                full_output = True,
-                )
-            nfeval = infodict['nfev']
-        else:
-            raise ValueError("Error in Minimizer name: %s"%self._parameters["Minimizer"])
-        #
-        IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
-        MinJ     = self.StoredVariables["CostFunctionJ"][IndexMin]
-        #
-        # Correction pour pallier a un bug de TNC sur le retour du Minimum
-        # ----------------------------------------------------------------
-        if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-            Minimum = self.StoredVariables["CurrentState"][IndexMin]
-        #
-        Xa = Minimum
         #--------------------------
+        if   self._parameters["Variant"] == "NonLinearLeastSquares":
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwnlls.ecwnlls)
         #
-        self.StoredVariables["Analysis"].store( Xa )
+        #--------------------------
+        elif self._parameters["Variant"] == "OneCorrection":
+            ecwnlls.ecwnlls(self, Xb, Y, HO, R, B)
         #
-        if self._toStore("OMA") or \
-            self._toStore("SimulatedObservationAtOptimum"):
-            if self._toStore("SimulatedObservationAtCurrentState"):
-                HXa = self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
-            elif self._toStore("SimulatedObservationAtCurrentOptimum"):
-                HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
-            else:
-                HXa = Hm( Xa )
-        #
-        # Calculs et/ou stockages supplémentaires
-        # ---------------------------------------
-        if self._toStore("Innovation") or \
-            self._toStore("OMB"):
-            Innovation  = Y - HXb
-        if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( Innovation )
-        if self._toStore("BMA"):
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
-        if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
-        if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( Innovation )
-        if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
-        if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+        #--------------------------
+        else:
+            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
         self._post_run(HO)
         return 0

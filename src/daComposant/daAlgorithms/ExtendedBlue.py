@@ -20,14 +20,31 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
 import numpy
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import ecwexblue
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "EXTENDEDBLUE")
+        self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "ExtendedBlue",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "ExtendedBlue",
+                "OneCorrection",
+                ],
+            )
+        self.defineRequiredParameter(
+            name     = "EstimationOf",
+            default  = "Parameters",
+            typecast = str,
+            message  = "Estimation d'état ou de paramètres",
+            listval  = ["State", "Parameters"],
+            )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
@@ -54,7 +71,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJoAtCurrentOptimum",
                 "CurrentOptimum",
                 "CurrentState",
+                "ForecastState",
                 "Innovation",
+                "InnovationAtCurrentAnalysis",
                 "MahalanobisConsistency",
                 "OMA",
                 "OMB",
@@ -101,6 +120,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
+            optional = ("U", "EM", "CM", "Q"),
             )
         self.setAttributes(tags=(
             "DataAssimilation",
@@ -111,120 +131,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        Hm = HO["Tangent"].asMatrix(Xb)
-        Hm = Hm.reshape(Y.size,Xb.size) # ADAO & check shape
-        Ha = HO["Adjoint"].asMatrix(Xb)
-        Ha = Ha.reshape(Xb.size,Y.size) # ADAO & check shape
-        H  = HO["Direct"].appliedTo
+        #--------------------------
+        if   self._parameters["Variant"] == "ExtendedBlue":
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexblue.ecwexblue)
         #
-        if HO["AppliedInX"] is not None and "HXb" in HO["AppliedInX"]:
-            HXb = H( Xb, HO["AppliedInX"]["HXb"])
+        #--------------------------
+        elif self._parameters["Variant"] == "OneCorrection":
+            ecwexblue.ecwexblue(self, Xb, Y, HO, R, B)
+        #
+        #--------------------------
         else:
-            HXb = H( Xb )
-        HXb = HXb.reshape((-1,1))
-        if Y.size != HXb.size:
-            raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
-        if max(Y.shape) != max(HXb.shape):
-            raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
-        #
-        BI = B.getI()
-        RI = R.getI()
-        #
-        Innovation  = Y - HXb
-        #
-        # Calcul de la matrice de gain et de l'analyse
-        # --------------------------------------------
-        if Y.size <= Xb.size:
-            _A = R + numpy.dot(Hm, B * Ha)
-            _u = numpy.linalg.solve( _A , Innovation )
-            Xa = Xb + B * Ha * _u
-        else:
-            _A = BI + numpy.dot(Ha, RI * Hm)
-            _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI * Innovation) )
-            Xa = Xb + _u
-        self.StoredVariables["Analysis"].store( Xa )
-        #
-        # Calcul de la fonction coût
-        # --------------------------
-        if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
-            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
-            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
-            self._toStore("OMA") or \
-            self._toStore("SigmaObs2") or \
-            self._toStore("MahalanobisConsistency") or \
-            self._toStore("SimulatedObservationAtCurrentOptimum") or \
-            self._toStore("SimulatedObservationAtCurrentState") or \
-            self._toStore("SimulatedObservationAtOptimum") or \
-            self._toStore("SimulationQuantiles"):
-            HXa  = H( Xa ).reshape((-1,1))
-            oma = Y - HXa
-        if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
-            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
-            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
-            self._toStore("MahalanobisConsistency"):
-            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
-            Jo  = float( 0.5 * oma.T * (RI * oma) )
-            J   = Jb + Jo
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
-            self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( Jb )
-            self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( Jo )
-            self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( J )
-        #
-        # Calcul de la covariance d'analyse
-        # ---------------------------------
-        if self._toStore("APosterioriCovariance") or \
-            self._toStore("SimulationQuantiles"):
-            if   (Y.size <= Xb.size): K  = B * Ha * (R + numpy.dot(Hm, B * Ha)).I
-            elif (Y.size >  Xb.size): K = (BI + numpy.dot(Ha, RI * Hm)).I * Ha * RI
-            A = B - K * Hm * B
-            if min(A.shape) != max(A.shape):
-                raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(self._name,str(A.shape)))
-            if (numpy.diag(A) < 0).any():
-                raise ValueError("The %s a posteriori covariance matrix A has at least one negative value on its diagonal. There is an error in the observation operator, please check it."%(self._name,))
-            if logging.getLogger().level < logging.WARNING: # La verification n'a lieu qu'en debug
-                try:
-                    L = numpy.linalg.cholesky( A )
-                except:
-                    raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(self._name,))
-            self.StoredVariables["APosterioriCovariance"].store( A )
-        #
-        # Calculs et/ou stockages supplémentaires
-        # ---------------------------------------
-        if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( Xa )
-        if self._toStore("CurrentOptimum"):
-            self.StoredVariables["CurrentOptimum"].store( Xa )
-        if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( Innovation )
-        if self._toStore("BMA"):
-            self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
-        if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( oma )
-        if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( Innovation )
-        if self._toStore("SigmaObs2"):
-            TraceR = R.trace(Y.size)
-            self.StoredVariables["SigmaObs2"].store( float( Innovation.T @ oma ) / TraceR )
-        if self._toStore("SigmaBck2"):
-            self.StoredVariables["SigmaBck2"].store( float( (Innovation.T @ (Hm @ (Xa - Xb)))/(Hm * (B * Hm.T)).trace() ) )
-        if self._toStore("MahalanobisConsistency"):
-            self.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/Innovation.size ) )
-        if self._toStore("SimulationQuantiles"):
-            HtM  = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
-            HtM  = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
-            NumericObjects.QuantilesEstimations(self, A, Xa, HXa, H, HtM)
-        if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
-        if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( HXa )
-        if self._toStore("SimulatedObservationAtCurrentOptimum"):
-            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( HXa )
-        if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
         self._post_run(HO)
         return 0

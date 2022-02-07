@@ -20,14 +20,30 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects
-import numpy
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import ecwlls
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "LINEARLEASTSQUARES")
+        self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "LinearLeastSquares",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "LinearLeastSquares",
+                "OneCorrection",
+                ],
+            )
+        self.defineRequiredParameter(
+            name     = "EstimationOf",
+            default  = "Parameters",
+            typecast = str,
+            message  = "Estimation d'état ou de paramètres",
+            listval  = ["State", "Parameters"],
+            )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
@@ -49,6 +65,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJoAtCurrentOptimum",
                 "CurrentOptimum",
                 "CurrentState",
+                "ForecastState",
+                "InnovationAtCurrentAnalysis",
                 "OMA",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
@@ -68,64 +86,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        Hm = HO["Tangent"].asMatrix(Xb)
-        Hm = Hm.reshape(Y.size,-1) # ADAO & check shape
-        Ha = HO["Adjoint"].asMatrix(Xb)
-        Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
+        #--------------------------
+        if   self._parameters["Variant"] == "LinearLeastSquares":
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwlls.ecwlls)
         #
-        if R is None:
-            RI = 1.
+        #--------------------------
+        elif self._parameters["Variant"] == "OneCorrection":
+            ecwlls.ecwlls(self, Xb, Y, HO, R, B)
+        #
+        #--------------------------
         else:
-            RI = R.getI()
-        #
-        # Calcul de la matrice de gain et de l'analyse
-        # --------------------------------------------
-        K = (Ha * (RI * Hm)).I * Ha * RI
-        Xa =  K * Y
-        self.StoredVariables["Analysis"].store( Xa )
-        #
-        # Calcul de la fonction coût
-        # --------------------------
-        if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
-            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
-            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum") or \
-            self._toStore("OMA") or \
-            self._toStore("SimulatedObservationAtCurrentOptimum") or \
-            self._toStore("SimulatedObservationAtCurrentState") or \
-            self._toStore("SimulatedObservationAtOptimum"):
-            HXa = Hm * Xa
-            oma = Y - HXa
-        if self._parameters["StoreInternalVariables"] or \
-            self._toStore("CostFunctionJ")  or self._toStore("CostFunctionJAtCurrentOptimum") or \
-            self._toStore("CostFunctionJb") or self._toStore("CostFunctionJbAtCurrentOptimum") or \
-            self._toStore("CostFunctionJo") or self._toStore("CostFunctionJoAtCurrentOptimum"):
-            Jb  = 0.
-            Jo  = float( 0.5 * oma.T * (RI * oma) )
-            J   = Jb + Jo
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
-            self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( Jb )
-            self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( Jo )
-            self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( J )
-        #
-        # Calculs et/ou stockages supplémentaires
-        # ---------------------------------------
-        if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( Xa )
-        if self._toStore("CurrentOptimum"):
-            self.StoredVariables["CurrentOptimum"].store( Xa )
-        if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( oma )
-        if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
-        if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( HXa )
-        if self._toStore("SimulatedObservationAtCurrentOptimum"):
-            self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( HXa )
-        if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
         self._post_run(HO)
         return 0

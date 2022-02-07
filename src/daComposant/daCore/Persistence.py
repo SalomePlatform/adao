@@ -326,6 +326,108 @@ class Persistence(object):
         except:
             raise TypeError("Base type is incompatible with numpy")
 
+    def norms(self, _ord=None):
+        """
+        Norm (_ord : voir numpy.linalg.norm)
+
+        Renvoie la série, contenant à chaque pas, la norme des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
+        """
+        try:
+            return [numpy.linalg.norm(item, _ord) for item in self.__values]
+        except:
+            raise TypeError("Base type is incompatible with numpy")
+
+    def maes(self, _predictor=None):
+        """
+        Mean Absolute Error (MAE)
+        mae(dX) = 1/n sum(dX_i)
+
+        Renvoie la série, contenant à chaque pas, la MAE des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy. C'est réservé aux variables d'écarts ou d'incréments si le
+        prédicteur est None, sinon c'est appliqué à l'écart entre les données
+        au pas et le prédicteur au même pas.
+        """
+        if _predictor is None:
+            try:
+                return [numpy.mean(numpy.abs(item)) for item in self.__values]
+            except:
+                raise TypeError("Base type is incompatible with numpy")
+        else:
+            if len(_predictor) != len(self.__values):
+                raise ValueError("Predictor number of steps is incompatible with the values")
+            for i, item in enumerate(self.__values):
+                if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
+                    raise ValueError("Predictor size at step %i is incompatible with the values"%i)
+            try:
+                return [numpy.mean(numpy.abs(numpy.ravel(item) - numpy.ravel(_predictor[i]))) for i, item in enumerate(self.__values)]
+            except:
+                raise TypeError("Base type is incompatible with numpy")
+
+    def mses(self, _predictor=None):
+        """
+        Mean-Square Error (MSE) ou Mean-Square Deviation (MSD)
+        mse(dX) = 1/n sum(dX_i**2)
+
+        Renvoie la série, contenant à chaque pas, la MSE des données au pas. Il
+        faut que le type de base soit compatible avec les types élémentaires
+        numpy. C'est réservé aux variables d'écarts ou d'incréments si le
+        prédicteur est None, sinon c'est appliqué à l'écart entre les données
+        au pas et le prédicteur au même pas.
+        """
+        if _predictor is None:
+            try:
+                __n = self.shape()[0]
+                return [(numpy.linalg.norm(item)**2 / __n) for item in self.__values]
+            except:
+                raise TypeError("Base type is incompatible with numpy")
+        else:
+            if len(_predictor) != len(self.__values):
+                raise ValueError("Predictor number of steps is incompatible with the values")
+            for i, item in enumerate(self.__values):
+                if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
+                    raise ValueError("Predictor size at step %i is incompatible with the values"%i)
+            try:
+                __n = self.shape()[0]
+                return [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i]))**2 / __n) for i, item in enumerate(self.__values)]
+            except:
+                raise TypeError("Base type is incompatible with numpy")
+
+    msds=mses # Mean-Square Deviation (MSD=MSE)
+
+    def rmses(self, _predictor=None):
+        """
+        Root-Mean-Square Error (RMSE) ou Root-Mean-Square Deviation (RMSD)
+        rmse(dX) = sqrt( 1/n sum(dX_i**2) ) = sqrt( mse(dX) )
+
+        Renvoie la série, contenant à chaque pas, la RMSE des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy. C'est réservé aux variables d'écarts ou d'incréments si le
+        prédicteur est None, sinon c'est appliqué à l'écart entre les données
+        au pas et le prédicteur au même pas.
+        """
+        if _predictor is None:
+            try:
+                __n = self.shape()[0]
+                return [(numpy.linalg.norm(item) / math.sqrt(__n)) for item in self.__values]
+            except:
+                raise TypeError("Base type is incompatible with numpy")
+        else:
+            if len(_predictor) != len(self.__values):
+                raise ValueError("Predictor number of steps is incompatible with the values")
+            for i, item in enumerate(self.__values):
+                if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
+                    raise ValueError("Predictor size at step %i is incompatible with the values"%i)
+            try:
+                __n = self.shape()[0]
+                return [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i])) / math.sqrt(__n)) for i, item in enumerate(self.__values)]
+            except:
+                raise TypeError("Base type is incompatible with numpy")
+
+    rmsds = rmses # Root-Mean-Square Deviation (RMSD=RMSE)
+
     def __preplots(self,
                    title    = "",
                    xlabel   = "",

@@ -20,13 +20,32 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging, numpy
+import numpy
 from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import std3dvar, van3dvar, incr3dvar, psas3dvar
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "3DVAR")
+        self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "3DVAR",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "3DVAR",
+                "3DVAR-VAN",
+                "3DVAR-Incr",
+                "3DVAR-PSAS",
+                "OneCorrection",
+                ],
+            listadv  = [
+                "3DVAR-Std",
+                "Incr3DVAR",
+                "OneCorrection3DVAR-Std",
+                ],
+            )
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "LBFGSB",
@@ -38,23 +57,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CG",
                 "NCG",
                 "BFGS",
-                ],
-            )
-        self.defineRequiredParameter(
-            name     = "Variant",
-            default  = "3DVAR",
-            typecast = str,
-            message  = "Variant ou formulation de la méthode",
-            listval  = [
-                "3DVAR",
-                "3DVAR-VAN",
-                "3DVAR-Incr",
-                "3DVAR-PSAS",
-                ],
-            listadv  = [
-                "3DVAR-Std",
-                "Incr3DVAR",
-                "OneCycle3DVAR-Std",
                 ],
             )
         self.defineRequiredParameter(
@@ -122,6 +124,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",
+                "InnovationAtCurrentAnalysis",
                 "InnovationAtCurrentState",
                 "JacobianMatrixAtBackground",
                 "JacobianMatrixAtOptimum",
@@ -180,6 +183,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            optional = ("U", "EM", "CM", "Q"),
             )
         self.setAttributes(tags=(
             "DataAssimilation",
@@ -191,22 +195,21 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        # Default 3DVAR
         if   self._parameters["Variant"] in ["3DVAR", "3DVAR-Std"]:
-            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.std3dvar)
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, std3dvar.std3dvar)
         #
         elif self._parameters["Variant"] == "3DVAR-VAN":
-            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.van3dvar)
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, van3dvar.van3dvar)
         #
         elif self._parameters["Variant"] in ["3DVAR-Incr", "Incr3DVAR"]:
-            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.incr3dvar)
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, incr3dvar.incr3dvar)
         #
         elif self._parameters["Variant"] == "3DVAR-PSAS":
-            NumericObjects.multi3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q, NumericObjects.psas3dvar)
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, psas3dvar.psas3dvar)
         #
         #--------------------------
-        elif self._parameters["Variant"] == "OneCycle3DVAR-Std":
-            NumericObjects.std3dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        elif self._parameters["Variant"] in ["OneCorrection", "OneCorrection3DVAR-Std"]:
+            std3dvar.std3dvar(self, Xb, Y, HO, R, B)
         #
         #--------------------------
         else:

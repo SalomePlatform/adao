@@ -20,9 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
-from daCore import BasicObjects, NumericObjects
 import numpy
+from daCore import BasicObjects
+from daAlgorithms.Atoms import enks, etkf, ienkf, mlef, senkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -179,61 +179,61 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         # Default EnKF = EnKF-16 = StochasticEnKF
         if   self._parameters["Variant"] == "EnKF-05":
-            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula05")
+            senkf.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula05")
         #
         elif self._parameters["Variant"] in ["EnKF-16", "StochasticEnKF", "EnKF"]:
-            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16")
+            senkf.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16")
         #
         #--------------------------
         # Default ETKF = ETKF-KFF
         elif self._parameters["Variant"] in ["ETKF-KFF", "ETKF"]:
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula")
+            etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula")
         #
         elif self._parameters["Variant"] == "ETKF-VAR":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="Variational")
+            etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="Variational")
         #
         #--------------------------
         # Default ETKF-N = ETKF-N-16
         elif self._parameters["Variant"] == "ETKF-N-11":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize11")
+            etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize11")
         #
         elif self._parameters["Variant"] == "ETKF-N-15":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize15")
+            etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize15")
         #
         elif self._parameters["Variant"] in ["ETKF-N-16", "ETKF-N"]:
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize16")
+            etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize16")
         #
         #--------------------------
         # Default MLEF = MLEF-T
         elif self._parameters["Variant"] in ["MLEF-T", "MLEF"]:
-            NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
+            mlef.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
         #
         elif self._parameters["Variant"] == "MLEF-B":
-            NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
+            mlef.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
         #
         #--------------------------
         # Default IEnKF = IEnKF-T
         elif self._parameters["Variant"] in ["IEnKF-T", "IEnKF"]:
-            NumericObjects.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
+            ienkf.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
         #
         elif self._parameters["Variant"] in ["IEnKF-B", "IEKF"]:
-            NumericObjects.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
+            ienkf.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
         #
         #--------------------------
         # Default EnKS = EnKS-KFF
         elif self._parameters["Variant"] in ["EnKS-KFF", "EnKS"]:
-            NumericObjects.enks(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterFormula")
+            enks.enks(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterFormula")
         #
         #--------------------------
-        # Default E3DVAR = E3DVAR-EnKF
-        elif self._parameters["Variant"] in ["E3DVAR-EnKF", "E3DVAR"]:
-            NumericObjects.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
+        # Default E3DVAR = E3DVAR-ETKF
+        elif self._parameters["Variant"] == "E3DVAR-EnKF":
+            senkf.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
         #
-        elif self._parameters["Variant"] == "E3DVAR-ETKF":
-            NumericObjects.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
+        elif self._parameters["Variant"] in ["E3DVAR-ETKF", "E3DVAR"]:
+            etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
         #
         elif self._parameters["Variant"] == "E3DVAR-MLEF":
-            NumericObjects.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
+            mlef.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
         #
         #--------------------------
         else:
