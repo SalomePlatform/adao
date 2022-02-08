@@ -61,6 +61,8 @@ comportement lors de l'optimisation.
 
 .. include:: snippets/CostDecrementTolerance.rst
 
+.. include:: snippets/EstimationOf_Parameters.rst
+
 .. include:: snippets/GradientNormTolerance.rst
 
 .. include:: snippets/InitializationPoint.rst
@@ -96,8 +98,10 @@ StoreSupplementaryCalculations
   "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
   "IndexOfOptimum",
   "Innovation",
+  "InnovationAtCurrentAnalysis",
   "InnovationAtCurrentState",
   "OMA",
   "OMB",
@@ -154,9 +158,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastState.rst
+
 .. include:: snippets/IndexOfOptimum.rst
 
 .. include:: snippets/Innovation.rst
+
+.. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
 

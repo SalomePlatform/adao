@@ -57,6 +57,8 @@ without being entirely equivalent.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
+.. include:: snippets/EstimationOf_Parameters.rst
+
 .. include:: snippets/NumberOfSamplesForQuantiles.rst
 
 .. include:: snippets/Quantiles.rst
@@ -94,7 +96,9 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
   "Innovation",
+  "InnovationAtCurrentAnalysis",
   "MahalanobisConsistency",
   "OMA",
   "OMB",
@@ -147,7 +151,11 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/ForecastState.rst
+
 .. include:: snippets/Innovation.rst
+
+.. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/MahalanobisConsistency.rst
 

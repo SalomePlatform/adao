@@ -57,6 +57,8 @@ In all cases, it is recommanded to prefer at least the
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
+.. include:: snippets/EstimationOf_Parameters.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
@@ -79,6 +81,8 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "ForecastState",
+  "InnovationAtCurrentAnalysis",
   "OMA",
   "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
@@ -126,6 +130,10 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/ForecastState.rst
+
+.. include:: snippets/InnovationAtCurrentAnalysis.rst
 
 .. include:: snippets/OMA.rst
 
