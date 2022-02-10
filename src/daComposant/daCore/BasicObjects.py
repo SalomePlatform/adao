@@ -625,6 +625,7 @@ class Algorithm(object):
             - CurrentIterationNumber : numéro courant d'itération dans les algorithmes itératifs, à partir de 0
             - CurrentOptimum : état optimal courant lors d'itérations
             - CurrentState : état courant lors d'itérations
+            - CurrentStepNumber : numéro courant de pas de mesure dans les algorithmes temporels
             - GradientOfCostFunctionJ  : gradient de la fonction-coût globale
             - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-coût
             - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-coût
@@ -684,6 +685,7 @@ class Algorithm(object):
         self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name  = "CurrentIterationNumber")
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["CurrentStepNumber"]                    = Persistence.OneIndex(name  = "CurrentStepNumber")
         self.StoredVariables["ForecastCovariance"]                   = Persistence.OneMatrix(name = "ForecastCovariance")
         self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
         self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
@@ -1094,6 +1096,7 @@ class PartialAlgorithm(object):
         self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
         self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
         self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name  = "CurrentIterationNumber")
+        self.StoredVariables["CurrentStepNumber"]                    = Persistence.OneIndex(name  = "CurrentStepNumber")
         #
         self.__canonical_stored_name = {}
         for k in self.StoredVariables:
@@ -2099,7 +2102,10 @@ class Covariance(object):
             return self.__C + numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
             _A = numpy.asarray(other)
-            _A.reshape(_A.size)[::_A.shape[1]+1] += self.__C
+            if len(_A.shape) == 1:
+                _A.reshape((-1,1))[::2] += self.__C
+            else:
+                _A.reshape(_A.size)[::_A.shape[1]+1] += self.__C
             return numpy.asmatrix(_A)
 
     def __radd__(self, other):

@@ -43,7 +43,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listadv  = [
                 "3DVAR-Std",
                 "Incr3DVAR",
-                "OneCorrection3DVAR-Std",
                 ],
             )
         self.defineRequiredParameter(

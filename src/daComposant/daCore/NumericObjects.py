@@ -477,24 +477,24 @@ class FDApproximation(object):
             else:                return _HaY
 
 # ==============================================================================
-def EnsembleOfCenteredPerturbations( __bgcenter, __bgcovariance, __nbmembers ):
-    "Génération d'un ensemble de taille __nbmembers-1 d'états aléatoires centrés"
+def EnsembleOfCenteredPerturbations( __bgCenter, __bgCovariance, __nbMembers ):
+    "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
     #
-    __bgcenter = numpy.ravel(__bgcenter)[:,None]
-    if __nbmembers < 1:
-        raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(__nbmembers),))
+    __bgCenter = numpy.ravel(__bgCenter)[:,None]
+    if __nbMembers < 1:
+        raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(__nbMembers),))
     #
-    if __bgcovariance is None:
-        _Perturbations = numpy.tile( __bgcenter, __nbmembers)
+    if __bgCovariance is None:
+        _Perturbations = numpy.tile( __bgCenter, __nbMembers)
     else:
-        _Z = numpy.random.multivariate_normal(numpy.zeros(__bgcenter.size), __bgcovariance, size=__nbmembers).T
-        _Perturbations = numpy.tile( __bgcenter, __nbmembers) + _Z
+        _Z = numpy.random.multivariate_normal(numpy.zeros(__bgCenter.size), __bgCovariance, size=__nbMembers).T
+        _Perturbations = numpy.tile( __bgCenter, __nbMembers) + _Z
     #
     return _Perturbations
 
 # ==============================================================================
-def EnsembleOfBackgroundPerturbations( __bgcenter, __bgcovariance, __nbmembers, __withSVD = True):
-    "Génération d'un ensemble de taille __nbmembers-1 d'états aléatoires centrés"
+def EnsembleOfBackgroundPerturbations( __bgCenter, __bgCovariance, __nbMembers, __withSVD = True):
+    "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
     def __CenteredRandomAnomalies(Zr, N):
         """
         Génère une matrice de N anomalies aléatoires centrées sur Zr selon les
@@ -508,31 +508,31 @@ def EnsembleOfBackgroundPerturbations( __bgcenter, __bgcovariance, __nbmembers, 
         Zr = numpy.dot(Q,Zr)
         return Zr.T
     #
-    __bgcenter = numpy.ravel(__bgcenter).reshape((-1,1))
-    if __nbmembers < 1:
-        raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(__nbmembers),))
-    if __bgcovariance is None:
-        _Perturbations = numpy.tile( __bgcenter, __nbmembers)
+    __bgCenter = numpy.ravel(__bgCenter).reshape((-1,1))
+    if __nbMembers < 1:
+        raise ValueError("Number of members has to be strictly more than 1 (given number: %s)."%(str(__nbMembers),))
+    if __bgCovariance is None:
+        _Perturbations = numpy.tile( __bgCenter, __nbMembers)
     else:
         if __withSVD:
-            _U, _s, _V = numpy.linalg.svd(__bgcovariance, full_matrices=False)
-            _nbctl = __bgcenter.size
-            if __nbmembers > _nbctl:
+            _U, _s, _V = numpy.linalg.svd(__bgCovariance, full_matrices=False)
+            _nbctl = __bgCenter.size
+            if __nbMembers > _nbctl:
                 _Z = numpy.concatenate((numpy.dot(
                     numpy.diag(numpy.sqrt(_s[:_nbctl])), _V[:_nbctl]),
-                    numpy.random.multivariate_normal(numpy.zeros(_nbctl),__bgcovariance,__nbmembers-1-_nbctl)), axis = 0)
+                    numpy.random.multivariate_normal(numpy.zeros(_nbctl),__bgCovariance,__nbMembers-1-_nbctl)), axis = 0)
             else:
-                _Z = numpy.dot(numpy.diag(numpy.sqrt(_s[:__nbmembers-1])), _V[:__nbmembers-1])
-            _Zca = __CenteredRandomAnomalies(_Z, __nbmembers)
-            _Perturbations = __bgcenter + _Zca
+                _Z = numpy.dot(numpy.diag(numpy.sqrt(_s[:__nbMembers-1])), _V[:__nbMembers-1])
+            _Zca = __CenteredRandomAnomalies(_Z, __nbMembers)
+            _Perturbations = __bgCenter + _Zca
         else:
-            if max(abs(__bgcovariance.flatten())) > 0:
-                _nbctl = __bgcenter.size
-                _Z = numpy.random.multivariate_normal(numpy.zeros(_nbctl),__bgcovariance,__nbmembers-1)
-                _Zca = __CenteredRandomAnomalies(_Z, __nbmembers)
-                _Perturbations = __bgcenter + _Zca
+            if max(abs(__bgCovariance.flatten())) > 0:
+                _nbctl = __bgCenter.size
+                _Z = numpy.random.multivariate_normal(numpy.zeros(_nbctl),__bgCovariance,__nbMembers-1)
+                _Zca = __CenteredRandomAnomalies(_Z, __nbMembers)
+                _Perturbations = __bgCenter + _Zca
             else:
-                _Perturbations = numpy.tile( __bgcenter, __nbmembers)
+                _Perturbations = numpy.tile( __bgCenter, __nbMembers)
     #
     return _Perturbations
 
@@ -552,9 +552,9 @@ def EnsembleOfAnomalies( __Ensemble, __OptMean = None, __Normalisation = 1.):
     return __Normalisation * (numpy.asarray( __Ensemble ) - __Em)
 
 # ==============================================================================
-def EnsembleErrorCovariance( __Ensemble, __quick = False ):
+def EnsembleErrorCovariance( __Ensemble, __Quick = False ):
     "Renvoie l'estimation empirique de la covariance d'ensemble"
-    if __quick:
+    if __Quick:
         # Covariance rapide mais rarement définie positive
         __Covariance = numpy.cov( __Ensemble )
     else:
@@ -638,6 +638,9 @@ def CovarianceInflation(
     else:
         __InflationFactor = float(__InflationFactor)
     #
+    __InputCovOrEns = numpy.asarray(__InputCovOrEns)
+    if __InputCovOrEns.size == 0: return __InputCovOrEns
+    #
     if __InflationType in ["MultiplicativeOnAnalysisCovariance", "MultiplicativeOnBackgroundCovariance"]:
         if __InflationFactor < 1.:
             raise ValueError("Inflation factor for multiplicative inflation has to be greater or equal than 1.")
@@ -659,17 +662,20 @@ def CovarianceInflation(
             raise ValueError("Inflation factor for additive inflation has to be greater or equal than 0.")
         if __InflationFactor < mpr:
             return __InputCovOrEns
-        __n, __m = numpy.asarray(InputCovOrEns).shape
+        __n, __m = __InputCovOrEns.shape
         if __n != __m:
             raise ValueError("Additive inflation can only be applied to squared (covariance) matrix.")
-        __OutputCovOrEns = (1. - __InflationFactor) * __InputCovOrEns + __InflationFactor * numpy.identity(__n)
+        __tr = __InputCovOrEns.trace()/__n
+        if __InflationFactor > __tr:
+            raise ValueError("Inflation factor for additive inflation has to be small over %.0e."%__tr)
+        __OutputCovOrEns = (1. - __InflationFactor)*__InputCovOrEns + __InflationFactor * numpy.identity(__n)
     #
     elif __InflationType == "HybridOnBackgroundCovariance":
         if __InflationFactor < 0.:
             raise ValueError("Inflation factor for hybrid inflation has to be greater or equal than 0.")
         if __InflationFactor < mpr:
             return __InputCovOrEns
-        __n, __m = numpy.asarray(InputCovOrEns).shape
+        __n, __m = __InputCovOrEns.shape
         if __n != __m:
             raise ValueError("Additive inflation can only be applied to squared (covariance) matrix.")
         if __BackgroundCov is None:
@@ -679,10 +685,10 @@ def CovarianceInflation(
         __OutputCovOrEns = (1. - __InflationFactor) * __InputCovOrEns + __InflationFactor * __BackgroundCov
     #
     elif __InflationType == "Relaxation":
-        raise NotImplementedError("InflationType Relaxation")
+        raise NotImplementedError("Relaxation inflation type not implemented")
     #
     else:
-        raise ValueError("Error in inflation type, '%s' is not a valid keyword."%InflationType)
+        raise ValueError("Error in inflation type, '%s' is not a valid keyword."%__InflationType)
     #
     return __OutputCovOrEns
 
@@ -853,7 +859,7 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Bet
 # ==============================================================================
 def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     """
-    Prévision multi-pas avec une correction par pas en X (multi-méthodes)
+    Prévision multi-pas avec une correction par pas (multi-méthodes)
     """
     #
     # Initialisation
