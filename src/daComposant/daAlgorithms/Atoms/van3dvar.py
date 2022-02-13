@@ -32,9 +32,9 @@ from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def van3dvar(selfA, Xb, Y, HO, R, B):
+def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    3DVAR variational analysis with no inversion of B
+    Correction
     """
     #
     # Initialisations
@@ -202,6 +202,7 @@ def van3dvar(selfA, Xb, Y, HO, R, B):
         Minimum = Xb + B * Minimum.reshape((-1,1)) # Pas @
     #
     Xa = Minimum
+    if __storeState: selfA._setInternalState("Xn", Xa)
     #--------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )

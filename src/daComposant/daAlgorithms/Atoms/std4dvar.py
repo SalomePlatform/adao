@@ -34,7 +34,7 @@ mfp = PlatformInfo().MaximumPrecision()
 # ==============================================================================
 def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
-    4DVAR
+    Correction
     """
     #
     # Initialisations

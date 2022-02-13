@@ -110,6 +110,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "CurrentStepNumber",
                 "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",
@@ -151,7 +152,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         #--------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            ecwnlls.ecwnlls(self, Xb, Y, HO, R, B)
+            ecwnlls.ecwnlls(self, Xb, Y, U, HO, CM, R, B)
         #
         #--------------------------
         else:

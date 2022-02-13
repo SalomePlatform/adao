@@ -31,9 +31,9 @@ from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def ecwblue(selfA, Xb, Y, HO, R, B):
+def ecwblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    BLUE
+    Correction
     """
     #
     # Initialisations
@@ -53,21 +53,41 @@ def ecwblue(selfA, Xb, Y, HO, R, B):
     if max(Y.shape) != max(HXb.shape):
         raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
     #
-    BI = B.getI()
-    RI = R.getI()
+    if selfA._parameters["StoreInternalVariables"] or \
+        selfA._toStore("CostFunctionJ")  or selfA._toStore("CostFunctionJAtCurrentOptimum") or \
+        selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
+        selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
+        selfA._toStore("MahalanobisConsistency") or \
+        (Y.size >  Xb.size):
+        if isinstance(B,numpy.ndarray):
+            BI = numpy.linalg.inv(B)
+        else:
+            BI = B.getI()
+        RI = R.getI()
     #
     Innovation  = Y - HXb
+    if selfA._parameters["EstimationOf"] == "Parameters":
+        if CM is not None and "Tangent" in CM and U is not None: # Attention : si Cm est aussi dans H, doublon !
+            Cm = CM["Tangent"].asMatrix(Xb)
+            Cm = Cm.reshape(Xb.size,U.size) # ADAO & check shape
+            Innovation = Innovation - (Cm @ U).reshape((-1,1))
     #
-    # Calcul de la matrice de gain et de l'analyse
-    # --------------------------------------------
+    # Calcul de l'analyse
+    # -------------------
     if Y.size <= Xb.size:
-        _A = R + numpy.dot(Hm, B * Ha)
+        _HNHt = numpy.dot(Hm, B @ Ha)
+        _A = R + _HNHt
         _u = numpy.linalg.solve( _A , Innovation )
-        Xa = Xb + B * Ha * _u
+        Xa = Xb + (B @ (Ha @ _u)).reshape((-1,1))
     else:
-        _A = BI + numpy.dot(Ha, RI * Hm)
-        _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI * Innovation) )
-        Xa = Xb + _u
+        _HtRH = numpy.dot(Ha, RI @ Hm)
+        _A = BI + _HtRH
+        _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI @ Innovation) )
+        Xa = Xb + _u.reshape((-1,1))
+    #
+    if __storeState: selfA._setInternalState("Xn", Xa)
+    #--------------------------
+    #
     selfA.StoredVariables["Analysis"].store( Xa )
     #
     # Calcul de la fonction coût
@@ -91,7 +111,7 @@ def ecwblue(selfA, Xb, Y, HO, R, B):
         selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
         selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
         selfA._toStore("MahalanobisConsistency"):
-        Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+        Jb  = float( 0.5 * (Xa - Xb).T @ (BI @ (Xa - Xb)) )
         Jo  = float( 0.5 * oma.T * (RI * oma) )
         J   = Jb + Jo
         selfA.StoredVariables["CostFunctionJb"].store( Jb )

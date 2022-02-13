@@ -38,17 +38,6 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
     #
-    # Opérateurs
-    H = HO["Direct"].appliedControledFormTo
-    #
-    if selfA._parameters["EstimationOf"] == "State":
-        M = EM["Direct"].appliedControledFormTo
-    #
-    if CM is not None and "Tangent" in CM and U is not None:
-        Cm = CM["Tangent"].asMatrix(Xb)
-    else:
-        Cm = None
-    #
     # Durée d'observation et tailles
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
@@ -90,21 +79,6 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
-        if hasattr(Y,"store"):
-            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
-        else:
-            Ynpu = numpy.ravel( Y ).reshape((__p,1))
-        #
-        Ht = HO["Tangent"].asMatrix(ValueForMethodForm = Xn)
-        Ht = Ht.reshape(Ynpu.size,Xn.size) # ADAO & check shape
-        Ha = HO["Adjoint"].asMatrix(ValueForMethodForm = Xn)
-        Ha = Ha.reshape(Xn.size,Ynpu.size) # ADAO & check shape
-        #
-        if selfA._parameters["EstimationOf"] == "State":
-            Mt = EM["Tangent"].asMatrix(ValueForMethodForm = Xn)
-            Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
-            Ma = EM["Adjoint"].asMatrix(ValueForMethodForm = Xn)
-            Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -117,8 +91,14 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Un = None
         #
         if selfA._parameters["EstimationOf"] == "State": # Forecast + Q and observation of forecast
+            Mt = EM["Tangent"].asMatrix(Xn)
+            Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
+            Ma = EM["Adjoint"].asMatrix(Xn)
+            Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
+            M  = EM["Direct"].appliedControledFormTo
             Xn_predicted = numpy.ravel( M( (Xn, Un) ) ).reshape((__n,1))
-            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+            if CM is not None and "Tangent" in CM and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                Cm = CM["Tangent"].asMatrix(Xn_predicted)
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm @ Un
             Pn_predicted = Q + Mt * (Pn * Ma)
@@ -127,13 +107,26 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Xn_predicted = Xn
             Pn_predicted = Pn
         #
+        if hasattr(Y,"store"):
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
+        else:
+            Ynpu = numpy.ravel( Y ).reshape((__p,1))
+        #
+        Ht = HO["Tangent"].asMatrix(Xn_predicted)
+        Ht = Ht.reshape(Ynpu.size,Xn.size) # ADAO & check shape
+        Ha = HO["Adjoint"].asMatrix(Xn_predicted)
+        Ha = Ha.reshape(Xn.size,Ynpu.size) # ADAO & check shape
+        H  = HO["Direct"].appliedControledFormTo
+        #
         if selfA._parameters["EstimationOf"] == "State":
             HX_predicted = numpy.ravel( H( (Xn_predicted, None) ) ).reshape((__p,1))
             _Innovation  = Ynpu - HX_predicted
         elif selfA._parameters["EstimationOf"] == "Parameters":
             HX_predicted = numpy.ravel( H( (Xn_predicted, Un) ) ).reshape((__p,1))
             _Innovation  = Ynpu - HX_predicted
-            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
+            if CM is not None and "Tangent" in CM and Un is not None: # Attention : si Cm est aussi dans H, doublon !
+                Cm = CM["Tangent"].asMatrix(Xn_predicted)
+                Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 _Innovation = _Innovation - Cm @ Un
         #
         Kn = Pn_predicted * Ha * numpy.linalg.inv(R + numpy.dot(Ht, Pn_predicted * Ha))

@@ -71,6 +71,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJoAtCurrentOptimum",
                 "CurrentOptimum",
                 "CurrentState",
+                "CurrentStepNumber",
                 "ForecastState",
                 "Innovation",
                 "InnovationAtCurrentAnalysis",
@@ -137,7 +138,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         #--------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            ecwexblue.ecwexblue(self, Xb, Y, HO, R, B)
+            ecwexblue.ecwexblue(self, Xb, Y, U, HO, CM, R, B)
         #
         #--------------------------
         else:

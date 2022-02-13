@@ -850,14 +850,16 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Bet
     selfB._parameters["Bounds"] = None
     selfB._parameters["InitializationPoint"] = Xf
     from daAlgorithms.Atoms import std3dvar
-    std3dvar.std3dvar(selfB, Xf, __Ynpu, __HO, __R, Pf)
+    std3dvar.std3dvar(selfB, Xf, __Ynpu, None, __HO, None, __R, Pf)
     Xa = selfB.get("Analysis")[-1].reshape((-1,1))
     del selfB
     #
     return Xa + EnsembleOfAnomalies( __EnXn )
 
 # ==============================================================================
-def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
+def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle,
+        __CovForecast = False, __LinEvolution = False,
+        ):
     """
     Prévision multi-pas avec une correction par pas (multi-méthodes)
     """
@@ -867,19 +869,20 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     if selfA._parameters["EstimationOf"] == "State":
         if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
             Xn = numpy.asarray(Xb)
+            if __CovForecast: Pn = B
             selfA.StoredVariables["Analysis"].store( Xn )
             if selfA._toStore("APosterioriCovariance"):
                 if hasattr(B,"asfullmatrix"):
                     selfA.StoredVariables["APosterioriCovariance"].store( B.asfullmatrix(Xn.size) )
                 else:
                     selfA.StoredVariables["APosterioriCovariance"].store( B )
-            if selfA._toStore("ForecastState"):
-                selfA.StoredVariables["ForecastState"].store( Xn )
             selfA._setInternalState("seed", numpy.random.get_state())
         elif selfA._parameters["nextStep"]:
             Xn = selfA._getInternalState("Xn")
+            if __CovForecast: Pn = selfA._getInternalState("Pn")
     else:
         Xn = numpy.asarray(Xb)
+        if __CovForecast: Pn = B
     #
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
@@ -889,6 +892,8 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
     # Multi-steps
     # -----------
     for step in range(duration-1):
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        #
         if hasattr(Y,"store"):
             Ynpu = numpy.asarray( Y[step+1] ).reshape((-1,1))
         else:
@@ -904,29 +909,50 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle):
         else:
             Un = None
         #
-        if selfA._parameters["EstimationOf"] == "State": # Forecast
-            M = EM["Direct"].appliedControledFormTo
-            if CM is not None and "Tangent" in CM and Un is not None:
-                Cm = CM["Tangent"].asMatrix(Xn)
+        # Predict (Time Update)
+        # ---------------------
+        if selfA._parameters["EstimationOf"] == "State":
+            if __CovForecast or __LinEvolution:
+                Mt = EM["Tangent"].asMatrix(Xn)
+                Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
+            if __CovForecast:
+                Ma = EM["Adjoint"].asMatrix(Xn)
+                Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
+                Pn_predicted = Q + Mt @ (Pn @ Ma)
+            if __LinEvolution:
+                Xn_predicted = Mt @ Xn
             else:
-                Cm = None
-            #
-            Xn_predicted = M( (Xn, Un) )
-            if selfA._toStore("ForecastState"):
-                selfA.StoredVariables["ForecastState"].store( Xn_predicted )
-            if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                M  = EM["Direct"].appliedControledFormTo
+                Xn_predicted = M( (Xn, Un) )
+            if CM is not None and "Tangent" in CM and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                Cm = CM["Tangent"].asMatrix(Xn_predicted)
                 Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
-                Xn_predicted = Xn_predicted + Cm @ Un
+                Xn_predicted = Xn_predicted + (Cm @ Un).reshape((-1,1))
         elif selfA._parameters["EstimationOf"] == "Parameters": # No forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
+            if __CovForecast: Pn_predicted = Pn
         Xn_predicted = numpy.asarray(Xn_predicted).reshape((-1,1))
+        if selfA._toStore("ForecastState"):
+            selfA.StoredVariables["ForecastState"].store( Xn_predicted )
+        if __CovForecast:
+            if hasattr(Pn_predicted,"asfullmatrix"):
+                Pn_predicted = Pn_predicted.asfullmatrix(Xn.size)
+            else:
+                Pn_predicted = numpy.asarray(Pn_predicted).reshape((Xn.size,Xn.size))
+            if selfA._toStore("ForecastCovariance"):
+                selfA.StoredVariables["ForecastCovariance"].store( Pn_predicted )
         #
-        oneCycle(selfA, Xn_predicted, Ynpu, HO, R, B) # Correct
+        # Correct (Measurement Update)
+        # ----------------------------
+        if __CovForecast:
+            oneCycle(selfA, Xn_predicted, Ynpu, Un, HO, CM, R, Pn_predicted, True)
+        else:
+            oneCycle(selfA, Xn_predicted, Ynpu, Un, HO, CM, R, B, True)
         #
-        Xn = selfA.StoredVariables["Analysis"][-1]
         #--------------------------
-        selfA._setInternalState("Xn", Xn)
+        Xn = selfA._getInternalState("Xn")
+        if __CovForecast: Pn = selfA._getInternalState("Pn")
     #
     return 0
 

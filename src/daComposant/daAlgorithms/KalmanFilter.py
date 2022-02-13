@@ -20,18 +20,28 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-from daCore import BasicObjects
-from daAlgorithms.Atoms import stdkf
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import ecwstdkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
         self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "KalmanFilter",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "KalmanFilter",
+                "OneCorrection",
+                ],
+            )
+        self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
-            message  = "Estimation d'etat ou de parametres",
+            message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
@@ -58,9 +68,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
                 "CostFunctionJoAtCurrentOptimum",
-                "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "CurrentStepNumber",
                 "ForecastCovariance",
                 "ForecastState",
                 "IndexOfOptimum",
@@ -86,8 +96,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        stdkf.stdkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        if   self._parameters["Variant"] == "KalmanFilter":
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True, True)
+        #
         #--------------------------
+        elif self._parameters["Variant"] == "OneCorrection":
+            ecwstdkf.ecwstdkf(self, Xb, Y, U, HO, CM, R, B)
+        #
+        #--------------------------
+        else:
+            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
         self._post_run(HO)
         return 0

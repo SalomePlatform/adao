@@ -32,9 +32,9 @@ from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def incr3dvar(selfA, Xb, Y, HO, R, B):
+def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    3DVAR incrémental
+    Correction
     """
     #
     # Initialisations
@@ -212,6 +212,7 @@ def incr3dvar(selfA, Xb, Y, HO, R, B):
         iOuter = selfA.StoredVariables["CurrentIterationNumber"][-1]
     #
     Xa = Xr
+    if __storeState: selfA._setInternalState("Xn", Xa)
     #--------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )

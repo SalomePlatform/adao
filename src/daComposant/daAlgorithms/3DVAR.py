@@ -120,6 +120,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "CurrentStepNumber",
                 "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",
@@ -207,8 +208,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, psas3dvar.psas3dvar)
         #
         #--------------------------
-        elif self._parameters["Variant"] in ["OneCorrection", "OneCorrection3DVAR-Std"]:
-            std3dvar.std3dvar(self, Xb, Y, HO, R, B)
+        elif self._parameters["Variant"] == "OneCorrection":
+            std3dvar.std3dvar(self, Xb, Y, U, HO, CM, R, B)
         #
         #--------------------------
         else:

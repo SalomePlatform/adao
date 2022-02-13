@@ -29,9 +29,9 @@ import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 
 # ==============================================================================
-def std3dvar(selfA, Xb, Y, HO, R, B):
+def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    3DVAR
+    Correction
     """
     #
     # Initialisations
@@ -50,7 +50,7 @@ def std3dvar(selfA, Xb, Y, HO, R, B):
         raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
     #
     if selfA._toStore("JacobianMatrixAtBackground"):
-        HtMb = HO["Tangent"].asMatrix(ValueForMethodForm = Xb)
+        HtMb = HO["Tangent"].asMatrix(Xb)
         HtMb = HtMb.reshape(Y.size,Xb.size) # ADAO & check shape
         selfA.StoredVariables["JacobianMatrixAtBackground"].store( HtMb )
     #
@@ -191,6 +191,7 @@ def std3dvar(selfA, Xb, Y, HO, R, B):
         Minimum = selfA.StoredVariables["CurrentState"][IndexMin]
     #
     Xa = Minimum
+    if __storeState: selfA._setInternalState("Xn", Xa)
     #--------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )

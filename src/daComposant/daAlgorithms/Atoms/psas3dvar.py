@@ -29,9 +29,9 @@ import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 
 # ==============================================================================
-def psas3dvar(selfA, Xb, Y, HO, R, B):
+def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    3DVAR PSAS
+    Correction
     """
     #
     # Initialisations
@@ -48,15 +48,14 @@ def psas3dvar(selfA, Xb, Y, HO, R, B):
     if max(Y.shape) != max(HXb.shape):
         raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
     #
-    if selfA._toStore("JacobianMatrixAtBackground"):
-        HtMb = HO["Tangent"].asMatrix(ValueForMethodForm = Xb)
-        HtMb = HtMb.reshape(Y.size,Xb.size) # ADAO & check shape
-        selfA.StoredVariables["JacobianMatrixAtBackground"].store( HtMb )
-    #
     Ht = HO["Tangent"].asMatrix(Xb)
+    Ht = Ht.reshape(Y.size,Xb.size) # ADAO & check shape
     BHT = B * Ht.T
     HBHTpR = R + Ht * BHT
     Innovation = Y - HXb
+    #
+    if selfA._toStore("JacobianMatrixAtBackground"):
+        selfA.StoredVariables["JacobianMatrixAtBackground"].store( Ht )
     #
     Xini = numpy.zeros(Y.size)
     #
@@ -189,6 +188,7 @@ def psas3dvar(selfA, Xb, Y, HO, R, B):
         Minimum = Xb + BHT @ Minimum.reshape((-1,1))
     #
     Xa = Minimum
+    if __storeState: selfA._setInternalState("Xn", Xa)
     #--------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )

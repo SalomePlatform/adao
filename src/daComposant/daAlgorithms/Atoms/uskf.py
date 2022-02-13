@@ -61,17 +61,6 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     Wc = numpy.array( Ww )
     Wc[0] = Lambda / (L + Lambda) + (1. - Alpha**2 + Beta)
     #
-    # Opérateurs
-    Hm = HO["Direct"].appliedControledFormTo
-    #
-    if selfA._parameters["EstimationOf"] == "State":
-        Mm = EM["Direct"].appliedControledFormTo
-    #
-    if CM is not None and "Tangent" in CM and U is not None:
-        Cm = CM["Tangent"].asMatrix(Xb)
-    else:
-        Cm = None
-    #
     # Durée d'observation et tailles
     if hasattr(Y,"stepnumber"):
         duration = Y.stepnumber()
@@ -112,10 +101,6 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         previousJMinimum = numpy.finfo(float).max
     #
     for step in range(duration-1):
-        if hasattr(Y,"store"):
-            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
-        else:
-            Ynpu = numpy.ravel( Y ).reshape((__p,1))
         #
         if U is not None:
             if hasattr(U,"store") and len(U)>1:
@@ -127,6 +112,11 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         else:
             Un = None
         #
+        if CM is not None and "Tangent" in CM and U is not None:
+            Cm = CM["Tangent"].asMatrix(Xn)
+        else:
+            Cm = None
+        #
         Pndemi = numpy.real(scipy.linalg.sqrtm(Pn))
         Xnp = numpy.hstack([Xn, Xn+Gamma*Pndemi, Xn-Gamma*Pndemi])
         nbSpts = 2*Xn.size+1
@@ -134,6 +124,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         XEtnnp = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
+                Mm = EM["Direct"].appliedControledFormTo
                 XEtnnpi = numpy.asarray( Mm( (Xnp[:,point], Un) ) ).reshape((-1,1))
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
@@ -155,6 +146,7 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         #
         Xnnp = numpy.hstack([Xncm.reshape((-1,1)), Xncm.reshape((-1,1))+Gamma*Pnmdemi, Xncm.reshape((-1,1))-Gamma*Pnmdemi])
         #
+        Hm = HO["Direct"].appliedControledFormTo
         Ynnp = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
@@ -172,6 +164,10 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Pyyn += Wc[i] * ((Ynnp[:,point]-Yncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
             Pxyn += Wc[i] * ((Xnnp[:,point]-Xncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
         #
+        if hasattr(Y,"store"):
+            Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
+        else:
+            Ynpu = numpy.ravel( Y ).reshape((__p,1))
         _Innovation  = Ynpu - Yncm.reshape((-1,1))
         if selfA._parameters["EstimationOf"] == "Parameters":
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !

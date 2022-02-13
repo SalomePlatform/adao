@@ -26,9 +26,9 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 # ==============================================================================
-def ecwlls(selfA, Xb, Y, HO, R, B):
+def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    Linear Least Squares
+    Correction
     """
     #
     # Initialisations
@@ -43,10 +43,14 @@ def ecwlls(selfA, Xb, Y, HO, R, B):
     else:
         RI = R.getI()
     #
-    # Calcul de la matrice de gain et de l'analyse
-    # --------------------------------------------
+    # Calcul de l'analyse
+    # -------------------
     K = (Ha * (RI * Hm)).I * Ha * RI
     Xa =  K * Y
+    #
+    if __storeState: selfA._setInternalState("Xn", Xa)
+    #--------------------------
+    #
     selfA.StoredVariables["Analysis"].store( Xa )
     #
     # Calcul de la fonction coût

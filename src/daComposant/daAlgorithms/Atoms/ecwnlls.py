@@ -28,9 +28,9 @@ __author__ = "Jean-Philippe ARGAUD"
 import numpy, scipy, scipy.optimize, scipy.version
 
 # ==============================================================================
-def ecwnlls(selfA, Xb, Y, HO, R, B):
+def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
-    Non Linear Least Squares
+    Correction
     """
     #
     # Initialisations
@@ -217,6 +217,7 @@ def ecwnlls(selfA, Xb, Y, HO, R, B):
         Minimum = selfA.StoredVariables["CurrentState"][IndexMin]
     #
     Xa = Minimum
+    if __storeState: selfA._setInternalState("Xn", Xa)
     #--------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )

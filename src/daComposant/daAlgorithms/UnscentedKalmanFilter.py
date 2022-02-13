@@ -104,7 +104,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
                 "CostFunctionJoAtCurrentOptimum",
-                "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
                 "ForecastCovariance",
