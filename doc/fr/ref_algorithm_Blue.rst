@@ -111,6 +111,7 @@ StoreSupplementaryCalculations
   "CostFunctionJoAtCurrentOptimum",
   "CurrentOptimum",
   "CurrentState",
+  "CurrentStepNumber",
   "ForecastState",
   "Innovation",
   "InnovationAtCurrentAnalysis",
@@ -165,6 +166,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/CurrentStepNumber.rst
 
 .. include:: snippets/ForecastState.rst
 

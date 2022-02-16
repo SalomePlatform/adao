@@ -98,6 +98,7 @@ StoreSupplementaryCalculations
   "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
+  "CurrentStepNumber",
   "ForecastState",
   "IndexOfOptimum",
   "Innovation",
@@ -157,6 +158,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/CurrentStepNumber.rst
 
 .. include:: snippets/ForecastState.rst
 
