@@ -64,7 +64,7 @@ de cas de calcul ADAO. Toutes les données sont explicitement définies dans le
 corps du script pour faciliter la lecture. L'ensemble des commandes est le
 suivant::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -93,7 +93,7 @@ La création et l'initialisation d'une étude se font par les commandes
 suivantes, le nom ``case`` de l'objet du cas de calcul TUI ADAO étant
 quelconque, au choix de l'utilisateur::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
 
@@ -149,9 +149,10 @@ ci-dessus) et l'enregistre dans le cas ADAO::
     import numpy
     def simulation(x):
         "Fonction de simulation H pour effectuer Y=H(X)"
-        __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-        __H = numpy.matrix("1 0 0;0 2 0;0 0 3")
-        return __H * __x
+        import numpy
+        __x = numpy.ravel(x)
+        __H = numpy.diag([1.,2.,3.])
+        return __H @ __x
     #
     case.set( 'ObservationOperator',
         OneFunction = simulation,
@@ -674,7 +675,7 @@ De plus, on peut obtenir une information simple sur le cas d'étude tel que
 défini par l'utilisateur en utilisant directement la commande "*print*" de Python
 sur le cas, à toute étape lors de sa construction. Par exemple::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -736,9 +737,9 @@ jumelles (pour mémoire, voir la démarche :ref:`section_methodology_twin`)::
     def simulation(x):
         "Fonction de simulation H pour effectuer Y=H(X)"
         import numpy
-        __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-        __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
-        return __H * __x
+        __x = numpy.ravel(x)
+        __H = numpy.diag([1.,2.,3.])
+        return __H @ __x
     #
     # Observations obtenues par simulation
     # ------------------------------------

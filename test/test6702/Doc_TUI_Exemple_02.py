@@ -35,7 +35,7 @@ class Test_Adao(unittest.TestCase):
         ++++++++++++++++++++++++++++++++++++++++++++++
         Les deux resultats sont testes pour etre identiques.
         """)
-        from numpy import array, matrix
+        from numpy import array
         from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -53,7 +53,7 @@ class Test_Adao(unittest.TestCase):
 
     def test2(self):
         """Test"""
-        from numpy import array, matrix
+        from numpy import array
         from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -63,9 +63,9 @@ class Test_Adao(unittest.TestCase):
         case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
         def simulation(x):
             import numpy
-            __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-            __H = numpy.matrix("1 0 0;0 2 0;0 0 3")
-            return __H * __x
+            __x = numpy.ravel(x)
+            __H = numpy.diag([1.,2.,3.])
+            return __H @ __x
         #
         case.set( 'ObservationOperator',
             OneFunction = simulation,

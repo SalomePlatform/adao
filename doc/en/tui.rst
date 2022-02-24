@@ -63,7 +63,7 @@ ADAO calculation case. All the data are explicitly defined inside the script in
 order to make the reading easier. The whole set of commands is the following
 one::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -92,7 +92,7 @@ The creation and initialization of a study are done using the following
 commands, the ``case`` object name of the ADAO TUI calculation case being let
 free to the user choice::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
 
@@ -146,9 +146,10 @@ case::
     import numpy
     def simulation(x):
         "Simulation function H to perform Y=H(X)"
-        __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-        __H = numpy.matrix("1 0 0;0 2 0;0 0 3")
-        return __H * __x
+        import numpy
+        __x = numpy.ravel(x)
+        __H = numpy.diag([1.,2.,3.])
+        return __H @ __x
     #
     case.set( 'ObservationOperator',
         OneFunction = simulation,
@@ -646,7 +647,7 @@ In addition, simple information about the case study as defined by the user can
 be obtained by using the Python "*print*" command directly on the case, at any
 stage during its design. For example::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
@@ -707,9 +708,9 @@ information, see the approach :ref:`section_methodology_twin`)::
     def simulation(x):
         "Simulation function H to perform Y=H(X)"
         import numpy
-        __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-        __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
-        return __H * __x
+        __x = numpy.ravel(x)
+        __H = numpy.diag([1.,2.,3.])
+        return __H @ __x
     #
     # Observations obtained by simulation
     # -----------------------------------

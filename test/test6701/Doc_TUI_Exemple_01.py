@@ -34,7 +34,7 @@ class Test_Adao(unittest.TestCase):
         +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         """)
         #---------------------------------------------------------------------------
-        from numpy import array, matrix
+        from numpy import array
         from adao import adaoBuilder
         case = adaoBuilder.New()
         case.set( 'AlgorithmParameters', Algorithm='3DVAR' )

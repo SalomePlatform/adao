@@ -43,9 +43,9 @@ def Simple_Matrix( size, diagonal=None ):
     Diagonal matrix, with either 1 or a given vector on the diagonal
     """
     if diagonal is not None:
-        S = numpy.diag( diagonal )
+        S = numpy.diagflat( diagonal )
     else:
-        S = numpy.matrix(numpy.identity(int(size)))
+        S = numpy.identity(int(size))
     return S
 #
 # ==============================================================================

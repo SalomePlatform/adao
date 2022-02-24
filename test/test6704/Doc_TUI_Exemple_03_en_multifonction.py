@@ -39,9 +39,9 @@ gammamin, gammamax = 1.5, 15.5
 def simulation(x):
     "Fonction de simulation H pour effectuer Y=H(X)"
     import numpy
-    __x = numpy.matrix(numpy.ravel(numpy.matrix(x))).T
-    __H = numpy.matrix("1 0 0;0 2 0;0 0 3; 1 2 3")
-    return __H * __x
+    __x = numpy.ravel(x)
+    __H = numpy.diag([1.,2.,3.])
+    return __H @ __x
 #
 def multisimulation( xserie ):
     yserie = []

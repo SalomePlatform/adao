@@ -118,8 +118,8 @@ class Test_Adao(unittest.TestCase):
         """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur fonctionnel)"""
         print(self.test2.__doc__)
         Xa = {}
-        M = numpy.matrix("1 0 0;0 2 0;0 0 3")
-        def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
+        M = numpy.diag([1.,2.,3.])
+        def H(x): return M @ numpy.ravel( x )
         for algo in ("3DVAR", "Blue", "ExtendedBlue", "NonLinearLeastSquares", "DerivativeFreeOptimization"):
             print("")
             msg = "Algorithme en test : %s"%algo
@@ -137,8 +137,8 @@ class Test_Adao(unittest.TestCase):
             Xa[algo] = adaopy.get("Analysis")[-1]
             del adaopy
         #
-        M = numpy.matrix("1 0 0;0 2 0;0 0 3")
-        def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
+        M = numpy.diag([1.,2.,3.])
+        def H(x): return M @ numpy.ravel( x )
         for algo in ("ExtendedKalmanFilter", "KalmanFilter", "EnsembleKalmanFilter", "UnscentedKalmanFilter", "4DVAR"):
             print("")
             msg = "Algorithme en test : %s"%algo
@@ -158,8 +158,8 @@ class Test_Adao(unittest.TestCase):
             Xa[algo] = adaopy.get("Analysis")[-1]
             del adaopy
         #
-        M = numpy.matrix("1 0 0;0 1 0;0 0 1")
-        def H(x): return M * numpy.asmatrix(numpy.ravel( x )).T
+        M = numpy.identity(3)
+        def H(x): return M @ numpy.ravel( x )
         for algo in ("ParticleSwarmOptimization", "QuantileRegression", ):
             print("")
             msg = "Algorithme en test : %s"%algo
