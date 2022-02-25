@@ -644,14 +644,14 @@ def CovarianceInflation(
     if __InflationType in ["MultiplicativeOnAnalysisCovariance", "MultiplicativeOnBackgroundCovariance"]:
         if __InflationFactor < 1.:
             raise ValueError("Inflation factor for multiplicative inflation has to be greater or equal than 1.")
-        if __InflationFactor < 1.+mpr:
+        if __InflationFactor < 1.+mpr: # No inflation = 1
             return __InputCovOrEns
         __OutputCovOrEns = __InflationFactor**2 * __InputCovOrEns
     #
     elif __InflationType in ["MultiplicativeOnAnalysisAnomalies", "MultiplicativeOnBackgroundAnomalies"]:
         if __InflationFactor < 1.:
             raise ValueError("Inflation factor for multiplicative inflation has to be greater or equal than 1.")
-        if __InflationFactor < 1.+mpr:
+        if __InflationFactor < 1.+mpr: # No inflation = 1
             return __InputCovOrEns
         __InputCovOrEnsMean = __InputCovOrEns.mean(axis=1, dtype=mfp).astype('float')
         __OutputCovOrEns = __InputCovOrEnsMean[:,numpy.newaxis] \
@@ -660,7 +660,7 @@ def CovarianceInflation(
     elif __InflationType in ["AdditiveOnAnalysisCovariance", "AdditiveOnBackgroundCovariance"]:
         if __InflationFactor < 0.:
             raise ValueError("Inflation factor for additive inflation has to be greater or equal than 0.")
-        if __InflationFactor < mpr:
+        if __InflationFactor < mpr: # No inflation = 0
             return __InputCovOrEns
         __n, __m = __InputCovOrEns.shape
         if __n != __m:
@@ -673,7 +673,7 @@ def CovarianceInflation(
     elif __InflationType == "HybridOnBackgroundCovariance":
         if __InflationFactor < 0.:
             raise ValueError("Inflation factor for hybrid inflation has to be greater or equal than 0.")
-        if __InflationFactor < mpr:
+        if __InflationFactor < mpr: # No inflation = 0
             return __InputCovOrEns
         __n, __m = __InputCovOrEns.shape
         if __n != __m:

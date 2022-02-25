@@ -285,7 +285,7 @@ are done by importing the interface module "*adaoBuilder*" and by by invoking
 its method "*New()*" as illustrated in the following lines (the ``case`` object
 name being let free to the user choice)::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
 

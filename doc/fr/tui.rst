@@ -295,7 +295,7 @@ se font en important le module d'interface "*adaoBuilder*" et en invoquant sa
 méthode "*New()*" comme illustré dans les quelques lignes suivantes (le nom
 ``case`` de l'objet étant quelconque, au choix de l'utilisateur)::
 
-    from numpy import array, matrix
+    from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
 

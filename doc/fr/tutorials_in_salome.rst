@@ -490,9 +490,9 @@ utiles à la construction de matrices, dans un fichier script Python nommé
         Diagonal matrix, with either 1 or a given vector on the diagonal
         """
         if diagonal is not None:
-            S = numpy.diag( diagonal )
+            S = numpy.diagflat( diagonal )
         else:
-            S = numpy.matrix(numpy.identity(int(size)))
+            S = numpy.identity(int(size))
         return S
 
 On définit ensuite l'état d'ébauche :math:`\mathbf{x}^b` comme une perturbation
@@ -545,15 +545,10 @@ facilité :
         """ Direct non-linear simulation operator """
         #
         # --------------------------------------> EXAMPLE TO BE REMOVED
-        if type(XX) is type(numpy.matrix([])):  # EXAMPLE TO BE REMOVED
-            HX = XX.A1.tolist()                 # EXAMPLE TO BE REMOVED
-        elif type(XX) is type(numpy.array([])): # EXAMPLE TO BE REMOVED
-            HX = numpy.matrix(XX).A1.tolist()   # EXAMPLE TO BE REMOVED
-        else:                                   # EXAMPLE TO BE REMOVED
-            HX = XX                             # EXAMPLE TO BE REMOVED
+        HX = 1. * numpy.ravel( XX )             # EXAMPLE TO BE REMOVED
         # --------------------------------------> EXAMPLE TO BE REMOVED
         #
-        return numpy.array( HX )
+        return HX
 
 On n'a pas besoin des opérateurs linéaires associés ``"TangentOperator"`` et
 ``"AdjointOperator"`` car ils vont être approximés en utilisant les capacités
