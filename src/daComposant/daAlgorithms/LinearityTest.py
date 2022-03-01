@@ -112,8 +112,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul du point courant
         # -----------------------
-        Xn      = numpy.asmatrix(numpy.ravel( Xb )).T
-        FX      = numpy.asmatrix(numpy.ravel( Hm( Xn ) )).T
+        Xn      = numpy.ravel(     Xb   ).reshape((-1,1))
+        FX      = numpy.ravel( Hm( Xn ) ).reshape((-1,1))
         NormeX  = numpy.linalg.norm( Xn )
         NormeFX = numpy.linalg.norm( FX )
         if self._toStore("CurrentState"):
@@ -125,7 +125,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # ---------------------------------------------
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
-            for v in Xn.A1:
+            for v in Xn:
                 if abs(v) > 1.e-8:
                     dX0.append( numpy.random.normal(0.,abs(v)) )
                 else:
@@ -133,14 +133,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             dX0 = numpy.ravel( self._parameters["InitialDirection"] )
         #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
+        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 ).reshape((-1,1))
         #
         # Calcul du gradient au point courant X pour l'increment dX
         # ---------------------------------------------------------
         if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
             dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
             GradFxdX = Ht( (Xn, dX1) )
-            GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
+            GradFxdX = numpy.ravel( GradFxdX ).reshape((-1,1))
             GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
         #
         # Entete des resultats
@@ -256,15 +256,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["ResiduFormula"] == "CenteredDL":
                 if self._toStore("CurrentState"):
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn - dX) )
+                    self.StoredVariables["CurrentState"].store( Xn + dX )
+                    self.StoredVariables["CurrentState"].store( Xn - dX )
                 #
-                FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
-                FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
+                FX_plus_dX  = numpy.ravel( Hm( Xn + dX ) ).reshape((-1,1))
+                FX_moins_dX = numpy.ravel( Hm( Xn - dX ) ).reshape((-1,1))
                 #
                 if self._toStore("SimulatedObservationAtCurrentState"):
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_moins_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_plus_dX )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_moins_dX )
                 #
                 Residu = numpy.linalg.norm( FX_plus_dX + FX_moins_dX - 2 * FX ) / NormeFX
                 #
@@ -274,12 +274,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["ResiduFormula"] == "Taylor":
                 if self._toStore("CurrentState"):
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
+                    self.StoredVariables["CurrentState"].store( Xn + dX )
                 #
-                FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
+                FX_plus_dX  = numpy.ravel( Hm( Xn + dX ) ).reshape((-1,1))
                 #
                 if self._toStore("SimulatedObservationAtCurrentState"):
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_plus_dX )
                 #
                 Residu = numpy.linalg.norm( FX_plus_dX - FX - amplitude * GradFxdX ) / NormeFX
                 #
@@ -289,18 +289,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["ResiduFormula"] == "NominalTaylor":
                 if self._toStore("CurrentState"):
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn - dX) )
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(dX) )
+                    self.StoredVariables["CurrentState"].store( Xn + dX )
+                    self.StoredVariables["CurrentState"].store( Xn - dX )
+                    self.StoredVariables["CurrentState"].store( dX )
                 #
-                FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
-                FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
-                FdX         = numpy.asmatrix(numpy.ravel( Hm( dX ) )).T
+                FX_plus_dX  = numpy.ravel( Hm( Xn + dX ) ).reshape((-1,1))
+                FX_moins_dX = numpy.ravel( Hm( Xn - dX ) ).reshape((-1,1))
+                FdX         = numpy.ravel( Hm( dX )      ).reshape((-1,1))
                 #
                 if self._toStore("SimulatedObservationAtCurrentState"):
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_moins_dX) )
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FdX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_plus_dX )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_moins_dX )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FdX )
                 #
                 Residu = max(
                     numpy.linalg.norm( FX_plus_dX  - amplitude * FdX ) / NormeFX,
@@ -313,18 +313,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
                 if self._toStore("CurrentState"):
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn + dX) )
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(Xn - dX) )
-                    self.StoredVariables["CurrentState"].store( numpy.ravel(dX) )
+                    self.StoredVariables["CurrentState"].store( Xn + dX )
+                    self.StoredVariables["CurrentState"].store( Xn - dX )
+                    self.StoredVariables["CurrentState"].store( dX )
                 #
-                FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
-                FX_moins_dX = numpy.asmatrix(numpy.ravel( Hm( Xn - dX ) )).T
-                FdX         = numpy.asmatrix(numpy.ravel( Hm( dX ) )).T
+                FX_plus_dX  = numpy.ravel( Hm( Xn + dX ) ).reshape((-1,1))
+                FX_moins_dX = numpy.ravel( Hm( Xn - dX ) ).reshape((-1,1))
+                FdX         = numpy.ravel( Hm( dX )      ).reshape((-1,1))
                 #
                 if self._toStore("SimulatedObservationAtCurrentState"):
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_moins_dX) )
-                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FdX) )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_plus_dX )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX_moins_dX )
+                    self.StoredVariables["SimulatedObservationAtCurrentState"].store( FdX )
                 #
                 Residu = max(
                     RMS( FX, FX_plus_dX   - amplitude * FdX ) / NormeFX,

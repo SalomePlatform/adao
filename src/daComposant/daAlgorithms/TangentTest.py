@@ -105,20 +105,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calcul du point courant
         # -----------------------
-        Xn      = numpy.asmatrix(numpy.ravel( Xb )).T
-        FX      = numpy.asmatrix(numpy.ravel( Hm( Xn ) )).T
+        Xn      = numpy.ravel( Xb ).reshape((-1,1))
+        FX      = numpy.ravel( Hm( Xn ) ).reshape((-1,1))
         NormeX  = numpy.linalg.norm( Xn )
         NormeFX = numpy.linalg.norm( FX )
         if self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
+            self.StoredVariables["CurrentState"].store( Xn )
         if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX )
         #
         # Fabrication de la direction de l'increment dX
         # ---------------------------------------------
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
-            for v in Xn.A1:
+            for v in Xn:
                 if abs(v) > 1.e-8:
                     dX0.append( numpy.random.normal(0.,abs(v)) )
                 else:
@@ -126,14 +126,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             dX0 = numpy.ravel( self._parameters["InitialDirection"] )
         #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
+        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 ).reshape((-1,1))
         #
         # Calcul du gradient au point courant X pour l'increment dX
         # qui est le tangent en X multiplie par dX
         # ---------------------------------------------------------
         dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
         GradFxdX = Ht( (Xn, dX1) )
-        GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
+        GradFxdX = numpy.ravel( GradFxdX ).reshape((-1,1))
         GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
         NormeGX  = numpy.linalg.norm( GradFxdX )
         #
@@ -187,7 +187,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             dX      = amplitude * dX0
             #
             if self._parameters["ResiduFormula"] == "Taylor":
-                FX_plus_dX  = numpy.asmatrix(numpy.ravel( Hm( Xn + dX ) )).T
+                FX_plus_dX  = numpy.ravel( Hm( Xn + dX ) ).reshape((-1,1))
                 #
                 Residu = numpy.linalg.norm( FX_plus_dX - FX ) / (amplitude * NormeGX)
                 #

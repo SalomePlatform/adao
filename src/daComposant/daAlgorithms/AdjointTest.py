@@ -96,28 +96,28 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        X       = numpy.asmatrix(numpy.ravel( Xb )).T
+        X       = numpy.ravel( Xb ).reshape((-1,1))
         NormeX  = numpy.linalg.norm( X )
         if Y is None:
-            Y = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
-        Y = numpy.asmatrix(numpy.ravel( Y )).T
+            Y = numpy.ravel( Hm( X ) ).reshape((-1,1))
+        Y = numpy.ravel( Y ).reshape((-1,1))
         NormeY = numpy.linalg.norm( Y )
         if self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( numpy.ravel(X) )
+            self.StoredVariables["CurrentState"].store( X )
         if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Y) )
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( Y )
         #
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
-            for v in X.A1:
+            for v in X:
                 if abs(v) > 1.e-8:
                     dX0.append( numpy.random.normal(0.,abs(v)) )
                 else:
                     dX0.append( numpy.random.normal(0.,X.mean()) )
         else:
-            dX0 = numpy.asmatrix(numpy.ravel( self._parameters["InitialDirection"] ))
+            dX0 = self._parameters["InitialDirection"]
         #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
+        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 )
         #
         # Entete des resultats
         # --------------------
@@ -156,10 +156,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             dX          = amplitude * dX0
             NormedX     = numpy.linalg.norm( dX )
             #
-            TangentFXdX = numpy.asmatrix( Ht( (X,dX) ) )
-            AdjointFXY  = numpy.asmatrix( Ha( (X,Y)  ) )
+            TangentFXdX = numpy.ravel( Ht( (X,dX) ) )
+            AdjointFXY  = numpy.ravel( Ha( (X,Y)  ) )
             #
-            Residu = abs(float(numpy.dot( TangentFXdX.A1 , Y.A1 ) - numpy.dot( dX.A1 , AdjointFXY.A1 )))
+            Residu = abs(float(numpy.dot( TangentFXdX, Y ) - numpy.dot( dX, AdjointFXY )))
             #
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   |  %9.3e"%(i,amplitude,NormeX,NormeY,NormedX,Residu)
             msgs += "\n" + __marge + msg

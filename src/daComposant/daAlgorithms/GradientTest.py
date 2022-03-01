@@ -121,18 +121,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        X       = numpy.asmatrix(numpy.ravel(    Xb   )).T
-        FX      = numpy.asmatrix(numpy.ravel( Hm( X ) )).T
+        X       = numpy.ravel(    Xb   ).reshape((-1,1))
+        FX      = numpy.ravel( Hm( X ) ).reshape((-1,1))
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
         if self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( numpy.ravel(X) )
+            self.StoredVariables["CurrentState"].store( X )
         if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX )
         #
         if len(self._parameters["InitialDirection"]) == 0:
             dX0 = []
-            for v in X.A1:
+            for v in X:
                 if abs(v) > 1.e-8:
                     dX0.append( numpy.random.normal(0.,abs(v)) )
                 else:
@@ -140,12 +140,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             dX0 = numpy.ravel( self._parameters["InitialDirection"] )
         #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.matrix( dX0 ).T
+        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 ).reshape((-1,1))
         #
         if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
             dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
             GradFxdX = Ht( (X, dX1) )
-            GradFxdX = numpy.asmatrix(numpy.ravel( GradFxdX )).T
+            GradFxdX = numpy.ravel( GradFxdX ).reshape((-1,1))
             GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
         #
         # Entete des resultats
@@ -239,7 +239,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             dX      = amplitude * dX0
             #
             FX_plus_dX = Hm( X + dX )
-            FX_plus_dX = numpy.asmatrix(numpy.ravel( FX_plus_dX )).T
+            FX_plus_dX = numpy.ravel( FX_plus_dX ).reshape((-1,1))
             #
             if self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( numpy.ravel(X + dX) )

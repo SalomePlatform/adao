@@ -79,7 +79,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 HXb = HO["AppliedInX"]["HXb"]
             else:
                 HXb = Ht @ Xb
-            HXb = numpy.asmatrix(numpy.ravel( HXb )).T
+            HXb = numpy.ravel( HXb ).reshape((-1,1))
             if Y.size != HXb.size:
                 raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
             if max(Y.shape) != max(HXb.shape):
