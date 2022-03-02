@@ -35,11 +35,18 @@ classical :math:`J` function of weighted "Least Squares":
 
 .. math:: J(\mathbf{x})=(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-It is similar to the :ref:`section_ref_algorithm_3DVAR`, without its background
+It is similar to a :ref:`section_ref_algorithm_3DVAR`, without its background
 part. The background, required in the interface, is only used as an initial
 point for the variational minimization.
 
-In all cases, it is recommended to prefer the :ref:`section_ref_algorithm_3DVAR`
+This algorithm is naturally written for a single estimate, without any dynamic
+or iterative notion (there is no need in this case for an incremental evolution
+operator, nor for an evolution error covariance). In ADAO, it can also be used
+on a succession of observations, placing the estimate in a recursive framework
+partly similar to a Kalman Filter. A standard estimate is made at each
+observation step on the state predicted by the incremental evolution model.
+
+In all cases, it is recommended to prefer a :ref:`section_ref_algorithm_3DVAR`
 for its stability as for its behavior during optimization.
 
 .. ------------------------------------ ..

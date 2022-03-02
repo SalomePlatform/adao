@@ -601,6 +601,8 @@ it is available in the ADAO module:
 The reader interested in the subject of optimization can look at [WikipediaMO]_
 as a general entry point.
 
+.. _section_theory_dynamique:
+
 Going further in data assimilation for dynamics
 -----------------------------------------------
 
@@ -772,8 +774,8 @@ written:
 
 where :math:`\mathbf{w}_{n}=[\mathbf{x}_n~~\mathbf{a}_n]^T`. The incremental
 evolution and observation operators are therefore respectively the augmented
-operators :math:`\tilde{M}` and :math:`\tilde{H}`, and are directly usable in
-data assimilation with ADAO.
+operators :math:`\tilde{M}` and :math:`\tilde{H}`, and are directly suitable
+for study cases with ADAO.
 
 Conceptual scheme for data assimilation in dynamics
 +++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -781,8 +783,9 @@ Conceptual scheme for data assimilation in dynamics
 To complete the description, we can represent the data assimilation process in
 a dynamics specific way using a temporal scheme, which describes the action of
 the evolution (:math:`M` or :math:`\tilde{M}`) and observation (:math:`H` or
-:math:`\tilde{H}`) operators during the discrete simulation. A possible
-representation is as follows:
+:math:`\tilde{H}`) operators during the discrete simulation and the recursive
+estimation of the state (:math:`\mathbf{x}`). A possible representation is as
+follows, particularly appropriate for iterative Kalman filtering algorithms:
 
   .. _schema_d_AD_temporel:
   .. image:: images/schema_temporel_KF.png
@@ -791,4 +794,8 @@ representation is as follows:
   .. centered::
     **Timeline of steps for data assimilation operators in dynamics**
 
-The concepts described in this diagram can be directly and simply used in ADAO.
+with **P** the state error covariance and *t* the discrete iterative time. In
+this scheme, the analysis **(x,P)** is obtained by means of the "*correction*"
+by observing the "*prediction*" of the previous state. The concepts described
+in this diagram can be directly and simply used in ADAO to elaborate study
+cases, and are included in the description of some algorithms.

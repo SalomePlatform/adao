@@ -31,18 +31,25 @@ Calculation algorithm "*LinearLeastSquares*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes a "Least Squares" linear type estimation of the state of
-a system. It is similar to the :ref:`section_ref_algorithm_Blue`, without its
+a system. It is similar to a :ref:`section_ref_algorithm_Blue`, without its
 background part.
 
 This algorithm is always the fastest of all the optimization algorithms of
 ADAO. It is theoretically reserved for observation operator cases which are
 explicitly linear, even if it sometimes works in "slightly" non-linear cases.
-One can verify the linearity of the observation operator with the help of the
+One can verify the linearity of the observation operator with the help of a
 :ref:`section_ref_algorithm_LinearityTest`.
 
-In all cases, it is recommanded to prefer at least the
-:ref:`section_ref_algorithm_Blue`, or the
-:ref:`section_ref_algorithm_ExtendedBlue` or the
+This algorithm is naturally written for a single estimate, without any dynamic
+or iterative notion (there is no need in this case for an incremental evolution
+operator, nor for an evolution error covariance). In ADAO, it can also be used
+on a succession of observations, placing the estimate in a recursive framework
+partly similar to a Kalman Filter. A standard estimate is made at each
+observation step on the state predicted by the incremental evolution model.
+
+In all cases, it is recommanded to prefer at least a
+:ref:`section_ref_algorithm_Blue`, or a
+:ref:`section_ref_algorithm_ExtendedBlue` or a
 :ref:`section_ref_algorithm_3DVAR`.
 
 .. ------------------------------------ ..

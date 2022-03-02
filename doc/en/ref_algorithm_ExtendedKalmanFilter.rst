@@ -31,12 +31,18 @@ Calculation algorithm "*ExtendedKalmanFilter*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a dynamic system by a
-extended Kalman Filter, using a non-linear calculation of the state and the
-incremental evolution (process).
+extended Kalman Filter, using a non-linear calculation of the state observation
+and incremental evolution (process). Technically, the estimation of the state
+is performed by the classical Kalman filter equations, using at each step the
+Jacobian obtained by linearization of the observation and the evolution to
+evaluate the state error covariance. This algorithm is therefore more expensive
+than the linear Kalman Filter, but it is by nature better adapted as soon as
+the operators are non-linear, being by principle universally recommended in
+this case.
 
 Conceptually, we can represent the temporal pattern of action of the evolution
 and observation operators in this algorithm in the following way, with **x**
-the state and **P** the state error covariance :
+the state, **P** the state error covariance, *t* the discrete iterative time :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -45,26 +51,34 @@ the state and **P** the state error covariance :
   .. centered::
     **Timeline of steps in extended Kalman filter data assimilation**
 
-We notice that there is no analysis performed at the initial time step
-(numbered 0 in the time indexing) because there is no forecast at this time
-(the background is stored as a pseudo analysis at the initial time step). If
-the observations are provided in series by the user, the first one is therefore
-not used.
+In this scheme, the analysis **(x,P)** is obtained by means of the
+"*correction*" by observing the "*prediction*" of the previous state. We notice
+that there is no analysis performed at the initial time step (numbered 0 in the
+time indexing) because there is no forecast at this time (the background is
+stored as a pseudo analysis at the initial time step). If the observations are
+provided in series by the user, the first one is therefore not used.
 
-In case of really non-linear operators, one can easily use the
-:ref:`section_ref_algorithm_EnsembleKalmanFilter` or the
+This filter can also be used to estimate (jointly or solely) parameters and not
+the state, in which case neither the time nor the evolution have any meaning.
+The iteration steps are then linked to the insertion of a new observation in
+the recursive estimation. One should consult the section
+:ref:`section_theory_dynamique` for the implementation concepts.
+
+In case of more pronounced non-linear operators, one can easily use a
+:ref:`section_ref_algorithm_EnsembleKalmanFilter` or a
 :ref:`section_ref_algorithm_UnscentedKalmanFilter`, which are often far more
-adapted to non-linear behavior but more costly. One can verify the linearity of
-the operators with the help of the :ref:`section_ref_algorithm_LinearityTest`.
+adapted to non-linear behavior but sometimes costly. One can verify the
+linearity of the operators with the help of a
+:ref:`section_ref_algorithm_LinearityTest`.
 
 .. index::
     pair: Variant ; EKF
     pair: Variant ; CEKF
 
-A difference is made between the extended Kalman filter taking into account
-bounds on the states (the variant named "CEKF", which is recommended and used
-by default), and the extended Kalman filter conducted without any constraint
-(the variant named "EKF", which is not recommended).
+The extended Kalman filter can take into account bounds on the states (the
+variant is named "CEKF", it is recommended and is used by default), or
+conducted without any constraint (the variant is named "EKF", and it is not
+recommended).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

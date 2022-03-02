@@ -31,12 +31,19 @@ Algorithme de calcul "*ExtendedKalmanFilter*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système dynamique par un
-filtre de Kalman étendu, utilisant un calcul non linéaire de l'état et de
-l'évolution incrémentale (processus).
+filtre de Kalman étendu, utilisant un calcul non linéaire de l'observation
+d'état et de l'évolution incrémentale (processus). Techniquement, l'estimation
+de l'état est réalisée par les équations classiques du filtre de Kalman, en
+utilisant à chaque pas la jacobienne obtenue par linéarisation de l'observation
+et de l'évolution pour évaluer la covariance d'erreur d'état. Cet algorithme
+est donc plus coûteux que le Filtre de Kalman linéaire, mais il est par nature
+mieux adapté dès que les opérateurs sont non linéaires, étant par principe
+universellement recommandé dans ce cas.
 
 Conceptuellement, on peut représenter le schéma temporel d'action des
 opérateurs d'évolution et d'observation dans cet algorithme de la manière
-suivante, avec **x** l'état et **P** la covariance d'erreur d'état :
+suivante, avec **x** l'état, **P** la covariance d'erreur d'état, *t* le temps
+itératif discret :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -45,27 +52,34 @@ suivante, avec **x** l'état et **P** la covariance d'erreur d'état :
   .. centered::
     **Schéma temporel des étapes en assimilation de données par filtre de Kalman étendu**
 
-On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
-(numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
-instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
-observations sont fournies en série par l'utilisateur, la première n'est donc
-pas utilisée.
+Dans ce schéma, l'analyse **(x,P)** est obtenue à travers la "*correction*" par
+l'observation de la "*prévision*" de l'état précédent. On remarque qu'il n'y a
+pas d'analyse effectuée au pas de temps initial (numéroté 0 dans l'indexage
+temporel) car il n'y a pas de prévision à cet instant (l'ébauche est stockée
+comme pseudo-analyse au pas initial). Si les observations sont fournies en
+série par l'utilisateur, la première n'est donc pas utilisée.
 
-Dans le cas d'opérateurs réellement non-linéaires, on peut aisément utiliser
-l':ref:`section_ref_algorithm_EnsembleKalmanFilter` ou
-l':ref:`section_ref_algorithm_UnscentedKalmanFilter`, qui sont souvent
-largement plus adaptés aux comportements non-linéaires mais plus coûteux. On
-peut vérifier la linéarité des opérateurs à l'aide de
-l':ref:`section_ref_algorithm_LinearityTest`.
+Ce filtre peut aussi être utilisé pour estimer (conjointement ou uniquement)
+des paramètres et non pas l'état, auquel cas ni le temps ni l'évolution n'ont
+plus de signification. Les pas d'itération sont alors liés à l'insertion d'une
+nouvelle observation dans l'estimation récursive. On consultera la section
+:ref:`section_theory_dynamique` pour les concepts de mise en oeuvre.
+
+Dans le cas d'opérateurs plus fortement non-linéaires, on peut utiliser un
+:ref:`section_ref_algorithm_EnsembleKalmanFilter` ou un
+:ref:`section_ref_algorithm_UnscentedKalmanFilter`, qui sont largement plus
+adaptés aux comportements non-linéaires même si parfois plus coûteux. On peut
+vérifier la linéarité des opérateurs à l'aide d'un
+:ref:`section_ref_algorithm_LinearityTest`.
 
 .. index::
     pair: Variant ; EKF
     pair: Variant ; CEKF
 
-On fait une différence entre le filtre de Kalman étendu tenant compte de
-bornes sur les états (la variante nommée "CEKF", qui est recommandée et qui est
-utilisée par défaut), et le filtre de Kalman étendu conduit sans
-aucune contrainte (la variante nommée "EKF", qui n'est pas recommandée).
+Le filtre de Kalman étendu peut tenir compte de bornes sur les états (la
+variante est nommée "CEKF", elle est recommandée et elle est utilisée par
+défaut), ou être conduit sans aucune contrainte (cette variante est nommée
+"EKF", et elle n'est pas recommandée).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

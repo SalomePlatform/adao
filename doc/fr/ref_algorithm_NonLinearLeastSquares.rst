@@ -35,12 +35,20 @@ la fonctionnelle :math:`J` d'écart classique de "Moindres Carrés" pondérés:
 
 .. math:: J(\mathbf{x})=(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-Il est similaire à l':ref:`section_ref_algorithm_3DVAR` privé de sa partie
+Il est similaire à un :ref:`section_ref_algorithm_3DVAR` privé de sa partie
 ébauche. L'ébauche, requise dans l'interface, ne sert que de point initial pour
 la minimisation variationnelle.
 
-Dans tous les cas, il est recommandé de lui préférer
-l':ref:`section_ref_algorithm_3DVAR` pour sa stabilité comme pour son
+Cet algorithme est naturellement écrit pour une estimation unique, sans notion
+dynamique ou itérative (il n'y a donc pas besoin  dans ce cas d'opérateur
+d'évolution incrémentale, ni de covariance d'erreurs d'évolution). Dans ADAO,
+il peut aussi être utilisé sur une succession d'observations, plaçant alors
+l'estimation dans un cadre récursif en partie similaire à un filtre de Kalman.
+Une estimation standard est effectuée à chaque pas d'observation sur l'état
+prévu par le modèle d'évolution incrémentale.
+
+Dans tous les cas, il est recommandé de lui préférer un
+:ref:`section_ref_algorithm_3DVAR` pour sa stabilité comme pour son
 comportement lors de l'optimisation.
 
 .. ------------------------------------ ..

@@ -31,16 +31,25 @@ Algorithme de calcul "*KalmanFilter*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système dynamique par un
-filtre de Kalman.
+filtre de Kalman. Sous forme discrète, c'est un estimateur itératif (ou
+récursif) de l'état courant à l'aide de l'état précédent et des observations
+actuelles. Le temps (ou pseudo-temps) entre deux pas est celui qui sépare les
+observations successives. Chaque pas d'itération est composé de deux étapes
+successives dites classiquement de "*prédiction*" puis de "*correction*".
+L'étape de prédiction utilise un opérateur d'évolution incrémentale pour
+établir une estimation de l'état courant à partir de l'état estimé au pas
+précédent. L'étape de correction (ou de *mise à jour*) utilise les observations
+courantes pour améliorer l'estimation en corrigeant l'état prédit.
 
 Il est théoriquement réservé aux cas d'opérateurs d'observation et d'évolution
 incrémentale (processus) linéaires, même s'il fonctionne parfois dans les cas
 "faiblement" non-linéaire. On peut vérifier la linéarité de l'opérateur
-d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
+d'observation à l'aide d'un :ref:`section_ref_algorithm_LinearityTest`.
 
 Conceptuellement, on peut représenter le schéma temporel d'action des
 opérateurs d'évolution et d'observation dans cet algorithme de la manière
-suivante, avec **x** l'état et **P** la covariance d'erreur d'état :
+suivante, avec **x** l'état, **P** la covariance d'erreur d'état, *t* le temps
+itératif discret :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -49,18 +58,25 @@ suivante, avec **x** l'état et **P** la covariance d'erreur d'état :
   .. centered::
     **Schéma temporel des étapes en assimilation de données par filtre de Kalman**
 
-On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
-(numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
-instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
-observations sont fournies en série par l'utilisateur, la première n'est donc
-pas utilisée.
+Dans ce schéma, l'analyse **(x,P)** est obtenue à travers la "*correction*" par
+l'observation de la "*prévision*" de l'état précédent. On remarque qu'il n'y a
+pas d'analyse effectuée au pas de temps initial (numéroté 0 dans l'indexage
+temporel) car il n'y a pas de prévision à cet instant (l'ébauche est stockée
+comme pseudo-analyse au pas initial). Si les observations sont fournies en
+série par l'utilisateur, la première n'est donc pas utilisée.
 
-En cas de non-linéarité, même peu marquée, on lui préférera
-l':ref:`section_ref_algorithm_ExtendedKalmanFilter`, ou
-l':ref:`section_ref_algorithm_EnsembleKalmanFilter` et
-l':ref:`section_ref_algorithm_UnscentedKalmanFilter` qui sont plus puissants.
-On peut vérifier la linéarité des opérateurs à l'aide de
-l':ref:`section_ref_algorithm_LinearityTest`.
+Ce filtre peut aussi être utilisé pour estimer (conjointement ou uniquement)
+des paramètres et non pas l'état, auquel cas ni le temps ni l'évolution n'ont
+plus de signification. Les pas d'itération sont alors liés à l'insertion d'une
+nouvelle observation dans l'estimation récursive. On consultera la section
+:ref:`section_theory_dynamique` pour les concepts de mise en oeuvre.
+
+En cas de non-linéarité des opérateurs, même peu marquée, on lui préférera un
+:ref:`section_ref_algorithm_ExtendedKalmanFilter`, ou un
+:ref:`section_ref_algorithm_EnsembleKalmanFilter` et un
+:ref:`section_ref_algorithm_UnscentedKalmanFilter` qui sont plus stables,
+supportent des bornes sur l'état, etc. On peut vérifier la linéarité des
+opérateurs à l'aide d'un :ref:`section_ref_algorithm_LinearityTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

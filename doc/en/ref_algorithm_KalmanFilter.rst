@@ -31,16 +31,24 @@ Calculation algorithm "*KalmanFilter*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a dynamic system by a
-Kalman Filter.
+Kalman Filter. In discrete form, it is an iterative (or recursive) estimator of
+the current state using the previous state and the current observations. The
+time (or pseudo-time) between two steps is the time between successive
+observations. Each iteration step is composed of two successive phases,
+classically called "*prediction*" and "*correction*". The prediction step uses
+an incremental evolution operator to establish an estimate of the current state
+from the state estimated at the previous step. The correction (or *update*)
+step uses the current observations to improve the estimate by correcting the
+predicted state.
 
-It is theoretically reserved for observation and incremental evolution operators
-cases which are linear, even if it sometimes works in "slightly" non-linear
-cases. One can verify the linearity of the operators with the help of
-the :ref:`section_ref_algorithm_LinearityTest`.
+It is theoretically reserved for observation and incremental evolution
+operators cases which are linear, even if it sometimes works in "slightly"
+non-linear cases. One can verify the linearity of the operators with the help
+of a :ref:`section_ref_algorithm_LinearityTest`.
 
 Conceptually, we can represent the temporal pattern of action of the evolution
 and observation operators in this algorithm in the following way, with **x**
-the state and **P** the state error covariance :
+the state, **P** the state error covariance, *t* the discrete iterative time :
 
   .. _schema_temporel_KF:
   .. image:: images/schema_temporel_KF.png
@@ -49,18 +57,25 @@ the state and **P** the state error covariance :
   .. centered::
     **Timeline of steps in Kalman filter data assimilation**
 
-We notice that there is no analysis performed at the initial time step
-(numbered 0 in the time indexing) because there is no forecast at this time
-(the background is stored as a pseudo analysis at the initial time step). If
-the observations are provided in series by the user, the first one is therefore
-not used.
+In this scheme, the analysis **(x,P)** is obtained by means of the
+"*correction*" by observing the "*prediction*" of the previous state. We notice
+that there is no analysis performed at the initial time step (numbered 0 in the
+time indexing) because there is no forecast at this time (the background is
+stored as a pseudo analysis at the initial time step). If the observations are
+provided in series by the user, the first one is therefore not used.
 
-In case of non-linearity, even slightly marked, it will be preferred the
-:ref:`section_ref_algorithm_ExtendedKalmanFilter`, or the
-:ref:`section_ref_algorithm_UnscentedKalmanFilter` and the
+This filter can also be used to estimate (jointly or solely) parameters and not
+the state, in which case neither the time nor the evolution have any meaning.
+The iteration steps are then linked to the insertion of a new observation in
+the recursive estimation. One should consult the section
+:ref:`section_theory_dynamique` for the implementation concepts.
+
+In case of non-linearity of the operators, even slightly marked, it will be
+preferred a :ref:`section_ref_algorithm_ExtendedKalmanFilter`, or a
+:ref:`section_ref_algorithm_UnscentedKalmanFilter` and a
 :ref:`section_ref_algorithm_UnscentedKalmanFilter` that are more powerful. One
-can verify the linearity of the operators
-with the help of the :ref:`section_ref_algorithm_LinearityTest`.
+can verify the linearity of the operators with the help of a
+:ref:`section_ref_algorithm_LinearityTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

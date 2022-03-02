@@ -32,28 +32,39 @@ Calculation algorithm "*Blue*"
 
 This algorithm realizes a BLUE (Best Linear Unbiased Estimator) type estimation
 of the state of a system. It is a linear, unbiased and optimal estimation.
-Technically, it is an Aitken estimator.
-
-This algorithm is always the fastest of all the assimilation algorithms of ADAO.
+Technically, it is here an Aitken estimator. It performs the best linear
+estimate of the state using the initial background state and the observations.
 It is theoretically reserved for observation operator cases which are linear,
 even if it sometimes works in "slightly" non-linear cases. One can verify the
 linearity of the observation operator with the help of the
-:ref:`section_ref_algorithm_LinearityTest`.
+:ref:`section_ref_algorithm_LinearityTest`. This algorithm is always the
+fastest of all the assimilation algorithms of ADAO.
 
-In case of non-linearity, even slightly marked, it will be easily preferred the
-:ref:`section_ref_algorithm_ExtendedBlue` or the
+This algorithm is naturally written for a single estimate, without any dynamic
+or iterative notion (there is no need in this case for an incremental evolution
+operator, nor for an evolution error covariance). In ADAO, it can also be used
+on a succession of observations, placing the estimate in a recursive framework
+partly similar to a :ref:`section_ref_algorithm_KalmanFilter`. A standard
+estimate is made at each observation step on the state predicted by the
+incremental evolution model, knowing that the state error covariance remains
+the background covariance initially provided by the user. To be explicit,
+unlike Kalman-type filters, the state error covariance is not updated.
+
+In case of non-linearity, even slightly marked, it will be easily preferred a
+:ref:`section_ref_algorithm_ExtendedBlue` or a
 :ref:`section_ref_algorithm_3DVAR`.
 
 .. index:: single: Optimal Interpolation
 .. index:: single: OI
 
-Additional remark: an algebraic simplification of the BLUE leads to the optimal
-interpolation method, named "*Optimal Interpolation*" or "*OI*". It is a very
-simple and inexpensive method, especially adapted to very (very) large
-problems, but whose disadvantage is to provide a globally sub-optimal and noisy
-analysis result, even inconsistent. The way to avoid these disadvantages is to
-adapt very precisely the elements of the method to each physical model. For
-these reasons, this method is not proposed nor recommended.
+Additional remark: an algebraic simplification of the BLUE leads to the
+so-called optimal interpolation method, named "*Optimal Interpolation*" or
+"*OI*". It is a very simple and inexpensive method, especially adapted to very
+(very) large problems, but whose disadvantage is to provide a globally
+sub-optimal and noisy analysis result, even inconsistent. The way to avoid
+these disadvantages is to adapt very precisely the elements of the method to
+each physical model. For these reasons, this method is not proposed nor
+recommended.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

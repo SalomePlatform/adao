@@ -32,24 +32,36 @@ Algorithme de calcul "*Blue*"
 
 Cet algorithme réalise une estimation de type BLUE (Best Linear Unbiased
 Estimator) de l'état d'un système. C'est une estimation linéaire, sans biais et
-optimale. De manière technique, c'est un estimateur d'Aitken.
-
-Cet algorithme est toujours le plus rapide de l'ensemble des algorithmes
-d'assimilation d'ADAO. Il est théoriquement réservé aux cas d'opérateurs
+optimale. De manière technique, c'est ici un estimateur d'Aitken. Il réalise la
+meilleure estimation linéaire de l'état à l'aide de l'état d'ébauche initial et
+des observations. Il est théoriquement réservé aux cas d'opérateurs
 d'observation linéaires, même s'il fonctionne parfois dans les cas "faiblement"
 non-linéaires. On peut vérifier la linéarité de l'opérateur d'observation à
-l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
+l'aide d'un :ref:`section_ref_algorithm_LinearityTest`. Cet algorithme est
+toujours le plus rapide de l'ensemble des algorithmes d'assimilation d'ADAO.
 
-En cas de non-linéarité, même peu marquée, on lui préférera aisément
-l':ref:`section_ref_algorithm_ExtendedBlue` ou
-l':ref:`section_ref_algorithm_3DVAR`.
+Cet algorithme est naturellement écrit pour une estimation unique, sans notion
+dynamique ou itérative (il n'y a donc pas besoin  dans ce cas d'opérateur
+d'évolution incrémentale, ni de covariance d'erreurs d'évolution). Dans ADAO,
+il peut aussi être utilisé sur une succession d'observations, plaçant alors
+l'estimation dans un cadre récursif en partie similaire à un
+:ref:`section_ref_algorithm_KalmanFilter`. Une estimation standard est
+effectuée à chaque pas d'observation sur l'état prévu par le modèle d'évolution
+incrémentale, sachant que la covariance d'erreur d'état reste la covariance
+d'ébauche initialement fournie par l'utilisateur. Pour être explicite,
+contrairement aux filtres de type Kalman, la covariance d'erreurs sur les états
+n'est pas remise à jour.
+
+En cas de non-linéarité, même peu marquée, on lui préférera aisément un
+:ref:`section_ref_algorithm_ExtendedBlue` ou un
+:ref:`section_ref_algorithm_3DVAR`.
 
 .. index:: single: Optimal Interpolation
 .. index:: single: OI
 
 Remarque complémentaire : une simplification algébrique du BLUE conduit à la
-méthode d'interpolation optimale, nommée "*Optimal Interpolation*" ou "*OI*".
-C'est une méthode très simple et peu coûteuse, spécialement adaptée aux
+méthode d'interpolation dite optimale nommée "*Optimal Interpolation*" ou
+"*OI*". C'est une méthode très simple et peu coûteuse, spécialement adaptée aux
 problèmes de très (très) grande taille, mais dont l'inconvénient est de fournir
 un résultat d'analyse globalement sous-optimal et bruité, voire incohérent. Le
 moyen d'éviter ces désavantages est d'adapter très précisément les éléments de

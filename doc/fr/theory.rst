@@ -641,6 +641,8 @@ mentionne que quelques méthodes qui sont disponibles dans ADAO :
 Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
 sa recherche grâce au point d'entrée [WikipediaMO]_.
 
+.. _section_theory_dynamique:
+
 Approfondir l'assimilation de données pour la dynamique
 -------------------------------------------------------
 
@@ -818,7 +820,7 @@ de paramètres :math:`\mathbf{a}`, à travers la variable conjointe
 avec :math:`\mathbf{w}_{n}=[\mathbf{x}_n~~\mathbf{a}_n]^T`. Les opérateurs
 d'évolution incrémentale et d'observation sont donc respectivement les
 opérateurs augmentés :math:`\tilde{M}` et :math:`\tilde{H}`, et sont
-directement utilisables en assimilation de données avec ADAO.
+directement utilisables dans les cas d'études avec ADAO.
 
 Schéma conceptuel pour l'assimilation de données en dynamique
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -826,8 +828,10 @@ Schéma conceptuel pour l'assimilation de données en dynamique
 Pour compléter la description, on peut représenter la démarche d'assimilation
 de données de manière spécifiquement dynamique à l'aide d'un schéma temporel,
 qui décrit l'action des opérateurs d'évolution (:math:`M` ou :math:`\tilde{M}`)
-et d'observation (:math:`H` ou :math:`\tilde{H}`) lors de la simulation
-discrète. Une représentation possible est la suivante :
+et d'observation (:math:`H` ou :math:`\tilde{H}`) lors de la simulation et
+l'estimation récursive discrète de l'état (:math:`\mathbf{x}`). Une
+représentation simple est la suivante, particulièrement adaptée aux algorithmes
+itératifs de filtrage de type Kalman :
 
   .. _schema_d_AD_temporel:
   .. image:: images/schema_temporel_KF.png
@@ -836,5 +840,9 @@ discrète. Une représentation possible est la suivante :
   .. centered::
     **Schéma d'action des opérateurs pour l'assimilation de données en dynamique**
 
-Les concepts décrits dans ce schéma peuvent directement et simplement être
-utilisés dans ADAO.
+avec **P** la covariance d'erreur d'état et *t* le temps itératif discret. Dans
+ce schéma, l'analyse **(x,P)** est obtenue à travers la "*correction*" par
+l'observation de la "*prévision*" de l'état précédent. Les concepts décrits
+dans ce schéma peuvent directement et simplement être utilisés dans ADAO pour
+construire des cas d'études, et sont repris dans la description de certains
+algorithmes.

@@ -33,13 +33,25 @@ Algorithme de calcul "*ExtendedBlue*"
 Cet algorithme réalise une estimation de type BLUE étendu (Best Linear Unbiased
 Estimator, étendu) de l'état d'un système.
 
-Cet algorithme est une généralisation partiellement non-linéaire de
-l':ref:`section_ref_algorithm_Blue`. Il lui est équivalent pour un opérateur
+Cet algorithme est une généralisation partiellement non-linéaire d'un
+:ref:`section_ref_algorithm_Blue`. Il lui est équivalent pour un opérateur
 d'observation linéaire. On peut vérifier la linéarité de l'opérateur
-d'observation à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
+d'observation à l'aide d'un :ref:`section_ref_algorithm_LinearityTest`.
 
-En non-linéaire, il se rapproche de l':ref:`section_ref_algorithm_3DVAR`, sans
-lui être entièrement équivalent.
+En non-linéaire, ses résultats se rapprochent d'un
+:ref:`section_ref_algorithm_3DVAR`, sans lui être entièrement équivalent.
+
+Cet algorithme est naturellement écrit pour une estimation unique, sans notion
+dynamique ou itérative (il n'y a donc pas besoin  dans ce cas d'opérateur
+d'évolution incrémentale, ni de covariance d'erreurs d'évolution). Dans ADAO,
+il peut aussi être utilisé sur une succession d'observations, plaçant alors
+l'estimation dans un cadre récursif en partie similaire à un
+:ref:`section_ref_algorithm_KalmanFilter`. Une estimation standard est
+effectuée à chaque pas d'observation sur l'état prévu par le modèle d'évolution
+incrémentale, sachant que la covariance d'erreur d'état reste la covariance
+d'ébauche initialement fournie par l'utilisateur. Pour être explicite,
+contrairement aux filtres de type Kalman, la covariance d'erreurs sur les états
+n'est pas remise à jour.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
