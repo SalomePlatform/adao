@@ -207,7 +207,7 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             )
         # nfeval = infodict['nfev']
     else:
-        raise ValueError("Error in Minimizer name: %s"%selfA._parameters["Minimizer"])
+        raise ValueError("Error in minimizer name: %s is unkown"%selfA._parameters["Minimizer"])
     #
     IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
     #

@@ -322,7 +322,7 @@ def strmatrix2liststr( __strvect ):
     __strvect = __strvect.replace(","," ") # Blanc
     for s in ("]", ")"):
         __strvect = __strvect.replace(s,";") # "]" et ")" par ";"
-    __strvect = re.sub(';\s*;',';',__strvect)
+    __strvect = re.sub(r';\s*;',r';',__strvect)
     __strvect = __strvect.rstrip(";") # Après ^ et avant v
     __strmat = [l.split() for l in __strvect.split(";")]
     return __strmat

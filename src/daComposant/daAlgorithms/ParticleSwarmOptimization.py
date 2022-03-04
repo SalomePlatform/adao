@@ -20,9 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import numpy, logging, copy
 from daCore import BasicObjects
-import numpy, copy
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -75,17 +74,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Critère de qualité utilisé",
             listval  = [
-                "DA",
-                "AugmentedWeightedLeastSquares", "AWLS",
+                "AugmentedWeightedLeastSquares", "AWLS", "DA",
                 "WeightedLeastSquares", "WLS",
                 "LeastSquares", "LS", "L2",
                 "AbsoluteValue", "L1",
                 "MaximumError", "ME",
                 ],
-            listadv  = [
-                "AugmentedPonderatedLeastSquares","APLS",
-                "PonderatedLeastSquares","PLS",
-                ]
             )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
@@ -124,6 +118,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.setAttributes(tags=(
             "Optimization",
             "NonLinear",
+            "MetaHeuristic",
             "Population",
             ))
 
@@ -148,32 +143,30 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction-coût
-        # ------------------------------
         def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
-            _X  = numpy.asmatrix(numpy.ravel( x )).T
-            _HX = Hm( _X )
-            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            _X  = numpy.ravel( x ).reshape((-1,1))
+            _HX = numpy.ravel( Hm( _X ) ).reshape((-1,1))
+            _Innovation = Y - _HX
             #
-            if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA"]:
+            if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
                 if BI is None or RI is None:
-                    raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
-                Jb  = 0.5 * (_X - Xb).T * BI * (_X - Xb)
-                Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
-            elif QualityMeasure in ["WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS"]:
+                    raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
+                Jb  = 0.5 * (_X - Xb).T @ (BI @ (_X - Xb))
+                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+            elif QualityMeasure in ["WeightedLeastSquares","WLS"]:
                 if RI is None:
                     raise ValueError("Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.
-                Jo  = 0.5 * (Y - _HX).T * RI * (Y - _HX)
+                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
             elif QualityMeasure in ["LeastSquares","LS","L2"]:
                 Jb  = 0.
-                Jo  = 0.5 * (Y - _HX).T * (Y - _HX)
+                Jo  = 0.5 * _Innovation.T @ _Innovation
             elif QualityMeasure in ["AbsoluteValue","L1"]:
                 Jb  = 0.
-                Jo  = numpy.sum( numpy.abs(Y - _HX) )
+                Jo  = numpy.sum( numpy.abs(_Innovation) )
             elif QualityMeasure in ["MaximumError","ME"]:
                 Jb  = 0.
-                Jo  = numpy.max( numpy.abs(Y - _HX) )
+                Jo  = numpy.max( numpy.abs(_Innovation) )
             #
             J   = float( Jb ) + float( Jo )
             #
@@ -198,13 +191,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         for i in range(nbparam) :
             PosInsect.append(numpy.random.uniform(low=SpaceLow[i], high=SpaceUp[i], size=self._parameters["NumberOfInsects"]))
             VelocityInsect.append(numpy.random.uniform(low=-LimitVelocity[i], high=LimitVelocity[i], size=self._parameters["NumberOfInsects"]))
-        VelocityInsect = numpy.matrix(VelocityInsect)
-        PosInsect = numpy.matrix(PosInsect)
+        VelocityInsect = numpy.array(VelocityInsect)
+        PosInsect = numpy.array(PosInsect)
         #
         BestPosInsect = numpy.array(PosInsect)
         qBestPosInsect = []
-        Best = copy.copy(SpaceLow)
-        qBest = CostFunction(Best,self._parameters["QualityCriterion"])
+        _Best = copy.copy(SpaceLow)
+        _qualityBest = CostFunction(_Best,self._parameters["QualityCriterion"])
         NumberOfFunctionEvaluations += 1
         #
         for i in range(self._parameters["NumberOfInsects"]):
@@ -212,17 +205,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             quality = CostFunction(insect,self._parameters["QualityCriterion"])
             NumberOfFunctionEvaluations += 1
             qBestPosInsect.append(quality)
-            if quality < qBest:
-                Best  = copy.copy( insect )
-                qBest = copy.copy( quality )
-        logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(Best), str(qBest)))
+            if quality < _qualityBest:
+                _Best  = copy.copy( insect )
+                _qualityBest = copy.copy( quality )
+        logging.debug("%s Initialisation, Insecte = %s, Qualité = %s"%(self._name, str(_Best), str(_qualityBest)))
         #
         self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
         if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( Best )
+            self.StoredVariables["CurrentState"].store( _Best )
         self.StoredVariables["CostFunctionJb"].store( 0. )
         self.StoredVariables["CostFunctionJo"].store( 0. )
-        self.StoredVariables["CostFunctionJ" ].store( qBest )
+        self.StoredVariables["CostFunctionJ" ].store( _qualityBest )
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
@@ -232,57 +225,55 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 rp = numpy.random.uniform(size=nbparam)
                 rg = numpy.random.uniform(size=nbparam)
                 for j in range(nbparam) :
-                    VelocityInsect[j,i] = self._parameters["SwarmVelocity"]*VelocityInsect[j,i] +  Phip*rp[j]*(BestPosInsect[j,i]-PosInsect[j,i]) +  Phig*rg[j]*(Best[j]-PosInsect[j,i])
+                    VelocityInsect[j,i] = self._parameters["SwarmVelocity"]*VelocityInsect[j,i] +  Phip*rp[j]*(BestPosInsect[j,i]-PosInsect[j,i]) +  Phig*rg[j]*(_Best[j]-PosInsect[j,i])
                     PosInsect[j,i] = PosInsect[j,i]+VelocityInsect[j,i]
                 quality = CostFunction(insect,self._parameters["QualityCriterion"])
                 NumberOfFunctionEvaluations += 1
                 if quality < qBestPosInsect[i]:
                     BestPosInsect[:,i] = copy.copy( insect )
                     qBestPosInsect[i]  = copy.copy( quality )
-                    if quality < qBest :
-                        Best  = copy.copy( insect )
-                        qBest = copy.copy( quality )
-            logging.debug("%s Etape %i, Insecte = %s, Qualité = %s"%(self._name, n, str(Best), str(qBest)))
+                    if quality < _qualityBest :
+                        _Best  = copy.copy( insect )
+                        _qualityBest = copy.copy( quality )
+            logging.debug("%s Etape %i, Insecte = %s, Qualité = %s"%(self._name, n, str(_Best), str(_qualityBest)))
             #
             self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
-                self.StoredVariables["CurrentState"].store( Best )
+                self.StoredVariables["CurrentState"].store( _Best )
             if self._toStore("SimulatedObservationAtCurrentState"):
-                _HmX = Hm( numpy.asmatrix(numpy.ravel( Best )).T )
-                _HmX = numpy.asmatrix(numpy.ravel( _HmX )).T
+                _HmX = Hm( _Best )
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HmX )
             self.StoredVariables["CostFunctionJb"].store( 0. )
             self.StoredVariables["CostFunctionJo"].store( 0. )
-            self.StoredVariables["CostFunctionJ" ].store( qBest )
+            self.StoredVariables["CostFunctionJ" ].store( _qualityBest )
             if NumberOfFunctionEvaluations > self._parameters["MaximumNumberOfFunctionEvaluations"]:
                 logging.debug("%s Stopping search because the number %i of function evaluations is exceeding the maximum %i."%(self._name, NumberOfFunctionEvaluations, self._parameters["MaximumNumberOfFunctionEvaluations"]))
                 break
         #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(numpy.ravel( Best )).T
+        Xa = _Best
         #
-        self.StoredVariables["Analysis"].store( Xa.A1 )
+        self.StoredVariables["Analysis"].store( Xa )
         #
+        # Calculs et/ou stockages supplémentaires
+        # ---------------------------------------
+        if self._toStore("OMA") or \
+            self._toStore("SimulatedObservationAtOptimum"):
+            HXa = Hm(Xa)
         if self._toStore("Innovation") or \
             self._toStore("OMB") or \
             self._toStore("SimulatedObservationAtBackground"):
             HXb = Hm(Xb)
-            d = Y - HXb
-        if self._toStore("OMA") or \
-            self._toStore("SimulatedObservationAtOptimum"):
-            HXa = Hm(Xa)
-        #
-        # Calculs et/ou stockages supplémentaires
-        # ---------------------------------------
+            Innovation = Y - HXb
         if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( d )
+            self.StoredVariables["Innovation"].store( Innovation )
+        if self._toStore("OMB"):
+            self.StoredVariables["OMB"].store( Innovation )
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
             self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
-        if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( d )
         if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):

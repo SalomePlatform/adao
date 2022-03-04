@@ -78,14 +78,14 @@ def mmqr(
         Derivees  = numpy.array(fprime(variables))
         Derivees  = Derivees.reshape(n,p) # ADAO & check shape
         DeriveesT = Derivees.transpose()
-        M         =   numpy.dot( DeriveesT , (numpy.array(numpy.matrix(p*[poids,]).T)*Derivees) )
+        M         =   numpy.dot( DeriveesT , (numpy.array(p*[poids,]).T * Derivees) )
         SM        =   numpy.transpose(numpy.dot( DeriveesT , veps ))
         step      = - numpy.linalg.lstsq( M, SM, rcond=-1 )[0]
         #
         variables = variables + step
         if bounds is not None:
             # Attention : boucle infinie à éviter si un intervalle est trop petit
-            while( (variables < numpy.ravel(numpy.asmatrix(bounds)[:,0])).any() or (variables > numpy.ravel(numpy.asmatrix(bounds)[:,1])).any() ):
+            while( (variables < numpy.ravel(numpy.asarray(bounds)[:,0])).any() or (variables > numpy.ravel(numpy.asarray(bounds)[:,1])).any() ):
                 step      = step/2.
                 variables = variables - step
         residus   = mesures - numpy.ravel( func(variables) )

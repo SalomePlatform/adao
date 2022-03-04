@@ -568,15 +568,10 @@ class FullOperator(object):
         #
         if __appliedInX is not None:
             self.__FO["AppliedInX"] = {}
-            for key in list(__appliedInX.keys()):
-                if type( __appliedInX[key] ) is type( numpy.matrix([]) ):
-                    # Pour le cas où l'on a une vraie matrice
-                    self.__FO["AppliedInX"][key] = numpy.matrix( __appliedInX[key].A1, numpy.float ).T
-                elif type( __appliedInX[key] ) is type( numpy.array([]) ) and len(__appliedInX[key].shape) > 1:
-                    # Pour le cas où l'on a un vecteur représenté en array avec 2 dimensions
-                    self.__FO["AppliedInX"][key] = numpy.matrix( __appliedInX[key].reshape(len(__appliedInX[key]),), numpy.float ).T
-                else:
-                    self.__FO["AppliedInX"][key] = numpy.matrix( __appliedInX[key],    numpy.float ).T
+            for key in __appliedInX:
+                if isinstance(__appliedInX[key], str):
+                    __appliedInX[key] = PlatformInfo.strvect2liststr( __appliedInX[key] )
+                self.__FO["AppliedInX"][key] = numpy.ravel( __appliedInX[key] ).reshape((-1,1))
         else:
             self.__FO["AppliedInX"] = None
 

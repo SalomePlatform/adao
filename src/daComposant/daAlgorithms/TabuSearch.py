@@ -65,22 +65,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "AugmentedWeightedLeastSquares",
             typecast = str,
             message  = "Critère de qualité utilisé",
-            listval  = ["AugmentedWeightedLeastSquares","AWLS","DA",
-                        "WeightedLeastSquares","WLS",
-                        "LeastSquares","LS","L2",
-                        "AbsoluteValue","L1",
-                        "MaximumError","ME"],
+            listval  = [
+                "AugmentedWeightedLeastSquares", "AWLS", "DA",
+                "WeightedLeastSquares", "WLS",
+                "LeastSquares", "LS", "L2",
+                "AbsoluteValue", "L1",
+                "MaximumError", "ME",
+                ],
             )
         self.defineRequiredParameter(
             name     = "NoiseHalfRange",
             default  = [],
-            typecast = numpy.matrix,
+            typecast = numpy.ravel,
             message  = "Demi-amplitude des perturbations uniformes centrées d'état pour chaque composante de l'état",
             )
         self.defineRequiredParameter(
             name     = "StandardDeviation",
             default  = [],
-            typecast = numpy.matrix,
+            typecast = numpy.ravel,
             message  = "Ecart-type des perturbations gaussiennes d'état pour chaque composante de l'état",
             )
         self.defineRequiredParameter(
@@ -135,7 +137,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         if self._parameters["NoiseDistribution"] == "Uniform":
-            nrange = numpy.ravel(self._parameters["NoiseHalfRange"]) # Vecteur
+            nrange = self._parameters["NoiseHalfRange"] # Vecteur
             if nrange.size != Xb.size:
                 raise ValueError("Noise generation by Uniform distribution requires range for all variable increments. The actual noise half range vector is:\n%s"%nrange)
         elif self._parameters["NoiseDistribution"] == "Gaussian":
@@ -143,19 +145,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if sigma.size != Xb.size:
                 raise ValueError("Noise generation by Gaussian distribution requires standard deviation for all variable increments. The actual standard deviation vector is:\n%s"%sigma)
         #
-        # Opérateur d'observation
-        # -----------------------
         Hm = HO["Direct"].appliedTo
         #
-        # Précalcul des inversions de B et R
-        # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction de deplacement
-        # ----------------------------------------
         def Tweak( x, NoiseDistribution, NoiseAddingProbability ):
-            _X  = numpy.matrix(numpy.ravel( x )).T
+            _X  = numpy.array( x, dtype=float, copy=True ).ravel().reshape((-1,1))
             if NoiseDistribution == "Uniform":
                 for i in range(_X.size):
                     if NoiseAddingProbability >= numpy.random.uniform():
@@ -171,32 +167,49 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             return _X
         #
-        def StateInList( x, TL ):
+        def StateInList( x, _TL ):
             _X  = numpy.ravel( x )
             _xInList = False
-            for state in TL:
+            for state in _TL:
                 if numpy.all(numpy.abs( _X - numpy.ravel(state) ) <= 1e-16*numpy.abs(_X)):
                     _xInList = True
             # if _xInList: import sys ; sys.exit()
             return _xInList
         #
+        def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
+            _X  = numpy.ravel( x ).reshape((-1,1))
+            _HX = numpy.ravel( Hm( _X ) ).reshape((-1,1))
+            _Innovation = Y - _HX
+            #
+            if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
+                if BI is None or RI is None:
+                    raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
+                Jb  = 0.5 * (_X - Xb).T @ (BI @ (_X - Xb))
+                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+            elif QualityMeasure in ["WeightedLeastSquares","WLS"]:
+                if RI is None:
+                    raise ValueError("Observation error covariance matrix has to be properly defined!")
+                Jb  = 0.
+                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+            elif QualityMeasure in ["LeastSquares","LS","L2"]:
+                Jb  = 0.
+                Jo  = 0.5 * _Innovation.T @ _Innovation
+            elif QualityMeasure in ["AbsoluteValue","L1"]:
+                Jb  = 0.
+                Jo  = numpy.sum( numpy.abs(_Innovation) )
+            elif QualityMeasure in ["MaximumError","ME"]:
+                Jb  = 0.
+                Jo  = numpy.max( numpy.abs(_Innovation) )
+            #
+            J   = float( Jb ) + float( Jo )
+            #
+            return J
+        #
         # Minimisation de la fonctionnelle
         # --------------------------------
         _n = 0
         _S = Xb
-        # _qualityS = CostFunction( _S, self._parameters["QualityCriterion"] )
-        _qualityS = BasicObjects.CostFunction3D(
-                   _S,
-            _Hm  = Hm,
-            _BI  = BI,
-            _RI  = RI,
-            _Xb  = Xb,
-            _Y   = Y,
-            _SSC = self._parameters["StoreSupplementaryCalculations"],
-            _QM  = self._parameters["QualityCriterion"],
-            _SSV = self.StoredVariables,
-            _sSc = False,
-            )
+        _qualityS = CostFunction( _S, self._parameters["QualityCriterion"] )
         _Best, _qualityBest   =   _S, _qualityS
         _TabuList = []
         _TabuList.append( _S )
@@ -205,34 +218,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if len(_TabuList) > self._parameters["LengthOfTabuList"]:
                 _TabuList.pop(0)
             _R = Tweak( _S, self._parameters["NoiseDistribution"], self._parameters["NoiseAddingProbability"] )
-            # _qualityR = CostFunction( _R, self._parameters["QualityCriterion"] )
-            _qualityR = BasicObjects.CostFunction3D(
-                       _R,
-                _Hm  = Hm,
-                _BI  = BI,
-                _RI  = RI,
-                _Xb  = Xb,
-                _Y   = Y,
-                _SSC = self._parameters["StoreSupplementaryCalculations"],
-                _QM  = self._parameters["QualityCriterion"],
-                _SSV = self.StoredVariables,
-                _sSc = False,
-                )
+            _qualityR = CostFunction( _R, self._parameters["QualityCriterion"] )
             for nbt in range(self._parameters["NumberOfElementaryPerturbations"]-1):
                 _W = Tweak( _S, self._parameters["NoiseDistribution"], self._parameters["NoiseAddingProbability"] )
-                # _qualityW = CostFunction( _W, self._parameters["QualityCriterion"] )
-                _qualityW = BasicObjects.CostFunction3D(
-                           _W,
-                    _Hm  = Hm,
-                    _BI  = BI,
-                    _RI  = RI,
-                    _Xb  = Xb,
-                    _Y   = Y,
-                    _SSC = self._parameters["StoreSupplementaryCalculations"],
-                    _QM  = self._parameters["QualityCriterion"],
-                    _SSV = self.StoredVariables,
-                    _sSc = False,
-                    )
+                _qualityW = CostFunction( _W, self._parameters["QualityCriterion"] )
                 if (not StateInList(_W, _TabuList)) and ( (_qualityW < _qualityR) or StateInList(_R,_TabuList) ):
                     _R, _qualityR   =   _W, _qualityW
             if (not StateInList( _R, _TabuList )) and (_qualityR < _qualityS):
@@ -241,46 +230,44 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if _qualityS < _qualityBest:
                 _Best, _qualityBest   =   _S, _qualityS
             #
+            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             if self._parameters["StoreInternalVariables"] or self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( _Best )
             if self._toStore("SimulatedObservationAtCurrentState"):
-                _HmX = Hm( numpy.asmatrix(numpy.ravel( _Best )).T )
-                _HmX = numpy.asmatrix(numpy.ravel( _HmX )).T
+                _HmX = Hm( _Best )
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HmX )
-            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
             self.StoredVariables["CostFunctionJb"].store( 0. )
             self.StoredVariables["CostFunctionJo"].store( 0. )
             self.StoredVariables["CostFunctionJ" ].store( _qualityBest )
         #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.asmatrix(numpy.ravel( _Best )).T
+        Xa = _Best
         #
-        self.StoredVariables["Analysis"].store( Xa.A1 )
-        #
-        if self._toStore("Innovation") or \
-            self._toStore("OMB") or \
-            self._toStore("SimulatedObservationAtBackground"):
-            HXb = Hm(Xb)
-            d = Y - HXb
-        if self._toStore("OMA") or \
-           self._toStore("SimulatedObservationAtOptimum"):
-            HXa = Hm(Xa)
+        self.StoredVariables["Analysis"].store( Xa )
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if self._toStore("OMA") or \
+            self._toStore("SimulatedObservationAtOptimum"):
+            HXa = Hm(Xa).reshape((-1,1))
+        if self._toStore("Innovation") or \
+            self._toStore("OMB") or \
+            self._toStore("SimulatedObservationAtBackground"):
+            HXb = Hm(Xb).reshape((-1,1))
+            Innovation = Y - HXb
         if self._toStore("Innovation"):
-            self.StoredVariables["Innovation"].store( numpy.ravel(d) )
+            self.StoredVariables["Innovation"].store( Innovation )
+        if self._toStore("OMB"):
+            self.StoredVariables["OMB"].store( Innovation )
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
-        if self._toStore("OMB"):
-            self.StoredVariables["OMB"].store( numpy.ravel(d) )
+            self.StoredVariables["OMA"].store( Y - HXa )
         if self._toStore("SimulatedObservationAtBackground"):
-            self.StoredVariables["SimulatedObservationAtBackground"].store( numpy.ravel(HXb) )
+            self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):
-            self.StoredVariables["SimulatedObservationAtOptimum"].store( numpy.ravel(HXa) )
+            self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
         self._post_run(HO)
         return 0

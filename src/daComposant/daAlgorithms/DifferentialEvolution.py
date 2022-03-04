@@ -20,7 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging, numpy, scipy.optimize
+import numpy, logging, scipy.optimize
 from daCore import BasicObjects
 
 # ==============================================================================
@@ -64,6 +64,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = -1,
             )
         self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+            )
+        self.defineRequiredParameter(
             name     = "PopulationSize",
             default  = 100,
             typecast = int,
@@ -92,11 +97,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Critère de qualité utilisé",
             listval  = [
-                "AugmentedWeightedLeastSquares","AWLS","DA",
-                "WeightedLeastSquares","WLS",
-                "LeastSquares","LS","L2",
-                "AbsoluteValue","L1",
-                "MaximumError","ME",
+                "AugmentedWeightedLeastSquares", "AWLS", "DA",
+                "WeightedLeastSquares", "WLS",
+                "LeastSquares", "LS", "L2",
+                "AbsoluteValue", "L1",
+                "MaximumError", "ME",
                 ],
             )
         self.defineRequiredParameter(
@@ -133,17 +138,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtOptimum",
                 ]
             )
-        self.defineRequiredParameter(
-            name     = "SetSeed",
-            typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
-            )
         self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R", "B" ),
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
             )
         self.setAttributes(tags=(
             "Optimization",
@@ -160,23 +160,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         maxiter = min(self._parameters["MaximumNumberOfSteps"],round(self._parameters["MaximumNumberOfFunctionEvaluations"]/(popsize*len_X) - 1))
         logging.debug("%s Nombre maximal de générations = %i, taille de la population à chaque génération = %i"%(self._name, maxiter, popsize*len_X))
         #
-        # Opérateurs
-        # ----------
         Hm = HO["Direct"].appliedTo
         #
-        # Précalcul des inversions de B et R
-        # ----------------------------------
         BI = B.getI()
         RI = R.getI()
         #
-        # Définition de la fonction-coût
-        # ------------------------------
         def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
-            _X  = numpy.asmatrix(numpy.ravel( x )).T
-            self.StoredVariables["CurrentState"].store( _X )
-            _HX = Hm( _X )
-            _HX = numpy.asmatrix(numpy.ravel( _HX )).T
+            _X  = numpy.ravel( x ).reshape((-1,1))
+            _HX = numpy.ravel( Hm( _X ) ).reshape((-1,1))
             _Innovation = Y - _HX
+            self.StoredVariables["CurrentState"].store( _X )
             if self._toStore("SimulatedObservationAtCurrentState") or \
                 self._toStore("SimulatedObservationAtCurrentOptimum"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
@@ -185,17 +178,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
                 if BI is None or RI is None:
-                    raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
-                Jb  = 0.5 * (_X - Xb).T * (BI * (_X - Xb))
-                Jo  = 0.5 * _Innovation.T * (RI * _Innovation)
+                    raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
+                Jb  = 0.5 * (_X - Xb).T @ (BI @ (_X - Xb))
+                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
             elif QualityMeasure in ["WeightedLeastSquares","WLS"]:
                 if RI is None:
                     raise ValueError("Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.
-                Jo  = 0.5 * (_Innovation).T * RI * (_Innovation)
+                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
             elif QualityMeasure in ["LeastSquares","LS","L2"]:
                 Jb  = 0.
-                Jo  = 0.5 * (_Innovation).T * (_Innovation)
+                Jo  = 0.5 * _Innovation.T @ _Innovation
             elif QualityMeasure in ["AbsoluteValue","L1"]:
                 Jb  = 0.
                 Jo  = numpy.sum( numpy.abs(_Innovation) )
@@ -230,8 +223,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )
             return J
         #
-        # Point de démarrage de l'optimisation : Xini = Xb
-        # ------------------------------------
         Xini = numpy.ravel(Xb)
         #
         # Minimisation de la fonctionnelle
@@ -255,7 +246,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Obtention de l'analyse
         # ----------------------
-        Xa = numpy.ravel( Minimum )
+        Xa = Minimum
         #
         self.StoredVariables["Analysis"].store( Xa )
         #
@@ -269,11 +260,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 HXa = self.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
             else:
                 HXa = Hm(Xa)
+            HXa = HXa.reshape((-1,1))
         if self._toStore("Innovation") or \
             self._toStore("OMB") or \
             self._toStore("SimulatedObservationAtBackground"):
-            HXb = Hm(Xb)
-            Innovation  = Y - HXb
+            HXb = Hm(Xb).reshape((-1,1))
+            Innovation = Y - HXb
         if self._toStore("Innovation"):
             self.StoredVariables["Innovation"].store( Innovation )
         if self._toStore("OMB"):
@@ -281,13 +273,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._toStore("BMA"):
             self.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
         if self._toStore("OMA"):
-            self.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
+            self.StoredVariables["OMA"].store( Y - HXa )
         if self._toStore("SimulatedObservationAtBackground"):
             self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
-        self._post_run()
+        self._post_run(HO)
         return 0
 
 # ==============================================================================

@@ -47,18 +47,21 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     else:
         duration = 2
         __p = numpy.array(Y).size
+    __n = Xb.size
     #
     # Précalcul des inversions de B et R
-    if selfA._parameters["StoreInternalVariables"] \
-        or selfA._toStore("CostFunctionJ") \
-        or selfA._toStore("CostFunctionJb") \
-        or selfA._toStore("CostFunctionJo") \
-        or selfA._toStore("CurrentOptimum") \
-        or selfA._toStore("APosterioriCovariance"):
-        BI = B.getI()
+    if selfA._parameters["StoreInternalVariables"] or \
+        selfA._toStore("CostFunctionJ")  or selfA._toStore("CostFunctionJAtCurrentOptimum") or \
+        selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
+        selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
+        selfA._toStore("CurrentOptimum") or selfA._toStore("APosterioriCovariance") or \
+        (__p > __n):
+        if isinstance(B,numpy.ndarray):
+            BI = numpy.linalg.inv(B)
+        else:
+            BI = B.getI()
         RI = R.getI()
     #
-    __n = Xb.size
     nbPreviousSteps  = len(selfA.StoredVariables["Analysis"])
     #
     if len(selfA.StoredVariables["Analysis"])==0 or not selfA._parameters["nextStep"]:
@@ -75,6 +78,8 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
         Pn = selfA._getInternalState("Pn")
+    if hasattr(Pn,"asfullmatrix"):
+        Pn = Pn.asfullmatrix(Xn.size)
     #
     if selfA._parameters["EstimationOf"] == "Parameters":
         XaMin            = Xn
@@ -106,7 +111,7 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 Cm = CM["Tangent"].asMatrix(Xn_predicted)
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm @ Un
-            Pn_predicted = Q + Mt * (Pn * Ma)
+            Pn_predicted = Q + Mt @ (Pn @ Ma)
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = Xn
@@ -137,9 +142,22 @@ def cekf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
                 _Innovation = _Innovation - Cm @ Un
         #
-        Kn = Pn_predicted * Ha * numpy.linalg.inv(R + numpy.dot(Ht, Pn_predicted * Ha))
-        Xn = Xn_predicted + Kn * _Innovation
-        Pn = Pn_predicted - Kn * Ht * Pn_predicted
+        if Ynpu.size <= Xn.size:
+            _HNHt = numpy.dot(Ht, Pn_predicted @ Ha)
+            _A = R + _HNHt
+            _u = numpy.linalg.solve( _A , _Innovation )
+            Xn = Xn_predicted + (Pn_predicted @ (Ha @ _u)).reshape((-1,1))
+            Kn = Pn_predicted @ (Ha @ numpy.linalg.inv(_A))
+        else:
+            _HtRH = numpy.dot(Ha, RI @ Ht)
+            _A = numpy.linalg.inv(Pn_predicted) + _HtRH
+            _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI @ _Innovation) )
+            Xn = Xn_predicted + _u.reshape((-1,1))
+            Kn = numpy.linalg.inv(_A) @ (Ha @ RI.asfullmatrix(Ynpu.size))
+        #
+        Pn = Pn_predicted - Kn @ (Ht @ Pn_predicted)
+        Pn = (Pn + Pn.T) * 0.5 # Symétrie
+        Pn = Pn + mpr*numpy.trace( Pn ) * numpy.identity(Xn.size) # Positivité
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             Xn = ApplyBounds( Xn, selfA._parameters["Bounds"] )

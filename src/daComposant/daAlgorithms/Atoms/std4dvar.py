@@ -241,7 +241,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             full_output = True,
             )
     else:
-        raise ValueError("Error in Minimizer name: %s"%selfA._parameters["Minimizer"])
+        raise ValueError("Error in minimizer name: %s is unkown"%selfA._parameters["Minimizer"])
     #
     IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
     #
