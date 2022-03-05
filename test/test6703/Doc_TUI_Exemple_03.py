@@ -40,7 +40,7 @@ def simulation(x):
     "Fonction de simulation H pour effectuer Y=H(X)"
     import numpy
     __x = numpy.ravel(x)
-    __H = numpy.diag([1.,2.,3.])
+    __H = numpy.array([[1,0,0],[0,2,0],[0,0,3],[1,2,3]])
     return __H @ __x
 #
 # Observations obtenues par simulation

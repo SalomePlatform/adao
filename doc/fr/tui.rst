@@ -62,25 +62,16 @@ Un exemple simple de création d'un cas de calcul TUI ADAO
 Pour introduire l'interface TUI, on commence par un exemple simple mais complet
 de cas de calcul ADAO. Toutes les données sont explicitement définies dans le
 corps du script pour faciliter la lecture. L'ensemble des commandes est le
-suivant::
+suivant :
 
-    from numpy import array
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
-    case.set( 'Background',          Vector=[0, 1, 2] )
-    case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
-    case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
-    case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
-    case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
-    case.set( 'Observer',            Variable="Analysis", Template="ValuePrinter" )
-    case.execute()
+.. literalinclude:: scripts/tui_example_01.py
+    :language: python
 
 Le résultat de l'exécution de ces commandes dans SALOME (que ce soit par la
-commande "*shell*" de SALOME, dans la console Python de l'interface, ou par le
-menu d'exécution d'un script) est le suivant::
+commande "*shell*" de SALOME, dans une console Python SALOME de l'interface, ou
+par le menu d'exécution d'un script) est le suivant :
 
-    Analysis [ 0.25000264  0.79999797  0.94999939]
+.. literalinclude:: scripts/tui_example_01.res
 
 Création détaillée d'un cas de calcul TUI ADAO
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -152,7 +143,7 @@ ci-dessus) et l'enregistre dans le cas ADAO::
         import numpy
         __x = numpy.ravel(x)
         __H = numpy.diag([1.,2.,3.])
-        return __H @ __x
+        return numpy.dot(__H, __x)
     #
     case.set( 'ObservationOperator',
         OneFunction = simulation,
@@ -673,26 +664,14 @@ externes au cas.
 
 De plus, on peut obtenir une information simple sur le cas d'étude tel que
 défini par l'utilisateur en utilisant directement la commande "*print*" de Python
-sur le cas, à toute étape lors de sa construction. Par exemple::
+sur le cas, à toute étape lors de sa construction. Par exemple :
 
-    from numpy import array
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
-    case.set( 'Background',          Vector=[0, 1, 2] )
-    print(case)
+.. literalinclude:: scripts/tui_example_07.py
+    :language: python
 
-dont le résultat est ici::
+dont le résultat est ici :
 
-    ================================================================================
-    ADAO Study report
-    ================================================================================
-
-      - AlgorithmParameters command has been set with values:
-            Algorithm='3DVAR'
-
-      - Background command has been set with values:
-            Vector=[0, 1, 2]
+.. literalinclude:: scripts/tui_example_07.res
 
 .. _subsection_tui_advanced:
 
@@ -718,104 +697,20 @@ Les hypothèses du cas utilisateur sont les suivantes. On suppose :
 #. que l'utilisateur dispose en Python d'une fonction de simulation physique appelée ``simulation``, préalablement (bien) testée, qui transforme les 3 paramètres en résultats similaires aux observations,
 #. que l'exploitation indépendante, que l'utilisateur veut faire, est représentée ici par l'affichage simple de l'état initial, de l'état optimal, de la simulation en ce point, des états intermédiaires et du nombre d'itérations d'optimisation.
 
-Pour effectuer de manière simple cet essai de cas de calcul TUI, on se donne
-par exemple les entrées suivantes, parfaitement arbitraires, en construisant
-les observations par simulation pour se placer dans un cas d'expériences
-jumelles (pour mémoire, voir la démarche :ref:`section_methodology_twin`)::
+Pour effectuer de manière simple cet essai de cas de calcul TUI, on se place
+dans un cas d'expériences jumelles (pour mémoire, voir la démarche
+:ref:`section_methodology_twin`). Pour cela, on se donne par exemple les
+entrées suivantes, parfaitement arbitraires, en construisant les observations
+par simulation. Puis on résout le problème de recalage par le jeu de commandes
+qui vient ensuite. Au final, l'ensemble du problème est posé et résolu par le
+script suivant :
 
-    #
-    # Construction artificielle d'un exemple de données utilisateur
-    # -------------------------------------------------------------
-    alpha = 5.
-    beta = 7
-    gamma = 9.0
-    #
-    alphamin, alphamax = 0., 10.
-    betamin,  betamax  = 3, 13
-    gammamin, gammamax = 1.5, 15.5
-    #
-    def simulation(x):
-        "Fonction de simulation H pour effectuer Y=H(X)"
-        import numpy
-        __x = numpy.ravel(x)
-        __H = numpy.diag([1.,2.,3.])
-        return __H @ __x
-    #
-    # Observations obtenues par simulation
-    # ------------------------------------
-    observations = simulation((2, 3, 4))
+.. literalinclude:: scripts/tui_example_11.py
+    :language: python
 
-Le jeu de commandes que l'on peut utiliser est le suivant::
+L'exécution de jeu de commandes donne les résultats suivants :
 
-    import numpy
-    from adao import adaoBuilder
-    #
-    # Mise en forme des entrées
-    # -------------------------
-    Xb = (alpha, beta, gamma)
-    Bounds = (
-        (alphamin, alphamax),
-        (betamin,  betamax ),
-        (gammamin, gammamax))
-    #
-    # TUI ADAO
-    # --------
-    case = adaoBuilder.New()
-    case.set(
-        'AlgorithmParameters',
-        Algorithm = '3DVAR',
-        Parameters = {
-            "Bounds":Bounds,
-            "MaximumNumberOfSteps":100,
-            "StoreSupplementaryCalculations":[
-                "CostFunctionJ",
-                "CurrentState",
-                "SimulatedObservationAtOptimum",
-                ],
-            }
-        )
-    case.set( 'Background', Vector = numpy.array(Xb), Stored = True )
-    case.set( 'Observation', Vector = numpy.array(observations) )
-    case.set( 'BackgroundError', ScalarSparseMatrix = 1.0e10 )
-    case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
-    case.set(
-        'ObservationOperator',
-        OneFunction = simulation,
-        Parameters  = {"DifferentialIncrement":0.0001},
-        )
-    case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
-    case.execute()
-    #
-    # Exploitation indépendante
-    # -------------------------
-    Xbackground   = case.get("Background")
-    Xoptimum      = case.get("Analysis")[-1]
-    FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
-    J_values      = case.get("CostFunctionJ")[:]
-    print("")
-    print("Nombre d'itérations internes...: %i"%len(J_values))
-    print("Etat initial...................: %s"%(numpy.ravel(Xbackground),))
-    print("Etat optimal...................: %s"%(numpy.ravel(Xoptimum),))
-    print("Simulation à l'état optimal....: %s"%(numpy.ravel(FX_at_optimum),))
-    print("")
-
-L'exécution de jeu de commandes donne le résultat suivant::
-
-    CurrentState [ 5.  7.  9.]
-    CurrentState [ 0.   3.   1.5]
-    CurrentState [ 1.40006418  3.86705307  3.7061137 ]
-    CurrentState [ 1.42580231  3.68474804  3.81008738]
-    CurrentState [ 1.60220353  3.0677108   4.06146069]
-    CurrentState [ 1.72517855  3.03296953  4.04915706]
-    CurrentState [ 2.00010755  3.          4.00055409]
-    CurrentState [ 1.99995528  3.          3.99996367]
-    CurrentState [ 2.00000007  3.          4.00000011]
-    CurrentState [ 2.  3.  4.]
-
-    Nombre d'itérations internes...: 10
-    Etat initial...................: [ 5.  7.  9.]
-    Etat optimal...................: [ 2.  3.  4.]
-    Simulation à l'état optimal....: [  2.   6.  12.  20.]
+.. literalinclude:: scripts/tui_example_11.res
 
 Comme il se doit en expériences jumelles, avec une confiance majoritairement
 placée dans les observations, on constate que l'on retrouve bien les paramètres
