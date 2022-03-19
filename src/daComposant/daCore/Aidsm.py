@@ -676,7 +676,7 @@ class Aidsm(object):
 
     # -----------------------------------------------------------
 
-    def get_available_variables(self):
+    def __get_available_variables(self):
         """
         Renvoie les variables potentiellement utilisables pour l'étude,
         initialement stockées comme données d'entrées ou dans les algorithmes,
@@ -700,7 +700,7 @@ class Aidsm(object):
             variables.sort()
             return variables
 
-    def get_available_algorithms(self):
+    def __get_available_algorithms(self):
         """
         Renvoie la liste des algorithmes potentiellement utilisables, identifiés
         par les chaînes de caractères.
@@ -720,13 +720,13 @@ class Aidsm(object):
         files.sort()
         return files
 
-    def get_algorithms_main_path(self):
+    def __get_algorithms_main_path(self):
         """
         Renvoie le chemin pour le répertoire principal contenant les algorithmes
         """
         return self.__parent
 
-    def add_algorithms_path(self, Path=None):
+    def __add_algorithms_path(self, Path=None):
         """
         Ajoute au chemin de recherche des algorithmes un répertoire dans lequel
         se trouve un sous-répertoire "daAlgorithms"

@@ -373,7 +373,7 @@ class PathManagement(object):
         self.__paths["daNumerics"]  = os.path.join(parent,"daNumerics")
         #
         for v in self.__paths.values():
-            sys.path.insert(0, v )
+            if os.path.isdir(v): sys.path.insert(0, v )
         #
         # Conserve en unique exemplaire chaque chemin
         sys.path = uniq( sys.path )

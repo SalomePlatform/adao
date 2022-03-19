@@ -34,6 +34,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "LinearLeastSquares",
+                ],
+            listadv  = [
                 "OneCorrection",
                 ],
             )

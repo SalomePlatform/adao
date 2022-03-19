@@ -431,7 +431,7 @@ check_names = ""
 decl_algos  = ""
 adao_all_names = ""
 assim_study_object = daCore.Aidsm.Aidsm()
-algos_list = assim_study_object.get_available_algorithms()
+algos_list = assim_study_object._Aidsm__get_available_algorithms()
 del assim_study_object
 for algo_name in algos_list:
   if algo_name in infos.AssimAlgos:

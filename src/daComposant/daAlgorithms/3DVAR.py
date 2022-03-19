@@ -38,9 +38,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "3DVAR-VAN",
                 "3DVAR-Incr",
                 "3DVAR-PSAS",
-                "OneCorrection",
                 ],
             listadv  = [
+                "OneCorrection",
                 "3DVAR-Std",
                 "Incr3DVAR",
                 ],

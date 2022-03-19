@@ -16,12 +16,12 @@ the framework are also known under the names of *calibration*, *adjustment*,
 problems*, *Bayesian estimation*, *optimal interpolation*, *mathematical
 regularization*, *meta-heuristics for optimization*, *model reduction*, *data
 smoothing*, etc. More details can be found in the full ADAO documentation (see
-https://www.salome-platform.org/).
+https://www.salome-platform.org/ User Documentation dedicated section).
 
 Only the use of ADAO text programming interface (API/TUI) is introduced
 here. This interface gives ability to create a calculation object in a
 similar way than the case building obtained through the graphical
-interface (GUI). When one wants to elaborate "by hand" the TUI
+interface (GUI). When one wants to elaborate directly the TUI
 calculation case, it is recommended to extensively use all the ADAO
 module documentation, and to go back if necessary to the graphical
 interface (GUI), to get all the elements allowing to correctly set the
