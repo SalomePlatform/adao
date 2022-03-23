@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import math, numpy
-from daCore import BasicObjects, PlatformInfo
+from daCore import BasicObjects, NumericObjects, PlatformInfo
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -125,25 +125,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         FX      = numpy.ravel( Hm( X ) ).reshape((-1,1))
         NormeX  = numpy.linalg.norm( X )
         NormeFX = numpy.linalg.norm( FX )
+        if NormeFX < mpr: NormeFX = mpr
         if self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( X )
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX )
         #
-        if len(self._parameters["InitialDirection"]) == 0:
-            dX0 = []
-            for v in X:
-                if abs(v) > 1.e-8:
-                    dX0.append( numpy.random.normal(0.,abs(v)) )
-                else:
-                    dX0.append( numpy.random.normal(0.,X.mean()) )
-        else:
-            dX0 = numpy.ravel( self._parameters["InitialDirection"] )
-        #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 ).reshape((-1,1))
+        dX0 = NumericObjects.SetInitialDirection(
+            self._parameters["InitialDirection"],
+            self._parameters["AmplitudeOfInitialDirection"],
+            X,
+            )
         #
         if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
-            dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
+            dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0.reshape((-1,1))
             GradFxdX = Ht( (X, dX1) )
             GradFxdX = numpy.ravel( GradFxdX ).reshape((-1,1))
             GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
@@ -236,7 +231,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         NormesdFXGdX = []
         #
         for i,amplitude in enumerate(Perturbations):
-            dX      = amplitude * dX0
+            dX      = amplitude * dX0.reshape((-1,1))
             #
             FX_plus_dX = Hm( X + dX )
             FX_plus_dX = numpy.ravel( FX_plus_dX ).reshape((-1,1))

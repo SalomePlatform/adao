@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy
-from daCore import BasicObjects, PlatformInfo
+from daCore import BasicObjects, NumericObjects, PlatformInfo
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -114,19 +114,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX )
         #
-        # Fabrication de la direction de l'increment dX
-        # ---------------------------------------------
-        if len(self._parameters["InitialDirection"]) == 0:
-            dX0 = []
-            for v in Xn:
-                if abs(v) > 1.e-8:
-                    dX0.append( numpy.random.normal(0.,abs(v)) )
-                else:
-                    dX0.append( numpy.random.normal(0.,Xn.mean()) )
-        else:
-            dX0 = numpy.ravel( self._parameters["InitialDirection"] )
-        #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 ).reshape((-1,1))
+        dX0 = NumericObjects.SetInitialDirection(
+            self._parameters["InitialDirection"],
+            self._parameters["AmplitudeOfInitialDirection"],
+            Xn,
+            )
         #
         # Calcul du gradient au point courant X pour l'increment dX
         # qui est le tangent en X multiplie par dX
@@ -136,6 +128,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         GradFxdX = numpy.ravel( GradFxdX ).reshape((-1,1))
         GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
         NormeGX  = numpy.linalg.norm( GradFxdX )
+        if NormeGX < mpr: NormeGX = mpr
         #
         # Entete des resultats
         # --------------------
@@ -184,7 +177,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Boucle sur les perturbations
         # ----------------------------
         for i,amplitude in enumerate(Perturbations):
-            dX      = amplitude * dX0
+            dX      = amplitude * dX0.reshape((-1,1))
             #
             if self._parameters["ResiduFormula"] == "Taylor":
                 FX_plus_dX  = numpy.ravel( Hm( Xn + dX ) ).reshape((-1,1))

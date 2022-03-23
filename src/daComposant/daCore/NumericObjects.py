@@ -477,6 +477,34 @@ class FDApproximation(object):
             else:                return _HaY
 
 # ==============================================================================
+def SetInitialDirection( __Direction = [], __Amplitude = 1., __Position = None ):
+    "Établit ou élabore une direction avec une amplitude"
+    #
+    if len(__Direction) == 0 and __Position is None:
+        raise ValueError("If initial direction is void, current position has to be given")
+    if abs(float(__Amplitude)) < mpr:
+        raise ValueError("Amplitude of perturbation can not be zero")
+    #
+    if len(__Direction) > 0:
+        __dX0 = numpy.asarray(__Direction)
+    else:
+        __dX0 = []
+        __X0 = numpy.ravel(numpy.asarray(__Position))
+        __mX0 = numpy.mean( __X0, dtype=mfp )
+        if abs(__mX0) < 2*mpr: __mX0 = 1. # Évite le problème de position nulle
+        for v in __X0:
+            if abs(v) > 1.e-8:
+                __dX0.append( numpy.random.normal(0.,abs(v)) )
+            else:
+                __dX0.append( numpy.random.normal(0.,__mX0) )
+    #
+    __dX0 = numpy.asarray(__dX0,float) # Évite le problème d'array de taille 1
+    __dX0 = numpy.ravel( __dX0 )       # Redresse les vecteurs
+    __dX0 = float(__Amplitude) * __dX0
+    #
+    return __dX0
+
+# ==============================================================================
 def EnsembleOfCenteredPerturbations( __bgCenter, __bgCovariance, __nbMembers ):
     "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
     #

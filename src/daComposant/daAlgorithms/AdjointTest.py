@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy
-from daCore import BasicObjects, PlatformInfo
+from daCore import BasicObjects, NumericObjects, PlatformInfo
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -92,32 +92,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ht = HO["Tangent"].appliedInXTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        # ----------
         Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        X       = numpy.ravel( Xb ).reshape((-1,1))
-        NormeX  = numpy.linalg.norm( X )
+        Xn       = numpy.ravel( Xb ).reshape((-1,1))
+        NormeX  = numpy.linalg.norm( Xn )
         if Y is None:
-            Y = numpy.ravel( Hm( X ) ).reshape((-1,1))
-        Y = numpy.ravel( Y ).reshape((-1,1))
-        NormeY = numpy.linalg.norm( Y )
-        if self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( X )
-        if self._toStore("SimulatedObservationAtCurrentState"):
-            self.StoredVariables["SimulatedObservationAtCurrentState"].store( Y )
-        #
-        if len(self._parameters["InitialDirection"]) == 0:
-            dX0 = []
-            for v in X:
-                if abs(v) > 1.e-8:
-                    dX0.append( numpy.random.normal(0.,abs(v)) )
-                else:
-                    dX0.append( numpy.random.normal(0.,X.mean()) )
+            Yn = numpy.ravel( Hm( Xn ) ).reshape((-1,1))
         else:
-            dX0 = self._parameters["InitialDirection"]
+            Yn = numpy.ravel( Y ).reshape((-1,1))
+        NormeY = numpy.linalg.norm( Yn )
+        if self._toStore("CurrentState"):
+            self.StoredVariables["CurrentState"].store( Xn )
+        if self._toStore("SimulatedObservationAtCurrentState"):
+            self.StoredVariables["SimulatedObservationAtCurrentState"].store( Yn )
         #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 )
+        dX0 = NumericObjects.SetInitialDirection(
+            self._parameters["InitialDirection"],
+            self._parameters["AmplitudeOfInitialDirection"],
+            Xn,
+            )
         #
         # Entete des resultats
         # --------------------
@@ -156,10 +150,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             dX          = amplitude * dX0
             NormedX     = numpy.linalg.norm( dX )
             #
-            TangentFXdX = numpy.ravel( Ht( (X,dX) ) )
-            AdjointFXY  = numpy.ravel( Ha( (X,Y)  ) )
+            TangentFXdX = numpy.ravel( Ht( (Xn,dX) ) )
+            AdjointFXY  = numpy.ravel( Ha( (Xn,Yn)  ) )
             #
-            Residu = abs(float(numpy.dot( TangentFXdX, Y ) - numpy.dot( dX, AdjointFXY )))
+            Residu = abs(float(numpy.dot( TangentFXdX, Yn ) - numpy.dot( dX, AdjointFXY )))
             #
             msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   |  %9.3e"%(i,amplitude,NormeX,NormeY,NormedX,Residu)
             msgs += "\n" + __marge + msg

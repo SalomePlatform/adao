@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import math, numpy
-from daCore import BasicObjects, PlatformInfo
+from daCore import BasicObjects, NumericObjects, PlatformInfo
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -99,44 +99,29 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             import math
             return math.sqrt( ((numpy.ravel(V2) - numpy.ravel(V1))**2).sum() / float(numpy.ravel(V1).size) )
         #
-        # Operateurs
-        # ----------
         Hm = HO["Direct"].appliedTo
         if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
             Ht = HO["Tangent"].appliedInXTo
         #
-        # Construction des perturbations
-        # ------------------------------
         Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        # Calcul du point courant
-        # -----------------------
         Xn      = numpy.ravel(     Xb   ).reshape((-1,1))
         FX      = numpy.ravel( Hm( Xn ) ).reshape((-1,1))
         NormeX  = numpy.linalg.norm( Xn )
         NormeFX = numpy.linalg.norm( FX )
+        if NormeFX < mpr: NormeFX = mpr
         if self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX) )
         #
-        # Fabrication de la direction de l'increment dX
-        # ---------------------------------------------
-        if len(self._parameters["InitialDirection"]) == 0:
-            dX0 = []
-            for v in Xn:
-                if abs(v) > 1.e-8:
-                    dX0.append( numpy.random.normal(0.,abs(v)) )
-                else:
-                    dX0.append( numpy.random.normal(0.,Xn.mean()) )
-        else:
-            dX0 = numpy.ravel( self._parameters["InitialDirection"] )
+        dX0 = NumericObjects.SetInitialDirection(
+            self._parameters["InitialDirection"],
+            self._parameters["AmplitudeOfInitialDirection"],
+            Xn,
+            )
         #
-        dX0 = float(self._parameters["AmplitudeOfInitialDirection"]) * numpy.ravel( dX0 ).reshape((-1,1))
-        #
-        # Calcul du gradient au point courant X pour l'increment dX
-        # ---------------------------------------------------------
         if self._parameters["ResiduFormula"] in ["Taylor", "NominalTaylor", "NominalTaylorRMS"]:
             dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
             GradFxdX = Ht( (Xn, dX1) )
@@ -252,7 +237,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Boucle sur les perturbations
         # ----------------------------
         for i,amplitude in enumerate(Perturbations):
-            dX      = amplitude * dX0
+            dX      = amplitude * dX0.reshape((-1,1))
             #
             if self._parameters["ResiduFormula"] == "CenteredDL":
                 if self._toStore("CurrentState"):
