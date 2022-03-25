@@ -47,18 +47,19 @@ tel qu'il est déclaré ici et dans les fichiers sources::
 
     This library is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
     Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
     See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
-En outre, on demande que toute publication ou présentation décrivant des travaux
-utilisant ce module, ou tout produit commercial ou non l'utilisant, cite au
-moins l'une des références ci-dessous en ajoutant l'année en cours :
+En outre, on demande que toute publication ou présentation décrivant des
+travaux utilisant ce module, ou tout produit commercial ou non l'utilisant,
+cite explicitement ADAO et au moins l'une des références ci-dessous en ajoutant
+l'année en cours :
 
     * *ADAO, a module for Data Assimilation and Optimization*,
       http://www.salome-platform.org/
@@ -69,5 +70,5 @@ moins l'une des références ci-dessous en ajoutant l'année en cours :
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,
       http://www.salome-platform.org/
 
-La documentation du module est également couverte par la licence et l'obligation
-de citation.
+La documentation du module est également entièrement couverte par la licence et
+l'obligation de citation.

@@ -35,12 +35,12 @@
    :scale: 50%
 
 This section presents advanced usage of the ADAO module using its text
-programming interface (API/TUI). This interface gives ability to create a
+programming interface (API/TUI). This interface gives user ability to create a
 calculation object in a similar way than the case building obtained through the
 graphical interface (GUI). A scripted form of a case built in the GUI can be
 obtained directly using the TUI export button |eficas_totui| integrated in the
 interface, but more complicated or integrated cases can be build only using TUI
-approach. When one wants to elaborate "by hand" the TUI calculation case, it is
+approach. When one wants to elaborate directly the TUI calculation case, it is
 recommended to extensively use all the ADAO module documentation, and to go
 back if necessary to the graphical interface (GUI), to get all the elements
 allowing to correctly set the commands. The general used notions and terms are

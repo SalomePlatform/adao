@@ -75,6 +75,8 @@ class AdaoCase:
         self.yacs_filename = self.filename[:self.filename.rfind(".")] + '.xml'
         yacs_filename_backup = self.filename[:self.filename.rfind(".")] + '.xml.back'
         if os.path.exists(self.yacs_filename):
+            if os.path.exists(yacs_filename_backup):
+                os.unlink(yacs_filename_backup)
             os.rename(self.yacs_filename, yacs_filename_backup)
 
         self.eficas_editor.modified = True
@@ -112,7 +114,9 @@ class AdaoCase:
         self.tui_filename = self.filename[:self.filename.rfind(".")] + '_TUI.py'
         tui_filename_backup = self.filename[:self.filename.rfind(".")] + '_TUI.py.back'
         if os.path.exists(self.tui_filename):
-          os.rename(self.tui_filename, tui_filename_backup)
+            if os.path.exists(tui_filename_backup):
+                os.unlink(tui_filename_backup)
+            os.rename(self.tui_filename, tui_filename_backup)
 
         self.eficas_editor.modified = True
         self.eficas_editor.saveFile()

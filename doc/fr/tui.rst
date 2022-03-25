@@ -35,19 +35,20 @@
    :scale: 50%
 
 Cette section présente des méthodes avancées d'usage du module ADAO à l'aide de
-son interface de programmation textuelle (API/TUI). Cette interface permet de
-créer un objet de calcul de manière similaire à la construction d'un cas par
-l'interface graphique (GUI). On peut d'ailleurs directement obtenir une forme
-scriptée d'un cas construit dans l'interface graphique GUI à l'aide du bouton
-d'export TUI |eficas_totui| intégré dans l'interface, mais des cas plus
-compliqués ou plus intégrés peuvent uniquement être construits avec la démarche
-TUI. Dans le cas où l'on désire réaliser à la main le cas de calcul TUI, on
-recommande de bien s'appuyer sur l'ensemble de la documentation du module ADAO,
-et de se reporter si nécessaire à l'interface graphique (GUI), pour disposer de
-l'ensemble des éléments permettant de renseigner correctement les commandes.
-Les notions générales et termes utilisés ici sont définis dans
-:ref:`section_theory`. Comme dans l'interface graphique, on note que la
-démarche en TUI est destinée à créer et gérer un unique cas de calcul.
+son interface de programmation textuelle (API/TUI). Cette interface permet à
+l'utilisateur de créer un objet de calcul de manière similaire à la
+construction d'un cas par l'interface graphique (GUI). On peut d'ailleurs
+directement obtenir une forme scriptée d'un cas construit dans l'interface
+graphique GUI à l'aide du bouton d'export TUI |eficas_totui| intégré dans
+l'interface, mais des cas plus compliqués ou plus intégrés peuvent uniquement
+être construits avec la démarche TUI. Dans le cas où l'on désire réaliser
+directement le cas de calcul TUI, on recommande de bien s'appuyer sur
+l'ensemble de la documentation du module ADAO, et de se reporter si nécessaire
+à l'interface graphique (GUI), pour disposer de l'ensemble des éléments
+permettant de renseigner correctement les commandes. Les notions générales et
+termes utilisés ici sont définis dans :ref:`section_theory`. Comme dans
+l'interface graphique, on note que la démarche en TUI est destinée à créer et
+gérer un unique cas de calcul.
 
 .. _subsection_tui_creating:
 
