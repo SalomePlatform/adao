@@ -73,7 +73,7 @@ for its stability as for its behavior during optimization.
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst
 

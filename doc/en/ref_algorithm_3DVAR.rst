@@ -93,7 +93,7 @@ unlike Kalman-type filters, the state error covariance is not updated.
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst
 

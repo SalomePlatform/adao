@@ -79,7 +79,7 @@ its application domain is similar to the one of Kalman filters, specially the
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst
 

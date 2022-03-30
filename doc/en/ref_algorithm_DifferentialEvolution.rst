@@ -68,7 +68,7 @@ least squares function, classically used in data assimilation.
 
 .. include:: snippets/CrossOverProbability_CR.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 

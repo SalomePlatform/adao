@@ -100,7 +100,7 @@ shown in the following figure:
 In the entry, one must enclose a standard dictionary definition between simple
 quotes, as for example::
 
-    '{"MaximumNumberOfSteps":25,"SetSeed":1000}'
+    '{"MaximumNumberOfIterations":25,"SetSeed":1000}'
 
 It is the recommended way to define algorithmic parameters. This method allows
 in particular to keep options or parameters for other algorithms than the
@@ -129,7 +129,7 @@ This external Python script file has then to define a variable with the required
 name "*AlgorithmParameters*", as in the following example::
 
     AlgorithmParameters = {
-        "MaximumNumberOfSteps" : 25,
+        "MaximumNumberOfIterations" : 25,
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 

@@ -70,4 +70,4 @@ init_data["BackgroundError"]     = BackgroundError
 init_data["ObservationError"]    = ObservationError
 
 # Algorithm Parameters
-init_data["AlgorithmParameters"] = {"Minimizer":"LBFGSB","MaximumNumberOfSteps":5}
+init_data["AlgorithmParameters"] = {"Minimizer":"LBFGSB","MaximumNumberOfIterations":5}

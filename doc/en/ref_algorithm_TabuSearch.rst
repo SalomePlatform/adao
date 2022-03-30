@@ -68,7 +68,7 @@ Positions already explored are kept in a list of finite length.
 
 .. include:: snippets/LengthOfTabuList.rst
 
-.. include:: snippets/MaximumNumberOfSteps_50.rst
+.. include:: snippets/MaximumNumberOfIterations_50.rst
 
 .. include:: snippets/NoiseAddingProbability.rst
 

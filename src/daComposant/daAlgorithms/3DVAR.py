@@ -66,7 +66,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["State", "Parameters"],
             )
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfSteps",
+            name     = "MaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",

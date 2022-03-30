@@ -80,7 +80,7 @@ class Test_Adao(unittest.TestCase):
             Algorithm = 'NonLinearLeastSquares',  # Mots-clé réservé
             Parameters = {                        # Dictionnaire
                 "Bounds":Bounds,                  # Liste de paires de Real ou de None
-                "MaximumNumberOfSteps":100,       # Int >= 0
+                "MaximumNumberOfIterations":100,  # Int >= 0
                 "CostDecrementTolerance":1.e-7,   # Real > 0
                 "StoreSupplementaryCalculations":[# Liste de mots-clés réservés
                     "CostFunctionJAtCurrentOptimum",

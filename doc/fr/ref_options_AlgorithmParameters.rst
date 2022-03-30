@@ -104,7 +104,7 @@ commande "*Dict*" qui apparaît, comme montré dans la figure qui suit :
 Dans le champs de saisie, il faut utiliser des guillemets simples pour une
 définition standard de dictionnaire, comme par exemple::
 
-    '{"MaximumNumberOfSteps":25,"SetSeed":1000}'
+    '{"MaximumNumberOfIterations":25,"SetSeed":1000}'
 
 C'est la manière recommandée pour définir des paramètres algorithmiques. Cette
 méthode permet en particulier de conserver des options ou des paramètres pour
@@ -134,7 +134,7 @@ Ce fichier script Python externe doit définir alors une variable au nom imposé
 "*AlgorithmParameters*", à la manière de l'exemple qui suit::
 
     AlgorithmParameters = {
-        "MaximumNumberOfSteps" : 25,
+        "MaximumNumberOfIterations" : 25,
         "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
         }
 

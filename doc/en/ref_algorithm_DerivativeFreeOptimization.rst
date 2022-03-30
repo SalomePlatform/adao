@@ -62,7 +62,7 @@ least squares function, classically used in data assimilation.
 
 .. include:: snippets/BoundsWithNone.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 

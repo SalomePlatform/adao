@@ -46,7 +46,7 @@ case.set(
     Algorithm = '3DVAR',
     Parameters = {
         "Bounds":Bounds,
-        "MaximumNumberOfSteps":100,
+        "MaximumNumberOfIterations":100,
         "StoreSupplementaryCalculations":[
             "CostFunctionJ",
             "CurrentState",

@@ -524,7 +524,7 @@ the documentation of the different :ref:`section_reference_assimilation`.
 **A first way is to limit the default number of iterations in the iterative
 search processes**. Even if this is not the best theoretical way to control the
 algorithm, it is very effective in a real study process. For this purpose, the
-keyword "*MaximumNumberOfSteps*" exists in all cases of calculations that
+keyword "*MaximumNumberOfIterations*" exists in all cases of calculations that
 support it, and its default value is usually set to an equivalent of infinity
 so that it is not the stopping criterion. This is the case for calculations
 based on variational methods such as :ref:`section_ref_algorithm_3DVAR`,
@@ -592,6 +592,15 @@ Switching from 9.x to 9.y with y > x
 There is no known incompatibility for the ADAO case files. The upgrade procedure
 is to read the old ADAO case file with the new SALOME/ADAO module, and save it
 with a new name.
+
+However, there may be incompatibilities from user cases written directly in TUI
+interface. It is advisable to review the syntax and arguments in the TUI
+scripts at each version change. In particular, it is advisable to check that
+the algorithm parameters are still adequate and active, knowing that it has
+been explicitly chosen that there is no message when a parameter becomes
+inactive (for the example, we quote the parameter "*MaximumNumberOfSteps*" as
+having changed its name to "*MaximumNumberOfIterations*", for homogeneity with
+the variables that can be displayed).
 
 Switching from 8.5 to 9.2
 +++++++++++++++++++++++++

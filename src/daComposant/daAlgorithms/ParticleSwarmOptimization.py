@@ -28,7 +28,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "PARTICLESWARMOPTIMIZATION")
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfSteps",
+            name     = "MaximumNumberOfIterations",
             default  = 50,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
@@ -219,7 +219,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
-        for n in range(self._parameters["MaximumNumberOfSteps"]):
+        for n in range(self._parameters["MaximumNumberOfIterations"]):
             for i in range(self._parameters["NumberOfInsects"]) :
                 insect  = numpy.ravel(PosInsect[:,i])
                 rp = numpy.random.uniform(size=nbparam)

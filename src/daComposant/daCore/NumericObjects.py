@@ -868,7 +868,7 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Bet
     #
     selfB = PartialAlgorithm("3DVAR")
     selfB._parameters["Minimizer"] = "LBFGSB"
-    selfB._parameters["MaximumNumberOfSteps"] = 15000
+    selfB._parameters["MaximumNumberOfIterations"] = 15000
     selfB._parameters["CostDecrementTolerance"] = 1.e-7
     selfB._parameters["ProjectedGradientTolerance"] = -1
     selfB._parameters["GradientNormTolerance"] = 1.e-05

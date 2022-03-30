@@ -70,7 +70,7 @@ liste de longueur finie.
 
 .. include:: snippets/LengthOfTabuList.rst
 
-.. include:: snippets/MaximumNumberOfSteps_50.rst
+.. include:: snippets/MaximumNumberOfIterations_50.rst
 
 .. include:: snippets/NoiseAddingProbability.rst
 

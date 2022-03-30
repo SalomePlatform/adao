@@ -80,7 +80,7 @@ l':ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst
 

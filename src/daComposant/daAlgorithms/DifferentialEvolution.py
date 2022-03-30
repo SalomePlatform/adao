@@ -50,7 +50,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             )
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfSteps",
+            name     = "MaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de générations",
@@ -157,7 +157,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         len_X = numpy.asarray(Xb).size
         popsize = round(self._parameters["PopulationSize"]/len_X)
-        maxiter = min(self._parameters["MaximumNumberOfSteps"],round(self._parameters["MaximumNumberOfFunctionEvaluations"]/(popsize*len_X) - 1))
+        maxiter = min(self._parameters["MaximumNumberOfIterations"],round(self._parameters["MaximumNumberOfFunctionEvaluations"]/(popsize*len_X) - 1))
         logging.debug("%s Nombre maximal de générations = %i, taille de la population à chaque génération = %i"%(self._name, maxiter, popsize*len_X))
         #
         Hm = HO["Direct"].appliedTo

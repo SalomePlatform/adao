@@ -69,7 +69,7 @@ en assimilation de données.
 
 .. include:: snippets/CrossOverProbability_CR.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 

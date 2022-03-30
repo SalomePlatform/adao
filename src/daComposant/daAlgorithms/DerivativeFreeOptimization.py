@@ -42,7 +42,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ],
             )
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfSteps",
+            name     = "MaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
@@ -210,7 +210,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 func        = CostFunction,
                 x0          = Xini,
                 args        = (self._parameters["QualityCriterion"],),
-                maxiter     = self._parameters["MaximumNumberOfSteps"]-1,
+                maxiter     = self._parameters["MaximumNumberOfIterations"]-1,
                 maxfun      = self._parameters["MaximumNumberOfFunctionEvaluations"],
                 xtol        = self._parameters["StateVariationTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],
@@ -268,7 +268,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 func        = CostFunction,
                 x0          = Xini,
                 args        = (self._parameters["QualityCriterion"],),
-                maxiter     = self._parameters["MaximumNumberOfSteps"]-1,
+                maxiter     = self._parameters["MaximumNumberOfIterations"]-1,
                 maxfun      = self._parameters["MaximumNumberOfFunctionEvaluations"],
                 xtol        = self._parameters["StateVariationTolerance"],
                 ftol        = self._parameters["CostDecrementTolerance"],

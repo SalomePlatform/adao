@@ -2,7 +2,8 @@
 
 CurrentIterationNumber
   *List of integers*. Each element is the iteration index at the current step
-  during the iterative algorithm procedure.
+  during the iterative algorithm procedure. There is one iteration index value
+  per assimilation step corresponding to an observed state.
 
   Example:
   ``i = ADD.get("CurrentIterationNumber")[-1]``

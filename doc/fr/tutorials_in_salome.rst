@@ -352,7 +352,7 @@ défaut, ou à partir d'un dictionnaire Python, contenant des paires clé/valeur
 La liste des paramètres optionnels possibles est donnée dans la section
 :ref:`section_reference` et ses sous-sections. On recommande d'utiliser la
 définition explicite de valeurs à partir de la liste par défaut de paramètres
-optionnels, comme ici avec le "*MaximumNumberOfSteps*" :
+optionnels, comme ici avec le "*MaximumNumberOfIterations*" :
 
   .. _adao_scriptentry02:
   .. image:: images/adao_scriptentry02.png
@@ -370,7 +370,7 @@ et elles peuvent être présentes sans être utiles. Par exemple :
 
     AlgorithmParameters = {
         "Minimizer" : "LBFGSB", # Recommended
-        "MaximumNumberOfSteps" : 10,
+        "MaximumNumberOfIterations" : 10,
         }
 
 Si aucune borne n'est requise sur les variables de contrôle, alors on peut
@@ -607,12 +607,12 @@ définis dans un fichier de script Python nommé
     # Creating the required ADAO variable
     # -----------------------------------
     AlgorithmParameters = {
-        "Minimizer" : "LBFGSB",      # Recommended
-        "MaximumNumberOfSteps" : 15, # Number of global iterative steps
+        "Minimizer" : "LBFGSB",           # Recommended
+        "MaximumNumberOfIterations" : 15, # Number of global iterative steps
         "Bounds" : [
-            [ None, None ],          # Bound on the first parameter
-            [ 0., 4. ],              # Bound on the second parameter
-            [ 0., None ],            # Bound on the third parameter
+            [ None, None ],               # Bound on the first parameter
+            [ 0., 4. ],                   # Bound on the second parameter
+            [ 0., None ],                 # Bound on the third parameter
             ],
         "StoreSupplementaryCalculations" : [
             "CurrentState",

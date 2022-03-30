@@ -1,6 +1,6 @@
-.. index:: single: MaximumNumberOfSteps
+.. index:: single: MaximumNumberOfIterations
 
-MaximumNumberOfSteps
+MaximumNumberOfIterations
   *Valeur entière*. Cette clé indique le nombre maximum d'itérations possibles
   en optimisation itérative. Le défaut est 15000, qui est très similaire à une
   absence de limite sur les itérations. Il est ainsi recommandé d'adapter ce
@@ -12,4 +12,4 @@ MaximumNumberOfSteps
   détaillées.
 
   Exemple :
-  ``{"MaximumNumberOfSteps":100}``
+  ``{"MaximumNumberOfIterations":100}``

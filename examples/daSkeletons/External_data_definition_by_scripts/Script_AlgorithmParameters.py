@@ -33,12 +33,12 @@ __author__ = "Jean-Philippe ARGAUD"
 # Creating the required ADAO variable
 # -----------------------------------
 AlgorithmParameters = {
-    "Minimizer" : "TNC",         # Possible : "LBFGSB", "TNC", "CG", "BFGS"
-    "MaximumNumberOfSteps" : 15, # Number of iterative steps
+    "Minimizer" : "LBFGSB",           # Possible : "LBFGSB", "TNC", "CG", "BFGS"
+    "MaximumNumberOfIterations" : 15, # Number of iterative steps
     "Bounds" : [
-        [ None, None ],          # Bound on the first parameter
-        [ 0., 4. ],              # Bound on the second parameter
-        [ 0., None ],            # Bound on the third parameter
+        [ None, None ],               # Bound on the first parameter
+        [ 0., 4. ],                   # Bound on the second parameter
+        [ 0., None ],                 # Bound on the third parameter
         ],
     "StoreInternalVariables":True,
 }

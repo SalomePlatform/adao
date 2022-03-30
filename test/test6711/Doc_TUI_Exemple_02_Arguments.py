@@ -39,7 +39,7 @@ class Test_Adao(unittest.TestCase):
             Algorithm = '3DVAR',
             Parameters = {
                 "Minimizer":"CG",
-                "MaximumNumberOfSteps":3,
+                "MaximumNumberOfIterations":3,
                 "CostDecrementTolerance":1.e-2,
                 "SetSeed":1234567,
                 "StoreSupplementaryCalculations":[
@@ -67,7 +67,7 @@ class Test_Adao(unittest.TestCase):
             Algorithm = '3DVAR',
             Parameters = {
                 "MINIMIZER":"CG",
-                "maximumnumberofsteps":3,
+                "MaximumNumberOfIterations":3,
                 "COSTDecrementTOLERANCE":1.e-2,
                 "STORESUPPLEMENTARYCALCULATIONS":[
                     "CostFunctionJAtCurrentOptimum",

@@ -75,7 +75,7 @@ comportement lors de l'optimisation.
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Minimizer_xDVAR.rst
 

@@ -28,7 +28,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "TABUSEARCH")
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfSteps",
+            name     = "MaximumNumberOfIterations",
             default  = 50,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
@@ -213,7 +213,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         _Best, _qualityBest   =   _S, _qualityS
         _TabuList = []
         _TabuList.append( _S )
-        while _n < self._parameters["MaximumNumberOfSteps"]:
+        while _n < self._parameters["MaximumNumberOfIterations"]:
             _n += 1
             if len(_TabuList) > self._parameters["LengthOfTabuList"]:
                 _TabuList.pop(0)

@@ -20,14 +20,14 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import argparse
+import argparse # optparse deprecated since Python version 3.2
 import sys
 import re
 
 import Traducteur.log as log
 from Traducteur.load         import getJDC, getJDCFromTexte
 from Traducteur.mocles       import parseKeywords
-from Traducteur.dictErreurs  import GenereErreurPourCommande
+from Traducteur.dictErreurs  import genereErreurPourCommande
 from Traducteur.inseremocle  import *
 from Traducteur.movemocle    import *
 from Traducteur.renamemocle  import *
@@ -60,6 +60,7 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
 
     # ==========================================================================
     fsrc = jdc.getSource()
+    fsrc = re.sub( "MaximumNumberOfSteps", "MaximumNumberOfIterations", fsrc )
     fsrc = re.sub( "#VERSION_CATALOGUE:.*:FIN VERSION_CATALOGUE", "#VERSION_CATALOGUE:%s:FIN VERSION_CATALOGUE"%version_out, fsrc)
     fsrc = re.sub( "#CHECKSUM.*FIN CHECKSUM", "", fsrc )
     #

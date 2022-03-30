@@ -47,5 +47,5 @@ for i in range(dimension-1):
 AlgorithmParameters = {
     "SetSeed" : 1000,
     "Minimizer" : "LBFGSB",
-    "MaximumNumberOfSteps" : 15,
+    "MaximumNumberOfIterations" : 15,
     }

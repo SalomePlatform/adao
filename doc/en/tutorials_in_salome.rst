@@ -335,7 +335,7 @@ dictionary, containing some key/value pairs. The list of possible optional
 parameters are given in the section :ref:`section_reference` and its
 subsections. The recommendation is to use the explicit definition of values
 from the default list of optional parameters, as here with the
-"*MaximumNumberOfSteps*":
+"*MaximumNumberOfIterations*":
 
   .. _adao_scriptentry02:
   .. image:: images/adao_scriptentry02.png
@@ -352,7 +352,7 @@ default values, and can exist without being used. For example:
 
     AlgorithmParameters = {
         "Minimizer" : "LBFGSB", # Recommended
-        "MaximumNumberOfSteps" : 10,
+        "MaximumNumberOfIterations" : 10,
         }
 
 If no bounds at all are required on the control variables, then one can choose
@@ -576,12 +576,12 @@ the following parameters can be defined in a Python script file named
     # Creating the required ADAO variable
     # -----------------------------------
     AlgorithmParameters = {
-        "Minimizer" : "LBFGSB",      # Recommended
-        "MaximumNumberOfSteps" : 15, # Number of global iterative steps
+        "Minimizer" : "LBFGSB",           # Recommended
+        "MaximumNumberOfIterations" : 15, # Number of global iterative steps
         "Bounds" : [
-            [ None, None ],          # Bound on the first parameter
-            [ 0., 4. ],              # Bound on the second parameter
-            [ 0., None ],            # Bound on the third parameter
+            [ None, None ],               # Bound on the first parameter
+            [ 0., 4. ],                   # Bound on the second parameter
+            [ 0., None ],                 # Bound on the third parameter
             ],
         "StoreSupplementaryCalculations" : [
             "CurrentState",

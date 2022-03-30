@@ -52,12 +52,26 @@ class GenericCaseViewer(object):
         self._content      = __content
         self._object       = __object
         self._missing = """raise ValueError("This case requires beforehand to import or define the variable named <%s>. When corrected, remove this command, correct and uncomment the following one.")\n# """
+    #------------------------
     def _append(self, *args):
         "Transformation d'une commande individuelle en un enregistrement"
         raise NotImplementedError()
     def _extract(self, *args):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         raise NotImplementedError()
+    #------------------------------
+    def _initialize(self, __multilines):
+        "Permet des pré-conversions automatiques simples de commandes ou clés"
+        __translation = {
+            "Study_name"          :"StudyName",
+            "Study_repertory"     :"StudyRepertory",
+            "MaximumNumberOfSteps":"MaximumNumberOfIterations",
+            "FunctionDict"        :"ScriptWithSwitch",
+            "FUNCTIONDICT_FILE"   :"SCRIPTWITHSWITCH_FILE",
+        }
+        for k,v in __translation.items():
+            __multilines = __multilines.replace(k,v)
+        return __multilines
     def _finalize(self, __upa=None):
         "Enregistrement du final"
         __hasNotExecute = True
@@ -88,8 +102,9 @@ class GenericCaseViewer(object):
         "Chargement normalisé des commandes"
         if __filename is not None and os.path.exists(__filename):
             self._content = open(__filename, 'r').read()
+            self._content = self._initialize(self._content)
         elif __content is not None and type(__content) is str:
-            self._content = __content
+            self._content = self._initialize(__content)
         elif __object is not None and type(__object) is dict:
             self._object = copy.deepcopy(__object)
         else:
@@ -1141,6 +1156,9 @@ class EficasGUI(object):
         #----------------
         if "EFICAS_ROOT" in os.environ:
             __EFICAS_ROOT = os.environ["EFICAS_ROOT"]
+            __path_ok = True
+        elif "EFICAS_NOUVEAU_ROOT" in os.environ:
+            __EFICAS_ROOT = os.environ["EFICAS_NOUVEAU_ROOT"]
             __path_ok = True
         else:
             self.__msg += "\nKeyError:\n"+\

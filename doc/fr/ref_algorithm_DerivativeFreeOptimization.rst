@@ -64,7 +64,7 @@ en assimilation de données.
 
 .. include:: snippets/BoundsWithNone.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 

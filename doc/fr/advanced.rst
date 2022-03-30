@@ -570,11 +570,12 @@ documentation des différents :ref:`section_reference_assimilation`.
 **Un premier moyen est de limiter le nombre d'itérations par défaut dans les
 processus de recherches itératives**. Même si ce n'est pas la meilleure manière
 théorique de contrôler l'algorithme, elle est très efficace dans un processus
-d'étude réelle. Pour cela, le mot-clé "*MaximumNumberOfSteps*" existe dans tous
-les cas de calculs qui le supportent, et sa valeur par défaut est usuellement
-fixée à un équivalent de l'infini pour que ce ne soit pas le critère d'arrêt.
-C'est le cas pour les calculs à base de méthodes variationnelles comme les
-:ref:`section_ref_algorithm_3DVAR`, :ref:`section_ref_algorithm_4DVAR` et
+d'étude réelle. Pour cela, le mot-clé "*MaximumNumberOfIterations*" existe dans
+tous les cas de calculs qui le supportent, et sa valeur par défaut est
+usuellement fixée à un équivalent de l'infini pour que ce ne soit pas le
+critère d'arrêt. C'est le cas pour les calculs à base de méthodes
+variationnelles comme les :ref:`section_ref_algorithm_3DVAR`,
+:ref:`section_ref_algorithm_4DVAR` et
 :ref:`section_ref_algorithm_NonLinearLeastSquares`, mais c'est aussi le cas
 pour d'autres comme les :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 ou :ref:`section_ref_algorithm_QuantileRegression`. Dans la pratique, on
@@ -646,6 +647,16 @@ Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
 avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
+Cependant, il peut se présenter des incompatibilités provenant de cas
+utilisateurs écrits directement en interface TUI. Il est conseillé de revoir la
+syntaxe et les arguments dans les scripts TUI à chaque changement de version.
+En particulier, il convient de vérifier que les paramètres d'algorithme sont
+toujours adéquats et actifs, sachant qu'il a été explicitement choisi qu'il n'y
+ait pas de message lorsqu'un paramètre devient inactif (pour l'exemple, on cite
+le paramètre "*MaximumNumberOfSteps*" comme ayant changé de nom pour devenir
+"*MaximumNumberOfIterations*", par homogénéité avec les variables pouvant être
+affichées).
+
 Passer de la version 8.5 à la 9.2
 +++++++++++++++++++++++++++++++++
 
@@ -653,7 +664,7 @@ Il n'y a pas d'incompatibilité connue pour les fichiers de cas ADAO. La
 procédure de montée en version consiste à lire l'ancien fichier de cas ADAO
 avec le nouveau module SALOME/ADAO, et à l'enregistrer avec un nouveau nom.
 
-Par contre, il peut se présenter des incompatibilités provenant de fichiers
+Cependant, il peut se présenter des incompatibilités provenant de fichiers
 scripts utilisateurs qui n'auraient pas une syntaxe compatible avec Python 3.
 L'erreur la plus immédiate est l'usage de l'impression "*print*" avec la
 syntaxe "*commande*" au lieu de la syntaxe fonctionnelle "*print(...)*". Dans

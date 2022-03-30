@@ -53,7 +53,7 @@ the model parameters that satisfy to the quantiles conditions.
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Quantile.rst
 

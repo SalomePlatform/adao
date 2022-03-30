@@ -44,7 +44,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["MMQR",],
             )
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfSteps",
+            name     = "MaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
@@ -141,7 +141,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 fprime      = GradientOfCostFunction,
                 bounds      = self._parameters["Bounds"],
                 quantile    = self._parameters["Quantile"],
-                maxfun      = self._parameters["MaximumNumberOfSteps"],
+                maxfun      = self._parameters["MaximumNumberOfIterations"],
                 toler       = self._parameters["CostDecrementTolerance"],
                 y           = Y,
                 )

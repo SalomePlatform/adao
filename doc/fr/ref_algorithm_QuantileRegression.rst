@@ -53,7 +53,7 @@ déterminer les paramètres de modèles satisfaisant aux conditions de quantiles
 
 .. include:: snippets/InitializationPoint.rst
 
-.. include:: snippets/MaximumNumberOfSteps.rst
+.. include:: snippets/MaximumNumberOfIterations.rst
 
 .. include:: snippets/Quantile.rst
 

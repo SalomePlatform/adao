@@ -1,6 +1,6 @@
-.. index:: single: MaximumNumberOfSteps
+.. index:: single: MaximumNumberOfIterations
 
-MaximumNumberOfSteps
+MaximumNumberOfIterations
   *Integer value*. This key indicates the maximum number of iterations allowed
   for iterative optimization. The default is 15000, which is very similar to no
   limit on iterations. It is then recommended to adapt this parameter to the
@@ -11,4 +11,4 @@ MaximumNumberOfSteps
   recommendations.
 
   Example:
-  ``{"MaximumNumberOfSteps":100}``
+  ``{"MaximumNumberOfIterations":100}``

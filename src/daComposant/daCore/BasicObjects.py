@@ -620,7 +620,7 @@ class Algorithm(object):
             - CurrentIterationNumber : numéro courant d'itération dans les algorithmes itératifs, à partir de 0
             - CurrentOptimum : état optimal courant lors d'itérations
             - CurrentState : état courant lors d'itérations
-            - CurrentStepNumber : numéro courant de pas de mesure dans les algorithmes temporels
+            - CurrentStepNumber : pas courant d'avancement dans les algorithmes en évolution, à partir de 0
             - GradientOfCostFunctionJ  : gradient de la fonction-coût globale
             - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-coût
             - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-coût

@@ -60,7 +60,7 @@ en assimilation de données.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/MaximumNumberOfSteps_50.rst
+.. include:: snippets/MaximumNumberOfIterations_50.rst
 
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 

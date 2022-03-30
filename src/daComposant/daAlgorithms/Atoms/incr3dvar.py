@@ -67,7 +67,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     J      = 1./mpr
     DeltaJ = 1./mpr
     Xr     = numpy.asarray(selfA._parameters["InitializationPoint"]).reshape((-1,1))
-    while abs(DeltaJ) >= selfA._parameters["CostDecrementTolerance"] and iOuter <= selfA._parameters["MaximumNumberOfSteps"]:
+    while abs(DeltaJ) >= selfA._parameters["CostDecrementTolerance"] and iOuter <= selfA._parameters["MaximumNumberOfIterations"]:
         #
         # Inner Loop
         # ----------
@@ -144,7 +144,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb),
-                maxfun      = selfA._parameters["MaximumNumberOfSteps"]-1,
+                maxfun      = selfA._parameters["MaximumNumberOfIterations"]-1,
                 factr       = selfA._parameters["CostDecrementTolerance"]*1.e14,
                 pgtol       = selfA._parameters["ProjectedGradientTolerance"],
                 iprint      = selfA._parameters["optiprint"],
@@ -158,7 +158,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
                 fprime      = GradientOfCostFunction,
                 args        = (),
                 bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb),
-                maxfun      = selfA._parameters["MaximumNumberOfSteps"],
+                maxfun      = selfA._parameters["MaximumNumberOfIterations"],
                 pgtol       = selfA._parameters["ProjectedGradientTolerance"],
                 ftol        = selfA._parameters["CostDecrementTolerance"],
                 messages    = selfA._parameters["optmessages"],
@@ -169,7 +169,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
                 x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = selfA._parameters["MaximumNumberOfSteps"],
+                maxiter     = selfA._parameters["MaximumNumberOfIterations"],
                 gtol        = selfA._parameters["GradientNormTolerance"],
                 disp        = selfA._parameters["optdisp"],
                 full_output = True,
@@ -180,7 +180,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
                 x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = selfA._parameters["MaximumNumberOfSteps"],
+                maxiter     = selfA._parameters["MaximumNumberOfIterations"],
                 avextol     = selfA._parameters["CostDecrementTolerance"],
                 disp        = selfA._parameters["optdisp"],
                 full_output = True,
@@ -191,7 +191,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
                 x0          = numpy.zeros(Xb.size),
                 fprime      = GradientOfCostFunction,
                 args        = (),
-                maxiter     = selfA._parameters["MaximumNumberOfSteps"],
+                maxiter     = selfA._parameters["MaximumNumberOfIterations"],
                 gtol        = selfA._parameters["GradientNormTolerance"],
                 disp        = selfA._parameters["optdisp"],
                 full_output = True,
