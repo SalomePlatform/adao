@@ -55,6 +55,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = int,
             message  = "Nombre maximal de générations",
             minval   = 0,
+            oldname  = "MaximumNumberOfSteps",
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfFunctionEvaluations",

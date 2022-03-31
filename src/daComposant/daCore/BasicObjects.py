@@ -32,6 +32,7 @@ import logging
 import copy
 import time
 import numpy
+import warnings
 from functools import partial
 from daCore import Persistence, PlatformInfo, Interfaces
 from daCore import Templates
@@ -662,6 +663,7 @@ class Algorithm(object):
         self.__variable_names_not_public = {"nextStep":False} # Duplication dans AlgorithmAndParameters
         self.__canonical_parameter_name = {} # Correspondance "lower"->"correct"
         self.__canonical_stored_name = {}    # Correspondance "lower"->"correct"
+        self.__replace_by_the_new_name = {}  # Nouveau nom à partir d'un nom ancien
         #
         self.StoredVariables = {}
         self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
@@ -905,7 +907,7 @@ class Algorithm(object):
         """
         raise NotImplementedError("Mathematical assimilation calculation has not been implemented!")
 
-    def defineRequiredParameter(self, name = None, default = None, typecast = None, message = None, minval = None, maxval = None, listval = None, listadv = None):
+    def defineRequiredParameter(self, name = None, default = None, typecast = None, message = None, minval = None, maxval = None, listval = None, listadv = None, oldname = None):
         """
         Permet de définir dans l'algorithme des paramètres requis et leurs
         caractéristiques par défaut.
@@ -921,8 +923,12 @@ class Algorithm(object):
             "listval"  : listval,
             "listadv"  : listadv,
             "message"  : message,
+            "oldname"  : oldname,
             }
         self.__canonical_parameter_name[name.lower()] = name
+        if oldname is not None:
+            self.__canonical_parameter_name[oldname.lower()] = name # Conversion
+            self.__replace_by_the_new_name[oldname.lower()] = name
         logging.debug("%s %s (valeur par défaut = %s)", self._name, message, self.setParameterValue(name))
 
     def getRequiredParameters(self, noDetails=True):
@@ -1008,6 +1014,13 @@ class Algorithm(object):
                 __inverse_fromDico_keys[self.__canonical_parameter_name[k.lower()]] = k
         #~ __inverse_fromDico_keys = dict([(self.__canonical_parameter_name[k.lower()],k) for k in fromDico.keys()])
         __canonic_fromDico_keys = __inverse_fromDico_keys.keys()
+        #
+        for k in __inverse_fromDico_keys.values():
+            if k.lower() in self.__replace_by_the_new_name:
+                __newk = self.__replace_by_the_new_name[k.lower()]
+                __msg = "the parameter '%s' used in '%s' algorithm case is deprecated and has to be replaced by '%s'. Please update your code."%(k,self._name,__newk)
+                warnings.warn(__msg, FutureWarning, stacklevel=50)
+        #
         for k in self.__required_parameters.keys():
             if k in __canonic_fromDico_keys:
                 self._parameters[k] = self.setParameterValue(k,fromDico[__inverse_fromDico_keys[k]])

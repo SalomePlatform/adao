@@ -49,6 +49,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
             minval   = 1,
+            oldname  = "MaximumNumberOfSteps",
             )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",

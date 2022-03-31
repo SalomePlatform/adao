@@ -33,6 +33,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
             minval   = 0,
+            oldname  = "MaximumNumberOfSteps",
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfFunctionEvaluations",
