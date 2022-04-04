@@ -7,7 +7,7 @@ MaximumNumberOfIterations
   needs on real problems. For some optimizers, the effective stopping step can
   be slightly different of the limit due to algorithm internal control
   requirements. One can refer to the section describing ways for
-  ref:`subsection_iterative_convergence_control` for more detailed
+  :ref:`subsection_iterative_convergence_control` for more detailed
   recommendations.
 
   Example:

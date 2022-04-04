@@ -534,8 +534,8 @@ for other ones like the :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 or :ref:`section_ref_algorithm_QuantileRegression`. In practice, a value
 between 10 and 30 is recommended to make this control parameter effective and
 still obtain an optimal search of good quality. For an optimal search of
-sufficient quality, this restriction should not be set too strictly, i.e. a
-limit of 30 should be better than 10.
+sufficient quality, this restriction should not be set too strictly, i.e. a 30
+iteration limit should be more favorable than a 10 iteration limit.
 
 **A second way to control convergence is to adapt the relative decrement
 tolerance in the minimization of the cost functional considered**. This
@@ -551,16 +551,17 @@ manifested by many successive iterations on almost identical states.
 finite difference approximation, primarily for the observation operator and a
 single-operator representation**. The control of this property is done with the
 keyword "*DifferentialIncrement*" which sets the definition using the
-:ref:`section_ref_operator_one`. Its default value is 1%, and it can usually be
-adjusted between :math:`10^{-5}` and :math:`10^{-3}` (although it is wise to
-check carefully the relevance of its value, it is easy in ADAO to change this
-parameter). The convergence criterion must then be adjusted so that it does not
-exceed the order of magnitude of this approximation. In practice, it is
-sufficient to set the "*CostDecrementTolerance*" criterion to approximately the
-same precision (i.e. with an order of magnitude more or less) as the
-"*DifferentialIncrement*" criterion. This way of improvement is also to be
-completed with analyses using the :ref:`section_ref_algorithm_LinearityTest`
-and :ref:`section_ref_algorithm_GradientTest`.
+:ref:`section_ref_operator_one`. Its default value is :math:`10^{-2}` (or 1%),
+and it can usually be adjusted between :math:`10^{-5}` and :math:`10^{-3}`
+(although it is wise to check carefully the relevance of its value, it is easy
+in ADAO to change this parameter). The convergence criterion must then be
+adjusted so that it does not exceed the order of magnitude of this
+approximation. In practice, it is sufficient to set the
+"*CostDecrementTolerance*" criterion to approximately the same precision (i.e.
+with an order of magnitude more or less) as the "*DifferentialIncrement*"
+criterion. This way of improvement is also to be completed with analyses using
+the :ref:`section_ref_algorithm_LinearityTest` and
+:ref:`section_ref_algorithm_GradientTest`.
 
 From experience, it is *a priori* not recommended to use other means to control
 convergence, even if they exist. These parameter adjustments are simple to

@@ -582,8 +582,8 @@ ou :ref:`section_ref_algorithm_QuantileRegression`. Dans la pratique, on
 recommande une valeur comprise entre 10 et 30 pour rendre ce paramètre de
 contrôle effectif et obtenir quand même une recherche optimale de bonne
 qualité. Pour une recherche optimale de qualité suffisante, il convient de ne
-pas fixer cette restriction trop strictement, c'est-à-dire qu'une limite de 30
-devrait être mieux que 10.
+pas fixer cette restriction trop strictement, c'est-à-dire qu'une limite à 30
+itérations devrait être plus favorable qu'une limite à 10 itérations.
 
 **Un second moyen de contrôle de la convergence est d'adapter la tolérance de
 décroissance relative dans la minimisation de la fonctionnelle de coût
@@ -602,14 +602,14 @@ défaut de l'approximation par différences finies, essentiellement pour
 l'opérateur d'observation et une représentation en mono-opérateur**. Le
 contrôle de cette propriété se fait à l'aide du mot-clé
 "*DifferentialIncrement*" qui paramètre la définition à l'aide de la
-:ref:`section_ref_operator_one`. Sa valeur par défaut est de 1%, et il peut
-généralement être ajusté entre :math:`10^{-5}` et :math:`10^{-3}` (même s'il
-est sage de vérifier soigneusement la pertinence de sa valeur, il est aisé dans
-ADAO de modifier ce paramètre). Le critère de convergence doit ensuite être
-ajusté de telle sorte qu'il ne surpasse pas l'ordre de grandeur de cette
-approximation. En pratique, on peut se contenter de fixer le critère
-"*CostDecrementTolerance*" à peu près à la même précision (c'est-à-dire avec un
-ordre de grandeur de plus ou de moins) que le critère
+:ref:`section_ref_operator_one`. Sa valeur par défaut est de :math:`10^{-2}`
+(ou 1%), et il peut généralement être ajusté entre :math:`10^{-5}` et
+:math:`10^{-3}` (même s'il est sage de vérifier soigneusement la pertinence de
+sa valeur, il est aisé dans ADAO de modifier ce paramètre). Le critère de
+convergence doit ensuite être ajusté de telle sorte qu'il ne surpasse pas
+l'ordre de grandeur de cette approximation. En pratique, on peut se contenter
+de fixer le critère "*CostDecrementTolerance*" à peu près à la même précision
+(c'est-à-dire avec un ordre de grandeur de plus ou de moins) que le critère
 "*DifferentialIncrement*". Ce moyen d'amélioration est aussi à compléter
 d'analyses à l'aide des :ref:`section_ref_algorithm_LinearityTest` et
 :ref:`section_ref_algorithm_GradientTest`.
