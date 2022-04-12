@@ -31,21 +31,30 @@ Glossaire
 
    cas
       Un cas ADAO est défini par un jeu de données et de choix, rassemblés par
-      l'intermédiaire de l'interface utilisateur du module. Les données sont les
-      mesures physiques qui doivent être techniquement disponibles avant ou
-      pendant l'exécution du cas. Le (ou les) code(s) de simulation et la
-      méthode d'assimilation de données ou d'optimisation, ainsi que leurs
-      paramètres, doivent être choisis, ils définissent les propriétés
-      d'exécution du cas.
+      l'intermédiaire de l'interface utilisateur du module (en TUI comme en
+      GUI). Les données sont les mesures physiques qui doivent être
+      techniquement disponibles avant ou pendant l'exécution du cas. Le (ou
+      les) code(s) de simulation et la méthode d'assimilation de données ou
+      d'optimisation, ainsi que leurs paramètres, doivent être choisis, ils
+      définissent les propriétés d'exécution du cas.
 
-   itération
-      Une itération a lieu lorsque l'on utilise des méthodes d'optimisation
-      itératives (par exemple le 3DVAR), et c'est entièrement caché à
-      l'intérieur du noeud principal de type YACS OptimizerLoop nommé
-      "*compute_bloc*". Néanmoins, l'utilisateur peut observer le processus
-      itératif à l'aide de la fenêtre "*YACS Container Log*", qui est mise à
-      jour au fur et à mesure du déroulement du calcul, et en utilisant des
-      "*Observers*" attachés à des variables de calcul.
+   itération (interne)
+      Une itération (interne) a lieu lorsque l'on utilise des méthodes
+      d'optimisation itératives (par exemple pour l'algorithme de 3DVAR). Les
+      itérations internes sont effectuées à l'intérieur de chaque opération
+      d'optimisation itérative. Le comportement itératif est entièrement
+      intégré dans l'exécution des algorithmes itératifs, et il n'est apparent
+      pour l'utilisateur que lorsque son observation est explicitement demandée
+      en utilisant des "*Observer*" attachés à des variables de calcul. Voir
+      aussi :term:`pas (d'assimilation)`.
+
+   pas (d'assimilation)
+      Un pas (d'assimilation) a lieu lorsqu'une nouvelle observation, ou un
+      nouveau jeu d'observations, est utilisé, pour suivre par exemple le
+      déroulement temporel d'un système dynamique. Remarque : un *unique pas*
+      d'assimilation peut contenir par nature *plusieurs itérations*
+      d'optimisation lorsque l'assimilation utilise une méthode itérative
+      d'optimisation. Voir aussi :term:`itération (interne)`.
 
    système physique
       C'est l'objet d'étude que l'on va représenter par simulation numérique,

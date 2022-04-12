@@ -31,18 +31,27 @@ Glossary
 
    case
       One ADAO case is defined by a set of data and of choices, packed together
-      through the user interface of the module. The data are physical
-      measurements that have technically to be available before or during the
-      case execution. The simulation code(s) and the data assimilation or
-      optimization method, and their parameters, has to be chosen, they define
-      the execution properties of the case.
+      through the user interface of the module (in TUI as in GUI). The data are
+      physical measurements that have technically to be available before or
+      during the case execution. The simulation code(s) and the data
+      assimilation or optimization method, and their parameters, has to be
+      chosen, they define the execution properties of the case.
 
-   iteration
-      One iteration occurs when using iterative optimizers (e.g. 3DVAR), and it
-      is entirely hidden in the main YACS OptimizerLoop Node named
-      "*compute_bloc*". Nevertheless, the user can watch the iterative process
-      through the "*YACS Container Log*" window, which is updated during the
-      process, and using "*Observers*" attached to calculation variables.
+   iteration (internal)
+      An (internal) iteration takes place when using iterative optimization
+      methods (e.g. for the 3DVAR algorithm). Internal iterations are performed
+      within each iterative optimization operation. The iterative behavior is
+      fully integrated into the execution of the iterative algorithms, and is
+      only apparent to the user when his observation is explicitly requested
+      using "*Observer*" attached to computational variables. See also
+      :term:`step (of assimilation)`.
+
+   step (of assimilation)
+      An assimilation step takes place when a new observation, or a new set of
+      observations, is used, for example to follow the temporal course of a
+      dynamic system. Remark: a *single step* of assimilation can contain by
+      nature *several iterations* of optimization when the assimilation uses an
+      iterative optimization method. See also :term:`iteration (internal)`.
 
    physical system
       This is the object of study that will be represented by numerical
