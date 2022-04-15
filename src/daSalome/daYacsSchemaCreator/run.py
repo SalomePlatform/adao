@@ -36,7 +36,8 @@ def create_schema(config_file, config_content, yacs_schema_filename):
       # Import config_file
       try:
         (fd, filename) = tempfile.mkstemp()
-        exec(compile(open(config_file).read(), filename, 'exec'))
+        with open(config_file, 'r') as fid:
+            exec(compile(fid.read(), filename, 'exec'))
       except Exception as e:
         if isinstance(e, SyntaxError): msg = "at %s: %s"%(e.offset, e.text)
         else: msg = ""

@@ -126,7 +126,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     nbPreviousSteps = selfA.StoredVariables["CostFunctionJ"].stepnumber()
     #
     if selfA._parameters["Minimizer"] == "LBFGSB":
-        if "0.19" <= scipy.version.version <= "1.1.0":
+        if "0.19" <= scipy.version.version <= "1.4.1":
             import daAlgorithms.Atoms.lbfgsbhlt as optimiseur
         else:
             import scipy.optimize as optimiseur

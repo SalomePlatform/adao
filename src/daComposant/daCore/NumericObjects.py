@@ -116,33 +116,48 @@ class FDApproximation(object):
                 self.__userFunction__name = Function.__name__
                 try:
                     mod = os.path.join(Function.__globals__['filepath'],Function.__globals__['filename'])
-                except:
+                except Exception:
                     mod = os.path.abspath(Function.__globals__['__file__'])
                 if not os.path.isfile(mod):
                     raise ImportError("No user defined function or method found with the name %s"%(mod,))
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
                 self.__userFunction__path = os.path.dirname(mod)
                 del mod
-                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled, extraArguments = self.__extraArgs )
+                self.__userOperator = Operator(
+                    name                 = self.__name,
+                    fromMethod           = Function,
+                    avoidingRedundancy   = self.__avoidRC,
+                    inputAsMultiFunction = self.__mfEnabled,
+                    extraArguments       = self.__extraArgs )
                 self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
             elif isinstance(Function,types.MethodType):
                 logging.debug("FDA Calculs en multiprocessing : MethodType")
                 self.__userFunction__name = Function.__name__
                 try:
                     mod = os.path.join(Function.__globals__['filepath'],Function.__globals__['filename'])
-                except:
+                except Exception:
                     mod = os.path.abspath(Function.__func__.__globals__['__file__'])
                 if not os.path.isfile(mod):
                     raise ImportError("No user defined function or method found with the name %s"%(mod,))
                 self.__userFunction__modl = os.path.basename(mod).replace('.pyc','').replace('.pyo','').replace('.py','')
                 self.__userFunction__path = os.path.dirname(mod)
                 del mod
-                self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled, extraArguments = self.__extraArgs )
+                self.__userOperator = Operator(
+                    name                 = self.__name,
+                    fromMethod           = Function,
+                    avoidingRedundancy   = self.__avoidRC,
+                    inputAsMultiFunction = self.__mfEnabled,
+                    extraArguments       = self.__extraArgs )
                 self.__userFunction = self.__userOperator.appliedTo # Pour le calcul Direct
             else:
                 raise TypeError("User defined function or method has to be provided for finite differences approximation.")
         else:
-            self.__userOperator = Operator( name = self.__name, fromMethod = Function, avoidingRedundancy = self.__avoidRC, inputAsMultiFunction = self.__mfEnabled, extraArguments = self.__extraArgs )
+            self.__userOperator = Operator(
+                name                 = self.__name,
+                fromMethod           = Function,
+                avoidingRedundancy   = self.__avoidRC,
+                inputAsMultiFunction = self.__mfEnabled,
+                extraArguments       = self.__extraArgs )
             self.__userFunction = self.__userOperator.appliedTo
         #
         self.__centeredDF = bool(centeredDF)
@@ -156,12 +171,12 @@ class FDApproximation(object):
             self.__dX     = numpy.ravel( dX )
 
     # ---------------------------------------------------------
-    def __doublon__(self, e, l, n, v=None):
+    def __doublon__(self, __e, __l, __n, __v=None):
         __ac, __iac = False, -1
-        for i in range(len(l)-1,-1,-1):
-            if numpy.linalg.norm(e - l[i]) < self.__tolerBP * n[i]:
+        for i in range(len(__l)-1,-1,-1):
+            if numpy.linalg.norm(__e - __l[i]) < self.__tolerBP * __n[i]:
                 __ac, __iac = True, i
-                if v is not None: logging.debug("FDA Cas%s déja calculé, récupération du doublon %i"%(v,__iac))
+                if __v is not None: logging.debug("FDA Cas%s déjà calculé, récupération du doublon %i"%(__v,__iac))
                 break
         return __ac, __iac
 
@@ -313,7 +328,7 @@ class FDApproximation(object):
                         _xserie.append( _X_moins_dXi )
                     #
                     _HX_plusmoins_dX = self.DirectOperator( _xserie )
-                     #
+                    #
                     _Jacobienne  = []
                     for i in range( len(_dX) ):
                         _Jacobienne.append( numpy.ravel( _HX_plusmoins_dX[2*i] - _HX_plusmoins_dX[2*i+1] ) / (2.*_dX[i]) )
@@ -376,7 +391,7 @@ class FDApproximation(object):
                     _Jacobienne = []
                     for i in range( len(_dX) ):
                         _Jacobienne.append( numpy.ravel(( _HX_plus_dX[i] - _HX ) / _dX[i]) )
-                   #
+                    #
                 else:
                     _Jacobienne  = []
                     _HX = self.DirectOperator( _X )
@@ -736,14 +751,24 @@ def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
     __A = __A + mpr*numpy.trace( __A ) * numpy.identity(__nb) # Positivité
     #
     if min(__A.shape) != max(__A.shape):
-        raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(__selfA._name,str(__A.shape)))
+        raise ValueError(
+            "The %s a posteriori covariance matrix A"%(__selfA._name,)+\
+            " is of shape %s, despites it has to be a"%(str(__A.shape),)+\
+            " squared matrix. There is an error in the observation operator,"+\
+            " please check it.")
     if (numpy.diag(__A) < 0).any():
-        raise ValueError("The %s a posteriori covariance matrix A has at least one negative value on its diagonal. There is an error in the observation operator, please check it."%(__selfA._name,))
+        raise ValueError(
+            "The %s a posteriori covariance matrix A"%(__selfA._name,)+\
+            " has at least one negative value on its diagonal. There is an"+\
+            " error in the observation operator, please check it.")
     if logging.getLogger().level < logging.WARNING: # La vérification n'a lieu qu'en debug
         try:
             numpy.linalg.cholesky( __A )
-        except:
-            raise ValueError("The %s a posteriori covariance matrix A is not symmetric positive-definite. Please check your a priori covariances and your observation operator."%(__selfA._name,))
+        except Exception:
+            raise ValueError(
+                "The %s a posteriori covariance matrix A"%(__selfA._name,)+\
+                " is not symmetric positive-definite. Please check your a"+\
+                " priori covariances and your observation operator.")
     #
     return __A
 
@@ -807,16 +832,20 @@ def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
     return 0
 
 # ==============================================================================
-def ForceNumericBounds( __Bounds ):
+def ForceNumericBounds( __Bounds, __infNumbers = True ):
     "Force les bornes à être des valeurs numériques, sauf si globalement None"
     # Conserve une valeur par défaut à None s'il n'y a pas de bornes
     if __Bounds is None: return None
-    # Converti toutes les bornes individuelles None à +/- l'infini
+    # Converti toutes les bornes individuelles None à +/- l'infini chiffré
     __Bounds = numpy.asarray( __Bounds, dtype=float )
     if len(__Bounds.shape) != 2 or min(__Bounds.shape) <= 0 or __Bounds.shape[1] != 2:
         raise ValueError("Incorrectly shaped bounds data")
-    __Bounds[numpy.isnan(__Bounds[:,0]),0] = -sys.float_info.max
-    __Bounds[numpy.isnan(__Bounds[:,1]),1] =  sys.float_info.max
+    if __infNumbers:
+        __Bounds[numpy.isnan(__Bounds[:,0]),0] = -float('inf')
+        __Bounds[numpy.isnan(__Bounds[:,1]),1] =  float('inf')
+    else:
+        __Bounds[numpy.isnan(__Bounds[:,0]),0] = -sys.float_info.max
+        __Bounds[numpy.isnan(__Bounds[:,1]),1] =  sys.float_info.max
     return __Bounds
 
 # ==============================================================================
@@ -829,7 +858,7 @@ def RecentredBounds( __Bounds, __Center, __Scale = None):
         return ForceNumericBounds( __Bounds ) - numpy.ravel( __Center ).reshape((-1,1))
     else:
         # Recentre les valeurs numériques de bornes et change l'échelle par une matrice
-        return __Scale @ (ForceNumericBounds( __Bounds ) - numpy.ravel( __Center ).reshape((-1,1)))
+        return __Scale @ (ForceNumericBounds( __Bounds, False ) - numpy.ravel( __Center ).reshape((-1,1)))
 
 # ==============================================================================
 def ApplyBounds( __Vector, __Bounds, __newClip = True):
@@ -859,8 +888,9 @@ def ApplyBounds( __Vector, __Bounds, __newClip = True):
     return __Vector
 
 # ==============================================================================
-def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Betaf):
+def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __SuppPars):
     "Recentre l'ensemble Xn autour de l'analyse 3DVAR"
+    __Betaf = __SuppPars["HybridCovarianceEquilibrium"]
     #
     Xf = EnsembleMean( __EnXf )
     Pf = Covariance( asCovariance=EnsembleErrorCovariance(__EnXf) )
@@ -868,8 +898,8 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Bet
     #
     selfB = PartialAlgorithm("3DVAR")
     selfB._parameters["Minimizer"] = "LBFGSB"
-    selfB._parameters["MaximumNumberOfIterations"] = 15000
-    selfB._parameters["CostDecrementTolerance"] = 1.e-7
+    selfB._parameters["MaximumNumberOfIterations"] = __SuppPars["HybridMaximumNumberOfIterations"]
+    selfB._parameters["CostDecrementTolerance"] = __SuppPars["HybridCostDecrementTolerance"]
     selfB._parameters["ProjectedGradientTolerance"] = -1
     selfB._parameters["GradientNormTolerance"] = 1.e-05
     selfB._parameters["StoreInternalVariables"] = False
@@ -983,6 +1013,7 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle,
         if __CovForecast: Pn = selfA._getInternalState("Pn")
     #
     return 0
+
 
 # ==============================================================================
 if __name__ == "__main__":

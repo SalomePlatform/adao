@@ -75,8 +75,8 @@ class GenericCaseViewer(object):
     def _finalize(self, __upa=None):
         "Enregistrement du final"
         __hasNotExecute = True
-        for l in self._lineSerie:
-            if "%s.execute"%(self._objname,) in l: __hasNotExecute = False
+        for __l in self._lineSerie:
+            if "%s.execute"%(self._objname,) in __l: __hasNotExecute = False
         if __hasNotExecute:
             self._lineSerie.append("%s.execute()"%(self._objname,))
         if __upa is not None and len(__upa)>0:
@@ -253,7 +253,7 @@ class _COMViewer(GenericCaseViewer):
                 elif 'SCRIPT_FILE' in r and os.path.exists(r['SCRIPT_FILE']):
                     __UserPostAnalysis = open(r['SCRIPT_FILE'],'r').read()
                     __commands.append( "set( Concept='UserPostAnalysis', Script='%s' )"%(r['SCRIPT_FILE'],) )
-                elif 'Template' in r and not 'ValueTemplate' in r:
+                elif 'Template' in r and 'ValueTemplate' not in r:
                     # AnalysisPrinter...
                     if r['Template'] not in Templates.UserPostAnalysisTemplates:
                         raise ValueError("User post-analysis template \"%s\" does not exist."%(r['Template'],))
@@ -453,8 +453,10 @@ class _SCDViewer(GenericCaseViewer):
                 __local.pop(__k)
             for __k,__v in __local.items():
                 if __k == "Concept": continue
-                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] and 'Script' in __local and __local['Script'] is not None: continue
-                if __k in ['Vector','VectorSerie'] and 'DataFile' in __local and __local['DataFile'] is not None: continue
+                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] \
+                    and 'Script' in __local and __local['Script'] is not None: continue
+                if __k in ['Vector','VectorSerie'] \
+                    and 'DataFile' in __local and __local['DataFile'] is not None: continue
                 if __k == 'Parameters' and not (__command in ['AlgorithmParameters','SupplementaryParameters']): continue
                 if __k == 'Algorithm':
                     __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
@@ -709,7 +711,9 @@ class ImportFromScript(object):
         if __filename is None:
             raise ValueError("The name of the file, containing the variable to be read, has to be specified.")
         if not os.path.isfile(__filename):
-            raise ValueError("The file containing the variable to be imported doesn't seem to exist. Please check the file. The given file name is:\n  \"%s\""%str(__filename))
+            raise ValueError(
+                "The file containing the variable to be imported doesn't seem to"+\
+                " exist. Please check the file. The given file name is:\n  \"%s\""%str(__filename))
         if os.path.dirname(__filename) != '':
             sys.path.insert(0, os.path.dirname(__filename))
             __basename = os.path.basename(__filename).rstrip(".py")
@@ -729,9 +733,15 @@ class ImportFromScript(object):
             raise ValueError("The name of the variable to be read has to be specified. Please check the content of the file and the syntax.")
         if not hasattr(self.__filenspace, __varname):
             if __synonym is None:
-                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__basename)+".py",__varname))
+                raise ValueError(
+                    "The imported script file \"%s\""%(str(self.__basename)+".py",)+\
+                    " doesn't contain the mandatory variable \"%s\""%(__varname,)+\
+                    " to be read. Please check the content of the file and the syntax.")
             elif not hasattr(self.__filenspace, __synonym):
-                raise ValueError("The imported script file \"%s\" doesn't contain the mandatory variable \"%s\" to be read. Please check the content of the file and the syntax."%(str(self.__basename)+".py",__synonym))
+                raise ValueError(
+                    "The imported script file \"%s\""%(str(self.__basename)+".py",)+\
+                    " doesn't contain the mandatory variable \"%s\""%(__synonym,)+\
+                    " to be read. Please check the content of the file and the syntax.")
             else:
                 return getattr(self.__filenspace, __synonym)
         else:
@@ -747,8 +757,10 @@ class ImportDetector(object):
     """
     __slots__ = (
         "__url", "__usr", "__root", "__end")
-    def __enter__(self): return self
-    def __exit__(self, exc_type, exc_val, exc_tb): return False
+    def __enter__(self):
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False
     #
     def __init__(self, __url, UserMime=""):
         if __url is None:
@@ -844,8 +856,10 @@ class ImportFromFile(object):
         "_filename", "_colnames", "_colindex", "_varsline", "_format",
         "_delimiter", "_skiprows", "__url", "__filestring", "__header",
         "__allowvoid", "__binaryformats", "__supportedformats")
-    def __enter__(self): return self
-    def __exit__(self, exc_type, exc_val, exc_tb): return False
+    def __enter__(self):
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False
     #
     def __init__(self, Filename=None, ColNames=None, ColIndex=None, Format="Guess", AllowVoidNameList=True):
         """
@@ -1029,7 +1043,7 @@ class ImportFromFile(object):
         else:
             raise ValueError("Unkown file format \"%s\" or no reader available"%self._format)
         if __columns is None: __columns = ()
-        #
+
         def toString(value):
             try:
                 return value.decode()
@@ -1061,8 +1075,10 @@ class ImportScalarLinesFromFile(ImportFromFile):
 
     Seule la méthode "getvalue" est changée.
     """
-    def __enter__(self): return self
-    def __exit__(self, exc_type, exc_val, exc_tb): return False
+    def __enter__(self):
+        return self
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False
     #
     def __init__(self, Filename=None, ColNames=None, ColIndex=None, Format="Guess"):
         ImportFromFile.__init__(self, Filename, ColNames, ColIndex, Format)
@@ -1079,9 +1095,11 @@ class ImportScalarLinesFromFile(ImportFromFile):
             __dtypes   = {'names'  : ('Name', 'Value', 'Minimum', 'Maximum'),
                           'formats': ('S128', 'g', 'g', 'g')}
             __usecols  = (0, 1, 2, 3)
+
             def __replaceNoneN( s ):
                 if s.strip() == b'None': return numpy.NINF
                 else:                    return s
+
             def __replaceNoneP( s ):
                 if s.strip() == b'None': return numpy.PINF
                 else:                    return s
@@ -1097,6 +1115,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
             __dtypes   = {'names'  : HeaderNames,
                           'formats': tuple(['S128',]+['g']*(len(HeaderNames)-1))}
             __usecols  = tuple(range(len(HeaderNames)))
+
             def __replaceNone( s ):
                 if s.strip() == b'None': return numpy.NAN
                 else:                    return s
@@ -1107,9 +1126,22 @@ class ImportScalarLinesFromFile(ImportFromFile):
             raise ValueError("Can not find names of columns for initial values. Wrong first line is:\n            \"%s\""%self._varsline)
         #
         if self._format == "text/plain":
-            __content = numpy.loadtxt(self._filename, dtype = __dtypes, usecols = __usecols, skiprows = self._skiprows, converters = __converters)
+            __content = numpy.loadtxt(
+                self._filename,
+                dtype      = __dtypes,
+                usecols    = __usecols,
+                skiprows   = self._skiprows,
+                converters = __converters,
+                )
         elif self._format in ["text/csv", "text/tab-separated-values"]:
-            __content = numpy.loadtxt(self._filename, dtype = __dtypes, usecols = __usecols, skiprows = self._skiprows, converters = __converters, delimiter = self._delimiter)
+            __content = numpy.loadtxt(
+                self._filename,
+                dtype      = __dtypes,
+                usecols    = __usecols,
+                skiprows   = self._skiprows,
+                converters = __converters,
+                delimiter  = self._delimiter,
+                )
         else:
             raise ValueError("Unkown file format \"%s\""%self._format)
         #
@@ -1223,6 +1255,7 @@ class EficasGUI(object):
             eficas_go.lanceEficas(code=prefs.code)
         else:
             logging.debug("Can not launch standalone EFICAS/ADAO interface for path errors.")
+
 
 # ==============================================================================
 if __name__ == "__main__":

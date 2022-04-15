@@ -273,7 +273,7 @@ class Persistence(object):
         """
         try:
             return [numpy.mean(item, dtype=mfp).astype('float') for item in self.__values]
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def stds(self, ddof=0):
@@ -290,7 +290,7 @@ class Persistence(object):
                 return [numpy.array(item).std(ddof=ddof, dtype=mfp).astype('float') for item in self.__values]
             else:
                 return [numpy.array(item).std(dtype=mfp).astype('float') for item in self.__values]
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def sums(self):
@@ -301,7 +301,7 @@ class Persistence(object):
         """
         try:
             return [numpy.array(item).sum() for item in self.__values]
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def mins(self):
@@ -312,7 +312,7 @@ class Persistence(object):
         """
         try:
             return [numpy.array(item).min() for item in self.__values]
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def maxs(self):
@@ -323,7 +323,7 @@ class Persistence(object):
         """
         try:
             return [numpy.array(item).max() for item in self.__values]
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def norms(self, _ord=None):
@@ -336,7 +336,7 @@ class Persistence(object):
         """
         try:
             return [numpy.linalg.norm(item, _ord) for item in self.__values]
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def maes(self, _predictor=None):
@@ -353,7 +353,7 @@ class Persistence(object):
         if _predictor is None:
             try:
                 return [numpy.mean(numpy.abs(item)) for item in self.__values]
-            except:
+            except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
             if len(_predictor) != len(self.__values):
@@ -363,7 +363,7 @@ class Persistence(object):
                     raise ValueError("Predictor size at step %i is incompatible with the values"%i)
             try:
                 return [numpy.mean(numpy.abs(numpy.ravel(item) - numpy.ravel(_predictor[i]))) for i, item in enumerate(self.__values)]
-            except:
+            except Exception:
                 raise TypeError("Base type is incompatible with numpy")
 
     def mses(self, _predictor=None):
@@ -381,7 +381,7 @@ class Persistence(object):
             try:
                 __n = self.shape()[0]
                 return [(numpy.linalg.norm(item)**2 / __n) for item in self.__values]
-            except:
+            except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
             if len(_predictor) != len(self.__values):
@@ -392,7 +392,7 @@ class Persistence(object):
             try:
                 __n = self.shape()[0]
                 return [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i]))**2 / __n) for i, item in enumerate(self.__values)]
-            except:
+            except Exception:
                 raise TypeError("Base type is incompatible with numpy")
 
     msds=mses # Mean-Square Deviation (MSD=MSE)
@@ -412,7 +412,7 @@ class Persistence(object):
             try:
                 __n = self.shape()[0]
                 return [(numpy.linalg.norm(item) / math.sqrt(__n)) for item in self.__values]
-            except:
+            except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
             if len(_predictor) != len(self.__values):
@@ -423,7 +423,7 @@ class Persistence(object):
             try:
                 __n = self.shape()[0]
                 return [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i])) / math.sqrt(__n)) for i, item in enumerate(self.__values)]
-            except:
+            except Exception:
                 raise TypeError("Base type is incompatible with numpy")
 
     rmsds = rmses # Root-Mean-Square Deviation (RMSD=RMSE)
@@ -567,7 +567,7 @@ class Persistence(object):
         """
         try:
             return numpy.mean(self.__values, axis=0, dtype=mfp).astype('float')
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def std(self, ddof=0):
@@ -584,7 +584,7 @@ class Persistence(object):
                 return numpy.asarray(self.__values).std(ddof=ddof,axis=0).astype('float')
             else:
                 return numpy.asarray(self.__values).std(axis=0).astype('float')
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def sum(self):
@@ -595,7 +595,7 @@ class Persistence(object):
         """
         try:
             return numpy.asarray(self.__values).sum(axis=0)
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def min(self):
@@ -606,7 +606,7 @@ class Persistence(object):
         """
         try:
             return numpy.asarray(self.__values).min(axis=0)
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def max(self):
@@ -617,7 +617,7 @@ class Persistence(object):
         """
         try:
             return numpy.asarray(self.__values).max(axis=0)
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def cumsum(self):
@@ -628,7 +628,7 @@ class Persistence(object):
         """
         try:
             return numpy.asarray(self.__values).cumsum(axis=0)
-        except:
+        except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def plot(self,
@@ -1016,6 +1016,7 @@ class CompositePersistence(object):
             raise ValueError("Load mode '%s' unknown. Choose another one."%mode)
         #
         return filename
+
 
 # ==============================================================================
 if __name__ == "__main__":

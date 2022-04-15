@@ -134,7 +134,7 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         #
         if selfA._parameters["Minimizer"] == "LBFGSB":
             # Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
-            if "0.19" <= scipy.version.version <= "1.1.0":
+            if "0.19" <= scipy.version.version <= "1.4.1":
                 import daAlgorithms.Atoms.lbfgsbhlt as optimiseur
             else:
                 import scipy.optimize as optimiseur

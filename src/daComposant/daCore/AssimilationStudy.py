@@ -36,6 +36,7 @@ class AssimilationStudy(_Aidsm):
     def __init__(self, name = ""):
         _Aidsm.__init__(self, name)
 
+
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

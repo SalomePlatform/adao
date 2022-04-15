@@ -158,6 +158,7 @@ def logtimer(f):
         return result
     return wrapper
 
+
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

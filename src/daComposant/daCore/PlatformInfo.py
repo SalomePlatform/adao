@@ -99,10 +99,10 @@ class PlatformInfo(object):
         elif sys.platform.startswith('darwin'):
             if hasattr(platform, 'mac_ver'):
                 __macosxv = {
-                     '0': 'Cheetah',       '1': 'Puma',         '2': 'Jaguar',
-                     '3': 'Panther',       '4': 'Tiger',        '5': 'Leopard',
-                     '6': 'Snow Leopard',  '7': 'Lion',         '8': 'Mountain Lion',
-                     '9': 'Mavericks',    '10': 'Yosemite',    '11': 'El Capitan',
+                    '0' : 'Cheetah',      '1' : 'Puma',        '2' : 'Jaguar',
+                    '3' : 'Panther',      '4' : 'Tiger',       '5' : 'Leopard',
+                    '6' : 'Snow Leopard', '7' : 'Lion',        '8' : 'Mountain Lion',
+                    '9' : 'Mavericks',    '10': 'Yosemite',    '11': 'El Capitan',
                     '12': 'Sierra',       '13': 'High Sierra', '14': 'Mojave',
                     '15': 'Catalina',     '16': 'Big Sur',     '17': 'Monterey',
                     }
@@ -185,6 +185,14 @@ class PlatformInfo(object):
             __version = "0.0.0"
         return __version
 
+    def getSdfVersion(self):
+        "Retourne la version de sdf disponible"
+        if has_sdf:
+            __version = sdf.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+
     def getCurrentMemorySize(self):
         "Retourne la taille mémoire courante utilisée"
         return 1
@@ -210,6 +218,7 @@ class PlatformInfo(object):
     def __str__(self):
         import daCore.version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
+
 
 # ==============================================================================
 try:
@@ -324,7 +333,7 @@ def strmatrix2liststr( __strvect ):
         __strvect = __strvect.replace(s,";") # "]" et ")" par ";"
     __strvect = re.sub(r';\s*;',r';',__strvect)
     __strvect = __strvect.rstrip(";") # Après ^ et avant v
-    __strmat = [l.split() for l in __strvect.split(";")]
+    __strmat = [__l.split() for __l in __strvect.split(";")]
     return __strmat
 
 def checkFileNameConformity( __filename, __warnInsteadOfPrint=True ):
@@ -484,6 +493,7 @@ class SystemUsage(object):
     def getMaxVirtualMemory(self, unit="o"):
         "Renvoie la mémoire totale maximale mesurée"
         return self._VmB('VmPeak:', unit)
+
 
 # ==============================================================================
 if __name__ == "__main__":

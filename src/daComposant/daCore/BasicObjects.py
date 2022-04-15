@@ -247,7 +247,11 @@ class Operator(object):
                 else:
                     _hserie = self.__Method( _xserie, self.__extraArgs ) # Calcul MF
                 if not hasattr(_hserie, "pop"):
-                    raise TypeError("The user input multi-function doesn't seem to return sequence results, behaving like a mono-function. It has to be checked.")
+                    raise TypeError(
+                        "The user input multi-function doesn't seem to return a"+\
+                        " result sequence, behaving like a mono-function. It has"+\
+                        " to be checked."
+                        )
                 for i in _hindex:
                     _xv = _xserie.pop(0)
                     _hv = _hserie.pop(0)
@@ -496,18 +500,15 @@ class FullOperator(object):
                     __Function = asThreeFunctions
                     __Function.update({"useApproximatedDerivatives":True})
                 else:
-                    raise ValueError("The functions has to be given in a dictionnary which have either 1 key (\"Direct\") or 3 keys (\"Direct\" (optionnal), \"Tangent\" and \"Adjoint\")")
+                    raise ValueError(
+                        "The functions has to be given in a dictionnary which have either"+\
+                        " 1 key (\"Direct\") or"+\
+                        " 3 keys (\"Direct\" (optionnal), \"Tangent\" and \"Adjoint\")")
                 if "Direct"  not in asThreeFunctions:
                     __Function["Direct"] = asThreeFunctions["Tangent"]
                 __Function.update(__Parameters)
             else:
                 __Function = None
-        #
-        # if sys.version_info[0] < 3 and isinstance(__Function, dict):
-        #     for k in ("Direct", "Tangent", "Adjoint"):
-        #         if k in __Function and hasattr(__Function[k],"__class__"):
-        #             if type(__Function[k]) is type(self.__init__):
-        #                 raise TypeError("can't use a class method (%s) as a function for the \"%s\" operator. Use a real function instead."%(type(__Function[k]),k))
         #
         if   appliedInX is not None and isinstance(appliedInX, dict):
             __appliedInX = appliedInX
@@ -547,25 +548,83 @@ class FullOperator(object):
                 mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
                 )
-            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = FDA.DirectOperator,  reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = FDA.TangentOperator, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
-            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = FDA.AdjointOperator, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator(
+                name = self.__name,
+                fromMethod = FDA.DirectOperator,
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                extraArguments = self.__extraArgs,
+                enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator(
+                name = self.__name+"Tangent",
+                fromMethod = FDA.TangentOperator,
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator(
+                name = self.__name+"Adjoint",
+                fromMethod = FDA.AdjointOperator,
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                extraArguments = self.__extraArgs )
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
-            self.__FO["Direct"]  = Operator( name = self.__name,           fromMethod = __Function["Direct"],  reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMethod = __Function["Tangent"], reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
-            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMethod = __Function["Adjoint"], reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, extraArguments = self.__extraArgs )
+            self.__FO["Direct"]  = Operator(
+                name = self.__name,
+                fromMethod = __Function["Direct"],
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                extraArguments = self.__extraArgs,
+                enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator(
+                name = self.__name+"Tangent",
+                fromMethod = __Function["Tangent"],
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                extraArguments = self.__extraArgs )
+            self.__FO["Adjoint"] = Operator(
+                name = self.__name+"Adjoint",
+                fromMethod = __Function["Adjoint"],
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                extraArguments = self.__extraArgs )
         elif asMatrix is not None:
             if isinstance(__Matrix, str):
                 __Matrix = PlatformInfo.strmatrix2liststr( __Matrix )
             __matrice = numpy.asarray( __Matrix, dtype=float )
-            self.__FO["Direct"]  = Operator( name = self.__name,           fromMatrix = __matrice,   reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF, enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
-            self.__FO["Tangent"] = Operator( name = self.__name+"Tangent", fromMatrix = __matrice,   reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF )
-            self.__FO["Adjoint"] = Operator( name = self.__name+"Adjoint", fromMatrix = __matrice.T, reducingMemoryUse = __reduceM, avoidingRedundancy = __avoidRC, inputAsMultiFunction = inputAsMF )
+            self.__FO["Direct"]  = Operator(
+                name = self.__name,
+                fromMatrix = __matrice,
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF,
+                enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+            self.__FO["Tangent"] = Operator(
+                name = self.__name+"Tangent",
+                fromMatrix = __matrice,
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF )
+            self.__FO["Adjoint"] = Operator(
+                name = self.__name+"Adjoint",
+                fromMatrix = __matrice.T,
+                reducingMemoryUse = __reduceM,
+                avoidingRedundancy = __avoidRC,
+                inputAsMultiFunction = inputAsMF )
             del __matrice
         else:
-            raise ValueError("The %s object is improperly defined or undefined, it requires at minima either a matrix, a Direct operator for approximate derivatives or a Tangent/Adjoint operators pair. Please check your operator input."%self.__name)
+            raise ValueError(
+                "The %s object is improperly defined or undefined,"%self.__name+\
+                " it requires at minima either a matrix, a Direct operator for"+\
+                " approximate derivatives or a Tangent/Adjoint operators pair."+\
+                " Please check your operator input.")
         #
         if __appliedInX is not None:
             self.__FO["AppliedInX"] = {}
@@ -729,7 +788,7 @@ class Algorithm(object):
         self.__setParameters(Parameters, reset=True)
         for k, v in self.__variable_names_not_public.items():
             if k not in self._parameters:  self.__setParameters( {k:v} )
-        #
+
         # Corrections et compléments des vecteurs
         def __test_vvalue(argument, variable, argname, symbol=None):
             if symbol is None: symbol = variable
@@ -746,12 +805,14 @@ class Algorithm(object):
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
                     logging.debug("%s %s vector %s is optional and set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
                 else:
-                    logging.debug("%s %s vector %s is set although neither required nor optional, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
+                    logging.debug(
+                        "%s %s vector %s is set although neither required nor optional, and its size is %i."%(
+                        self._name,argname,symbol,numpy.array(argument).size))
             return 0
         __test_vvalue( Xb, "Xb", "Background or initial state" )
         __test_vvalue( Y,  "Y",  "Observation" )
         __test_vvalue( U,  "U",  "Control" )
-        #
+
         # Corrections et compléments des covariances
         def __test_cvalue(argument, variable, argname, symbol=None):
             if symbol is None: symbol = variable
@@ -773,7 +834,7 @@ class Algorithm(object):
         __test_cvalue( B, "B", "Background" )
         __test_cvalue( R, "R", "Observation" )
         __test_cvalue( Q, "Q", "Evolution" )
-        #
+
         # Corrections et compléments des opérateurs
         def __test_ovalue(argument, variable, argname, symbol=None):
             if symbol is None: symbol = variable
@@ -801,7 +862,9 @@ class Algorithm(object):
             logging.debug("%s Bounds taken into account"%(self._name,))
         else:
             self._parameters["Bounds"] = None
-        if ("StateBoundsForQuantiles" in self._parameters) and isinstance(self._parameters["StateBoundsForQuantiles"], (list, tuple)) and (len(self._parameters["StateBoundsForQuantiles"]) > 0):
+        if ("StateBoundsForQuantiles" in self._parameters) \
+            and isinstance(self._parameters["StateBoundsForQuantiles"], (list, tuple)) \
+            and (len(self._parameters["StateBoundsForQuantiles"]) > 0):
             logging.debug("%s Bounds for quantiles states taken into account"%(self._name,))
             # Attention : contrairement à Bounds, pas de défaut à None, sinon on ne peut pas être sans bornes
         #
@@ -847,8 +910,12 @@ class Algorithm(object):
                     _C = numpy.dot(_EI, numpy.dot(_A, _EI))
                     self.StoredVariables["APosterioriCorrelations"].store( _C )
         if _oH is not None and "Direct" in _oH and "Tangent" in _oH and "Adjoint" in _oH:
-            logging.debug("%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i", self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
-            logging.debug("%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i", self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
+            logging.debug(
+                "%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i",
+                self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
+            logging.debug(
+                "%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i",
+                self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
         logging.debug("%s Durées d'utilisation CPU de %.1fs et elapsed de %.1fs", self._name, self._getTimeState()[0], self._getTimeState()[1])
         logging.debug("%s Terminé", self._name)
@@ -892,12 +959,12 @@ class Algorithm(object):
         else:
             try:
                 msg = "'%s'"%k
-            except:
+            except Exception:
                 raise TypeError("pop expected at least 1 arguments, got 0")
             "If key is not found, d is returned if given, otherwise KeyError is raised"
             try:
                 return d
-            except:
+            except Exception:
                 raise KeyError(msg)
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
@@ -907,7 +974,17 @@ class Algorithm(object):
         """
         raise NotImplementedError("Mathematical assimilation calculation has not been implemented!")
 
-    def defineRequiredParameter(self, name = None, default = None, typecast = None, message = None, minval = None, maxval = None, listval = None, listadv = None, oldname = None):
+    def defineRequiredParameter(self,
+        name     = None,
+        default  = None,
+        typecast = None,
+        message  = None,
+        minval   = None,
+        maxval   = None,
+        listval  = None,
+        listadv  = None,
+        oldname  = None,
+        ):
         """
         Permet de définir dans l'algorithme des paramètres requis et leurs
         caractéristiques par défaut.
@@ -963,7 +1040,7 @@ class Algorithm(object):
             else:
                 try:
                     __val = typecast( value )
-                except:
+                except Exception:
                     raise ValueError("The value '%s' for the parameter named '%s' can not be correctly evaluated with type '%s'."%(value, __k, typecast))
         #
         if minval is not None and (numpy.array(__val, float) < minval).any():
@@ -1018,7 +1095,8 @@ class Algorithm(object):
         for k in __inverse_fromDico_keys.values():
             if k.lower() in self.__replace_by_the_new_name:
                 __newk = self.__replace_by_the_new_name[k.lower()]
-                __msg = "the parameter '%s' used in '%s' algorithm case is deprecated and has to be replaced by '%s'. Please update your code."%(k,self._name,__newk)
+                __msg  = "the parameter \"%s\" used in \"%s\" algorithm case is deprecated and has to be replaced by \"%s\"."%(k,self._name,__newk)
+                __msg += " Please update your code."
                 warnings.warn(__msg, FutureWarning, stacklevel=50)
         #
         for k in self.__required_parameters.keys():
@@ -1232,7 +1310,7 @@ class AlgorithmAndParameters(object):
         try:
             catalogAd = r.loadCatalog("proc", __file)
             r.addCatalog(catalogAd)
-        except:
+        except Exception:
             pass
 
         try:
@@ -1362,7 +1440,8 @@ class AlgorithmAndParameters(object):
             if os.path.isfile(os.path.join(directory, daDirectory, str(choice)+'.py')):
                 module_path = os.path.abspath(os.path.join(directory, daDirectory))
         if module_path is None:
-            raise ImportError("No algorithm module named \"%s\" has been found in the search path.\n             The search path is %s"%(choice, sys.path))
+            raise ImportError(
+                "No algorithm module named \"%s\" has been found in the search path.\n             The search path is %s"%(choice, sys.path))
         #
         # Importe le fichier complet comme un module
         # ------------------------------------------
@@ -1374,7 +1453,8 @@ class AlgorithmAndParameters(object):
             self.__algorithmName = str(choice)
             sys.path = sys_path_tmp ; del sys_path_tmp
         except ImportError as e:
-            raise ImportError("The module named \"%s\" was found, but is incorrect at the import stage.\n             The import error message is: %s"%(choice,e))
+            raise ImportError(
+                "The module named \"%s\" was found, but is incorrect at the import stage.\n             The import error message is: %s"%(choice,e))
         #
         # Instancie un objet du type élémentaire du fichier
         # -------------------------------------------------
@@ -1463,13 +1543,21 @@ class AlgorithmAndParameters(object):
             raise ValueError("Shape characteristic of evolution operator (EM) is incorrect: \"%s\"."%(__EM_shape,))
         #
         if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not( __HO_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and state (X) \"%s\" are incompatible."%(__HO_shape,__Xb_shape))
+            raise ValueError(
+                "Shape characteristic of observation operator (H)"+\
+                " \"%s\" and state (X) \"%s\" are incompatible."%(__HO_shape,__Xb_shape))
         if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not( __HO_shape[0] == max(__Y_shape) ):
-            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and observation (Y) \"%s\" are incompatible."%(__HO_shape,__Y_shape))
+            raise ValueError(
+                "Shape characteristic of observation operator (H)"+\
+                " \"%s\" and observation (Y) \"%s\" are incompatible."%(__HO_shape,__Y_shape))
         if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__B) > 0 and not( __HO_shape[1] == __B_shape[0] ):
-            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and a priori errors covariance matrix (B) \"%s\" are incompatible."%(__HO_shape,__B_shape))
+            raise ValueError(
+                "Shape characteristic of observation operator (H)"+\
+                " \"%s\" and a priori errors covariance matrix (B) \"%s\" are incompatible."%(__HO_shape,__B_shape))
         if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__R) > 0 and not( __HO_shape[0] == __R_shape[1] ):
-            raise ValueError("Shape characteristic of observation operator (H) \"%s\" and observation errors covariance matrix (R) \"%s\" are incompatible."%(__HO_shape,__R_shape))
+            raise ValueError(
+                "Shape characteristic of observation operator (H)"+\
+                " \"%s\" and observation errors covariance matrix (R) \"%s\" are incompatible."%(__HO_shape,__R_shape))
         #
         if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
             if self.__algorithmName in ["EnsembleBlue",]:
@@ -1479,16 +1567,24 @@ class AlgorithmAndParameters(object):
                     self.__Xb.store( numpy.asarray(member, dtype=float) )
                 __Xb_shape = min(__B_shape)
             else:
-                raise ValueError("Shape characteristic of a priori errors covariance matrix (B) \"%s\" and background (Xb) \"%s\" are incompatible."%(__B_shape,__Xb_shape))
+                raise ValueError(
+                    "Shape characteristic of a priori errors covariance matrix (B)"+\
+                    " \"%s\" and background vector (Xb) \"%s\" are incompatible."%(__B_shape,__Xb_shape))
         #
         if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
-            raise ValueError("Shape characteristic of observation errors covariance matrix (R) \"%s\" and observation (Y) \"%s\" are incompatible."%(__R_shape,__Y_shape))
+            raise ValueError(
+                "Shape characteristic of observation errors covariance matrix (R)"+\
+                " \"%s\" and observation vector (Y) \"%s\" are incompatible."%(__R_shape,__Y_shape))
         #
         if self.__EM is not None and len(self.__EM) > 0 and not isinstance(self.__EM, dict) and not( __EM_shape[1] == max(__Xb_shape) ):
-            raise ValueError("Shape characteristic of evolution model (EM) \"%s\" and state (X) \"%s\" are incompatible."%(__EM_shape,__Xb_shape))
+            raise ValueError(
+                "Shape characteristic of evolution model (EM)"+\
+                " \"%s\" and state (X) \"%s\" are incompatible."%(__EM_shape,__Xb_shape))
         #
         if self.__CM is not None and len(self.__CM) > 0 and not isinstance(self.__CM, dict) and not( __CM_shape[1] == max(__U_shape) ):
-            raise ValueError("Shape characteristic of control model (CM) \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape,__U_shape))
+            raise ValueError(
+                "Shape characteristic of control model (CM)"+\
+                " \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape,__U_shape))
         #
         if ("Bounds" in self.__P) \
             and (isinstance(self.__P["Bounds"], list) or isinstance(self.__P["Bounds"], tuple)) \
@@ -1789,7 +1885,10 @@ class State(object):
                 self.shape       = (self.shape[0],1)
             self.size        = self.shape[0] * self.shape[1]
         else:
-            raise ValueError("The %s object is improperly defined or undefined, it requires at minima either a vector, a list/tuple of vectors or a persistent object. Please check your vector input."%self.__name)
+            raise ValueError(
+                "The %s object is improperly defined or undefined,"%self.__name+\
+                " it requires at minima either a vector, a list/tuple of"+\
+                " vectors or a persistent object. Please check your vector input.")
         #
         if scheduledBy is not None:
             self.__T = scheduledBy
@@ -1876,7 +1975,10 @@ class Covariance(object):
                 __Scalar = PlatformInfo.strvect2liststr( __Scalar )
                 if len(__Scalar) > 0: __Scalar = __Scalar[0]
             if numpy.array(__Scalar).size != 1:
-                raise ValueError('  The diagonal multiplier given to define a sparse matrix is not a unique scalar value.\n  Its actual measured size is %i. Please check your scalar input.'%numpy.array(__Scalar).size)
+                raise ValueError(
+                    "  The diagonal multiplier given to define a sparse matrix is"+\
+                    " not a unique scalar value.\n  Its actual measured size is"+\
+                    " %i. Please check your scalar input."%numpy.array(__Scalar).size)
             self.__is_scalar = True
             self.__C         = numpy.abs( float(__Scalar) )
             self.shape       = (0,0)
@@ -1909,7 +2011,6 @@ class Covariance(object):
                 self.size        = 0
         else:
             pass
-            # raise ValueError("The %s covariance matrix has to be specified either as a matrix, a vector for its diagonal or a scalar multiplying an identity matrix."%self.__name)
         #
         self.__validate()
 
@@ -1928,12 +2029,12 @@ class Covariance(object):
         if self.ismatrix() and (self.__check or logging.getLogger().level < logging.WARNING):
             try:
                 numpy.linalg.cholesky( self.__C )
-            except:
+            except Exception:
                 raise ValueError("The %s covariance matrix is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
         if self.isobject() and (self.__check or logging.getLogger().level < logging.WARNING):
             try:
                 self.__C.cholesky()
-            except:
+            except Exception:
                 raise ValueError("The %s covariance object is not symmetric positive-definite. Please check your matrix input."%(self.__name,))
 
     def isscalar(self):
@@ -2168,14 +2269,16 @@ class Covariance(object):
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
                 return self.__C * numpy.asmatrix(other)
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asmatrix(other).shape,self.__name))
+                raise ValueError(
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asmatrix(other).shape,self.__name))
         elif self.isvector() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
             if numpy.ravel(other).size == self.shape[1]: # Vecteur
                 return numpy.asmatrix(self.__C * numpy.ravel(other)).T
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
                 return numpy.asmatrix((self.__C * (numpy.asarray(other).transpose())).transpose())
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
+                raise ValueError(
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
             return self.__C * other
         elif self.isscalar() and isinstance(other, (list, numpy.ndarray, tuple)):
@@ -2186,7 +2289,8 @@ class Covariance(object):
         elif self.isobject():
             return self.__C.__mul__(other)
         else:
-            raise NotImplementedError("%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
+            raise NotImplementedError(
+                "%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __rmatmul__(self, other):
         "x.__rmul__(y) <==> y@x"
@@ -2198,20 +2302,23 @@ class Covariance(object):
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
                 return numpy.asmatrix(other) * self.__C
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
+                raise ValueError(
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
         elif self.isvector() and isinstance(other,numpy.matrix):
             if numpy.ravel(other).size == self.shape[0]: # Vecteur
                 return numpy.asmatrix(numpy.ravel(other) * self.__C)
             elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
                 return numpy.asmatrix(numpy.array(other) * self.__C)
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
+                raise ValueError(
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
             return other * self.__C
         elif self.isobject():
             return self.__C.__rmatmul__(other)
         else:
-            raise NotImplementedError("%s covariance matrix __rmatmul__ method not available for %s type!"%(self.__name,type(other)))
+            raise NotImplementedError(
+                "%s covariance matrix __rmatmul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __rmul__(self, other):
         "x.__rmul__(y) <==> y*x"
@@ -2223,14 +2330,16 @@ class Covariance(object):
             elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
                 return numpy.asmatrix(other) * self.__C
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
+                raise ValueError(
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
         elif self.isvector() and isinstance(other,numpy.matrix):
             if numpy.ravel(other).size == self.shape[0]: # Vecteur
                 return numpy.asmatrix(numpy.ravel(other) * self.__C)
             elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
                 return numpy.asmatrix(numpy.array(other) * self.__C)
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
+                raise ValueError(
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
         elif self.isscalar() and isinstance(other,numpy.matrix):
             return other * self.__C
         elif self.isscalar() and isinstance(other,float):
@@ -2238,7 +2347,8 @@ class Covariance(object):
         elif self.isobject():
             return self.__C.__rmul__(other)
         else:
-            raise NotImplementedError("%s covariance matrix __rmul__ method not available for %s type!"%(self.__name,type(other)))
+            raise NotImplementedError(
+                "%s covariance matrix __rmul__ method not available for %s type!"%(self.__name,type(other)))
 
     def __len__(self):
         "x.__len__() <==> len(x)"
@@ -2368,6 +2478,7 @@ def MultiFonction(
     #
     # logging.debug("MULTF Internal multifonction calculations end")
     return __multiHX
+
 
 # ==============================================================================
 if __name__ == "__main__":

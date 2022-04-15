@@ -181,8 +181,7 @@ def senkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 )
         #
         if Hybrid == "E3DVAR":
-            betaf = selfA._parameters["HybridCovarianceEquilibrium"]
-            Xn = Apply3DVarRecentringOnEnsemble(Xn, EMX, Ynpu, HO, R, B, betaf)
+            Xn = Apply3DVarRecentringOnEnsemble(Xn, EMX, Ynpu, HO, R, B, selfA._parameters)
         #
         Xa = EnsembleMean( Xn )
         #--------------------------

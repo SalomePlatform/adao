@@ -129,10 +129,8 @@ class __ReportV__(object):
         return 0
 
 # ==============================================================================
-# Classes d'interface utilisateur : ReportStorage, ReportViewIn*
+# Classes d'interface utilisateur : ReportViewIn*, ReportStorage
 # Tags de structure : (title, h1, h2, h3, p, uli, oli, <b></b>, <i></i>)
-
-ReportStorage = __ReportC__
 
 class ReportViewInHtml(__ReportV__):
     """
@@ -294,6 +292,10 @@ class ReportViewInPlainTxt(__ReportV__):
                     pg += "\n%s%s%s"%(self.tags[s][0],c,self.tags[s][1])
             pg += "\n"
         return pg
+
+
+# Interface utilisateur de stockage des informations
+ReportStorage = __ReportC__
 
 # ==============================================================================
 if __name__ == "__main__":
