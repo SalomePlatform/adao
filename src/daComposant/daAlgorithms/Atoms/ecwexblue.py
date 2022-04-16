@@ -78,12 +78,12 @@ def ecwexblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     if Y.size <= Xb.size:
         _HNHt = numpy.dot(Hm, B @ Ha)
         _A = R + _HNHt
-        _u = numpy.linalg.solve( _A , Innovation )
-        Xa = Xb + (B @ (Ha @ _u)).reshape((-1,1))
+        _u = numpy.linalg.solve( _A , numpy.ravel(Innovation) )
+        Xa = Xb + (B @ numpy.ravel(Ha @ _u)).reshape((-1,1))
     else:
         _HtRH = numpy.dot(Ha, RI @ Hm)
         _A = BI + _HtRH
-        _u = numpy.linalg.solve( _A , numpy.dot(Ha, RI @ Innovation) )
+        _u = numpy.linalg.solve( _A , numpy.ravel(numpy.dot(Ha, RI @ numpy.ravel(Innovation))) )
         Xa = Xb + _u.reshape((-1,1))
     #
     if __storeState: selfA._setInternalState("Xn", Xa)
