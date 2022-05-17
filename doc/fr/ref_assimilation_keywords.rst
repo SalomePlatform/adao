@@ -31,8 +31,8 @@ calcul en évitant les particularités de chaque algorithme. C'est donc un
 inventaire commun des commandes.
 
 Le jeu de commandes pour un cas d'assimilation de données ou d'optimisation est
-lié à la description d'un cas de calcul, qui est une procédure d'*Assimilation
-de Données*, de *Méthodes avec Réduction* ou de méthodes *Optimisation*.
+lié à la description d'un cas de calcul, qui est une procédure en *Assimilation
+de Données*, en *Méthodes avec Réduction* ou en méthodes *Optimisation*.
 
 Le premier terme décrit le choix entre un calcul ou une vérification. Dans
 l'interface graphique, chacun des trois types de calculs, individuellement

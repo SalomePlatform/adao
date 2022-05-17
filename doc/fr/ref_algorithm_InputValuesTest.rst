@@ -52,12 +52,12 @@ informatiquement problématique*).
 
 *Astuce pour cet algorithme :*
 
-    Comme la commande *"ObservationOperator"* est requise pour TOUS les
-    algorithmes de vérification dans l'interface graphique, vous devez fournir
-    une valeur, malgré le fait que cette commandes ne soit pas nécessaires pour
-    cet test, et ne soit donc pas utilisée. La manière la plus simple est de
-    donner "1" comme un STRING, l'*"ObservationOperator"* devant être de type
-    *Matrix*.
+    Comme la commande *"ObservationOperator"*, dans l'interface graphique, est
+    requise pour TOUS les algorithmes de vérification, il faut fournir une
+    valeur, malgré le fait que cette commandes ne soit pas nécessaires pour cet
+    test (et sa valeur n'est donc pas utilisée). La manière la plus simple est
+    de donner "1" comme un STRING, pour un *"ObservationOperator"* devant être
+    de type *Matrix* creuse.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Chck.rst

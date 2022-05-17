@@ -31,9 +31,9 @@ Checking algorithm "*ObserverTest*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to verify an external function, given by the user, used as
-an *observer*. This external function can be applied to every of the variables
+an *observer*. This external function can be applied to each of the variables
 that can be potentially observed. It is activated only on those who are
-explicitly associated with the *observer* in the interface.
+explicitly associated with the *observer* in its declaration.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -45,8 +45,9 @@ indicated in :ref:`section_ref_assimilation_keywords`.
 
 *Tips for this algorithm:*
 
-    Because *"CheckingPoint"* and *"ObservationOperator"* are required commands
-    for ALL checking algorithms in the interface, you have to provide a value
-    for them, despite the fact that these commands are not required for this
-    test, and will not be used. The easiest way is to give "1" as a STRING for
-    both, *"ObservationOperator"* having to be of type *Matrix*.
+    Because *"CheckingPoint"* and *"ObservationOperator"*, in the graphical
+    interface, are required commands for ALL checking algorithms, you have to
+    provide a value for them, despite the fact that these commands are not
+    required for this test, and will not be used. The easiest way is to give
+    "1" as a STRING for both, *"ObservationOperator"* having to be of type
+    sparse *Matrix*.

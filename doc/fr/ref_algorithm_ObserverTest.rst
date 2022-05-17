@@ -32,9 +32,9 @@ Algorithme de vérification "*ObserverTest*"
 
 Cet algorithme permet de vérifier une fonction externe et fournie par
 l'utilisateur, utilisée comme un *observer*. Cette fonction externe peut être
-appliquée à chacune des variables potentiellement observables. Elle n'est
-activée que sur celles qui sont explicitement associées avec l'*observer* dans
-l'interface.
+appliquée pour chacune des variables potentiellement observables. Elle n'est
+activée que sur celles qui sont explicitement associées avec cet *observer*
+dans sa déclaration.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -46,9 +46,10 @@ sont indiquées dans la :ref:`section_ref_checking_keywords`.
 
 *Astuce pour cet algorithme :*
 
-    Comme les commandes *"CheckingPoint"* et *"ObservationOperator"* sont
-    requises pour TOUS les algorithmes de vérification dans l'interface, vous
-    devez fournir une valeur, malgré le fait que ces commandes ne soient pas
-    nécessaires pour ce test, et ne sont donc pas utilisées. La manière la plus
-    simple est de donner "1" comme un STRING pour les deux,
-    l'*"ObservationOperator"* devant être de type *Matrix*.
+    Comme les commandes *"CheckingPoint"* et *"ObservationOperator"*, dans
+    l'interface graphique, sont requises pour TOUS les algorithmes de
+    vérification, il faut fournir une valeur, malgré le fait que ces commandes
+    ne soient pas nécessaires pour ce test (et que leurs valeurs ne sont donc
+    pas utilisées). La manière la plus simple est de donner "1" comme un STRING
+    pour les deux, avec un *"ObservationOperator"* devant être de type *Matrix*
+    creuse.

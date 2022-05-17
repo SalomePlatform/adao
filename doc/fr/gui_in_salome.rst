@@ -113,9 +113,9 @@ le menu principal "*ADAO*") pour créer un nouveau cas ADAO, et on obtient :
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Pour construire un cas en utilisant l'éditeur intégré, on doit passer par une
-série de sous-étapes, en choisissant, à chaque étape, un mot-clé puis en
+série de sous-étapes, en choisissant, à chaque sous-étape, un mot-clé puis en
 remplissant ses valeurs. On note que c'est dans cette étape qu'il faut, entre
-autres, définir l'**appel au code de simulation** utilisé dans les opérateurs
+autres, définir un **appel au code de simulation** utilisé dans les opérateurs
 d'observation ou d'évolution décrivant le problème [#]_.
 
 L'éditeur structuré indique des types hiérarchiques, des valeurs ou des

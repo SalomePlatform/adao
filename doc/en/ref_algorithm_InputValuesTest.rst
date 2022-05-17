@@ -50,11 +50,11 @@ if a variable is large in size, this can be difficult*).
 
 *Tips for this algorithm:*
 
-    Because *"ObservationOperator"* is a required command for ALL checking
-    algorithms in the graphical interface, you have to provide a value for it,
+    Because *"ObservationOperator"*, in the graphical interface, is a required
+    command for ALL checking algorithms, you have to provide a value for it,
     despite the fact that this command is not required for this test, and will
     not be used. The easiest way is to give "1" as a STRING,
-    *"ObservationOperator"* having to be of type *Matrix*.
+    *"ObservationOperator"* having to be of type sparse *Matrix*.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Chck.rst

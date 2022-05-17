@@ -206,6 +206,7 @@ d'états et de paramètres.
 Description simple du cadre méthodologique de l'assimilation de données
 -----------------------------------------------------------------------
 
+.. index:: single: analyse
 .. index:: single: ebauche
 .. index:: single: covariances d'erreurs d'ébauche
 .. index:: single: covariances d'erreurs d'observation
@@ -267,9 +268,9 @@ matrice :math:`\mathbf{B}` des covariances d'erreurs d'ébauche par :
 
 L'estimation optimale des paramètres vrais :math:`\mathbf{x}^t`, étant donné
 l'ébauche :math:`\mathbf{x}^b` et les observations :math:`\mathbf{y}^o`, est
-ainsi "l'*analyse*" :math:`\mathbf{x}^a` et provient de la minimisation d'une
-fonction d'erreur, explicite en assimilation variationnelle, ou d'une correction
-de filtrage en assimilation par filtrage.
+ainsi appelée une "*analyse*", notée :math:`\mathbf{x}^a`, et provient de la
+minimisation d'une fonction d'erreur, explicite en assimilation variationnelle,
+ou d'une correction de filtrage en assimilation par filtrage.
 
 En **assimilation variationnelle**, dans un cas statique, on cherche
 classiquement à minimiser la fonction :math:`J` suivante :
@@ -579,10 +580,10 @@ méthodes sont un coût numérique souvent bien supérieur pour trouver les
 estimations d'états, et fréquemment aucune garantie de convergence en temps
 fini. Ici, on ne mentionne que quelques méthodes disponibles dans ADAO :
 
-- l'*optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
-- l'*optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
-- l'*évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`),
-- la *régression de quantile (Quantile Regression ou QR)* (voir :ref:`section_ref_algorithm_QuantileRegression`).
+- *optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- *optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- *évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`),
+- *régression de quantile (Quantile Regression ou QR)* (voir :ref:`section_ref_algorithm_QuantileRegression`).
 
 En second lieu, les méthodes d'optimisation cherchent usuellement à minimiser
 des mesures quadratiques d'erreurs, car les propriétés naturelles de ces
@@ -634,9 +635,9 @@ sont un coût numérique souvent bien supérieur pour trouver les estimations
 d'états, et pas de garantie de convergence en temps fini. Ici encore, on ne
 mentionne que quelques méthodes qui sont disponibles dans ADAO :
 
-- l'*optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
-- l'*optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
-- l'*évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`).
+- *optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- *optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- *évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`).
 
 Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
 sa recherche grâce au point d'entrée [WikipediaMO]_.

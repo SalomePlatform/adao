@@ -189,6 +189,7 @@ way the problem of joint estimation of states and parameters.
 Simple description of the data assimilation methodological framework
 --------------------------------------------------------------------
 
+.. index:: single: analysis
 .. index:: single: background
 .. index:: single: background error covariances
 .. index:: single: observation error covariances
@@ -249,9 +250,9 @@ matrix of background error covariances by:
 
 The optimal estimation of the true parameters :math:`\mathbf{x}^t`, given the
 background :math:`\mathbf{x}^b` and the observations :math:`\mathbf{y}^o`, is
-then the "*analysis*" :math:`\mathbf{x}^a` and comes from the minimisation of an
-error function, explicit in variational assimilation, or from the filtering
-correction in assimilation by filtering.
+then called an "*analysis*", noted as :math:`\mathbf{x}^a`, and comes from the
+minimisation of an error function, explicit in variational assimilation, or
+from the filtering correction in assimilation by filtering.
 
 In **variational assimilation**, in a static case, one classically attempts to
 minimize the following function :math:`J`:
