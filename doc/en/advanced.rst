@@ -576,9 +576,11 @@ Switching from a version of ADAO to a newer one
 .. index:: single: Version
 
 The ADAO module and its ".comm" case files are identified by versions, with
-"Major", "Minor" and "Revision" characteristics. A particular version is
-numbered as "Major.Minor.Revision", with strong link with the numbering of the
-SALOME platform.
+"Major", "Minor", "Revision" and optionally "Installation" characteristics. A
+particular version is numbered as "Major.Minor.Revision", with strong link with
+the numbering of the SALOME platform. The optional indication of a fourth
+number indicates a difference in the installation method, not in the content of
+the version.
 
 Each version "Major.Minor.Revision" of the ADAO module can read ADAO case files
 of the previous minor version "Major.Minor-1.*". In general, it can also read

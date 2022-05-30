@@ -628,9 +628,11 @@ Passer d'une version d'ADAO à une nouvelle
 .. index:: single: Version
 
 Le module ADAO et ses fichiers de cas ".comm" sont identifiés par des versions,
-avec des caractéristiques "Major", "Minor" et "Revision". Une version
-particulière est numérotée "Major.Minor.Revision", avec un lien fort avec la
-numérotation de la plateforme SALOME.
+avec des caractéristiques "Major", "Minor", "Revision" et optionnellement
+"Installation". Une version particulière est numérotée "Major.Minor.Revision",
+avec un lien fort avec la numérotation de la plateforme SALOME. L'indication
+optionnelle d'un quatrième numéro désigne une différence dans le mode
+d'installation, pas dans le contenu de la version.
 
 Chaque version "Major.Minor.Revision" du module ADAO peut lire les fichiers de
 cas ADAO de la précédente version mineure "Major.Minor-1.*". En général, elle

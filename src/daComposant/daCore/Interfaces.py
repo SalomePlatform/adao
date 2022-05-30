@@ -609,7 +609,7 @@ class _YACSViewer(GenericCaseViewer):
         if not PlatformInfo.has_salome or \
             not PlatformInfo.has_adao:
             raise ImportError(
-                "Unable to get SALOME or ADAO environnement for YACS conversion.\n"+\
+                "Unable to get SALOME (%s) or ADAO (%s) environnement for YACS conversion.\n"%(PlatformInfo.has_salome,PlatformInfo.has_adao)+\
                 "Please load the right SALOME environnement before trying to use it.")
         else:
             from daYacsSchemaCreator.run import create_schema_from_content
