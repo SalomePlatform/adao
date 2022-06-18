@@ -30,11 +30,11 @@ Algorithme de vérification "*FunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de vérifier que l'opérateur d'observation fonctionne
-correctement et que son appel se déroule de manière compatible avec son usage
-dans les algorithmes d'ADAO. De manière pratique, il permet d'appeler une ou
-plusieurs fois l'opérateur, en activant ou non le mode "debug" lors de
-l'exécution.
+Cet algorithme permet de vérifier qu'un opérateur, dont en particulier celui
+d'observation, fonctionne correctement et que son appel se déroule de manière
+compatible avec son usage dans les algorithmes d'ADAO. De manière pratique, il
+permet d'appeler une ou plusieurs fois l'opérateur, en activant ou non le mode
+"debug" lors de l'exécution.
 
 Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
 l'opérateur est indiquée, et une autre globale est fournie de manière
@@ -90,6 +90,17 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_FunctionTest.rst
+
+.. literalinclude:: scripts/simple_FunctionTest.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_FunctionTest.res
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

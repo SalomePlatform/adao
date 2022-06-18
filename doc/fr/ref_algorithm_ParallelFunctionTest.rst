@@ -30,7 +30,8 @@ Algorithme de vérification "*ParallelFunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de vérifier que l'opérateur d'observation fonctionne
+Cet algorithme permet de vérifier qu'un opérateur, dont en particulier celui
+d'observation, fonctionne
 correctement en parallèle et que son appel se déroule de manière compatible
 avec son usage dans les algorithmes d'ADAO. De manière pratique, il permet
 d'appeler une ou plusieurs fois l'opérateur en parallèle, en activant ou non le
@@ -90,6 +91,17 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_ParallelFunctionTest.rst
+
+.. literalinclude:: scripts/simple_ParallelFunctionTest.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_ParallelFunctionTest.res
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
