@@ -31,6 +31,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "FUNCTIONTEST")
         self.defineRequiredParameter(
+            name     = "ShowElementarySummary",
+            default  = True,
+            typecast = bool,
+            message  = "Calcule et affiche un résumé à chaque évaluation élémentaire",
+            )
+        self.defineRequiredParameter(
             name     = "NumberOfPrintedDigits",
             default  = 5,
             typecast = int,
@@ -81,6 +87,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Xn = copy.copy( Xb )
         #
         # ----------
+        __s = self._parameters["ShowElementarySummary"]
         __marge =  5*u" "
         _p = self._parameters["NumberOfPrintedDigits"]
         if len(self._parameters["ResultTitle"]) > 0:
@@ -103,12 +110,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Xn )
         print(msgs)
         #
+        print("     %s\n"%("-"*75,))
         if self._parameters["SetDebug"]:
             CUR_LEVEL = logging.getLogger().getEffectiveLevel()
             logging.getLogger().setLevel(logging.DEBUG)
-            print("===> Beginning of evaluation, activating debug\n")
+            print("===> Beginning of repeated evaluation, activating debug\n")
         else:
-            print("===> Beginning of evaluation, without activating debug\n")
+            print("===> Beginning of repeated evaluation, without activating debug\n")
         #
         # ----------
         HO["Direct"].disableAvoidingRedundancy()
@@ -117,25 +125,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         for i in range(self._parameters["NumberOfRepetition"]):
             if self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
-            print("     %s\n"%("-"*75,))
-            if self._parameters["NumberOfRepetition"] > 1:
-                print("===> Repetition step number %i on a total of %i\n"%(i+1,self._parameters["NumberOfRepetition"]))
-            print("===> Launching direct operator evaluation\n")
+            if __s:
+                print("     %s\n"%("-"*75,))
+                if self._parameters["NumberOfRepetition"] > 1:
+                    print("===> Repetition step number %i on a total of %i\n"%(i+1,self._parameters["NumberOfRepetition"]))
+                print("===> Launching operator sequential evaluation\n")
             #
             Yn = Hm( Xn )
             #
-            print("\n===> End of direct operator evaluation\n")
-            #
-            msgs  = ("===> Information after evaluation:\n")
-            msgs += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
-            msgs += ("       Type...............: %s\n")%type( Yn )
-            msgs += ("       Lenght of vector...: %i\n")%max(numpy.ravel( Yn ).shape)
-            msgs += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Yn )
-            msgs += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Yn )
-            msgs += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Yn, dtype=mfp )
-            msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn, dtype=mfp )
-            msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
-            print(msgs)
+            if __s:
+                print("\n===> End of operator sequential evaluation\n")
+                #
+                msgs  = ("===> Information after evaluation:\n")
+                msgs += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
+                msgs += ("       Type...............: %s\n")%type( Yn )
+                msgs += ("       Lenght of vector...: %i\n")%max(numpy.ravel( Yn ).shape)
+                msgs += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Yn )
+                msgs += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Yn )
+                msgs += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Yn, dtype=mfp )
+                msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn, dtype=mfp )
+                msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
+                print(msgs)
             if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
             #
@@ -148,12 +158,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         print("     %s\n"%("-"*75,))
         if self._parameters["SetDebug"]:
-            print("===> End of evaluation, deactivating debug if necessary\n")
+            print("===> End of repeated evaluation, deactivating debug if necessary\n")
             logging.getLogger().setLevel(CUR_LEVEL)
         else:
-            print("===> End of evaluation, without deactivating debug\n")
+            print("===> End of repeated evaluation, without deactivating debug\n")
         #
         if self._parameters["NumberOfRepetition"] > 1:
+            print("     %s\n"%("-"*75,))
+            print("===> Launching statistical summary calculation for %i states\n"%self._parameters["NumberOfRepetition"])
             msgs  = ("     %s\n"%("-"*75,))
             msgs += ("\n===> Statistical analysis of the outputs obtained through sequential repeated evaluations\n")
             msgs += ("\n     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)

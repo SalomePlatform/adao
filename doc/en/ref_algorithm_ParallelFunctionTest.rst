@@ -30,10 +30,11 @@ Checking algorithm "*ParallelFunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to verify that the observation operator is working
-correctly in parallel and that its call is compatible with its usage in ADAO
-algorithms. In practice, it allows to call one or several times the operator in
-parallel, activating or not the "debug" mode during execution.
+This algorithm allows to verify that an operator, in particular the
+observation one, is working correctly in parallel and that its call is
+compatible with its usage in ADAO algorithms. In practice, it allows to
+call one or several times the operator in parallel, activating or not
+the "debug" mode during execution.
 
 Statistics on input and output vectors for each execution of operator are
 given, and an another global statistic is given at the end of the checking
@@ -89,6 +90,17 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_ParallelFunctionTest.rst
+
+.. literalinclude:: scripts/simple_ParallelFunctionTest.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_ParallelFunctionTest.res
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
