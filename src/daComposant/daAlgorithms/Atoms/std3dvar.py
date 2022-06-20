@@ -117,8 +117,12 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     nbPreviousSteps = selfA.StoredVariables["CostFunctionJ"].stepnumber()
     #
     if selfA._parameters["Minimizer"] == "LBFGSB":
-        if "0.19" <= scipy.version.version <= "1.4.1":
-            import daAlgorithms.Atoms.lbfgsbhlt as optimiseur
+        if "0.19" <= scipy.version.version <= "1.4.99":
+            import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
+        elif "1.5.0" <= scipy.version.version <= "1.7.99":
+            import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
+        elif "1.8.0" <= scipy.version.version <= "1.8.99":
+            import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
