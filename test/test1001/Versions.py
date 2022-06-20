@@ -101,8 +101,6 @@ class Test_Versions(unittest.TestCase):
                 'CocoaAgg',
                 'GTK',
                 'GTKAgg',
-                'Qt4',
-                'Qt4Agg',
                 'Qt5',
                 'Qt5Agg',
                 'Template',
