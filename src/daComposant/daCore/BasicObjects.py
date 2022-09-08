@@ -2479,7 +2479,6 @@ def MultiFonction(
     # logging.debug("MULTF Internal multifonction calculations end")
     return __multiHX
 
-
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

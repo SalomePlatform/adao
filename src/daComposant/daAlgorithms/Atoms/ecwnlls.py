@@ -138,6 +138,8 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
         elif "1.8.0" <= scipy.version.version <= "1.8.99":
             import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
+        elif "1.9.0" <= scipy.version.version <= "1.9.99":
+            import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(

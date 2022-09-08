@@ -47,7 +47,7 @@ def mmqr(
     Journal of Computational and Graphical Statistics, 9, 1, pp.60-77, 2000.
     """
     #
-    # Recuperation des donnees et informations initiales
+    # Récupération des données et informations initiales
     # --------------------------------------------------
     variables = numpy.ravel( x0 )
     mesures   = numpy.ravel( y )
@@ -56,7 +56,7 @@ def mmqr(
     n         = mesures.size
     quantile  = float(quantile)
     #
-    # Calcul des parametres du MM
+    # Calcul des paramètres du MM
     # ---------------------------
     tn      = float(toler) / n
     e0      = -tn / math.log(tn)
@@ -70,7 +70,7 @@ def mmqr(
     lastsurrogate = -numpy.sum(residus*veps) - (1.-2.*quantile)*numpy.sum(residus)
     iteration = 0
     #
-    # Recherche iterative
+    # Recherche itérative
     # -------------------
     while (increment > toler) and (iteration < maxfun) :
         iteration += 1

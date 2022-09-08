@@ -41,10 +41,15 @@ class Test_Adao(unittest.TestCase):
             import scipy ; print("    - Scipy.............: %s"%scipy.version.version)
         except:
             print("    - Scipy.............: %s"%("absent",))
-        try:
-            import numpy.distutils.system_info as sysinfo ; la = sysinfo.get_info('lapack') ; print("    - Lapack............: %s/lib%s.so"%(la['library_dirs'][0],la['libraries'][0]))
-        except:
-            print("    - Lapack............: %s"%("absent",))
+        if tuple(map(int,numpy.version.version.split("."))) < (1,23,0):
+            import numpy.distutils.system_info as sysinfo
+            la = sysinfo.get_info('lapack')
+            if 'libraries' in la:
+                print('    - Lapack............: %s/lib%s.so'%(la['library_dirs'][0],la['libraries'][0]))
+            else:
+                print('    - Lapack............: absent')
+        else:
+            print('    - Lapack............: numpy n\'indique plus où le trouver')
         print("")
         return True
 
@@ -102,7 +107,7 @@ class Test_Adao(unittest.TestCase):
         #
         t_init = time.time()
         for i in range(repetitions):
-            b = scipy.dot(A,x)
+            b = numpy.dot(A,x)
         print("    La duree elapsed pour %3i produits est de.......: %4.1f s"%(repetitions, time.time()-t_init))
         r = [__d*(__d+1.)*(2.*__d+1.)/6.,]*__d
         if max(abs(b-r)) > precision:

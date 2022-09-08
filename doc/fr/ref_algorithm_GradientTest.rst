@@ -32,12 +32,15 @@ Algorithme de vérification "*GradientTest*"
 
 Cet algorithme permet de vérifier la qualité du gradient de l'opérateur, en
 calculant un résidu dont les propriétés théoriques sont connues. Plusieurs
-formules de résidu sont disponibles.
+formules de résidu sont disponibles. Le test est applicable à un opérateur
+quelconque, d'évolution comme d'observation.
 
-Dans tous les cas, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
+Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
+vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
 :math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` avec :math:`\alpha_0` un paramètre
-utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est le code de
-calcul.
+utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est l'opérateur ou
+le code de calcul (qui est ici acquis par la commande d'opérateur d'observation
+"*ObservationOperator*").
 
 Résidu "Taylor"
 ***************

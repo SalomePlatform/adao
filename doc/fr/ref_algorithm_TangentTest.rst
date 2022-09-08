@@ -31,7 +31,15 @@ Algorithme de vérification "*TangentTest*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet de vérifier la qualité de l'opérateur tangent, en
-calculant un résidu dont les propriétés théoriques sont connues.
+calculant un résidu dont les propriétés théoriques sont connues. Le test est
+applicable à un opérateur quelconque, d'évolution comme d'observation.
+
+Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
+vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
+:math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` avec :math:`\alpha_0` un paramètre
+utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est l'opérateur ou
+le code de calcul (qui est ici acquis par la commande d'opérateur d'observation
+"*ObservationOperator*").
 
 On observe le résidu suivant, provenant du rapport d'incréments utilisant
 l'opérateur linéaire tangent :
@@ -49,9 +57,6 @@ Si :math:`|R-1|/\alpha` est très faible, le code de calcul :math:`F` est
 vraisemblablement linéaire ou quasi-linéaire (ce que l'on peut vérifier par
 l':ref:`section_ref_algorithm_LinearityTest`), et le tangent est valide jusqu'à
 ce que l'on atteigne la précision du calcul.
-
-On prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
-:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` est le code de calcul.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

@@ -34,8 +34,9 @@ Cet algorithme réalise une estimation de type BLUE étendu (Best Linear Unbiase
 Estimator, étendu) de l'état d'un système.
 
 Cet algorithme est une généralisation partiellement non-linéaire d'un
-:ref:`section_ref_algorithm_Blue`. Il lui est équivalent pour un opérateur
-d'observation linéaire. On peut vérifier la linéarité de l'opérateur
+:ref:`section_ref_algorithm_Blue`. Si l'opérateur d'observation est
+explicitement linéaire, l'algorithme est équivalent à celui du
+:ref:`section_ref_algorithm_Blue`. On peut vérifier la linéarité de l'opérateur
 d'observation à l'aide d'un :ref:`section_ref_algorithm_LinearityTest`.
 
 En non-linéaire, ses résultats se rapprochent d'un

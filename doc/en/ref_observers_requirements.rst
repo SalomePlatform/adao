@@ -33,7 +33,7 @@ Requirements for functions describing an "*observer*"
 Some special variables, internal to the optimization process and used inside
 calculation, can be monitored during an ADAO calculation. These variables can
 be printed, plotted, saved, etc. by the user. This can be done using some
-"*observer*", sometimes also called "callback" on a variable. They are special
+"*observer*", sometimes also called "callback", on a variable. They are special
 Python functions, each one associated with a given variable, as conceptually
 described in the following figure:
 
@@ -61,10 +61,10 @@ figure:
   .. centered::
     **Choosing its entry type for an "observer" function**
 
-The "*observer*" function can be given as an explicit script (entry of type
+An "*observer*" function can be given as an explicit script (entry of type
 "*String*"), as a script in an external file (entry of type "*Script*"), or by
 using a template or pattern (entry of type"*Template*"). The templates are
-available by default in ADAO using the graphical interface EFICAS or the text
+available by default in ADAO, using the graphical interface EFICAS or the text
 interface TUI, and are detailed in the following
 :ref:`section_ref_observers_templates`. These templates are simple scripts that
 can be tuned by the user, either in the integrated edition stage of the case
@@ -92,16 +92,16 @@ To use directly this "*observer*" capability, the user must use or build a
 script that have on standard input (that is, in the naming space) the variables
 ``var`` and ``info``. The variable ``var`` is to be used as an object of
 list/tuple type, that contains the history of the variable of interest, indexed
-by the iterating steps. Only the body of the "*observer*" function has to be
-specified by the user, not the function call itself.
+by the iterating and/or time steps. Only the body of the "*observer*" function
+has to be specified by the user, not the  Python ``def`` function call itself.
 
 As an example, here is a very simple script (similar to the "*ValuePrinter*"
 template), that can be used to print the value of the monitored variable::
 
     print("    --->",info," Value =",var[-1])
 
-Stored as a Python file or as an explicit string, these script lines can be
-associated to each variable found in the keyword "*SELECTION*" of the
+Stored as a Python file or as an explicit string, this or these script lines
+can be associated to each variable found in the keyword "*SELECTION*" of the
 "*Observers*" command of the ADAO case: "*Analysis*", "*CurrentState*",
 "*CostFunction*"... The current value of the variable will for example be
 printed at each step of the optimization or data assimilation algorithm. The
@@ -116,6 +116,15 @@ execution of this "*observer*" is simply never activated.
     carefully established function scripts or external programs that do not
     crash before being registered as an "*observer*" function. The debugging
     can otherwise be really difficult!
+
+Some "*observer*" allow the creation of successive files or figures, which are
+uniquely numbered and, if applicable, stored by default in the standard
+``/tmp`` directory. In the case where this information needs to be modified (as
+for example when the ``/tmp`` directory is a virtual or local non-permanent
+folder, or when one wishes to have a numbering according to the iteration), the
+user is encouraged to take inspiration from a model that is suitable for him
+and to modify it by specifying differently this shared information. Then, the
+modified function can be used in a "*String*" or "*Script*" input.
 
 Hereinafter we give the identifier and the contents of all the available
 "*observer*" models.

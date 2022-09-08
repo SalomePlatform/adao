@@ -30,11 +30,10 @@ Checking algorithm "*FunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to verify that an operator, in particular the
-observation one, is working correctly and that its call is compatible
-with its usage in ADAO algorithms. In practice, it allows to call one
-or several times the operator, activating or not the "debug" mode
-during execution.
+This algorithm allows to verify that a given operator :math:`F`, in particular
+the observation one, is working correctly and that its call is compatible with
+its usage in ADAO algorithms. In practice, it allows to call one or several
+times the operator, activating or not the "debug" mode during execution.
 
 Statistics on input and output vectors for each execution of operator are
 given, and an another global statistic is given at the end of the checking
@@ -59,6 +58,8 @@ themselves beforehand with the intended test
 
 .. include:: snippets/SetDebug.rst
 
+.. include:: snippets/ShowElementarySummary.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
@@ -82,7 +83,7 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
-*None*
+.. include:: snippets/NoUnconditionalOutput.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst

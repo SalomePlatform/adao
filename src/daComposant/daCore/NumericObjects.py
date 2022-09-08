@@ -1014,7 +1014,6 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle,
     #
     return 0
 
-
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

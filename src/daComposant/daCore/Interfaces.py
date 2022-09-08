@@ -1256,7 +1256,6 @@ class EficasGUI(object):
         else:
             logging.debug("Can not launch standalone EFICAS/ADAO interface for path errors.")
 
-
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

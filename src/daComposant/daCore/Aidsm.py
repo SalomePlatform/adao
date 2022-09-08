@@ -864,7 +864,6 @@ class Aidsm(object):
         else:
             return self.__StoredInputs
 
-
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

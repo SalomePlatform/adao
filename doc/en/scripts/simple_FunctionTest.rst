@@ -1,16 +1,16 @@
-.. index:: single: FunctionTest (exemple)
+.. index:: single: FunctionTest (example)
 
-Cet exemple décrit le test du bon fonctionnement d'un opérateur et que son
-appel se déroule de manière compatible avec son usage dans les algorithmes
-d'ADAO. Les information nécessaires sont minimales, à savoir ici un opérateur
-de type observation :math:`H` et un état :math:`\mathbf{x}^b` sur lequel le
-tester (nommé "*CheckingPoint*" pour le test).
+This example describes the test of the correct operation of a given operator,
+and that its call proceeds in a way compatible with its common use in the ADAO
+algorithms. The required information are minimal, namely here an operator
+:math:`F` (described for the test by the observation command
+"*ObservationOperator*"), and a state :math:`\mathbf{x}^b` to test it on
+(described for the test by the command "*CheckingPoint*").
 
-Le test est répété un nombre paramétrable de fois, et une statistique finale
-permet de vérifier rapidement le bon comportement de l'opérateur. Le diagnostic
-le plus simple consiste à vérifier, à la fin, l'ordre de grandeur des valeurs
-indiquées comme la moyenne des différences entre les sorties répétées et leur
-moyenne ("*mean of the differences between the outputs Y and their mean Ym*").
-Pour un opérateur normal, ces valeurs doivent être proches du zéro numérique.
-
-
+The test is repeated a configurable number of times, and a final statistic
+makes it possible to quickly verify the operator's good behavior. The simplest
+diagnostic consists in checking, at the very end of the display, the order of
+magnitude of the values indicated as the mean of the differences between the
+repeated outputs and their mean, under the part entitled "*Characteristics of
+the mean of the differences between the outputs Y and their mean Ym*". For a
+satisfactory operator, these values should be close to the numerical zero.

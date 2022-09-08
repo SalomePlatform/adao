@@ -59,6 +59,8 @@ themselves beforehand with the intended test
 
 .. include:: snippets/SetDebug.rst
 
+.. include:: snippets/ShowElementarySummary.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
@@ -82,7 +84,7 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
-*None*
+.. include:: snippets/NoUnconditionalOutput.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst

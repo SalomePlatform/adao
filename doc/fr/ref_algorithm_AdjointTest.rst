@@ -30,23 +30,34 @@ Algorithme de vérification "*AdjointTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de vérifier la qualité de l'opérateur adjoint, en
-calculant un résidu dont les propriétés théoriques sont connues.
+Cet algorithme permet de vérifier la qualité de l'adjoint d'un opérateur
+:math:`F`, en calculant un résidu dont les propriétés théoriques sont connues.
+Le test est applicable à un opérateur quelconque, d'évolution comme
+d'observation.
+
+Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
+vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
+:math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` avec :math:`\alpha_0` un paramètre
+utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est l'opérateur ou
+le code de calcul (qui est ici acquis par la commande d'opérateur d'observation
+"*ObservationOperator*").
 
 On observe le résidu suivant, qui est la différence de deux produits scalaires :
 
 .. math:: R(\alpha) = | < TangentF_x(\mathbf{dx}) , \mathbf{y} > - < \mathbf{dx} , AdjointF_x(\mathbf{y}) > |
 
-qui doit rester constamment égal à zéro à la précision du calcul. On prend
-:math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
-:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` est le code de calcul.
-:math:`\mathbf{y}` doit être dans l'image de :math:`F`. S'il n'est pas donné,
-on prend :math:`\mathbf{y} = F(\mathbf{x})`.
+dans lequel la quantité optionnelle :math:`\mathbf{y}` doit être dans l'image
+de :math:`F`. Si elle n'est pas donnée, on prend son évaluation par défaut
+:math:`\mathbf{y} = F(\mathbf{x})`.
+
+Ce résidu doit rester constamment égal à zéro à la précision du calcul.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst
+
+.. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationOperator.rst
 

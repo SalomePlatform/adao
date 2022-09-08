@@ -33,7 +33,7 @@ Conditions requises pour les fonctions décrivant un "*observer*"
 Certaines variables spéciales, internes à l'optimisation et utilisées au cours
 des calculs, peuvent être surveillées durant un calcul ADAO. Ces variables
 peuvent être affichées, tracées, enregistrées, etc. par l'utilisateur. C'est
-réalisable en utilisant des "*observer*", parfois aussi appelés des "callback"
+réalisable en utilisant des "*observer*", parfois aussi appelés des "callback",
 sur une variable. Ce sont des fonctions Python spéciales, qui sont chacune
 associées à une variable donnée, comme décrit conceptuellement dans la figure
 suivante :
@@ -65,10 +65,10 @@ montré dans la figure qui suit :
 Une fonction "*observer*" peut être fourni sous la forme d'un script explicite
 (entrée de type "*String*"), d'un script contenu dans un fichier externe
 (entrée de type "*Script*"), ou en utilisant un modèle (entrée de type
-"*Template*"). Les modèles sont fournis par défaut dans ADAO lors de l'usage de
-l'éditeur graphique EFICAS d'ADAO ou de l'interface TUI, et sont détaillés dans
-la partie :ref:`section_ref_observers_templates` qui suit. Ces derniers sont
-des scripts simples qui peuvent être adaptés par l'utilisateur, soit dans
+"*Template*"). Les modèles sont fournis par défaut dans ADAO, lors de l'usage
+de l'éditeur graphique EFICAS d'ADAO ou de l'interface TUI, et sont détaillés
+dans la partie :ref:`section_ref_observers_templates` qui suit. Ces derniers
+sont des scripts simples qui peuvent être adaptés par l'utilisateur, soit dans
 l'étape d'édition intégrée du cas avec EFICAS d'ADAO, soit dans l'étape
 d'édition du schéma avant l'exécution, pour améliorer la performance du calcul
 ADAO dans le superviseur d'exécution de SALOME.
@@ -96,9 +96,9 @@ Pour pouvoir utiliser directement cette capacité "*observer*", l'utilisateur
 doit utiliser ou construire un script utilisant en entrée standard (i.e.
 disponible dans l'espace de nommage) les variables ``var`` et ``info``. La
 variable ``var`` est à utiliser comme un objet de type liste/tuple, contenant
-l'historique de la variable d'intérêt, indicé par les pas d'itérations. Seul le
-corps de la fonction "*observer*" doit être spécifié par l'utilisateur, pas
-l'appel de fonction lui-même.
+l'historique de la variable d'intérêt, indicé par les pas d'itérations et/ou de
+temps. Seul le corps de la fonction "*observer*" doit être spécifié par
+l'utilisateur, pas l'appel Python ``def`` de fonction lui-même.
 
 A titre d'exemple, voici un script très simple (similaire au modèle
 "*ValuePrinter*"), utilisable pour afficher la valeur d'une variable
@@ -107,16 +107,16 @@ surveillée :
 
     print("    --->",info," Value =",var[-1])
 
-Stockées comme un fichier Python ou une chaîne de caractères explicite, ces
-lignes de script peuvent être associées à chaque variable présente dans le
-mot-clé "*SELECTION*" de la commande "*Observers*" du cas ADAO : "*Analysis*",
-"*CurrentState*", "*CostFunction*"... La valeur courante de la variable sera
-par exemple affichée à chaque étape de l'algorithme d'optimisation ou
-d'assimilation. Les "*observer*" peuvent inclure des capacités d'affichage
-graphique, de stockage, de traitement complexe, d'analyse statistique, etc. Si
-une variable, à laquelle est lié un "*observer*", n'est pas requise dans le
-calcul et par l'utilisateur, l'exécution de cet "*observer*" n'est tout
-simplement jamais activée.
+Stockées comme un fichier Python ou une chaîne de caractères explicite, cette
+ou ces lignes de script peuvent être associées à chaque variable présente dans
+le mot-clé "*SELECTION*" de la commande "*Observers*" du cas ADAO :
+"*Analysis*", "*CurrentState*", "*CostFunction*"... La valeur courante de la
+variable sera par exemple affichée à chaque étape de l'algorithme
+d'optimisation ou d'assimilation. Les "*observer*" peuvent inclure des
+capacités d'affichage graphique, de stockage, de traitement complexe, d'analyse
+statistique, etc. Si une variable, à laquelle est lié un "*observer*", n'est
+pas requise dans le calcul et par l'utilisateur, l'exécution de cet
+"*observer*" n'est tout simplement jamais activée.
 
 .. warning::
 
@@ -125,6 +125,16 @@ simplement jamais activée.
     des programmes externes qui ne se plantent pas avant d'être enregistrés
     comme une fonction "*observer*". Le débogage peut sinon être vraiment
     difficile !
+
+Certains "*observer*" permettent de créer des fichiers ou des figures
+successives, qui sont numérotées de manière unique et, le cas échéant,
+enregistrées par défaut dans le répertoire standard ``/tmp``. Dans le cas où
+ces informations sont à modifier (comme par exemple lorsque le répertoire
+``/tmp`` est un dossier virtuel ou local non pérenne, ou lorsque l'on désire
+une numérotation en fonction de l'itération), l'utilisateur est invité à
+s'inspirer d'un modèle lui convenant pour le modifier en spécifiant
+différemment ces informations communes. Ensuite, la fonction modifiée peut être
+utilisée dans une entrée de type "*String*" ou de type "*Script*".
 
 On donne ci-après l'identifiant et le contenu de tous les modèles "*observer*"
 disponibles.

@@ -219,7 +219,6 @@ class PlatformInfo(object):
         import daCore.version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
 
-
 # ==============================================================================
 try:
     import scipy
@@ -493,7 +492,6 @@ class SystemUsage(object):
     def getMaxVirtualMemory(self, unit="o"):
         "Renvoie la mémoire totale maximale mesurée"
         return self._VmB('VmPeak:', unit)
-
 
 # ==============================================================================
 if __name__ == "__main__":
