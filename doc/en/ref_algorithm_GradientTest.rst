@@ -146,6 +146,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_GradientTest_examples:
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`

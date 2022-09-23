@@ -118,7 +118,7 @@ Pour étendre cet exemple, on peut modifier les variances représentées par
 :math:`\mathbf{x}^b`, en proportion inverse des variances dans
 :math:`\mathbf{B}` et :math:`\mathbf{R}`. Comme autre extension, on peut aussi
 dire qu'il est équivalent de rechercher l'analyse à l'aide d'un algorithme de
-BLUE ou d'un algorithme de 3DVAR.
+"Blue" ou d'un algorithme de "3DVAR".
 
 Utiliser l'interface textuelle (TUI) pour construire le cas ADAO
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -201,10 +201,10 @@ comme montré ci-après :
     >>>
 
 Pour étendre cet exemple, on peut remarquer que le même problème résolu par un
-algorithme de 3DVAR donne le même résultat. Cet algorithme peut être choisi
+algorithme de "3DVAR" donne le même résultat. Cet algorithme peut être choisi
 lors de l'étape de construction du cas ADAO en changeant simplement l'argument
-"*Algorithm*" en entête. Le reste du cas ADAO en 3DVAR est alors entièrement
-similaire au cas algorithmique du BLUE.
+"*Algorithm*" en entête. Le reste du cas ADAO en "3DVAR" est alors entièrement
+similaire au cas algorithmique du "Blue".
 
 .. _section_tutorials_in_python_script:
 
@@ -292,12 +292,12 @@ Les autres étapes et résultats sont exactement les mêmes que dans l'exemple
 précédent :ref:`section_tutorials_in_python_explicit`.
 
 Dans la pratique, cette démarche par scripts est la manière la plus facile pour
-récupérer des informations depuis des calculs en ligne ou préalables, depuis des
-fichiers statiques, depuis des bases de données ou des flux informatiques,
+récupérer des informations depuis des calculs en ligne ou préalables, depuis
+des fichiers statiques, depuis des bases de données ou des flux informatiques,
 chacun pouvant être dans ou hors SALOME. Cela permet aussi de modifier aisément
 des données d'entrée, par exemple à des fin de débogage ou pour des traitements
 répétitifs, et c'est la méthode la plus polyvalente pour paramétrer les données
 d'entrée. **Mais attention, la méthodologie par scripts n'est pas une procédure
 "sûre", en ce sens que des données erronées ou des erreurs dans les calculs,
 peuvent être directement introduites dans l'exécution du cas ADAO.
-L'utilisateur doit vérifier avec attention le contenu de ses scripts.**
+L'utilisateur doit vérifier avec soin le contenu de ses scripts.**

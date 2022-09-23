@@ -2,8 +2,8 @@
 
 Cet exemple décrit le test du bon fonctionnement d'un opérateur quelconque, et
 que son appel se déroule de manière compatible avec son usage courant dans les
-algorithmes d'ADAO. Les information nécessaires sont minimales, à savoir ici un
-opérateur :math:`F` (décrit pour le test par la commande d'observation
+algorithmes d'ADAO. Les informations nécessaires sont minimales, à savoir ici
+un opérateur :math:`F` (décrit pour le test par la commande d'observation
 "*ObservationOperator*"), et un état :math:`\mathbf{x}^b` sur lequel le tester
 (décrit pour le test par la commande "*CheckingPoint*").
 

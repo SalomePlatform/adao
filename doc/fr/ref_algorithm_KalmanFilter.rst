@@ -196,6 +196,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_KalmanFilter_examples:
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_KalmanFilter1.rst
@@ -205,6 +206,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_KalmanFilter1.res
+    :language: none
 
 .. include:: snippets/Header2Algo11.rst
 
@@ -225,6 +227,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_KalmanFilter2.res
+    :language: none
 
 .. include:: snippets/Header2Algo11.rst
 

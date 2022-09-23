@@ -406,7 +406,7 @@ the true state :math:`\mathbf{x}^t` for each component, which is:
 
 To describe the background error covariances matrix :math:`\mathbf{B}`, we make
 as previously the hypothesis of uncorrelated errors (that is, a diagonal matrix,
-of size 3x3 because :math:`\mathbf{x}^b` is of lenght 3) and to have the same
+of size 3x3 because :math:`\mathbf{x}^b` is of length 3) and to have the same
 variance of 0.1 for all variables. We get:
 ::
 

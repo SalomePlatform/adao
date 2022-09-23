@@ -50,29 +50,31 @@ d'une centaine de méthodes algorithmiques différentes et permet l'étude
 d'environ 350 problèmes appliqués distincts.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
-relatives à la documentation théorique (indiquée dans le titre de section par
-**[DocT]**), à la documentation utilisateur (indiquée dans le titre de section
-par **[DocU]**), et à la documentation de référence (indiquée dans le titre de
-section par **[DocR]**).
+relatives à la **documentation théorique** (indiquée dans le titre de section
+par **[DocT]**), à la **documentation utilisateur** (indiquée dans le titre de
+section par **[DocU]**), et à la **documentation de référence** (indiquée dans
+le titre de section par **[DocR]**).
 
 La première partie est l':ref:`section_intro`. La seconde partie présente
 :ref:`section_theory`, et à leurs concepts, et la partie suivante décrit la
 :ref:`section_methodology`. Pour un utilisateur courant, les parties suivantes
-présentent des exemples didactiques d'utilisation sous la forme de
-:ref:`section_tutorials_in_salome` ou de :ref:`section_tutorials_in_python`,
-puis indique les :ref:`section_advanced`, avec l'obtention de renseignements
-supplémentaires ou l'usage par scripts de commandes hors interface de contrôle
-graphique. Les utilisateurs intéressés par un accès rapide au module peuvent
-s'arrêter avant la lecture de la suite, mais un usage utile du module nécessite
-de lire et de revenir régulièrement à ces parties. Les parties qui suivent
-expliquent comment utiliser une :ref:`section_gui_in_salome` ou une
-:ref:`section_tui`. La dernière grande partie détaille la
-:ref:`section_reference`, avec trois sous-parties essentielles qui la composent
-et qui décrivent les commandes et des options d'algorithmes. Un
-:ref:`section_glossary`, des :ref:`section_notations`, une
-:ref:`section_bibliography` et un index développé complètent le document.
-Enfin, pour respecter les exigences de licence du module, n'oubliez pas de lire
-la partie :ref:`section_license`.
+présentent des :ref:`section_docu_examples`, rapidement accessibles par
+l'ensemble des pointeurs vers les sous-parties. Des présentations didactiques
+sont détaillés dans les :ref:`section_tutorials_in_salome` ou les
+:ref:`section_tutorials_in_python`, et complétées par des indications sur les
+:ref:`section_advanced`, avec l'obtention de renseignements supplémentaires ou
+l'usage par scripts de commandes hors interface de contrôle graphique.
+
+Les utilisateurs intéressés par un accès rapide au module peuvent s'arrêter
+avant la lecture de la suite, mais un usage utile du module nécessite de lire
+et de revenir régulièrement à ces parties. Les parties qui suivent expliquent
+comment utiliser une :ref:`section_gui_in_salome` ou une :ref:`section_tui`. La
+dernière grande partie détaille la :ref:`section_reference`, avec trois
+sous-parties essentielles qui la composent et qui décrivent les commandes et
+des options d'algorithmes. Un :ref:`section_glossary`, des
+:ref:`section_notations`, une :ref:`section_bibliography` et un index développé
+complètent le document. Enfin, pour respecter les exigences de licence du
+module, n'oubliez pas de lire la partie :ref:`section_license`.
 
 .. toctree::
    :caption: Table des matières
@@ -83,6 +85,7 @@ la partie :ref:`section_license`.
    intro
    theory
    methodology
+   examples
    tutorials_in_salome
    tutorials_in_python
    advanced

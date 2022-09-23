@@ -1,0 +1,12 @@
+.. index:: single: EnsembleOfSnapshots
+
+EnsembleOfSnapshots
+  *List of vectors or matrix*. This key contains a set of physical state
+  vectors :math:`\mathbf{y}` (called "*snapshots*" in "Reduced Bases"
+  terminology), with 1 state per column if it is a matrix or 1 state per
+  element of the list. Important: the numbering of the points, to which a state
+  value is given, in each vector is implicitly that of the natural order of
+  numbering of the state vector, from 0 to the "size minus 1" of this vector.
+
+  Example :
+  ``{"EnsembleOfSnapshots":[y1, y2, y3...]}``

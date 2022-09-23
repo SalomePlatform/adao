@@ -30,24 +30,35 @@ Checking algorithm "*AdjointTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to check the quality of the adjoint operator, by
-calculating a residue with known theoretical properties.
+This algorithm allows to check the quality of the adjoint of an operator
+:math:`F`, by computing a residue whose theoretical properties are known. The
+test is applicable to any operator, of evolution or observation.
+
+For all formulas, with :math:`\mathbf{x}` the current verification point, we
+take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
+:math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` with :math:`\alpha_0` a scaling user
+parameter, defaulting to 1. :math:`F` is the computational operator or code
+(which is here acquired by the observation operator command
+"*ObservationOperator*").
 
 One can observe the following residue, which is the difference of two scalar
 products:
 
 .. math:: R(\alpha) = | < TangentF_x(\mathbf{dx}) , \mathbf{y} > - < \mathbf{dx} , AdjointF_x(\mathbf{y}) > |
 
-that has to remain equal to zero at the calculation precision. One take
-:math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
-:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` is the calculation code.
-:math:`\mathbf{y}` has to be in the image of :math:`F`. If it is not given, one
-take :math:`\mathbf{y} = F(\mathbf{x})`.
+in which the optional quantity :math:`\mathbf{y}` must be in the image of
+:math:`F`. If it is not given, we take its default evaluation :math:`\mathbf{y}
+= F(\mathbf{x})`.
+
+This residue must remain constantly equal to zero at the accuracy of the
+calculation.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst
+
+.. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationOperator.rst
 
@@ -59,6 +70,8 @@ take :math:`\mathbf{y} = F(\mathbf{x})`.
 .. include:: snippets/EpsilonMinimumExponent.rst
 
 .. include:: snippets/InitialDirection.rst
+
+.. include:: snippets/NumberOfPrintedDigits.rst
 
 .. include:: snippets/SetSeed.rst
 
@@ -96,6 +109,19 @@ StoreSupplementaryCalculations
 .. include:: snippets/Residu.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
+
+.. ------------------------------------ ..
+.. _section_ref_algorithm_AdjointTest_examples:
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_AdjointTest.rst
+
+.. literalinclude:: scripts/simple_AdjointTest.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_AdjointTest.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

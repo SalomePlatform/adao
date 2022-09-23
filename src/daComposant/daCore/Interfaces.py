@@ -1186,19 +1186,19 @@ class EficasGUI(object):
         self.__msg = ""
         self.__path_settings_ok = False
         #----------------
-        if "EFICAS_ROOT" in os.environ:
-            __EFICAS_ROOT = os.environ["EFICAS_ROOT"]
+        if "EFICAS_TOOLS_ROOT" in os.environ:
+            __EFICAS_TOOLS_ROOT = os.environ["EFICAS_TOOLS_ROOT"]
             __path_ok = True
         elif "EFICAS_NOUVEAU_ROOT" in os.environ:
-            __EFICAS_ROOT = os.environ["EFICAS_NOUVEAU_ROOT"]
+            __EFICAS_TOOLS_ROOT = os.environ["EFICAS_NOUVEAU_ROOT"]
             __path_ok = True
         else:
             self.__msg += "\nKeyError:\n"+\
-                "  the required environment variable EFICAS_ROOT is unknown.\n"+\
-                "  You have either to be in SALOME environment, or to set\n"+\
-                "  this variable in your environment to the right path \"<...>\"\n"+\
-                "  to find an installed EFICAS application. For example:\n"+\
-                "      EFICAS_ROOT=\"<...>\" command\n"
+                "  the required environment variable EFICAS_TOOLS_ROOT is unknown.\n"+\
+                "  You have either to be in SALOME environment, or to set this\n"+\
+                "  variable in your environment to the right path \"<...>\" to\n"+\
+                "  find an installed EFICAS application. For example:\n"+\
+                "      EFICAS_TOOLS_ROOT=\"<...>\" command\n"
             __path_ok = False
         try:
             import adao
@@ -1238,7 +1238,7 @@ class EficasGUI(object):
             self.__path_settings_ok = True
         #----------------
         if self.__path_settings_ok:
-            sys.path.insert(0,__EFICAS_ROOT)
+            sys.path.insert(0,__EFICAS_TOOLS_ROOT)
             sys.path.insert(0,os.path.join(adao.adao_py_dir,"daEficas"))
             if __addpath is not None and os.path.exists(os.path.abspath(__addpath)):
                 sys.path.insert(0,os.path.abspath(__addpath))

@@ -48,27 +48,30 @@ more than one hundred different algorithmic methods and allows the study of
 about 350 distinct applied problems.
 
 The documentation for this module is divided into several major categories,
-related to the theoretical documentation (indicated in the section title by
-**[DocT]**), to the user documentation (indicated in the section title by
-**[DocU]**), and to the reference documentation (indicated in the section title
-by **[DocR]**).
+related to the **theoretical documentation** (indicated in the section title by
+**[DocT]**), to the **user documentation** (indicated in the section title by
+**[DocU]**), and to the **reference documentation** (indicated in the section
+title by **[DocR]**).
 
 The first part is the :ref:`section_intro`. The second part introduces
 :ref:`section_theory`, and their concepts, and the next part describes the
-:ref:`section_methodology`. For a standard user, the next parts describe
-examples on ADAO usage as :ref:`section_tutorials_in_salome` or
-:ref:`section_tutorials_in_python`, then indicates the :ref:`section_advanced`,
-with how to obtain additional information or how to use non-GUI command
-execution scripting. Users interested in quick use of the module can stop
-before reading the rest, but a valuable use of the module requires to read and
-come back regularly to these parts. The following parts describe
+:ref:`section_methodology`. For a standard user, the next parts describe some
+:ref:`section_docu_examples`, quickly accessible by the collection of pointers
+to the subsections. Didactic presentations are detailed in
+:ref:`section_tutorials_in_salome` or :ref:`section_tutorials_in_python`,
+supplemented by information on the :ref:`section_advanced` with how to obtain
+additional information or how to use non-GUI command execution scripting.
+
+Users interested in quick access to the module can stop before reading the
+remaining parts, but a valuable use of the module requires reading and
+returning to these parts regularly. The following parts describe
 :ref:`section_gui_in_salome` and :ref:`section_tui`. The last main part gives a
 detailed :ref:`section_reference`, with three essential main sub-parts
 describing the details of commands and options of the algorithms. A
 :ref:`section_glossary`, some :ref:`section_notations`, a
-:ref:`section_bibliography` and an extensive index are included in
-the document. And, to comply with the module requirements, be sure to read the
-part :ref:`section_license`.
+:ref:`section_bibliography` and an extensive index are included in the
+document. And, to comply with the module requirements, be sure to read the part
+:ref:`section_license`.
 
 .. toctree::
    :caption: Table of contents
@@ -79,6 +82,7 @@ part :ref:`section_license`.
    intro
    theory
    methodology
+   examples
    tutorials_in_salome
    tutorials_in_python
    advanced

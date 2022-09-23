@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import os, copy, types, sys, logging, numpy
+import os, copy, types, sys, logging, numpy, itertools
 from daCore.BasicObjects import Operator, Covariance, PartialAlgorithm
 from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
@@ -68,7 +68,7 @@ class FDApproximation(object):
             reducingMemoryUse     = False,
             avoidingRedundancy    = True,
             toleranceInRedundancy = 1.e-18,
-            lenghtOfRedundancy    = -1,
+            lengthOfRedundancy    = -1,
             mpEnabled             = False,
             mpWorkers             = None,
             mfEnabled             = False,
@@ -98,7 +98,7 @@ class FDApproximation(object):
         if avoidingRedundancy:
             self.__avoidRC = True
             self.__tolerBP = float(toleranceInRedundancy)
-            self.__lenghtRJ = int(lenghtOfRedundancy)
+            self.__lengthRJ = int(lengthOfRedundancy)
             self.__listJPCP = [] # Jacobian Previous Calculated Points
             self.__listJPCI = [] # Jacobian Previous Calculated Increment
             self.__listJPCR = [] # Jacobian Previous Calculated Results
@@ -411,8 +411,8 @@ class FDApproximation(object):
             if __Produit is None or self.__avoidRC:
                 _Jacobienne = numpy.transpose( numpy.vstack( _Jacobienne ) )
                 if self.__avoidRC:
-                    if self.__lenghtRJ < 0: self.__lenghtRJ = 2 * _X.size
-                    while len(self.__listJPCP) > self.__lenghtRJ:
+                    if self.__lengthRJ < 0: self.__lengthRJ = 2 * _X.size
+                    while len(self.__listJPCP) > self.__lengthRJ:
                         self.__listJPCP.pop(0)
                         self.__listJPCI.pop(0)
                         self.__listJPCR.pop(0)
@@ -870,7 +870,7 @@ def ApplyBounds( __Vector, __Bounds, __newClip = True):
         raise ValueError("Incorrect array definition of vector data")
     if not isinstance(__Bounds, numpy.ndarray): # Is an array
         raise ValueError("Incorrect array definition of bounds data")
-    if 2*__Vector.size != __Bounds.size: # Is a 2 column array of vector lenght
+    if 2*__Vector.size != __Bounds.size: # Is a 2 column array of vector length
         raise ValueError("Incorrect bounds number (%i) to be applied for this vector (of size %i)"%(__Bounds.size,__Vector.size))
     if len(__Bounds.shape) != 2 or min(__Bounds.shape) <= 0 or __Bounds.shape[1] != 2:
         raise ValueError("Incorrectly shaped bounds data")
@@ -913,6 +913,46 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Sup
     del selfB
     #
     return Xa + EnsembleOfAnomalies( __EnXn )
+
+# ==============================================================================
+def BuildComplexSampleList(
+    __SampleAsnUplet,
+    __SampleAsExplicitHyperCube,
+    __SampleAsMinMaxStepHyperCube,
+    __SampleAsIndependantRandomVariables,
+    __X0,
+    ):
+    # ---------------------------
+    if len(__SampleAsnUplet) > 0:
+        sampleList = __SampleAsnUplet
+        for i,Xx in enumerate(sampleList):
+            if numpy.ravel(Xx).size != __X0.size:
+                raise ValueError("The size %i of the %ith state X in the sample and %i of the checking point Xb are different, they have to be identical."%(numpy.ravel(Xx).size,i+1,X0.size))
+    elif len(__SampleAsExplicitHyperCube) > 0:
+        sampleList = itertools.product(*list(__SampleAsExplicitHyperCube))
+    elif len(__SampleAsMinMaxStepHyperCube) > 0:
+        coordinatesList = []
+        for i,dim in enumerate(__SampleAsMinMaxStepHyperCube):
+            if len(dim) != 3:
+                raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be [min,max,step]."%(i,dim))
+            else:
+                coordinatesList.append(numpy.linspace(dim[0],dim[1],1+int((float(dim[1])-float(dim[0]))/float(dim[2]))))
+        sampleList = itertools.product(*coordinatesList)
+    elif len(__SampleAsIndependantRandomVariables) > 0:
+        coordinatesList = []
+        for i,dim in enumerate(__SampleAsIndependantRandomVariables):
+            if len(dim) != 3:
+                raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be ('distribution',(parameters),length) with distribution in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]."%(i,dim))
+            elif not( str(dim[0]) in ['normal','lognormal','uniform','weibull'] and hasattr(numpy.random,dim[0]) ):
+                raise ValueError("For dimension %i, the distribution name \"%s\" is not allowed, please choose in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]"%(i,dim[0]))
+            else:
+                distribution = getattr(numpy.random,str(dim[0]),'normal')
+                coordinatesList.append(distribution(*dim[1], size=max(1,int(dim[2]))))
+        sampleList = itertools.product(*coordinatesList)
+    else:
+        sampleList = iter([__X0,])
+    # ----------
+    return sampleList
 
 # ==============================================================================
 def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle,

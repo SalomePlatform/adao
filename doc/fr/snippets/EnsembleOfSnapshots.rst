@@ -1,0 +1,13 @@
+.. index:: single: EnsembleOfSnapshots
+
+EnsembleOfSnapshots
+  *Liste de vecteurs ou matrice*. Cette clé contient un ensemble de vecteurs
+  d'état physique :math:`\mathbf{y}` (nommés "*snapshots*" en terminologie de
+  "Bases Réduites"), avec 1 état par colonne si c'est une matrice ou 1 état par
+  élément de la liste. Important : la numérotation des points, auxquels sont
+  fournis une valeur d'état, dans chaque vecteur est implicitement celle de
+  l'ordre naturel de numérotation du vecteur d'état, de 0 à la "taille moins 1"
+  de ce vecteur.
+
+  Exemple :
+  ``{"EnsembleOfSnapshots":[y1, y2, y3...]}``

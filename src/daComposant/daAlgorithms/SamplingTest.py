@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy, logging, itertools
-from daCore import BasicObjects
+from daCore import BasicObjects, NumericObjects
 from daCore.PlatformInfo import PlatformInfo
 mfp = PlatformInfo().MaximumPrecision()
 
@@ -39,19 +39,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SampleAsExplicitHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable comme une liste",
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable comme une liste",
             )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxStepHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonages de chaque variable par un triplet [min,max,step]",
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable par un triplet [min,max,step]",
             )
         self.defineRequiredParameter(
             name     = "SampleAsIndependantRandomVariables",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
+            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonnage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
             )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
@@ -112,34 +112,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Y0 = numpy.ravel( Y  )
         #
         # ---------------------------
-        if len(self._parameters["SampleAsnUplet"]) > 0:
-            sampleList = self._parameters["SampleAsnUplet"]
-            for i,Xx in enumerate(sampleList):
-                if numpy.ravel(Xx).size != X0.size:
-                    raise ValueError("The size %i of the %ith state X in the sample and %i of the checking point Xb are different, they have to be identical."%(numpy.ravel(Xx).size,i+1,X0.size))
-        elif len(self._parameters["SampleAsExplicitHyperCube"]) > 0:
-            sampleList = itertools.product(*list(self._parameters["SampleAsExplicitHyperCube"]))
-        elif len(self._parameters["SampleAsMinMaxStepHyperCube"]) > 0:
-            coordinatesList = []
-            for i,dim in enumerate(self._parameters["SampleAsMinMaxStepHyperCube"]):
-                if len(dim) != 3:
-                    raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be [min,max,step]."%(i,dim))
-                else:
-                    coordinatesList.append(numpy.linspace(dim[0],dim[1],1+int((float(dim[1])-float(dim[0]))/float(dim[2]))))
-            sampleList = itertools.product(*coordinatesList)
-        elif len(self._parameters["SampleAsIndependantRandomVariables"]) > 0:
-            coordinatesList = []
-            for i,dim in enumerate(self._parameters["SampleAsIndependantRandomVariables"]):
-                if len(dim) != 3:
-                    raise ValueError("For dimension %i, the variable definition \"%s\" is incorrect, it should be ('distribution',(parameters),length) with distribution in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]."%(i,dim))
-                elif not( str(dim[0]) in ['normal','lognormal','uniform','weibull'] and hasattr(numpy.random,dim[0]) ):
-                    raise ValueError("For dimension %i, the distribution name \"%s\" is not allowed, please choose in ['normal'(mean,std),'lognormal'(mean,sigma),'uniform'(low,high),'weibull'(shape)]"%(i,dim[0]))
-                else:
-                    distribution = getattr(numpy.random,str(dim[0]),'normal')
-                    coordinatesList.append(distribution(*dim[1], size=max(1,int(dim[2]))))
-            sampleList = itertools.product(*coordinatesList)
-        else:
-            sampleList = iter([X0,])
+        sampleList = NumericObjects.BuildComplexSampleList(
+            self._parameters["SampleAsnUplet"],
+            self._parameters["SampleAsExplicitHyperCube"],
+            self._parameters["SampleAsMinMaxStepHyperCube"],
+            self._parameters["SampleAsIndependantRandomVariables"],
+            X0,
+            )
         # ----------
         BI = B.getI()
         RI = R.getI()

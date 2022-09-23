@@ -192,6 +192,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_NonLinearLeastSquares_examples:
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_NonLinearLeastSquares.rst
@@ -201,6 +202,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_NonLinearLeastSquares.res
+    :language: none
 
 .. include:: snippets/Header2Algo11.rst
 

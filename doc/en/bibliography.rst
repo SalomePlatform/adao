@@ -39,7 +39,7 @@ Bibliography
 
 .. [Buchinsky98] Buchinsky M., *Recent Advances in Quantile Regression Models: A Practical Guidline for Empirical Research*, Journal of Human Resources, 33(1), pp.88-126, 1998
 
-.. [Burgers98] Burgers G., Van Leuween P. J., Evensen G., *Analysis scheme in the Ensemble Kalman Filter*, Monthly Weather Review, 126, 1719–1724, 1998
+.. [Burgers98] Burgers G., Van Leuween P. J., Evensen G., *Analysis scheme in the Ensemble Kalman Filter*, Monthly Weather Review, 126(6), pp.1719–1724, 1998
 
 .. [Byrd95] Byrd R. H., Lu P., Nocedal J., *A Limited Memory Algorithm for Bound Constrained Optimization*, SIAM Journal on Scientific and Statistical Computing, 16(5), pp.1190-1208, 1995
 
@@ -49,9 +49,9 @@ Bibliography
 
 .. [Cohn98] Cohn S. E., Da Silva A., Guo J., Sienkiewicz M., Lamich D., *Assessing the effects of data selection with the DAO Physical-space Statistical Analysis System*, Monthly Weather Review, 126, pp.2913–2926, 1998
 
-.. [Courtier94] Courtier P., Thépaut J.-N., Hollingsworth A., *A strategy for operational implementation of 4D-Var, using an incremental approach*, Quarterly Journal of the Royal Meteorological Society, 120, pp.1367–1387, 1994
+.. [Courtier94] Courtier P., Thépaut J.-N., Hollingsworth A., *A strategy for operational implementation of 4D-Var, using an incremental approach*, Quarterly Journal of the Royal Meteorological Society, 120(519), pp.1367–1387, 1994
 
-.. [Courtier97] Courtier P., *Dual formulation of four-dimensional variational assimilation*, Quarterly Journal of the Royal Meteorological Society, 123, pp.2449-2461, 1997
+.. [Courtier97] Courtier P., *Dual formulation of four-dimensional variational assimilation*, Quarterly Journal of the Royal Meteorological Society, 123(544), pp.2249-2261, 1997
 
 .. [Das11] Das S., Suganthan P. N., *Differential Evolution: A Survey of the State-of-the-art*, IEEE Transactions on Evolutionary Computation, 15(1), pp.4-31, 2011
 
@@ -69,6 +69,8 @@ Bibliography
 
 .. [Glover90] Glover F., *Tabu Search-Part II*, ORSA Journal on Computing, 2(1), pp.4-32, 1990
 
+.. [Hamill00] Hamill T. M., Snyder C., *A Hybrid Ensemble Kalman Filter-3D Variational Analysis Scheme*, Monthly Weather Review, 128(8), pp.2905-2919, 2000
+
 .. [Ide97] Ide K., Courtier P., Ghil M., Lorenc A. C., *Unified notation for data assimilation: operational, sequential and variational*, Journal of the Meteorological Society of Japan, 75(1B), pp.181-189, 1997
 
 .. [Jazwinski70] Jazwinski A. H., *Stochastic Processes and Filtering Theory*,  Academic Press, 1970
@@ -85,9 +87,9 @@ Bibliography
 
 .. [Lions68] Lions J.-L., *Optimal Control of Systems Governed by Partial Differential Equations*, Springer, 1971
 
-.. [Lorenc86] Lorenc A. C., *Analysis methods for numerical weather prediction*, Quarterly Journal of the Royal Meteorological Society, 112, pp.1177-1194, 1986
+.. [Lorenc86] Lorenc A. C., *Analysis methods for numerical weather prediction*, Quarterly Journal of the Royal Meteorological Society, 112(474), pp.1177-1194, 1986
 
-.. [Lorenc88] Lorenc A. C., *Optimal nonlinear objective analysis*, Quarterly Journal of the Royal Meteorological Society, 114, pp.205–240, 1988
+.. [Lorenc88] Lorenc A. C., *Optimal nonlinear objective analysis*, Quarterly Journal of the Royal Meteorological Society, 114(479), pp.205–240, 1988
 
 .. [Morales11] Morales J. L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
 
@@ -151,5 +153,5 @@ Bibliography
 
 .. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 23(4), pp.550-560, 1997
 
-.. [Zupanski05] Zupanski M., *Maximum likelihood ensemble filter: Theoretical aspects*, Monthly Weather Review, 133, pp.1710–1726, 2005
+.. [Zupanski05] Zupanski M., *Maximum likelihood ensemble filter: Theoretical aspects*, Monthly Weather Review, 133(6), pp.1710–1726, 2005
 

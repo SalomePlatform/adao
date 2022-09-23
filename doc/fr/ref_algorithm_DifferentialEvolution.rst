@@ -176,6 +176,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_DifferentialEvolution_examples:
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_DerivativeFreeOptimization`

@@ -23,6 +23,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import sys, os, time, sphinx, logging
+# logging.getLogger().setLevel(logging.DEBUG)
 
 # -- Module version information --------------------------------------------------
 
@@ -61,8 +62,10 @@ from distutils.version import LooseVersion #, StrictVersion
 __lv = LooseVersion(sphinx.__version__)
 if __lv < LooseVersion("1.4.0"):
     extensions = ['sphinx.ext.pngmath']
+    logging.debug('Using "%s" extensions'%(extensions,))
 else:
     extensions = ['sphinx.ext.imgmath']
+    logging.debug('Using "%s" extensions'%(extensions,))
 try:
     import sphinx_rtd_theme
     extensions += ['sphinx_rtd_theme']

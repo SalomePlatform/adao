@@ -10,7 +10,7 @@ case.setAlgorithmParameters(
     Parameters={
         'NumberOfRepetition' : 5,
         'NumberOfPrintedDigits' : 2,
-        "ShowElementarySummary":False,
+        'ShowElementarySummary':False,
         },
     )
 case.execute()

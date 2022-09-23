@@ -33,6 +33,8 @@ interface (GUI). It requires to know how to find files or commands included
 inside the whole SALOME installation. All the names to be replaced by user are
 indicated by the syntax ``<...>``.
 
+.. _section_advanced_convert_JDC:
+
 Converting and executing an ADAO command file (JDC) using a Shell script
 ------------------------------------------------------------------------
 
@@ -128,6 +130,8 @@ following Shell script::
 
 In all cases, the standard output and errors come in the launching terminal.
 
+.. _section_advanced_YACS_tui:
+
 Running an ADAO calculation scheme in YACS using the text user mode (YACS TUI)
 ------------------------------------------------------------------------------
 
@@ -189,12 +193,14 @@ Running an ADAO calculation in R environment using the TUI ADAO interface
 
 .. index:: single: R
 .. index:: single: rPython
+.. index:: single: reticulate
 
 To extend the analysis and treatment capacities, it is possible to use ADAO
 calculations in **R** environment (see [R]_ for more details). It is available
 in SALOME by launching the R interpreter in the shell "``salome shell``".
-Moreover, the package "*rPython*" has to be available, it can be installed by
-the user if required by the following R command::
+Moreover, the package "*rPython*" (or the more recent "*reticulate*" one) has
+to be available, it can be installed by the user if required by the following R
+command::
 
     #
     # IMPORTANT: to be run in R interpreter
@@ -304,17 +310,19 @@ commands are used::
     from adao import adaoBuilder
     adaoBuilder.Gui()
 
-If necessary, explicit messages can be used to identify the required
-environment variables that are missing. However, this command should not be run
-in the SALOME Python console (because in this case it is enough to activate the
-module since we already are in the graphical environment...) but it can be done
-in a "SALOME shell" session obtained from the "Tools/Extensions" menu of
-SALOME. As a reminder, the easiest way to get a Python interpreter included in
-a "SALOME shell" session is to run the following command in a terminal::
+As a reminder, the easiest way to get a Python interpreter included in a
+"SALOME shell" session is to run the following command in a terminal::
 
     $SALOMEDIR/salome shell -- python
 
 with ``SALOMEDIR`` the ``<SALOME main installation directory>``.
+
+If necessary, explicit messages can be used to identify the required
+environment variables that are missing. However, **this command should not be
+run in the SALOME Python console** (because in this case it is enough to
+activate the module since we already are in the graphical environment...) or in
+an independant Python install, but it can be run in a "SALOME shell" session
+obtained from the "Tools/Extensions" menu of SALOME.
 
 .. _section_advanced_execution_mode:
 

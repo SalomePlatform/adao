@@ -2,7 +2,7 @@
 
 Residu
   *Liste de valeurs*. Chaque élément est la valeur du résidu particulier
-  vérifié lors d'un algorithme de vérification, selon l'ordre des tests
+  vérifié lors du déroulement de l'algorithme, selon l'ordre des tests
   effectués.
 
   Exemple :

@@ -145,3 +145,23 @@ The mathematical concepts and notations used are explained in the section
    ref_algorithm_SamplingTest
    ref_algorithm_TangentTest
    ref_checking_keywords
+
+.. _section_reference_task:
+
+================================================================================
+**[DocR]** Dedicated tasks or study oriented cases
+================================================================================
+
+This section describes the dedicated task or study oriented cases available in
+ADAO, detailing their usage characteristics and their options.
+
+These tasks use algorithms from data assimilation methods, optimization methods
+or methods with reduction. We refer to the :ref:`section_theory` section and
+the :ref:`section_reference_assimilation` section for the underlying
+algorithmic details.
+
+.. toctree::
+   :maxdepth: 1
+
+   ref_algorithm_MeasurementsOptimalPositioningTask
+   ref_task_keywords

@@ -61,11 +61,16 @@ This algorithm is naturally written for a single estimate, without any dynamic
 or iterative notion (there is no need in this case for an incremental evolution
 operator, nor for an evolution error covariance). In ADAO, it can also be used
 on a succession of observations, placing the estimate in a recursive framework
-partly similar to a :ref:`section_ref_algorithm_KalmanFilter`. A standard
-estimate is made at each observation step on the state predicted by the
-incremental evolution model, knowing that the state error covariance remains
-the background covariance initially provided by the user. To be explicit,
-unlike Kalman-type filters, the state error covariance is not updated.
+similar to a :ref:`section_ref_algorithm_KalmanFilter`. A standard estimate is
+made at each observation step on the state predicted by the incremental
+evolution model, knowing that the state error covariance remains the background
+covariance initially provided by the user. To be explicit, unlike Kalman-type
+filters, the state error covariance is not updated.
+
+An extension of 3DVAR, coupling a 3DVAR méthod with a Kalman ensemble filter,
+allows to improve the estimation of *a posteriori* error covariances. This
+extension is obtained by using the "E3DVAR" variant of the filtering algorithm
+:ref:`section_ref_algorithm_EnsembleKalmanFilter`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -246,6 +251,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulationQuantiles.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_3DVAR_examples:
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_3DVAR.rst

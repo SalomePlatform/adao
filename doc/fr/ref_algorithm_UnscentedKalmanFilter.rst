@@ -185,6 +185,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_UnscentedKalmanFilter_examples:
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_KalmanFilter`

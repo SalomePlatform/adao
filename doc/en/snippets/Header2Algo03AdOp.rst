@@ -5,4 +5,4 @@ choose the specific options, described hereafter, of the algorithm. See
 :ref:`section_ref_options_Algorithm_Parameters` for the good use of this
 command.
 
-The options of the algorithm are the following:
+The options are the following:

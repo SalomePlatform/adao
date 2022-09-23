@@ -6,4 +6,4 @@ décrites ci-après, de l'algorithme. On se reportera à la
 :ref:`section_ref_options_Algorithm_Parameters` pour le bon usage de cette
 commande.
 
-Les options de l'algorithme sont les suivantes :
+Les options sont les suivantes :

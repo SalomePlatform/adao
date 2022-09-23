@@ -36,6 +36,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["ScalarProduct"],
             )
         self.defineRequiredParameter(
+            name     = "AmplitudeOfInitialDirection",
+            default  = 1.,
+            typecast = float,
+            message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
+            )
+        self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
             default  = -8,
             typecast = int,
@@ -50,21 +56,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Direction initiale de la dérivée directionnelle autour du point nominal",
             )
         self.defineRequiredParameter(
-            name     = "AmplitudeOfInitialDirection",
-            default  = 1.,
-            typecast = float,
-            message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
-            )
-        self.defineRequiredParameter(
-            name     = "SetSeed",
-            typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
+            name     = "NumberOfPrintedDigits",
+            default  = 5,
+            typecast = int,
+            message  = "Nombre de chiffres affichés pour les impressions de réels",
+            minval   = 0,
             )
         self.defineRequiredParameter(
             name     = "ResultTitle",
             default  = "",
             typecast = str,
             message  = "Titre du tableau et de la figure",
+            )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
@@ -113,39 +120,57 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Xn,
             )
         #
-        # Entete des resultats
         # --------------------
-        __marge =  12*u" "
-        __precision = u"""
-            Remarque : les nombres inferieurs a %.0e (environ) representent un zero
-                       a la precision machine.\n"""%mpr
-        if self._parameters["ResiduFormula"] == "ScalarProduct":
-            __entete = u"  i   Alpha     ||X||       ||Y||       ||dX||        R(Alpha)"
-            __msgdoc = u"""
-            On observe le residu qui est la difference de deux produits scalaires :
-
-              R(Alpha) = | < TangentF_X(dX) , Y > - < dX , AdjointF_X(Y) > |
-
-            qui doit rester constamment egal a zero a la precision du calcul.
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.
-            Y doit etre dans l'image de F. S'il n'est pas donne, on prend Y = F(X).\n""" + __precision
+        __p = self._parameters["NumberOfPrintedDigits"]
         #
+        __marge =  5*u" "
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = str(self._parameters["ResultTitle"])
-            msgs  = u"\n"
-            msgs += __marge + "====" + "="*len(__rt) + "====\n"
-            msgs += __marge + "    " + __rt + "\n"
-            msgs += __marge + "====" + "="*len(__rt) + "====\n"
+            msgs  = ("\n")
+            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+            msgs += (__marge + "    " + __rt + "\n")
+            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
         else:
-            msgs  = u""
-        msgs += __msgdoc
+            msgs  = ("\n")
+            msgs += ("     %s\n"%self._name)
+            msgs += ("     %s\n"%("="*len(self._name),))
         #
+        msgs += ("\n")
+        msgs += ("     This test allows to analyze the quality of an adjoint operator associated\n")
+        msgs += ("     to some given direct operator. If the adjoint operator is approximated and\n")
+        msgs += ("     not given, the test measures the quality of the automatic approximation.\n")
+        #
+        if self._parameters["ResiduFormula"] == "ScalarProduct":
+            msgs += ("\n")
+            msgs += ("     Using the \"%s\" formula, one observes the residue R which is the\n"%self._parameters["ResiduFormula"])
+            msgs += ("     difference of two scalar products:\n")
+            msgs += ("\n")
+            msgs += ("         R(Alpha) = | < TangentF_X(dX) , Y > - < dX , AdjointF_X(Y) > |\n")
+            msgs += ("\n")
+            msgs += ("     which must remain constantly equal to zero to the accuracy of the calculation.\n")
+            msgs += ("     One takes dX0 = Normal(0,X) and dX = Alpha*dX0, where F is the calculation\n")
+            msgs += ("     operator. If it is given, Y must be in the image of F. If it is not given,\n")
+            msgs += ("     one takes Y = F(X).\n")
+        msgs += ("\n")
+        msgs += ("     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)"%mpr)
+        print(msgs)
+        #
+        # --------------------
+        __pf = "  %"+str(__p+7)+"."+str(__p)+"e"
+        __ms = "  %2i  %5.0e"+(__pf*4)
+        __bl = "  %"+str(__p+7)+"s  "
+        __entete = str.rstrip("  i   Alpha  "     + \
+            str.center("||X||",2+__p+7)  + \
+            str.center("||Y||",2+__p+7)  + \
+            str.center("||dX||",2+__p+7) + \
+            str.center("R(Alpha)",2+__p+7))
         __nbtirets = len(__entete) + 2
+        #
+        msgs  = ""
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n" + __marge + __entete
         msgs += "\n" + __marge + "-"*__nbtirets
         #
-        # ----------
         for i,amplitude in enumerate(Perturbations):
             dX          = amplitude * dX0
             NormedX     = numpy.linalg.norm( dX )
@@ -155,17 +180,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             Residu = abs(float(numpy.dot( TangentFXdX, Yn ) - numpy.dot( dX, AdjointFXY )))
             #
-            msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   |  %9.3e"%(i,amplitude,NormeX,NormeY,NormedX,Residu)
+            msg = __ms%(i,amplitude,NormeX,NormeY,NormedX,Residu)
             msgs += "\n" + __marge + msg
             #
             self.StoredVariables["Residu"].store( Residu )
         #
         msgs += "\n" + __marge + "-"*__nbtirets
-        msgs += "\n"
-        #
-        # Sorties eventuelles
-        # -------------------
-        print("\nResults of adjoint check by \"%s\" formula:"%self._parameters["ResiduFormula"])
         print(msgs)
         #
         self._post_run(HO)

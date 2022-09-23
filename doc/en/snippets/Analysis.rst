@@ -2,7 +2,7 @@
 
 Analysis
   *List of vectors*. Each element of this variable is an optimal state
-  :math:`\mathbf{x}*` in optimization or an analysis :math:`\mathbf{x}^a` in
+  :math:`\mathbf{x}^*` in optimization or an analysis :math:`\mathbf{x}^a` in
   data assimilation.
 
   Example:

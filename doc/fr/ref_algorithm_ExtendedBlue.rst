@@ -196,6 +196,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulationQuantiles.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_ExtendedBlue_examples:
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_ExtendedBlue.rst
@@ -205,6 +206,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_ExtendedBlue.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

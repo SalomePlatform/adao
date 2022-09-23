@@ -70,6 +70,8 @@ Ce résidu doit rester constamment égal à zéro à la précision du calcul.
 
 .. include:: snippets/InitialDirection.rst
 
+.. include:: snippets/NumberOfPrintedDigits.rst
+
 .. include:: snippets/SetSeed.rst
 
 StoreSupplementaryCalculations
@@ -106,6 +108,19 @@ StoreSupplementaryCalculations
 .. include:: snippets/Residu.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
+
+.. ------------------------------------ ..
+.. _section_ref_algorithm_AdjointTest_examples:
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_AdjointTest.rst
+
+.. literalinclude:: scripts/simple_AdjointTest.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_AdjointTest.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

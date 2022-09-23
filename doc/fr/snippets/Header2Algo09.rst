@@ -1,5 +1,5 @@
-Exemple d'utilisation en Python (TUI)
-+++++++++++++++++++++++++++++++++++++
+Exemples d'utilisation en Python (TUI)
+++++++++++++++++++++++++++++++++++++++
 
 Voici un exemple très simple d'usage de l'algorithme proposé et de ses
 paramètres, écrit en :ref:`section_tui`, et dont les informations indiquées en

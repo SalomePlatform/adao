@@ -28,9 +28,6 @@ Calculation algorithm "*EnsembleKalmanFilter*"
 ----------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a dynamic system by a
@@ -64,17 +61,21 @@ robust formulations are proposed here:
     pair: Variant ; ETKF-N
     pair: Variant ; MLEF
     pair: Variant ; IEnKF
+    pair: Variant ; E3DVAR
+    pair: Variant ; EnKS
 
 - "EnKF" (Ensemble Kalman Filter, see [Evensen94]_), original stochastic algorithm, allowing consistent treatment of non-linear evolution operator,
 - "ETKF" (Ensemble-Transform Kalman Filter), deterministic EnKF algorithm, allowing treatment of non-linear evolution operator with a lot less members (one recommends to use a number of members on the order of 10 or even sometimes less),
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), ETKF algorithm of "finite size N", yhat doesn't need inflation that is often required with the other algorithms,
 - "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF algorithm, allowing in addition the consistent treament of non-linear observation operator,
 - "IEnKF" (Iterative EnKF), deterministic EnKF algorithm, improving treament of operators non-linearities
+- "E3DVAR" (EnKF 3DVAR), algorithm coupling ensemble and variational assimilation, which uses in parallel a 3DVAR variational assimilation and an EnKF algorithm to improve the estimation of *a posteriori* error covariances
 - "EnKS" (Ensemble Kalman Smoother), smoothing algorithm with a fixed time lag L.
 
-Without being a universal recommandation, one recommend to use "EnKF" as a
-reference algorithm, and the other algorithms (in this order) as means to
-obtain less costly data assimilation with hopefully the same quality.
+Without being a universal recommandation, one recommend to use "EnKF"
+formulation as a reference algorithm, "ETKF-N" ou "IEnKF" formulation for
+robust performance, and the other algorithms (in this order) as means to obtain
+a less costly data assimilation with (hopefully) the same quality.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -97,6 +98,12 @@ obtain less costly data assimilation with hopefully the same quality.
 .. include:: snippets/Header2Algo03AdOp.rst
 
 .. include:: snippets/EstimationOf_State.rst
+
+.. include:: snippets/HybridCostDecrementTolerance.rst
+
+.. include:: snippets/HybridCovarianceEquilibrium.rst
+
+.. include:: snippets/HybridMaximumNumberOfIterations.rst
 
 .. include:: snippets/InflationFactor.rst
 
@@ -206,6 +213,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_EnsembleKalmanFilter_examples:
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_KalmanFilter`
@@ -220,4 +228,5 @@ StoreSupplementaryCalculations
 - [Bishop01]_
 - [Evensen03]_
 - [Zupanski05]_
+- [Hamill00]_
 - [WikipediaEnKF]_

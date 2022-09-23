@@ -110,6 +110,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtOptimum.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_EnsembleBlue_examples:
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_Blue`

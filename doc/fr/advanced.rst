@@ -33,6 +33,8 @@ l'interface graphique (GUI). Cela nécessite de savoir comment trouver les
 fichiers ou les commandes incluses dans l'installation complète de SALOME. Tous
 les noms à remplacer par l'utilisateur sont indiqués par la syntaxe ``<...>``.
 
+.. _section_advanced_convert_JDC:
+
 Convertir et exécuter un fichier de commandes ADAO (JDC) par l'intermédiaire d'un script Shell
 ----------------------------------------------------------------------------------------------
 
@@ -138,6 +140,8 @@ SALOME>``, il suffit d'enregistrer le script de commandes Shell suivant :
 Dans tous les cas, les sorties standard et d'erreur se font dans le terminal de
 lancement.
 
+.. _section_advanced_YACS_tui:
+
 Exécuter un schéma de calcul ADAO dans YACS en utilisant le mode "texte" (TUI YACS)
 -----------------------------------------------------------------------------------
 
@@ -202,13 +206,14 @@ Exécuter un calcul ADAO en environnement R en utilisant l'interface TUI ADAO
 
 .. index:: single: R
 .. index:: single: rPython
+.. index:: single: reticulate
 
 Pour étendre les possibilités d'analyse et de traitement, il est possible
 d'utiliser les calculs ADAO dans l'environnement **R** (voir [R]_ pour plus de
-détails). Ce dernier est disponible dans SALOME en lançant l'interpréteur R dans
-le shell "``salome shell``". Il faut de plus disposer, en R, du package
-"*rPython*", qui peut si nécessaire être installé par l'utilisateur à l'aide de
-la commande R suivante :
+détails). Ce dernier est disponible dans SALOME en lançant l'interpréteur R
+dans le shell "``salome shell``". Il faut de plus disposer, en R, du package
+"*rPython*" (ou du package "*reticulate*", plus récent), qui peut si nécessaire
+être installé par l'utilisateur à l'aide de la commande R suivante :
 ::
 
     #-*- coding: utf-8 -*-
@@ -328,19 +333,21 @@ Python obtenu depuis le "SALOME shell", on utilise les commandes suivantes :
     from adao import adaoBuilder
     adaoBuilder.Gui()
 
-Si nécessaire, des messages explicites permettent d'identifier les variables
-d'environnement requises qui seraient absentes. Cette commande ne doit
-néanmoins pas être lancée dans la console Python de SALOME (car dans ce cas il
-suffit d'activer le module puisque l'on est déjà dans l'interface
-graphique...), mais elle peut l'être dans une session "SALOME shell" obtenue
-depuis le menu "Outils/Extensions" de SALOME. Pour mémoire, le moyen le plus
-simple d'obtenir un interpréteur Python inclu dans une session "SALOME shell"
-est de lancer la commande suivante dans un terminal :
-::
+Pour mémoire, le moyen le plus simple d'obtenir un interpréteur Python inclu
+dans une session "SALOME shell" est de lancer la commande suivante dans un
+terminal : ::
 
     $SALOMEDIR/salome shell -- python
 
 avec ``SALOMEDIR`` le ``<Répertoire principal d'installation de SALOME>``.
+
+Si nécessaire, des messages explicites permettent d'identifier les variables
+d'environnement requises qui seraient absentes. **Cette commande ne doit
+néanmoins pas être lancée dans la console Python de SALOME** (car dans ce cas
+il suffit d'activer le module puisque l'on est déjà dans l'interface
+graphique...) ou dans une installation Python indépendante, mais elle peut
+l'être dans une session "SALOME shell" obtenue depuis le menu
+"Outils/Extensions" de SALOME.
 
 .. _section_advanced_execution_mode:
 

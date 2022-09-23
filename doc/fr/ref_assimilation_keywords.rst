@@ -46,8 +46,8 @@ plusieurs catégories), est impérativement désigné par l'une ces commandes:
 
 .. include:: snippets/REDUCTION_STUDY.rst
 
-Les autres termes imbriqués sont classés par ordre alphabétique. Ils ne sont
-pas obligatoirement requis pour tous les algorithmes. Les différentes commandes
+Les termes imbriqués sont classés par ordre alphabétique. Ils ne sont pas
+obligatoirement requis pour tous les algorithmes. Les différentes commandes
 sont les suivantes:
 
 .. include:: snippets/AlgorithmParameters.rst

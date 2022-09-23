@@ -147,3 +147,25 @@ dans la section :ref:`section_theory`.
    ref_algorithm_SamplingTest
    ref_algorithm_TangentTest
    ref_checking_keywords
+
+.. _section_reference_task:
+
+================================================================================
+**[DocR]** Cas orientés tâches ou études dédiées
+================================================================================
+
+Cette section décrit les algorithmes de tâches facilitant une étude dédiée
+disponibles dans ADAO, détaillant leurs caractéristiques d'utilisation et leurs
+options.
+
+Ces tâches utilisent des algorithmes provenant de méthodes d'assimilation de
+données, de méthodes d'optimisation ou de méthodes avec réduction. On renvoie à
+la section :ref:`section_theory` et à celle des
+:ref:`section_reference_assimilation` pour les détails algorithmiques
+sous-jacents.
+
+.. toctree::
+   :maxdepth: 1
+
+   ref_algorithm_MeasurementsOptimalPositioningTask
+   ref_task_keywords

@@ -126,7 +126,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "EM", "R", "B" ),
+            mandatory= ("Xb", "Y", "HO", "EM", "R", "B"),
             optional = ("U", "CM", "Q"),
             )
         self.setAttributes(tags=(

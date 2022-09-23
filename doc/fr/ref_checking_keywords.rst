@@ -31,13 +31,13 @@ une procédure pour vérifier les propriétés d'une information requise, utilis
 ailleurs par un cas de calcul.
 
 Le premier terme décrit le choix entre un calcul ou une vérification. Dans
-l'interface graphique, la vérification est désigné obligatoirement par la
-commande:
+l'interface graphique, le choix est désigné obligatoirement par la commande:
 
 .. include:: snippets/CHECKING_STUDY.rst
 
-Les autres termes sont classés par ordre alphabétique. Les différentes
-commandes sont les suivantes:
+Les termes imbriqués sont classés par ordre alphabétique. Ils ne sont pas
+obligatoirement requis pour tous les algorithmes. Les différentes commandes
+sont les suivantes:
 
 .. include:: snippets/AlgorithmParameters.rst
 

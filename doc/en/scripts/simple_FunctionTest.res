@@ -1,8 +1,16 @@
+
+     FUNCTIONTEST
+     ============
+
+     This test allows to analyze the (repetition of) launch of some given
+     operator. It shows simple statistics related to its successful execution,
+     or related to the similarities of repetition of its execution.
+
 ===> Information before launching:
      -----------------------------
      Characteristics of input vector X, internally converted:
        Type...............: <class 'numpy.ndarray'>
-       Lenght of vector...: 3
+       Length of vector...: 3
        Minimum value......: 0.00e+00
        Maximum value......: 2.00e+00
        Mean of vector.....: 1.00e+00

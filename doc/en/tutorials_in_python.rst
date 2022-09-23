@@ -113,7 +113,8 @@ As an extension of this example, one can change the variances represented by
 :math:`\mathbf{x}^a` will move to :math:`\mathbf{y}^o` or to
 :math:`\mathbf{x}^b`, in inverse proportion of the variances in
 :math:`\mathbf{B}` and :math:`\mathbf{R}`. As an other extension, it is also
-equivalent to search for the analysis thought a BLUE algorithm or a 3DVAR one.
+equivalent to search for the analysis thought a "Blue" algorithm or a "3DVAR"
+one.
 
 Using the graphical interface (GUI) to build the ADAO case
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -194,9 +195,9 @@ as shown here:
     >>>
 
 As a simple extension of this example, one can notice that the same problem
-solved with a 3DVAR algorithm gives the same result. This algorithm can be
+solved with a "3DVAR" algorithm gives the same result. This algorithm can be
 chosen at the ADAO case building step by only changing the "*Algorithm*"
-argument on the beginning. The remaining parts of the ADAO case in 3DVAR is
+argument on the beginning. The remaining parts of the ADAO case in "3DVAR" is
 exactly similar to the BLUE algorithmic case.
 
 .. _section_tutorials_in_python_script:

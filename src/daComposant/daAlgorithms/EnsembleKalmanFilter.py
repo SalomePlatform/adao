@@ -39,6 +39,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ETKF-N",
                 "MLEF",
                 "IEnKF",
+                "E3DVAR",
                 "EnKS",
                 ],
             listadv  = [
@@ -56,7 +57,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "IEnKF-B",
                 "EnKS-KFF",
                 "IEKF",
-                "E3DVAR",
                 "E3DVAR-EnKF",
                 "E3DVAR-ETKF",
                 "E3DVAR-MLEF",
@@ -185,6 +185,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             "Filter",
             "Ensemble",
             "Dynamic",
+            "Reduction",
             ))
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

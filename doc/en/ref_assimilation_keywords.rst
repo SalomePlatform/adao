@@ -46,9 +46,8 @@ imperatively indicated by one of these commands:
 
 .. include:: snippets/REDUCTION_STUDY.rst
 
-The other nested terms are listed in alphabetical order. They are not
-necessarily required for all algorithms. The different commands are the
-following:
+The nested terms are sorted in alphabetical order. They are not necessarily
+required for all algorithms. The various commands are the following:
 
 .. include:: snippets/AlgorithmParameters.rst
 

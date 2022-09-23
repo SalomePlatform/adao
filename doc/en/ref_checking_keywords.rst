@@ -31,12 +31,12 @@ procedure to check required properties on information, used somewhere else by a
 calculation case.
 
 The first term describes the choice between calculation or checking. In the
-graphical interface, the verification is imperatively indicated by the command:
+graphical interface, the choice is imperatively indicated by the command:
 
 .. include:: snippets/CHECKING_STUDY.rst
 
-The other terms are ordered in alphabetical order. The different commands are
-the following:
+The nested terms are sorted in alphabetical order. They are not necessarily
+required for all algorithms. The various commands are the following:
 
 .. include:: snippets/AlgorithmParameters.rst
 

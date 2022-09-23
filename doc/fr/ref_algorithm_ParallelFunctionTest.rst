@@ -95,6 +95,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_ParallelFunctionTest_examples:
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_ParallelFunctionTest.rst
@@ -104,6 +105,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_ParallelFunctionTest.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

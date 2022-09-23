@@ -88,26 +88,35 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # ----------
         __s = self._parameters["ShowElementarySummary"]
+        __p = self._parameters["NumberOfPrintedDigits"]
+        #
         __marge =  5*u" "
-        _p = self._parameters["NumberOfPrintedDigits"]
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = str(self._parameters["ResultTitle"])
-            msgs  = u"\n"
-            msgs +=  __marge + "====" + "="*len(__rt) + "====\n"
-            msgs +=  __marge + "    " + __rt + "\n"
-            msgs +=  __marge + "====" + "="*len(__rt) + "====\n"
-            print("%s"%msgs)
+            msgs  = ("\n")
+            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+            msgs += (__marge + "    " + __rt + "\n")
+            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+        else:
+            msgs  = ("\n")
+            msgs += ("     %s\n"%self._name)
+            msgs += ("     %s\n"%("="*len(self._name),))
         #
-        msgs  = ("===> Information before launching:\n")
+        msgs += ("\n")
+        msgs += ("     This test allows to analyze the (repetition of) launch of some given\n")
+        msgs += ("     operator. It shows simple statistics related to its successful execution,\n")
+        msgs += ("     or related to the similarities of repetition of its execution.\n")
+        msgs += ("\n")
+        msgs += ("===> Information before launching:\n")
         msgs += ("     -----------------------------\n")
         msgs += ("     Characteristics of input vector X, internally converted:\n")
         msgs += ("       Type...............: %s\n")%type( Xn )
-        msgs += ("       Lenght of vector...: %i\n")%max(numpy.ravel( Xn ).shape)
-        msgs += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Xn )
-        msgs += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Xn )
-        msgs += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Xn, dtype=mfp )
-        msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Xn, dtype=mfp )
-        msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Xn )
+        msgs += ("       Length of vector...: %i\n")%max(numpy.ravel( Xn ).shape)
+        msgs += ("       Minimum value......: %."+str(__p)+"e\n")%numpy.min( Xn )
+        msgs += ("       Maximum value......: %."+str(__p)+"e\n")%numpy.max( Xn )
+        msgs += ("       Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( Xn, dtype=mfp )
+        msgs += ("       Standard error.....: %."+str(__p)+"e\n")%numpy.std( Xn, dtype=mfp )
+        msgs += ("       L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Xn )
         print(msgs)
         #
         print("     %s\n"%("-"*75,))
@@ -157,12 +166,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     msgs  = ("===> Information after evaluation:\n")
                     msgs += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
                     msgs += ("       Type...............: %s\n")%type( Yn )
-                    msgs += ("       Lenght of vector...: %i\n")%max(numpy.ravel( Yn ).shape)
-                    msgs += ("       Minimum value......: %."+str(_p)+"e\n")%numpy.min( Yn )
-                    msgs += ("       Maximum value......: %."+str(_p)+"e\n")%numpy.max( Yn )
-                    msgs += ("       Mean of vector.....: %."+str(_p)+"e\n")%numpy.mean( Yn, dtype=mfp )
-                    msgs += ("       Standard error.....: %."+str(_p)+"e\n")%numpy.std( Yn, dtype=mfp )
-                    msgs += ("       L2 norm of vector..: %."+str(_p)+"e\n")%numpy.linalg.norm( Yn )
+                    msgs += ("       Length of vector...: %i\n")%max(numpy.ravel( Yn ).shape)
+                    msgs += ("       Minimum value......: %."+str(__p)+"e\n")%numpy.min( Yn )
+                    msgs += ("       Maximum value......: %."+str(__p)+"e\n")%numpy.max( Yn )
+                    msgs += ("       Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( Yn, dtype=mfp )
+                    msgs += ("       Standard error.....: %."+str(__p)+"e\n")%numpy.std( Yn, dtype=mfp )
+                    msgs += ("       L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Yn )
                     print(msgs)
                 if self._toStore("SimulatedObservationAtCurrentState"):
                     self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
@@ -176,24 +185,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             Yy = numpy.array( Ys )
             msgs += ("\n     Characteristics of the whole set of outputs Y:\n")
             msgs += ("       Number of evaluations.........................: %i\n")%len( Ys )
-            msgs += ("       Minimum value of the whole set of outputs.....: %."+str(_p)+"e\n")%numpy.min( Yy )
-            msgs += ("       Maximum value of the whole set of outputs.....: %."+str(_p)+"e\n")%numpy.max( Yy )
-            msgs += ("       Mean of vector of the whole set of outputs....: %."+str(_p)+"e\n")%numpy.mean( Yy, dtype=mfp )
-            msgs += ("       Standard error of the whole set of outputs....: %."+str(_p)+"e\n")%numpy.std( Yy, dtype=mfp )
+            msgs += ("       Minimum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.min( Yy )
+            msgs += ("       Maximum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.max( Yy )
+            msgs += ("       Mean of vector of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.mean( Yy, dtype=mfp )
+            msgs += ("       Standard error of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.std( Yy, dtype=mfp )
             Ym = numpy.mean( numpy.array( Ys ), axis=0, dtype=mfp )
             msgs += ("\n     Characteristics of the vector Ym, mean of the outputs Y:\n")
             msgs += ("       Size of the mean of the outputs...............: %i\n")%Ym.size
-            msgs += ("       Minimum value of the mean of the outputs......: %."+str(_p)+"e\n")%numpy.min( Ym )
-            msgs += ("       Maximum value of the mean of the outputs......: %."+str(_p)+"e\n")%numpy.max( Ym )
-            msgs += ("       Mean of the mean of the outputs...............: %."+str(_p)+"e\n")%numpy.mean( Ym, dtype=mfp )
-            msgs += ("       Standard error of the mean of the outputs.....: %."+str(_p)+"e\n")%numpy.std( Ym, dtype=mfp )
+            msgs += ("       Minimum value of the mean of the outputs......: %."+str(__p)+"e\n")%numpy.min( Ym )
+            msgs += ("       Maximum value of the mean of the outputs......: %."+str(__p)+"e\n")%numpy.max( Ym )
+            msgs += ("       Mean of the mean of the outputs...............: %."+str(__p)+"e\n")%numpy.mean( Ym, dtype=mfp )
+            msgs += ("       Standard error of the mean of the outputs.....: %."+str(__p)+"e\n")%numpy.std( Ym, dtype=mfp )
             Ye = numpy.mean( numpy.array( Ys ) - Ym, axis=0, dtype=mfp )
             msgs += "\n     Characteristics of the mean of the differences between the outputs Y and their mean Ym:\n"
             msgs += ("       Size of the mean of the differences...........: %i\n")%Ym.size
-            msgs += ("       Minimum value of the mean of the differences..: %."+str(_p)+"e\n")%numpy.min( Ye )
-            msgs += ("       Maximum value of the mean of the differences..: %."+str(_p)+"e\n")%numpy.max( Ye )
-            msgs += ("       Mean of the mean of the differences...........: %."+str(_p)+"e\n")%numpy.mean( Ye, dtype=mfp )
-            msgs += ("       Standard error of the mean of the differences.: %."+str(_p)+"e\n")%numpy.std( Ye, dtype=mfp )
+            msgs += ("       Minimum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.min( Ye )
+            msgs += ("       Maximum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.max( Ye )
+            msgs += ("       Mean of the mean of the differences...........: %."+str(__p)+"e\n")%numpy.mean( Ye, dtype=mfp )
+            msgs += ("       Standard error of the mean of the differences.: %."+str(__p)+"e\n")%numpy.std( Ye, dtype=mfp )
             msgs += ("\n     %s\n"%("-"*75,))
             print(msgs)
         #

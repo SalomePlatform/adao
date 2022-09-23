@@ -44,14 +44,14 @@ class CacheManager(object):
     """
     def __init__(self,
                  toleranceInRedundancy = 1.e-18,
-                 lenghtOfRedundancy    = -1,
+                 lengthOfRedundancy    = -1,
                 ):
         """
         Les caractéristiques de tolérance peuvent être modifiées à la création.
         """
         self.__tolerBP   = float(toleranceInRedundancy)
-        self.__lenghtOR  = int(lenghtOfRedundancy)
-        self.__initlnOR  = self.__lenghtOR
+        self.__lengthOR  = int(lengthOfRedundancy)
+        self.__initlnOR  = self.__lengthOR
         self.__seenNames = []
         self.__enabled   = True
         self.clearCache()
@@ -66,7 +66,7 @@ class CacheManager(object):
         __alc = False
         __HxV = None
         if self.__enabled:
-            for i in range(min(len(self.__listOPCV),self.__lenghtOR)-1,-1,-1):
+            for i in range(min(len(self.__listOPCV),self.__lengthOR)-1,-1,-1):
                 if not hasattr(xValue, 'size'):
                     pass
                 elif (str(oName) != self.__listOPCV[i][3]):
@@ -83,15 +83,15 @@ class CacheManager(object):
 
     def storeValueInX(self, xValue, HxValue, oName="" ):
         "Stocke pour un opérateur o un calcul Hx correspondant à la valeur x"
-        if self.__lenghtOR < 0:
-            self.__lenghtOR = 2 * min(xValue.size, 50) + 2 # 2 * xValue.size + 2
-            self.__initlnOR = self.__lenghtOR
+        if self.__lengthOR < 0:
+            self.__lengthOR = 2 * min(xValue.size, 50) + 2 # 2 * xValue.size + 2
+            self.__initlnOR = self.__lengthOR
             self.__seenNames.append(str(oName))
         if str(oName) not in self.__seenNames: # Etend la liste si nouveau
-            self.__lenghtOR += 2 * min(xValue.size, 50) + 2 # 2 * xValue.size + 2
-            self.__initlnOR += self.__lenghtOR
+            self.__lengthOR += 2 * min(xValue.size, 50) + 2 # 2 * xValue.size + 2
+            self.__initlnOR += self.__lengthOR
             self.__seenNames.append(str(oName))
-        while len(self.__listOPCV) > self.__lenghtOR:
+        while len(self.__listOPCV) > self.__lengthOR:
             self.__listOPCV.pop(0)
         self.__listOPCV.append( (
             copy.copy(numpy.ravel(xValue)), # 0 Previous point
@@ -102,13 +102,13 @@ class CacheManager(object):
 
     def disable(self):
         "Inactive le cache"
-        self.__initlnOR = self.__lenghtOR
-        self.__lenghtOR = 0
+        self.__initlnOR = self.__lengthOR
+        self.__lengthOR = 0
         self.__enabled  = False
 
     def enable(self):
         "Active le cache"
-        self.__lenghtOR = self.__initlnOR
+        self.__lengthOR = self.__initlnOR
         self.__enabled  = True
 
 # ==============================================================================
@@ -529,7 +529,7 @@ class FullOperator(object):
             if "withReducingMemoryUse"              not in __Function: __Function["withReducingMemoryUse"]              = __reduceM
             if "withAvoidingRedundancy"             not in __Function: __Function["withAvoidingRedundancy"]             = __avoidRC
             if "withToleranceInRedundancy"          not in __Function: __Function["withToleranceInRedundancy"]          = 1.e-18
-            if "withLenghtOfRedundancy"             not in __Function: __Function["withLenghtOfRedundancy"]             = -1
+            if "withLengthOfRedundancy"             not in __Function: __Function["withLengthOfRedundancy"]             = -1
             if "NumberOfProcesses"                  not in __Function: __Function["NumberOfProcesses"]                  = None
             if "withmfEnabled"                      not in __Function: __Function["withmfEnabled"]                      = inputAsMF
             from daCore import NumericObjects
@@ -543,7 +543,7 @@ class FullOperator(object):
                 reducingMemoryUse     = __Function["withReducingMemoryUse"],
                 avoidingRedundancy    = __Function["withAvoidingRedundancy"],
                 toleranceInRedundancy = __Function["withToleranceInRedundancy"],
-                lenghtOfRedundancy    = __Function["withLenghtOfRedundancy"],
+                lengthOfRedundancy    = __Function["withLengthOfRedundancy"],
                 mpEnabled             = __Function["EnableMultiProcessingInDerivatives"],
                 mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
@@ -758,7 +758,10 @@ class Algorithm(object):
         self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
         self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
+        self.StoredVariables["OptimalPoints"]                        = Persistence.OneVector(name = "OptimalPoints")
+        self.StoredVariables["ReducedBasis"]                         = Persistence.OneMatrix(name = "ReducedBasis")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
+        self.StoredVariables["Residus"]                              = Persistence.OneVector(name = "Residus")
         self.StoredVariables["SampledStateForQuantiles"]             = Persistence.OneMatrix(name = "SampledStateForQuantiles")
         self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
         self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")

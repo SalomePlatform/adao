@@ -111,6 +111,7 @@ CheckAlgos = [
     "InputValuesTest",
     "ObserverTest",
     ]
+TaskAlgos = []
 
 AlgoDataRequirements = {}
 AlgoDataRequirements["3DVAR"] = [

@@ -428,7 +428,7 @@ algos_names = ""
 optim_names = ""
 reduc_names = ""
 check_names = ""
-decl_algos  = ""
+task_names  = ""
 adao_all_names = ""
 assim_study_object = daCore.Aidsm.Aidsm()
 algos_list = assim_study_object._Aidsm__get_available_algorithms()
@@ -446,7 +446,10 @@ for algo_name in algos_list:
   if algo_name in infos.CheckAlgos:
     logging.debug("A checking algorithm is found: " + algo_name)
     check_names += "\"" + algo_name + "\", "
-  if algo_name in infos.AssimAlgos+infos.OptimizationAlgos+infos.ReductionAlgos+infos.CheckAlgos:
+  if algo_name in infos.TaskAlgos:
+    logging.debug("A task algorithm is found: " + algo_name)
+    task_names += "\"" + algo_name + "\", "
+  if algo_name in infos.AssimAlgos+infos.OptimizationAlgos+infos.ReductionAlgos+infos.CheckAlgos+infos.TaskAlgos:
     # Pour filtrer sur les algorithmes vraiment interfacés, car il peut y en avoir moins que "algos_list"
     adao_all_names += "\"" + algo_name + "\", "
 
@@ -585,7 +588,7 @@ mem_file.write(unicode(assim_study, 'utf-8').format(**{
   'optim_names':optim_names,
   'reduc_names':reduc_names,
   'check_names':check_names,
-  'decl_algos':decl_algos,
+  'task_names':task_names,
   }))
 
 # Final step: On écrit le fichier

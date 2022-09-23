@@ -1,8 +1,16 @@
+
+     PARALLELFUNCTIONTEST
+     ====================
+
+     This test allows to analyze the (repetition of) launch of some given
+     operator. It shows simple statistics related to its successful execution,
+     or related to the similarities of repetition of its execution.
+
 ===> Information before launching:
      -----------------------------
      Characteristics of input vector X, internally converted:
        Type...............: <class 'numpy.ndarray'>
-       Lenght of vector...: 30
+       Length of vector...: 30
        Minimum value......: 0.00e+00
        Maximum value......: 2.90e+01
        Mean of vector.....: 1.45e+01

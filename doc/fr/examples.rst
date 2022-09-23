@@ -1,0 +1,65 @@
+..
+   Copyright (C) 2008-2022 EDF R&D
+
+   This file is part of SALOME ADAO module.
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+
+   See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
+
+   Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
+
+.. _section_docu_examples:
+
+================================================================================
+**[DocU]** Exemples d'utilisation d'ADAO
+================================================================================
+
+Pour faciliter la lecture ou la recherche, cette section rassemble de manière
+synthétique les pointeurs directs, vers les sections adéquates, d'exemples
+simples d’utilisation du module (principalement mais pas uniquement en TUI).
+
+Ces exemples sont disponibles en direct dans les tutoriaux, dans les
+documentations détaillées d'algorithmes ou de problèmes appliqués, et dans les
+usages avancés.
+
+Tutoriaux
+---------
+
+#. :ref:`section_tutorials_in_salome`
+#. :ref:`section_tutorials_in_python`
+
+Utilisations d'algorithmes de calcul
+------------------------------------
+
+#. :ref:`Exemples avec l'algorithme de "3DVAR"<section_ref_algorithm_3DVAR_examples>`
+#. :ref:`Exemples avec l'algorithme de "Blue"<section_ref_algorithm_Blue_examples>`
+#. :ref:`Exemples avec l'algorithme de "ExtendedBlue"<section_ref_algorithm_ExtendedBlue_examples>`
+#. :ref:`Exemples avec l'algorithme de "KalmanFilter"<section_ref_algorithm_KalmanFilter_examples>`
+#. :ref:`Exemples avec l'algorithme de "NonLinearLeastSquares"<section_ref_algorithm_NonLinearLeastSquares_examples>`
+
+Utilisations d'algorithmes de vérification
+------------------------------------------
+
+#. :ref:`Exemples avec la vérification "AdjointTest"<section_ref_algorithm_AdjointTest_examples>`
+#. :ref:`Exemples avec la vérification "FunctionTest"<section_ref_algorithm_FunctionTest_examples>`
+#. :ref:`Exemples avec la vérification "ParallelFunctionTest"<section_ref_algorithm_ParallelFunctionTest_examples>`
+
+Utilisations avancées
+---------------------
+
+#. :ref:`section_advanced_convert_JDC`
+#. :ref:`section_advanced_YACS_tui`
+#. :ref:`section_advanced_R`
