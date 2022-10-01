@@ -41,10 +41,12 @@ Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet d'établir des points de mesures optimaux par une analyse
-EIM (Empirical Interpolation Method), à partir d'un ensemble de vecteurs d'état
-(usuellement appelés "*snapshots*" en méthodologie de bases réduites). Chacun
-de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
+Cet algorithme permet d'établir la position de points de mesures optimaux par
+une analyse EIM (Empirical Interpolation Method), à partir d'un ensemble de
+vecteurs d'état (usuellement appelés "*snapshots*" en méthodologie de bases
+réduites).
+
+Chacun de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
 résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour un jeu de
 paramètres donné :math:`\mathbf{x}=\mu`.
 

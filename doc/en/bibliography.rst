@@ -27,6 +27,12 @@
 Bibliography
 ================================================================================
 
+The present bibliography is made of an explicit choice of didactic references,
+often introductory but not only, and as far as possible publicly accessible.
+These references accompany the learning process as well as the advanced use of
+the methods available in the module, without the intention of constituting an
+exhaustive bibliography.
+
 .. [Argaud09] Argaud J.-P., Bouriquet B., Hunt J., *Data Assimilation from Operational and Industrial Applications to Complex Systems*, Mathematics Today, pp.150-152, October 2009
 
 .. [Asch16] Asch M., Bocquet M., Nodet M., *Data Assimilation - Methods, Algorithms and Applications*, SIAM, 2016

@@ -40,11 +40,13 @@ Task algorithm "*MeasurementsOptimalPositioningTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm provides optimal measurement points by an EIM (Empirical
-Interpolation Method) analysis, from a set of state vectors (usually called
-"snapshots" in reduced basis methodology). Each of these state vectors is
-usually (but not necessarily) the result :math:`\mathbf{y}` of a simulation
-:math:`H` for a given set of parameters :math:`\mathbf{x}=\mu`.
+This algorithm provides optimal positioning of measurement points by an EIM
+(Empirical Interpolation Method) analysis, from a set of state vectors (usually
+called "snapshots" in reduced basis methodology).
+
+Each of these state vectors is usually (but not necessarily) the result
+:math:`\mathbf{y}` of a simulation :math:`H` for a given set of parameters
+:math:`\mathbf{x}=\mu`.
 
 In its simplest use, if the set of state vectors is pre-existing, it is only
 necessary to provide it through the algorithm options.

@@ -330,6 +330,7 @@ Change the default execution mode of nodes in YACS
 --------------------------------------------------
 
 .. index:: single: YACS
+.. index:: single: ExecuteInContainer
 
 Various reasons may lead to want to change the default mode of node execution
 in YACS (see [#]_ for the correct use of these possibilities). This may be for
@@ -362,6 +363,11 @@ are adapted to the intended use. The procedure is therefore as follows:
 
 This can be repeated for each node that requires it, by reusing the same new
 container for all nodes, or by creating a new container for each node.
+
+A more generic way to impose a global execution in a separate container is to
+use a variable named "*ExecuteInContainer*". This variable is available for
+ADAO cases through graphical user interface (GUI) or the textual one (it is for
+example available by default in the :ref:`section_ref_assimilation_keywords`).
 
 .. warning::
 

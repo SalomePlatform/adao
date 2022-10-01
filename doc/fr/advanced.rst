@@ -355,6 +355,7 @@ Changer le mode par défaut d'exécution de noeuds dans YACS
 ----------------------------------------------------------
 
 .. index:: single: YACS
+.. index:: single: ExecuteInContainer
 
 Diverses raisons peuvent conduire à vouloir modifier le mode par défaut
 d'exécution de noeuds dans YACS (voir [#]_ pour le bon usage de ces
@@ -391,6 +392,12 @@ caractéristiques sont adaptées à l'usage visé. La démarche est donc la suiv
 On peut répéter cette démarche pour chaque noeud qui le nécessite, en
 réutilisant le même nouveau conteneur pour tous les noeuds, ou en créant un
 nouveau conteneur pour chaque noeud.
+
+Une manière plus générale pour imposer une exécution globale dans un conteneur
+séparé est d'utiliser une variable nommée "*ExecuteInContainer*". Cette
+variable est disponible pour les cas ADAO via l'interface graphique (GUI) ou
+l'interface scriptée (elle est par exemple présente par défaut dans la
+:ref:`section_ref_assimilation_keywords`).
 
 .. warning::
 
