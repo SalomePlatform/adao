@@ -32,20 +32,24 @@
 .. index:: single: observation
 .. index:: single: a priori
 .. index:: single: EstimationOf
+.. index:: single: analysis
 
 **Data Assimilation** is a general well established framework for computing the
 optimal estimate of the true state of a system, over time if necessary. It uses
 values obtained by combining both observations and *a priori* models, including
-information about their errors.
+information about their errors while simultaneously respecting constraints.
+This takes into account the laws of behavior or motion of the system through
+the equations of the model, and the way the measurements are physically related
+to the variables of the system.
 
 In other words, data assimilation merges measurement data of a system, that are
 the observations, with *a priori* system physical and mathematical knowledge,
-embedded in numerical models. The goal is to obtain the best possible estimate
-of the system real state and of its stochastic properties. Note that this real
-state (or "*true state*") cannot usually be reached, but can only be estimated.
-Moreover, despite the fact that the used information are stochastic by nature,
-data assimilation provides deterministic techniques in order to perform very
-efficiently the estimation.
+embedded in numerical models. The goal is to obtain the best possible estimate,
+called "*analysis*", of the system real state and of its stochastic properties.
+Note that this real state (or "*true state*") cannot usually be reached, but
+can only be estimated. Moreover, despite the fact that the used information are
+stochastic by nature, data assimilation provides deterministic techniques in
+order to perform very efficiently the estimation.
 
 Because data assimilation looks for the **best possible** estimate, its
 underlying procedure always integrates optimization in order to find this

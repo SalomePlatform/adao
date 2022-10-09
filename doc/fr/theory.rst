@@ -33,22 +33,27 @@
 .. index:: single: observation
 .. index:: single: a priori
 .. index:: single: EstimationOf
+.. index:: single: analyse
 
-**L'assimilation de données** est un cadre général bien établi pour le calcul de
-l'estimation optimale de l'état réel d'un système, au cours du temps si
-nécessaire. Il utilise les valeurs obtenues en combinant des observations et des
-modèles *a priori*, incluant de plus des informations sur leurs erreurs.
+**L'assimilation de données** est un cadre général bien établi pour le calcul
+de l'estimation optimale de l'état réel d'un système, au cours du temps si
+nécessaire. Il utilise les valeurs obtenues en combinant des observations et
+des modèles *a priori*, incluant de plus des informations sur leurs erreurs
+tout en respectant simultanément des contraintes. Cela tient donc compte des
+lois du comportement ou de la dynamique du système à travers les équations du
+modèle, et de la façon dont les mesures sont physiquement liées aux variables
+simulées.
 
 En d'autres termes, l'assimilation de données est un moyen de fusionner les
 données mesurées d'un système, qui sont les observations, avec des
 connaissances physique et mathématique *a priori* du système, intégrées dans
 les modèles numériques. L'objectif est d'obtenir la meilleure estimation
-possible de l'état réel du système et de ses propriétés stochastiques. On note
-que cet état réel (ou "*état vrai*") ne peut être habituellement atteint, mais
-peut seulement être estimé. De plus, malgré le fait que les informations
-utilisées sont stochastiques par nature, l'assimilation de données fournit des
-techniques déterministes afin de réaliser l'estimation de manière très
-efficace.
+possible, appelée "*analyse*", de l'état réel du système et de ses propriétés
+stochastiques. On note que cet état réel (ou "*état vrai*") ne peut être
+habituellement atteint, mais peut seulement être estimé. De plus, malgré le
+fait que les informations utilisées sont stochastiques par nature,
+l'assimilation de données fournit des techniques déterministes afin de réaliser
+l'estimation de manière très efficace.
 
 Comme l'assimilation de données cherche l'estimation la **meilleure possible**,
 la démarche technique sous-jacente intègre toujours de l'optimisation afin de

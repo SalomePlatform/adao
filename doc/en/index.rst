@@ -40,12 +40,12 @@ over time. It uses information coming from experimental measurements or
 observations, and from numerical *a priori* models, including information about
 their errors. Parts of the framework are also known under the names of
 *calibration*, *adjustment*, *state estimation*, *parameter estimation*,
-*parameter adjustment*, *inverse problems*, *Bayesian estimation*, *optimal
-interpolation*, *mathematical regularization*, *meta-heuristics for
-optimization*, *model reduction*, *data smoothing*, etc. More details can be
-found in the section :ref:`section_theory`. The ADAO module currently offers
-more than one hundred different algorithmic methods and allows the study of
-about 350 distinct applied problems.
+*parameter adjustment*, *inverse problems*, *inverse methods*, *Bayesian
+estimation*, *optimal interpolation*, *mathematical regularization*,
+*meta-heuristics for optimization*, *model reduction*, *data smoothing*, etc.
+More details can be found in the section :ref:`section_theory`. The ADAO module
+currently offers more than one hundred different algorithmic methods and allows
+the study of about 350 distinct applied problems.
 
 The documentation for this module is divided into several major categories,
 related to the **theoretical documentation** (indicated in the section title by
