@@ -6,9 +6,9 @@
     pair: Variant ; 3DVAR-PSAS
 
 Variant
-  *Predifined name*.  This key allows to choose one of the possible variants
+  *Predefined name*.  This key allows to choose one of the possible variants
   for the main algorithm. The default variant is the original "3DVAR", and the
-  possible ones are
+  possible choices are
   "3DVAR" (Classical 3D Variational analysis),
   "3DVAR-VAN" (3D Variational Analysis with No inversion of B),
   "3DVAR-Incr" (Incremental 3DVAR),

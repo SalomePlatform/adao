@@ -13,7 +13,7 @@ Variant
   "3DVAR-VAN" (3D Variational Analysis with No inversion of B),
   "3DVAR-Incr" (Incremental 3DVAR),
   "3DVAR-PSAS" (Physical-space Statistical Analysis Scheme for 3DVAR),
-  Il est fortement conseillé de conserver la valeur par défaut.
+  Il est fortement recommandé de conserver la valeur par défaut.
 
   Exemple :
   ``{"Variant":"3DVAR"}``

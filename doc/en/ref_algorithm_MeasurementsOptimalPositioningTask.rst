@@ -35,21 +35,24 @@ Task algorithm "*MeasurementsOptimalPositioningTask*"
 
 .. warning::
 
-  This algorithm is for now only available in textual user interface (TUI) and not in graphical user interface (GUI).
+  This algorithm is only available in textual user interface (TUI) and not in
+  graphical user interface (GUI).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm provides optimal positioning of measurement points by an EIM
-(Empirical Interpolation Method) analysis, from a set of state vectors (usually
-called "snapshots" in reduced basis methodology).
+(Empirical Interpolation Method) analysis, in a iterative greedy way from a set
+of state vectors (usually called "snapshots" in reduced basis methodology).
 
 Each of these state vectors is usually (but not necessarily) the result
 :math:`\mathbf{y}` of a simulation :math:`H` for a given set of parameters
-:math:`\mathbf{x}=\mu`.
+:math:`\mathbf{x}=\mu`. In its simplest use, if the set of state vectors is
+pre-existing, it is only necessary to provide it through the algorithm options.
 
-In its simplest use, if the set of state vectors is pre-existing, it is only
-necessary to provide it through the algorithm options.
+It is also possible to exclude a priori potential locations for optimal
+measurement points, using the "*lcEIM*" analysis for a constrained positioning
+search.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -90,6 +93,8 @@ StoreSupplementaryCalculations
   Example :
   ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
+.. include:: snippets/Variant_MOP.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
@@ -106,6 +111,8 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask_examples:
-.. include:: snippets/Header2Algo06.rst
+.. include:: snippets/Header2Algo07.rst
 
-- :ref:`section_ref_algorithm_FunctionTest`
+- [Barrault04]_
+- [Gong18]_
+- [Quarteroni16]_

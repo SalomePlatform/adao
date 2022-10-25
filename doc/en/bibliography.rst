@@ -37,6 +37,8 @@ exhaustive bibliography.
 
 .. [Asch16] Asch M., Bocquet M., Nodet M., *Data Assimilation - Methods, Algorithms and Applications*, SIAM, 2016
 
+.. [Barrault04] Barrault M., Maday Y., Nguyen N. C., Patera A. T., *An 'empirical interpolation' method: application to efficient reduced-basis discretization of partial differential equations*, Comptes Rendus Mathématique, 339(9), pp.667–672, 2004
+
 .. [Bishop01] Bishop C. H., Etherton B. J., Majumdar S. J., *Adaptive sampling with the ensemble transform Kalman filter. Part I: theoretical aspects*, Monthly Weather Review, 129, pp.420–436, 2001
 
 .. [Bocquet04] Bocquet M., *Introduction aux principes et méthodes de l'assimilation de données en géophysique*, Lecture Notes, 2014
@@ -74,6 +76,8 @@ exhaustive bibliography.
 .. [Glover89] Glover F., *Tabu Search-Part I*, ORSA Journal on Computing, 1(2), pp.190-206, 1989
 
 .. [Glover90] Glover F., *Tabu Search-Part II*, ORSA Journal on Computing, 2(1), pp.4-32, 1990
+
+.. [Gong18] Gong H., *Data assimilation with reduced basis and noisy measurement: Applications to nuclear reactor cores*, PhD Thesis, Sorbonne Université (France), 2018
 
 .. [Hamill00] Hamill T. M., Snyder C., *A Hybrid Ensemble Kalman Filter-3D Variational Analysis Scheme*, Monthly Weather Review, 128(8), pp.2905-2919, 2000
 
@@ -116,6 +120,8 @@ exhaustive bibliography.
 .. [Price05] Price K.V., Storn R., Lampinen J., *Differential evolution: a practical approach to global optimization*, Springer, 2005
 
 .. [Python] *Python programming language*, http://www.python.org/
+
+.. [Quarteroni16] Quarteroni A., Manzoni A., Negri F., *Reduced Basis Methods for Partial Differential Equations - An introduction*, Springer, 2016
 
 .. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
 

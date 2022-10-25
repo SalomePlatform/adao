@@ -35,23 +35,26 @@ Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
 
 .. warning::
 
-  Cet algorithme n'est pour l'instant utilisable qu'en interface textuelle
-  (TUI) et pas en interface graphique (GUI).
+  Cet algorithme n'est utilisable qu'en interface textuelle (TUI) et pas en
+  interface graphique (GUI).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'établir la position de points de mesures optimaux par
-une analyse EIM (Empirical Interpolation Method), à partir d'un ensemble de
-vecteurs d'état (usuellement appelés "*snapshots*" en méthodologie de bases
-réduites).
+une analyse EIM (Empirical Interpolation Method), de manière itérative à partir
+d'un ensemble de vecteurs d'état (usuellement appelés "*snapshots*" en
+méthodologie de bases réduites).
 
 Chacun de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
 résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour un jeu de
-paramètres donné :math:`\mathbf{x}=\mu`.
+paramètres donné :math:`\mathbf{x}=\mu`. Dans son usage le plus simple, si
+l'ensemble des vecteurs d'état est pré-existant, il suffit de le fournir par
+les options d'algorithme.
 
-Dans son usage le plus simple, si l'ensemble des vecteurs d'état est
-pré-existant, il suffit de le fournir par les options d'algorithme.
+Il est aussi possible d'exclure a priori des positions potentielles pour les
+points de mesures optimaux, en utilisant l'analyse "*lcEIM*" pour une recherche
+de positionnement contraint.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -92,6 +95,8 @@ StoreSupplementaryCalculations
   Exemple :
   ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
 
+.. include:: snippets/Variant_MOP.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
@@ -108,6 +113,8 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask_examples:
-.. include:: snippets/Header2Algo06.rst
+.. include:: snippets/Header2Algo07.rst
 
-- :ref:`section_ref_algorithm_FunctionTest`
+- [Barrault04]_
+- [Gong18]_
+- [Quarteroni16]_

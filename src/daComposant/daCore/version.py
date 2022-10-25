@@ -29,7 +29,7 @@ __all__ = []
 name     = "ADAO"
 version  = "9.10.0"
 year     = "2022"
-date     = "lundi 14 novembre 2022, 12:12:12 (UTC+0100)"
+date     = "lundi 12 décembre 2022, 12:12:12 (UTC+0100)"
 
 longname = name + ", a module for Data Assimilation and Optimization"
 cata     = "V" + version.replace(".","_")

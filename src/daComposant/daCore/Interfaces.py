@@ -42,6 +42,10 @@ class GenericCaseViewer(object):
     """
     Gestion des commandes de création d'une vue de cas
     """
+    __slots__ = (
+        "_name", "_objname", "_lineSerie", "_switchoff", "_content",
+        "_numobservers", "_object", "_missing")
+    #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         self._name         = str(__name)
@@ -72,6 +76,7 @@ class GenericCaseViewer(object):
         for k,v in __translation.items():
             __multilines = __multilines.replace(k,v)
         return __multilines
+    #
     def _finalize(self, __upa=None):
         "Enregistrement du final"
         __hasNotExecute = True
@@ -82,11 +87,14 @@ class GenericCaseViewer(object):
         if __upa is not None and len(__upa)>0:
             __upa = __upa.replace("ADD",str(self._objname))
             self._lineSerie.append(__upa)
+    #
     def _addLine(self, line=""):
         "Ajoute un enregistrement individuel"
         self._lineSerie.append(line)
+    #
     def _get_objname(self):
         return self._objname
+    #
     def dump(self, __filename=None, __upa=None):
         "Restitution normalisée des commandes"
         self._finalize(__upa)
@@ -98,6 +106,7 @@ class GenericCaseViewer(object):
             __fid.write(__text)
             __fid.close()
         return __text
+    #
     def load(self, __filename=None, __content=None, __object=None):
         "Chargement normalisé des commandes"
         if __filename is not None and os.path.exists(__filename):
@@ -116,6 +125,8 @@ class _TUIViewer(GenericCaseViewer):
     """
     Établissement des commandes d'un cas ADAO TUI (Cas<->TUI)
     """
+    __slots__ = ()
+    #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -127,6 +138,7 @@ class _TUIViewer(GenericCaseViewer):
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
+    #
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command is not None and __keys is not None and __local is not None:
@@ -160,6 +172,7 @@ class _TUIViewer(GenericCaseViewer):
             __text = __text.rstrip(", ")
             __text += " )"
             self._addLine(__text)
+    #
     def _extract(self, __multilines="", __object=None):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         __is_case = False
@@ -182,6 +195,8 @@ class _COMViewer(GenericCaseViewer):
     """
     Établissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
     """
+    __slots__ = ("_observerIndex", "_objdata")
+    #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -194,6 +209,7 @@ class _COMViewer(GenericCaseViewer):
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
+    #
     def _extract(self, __multilines=None, __object=None):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         __suppparameters = {}
@@ -352,6 +368,10 @@ class _SCDViewer(GenericCaseViewer):
 
     Remarque : le fichier généré est différent de celui obtenu par EFICAS
     """
+    __slots__ = (
+        "__DebugCommandNotSet", "__ObserverCommandNotSet",
+        "__UserPostAnalysisNotSet", "__hasAlgorithm")
+    #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entête"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -591,11 +611,14 @@ class _YACSViewer(GenericCaseViewer):
     """
     Etablissement des commandes d'un cas YACS (Cas->SCD->YACS)
     """
+    __slots__ = ("__internalSCD")
+    #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self.__internalSCD = _SCDViewer(__name, __objname, __content, __object)
         self._append       = self.__internalSCD._append
+    #
     def dump(self, __filename=None, __upa=None):
         "Restitution normalisée des commandes"
         # -----
@@ -635,6 +658,8 @@ class _ReportViewer(GenericCaseViewer):
     """
     Partie commune de restitution simple
     """
+    __slots__ = ("_r")
+    #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -647,6 +672,7 @@ class _ReportViewer(GenericCaseViewer):
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
+    #
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command is not None and __keys is not None and __local is not None:
@@ -675,6 +701,7 @@ class _ReportViewer(GenericCaseViewer):
                 __text += " with values:" + __ktext
             __text = __text.rstrip(", ")
             self._r.append(__text, "uli")
+    #
     def _finalize(self, __upa=None):
         "Enregistrement du final"
         raise NotImplementedError()
@@ -683,6 +710,8 @@ class _SimpleReportInRstViewer(_ReportViewer):
     """
     Restitution simple en RST
     """
+    __slots__ = ()
+    #
     def _finalize(self, __upa=None):
         self._lineSerie.append(Reporting.ReportViewInRst(self._r).__str__())
 
@@ -690,6 +719,8 @@ class _SimpleReportInHtmlViewer(_ReportViewer):
     """
     Restitution simple en HTML
     """
+    __slots__ = ()
+    #
     def _finalize(self, __upa=None):
         self._lineSerie.append(Reporting.ReportViewInHtml(self._r).__str__())
 
@@ -697,6 +728,8 @@ class _SimpleReportInPlainTxtViewer(_ReportViewer):
     """
     Restitution simple en TXT
     """
+    __slots__ = ()
+    #
     def _finalize(self, __upa=None):
         self._lineSerie.append(Reporting.ReportViewInPlainTxt(self._r).__str__())
 
@@ -706,6 +739,7 @@ class ImportFromScript(object):
     Obtention d'une variable nommee depuis un fichier script importé
     """
     __slots__ = ("__basename", "__filenspace", "__filestring")
+    #
     def __init__(self, __filename=None):
         "Verifie l'existence et importe le script"
         if __filename is None:
@@ -727,6 +761,7 @@ class ImportFromScript(object):
             self.__filenspace = ""
         with open(__filename,'r') as fid:
             self.__filestring = fid.read()
+    #
     def getvalue(self, __varname=None, __synonym=None ):
         "Renvoie la variable demandee par son nom ou son synonyme"
         if __varname is None:
@@ -746,6 +781,7 @@ class ImportFromScript(object):
                 return getattr(self.__filenspace, __synonym)
         else:
             return getattr(self.__filenspace, __varname)
+    #
     def getstring(self):
         "Renvoie le script complet"
         return self.__filestring
@@ -755,8 +791,8 @@ class ImportDetector(object):
     """
     Détection des caractéristiques de fichiers ou objets en entrée
     """
-    __slots__ = (
-        "__url", "__usr", "__root", "__end")
+    __slots__ = ("__url", "__usr", "__root", "__end")
+    #
     def __enter__(self):
         return self
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -790,8 +826,10 @@ class ImportDetector(object):
             return True
         else:
             return False
+    #
     def is_not_local_file(self):
         return not self.is_local_file()
+    #
     def raise_error_if_not_local_file(self):
         if self.is_not_local_file():
             raise ValueError("The name or the url of the file object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
@@ -805,8 +843,10 @@ class ImportDetector(object):
             return True
         else:
             return False
+    #
     def is_not_local_dir(self):
         return not self.is_local_dir()
+    #
     def raise_error_if_not_local_dir(self):
         if self.is_not_local_dir():
             raise ValueError("The name or the url of the directory object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
@@ -818,10 +858,12 @@ class ImportDetector(object):
     def get_standard_mime(self):
         (__mtype, __encoding) = mimetypes.guess_type(self.__url, strict=False)
         return __mtype
+    #
     def get_user_mime(self):
         __fake = "fake."+self.__usr.lower()
         (__mtype, __encoding) = mimetypes.guess_type(__fake, strict=False)
         return __mtype
+    #
     def get_comprehensive_mime(self):
         if self.get_standard_mime() is not None:
             return self.get_standard_mime()
@@ -834,8 +876,10 @@ class ImportDetector(object):
     # ----------------------
     def get_user_name(self):
         return self.__url
+    #
     def get_absolute_name(self):
         return os.path.abspath(os.path.realpath(self.__url))
+    #
     def get_extension(self):
         return self.__end
 
@@ -856,8 +900,10 @@ class ImportFromFile(object):
         "_filename", "_colnames", "_colindex", "_varsline", "_format",
         "_delimiter", "_skiprows", "__url", "__filestring", "__header",
         "__allowvoid", "__binaryformats", "__supportedformats")
+    #
     def __enter__(self):
         return self
+    #
     def __exit__(self, exc_type, exc_val, exc_tb):
         return False
     #
@@ -910,7 +956,7 @@ class ImportFromFile(object):
         else:                    self._colindex = None
         #
         self.__allowvoid = bool(AllowVoidNameList)
-
+    #
     def __getentete(self, __nblines = 3):
         "Lit l'entête du fichier pour trouver la définition des variables"
         # La première ligne non vide non commentée est toujours considérée
@@ -929,7 +975,7 @@ class ImportFromFile(object):
                 for i in range(max(0,__nblines)):
                     __header.append(fid.readline())
         return (__header, __varsline, __skiprows)
-
+    #
     def __getindices(self, __colnames, __colindex, __delimiter=None ):
         "Indices de colonnes correspondants à l'index et aux variables"
         if __delimiter is None:
@@ -961,7 +1007,7 @@ class ImportFromFile(object):
             __useindex = None
         #
         return (__usecols, __useindex)
-
+    #
     def getsupported(self):
         self.__supportedformats = {}
         self.__supportedformats["text/plain"]                = True
@@ -971,7 +1017,7 @@ class ImportFromFile(object):
         self.__supportedformats["application/numpy.npz"]     = True
         self.__supportedformats["application/dymola.sdf"]    = PlatformInfo.has_sdf
         return self.__supportedformats
-
+    #
     def getvalue(self, ColNames=None, ColIndex=None ):
         "Renvoie la ou les variables demandées par la liste de leurs noms"
         # Uniquement si mise à jour
@@ -1053,7 +1099,7 @@ class ImportFromFile(object):
             __index = tuple([toString(v) for v in __index])
         #
         return (self._colnames, __columns, self._colindex, __index)
-
+    #
     def getstring(self):
         "Renvoie le fichier texte complet"
         if self._format in self.__binaryformats:
@@ -1061,7 +1107,7 @@ class ImportFromFile(object):
         else:
             with open(self._filename,'r') as fid:
                 return fid.read()
-
+    #
     def getformat(self):
         return self._format
 
@@ -1075,8 +1121,11 @@ class ImportScalarLinesFromFile(ImportFromFile):
 
     Seule la méthode "getvalue" est changée.
     """
+    __slots__ = ()
+    #
     def __enter__(self):
         return self
+    #
     def __exit__(self, exc_type, exc_val, exc_tb):
         return False
     #
@@ -1181,6 +1230,8 @@ class EficasGUI(object):
     """
     Lancement autonome de l'interface EFICAS/ADAO
     """
+    __slots__ = ("__msg", "__path_settings_ok")
+    #
     def __init__(self, __addpath = None):
         # Chemin pour l'installation (ordre important)
         self.__msg = ""
@@ -1246,7 +1297,7 @@ class EficasGUI(object):
         else:
             print(self.__msg)
             logging.debug("Errors in path settings have been found")
-
+    #
     def gui(self):
         if self.__path_settings_ok:
             logging.debug("Launching standalone EFICAS/ADAO interface...")

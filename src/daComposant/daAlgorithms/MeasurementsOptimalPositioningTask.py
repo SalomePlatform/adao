@@ -30,12 +30,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "MEASUREMENTSOPTIMALPOSITIONING")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "Positioning",
+            default  = "PositioningBylcEIM",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "Positioning",
-                # "PositioningByEIM",
+                "PositioningByEIM",
+                "PositioningBylcEIM",
                 ],
             )
         self.defineRequiredParameter(
@@ -95,9 +95,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        if   self._parameters["Variant"] in ["Positioning", "PositioningByEIM"]:
+        if   self._parameters["Variant"] == "PositioningBylcEIM":
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
                 ecweim.EIM_offline(self)
+            else:
+                raise ValueError("Snapshots have to be given in order to launch the positionning analysis")
+        #
+        elif self._parameters["Variant"] == "PositioningByEIM":
+            if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+                ecweim.EIM_offline(self)
+            else:
+                raise ValueError("Snapshots have to be given in order to launch the positionning analysis")
         #
         #--------------------------
         else:

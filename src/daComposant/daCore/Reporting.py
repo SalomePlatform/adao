@@ -35,11 +35,13 @@ class _ReportPartM__(object):
     """
     Store and retrieve the data for C: internal class
     """
+    __slots__ = ("__part", "__styles", "__content")
+    #
     def __init__(self, part="default"):
         self.__part    = str(part)
         self.__styles  = []
         self.__content = []
-
+    #
     def append(self, content, style="p", position=-1):
         if position == -1:
             self.__styles.append(style)
@@ -48,10 +50,10 @@ class _ReportPartM__(object):
             self.__styles.insert(position, style)
             self.__content.insert(position, content)
         return 0
-
+    #
     def get_styles(self):
         return self.__styles
-
+    #
     def get_content(self):
         return self.__content
 
@@ -59,24 +61,26 @@ class _ReportM__(object):
     """
     Store and retrieve the data for C: internal class
     """
+    __slots__ = ("__document")
+    #
     def __init__(self, part='default'):
         self.__document = {}
         self.__document[part] = _ReportPartM__(part)
-
+    #
     def append(self,  content, style="p", position=-1, part='default'):
         if part not in self.__document:
             self.__document[part] = _ReportPartM__(part)
         self.__document[part].append(content, style, position)
         return 0
-
+    #
     def get_styles(self):
         op = list(self.__document.keys()) ; op.sort()
         return [self.__document[k].get_styles() for k in op]
-
+    #
     def get_content(self):
         op = list(self.__document.keys()) ; op.sort()
         return [self.__document[k].get_content() for k in op]
-
+    #
     def clear(self):
         self.__init__()
 
@@ -84,16 +88,18 @@ class __ReportC__(object):
     """
     Get user commands, update M and V: user intertace to create the report
     """
+    __slots__ = ()
+    #
     m = _ReportM__()
-
+    #
     def append(self, content="", style="p", position=-1, part="default"):
         return self.m.append(content, style, position, part)
-
+    #
     def retrieve(self):
         st = self.m.get_styles()
         ct = self.m.get_content()
         return st, ct
-
+    #
     def clear(self):
         self.m.clear()
 
@@ -101,12 +107,13 @@ class __ReportV__(object):
     """
     Interact with user and C: template for reports
     """
-
+    __slots__ = ("c")
+    #
     default_filename="report.txt"
-
+    #
     def __init__(self, c):
         self.c = c
-
+    #
     def save(self, filename=None):
         if filename is None:
             filename = self.default_filename
@@ -117,13 +124,13 @@ class __ReportV__(object):
         fid.write(h)
         fid.close()
         return filename, _filename
-
+    #
     def retrieve(self):
         return self.c.retrieve()
-
+    #
     def __str__(self):
         return self.get()
-
+    #
     def close(self):
         del self.c
         return 0
@@ -136,13 +143,14 @@ class ReportViewInHtml(__ReportV__):
     """
     Report in HTML
     """
-
+    __slots__ = ()
+    #
     default_filename="report.html"
     tags = {
         "oli":"li",
         "uli":"li",
         }
-
+    #
     def get(self):
         st, ct = self.retrieve()
         inuLi, inoLi = False, False
@@ -183,7 +191,8 @@ class ReportViewInRst(__ReportV__):
     """
     Report in RST
     """
-
+    __slots__ = ()
+    #
     default_filename="report.rst"
     tags = {
         "p":["\n\n",""],
@@ -202,7 +211,7 @@ class ReportViewInRst(__ReportV__):
         "</b>":"**",
         "</i>":"*",
         }
-
+    #
     def get(self):
         st, ct = self.retrieve()
         inuLi, inoLi = False, False
@@ -242,7 +251,7 @@ class ReportViewInPlainTxt(__ReportV__):
     """
     Report in plain TXT
     """
-
+    #
     default_filename="report.txt"
     tags = {
         "p":["\n",""],
@@ -261,7 +270,7 @@ class ReportViewInPlainTxt(__ReportV__):
         "</b>":"",
         "</i>":"",
         }
-
+    #
     def get(self):
         st, ct = self.retrieve()
         inuLi, inoLi = False, False
@@ -292,7 +301,6 @@ class ReportViewInPlainTxt(__ReportV__):
                     pg += "\n%s%s%s"%(self.tags[s][0],c,self.tags[s][1])
             pg += "\n"
         return pg
-
 
 # Interface utilisateur de stockage des informations
 ReportStorage = __ReportC__

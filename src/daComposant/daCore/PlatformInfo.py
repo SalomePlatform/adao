@@ -56,30 +56,32 @@ class PlatformInfo(object):
     """
     Rassemblement des informations sur le code et la plateforme
     """
+    __slots__ = ()
+    #
     def __init__(self):
         "Sans effet"
         pass
-
+    #
     def getName(self):
         "Retourne le nom de l'application"
         import daCore.version as dav
         return dav.name
-
+    #
     def getVersion(self):
         "Retourne le numéro de la version"
         import daCore.version as dav
         return dav.version
-
+    #
     def getDate(self):
         "Retourne la date de création de la version"
         import daCore.version as dav
         return dav.date
-
+    #
     def getYear(self):
         "Retourne l'année de création de la version"
         import daCore.version as dav
         return dav.year
-
+    #
     def getSystemInformation(self, __prefix=""):
         __msg  = ""
         __msg += "\n%s%30s : %s" %(__prefix,"platform.system",platform.system())
@@ -131,16 +133,16 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"platform.node",platform.node())
         __msg += "\n%s%30s : %s" %(__prefix,"os.path.expanduser",os.path.expanduser('~'))
         return __msg
-
+    #
     def getPythonVersion(self):
         "Retourne la version de python disponible"
         return ".".join([str(x) for x in sys.version_info[0:3]]) # map(str,sys.version_info[0:3]))
-
+    #
     def getNumpyVersion(self):
         "Retourne la version de numpy disponible"
         import numpy.version
         return numpy.version.version
-
+    #
     def getScipyVersion(self):
         "Retourne la version de scipy disponible"
         if has_scipy:
@@ -148,7 +150,7 @@ class PlatformInfo(object):
         else:
             __version = "0.0.0"
         return __version
-
+    #
     def getMatplotlibVersion(self):
         "Retourne la version de matplotlib disponible"
         if has_matplotlib:
@@ -156,7 +158,7 @@ class PlatformInfo(object):
         else:
             __version = "0.0.0"
         return __version
-
+    #
     def getGnuplotVersion(self):
         "Retourne la version de gnuplotpy disponible"
         if has_gnuplot:
@@ -164,7 +166,7 @@ class PlatformInfo(object):
         else:
             __version = "0.0"
         return __version
-
+    #
     def getSphinxVersion(self):
         "Retourne la version de sphinx disponible"
         if has_sphinx:
@@ -172,7 +174,7 @@ class PlatformInfo(object):
         else:
             __version = "0.0.0"
         return __version
-
+    #
     def getNloptVersion(self):
         "Retourne la version de nlopt disponible"
         if has_nlopt:
@@ -184,7 +186,7 @@ class PlatformInfo(object):
         else:
             __version = "0.0.0"
         return __version
-
+    #
     def getSdfVersion(self):
         "Retourne la version de sdf disponible"
         if has_sdf:
@@ -192,11 +194,11 @@ class PlatformInfo(object):
         else:
             __version = "0.0.0"
         return __version
-
+    #
     def getCurrentMemorySize(self):
         "Retourne la taille mémoire courante utilisée"
         return 1
-
+    #
     def MaximumPrecision(self):
         "Retourne la precision maximale flottante pour Numpy"
         import numpy
@@ -206,7 +208,7 @@ class PlatformInfo(object):
         except Exception:
             mfp = 'float64'
         return mfp
-
+    #
     def MachinePrecision(self):
         # Alternative sans module :
         # eps = 2.38
@@ -214,12 +216,18 @@ class PlatformInfo(object):
         #     old_eps = eps
         #     eps = (1.0 + eps/2) - 1.0
         return sys.float_info.epsilon
-
+    #
     def __str__(self):
         import daCore.version as dav
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
 
 # ==============================================================================
+try:
+    import numpy
+    has_numpy = True
+except ImportError:
+    raise ImportError("Numpy is not available, despites the fact it is mandatory.")
+
 try:
     import scipy
     import scipy.version
@@ -374,6 +382,8 @@ class PathManagement(object):
     """
     Mise à jour du path système pour les répertoires d'outils
     """
+    __slots__ = ("__paths")
+    #
     def __init__(self):
         "Déclaration des répertoires statiques"
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__),".."))
@@ -386,7 +396,7 @@ class PathManagement(object):
         # Conserve en unique exemplaire chaque chemin
         sys.path = uniq( sys.path )
         del parent
-
+    #
     def getpaths(self):
         """
         Renvoie le dictionnaire des chemins ajoutés
@@ -398,6 +408,7 @@ class SystemUsage(object):
     """
     Permet de récupérer les différentes tailles mémoires du process courant
     """
+    __slots__ = ()
     #
     # Le module resource renvoie 0 pour les tailles mémoire. On utilise donc
     # plutôt : http://code.activestate.com/recipes/286222/ et Wikipedia

@@ -9,6 +9,7 @@ Variant
   "2UKF" de l'algorithme original "UKF", et les choix possibles sont
   "UKF" (Unscented Kalman Filter),
   "2UKF" (Constrained Unscented Kalman Filter).
+  Il est fortement recommandé de conserver la valeur par défaut.
 
   Exemple :
   ``{"Variant":"2UKF"}``

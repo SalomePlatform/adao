@@ -9,9 +9,9 @@
     pair: Variant ; EnKS
 
 Variant
-  *Predifined name*.  This key allows to choose one of the possible variants
+  *Predefined name*.  This key allows to choose one of the possible variants
   for the main algorithm. The default variant is the original "EnKF"
-  formulation, and the possible ones are
+  formulation, and the possible choices are
   "EnKF" (Ensemble Kalman Filter),
   "ETKF" (Ensemble-Transform Kalman Filter),
   "ETKF-N" (Ensemble-Transform Kalman Filter),

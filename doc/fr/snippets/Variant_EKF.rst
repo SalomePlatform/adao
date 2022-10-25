@@ -9,6 +9,7 @@ Variant
   "CEKF" de l'algorithme original "EKF", et les choix possibles sont
   "EKF" (Extended Kalman Filter),
   "CEKF" (Constrained Extended Kalman Filter).
+  Il est fortement recommandé de conserver la valeur par défaut.
 
   Exemple :
   ``{"Variant":"CEKF"}``
