@@ -8,7 +8,7 @@ QualityCriterion
   suivante, dans laquelle les noms équivalents sont indiqués par un signe "<=>" :
   ["AugmentedWeightedLeastSquares" <=> "AWLS" <=> "DA",
   "WeightedLeastSquares" <=> "WLS", "LeastSquares" <=> "LS" <=> "L2",
-  "AbsoluteValue" <=> "L1", "MaximumError" <=> "ME"].
+  "AbsoluteValue" <=> "L1", "MaximumError" <=> "ME" <=> "Linf"].
 
   Exemple :
   ``{"QualityCriterion":"DA"}``

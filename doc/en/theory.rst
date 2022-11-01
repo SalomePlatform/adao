@@ -561,35 +561,36 @@ The most classical instances of error measurements are recalled or specified
 below, indicating their identifiers in ADAO for the possible selection of a
 quality criterion:
 
-- the objective function for the augmented weighted least squares error measurement (which is the basic default functional in all data assimilation algorithms, often named "*3D-Var*" objective function, and which is known for the quality criteria in ADAO as "*AugmentedWeightedLeastSquares*", "*AWLS*" or "*DA*") is:
+- the objective function for the augmented weighted least squares error measurement (which is the basic default functional in all data assimilation algorithms, often named "*3D-Var*" objective function, and which is known in the quality criteria for ADAO as "*AugmentedWeightedLeastSquares*", "*AWLS*" or "*DA*") is:
 
     .. index:: single: AugmentedWeightedLeastSquares (QualityCriterion)
     .. index:: single: AWLS (QualityCriterion)
     .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-- the objective function for the weighted least squares error measurement (which is the squared :math:`L^2` weighted norm of the innovation, with a :math:`1/2` coefficient to be homogeneous with the previous one, and which is known for the quality criteria in ADAO as "*WeightedLeastSquares*" or "*WLS*") is:
+- the objective function for the weighted least squares error measurement (which is the squared :math:`L^2` weighted norm of the innovation, with a :math:`1/2` coefficient to be homogeneous with the previous one, and which is known in the quality criteria for ADAO as "*WeightedLeastSquares*" or "*WLS*") is:
 
     .. index:: single: WeightedLeastSquares (QualityCriterion)
     .. index:: single: WLS (QualityCriterion)
     .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-- the objective function for the least squares error measurement (which is the squared :math:`L^2` norm of the innovation, with a :math:`1/2` coefficient to be homogeneous with the previous ones, and which is known for the quality criteria in ADAO as "*LeastSquares*", "*LS*" or "*L2*") is:
+- the objective function for the least squares error measurement (which is the squared :math:`L^2` norm of the innovation, with a :math:`1/2` coefficient to be homogeneous with the previous ones, and which is known in the quality criteria for ADAO as "*LeastSquares*", "*LS*" or "*L2*") is:
 
     .. index:: single: LeastSquares (QualityCriterion)
     .. index:: single: LS (QualityCriterion)
     .. index:: single: L2 (QualityCriterion)
     .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})=\frac{1}{2}||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^2}^2
 
-- the objective function for the absolute error value measurement (which is the :math:`L^1` norm of the innovation, and which is known for the quality criteria in ADAO as "*AbsoluteValue*" or "*L1*") is:
+- the objective function for the absolute error value measurement (which is the :math:`L^1` norm of the innovation, and which is known in the quality criteria for ADAO as "*AbsoluteValue*" or "*L1*") is:
 
     .. index:: single: AbsoluteValue (QualityCriterion)
     .. index:: single: L1 (QualityCriterion)
     .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^1}
 
-- the objective function for the maximum error value measurement (which is the :math:`L^{\infty}` norm, and which is known for the quality criteria in ADAO as "*MaximumError*" or "*ME*") is:
+- the objective function for the maximum error value measurement (which is the :math:`L^{\infty}` norm, and which is known in the quality criteria for ADAO as "*MaximumError*", "*ME*" or "*Linf*") is:
 
     .. index:: single: MaximumError (QualityCriterion)
     .. index:: single: ME (QualityCriterion)
+    .. index:: single: Linf (QualityCriterion)
     .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^{\infty}}
 
 These error measures may be not differentiable for the last two, but some

@@ -64,7 +64,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "WeightedLeastSquares","WLS",
                 "LeastSquares", "LS", "L2",
                 "AbsoluteValue", "L1",
-                "MaximumError", "ME",
+                "MaximumError", "ME", "Linf",
                 ],
             listadv  = [
                 "AugmentedPonderatedLeastSquares", "APLS",
@@ -146,7 +146,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 elif QualityMeasure in ["AbsoluteValue","L1"]:
                     Jb  = 0.
                     Jo  = float( numpy.sum( numpy.abs(Y0 - _HX), dtype=mfp ) )
-                elif QualityMeasure in ["MaximumError","ME"]:
+                elif QualityMeasure in ["MaximumError","ME", "Linf"]:
                     Jb  = 0.
                     Jo  = numpy.max( numpy.abs(Y0 - _HX) )
                 #

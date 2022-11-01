@@ -681,6 +681,8 @@ class Algorithm(object):
             - CurrentOptimum : état optimal courant lors d'itérations
             - CurrentState : état courant lors d'itérations
             - CurrentStepNumber : pas courant d'avancement dans les algorithmes en évolution, à partir de 0
+            - ForecastCovariance : covariance de l'état prédit courant lors d'itérations
+            - ForecastState : état prédit courant lors d'itérations
             - GradientOfCostFunctionJ  : gradient de la fonction-coût globale
             - GradientOfCostFunctionJb : gradient de la partie ébauche de la fonction-coût
             - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-coût
@@ -694,8 +696,6 @@ class Algorithm(object):
             - MahalanobisConsistency : indicateur de consistance des covariances
             - OMA : Observation moins Analyse : Y - Xa
             - OMB : Observation moins Background : Y - Xb
-            - ForecastCovariance : covariance de l'état prédit courant lors d'itérations
-            - ForecastState : état prédit courant lors d'itérations
             - Residu : dans le cas des algorithmes de vérification
             - SampledStateForQuantiles : échantillons d'états pour l'estimation des quantiles
             - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche

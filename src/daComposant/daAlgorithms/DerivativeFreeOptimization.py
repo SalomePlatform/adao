@@ -78,7 +78,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "WeightedLeastSquares", "WLS",
                 "LeastSquares", "LS", "L2",
                 "AbsoluteValue", "L1",
-                "MaximumError", "ME",
+                "MaximumError", "ME", "Linf",
                 ],
             )
         self.defineRequiredParameter(
@@ -167,7 +167,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             elif QualityMeasure in ["AbsoluteValue","L1"]:
                 Jb  = 0.
                 Jo  = numpy.sum( numpy.abs(_Innovation) )
-            elif QualityMeasure in ["MaximumError","ME"]:
+            elif QualityMeasure in ["MaximumError","ME", "Linf"]:
                 Jb  = 0.
                 Jo  = numpy.max( numpy.abs(_Innovation) )
             #

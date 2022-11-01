@@ -585,10 +585,10 @@ méthodes sont un coût numérique souvent bien supérieur pour trouver les
 estimations d'états, et fréquemment aucune garantie de convergence en temps
 fini. Ici, on ne mentionne que quelques méthodes disponibles dans ADAO :
 
-- *optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
-- *optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
-- *évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`),
-- *régression de quantile (Quantile Regression ou QR)* (voir :ref:`section_ref_algorithm_QuantileRegression`).
+- *Optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- *Optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- *Évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`),
+- *Régression de quantile (Quantile Regression ou QR)* (voir :ref:`section_ref_algorithm_QuantileRegression`).
 
 En second lieu, les méthodes d'optimisation cherchent usuellement à minimiser
 des mesures quadratiques d'erreurs, car les propriétés naturelles de ces
@@ -601,35 +601,36 @@ réduire**. Par exemple, on peut citer une *erreur en valeur absolue*, une
 classiques de mesures d'erreurs, en indiquant leur identifiant dans ADAO pour
 la sélection éventuelle d'un critère de qualité :
 
-- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés et augmentés (qui est la fonctionnelle de base par défaut de tous les algorithmes en assimilation de données, souvent nommée la fonctionnelle du "*3D-Var*", et qui est connue pour les critères de qualité dans ADAO sous les noms de "*AugmentedWeightedLeastSquares*", "*AWLS*" ou "*DA*") est :
+- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés et augmentés (qui est la fonctionnelle de base par défaut de tous les algorithmes en assimilation de données, souvent nommée la fonctionnelle du "*3D-Var*", et qui est connue dans les critères de qualité pour ADAO sous les noms de "*AugmentedWeightedLeastSquares*", "*AWLS*" ou "*DA*") est :
 
     .. index:: single: AugmentedWeightedLeastSquares (QualityCriterion)
     .. index:: single: AWLS (QualityCriterion)
     .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés (qui est le carré de la norme pondérée :math:`L^2` de l'innovation, avec un coefficient :math:`1/2` pour être homogène à la précédente, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*WeightedLeastSquares*" ou "*WLS*") est :
+- la fonction objectif pour la mesure d'erreur par moindres carrés pondérés (qui est le carré de la norme pondérée :math:`L^2` de l'innovation, avec un coefficient :math:`1/2` pour être homogène à la précédente, et qui est connue dans les critères de qualité pour ADAO sous les noms de "*WeightedLeastSquares*" ou "*WLS*") est :
 
     .. index:: single: WeightedLeastSquares (QualityCriterion)
     .. index:: single: WLS (QualityCriterion)
     .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
-- la fonction objectif pour la mesure d'erreur par moindres carrés (qui est le carré de la norme :math:`L^2` de l'innovation, avec un coefficient :math:`1/2` pour être homogène aux précédentes, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*LeastSquares*", "*LS*" ou "*L2*") est :
+- la fonction objectif pour la mesure d'erreur par moindres carrés (qui est le carré de la norme :math:`L^2` de l'innovation, avec un coefficient :math:`1/2` pour être homogène aux précédentes, et qui est connue dans les critères de qualité pour ADAO sous les noms de "*LeastSquares*", "*LS*" ou "*L2*") est :
 
     .. index:: single: LeastSquares (QualityCriterion)
     .. index:: single: LS (QualityCriterion)
     .. index:: single: L2 (QualityCriterion)
     .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})=\frac{1}{2}||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^2}^2
 
-- la fonction objectif pour la mesure d'erreur en valeur absolue (qui est la norme :math:`L^1` de l'innovation, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*AbsoluteValue*" ou "*L1*") est :
+- la fonction objectif pour la mesure d'erreur en valeur absolue (qui est la norme :math:`L^1` de l'innovation, et qui est connue dans les critères de qualité pour ADAO sous les noms de "*AbsoluteValue*" ou "*L1*") est :
 
     .. index:: single: AbsoluteValue (QualityCriterion)
     .. index:: single: L1 (QualityCriterion)
     .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^1}
 
-- la fonction objectif pour la mesure d'erreur maximale (qui est la norme :math:`L^{\infty}` de l'innovation, et qui est connue pour les critères de qualité dans ADAO sous les noms de "*MaximumError*" ou "*ME*") est :
+- la fonction objectif pour la mesure d'erreur maximale (qui est la norme :math:`L^{\infty}` de l'innovation, et qui est connue dans les critères de qualité pour ADAO sous les noms de "*MaximumError*", "*ME*" ou "*Linf*") est :
 
     .. index:: single: MaximumError (QualityCriterion)
     .. index:: single: ME (QualityCriterion)
+    .. index:: single: Linf (QualityCriterion)
     .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^{\infty}}
 
 Ces mesures d'erreurs peuvent ne être pas différentiables comme pour les deux
@@ -640,9 +641,9 @@ sont un coût numérique souvent bien supérieur pour trouver les estimations
 d'états, et pas de garantie de convergence en temps fini. Ici encore, on ne
 mentionne que quelques méthodes qui sont disponibles dans ADAO :
 
-- *optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
-- *optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
-- *évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`).
+- *Optimisation sans dérivées (Derivative Free Optimization ou DFO)* (voir :ref:`section_ref_algorithm_DerivativeFreeOptimization`),
+- *Optimisation par essaim de particules (Particle Swarm Optimization ou PSO)* (voir :ref:`section_ref_algorithm_ParticleSwarmOptimization`),
+- *Évolution différentielle (Differential Evolution ou DE)* (voir :ref:`section_ref_algorithm_DifferentialEvolution`).
 
 Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
 sa recherche grâce au point d'entrée [WikipediaMO]_.
