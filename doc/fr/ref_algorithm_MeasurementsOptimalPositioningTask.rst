@@ -87,6 +87,7 @@ StoreSupplementaryCalculations
   (la description détaillée de chaque variable nommée est donnée dans la suite
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
+  "EnsembleOfSnapshots",
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
@@ -104,6 +105,8 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
+
+.. include:: snippets/EnsembleOfSnapshots.rst
 
 .. include:: snippets/OptimalPoints.rst
 

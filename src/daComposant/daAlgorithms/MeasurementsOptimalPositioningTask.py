@@ -78,6 +78,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
+                "EnsembleOfSnapshots",
                 "OptimalPoints",
                 "ReducedBasis",
                 "Residus",
@@ -97,12 +98,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         if   self._parameters["Variant"] == "PositioningBylcEIM":
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+                if self._toStore("EnsembleOfSnapshots"):
+                    self.StoredVariables["EnsembleOfSnapshots"].store( self._parameters["EnsembleOfSnapshots"] )
                 ecweim.EIM_offline(self)
             else:
                 raise ValueError("Snapshots have to be given in order to launch the positionning analysis")
         #
         elif self._parameters["Variant"] == "PositioningByEIM":
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+                if self._toStore("EnsembleOfSnapshots"):
+                    self.StoredVariables["EnsembleOfSnapshots"].store( self._parameters["EnsembleOfSnapshots"] )
                 ecweim.EIM_offline(self)
             else:
                 raise ValueError("Snapshots have to be given in order to launch the positionning analysis")

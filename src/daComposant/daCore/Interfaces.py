@@ -405,6 +405,7 @@ class _SCDViewer(GenericCaseViewer):
         if __content is not None:
             for command in __content:
                 self._append(*command)
+    #
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command == "set": __command = __local["Concept"]
@@ -550,6 +551,7 @@ class _SCDViewer(GenericCaseViewer):
         if __text is not None: self._addLine(__text)
         if not __switchoff:
             self._switchoff = False
+    #
     def _finalize(self, *__args):
         self.__loadVariablesByScript()
         if self.__DebugCommandNotSet:
@@ -562,6 +564,7 @@ class _SCDViewer(GenericCaseViewer):
             self._addLine("xa=ADD.get('Analysis')[-1]")
             self._addLine("print('Analysis:',xa)\"\"\"")
             self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
+    #
     def __loadVariablesByScript(self):
         __ExecVariables = {} # Necessaire pour recuperer la variable
         exec("\n".join(self._lineSerie), __ExecVariables)
@@ -611,7 +614,7 @@ class _YACSViewer(GenericCaseViewer):
     """
     Etablissement des commandes d'un cas YACS (Cas->SCD->YACS)
     """
-    __slots__ = ("__internalSCD")
+    __slots__ = ("__internalSCD", "_append")
     #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"

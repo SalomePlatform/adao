@@ -705,6 +705,27 @@ class Persistence(object):
             eval(input('Please press return to continue...\n'))
 
     # ---------------------------------------------------------
+    def s2mvr(self):
+        """
+        Renvoie la série sous la forme d'une unique matrice avec les données au
+        pas rangées par ligne
+        """
+        try:
+            return numpy.asarray(self.__values)
+        except Exception:
+            raise TypeError("Base type is incompatible with numpy")
+
+    def s2mvc(self):
+        """
+        Renvoie la série sous la forme d'une unique matrice avec les données au
+        pas rangées par colonne
+        """
+        try:
+            return numpy.asarray(self.__values).transpose()
+        except Exception:
+            raise TypeError("Base type is incompatible with numpy")
+
+    # ---------------------------------------------------------
     def setDataObserver(self, HookFunction = None, HookParameters = None, Scheduler = None):
         """
         Association à la variable d'un triplet définissant un observer

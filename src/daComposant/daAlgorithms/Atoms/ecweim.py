@@ -40,7 +40,7 @@ def EIM_offline(selfA, Verbose = False):
     elif isinstance(selfA._parameters["EnsembleOfSnapshots"], (list,tuple)):
         __EOS = numpy.asarray(selfA._parameters["EnsembleOfSnapshots"]).T
     else:
-        raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column is a snapshot vector) or a list/tuple (each element is a snapshot vector).")
+        raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     #
     if   selfA._parameters["ErrorNorm"] == "L2":
         MaxNormByColumn = MaxL2NormByColumn

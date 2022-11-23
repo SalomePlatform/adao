@@ -634,12 +634,30 @@ sont simples à mettre en œuvre, et il est favorable de les essayer (en
 expériences jumelles ou pas) car ils résolvent de nombreux problèmes rencontrés
 en pratique.
 
+.. _subsection_version_compatibility:
+.. index::
+    pair: Version ; SALOME
+    pair: Version ; EFICAS
+    pair: Version ; Python
+    pair: Version ; Numpy
+    pair: Version ; Scipy
+    pair: Version ; MatplotLib
+    pair: Version ; Gnuplot
+    pair: Version ; NLopt
+
+Versions de compatibilité d'ADAO avec les outils support
+--------------------------------------------------------
+
+.. include:: snippets/ModuleValidation.rst
+
+.. include:: snippets/ModuleCompatibility.rst
+
 .. _subsection_new_adao_version:
+.. index::
+    pair: Version d'ADAO ; Changement de
 
 Passer d'une version d'ADAO à une nouvelle
 ------------------------------------------
-
-.. index:: single: Version
 
 Le module ADAO et ses fichiers de cas ".comm" sont identifiés par des versions,
 avec des caractéristiques "Major", "Minor", "Revision" et optionnellement

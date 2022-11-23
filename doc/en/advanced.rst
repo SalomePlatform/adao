@@ -582,12 +582,31 @@ convergence, even if they exist. These parameter adjustments are simple to
 implement, and it is favorable to try them (in twin experiments or not) because
 they solve many problems encountered in practice.
 
+
+.. _subsection_version_compatibility:
+.. index::
+    pair: Version ; SALOME
+    pair: Version ; EFICAS
+    pair: Version ; Python
+    pair: Version ; Numpy
+    pair: Version ; Scipy
+    pair: Version ; MatplotLib
+    pair: Version ; Gnuplot
+    pair: Version ; NLopt
+
+Versions of ADAO compatibility with support tools
+-------------------------------------------------
+
+.. include:: snippets/ModuleValidation.rst
+
+.. include:: snippets/ModuleCompatibility.rst
+
 .. _subsection_new_adao_version:
+.. index::
+    pair: Version of ADAO ; Switching
 
 Switching from a version of ADAO to a newer one
 -----------------------------------------------
-
-.. index:: single: Version
 
 The ADAO module and its ".comm" case files are identified by versions, with
 "Major", "Minor", "Revision" and optionally "Installation" characteristics. A
