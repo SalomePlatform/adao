@@ -35,4 +35,6 @@ A priori background state..........: [1. 1. 1.]
 
 Expected theoretical coefficients..: [ 2 -1  2]
 
+Number of iterations...............: 25
+Number of simulations..............: 100
 Calibration resulting coefficients.: [ 2.         -0.99999992  1.99999987]

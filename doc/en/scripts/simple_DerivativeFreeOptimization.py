@@ -26,7 +26,7 @@ case.setObservation( Vector = Yobs, Stored=True )
 case.setObservationError( ScalarSparseMatrix = 1. )
 case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
-    Algorithm='3DVAR',
+    Algorithm='DerivativeFreeOptimization',
     Parameters={
         'MaximumNumberOfIterations': 100,
         'StoreSupplementaryCalculations': [
@@ -56,7 +56,7 @@ print("")
 print("Expected theoretical coefficients..:", ravel((2,-1,2)))
 print("")
 print("Number of iterations...............:", len(case.get('CurrentState')))
-print("Number of simulations..............:", len(case.get('CurrentState'))*4)
+print("Number of simulations..............:", len(case.get('CurrentState')))
 print("Calibration resulting coefficients.:", ravel(case.get('Analysis')[-1]))
 #
 Xa = case.get('Analysis')[-1]
@@ -71,4 +71,4 @@ plt.legend()
 plt.title('Coefficients calibration', fontweight='bold')
 plt.xlabel('Arbitrary coordinate')
 plt.ylabel('Observations')
-plt.savefig("simple_3DVAR.png")
+plt.savefig("simple_DerivativeFreeOptimization.png")

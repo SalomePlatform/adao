@@ -168,6 +168,25 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_DerivativeFreeOptimization_examples:
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_DerivativeFreeOptimization.rst
+
+.. literalinclude:: scripts/simple_DerivativeFreeOptimization.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_DerivativeFreeOptimization.res
+    :language: none
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_DerivativeFreeOptimization:
+.. image:: scripts/simple_DerivativeFreeOptimization.png
+  :align: center
+  :width: 90%
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_ParticleSwarmOptimization`

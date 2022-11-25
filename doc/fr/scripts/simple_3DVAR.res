@@ -35,4 +35,6 @@ Vecteur d'observation.............: [ 57.   2.   3.  17. 192.]
 
 Coefficients théoriques attendus..: [ 2 -1  2]
 
+Nombre d'itérations...............: 25
+Nombre de simulations.............: 100
 Coefficients résultants du calage.: [ 2.         -0.99999992  1.99999987]

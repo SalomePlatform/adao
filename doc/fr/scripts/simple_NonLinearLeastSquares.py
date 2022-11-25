@@ -54,6 +54,8 @@ print("État d'ébauche a priori...........:", ravel(case.get('Background')))
 print("")
 print("Coefficients théoriques attendus..:", ravel((2,-1,2)))
 print("")
+print("Nombre d'itérations...............:", len(case.get('CurrentState')))
+print("Nombre de simulations.............:", len(case.get('CurrentState'))*4)
 print("Coefficients résultants du calage.:", ravel(case.get('Analysis')[-1]))
 #
 Xa = case.get('Analysis')[-1]

@@ -46,6 +46,7 @@ Utilisations d'algorithmes de calcul
 
 #. :ref:`Exemples avec l'algorithme de "3DVAR"<section_ref_algorithm_3DVAR_examples>`
 #. :ref:`Exemples avec l'algorithme de "Blue"<section_ref_algorithm_Blue_examples>`
+#. :ref:`Exemples avec l'algorithme de "DerivativeFreeOptimization" algorithm<section_ref_algorithm_DerivativeFreeOptimization_examples>`
 #. :ref:`Exemples avec l'algorithme de "ExtendedBlue"<section_ref_algorithm_ExtendedBlue_examples>`
 #. :ref:`Exemples avec l'algorithme de "KalmanFilter"<section_ref_algorithm_KalmanFilter_examples>`
 #. :ref:`Exemples avec l'algorithme de "NonLinearLeastSquares"<section_ref_algorithm_NonLinearLeastSquares_examples>`
