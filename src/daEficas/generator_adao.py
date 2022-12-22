@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2022 EDF R&D
+# Copyright (C) 2008-2023 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
