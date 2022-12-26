@@ -96,13 +96,25 @@ StoreSupplementaryCalculations
 .. _section_ref_algorithm_FunctionTest_examples:
 .. include:: snippets/Header2Algo09.rst
 
-.. include:: scripts/simple_FunctionTest.rst
+.. --------- ..
+.. include:: scripts/simple_FunctionTest1.rst
 
-.. literalinclude:: scripts/simple_FunctionTest.py
+.. literalinclude:: scripts/simple_FunctionTest1.py
 
 .. include:: snippets/Header2Algo10.rst
 
-.. literalinclude:: scripts/simple_FunctionTest.res
+.. literalinclude:: scripts/simple_FunctionTest1.res
+    :language: none
+
+.. --------- ..
+.. include:: scripts/simple_FunctionTest2.rst
+
+.. literalinclude:: scripts/simple_FunctionTest2.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_FunctionTest2.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

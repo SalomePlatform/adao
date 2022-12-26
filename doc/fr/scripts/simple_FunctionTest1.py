@@ -2,9 +2,9 @@
 #
 from numpy import array, eye
 from adao import adaoBuilder
-case = adaoBuilder.New('')
+case = adaoBuilder.New()
 case.setCheckingPoint( Vector = array([0., 1., 2.]), Stored=True )
-case.setObservationOperator( Matrix = eye(3), )
+case.setObservationOperator( Matrix = eye(3) )
 case.setAlgorithmParameters(
     Algorithm='FunctionTest',
     Parameters={

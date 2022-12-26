@@ -1,11 +1,14 @@
 .. index:: single: FunctionTest (exemple)
 
+Premier exemple
+...............
+
 Cet exemple décrit le test du bon fonctionnement d'un opérateur quelconque, et
 que son appel se déroule de manière compatible avec son usage courant dans les
 algorithmes d'ADAO. Les informations nécessaires sont minimales, à savoir ici
-un opérateur :math:`F` (décrit pour le test par la commande d'observation
-"*ObservationOperator*"), et un état :math:`\mathbf{x}^b` sur lequel le tester
-(décrit pour le test par la commande "*CheckingPoint*").
+un opérateur (décrit pour le test par la commande d'observation
+"*ObservationOperator*"), et un état particulier :math:`\mathbf{x}` sur lequel
+le tester (décrit pour le test par la commande "*CheckingPoint*").
 
 Le test est répété un nombre paramétrable de fois, et une statistique finale
 permet de vérifier rapidement le bon comportement de l'opérateur. Le diagnostic
