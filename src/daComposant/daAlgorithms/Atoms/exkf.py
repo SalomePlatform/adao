@@ -44,7 +44,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         __p = numpy.cumprod(Y.shape())[-1]
     else:
         duration = 2
-        __p = numpy.array(Y).size
+        __p = numpy.size(Y)
     __n = Xb.size
     #
     # Précalcul des inversions de B et R

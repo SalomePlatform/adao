@@ -19,7 +19,7 @@ print("Résolution du problème de calage")
 print("--------------------------------")
 print("")
 from adao import adaoBuilder
-case = adaoBuilder.New('')
+case = adaoBuilder.New()
 case.setBackground( Vector = Xb, Stored=True )
 case.setBackgroundError( ScalarSparseMatrix = 1.e6 )
 case.setObservation( Vector = Yobs, Stored=True )

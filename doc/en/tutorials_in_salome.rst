@@ -585,6 +585,7 @@ the following parameters can be defined in a Python script file named
             ],
         "StoreSupplementaryCalculations" : [
             "CurrentState",
+            "CostFunctionJ",
             ],
     }
 

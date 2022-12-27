@@ -2,7 +2,7 @@
 #
 from numpy import array, ravel
 from adao import adaoBuilder
-case = adaoBuilder.New('')
+case = adaoBuilder.New()
 case.setBackground( Vector = array([0., 1., 2.]), Stored=True )
 case.setBackgroundError( ScalarSparseMatrix = 1. )
 case.setObservation( Vector=array([10., 11., 12.]), Stored=True )

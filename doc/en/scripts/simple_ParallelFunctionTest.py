@@ -6,7 +6,7 @@ from adao import adaoBuilder
 def SomeOperator( x ):
     return numpy.dot(numpy.eye(x.size), numpy.ravel(x))
 #
-case = adaoBuilder.New('')
+case = adaoBuilder.New()
 case.setAlgorithmParameters(
     Algorithm='ParallelFunctionTest',
     Parameters={

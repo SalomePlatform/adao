@@ -616,6 +616,7 @@ définis dans un fichier de script Python nommé
             ],
         "StoreSupplementaryCalculations" : [
             "CurrentState",
+            "CostFunctionJ",
             ],
     }
 

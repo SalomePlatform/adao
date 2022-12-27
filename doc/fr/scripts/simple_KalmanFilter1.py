@@ -12,7 +12,7 @@ print("------------------------------------------------")
 print("  Observations bruitées acquises sur %i pas de temps"%(len(Yobs)-1,))
 print("")
 from adao import adaoBuilder
-case = adaoBuilder.New('')
+case = adaoBuilder.New()
 #
 case.setBackground         (Vector             = [0.])
 case.setBackgroundError    (ScalarSparseMatrix = 1.)

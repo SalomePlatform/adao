@@ -61,7 +61,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         __p = numpy.cumprod(Y.shape())[-1]
     else:
         duration = 2
-        __p = numpy.array(Y).size
+        __p = numpy.size(Y)
     #
     # Précalcul des inversions de B et R
     if selfA._parameters["StoreInternalVariables"] \

@@ -84,11 +84,11 @@ class CacheManager(object):
     def storeValueInX(self, xValue, HxValue, oName="" ):
         "Stocke pour un opérateur o un calcul Hx correspondant à la valeur x"
         if self.__lengthOR < 0:
-            self.__lengthOR = 2 * min(xValue.size, 50) + 2 # 2 * xValue.size + 2
+            self.__lengthOR = 2 * min(numpy.size(xValue), 50) + 2
             self.__initlnOR = self.__lengthOR
             self.__seenNames.append(str(oName))
         if str(oName) not in self.__seenNames: # Etend la liste si nouveau
-            self.__lengthOR += 2 * min(xValue.size, 50) + 2 # 2 * xValue.size + 2
+            self.__lengthOR += 2 * min(numpy.size(xValue), 50) + 2
             self.__initlnOR += self.__lengthOR
             self.__seenNames.append(str(oName))
         while len(self.__listOPCV) > self.__lengthOR:

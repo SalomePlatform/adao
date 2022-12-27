@@ -97,7 +97,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Graine fixée pour le générateur aléatoire",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "HO"),
+            mandatory= ("Xb", "Y", "HO", "R", "B"),
             )
         self.setAttributes(tags=(
             "Checking",

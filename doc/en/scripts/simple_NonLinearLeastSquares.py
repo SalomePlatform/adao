@@ -19,7 +19,7 @@ print("Resolution of the calibration problem")
 print("-------------------------------------")
 print("")
 from adao import adaoBuilder
-case = adaoBuilder.New('')
+case = adaoBuilder.New()
 case.setBackground( Vector = Xb, Stored=True )
 case.setObservation( Vector = Yobs, Stored=True )
 case.setObservationError( ScalarSparseMatrix = 1. )
