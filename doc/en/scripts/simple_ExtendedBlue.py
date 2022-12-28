@@ -5,11 +5,11 @@ from adao import adaoBuilder
 case = adaoBuilder.New()
 case.setBackground( Vector = array([0., 1., 2.]), Stored=True )
 case.setBackgroundError( ScalarSparseMatrix = 1. )
-case.setObservation( Vector=array([10., 11., 12.]), Stored=True )
+case.setObservation( Vector = array([10., 11., 12.]), Stored=True )
 case.setObservationError( ScalarSparseMatrix = 1. )
-case.setObservationOperator( Matrix=array([[1., 0., 0.],
-                                           [0., 1., 0.],
-                                           [0., 0., 1.]]), )
+case.setObservationOperator( Matrix = array([[1., 0., 0.],
+                                             [0., 1., 0.],
+                                             [0., 0., 1.]]), )
 case.setAlgorithmParameters(
     Algorithm='ExtendedBlue',
     Parameters={

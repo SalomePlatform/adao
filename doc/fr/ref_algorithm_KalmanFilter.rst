@@ -199,6 +199,7 @@ StoreSupplementaryCalculations
 .. _section_ref_algorithm_KalmanFilter_examples:
 .. include:: snippets/Header2Algo09.rst
 
+.. --------- ..
 .. include:: scripts/simple_KalmanFilter1.rst
 
 .. literalinclude:: scripts/simple_KalmanFilter1.py
@@ -220,6 +221,7 @@ StoreSupplementaryCalculations
   :align: center
   :width: 90%
 
+.. --------- ..
 .. include:: scripts/simple_KalmanFilter2.rst
 
 .. literalinclude:: scripts/simple_KalmanFilter2.py

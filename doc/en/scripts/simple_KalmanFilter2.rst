@@ -1,3 +1,6 @@
+Second example
+..............
+
 The Kalman filter can also be used for a **running analysis of the observations
 of a given dynamic model**. In this case, the analysis is conducted
 iteratively, at the arrival of each observation.

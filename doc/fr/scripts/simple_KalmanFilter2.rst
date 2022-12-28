@@ -1,3 +1,6 @@
+Deuxième exemple
+................
+
 Le filtre de Kalman peut aussi être utilisé pour une **analyse courante des
 observations d'un modèle dynamique donné**. Dans ce cas, l'analyse est conduite
 de manière itérative, lors de l'arrivée de chaque observation.

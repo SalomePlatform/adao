@@ -292,6 +292,8 @@ def isIterable( __sequence, __check = False, __header = "" ):
         __isOk = True
     elif "_iterator" in type(__sequence).__name__:
         __isOk = True
+    elif "itertools" in str(type(__sequence)):
+        __isOk = True
     else:
         __isOk = False
     if __check and not __isOk:

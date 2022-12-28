@@ -1,5 +1,8 @@
 .. index:: single: KalmanFilter (exemple)
 
+Premier exemple
+...............
+
 Le filtre de Kalman peut être utilisé pour une **réanalyse des observations
 d'un modèle dynamique donné**. C'est parce que l'ensemble de l'historique
 complet de l'observation est déjà connu au début des fenêtres temporelles qu'on
