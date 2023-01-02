@@ -43,15 +43,28 @@ Task algorithm "*MeasurementsOptimalPositioningTask*"
 
 This algorithm provides optimal positioning of measurement points by an EIM
 (Empirical Interpolation Method) analysis, in a iterative greedy way from a set
-of state vectors (usually called "snapshots" in reduced basis methodology).
+of given state vectors (usually called "snapshots" in reduced basis
+methodology) or obtained by a direct simulation during the algorithm. Each of
+these state vectors are usaully (but not necessarily) the result
+:math:`\mathbf{y}` of a simulation :math:`H` for a given set of paramters
+:math:`\mathbf{x}=\mu`.
 
-Each of these state vectors is usually (but not necessarily) the result
-:math:`\mathbf{y}` of a simulation :math:`H` for a given set of parameters
-:math:`\mathbf{x}=\mu`. In its simplest use, if the set of state vectors is
-pre-existing, it is only necessary to provide it through the algorithm options.
+There are two ways to use this algorithm:
 
-It is also possible to exclude a priori potential locations for optimal
-measurement points, using the "*lcEIM*" analysis for a constrained positioning
+#. In its simplest use, if the set of state vectors is pre-existing, it is only
+   necessary to provide it by the option "*SetOfSnapshots*" of algorithm.
+#. If the set of state vectors is to be obtained by simulations during the
+   course of the algorithm, then one must provide the :math:`H` simulation
+   operator and the parametric :math:`\mathbf{x}` state space design of
+   experiments.
+
+The sample of states :math:`\mathbf{x}` can be provided explicitly or in the
+form of hyper-cubes, explicit or sampled according to standard laws. Beware of
+the size of the hyper-cube (and thus the number of computations) that can be
+reached, it can quickly become important.
+
+It is possible to exclude a priori potential positions for optimal measurement
+points, using the analysis variant "*lcEIM*" for a constrained positioning
 search.
 
 .. ------------------------------------ ..
@@ -72,6 +85,18 @@ search.
 
 .. include:: snippets/MaximumNumberOfLocations.rst
 
+.. include:: snippets/SampleAsExplicitHyperCube.rst
+
+.. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxStepHyperCube.rst
+
+.. include:: snippets/SampleAsnUplet.rst
+
+.. include:: snippets/SetDebug.rst
+
+.. include:: snippets/SetSeed.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
@@ -85,7 +110,8 @@ StoreSupplementaryCalculations
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the
   algorithm*"): [
-  "EnsembleOfSnapshots",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
@@ -104,7 +130,9 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
-.. include:: snippets/EnsembleOfSnapshots.rst
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/OptimalPoints.rst
 

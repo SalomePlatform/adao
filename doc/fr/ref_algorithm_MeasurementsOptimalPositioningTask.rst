@@ -43,18 +43,30 @@ Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
 
 Cet algorithme permet d'établir la position de points de mesures optimaux par
 une analyse EIM (Empirical Interpolation Method), de manière itérative à partir
-d'un ensemble de vecteurs d'état (usuellement appelés "*snapshots*" en
-méthodologie de bases réduites).
+d'un ensemble de vecteurs d'état établis (usuellement appelés "*snapshots*" en
+méthodologie de bases réduites) ou obtenus par une simulation directe au cours
+de l'algorithme. Chacun de ces vecteurs d'état est habituellement (mais pas
+obligatoirement) le résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour
+un jeu de paramètres donné :math:`\mathbf{x}=\mu`.
 
-Chacun de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
-résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour un jeu de
-paramètres donné :math:`\mathbf{x}=\mu`. Dans son usage le plus simple, si
-l'ensemble des vecteurs d'état est pré-existant, il suffit de le fournir par
-les options d'algorithme.
+Il y a deux manières d'utiliser cet algorithme:
 
-Il est aussi possible d'exclure a priori des positions potentielles pour les
-points de mesures optimaux, en utilisant l'analyse "*lcEIM*" pour une recherche
-de positionnement contraint.
+#. Dans son usage le plus simple, si l'ensemble des vecteurs d'état est
+   pré-existant, il suffit de le fournir par l'option "*EnsembleOfSnapshots*"
+   d'algorithme.
+#. Si l'ensemble des vecteurs d'état doit être obtenu par des simulations au
+   cours de l'algorithme, alors on doit fournir l'opérateur de simulation
+   :math:`H` et le plan d'expérience de l'espace des états :math:`\mathbf{x}`
+   paramétriques.
+
+L'échantillon des états :math:`\mathbf{x}` peut être fourni explicitement ou
+sous la forme d'hyper-cubes, explicites ou échantillonnés selon des lois
+courantes. Attention à la taille de l'hyper-cube (et donc au nombre de calculs)
+qu'il est possible d'atteindre, elle peut rapidement devenir importante.
+
+Il est possible d'exclure a priori des positions potentielles pour les points
+de mesures optimaux, en utilisant le variant "*lcEIM*" d'analyse pour une
+recherche de positionnement contraint.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -74,6 +86,18 @@ de positionnement contraint.
 
 .. include:: snippets/MaximumNumberOfLocations.rst
 
+.. include:: snippets/SampleAsExplicitHyperCube.rst
+
+.. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxStepHyperCube.rst
+
+.. include:: snippets/SampleAsnUplet.rst
+
+.. include:: snippets/SetDebug.rst
+
+.. include:: snippets/SetSeed.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
@@ -87,7 +111,8 @@ StoreSupplementaryCalculations
   (la description détaillée de chaque variable nommée est donnée dans la suite
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
-  "EnsembleOfSnapshots",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
@@ -106,7 +131,9 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
-.. include:: snippets/EnsembleOfSnapshots.rst
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/OptimalPoints.rst
 

@@ -23,6 +23,7 @@
 import numpy
 from daCore import BasicObjects
 from daAlgorithms.Atoms import ecweim
+from daAlgorithms.Atoms import eosg
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -73,16 +74,52 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = 0.,
             )
         self.defineRequiredParameter(
+            name     = "SampleAsnUplet",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par une liste de n-uplet",
+            )
+        self.defineRequiredParameter(
+            name     = "SampleAsExplicitHyperCube",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable comme une liste",
+            )
+        self.defineRequiredParameter(
+            name     = "SampleAsMinMaxStepHyperCube",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable par un triplet [min,max,step]",
+            )
+        self.defineRequiredParameter(
+            name     = "SampleAsIndependantRandomVariables",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonnage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
+            )
+        self.defineRequiredParameter(
+            name     = "SetDebug",
+            default  = False,
+            typecast = bool,
+            message  = "Activation du mode debug lors de l'exécution",
+            )
+        self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
-                "EnsembleOfSnapshots",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "OptimalPoints",
                 "ReducedBasis",
                 "Residus",
                 ]
+            )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
             )
         self.requireInputArguments(
             mandatory= (),
@@ -98,19 +135,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         if   self._parameters["Variant"] == "PositioningBylcEIM":
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
-                if self._toStore("EnsembleOfSnapshots"):
-                    self.StoredVariables["EnsembleOfSnapshots"].store( self._parameters["EnsembleOfSnapshots"] )
-                ecweim.EIM_offline(self)
+                if self._toStore("EnsembleOfSimulations"):
+                    self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
+                ecweim.EIM_offline(self, self._parameters["EnsembleOfSnapshots"])
+            elif isinstance(HO, dict):
+                ecweim.EIM_offline(self, eosg.eosg(self, Xb, HO))
             else:
-                raise ValueError("Snapshots have to be given in order to launch the positionning analysis")
+                raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
         #
         elif self._parameters["Variant"] == "PositioningByEIM":
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
-                if self._toStore("EnsembleOfSnapshots"):
-                    self.StoredVariables["EnsembleOfSnapshots"].store( self._parameters["EnsembleOfSnapshots"] )
-                ecweim.EIM_offline(self)
+                if self._toStore("EnsembleOfSimulations"):
+                    self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
+                ecweim.EIM_offline(self, self._parameters["EnsembleOfSnapshots"])
+            elif isinstance(HO, dict):
+                ecweim.EIM_offline(self, eosg.eosg(self, Xb, HO))
             else:
-                raise ValueError("Snapshots have to be given in order to launch the positionning analysis")
+                raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
         #
         #--------------------------
         else:

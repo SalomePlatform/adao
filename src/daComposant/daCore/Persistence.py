@@ -722,6 +722,7 @@ class Persistence(object):
         """
         try:
             return numpy.asarray(self.__values).transpose()
+            # Eqvlt: return numpy.stack([numpy.ravel(sv) for sv in self.__values], axis=1)
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 

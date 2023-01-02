@@ -30,27 +30,29 @@ Requirements for functions describing an operator
 .. index:: single: setEvolutionModel
 .. index:: single: setControlModel
 
-The operators for observation and evolution are required to implement the data
-assimilation or optimization procedures. They include the physical simulation
-by numerical calculations, but also the filtering and restriction to compare
-the simulation to observation. The evolution operator is considered here in its
-incremental form, representing the transition between two successive states,
-and is then similar to the observation operator.
+The availability of the operators of observation, and sometimes of evolution,
+are required to implement the data assimilation or optimization procedures. As
+the evolution operator is considered in its incremental form, which represents
+the transition between two successive states, it is then formally similar to
+the observation operator and the way to describe them is unique.
 
-Schematically, an operator :math:`O` has to give a output solution for
-specified input parameters. Part of the input parameters can be modified during
-the optimization procedure. So the mathematical representation of such a
-process is a function. It was briefly described in the section
-:ref:`section_theory` and is generalized here by the relation:
+These operators include the **physical simulation by numerical calculations**.
+But they also include **filtering, projection or restriction** of simulated
+quantities, which are necessary to compare the simulation to the observation.
+
+Schematically, an operator :math:`O` has to give a output simulation or
+solution for specified input parameters. Part of the input parameters can be
+modified during the optimization procedure. So the mathematical representation
+of such a process is a function. It was briefly described in the section
+:ref:`section_theory`. It is generalized here by the relation:
 
 .. math:: \mathbf{y} = O( \mathbf{x} )
 
 between the pseudo-observations outputs :math:`\mathbf{y}` and the input
-parameters :math:`\mathbf{x}` using the observation or evolution operator
-:math:`O`. The same functional representation can be used for the linear
-tangent model :math:`\mathbf{O}` of :math:`O` and its adjoint
-:math:`\mathbf{O}^*`, also required by some data assimilation or optimization
-algorithms.
+parameters :math:`\mathbf{x}` using the observation or evolution :math:`O`
+operator. The same functional representation can be used for the linear tangent
+model :math:`\mathbf{O}` of :math:`O` and its adjoint :math:`\mathbf{O}^*`,
+also required by some data assimilation or optimization algorithms.
 
 On input and output of these operators, the :math:`\mathbf{x}` and
 :math:`\mathbf{y}` variables, or their increments, are mathematically vectors,
@@ -60,9 +62,9 @@ Numpy array) or oriented ones (of type Numpy matrix).
 Then, **to fully describe an operator, the user has only to provide a function
 that completely and only realize the functional operation**.
 
-This function is usually given as a Python function or script, that can be in
-particular executed as an independent Python function or in a YACS node. These
-function or script can, with no differences, launch external codes or use
+This function is usually given as a **Python function or script**, that can be
+in particular executed as an independent Python function or in a YACS node.
+These function or script can, with no differences, launch external codes or use
 internal Python or SALOME calls and methods. If the algorithm requires the 3
 aspects of the operator (direct form, tangent form and adjoint form), the user
 has to give the 3 functions or to approximate them using ADAO.
@@ -125,7 +127,8 @@ follow the generic template::
         ...
         ...
         ...
-        return Y=O(X)
+        # Result: Y = O(X)
+        return "a vector similar to Y"
 
 In this case, the user has also provide a value for the differential increment
 (or keep the default value), using through the graphical interface (GUI) or
@@ -133,26 +136,31 @@ textual one (TUI) the keyword "*DifferentialIncrement*" as parameter, which has
 a default value of 1%. This coefficient will be used in the finite differences
 approximation to build the tangent and adjoint operators. The finite
 differences approximation order can also be chosen through the GUI, using the
-keyword "*CenteredFiniteDifference*", with 0 for an uncentered schema of first
-order (which is the default value), and with 1 for a centered schema of second
-order (and of twice the first order computational cost). If necessary and if
-possible, :ref:`subsection_ref_parallel_df` can be used. In all cases, an
-internal cache mechanism is used to restrict the number of operator evaluations
-at the minimum possible in a sequential or parallel execution scheme for
-numerical approximations of the tangent and adjoint operators, to avoid
-redundant calculations. One can refer to the section dealing with
-:ref:`subsection_iterative_convergence_control` to discover the interaction
-with the convergence parameters.
+keyword "*CenteredFiniteDifference*", with ``False`` or 0 for an uncentered
+schema of first order (which is the default value), and with ``True`` or 1 for
+a centered schema of second order (and of twice the first order computational
+cost). If necessary and if possible, :ref:`subsection_ref_parallel_df` can be
+used. In all cases, an internal cache mechanism is used to restrict the number
+of operator evaluations at the minimum possible in a sequential or parallel
+execution scheme for numerical approximations of the tangent and adjoint
+operators, to avoid redundant calculations. One can refer to the section
+dealing with :ref:`subsection_iterative_convergence_control` to discover the
+interaction with the convergence parameters.
 
 This first operator definition form allows easily to test the functional form
 before its use in an ADAO case, greatly reducing the complexity of operator
 implementation. One can then use the "*FunctionTest*" ADAO checking algorithm
-(see the section on the :ref:`section_ref_algorithm_FunctionTest`) for this
-test.
+(see the section on the :ref:`section_ref_algorithm_FunctionTest`) specifically
+designed for this test.
 
-**Important warning:** the name "*DirectOperator*" is mandatory, and the type
-of the ``X`` argument can be either a list of float values, a Numpy array or a
-Numpy matrix. The user function has to accept and treat all these cases.
+**Important:** the name "*DirectOperator*" is mandatory when using an
+independant Python script. The type of the input ``X`` argument can be either a
+list of float values, a Numpy array or a Numpy matrix, and the user function
+has to accept and treat all these cases. The type of the output argument ``Y``
+must also be equivalent to a list of real values.
+
+Various forms of operators are available in several scripts included in the
+:ref:`section_docu_examples`.
 
 .. _section_ref_operator_funcs:
 
@@ -237,10 +245,11 @@ become the following::
         else:
             return "a vector similar to X"
 
-**Important warning:** the names "*DirectOperator*", "*TangentOperator*" and
-"*AdjointOperator*" are mandatory, and the type of the ``X``, Y``, ``dX``
-arguments can be either a list of float values, a Numpy array or a Numpy
-matrix. The user function has to treat these cases in his script.
+**Important:** the names "*DirectOperator*", "*TangentOperator*" and
+"*AdjointOperator*" are mandatory when using an independant Python script. The
+type of the ``X``, Y``, ``dX`` input or output arguments can be either a list
+of float values, a Numpy array or a Numpy matrix. The user function has to
+treat these cases in his script.
 
 .. _section_ref_operator_switch:
 

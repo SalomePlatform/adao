@@ -99,6 +99,8 @@ StoreSupplementaryCalculations
   "CostFunctionJb",
   "CostFunctionJo",
   "CurrentState",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "InnovationAtCurrentState",
   "SimulatedObservationAtCurrentState",
   ].
@@ -125,6 +127,10 @@ StoreSupplementaryCalculations
 .. include:: snippets/CostFunctionJo.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
 

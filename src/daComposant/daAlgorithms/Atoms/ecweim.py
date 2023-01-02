@@ -26,19 +26,21 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy
+import daCore.Persistence
 
 # ==============================================================================
-def EIM_offline(selfA, Verbose = False):
+def EIM_offline(selfA, EOS = None, Verbose = False):
     """
     Établissement de base par Empirical Interpolation Method (EIM)
     """
     #
     # Initialisations
     # ---------------
-    if isinstance(selfA._parameters["EnsembleOfSnapshots"], (numpy.ndarray,numpy.matrix)):
-        __EOS = numpy.asarray(selfA._parameters["EnsembleOfSnapshots"])
-    elif isinstance(selfA._parameters["EnsembleOfSnapshots"], (list,tuple)):
-        __EOS = numpy.asarray(selfA._parameters["EnsembleOfSnapshots"]).T
+    if isinstance(EOS, (numpy.ndarray, numpy.matrix)):
+        __EOS = numpy.asarray(EOS)
+    elif isinstance(EOS, (list, tuple, daCore.Persistence.Persistence)):
+        __EOS = numpy.stack([numpy.ravel(_sn) for _sn in EOS], axis=1)
+        # __EOS = numpy.asarray(EOS).T
     else:
         raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     #

@@ -30,25 +30,30 @@ Conditions requises pour les fonctions décrivant un opérateur
 .. index:: single: setEvolutionModel
 .. index:: single: setControlModel
 
-Les opérateurs d'observation et d'évolution sont nécessaires pour mettre en
-oeuvre les procédures d'assimilation de données ou d'optimisation. Ils
-comprennent la simulation physique par des calculs numériques, mais aussi le
-filtrage et de restriction pour comparer la simulation à l'observation.
-L'opérateur d'évolution est ici considéré dans sa forme incrémentale, qui
-représente la transition entre deux états successifs, et il est alors similaire
-à l'opérateur d'observation.
+La disponibilité des opérateurs d'observation et parfois d'évolution sont
+nécessaires pour mettre en oeuvre les procédures d'assimilation de données ou
+d'optimisation. Comme l'opérateur d'évolution est considéré dans sa forme
+incrémentale, qui représente la transition entre deux états successifs, il est
+alors formellement similaire à l'opérateur d'observation et la manière de les
+décrire est unique.
 
-Schématiquement, un opérateur :math:`O` a pour objet de restituer une solution
-pour des paramètres d'entrée spécifiés. Une partie des paramètres d'entrée peut
-être modifiée au cours de la procédure d'optimisation. Ainsi, la représentation
-mathématique d'un tel processus est une fonction. Il a été brièvement décrit
-dans la section :ref:`section_theory` et il est généralisé ici par la relation:
+Ces opérateurs comprennent la **simulation physique par des calculs
+numériques**. Mais ils comprennent aussi **le filtrage, la projection ou la
+restriction** des grandeurs simulées, qui sont nécessaires pour comparer la
+simulation à l'observation.
+
+Schématiquement, un opérateur :math:`O` a pour objet de restituer une
+simulation ou une solution pour des paramètres d'entrée spécifiés. Une partie
+des paramètres d'entrée peut être modifiée au cours de la procédure
+d'optimisation. Ainsi, la représentation mathématique d'un tel processus est
+une fonction. Il a été brièvement décrit dans la section :ref:`section_theory`.
+Il est généralisé ici par la relation:
 
 .. math:: \mathbf{y} = O( \mathbf{x} )
 
 entre les pseudo-observations en sortie :math:`\mathbf{y}` et les paramètres
-d'entrée :math:`\mathbf{x}` en utilisant l'opérateur d'observation ou
-d'évolution :math:`O`. La même représentation fonctionnelle peut être utilisée
+d'entrée :math:`\mathbf{x}` en utilisant l'opérateur :math:`O` d'observation ou
+d'évolution. La même représentation fonctionnelle peut être utilisée
 pour le modèle linéaire tangent :math:`\mathbf{O}` de :math:`O` et son adjoint
 :math:`\mathbf{O}^*` qui sont aussi requis par certains algorithmes
 d'assimilation de données ou d'optimisation.
@@ -62,13 +67,13 @@ Ainsi, **pour décrire de manière complète un opérateur, l'utilisateur n'a qu
 fournir une fonction qui réalise complètement et uniquement l'opération
 fonctionnelle**.
 
-Cette fonction est généralement donnée comme une fonction ou un script Python,
-qui peuvent en particulier être exécuté comme une fonction Python indépendante
-ou dans un noeud YACS. Cette fonction ou ce script peuvent, sans différences,
-lancer des codes externes ou utiliser des appels et des méthodes internes
-Python ou SALOME. Si l'algorithme nécessite les 3 aspects de l'opérateur (forme
-directe, forme tangente et forme adjointe), l'utilisateur doit donner les 3
-fonctions ou les approximer grâce à ADAO.
+Cette fonction est généralement donnée comme une **fonction ou un script
+Python**, qui peuvent en particulier être exécuté comme une fonction Python
+indépendante ou dans un noeud YACS. Cette fonction ou ce script peuvent, sans
+différences, lancer des codes externes ou utiliser des appels et des méthodes
+internes Python ou SALOME. Si l'algorithme nécessite les 3 aspects de
+l'opérateur (forme directe, forme tangente et forme adjointe), l'utilisateur
+doit donner les 3 fonctions ou les approximer grâce à ADAO.
 
 Il existe pour l'utilisateur 3 méthodes effectives de fournir une représentation
 fonctionnelle de l'opérateur, qui diffèrent selon le type d'argument choisi:
@@ -128,18 +133,20 @@ script externe peut suivre le modèle générique suivant::
         ...
         ...
         ...
-        return Y=O(X)
+        # Résultat : Y = O(X)
+        return "un vecteur similaire à Y"
 
 Dans ce cas, l'utilisateur doit aussi fournir une valeur pour l'incrément
-différentiel (ou conserver la valeur par défaut), en utilisant dans l'interface
-graphique (GUI) ou textuelle (TUI) le mot-clé "*DifferentialIncrement*" comme
-paramètre, qui a une valeur par défaut de 1%. Ce coefficient est utilisé dans
-l'approximation différences finies pour construire les opérateurs tangent et
-adjoint. L'ordre de l'approximation différences finies peut aussi être choisi à
-travers l'interface, en utilisant le mot-clé "*CenteredFiniteDifference*", avec
-0 pour un schéma non centré du premier ordre (qui est la valeur par défaut), et
-avec 1 pour un schéma centré du second ordre (et qui coûte numériquement deux
-fois plus cher que le premier ordre). Si nécessaire et si possible, on peut
+différentiel ou conserver la valeur par défaut. Cela se réalise en utilisant
+dans l'interface graphique (GUI) ou textuelle (TUI) le mot-clé
+"*DifferentialIncrement*" comme paramètre, qui a une valeur par défaut de 1%.
+Ce coefficient est utilisé dans l'approximation différences finies pour
+construire les opérateurs tangent et adjoint. L'ordre de l'approximation
+différences finies peut aussi être choisi à travers l'interface, en utilisant
+le mot-clé "*CenteredFiniteDifference*", avec ``False`` ou 0 pour un schéma non
+centré du premier ordre (qui est la valeur par défaut), et avec ``True`` ou 1
+pour un schéma centré du second ordre (et qui coûte numériquement deux fois
+plus cher que le premier ordre). Si nécessaire et si possible, on peut
 :ref:`subsection_ref_parallel_df`. Dans tous les cas, un mécanisme de cache
 interne permet de limiter le nombre d'évaluations de l'opérateur au minimum
 possible du point de vue de l'exécution séquentielle ou parallèle des
@@ -152,12 +159,17 @@ Cette première forme de définition de l'opérateur permet aisément de tester 
 forme fonctionnelle avant son usage dans un cas ADAO, réduisant notablement la
 complexité de l'implémentation de l'opérateur. On peut ainsi utiliser
 l'algorithme ADAO de vérification "*FunctionTest*" (voir la section sur
-l':ref:`section_ref_algorithm_FunctionTest`) pour ce test.
+l':ref:`section_ref_algorithm_FunctionTest`) spécifiquement prévu pour ce test.
 
-**Avertissement important :** le nom "*DirectOperator*" est obligatoire, et le
-type de l'argument ``X`` peut être une liste de valeur réelles, un vecteur
-Numpy ou une matrice Numpy. La fonction utilisateur doit accepter et traiter
-tous ces cas.
+**Important :** le nom "*DirectOperator*" est obligatoire lorsque l'on utilise
+un script Python indépendant. Le type de l'argument ``X`` en entrée peut être
+une liste de valeurs réelles, un vecteur Numpy ou une matrice Numpy, et la
+fonction utilisateur doit accepter et traiter tous ces cas. Le type de
+l'argument ``Y`` en sortie doit aussi être équivalent à une liste de valeurs
+réelles.
+
+Des formes variées d'opérateurs sont disponibles dans les divers scripts inclus
+dans les :ref:`section_docu_examples`.
 
 .. _section_ref_operator_funcs:
 
@@ -243,10 +255,11 @@ et "*AdjointOperator*" deviennent alors les suivants::
         else:
             return "un vecteur similaire à X"
 
-**Avertissement important :** les noms "*DirectOperator*", "*TangentOperator*"
-et "*AdjointOperator*" sont obligatoires, et le type des arguments ``X``,
-``Y``, ``dX`` peut être une liste de valeur réelles, un vecteur Numpy ou une
-matrice Numpy. La fonction utilisateur doit accepter et traiter tous ces cas.
+**Important :** les noms "*DirectOperator*", "*TangentOperator*" et
+"*AdjointOperator*" sont obligatoires lorsque l'on utilise un script Python
+indépendant. Le type des arguments en entrée ou en sortie ``X``, ``Y``, ``dX``
+peut être une liste de valeur réelles, un vecteur Numpy ou une matrice Numpy.
+La fonction utilisateur doit accepter et traiter tous ces cas.
 
 .. _section_ref_operator_switch:
 

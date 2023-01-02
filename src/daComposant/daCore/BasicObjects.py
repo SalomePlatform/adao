@@ -681,7 +681,9 @@ class Algorithm(object):
             - CurrentOptimum : état optimal courant lors d'itérations
             - CurrentState : état courant lors d'itérations
             - CurrentStepNumber : pas courant d'avancement dans les algorithmes en évolution, à partir de 0
+            - EnsembleOfSimulations : ensemble d'états (sorties, simulations) rangés par colonne dans une matrice
             - EnsembleOfSnapshots : ensemble d'états rangés par colonne dans une matrice
+            - EnsembleOfStates : ensemble d'états (entrées, paramètres) rangés par colonne dans une matrice
             - ForecastCovariance : covariance de l'état prédit courant lors d'itérations
             - ForecastState : état prédit courant lors d'itérations
             - GradientOfCostFunctionJ  : gradient de la fonction-coût globale
@@ -743,7 +745,9 @@ class Algorithm(object):
         self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
         self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
         self.StoredVariables["CurrentStepNumber"]                    = Persistence.OneIndex(name  = "CurrentStepNumber")
+        self.StoredVariables["EnsembleOfSimulations"]                = Persistence.OneMatrix(name = "EnsembleOfSimulations")
         self.StoredVariables["EnsembleOfSnapshots"]                  = Persistence.OneMatrix(name = "EnsembleOfSnapshots")
+        self.StoredVariables["EnsembleOfStates"]                     = Persistence.OneMatrix(name = "EnsembleOfStates")
         self.StoredVariables["ForecastCovariance"]                   = Persistence.OneMatrix(name = "ForecastCovariance")
         self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
         self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
