@@ -279,6 +279,13 @@ def uniq( __sequence ):
     __seen = set()
     return [x for x in __sequence if x not in __seen and not __seen.add(x)]
 
+def vt( __version ):
+    "Version transformée pour comparaison robuste, obtenue comme un tuple"
+    serie = []
+    for sv in re.split("[_.+-]", __version):
+        serie.append(sv.zfill(6))
+    return tuple(serie)
+
 def isIterable( __sequence, __check = False, __header = "" ):
     """
     Vérification que l'argument est un itérable interne.

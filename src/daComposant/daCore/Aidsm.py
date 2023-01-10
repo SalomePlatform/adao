@@ -124,7 +124,7 @@ class Aidsm(object):
             Vector               = None,
             VectorSerie          = None,
             ):
-        "Interface unique de definition de variables d'entrees par argument"
+        "Interface unique de définition de variables d'entrées par argument"
         self.__case.register("set",dir(),locals(),None,True)
         try:
             if   Concept in ("Background", "CheckingPoint", "ControlInput", "Observation"):
@@ -185,7 +185,7 @@ class Aidsm(object):
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "Background"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -213,7 +213,7 @@ class Aidsm(object):
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "CheckingPoint"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -241,7 +241,7 @@ class Aidsm(object):
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "ControlInput"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -269,7 +269,7 @@ class Aidsm(object):
             Stored         = False,
             Scheduler      = None,
             Checked        = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "Observation"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -295,7 +295,7 @@ class Aidsm(object):
             Stored               = False,
             ObjectMatrix         = None,
             Checked              = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "BackgroundError"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
@@ -319,7 +319,7 @@ class Aidsm(object):
             Stored               = False,
             ObjectMatrix         = None,
             Checked              = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "ObservationError"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
@@ -343,7 +343,7 @@ class Aidsm(object):
             Stored               = False,
             ObjectMatrix         = None,
             Checked              = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "EvolutionError"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
@@ -371,7 +371,7 @@ class Aidsm(object):
             PerformanceProfile   = None,
             InputFunctionAsMulti = False,
             Checked              = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "ObservationOperator"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
@@ -404,7 +404,7 @@ class Aidsm(object):
             PerformanceProfile   = None,
             InputFunctionAsMulti = False,
             Checked              = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "EvolutionModel"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
@@ -437,7 +437,7 @@ class Aidsm(object):
             PerformanceProfile   = None,
             InputFunctionAsMulti = False,
             Checked              = False):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "ControlModel"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
@@ -459,7 +459,7 @@ class Aidsm(object):
         return 0
 
     def setName(self, String=None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         self.__case.register("setName",dir(),locals())
         if String is not None:
             self.__name = str(String)
@@ -468,7 +468,7 @@ class Aidsm(object):
         self.__StoredInputs["Name"] = self.__name
 
     def setDirectory(self, String=None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         self.__case.register("setDirectory",dir(),locals())
         if os.path.isdir(os.path.abspath(str(String))):
             self.__directory = os.path.abspath(str(String))
@@ -498,7 +498,7 @@ class Aidsm(object):
             Algorithm  = None,
             Parameters = None,
             Script     = None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "AlgorithmParameters"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = AlgorithmAndParameters(
@@ -512,7 +512,7 @@ class Aidsm(object):
     def updateAlgorithmParameters(self,
             Parameters = None,
             Script     = None):
-        "Mise a jour d'un concept de calcul"
+        "Mise à jour d'un concept de calcul"
         Concept = "AlgorithmParameters"
         if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
             raise ValueError("\n\nNo algorithm registred, set one before updating parameters or executing\n")
@@ -527,7 +527,7 @@ class Aidsm(object):
             Algorithm  = None,
             Parameters = None,
             Script     = None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "RegulationParameters"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = RegulationAndParameters(
@@ -541,7 +541,7 @@ class Aidsm(object):
     def setSupplementaryParameters(self,
             Parameters = None,
             Script     = None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "SupplementaryParameters"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept] = ExternalParameters(
@@ -554,7 +554,7 @@ class Aidsm(object):
     def updateSupplementaryParameters(self,
             Parameters = None,
             Script     = None):
-        "Mise a jour d'un concept de calcul"
+        "Mise à jour d'un concept de calcul"
         Concept = "SupplementaryParameters"
         if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
             self.__adaoObject[Concept] = ExternalParameters(name = Concept)
@@ -572,7 +572,7 @@ class Aidsm(object):
             Info           = None,
             ObjectFunction = None,
             Scheduler      = None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "Observer"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept].append( DataObserver(
@@ -592,7 +592,7 @@ class Aidsm(object):
             Variable       = None,
             ObjectFunction = None,
             ):
-        "Permet de retirer un observer à une ou des variable nommée"
+        "Permet de retirer un observer à une ou des variable nommées"
         if "AlgorithmParameters" not in self.__adaoObject:
             raise ValueError("No algorithm registred, ask for one before removing observers")
         #
@@ -617,7 +617,7 @@ class Aidsm(object):
             Template       = None,
             String         = None,
             Script         = None):
-        "Definition d'un concept de calcul"
+        "Définition d'un concept de calcul"
         Concept = "UserPostAnalysis"
         self.__case.register("set"+Concept, dir(), locals())
         self.__adaoObject[Concept].append( repr(UserScript(
@@ -631,7 +631,7 @@ class Aidsm(object):
     # -----------------------------------------------------------
 
     def get(self, Concept=None, noDetails=True ):
-        "Recuperation d'une sortie du calcul"
+        "Récupération d'une sortie du calcul"
         if Concept is not None:
             try:
                 self.__case.register("get", dir(), locals(), Concept) # Break pickle in Python 2

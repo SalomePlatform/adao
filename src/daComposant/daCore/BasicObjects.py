@@ -792,7 +792,7 @@ class Algorithm(object):
         logging.debug("%s Taille mémoire utilisée de %.0f Mio"%(self._name, self._m.getUsedMemory("Mio")))
         self._getTimeState(reset=True)
         #
-        # Mise a jour des paramètres internes avec le contenu de Parameters, en
+        # Mise à jour des paramètres internes avec le contenu de Parameters, en
         # reprenant les valeurs par défauts pour toutes celles non définies
         self.__setParameters(Parameters, reset=True)
         for k, v in self.__variable_names_not_public.items():
@@ -978,10 +978,9 @@ class Algorithm(object):
 
     def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
         """
-        Doit implémenter l'opération élémentaire de calcul d'assimilation sous
-        sa forme mathématique la plus naturelle possible.
+        Doit implémenter l'opération élémentaire de calcul algorithmique.
         """
-        raise NotImplementedError("Mathematical assimilation calculation has not been implemented!")
+        raise NotImplementedError("Mathematical algorithmic calculation has not been implemented!")
 
     def defineRequiredParameter(self,
         name     = None,
@@ -1246,7 +1245,7 @@ class AlgorithmAndParameters(object):
                  asDict     = None,
                  asScript   = None,
                 ):
-        "Mise a jour des parametres"
+        "Mise à jour des paramètres"
         if asDict is None and asScript is not None:
             __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
         else:
@@ -1748,7 +1747,7 @@ class UserScript(object):
 # ==============================================================================
 class ExternalParameters(object):
     """
-    Classe générale d'interface de type texte de script utilisateur
+    Classe générale d'interface pour le stockage des paramètres externes
     """
     def __init__(self,
                  name        = "GenericExternalParameters",
@@ -1766,7 +1765,7 @@ class ExternalParameters(object):
                  asDict     = None,
                  asScript   = None,
                 ):
-        "Mise a jour des parametres"
+        "Mise à jour des paramètres"
         if asDict is None and asScript is not None:
             __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "ExternalParameters" )
         else:

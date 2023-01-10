@@ -13,8 +13,8 @@ guarantee).
    :widths: 20, 10, 10
 
    Python,     3.6.5,    3.10.8
-   Numpy,      1.14.3,   1.23.5
-   Scipy,      1.1.0,    1.9.3
+   Numpy,      1.14.3,    1.24.1
+   Scipy,      1.1.0,    1.10.0
    MatplotLib, 2.2.2,    3.6.2
-   GnuplotPy,  1.8,      1.8
+   GnuplotPy,  1.8,    1.8
    NLopt,      2.4.2,    2.7.1

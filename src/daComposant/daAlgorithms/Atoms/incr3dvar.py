@@ -28,7 +28,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 from daCore.NumericObjects import RecentredBounds
-from daCore.PlatformInfo import PlatformInfo
+from daCore.PlatformInfo import PlatformInfo, vt
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -134,13 +134,13 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         #
         if selfA._parameters["Minimizer"] == "LBFGSB":
             # Minimum, J_optimal, Informations = scipy.optimize.fmin_l_bfgs_b(
-            if "0.19" <= scipy.version.version <= "1.4.99":
+            if   vt("0.19")  <= vt(scipy.version.version) <= vt("1.4.99"):
                 import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
-            elif "1.5.0" <= scipy.version.version <= "1.7.99":
+            elif vt("1.5.0") <= vt(scipy.version.version) <= vt("1.7.99"):
                 import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
-            elif "1.8.0" <= scipy.version.version <= "1.8.99":
+            elif vt("1.8.0") <= vt(scipy.version.version) <= vt("1.8.99"):
                 import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
-            elif "1.9.0" <= scipy.version.version <= "1.9.99":
+            elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
                 import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
             else:
                 import scipy.optimize as optimiseur
