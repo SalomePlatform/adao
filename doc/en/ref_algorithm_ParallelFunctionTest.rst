@@ -104,6 +104,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_ParallelFunctionTest.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

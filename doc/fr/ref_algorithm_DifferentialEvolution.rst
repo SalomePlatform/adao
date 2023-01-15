@@ -28,9 +28,6 @@ Algorithme de calcul "*DifferentialEvolution*"
 ----------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation

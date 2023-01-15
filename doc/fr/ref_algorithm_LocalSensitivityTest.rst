@@ -28,9 +28,6 @@ Algorithme de vérification "*LocalSensitivityTest*"
 ---------------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'établir la valeur de la Jacobienne de l'opérateur

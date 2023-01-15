@@ -1,0 +1,10 @@
+Original versions of Gnuplot.py are described in NEWS.txt.
+
+The original 1.8 version was maintained in order to support the compatibility
+with Python and Gnuplot evolutions, up to the supported versions for SALOME and
+ADAO. The "Id" historical fields have been freeze in each source file. The
+compatibility maintenance versions are numbered using a third digit in the
+historical version number, beginning with '1.8.10' in order to show the
+maintenance modification.
+
+All maintenance modifications or versions are under LGPL license.

@@ -28,9 +28,6 @@ Checking algorithm "*LocalSensitivityTest*"
 -------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to calculate the value of the Jacobian of the operator

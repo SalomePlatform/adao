@@ -25,6 +25,10 @@
 .. index:: single: Optimal positioning of measurements
 .. index:: single: Measurement locations
 .. index:: single: Measurements (Optimal positioning)
+.. index:: single: Ensemble of simulations
+.. index:: single: Ensemble of snapshots
+.. index:: single: Simulations (Ensemble)
+.. index:: single: Snapshots (Ensemble)
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask:
 
 Task algorithm "*MeasurementsOptimalPositioningTask*"

@@ -29,9 +29,6 @@ Algorithme de calcul "*4DVAR*"
 ------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système dynamique, par une
