@@ -169,7 +169,7 @@ StoreSupplementaryCalculations
   ].
 
   Exemple :
-  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 .. include:: snippets/Variant_3DVAR.rst
 

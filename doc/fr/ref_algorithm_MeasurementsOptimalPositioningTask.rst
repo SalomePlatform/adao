@@ -25,6 +25,10 @@
 .. index:: single: Positionnement optimal de mesures
 .. index:: single: Positions de mesures
 .. index:: single: Mesures (Positionnement optimal)
+.. index:: single: Ensemble de simulations
+.. index:: single: Ensemble de snapshots
+.. index:: single: Simulations (Ensemble)
+.. index:: single: Snapshots (Ensemble)
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask:
 
 Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
@@ -42,12 +46,13 @@ Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'établir la position de points de mesures optimaux par
-une analyse EIM (Empirical Interpolation Method), de manière itérative à partir
-d'un ensemble de vecteurs d'état établis (usuellement appelés "*snapshots*" en
-méthodologie de bases réduites) ou obtenus par une simulation directe au cours
-de l'algorithme. Chacun de ces vecteurs d'état est habituellement (mais pas
-obligatoirement) le résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour
-un jeu de paramètres donné :math:`\mathbf{x}=\mu`.
+une analyse EIM (Empirical Interpolation Method). Ces positions sont
+déterminées de manière itérative, à partir d'un ensemble de vecteurs d'état
+pré-existants (usuellement appelés "*snapshots*" en méthodologie de bases
+réduites) ou obtenus par une simulation directe au cours de l'algorithme.
+Chacun de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
+résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour un jeu de
+paramètres donné :math:`\mathbf{x}`.
 
 Il y a deux manières d'utiliser cet algorithme:
 
@@ -119,7 +124,7 @@ StoreSupplementaryCalculations
   ].
 
   Exemple :
-  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 .. include:: snippets/Variant_MOP.rst
 

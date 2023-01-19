@@ -46,17 +46,17 @@ Task algorithm "*MeasurementsOptimalPositioningTask*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm provides optimal positioning of measurement points by an EIM
-(Empirical Interpolation Method) analysis, in a iterative greedy way from a set
-of given state vectors (usually called "snapshots" in reduced basis
-methodology) or obtained by a direct simulation during the algorithm. Each of
-these state vectors are usaully (but not necessarily) the result
-:math:`\mathbf{y}` of a simulation :math:`H` for a given set of paramters
-:math:`\mathbf{x}=\mu`.
+(Empirical Interpolation Method) analysis. These positions are determined in a
+iterative greedy way, from a pre-existing set of state vectors (usually called
+"snapshots" in reduced basis methodology) or obtained by a direct simulation
+during the algorithm. Each of these state vectors are usually (but not
+necessarily) the result :math:`\mathbf{y}` of a simulation :math:`H` for a
+given set of parameters :math:`\mathbf{x}`.
 
 There are two ways to use this algorithm:
 
 #. In its simplest use, if the set of state vectors is pre-existing, it is only
-   necessary to provide it by the option "*SetOfSnapshots*" of algorithm.
+   necessary to provide it by the algorithm option "*EnsembleOfSnapshots*".
 #. If the set of state vectors is to be obtained by simulations during the
    course of the algorithm, then one must provide the :math:`H` simulation
    operator and the parametric :math:`\mathbf{x}` state space design of
@@ -122,7 +122,7 @@ StoreSupplementaryCalculations
   ].
 
   Example :
-  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 .. include:: snippets/Variant_MOP.rst
 

@@ -80,7 +80,7 @@ StoreSupplementaryCalculations
   ].
 
   Exemple :
-  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst

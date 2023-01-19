@@ -86,7 +86,7 @@ StoreSupplementaryCalculations
   ].
 
   Example :
-  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 *Tips for this algorithm:*
 

@@ -156,7 +156,7 @@ StoreSupplementaryCalculations
   ].
 
   Exemple :
-  ``{"StoreSupplementaryCalculations":["BMA", "CurrentState"]}``
+  ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 .. include:: snippets/Variant_EnKF.rst
 
