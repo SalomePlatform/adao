@@ -21,26 +21,35 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: SamplingTest
-.. _section_ref_algorithm_SamplingTest:
+.. index:: single: EnsembleOfSimulationGenerationTask
+.. index:: single: Génération d'ensemble de simulations
+.. index:: single: Ensemble de simulations
+.. index:: single: Ensemble de snapshots
+.. index:: single: Simulations (Ensemble)
+.. index:: single: Snapshots (Ensemble)
+.. _section_ref_algorithm_EnsembleOfSimulationGenerationTask:
 
-Algorithme de vérification "*SamplingTest*"
--------------------------------------------
+Algorithme de tâche "*EnsembleOfSimulationGenerationTask*"
+----------------------------------------------------------
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo00.rst
+
+.. warning::
+
+  Cet algorithme n'est utilisable qu'en interface textuelle (TUI) et pas en
+  interface graphique (GUI).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet d'établir les valeurs, liées à un état
-:math:`\mathbf{x}`, d'une fonctionnelle d'erreur :math:`J` quelconque de type
-:math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations, et
-de l'opérateur d'observation, pour un échantillon d'états :math:`\mathbf{x}`
-donné a priori. La fonctionnelle d'erreur par défaut est celle de moindres
-carrés pondérés augmentés, classiquement utilisée en assimilation de données,
-utilisant des observations :math:`\mathbf{y}^o`.
-
-Il est utile pour tester la sensibilité, de la fonctionnelle :math:`J`, en
-particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque un état n'est
-pas observable, une valeur *"NaN"* est retournée.
+Cet algorithme permet de générer un ensemble de résultats, de type simulation
+ou observation, à l'aide de l'opérateur :math:`H` pour un plan d'expérience de
+l'espace des états :math:`\mathbf{x}` paramétriques. Le résultat de cet
+algorithme est une collection homogène des vecteurs simulés (disponible à
+l'aide de la variable stockable "*EnsembleOfSimulations*") correspondants directement à
+la collection homogène choisie de vecteurs d'états (disponible à l'aide de la
+variable stockable "*EnsembleOfStates*").
 
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
@@ -54,26 +63,22 @@ demandés **explicitement**. On utilise pour cela, sur la variable désirée, la
 sauvegarde finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en
 cours de calcul à l'aide des "*observer*" adaptés.
 
-Pour effectuer un échantillonnage distribué ou plus complexe, voir le module
-OPENTURNS disponible dans SALOME.
+Les résultats obtenus avec cet algorithme peuvent être utilisés pour alimenter
+un :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`. De manière
+complémentaire, et si le but est d'évaluer l'erreur calcul-mesure, un
+:ref:`section_ref_algorithm_SamplingTest` utilise les mêmes commandes
+d'échantillonnage pour établir un ensemble de valeurs de fonctionnelle d'erreur
+:math:`J` à partir d'observations :math:`\mathbf{y}^o`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst
 
-.. include:: snippets/BackgroundError.rst
-
-.. include:: snippets/Observation.rst
-
-.. include:: snippets/ObservationError.rst
-
 .. include:: snippets/ObservationOperator.rst
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo03Chck.rst
-
-.. include:: snippets/QualityCriterion.rst
+.. include:: snippets/Header2Algo03Task.rst
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
@@ -100,14 +105,8 @@ StoreSupplementaryCalculations
   (la description détaillée de chaque variable nommée est donnée dans la suite
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
-  "CostFunctionJ",
-  "CostFunctionJb",
-  "CostFunctionJo",
-  "CurrentState",
   "EnsembleOfSimulations",
   "EnsembleOfStates",
-  "InnovationAtCurrentState",
-  "SimulatedObservationAtCurrentState",
   ].
 
   Exemple :
@@ -116,39 +115,20 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
 
-.. include:: snippets/CostFunctionJ.rst
-
-.. include:: snippets/CostFunctionJb.rst
-
-.. include:: snippets/CostFunctionJo.rst
+.. include:: snippets/EnsembleOfSimulations.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
-
-.. include:: snippets/CostFunctionJ.rst
-
-.. include:: snippets/CostFunctionJb.rst
-
-.. include:: snippets/CostFunctionJo.rst
-
-.. include:: snippets/CurrentState.rst
 
 .. include:: snippets/EnsembleOfSimulations.rst
 
 .. include:: snippets/EnsembleOfStates.rst
 
-.. include:: snippets/InnovationAtCurrentState.rst
-
-.. include:: snippets/SimulatedObservationAtCurrentState.rst
-
 .. ------------------------------------ ..
-.. _section_ref_algorithm_SamplingTest_examples:
+.. _section_ref_algorithm_EnsembleOfSimulationGenerationTask_examples:
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`
-- :ref:`section_ref_algorithm_LocalSensitivityTest`
+- :ref:`section_ref_algorithm_ParallelFunctionTest`
+- :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`
 
-.. ------------------------------------ ..
-.. include:: snippets/Header2Algo08.rst
-
-- OPENTURNS, voir le *Guide utilisateur du module OPENTURNS* dans le menu principal *Aide* de l'environnement SALOME

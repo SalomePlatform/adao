@@ -31,22 +31,24 @@ Checking algorithm "*SamplingTest*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to calculate the values, linked to a :math:`\mathbf{x}`
-state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
-:math:`L^{\infty}`, with or without weights, and of the observation operator,
-for an priori given states sample. The default error function is the augmented
-weighted least squares function, classically used in data assimilation.
+state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2`
+or :math:`L^{\infty}`, with or without weights, and of the observation
+operator, for an priori given :math:`\mathbf{x}` states sample. The default
+error function is the augmented weighted least squares function, classically
+used in data assimilation, using observation :math:`\mathbf{y}^o`.
 
 It is useful to test the sensitivity, of the error function :math:`J`, in
 particular, to the state :math:`\mathbf{x}` variations. When a state is not
 observable, a *"NaN"* value is returned.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
-the form of hyper-cubes, explicit or sampled using classic distributions. Be
-careful to the size of the hyper-cube (and then to the number of calculations)
-that can be reached, it can be big very quickly.
+form of hyper-cubes, explicit or sampled according to classic distributions.
+Beware of the size of the hyper-cube (and then to the number of computations)
+that can be reached, it can grow quickly to be quite large.
 
-To be visible by the user, the results of sampling has to be explicitly asked
-for. One use for that, on the desired variable, the final saving through
+To be visible by the user while reducing the risk of storage difficulties, the
+results of sampling or simulations has to be **explicitly** asked for. One use
+for that, on the desired variable, the final saving through
 "*UserPostAnalysis*" or the treatment during the calculation by "*observer*".
 
 To perform distributed or more complex sampling, see OPENTURNS module available

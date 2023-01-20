@@ -112,3 +112,4 @@ StoreSupplementaryCalculations
 - :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_InputValuesTest`
 - :ref:`section_ref_algorithm_LinearityTest`
+- :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`

@@ -167,5 +167,6 @@ sous-jacents.
 .. toctree::
    :maxdepth: 1
 
+   ref_algorithm_EnsembleOfSimulationGenerationTask
    ref_algorithm_MeasurementsOptimalPositioningTask
    ref_task_keywords

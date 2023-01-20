@@ -51,23 +51,25 @@ déterminées de manière itérative, à partir d'un ensemble de vecteurs d'éta
 pré-existants (usuellement appelés "*snapshots*" en méthodologie de bases
 réduites) ou obtenus par une simulation directe au cours de l'algorithme.
 Chacun de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
-résultat :math:`\mathbf{y}` d'une simulation :math:`H` pour un jeu de
-paramètres donné :math:`\mathbf{x}`.
+résultat :math:`\mathbf{y}` d'une simulation ou d'une observation à l'aide de
+l'opérateur :math:`H` pour un jeu de paramètres donné :math:`\mathbf{x}`.
 
 Il y a deux manières d'utiliser cet algorithme:
 
 #. Dans son usage le plus simple, si l'ensemble des vecteurs d'état est
    pré-existant, il suffit de le fournir par l'option "*EnsembleOfSnapshots*"
-   d'algorithme.
+   d'algorithme. C'est par exemple le cas l'ensemble des états a été généré par
+   un :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`.
 #. Si l'ensemble des vecteurs d'état doit être obtenu par des simulations au
-   cours de l'algorithme, alors on doit fournir l'opérateur de simulation
-   :math:`H` et le plan d'expérience de l'espace des états :math:`\mathbf{x}`
-   paramétriques.
+   cours de l'algorithme, alors on doit fournir l'opérateur de simulation ou
+   d'observation :math:`H` et le plan d'expérience de l'espace des états
+   :math:`\mathbf{x}` paramétriques.
 
-L'échantillon des états :math:`\mathbf{x}` peut être fourni explicitement ou
-sous la forme d'hyper-cubes, explicites ou échantillonnés selon des lois
-courantes. Attention à la taille de l'hyper-cube (et donc au nombre de calculs)
-qu'il est possible d'atteindre, elle peut rapidement devenir importante.
+L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
+ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
+distributions courantes. Attention à la taille de l'hyper-cube (et donc au
+nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
+importante.
 
 Il est possible d'exclure a priori des positions potentielles pour les points
 de mesures optimaux, en utilisant le variant "*lcEIM*" d'analyse pour une
@@ -148,6 +150,13 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask_examples:
+.. include:: snippets/Header2Algo06.rst
+
+- :ref:`section_ref_algorithm_FunctionTest`
+- :ref:`section_ref_algorithm_ParallelFunctionTest`
+- :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst
 
 - [Barrault04]_
