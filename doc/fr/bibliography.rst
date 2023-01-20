@@ -77,6 +77,10 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Glover90] Glover F., *Tabu Search-Part II*, ORSA Journal on Computing, 2(1), pp.4-32, 1990
 
+.. [Gnuplot] *Gnuplot - Portable command-line driven graphing utility*, http://www.gnuplot.info/
+
+.. [Gnuplot.py] *Gnuplot.py - A pipe-based interface to the gnuplot plotting program*, http://gnuplot-py.sourceforge.net
+
 .. [Gong18] Gong H., *Data assimilation with reduced basis and noisy measurement: Applications to nuclear reactor cores*, PhD Thesis, Sorbonne Université (France), 2018
 
 .. [Hamill00] Hamill T. M., Snyder C., *A Hybrid Ensemble Kalman Filter-3D Variational Analysis Scheme*, Monthly Weather Review, 128(8), pp.2905-2919, 2000

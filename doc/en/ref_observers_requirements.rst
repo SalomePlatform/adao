@@ -126,6 +126,14 @@ user is encouraged to take inspiration from a model that is suitable for him
 and to modify it by specifying differently this shared information. Then, the
 modified function can be used in a "*String*" or "*Script*" input.
 
+.. note::
+
+    Some of the "observers" allow to create figures using the built-in Python
+    module Gnuplot.py [Gnuplot.py]_, which is an interface to control and send
+    arguments to the classic graphical plotting utility Gnuplot [Gnuplot]_.
+    Available under most environments, Gnuplot is independent and must be
+    correctly preinstalled. Gnuplot.py is here updated to support Python 3.
+
 Hereinafter we give the identifier and the contents of all the available
 "*observer*" models.
 
