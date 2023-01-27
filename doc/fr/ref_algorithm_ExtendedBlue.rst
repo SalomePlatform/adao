@@ -197,6 +197,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_ExtendedBlue_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_ExtendedBlue.rst

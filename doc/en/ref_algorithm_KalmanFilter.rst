@@ -196,6 +196,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_KalmanFilter_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. --------- ..

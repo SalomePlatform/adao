@@ -126,6 +126,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_EnsembleOfSimulationGenerationTask_examples:
+
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`

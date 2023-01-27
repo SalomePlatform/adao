@@ -138,6 +138,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_QuantileRegression_examples:
+
 .. include:: snippets/Header2Algo06.rst
 
 .. ------------------------------------ ..

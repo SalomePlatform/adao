@@ -140,6 +140,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_SamplingTest_examples:
+
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`

@@ -111,8 +111,6 @@ class Test_Adao(unittest.TestCase):
         verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 2.e-1)
         print("  Les resultats obtenus sont corrects.")
         print("")
-        #
-        return 0
 
     def test2(self):
         """Verification de la disponibilite de l'ensemble des algorithmes\n(Utilisation d'un operateur fonctionnel)"""
@@ -185,8 +183,6 @@ class Test_Adao(unittest.TestCase):
         verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 2e-1)
         print("  Les resultats obtenus sont corrects.")
         print("")
-        #
-        return 0
 
 def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):
     """Comparaison de deux vecteurs"""

@@ -134,8 +134,6 @@ class Test_Versions(unittest.TestCase):
         print("")
         print("  Les résultats obtenus sont corrects.")
         print("")
-        #
-        return 0
 
 def compare_versions(v1,v2):
     "Comparaison v1 >= v2"

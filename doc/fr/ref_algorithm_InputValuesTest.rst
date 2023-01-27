@@ -71,7 +71,10 @@ informatiquement problématique*).
 .. include:: snippets/SetDebug.rst
 
 .. ------------------------------------ ..
+.. _section_ref_algorithm_InputValuesTest_examples:
+
 .. include:: snippets/Header2Algo06.rst
 
+- :ref:`section_ref_algorithm_ControledFunctionTest`
 - :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_ParallelFunctionTest`

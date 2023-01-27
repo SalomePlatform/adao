@@ -95,6 +95,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_ParallelFunctionTest_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_ParallelFunctionTest.rst

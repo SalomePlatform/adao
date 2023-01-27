@@ -49,7 +49,6 @@ class Test_Adao(unittest.TestCase):
         #
         xa = case.get("Analysis")[-1]
         Test_Adao.results.append( xa )
-        return xa
 
     def test2(self):
         """Test"""
@@ -76,7 +75,6 @@ class Test_Adao(unittest.TestCase):
         #
         xa = case.get("Analysis")[-1]
         Test_Adao.results.append( xa )
-        return xa
 
     def test3(self):
         """Test"""

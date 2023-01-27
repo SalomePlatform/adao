@@ -147,7 +147,7 @@ class Test_Adao(unittest.TestCase):
         print("The results are correct.")
         print("")
         #
-        return Xoptimum
+        #  return Xoptimum
 
 # ==============================================================================
 def assertAlmostEqualArrays(first, second, places=7, msg=None, delta=None):

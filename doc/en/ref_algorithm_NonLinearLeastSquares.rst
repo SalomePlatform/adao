@@ -190,6 +190,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_NonLinearLeastSquares_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_NonLinearLeastSquares.rst

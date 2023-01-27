@@ -51,7 +51,6 @@ class Test_Adao(unittest.TestCase):
         else:
             print('    - Lapack............: numpy n\'indique plus où le trouver')
         print("")
-        return True
 
     #~ @unittest.skip("Debug")
     def test_Numpy01(self, dimension = 10000, precision = 1.e-17, repetitions = 10):

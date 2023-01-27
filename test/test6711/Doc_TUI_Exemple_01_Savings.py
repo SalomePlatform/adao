@@ -93,8 +93,6 @@ class Test_Adao(unittest.TestCase):
         print("  L'écart absolu maximal obtenu lors du test est de %.2e."%ecart)
         print("  Les résultats obtenus sont corrects.")
         print("")
-        #
-        return xa
 
 # ==============================================================================
 def filesize(name):

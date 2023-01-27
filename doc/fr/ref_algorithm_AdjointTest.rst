@@ -39,7 +39,7 @@ Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
 vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
 :math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` avec :math:`\alpha_0` un paramètre
 utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est l'opérateur ou
-le code de calcul (qui est ici acquis par la commande d'opérateur d'observation
+le code de calcul (qui est ici défini par la commande d'opérateur d'observation
 "*ObservationOperator*").
 
 On observe le résidu suivant, qui est la différence de deux produits scalaires :
@@ -111,6 +111,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_AdjointTest_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_AdjointTest.rst

@@ -117,8 +117,6 @@ class Test_Adao(unittest.TestCase):
             verify_similarity_of_algo_results(("Multi/"+algo, "Mono/"+algo), Xa, 1.e-20)
         print("  Les resultats obtenus sont corrects.")
         print("")
-        #
-        return 0
 
 # ==============================================================================
 def almost_equal_vectors(v1, v2, precision = 1.e-15, msg = ""):

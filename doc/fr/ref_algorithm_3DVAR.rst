@@ -257,6 +257,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_3DVAR_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. include:: scripts/simple_3DVAR.rst

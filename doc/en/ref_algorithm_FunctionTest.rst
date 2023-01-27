@@ -94,6 +94,7 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_FunctionTest_examples:
+
 .. include:: snippets/Header2Algo09.rst
 
 .. --------- ..
