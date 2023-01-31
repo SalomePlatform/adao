@@ -122,7 +122,10 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"sys.executable",sys.executable)
         __msg += "\n%s%30s : %s" %(__prefix,"sys.version",sys.version.replace('\n',''))
         __msg += "\n%s%30s : %s" %(__prefix,"sys.getfilesystemencoding",str(sys.getfilesystemencoding()))
-        __msg += "\n%s%30s : %s" %(__prefix,"locale.getdefaultlocale",str(locale.getdefaultlocale()))
+        if  sys.version_info.major == 3 and sys.version_info.minor < 11: # Python 3.10
+            __msg += "\n%s%30s : %s" %(__prefix,"locale.getdefaultlocale",str(locale.getdefaultlocale()))
+        else:
+            __msg += "\n%s%30s : %s" %(__prefix,"locale.getlocale",str(locale.getlocale()))
         __msg += "\n"
         __msg += "\n%s%30s : %s" %(__prefix,"os.cpu_count",os.cpu_count())
         if hasattr(os, 'sched_getaffinity'):

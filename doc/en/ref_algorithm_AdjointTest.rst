@@ -38,7 +38,7 @@ For all formulas, with :math:`\mathbf{x}` the current verification point, we
 take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
 :math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` with :math:`\alpha_0` a scaling user
 parameter, defaulting to 1. :math:`F` is the computational operator or code
-(which is here acquired by the observation operator command
+(which is here defined by the observation operator command
 "*ObservationOperator*").
 
 One can observe the following residue, which is the difference of two scalar

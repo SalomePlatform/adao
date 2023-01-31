@@ -976,7 +976,7 @@ class Algorithm(object):
             except Exception:
                 raise KeyError(msg)
 
-    def run(self, Xb=None, Y=None, H=None, M=None, R=None, B=None, Q=None, Parameters=None):
+    def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         """
         Doit implémenter l'opération élémentaire de calcul algorithmique.
         """

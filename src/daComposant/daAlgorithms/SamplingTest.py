@@ -21,10 +21,9 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy, logging
-from daCore import BasicObjects, NumericObjects
+from daCore import BasicObjects, NumericObjects, PlatformInfo
 from daAlgorithms.Atoms import eosg
-from daCore.PlatformInfo import PlatformInfo
-mfp = PlatformInfo().MaximumPrecision()
+mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -90,6 +89,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentState",
                 "EnsembleOfSimulations",
                 "EnsembleOfStates",
+                "Innovation",
                 "InnovationAtCurrentState",
                 "SimulatedObservationAtCurrentState",
                 ]
@@ -147,6 +147,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                     Jo  = numpy.max( numpy.abs(_Innovation) )
                 #
                 J   = Jb + Jo
+            if self._toStore("Innovation"):
+                self.StoredVariables["Innovation"].store( _Innovation )
             if self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( _X )
             if self._toStore("InnovationAtCurrentState"):

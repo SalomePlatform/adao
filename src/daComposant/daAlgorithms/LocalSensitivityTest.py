@@ -81,9 +81,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 HXb = Ht @ Xb
             HXb = numpy.ravel( HXb ).reshape((-1,1))
             if Y.size != HXb.size:
-                raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+                raise ValueError("The size %i of observations Yobs and %i of observed calculation F(X) are different, they have to be identical."%(Y.size,HXb.size))
             if max(Y.shape) != max(HXb.shape):
-                raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
+                raise ValueError("The shapes %s of observations Yobs and %s of observed calculation F(X) are different, they have to be identical."%(Y.shape,HXb.shape))
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( HXb )
         #
         self._post_run(HO)

@@ -26,24 +26,29 @@
 Notations and common conventions
 ================================
 
+.. index:: single: File (naming)
+.. index:: single: File (type)
+
 In all this documentation, we use standard notations of linear algebra, data
 assimilation (as described in [Ide97]_) and optimization.
 
-For algebraic formulations, vectors are written horizontally or vertically
-without making a difference. Matrices are written either normally, or with a
-condensed notation, consisting in the use of a space to separate the values,
-and a "``;``" to separate the rows of the matrix, in a continuous line.
+For algebraic formulations, **vectors** are written horizontally or vertically
+without making a difference. **Matrices** can be written either normally as a
+serie of number series, either in text condensed notation, consisting in the
+use of a space to separate the values, and a "``;``" to separate the rows of
+the matrix, in a continuous line.
 
-Files can be indicated by an absolute or relative path. For some old or shared
-file systems, the full name with the path must not contain more than 256
-characters. In the case of Python files, it is advisable not to use dots in the
-name apart for the extension, to prevent difficulties in using it that are
-complicated to diagnose.
+**Files** can be indicated by an absolute or relative path. For some old or
+shared file systems, the full name, including the path, must not contain more
+than 256 characters. In the case of Python files, it is advisable not to use
+dots in the name apart for the extension, to prevent difficulties in using it
+that are then complicated to diagnose.
 
-File type and naming conventions rely heavily on the extensions of the files
-themselves. Some of them are briefly specified here, without being exhaustive:
+**File type and naming conventions** rely heavily on the extensions of the
+files themselves. Some of them are briefly specified here, without being
+exhaustive:
 
-- extension ``.py``   : data or commands text file of Python source type
+- extension ``.py``   : data or commands text file of Python type
 - extension ``.comm`` : commands text file of ADAO EFICAS type
 - extension ``.xml``  : data text file of XML type or commands (for YACS, not exclusive)
 - extension ``.txt``  : data text file with space separator
@@ -53,6 +58,9 @@ themselves. Some of them are briefly specified here, without being exhaustive:
 - extension ``.npy``  : data binary file of type Numpy mono-variable
 - extension ``.npz``  : data binary file of type Numpy multi-variables
 - extension ``.sdf``  : data binary file of type Scientific Data Format
+
+For the use of some of these files, one can refer to the keyword "*DataFile*"
+as :ref:`section_ref_entry_types_info`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst

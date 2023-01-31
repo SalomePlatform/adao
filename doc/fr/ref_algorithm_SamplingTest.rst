@@ -106,6 +106,7 @@ StoreSupplementaryCalculations
   "CurrentState",
   "EnsembleOfSimulations",
   "EnsembleOfStates",
+  "Innovation",
   "InnovationAtCurrentState",
   "SimulatedObservationAtCurrentState",
   ].
@@ -136,6 +137,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/EnsembleOfSimulations.rst
 
 .. include:: snippets/EnsembleOfStates.rst
+
+.. include:: snippets/Innovation.rst
 
 .. include:: snippets/InnovationAtCurrentState.rst
 

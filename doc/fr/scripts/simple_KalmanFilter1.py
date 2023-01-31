@@ -44,7 +44,7 @@ Xa = case.get("Analysis")
 Pa = case.get("APosterioriCovariance")
 #
 print("")
-print("  Variance a posteriori finale :",Pa[-1])
+print("  Variance a posteriori finale :", Pa[-1])
 print("")
 #
 #-------------------------------------------------------------------------------

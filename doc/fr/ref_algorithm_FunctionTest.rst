@@ -34,7 +34,8 @@ Cet algorithme permet de vérifier qu'un opérateur :math:`F` quelconque, dont e
 particulier celui d'observation, fonctionne correctement et que son appel se
 déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De
 manière pratique, il permet d'appeler une ou plusieurs fois l'opérateur, en
-activant ou non le mode "debug" lors de l'exécution.
+activant ou non le mode "debug" lors de l'exécution. L'opérateur :math:`F` est
+considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}`.
 
 Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
 l'opérateur est indiquée, et une autre globale est fournie de manière

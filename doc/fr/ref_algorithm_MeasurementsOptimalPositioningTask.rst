@@ -58,8 +58,8 @@ Il y a deux manières d'utiliser cet algorithme:
 
 #. Dans son usage le plus simple, si l'ensemble des vecteurs d'état est
    pré-existant, il suffit de le fournir par l'option "*EnsembleOfSnapshots*"
-   d'algorithme. C'est par exemple le cas l'ensemble des états a été généré par
-   un :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`.
+   d'algorithme. C'est par exemple le cas si l'ensemble des états a été généré
+   par un :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`.
 #. Si l'ensemble des vecteurs d'état doit être obtenu par des simulations au
    cours de l'algorithme, alors on doit fournir l'opérateur de simulation ou
    d'observation :math:`H` et le plan d'expérience de l'espace des états

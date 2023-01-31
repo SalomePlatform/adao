@@ -33,7 +33,9 @@ Checking algorithm "*FunctionTest*"
 This algorithm allows to verify that a given operator :math:`F`, in particular
 the observation one, is working correctly and that its call is compatible with
 its usage in ADAO algorithms. In practice, it allows to call one or several
-times the operator, activating or not the "debug" mode during execution.
+times the operator, activating or not the "debug" mode during execution. The
+:math:`F` operator is considered to depend on the vector variable
+:math:`\mathbf{x}`.
 
 Statistics on input and output vectors for each execution of operator are
 given, and an another global statistic is given at the end of the checking
