@@ -72,5 +72,6 @@ if a variable is large in size, this can be difficult*).
 
 .. include:: snippets/Header2Algo06.rst
 
+- :ref:`section_ref_algorithm_ControledFunctionTest`
 - :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_ParallelFunctionTest`

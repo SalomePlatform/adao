@@ -21,28 +21,29 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: FunctionTest
-.. _section_ref_algorithm_FunctionTest:
+.. index:: single: ControledFunctionTest
+.. _section_ref_algorithm_ControledFunctionTest:
 
-Algorithme de vérification "*FunctionTest*"
--------------------------------------------
+Checking algorithm "*ControledFunctionTest*"
+--------------------------------------------
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de vérifier qu'un opérateur :math:`F` quelconque, dont en
-particulier celui d'observation, fonctionne correctement et que son appel se
-déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De
-manière pratique, il permet d'appeler une ou plusieurs fois l'opérateur, en
-activant ou non le mode "debug" lors de l'exécution. L'opérateur :math:`F` est
-considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}`.
+This algorithm allows to verify that a given operator :math:`F`, in particular
+the observation one, is working correctly and that its call is compatible with
+its usage in ADAO algorithms. In practice, it allows to call one or several
+times the operator, activating or not the "debug" mode during execution. The
+:math:`F` operator is considered to depend on a state vector variable
+:math:`\mathbf{x}` and on a control vector variable :math:`\mathbf{u}`, the two
+not necessarily being of the same size.
 
-Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
-l'opérateur est indiquée, et une autre globale est fournie de manière
-récapitulative à la fin de l'algorithme de vérification. La précision
-d'affichage est contrôlable pour permettre l'automatisation des tests
-d'opérateur. Il peut être aussi utile de vérifier préalablement les entrées
-elles-mêmes avec le test prévu :ref:`section_ref_algorithm_InputValuesTest`.
+Statistics on input and output vectors for each execution of operator are
+given, and an another global statistic is given at the end of the checking
+algorithm. The precision of printed outputs can be controlled to facilitate
+automatic tests of operator. It may also be useful to check the entries
+themselves beforehand with the intended test
+:ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -50,6 +51,8 @@ elles-mêmes avec le test prévu :ref:`section_ref_algorithm_InputValuesTest`.
 .. include:: snippets/CheckingPoint.rst
 
 .. include:: snippets/ObservationOperator.rst
+
+.. include:: snippets/ControlInput.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Chck.rst
@@ -65,21 +68,21 @@ elles-mêmes avec le test prévu :ref:`section_ref_algorithm_InputValuesTest`.
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 
-  *Liste de noms*. Cette liste indique les noms des variables supplémentaires,
-  qui peuvent être disponibles au cours du déroulement ou à la fin de
-  l'algorithme, si elles sont initialement demandées par l'utilisateur. Leur
-  disponibilité implique, potentiellement, des calculs ou du stockage coûteux.
-  La valeur par défaut est donc une liste vide, aucune de ces variables n'étant
-  calculée et stockée par défaut (sauf les variables inconditionnelles). Les
-  noms possibles pour les variables supplémentaires sont dans la liste suivante
-  (la description détaillée de chaque variable nommée est donnée dans la suite
-  de cette documentation par algorithme spécifique, dans la sous-partie
-  "*Informations et variables disponibles à la fin de l'algorithme*") : [
+  *List of names*. This list indicates the names of the supplementary
+  variables, that can be available during or at the end of the algorithm, if
+  they are initially required by the user. Their avalability involves,
+  potentially, costly calculations or memory consumptions. The default is then
+  a void list, none of these variables being calculated and stored by default
+  (excepted the unconditionnal variables). The possible names are in the
+  following list (the detailed description of each named variable is given in
+  the following part of this specific algorithmic documentation, in the
+  sub-section "*Information and variables available at the end of the
+  algorithm*"): [
   "CurrentState",
   "SimulatedObservationAtCurrentState",
   ].
 
-  Exemple :
+  Example :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
 .. ------------------------------------ ..
@@ -95,28 +98,28 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
-.. _section_ref_algorithm_FunctionTest_examples:
+.. _section_ref_algorithm_ControledFunctionTest_examples:
 
 .. include:: snippets/Header2Algo09.rst
 
 .. --------- ..
-.. include:: scripts/simple_FunctionTest1.rst
+.. include:: scripts/simple_ControledFunctionTest1.rst
 
-.. literalinclude:: scripts/simple_FunctionTest1.py
+.. literalinclude:: scripts/simple_ControledFunctionTest1.py
 
 .. include:: snippets/Header2Algo10.rst
 
-.. literalinclude:: scripts/simple_FunctionTest1.res
+.. literalinclude:: scripts/simple_ControledFunctionTest1.res
     :language: none
 
 .. --------- ..
-.. include:: scripts/simple_FunctionTest2.rst
+.. include:: scripts/simple_ControledFunctionTest2.rst
 
-.. literalinclude:: scripts/simple_FunctionTest2.py
+.. literalinclude:: scripts/simple_ControledFunctionTest2.py
 
 .. include:: snippets/Header2Algo10.rst
 
-.. literalinclude:: scripts/simple_FunctionTest2.res
+.. literalinclude:: scripts/simple_ControledFunctionTest2.res
     :language: none
 
 .. ------------------------------------ ..
@@ -124,6 +127,5 @@ StoreSupplementaryCalculations
 
 - :ref:`section_ref_algorithm_InputValuesTest`
 - :ref:`section_ref_algorithm_LinearityTest`
-- :ref:`section_ref_algorithm_ControledFunctionTest`
+- :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_ParallelFunctionTest`
-- :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`

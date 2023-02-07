@@ -137,6 +137,7 @@ dans la section :ref:`section_theory`.
    :maxdepth: 1
 
    ref_algorithm_AdjointTest
+   ref_algorithm_ControledFunctionTest
    ref_algorithm_FunctionTest
    ref_algorithm_GradientTest
    ref_algorithm_InputValuesTest

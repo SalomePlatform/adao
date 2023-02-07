@@ -21,11 +21,11 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: FunctionTest
-.. _section_ref_algorithm_FunctionTest:
+.. index:: single: ControledFunctionTest
+.. _section_ref_algorithm_ControledFunctionTest:
 
-Algorithme de vérification "*FunctionTest*"
--------------------------------------------
+Algorithme de vérification "*ControledFunctionTest*"
+----------------------------------------------------
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
@@ -35,7 +35,9 @@ particulier celui d'observation, fonctionne correctement et que son appel se
 déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De
 manière pratique, il permet d'appeler une ou plusieurs fois l'opérateur, en
 activant ou non le mode "debug" lors de l'exécution. L'opérateur :math:`F` est
-considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}`.
+considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}` et d'un
+contrôle :math:`\mathbf{u}`, les deux n'étant pas nécessairement de la même
+taille.
 
 Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
 l'opérateur est indiquée, et une autre globale est fournie de manière
@@ -50,6 +52,8 @@ elles-mêmes avec le test prévu :ref:`section_ref_algorithm_InputValuesTest`.
 .. include:: snippets/CheckingPoint.rst
 
 .. include:: snippets/ObservationOperator.rst
+
+.. include:: snippets/ControlInput.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Chck.rst
@@ -95,28 +99,28 @@ StoreSupplementaryCalculations
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
-.. _section_ref_algorithm_FunctionTest_examples:
+.. _section_ref_algorithm_ControledFunctionTest_examples:
 
 .. include:: snippets/Header2Algo09.rst
 
 .. --------- ..
-.. include:: scripts/simple_FunctionTest1.rst
+.. include:: scripts/simple_ControledFunctionTest1.rst
 
-.. literalinclude:: scripts/simple_FunctionTest1.py
+.. literalinclude:: scripts/simple_ControledFunctionTest1.py
 
 .. include:: snippets/Header2Algo10.rst
 
-.. literalinclude:: scripts/simple_FunctionTest1.res
+.. literalinclude:: scripts/simple_ControledFunctionTest1.res
     :language: none
 
 .. --------- ..
-.. include:: scripts/simple_FunctionTest2.rst
+.. include:: scripts/simple_ControledFunctionTest2.rst
 
-.. literalinclude:: scripts/simple_FunctionTest2.py
+.. literalinclude:: scripts/simple_ControledFunctionTest2.py
 
 .. include:: snippets/Header2Algo10.rst
 
-.. literalinclude:: scripts/simple_FunctionTest2.res
+.. literalinclude:: scripts/simple_ControledFunctionTest2.res
     :language: none
 
 .. ------------------------------------ ..
@@ -124,6 +128,5 @@ StoreSupplementaryCalculations
 
 - :ref:`section_ref_algorithm_InputValuesTest`
 - :ref:`section_ref_algorithm_LinearityTest`
-- :ref:`section_ref_algorithm_ControledFunctionTest`
+- :ref:`section_ref_algorithm_FunctionTest`
 - :ref:`section_ref_algorithm_ParallelFunctionTest`
-- :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`
