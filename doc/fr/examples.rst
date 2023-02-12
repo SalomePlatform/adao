@@ -46,7 +46,7 @@ Utilisations d'algorithmes de calcul
 
 #. :ref:`Exemples avec l'algorithme de "3DVAR"<section_ref_algorithm_3DVAR_examples>`
 #. :ref:`Exemples avec l'algorithme de "Blue"<section_ref_algorithm_Blue_examples>`
-#. :ref:`Exemples avec l'algorithme de "DerivativeFreeOptimization" algorithm<section_ref_algorithm_DerivativeFreeOptimization_examples>`
+#. :ref:`Exemples avec l'algorithme de "DerivativeFreeOptimization"<section_ref_algorithm_DerivativeFreeOptimization_examples>`
 #. :ref:`Exemples avec l'algorithme de "ExtendedBlue"<section_ref_algorithm_ExtendedBlue_examples>`
 #. :ref:`Exemples avec l'algorithme de "KalmanFilter"<section_ref_algorithm_KalmanFilter_examples>`
 #. :ref:`Exemples avec l'algorithme de "NonLinearLeastSquares"<section_ref_algorithm_NonLinearLeastSquares_examples>`
@@ -54,9 +54,10 @@ Utilisations d'algorithmes de calcul
 Utilisations d'algorithmes de vérification
 ------------------------------------------
 
-#. :ref:`Exemples avec la vérification "AdjointTest"<section_ref_algorithm_AdjointTest_examples>`
-#. :ref:`Exemples avec la vérification "FunctionTest"<section_ref_algorithm_FunctionTest_examples>`
-#. :ref:`Exemples avec la vérification "ParallelFunctionTest"<section_ref_algorithm_ParallelFunctionTest_examples>`
+#. :ref:`Exemples de vérification avec "AdjointTest"<section_ref_algorithm_AdjointTest_examples>`
+#. :ref:`Exemples de vérification avec "ControledFunctionTest"<section_ref_algorithm_ControledFunctionTest_examples>`
+#. :ref:`Exemples de vérification avec "FunctionTest"<section_ref_algorithm_FunctionTest_examples>`
+#. :ref:`Exemples de vérification avec "ParallelFunctionTest"<section_ref_algorithm_ParallelFunctionTest_examples>`
 
 Utilisations avancées
 ---------------------

@@ -3,8 +3,26 @@
      ===========
 
      This test allows to analyze the quality of an adjoint operator associated
-     to some given direct operator. If the adjoint operator is approximated and
-     not given, the test measures the quality of the automatic approximation.
+     to some given direct operator F, applied to one single vector argument x.
+     If the adjoint operator is approximated and not given, the test measures
+     the quality of the automatic approximation, around an input checking point X.
+
+===> Information before launching:
+     -----------------------------
+
+     Characteristics of input vector X, internally converted:
+       Type...............: <class 'numpy.ndarray'>
+       Length of vector...: 3
+       Minimum value......: 0.000e+00
+       Maximum value......: 2.000e+00
+       Mean of vector.....: 1.000e+00
+       Standard error.....: 8.165e-01
+       L2 norm of vector..: 2.236e+00
+
+     ---------------------------------------------------------------------------
+
+===> Numerical quality indicators:
+     -----------------------------
 
      Using the "ScalarProduct" formula, one observes the residue R which is the
      difference of two scalar products:
@@ -17,6 +35,7 @@
      one takes Y = F(X).
 
      (Remark: numbers that are (about) under 2e-16 represent 0 to machine precision)
+
 
      -------------------------------------------------------------
        i   Alpha     ||X||       ||Y||       ||dX||     R(Alpha)
@@ -35,3 +54,8 @@
        11  1e-11   2.236e+00   1.910e+01   3.536e-11   0.000e+00
        12  1e-12   2.236e+00   1.910e+01   3.536e-12   0.000e+00
      -------------------------------------------------------------
+
+     End of the verification by "ScalarProduct" formula
+
+     ---------------------------------------------------------------------------
+

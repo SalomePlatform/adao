@@ -20,9 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import logging
+import numpy, copy, logging
 from daCore import BasicObjects, PlatformInfo
-import numpy, copy
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
 
@@ -84,127 +83,177 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Hm = HO["Direct"].appliedTo
         #
-        Xn = copy.copy( Xb )
+        X0 = copy.copy( Xb )
         #
         # ----------
         __s = self._parameters["ShowElementarySummary"]
         __p = self._parameters["NumberOfPrintedDigits"]
+        __r = self._parameters["NumberOfRepetition"]
         #
-        __marge =  5*u" "
+        __marge = 5*u" "
+        __flech = 3*"="+"> "
+        msgs  = ("\n") # 1
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = str(self._parameters["ResultTitle"])
-            msgs  = ("\n")
             msgs += (__marge + "====" + "="*len(__rt) + "====\n")
             msgs += (__marge + "    " + __rt + "\n")
             msgs += (__marge + "====" + "="*len(__rt) + "====\n")
         else:
-            msgs  = ("\n")
-            msgs += ("     %s\n"%self._name)
-            msgs += ("     %s\n"%("="*len(self._name),))
+            msgs += (__marge + "%s\n"%self._name)
+            msgs += (__marge + "%s\n"%("="*len(self._name),))
         #
         msgs += ("\n")
-        msgs += ("     This test allows to analyze the (repetition of) launch of some given\n")
-        msgs += ("     operator. It shows simple statistics related to its successful execution,\n")
-        msgs += ("     or related to the similarities of repetition of its execution.\n")
+        msgs += (__marge + "This test allows to analyze the (repetition of the) launch of some\n")
+        msgs += (__marge + "given simulation operator F, applied to one single vector argument x,\n")
+        msgs += (__marge + "in a parallel way.\n")
+        msgs += (__marge + "The output shows simple statistics related to its successful execution,\n")
+        msgs += (__marge + "or related to the similarities of repetition of its execution.\n")
         msgs += ("\n")
-        msgs += ("===> Information before launching:\n")
-        msgs += ("     -----------------------------\n")
-        msgs += ("     Characteristics of input vector X, internally converted:\n")
-        msgs += ("       Type...............: %s\n")%type( Xn )
-        msgs += ("       Length of vector...: %i\n")%max(numpy.ravel( Xn ).shape)
-        msgs += ("       Minimum value......: %."+str(__p)+"e\n")%numpy.min( Xn )
-        msgs += ("       Maximum value......: %."+str(__p)+"e\n")%numpy.max( Xn )
-        msgs += ("       Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( Xn, dtype=mfp )
-        msgs += ("       Standard error.....: %."+str(__p)+"e\n")%numpy.std( Xn, dtype=mfp )
-        msgs += ("       L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Xn )
-        print(msgs)
+        msgs += (__flech + "Information before launching:\n")
+        msgs += (__marge + "-----------------------------\n")
+        msgs += ("\n")
+        msgs += (__marge + "Characteristics of input vector X, internally converted:\n")
+        msgs += (__marge + "  Type...............: %s\n")%type( X0 )
+        msgs += (__marge + "  Length of vector...: %i\n")%max(numpy.ravel( X0 ).shape)
+        msgs += (__marge + "  Minimum value......: %."+str(__p)+"e\n")%numpy.min(  X0 )
+        msgs += (__marge + "  Maximum value......: %."+str(__p)+"e\n")%numpy.max(  X0 )
+        msgs += (__marge + "  Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( X0, dtype=mfp )
+        msgs += (__marge + "  Standard error.....: %."+str(__p)+"e\n")%numpy.std(  X0, dtype=mfp )
+        msgs += (__marge + "  L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( X0 )
+        msgs += ("\n")
+        msgs += (__marge + "%s\n\n"%("-"*75,))
         #
-        print("     %s\n"%("-"*75,))
         if self._parameters["SetDebug"]:
             CUR_LEVEL = logging.getLogger().getEffectiveLevel()
             logging.getLogger().setLevel(logging.DEBUG)
-            print("===> Beginning of repeated evaluation, activating debug\n")
+            if __r > 1:
+                msgs += (__flech + "Beginning of repeated evaluation, activating debug\n")
+            else:
+                msgs += (__flech + "Beginning of evaluation, activating debug\n")
         else:
-            print("===> Beginning of repeated evaluation, without activating debug\n")
+            if __r > 1:
+                msgs += (__flech + "Beginning of repeated evaluation, without activating debug\n")
+            else:
+                msgs += (__flech + "Beginning of evaluation, without activating debug\n")
+        msgs += ("\n")
+        msgs += (__marge + "%s\n"%("-"*75,))
+        print(msgs) # 1
         #
         # ----------
         HO["Direct"].disableAvoidingRedundancy()
         # ----------
         Ys = []
-        print("     %s\n"%("-"*75,))
         Xs = []
-        for i in range(self._parameters["NumberOfRepetition"]):
+        msgs  = (__marge + "Appending the input vector to the agument set to be evaluated in parallel\n") # 2-1
+        for i in range(__r):
             if self._toStore("CurrentState"):
-                self.StoredVariables["CurrentState"].store( numpy.ravel(Xn) )
-            Xs.append( Xn )
-        print("===> Launching operator parallel evaluation for %i states\n"%self._parameters["NumberOfRepetition"])
+                self.StoredVariables["CurrentState"].store( X0 )
+            Xs.append( X0 )
+            if __s:
+                # msgs += ("\n")
+                if __r > 1:
+                    msgs += (__marge + "  Appending step number %i on a total of %i\n"%(i+1,__r))
+        #
+        msgs += ("\n")
+        msgs += (__marge + "%s\n\n"%("-"*75,))
+        msgs += (__flech + "Launching operator parallel evaluation for %i states\n"%__r)
+        print(msgs) # 2-1
         #
         Ys = Hm( Xs, argsAsSerie = True )
         #
-        print("\n===> End of operator parallel evaluation for %i states\n"%self._parameters["NumberOfRepetition"])
+        msgs  = ("\n") # 2-2
+        msgs += (__flech + "End of operator parallel evaluation for %i states\n"%__r)
+        msgs += ("\n")
+        msgs += (__marge + "%s\n"%("-"*75,))
+        print(msgs) # 2-2
         #
         # ----------
         HO["Direct"].enableAvoidingRedundancy()
         # ----------
         #
-        print("     %s\n"%("-"*75,))
+        msgs  = ("") # 3
         if self._parameters["SetDebug"]:
-            print("===> End of repeated evaluation, deactivating debug if necessary\n")
+            if __r > 1:
+                msgs += (__flech + "End of repeated evaluation, deactivating debug if necessary\n")
+            else:
+                msgs += (__flech + "End of evaluation, deactivating debug if necessary\n")
             logging.getLogger().setLevel(CUR_LEVEL)
         else:
-            print("===> End of repeated evaluation, without deactivating debug\n")
+            if __r > 1:
+                msgs += (__flech + "End of repeated evaluation, without deactivating debug\n")
+            else:
+                msgs += (__flech + "End of evaluation, without deactivating debug\n")
         #
         if __s or self._toStore("SimulatedObservationAtCurrentState"):
             for i in range(self._parameters["NumberOfRepetition"]):
                 if __s:
-                    print("     %s\n"%("-"*75,))
+                    msgs += ("\n")
+                    msgs += (__marge + "%s\n\n"%("-"*75,))
                     if self._parameters["NumberOfRepetition"] > 1:
-                        print("===> Repetition step number %i on a total of %i\n"%(i+1,self._parameters["NumberOfRepetition"]))
+                        msgs += (__flech + "Repetition step number %i on a total of %i\n"%(i+1,self._parameters["NumberOfRepetition"]))
                 #
                 Yn = Ys[i]
                 if __s:
-                    msgs  = ("===> Information after evaluation:\n")
-                    msgs += ("\n     Characteristics of simulated output vector Y=H(X), to compare to others:\n")
-                    msgs += ("       Type...............: %s\n")%type( Yn )
-                    msgs += ("       Length of vector...: %i\n")%max(numpy.ravel( Yn ).shape)
-                    msgs += ("       Minimum value......: %."+str(__p)+"e\n")%numpy.min( Yn )
-                    msgs += ("       Maximum value......: %."+str(__p)+"e\n")%numpy.max( Yn )
-                    msgs += ("       Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( Yn, dtype=mfp )
-                    msgs += ("       Standard error.....: %."+str(__p)+"e\n")%numpy.std( Yn, dtype=mfp )
-                    msgs += ("       L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Yn )
-                    print(msgs)
+                    msgs += ("\n")
+                    msgs += (__flech + "Information after evaluation:\n")
+                    msgs += ("\n")
+                    msgs += (__marge + "Characteristics of simulated output vector Y=F(X), to compare to others:\n")
+                    msgs += (__marge + "  Type...............: %s\n")%type( Yn )
+                    msgs += (__marge + "  Length of vector...: %i\n")%max(numpy.ravel( Yn ).shape)
+                    msgs += (__marge + "  Minimum value......: %."+str(__p)+"e\n")%numpy.min(  Yn )
+                    msgs += (__marge + "  Maximum value......: %."+str(__p)+"e\n")%numpy.max(  Yn )
+                    msgs += (__marge + "  Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( Yn, dtype=mfp )
+                    msgs += (__marge + "  Standard error.....: %."+str(__p)+"e\n")%numpy.std(  Yn, dtype=mfp )
+                    msgs += (__marge + "  L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Yn )
+                    #
                 if self._toStore("SimulatedObservationAtCurrentState"):
                     self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
         #
-        if self._parameters["NumberOfRepetition"] > 1:
-            print("     %s\n"%("-"*75,))
-            print("===> Launching statistical summary calculation for %i states\n"%self._parameters["NumberOfRepetition"])
-            msgs  = ("     %s\n"%("-"*75,))
-            msgs += ("\n===> Statistical analysis of the outputs obtained through parallel repeated evaluations\n")
-            msgs += ("\n     (Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
+        msgs += ("\n")
+        msgs += (__marge + "%s\n"%("-"*75,))
+        #
+        if __r > 1:
+            msgs += ("\n")
+            msgs += (__flech + "Launching statistical summary calculation for %i states\n"%__r)
+            msgs += ("\n")
+            msgs += (__marge + "%s\n"%("-"*75,))
+            msgs += ("\n")
+            msgs += (__flech + "Statistical analysis of the outputs obtained through parallel repeated evaluations\n")
+            msgs += ("\n")
+            msgs += (__marge + "(Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
+            msgs += ("\n")
             Yy = numpy.array( Ys )
-            msgs += ("\n     Characteristics of the whole set of outputs Y:\n")
-            msgs += ("       Number of evaluations.........................: %i\n")%len( Ys )
-            msgs += ("       Minimum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.min( Yy )
-            msgs += ("       Maximum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.max( Yy )
-            msgs += ("       Mean of vector of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.mean( Yy, dtype=mfp )
-            msgs += ("       Standard error of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.std( Yy, dtype=mfp )
+            msgs += (__marge + "Number of evaluations...........................: %i\n")%len( Ys )
+            msgs += ("\n")
+            msgs += (__marge + "Characteristics of the whole set of outputs Y:\n")
+            msgs += (__marge + "  Size of each of the outputs...................: %i\n")%Ys[0].size
+            msgs += (__marge + "  Minimum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.min(  Yy )
+            msgs += (__marge + "  Maximum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.max(  Yy )
+            msgs += (__marge + "  Mean of vector of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.mean( Yy, dtype=mfp )
+            msgs += (__marge + "  Standard error of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.std(  Yy, dtype=mfp )
+            msgs += ("\n")
             Ym = numpy.mean( numpy.array( Ys ), axis=0, dtype=mfp )
-            msgs += ("\n     Characteristics of the vector Ym, mean of the outputs Y:\n")
-            msgs += ("       Size of the mean of the outputs...............: %i\n")%Ym.size
-            msgs += ("       Minimum value of the mean of the outputs......: %."+str(__p)+"e\n")%numpy.min( Ym )
-            msgs += ("       Maximum value of the mean of the outputs......: %."+str(__p)+"e\n")%numpy.max( Ym )
-            msgs += ("       Mean of the mean of the outputs...............: %."+str(__p)+"e\n")%numpy.mean( Ym, dtype=mfp )
-            msgs += ("       Standard error of the mean of the outputs.....: %."+str(__p)+"e\n")%numpy.std( Ym, dtype=mfp )
+            msgs += (__marge + "Characteristics of the vector Ym, mean of the outputs Y:\n")
+            msgs += (__marge + "  Size of the mean of the outputs...............: %i\n")%Ym.size
+            msgs += (__marge + "  Minimum value of the mean of the outputs......: %."+str(__p)+"e\n")%numpy.min(  Ym )
+            msgs += (__marge + "  Maximum value of the mean of the outputs......: %."+str(__p)+"e\n")%numpy.max(  Ym )
+            msgs += (__marge + "  Mean of the mean of the outputs...............: %."+str(__p)+"e\n")%numpy.mean( Ym, dtype=mfp )
+            msgs += (__marge + "  Standard error of the mean of the outputs.....: %."+str(__p)+"e\n")%numpy.std(  Ym, dtype=mfp )
+            msgs += ("\n")
             Ye = numpy.mean( numpy.array( Ys ) - Ym, axis=0, dtype=mfp )
-            msgs += "\n     Characteristics of the mean of the differences between the outputs Y and their mean Ym:\n"
-            msgs += ("       Size of the mean of the differences...........: %i\n")%Ym.size
-            msgs += ("       Minimum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.min( Ye )
-            msgs += ("       Maximum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.max( Ye )
-            msgs += ("       Mean of the mean of the differences...........: %."+str(__p)+"e\n")%numpy.mean( Ye, dtype=mfp )
-            msgs += ("       Standard error of the mean of the differences.: %."+str(__p)+"e\n")%numpy.std( Ye, dtype=mfp )
-            msgs += ("\n     %s\n"%("-"*75,))
-            print(msgs)
+            msgs += (__marge + "Characteristics of the mean of the differences between the outputs Y and their mean Ym:\n")
+            msgs += (__marge + "  Size of the mean of the differences...........: %i\n")%Ye.size
+            msgs += (__marge + "  Minimum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.min(  Ye )
+            msgs += (__marge + "  Maximum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.max(  Ye )
+            msgs += (__marge + "  Mean of the mean of the differences...........: %."+str(__p)+"e\n")%numpy.mean( Ye, dtype=mfp )
+            msgs += (__marge + "  Standard error of the mean of the differences.: %."+str(__p)+"e\n")%numpy.std(  Ye, dtype=mfp )
+            msgs += ("\n")
+            msgs += (__marge + "%s\n"%("-"*75,))
+        #
+        msgs += ("\n")
+        msgs += (__marge + "End of the \"%s\" verification\n\n"%self._name)
+        msgs += (__marge + "%s\n"%("-"*75,))
+        print(msgs) # 3
         #
         self._post_run(HO)
         return 0

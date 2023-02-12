@@ -23,6 +23,7 @@
 import math, numpy
 from daCore import BasicObjects, NumericObjects, PlatformInfo
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
+mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -69,16 +70,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Graine fixée pour le générateur aléatoire",
             )
         self.defineRequiredParameter(
-            name     = "PlotAndSave",
-            default  = False,
-            typecast = bool,
-            message  = "Trace et sauve les résultats",
-            )
-        self.defineRequiredParameter(
-            name     = "ResultFile",
-            default  = self._name+"_result_file",
-            typecast = str,
-            message  = "Nom de base (hors extension) des fichiers de sauvegarde des résultats",
+            name     = "NumberOfPrintedDigits",
+            default  = 5,
+            typecast = int,
+            message  = "Nombre de chiffres affichés pour les impressions de réels",
+            minval   = 0,
             )
         self.defineRequiredParameter(
             name     = "ResultTitle",
@@ -91,6 +87,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "",
             typecast = str,
             message  = "Label de la courbe tracée dans la figure",
+            )
+        self.defineRequiredParameter(
+            name     = "ResultFile",
+            default  = self._name+"_result_file",
+            typecast = str,
+            message  = "Nom de base (hors extension) des fichiers de sauvegarde des résultats",
+            )
+        self.defineRequiredParameter(
+            name     = "PlotAndSave",
+            default  = False,
+            typecast = bool,
+            message  = "Trace et sauve les résultats",
             )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
@@ -117,112 +125,134 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
             Ht = HO["Tangent"].appliedInXTo
         #
+        X0      = numpy.ravel( Xb ).reshape((-1,1))
+        #
         # ----------
+        __p = self._parameters["NumberOfPrintedDigits"]
+        #
+        __marge = 5*u" "
+        __flech = 3*"="+"> "
+        msgs  = ("\n") # 1
+        if len(self._parameters["ResultTitle"]) > 0:
+            __rt = str(self._parameters["ResultTitle"])
+            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+            msgs += (__marge + "    " + __rt + "\n")
+            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+        else:
+            msgs += (__marge + "%s\n"%self._name)
+            msgs += (__marge + "%s\n"%("="*len(self._name),))
+        #
+        msgs += ("\n")
+        msgs += (__marge + "This test allows to analyze the numerical stability of the gradient of some\n")
+        msgs += (__marge + "given simulation operator F, applied to one single vector argument x.\n")
+        msgs += (__marge + "The output shows simple statistics related to its stability for various\n")
+        msgs += (__marge + "increments, around an input checking point X.\n")
+        msgs += ("\n")
+        msgs += (__flech + "Information before launching:\n")
+        msgs += (__marge + "-----------------------------\n")
+        msgs += ("\n")
+        msgs += (__marge + "Characteristics of input vector X, internally converted:\n")
+        msgs += (__marge + "  Type...............: %s\n")%type( X0 )
+        msgs += (__marge + "  Length of vector...: %i\n")%max(numpy.ravel( X0 ).shape)
+        msgs += (__marge + "  Minimum value......: %."+str(__p)+"e\n")%numpy.min(  X0 )
+        msgs += (__marge + "  Maximum value......: %."+str(__p)+"e\n")%numpy.max(  X0 )
+        msgs += (__marge + "  Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( X0, dtype=mfp )
+        msgs += (__marge + "  Standard error.....: %."+str(__p)+"e\n")%numpy.std(  X0, dtype=mfp )
+        msgs += (__marge + "  L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( X0 )
+        msgs += ("\n")
+        msgs += (__marge + "%s\n\n"%("-"*75,))
+        msgs += (__flech + "Numerical quality indicators:\n")
+        msgs += (__marge + "-----------------------------\n")
+        msgs += ("\n")
+        msgs += (__marge + "Using the \"%s\" formula, one observes the residue R which is the\n"%self._parameters["ResiduFormula"])
+        msgs += (__marge + "following ratio or comparison:\n")
+        msgs += ("\n")
+        #
+        if self._parameters["ResiduFormula"] == "Taylor":
+            msgs += (__marge + "               || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||\n")
+            msgs += (__marge + "    R(Alpha) = ----------------------------------------------------\n")
+            msgs += (__marge + "                               || F(X) ||\n")
+            msgs += ("\n")
+            msgs += (__marge + "If the residue decreases and if the decay is in Alpha**2 according to\n")
+            msgs += (__marge + "Alpha, it means that the gradient is well calculated up to the stopping\n")
+            msgs += (__marge + "precision of the quadratic decay, and that F is not linear.\n")
+            msgs += ("\n")
+            msgs += (__marge + "If the residue decreases and if the decay is done in Alpha according\n")
+            msgs += (__marge + "to Alpha, until a certain threshold after which the residue is small\n")
+            msgs += (__marge + "and constant, it means that F is linear and that the residue decreases\n")
+            msgs += (__marge + "from the error made in the calculation of the GradientF_X term.\n")
+            #
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
+            #
+        if self._parameters["ResiduFormula"] == "TaylorOnNorm":
+            msgs += (__marge + "               || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||\n")
+            msgs += (__marge + "    R(Alpha) = ----------------------------------------------------\n")
+            msgs += (__marge + "                                  Alpha**2\n")
+            msgs += ("\n")
+            msgs += (__marge + "It is a residue essentially similar to the classical Taylor criterion,\n")
+            msgs += (__marge + "but its behavior may differ depending on the numerical properties of\n")
+            msgs += (__marge + "the calculations of its various terms.\n")
+            msgs += ("\n")
+            msgs += (__marge + "If the residue is constant up to a certain threshold and increasing\n")
+            msgs += (__marge + "afterwards, it means that the gradient is well computed up to this\n")
+            msgs += (__marge + "stopping precision, and that F is not linear.\n")
+            msgs += ("\n")
+            msgs += (__marge + "If the residue is systematically increasing starting from a small\n")
+            msgs += (__marge + "value compared to ||F(X)||, it means that F is (quasi-)linear and that\n")
+            msgs += (__marge + "the calculation of the gradient is correct until the residue is of the\n")
+            msgs += (__marge + "order of magnitude of ||F(X)||.\n")
+            #
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
+            #
+        if self._parameters["ResiduFormula"] == "Norm":
+            msgs += (__marge + "               || F(X+Alpha*dX) - F(X) ||\n")
+            msgs += (__marge + "    R(Alpha) = --------------------------\n")
+            msgs += (__marge + "                         Alpha\n")
+            msgs += ("\n")
+            msgs += (__marge + "which must remain constant until the accuracy of the calculation is\n")
+            msgs += (__marge + "reached.\n")
+            #
+            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
+            #
+        msgs += ("\n")
+        msgs += (__marge + "We take dX0 = Normal(0,X) and dX = Alpha*dX0. F is the calculation code.\n")
+        msgs += ("\n")
+        msgs += (__marge + "(Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
+        print(msgs) # 1
+        #
         Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
         Perturbations.reverse()
         #
-        X       = numpy.ravel(    Xb   ).reshape((-1,1))
-        FX      = numpy.ravel( Hm( X ) ).reshape((-1,1))
-        NormeX  = numpy.linalg.norm( X )
+        FX      = numpy.ravel( Hm( X0 ) ).reshape((-1,1))
+        NormeX  = numpy.linalg.norm( X0 )
         NormeFX = numpy.linalg.norm( FX )
         if NormeFX < mpr: NormeFX = mpr
         if self._toStore("CurrentState"):
-            self.StoredVariables["CurrentState"].store( X )
+            self.StoredVariables["CurrentState"].store( X0 )
         if self._toStore("SimulatedObservationAtCurrentState"):
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( FX )
         #
         dX0 = NumericObjects.SetInitialDirection(
             self._parameters["InitialDirection"],
             self._parameters["AmplitudeOfInitialDirection"],
-            X,
+            X0,
             )
         #
         if self._parameters["ResiduFormula"] in ["Taylor", "TaylorOnNorm"]:
-            dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0.reshape((-1,1))
-            GradFxdX = Ht( (X, dX1) )
+            dX1      = float(self._parameters["AmplitudeOfTangentPerturbation"]) * dX0
+            GradFxdX = Ht( (X0, dX1) )
             GradFxdX = numpy.ravel( GradFxdX ).reshape((-1,1))
             GradFxdX = float(1./self._parameters["AmplitudeOfTangentPerturbation"]) * GradFxdX
         #
-        # Entete des resultats
-        # --------------------
-        __marge =  12*u" "
-        __precision = u"""
-            Remarque : les nombres inferieurs a %.0e (environ) representent un zero
-                       a la precision machine.\n"""%mpr
-        if self._parameters["ResiduFormula"] == "Taylor":
-            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
-            __msgdoc = u"""
-            On observe le residu issu du developpement de Taylor de la fonction F,
-            normalise par la valeur au point nominal :
-
-                         || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
-              R(Alpha) = ----------------------------------------------------
-                                         || F(X) ||
-
-            Si le residu decroit et que la decroissance se fait en Alpha**2 selon Alpha,
-            cela signifie que le gradient est bien calcule jusqu'a la precision d'arret
-            de la decroissance quadratique, et que F n'est pas lineaire.
-
-            Si le residu decroit et que la decroissance se fait en Alpha selon Alpha,
-            jusqu'a un certain seuil apres lequel le residu est faible et constant, cela
-            signifie que F est lineaire et que le residu decroit a partir de l'erreur
-            faite dans le calcul du terme GradientF_X.
-
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
-        if self._parameters["ResiduFormula"] == "TaylorOnNorm":
-            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
-            __msgdoc = u"""
-            On observe le residu issu du developpement de Taylor de la fonction F,
-            rapporte au parametre Alpha au carre :
-
-                         || F(X+Alpha*dX) - F(X) - Alpha * GradientF_X(dX) ||
-              R(Alpha) = ----------------------------------------------------
-                                            Alpha**2
-
-            C'est un residu essentiellement similaire au critere classique de Taylor,
-            mais son comportement peut differer selon les proprietes numeriques des
-            calculs de ses differents termes.
-
-            Si le residu est constant jusqu'a un certain seuil et croissant ensuite,
-            cela signifie que le gradient est bien calcule jusqu'a cette precision
-            d'arret, et que F n'est pas lineaire.
-
-            Si le residu est systematiquement croissant en partant d'une valeur faible
-            par rapport a ||F(X)||, cela signifie que F est (quasi-)lineaire et que le
-            calcul du gradient est correct jusqu'au moment ou le residu est de l'ordre de
-            grandeur de ||F(X)||.
-
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
-        if self._parameters["ResiduFormula"] == "Norm":
-            __entete = u"  i   Alpha       ||X||    ||F(X)||  ||F(X+dX)||    ||dX||  ||F(X+dX)-F(X)||   ||F(X+dX)-F(X)||/||dX||      R(Alpha)   log( R )"
-            __msgdoc = u"""
-            On observe le residu, qui est base sur une approximation du gradient :
-
-                          || F(X+Alpha*dX) - F(X) ||
-              R(Alpha) =  ---------------------------
-                                    Alpha
-
-            qui doit rester constant jusqu'a ce que l'on atteigne la precision du calcul.
-
-            On prend dX0 = Normal(0,X) et dX = Alpha*dX0. F est le code de calcul.\n""" + __precision
-        #
-        if len(self._parameters["ResultTitle"]) > 0:
-            __rt = str(self._parameters["ResultTitle"])
-            msgs  = u"\n"
-            msgs += __marge + "====" + "="*len(__rt) + "====\n"
-            msgs += __marge + "    " + __rt + "\n"
-            msgs += __marge + "====" + "="*len(__rt) + "====\n"
-        else:
-            msgs  = u""
-        msgs += __msgdoc
-        #
+        # Boucle sur les perturbations
+        # ----------------------------
         __nbtirets = len(__entete) + 2
+        msgs  = ("") # 2
         msgs += "\n" + __marge + "-"*__nbtirets
         msgs += "\n" + __marge + __entete
         msgs += "\n" + __marge + "-"*__nbtirets
+        msgs += ("\n")
         #
-        # Boucle sur les perturbations
-        # ----------------------------
         NormesdX     = []
         NormesFXdX   = []
         NormesdFX    = []
@@ -233,11 +263,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         for i,amplitude in enumerate(Perturbations):
             dX      = amplitude * dX0.reshape((-1,1))
             #
-            FX_plus_dX = Hm( X + dX )
+            FX_plus_dX = Hm( X0 + dX )
             FX_plus_dX = numpy.ravel( FX_plus_dX ).reshape((-1,1))
             #
             if self._toStore("CurrentState"):
-                self.StoredVariables["CurrentState"].store( numpy.ravel(X + dX) )
+                self.StoredVariables["CurrentState"].store( numpy.ravel(X0 + dX) )
             if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(FX_plus_dX) )
             #
@@ -269,17 +299,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             elif self._parameters["ResiduFormula"] == "Norm":
                 Residu = NormedFXsAm
             #
-            msg = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e   %4.0f"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu,math.log10(max(1.e-99,Residu)))
-            msgs += "\n" + __marge + msg
-            #
             self.StoredVariables["Residu"].store( Residu )
+            ttsep = "  %2i  %5.0e   %9.3e   %9.3e   %9.3e   %9.3e   %9.3e      |      %9.3e          |   %9.3e   %4.0f\n"%(i,amplitude,NormeX,NormeFX,NormeFXdX,NormedX,NormedFX,NormedFXsdX,Residu,math.log10(max(1.e-99,Residu)))
+            msgs += __marge + ttsep
         #
-        msgs += "\n" + __marge + "-"*__nbtirets
-        msgs += "\n"
-        #
-        # ----------
-        print("\nResults of gradient check by \"%s\" formula:"%self._parameters["ResiduFormula"])
-        print(msgs)
+        msgs += (__marge + "-"*__nbtirets + "\n\n")
+        msgs += (__marge + "End of the \"%s\" verification by the \"%s\" formula.\n\n"%(self._name,self._parameters["ResiduFormula"]))
+        msgs += (__marge + "%s\n"%("-"*75,))
+        print(msgs) # 2
         #
         if self._parameters["PlotAndSave"]:
             f = open(str(self._parameters["ResultFile"])+".txt",'a')

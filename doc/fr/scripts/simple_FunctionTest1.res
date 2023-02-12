@@ -2,12 +2,15 @@
      FUNCTIONTEST
      ============
 
-     This test allows to analyze the (repetition of) launch of some given
-     operator. It shows simple statistics related to its successful execution,
+     This test allows to analyze the (repetition of the) launch of some
+     given simulation operator F, applied to one single vector argument x,
+     in a sequential way.
+     The output shows simple statistics related to its successful execution,
      or related to the similarities of repetition of its execution.
 
 ===> Information before launching:
      -----------------------------
+
      Characteristics of input vector X, internally converted:
        Type...............: <class 'numpy.ndarray'>
        Length of vector...: 3
@@ -35,8 +38,10 @@
 
      (Remark: numbers that are (about) under 2e-16 represent 0 to machine precision)
 
+     Number of evaluations...........................: 5
+
      Characteristics of the whole set of outputs Y:
-       Number of evaluations.........................: 5
+       Size of each of the outputs...................: 3
        Minimum value of the whole set of outputs.....: 0.00e+00
        Maximum value of the whole set of outputs.....: 2.00e+00
        Mean of vector of the whole set of outputs....: 1.00e+00

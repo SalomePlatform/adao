@@ -31,7 +31,15 @@ Checking algorithm "*TangentTest*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm allows to check the quality of the tangent operator, by
-calculating a residue with known theoretical properties.
+calculating a residue whose theoretical properties are known. The test is
+applicable to any operator, of evolution or observation.
+
+For all formulas, with :math:`\mathbf{x}` the current verification point, we
+take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
+:math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` with :math:`\alpha_0` a scaling user
+parameter, defaulting to 1. :math:`F` is the computational operator or code
+(which is here defined by the observation operator command
+"*ObservationOperator*").
 
 One can observe the following residue, which is the comparison of increments
 using the tangent linear operator:
@@ -48,9 +56,6 @@ If :math:`|R-1|/\alpha` is really small, the calculation code :math:`F` is
 almost linear or quasi-linear (which can be verified by the
 :ref:`section_ref_algorithm_LinearityTest`), and the tangent is valid until the
 calculation precision is reached.
-
-One take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
-:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` is the calculation code.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -69,6 +74,8 @@ One take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
 .. include:: snippets/EpsilonMinimumExponent.rst
 
 .. include:: snippets/InitialDirection.rst
+
+.. include:: snippets/NumberOfPrintedDigits.rst
 
 .. include:: snippets/SetSeed.rst
 

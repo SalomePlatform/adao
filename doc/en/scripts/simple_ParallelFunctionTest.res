@@ -2,12 +2,15 @@
      PARALLELFUNCTIONTEST
      ====================
 
-     This test allows to analyze the (repetition of) launch of some given
-     operator. It shows simple statistics related to its successful execution,
+     This test allows to analyze the (repetition of the) launch of some
+     given simulation operator F, applied to one single vector argument x,
+     in a parallel way.
+     The output shows simple statistics related to its successful execution,
      or related to the similarities of repetition of its execution.
 
 ===> Information before launching:
      -----------------------------
+
      Characteristics of input vector X, internally converted:
        Type...............: <class 'numpy.ndarray'>
        Length of vector...: 30
@@ -20,6 +23,10 @@
      ---------------------------------------------------------------------------
 
 ===> Beginning of repeated evaluation, without activating debug
+
+     ---------------------------------------------------------------------------
+
+     Appending the input vector to the agument set to be evaluated in parallel
 
      ---------------------------------------------------------------------------
 
@@ -42,8 +49,10 @@
 
      (Remark: numbers that are (about) under 2e-16 represent 0 to machine precision)
 
+     Number of evaluations...........................: 50
+
      Characteristics of the whole set of outputs Y:
-       Number of evaluations.........................: 50
+       Size of each of the outputs...................: 30
        Minimum value of the whole set of outputs.....: 0.00e+00
        Maximum value of the whole set of outputs.....: 2.90e+01
        Mean of vector of the whole set of outputs....: 1.45e+01

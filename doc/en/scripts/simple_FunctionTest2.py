@@ -17,8 +17,8 @@ DirectOperator = QuadFunction
 #
 from adao import adaoBuilder
 case = adaoBuilder.New()
-case.setCheckingPoint( Vector = array([1., 1., 1.]), Stored=True )
-case.setObservationOperator( OneFunction = DirectOperator )
+case.set( 'CheckingPoint', Vector = array([1., 1., 1.]), Stored=True )
+case.set( 'ObservationOperator', OneFunction = DirectOperator )
 case.setAlgorithmParameters(
     Algorithm='FunctionTest',
     Parameters={
