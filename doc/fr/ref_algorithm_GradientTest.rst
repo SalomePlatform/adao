@@ -108,6 +108,8 @@ qui doit rester constant jusqu'à ce que l'on atteigne la précision du calcul.
 
 .. include:: snippets/InitialDirection.rst
 
+.. include:: snippets/NumberOfPrintedDigits.rst
+
 .. include:: snippets/ResiduFormula_GradientTest.rst
 
 .. include:: snippets/SetSeed.rst

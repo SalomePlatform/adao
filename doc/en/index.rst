@@ -69,9 +69,9 @@ returning to these parts regularly. The following parts describe
 detailed :ref:`section_reference`, with three essential main sub-parts
 describing the details of commands and options of the algorithms. A
 :ref:`section_glossary`, some :ref:`section_notations`, a
-:ref:`section_bibliography` and an extensive index are included in the
-document. And, to comply with the module requirements, be sure to read the part
-:ref:`section_license`.
+:ref:`section_bibliography`, some elements about :ref:`section_versions`, and
+an extensive index are included in the document. And, to comply with the module
+requirements, be sure to read the part :ref:`section_license`.
 
 .. toctree::
    :caption: Table of contents
@@ -89,9 +89,10 @@ document. And, to comply with the module requirements, be sure to read the part
    gui_in_salome
    tui
    reference
+   versions
+   notations
    license
    bibliography
-   notations
    glossary
    genindex
 

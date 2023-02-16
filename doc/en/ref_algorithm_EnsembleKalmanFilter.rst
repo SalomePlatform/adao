@@ -37,6 +37,8 @@ or extended Kalman filters.
 
 It applies to non-linear observation and incremental evolution (process)
 operators with excellent robustness and performance qualities. It can be
+interpreted as an order reduction of the classical Kalman filter, with a
+remarkable assimilation quality of this filtering for large problems. It can be
 compared to the :ref:`section_ref_algorithm_UnscentedKalmanFilter`, whose
 qualities are similar for non-linear systems.
 
@@ -52,8 +54,14 @@ In case of linear of "slightly" non-linear operators, one can easily use the
 to evaluate on small systems. One can verify the linearity of the operators
 with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
-There exists a lot of variants of this algorithm. The following stable and
-robust formulations are proposed here:
+There are many deterministic or stochastic variants of this algorithm, allowing
+in particular to perform size reduction of algebraic problems at different
+levels (by using reduced rank methods, dimension reduction, changes of
+computational space, leading to schemes of type Ensemble Square Root Kalman
+Filters (EnSRKF) or Reduced-Rank Square Root Filters (RRSQRT), to deterministic
+transformations...). We do not go into the complex details of classifications
+and algorithmic equivalences, which are available in the literature. The
+following stable and robust formulations are proposed here:
 
 .. index::
     pair: Variant ; EnKF
@@ -63,6 +71,8 @@ robust formulations are proposed here:
     pair: Variant ; IEnKF
     pair: Variant ; E3DVAR
     pair: Variant ; EnKS
+    pair: Variant ; EnSRKF
+    pair: Variant ; RRSQRT
 
 - "EnKF" (Ensemble Kalman Filter, see [Evensen94]_), original stochastic algorithm, allowing consistent treatment of non-linear evolution operator,
 - "ETKF" (Ensemble-Transform Kalman Filter), deterministic EnKF algorithm, allowing treatment of non-linear evolution operator with a lot less members (one recommends to use a number of members on the order of 10 or even sometimes less),
@@ -73,9 +83,9 @@ robust formulations are proposed here:
 - "EnKS" (Ensemble Kalman Smoother), smoothing algorithm with a fixed time lag L.
 
 Without being a universal recommandation, one recommend to use "EnKF"
-formulation as a reference algorithm, "ETKF-N" ou "IEnKF" formulation for
-robust performance, and the other algorithms (in this order) as means to obtain
-a less costly data assimilation with (hopefully) the same quality.
+formulation as a reference algorithm, **"ETKF-N" ou "IEnKF" formulation for
+robust performance**, and the other algorithms (in this order) as means to
+obtain a less costly data assimilation with (hopefully) the same quality.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

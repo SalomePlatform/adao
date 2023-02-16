@@ -127,6 +127,8 @@ If it is equal to 0 only on part of the variation domain of increment
 
 .. include:: snippets/InitialDirection.rst
 
+.. include:: snippets/NumberOfPrintedDigits.rst
+
 .. include:: snippets/ResiduFormula_LinearityTest.rst
 
 .. include:: snippets/SetSeed.rst

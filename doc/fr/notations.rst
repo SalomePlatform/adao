@@ -26,28 +26,32 @@
 Notations et conventions communes
 =================================
 
+.. index:: single: Fichier (nommage)
+.. index:: single: Fichier (type)
+
 Dans cette documentation, on utilise les notations standards de l'algèbre
 linéaire, de l'assimilation de données (comme décrit dans [Ide97]_) et de
 l'optimisation.
 
-Pour les formulations algébriques, les vecteurs sont écrits horizontalement ou
-verticalement sans faire la différence. Les matrices sont écrites soit
-normalement, ou avec une notation condensée, consistant à utiliser un espace
-pour séparer les valeurs, et un "``;``" pour séparer les lignes de la matrice,
-de façon continue sur une ligne.
+Pour les formulations algébriques, les **vecteurs** sont écrits horizontalement
+ou verticalement sans faire la différence. Les **matrices** peuvent s'écrire
+soit normalement comme une série de série de chiffres, soit en notation
+condensée en texte, consistant à utiliser un espace pour séparer les valeurs,
+et un "``;``" pour séparer les lignes de la matrice, de façon continue sur une
+ligne.
 
-Les fichiers peuvent être indiqués grâce à un chemin absolu ou relatif. Pour
-certains systèmes de fichiers anciens ou partagés, le nom complet avec le
-chemin ne doit pas contenir plus de 256 caractères. Dans le cas où ce sont des
-fichiers de type Python, il est judicieux de ne pas utiliser de points dans le
-nom à part pour l'extension, pour éviter des difficultés d'utilisation
-compliquées à diagnostiquer.
+Les **fichiers** peuvent être indiqués grâce à un chemin absolu ou relatif.
+Pour certains systèmes de fichiers anciens ou partagés, le nom complet, y
+compris le chemin, ne doit pas contenir plus de 256 caractères. Dans le cas où
+ce sont des fichiers de type Python, il est judicieux de ne pas utiliser de
+points dans le nom à part pour l'extension, pour éviter des difficultés
+d'utilisation qui sont ensuite compliquées à diagnostiquer.
 
-Les conventions de type et de nommage des fichiers s'appuient fortement sur les
-extensions des fichiers eux-mêmes. On en précise brièvement certaines ici, sans
-être exhaustifs :
+Les **conventions de type et de nommage des fichiers** s'appuient fortement sur
+les extensions des fichiers eux-mêmes. On en précise brièvement certaines ici,
+sans être exhaustifs :
 
-- extension ``.py``   : fichier texte de données ou commandes de type source Python
+- extension ``.py``   : fichier texte de données ou de commandes de type Python
 - extension ``.comm`` : fichier texte de données de commandes EFICAS d'ADAO
 - extension ``.xml``  : fichier texte de données de type XML (pour YACS, non exclusif)
 - extension ``.txt``  : fichier texte de données à séparateur espace
@@ -57,6 +61,9 @@ extensions des fichiers eux-mêmes. On en précise brièvement certaines ici, sa
 - extension ``.npy``  : fichier binaire de données de type Numpy mono-variable
 - extension ``.npz``  : fichier binaire de données de type Numpy multi-variables
 - extension ``.sdf``  : fichier binaire de données de type Scientific Data Format
+
+Pour l'usage de certains de ces fichiers, on pourra se reporter au mot-clé
+"*DataFile*" comme :ref:`section_ref_entry_types_info`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst

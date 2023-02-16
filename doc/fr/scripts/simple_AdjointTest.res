@@ -55,7 +55,7 @@
        12  1e-12   2.236e+00   1.910e+01   3.536e-12   0.000e+00
      -------------------------------------------------------------
 
-     End of the verification by "ScalarProduct" formula
+     End of the "ADJOINTTEST" verification by the "ScalarProduct" formula.
 
      ---------------------------------------------------------------------------
 

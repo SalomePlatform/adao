@@ -132,6 +132,8 @@ de F est vérifiée.
 
 .. include:: snippets/InitialDirection.rst
 
+.. include:: snippets/NumberOfPrintedDigits.rst
+
 .. include:: snippets/ResiduFormula_LinearityTest.rst
 
 .. include:: snippets/SetSeed.rst

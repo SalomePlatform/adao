@@ -7,8 +7,8 @@ Yobs = []
 for i in range(51):
     Yobs.append([random.normal(Xtrue, 0.1, size=(1,)),])
 #
-print("Estimation par filtrage d'une variable constante")
-print("------------------------------------------------")
+print("Estimation par filtrage d'une trajectoire temporelle")
+print("----------------------------------------------------")
 print("  Observations bruitées acquises sur %i pas de temps"%(len(Yobs)-1,))
 print("")
 from adao import adaoBuilder

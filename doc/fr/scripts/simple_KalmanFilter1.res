@@ -1,5 +1,5 @@
-Estimation par filtrage d'une variable constante
-------------------------------------------------
+Estimation par filtrage d'une trajectoire temporelle
+----------------------------------------------------
   Observations bruitées acquises sur 50 pas de temps
 
   État analysé à l'observation courante : [0.]

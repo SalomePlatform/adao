@@ -72,9 +72,10 @@ comment utiliser une :ref:`section_gui_in_salome` ou une :ref:`section_tui`. La
 dernière grande partie détaille la :ref:`section_reference`, avec trois
 sous-parties essentielles qui la composent et qui décrivent les commandes et
 des options d'algorithmes. Un :ref:`section_glossary`, des
-:ref:`section_notations`, une :ref:`section_bibliography` et un index développé
-complètent le document. Enfin, pour respecter les exigences de licence du
-module, n'oubliez pas de lire la partie :ref:`section_license`.
+:ref:`section_notations`, une :ref:`section_bibliography`, des éléments de
+changement des :ref:`section_versions`, et un index développé complètent le
+document. Enfin, pour respecter les exigences de licence du module, n'oubliez
+pas de lire la partie :ref:`section_license`.
 
 .. toctree::
    :caption: Table des matières
@@ -92,9 +93,10 @@ module, n'oubliez pas de lire la partie :ref:`section_license`.
    gui_in_salome
    tui
    reference
+   versions
+   notations
    license
    bibliography
-   notations
    glossary
    genindex
 

@@ -37,7 +37,9 @@ comme dans les filtres de Kalman simple ou étendu.
 
 Il s'applique aux cas d'opérateurs d'observation et d'évolution incrémentale
 (processus) non-linéaires et présente d'excellentes qualités de robustesse et
-de performances. Il peut être rapproché de
+de performances. Il peut être interprété comme une réduction d'ordre du filtre
+de Kalman classique, avec une remarquable qualité d'assimilation de ce
+filtrage pour les problèmes de grande taille. Il peut être rapproché de
 l':ref:`section_ref_algorithm_UnscentedKalmanFilter` dont les qualités sont
 similaires pour les systèmes non-linéaires.
 
@@ -53,8 +55,15 @@ l':ref:`section_ref_algorithm_KalmanFilter`, qui sont souvent largement moins
 coûteux en évaluations sur de petits systèmes. On peut vérifier la linéarité
 des opérateurs à l'aide de l':ref:`section_ref_algorithm_LinearityTest`.
 
-Il existe de nombreuses variantes de cet algorithme. On propose ici des
-formulations stables et robustes suivantes :
+Il existe de nombreuses variantes déterministes ou stochastiques de cet
+algorithme, permettant en particulier d'effectuer de la réduction de taille des
+problèmes algébriques à différents niveaux (en utilisant des méthodes de rang
+réduit, de la réduction de dimension, des changements d'espace de calcul,
+conduisant à des schémas de type Ensemble Square Root Kalman Filters (EnSRKF)
+ou Reduced-Rank Square Root Filters (RRSQRT), à des transformations
+déterministes...). On ne rentre pas ici dans le détail complexe des
+classifications et des équivalences algorithmiques, qui sont disponibles dans
+la littérature. On propose ici les formulations stables et robustes suivantes :
 
 .. index::
     pair: Variant ; EnKF
@@ -64,6 +73,8 @@ formulations stables et robustes suivantes :
     pair: Variant ; IEnKF
     pair: Variant ; E3DVAR
     pair: Variant ; EnKS
+    pair: Variant ; EnSRKF
+    pair: Variant ; RRSQRT
 
 - "EnKF" (Ensemble Kalman Filter, voir [Evensen94]_), algorithme stochastique original, permettant de traiter de manière consistante un opérateur d'évolution non-linéaire,
 - "ETKF" (Ensemble-Transform Kalman Filter), algorithme déterministe d'EnKF, permettant de traiter un opérateur d'évolution non-linéaire avec beaucoup moins de membres (on recommande d'utiliser un nombre de membres de l'ordre de 10 ou même parfois moins),
@@ -74,9 +85,9 @@ formulations stables et robustes suivantes :
 - "EnKS" (Ensemble Kalman Smoother), algorithme de lissage avec un décalage fixe.
 
 Sans pouvoir prétendre à l'universalité, on recommande d'utiliser la
-formulation "EnKF" comme référence, la formulation "ETKF-N" ou "IEnKF" pour une
-performance robuste, et les autres algorithmes (dans l'ordre) comme des moyens
-pour obtenir une assimilation de données plus économique et de qualité
+formulation "EnKF" comme référence, **la formulation "ETKF-N" ou "IEnKF" pour
+une performance robuste**, et les autres algorithmes (dans l'ordre) comme des
+moyens pour obtenir une assimilation de données plus économique et de qualité
 (éventuellement) similaire.
 
 .. ------------------------------------ ..

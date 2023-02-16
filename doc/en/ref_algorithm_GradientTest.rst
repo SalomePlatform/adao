@@ -106,6 +106,8 @@ which has to remain stable until the calculation precision is reached.
 
 .. include:: snippets/InitialDirection.rst
 
+.. include:: snippets/NumberOfPrintedDigits.rst
+
 .. include:: snippets/ResiduFormula_GradientTest.rst
 
 .. include:: snippets/SetSeed.rst
