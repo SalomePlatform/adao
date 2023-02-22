@@ -109,11 +109,13 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Nelder65] Nelder J. A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
 
+.. [NumPy20] Harris C.R. et al., *Array programming with NumPy*, Nature 585, pp.357–362, 2020, https://numpy.org/
+
 .. [Powell64] Powell M. J. D., *An efficient method for finding the minimum of a function of several variables without calculating derivatives*, Computer Journal, 7(2), pp.155-162, 1964
 
 .. [Powell94] Powell M. J. D., *A direct search optimization method that models the objective and constraint functions by linear interpolation*, in Advances in Optimization and Numerical Analysis, eds. S. Gomez and J-P Hennart, Kluwer Academic (Dordrecht), pp. 51-67, 1994
 
-.. [Powell98] Powell M. J. D., *Direct search algorithms for optimization calculations*, Acta Numerica 7, 287-336, 1998
+.. [Powell98] Powell M. J. D., *Direct search algorithms for optimization calculations*, Acta Numerica 7, pp.287-336, 1998
 
 .. [Powell04] Powell M. J. D., *The NEWUOA software for unconstrained optimization without derivatives*, Proc. 40th Workshop on Large Scale Nonlinear Optimization, Erice, Italy, 2004
 
@@ -134,6 +136,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 .. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
 
 .. [SalomeMeca] *Salome_Meca et Code_Aster, Analyse des Structures et Thermomécanique pour les Etudes et la Recherche*, http://www.code-aster.org/
+
+.. [SciPy20] Virtanen P. et al., *SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python*, Nature Methods, 17(3), pp.261-272, 2020, https://scipy.org/
 
 .. [Storn97] Storn R., Price, K., *Differential Evolution – A Simple and Efficient Heuristic for global Optimization over Continuous Spaces*, Journal of Global Optimization, 11(1), pp.341-359, 1997
 

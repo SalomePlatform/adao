@@ -1,4 +1,4 @@
-# Modification de la version 1.9.1
+# Modification de la version 1.9.1 et 1.10.1
 """
 Functions
 ---------
@@ -241,7 +241,9 @@ def _minimize_lbfgsb(fun, x0, args=(), jac=None, bounds=None,
         If `jac is None` the absolute step size used for numerical
         approximation of the jacobian via forward differences.
     maxfun : int
-        Maximum number of function evaluations.
+        Maximum number of function evaluations. Note that this function
+        may violate the limit because of evaluating gradients by numerical
+        differentiation.
     maxiter : int
         Maximum number of iterations.
     iprint : int, optional

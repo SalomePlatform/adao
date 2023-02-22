@@ -171,6 +171,12 @@ operator script files has to be modified.
 Versions of ADAO compatibility with support tools
 -------------------------------------------------
 
+The module benefits greatly from the **Python environment** [Python]_ and the
+multiple features of this language, from the scientific calculation tools
+included in **NumPy** [NumPy20]_, **SciPy** [SciPy20]_, **NLopt** [Johnson08]_
+or in the tools that can be reached with them, and from the numerous
+capabilities of **SALOME** [Salome]_ when used in combination.
+
 .. include:: snippets/ModuleValidation.rst
 
 .. include:: snippets/ModuleCompatibility.rst

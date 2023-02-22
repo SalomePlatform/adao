@@ -181,6 +181,12 @@ doivent être modifiés.
 Versions de compatibilité d'ADAO avec les outils support
 --------------------------------------------------------
 
+Le module ADAO bénéficie largement de l'**environnement Python** [Python]_ et
+des nombreuses possibilités de ce langage, des outils de calcul scientifique
+inclus dans **NumPy** [NumPy20]_, **SciPy** [SciPy20]_, **NLopt** [Johnson08]_
+ou dans les outils atteignables grâce à eux, et des nombreuses capacités de
+**SALOME** [Salome]_ lorsqu'il est utilisé en association.
+
 .. include:: snippets/ModuleValidation.rst
 
 .. include:: snippets/ModuleCompatibility.rst

@@ -107,13 +107,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        # Default EKF
-        #--------------------------
         if   self._parameters["Variant"] == "EKF":
             exkf.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        # Default CEKF
         elif self._parameters["Variant"] == "CEKF":
             cekf.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #

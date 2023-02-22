@@ -22,8 +22,7 @@
 
 import numpy
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecweim
-from daAlgorithms.Atoms import eosg
+from daAlgorithms.Atoms import ecweim, eosg
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -56,8 +55,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "ExcludeLocations",
             default  = [],
             typecast = tuple,
-            message  = "Liste des positions exclues selon la numérotation interne d'un snapshot",
-            minval   = -1,
+            message  = "Liste des indices ou noms de positions exclues selon l'ordre interne d'un snapshot",
+            )
+        self.defineRequiredParameter(
+            name     = "NameOfLocations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des noms de positions selon l'ordre interne d'un snapshot",
             )
         self.defineRequiredParameter(
             name     = "ErrorNorm",
@@ -111,6 +115,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "EnsembleOfSimulations",
                 "EnsembleOfStates",
+                "ExcludedPoints",
                 "OptimalPoints",
                 "ReducedBasis",
                 "Residus",

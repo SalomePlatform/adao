@@ -91,6 +91,8 @@ search.
 
 .. include:: snippets/MaximumNumberOfLocations.rst
 
+.. include:: snippets/NameOfLocations.rst
+
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
@@ -118,6 +120,7 @@ StoreSupplementaryCalculations
   algorithm*"): [
   "EnsembleOfSimulations",
   "EnsembleOfStates",
+  "ExcludedPoints",
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
@@ -139,6 +142,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/EnsembleOfSimulations.rst
 
 .. include:: snippets/EnsembleOfStates.rst
+
+.. include:: snippets/ExcludedPoints.rst
 
 .. include:: snippets/OptimalPoints.rst
 

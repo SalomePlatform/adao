@@ -21,12 +21,13 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    EIM
+    EIM & lcEIM
 """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy
 import daCore.Persistence
+from daCore.NumericObjects import FindIndexesFromNames
 
 # ==============================================================================
 def EIM_offline(selfA, EOS = None, Verbose = False):
@@ -43,6 +44,7 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         # __EOS = numpy.asarray(EOS).T
     else:
         raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
+    __dimS, __nbmS = __EOS.shape
     #
     if   selfA._parameters["ErrorNorm"] == "L2":
         MaxNormByColumn = MaxL2NormByColumn
@@ -56,8 +58,16 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     if __LcCsts and "ExcludeLocations" in selfA._parameters:
         __ExcludedMagicPoints = selfA._parameters["ExcludeLocations"]
     else:
-        __ExcludedMagicPoints = []
+        __ExcludedMagicPoints = ()
+    if __LcCsts and "NameOfLocations" in selfA._parameters:
+        if isinstance(selfA._parameters["NameOfLocations"], (list, numpy.ndarray, tuple)) and len(selfA._parameters["NameOfLocations"]) == __dimS:
+            __NameOfLocations = selfA._parameters["NameOfLocations"]
+        else:
+            __NameOfLocations = ()
+    else:
+        __NameOfLocations = ()
     if __LcCsts and len(__ExcludedMagicPoints) > 0:
+        __ExcludedMagicPoints = FindIndexesFromNames( __NameOfLocations, __ExcludedMagicPoints )
         __ExcludedMagicPoints = numpy.ravel(numpy.asarray(__ExcludedMagicPoints, dtype=int))
         __IncludedMagicPoints = numpy.setdiff1d(
             numpy.arange(__EOS.shape[0]),
@@ -67,7 +77,6 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     else:
         __IncludedMagicPoints = []
     #
-    __dimS, __nbmS = __EOS.shape
     if "MaximumNumberOfLocations" in selfA._parameters and "MaximumRBSize" in selfA._parameters:
         selfA._parameters["MaximumRBSize"] = min(selfA._parameters["MaximumNumberOfLocations"],selfA._parameters["MaximumRBSize"])
     elif "MaximumNumberOfLocations" in selfA._parameters:
@@ -148,6 +157,8 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
             selfA.StoredVariables["ReducedBasis"].store( __Q )
         if selfA._toStore("Residus"):
             selfA.StoredVariables["Residus"].store( __errors )
+        if selfA._toStore("ExcludedPoints"):
+            selfA.StoredVariables["ExcludedPoints"].store( __ExcludedMagicPoints )
     #
     return __mu, __I, __Q, __errors
 

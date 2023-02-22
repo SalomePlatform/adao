@@ -93,6 +93,8 @@ recherche de positionnement contraint.
 
 .. include:: snippets/MaximumNumberOfLocations.rst
 
+.. include:: snippets/NameOfLocations.rst
+
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
@@ -120,6 +122,7 @@ StoreSupplementaryCalculations
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
   "EnsembleOfSimulations",
   "EnsembleOfStates",
+  "ExcludedPoints",
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
@@ -141,6 +144,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/EnsembleOfSimulations.rst
 
 .. include:: snippets/EnsembleOfStates.rst
+
+.. include:: snippets/ExcludedPoints.rst
 
 .. include:: snippets/OptimalPoints.rst
 

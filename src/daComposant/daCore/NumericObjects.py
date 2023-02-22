@@ -915,6 +915,68 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Sup
     return Xa + EnsembleOfAnomalies( __EnXn )
 
 # ==============================================================================
+def FindIndexesFromNames( __NameOfLocations = None, __ExcludeLocations = None, ForceArray = False):
+    "Exprime les indices des noms exclus, en ignorant les absents"
+    if __ExcludeLocations is None:
+        __ExcludeIndexes = ()
+    elif isinstance(__ExcludeLocations, (list, numpy.ndarray, tuple)) and len(__ExcludeLocations)==0:
+        __ExcludeIndexes = ()
+    # ----------
+    elif __NameOfLocations is None:
+        try:
+            __ExcludeIndexes = numpy.asarray(__ExcludeLocations, dtype=int)
+        except ValueError as e:
+            if "invalid literal for int() with base 10:" in str(e):
+                raise ValueError("to exclude named locations, initial location name list can not be void and has to have the same length as one state")
+            else:
+                raise ValueError(str(e))
+    elif isinstance(__NameOfLocations, (list, numpy.ndarray, tuple)) and len(__NameOfLocations)==0:
+        try:
+            __ExcludeIndexes = numpy.asarray(__ExcludeLocations, dtype=int)
+        except ValueError as e:
+            if "invalid literal for int() with base 10:" in str(e):
+                raise ValueError("to exclude named locations, initial location name list can not be void and has to have the same length as one state")
+            else:
+                raise ValueError(str(e))
+    # ----------
+    else:
+        try:
+            __ExcludeIndexes = numpy.asarray(__ExcludeLocations, dtype=int)
+        except ValueError as e:
+            if "invalid literal for int() with base 10:" in str(e):
+                if len(__NameOfLocations) < 1.e6+1 and len(__ExcludeLocations) > 1500:
+                    __Heuristic = True
+                else:
+                    __Heuristic = False
+                if ForceArray or __Heuristic:
+                    # Recherche par array permettant des noms invalides, peu efficace
+                    __NameToIndex = dict(numpy.array((
+                        __NameOfLocations,
+                        range(len(__NameOfLocations))
+                        )).T)
+                    __ExcludeIndexes = numpy.asarray([__NameToIndex.get(k, -1) for k in __ExcludeLocations], dtype=int)
+                    #
+                else:
+                    # Recherche par liste permettant des noms invalides, très efficace
+                    def __NameToIndex_get( cle, default = -1 ):
+                        if cle in __NameOfLocations:
+                            return __NameOfLocations.index(cle)
+                        else:
+                            return default
+                    __ExcludeIndexes = numpy.asarray([__NameToIndex_get(k, -1) for k in __ExcludeLocations], dtype=int)
+                    #
+                    # Recherche par liste interdisant des noms invalides, mais encore un peu plus efficace
+                    # __ExcludeIndexes = numpy.asarray([__NameOfLocations.index(k) for k in __ExcludeLocations], dtype=int)
+                    #
+                # Ignore les noms absents
+                __ExcludeIndexes = numpy.compress(__ExcludeIndexes > -1, __ExcludeIndexes)
+                if len(__ExcludeIndexes)==0: __ExcludeIndexes = ()
+            else:
+                raise ValueError(str(e))
+    # ----------
+    return __ExcludeIndexes
+
+# ==============================================================================
 def BuildComplexSampleList(
     __SampleAsnUplet,
     __SampleAsExplicitHyperCube,

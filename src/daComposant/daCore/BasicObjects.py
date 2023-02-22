@@ -748,6 +748,7 @@ class Algorithm(object):
         self.StoredVariables["EnsembleOfSimulations"]                = Persistence.OneMatrix(name = "EnsembleOfSimulations")
         self.StoredVariables["EnsembleOfSnapshots"]                  = Persistence.OneMatrix(name = "EnsembleOfSnapshots")
         self.StoredVariables["EnsembleOfStates"]                     = Persistence.OneMatrix(name = "EnsembleOfStates")
+        self.StoredVariables["ExcludedPoints"]                       = Persistence.OneVector(name = "ExcludedPoints")
         self.StoredVariables["ForecastCovariance"]                   = Persistence.OneMatrix(name = "ForecastCovariance")
         self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
         self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
