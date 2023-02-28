@@ -5,7 +5,7 @@ def QuadFunction( coefficients ):
     """
     Simulation quadratique aux points x : y = a x^2 + b x + c
     """
-    a, b, c = list(ravel(coefficients))
+    a, b, c  = list(ravel(coefficients))
     x_points = (-5, 0, 1, 3, 10)
     y_points = []
     for x in x_points:
@@ -64,11 +64,11 @@ import matplotlib.pyplot as plt
 plt.rcParams['figure.figsize'] = (10, 4)
 #
 plt.figure()
-plt.plot((-5,0,1,3,10),QuadFunction(Xb),'b-',label="Simulation à l'ébauche")
-plt.plot((-5,0,1,3,10),Yobs,            'kX',label='Observation',markersize=10)
-plt.plot((-5,0,1,3,10),QuadFunction(Xa),'r-',label="Simulation à l'optimum")
+plt.plot((-5,0,1,3,10),QuadFunction(Xb),'b--',label="Simulation à l'ébauche")
+plt.plot((-5,0,1,3,10),Yobs,            'kX', label='Observation',markersize=10)
+plt.plot((-5,0,1,3,10),QuadFunction(Xa),'r-', label="Simulation à l'optimum")
 plt.legend()
 plt.title('Calage de coefficients', fontweight='bold')
 plt.xlabel('Coordonnée arbitraire')
 plt.ylabel('Observations')
-plt.savefig("simple_3DVAR.png")
+plt.savefig("simple_3DVAR1.png")

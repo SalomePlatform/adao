@@ -260,19 +260,71 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/Header2Algo09.rst
 
-.. include:: scripts/simple_3DVAR.rst
+.. --------- ..
+.. include:: scripts/simple_3DVAR1.rst
 
-.. literalinclude:: scripts/simple_3DVAR.py
+.. literalinclude:: scripts/simple_3DVAR1.py
 
 .. include:: snippets/Header2Algo10.rst
 
-.. literalinclude:: scripts/simple_3DVAR.res
+.. literalinclude:: scripts/simple_3DVAR1.res
     :language: none
 
 .. include:: snippets/Header2Algo11.rst
 
-.. _simple_3DVAR:
-.. image:: scripts/simple_3DVAR.png
+.. _simple_3DVAR1:
+.. image:: scripts/simple_3DVAR1.png
+  :align: center
+  :width: 90%
+
+.. include:: scripts/simple_3DVAR1Plus.rst
+
+.. _simple_3DVAR1Plus:
+.. image:: scripts/simple_3DVAR1Plus.png
+  :align: center
+  :width: 90%
+
+.. --------- ..
+.. include:: scripts/simple_3DVAR2.rst
+
+.. literalinclude:: scripts/simple_3DVAR2.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_3DVAR2.res
+    :language: none
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_3DVAR2_state:
+.. image:: scripts/simple_3DVAR2_state.png
+  :align: center
+  :width: 90%
+
+.. simple_3DVAR2_variance:
+.. image:: scripts/simple_3DVAR2_variance.png
+  :align: center
+  :width: 90%
+
+.. --------- ..
+.. include:: scripts/simple_3DVAR3.rst
+
+.. literalinclude:: scripts/simple_3DVAR3.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_3DVAR3.res
+    :language: none
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_3DVAR3_state:
+.. image:: scripts/simple_3DVAR3_state.png
+  :align: center
+  :width: 90%
+
+.. _simple_3DVAR3_variance:
+.. image:: scripts/simple_3DVAR3_variance.png
   :align: center
   :width: 90%
 
@@ -281,6 +333,7 @@ StoreSupplementaryCalculations
 
 - :ref:`section_ref_algorithm_Blue`
 - :ref:`section_ref_algorithm_ExtendedBlue`
+- :ref:`section_ref_algorithm_KalmanFilter`
 - :ref:`section_ref_algorithm_LinearityTest`
 
 .. ------------------------------------ ..

@@ -1,6 +1,6 @@
 Python (TUI) use examples
 +++++++++++++++++++++++++
 
-Here is a very simple use of the given algorithm and its parameters, written in
-:ref:`section_tui`, and from which input information allow to define an
-equivalent case in graphical user interface.
+Here is one or more very simple examples of the proposed algorithm and its
+parameters, written in :ref:`section_tui`. Moreover, the information given as
+input also allows to define an equivalent case in :ref:`section_gui_in_salome`.
