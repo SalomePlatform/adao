@@ -34,30 +34,38 @@ Each algorithm can be controlled using some specific options or parameters. They
 are given through the "*Parameters*" optional command included in the mandatory
 command "*AlgorithmParameters*".
 
-There are 3 practical methods for the user of the EFICAS graphical user
-interface of ADAO (GUI) to provide these options. The method is determined as
-follows in the ADAO EFICAS graphical user interface:
+There are several convenient methods for providing these options, either using
+the ADAO EFICAS graphical interface (GUI) or the textual interface (TUI). The
+method is determined as follows:
 
-#. firstly using the "*Parameters*" keyword in the "*AlgorithmParameters*"
-   command, which allows to choose between "*Defaults*" (use of explicit
-   pre-filled keywords by default parameters values) and "*Dict*" (use of a
-   dictionary to fill the necessary keywords),
-#. then secondly or thirdly, only in the "*Dict*" case of "*Parameters*", by
-   the included keyword "*FROM*" which allows to choose between a string entry
-   and a Python script file entry.
+#. First, in the graphical user interface (GUI), using the "*Parameters*"
+   keyword in the "*AlgorithmParameters*" command, which allows you to choose
+   between "*Defaults*" (use of explicit keywords pre-populated by the default
+   values of the parameters) and "*Dict*" (use of a dictionary to fill in the
+   necessary keywords),
+#. Then secondly or thirdly, in the graphical user interface (GUI), only in the
+   case "*Dict*" of "*Parameters*", by the included keyword "*FROM*" which
+   allows to choose between an entry by string or an entry by Python script
+   file.
+#. Fourth, in textual interface (TUI), using the "*Parameters*" keyword in the
+   "*AlgorithmParameters*" command, in a similar way to the graphical
+   interface, by filling in the explicit keywords described in the
+   documentation of each algorithm.
+#. Fifth, in textual interface (TUI), using the keyword "*Parameters*" in the
+   command "*AlgorithmParameters*", providing a script containing a dictionary
+   similar to methods two and three and compatible with these GUI entries.
 
-These two last options can be also used in the ADAO textual interface (TUI),
-through the keywords "*Parameters*" and "*Script*" of the corresponding command
-"*AlgorithmParameters*" (see the :ref:`section_tui` part for detailed
-description).
+These last two options are the ones that can be used in the textual interface
+(TUI) in a similar and compatible way to the two previous ones based on the
+graphical interface (GUI).
 
 If an option or a parameter is specified by the user for an algorithm that does
 not support it, the option is simply ignored (left unused) and don't stop the
 treatment. The meaning of the acronyms or particular names can be found in the
 index or the :ref:`section_glossary`.
 
-First method : using explicit pre-filled keywords
-+++++++++++++++++++++++++++++++++++++++++++++++++
+First method (GUI): using explicit pre-filled keywords
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To give the parameters values by explicit pre-filled keywords, directly in the
 graphical interface, the user selects the type "*Defaults*" in the keyword
@@ -82,8 +90,8 @@ algorithm.
 
 This method is naturally not usable in TUI interface.
 
-Second method : using a string in the graphical interface
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Second method(GUI): using a string in the graphical interface
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To give the parameters values as a string, directly in the graphical interface,
 the user selects the type "*Dict*" in the keyword "*Parameters*", then the type
@@ -107,10 +115,7 @@ in particular to keep options or parameters for other algorithms than the
 currently used one. It is then easier to change of algorithm or to keep default
 values different of the standard defaults.
 
-In the textual interface TUI, the dictionary has only to be given as argument
-of the "*Parameters*" keyword.
-
-Third method : using an external Python script file
+Third method (GUI): using an external Python script file
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To give the parameters values as an external Python script file, the user
@@ -125,17 +130,134 @@ command which appears, as shown in the following figure:
   .. centered::
     **Using an external file for algorithmic parameters**
 
-This external Python script file has then to define a variable with the required
-name "*AlgorithmParameters*", as in the following example::
+This external Python script file, named for example here ``myParameters.py``,
+must define a dictionary variable with the imposed name "*Parameters*" or
+"*AlgorithmParameters*", like the following example:
+
+.. code-block:: python
+    :caption: myParameters.py: parameters file
 
     AlgorithmParameters = {
         "MaximumNumberOfIterations" : 25,
-        "StoreSupplementaryCalculations" : ["APosterioriCovariance","OMA"],
+        "StoreSupplementaryCalculations" : [
+            "CurrentState",
+            "APosterioriCovariance",
+            "OMA",
+            ],
         }
 
-The file can also contain other Python commands. This method also allows, as
-the previous one, to keep options or parameters for other algorithms than the
-currently used one.
+Moreover, the file can contain other Python commands. This method also allows,
+like the previous one, to keep externally options or parameters for other
+algorithms than the one we are using.
 
-In the textual interface TUI, the file name has only to be given as argument of
-the "*Script*" keyword.
+Fourth method (TUI): use explicit documented keywords
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+In the textual interface (TUI), the control of the algorithms is done by using
+the command "*setAlgorithmParameters*". It allows to fill in or define the
+keywords described in the documentation of each ADAO calculation case. Just to
+remind you, these keywords are the same as the ones presented in the graphical
+interface.
+
+To do this, a dictionary of "keyword/value" pairs can be given as an argument
+to the "*Parameters*" keyword of the command. For a TUI calculation case named
+for example ``case``, the syntax looks like the following code:
+
+.. code-block:: python
+
+    [...]
+    case.setAlgorithmParameters(
+        Algorithm='3DVAR',
+        Parameters={
+            "MaximumNumberOfIterations" : 25,
+            "StoreSupplementaryCalculations" : [
+                "CurrentState",
+                "APosterioriCovariance",
+                "OMA",
+                ],
+            },
+        )
+    [...]
+
+The argument values can obviously come from Python evaluations or previously
+defined variables, making it easy to insert ADAO commands into the Python
+scripting flow of a study.
+
+Fifth method (TUI): use an external Python script file
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+In the textual interface (TUI), a file can be given as argument in the same and
+compatible way as the third method dedicated to the graphical interface (GUI).
+An external Python script file named ``myParameters.py``, and containing for
+example the information already mentioned for the third method, is the
+following:
+
+.. code-block:: python
+    :caption: Simple version of myParameters.py
+
+    AlgorithmParameters = {
+        "MaximumNumberOfIterations" : 25,
+        "StoreSupplementaryCalculations" : [
+            "CurrentState",
+            "APosterioriCovariance",
+            "OMA",
+            ],
+        }
+
+For a TUI computation case named for example ``case``, which has to read this
+file, the textual interface command uses the argument "*Script*" in the
+following form:
+
+.. code-block:: python
+
+    [...]
+    case.setAlgorithmParameters( Algorithm = "3DVAR", Script = "myParameters.py" )
+    [...]
+
+Alternatively and completely equivalently, to comply with the definition
+required by the "*setAlgorithmParameters*" command, one can use in the external
+Python script ``myParameters.py`` the name "*Parameters*" instead of
+"*AlgorithmParameters*" in the form:
+
+.. code-block:: python
+    :caption: Simple version of myParameters.py
+
+    Parameters = {
+        "MaximumNumberOfIterations" : 25,
+        "StoreSupplementaryCalculations" : [
+            "CurrentState",
+            "APosterioriCovariance",
+            "OMA",
+            ],
+        }
+
+The loading command in the textual interface remains the same. One can also add
+in the external script the name of the algorithm with its own keyword
+"*Algorithm*" (which in this case is required, and cannot be included as an
+option in "*AlgorithmParameters*"):
+
+.. code-block:: python
+    :caption: Full version of myParameters.py
+    :name: myParameters.py
+
+    Algorithm='3DVAR'
+    Parameters = {
+        "MaximumNumberOfIterations" : 25,
+        "StoreSupplementaryCalculations" : [
+            "CurrentState",
+            "APosterioriCovariance",
+            "OMA",
+            ],
+        }
+
+The textual interface loading command is then simplified to a single argument:
+
+.. code-block:: python
+
+    [...]
+    case.setAlgorithmParameters(Script = "myParameters.py")
+    [...]
+
+This last form is the simplest way to fully parameterize algorithm inputs in an
+external Python script, which can then be controlled or generated by a wider
+process of study building including the ADAO commands.

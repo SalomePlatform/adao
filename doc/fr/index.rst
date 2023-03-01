@@ -81,7 +81,7 @@ pas de lire la partie :ref:`section_license`.
    :caption: Table des matières
    :name: mastertoc
    :maxdepth: 2
-   :numbered: 2
+   :numbered: 4
 
    intro
    theory

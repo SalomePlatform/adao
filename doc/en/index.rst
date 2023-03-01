@@ -77,7 +77,7 @@ requirements, be sure to read the part :ref:`section_license`.
    :caption: Table of contents
    :name: mastertoc
    :maxdepth: 2
-   :numbered: 2
+   :numbered: 4
 
    intro
    theory

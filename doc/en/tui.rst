@@ -77,15 +77,21 @@ Detailed setup of an ADAO TUI calculation case
 
 More details are given here on the successive steps of the setup of an ADAO TUI
 calculation case. The commands themselves are detailed just after in the
-:ref:`subsection_tui_commands`.
+:ref:`subsection_tui_commands`. We keep the indication ``[...]`` of preceding
+or following lines to emphasize that these commands can be inserted in the
+middle of a complete stream of Python scripting for a real study.
 
 The creation and initialization of a study are done using the following
 commands, the ``case`` object name of the ADAO TUI calculation case being let
-free to the user choice::
+free to the user choice:
 
+.. code-block:: python
+
+    [...]
     from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
+    [...]
 
 It is recommended to import by default the ``numpy`` module or some of its
 embedded constructors such as the ``array`` one, to make easier its upcoming
@@ -100,8 +106,11 @@ optimization algorithm and its parameters, then the *a priori* state
 :math:`\mathbf{x}^b` (named ``Background``) and its errors covariance
 :math:`\mathbf{B}` (named ``BackgroundError``), and after that, the observation
 :math:`\mathbf{y}^o` (named ``Observation``) and its errors  covariance
-:math:`\mathbf{R}` (named ``ObservationError``)::
+:math:`\mathbf{R}` (named ``ObservationError``):
 
+.. code-block:: python
+
+    [...]
     case.set( 'AlgorithmParameters', Algorithm='3DVAR' )
     #
     case.set( 'Background',          Vector=[0, 1, 2] )
@@ -109,6 +118,7 @@ optimization algorithm and its parameters, then the *a priori* state
     #
     case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
     case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
+    [...]
 
 As a remark, vector or matrix inputs can be given as objects of type ``str``,
 ``list`` or ``tuple`` of Python, or of type ``array`` or ``matrix`` of Numpy.
@@ -119,9 +129,13 @@ possibly :math:`M` of evolution. In all cases, linear or non-linear, they can
 be defined as functions. In the simple case of a linear operator, one can also
 define it using the matrix that corresponds to the linear operator. In the most
 simple present case of a linear operator, we use the following syntax for an
-operator from :math:`\mathbf{R}^3` into itself::
+operator from :math:`\mathbf{R}^3` into itself:
 
+.. code-block:: python
+
+    [...]
     case.set( 'ObservationOperator', Matrix = "1 0 0;0 2 0;0 0 3")
+    [...]
 
 In the most frequent case of a non-linear operator of :math:`\mathbf{R}^n` into
 :math:`\mathbf{R}^p`, it has to be previously available as a Python function,
@@ -132,8 +146,11 @@ by the keyword "*OneFunction*", its adjoint is directly established by
 numerical calculations and it can be parametrized by the keyword
 "*Parameters*". The following example shows a ``simulation`` function (which
 realizes here the same linear operator than above) and record it in the ADAO
-case::
+case:
 
+.. code-block:: python
+
+    [...]
     import numpy
     def simulation(x):
         "Simulation function H to perform Y=H(X)"
@@ -146,6 +163,7 @@ case::
         OneFunction = simulation,
         Parameters  = {"DifferentialIncrement":0.01},
         )
+    [...]
 
 To obtain intermediary or final results of the case, one can add some
 "*observer*", that link a script to execute with an intermediate or final
@@ -153,15 +171,23 @@ calculation variable. The reader can go the description of the way of
 :ref:`section_advanced_observer`, and to the :ref:`section_reference` in order
 to know what are the observable quantities. This link between an "*observer*"
 and an observable quantity is done in a similar way than the calculation data
-definition::
+definition:
 
+.. code-block:: python
+
+    [...]
     case.set( 'Observer', Variable="Analysis", Template="ValuePrinter" )
+    [...]
 
 Finally, when all the required information are available in the ADAO
 calculation case named ``case``, it can be executed in a very simple way in the
-environment of the Python interpreter::
+environment of the Python interpreter:
 
+.. code-block:: python
+
+    [...]
     case.execute()
+    [...]
 
 At the end, we get a very compact script previously proposed in
 :ref:`subsection_tui_example`.
@@ -177,14 +203,18 @@ these inputs can come from variables currently available in the name space of
 the script. It is then easy to use previously calculated variables or obtained
 by importing "user" scripts. If for example the observations are available as a
 list in an external Python file named ``observations.py`` under the name
-``table``, the registering of the observations in the ADAO TUI calculation case
-can be done by the following operations::
+``someTable``, the registering of the observations in the ADAO TUI calculation
+case can be done by the following operations:
 
-    from observations import table
-    case.set( 'Observation', Vector=table )
+.. code-block:: python
 
-The first line imports the ``table`` variable from the external file, and the
-second one register directly this table as the "*Observation*" data.
+    [...]
+    from observations import someTable
+    case.set( 'Observation', Vector=someTable )
+    [...]
+
+The first line imports the ``someTable`` variable from the external file, and
+the second one register directly this table as the "*Observation*" data.
 
 The simplicity of this recording demonstrates the ease of obtaining
 computational data from external sources, files or computing flows achievable
@@ -205,14 +235,18 @@ required variable. The reader can go to the :ref:`section_ref_output_variables`
 for a detailed description on this subject.
 
 For instance, we give some script lines that allow to get the number of
-iterations of the optimization and the optimal value, and its size::
+iterations of the optimization and the optimal value, and its size:
 
+.. code-block:: python
+
+    [...]
     print("")
     print("    Number of iterations : %i"%len(case.get("CostFunctionJ")))
     Xa = case.get("Analysis")
     print("    Optimal analysis     : %s"%(Xa[-1],))
     print("    Size of the analysis : %i"%len(Xa[-1]))
     print("")
+    [...]
 
 These lines can be very simply added to the initial example of ADAO TUI
 calculation case given in :ref:`subsection_tui_example`.
@@ -274,11 +308,15 @@ Creating a calculation case in TUI text interface
 The creation and the initialization of a calculation case in TUI text interface
 are done by importing the interface module "*adaoBuilder*" and by by invoking
 its method "*New()*" as illustrated in the following lines (the ``case`` object
-name being let free to the user choice)::
+name being let free to the user choice):
 
+.. code-block:: python
+
+    [...]
     from numpy import array
     from adao import adaoBuilder
     case = adaoBuilder.New()
+    [...]
 
 It is recommended by default to always import the ``numpy`` module (or some of
 its embedded constructors such as the ``array`` one) to make easier its
