@@ -15,6 +15,6 @@ la version atteinte (mais cela reste sans garantie).
    Python,     3.6.5,    3.10.9
    Numpy,      1.14.3,    1.24.2
    Scipy,      0.19.1,    1.10.1
-   MatplotLib, 2.2.2,    3.7.0
+   MatplotLib, 2.2.2,    3.7.1
    GnuplotPy,  1.8,    1.8
    NLopt,      2.4.2,    2.7.1

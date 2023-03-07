@@ -116,7 +116,7 @@ currently used one. It is then easier to change of algorithm or to keep default
 values different of the standard defaults.
 
 Third method (GUI): using an external Python script file
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To give the parameters values as an external Python script file, the user
 selects in the graphical interface the type "*Dict*" in the keyword
