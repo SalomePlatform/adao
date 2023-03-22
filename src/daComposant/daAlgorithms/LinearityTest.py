@@ -204,7 +204,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += (__marge + "of the Alpha increment, it is over this part that the linearity assumption\n")
             msgs += (__marge + "of F is verified.\n")
             #
-            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| en %"
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)   |R-1| in %"
             #
         if self._parameters["ResiduFormula"] == "NominalTaylorRMS":
             msgs += (__marge + "    R(Alpha) = max(\n")
@@ -219,7 +219,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += (__marge + "of the Alpha increment, it is over this part that the linearity assumption\n")
             msgs += (__marge + "of F is verified.\n")
             #
-            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| en %"
+            __entete = u"  i   Alpha     ||X||      ||F(X)||   |   R(Alpha)    |R| in %"
             #
         msgs += ("\n")
         msgs += (__marge + "We take dX0 = Normal(0,X) and dX = Alpha*dX0. F is the calculation code.\n")

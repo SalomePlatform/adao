@@ -30,29 +30,27 @@ Checking algorithm "*SamplingTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to calculate the values, linked to a :math:`\mathbf{x}`
-state, of a general error function :math:`J` of type :math:`L^1`, :math:`L^2`
-or :math:`L^{\infty}`, with or without weights, and of the observation
-operator, for an priori given :math:`\mathbf{x}` states sample. The default
-error function is the augmented weighted least squares function, classically
-used in data assimilation, using observation :math:`\mathbf{y}^o`.
+This test algorithm is used to establish the collection of values of an error
+functional :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
+with or without weights, using the observation operator :math:`\mathcal{H}`,
+for an a priori given sample of states :math:`\mathbf{x}`. The default error
+functional is the augmented weighted least squares functional, classically used
+in data assimilation, using in addition to observations :math:`\mathbf{y}^o`.
 
-It is useful to test the sensitivity, of the error function :math:`J`, in
-particular, to the state :math:`\mathbf{x}` variations. When a state is not
-observable, a *"NaN"* value is returned.
+This test is useful for analyzing the sensitivity of the functional :math:`J`
+to variations in the state :math:`\mathbf{x}` in particular.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
 form of hyper-cubes, explicit or sampled according to classic distributions.
 Beware of the size of the hyper-cube (and then to the number of computations)
-that can be reached, it can grow quickly to be quite large.
+that can be reached, it can grow quickly to be quite large. When a state is not
+observable, a *"NaN"* value is returned.
 
-To be visible by the user while reducing the risk of storage difficulties, the
-results of sampling or simulations has to be **explicitly** asked for. One use
-for that, on the desired variable, the final saving through
-"*UserPostAnalysis*" or the treatment during the calculation by "*observer*".
-
-To perform distributed or more complex sampling, see OPENTURNS module available
-in SALOME.
+To access the calculated information, the results of the sampling or
+simulations must be requested **explicitly** to avoid storage difficulties (if
+no results are requested, nothing is available). One use for that, on the
+desired variable, the final saving through "*UserPostAnalysis*" or the
+treatment during the calculation by well suited "*observer*".
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

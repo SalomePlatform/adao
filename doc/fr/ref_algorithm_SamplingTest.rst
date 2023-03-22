@@ -30,32 +30,30 @@ Algorithme de vérification "*SamplingTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet d'établir les valeurs, liées à un état
-:math:`\mathbf{x}`, d'une fonctionnelle d'erreur :math:`J` quelconque de type
-:math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations, et
-de l'opérateur d'observation, pour un échantillon d'états :math:`\mathbf{x}`
-donné a priori. La fonctionnelle d'erreur par défaut est celle de moindres
+Cet algorithme de test permet d'établir la collection des valeurs d'une
+fonctionnelle d'erreur :math:`J` de type :math:`L^1`, :math:`L^2` ou
+:math:`L^{\infty}`, avec ou sans pondérations, à l'aide de l'opérateur
+d'observation :math:`\mathcal{H}`, pour un échantillon donné a priori d'états
+:math:`\mathbf{x}`. La fonctionnelle d'erreur par défaut est celle de moindres
 carrés pondérés augmentés, classiquement utilisée en assimilation de données,
-utilisant des observations :math:`\mathbf{y}^o`.
+utilisant en plus des observations :math:`\mathbf{y}^o`.
 
-Il est utile pour tester la sensibilité, de la fonctionnelle :math:`J`, en
-particulier, aux variations de l'état :math:`\mathbf{x}`. Lorsque un état n'est
-pas observable, une valeur *"NaN"* est retournée.
+Ce test est utile pour analyser la sensibilité de la fonctionnelle :math:`J`
+aux variations de l'état :math:`\mathbf{x}` en particulier.
 
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
 distributions courantes. Attention à la taille de l'hyper-cube (et donc au
 nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante.
+importante. Lorsque un état n'est pas observable, une valeur *"NaN"* est
+retournée.
 
-Pour apparaître pour l'utilisateur tout en réduisant les difficultés de
-stockage, les résultats de l'échantillonnage ou des simulations doivent être
-demandés **explicitement**. On utilise pour cela, sur la variable désirée, la
-sauvegarde finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en
-cours de calcul à l'aide des "*observer*" adaptés.
-
-Pour effectuer un échantillonnage distribué ou plus complexe, voir le module
-OPENTURNS disponible dans SALOME.
+Pour accéder aux informations calculées, les résultats de l'échantillonnage ou
+des simulations doivent être demandés **explicitement** pour éviter les
+difficultés de stockage (en l'absence de résultats demandés, rien n'est
+disponible). On utilise pour cela, sur la variable désirée, la sauvegarde
+finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en cours de
+calcul à l'aide des "*observer*" adaptés.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
