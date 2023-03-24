@@ -161,7 +161,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             return J, Jb, Jo
         #
         # ----------
-        EOX, EOS = eosg.eosg(self, Xb, HO, True)
+        EOX, EOS = eosg.eosg(self, Xb, HO, True, False)
         #
         for i in range(EOS.shape[1]):
             J, Jb, Jo = CostFunction( EOX[:,i], EOS[:,i],  self._parameters["QualityCriterion"])

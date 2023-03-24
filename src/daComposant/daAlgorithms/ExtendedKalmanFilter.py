@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 from daCore import BasicObjects
-from daAlgorithms.Atoms import cekf, exkf
+from daAlgorithms.Atoms import cekf, ceks, exks, exkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -35,6 +35,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "EKF",
                 "CEKF",
+                ],
+            listadv  = [
+                "EKS",
+                "CEKS",
                 ],
             )
         self.defineRequiredParameter(
@@ -113,6 +117,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         elif self._parameters["Variant"] == "CEKF":
             cekf.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        #
+        #--------------------------
+        elif self._parameters["Variant"] == "EKS":
+            exks.exks(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        #
+        #--------------------------
+        elif self._parameters["Variant"] == "CEKS":
+            ceks.ceks(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

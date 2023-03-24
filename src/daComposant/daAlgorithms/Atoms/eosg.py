@@ -29,7 +29,7 @@ import numpy, logging
 import daCore.NumericObjects
 
 # ==============================================================================
-def eosg(selfA, Xb, HO, outputEOX = False):
+def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
     """
     Ensemble Of Simulations Generation
     """
@@ -51,11 +51,34 @@ def eosg(selfA, Xb, HO, outputEOX = False):
         print("     %s\n"%("-"*75,))
     #
     Hm = HO["Direct"].appliedTo
-    EOS = Hm(
-        sampleList,
-        argsAsSerie = True,
-        returnSerieAsArrayMatrix = True,
-        )
+    if assumeNoFailure:
+        EOS = Hm(
+            sampleList,
+            argsAsSerie = True,
+            returnSerieAsArrayMatrix = True,
+            )
+    else:
+        try:
+            EOS = Hm(
+                sampleList,
+                argsAsSerie = True,
+                returnSerieAsArrayMatrix = True,
+                )
+        except: # Reprise séquentielle sur erreur de calcul
+            EOS, __s = [], 1
+            for state in sampleList:
+                if numpy.any(numpy.isin((None, numpy.nan), state)):
+                    EOS.append( () ) # Résultat vide
+                else:
+                    try:
+                        EOS.append( Hm(state) )
+                        __s = numpy.asarray(EOS[-1]).size
+                    except:
+                        EOS.append( () ) # Résultat vide
+            for i, resultat in enumerate(EOS):
+                if len(resultat) == 0: # Résultat vide
+                    EOS[i] = numpy.nan*numpy.ones(__s)
+            EOS = numpy.stack(EOS, axis=1)
     #
     if selfA._parameters["SetDebug"]:
         print("\n     %s\n"%("-"*75,))

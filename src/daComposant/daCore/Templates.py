@@ -112,35 +112,35 @@ ObserverTemplates.store(
     )
 ObserverTemplates.store(
     name    = "ValueSaver",
-    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement",
     en_EN   = "Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSerieSaver",
-    content = """import numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape",
     en_EN   = "Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValuePrinterAndSaver",
-    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable",
     en_EN   = "Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueIndexPrinterAndSaver",
-    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable, en ajoutant son index",
     en_EN   = "Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable, adding its index",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterAndSaver",
-    content = """import numpy, re\nv=numpy.array(var[:], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    content = """import numpy, re\nv=numpy.array(var[:], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp', la série des valeurs de la variable",
     en_EN   = "Print on standard output and, in the same time, save in a file of the '/tmp' directory, the value series of the variable",
     order   = "next",
@@ -175,14 +175,14 @@ ObserverTemplates.store(
     )
 ObserverTemplates.store(
     name    = "ValuePrinterSaverAndGnuPlotter",
-    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable",
     en_EN   = "Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable",
     order   = "next",
     )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterSaverAndGnuPlotter",
-    content = """print(str(info)+' '+str(var[:]))\nimport numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub('\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    content = """print(str(info)+' '+str(var[:]))\nimport numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
     fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la série des valeurs de la variable",
     en_EN   = "Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable",
     order   = "next",

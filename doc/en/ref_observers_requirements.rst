@@ -192,7 +192,7 @@ Save the current value of the variable in a file of the '/tmp' directory named '
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
@@ -213,7 +213,7 @@ Save the value series of the variable in a file of the '/tmp' directory named 'v
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
@@ -235,7 +235,7 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
@@ -257,7 +257,7 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
@@ -279,7 +279,7 @@ Print on standard output and, in the same time, save in a file of the '/tmp' dir
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
 
@@ -391,7 +391,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
@@ -424,7 +424,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
     except:
         istep=0
     f='/tmp/value_%s_%05i.txt'%(info,istep)
-    f=re.sub('\s','_',f)
+    f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
