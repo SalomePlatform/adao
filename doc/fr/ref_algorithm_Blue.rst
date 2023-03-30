@@ -65,8 +65,8 @@ méthode d'interpolation dite optimale nommée "*Optimal Interpolation*" ou
 problèmes de très (très) grande taille, mais dont l'inconvénient est de fournir
 un résultat d'analyse globalement sous-optimal et bruité, voire incohérent. Le
 moyen d'éviter ces désavantages est d'adapter très précisément les éléments de
-la méthode à chaque modèle physique. Pour ces raisons, cette méthode n'est donc
-pas proposée.
+la méthode à chaque modèle physique, la rendant non robuste. Pour ces raisons,
+cette méthode n'est donc pas proposée.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

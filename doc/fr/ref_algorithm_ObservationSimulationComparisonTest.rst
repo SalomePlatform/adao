@@ -21,32 +21,37 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: ParallelFunctionTest
-.. _section_ref_algorithm_ParallelFunctionTest:
+.. index:: single: ObservationSimulationComparisonTest
+.. _section_ref_algorithm_ObservationSimulationComparisonTest:
 
-Algorithme de vérification "*ParallelFunctionTest*"
----------------------------------------------------
+Algorithme de vérification "*ObservationSimulationComparisonTest*"
+------------------------------------------------------------------
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme de vérification permet d'analyser de manière simple la stabilité
-d'un opérateur :math:`F` lors de son exécution en parallèle. L'opérateur est
-quelconque, et il peut donc être celui d'observation :math:`\mathcal{H}` comme
-celui d'évolution :math:`\mathcal{D}`, pourvu qu'il soit fourni dans chaque cas
-selon les :ref:`section_ref_operator_requirements`. L'opérateur :math:`F` est
-considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}` et
-restituant une autre variable vectorielle :math:`\mathbf{y}`.
+de l'écart entre des mesures et le calcul d'un opérateur :math:`F`, lors de son
+exécution. L'opérateur est quelconque, et il peut donc être celui d'observation
+:math:`\mathcal{H}` comme celui d'évolution :math:`\mathcal{D}`, pourvu qu'il
+soit fourni dans chaque cas selon les :ref:`section_ref_operator_requirements`.
+L'opérateur :math:`F` est considéré comme dépendant d'une variable vectorielle
+:math:`\mathbf{x}` et restituant une autre variable vectorielle
+:math:`\mathbf{y}`.
 
-L'algorithme vérifie que l'opérateur fonctionne correctement et que son appel
-se déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De
-manière pratique, il permet d'appeler une ou plusieurs fois l'opérateur, en
-activant ou non le mode "debug" lors de l'exécution.
+L'algorithme vérifie que l'écart est stable, que l'opérateur fonctionne
+correctement et que son appel se déroule de manière compatible avec son usage
+dans les algorithmes d'ADAO. De manière pratique, il permet d'appeler une ou
+plusieurs fois l'opérateur, en activant ou non le mode "debug" lors de
+l'exécution. Il est très similaire dans son fonctionnement courant à un
+:ref:`section_ref_algorithm_FunctionTest` mais il teste la stabilité de l'écart
+mesures-calculs.
 
 Une statistique sur les vecteurs :math:`\mathbf{x}` en entrée et
-:math:`\mathbf{y}` en sortie est indiquée lors de chaque exécution de
-l'opérateur, et une autre statistique globale est fournie de manière
-récapitulative à la fin. La précision d'affichage est contrôlable pour
+:math:`\mathbf{y}` en sortie, et potentiellement sur la fonctionnelle d'erreur
+standard d'assimilation de données :math:`J`, est indiquée lors de chaque
+exécution de l'opérateur, et une autre statistique globale est fournie de
+manière récapitulative à la fin. La précision d'affichage est contrôlable pour
 permettre l'automatisation des tests d'opérateur. Il peut être aussi utile de
 vérifier préalablement les entrées elles-mêmes avec le test prévu
 :ref:`section_ref_algorithm_InputValuesTest`.
@@ -55,6 +60,12 @@ vérifier préalablement les entrées elles-mêmes avec le test prévu
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst
+
+.. include:: snippets/BackgroundError.rst
+
+.. include:: snippets/Observation.rst
+
+.. include:: snippets/ObservationError.rst
 
 .. include:: snippets/ObservationOperator.rst
 
@@ -82,7 +93,12 @@ StoreSupplementaryCalculations
   (la description détaillée de chaque variable nommée est donnée dans la suite
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
   "CurrentState",
+  "Innovation",
+  "InnovationAtCurrentState",
   "SimulatedObservationAtCurrentState",
   ].
 
@@ -97,29 +113,23 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
+.. include:: snippets/CostFunctionJ.rst
+
+.. include:: snippets/CostFunctionJb.rst
+
+.. include:: snippets/CostFunctionJo.rst
+
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/Innovation.rst
+
+.. include:: snippets/InnovationAtCurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
-.. _section_ref_algorithm_ParallelFunctionTest_examples:
+.. _section_ref_algorithm_ObservationSimulationComparisonTest_examples:
 
-.. include:: snippets/Header2Algo09.rst
-
-.. include:: scripts/simple_ParallelFunctionTest.rst
-
-.. literalinclude:: scripts/simple_ParallelFunctionTest.py
-
-.. include:: snippets/Header2Algo10.rst
-
-.. literalinclude:: scripts/simple_ParallelFunctionTest.res
-    :language: none
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
-- :ref:`section_ref_algorithm_InputValuesTest`
-- :ref:`section_ref_algorithm_LinearityTest`
 - :ref:`section_ref_algorithm_FunctionTest`
-- :ref:`section_ref_algorithm_ControledFunctionTest`
-- :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`

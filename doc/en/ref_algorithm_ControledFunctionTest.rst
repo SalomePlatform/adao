@@ -30,19 +30,25 @@ Checking algorithm "*ControledFunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to verify that a given operator :math:`F`, in particular
-the observation one, is working correctly and that its call is compatible with
-its usage in ADAO algorithms. In practice, it allows to call one or several
-times the operator, activating or not the "debug" mode during execution. The
-:math:`F` operator is considered to depend on a state vector variable
-:math:`\mathbf{x}` and on a control vector variable :math:`\mathbf{u}`, the two
-not necessarily being of the same size.
+This verification algorithm allows to analyze in a simple way the stability of
+an operator :math:`F` during its execution. The operator is any operator, so it
+can be the observation operator :math:`\mathcal{H}` as well as the evolution
+operator :math:`\mathcal{D}`, as long as it is provided in each case according
+to the :ref:`section_ref_operator_requirements`. The operator :math:`F` is
+considered as depending on a vector variable :math:`\mathbf{x}` and on a
+control vector variable :math:`\mathbf{u}`, the two not necessarily being of
+the same size, and returning another vector variable :math:`\mathbf{y}`.
 
-Statistics on input and output vectors for each execution of operator are
-given, and an another global statistic is given at the end of the checking
-algorithm. The precision of printed outputs can be controlled to facilitate
-automatic tests of operator. It may also be useful to check the entries
-themselves beforehand with the intended test
+The algorithm verifies that the operator is working correctly and that its call
+is compatible with its usage in ADAO algorithms. In practice, it allows to call
+one or several times the operator, activating or not the "debug" mode during
+execution.
+
+Statistics on :math:`\mathbf{x}` input and :math:`\mathbf{y}` output vectors
+are given for each execution of operator, and an another global statistic is
+given at the end. The precision of printed outputs can be controlled to
+facilitate automatic tests of operator. It may also be useful to check the
+entries themselves beforehand with the intended test
 :ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..

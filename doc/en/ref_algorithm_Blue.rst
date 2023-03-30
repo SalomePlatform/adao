@@ -63,8 +63,8 @@ so-called optimal interpolation method, named "*Optimal Interpolation*" or
 (very) large problems, but whose disadvantage is to provide a globally
 sub-optimal and noisy analysis result, even inconsistent. The way to avoid
 these disadvantages is to adapt very precisely the elements of the method to
-each physical model. For these reasons, this method is not proposed nor
-recommended.
+each physical model, making the method not robust. For these reasons, this
+method is not proposed nor recommended.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

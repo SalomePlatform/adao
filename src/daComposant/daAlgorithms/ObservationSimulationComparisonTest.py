@@ -223,7 +223,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                         Js.append( J )
                         msgs += ("\n")
                         msgs += (__marge + "  Cost function J....: %."+str(__p)+"e\n")%J
-                        msgs += (__marge + "  Cost function Jb=0.: %."+str(__p)+"e\n")%Jb
+                        msgs += (__marge + "  Cost function Jb...: %."+str(__p)+"e\n")%Jb
                         msgs += (__marge + "  Cost function Jo...: %."+str(__p)+"e\n")%Jo
                 print(msgs) # 2-2
             if self._toStore("SimulatedObservationAtCurrentState"):
@@ -332,11 +332,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += (__marge + "%s\n\n"%("-"*75,))
                 msgs += (__marge + "Number of evaluations...........................: %i\n")%len( Js )
                 msgs += ("\n")
-                msgs += (__marge + "Characteristics of the whole set of cost function J values:\n")
+                msgs += (__marge + "Characteristics of the whole set of data assimilation cost function J values:\n")
                 msgs += (__marge + "  Minimum value of the whole set of J...........: %."+str(__p)+"e\n")%numpy.min(  Jj )
                 msgs += (__marge + "  Maximum value of the whole set of J...........: %."+str(__p)+"e\n")%numpy.max(  Jj )
                 msgs += (__marge + "  Mean of vector of the whole set of J..........: %."+str(__p)+"e\n")%numpy.mean( Jj, dtype=mfp )
                 msgs += (__marge + "  Standard error of the whole set of J..........: %."+str(__p)+"e\n")%numpy.std(  Jj, dtype=mfp )
+                msgs += (__marge + "  (Remark: variations of the cost function J only come from the observation part Jo of J)\n")
             msgs += ("\n")
             msgs += (__marge + "%s\n"%("-"*75,))
         #

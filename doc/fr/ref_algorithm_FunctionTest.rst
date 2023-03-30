@@ -30,19 +30,26 @@ Algorithme de vérification "*FunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de vérifier qu'un opérateur :math:`F` quelconque, dont en
-particulier celui d'observation, fonctionne correctement et que son appel se
-déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De
-manière pratique, il permet d'appeler une ou plusieurs fois l'opérateur, en
-activant ou non le mode "debug" lors de l'exécution. L'opérateur :math:`F` est
-considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}`.
+Cet algorithme de vérification permet d'analyser de manière simple la stabilité
+d'un opérateur :math:`F` lors de son exécution. L'opérateur est quelconque, et
+il peut donc être celui d'observation :math:`\mathcal{H}` comme celui
+d'évolution :math:`\mathcal{D}`, pourvu qu'il soit fourni dans chaque cas selon
+les :ref:`section_ref_operator_requirements`. L'opérateur :math:`F` est
+considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}` et
+restituant une autre variable vectorielle :math:`\mathbf{y}`.
 
-Une statistique sur les vecteurs en entrée et en sortie de chaque exécution de
-l'opérateur est indiquée, et une autre globale est fournie de manière
-récapitulative à la fin de l'algorithme de vérification. La précision
-d'affichage est contrôlable pour permettre l'automatisation des tests
-d'opérateur. Il peut être aussi utile de vérifier préalablement les entrées
-elles-mêmes avec le test prévu :ref:`section_ref_algorithm_InputValuesTest`.
+L'algorithme vérifie que l'opérateur fonctionne correctement et que son appel
+se déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De
+manière pratique, il permet d'appeler une ou plusieurs fois l'opérateur, en
+activant ou non le mode "debug" lors de l'exécution.
+
+Une statistique sur les vecteurs :math:`\mathbf{x}` en entrée et
+:math:`\mathbf{y}` en sortie est indiquée lors de chaque exécution de
+l'opérateur, et une autre statistique globale est fournie de manière
+récapitulative à la fin. La précision d'affichage est contrôlable pour
+permettre l'automatisation des tests d'opérateur. Il peut être aussi utile de
+vérifier préalablement les entrées elles-mêmes avec le test prévu
+:ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -127,3 +134,4 @@ StoreSupplementaryCalculations
 - :ref:`section_ref_algorithm_ControledFunctionTest`
 - :ref:`section_ref_algorithm_ParallelFunctionTest`
 - :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`
+- :ref:`section_ref_algorithm_ObservationSimulationComparisonTest`

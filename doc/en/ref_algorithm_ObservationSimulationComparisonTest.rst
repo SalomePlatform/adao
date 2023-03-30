@@ -21,29 +21,33 @@
 
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-.. index:: single: FunctionTest
-.. _section_ref_algorithm_FunctionTest:
+.. index:: single: ObservationSimulationComparisonTest
+.. _section_ref_algorithm_ObservationSimulationComparisonTest:
 
-Checking algorithm "*FunctionTest*"
------------------------------------
+Checking algorithm "*ObservationSimulationComparisonTest*"
+----------------------------------------------------------
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This verification algorithm allows to analyze in a simple way the stability of
-an operator :math:`F` during its execution. The operator is any operator, so it
-can be the observation operator :math:`\mathcal{H}` as well as the evolution
-operator :math:`\mathcal{D}`, as long as it is provided in each case according
-to the :ref:`section_ref_operator_requirements`. The operator :math:`F` is
-considered as depending on a vector variable :math:`\mathbf{x}` and returning
-another vector variable :math:`\mathbf{y}`.
+the difference between measures and an operator :math:`F` during its execution.
+The operator is any operator, so it can be the observation operator
+:math:`\mathcal{H}` as well as the evolution operator :math:`\mathcal{D}`, as
+long as it is provided in each case according to the
+:ref:`section_ref_operator_requirements`. The operator :math:`F` is considered
+as depending on a vector variable :math:`\mathbf{x}` and returning another
+vector variable :math:`\mathbf{y}`.
 
-The algorithm verifies that the operator is working correctly and that its call
-is compatible with its usage in ADAO algorithms. In practice, it allows to call
-one or several times the operator, activating or not the "debug" mode during
-execution.
+The algorithm verifies that the difference is stable, that the operator is
+working correctly and that its call is compatible with its usage in ADAO
+algorithms. In practice, it allows to call one or several times the operator,
+activating or not the "debug" mode during execution. It is very similar in its
+current behavior to a :ref:`section_ref_algorithm_FunctionTest` but it tests
+the stability of the measurement-calculation difference.
 
-Statistics on :math:`\mathbf{x}` input and :math:`\mathbf{y}` output vectors
+Statistics on :math:`\mathbf{x}` input and :math:`\mathbf{y}` output vectors,
+and potentially on the classical data assimilation error function :math:`J`,
 are given for each execution of operator, and an another global statistic is
 given at the end. The precision of printed outputs can be controlled to
 facilitate automatic tests of operator. It may also be useful to check the
@@ -54,6 +58,12 @@ entries themselves beforehand with the intended test
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst
+
+.. include:: snippets/BackgroundError.rst
+
+.. include:: snippets/Observation.rst
+
+.. include:: snippets/ObservationError.rst
 
 .. include:: snippets/ObservationOperator.rst
 
@@ -81,7 +91,12 @@ StoreSupplementaryCalculations
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the
   algorithm*"): [
+  "CostFunctionJ",
+  "CostFunctionJb",
+  "CostFunctionJo",
   "CurrentState",
+  "Innovation",
+  "InnovationAtCurrentState",
   "SimulatedObservationAtCurrentState",
   ].
 
@@ -96,41 +111,23 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
+.. include:: snippets/CostFunctionJ.rst
+
+.. include:: snippets/CostFunctionJb.rst
+
+.. include:: snippets/CostFunctionJo.rst
+
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/Innovation.rst
+
+.. include:: snippets/InnovationAtCurrentState.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
-.. _section_ref_algorithm_FunctionTest_examples:
+.. _section_ref_algorithm_ObservationSimulationComparisonTest_examples:
 
-.. include:: snippets/Header2Algo09.rst
-
-.. --------- ..
-.. include:: scripts/simple_FunctionTest1.rst
-
-.. literalinclude:: scripts/simple_FunctionTest1.py
-
-.. include:: snippets/Header2Algo10.rst
-
-.. literalinclude:: scripts/simple_FunctionTest1.res
-    :language: none
-
-.. --------- ..
-.. include:: scripts/simple_FunctionTest2.rst
-
-.. literalinclude:: scripts/simple_FunctionTest2.py
-
-.. include:: snippets/Header2Algo10.rst
-
-.. literalinclude:: scripts/simple_FunctionTest2.res
-    :language: none
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
-- :ref:`section_ref_algorithm_InputValuesTest`
-- :ref:`section_ref_algorithm_LinearityTest`
-- :ref:`section_ref_algorithm_ControledFunctionTest`
-- :ref:`section_ref_algorithm_ParallelFunctionTest`
-- :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`
-- :ref:`section_ref_algorithm_ObservationSimulationComparisonTest`
+- :ref:`section_ref_algorithm_FunctionTest`
