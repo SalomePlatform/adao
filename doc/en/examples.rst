@@ -56,6 +56,7 @@ Checking algorithms uses
 #. :ref:`Examples with the "AdjointTest" check<section_ref_algorithm_AdjointTest_examples>`
 #. :ref:`Examples with the "ControledFunctionTest"<section_ref_algorithm_ControledFunctionTest_examples>`
 #. :ref:`Examples with the "FunctionTest" check<section_ref_algorithm_FunctionTest_examples>`
+#. :ref:`Examples with the "ObservationSimulationComparisonTest" check<section_ref_algorithm_ObservationSimulationComparisonTest_examples>`
 #. :ref:`Examples with the "ParallelFunctionTest" check<section_ref_algorithm_ParallelFunctionTest_examples>`
 
 Advanced uses

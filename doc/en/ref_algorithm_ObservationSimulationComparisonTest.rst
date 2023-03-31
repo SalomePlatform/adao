@@ -97,6 +97,7 @@ StoreSupplementaryCalculations
   "CurrentState",
   "Innovation",
   "InnovationAtCurrentState",
+  "OMB",
   "SimulatedObservationAtCurrentState",
   ].
 
@@ -123,11 +124,26 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/InnovationAtCurrentState.rst
 
+.. include:: snippets/OMB.rst
+
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_ObservationSimulationComparisonTest_examples:
 
+.. include:: snippets/Header2Algo09.rst
+
+.. --------- ..
+.. include:: scripts/simple_ObservationSimulationComparisonTest1.rst
+
+.. literalinclude:: scripts/simple_ObservationSimulationComparisonTest1.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_ObservationSimulationComparisonTest1.res
+    :language: none
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`

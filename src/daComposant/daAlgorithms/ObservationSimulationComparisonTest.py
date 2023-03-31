@@ -73,6 +73,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentState",
                 "Innovation",
                 "InnovationAtCurrentState",
+                "OMB",
                 "SimulatedObservationAtCurrentState",
                 ]
             )
@@ -127,7 +128,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += ("\n")
         msgs += (__marge + "This test allows to analyze the (repetition of the) launch of some\n")
         msgs += (__marge + "given simulation operator F, applied to one single vector argument x,\n")
-        msgs += (__marge + "and its (repeated) comparison to observations or measures y.\n")
+        msgs += (__marge + "and its comparison to observations or measures y through the innovation\n")
+        msgs += (__marge + "difference OMB = y - F(x) (Observation minus evaluation at Background)\n")
+        msgs += (__marge + "and (if required) the data assimilation standard cost function J.\n")
         msgs += (__marge + "The output shows simple statistics related to its successful execution,\n")
         msgs += (__marge + "or related to the similarities of repetition of its execution.\n")
         msgs += ("\n")
@@ -194,6 +197,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             Dn = _Y0 - numpy.ravel( Yn )
             #
+            if len(self._parameters["StoreSupplementaryCalculations"]) > 0:
+                J, Jb, Jo = CostFunction( X0, Yn )
+                if self._toStore("CostFunctionJ"):
+                    Js.append( J )
             if __s:
                 msgs  = ("\n") # 2-2
                 msgs += (__flech + "End of operator sequential evaluation\n")
@@ -209,7 +216,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += (__marge + "  Standard error.....: %."+str(__p)+"e\n")%numpy.std(  Yn, dtype=mfp )
                 msgs += (__marge + "  L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Yn )
                 msgs += ("\n")
-                msgs += (__marge + "Characteristics of increment between observations Yobs and simulated output vector Y=F(X):\n")
+                msgs += (__marge + "Characteristics of OMB differences between observations Yobs and simulated output vector Y=F(X):\n")
                 msgs += (__marge + "  Type...............: %s\n")%type( Dn )
                 msgs += (__marge + "  Length of vector...: %i\n")%max(numpy.ravel( Dn ).shape)
                 msgs += (__marge + "  Minimum value......: %."+str(__p)+"e\n")%numpy.min(  Dn )
@@ -218,18 +225,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += (__marge + "  Standard error.....: %."+str(__p)+"e\n")%numpy.std(  Dn, dtype=mfp )
                 msgs += (__marge + "  L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( Dn )
                 if len(self._parameters["StoreSupplementaryCalculations"]) > 0:
-                    J, Jb, Jo = CostFunction( X0, Yn )
                     if self._toStore("CostFunctionJ"):
-                        Js.append( J )
                         msgs += ("\n")
                         msgs += (__marge + "  Cost function J....: %."+str(__p)+"e\n")%J
                         msgs += (__marge + "  Cost function Jb...: %."+str(__p)+"e\n")%Jb
                         msgs += (__marge + "  Cost function Jo...: %."+str(__p)+"e\n")%Jo
+                        msgs += (__marge + "  (Remark: the Jb background part of the cost function J is zero by hypothesis)\n")
                 print(msgs) # 2-2
             if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( numpy.ravel(Yn) )
             if self._toStore("Innovation"):
                 self.StoredVariables["Innovation"].store( Dn )
+            if self._toStore("OMB"):
+                self.StoredVariables["OMB"].store( Dn )
             if self._toStore("InnovationAtCurrentState"):
                 self.StoredVariables["InnovationAtCurrentState"].store( Dn )
             #
@@ -296,30 +304,30 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += ("\n")
             msgs += (__marge + "%s\n"%("-"*75,))
             msgs += ("\n")
-            msgs += (__flech + "Statistical analysis of the increments obtained through sequential repeated evaluations\n")
+            msgs += (__flech + "Statistical analysis of the OMB differences obtained through sequential repeated evaluations\n")
             msgs += ("\n")
             msgs += (__marge + "(Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
             msgs += ("\n")
             Dy = numpy.array( Ds )
             msgs += (__marge + "Number of evaluations...........................: %i\n")%len( Ds )
             msgs += ("\n")
-            msgs += (__marge + "Characteristics of the whole set of increments D:\n")
+            msgs += (__marge + "Characteristics of the whole set of OMB differences:\n")
             msgs += (__marge + "  Size of each of the outputs...................: %i\n")%Ds[0].size
-            msgs += (__marge + "  Minimum value of the whole set of increments..: %."+str(__p)+"e\n")%numpy.min(  Dy )
-            msgs += (__marge + "  Maximum value of the whole set of increments..: %."+str(__p)+"e\n")%numpy.max(  Dy )
-            msgs += (__marge + "  Mean of vector of the whole set of increments.: %."+str(__p)+"e\n")%numpy.mean( Dy, dtype=mfp )
-            msgs += (__marge + "  Standard error of the whole set of increments.: %."+str(__p)+"e\n")%numpy.std(  Dy, dtype=mfp )
+            msgs += (__marge + "  Minimum value of the whole set of differences.: %."+str(__p)+"e\n")%numpy.min(  Dy )
+            msgs += (__marge + "  Maximum value of the whole set of differences.: %."+str(__p)+"e\n")%numpy.max(  Dy )
+            msgs += (__marge + "  Mean of vector of the whole set of differences: %."+str(__p)+"e\n")%numpy.mean( Dy, dtype=mfp )
+            msgs += (__marge + "  Standard error of the whole set of differences: %."+str(__p)+"e\n")%numpy.std(  Dy, dtype=mfp )
             msgs += ("\n")
             Dm = numpy.mean( numpy.array( Ds ), axis=0, dtype=mfp )
-            msgs += (__marge + "Characteristics of the vector Dm, mean of the increments D:\n")
-            msgs += (__marge + "  Size of the mean of the increments............: %i\n")%Dm.size
-            msgs += (__marge + "  Minimum value of the mean of the increments...: %."+str(__p)+"e\n")%numpy.min(  Dm )
-            msgs += (__marge + "  Maximum value of the mean of the increments...: %."+str(__p)+"e\n")%numpy.max(  Dm )
-            msgs += (__marge + "  Mean of the mean of the increments............: %."+str(__p)+"e\n")%numpy.mean( Dm, dtype=mfp )
-            msgs += (__marge + "  Standard error of the mean of the increments..: %."+str(__p)+"e\n")%numpy.std(  Dm, dtype=mfp )
+            msgs += (__marge + "Characteristics of the vector Dm, mean of the OMB differences:\n")
+            msgs += (__marge + "  Size of the mean of the differences...........: %i\n")%Dm.size
+            msgs += (__marge + "  Minimum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.min(  Dm )
+            msgs += (__marge + "  Maximum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.max(  Dm )
+            msgs += (__marge + "  Mean of the mean of the differences...........: %."+str(__p)+"e\n")%numpy.mean( Dm, dtype=mfp )
+            msgs += (__marge + "  Standard error of the mean of the differences.: %."+str(__p)+"e\n")%numpy.std(  Dm, dtype=mfp )
             msgs += ("\n")
             De = numpy.mean( numpy.array( Ds ) - Dm, axis=0, dtype=mfp )
-            msgs += (__marge + "Characteristics of the mean of the differences between the increments D and their mean Dm:\n")
+            msgs += (__marge + "Characteristics of the mean of the differences between the OMB differences and their mean Dm:\n")
             msgs += (__marge + "  Size of the mean of the differences...........: %i\n")%De.size
             msgs += (__marge + "  Minimum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.min( De )
             msgs += (__marge + "  Maximum value of the mean of the differences..: %."+str(__p)+"e\n")%numpy.max( De )
@@ -330,6 +338,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += ("\n")
                 Jj = numpy.array( Js )
                 msgs += (__marge + "%s\n\n"%("-"*75,))
+                msgs += (__flech + "Statistical analysis of the cost function J values obtained through sequential repeated evaluations\n")
+                msgs += ("\n")
                 msgs += (__marge + "Number of evaluations...........................: %i\n")%len( Js )
                 msgs += ("\n")
                 msgs += (__marge + "Characteristics of the whole set of data assimilation cost function J values:\n")

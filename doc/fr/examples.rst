@@ -57,6 +57,7 @@ Utilisations d'algorithmes de vérification
 #. :ref:`Exemples de vérification avec "AdjointTest"<section_ref_algorithm_AdjointTest_examples>`
 #. :ref:`Exemples de vérification avec "ControledFunctionTest"<section_ref_algorithm_ControledFunctionTest_examples>`
 #. :ref:`Exemples de vérification avec "FunctionTest"<section_ref_algorithm_FunctionTest_examples>`
+#. :ref:`Exemples de vérification avec "ObservationSimulationComparisonTest"<section_ref_algorithm_ObservationSimulationComparisonTest_examples>`
 #. :ref:`Exemples de vérification avec "ParallelFunctionTest"<section_ref_algorithm_ParallelFunctionTest_examples>`
 
 Utilisations avancées
