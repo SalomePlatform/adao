@@ -44,7 +44,8 @@ class GenericCaseViewer(object):
     """
     __slots__ = (
         "_name", "_objname", "_lineSerie", "_switchoff", "_content",
-        "_numobservers", "_object", "_missing")
+        "_numobservers", "_object", "_missing",
+        )
     #
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"

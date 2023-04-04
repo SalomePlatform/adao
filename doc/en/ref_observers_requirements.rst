@@ -129,10 +129,10 @@ modified function can be used in a "*String*" or "*Script*" input.
 .. note::
 
     Some of the "observers" allow to create figures using the built-in Python
-    module Gnuplot.py [Gnuplot.py]_, which is an interface to control and send
-    arguments to the classic graphical plotting utility Gnuplot [Gnuplot]_.
-    Available under most environments, Gnuplot is independent and must be
-    correctly preinstalled. Gnuplot.py is here updated to support Python 3.
+    module Gnuplot.py [Gnuplot.py]_, here updated to support Python 3. This
+    module is an interface to control and to send arguments to the outstanding
+    classic utility for graphic plotting Gnuplot [Gnuplot]_. Available for most
+    environments, Gnuplot is independent and must be correctly preinstalled.
 
 Hereinafter we give the identifier and the contents of all the available
 "*observer*" models.

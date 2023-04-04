@@ -58,6 +58,14 @@ class FDApproximation(object):
     "dX" qui sera multiplié par "increment" (donc en %), et on effectue de DF
     centrées si le booléen "centeredDF" est vrai.
     """
+    __slots__ = (
+        "__name", "__extraArgs", "__mpEnabled", "__mpWorkers", "__mfEnabled",
+        "__rmEnabled", "__avoidRC", "__tolerBP", "__centeredDF", "__lengthRJ",
+        "__listJPCP", "__listJPCI", "__listJPCR", "__listJPPN", "__listJPIN",
+        "__userOperator", "__userFunction", "__increment", "__pool", "__dX",
+        "__userFunction__name", "__userFunction__modl", "__userFunction__path",
+        )
+    #
     def __init__(self,
             name                  = "FDApproximation",
             Function              = None,

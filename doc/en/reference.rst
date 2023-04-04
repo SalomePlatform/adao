@@ -89,11 +89,12 @@ This section describes algorithmic choices to use data assimilation methods,
 optimization methods or methods with reduction, available in ADAO, detailing
 their characteristics and their options.
 
-Some examples on these commands usage are available in the section
-:ref:`section_tutorials_in_salome`, in the section
-:ref:`section_tutorials_in_python` and in the sample files installed with ADAO.
-The mathematical concepts and notations used are explained in the section
-:ref:`section_theory`.
+Some examples on these commands usage are available in the section of
+:ref:`section_tutorials_in_salome`, in the section of
+:ref:`section_tutorials_in_python`, in the section of
+:ref:`section_docu_examples`, and in the sample files installed with ADAO. The
+mathematical concepts and notations used are explained in the general section
+providing :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -125,11 +126,12 @@ The mathematical concepts and notations used are explained in the section
 This section describes the checking algorithms available in ADAO, detailing
 their usage characteristics and their options.
 
-Some examples on these commands usage are available in the section
-:ref:`section_tutorials_in_salome`, in the section
-:ref:`section_tutorials_in_python` and in the sample files installed with ADAO.
-The mathematical concepts and notations used are explained in the section
-:ref:`section_theory`.
+Some examples on these commands usage are available in the section of
+:ref:`section_tutorials_in_salome`, in the section of
+:ref:`section_tutorials_in_python`, in the section of
+:ref:`section_docu_examples`, and in the sample files installed with ADAO. The
+mathematical concepts and notations used are explained in the general section
+providing :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -158,9 +160,9 @@ This section describes the dedicated task or study oriented cases available in
 ADAO, detailing their usage characteristics and their options.
 
 These tasks use algorithms from data assimilation methods, optimization methods
-or methods with reduction. We refer to the :ref:`section_theory` section and
-the :ref:`section_reference_assimilation` section for the underlying
-algorithmic details.
+or methods with reduction. We refer to the general section providing
+:ref:`section_theory` section and to the :ref:`section_reference_assimilation`
+section for the underlying algorithmic details.
 
 .. toctree::
    :maxdepth: 1

@@ -139,11 +139,12 @@ utilisée dans une entrée de type "*String*" ou de type "*Script*".
 .. note::
 
     Une partie des "*observer*" permet de créer des figures en utilisant le
-    module Python intégré Gnuplot.py [Gnuplot.py]_, qui est une interface de
-    contrôle et transmission d'arguments à l'utilitaire classique de tracé
-    graphique Gnuplot [Gnuplot]_. Disponible sous la grande majorité des
+    module Python intégré Gnuplot.py [Gnuplot.py]_, ici mis à jour pour
+    supporter Python 3. Ce module est une interface de contrôle et de
+    transmission d'arguments au remarquable utilitaire classique de tracé
+    graphique Gnuplot [Gnuplot]_. Disponible pour la grande majorité des
     environnements, ce dernier est indépendant et doit être correctement
-    préinstallé. Gnuplot.py est ici mis à jour pour supporter Python 3
+    préinstallé.
 
 On donne ci-après l'identifiant et le contenu de tous les modèles "*observer*"
 disponibles.

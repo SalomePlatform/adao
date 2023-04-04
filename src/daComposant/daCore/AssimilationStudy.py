@@ -33,6 +33,8 @@ class AssimilationStudy(_Aidsm):
     """
     Generic ADAO TUI builder
     """
+    __slots__ = ()
+    #
     def __init__(self, name = ""):
         _Aidsm.__init__(self, name)
 

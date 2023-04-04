@@ -42,6 +42,11 @@ import logging
 # ==============================================================================
 class Aidsm(object):
     """ ADAO Internal Data Structure Model """
+    __slots__ = (
+        "__name", "__objname", "__directory", "__case", "__parent",
+        "__adaoObject", "__StoredInputs", "__PostAnalysis", "__Concepts",
+        )
+    #
     def __init__(self, name = "", addViewers=None):
         self.__name         = str(name)
         self.__objname      = None

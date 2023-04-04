@@ -22,6 +22,7 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: ParticleSwarmOptimization
+.. index:: single: Global optimization
 .. _section_ref_algorithm_ParticleSwarmOptimization:
 
 Calculation algorithm "*ParticleSwarmOptimization*"

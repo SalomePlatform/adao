@@ -542,6 +542,10 @@ Approfondir l'estimation d'état par des méthodes d'optimisation
 
 .. index:: single: estimation d'état
 .. index:: single: méthodes d'optimisation
+.. index:: single: Optimisation locale
+.. index:: single: Locale (optimisation)
+.. index:: single: Optimisation globale
+.. index:: single: Globale (optimisation)
 .. index:: single: DerivativeFreeOptimization
 .. index:: single: ParticleSwarmOptimization
 .. index:: single: DifferentialEvolution

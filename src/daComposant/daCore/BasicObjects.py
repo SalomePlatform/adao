@@ -42,6 +42,11 @@ class CacheManager(object):
     """
     Classe générale de gestion d'un cache de calculs
     """
+    __slots__ = (
+        "__tolerBP", "__lengthOR", "__initlnOR", "__seenNames", "__enabled",
+        "__listOPCV",
+        )
+    #
     def __init__(self,
                  toleranceInRedundancy = 1.e-18,
                  lengthOfRedundancy    = -1,
@@ -116,6 +121,12 @@ class Operator(object):
     """
     Classe générale d'interface de type opérateur simple
     """
+    __slots__ = (
+        "__name", "__NbCallsAsMatrix", "__NbCallsAsMethod",
+        "__NbCallsOfCached", "__reduceM", "__avoidRC", "__inputAsMF",
+        "__mpEnabled", "__extraArgs", "__Method", "__Matrix", "__Type",
+        )
+    #
     NbCallsAsMatrix = 0
     NbCallsAsMethod = 0
     NbCallsOfCached = 0
@@ -416,6 +427,10 @@ class FullOperator(object):
     Classe générale d'interface de type opérateur complet
     (Direct, Linéaire Tangent, Adjoint)
     """
+    __slots__ = (
+        "__name", "__check", "__extraArgs", "__FO", "__T",
+        )
+    #
     def __init__(self,
                  name             = "GenericFullOperator",
                  asMatrix         = None,
@@ -657,6 +672,13 @@ class Algorithm(object):
 
     Une classe élémentaire d'algorithme doit implémenter la méthode "run".
     """
+    __slots__ = (
+        "_name", "_parameters", "__internal_state", "__required_parameters",
+        "_m", "__variable_names_not_public", "__canonical_parameter_name",
+        "__canonical_stored_name", "__replace_by_the_new_name",
+        "StoredVariables",
+        )
+    #
     def __init__(self, name):
         """
         L'initialisation présente permet de fabriquer des variables de stockage
@@ -1173,6 +1195,10 @@ class PartialAlgorithm(object):
     action avancée comme la vérification . Pour les méthodes reprises ici,
     le fonctionnement est identique à celles de la classe "Algorithm".
     """
+    __slots__ = (
+        "_name", "_parameters", "StoredVariables", "__canonical_stored_name",
+        )
+    #
     def __init__(self, name):
         self._name = str( name )
         self._parameters = {"StoreSupplementaryCalculations":[]}
@@ -1211,6 +1237,12 @@ class AlgorithmAndParameters(object):
     """
     Classe générale d'interface d'action pour l'algorithme et ses paramètres
     """
+    __slots__ = (
+        "__name", "__algorithm", "__algorithmFile", "__algorithmName", "__A",
+        "__P", "__Xb", "__Y", "__U", "__HO", "__EM", "__CM", "__B", "__R",
+        "__Q", "__variable_names_not_public",
+        )
+    #
     def __init__(self,
                  name               = "GenericAlgorithm",
                  asAlgorithm        = None,
@@ -1614,6 +1646,8 @@ class RegulationAndParameters(object):
     """
     Classe générale d'interface d'action pour la régulation et ses paramètres
     """
+    __slots__ = ("__name", "__P")
+    #
     def __init__(self,
                  name               = "GenericRegulation",
                  asAlgorithm        = None,
@@ -1653,6 +1687,8 @@ class DataObserver(object):
     """
     Classe générale d'interface de type observer
     """
+    __slots__ = ("__name", "__V", "__O", "__I")
+    #
     def __init__(self,
                  name        = "GenericObserver",
                  onVariable  = None,
@@ -1716,6 +1752,8 @@ class UserScript(object):
     """
     Classe générale d'interface de type texte de script utilisateur
     """
+    __slots__ = ("__name", "__F")
+    #
     def __init__(self,
                  name       = "GenericUserScript",
                  asTemplate = None,
@@ -1750,6 +1788,8 @@ class ExternalParameters(object):
     """
     Classe générale d'interface pour le stockage des paramètres externes
     """
+    __slots__ = ("__name", "__P")
+    #
     def __init__(self,
                  name        = "GenericExternalParameters",
                  asDict      = None,
@@ -1799,6 +1839,11 @@ class State(object):
     """
     Classe générale d'interface de type état
     """
+    __slots__ = (
+        "__name", "__check", "__V", "__T", "__is_vector", "__is_series",
+        "shape", "size",
+        )
+    #
     def __init__(self,
                  name               = "GenericVector",
                  asVector           = None,
@@ -1931,6 +1976,11 @@ class Covariance(object):
     """
     Classe générale d'interface de type covariance
     """
+    __slots__ = (
+        "__name", "__check", "__C", "__is_scalar", "__is_vector", "__is_matrix",
+        "__is_object", "shape", "size",
+        )
+    #
     def __init__(self,
                  name          = "GenericCovariance",
                  asCovariance  = None,
@@ -2368,6 +2418,8 @@ class Observer2Func(object):
     """
     Création d'une fonction d'observateur a partir de son texte
     """
+    __slots__ = ("__corps")
+    #
     def __init__(self, corps=""):
         self.__corps = corps
     def func(self,var,info):
@@ -2382,6 +2434,11 @@ class CaseLogger(object):
     """
     Conservation des commandes de création d'un cas
     """
+    __slots__ = (
+        "__name", "__objname", "__logSerie", "__switchoff", "__viewers",
+        "__loaders",
+        )
+    #
     def __init__(self, __name="", __objname="case", __addViewers=None, __addLoaders=None):
         self.__name     = str(__name)
         self.__objname  = str(__objname)

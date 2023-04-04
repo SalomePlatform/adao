@@ -508,6 +508,8 @@ Going further in the state estimation by optimization methods
 
 .. index:: single: state estimation
 .. index:: single: optimization methods
+.. index:: single: Local optimization
+.. index:: single: Global optimization
 .. index:: single: DerivativeFreeOptimization
 .. index:: single: ParticleSwarmOptimization
 .. index:: single: DifferentialEvolution

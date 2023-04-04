@@ -91,11 +91,12 @@ d'assimilation de données, des méthodes d'optimisation ou des méthodes avec
 réduction, disponibles dans ADAO, en détaillant leurs caractéristiques et leurs
 options.
 
-Des exemples sur l'usage de ces commandes sont disponibles dans la section
-:ref:`section_tutorials_in_salome`, dans la section
-:ref:`section_tutorials_in_python` et dans les fichiers d'exemple installés
-avec ADAO. Les notions et notations mathématiques utilisées sont expliquées
-dans la section :ref:`section_theory`.
+Des exemples sur l'usage de ces commandes sont disponibles dans la section des
+:ref:`section_tutorials_in_salome`, dans la section des
+:ref:`section_tutorials_in_python`, dans la section des
+:ref:`section_docu_examples`, et dans les fichiers d'exemple installés avec
+ADAO. Les notions et notations mathématiques utilisées sont expliquées dans la
+section générale donnant :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -127,11 +128,12 @@ dans la section :ref:`section_theory`.
 Cette section décrit les algorithmes de vérification disponibles dans ADAO,
 détaillant leurs caractéristiques d'utilisation et leurs options.
 
-Des exemples sur l'usage de ces commandes sont disponibles dans la section
-:ref:`section_tutorials_in_salome`, dans la section
-:ref:`section_tutorials_in_python` et dans les fichiers d'exemple installés
-avec ADAO. Les notions et notations mathématiques utilisées sont expliquées
-dans la section :ref:`section_theory`.
+Des exemples sur l'usage de ces commandes sont disponibles dans la section des
+:ref:`section_tutorials_in_salome`, dans la section des
+:ref:`section_tutorials_in_python`, dans la section des
+:ref:`section_docu_examples`, et dans les fichiers d'exemple installés avec
+ADAO. Les notions et notations mathématiques utilisées sont expliquées dans la
+section générale donnant :ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -162,7 +164,7 @@ options.
 
 Ces tâches utilisent des algorithmes provenant de méthodes d'assimilation de
 données, de méthodes d'optimisation ou de méthodes avec réduction. On renvoie à
-la section :ref:`section_theory` et à celle des
+la section générale donnant :ref:`section_theory` et à celle des
 :ref:`section_reference_assimilation` pour les détails algorithmiques
 sous-jacents.
 

@@ -42,6 +42,11 @@ class Persistence(object):
     Classe générale de persistance définissant les accesseurs nécessaires
     (Template)
     """
+    __slots__ = (
+        "__name", "__unit", "__basetype", "__values", "__tags", "__dynamic",
+        "__g", "__title", "__ltitle", "__pause", "__dataobservers",
+        )
+    #
     def __init__(self, name="", unit="", basetype=str):
         """
         name : nom courant
@@ -786,6 +791,8 @@ class SchedulerTrigger(object):
     """
     Classe générale d'interface de type Scheduler/Trigger
     """
+    __slots__ = ()
+    #
     def __init__(self,
                  simplifiedCombo = None,
                  startTime       = 0,
@@ -807,6 +814,8 @@ class OneScalar(Persistence):
     ou des matrices comme dans les classes suivantes, mais c'est déconseillé
     pour conserver une signification claire des noms.
     """
+    __slots__ = ()
+    #
     def __init__(self, name="", unit="", basetype = float):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -814,6 +823,8 @@ class OneIndex(Persistence):
     """
     Classe définissant le stockage d'une valeur unique entière (int) par pas.
     """
+    __slots__ = ()
+    #
     def __init__(self, name="", unit="", basetype = int):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -822,6 +833,8 @@ class OneVector(Persistence):
     Classe de stockage d'une liste de valeurs numériques homogènes par pas. Ne
     pas utiliser cette classe pour des données hétérogènes, mais "OneList".
     """
+    __slots__ = ()
+    #
     def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -829,6 +842,8 @@ class OneMatrix(Persistence):
     """
     Classe de stockage d'une matrice de valeurs homogènes par pas.
     """
+    __slots__ = ()
+    #
     def __init__(self, name="", unit="", basetype = numpy.matrix):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -838,6 +853,8 @@ class OneList(Persistence):
     pas utiliser cette classe pour des données numériques homogènes, mais
     "OneVector".
     """
+    __slots__ = ()
+    #
     def __init__(self, name="", unit="", basetype = list):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -853,6 +870,8 @@ class OneNoType(Persistence):
     résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
     volontairement, et pas du tout par défaut.
     """
+    __slots__ = ()
+    #
     def __init__(self, name="", unit="", basetype = NoType):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -865,6 +884,8 @@ class CompositePersistence(object):
     Des objets par défaut sont prévus, et des objets supplémentaires peuvent
     être ajoutés.
     """
+    __slots__ = ("__name", "__StoredObjects")
+    #
     def __init__(self, name="", defaults=True):
         """
         name : nom courant
