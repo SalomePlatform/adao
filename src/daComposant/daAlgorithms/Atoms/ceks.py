@@ -172,6 +172,10 @@ def ceks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Ma = Ma.reshape(Xs.size,Xs.size) # ADAO & check shape
             M  = EM["Direct"].appliedControledFormTo
             Xn = numpy.ravel( M( (Xs, Un) ) ).reshape((__n,1))
+            if CM is not None and "Tangent" in CM and Un is not None: # Attention : si Cm est aussi dans M, doublon !
+                Cm = CM["Tangent"].asMatrix(Xn_predicted)
+                Cm = Cm.reshape(__n,Un.size) # ADAO & check shape
+                Xn = Xn + Cm @ Un
         elif selfA._parameters["EstimationOf"] == "Parameters": # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Mt = Ma = 1.

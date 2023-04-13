@@ -1026,8 +1026,7 @@ def BuildComplexSampleList(
 
 # ==============================================================================
 def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle,
-        __CovForecast = False, __LinEvolution = False,
-        ):
+        __CovForecast = False):
     """
     Prévision multi-pas avec une correction par pas (multi-méthodes)
     """
@@ -1080,18 +1079,15 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle,
         # Predict (Time Update)
         # ---------------------
         if selfA._parameters["EstimationOf"] == "State":
-            if __CovForecast or __LinEvolution:
+            if __CovForecast:
                 Mt = EM["Tangent"].asMatrix(Xn)
                 Mt = Mt.reshape(Xn.size,Xn.size) # ADAO & check shape
             if __CovForecast:
                 Ma = EM["Adjoint"].asMatrix(Xn)
                 Ma = Ma.reshape(Xn.size,Xn.size) # ADAO & check shape
                 Pn_predicted = Q + Mt @ (Pn @ Ma)
-            if __LinEvolution:
-                Xn_predicted = Mt @ Xn
-            else:
-                M  = EM["Direct"].appliedControledFormTo
-                Xn_predicted = M( (Xn, Un) )
+            M  = EM["Direct"].appliedControledFormTo
+            Xn_predicted = M( (Xn, Un) ).reshape((-1,1))
             if CM is not None and "Tangent" in CM and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                 Cm = CM["Tangent"].asMatrix(Xn_predicted)
                 Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape

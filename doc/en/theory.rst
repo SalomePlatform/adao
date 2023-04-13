@@ -56,8 +56,8 @@ underlying procedure always integrates optimization in order to find this
 estimate: particular optimization methods are always embedded in data
 assimilation algorithms. Optimization methods can be seen in ADAO as a way to
 extend data assimilation applications. They will be introduced this way in the
-section `Going further in the state estimation by optimization methods`_, but
-they are far more general and can be used without data assimilation concepts.
+section :ref:`section_theory_optimization`, but they are far more general and
+can be used without data assimilation concepts.
 
 Two main types of applications exist in data assimilation, which are covered by
 the same formalism: **fields reconstruction** (see `Fields reconstruction or
@@ -68,13 +68,11 @@ can if necessary elaborate joint estimation of both (see `Joint state and
 parameter estimation in dynamics`_). In ADAO, some algorithms can be used
 either in state estimation or in parameter estimation. This is done simply by
 changing the required option "*EstimationOf*" in the algorithm parameters.
-Before introducing the `Simple description of the data assimilation
-methodological framework`_ in a next section, these two types of applications
-are briefly described. At the end, some detailed information allow `Going
-further in the data assimilation framework`_ and `Going further in the state
-estimation by optimization methods`_, as well as `Going further in data
-assimilation for dynamics`_  and having `An overview of reduction methods and
-of reduced optimization`_.
+Before introducing the :ref:`section_theory_da_framework` in a next section,
+these two types of applications are briefly described. At the end, some
+detailed information allow :ref:`section_theory_more_assimilation` and
+:ref:`section_theory_optimization`, as well as :ref:`section_theory_dynamique`
+and having :ref:`section_theory_reduction`.
 
 Fields reconstruction or measures interpolation
 -----------------------------------------------
@@ -190,6 +188,8 @@ in the case of more marked nonlinearities during the numerical simulation of
 the states, it is advisable to treat in a more complete but also more complex
 way the problem of joint estimation of states and parameters.
 
+.. _section_theory_da_framework:
+
 Simple description of the data assimilation methodological framework
 --------------------------------------------------------------------
 
@@ -268,15 +268,15 @@ assimlation (see for example [Talagrand97]_) or as the generalized Tikhonov
 regularization functional in optimization (see for example [WikipediaTI]_).
 Since :math:`\mathbf{B}` and :math:`\mathbf{R}` covariance matrices are
 proportional to the variances of errors, their presence in both terms of the
-function :math:`J` can effectively weight the gap terms by the confidence in the
-background or observations errors. The parameters vector :math:`\mathbf{x}`
+function :math:`J` can effectively weight the gap terms by the confidence in
+the background or observations errors. The parameters vector :math:`\mathbf{x}`
 realizing the minimum of this function therefore constitute the analysis
 :math:`\mathbf{x}^a`. It is at this level that we have to use the full panoply
 of function minimization methods otherwise known in optimization (see also
-section `Going further in the state estimation by optimization methods`_).
-Depending on the size of the parameters vector :math:`\mathbf{x}` to identify,
-and of the availability of gradient or Hessian of :math:`J`, it is appropriate
-to adapt the chosen optimization method (gradient, Newton, quasi-Newton...).
+section :ref:`section_theory_optimization`). Depending on the size of the
+parameters vector :math:`\mathbf{x}` to identify, and of the availability of
+gradient or Hessian of :math:`J`, it is appropriate to adapt the chosen
+optimization method (gradient, Newton, quasi-Newton...).
 
 In **assimilation by filtering**, in this simple case usually referred to as
 "*BLUE*" (for "*Best Linear Unbiased Estimator*"), the :math:`\mathbf{x}^a`
@@ -305,7 +305,7 @@ and "*Kalman filter (KF)*" and their derivatives. They have to take into
 account an evolution operator to establish an analysis at the right time steps
 of the gap between observations and simulations, and to have, at every moment,
 the propagation of the background through the evolution model. The next section
-provides information on `Going further in data assimilation for dynamics`_. In
+provides information on :ref:`section_theory_dynamique`. In
 the same way, these methods can be used in case of non linear observation or
 evolution operators. Many other variants have been developed to improve the
 numerical quality of the methods or to take into account computer requirements
@@ -328,11 +328,10 @@ inspired by [Asch16]_ (Figure 1.5).
 
 It is deliberately simple to remain readable, the dashed lines showing some of
 the simplifications or extensions. For example, it does not specifically
-mention the methods with reductions (of which it is given hereafter `An
-overview of reduction methods and of reduced optimization`_), some of which
-were variations of the basic methods shown here, nor does it mention the more
-detailed extensions. It also omits the test methods available in ADAO and
-useful for the study.
+mention the methods with reductions (of which it is given hereafter
+:ref:`section_theory_reduction`), some of which were variations of the basic
+methods shown here, nor does it mention the more detailed extensions. It also
+omits the test methods available in ADAO and useful for the study.
 
 Each method mentioned in this diagram is the subject of a specific descriptive
 section in the chapter on :ref:`section_reference_assimilation`. The acronyms
@@ -354,6 +353,8 @@ links:
 - Swarm: :ref:`section_ref_algorithm_ParticleSwarmOptimization`,
 - Tabu: :ref:`section_ref_algorithm_TabuSearch`,
 - UKF: :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
+
+.. _section_theory_reduction:
 
 An overview of reduction methods and of reduced optimization
 ------------------------------------------------------------
@@ -456,6 +457,8 @@ One can end this quick overview of reduction methods highlighting that their
 use is ubiquitous in real applications and in numerical tools, and that ADAO
 allows to use proven methods without even knowing it.
 
+.. _section_theory_more_assimilation:
+
 Going further in the data assimilation framework
 ------------------------------------------------
 
@@ -502,6 +505,8 @@ interpolation*, *variational optimization*, *quadratic optimization*,
 reduction*, *data smoothing*, *data-driven* modeling, model and data learning
 (*Machine Learning* and *Artificial Intelligence*), etc. These terms can be
 used in bibliographic searches.
+
+.. _section_theory_optimization:
 
 Going further in the state estimation by optimization methods
 -------------------------------------------------------------

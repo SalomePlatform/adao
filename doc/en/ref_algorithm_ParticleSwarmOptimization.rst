@@ -34,15 +34,17 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 This algorithm realizes an estimation of the state of a system by minimization
 of a cost function :math:`J` by using an evolutionary strategy of particle
 swarm. It is a method that does not use the derivatives of the cost function.
-It falls in the same category than the
+It is based on the evolution of a population (called a "swarm") of states (each
+state is called a "particle"). It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`, the
 :ref:`section_ref_algorithm_DifferentialEvolution` or the
 :ref:`section_ref_algorithm_TabuSearch`.
 
 This is an optimization method allowing for global minimum search of a general
-error function :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
-with or without weights. The default error function is the augmented weighted
-least squares function, classically used in data assimilation.
+error function :math:`J` of type :math:`L^1`, :math:`L^2` or
+:math:`L^{\infty}`, with or without weights, as described in the section for
+:ref:`section_theory_optimization`. The default error function is the augmented
+weighted least squares function, classically used in data assimilation.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

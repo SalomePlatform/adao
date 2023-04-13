@@ -61,9 +61,9 @@ trouver cette estimation : des méthodes d'optimisation choisies sont toujours
 intégrées dans les algorithmes d'assimilation de données. Par ailleurs, les
 méthodes d'optimisation peuvent être vues dans ADAO comme un moyen d'étendre
 les applications d'assimilation de données. Elles seront présentées de cette
-façon dans la section pour `Approfondir l'estimation d'état par des méthodes
-d'optimisation`_, mais elles sont beaucoup plus générales et peuvent être
-utilisées sans les concepts d'assimilation de données.
+façon dans la section pour :ref:`section_theory_optimization`, mais elles sont
+beaucoup plus générales et peuvent être utilisées sans les concepts
+d'assimilation de données.
 
 Deux types principaux d'applications existent en assimilation de données, qui
 sont couverts par le même formalisme : la **reconstruction de champs** (voir
@@ -75,14 +75,12 @@ conjointe si nécessaire (voir `Estimation conjointe d'états et de
 paramètres`_). Dans ADAO, certains algorithmes peuvent être utilisés soit en
 estimation d'état, soit en estimation de paramètres. Cela se fait simplement en
 changeant l'option requise "*EstimationOf*" dans les paramètres des
-algorithmes. Avant d'introduire la `Description simple du cadre méthodologique
-de l'assimilation de données`_ dans une prochaine section, on décrit brièvement
-ces deux types d'applications. A la fin de ce chapitre, quelques informations
-permettent d'aller plus loin pour `Approfondir le cadre méthodologique de
-l'assimilation de données`_ et `Approfondir l'estimation d'état par des
-méthodes d'optimisation`_, ainsi que pour `Approfondir l'assimilation de
-données pour la dynamique`_ et avoir `Un aperçu des méthodes de réduction et de
-l'optimisation réduite`_.
+algorithmes. Avant d'introduire la :ref:`section_theory_da_framework` dans une
+prochaine section, on décrit brièvement ces deux types d'applications. A la fin
+de ce chapitre, quelques informations permettent d'aller plus loin pour
+:ref:`section_theory_more_assimilation` et :ref:`section_theory_optimization`,
+ainsi que pour :ref:`section_theory_dynamique` et avoir
+:ref:`section_theory_reduction`.
 
 Reconstruction de champs ou interpolation de données
 ----------------------------------------------------
@@ -208,6 +206,8 @@ lors de la simulation numérique des états, il convient de traiter de manière
 plus complète mais aussi plus complexe le problème d'estimation conjointe
 d'états et de paramètres.
 
+.. _section_theory_da_framework:
+
 Description simple du cadre méthodologique de l'assimilation de données
 -----------------------------------------------------------------------
 
@@ -285,18 +285,19 @@ classiquement à minimiser la fonction :math:`J` suivante :
 :math:`J` est classiquement désignée comme la fonctionnelle "*3D-Var*" en
 assimilation de données (voir par exemple [Talagrand97]_) ou comme la
 fonctionnelle de régularisation de Tikhonov généralisée en optimisation (voir
-par exemple [WikipediaTI]_). Comme les matrices de covariance :math:`\mathbf{B}`
-et :math:`\mathbf{R}` sont proportionnelles aux variances d'erreurs, leur
-présence dans les deux termes de la fonctionnelle :math:`J` permet effectivement
-de pondérer les termes d'écarts par la confiance dans les erreurs d'ébauche ou
-d'observations. Le vecteur :math:`\mathbf{x}` des paramètres réalisant le
-minimum de cette fonction constitue ainsi l'analyse :math:`\mathbf{x}^a`. C'est
-à ce niveau que l'on doit utiliser toute la panoplie des méthodes de
-minimisation de fonctions connues par ailleurs en optimisation (voir aussi la
-section `Approfondir l'estimation d'état par des méthodes d'optimisation`_).
-Selon la taille du vecteur :math:`\mathbf{x}` des paramètres à identifier, et la
+par exemple [WikipediaTI]_). Comme les matrices de covariance
+:math:`\mathbf{B}` et :math:`\mathbf{R}` sont proportionnelles aux variances
+d'erreurs, leur présence dans les deux termes de la fonctionnelle :math:`J`
+permet effectivement de pondérer les termes d'écarts par la confiance dans les
+erreurs d'ébauche ou d'observations. Le vecteur :math:`\mathbf{x}` des
+paramètres réalisant le minimum de cette fonction constitue ainsi l'analyse
+:math:`\mathbf{x}^a`. C'est à ce niveau que l'on doit utiliser toute la
+panoplie des méthodes de minimisation de fonctions connues par ailleurs en
+optimisation (voir aussi la section :ref:`section_theory_optimization`). Selon
+la taille du vecteur :math:`\mathbf{x}` des paramètres à identifier, et la
 disponibilité du gradient ou de la hessienne de :math:`J`, il est judicieux
-d'adapter la méthode d'optimisation choisie (gradient, Newton, quasi-Newton...).
+d'adapter la méthode d'optimisation choisie (gradient, Newton,
+quasi-Newton...).
 
 En **assimilation par filtrage**, dans ce cas simple usuellement dénommé
 "*BLUE*" (pour "*Best Linear Unbiased Estimator*"), l'analyse
@@ -325,12 +326,12 @@ et de "*Filtre de Kalman (KF)*" et leurs dérivés. Elles doivent alors prendre
 en compte un opérateur d'évolution pour établir aux bons pas de temps une
 analyse de l'écart entre les observations et les simulations et pour avoir, à
 chaque instant, la propagation de l'ébauche à travers le modèle d'évolution. On
-se reportera à la section suivante pour `Approfondir l'assimilation de données
-pour la dynamique`_. De la même manière, ces méthodes peuvent aussi être
-utilisées dans le cas d'opérateurs d'observation ou d'évolution non linéaires.
-Un grand nombre de variantes ont été développées pour accroître la qualité
-numérique des méthodes ou pour prendre en compte des contraintes informatiques
-comme la taille ou la durée des calculs.
+se reportera à la section suivante pour :ref:`section_theory_dynamique`. De
+la même manière, ces méthodes peuvent aussi être utilisées dans le cas
+d'opérateurs d'observation ou d'évolution non linéaires. Un grand nombre de
+variantes ont été développées pour accroître la qualité numérique des méthodes
+ou pour prendre en compte des contraintes informatiques comme la taille ou la
+durée des calculs.
 
 Une vue schématique des approches d'Assimilation de Données et d'Optimisation
 -----------------------------------------------------------------------------
@@ -350,10 +351,10 @@ librement inspiré de [Asch16]_ (Figure 1.5).
 Il est volontairement simple pour rester lisible, les lignes tiretées montrant
 certaines des simplifications ou extensions. Ce schéma omet par exemple de
 citer spécifiquement les méthodes avec réductions (dont il est donné ci-après
-`Un aperçu des méthodes de réduction et de l'optimisation réduite`_), dont une
-partie sont des variantes de méthodes de base indiquées ici, ou de citer les
-extensions les plus détaillées. Il omet de même les méthodes de tests
-disponibles dans ADAO et utiles pour la mise en étude.
+:ref:`section_theory_reduction`), dont une partie sont des variantes de
+méthodes de base indiquées ici, ou de citer les extensions les plus détaillées.
+Il omet de même les méthodes de tests disponibles dans ADAO et utiles pour la
+mise en étude.
 
 Chaque méthode citée dans ce schéma fait l'objet d'une partie descriptive
 spécifique dans le chapitre des :ref:`section_reference_assimilation`. Les
@@ -375,6 +376,8 @@ associés :
 - Swarm : :ref:`section_ref_algorithm_ParticleSwarmOptimization`,
 - Tabu : :ref:`section_ref_algorithm_TabuSearch`,
 - UKF : :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
+
+.. _section_theory_reduction:
 
 Un aperçu des méthodes de réduction et de l'optimisation réduite
 ----------------------------------------------------------------
@@ -484,6 +487,8 @@ soulignant que leur usage est omni-présent dans les applications réelles et
 dans les outils numériques, et qu'ADAO permet d'utiliser des méthodes éprouvées
 sans même le savoir.
 
+.. _section_theory_more_assimilation:
+
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------
 
@@ -536,6 +541,8 @@ d'optimisation, de *réduction de modèles*, de *lissage de données*, de pilota
 des modèles par les données (« *data-driven* »), *d'apprentissage* de modèles
 et de données (*Machine Learning* et Intelligence Artificielle), etc. Ces
 termes peuvent être utilisés dans les recherches bibliographiques.
+
+.. _section_theory_optimization:
 
 Approfondir l'estimation d'état par des méthodes d'optimisation
 ---------------------------------------------------------------

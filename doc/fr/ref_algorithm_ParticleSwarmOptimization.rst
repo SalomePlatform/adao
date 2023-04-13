@@ -35,16 +35,19 @@ Algorithme de calcul "*ParticleSwarmOptimization*"
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
 d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
 d'essaim particulaire. C'est une méthode qui n'utilise pas les dérivées de la
-fonctionnelle d'écart. Elle entre dans la même catégorie que
-l':ref:`section_ref_algorithm_DerivativeFreeOptimization`,
-l':ref:`section_ref_algorithm_DifferentialEvolution` ou
-l':ref:`section_ref_algorithm_TabuSearch`.
+fonctionnelle d'écart. Elle est basée sur l'évolution d'une population (appelée
+"essaim") d'états (chaque individu étant appelé une "particule"). Elle entre
+dans la même catégorie que les
+:ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+:ref:`section_ref_algorithm_DifferentialEvolution` ou
+:ref:`section_ref_algorithm_TabuSearch`.
 
-C'est une méthode d'optimisation permettant la recherche du minimum global d'une
-fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
-:math:`L^{\infty}`, avec ou sans pondérations. La fonctionnelle d'erreur par
-défaut est celle de moindres carrés pondérés augmentés, classiquement utilisée
-en assimilation de données.
+C'est une méthode d'optimisation permettant la recherche du minimum global
+d'une fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`,
+:math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations, comme décrit dans
+la section pour :ref:`section_theory_optimization`. La fonctionnelle d'erreur
+par défaut est celle de moindres carrés pondérés augmentés, classiquement
+utilisée en assimilation de données.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

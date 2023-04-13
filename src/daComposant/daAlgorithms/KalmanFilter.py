@@ -99,7 +99,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         #--------------------------
         if   self._parameters["Variant"] == "KalmanFilter":
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True, True)
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True)
         #
         #--------------------------
         elif self._parameters["Variant"] == "OneCorrection":
