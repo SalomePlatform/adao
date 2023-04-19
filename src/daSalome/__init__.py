@@ -122,6 +122,8 @@ quote at least one of the references given below:
 The documentation of the module is also covered by the license and the
 requirement of quoting.
 """
+__author__ = "Jean-Philippe ARGAUD"
+__all__ = ["adaoBuilder"]
 
 import os, sys, logging
 adao_py_dir = os.path.abspath(os.path.dirname(__file__))

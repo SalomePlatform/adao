@@ -171,6 +171,8 @@ exhaustive bibliography.
 
 .. [WikipediaUKF] Wikipedia, *Unscented Kalman Filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
 
+.. [ZambranoBigiarini13] Zambrano-Bigiarini M., Clerc M., Rojas R., *Standard Particle Swarm Optimisation 2011 at CEC-2013: A baseline for future PSO improvements*, 2013 IEEE Congress on Evolutionary Computation, pp.2337-2344, 2013
+
 .. [Zhu97] Zhu C., Byrd R. H., Nocedal J., *L-BFGS-B: Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 23(4), pp.550-560, 1997
 
 .. [Zupanski05] Zupanski M., *Maximum likelihood ensemble filter: Theoretical aspects*, Monthly Weather Review, 133(6), pp.1710–1726, 2005

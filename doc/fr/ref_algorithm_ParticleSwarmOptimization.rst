@@ -36,8 +36,8 @@ Cet algorithme réalise une estimation de l'état d'un système par minimisation
 d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
 d'essaim particulaire. C'est une méthode qui n'utilise pas les dérivées de la
 fonctionnelle d'écart. Elle est basée sur l'évolution d'une population (appelée
-"essaim") d'états (chaque individu étant appelé une "particule"). Elle entre
-dans la même catégorie que les
+"essaim") d'états (chaque individu étant appelé une "particule" ou un insecte).
+Elle entre dans la même catégorie que les
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 :ref:`section_ref_algorithm_DifferentialEvolution` ou
 :ref:`section_ref_algorithm_TabuSearch`.
@@ -48,6 +48,17 @@ d'une fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`,
 la section pour :ref:`section_theory_optimization`. La fonctionnelle d'erreur
 par défaut est celle de moindres carrés pondérés augmentés, classiquement
 utilisée en assimilation de données.
+
+Il existe diverses variantes de cet algorithme. On propose ici les formulations
+stables et robustes suivantes :
+
+.. index::
+    pair: Variant ; PSO
+    pair: Variant ; CanonicalPSO
+    pair: Variant ; OGCR
+
+- "PSO" (Canonical PSO, voir [ZambranoBigiarini13]_), algorithme canonique d'essaim particulaire, robuste et défini comme la référence des algorithmes d'essaims particulaires,
+- "OGCR" (Simple PSO sans bornes sur les insectes ou les vitesses), algorithme simplifié d'essaim particulaire, déconseillé car peu robuste, mais parfois beaucoup plus rapide.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -65,21 +76,27 @@ utilisée en assimilation de données.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/MaximumNumberOfIterations_50.rst
-
-.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
-
-.. include:: snippets/QualityCriterion.rst
-
-.. include:: snippets/NumberOfInsects.rst
-
-.. include:: snippets/SwarmVelocity.rst
-
-.. include:: snippets/GroupRecallRate.rst
+.. include:: snippets/BoundsWithNone.rst
 
 .. include:: snippets/BoxBounds.rst
 
+.. include:: snippets/CognitiveAcceleration.rst
+
+.. include:: snippets/InertiaWeight.rst
+
+.. include:: snippets/InitializationPoint.rst
+
+.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
+
+.. include:: snippets/MaximumNumberOfIterations_50.rst
+
+.. include:: snippets/NumberOfInsects.rst
+
+.. include:: snippets/QualityCriterion.rst
+
 .. include:: snippets/SetSeed.rst
+
+.. include:: snippets/SocialAcceleration.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
@@ -111,6 +128,8 @@ StoreSupplementaryCalculations
 
   Exemple :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
+
+.. include:: snippets/VelocityClampingFactor.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo04.rst
@@ -165,3 +184,4 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo07.rst
 
 - [WikipediaPSO]_
+- [ZambranoBigiarini13]_
