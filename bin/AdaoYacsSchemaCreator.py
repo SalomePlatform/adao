@@ -49,4 +49,8 @@ my_parser.add_argument('config_file')
 my_parser.add_argument('yacs_schema_filename')
 args = my_parser.parse_args()
 
+if os.path.dirname(args.config_file) != '':
+    # Ajout dans le sys.path pour permettre l'import des fichiers inclus
+    sys.path.insert(0, os.path.dirname(args.config_file))
+
 run.create_schema_from_file(args.config_file, args.yacs_schema_filename)

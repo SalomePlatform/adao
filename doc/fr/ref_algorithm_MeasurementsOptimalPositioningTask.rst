@@ -72,8 +72,8 @@ nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
 importante.
 
 Il est possible d'exclure a priori des positions potentielles pour les points
-de mesures optimaux, en utilisant le variant "*lcEIM*" d'analyse pour une
-recherche de positionnement contraint.
+de mesures optimaux, en utilisant le variant "*PositioningBylcEIM*" d'analyse
+pour une recherche de positionnement contraint.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

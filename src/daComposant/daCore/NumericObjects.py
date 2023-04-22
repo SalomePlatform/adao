@@ -544,7 +544,7 @@ def EnsembleOfCenteredPerturbations( __bgCenter, __bgCovariance, __nbMembers ):
     return _Perturbations
 
 # ==============================================================================
-def EnsembleOfBackgroundPerturbations( __bgCenter, __bgCovariance, __nbMembers, __withSVD = True):
+def EnsembleOfBackgroundPerturbations( __bgCenter, __bgCovariance, __nbMembers, __withSVD = True ):
     "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
     def __CenteredRandomAnomalies(Zr, N):
         """
@@ -593,7 +593,7 @@ def EnsembleMean( __Ensemble ):
     return numpy.asarray(__Ensemble).mean(axis=1, dtype=mfp).astype('float').reshape((-1,1))
 
 # ==============================================================================
-def EnsembleOfAnomalies( __Ensemble, __OptMean = None, __Normalisation = 1.):
+def EnsembleOfAnomalies( __Ensemble, __OptMean = None, __Normalisation = 1. ):
     "Renvoie les anomalies centrées à partir d'un ensemble"
     if __OptMean is None:
         __Em = EnsembleMean( __Ensemble )
@@ -744,7 +744,7 @@ def CovarianceInflation(
     return __OutputCovOrEns
 
 # ==============================================================================
-def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
+def HessienneEstimation( __selfA, __nb, __HaM, __HtM, __BI, __RI ):
     "Estimation de la Hessienne"
     #
     __HessienneI = []
@@ -781,7 +781,7 @@ def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
     return __A
 
 # ==============================================================================
-def QuantilesEstimations(selfA, A, Xa, HXa = None, Hm = None, HtM = None):
+def QuantilesEstimations( selfA, A, Xa, HXa = None, Hm = None, HtM = None ):
     "Estimation des quantiles a posteriori à partir de A>0 (selfA est modifié)"
     nbsamples = selfA._parameters["NumberOfSamplesForQuantiles"]
     #
@@ -857,7 +857,7 @@ def ForceNumericBounds( __Bounds, __infNumbers = True ):
     return __Bounds
 
 # ==============================================================================
-def RecentredBounds( __Bounds, __Center, __Scale = None):
+def RecentredBounds( __Bounds, __Center, __Scale = None ):
     "Recentre les bornes autour de 0, sauf si globalement None"
     # Conserve une valeur par défaut à None s'il n'y a pas de bornes
     if __Bounds is None: return None
@@ -869,7 +869,7 @@ def RecentredBounds( __Bounds, __Center, __Scale = None):
         return __Scale @ (ForceNumericBounds( __Bounds, False ) - numpy.ravel( __Center ).reshape((-1,1)))
 
 # ==============================================================================
-def ApplyBounds( __Vector, __Bounds, __newClip = True):
+def ApplyBounds( __Vector, __Bounds, __newClip = True ):
     "Applique des bornes numériques à un point"
     # Conserve une valeur par défaut s'il n'y a pas de bornes
     if __Bounds is None: return __Vector
@@ -896,7 +896,7 @@ def ApplyBounds( __Vector, __Bounds, __newClip = True):
     return __Vector
 
 # ==============================================================================
-def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __SuppPars):
+def Apply3DVarRecentringOnEnsemble( __EnXn, __EnXf, __Ynpu, __HO, __R, __B, __SuppPars ):
     "Recentre l'ensemble Xn autour de l'analyse 3DVAR"
     __Betaf = __SuppPars["HybridCovarianceEquilibrium"]
     #
@@ -923,7 +923,7 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Sup
     return Xa + EnsembleOfAnomalies( __EnXn )
 
 # ==============================================================================
-def FindIndexesFromNames( __NameOfLocations = None, __ExcludeLocations = None, ForceArray = False):
+def FindIndexesFromNames( __NameOfLocations = None, __ExcludeLocations = None, ForceArray = False ):
     "Exprime les indices des noms exclus, en ignorant les absents"
     if __ExcludeLocations is None:
         __ExcludeIndexes = ()

@@ -289,7 +289,7 @@ class _COMViewer(GenericCaseViewer):
                     __from = r['data']
                     if 'STRING' in __from:
                         __parameters = ", Parameters=%s"%(repr(eval(__from['STRING'])),)
-                    elif 'SCRIPT_FILE' in __from and os.path.exists(__from['SCRIPT_FILE']):
+                    elif 'SCRIPT_FILE' in __from: # Pas de test d'existence du fichier pour accepter un fichier relatif
                         __parameters = ", Script='%s'"%(__from['SCRIPT_FILE'],)
                 else: # if 'Parameters' in r and r['Parameters'] == 'Defaults':
                     __Dict = copy.deepcopy(r)
@@ -748,10 +748,18 @@ class ImportFromScript(object):
         "Verifie l'existence et importe le script"
         if __filename is None:
             raise ValueError("The name of the file, containing the variable to be read, has to be specified.")
-        if not os.path.isfile(__filename):
-            raise ValueError(
-                "The file containing the variable to be imported doesn't seem to"+\
-                " exist. Please check the file. The given file name is:\n  \"%s\""%str(__filename))
+        __fullname, __i = __filename, 0
+        while not os.path.exists(__fullname) and __i < len(sys.path):
+            # Correction avec le sys.path si nécessaire
+            __fullname = os.path.join(sys.path[__i], __filename)
+            __i += 1
+        if not os.path.exists(__filename):
+            if os.path.exists(__fullname):
+                __filename = __fullname
+            else:
+                raise ValueError(
+                    "The file containing the variable to be imported doesn't seem to"+\
+                    " exist. Please check the file. The given file name is:\n  \"%s\""%str(__filename))
         if os.path.dirname(__filename) != '':
             sys.path.insert(0, os.path.dirname(__filename))
             __basename = os.path.basename(__filename).rstrip(".py")

@@ -70,8 +70,8 @@ Beware of the size of the hyper-cube (and then to the number of computations)
 that can be reached, it can grow quickly to be quite large.
 
 It is possible to exclude a priori potential positions for optimal measurement
-points, using the analysis variant "*lcEIM*" for a constrained positioning
-search.
+points, using the analysis variant "*PositioningBylcEIM*" for a constrained
+positioning search.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

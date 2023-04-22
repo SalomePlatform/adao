@@ -106,12 +106,28 @@ def check_study(study_config):
       raise ValueError("\n\nAnalysis found but Data is not defined in the analysis configuration!\n")
 
     if analysis_config["From"] == "Script":
-      check_file_name = analysis_config["Data"]
-      if check_repertory and not os.path.exists(check_file_name):
-        check_file_name = os.path.join(repertory, os.path.basename(analysis_config["Data"]))
-      if not os.path.exists(check_file_name):
+      # Recherche d'un nom valide :
+      checked_file_name = analysis_config["Data"]
+      if not os.path.exists(checked_file_name):
+        if check_repertory:
+          if os.path.exists( os.path.join(repertory, analysis_config["Data"]) ):
+            checked_file_name = os.path.join(repertory, analysis_config["Data"])
+          if os.path.exists( os.path.join(repertory, os.path.basename(analysis_config["Data"])) ):
+            checked_file_name = os.path.join(repertory, os.path.basename(analysis_config["Data"]))
+        else:
+          __i = 0
+          while not os.path.exists(checked_file_name) and __i < len(sys.path):
+            # Correction avec le sys.path si nécessaire
+            checked_file_name = os.path.join(sys.path[__i], analysis_config["Data"])
+            __i += 1
+          __i = 0
+          while not os.path.exists(checked_file_name) and __i < len(sys.path):
+            # Correction avec le sys.path si nécessaire
+            checked_file_name = os.path.join(sys.path[__i], os.path.basename(analysis_config["Data"]))
+            __i += 1
+      if not os.path.exists(checked_file_name):
         raise ValueError("\n\n The script file cannot be found for UserPostAnalysis,\n please check its availability.\n"+
-                             " The given user file is:\n %s\n" % check_file_name)
+                             " The given user file is:\n %s\n" % checked_file_name)
 
   # Check observers
   if "Observers" in study_config.keys():
@@ -173,7 +189,7 @@ def check_variables(name, study_config):
     except:
       raise ValueError("\n\n Variable %s value cannot be converted in an integer \n in the %s configuration!\n" % name)
 
-def check_data(data_name, data_config, repertory_check=False, repertory=""):
+def check_data(data_name, data_config, check_repertory=False, repertory=""):
 
   logging.debug("[check_data] " + data_name)
   data_name_data = "Data"
@@ -199,16 +215,47 @@ def check_data(data_name, data_config, repertory_check=False, repertory=""):
   # Check des fichiers
   from_type = data_config["From"]
   if from_type == "Script":
-    check_file_name = data_config["Data"]
-    if repertory_check and not os.path.exists(check_file_name):
-      check_file_name = os.path.join(repertory, os.path.basename(data_config["Data"]))
-    if not os.path.exists(check_file_name):
-      raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
+    # Recherche d'un nom valide :
+    checked_file_name = data_config["Data"]
+    if not os.path.exists(checked_file_name):
+      if check_repertory:
+        if os.path.exists( os.path.join(repertory, data_config["Data"]) ):
+          checked_file_name = os.path.join(repertory, data_config["Data"])
+        if os.path.exists( os.path.join(repertory, os.path.basename(data_config["Data"])) ):
+          checked_file_name = os.path.join(repertory, os.path.basename(data_config["Data"]))
+      else:
+        # Correction avec le sys.path si nécessaire
+        __i = 0
+        while not os.path.exists(checked_file_name) and __i < len(sys.path):
+          checked_file_name = os.path.join(sys.path[__i], data_config["Data"])
+          __i += 1
+        __i = 0
+        while not os.path.exists(checked_file_name) and __i < len(sys.path):
+          checked_file_name = os.path.join(sys.path[__i], os.path.basename(data_config["Data"]))
+          __i += 1
+    if not os.path.exists(checked_file_name):
+      raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword,\n please check its availability.\n The given user file is:\n %s\n"%(from_type,data_config["Data"]))
+    #
   elif (from_type == "FunctionDict" or from_type == "ScriptWithSwitch" or from_type == "ScriptWithFunctions" or from_type == "ScriptWithOneFunction"):
     TheData = data_config["Data"]
     for FunctionName in TheData["Function"]:
-      check_file_name = TheData["Script"][FunctionName]
-      if repertory_check and not os.path.exists(check_file_name):
-        check_file_name = os.path.join(repertory, os.path.basename(TheData["Script"][FunctionName]))
-      if not os.path.exists(check_file_name):
-        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,check_file_name))
+      # Recherche d'un nom valide :
+      checked_file_name = TheData["Script"][FunctionName]
+      if not os.path.exists(checked_file_name):
+        if check_repertory:
+          if os.path.exists( os.path.join(repertory, TheData["Script"][FunctionName]) ):
+            checked_file_name = os.path.join(repertory, TheData["Script"][FunctionName])
+          if os.path.exists( os.path.join(repertory, os.path.basename(TheData["Script"][FunctionName])) ):
+            checked_file_name = os.path.join(repertory, os.path.basename(TheData["Script"][FunctionName]))
+        else:
+          # Correction avec le sys.path si nécessaire
+          __i = 0
+          while not os.path.exists(checked_file_name) and __i < len(sys.path):
+            checked_file_name = os.path.join(sys.path[__i], TheData["Script"][FunctionName])
+            __i += 1
+          __i = 0
+          while not os.path.exists(checked_file_name) and __i < len(sys.path):
+            checked_file_name = os.path.join(sys.path[__i], os.path.basename(TheData["Script"][FunctionName]))
+            __i += 1
+      if not os.path.exists(checked_file_name):
+        raise ValueError("\n\n The script file cannot be found for the \"%s\" keyword, please \n check its availability. The given user file is:\n %s\n"%(from_type,checked_file_name))
