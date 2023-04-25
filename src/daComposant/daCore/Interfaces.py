@@ -296,6 +296,8 @@ class _COMViewer(GenericCaseViewer):
                     __Dict.pop('Algorithm','')
                     __Dict.pop('Parameters','')
                     if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
+                    if 'Bounds' in __Dict and type(__Dict['Bounds']) is str:
+                        __Dict['Bounds'] = eval(__Dict['Bounds'])
                     if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
                         __Dict['BoxBounds'] = eval(__Dict['BoxBounds'])
                     if len(__Dict) > 0:

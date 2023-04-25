@@ -26,19 +26,11 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, logging, copy
+from daCore.NumericObjects import VariablesAndIncrementsBounds
 from numpy.random import uniform as rand
 
 # ==============================================================================
 def ecwopso(selfA, Xb, Y, HO, R, B):
-    #
-    if ("BoxBounds" in selfA._parameters) and isinstance(selfA._parameters["BoxBounds"], (list, tuple)) and (len(selfA._parameters["BoxBounds"]) > 0):
-        BoxBounds = selfA._parameters["BoxBounds"]
-        logging.debug("%s Prise en compte des bornes d'incréments de paramètres effectuée"%(selfA._name,))
-    else:
-        raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given (BoxBounds).")
-    BoxBounds   = numpy.array(BoxBounds)
-    if numpy.isnan(BoxBounds).any():
-        raise ValueError("Particle Swarm Optimization requires bounds on all variables increments to be truly given (BoxBounds), \"None\" is not allowed. The actual increments bounds are:\n%s"%BoxBounds)
     #
     Hm = HO["Direct"].appliedTo
     #
@@ -46,6 +38,13 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     RI = R.getI()
     #
     Xini = selfA._parameters["InitializationPoint"]
+    #
+    Bounds, BoxBounds = VariablesAndIncrementsBounds(
+        selfA._parameters["Bounds"],
+        selfA._parameters["BoxBounds"],
+        Xini,
+        selfA._name,
+        )
     #
     def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
         _X  = numpy.asarray( x ).reshape((-1,1))
@@ -101,16 +100,15 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     #
     # Initialisation de l'essaim
     # --------------------------
-    LimitStep  = Xini.reshape((-1,1)) + BoxBounds
-    __dx = __vc * numpy.abs(BoxBounds[:,1]-BoxBounds[:,0])
-    LimitSpeed = numpy.vstack((-__dx,__dx)).T
+    LimitPlace = Bounds
+    LimitSpeed = 0.5 * BoxBounds # "1/2*([Xmin,Xmax]-Xini)"
     #
     NumberOfFunctionEvaluations = 1
     JXini, JbXini, JoXini = CostFunction(Xini,selfA._parameters["QualityCriterion"])
     #
     Swarm  = numpy.zeros((__nbI,3,__nbP)) # 3 car (x,v,xbest)
     for __p in range(__nbP) :
-        Swarm[:,0,__p] = rand( low=LimitStep[__p,0],  high=LimitStep[__p,1],  size=__nbI) # Position
+        Swarm[:,0,__p] = rand( low=LimitPlace[__p,0], high=LimitPlace[__p,1], size=__nbI) # Position
         Swarm[:,1,__p] = rand( low=LimitSpeed[__p,0], high=LimitSpeed[__p,1], size=__nbI) # Velocity
     logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name,Swarm.shape[0],Swarm.shape[2]))
     #

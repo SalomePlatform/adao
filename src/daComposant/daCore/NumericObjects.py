@@ -896,6 +896,20 @@ def ApplyBounds( __Vector, __Bounds, __newClip = True ):
     return __Vector
 
 # ==============================================================================
+def VariablesAndIncrementsBounds( __Bounds, __BoxBounds, __Xini, __Name, __Multiplier = 1. ):
+    __Bounds    = ForceNumericBounds( __Bounds )
+    __BoxBounds = ForceNumericBounds( __BoxBounds )
+    if __Bounds is None and __BoxBounds is None:
+        raise ValueError("Algorithm %s requires bounds on all variables (by Bounds), or on all variables increments (by BoxBounds), or both, to be explicitly given."%(__Name,))
+    elif __Bounds is None and __BoxBounds is not None:
+        __Bounds    = __BoxBounds
+        logging.debug("%s Définition des bornes de paramètres à partir des bornes d'incréments courantes"%(__Name,))
+    elif __Bounds is not None and __BoxBounds is None:
+        __BoxBounds = __Multiplier * (__Bounds - __Xini.reshape((-1,1))) # "M * [Xmin,Xmax]-Xini"
+        logging.debug("%s Définition des bornes d'incréments de paramètres à partir des bornes courantes"%(__Name,))
+    return __Bounds, __BoxBounds
+
+# ==============================================================================
 def Apply3DVarRecentringOnEnsemble( __EnXn, __EnXf, __Ynpu, __HO, __R, __B, __SuppPars ):
     "Recentre l'ensemble Xn autour de l'analyse 3DVAR"
     __Betaf = __SuppPars["HybridCovarianceEquilibrium"]
