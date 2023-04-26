@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import os, copy, types, sys, logging, numpy, itertools
+import os, copy, types, sys, logging, math, numpy, itertools
 from daCore.BasicObjects import Operator, Covariance, PartialAlgorithm
 from daCore.PlatformInfo import PlatformInfo
 mpr = PlatformInfo().MachinePrecision()
@@ -935,6 +935,38 @@ def Apply3DVarRecentringOnEnsemble( __EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Su
     del selfB
     #
     return Xa + EnsembleOfAnomalies( __EnXn )
+
+# ==============================================================================
+def GenerateRandomPointInHyperSphere( __Center, __Radius ):
+    "Génère un point aléatoire uniformément à l'intérieur d'une hyper-sphère"
+    __Dimension  = numpy.asarray( __Center ).size
+    __GaussDelta = numpy.random.normal( 0, 1, size=__Center.shape )
+    __VectorNorm = numpy.linalg.norm( __GaussDelta )
+    __PointOnHS  = __Radius * (__GaussDelta / __VectorNorm)
+    __MoveInHS   = math.exp( math.log(numpy.random.uniform()) / __Dimension) # rand()**1/n
+    __PointInHS  = __MoveInHS * __PointOnHS
+    return __Center + __PointInHS
+
+# ==============================================================================
+def GetNeighborhoodTopology( __ntype, __ipop ):
+    "Renvoi une topologie de connexion pour une population de points"
+    if __ntype in ["FullyConnectedNeighborhood", "FullyConnectedNeighbourhood", "gbest"]:
+        __topology = [__ipop for __i in __ipop]
+    elif __ntype in ["RingNeighborhoodWithRadius1", "RingNeighbourhoodWithRadius1", "lbest"]:
+        __cpop = list(__ipop[-1:]) + list(__ipop) + list(__ipop[:1])
+        __topology = [__cpop[__n:__n+3] for __n in range(len(__ipop))]
+    elif __ntype in ["RingNeighborhoodWithRadius2", "RingNeighbourhoodWithRadius2"]:
+        __cpop = list(__ipop[-2:]) + list(__ipop) + list(__ipop[:2])
+        __topology = [__cpop[__n:__n+5] for __n in range(len(__ipop))]
+    elif __ntype in ["AdaptativeRandomWith3Neighbors", "AdaptativeRandomWith3Neighbours", "abest"]:
+        __cpop = 3*list(__ipop)
+        __topology = [[__i]+list(numpy.random.choice(__cpop,3)) for __i in __ipop]
+    elif __ntype in ["AdaptativeRandomWith5Neighbors", "AdaptativeRandomWith5Neighbours"]:
+        __cpop = 5*list(__ipop)
+        __topology = [[__i]+list(numpy.random.choice(__cpop,5)) for __i in __ipop]
+    else:
+        raise ValueError("Swarm topology type unavailable because name \"%s\" is unknown."%__ntype)
+    return __topology
 
 # ==============================================================================
 def FindIndexesFromNames( __NameOfLocations = None, __ExcludeLocations = None, ForceArray = False ):

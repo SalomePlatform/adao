@@ -5,8 +5,8 @@ VelocityClampingFactor
   groupe dans la mise à jour pour chaque insecte, utile pour éviter l'explosion
   de l'essaim, c'est-à-dire une croissance incontrôlée de la vitesse des
   insectes. C'est une valeur réelle comprise entre 0+ et 1. Le défaut est de
-  1.0.
+  0.3.
 
   Exemple :
-  ``{"VelocityClampingFactor":1.0}``
+  ``{"VelocityClampingFactor":0.3}``
 

@@ -47,12 +47,10 @@ error function :math:`J` of type :math:`L^1`, :math:`L^2` or
 :ref:`section_theory_optimization`. The default error function is the augmented
 weighted least squares function, classically used in data assimilation.
 
-.There exists various variants of this algorithm. The following stable and
+There exists various variants of this algorithm. The following stable and
 robust formulations are proposed here:
 
 .. index::
-.. index::
-    pair: Variant ; PSO
     pair: Variant ; CanonicalPSO
     pair: Variant ; OGCR
 

@@ -103,7 +103,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     LimitPlace = Bounds
     LimitSpeed = 0.5 * BoxBounds # "1/2*([Xmin,Xmax]-Xini)"
     #
-    NumberOfFunctionEvaluations = 1
+    nbfct = 1 # Nb d'évaluations
     JXini, JbXini, JoXini = CostFunction(Xini,selfA._parameters["QualityCriterion"])
     #
     Swarm  = numpy.zeros((__nbI,3,__nbP)) # 3 car (x,v,xbest)
@@ -114,7 +114,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     #
     qSwarm = JXini * numpy.ones((__nbI,3)) # Qualité (J, Jb, Jo) par insecte
     for __i in range(__nbI):
-        NumberOfFunctionEvaluations += 1
+        nbfct += 1
         JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
         if JTest < JXini:
             Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
@@ -131,13 +131,21 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest,0]  )
     selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest,1] )
     selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest,2] )
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalStates"):
+        selfA.StoredVariables["InternalStates"].store( Swarm[:,0,:].T )
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
+        selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:,0] )
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
+        selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:,1] )
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJo"):
+        selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:,2] )
     #
     selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
     #
     # Minimisation de la fonctionnelle
     # --------------------------------
     step = 0
-    while KeepRunningCondition(step, NumberOfFunctionEvaluations):
+    while KeepRunningCondition(step, nbfct):
         step += 1
         for __i in range(__nbI):
             for __p in range(__nbP):
@@ -148,7 +156,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
                 # Position
                 Swarm[__i,0,__p]  = Swarm[__i,0,__p] + Swarm[__i,1,__p]
                 #
-            NumberOfFunctionEvaluations += 1
+            nbfct += 1
             JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
             if JTest < qSwarm[__i,0]:
                 Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
@@ -164,6 +172,14 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
         selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest,0]  )
         selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest,1] )
         selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest,2] )
+        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalStates"):
+            selfA.StoredVariables["InternalStates"].store( Swarm[:,0,:].T )
+        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
+            selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:,0] )
+        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
+            selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:,1] )
+        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJo"):
+            selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:,2] )
         logging.debug("%s Step %i: insect %i is the better one with J =%.7f"%(selfA._name,step,iBest,qSwarm[iBest,0]))
     #
     # Obtention de l'analyse

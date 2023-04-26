@@ -713,7 +713,12 @@ class Algorithm(object):
             - GradientOfCostFunctionJo : gradient de la partie observations de la fonction-coût
             - IndexOfOptimum : index de l'état optimal courant lors d'itérations
             - Innovation : l'innovation : d = Y - H(X)
+            - InnovationAtCurrentAnalysis : l'innovation à l'état analysé : da = Y - H(Xa)
             - InnovationAtCurrentState : l'innovation à l'état courant : dn = Y - H(Xn)
+            - InternalCostFunctionJ : ensemble de valeurs internes de fonction-coût J dans un vecteur
+            - InternalCostFunctionJb : ensemble de valeurs internes de fonction-coût Jb dans un vecteur
+            - InternalCostFunctionJb : ensemble de valeurs internes de fonction-coût Jo dans un vecteur
+            - InternalStates : ensemble d'états internes rangés par colonne dans une matrice (=EnsembleOfSnapshots)
             - JacobianMatrixAtBackground : matrice jacobienne à l'état d'ébauche
             - JacobianMatrixAtCurrentState : matrice jacobienne à l'état courant
             - JacobianMatrixAtOptimum : matrice jacobienne à l'optimum
@@ -780,6 +785,10 @@ class Algorithm(object):
         self.StoredVariables["Innovation"]                           = Persistence.OneVector(name = "Innovation")
         self.StoredVariables["InnovationAtCurrentAnalysis"]          = Persistence.OneVector(name = "InnovationAtCurrentAnalysis")
         self.StoredVariables["InnovationAtCurrentState"]             = Persistence.OneVector(name = "InnovationAtCurrentState")
+        self.StoredVariables["InternalCostFunctionJ"]                = Persistence.OneVector(name = "InternalCostFunctionJ")
+        self.StoredVariables["InternalCostFunctionJb"]               = Persistence.OneVector(name = "InternalCostFunctionJb")
+        self.StoredVariables["InternalCostFunctionJo"]               = Persistence.OneVector(name = "InternalCostFunctionJo")
+        self.StoredVariables["InternalStates"]                       = Persistence.OneMatrix(name = "InternalStates")
         self.StoredVariables["JacobianMatrixAtBackground"]           = Persistence.OneMatrix(name = "JacobianMatrixAtBackground")
         self.StoredVariables["JacobianMatrixAtCurrentState"]         = Persistence.OneMatrix(name = "JacobianMatrixAtCurrentState")
         self.StoredVariables["JacobianMatrixAtOptimum"]              = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")

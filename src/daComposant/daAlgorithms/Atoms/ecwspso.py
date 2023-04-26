@@ -21,16 +21,18 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Canonical Particle Swarm Optimization
+    SPSO-2011 Particle Swarm Optimization
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, logging, copy
+import numpy, logging, copy, math
 from daCore.NumericObjects import ApplyBounds, VariablesAndIncrementsBounds
+from daCore.NumericObjects import GenerateRandomPointInHyperSphere
+from daCore.NumericObjects import GetNeighborhoodTopology
 from numpy.random import uniform as rand
 
 # ==============================================================================
-def ecwnpso(selfA, Xb, Y, HO, R, B):
+def ecwspso(selfA, Xb, Y, HO, R, B):
     #
     Hm = HO["Direct"].appliedTo
     #
@@ -44,6 +46,7 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
         selfA._parameters["BoxBounds"],
         Xini,
         selfA._name,
+        0.5,
         )
     #
     def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
@@ -101,31 +104,36 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
     # Initialisation de l'essaim
     # --------------------------
     LimitPlace = Bounds
-    LimitSpeed = 0.5 * BoxBounds # "1/2*([Xmin,Xmax]-Xini)"
+    LimitSpeed = BoxBounds
     #
     nbfct = 1 # Nb d'évaluations
     JXini, JbXini, JoXini = CostFunction(Xini,selfA._parameters["QualityCriterion"])
     #
-    Swarm  = numpy.zeros((__nbI,4,__nbP)) # 4 car (x,v,xbest,lbest)
+    Swarm  = numpy.zeros((__nbI,4,__nbP)) # 4 car (x,v,gbest,lbest)
     for __p in range(__nbP) :
         Swarm[:,0,__p] = rand( low=LimitPlace[__p,0], high=LimitPlace[__p,1], size=__nbI) # Position
         Swarm[:,1,__p] = rand( low=LimitSpeed[__p,0], high=LimitSpeed[__p,1], size=__nbI) # Velocity
     logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name,Swarm.shape[0],Swarm.shape[2]))
     #
-    qSwarm = JXini * numpy.ones((__nbI,3)) # Qualité (J, Jb, Jo) par insecte
+    __nbh = GetNeighborhoodTopology( selfA._parameters["SwarmTopology"], list(range(__nbI)) )
+    #
+    qSwarm = JXini * numpy.ones((__nbI,6)) # Qualités (J, Jb, Jo) par insecte + par voisinage
     for __i in range(__nbI):
         nbfct += 1
         JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
         if JTest < JXini:
             Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
-            qSwarm[__i,:]  = (JTest, JbTest, JoTest)
+            qSwarm[__i,:3] = (JTest, JbTest, JoTest)
         else:
             Swarm[__i,2,:] = Xini # xBest
-            qSwarm[__i,:]  = (JXini, JbXini, JoXini)
+            qSwarm[__i,:3] = (JXini, JbXini, JoXini)
     logging.debug("%s Initialisation of the best previous insects"%selfA._name)
     #
     iBest = numpy.argmin(qSwarm[:,0])
     xBest = Swarm[iBest,2,:]
+    for __i in range(__nbI):
+        Swarm[__i,3,:] = xBest # lBest
+        qSwarm[__i,3:] = qSwarm[iBest,:3]
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
         selfA.StoredVariables["CurrentState"].store( xBest )
     selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest,0]  )
@@ -150,20 +158,37 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
         for __i in range(__nbI):
             rct = rand(size=__nbP)
             rst = rand(size=__nbP)
+            rrt = rand(size=__nbP)
+            # Points
+            __xPoint = Swarm[__i,0,:]
+            __pPoint = __xPoint \
+                     + __ca * rct * (Swarm[__i,2,:] - Swarm[__i,0,:])
+            __lPoint = __xPoint \
+                     + __sa * rst * (Swarm[__i,3,:] - Swarm[__i,0,:])
+            __gPoint = (__xPoint + __pPoint + __lPoint) / 3
+            __radius = numpy.linalg.norm(__gPoint - __xPoint)
+            __rPoint = GenerateRandomPointInHyperSphere( __gPoint, __radius  )
             # Vitesse
-            __velins = __iw * Swarm[__i,1,:] \
-                     + __ca * rct * (Swarm[__i,2,:]   - Swarm[__i,0,:]) \
-                     + __sa * rst * (Swarm[iBest,2,:] - Swarm[__i,0,:])
-            Swarm[__i,1,:] = ApplyBounds( __velins, LimitSpeed )
+            __value  = __iw * Swarm[__i,1,:] + __rPoint - __xPoint
+            Swarm[__i,1,:] = ApplyBounds( __value, LimitSpeed )
             # Position
-            __velins  = Swarm[__i,0,:] + Swarm[__i,1,:]
-            Swarm[__i,0,:] = ApplyBounds( __velins, LimitPlace )
+            __value  = Swarm[__i,0,:] + Swarm[__i,1,:]
+            Swarm[__i,0,:] = ApplyBounds( __value, LimitPlace )
             #
             nbfct += 1
+            # Update gbest
             JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
             if JTest < qSwarm[__i,0]:
                 Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
-                qSwarm[__i,:]  = (JTest, JbTest, JoTest)
+                qSwarm[__i,:3]  = (JTest, JbTest, JoTest)
+            #
+        # Update lbest
+        for __i in range(__nbI):
+            __im = numpy.argmin( [qSwarm[__v,0] for __v in __nbh[__i]] )
+            __il = __nbh[__i][__im] # Best in NB
+            if qSwarm[__il,0] < qSwarm[__i,3]:
+                Swarm[__i,3,:] = Swarm[__il,2,:] # lBest
+                qSwarm[__i,3:] = qSwarm[__il,:3]
         #
         iBest = numpy.argmin(qSwarm[:,0])
         xBest = Swarm[iBest,2,:]

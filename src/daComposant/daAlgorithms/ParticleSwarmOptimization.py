@@ -22,7 +22,7 @@
 
 import numpy, logging, copy
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecwnpso, ecwopso
+from daAlgorithms.Atoms import ecwnpso, ecwopso, ecwspso
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -30,16 +30,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "PARTICLESWARMOPTIMIZATION")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "PSO",
+            default  = "CanonicalPSO",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "PSO",
+                "CanonicalPSO",
                 "OGCR",
+                "SPSO-2011",
                 ],
             listadv  = [
-                "CanonicalPSO",
-                "SPSO-2011",
+                "PSO",
                 ],
             )
         self.defineRequiredParameter(
@@ -70,8 +70,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = -1,
             )
         self.defineRequiredParameter(
+            name     = "SwarmTopology",
+            default  = "FullyConnectedNeighborhood",
+            typecast = str,
+            message  = "Mode de définition du voisinage de chaque particule",
+            listval  = [
+                "FullyConnectedNeighborhood", "FullyConnectedNeighbourhood", "gbest",
+                "RingNeighborhoodWithRadius1", "RingNeighbourhoodWithRadius1", "lbest",
+                "RingNeighborhoodWithRadius2", "RingNeighbourhoodWithRadius2",
+                "AdaptativeRandomWith3Neighbors", "AdaptativeRandomWith3Neighbours", "abest",
+                "AdaptativeRandomWith5Neighbors", "AdaptativeRandomWith5Neighbours",
+                ],
+            listadv  = [
+                "VonNeumannNeighborhood", "VonNeumannNeighbourhood",
+                ],
+            )
+        self.defineRequiredParameter(
             name     = "InertiaWeight",
-            default  = 1.,
+            default  = 0.72135, # 1/(2*ln(2))
             typecast = float,
             message  = "Part de la vitesse de l'essaim qui est imposée à l'insecte, ou poids de l'inertie (entre 0 et 1)",
             minval   = 0.,
@@ -80,19 +96,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "CognitiveAcceleration",
-            default  = 0.5,
+            default  = 1.19315, # 1/2+ln(2)
             typecast = float,
             message  = "Taux de rappel à la meilleure position de l'insecte précédemment connue (entre 0 et 1)",
             minval   = 0.,
-            maxval   = 1.,
             )
         self.defineRequiredParameter(
             name     = "SocialAcceleration",
-            default  = 0.5,
+            default  = 1.19315, # 1/2+ln(2)
             typecast = float,
             message  = "Taux de rappel au meilleur insecte du groupe local (entre 0 et 1)",
             minval   = 0.,
-            maxval   = 1.,
             oldname  = "GroupRecallRate",
             )
         self.defineRequiredParameter(
@@ -144,12 +158,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ]
             )
         self.defineRequiredParameter( # Pas de type
-            name     = "BoxBounds",
-            message  = "Liste des valeurs de bornes d'incréments de paramètres",
-            )
-        self.defineRequiredParameter( # Pas de type
             name     = "Bounds",
             message  = "Liste des paires de bornes",
+            )
+        self.defineRequiredParameter( # Pas de type
+            name     = "BoxBounds",
+            message  = "Liste des paires de bornes d'incréments",
             )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
@@ -175,6 +189,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         elif self._parameters["Variant"] in ["OGCR"]:
             ecwopso.ecwopso(self, Xb, Y, HO, R, B)
+        #
+        elif self._parameters["Variant"] in ["SPSO-2011"]:
+            ecwspso.ecwspso(self, Xb, Y, HO, R, B)
         #
         #--------------------------
         else:

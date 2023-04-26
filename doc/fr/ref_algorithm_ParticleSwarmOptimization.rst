@@ -53,7 +53,6 @@ Il existe diverses variantes de cet algorithme. On propose ici les formulations
 stables et robustes suivantes :
 
 .. index::
-    pair: Variant ; PSO
     pair: Variant ; CanonicalPSO
     pair: Variant ; OGCR
 
