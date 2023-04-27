@@ -53,9 +53,11 @@ robust formulations are proposed here:
 .. index::
     pair: Variant ; CanonicalPSO
     pair: Variant ; OGCR
+    pair: Variant ; SPSO-2011
 
-- "PSO" (Canonical PSO, see [ZambranoBigiarini13]_), canonical algorithm of particle swarm, robust and defining the reference for particle swarm algorithms,
-- "OGCR" (Simple PSO with no bounds on insects or velocities), simplified algorithm of particle swarm, not recommanded because less robust, but sometimes a lot more efficient.
+- "CanonicalPSO" (Canonical Particule Swarm Optimisation, see [ZambranoBigiarini13]_), classical algorithm called "canonical" of particle swarm, robust and defining a reference for particle swarm algorithms,
+- "OGCR" (Simple Particule Swarm Optimisation), simplified algorithm of particle swarm with no bounds on insects or velocities, not recommanded because less robust, but sometimes a lot more efficient,
+- "SPSO-2011" (Standard Standard Particle Swarm Optimisation 2011, voir [ZambranoBigiarini13]_), 2011 reference algorithm of particule swarm, robust, efficient and defined as a reference for particle swarm algorithms.
 
 . ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -125,6 +127,8 @@ StoreSupplementaryCalculations
 
   Example :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
+
+.. include:: snippets/Variant_PSO.rst
 
 .. include:: snippets/VelocityClampingFactor.rst
 

@@ -55,9 +55,11 @@ stables et robustes suivantes :
 .. index::
     pair: Variant ; CanonicalPSO
     pair: Variant ; OGCR
+    pair: Variant ; SPSO-2011
 
-- "PSO" (Canonical PSO, voir [ZambranoBigiarini13]_), algorithme canonique d'essaim particulaire, robuste et défini comme la référence des algorithmes d'essaims particulaires,
-- "OGCR" (Simple PSO sans bornes sur les insectes ou les vitesses), algorithme simplifié d'essaim particulaire, déconseillé car peu robuste, mais parfois beaucoup plus rapide.
+- "CanonicalPSO" (Canonical Particule Swarm Optimisation, voir [ZambranoBigiarini13]_), algorithme classique dit "canonique" d'essaim particulaire, robuste et définissant une référence des algorithmes d'essaims particulaires,
+- "OGCR" (Simple Particule Swarm Optimisation), algorithme simplifié d'essaim particulaire sans bornes sur les insectes ou les vitesses, déconseillé car peu robuste, mais parfois beaucoup plus rapide,
+- "SPSO-2011" (Standard Standard Particle Swarm Optimisation 2011, voir [ZambranoBigiarini13]_), algorithme de référence 2011 d'essaim particulaire, robuste, performant et défini comme une référence des algorithmes d'essaims particulaires.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -127,6 +129,8 @@ StoreSupplementaryCalculations
 
   Exemple :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
+
+.. include:: snippets/Variant_PSO.rst
 
 .. include:: snippets/VelocityClampingFactor.rst
 

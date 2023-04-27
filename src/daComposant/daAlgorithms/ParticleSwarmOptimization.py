@@ -98,14 +98,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "CognitiveAcceleration",
             default  = 1.19315, # 1/2+ln(2)
             typecast = float,
-            message  = "Taux de rappel à la meilleure position de l'insecte précédemment connue (entre 0 et 1)",
+            message  = "Taux de rappel à la meilleure position de l'insecte précédemment connue (positif)",
             minval   = 0.,
             )
         self.defineRequiredParameter(
             name     = "SocialAcceleration",
             default  = 1.19315, # 1/2+ln(2)
             typecast = float,
-            message  = "Taux de rappel au meilleur insecte du groupe local (entre 0 et 1)",
+            message  = "Taux de rappel au meilleur insecte du groupe local (positif)",
             minval   = 0.,
             oldname  = "GroupRecallRate",
             )
@@ -150,6 +150,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentState",
                 "Innovation",
+                "InternalCostFunctionJ",
+                "InternalCostFunctionJb",
+                "InternalCostFunctionJo",
+                "InternalStates",
                 "OMA",
                 "OMB",
                 "SimulatedObservationAtBackground",
