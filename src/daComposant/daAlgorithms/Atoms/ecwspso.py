@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    SPSO-2011 Particle Swarm Optimization
+    Standard Particle Swarm Optimization 2011
 """
 __author__ = "Jean-Philippe ARGAUD"
 

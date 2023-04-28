@@ -47,7 +47,7 @@ inverses*, *inversion*, *estimation bayésienne*, *interpolation optimale*,
 de modèles*, *lissage de données*, etc. De plus amples détails peuvent être
 trouvés dans la partie proposant :ref:`section_theory`. Le module ADAO offre
 actuellement plus d'une centaine de méthodes algorithmiques différentes et
-permet l'étude d'environ 350 problèmes appliqués distincts.
+permet l'étude d'environ 400 problèmes appliqués distincts.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la **documentation théorique** (indiquée dans le titre de section

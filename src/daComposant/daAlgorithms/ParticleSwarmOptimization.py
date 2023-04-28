@@ -64,7 +64,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         self.defineRequiredParameter(
             name     = "NumberOfInsects",
-            default  = 100,
+            default  = 40,
             typecast = int,
             message  = "Nombre d'insectes dans l'essaim",
             minval   = -1,

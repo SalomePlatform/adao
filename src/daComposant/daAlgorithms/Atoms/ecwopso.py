@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Standard Particle Swarm Optimization
+    Simple Particle Swarm Optimization
 """
 __author__ = "Jean-Philippe ARGAUD"
 
@@ -44,6 +44,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
         selfA._parameters["BoxBounds"],
         Xini,
         selfA._name,
+        0.5, # Similaire au SPSO-2011
         )
     #
     def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
@@ -101,7 +102,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     # Initialisation de l'essaim
     # --------------------------
     LimitPlace = Bounds
-    LimitSpeed = 0.5 * BoxBounds # "1/2*([Xmin,Xmax]-Xini)"
+    LimitSpeed = BoxBounds
     #
     nbfct = 1 # Nb d'évaluations
     JXini, JbXini, JoXini = CostFunction(Xini,selfA._parameters["QualityCriterion"])
