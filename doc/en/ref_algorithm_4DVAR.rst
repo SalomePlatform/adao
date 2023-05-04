@@ -39,8 +39,10 @@ assimilation:
 
 which is usually designed as the "*4D-Var*" functional (see for example
 [Talagrand97]_). The terms "*4D-Var*", "*4D-VAR*" and "*4DVAR*" are equivalent.
-It is well suited in cases of non-linear observation and evolution operators,
-its application domain is similar to the one of Kalman filters, specially the
+This mono-objective optimization algorithm is naturally written for a single
+estimate on a time window for the simulation. It is well suited in cases of
+non-linear observation and evolution operators, its application domain is
+similar to the one of Kalman filters, specially the
 :ref:`section_ref_algorithm_ExtendedKalmanFilter` or the
 :ref:`section_ref_algorithm_UnscentedKalmanFilter`.
 

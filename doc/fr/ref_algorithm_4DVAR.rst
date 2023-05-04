@@ -39,7 +39,9 @@ classique en assimilation de données :
 
 qui est usuellement désignée comme la fonctionnelle "*4D-Var*" (voir par
 exemple [Talagrand97]_). Les dénominations "*4D-Var*", "*4D-VAR*"  et "*4DVAR*"
-sont équivalentes. Il est bien adapté aux cas d'opérateurs d'observation et
+sont équivalentes. Cet algorithme d'optimisation mono-objectif est
+naturellement écrit pour une estimation unique sur une fenêtre temporelle de
+simulation. Il est bien adapté aux cas d'opérateurs d'observation et
 d'évolution non-linéaires, son domaine d'application est comparable aux
 algorithmes de filtrage de Kalman et en particulier
 l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou

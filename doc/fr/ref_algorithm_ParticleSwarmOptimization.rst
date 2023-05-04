@@ -42,12 +42,12 @@ Elle entre dans la même catégorie que les
 :ref:`section_ref_algorithm_DifferentialEvolution` ou
 :ref:`section_ref_algorithm_TabuSearch`.
 
-C'est une méthode d'optimisation permettant la recherche du minimum global
-d'une fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`,
-:math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations, comme décrit dans
-la section pour :ref:`section_theory_optimization`. La fonctionnelle d'erreur
-par défaut est celle de moindres carrés pondérés augmentés, classiquement
-utilisée en assimilation de données.
+C'est une méthode d'optimisation mono-objectif, permettant la recherche du
+minimum global d'une fonctionnelle d'erreur :math:`J` quelconque de type
+:math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations,
+comme décrit dans la section pour :ref:`section_theory_optimization`. La
+fonctionnelle d'erreur par défaut est celle de moindres carrés pondérés
+augmentés, classiquement utilisée en assimilation de données.
 
 Il existe diverses variantes de cet algorithme. On propose ici les formulations
 stables et robustes suivantes :
@@ -129,6 +129,8 @@ StoreSupplementaryCalculations
 
   Exemple :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
+
+.. include:: snippets/SwarmTopology.rst
 
 .. include:: snippets/Variant_PSO.rst
 

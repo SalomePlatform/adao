@@ -39,11 +39,11 @@ même catégorie que l':ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 l':ref:`section_ref_algorithm_ParticleSwarmOptimization` ou
 l':ref:`section_ref_algorithm_DifferentialEvolution`.
 
-C'est une méthode d'optimisation permettant la recherche du minimum global d'une
-fonctionnelle d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
-:math:`L^{\infty}`, avec ou sans pondérations. La fonctionnelle d'erreur par
-défaut est celle de moindres carrés pondérés augmentés, classiquement utilisée
-en assimilation de données.
+C'est une méthode d'optimisation mono-objectif permettant la recherche du
+minimum global d'une fonctionnelle d'erreur :math:`J` quelconque de type
+:math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations. La
+fonctionnelle d'erreur par défaut est celle de moindres carrés pondérés
+augmentés, classiquement utilisée en assimilation de données.
 
 Elle fonctionne par exploration aléatoire itérative du voisinage du point
 courant, pour en choisir l'état qui minimise la fonctionnelle d'écart. Pour

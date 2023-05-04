@@ -41,15 +41,16 @@ help of a :ref:`section_ref_algorithm_LinearityTest`.
 In case of non-linearity, its results are close to a
 :ref:`section_ref_algorithm_3DVAR`, without being entirely equivalent.
 
-This algorithm is naturally written for a single estimate, without any dynamic
-or iterative notion (there is no need in this case for an incremental evolution
-operator, nor for an evolution error covariance). In ADAO, it can also be used
-on a succession of observations, placing the estimate in a recursive framework
-partly similar to a :ref:`section_ref_algorithm_KalmanFilter`. A standard
-estimate is made at each observation step on the state predicted by the
-incremental evolution model, knowing that the state error covariance remains
-the background covariance initially provided by the user. To be explicit,
-unlike Kalman-type filters, the state error covariance is not updated.
+This mono-objective optimization algorithm is naturally written for a single
+estimate, without any dynamic or iterative notion (there is no need in this
+case for an incremental evolution operator, nor for an evolution error
+covariance). In ADAO, it can also be used on a succession of observations,
+placing the estimate in a recursive framework partly similar to a
+:ref:`section_ref_algorithm_KalmanFilter`. A standard estimate is made at each
+observation step on the state predicted by the incremental evolution model,
+knowing that the state error covariance remains the background covariance
+initially provided by the user. To be explicit, unlike Kalman-type filters, the
+state error covariance is not updated.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

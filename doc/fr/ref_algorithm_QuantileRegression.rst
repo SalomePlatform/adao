@@ -30,10 +30,11 @@ Algorithme de calcul "*QuantileRegression*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet d'estimer les quantiles conditionnels de la distribution
-des paramètres d'état, exprimés à l'aide d'un modèle des variables observées. Ce
-sont donc les quantiles sur les variables observées qui vont permettre de
-déterminer les paramètres de modèles satisfaisant aux conditions de quantiles.
+Cet algorithme d'optimisation mono-objectif sur les paramètres de modèle permet
+d'estimer les quantiles conditionnels de la distribution des paramètres d'état,
+exprimés à l'aide d'un modèle des variables observées. Ce sont donc les
+quantiles sur les variables observées qui vont permettre de déterminer les
+paramètres de modèles satisfaisant aux conditions de quantiles.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

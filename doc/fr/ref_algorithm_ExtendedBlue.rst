@@ -42,17 +42,17 @@ d'observation à l'aide d'un :ref:`section_ref_algorithm_LinearityTest`.
 En non-linéaire, ses résultats se rapprochent d'un
 :ref:`section_ref_algorithm_3DVAR`, sans lui être entièrement équivalent.
 
-Cet algorithme est naturellement écrit pour une estimation unique, sans notion
-dynamique ou itérative (il n'y a donc pas besoin  dans ce cas d'opérateur
-d'évolution incrémentale, ni de covariance d'erreurs d'évolution). Dans ADAO,
-il peut aussi être utilisé sur une succession d'observations, plaçant alors
-l'estimation dans un cadre récursif en partie similaire à un
-:ref:`section_ref_algorithm_KalmanFilter`. Une estimation standard est
-effectuée à chaque pas d'observation sur l'état prévu par le modèle d'évolution
-incrémentale, sachant que la covariance d'erreur d'état reste la covariance
-d'ébauche initialement fournie par l'utilisateur. Pour être explicite,
-contrairement aux filtres de type Kalman, la covariance d'erreurs sur les états
-n'est pas remise à jour.
+Cet algorithme d'optimisation mono-objectif est naturellement écrit pour une
+estimation unique, sans notion dynamique ou itérative (il n'y a donc pas besoin
+dans ce cas d'opérateur d'évolution incrémentale, ni de covariance d'erreurs
+d'évolution). Dans ADAO, il peut aussi être utilisé sur une succession
+d'observations, plaçant alors l'estimation dans un cadre récursif en partie
+similaire à un :ref:`section_ref_algorithm_KalmanFilter`. Une estimation
+standard est effectuée à chaque pas d'observation sur l'état prévu par le
+modèle d'évolution incrémentale, sachant que la covariance d'erreur d'état
+reste la covariance d'ébauche initialement fournie par l'utilisateur. Pour être
+explicite, contrairement aux filtres de type Kalman, la covariance d'erreurs
+sur les états n'est pas remise à jour.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

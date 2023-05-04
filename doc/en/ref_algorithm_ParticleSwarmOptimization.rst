@@ -41,8 +41,8 @@ than the
 :ref:`section_ref_algorithm_DifferentialEvolution` or the
 :ref:`section_ref_algorithm_TabuSearch`.
 
-This is an optimization method allowing for global minimum search of a general
-error function :math:`J` of type :math:`L^1`, :math:`L^2` or
+This is a mono-objective optimization method, allowing for global minimum search
+of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
 :math:`L^{\infty}`, with or without weights, as described in the section for
 :ref:`section_theory_optimization`. The default error function is the augmented
 weighted least squares function, classically used in data assimilation.
@@ -127,6 +127,8 @@ StoreSupplementaryCalculations
 
   Example :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
+
+.. include:: snippets/SwarmTopology.rst
 
 .. include:: snippets/Variant_PSO.rst
 
