@@ -22,11 +22,14 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: ParticleSwarmOptimization
-.. index:: single: Global optimization
+.. index:: single: Particle Swarm (Optimization)
 .. _section_ref_algorithm_ParticleSwarmOptimization:
 
 Calculation algorithm "*ParticleSwarmOptimization*"
 ---------------------------------------------------
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo00.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
@@ -59,7 +62,48 @@ robust formulations are proposed here:
 - "OGCR" (Simple Particule Swarm Optimisation), simplified algorithm of particle swarm with no bounds on insects or velocities, not recommanded because less robust, but sometimes a lot more efficient,
 - "SPSO-2011" (Standard Standard Particle Swarm Optimisation 2011, voir [ZambranoBigiarini13]_), 2011 reference algorithm of particule swarm, robust, efficient and defined as a reference for particle swarm algorithms.
 
-. ------------------------------------ ..
+The following are a few practical suggestions for the effective use of these
+algorithms:
+
+- The recommended variant of this algorithm is the "SPSO-2011" even if the
+  "CanonicalPSO" algorithm remains by default the more robust of the two.
+- The number of particles or insects usually recommended varies between 40 and
+  100 depending on the algorithm, more or less independently of the dimension
+  of the state space.
+- The recommended number of generations for population evolution is often
+  around 50, but it can easily vary between 25 and 500.
+- The maximum number of evaluations of the simulation function should usually
+  be limited to between a few thousand and a few tens of thousands of times the
+  dimension of the state space.
+- The error functional usually decreases by levels (thus with a zero
+  progression of the value of the functional at each generation when we stay in
+  the level), making it not recommended to stop on the criterion of decrease of
+  the cost function. It is normally wiser to adapt the number of iterations or
+  generations to accelerate the convergence of the algorithms.
+- If the problem is constrained, it is necessary to define the bounds of the
+  variables (by the variable "*Bounds*"). If the problem is totally
+  unconstrained, it is essential to define increment bounds (by the variable
+  "*BoxBounds*") to delimit the optimal search in a useful way. Similarly, if
+  the problem is partially constrained, it is recommended (but not required) to
+  define increment bounds. In case these increment bounds are not defined, the
+  variable bounds will be used as increment bounds.
+
+These suggestions are to be used as experimental indications, not as
+requirements, because they are to be appreciated or adapted according to the
+physics of each problem that is treated.
+
+The count of the number of evaluations of the function to be simulated during
+this algorithm is deterministic, namely the "*number of iterations or
+generations*" multiplied by the "*number of individuals in the population*".
+With the default values, it takes between `40x50=2000` and `100*50=5000`
+evaluations. It is for this reason that this algorithm is usually interesting
+when the dimension of the state space is large, or when the non-linearities of
+the simulation make the evaluation of the gradient of the functional by
+numerical approximation complicated or invalid. But it is also necessary that
+the calculation of the function to be simulated is not too costly to avoid a
+prohibitive optimization time.
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

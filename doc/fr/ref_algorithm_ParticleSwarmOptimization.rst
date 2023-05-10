@@ -22,12 +22,14 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: ParticleSwarmOptimization
-.. index:: single: Optimisation globale
-.. index:: single: Globale (optimisation)
+.. index:: single: Essaim particulaire (Optimisation par)
 .. _section_ref_algorithm_ParticleSwarmOptimization:
 
 Algorithme de calcul "*ParticleSwarmOptimization*"
 --------------------------------------------------
+
+.. ------------------------------------ ..
+.. include:: snippets/Header2Algo00.rst
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
@@ -60,6 +62,49 @@ stables et robustes suivantes :
 - "CanonicalPSO" (Canonical Particule Swarm Optimisation, voir [ZambranoBigiarini13]_), algorithme classique dit "canonique" d'essaim particulaire, robuste et définissant une référence des algorithmes d'essaims particulaires,
 - "OGCR" (Simple Particule Swarm Optimisation), algorithme simplifié d'essaim particulaire sans bornes sur les insectes ou les vitesses, déconseillé car peu robuste, mais parfois beaucoup plus rapide,
 - "SPSO-2011" (Standard Standard Particle Swarm Optimisation 2011, voir [ZambranoBigiarini13]_), algorithme de référence 2011 d'essaim particulaire, robuste, performant et défini comme une référence des algorithmes d'essaims particulaires.
+
+Voici quelques suggestions pratiques pour une utilisation efficace de ces
+algorithmes :
+
+- La variante recommandée de cet algorithme est le "SPSO-2011" même si
+  l'algorithme "CanonicalPSO" reste par défaut le plus robuste des deux.
+- Le nombre de particules ou d'insectes usuellement recommandé varie entre 40
+  et 100 selon l'algorithme, à peu près indépendamment de la dimension de
+  l'espace des états.
+- Le nombre recommandé de générations, lors de l'évolution de la population,
+  est souvent de l'ordre de 50, mais il peut facilement varier entre 25 et 500.
+- Le nombre maximal d'évaluation de la fonction de simulation doit usuellement
+  être limité entre quelques milliers et quelques dizaines de milliers de fois
+  la dimension de l'espace des états.
+- La fonctionnelle d'erreur décroît usuellement par pallier (donc avec une
+  progression nulle de la valeur de fonctionnelle à chaque génération lorsque
+  l'on reste dans le palier), rendant non recommandé un arrêt sur critère de
+  décroissance de la fonction-coût. Il est normalement plus judicieux d'adapter
+  le nombre d'itérations ou de générations pour accélérer la convergence des
+  algorithmes.
+- Si le problème est contraint, il faut définir les bornes des variables (par
+  la variable "*Bounds*"). Si le problème est totalement non contraint, il est
+  indispensable de définir des bornes d'incrément (par la variable
+  "*BoxBounds*") pour circonscrire la recherche optimale de manière utile. De
+  manière similaire, si le problème est partiellement contraint, il est
+  recommandé (mais pas indispensable) de définir des bornes d'incrément. Dans
+  le cas où ces bornes d'incréments ne sont pas définies, ce sont les bornes
+  des variables qui seront utilisées comme bornes d'incréments.
+
+Ces conseils sont à utiliser comme des indications expérimentales, et pas comme
+des prescriptions, car ils sont à apprécier ou à adapter selon la physique de
+chaque problème que l'on traite.
+
+Le décompte du nombre d'évaluations de la fonction à simuler lors de cet
+algorithme est déterministe, à savoir le "*nombre d'itérations ou de
+générations*" multiplié par le "*nombre d'individus de la population*". Avec
+les valeurs par défaut, il faut entre `40x50=2000` et `100*50=5000` évaluations
+par défaut. C'est pour cette raison que cet algorithme est usuellement
+intéressant lorsque la dimension de l'espace des états est grande, ou que les
+non-linéarités de la simulation rendent compliqué, ou invalide, l'évaluation du
+gradient de la fonctionnelle par approximation numérique. Mais il est aussi
+nécessaire que le calcul de la fonction à simuler ne soit pas trop coûteuse
+pour éviter une temps d'optimisation rédhibitoire.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

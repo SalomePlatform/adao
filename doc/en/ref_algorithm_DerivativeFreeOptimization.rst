@@ -22,7 +22,6 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: DerivativeFreeOptimization
-.. index:: single: Global optimization
 .. _section_ref_algorithm_DerivativeFreeOptimization:
 
 Calculation algorithm "*DerivativeFreeOptimization*"

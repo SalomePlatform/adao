@@ -22,8 +22,6 @@
    Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 .. index:: single: DifferentialEvolution
-.. index:: single: Optimisation globale
-.. index:: single: Globale (optimisation)
 .. _section_ref_algorithm_DifferentialEvolution:
 
 Algorithme de calcul "*DifferentialEvolution*"
