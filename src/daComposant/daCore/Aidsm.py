@@ -851,6 +851,10 @@ class Aidsm(object):
         msg  = self.dump(None, "SimpleReportInPlainTxt")
         return msg
 
+    def sysinfo(self, title=""):
+        msg = PlatformInfo.PlatformInfo().getAllInformation("  ", title)
+        return msg
+
     def prepare_to_pickle(self):
         "Retire les variables non pickelisables, avec recopie efficace"
         if self.__adaoObject['AlgorithmParameters'] is not None:

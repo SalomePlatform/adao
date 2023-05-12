@@ -137,6 +137,28 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"os.path.expanduser",os.path.expanduser('~'))
         return __msg
     #
+    def getApplicationInformation(self, __prefix=""):
+        __msg  = ""
+        __msg += "\n%s%30s : %s" %(__prefix,"ADAO version",self.getVersion())
+        __msg += "\n"
+        __msg += "\n%s%30s : %s" %(__prefix,"Python version",self.getPythonVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"Numpy version",self.getNumpyVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"Scipy version",self.getScipyVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"NLopt version",self.getNloptVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"MatplotLib version",self.getMatplotlibVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"GnuplotPy version",self.getGnuplotVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"Sphinx version",self.getSphinxVersion())
+        return __msg
+    #
+    def getAllInformation(self, __prefix="", __title="Whole system information"):
+        __msg  = ""
+        if len(__title)>0:
+            __msg += "\n"+"="*80+"\n"+__title+"\n"+"="*80+"\n"
+        __msg += self.getSystemInformation(__prefix)
+        __msg += "\n"
+        __msg += self.getApplicationInformation(__prefix)
+        return __msg
+    #
     def getPythonVersion(self):
         "Retourne la version de python disponible"
         return ".".join([str(x) for x in sys.version_info[0:3]]) # map(str,sys.version_info[0:3]))
