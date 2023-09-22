@@ -26,7 +26,7 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import math, numpy, scipy
-from daCore.PlatformInfo import PlatformInfo
+from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 mfp = PlatformInfo().MaximumPrecision()
 
@@ -212,8 +212,8 @@ def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
-            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
+            Jb  = vfloat( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )

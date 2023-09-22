@@ -6,4 +6,4 @@ ExcludedPoints
   variables of a state vector considered arbitrarily in one-dimensional form.
 
   Example :
-  ``mp = ADD.get("ExcludedPoints")[-1]``
+  ``ep = ADD.get("ExcludedPoints")[-1]``

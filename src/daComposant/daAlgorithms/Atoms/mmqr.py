@@ -97,7 +97,7 @@ def mmqr(
             residus   = mesures - numpy.ravel( func(variables) )
             surrogate = numpy.sum(residus**2 * poids) + (4.*quantile-2.) * numpy.sum(residus)
         #
-        increment     = lastsurrogate-surrogate
+        increment     = abs(lastsurrogate-surrogate)
         poids         = 1./(epsilon+numpy.abs(residus))
         veps          = 1. - 2. * quantile - residus * poids
         lastsurrogate = -numpy.sum(residus * veps) - (1.-2.*quantile)*numpy.sum(residus)

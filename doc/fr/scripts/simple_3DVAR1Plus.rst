@@ -8,8 +8,8 @@ finale obtenue avec les coefficients recalés coïncide donc avec les
 observations aux 5 points de contrôle.
 
 Pour illustrer plus clairement le recalage effectué, en utilisant les mêmes
-informations, on peut tracer la version continue des courbes quadratiques dont
-on dispose pour l'état d'ébauche des coefficients, et pour l'état optimal des
-coefficients, en même temps que les valeurs obtenues aux points de contrôle. De plus,
-pour améliorer la lisibilité, on a retiré les traits qui joignent les
-simulations dans le graphique précédent.
+informations, on peut tracer la version "continue" des courbes quadratiques
+dont on dispose de l'état d'ébauche pour les coefficients, et de l'état optimal
+pour ces mêmes coefficients, en même temps que les valeurs obtenues aux points
+de contrôle. De plus, pour améliorer la lisibilité, on a retiré les traits qui
+joignent les simulations dans le graphique précédent.

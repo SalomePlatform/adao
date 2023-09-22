@@ -21,9 +21,10 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy, copy, logging
-from daCore import BasicObjects, PlatformInfo
-mpr = PlatformInfo.PlatformInfo().MachinePrecision()
-mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
+from daCore import BasicObjects
+from daCore.PlatformInfo import PlatformInfo, vfloat
+mpr = PlatformInfo().MachinePrecision()
+mfp = PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -101,8 +102,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _HX = numpy.ravel( HmX )
                 _X0 = numpy.ravel( X0 )
                 _Y0 = numpy.ravel( Y0 )
-                Jb  = float( 0.5 *  (_X - _X0).T * (BI * (_X - _X0))  )
-                Jo  = float( 0.5 * (_Y0 - _HX).T * (RI * (_Y0 - _HX)) )
+                Jb  = vfloat( 0.5 *  (_X - _X0).T * (BI * (_X - _X0))  )
+                Jo  = vfloat( 0.5 * (_Y0 - _HX).T * (RI * (_Y0 - _HX)) )
                 J   = Jb + Jo
                 self.StoredVariables["CostFunctionJb"].store( Jb )
                 self.StoredVariables["CostFunctionJo"].store( Jo )

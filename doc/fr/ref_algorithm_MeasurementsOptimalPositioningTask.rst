@@ -45,35 +45,55 @@ Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet d'établir la position de points de mesures optimaux par
-une analyse EIM (Empirical Interpolation Method). Ces positions sont
-déterminées de manière itérative, à partir d'un ensemble de vecteurs d'état
+Cet algorithme permet d'établir la position optimale de mesures d'un champ
+physique :math:`\mathbf{y}`, pour en assurer l'interpolation la meilleure
+possible. Ces positions optimales de mesure sont déterminées de manière
+itérative, à partir d'un ensemble de vecteurs d'état :math:`\mathbf{y}`
 pré-existants (usuellement appelés "*snapshots*" en méthodologie de bases
-réduites) ou obtenus par une simulation directe au cours de l'algorithme.
-Chacun de ces vecteurs d'état est habituellement (mais pas obligatoirement) le
-résultat :math:`\mathbf{y}` d'une simulation ou d'une observation à l'aide de
-l'opérateur :math:`H` pour un jeu de paramètres donné :math:`\mathbf{x}`.
+réduites) ou obtenus par une simulation de ce(s) champ(s) physiqu(e) d'intérêt
+au cours de l'algorithme. Chacun de ces vecteurs d'état est habituellement
+(mais pas obligatoirement) le résultat :math:`\mathbf{y}` d'une simulation à
+l'aide de l'opérateur :math:`H` restituant le (ou les) champ(s) complet(s) pour
+un jeu de paramètres donné :math:`\mathbf{x}`, ou d'une observation explicite
+du (ou des) champ(s) complet(s) :math:`\mathbf{y}`.
+
+Pour établir la position optimale de mesures, on utilise une méthode de type
+Empirical Interpolation Method (EIM [Barrault04]_), avec (variant "*lcEIM*") ou
+sans contraintes (variant "*EIM*") de positionnement.
 
 Il y a deux manières d'utiliser cet algorithme:
 
-#. Dans son usage le plus simple, si l'ensemble des vecteurs d'état est
-   pré-existant, il suffit de le fournir par l'option "*EnsembleOfSnapshots*"
-   d'algorithme. C'est par exemple le cas si l'ensemble des états a été généré
-   par un :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`.
-#. Si l'ensemble des vecteurs d'état doit être obtenu par des simulations au
-   cours de l'algorithme, alors on doit fournir l'opérateur de simulation ou
-   d'observation :math:`H` et le plan d'expérience de l'espace des états
-   :math:`\mathbf{x}` paramétriques.
+#. Dans son usage le plus simple, si l'ensemble des vecteurs d'état physique
+   :math:`\mathbf{y}` est pré-existant, il suffit de le fournir sous la forme
+   d'une collection ordonnée par l'option "*EnsembleOfSnapshots*" de
+   l'algorithme. C'est par exemple ce que l'on obtient par défaut si l'ensemble
+   des états a été généré par un
+   :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`.
+#. Si l'ensemble des vecteurs d'état physique :math:`\mathbf{y}` doit être
+   obtenu par des simulations explicites au cours de l'algorithme, alors on
+   doit fournir à la fois l'opérateur de simulation du champ complet, ici
+   identifié à l'opérateur d'observation :math:`H` du champ complet, et le plan
+   d'expérience de l'espace des états :math:`\mathbf{x}` paramétriques.
 
-L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
+Dans le cas où l'on fournit le plan d'expérience, l'échantillonnage des états
+:math:`\mathbf{x}` peut être fourni comme pour un
+:ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`, explicitement
 ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
-distributions courantes. Attention à la taille de l'hyper-cube (et donc au
-nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante.
+distributions courantes. Les calculs sont optimisés selon les ressources
+informatiques disponibles et les options demandées par l'utilisateur. Attention
+à la taille de l'hyper-cube (et donc au nombre de calculs) qu'il est possible
+d'atteindre, elle peut rapidement devenir importante.
 
-Il est possible d'exclure a priori des positions potentielles pour les points
-de mesures optimaux, en utilisant le variant "*PositioningBylcEIM*" d'analyse
-pour une recherche de positionnement contraint.
+  .. _mop_determination:
+  .. image:: images/mop_determination.png
+    :align: center
+    :width: 95%
+  .. centered::
+    **Schéma général d'utilisation de l'algorithme**
+
+Il est possible d'exclure a priori des positions potentielles pour le
+positionnement des mesures, en utilisant le variant "*lcEIM*" d'analyse pour
+une recherche de positionnement contraint.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

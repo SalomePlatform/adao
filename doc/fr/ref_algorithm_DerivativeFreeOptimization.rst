@@ -208,3 +208,4 @@ StoreSupplementaryCalculations
 - [Powell07]_
 - [Powell09]_
 - [Rowan90]_
+- [WikipediaNM]_

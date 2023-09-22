@@ -26,7 +26,7 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy
-from daCore.PlatformInfo import PlatformInfo
+from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -115,8 +115,8 @@ def ecwstdkf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         or selfA._toStore("CostFunctionJb") \
         or selfA._toStore("CostFunctionJo") \
         or selfA._toStore("CurrentOptimum") or selfA._toStore("APosterioriCovariance"):
-        Jb  = float( 0.5 * (Xa - Xb).T @ (BI @ (Xa - Xb)) )
-        Jo  = float( 0.5 * Innovation.T @ (RI @ Innovation) )
+        Jb  = vfloat( 0.5 * (Xa - Xb).T @ (BI @ (Xa - Xb)) )
+        Jo  = vfloat( 0.5 * Innovation.T @ (RI @ Innovation) )
         J   = Jb + Jo
         selfA.StoredVariables["CostFunctionJb"].store( Jb )
         selfA.StoredVariables["CostFunctionJo"].store( Jo )

@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
-from daCore.PlatformInfo import vt
+from daCore.PlatformInfo import vt, vfloat
 
 # ==============================================================================
 def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
@@ -74,8 +74,8 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( Innovation )
         #
-        Jb  = float( 0.5 * _W.T @ (HBHTpR @ _W) )
-        Jo  = float( - _W.T @ Innovation )
+        Jb  = vfloat( 0.5 * _W.T @ (HBHTpR @ _W) )
+        Jo  = vfloat( - _W.T @ Innovation )
         J   = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
@@ -123,6 +123,8 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
         elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
             import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
+        elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
+            import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
@@ -257,7 +259,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["OMB"].store( Innovation )
     if selfA._toStore("SigmaObs2"):
         TraceR = R.trace(Y.size)
-        selfA.StoredVariables["SigmaObs2"].store( float( (Innovation.T @ oma) ) / TraceR )
+        selfA.StoredVariables["SigmaObs2"].store( vfloat( (Innovation.T @ oma) ) / TraceR )
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/Innovation.size ) )
     if selfA._toStore("SimulationQuantiles"):

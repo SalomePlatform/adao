@@ -93,11 +93,26 @@ class ExtendedLogging(object):
         """
         Initialise un logging à la console pour TOUS les niveaux de messages.
         """
-        logging.basicConfig(
-            format = '%(levelname)-8s %(message)s',
-            level  = level,
-            stream = sys.stdout,
-            )
+        if  sys.version_info.major <= 3 and sys.version_info.minor < 8:
+            if logging.getLogger().hasHandlers():
+                while logging.getLogger().hasHandlers():
+                    logging.getLogger().removeHandler( logging.getLogger().handlers[-1] )
+                __sys_stdout = logging.StreamHandler(sys.stdout)
+                __sys_stdout.setFormatter(logging.Formatter('%(levelname)-8s %(message)s'))
+                logging.getLogger().addHandler(__sys_stdout)
+            else:
+                logging.basicConfig(
+                    format = '%(levelname)-8s %(message)s',
+                    level  = level,
+                    stream = sys.stdout,
+                    )
+        else: # Actif lorsque Python > 3.7
+            logging.basicConfig(
+                format = '%(levelname)-8s %(message)s',
+                level  = level,
+                stream = sys.stdout,
+                force  = True,
+                )
         self.__logfile = None
         #
         # Initialise l'affichage de logging
@@ -130,7 +145,7 @@ class ExtendedLogging(object):
         Permet de disposer des messages dans un fichier EN PLUS de la console.
         """
         if self.__logfile is not None:
-            # Supprime le précédent mode de stockage fichier s'il exsitait
+            # Supprime le précédent mode de stockage fichier s'il existait
             logging.getLogger().removeHandler(self.__logfile)
         self.__logfile = logging.FileHandler(filename, filemode)
         self.__logfile.setLevel(level)

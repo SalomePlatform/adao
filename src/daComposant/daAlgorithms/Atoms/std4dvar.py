@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import ForceNumericBounds, ApplyBounds
-from daCore.PlatformInfo import PlatformInfo, vt
+from daCore.PlatformInfo import PlatformInfo, vt, vfloat
 mpr = PlatformInfo().MachinePrecision()
 mfp = PlatformInfo().MaximumPrecision()
 
@@ -96,7 +96,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             selfA._toStore("CurrentState") or \
             selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        Jb  = float( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
+        Jb  = vfloat( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
         selfA.DirectCalculation = [None,]
         selfA.DirectInnovation  = [None,]
         Jo  = 0.
@@ -128,7 +128,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             selfA.DirectInnovation.append( _YmHMX )
             #
             # Ajout dans la fonctionnelle d'observation
-            Jo = Jo + 0.5 * float( _YmHMX.T * (RI * _YmHMX) )
+            Jo = Jo + 0.5 * vfloat( _YmHMX.T * (RI * _YmHMX) )
         J = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
@@ -186,6 +186,8 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
         elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
             import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
+        elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
+            import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(

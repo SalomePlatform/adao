@@ -172,5 +172,6 @@ sous-jacents.
    :maxdepth: 1
 
    ref_algorithm_EnsembleOfSimulationGenerationTask
+   ref_algorithm_InterpolationByReducedModelTask
    ref_algorithm_MeasurementsOptimalPositioningTask
    ref_task_keywords

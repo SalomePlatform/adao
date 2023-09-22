@@ -58,19 +58,37 @@ stables et robustes suivantes :
     pair: Variant ; CanonicalPSO
     pair: Variant ; OGCR
     pair: Variant ; SPSO-2011
+    pair: Variant ; AIS PSO
+    pair: Variant ; APSO
 
-- "CanonicalPSO" (Canonical Particule Swarm Optimisation, voir [ZambranoBigiarini13]_), algorithme classique dit "canonique" d'essaim particulaire, robuste et définissant une référence des algorithmes d'essaims particulaires,
-- "OGCR" (Simple Particule Swarm Optimisation), algorithme simplifié d'essaim particulaire sans bornes sur les insectes ou les vitesses, déconseillé car peu robuste, mais parfois beaucoup plus rapide,
-- "SPSO-2011" (Standard Standard Particle Swarm Optimisation 2011, voir [ZambranoBigiarini13]_), algorithme de référence 2011 d'essaim particulaire, robuste, performant et défini comme une référence des algorithmes d'essaims particulaires.
+- "CanonicalPSO" (Canonical Particule Swarm Optimisation, voir
+  [ZambranoBigiarini13]_), algorithme classique dit "canonique" d'essaim
+  particulaire, robuste et définissant une référence des algorithmes d'essaims
+  particulaires,
+- "OGCR" (Simple Particule Swarm Optimisation), algorithme simplifié d'essaim
+  particulaire sans bornes sur les insectes ou les vitesses, déconseillé car
+  peu robuste, mais parfois beaucoup plus rapide,
+- "SPSO-2011" (Standard Particle Swarm Optimisation 2011, voir
+  [ZambranoBigiarini13]_), algorithme de référence 2011 d'essaim particulaire,
+  robuste, performant et défini comme une référence des algorithmes d'essaims
+  particulaires. Cet algorithme est parfois appelé ":math:`\omega`-PSO" ou
+  "Inertia PSO" car il intègre une contribution dite d'inertie, ou encore
+  appelé "AIS" (pour "Asynchronous Iteration Strategy") ou "APSO" (pour
+  "Advanced Particle Swarm Optimisation") car il intègre la mise à jour
+  évolutive des meilleurs éléments, conduisant à une convergence
+  intrinsèquement améliorée de l'algorithme.
 
 Voici quelques suggestions pratiques pour une utilisation efficace de ces
 algorithmes :
 
 - La variante recommandée de cet algorithme est le "SPSO-2011" même si
-  l'algorithme "CanonicalPSO" reste par défaut le plus robuste des deux.
+  l'algorithme "CanonicalPSO" reste par défaut le plus robuste.
 - Le nombre de particules ou d'insectes usuellement recommandé varie entre 40
   et 100 selon l'algorithme, à peu près indépendamment de la dimension de
-  l'espace des états.
+  l'espace des états. En général, les meilleurs performances sont obtenues pour
+  des populations de 70 à 500 particules. Même si la valeur par défaut de ce
+  paramètre de base provient d'une expérience étendue sur ces algorithmes, il
+  est recommandé de l'adapter à la difficulté des problèmes traités.
 - Le nombre recommandé de générations, lors de l'évolution de la population,
   est souvent de l'ordre de 50, mais il peut facilement varier entre 25 et 500.
 - Le nombre maximal d'évaluation de la fonction de simulation doit usuellement
@@ -78,7 +96,7 @@ algorithmes :
   la dimension de l'espace des états.
 - La fonctionnelle d'erreur décroît usuellement par pallier (donc avec une
   progression nulle de la valeur de fonctionnelle à chaque génération lorsque
-  l'on reste dans le palier), rendant non recommandé un arrêt sur critère de
+  l'on reste dans le palier), rendant *non recommandé* un arrêt sur critère de
   décroissance de la fonction-coût. Il est normalement plus judicieux d'adapter
   le nombre d'itérations ou de générations pour accélérer la convergence des
   algorithmes.
@@ -165,6 +183,10 @@ StoreSupplementaryCalculations
   "CurrentIterationNumber",
   "CurrentState",
   "Innovation",
+  "InternalCostFunctionJ",
+  "InternalCostFunctionJb",
+  "InternalCostFunctionJo",
+  "InternalStates",
   "OMA",
   "OMB",
   "SimulatedObservationAtBackground",
@@ -211,6 +233,14 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/Innovation.rst
 
+.. include:: snippets/InternalCostFunctionJ.rst
+
+.. include:: snippets/InternalCostFunctionJb.rst
+
+.. include:: snippets/InternalCostFunctionJo.rst
+
+.. include:: snippets/InternalStates.rst
+
 .. include:: snippets/OMA.rst
 
 .. include:: snippets/OMB.rst
@@ -224,6 +254,25 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. _section_ref_algorithm_ParticleSwarmOptimization_examples:
 
+.. include:: snippets/Header2Algo09.rst
+
+.. include:: scripts/simple_ParticleSwarmOptimization1.rst
+
+.. literalinclude:: scripts/simple_ParticleSwarmOptimization1.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_ParticleSwarmOptimization1.res
+    :language: none
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_ParticleSwarmOptimization1:
+.. image:: scripts/simple_ParticleSwarmOptimization1.png
+  :align: center
+  :width: 90%
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_DerivativeFreeOptimization`

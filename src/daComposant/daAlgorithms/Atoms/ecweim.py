@@ -21,18 +21,18 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    EIM & lcEIM
+    Empirical Interpolation Method EIM & lcEIM
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy
+import numpy, logging
 import daCore.Persistence
 from daCore.NumericObjects import FindIndexesFromNames
 
 # ==============================================================================
 def EIM_offline(selfA, EOS = None, Verbose = False):
     """
-    Établissement de base par Empirical Interpolation Method (EIM)
+    Établissement de la base
     """
     #
     # Initialisations
@@ -45,13 +45,14 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     else:
         raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     __dimS, __nbmS = __EOS.shape
+    logging.debug("%s Building a RB using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
     #
     if   selfA._parameters["ErrorNorm"] == "L2":
         MaxNormByColumn = MaxL2NormByColumn
     else:
         MaxNormByColumn = MaxLinfNormByColumn
     #
-    if selfA._parameters["Variant"] == "PositioningByEIM":
+    if selfA._parameters["Variant"] in ["EIM", "PositioningByEIM"]:
         __LcCsts = False
     else:
         __LcCsts = True
@@ -93,7 +94,7 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     #
     __mu     = []
     __I      = []
-    __Q      = numpy.empty(__dimS)
+    __Q      = numpy.empty(__dimS).reshape((-1,1))
     __errors = []
     #
     __M      = 0
@@ -127,16 +128,16 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         if __M > 1:
             __Q = numpy.column_stack((__Q, __rhoM))
         else:
-            __Q = __rhoM
+            __Q = __rhoM.reshape((-1,1))
         __I.append(__iM)
         #
-        __restrictedQi = __Q[__I]
+        __restrictedQi = __Q[__I,:]
         if __M > 1:
             __Qi_inv = numpy.linalg.inv(__restrictedQi)
         else:
             __Qi_inv = 1. / __restrictedQi
         #
-        __restrictedEOSi = __EOS[__I]
+        __restrictedEOSi = __EOS[__I,:]
         #
         __interpolator = numpy.empty(__EOS.shape)
         if __M > 1:
@@ -151,6 +152,12 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         __residuM = __dataForNextIter[:,__muM]
     #
     #--------------------------
+    if __eM < selfA._parameters["EpsilonEIM"]:
+        logging.debug("%s %s (%.1e)"%(selfA._name,"The convergence is obtained when reaching the required EIM tolerance",selfA._parameters["EpsilonEIM"]))
+    if __M >= __maxM:
+        logging.debug("%s %s (%i)"%(selfA._name,"The convergence is obtained when reaching the maximum number of RB dimension",__maxM))
+    logging.debug("%s The RB of size %i has been correctly build"%(selfA._name,__Q.shape[1]))
+    logging.debug("%s There are %i points that have been excluded from the potential optimal points"%(selfA._name,len(__ExcludedMagicPoints)))
     if hasattr(selfA, "StoredVariables"):
         selfA.StoredVariables["OptimalPoints"].store( __I )
         if selfA._toStore("ReducedBasis"):
@@ -163,8 +170,46 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     return __mu, __I, __Q, __errors
 
 # ==============================================================================
-def EIM_online(selfA, QEIM, mu, iEIM):
-    raise NotImplementedError()
+def EIM_online(selfA, QEIM, gJmu = None, mPoints = None, mu = None, PseudoInverse = True, rbDimension = None, Verbose = False):
+    """
+    Reconstruction du champ complet
+    """
+    if gJmu is None and mu is None:
+        raise ValueError("Either measurements or parameters has to be given as a list, both can not be None simultaneously.")
+    if mPoints is None:
+        raise ValueError("List of optimal locations for measurements has to be given.")
+    if gJmu is not None:
+        if len(gJmu) > len(mPoints):
+            raise ValueError("The number of measurements (%i) has to be less or equal to the number of optimal locations (%i)."%(len(gJmu),len(mPoints)))
+        if len(gJmu) > QEIM.shape[1]:
+            raise ValueError("The number of measurements (%i) in optimal locations has to be less or equal to the dimension of the RB (%i)."%(len(gJmu),QEIM.shape[1]))
+        __gJmu = numpy.ravel(gJmu)
+    if mu is not None:
+        # __gJmu = H(mu)
+        raise NotImplementedError()
+    if rbDimension is not None:
+        rbDimension = min(QEIM.shape[1], rbDimension)
+    else:
+        rbDimension = QEIM.shape[1]
+    __rbDim = min(QEIM.shape[1],len(mPoints),len(gJmu),rbDimension) # Modulation
+    #--------------------------
+    #
+    # Restriction aux mesures
+    if PseudoInverse:
+        __QJinv = numpy.linalg.pinv( QEIM[mPoints,0:__rbDim] )
+        __gammaMu = numpy.dot( __QJinv, __gJmu[0:__rbDim])
+    else:
+        __gammaMu = numpy.linalg.solve( QEIM[mPoints,0:__rbDim], __gJmu[0:__rbDim] )
+    #
+    # Interpolation du champ complet
+    __gMmu = numpy.dot( QEIM[:,0:__rbDim], __gammaMu )
+    #
+    #--------------------------
+    logging.debug("%s The full field of size %i has been correctly build"%(selfA._name,__gMmu.size))
+    if hasattr(selfA, "StoredVariables"):
+        selfA.StoredVariables["Analysis"].store( __gMmu )
+    #
+    return __gMmu
 
 # ==============================================================================
 def MaxL2NormByColumn(Ensemble, LcCsts = False, IncludedPoints = []):

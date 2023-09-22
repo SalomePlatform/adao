@@ -148,6 +148,7 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s" %(__prefix,"MatplotLib version",self.getMatplotlibVersion())
         __msg += "\n%s%30s : %s" %(__prefix,"GnuplotPy version",self.getGnuplotVersion())
         __msg += "\n%s%30s : %s" %(__prefix,"Sphinx version",self.getSphinxVersion())
+        __msg += "\n%s%30s : %s" %(__prefix,"Fmpy version",self.getFmpyVersion())
         return __msg
     #
     def getAllInformation(self, __prefix="", __title="Whole system information"):
@@ -216,6 +217,14 @@ class PlatformInfo(object):
         "Retourne la version de sdf disponible"
         if has_sdf:
             __version = sdf.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+    #
+    def getFmpyVersion(self):
+        "Retourne la version de fmpy disponible"
+        if has_fmpy:
+            __version = fmpy.__version__
         else:
             __version = "0.0.0"
         return __version
@@ -291,6 +300,12 @@ try:
 except ImportError:
     has_sdf = False
 
+try:
+    import fmpy
+    has_fmpy = True
+except ImportError:
+    has_fmpy = False
+
 has_salome = bool( "SALOME_ROOT_DIR" in os.environ )
 has_yacs   = bool(   "YACS_ROOT_DIR" in os.environ )
 has_adao   = bool(   "ADAO_ROOT_DIR" in os.environ )
@@ -348,6 +363,17 @@ def date2int( __date, __lang="FR" ):
     else:
         raise ValueError("Cannot convert \"%s\" as a D/M/Y H:M date"%d)
     return __number
+
+def vfloat(__value :numpy.ndarray):
+    """
+    Conversion en flottant d'un vecteur de taille 1 et de dimensions quelconques
+    """
+    if hasattr(__value,"size") and __value.size == 1:
+        return float(__value.flat[0])
+    elif isinstance(__value, (float,int)):
+        return float(__value)
+    else:
+        raise ValueError("Error in converting multiple float values from array when waiting for only one")
 
 def strvect2liststr( __strvect ):
     """

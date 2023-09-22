@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, logging
+import numpy, logging, copy
 import daCore.NumericObjects
 
 # ==============================================================================
@@ -34,7 +34,6 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
     Ensemble Of Simulations Generation
     """
     #
-    __seed = numpy.random.get_state()
     sampleList = daCore.NumericObjects.BuildComplexSampleList(
         selfA._parameters["SampleAsnUplet"],
         selfA._parameters["SampleAsExplicitHyperCube"],
@@ -42,6 +41,8 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
         selfA._parameters["SampleAsIndependantRandomVariables"],
         Xb,
         )
+    if outputEOX or selfA._toStore("EnsembleOfStates"):
+        EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
     #
     # ----------
     if selfA._parameters["SetDebug"]:
@@ -86,25 +87,14 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
         logging.getLogger().setLevel(CUR_LEVEL)
     # ----------
     #
-    if outputEOX or selfA._toStore("EnsembleOfStates"):
-        # Attention la liste s'épuise donc il faut la recréer
-        numpy.random.set_state(__seed)
-        sampleList = daCore.NumericObjects.BuildComplexSampleList(
-            selfA._parameters["SampleAsnUplet"],
-            selfA._parameters["SampleAsExplicitHyperCube"],
-            selfA._parameters["SampleAsMinMaxStepHyperCube"],
-            selfA._parameters["SampleAsIndependantRandomVariables"],
-            Xb,
-            )
-        # Il faut passer la liste en tuple/list pour stack
-        EOX = numpy.stack(tuple(sampleList), axis=1)
-        assert EOX.shape[1] == EOS.shape[1], "  Error of number of states in Ensemble Of Simulations Generation"
     if selfA._toStore("EnsembleOfStates"):
+        assert EOX.shape[1] == EOS.shape[1], "  Error of number of states in Ensemble Of Simulations Generation"
         selfA.StoredVariables["EnsembleOfStates"].store( EOX )
     if selfA._toStore("EnsembleOfSimulations"):
         selfA.StoredVariables["EnsembleOfSimulations"].store( EOS )
     #
     if outputEOX:
+        assert EOX.shape[1] == EOS.shape[1], "  Error of number of states in Ensemble Of Simulations Generation"
         return EOX, EOS
     else:
         return EOS

@@ -25,6 +25,8 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
+from daCore.PlatformInfo import vfloat
+
 # ==============================================================================
 def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
@@ -71,7 +73,7 @@ def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
         selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum"):
         Jb  = 0.
-        Jo  = float( 0.5 * oma.T * (RI * oma) )
+        Jo  = vfloat( 0.5 * oma.T * (RI * oma) )
         J   = Jb + Jo
         selfA.StoredVariables["CostFunctionJb"].store( Jb )
         selfA.StoredVariables["CostFunctionJo"].store( Jo )

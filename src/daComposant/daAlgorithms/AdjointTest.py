@@ -21,9 +21,10 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy
-from daCore import BasicObjects, NumericObjects, PlatformInfo
-mpr = PlatformInfo.PlatformInfo().MachinePrecision()
-mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
+from daCore import BasicObjects, NumericObjects
+from daCore.PlatformInfo import PlatformInfo, vfloat
+mpr = PlatformInfo().MachinePrecision()
+mfp = PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -199,7 +200,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 TangentFXdX = numpy.ravel( Ht( (X0,dX) ) )
                 AdjointFXY  = numpy.ravel( Ha( (X0,Yn)  ) )
                 #
-                Residu = abs(float(numpy.dot( TangentFXdX, Yn ) - numpy.dot( dX, AdjointFXY )))
+                Residu = abs(vfloat(numpy.dot( TangentFXdX, Yn ) - numpy.dot( dX, AdjointFXY )))
                 #
                 self.StoredVariables["Residu"].store( Residu )
                 ttsep = __ms%(i,amplitude,NormeX,NormeY,NormedX,Residu)

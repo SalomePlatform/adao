@@ -59,7 +59,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = "LBFGSB",
             typecast = str,
             message  = "Minimiseur utilisé",
-            listval  = ["LBFGSB","TNC", "CG", "NCG", "BFGS"],
+            listval  = [
+                "LBFGSB",
+                "TNC",
+                "CG",
+                "BFGS",
+                ],
+            listadv  = [
+                "NCG",
+                ],
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",

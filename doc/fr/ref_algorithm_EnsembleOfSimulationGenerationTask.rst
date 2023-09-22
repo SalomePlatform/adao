@@ -43,25 +43,25 @@ Algorithme de tâche "*EnsembleOfSimulationGenerationTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de générer un ensemble de résultats, de type simulation
-ou observation, à l'aide de l'opérateur :math:`H` pour un plan d'expérience de
-l'espace des états :math:`\mathbf{x}` paramétriques. Le résultat de cet
-algorithme est une collection homogène des vecteurs simulés (disponible à
-l'aide de la variable stockable "*EnsembleOfSimulations*") correspondants directement à
-la collection homogène choisie de vecteurs d'états (disponible à l'aide de la
+Cet algorithme permet de générer un ensemble de résultats physiques, de type
+simulation ou observation, à l'aide de l'opérateur :math:`H` pour un plan
+d'expérience de l'espace des états :math:`\mathbf{x}` paramétriques. Le
+résultat de cet algorithme est une collection homogène de vecteurs simulés
+:math:`\mathbf{y}` (disponible à l'aide de la variable stockable
+"*EnsembleOfSimulations*") correspondants directement à la collection homogène
+choisie de vecteurs d'états :math:`\mathbf{x}` (disponible à l'aide de la
 variable stockable "*EnsembleOfStates*").
 
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
-distributions courantes. Attention à la taille de l'hyper-cube (et donc au
-nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante.
+distributions courantes. Les calculs sont optimisés selon les ressources
+informatiques disponibles et les options demandées par l'utilisateur. Attention
+à la taille de l'hyper-cube (et donc au nombre de calculs) qu'il est possible
+d'atteindre, elle peut rapidement devenir importante.
 
 Pour apparaître pour l'utilisateur tout en réduisant les difficultés de
 stockage, les résultats de l'échantillonnage ou des simulations doivent être
-demandés **explicitement**. On utilise pour cela, sur la variable désirée, la
-sauvegarde finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en
-cours de calcul à l'aide des "*observer*" adaptés.
+demandés **explicitement** à l'aide de la variable requise.
 
 Les résultats obtenus avec cet algorithme peuvent être utilisés pour alimenter
 un :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`. De manière

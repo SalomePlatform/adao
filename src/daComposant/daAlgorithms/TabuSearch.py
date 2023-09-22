@@ -22,6 +22,7 @@
 
 import numpy
 from daCore import BasicObjects
+from daCore.PlatformInfo import vfloat
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -185,24 +186,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
                 if BI is None or RI is None:
                     raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
-                Jb  = 0.5 * (_X - Xb).T @ (BI @ (_X - Xb))
-                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+                Jb  = vfloat(0.5 * (_X - Xb).T @ (BI @ (_X - Xb)))
+                Jo  = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
             elif QualityMeasure in ["WeightedLeastSquares","WLS"]:
                 if RI is None:
                     raise ValueError("Observation error covariance matrix has to be properly defined!")
                 Jb  = 0.
-                Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+                Jo  = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
             elif QualityMeasure in ["LeastSquares","LS","L2"]:
                 Jb  = 0.
-                Jo  = 0.5 * _Innovation.T @ _Innovation
+                Jo  = vfloat(0.5 * _Innovation.T @ _Innovation)
             elif QualityMeasure in ["AbsoluteValue","L1"]:
                 Jb  = 0.
-                Jo  = numpy.sum( numpy.abs(_Innovation) )
+                Jo  = vfloat(numpy.sum( numpy.abs(_Innovation) ))
             elif QualityMeasure in ["MaximumError","ME", "Linf"]:
                 Jb  = 0.
-                Jo  = numpy.max( numpy.abs(_Innovation) )
+                Jo  = vfloat(numpy.max( numpy.abs(_Innovation) ))
             #
-            J   = float( Jb ) + float( Jo )
+            J   = Jb + Jo
             #
             return J
         #

@@ -26,7 +26,7 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize, scipy.version
-from daCore.PlatformInfo import vt
+from daCore.PlatformInfo import vt, vfloat
 
 # ==============================================================================
 def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
@@ -72,7 +72,7 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
         #
         Jb  = 0.
-        Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
+        Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
         J   = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
@@ -113,7 +113,7 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         _HX = Hm( _X ).reshape((-1,1))
         _Innovation = Y - _HX
         Jb  = 0.
-        Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
+        Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
         J   = Jb + Jo
         if selfA._parameters["StoreInternalVariables"] or \
             selfA._toStore("CurrentState"):
@@ -141,6 +141,8 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
         elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
             import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
+        elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
+            import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(

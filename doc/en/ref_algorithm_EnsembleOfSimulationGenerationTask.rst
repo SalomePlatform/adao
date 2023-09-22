@@ -43,23 +43,24 @@ Task algorithm "*EnsembleOfSimulationGenerationTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to generate a set of results, of simulation or
+This algorithm allows to generate a set of physical results, of simulation or
 observation type, using the :math:`H` operator for a design of experiment of
 the :math:`\mathbf{x}` parametric state space. The result of this algorithm is
-a homogeneous collection of simulated vectors (available using the storable
-variable "*EnsembleOfSimulations*") corresponding directly to the chosen
-homogeneous collection of state vectors (available using the storable variable
-"*EnsembleOfStates*").
+a homogeneous collection of simulated vectors :math:`\mathbf{y}` (available
+using the storable variable "*EnsembleOfSimulations*") corresponding directly
+to the chosen homogeneous collection of state vectors :math:`\mathbf{x}`
+(available using the storable variable "*EnsembleOfStates*").
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
 form of hyper-cubes, explicit or sampled according to classic distributions.
-Beware of the size of the hyper-cube (and then to the number of computations)
-that can be reached, it can grow quickly to be quite large.
+The computations are optimized according to the computer resources available
+and the options requested by the user. Beware of the size of the hyper-cube
+(and then to the number of computations) that can be reached, it can grow
+quickly to be quite large.
 
 To be visible by the user while reducing the risk of storage difficulties, the
-results of sampling or simulations has to be **explicitly** asked for. One use
-for that, on the desired variable, the final saving through
-"*UserPostAnalysis*" or the treatment during the calculation by "*observer*".
+results of sampling or simulations has to be **explicitly** asked for using the
+required variable.
 
 The results obtained with this algorithm can be used to feed an
 :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`. In a

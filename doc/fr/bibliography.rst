@@ -161,6 +161,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [WikipediaND] Wikipedia, *Nondimensionalization*, https://en.wikipedia.org/wiki/Nondimensionalization
 
+.. [WikipediaNM] Wikipedia, *Nelder–Mead method*, https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method
+
 .. [WikipediaPSO] Wikipedia, *Particle Swarm Optimization*, https://en.wikipedia.org/wiki/Particle_swarm_optimization
 
 .. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression

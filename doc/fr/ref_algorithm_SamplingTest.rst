@@ -48,6 +48,14 @@ nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
 importante. Lorsque un état n'est pas observable, une valeur *"NaN"* est
 retournée.
 
+Il est aussi possible de fournir un ensemble de simulations :math:`\mathbf{y}`
+déjà établies par ailleurs (donc sans besoin explicite d'un opérateur
+:math:`\mathcal{H}`), qui sont implicitement associées à un ensemble
+d'échantillons d'états :math:`\mathbf{x}`. Dans ce cas où l'ensemble de
+simulations est fourni, il est impératif de fournir aussi l'ensemble des états
+:math:`\mathbf{x}` par un échantillonnage explicite, dont l'ordre des états
+correspond à l'ordre des simulations :math:`\mathbf{y}`.
+
 Pour accéder aux informations calculées, les résultats de l'échantillonnage ou
 des simulations doivent être demandés **explicitement** pour éviter les
 difficultés de stockage (en l'absence de résultats demandés, rien n'est
@@ -70,6 +78,8 @@ calcul à l'aide des "*observer*" adaptés.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Chck.rst
+
+.. include:: snippets/EnsembleOfSnapshots.rst
 
 .. include:: snippets/QualityCriterion.rst
 

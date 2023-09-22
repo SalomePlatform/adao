@@ -34,15 +34,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "PositioningByEIM",
-                "PositioningBylcEIM",
+                "EIM",   "PositioningByEIM",
+                "lcEIM", "PositioningBylcEIM",
                 ],
             )
         self.defineRequiredParameter(
             name     = "EnsembleOfSnapshots",
             default  = [],
             typecast = numpy.array,
-            message  = "Ensemble de vecteurs d'état physique (snapshots), 1 état par colonne",
+            message  = "Ensemble de vecteurs d'état physique (snapshots), 1 état par colonne (Training Set)",
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfLocations",
@@ -139,7 +139,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
-        if   self._parameters["Variant"] == "PositioningBylcEIM":
+        if   self._parameters["Variant"] in ["lcEIM", "PositioningBylcEIM"]:
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
                 if self._toStore("EnsembleOfSimulations"):
                     self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
@@ -149,7 +149,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             else:
                 raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
         #
-        elif self._parameters["Variant"] == "PositioningByEIM":
+        elif self._parameters["Variant"] in ["EIM", "PositioningByEIM"]:
             if len(self._parameters["EnsembleOfSnapshots"]) > 0:
                 if self._toStore("EnsembleOfSimulations"):
                     self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )

@@ -33,6 +33,7 @@ from daCore.NumericObjects import EnsembleMean
 from daCore.NumericObjects import EnsembleOfAnomalies
 from daCore.NumericObjects import EnsembleOfBackgroundPerturbations
 from daCore.NumericObjects import EnsemblePerturbationWithGivenCovariance
+from daCore.PlatformInfo import vfloat
 
 # ==============================================================================
 def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
@@ -165,7 +166,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 _Jo = 0.5 * _A.T @ (RI * _A)
                 _Jb = 0.5 * (__m-1) * w.T @ w
                 _J  = _Jo + _Jb
-                return float(_J)
+                return vfloat(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,1)) - (EaHX @ w).reshape((__p,1))
                 _GardJo = - EaHX.T @ (RI * _A)
@@ -196,7 +197,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 _Jo = 0.5 * _A.T @ (RI * _A)
                 _Jb = 0.5 * __m * math.log(1 + 1/__m + w.T @ w)
                 _J  = _Jo + _Jb
-                return float(_J)
+                return vfloat(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,1)) - (EaHX @ w).reshape((__p,1))
                 _GardJo = - EaHX.T @ (RI * _A)
@@ -229,7 +230,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 _Jo = 0.5 * _A.T * (RI * _A)
                 _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w)
                 _J  = _Jo + _Jb
-                return float(_J)
+                return vfloat(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,1)) - (EaHX @ w).reshape((__p,1))
                 _GardJo = - EaHX.T @ (RI * _A)
@@ -262,7 +263,7 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 _Jo = 0.5 * _A.T @ (RI * _A)
                 _Jb = 0.5 * (__m+1) * math.log(1 + 1/__m + w.T @ w / (__m-1))
                 _J  = _Jo + _Jb
-                return float(_J)
+                return vfloat(_J)
             def GradientOfCostFunction(w):
                 _A  = Ynpu - HXfm.reshape((__p,1)) - (EaHX @ w).reshape((__p,1))
                 _GardJo = - EaHX.T @ (RI * _A)
@@ -346,8 +347,8 @@ def etkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
             or selfA._toStore("CostFunctionJo") \
             or selfA._toStore("CurrentOptimum") \
             or selfA._toStore("APosterioriCovariance"):
-            Jb  = float( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
-            Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
+            Jb  = vfloat( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
+            Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )

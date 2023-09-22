@@ -49,6 +49,7 @@ Calculation algorithms uses
 #. :ref:`Examples with the "ExtendedBlue" algorithm<section_ref_algorithm_ExtendedBlue_examples>`
 #. :ref:`Examples with the "KalmanFilter" algorithm<section_ref_algorithm_KalmanFilter_examples>`
 #. :ref:`Examples with the "NonLinearLeastSquares" algorithm<section_ref_algorithm_NonLinearLeastSquares_examples>`
+#. :ref:`Examples with the "ParticleSwarmOptimization" algorithm<section_ref_algorithm_ParticleSwarmOptimization_examples>`
 
 Checking algorithms uses
 ------------------------

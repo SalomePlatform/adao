@@ -12,9 +12,9 @@ purposes only, knowing that, in case of doubt, the SALOME version sheet
    ADAO,       |release|
    EFICAS,     |release|
    SALOME,     |release|
-   Python,     3.6.5
-   Numpy,      1.16.4
-   Scipy,      1.4.1
+   Python,     3.9.2
+   Numpy,      1.19.5
+   Scipy,      1.6.0
    MatplotLib, 3.3.4
    Gnuplot,    1.8
-   NLopt,      2.5.0
+   NLopt,      2.4.2

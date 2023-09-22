@@ -27,6 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, logging, copy
 from daCore.NumericObjects import VariablesAndIncrementsBounds
+from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
 
 # ==============================================================================
@@ -72,9 +73,9 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
             Jb  = 0.
             Jo  = numpy.max( numpy.abs(_Innovation) )
         #
-        J   = float( Jb ) + float( Jo )
+        J   = vfloat( Jb ) + vfloat( Jo )
         #
-        return J, float( Jb ), float( Jo )
+        return J, vfloat( Jb ), vfloat( Jo )
     #
     def KeepRunningCondition(__step, __nbfct):
         if __step >= selfA._parameters["MaximumNumberOfIterations"]:
@@ -97,6 +98,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     __vc = float( selfA._parameters["VelocityClampingFactor"] )
     logging.debug("%s Cognitive acceleration (recall to the best previously known value of the insect) = %s"%(selfA._name, str(__ca)))
     logging.debug("%s Social acceleration (recall to the best insect value of the group) = %s"%(selfA._name, str(__sa)))
+    logging.debug("%s Inertial weight = %s"%(selfA._name, str(__iw)))
     logging.debug("%s Velocity clamping factor = %s"%(selfA._name, str(__vc)))
     #
     # Initialisation de l'essaim

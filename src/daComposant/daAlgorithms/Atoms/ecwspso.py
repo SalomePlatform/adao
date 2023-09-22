@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Standard Particle Swarm Optimization 2011
+    Standard Particle Swarm Optimization 2011 (SIS)
 """
 __author__ = "Jean-Philippe ARGAUD"
 
@@ -29,6 +29,7 @@ import numpy, logging, copy, math
 from daCore.NumericObjects import ApplyBounds, VariablesAndIncrementsBounds
 from daCore.NumericObjects import GenerateRandomPointInHyperSphere
 from daCore.NumericObjects import GetNeighborhoodTopology
+from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
 
 # ==============================================================================
@@ -74,9 +75,9 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
             Jb  = 0.
             Jo  = numpy.max( numpy.abs(_Innovation) )
         #
-        J   = float( Jb ) + float( Jo )
+        J   = vfloat( Jb ) + vfloat( Jo )
         #
-        return J, float( Jb ), float( Jo )
+        return J, vfloat( Jb ), vfloat( Jo )
     #
     def KeepRunningCondition(__step, __nbfct):
         if __step >= selfA._parameters["MaximumNumberOfIterations"]:
@@ -99,6 +100,7 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
     __vc = float( selfA._parameters["VelocityClampingFactor"] )
     logging.debug("%s Cognitive acceleration (recall to the best previously known value of the insect) = %s"%(selfA._name, str(__ca)))
     logging.debug("%s Social acceleration (recall to the best insect value of the group) = %s"%(selfA._name, str(__sa)))
+    logging.debug("%s Inertial weight = %s"%(selfA._name, str(__iw)))
     logging.debug("%s Velocity clamping factor = %s"%(selfA._name, str(__vc)))
     #
     # Initialisation de l'essaim
@@ -155,40 +157,41 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
     step = 0
     while KeepRunningCondition(step, nbfct):
         step += 1
+        #
         for __i in range(__nbI):
-            rct = rand(size=__nbP)
-            rst = rand(size=__nbP)
-            rrt = rand(size=__nbP)
-            # Points
-            __xPoint = Swarm[__i,0,:]
-            __pPoint = __xPoint \
-                     + __ca * rct * (Swarm[__i,2,:] - Swarm[__i,0,:])
-            __lPoint = __xPoint \
-                     + __sa * rst * (Swarm[__i,3,:] - Swarm[__i,0,:])
-            __gPoint = (__xPoint + __pPoint + __lPoint) / 3
-            __radius = numpy.linalg.norm(__gPoint - __xPoint)
-            __rPoint = GenerateRandomPointInHyperSphere( __gPoint, __radius  )
-            # Vitesse
-            __value  = __iw * Swarm[__i,1,:] + __rPoint - __xPoint
-            Swarm[__i,1,:] = ApplyBounds( __value, LimitSpeed )
-            # Position
-            __value  = Swarm[__i,0,:] + Swarm[__i,1,:]
-            Swarm[__i,0,:] = ApplyBounds( __value, LimitPlace )
-            #
-            nbfct += 1
-            # Update gbest
+            # Évalue
             JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
+            # Maj lbest
             if JTest < qSwarm[__i,0]:
-                Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
+                Swarm[__i,2,:] = Swarm[__i,0,:]
                 qSwarm[__i,:3]  = (JTest, JbTest, JoTest)
-            #
-        # Update lbest
+        #
         for __i in range(__nbI):
+            # Maj gbest
             __im = numpy.argmin( [qSwarm[__v,0] for __v in __nbh[__i]] )
             __il = __nbh[__i][__im] # Best in NB
             if qSwarm[__il,0] < qSwarm[__i,3]:
-                Swarm[__i,3,:] = Swarm[__il,2,:] # lBest
+                Swarm[__i,3,:] = Swarm[__il,2,:]
                 qSwarm[__i,3:] = qSwarm[__il,:3]
+        #
+        for __i in range(__nbI-1,0-1,-1):
+            __rct = rand(size=__nbP)
+            __rst = rand(size=__nbP)
+            __xPoint = Swarm[__i,0,:]
+            # Points
+            __pPoint = __xPoint + __ca * __rct * (Swarm[__i,2,:] - __xPoint)
+            __lPoint = __xPoint + __sa * __rst * (Swarm[__i,3,:] - __xPoint)
+            __gPoint = (__xPoint + __pPoint + __lPoint) / 3
+            __radius = numpy.linalg.norm(__gPoint - __xPoint)
+            __rPoint = GenerateRandomPointInHyperSphere( __gPoint, __radius  )
+            # Maj vitesse
+            __value  = __iw * Swarm[__i,1,:] + __rPoint - __xPoint
+            Swarm[__i,1,:] = ApplyBounds( __value, LimitSpeed )
+            # Maj position
+            __value  = __xPoint + Swarm[__i,1,:]
+            Swarm[__i,0,:] = ApplyBounds( __value, LimitPlace )
+            #
+            nbfct += 1
         #
         iBest = numpy.argmin(qSwarm[:,0])
         xBest = Swarm[iBest,2,:]

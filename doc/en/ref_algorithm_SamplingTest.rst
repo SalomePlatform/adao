@@ -46,6 +46,14 @@ Beware of the size of the hyper-cube (and then to the number of computations)
 that can be reached, it can grow quickly to be quite large. When a state is not
 observable, a *"NaN"* value is returned.
 
+It is also possible to supply a set of simulations :math:`\mathbf{y}` already
+established elsewhere (so there's no explicit need for an operator
+:math:`\mathcal{H}`), which are implicitly associated with a set of state
+samples :math:`\mathbf{x}`. In this case where the set of simulations is
+provided, it is imperative to also provide the set of states :math:`\mathbf{x}`
+by explicit sampling, whose state order corresponds to the order of the
+simulations :math:`\mathbf{y}`.
+
 To access the calculated information, the results of the sampling or
 simulations must be requested **explicitly** to avoid storage difficulties (if
 no results are requested, nothing is available). One use for that, on the
@@ -67,6 +75,8 @@ treatment during the calculation by well suited "*observer*".
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Chck.rst
+
+.. include:: snippets/EnsembleOfSnapshots.rst
 
 .. include:: snippets/QualityCriterion.rst
 

@@ -22,7 +22,7 @@
 
 import numpy, logging, copy
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecwnpso, ecwopso, ecwspso
+from daAlgorithms.Atoms import ecwnpso, ecwopso, ecwapso, ecwspso, ecwpspso
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -39,6 +39,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SPSO-2011",
                 ],
             listadv  = [
+                "SPSO-2011-AIS",
+                "SPSO-2011-SIS",
+                "SPSO-2011-PSIS",
                 "PSO",
                 ],
             )
@@ -194,8 +197,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] in ["OGCR"]:
             ecwopso.ecwopso(self, Xb, Y, HO, R, B)
         #
-        elif self._parameters["Variant"] in ["SPSO-2011"]:
+        elif self._parameters["Variant"] in ["SPSO-2011", "SPSO-2011-AIS"]:
+            ecwapso.ecwapso(self, Xb, Y, HO, R, B)
+        #
+        elif self._parameters["Variant"] in ["SPSO-2011-SIS"]:
             ecwspso.ecwspso(self, Xb, Y, HO, R, B)
+        #
+        elif self._parameters["Variant"] in ["SPSO-2011-PSIS"]:
+            ecwpspso.ecwpspso(self, Xb, Y, HO, R, B)
         #
         #--------------------------
         else:

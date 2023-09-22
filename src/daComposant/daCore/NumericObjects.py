@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import os, copy, types, sys, logging, math, numpy, itertools
 from daCore.BasicObjects import Operator, Covariance, PartialAlgorithm
-from daCore.PlatformInfo import PlatformInfo
+from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 mfp = PlatformInfo().MaximumPrecision()
 # logging.getLogger().setLevel(logging.DEBUG)
@@ -205,7 +205,7 @@ class FDApproximation(object):
             assert __LMatrix[0].size == _Idwy.size, "Incorrect size of elements"
             __Produit = numpy.zeros(len(__LMatrix))
             for i, col in enumerate(__LMatrix):
-                __Produit[i] = float( _Idwy @ col)
+                __Produit[i] = vfloat( _Idwy @ col)
             return __Produit
         else:
             __Produit = None
@@ -772,6 +772,7 @@ def HessienneEstimation( __selfA, __nb, __HaM, __HtM, __BI, __RI ):
     if logging.getLogger().level < logging.WARNING: # La vérification n'a lieu qu'en debug
         try:
             numpy.linalg.cholesky( __A )
+            logging.debug("%s La matrice de covariance a posteriori A est bien symétrique définie positive."%(__selfA._name,))
         except Exception:
             raise ValueError(
                 "The %s a posteriori covariance matrix A"%(__selfA._name,)+\
@@ -900,13 +901,13 @@ def VariablesAndIncrementsBounds( __Bounds, __BoxBounds, __Xini, __Name, __Multi
     __Bounds    = ForceNumericBounds( __Bounds )
     __BoxBounds = ForceNumericBounds( __BoxBounds )
     if __Bounds is None and __BoxBounds is None:
-        raise ValueError("Algorithm %s requires bounds on all variables (by Bounds), or on all variables increments (by BoxBounds), or both, to be explicitly given."%(__Name,))
+        raise ValueError("Algorithm %s requires bounds on all variables (by Bounds), or on all variable increments (by BoxBounds), or both, to be explicitly given."%(__Name,))
     elif __Bounds is None and __BoxBounds is not None:
         __Bounds    = __BoxBounds
-        logging.debug("%s Définition des bornes de paramètres à partir des bornes d'incréments courantes"%(__Name,))
+        logging.debug("%s Definition of parameter bounds from current parameter increment bounds"%(__Name,))
     elif __Bounds is not None and __BoxBounds is None:
         __BoxBounds = __Multiplier * (__Bounds - __Xini.reshape((-1,1))) # "M * [Xmin,Xmax]-Xini"
-        logging.debug("%s Définition des bornes d'incréments de paramètres à partir des bornes courantes"%(__Name,))
+        logging.debug("%s Definition of parameter increment bounds from current parameter bounds"%(__Name,))
     return __Bounds, __BoxBounds
 
 # ==============================================================================

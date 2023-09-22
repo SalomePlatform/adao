@@ -126,9 +126,10 @@ __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["adaoBuilder"]
 
 import os, sys, logging
-adao_py_dir = os.path.abspath(os.path.dirname(__file__))
+adao_py_dir = os.path.abspath(os.path.dirname(__file__)) # Variable témoin
 sys.path.insert(0, adao_py_dir)
 
+from daCore import Persistence # PathManagement activé dans Persistence
 from daCore.version import name, version, year, date, __version__
 try:
     from daYacsIntegration.daOptimizerLoop import *

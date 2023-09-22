@@ -7,4 +7,4 @@ ExcludedPoints
   unidimensionnelle.
 
   Exemple :
-  ``mp = ADD.get("ExcludedPoints")[-1]``
+  ``ep = ADD.get("ExcludedPoints")[-1]``

@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import logging, numpy
 from daCore.NumericObjects import QuantilesEstimations
-from daCore.PlatformInfo import PlatformInfo
+from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -112,8 +112,8 @@ def ecwexblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
         selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
         selfA._toStore("MahalanobisConsistency"):
-        Jb  = float( 0.5 * (Xa - Xb).T @ (BI @ (Xa - Xb)) )
-        Jo  = float( 0.5 * oma.T * (RI * oma) )
+        Jb  = vfloat( 0.5 * (Xa - Xb).T @ (BI @ (Xa - Xb)) )
+        Jo  = vfloat( 0.5 * oma.T * (RI * oma) )
         J   = Jb + Jo
         selfA.StoredVariables["CostFunctionJb"].store( Jb )
         selfA.StoredVariables["CostFunctionJo"].store( Jo )
@@ -134,7 +134,7 @@ def ecwexblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         if min(A.shape) != max(A.shape):
             raise ValueError("The %s a posteriori covariance matrix A is of shape %s, despites it has to be a squared matrix. There is an error in the observation operator, please check it."%(selfA._name,str(A.shape)))
         if (numpy.diag(A) < 0).any():
-            raise ValueError("The %s a posteriori covariance matrix A has at least one negative value on its diagonal. There is an error in the observation operator, please check it."%(selfA._name,))
+            raise ValueError("The %s a posteriori covariance matrix A has at least one negative value %.2e on its diagonal. There is an error in the observation operator or in the covariances, please check them."%(selfA._name,min(numpy.diag(A))))
         if logging.getLogger().level < logging.WARNING: # La vérification n'a lieu qu'en debug
             try:
                 numpy.linalg.cholesky( A )
@@ -160,9 +160,9 @@ def ecwexblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["OMB"].store( Innovation )
     if selfA._toStore("SigmaObs2"):
         TraceR = R.trace(Y.size)
-        selfA.StoredVariables["SigmaObs2"].store( float( Innovation.T @ oma ) / TraceR )
+        selfA.StoredVariables["SigmaObs2"].store( vfloat( Innovation.T @ oma ) / TraceR )
     if selfA._toStore("SigmaBck2"):
-        selfA.StoredVariables["SigmaBck2"].store( float( (Innovation.T @ (Hm @ (numpy.ravel(Xa) - numpy.ravel(Xb))))/(Hm * (B * Hm.T)).trace() ) )
+        selfA.StoredVariables["SigmaBck2"].store( vfloat( (Innovation.T @ (Hm @ (numpy.ravel(Xa) - numpy.ravel(Xb))))/(Hm * (B * Hm.T)).trace() ) )
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*J/Innovation.size ) )
     if selfA._toStore("SimulationQuantiles"):

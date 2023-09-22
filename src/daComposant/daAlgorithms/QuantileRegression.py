@@ -32,7 +32,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "Quantile",
             default  = 0.5,
             typecast = float,
-            message  = "Quantile pour la regression de quantile",
+            message  = "Quantile pour la régression de quantile",
             minval   = 0.,
             maxval   = 1.,
             )

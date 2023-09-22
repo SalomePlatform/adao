@@ -14,8 +14,8 @@ Minimizer
   "COBYLA" (minimisation, avec ou sans contraintes, par approximation linéaire, voir [Powell94]_ [Powell98]_).
   "NEWUOA" (minimisation, avec ou sans contraintes, par approximation quadratique itérative, voir [Powell04]_),
   "POWELL" (minimisation, sans contraintes, de type directions conjuguées, voir [Powell64]_),
-  "SIMPLEX" (minimisation, avec ou sans contraintes, de type simplexe ou Nelder-Mead, voir [Nelder65]_),
-  "SUBPLEX" (minimisation, avec ou sans contraintes, de type simplexe sur une suite de sous-espaces, voir [Rowan90]_).
+  "SIMPLEX" (minimisation, avec ou sans contraintes, de type Nelder-Mead utilisant le concept de simplexe, voir [Nelder65]_ et [WikipediaNM]_),
+  "SUBPLEX" (minimisation, avec ou sans contraintes, de type Nelder-Mead utilisant le concept de simplexe sur une suite de sous-espaces, voir [Rowan90]_).
   Seul le minimiseur "POWELL" ne permet pas de traiter les contraintes de
   bornes, tous les autres en tiennent compte si elles sont présentes dans la
   définition du cas.

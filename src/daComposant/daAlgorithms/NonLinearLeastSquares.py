@@ -49,9 +49,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "LBFGSB",
                 "TNC",
                 "CG",
-                "NCG",
                 "BFGS",
                 "LM",
+                ],
+            listadv  = [
+                "NCG",
                 ],
             )
         self.defineRequiredParameter(

@@ -20,15 +20,22 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import numpy, logging
+import numpy, logging, copy
 from daCore import BasicObjects, NumericObjects, PlatformInfo
+from daCore.PlatformInfo import PlatformInfo, vfloat
 from daAlgorithms.Atoms import eosg
-mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
+mfp = PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "SAMPLINGTEST")
+        self.defineRequiredParameter(
+            name     = "EnsembleOfSnapshots",
+            default  = [],
+            typecast = numpy.array,
+            message  = "Ensemble de vecteurs d'état physique (snapshots), 1 état par colonne",
+            )
         self.defineRequiredParameter(
             name     = "SampleAsnUplet",
             default  = [],
@@ -100,7 +107,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Graine fixée pour le générateur aléatoire",
             )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R", "B"),
+            mandatory= ("Xb", "Y", "R", "B"),
+            optional = ("HO"),
             )
         self.setAttributes(tags=(
             "Checking",
@@ -129,22 +137,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","AugmentedPonderatedLeastSquares","APLS","DA"]:
                     if BI is None or RI is None:
                         raise ValueError("Background and Observation error covariance matrix has to be properly defined!")
-                    Jb  = float( 0.5 *  (_X - Xb).T * (BI * (_X - Xb))  )
-                    Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
+                    Jb  = vfloat( 0.5 *  (_X - Xb).T * (BI * (_X - Xb))  )
+                    Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
                 elif QualityMeasure in ["WeightedLeastSquares","WLS","PonderatedLeastSquares","PLS"]:
                     if RI is None:
                         raise ValueError("Observation error covariance matrix has to be properly defined!")
                     Jb  = 0.
-                    Jo  = float( 0.5 * _Innovation.T * (RI * _Innovation) )
+                    Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
                 elif QualityMeasure in ["LeastSquares","LS","L2"]:
                     Jb  = 0.
-                    Jo  = float( 0.5 * _Innovation.T @ _Innovation )
+                    Jo  = vfloat( 0.5 * _Innovation.T @ _Innovation )
                 elif QualityMeasure in ["AbsoluteValue","L1"]:
                     Jb  = 0.
-                    Jo  = float( numpy.sum( numpy.abs(_Innovation), dtype=mfp ) )
+                    Jo  = vfloat( numpy.sum( numpy.abs(_Innovation), dtype=mfp ) )
                 elif QualityMeasure in ["MaximumError","ME", "Linf"]:
                     Jb  = 0.
-                    Jo  = numpy.max( numpy.abs(_Innovation) )
+                    Jo  = vfloat(numpy.max( numpy.abs(_Innovation) ))
                 #
                 J   = Jb + Jo
             if self._toStore("Innovation"):
@@ -161,7 +169,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             return J, Jb, Jo
         #
         # ----------
-        EOX, EOS = eosg.eosg(self, Xb, HO, True, False)
+        if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+            sampleList = NumericObjects.BuildComplexSampleList(
+                self._parameters["SampleAsnUplet"],
+                self._parameters["SampleAsExplicitHyperCube"],
+                self._parameters["SampleAsMinMaxStepHyperCube"],
+                self._parameters["SampleAsIndependantRandomVariables"],
+                Xb,
+                )
+            EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
+            EOS = self._parameters["EnsembleOfSnapshots"]
+            #
+            if self._toStore("EnsembleOfStates"):
+                self.StoredVariables["EnsembleOfStates"].store( EOX )
+            if self._toStore("EnsembleOfSimulations"):
+                self.StoredVariables["EnsembleOfSimulations"].store( EOS )
+        else:
+            EOX, EOS = eosg.eosg(self, Xb, HO, True, False)
         #
         for i in range(EOS.shape[1]):
             J, Jb, Jo = CostFunction( EOX[:,i], EOS[:,i],  self._parameters["QualityCriterion"])
