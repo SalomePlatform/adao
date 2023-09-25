@@ -72,14 +72,14 @@ class AdaoCase:
         rtn = ""
         if (self.filename == "" or self.filename == "not yet defined"):
             return "You need to save your case before exporting it."
-
+        #
         self.yacs_filename = self.filename[:self.filename.rfind(".")] + '.xml'
         yacs_filename_backup = self.filename[:self.filename.rfind(".")] + '.xml.back'
         if os.path.exists(self.yacs_filename):
             if os.path.exists(yacs_filename_backup):
                 os.unlink(yacs_filename_backup)
             os.rename(self.yacs_filename, yacs_filename_backup)
-
+        #
         self.eficas_editor.modified = True
         self.eficas_editor.saveFile()
         filename = self.filename[:self.filename.rfind(".")] + '.py'
@@ -92,15 +92,27 @@ class AdaoCase:
             msg += "generation. Is your case correct? Try to close and re-open the\n"
             msg += "case with the ADAO/EFICAS editor."
             return msg
-
-        if "ADAO_ENGINE_ROOT_DIR" not in os.environ:
-            return "Please add ADAO_ENGINE_ROOT_DIR to your environment."
-
-        adao_path = os.environ["ADAO_ENGINE_ROOT_DIR"]
-        adao_exe = adao_path + "/bin/AdaoYacsSchemaCreator.py"
-        args = ["python", adao_exe, filename, self.yacs_filename]
-        p = subprocess.Popen(args)
-        (stdoutdata, stderrdata) = p.communicate()
+        #
+        # if "ADAO_ENGINE_ROOT_DIR" not in os.environ:
+            # return "Please add ADAO_ENGINE_ROOT_DIR to your environment."
+        #
+        # adao_path = os.environ["ADAO_ENGINE_ROOT_DIR"]
+        # adao_exe = adao_path + "/bin/AdaoYacsSchemaCreator.py"
+        # args = ["python", adao_exe, filename, self.yacs_filename]
+        # p = subprocess.Popen(args)
+        # (stdoutdata, stderrdata) = p.communicate()
+        #
+        # Usage direct du python interne
+        try:
+            # import adao
+            from daYacsSchemaCreator import run
+        except ImportError as e:
+            logging.fatal("\n  Import of YACS schema creator module failed, the error message is:\n" +
+                          "\n  %s\n"%(e,) +
+                          "\n  Add its installation directory in your PYTHONPATH.\n")
+            sys.exit(1)
+        run.create_schema_from_file(filename, self.yacs_filename)
+        #
         if not os.path.exists(self.yacs_filename):
             msg  = "An error occurred during the execution of the ADAO YACS\n"
             msg += "Schema Creator. If SALOME GUI is launched by command\n"
