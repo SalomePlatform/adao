@@ -58,8 +58,8 @@ un jeu de paramètres donné :math:`\mathbf{x}`, ou d'une observation explicite
 du (ou des) champ(s) complet(s) :math:`\mathbf{y}`.
 
 Pour établir la position optimale de mesures, on utilise une méthode de type
-Empirical Interpolation Method (EIM [Barrault04]_), avec (variant "*lcEIM*") ou
-sans contraintes (variant "*EIM*") de positionnement.
+Empirical Interpolation Method (EIM [Barrault04]_), avec contraintes (variant
+"*lcEIM*") ou sans contraintes (variant "*EIM*") de positionnement.
 
 Il y a deux manières d'utiliser cet algorithme:
 
@@ -176,6 +176,29 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask_examples:
 
+.. include:: snippets/Header2Algo09.rst
+
+.. --------- ..
+.. include:: scripts/simple_MeasurementsOptimalPositioningTask1.rst
+
+.. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask1.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask1.res
+    :language: none
+
+.. --------- ..
+.. include:: scripts/simple_MeasurementsOptimalPositioningTask2.rst
+
+.. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask2.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask2.res
+    :language: none
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`

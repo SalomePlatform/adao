@@ -115,7 +115,7 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         # Détermination du point et de la fonction magiques
         __abs_residuM = numpy.abs(__residuM)
         __iM   = numpy.argmax(__abs_residuM)
-        __rhoM = __residuM / __abs_residuM[__iM]
+        __rhoM = __residuM / __residuM[__iM]
         #
         if __LcCsts and __iM in __ExcludedMagicPoints:
             __sIndices = numpy.argsort(__abs_residuM)

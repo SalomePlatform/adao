@@ -61,6 +61,11 @@ Utilisations d'algorithmes de vérification
 #. :ref:`Exemples de vérification avec "ObservationSimulationComparisonTest"<section_ref_algorithm_ObservationSimulationComparisonTest_examples>`
 #. :ref:`Exemples de vérification avec "ParallelFunctionTest"<section_ref_algorithm_ParallelFunctionTest_examples>`
 
+Utilisations d'algorithmes orientés tâches ou études dédiées
+------------------------------------------------------------
+
+#. :ref:`Exemples de vérification avec "MeasurementsOptimalPositioningTask"<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
+
 Utilisations avancées
 ---------------------
 

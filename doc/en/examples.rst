@@ -60,6 +60,11 @@ Checking algorithms uses
 #. :ref:`Examples with the "ObservationSimulationComparisonTest" check<section_ref_algorithm_ObservationSimulationComparisonTest_examples>`
 #. :ref:`Examples with the "ParallelFunctionTest" check<section_ref_algorithm_ParallelFunctionTest_examples>`
 
+Dedicated tasks or study oriented cases uses
+--------------------------------------------
+
+#. :ref:`Examples with the "MeasurementsOptimalPositioningTask" case<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
+
 Advanced uses
 -------------
 
