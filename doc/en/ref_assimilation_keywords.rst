@@ -26,30 +26,24 @@
 List of commands and keywords for data assimilation or optimisation case
 ------------------------------------------------------------------------
 
-We summarize here all the commands available to describe a calculation case by
-avoiding the particularities of each algorithm. It is therefore a common
-inventory of commands.
+We summarize here all the commands and keywords available to describe a
+calculation case, by avoiding the particularities of each algorithm. It is
+therefore a common inventory of commands.
 
 The set of commands for an data assimilation or optimisation case is related to
 the description of a calculation case, that is a *Data Assimilation* procedure
-or an *Optimization* procedure.
+(chosen  in graphical user interface by the command "*ASSIMILATION_STUDY*"), a
+*Reduction Method* procedure (chosen  in graphical user interface by the
+command "*REDUCTION_STUDY*") or an *Optimization* procedure (chosen  in
+graphical user interface by the command "*OPTIMIZATION_STUDY*").
 
-The first term describes the choice between calculation or checking. In the
-graphical interface, each of the three types of calculation, individually more
-oriented to *data assimilation*, *optimization methods* or *methods with
-reduction* (some algorithms are simultaneously in various categories), is
-imperatively indicated by one of these commands:
-
-.. include:: snippets/ASSIMILATION_STUDY.rst
-
-.. include:: snippets/OPTIMIZATION_STUDY.rst
-
-.. include:: snippets/REDUCTION_STUDY.rst
-
-The nested terms are sorted in alphabetical order. They are not necessarily
-required for all algorithms. The various commands are the following:
+All the possible terms, nested or not, are listed by alphabetical order. They
+are not required for all the algorithms. The commands or keywords available are
+the following
 
 .. include:: snippets/AlgorithmParameters.rst
+
+.. include:: snippets/ASSIMILATION_STUDY.rst
 
 .. include:: snippets/Background.rst
 
@@ -75,7 +69,11 @@ required for all algorithms. The various commands are the following:
 
 .. include:: snippets/Observers.rst
 
+.. include:: snippets/OPTIMIZATION_STUDY.rst
+
 .. include:: snippets/OutputVariables.rst
+
+.. include:: snippets/REDUCTION_STUDY.rst
 
 .. include:: snippets/StudyName.rst
 

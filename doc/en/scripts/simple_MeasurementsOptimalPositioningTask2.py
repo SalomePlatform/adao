@@ -33,8 +33,8 @@ case.execute()
 print("- ADAO calculation performed")
 print()
 #
-print("Optimal positioning of measures")
-print("-------------------------------")
+print("Display the optimal positioning of measures")
+print("-------------------------------------------")
 op = case.get("OptimalPoints")[-1]
 print("- Number of optimal measurement positions..............: %i"%op.size)
 print("- Optimal measurement positions, numbered by default...: %s"%op)
@@ -50,8 +50,8 @@ rs = case.get("Residus")[-1]
 print("- Ordered residuals of reconstruction error\n ",rs)
 print()
 a0, a1 = 7, -2.5
-print("- Elementary example of second field reconstruction")
-print("  as a linear combination of the two base vectors,")
-print("  with the respective coefficients %.1f and %.1f:"%(a0,a1))
+print("- Elementary example of second field reconstruction as a linear")
+print("  combination of the two base vectors, that can be guessed to be")
+print("  multiplied with the respective coefficients %.1f and %.1f:"%(a0,a1))
 print( a0*rb[:,0] + a1*rb[:,1])
 print()

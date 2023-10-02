@@ -15,8 +15,8 @@ Search for optimal measurement positions
 -------------------------------------------
 - ADAO calculation performed
 
-Optimal positioning of measures
--------------------------------
+Display the optimal positioning of measures
+-------------------------------------------
 - Number of optimal measurement positions..............: 2
 - Optimal measurement positions, numbered by default...: [6 0]
 
@@ -35,9 +35,9 @@ Reduced representation and error information
 - Ordered residuals of reconstruction error
   [2.43926218e+01 4.76969601e+00 2.51214793e-15]
 
-- Elementary example of second field reconstruction
-  as a linear combination of the two base vectors,
-  with the respective coefficients 7.0 and -2.5:
+- Elementary example of second field reconstruction as a linear
+  combination of the two base vectors, that can be guessed to be
+  multiplied with the respective coefficients 7.0 and -2.5:
 [[1.]
  [2.]
  [3.]

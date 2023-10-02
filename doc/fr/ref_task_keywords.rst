@@ -26,18 +26,23 @@
 Liste des commandes et mots-clés pour un cas orienté tâche ou étude dédiée
 --------------------------------------------------------------------------
 
-Ce jeu de commandes est lié à la description d'un cas orienté tâche ou étude
-dédiée, qui consiste en une procédure spécifique simple pour effectuer une
-tâche de calcul dédiée à une application générale des méthodes d'assimilation
-de données ou d'optimisation.
+On résume ici l’ensemble des commandes et des mots-clés disponibles pour
+décrire un cas orienté tâche ou étude dédiée en évitant les particularités de
+chaque algorithme. C’est donc un inventaire commun des commandes.
 
-Les termes imbriqués sont classés par ordre alphabétique. Ils ne sont pas
-obligatoirement requis pour tous les algorithmes. Les différentes commandes
-sont les suivantes:
+Tous les termes possibles, imbriqués ou non, sont classés par ordre
+alphabétique. Ils ne sont pas obligatoirement requis pour tous les algorithmes.
+Les commandes ou mots-clés disponibles sont les suivants:
 
 .. include:: snippets/AlgorithmParameters.rst
 
+.. include:: snippets/Background.rst
+
 .. include:: snippets/Debug.rst
+
+.. include:: snippets/Observation.rst
+
+.. include:: snippets/ObservationOperator.rst
 
 .. include:: snippets/Observers.rst
 

@@ -29,8 +29,8 @@ case.execute()
 print("- Calcul ADAO effectué")
 print()
 #
-print("Positions optimales de mesure")
-print("-----------------------------")
+print("Affichage des positions optimales de mesure")
+print("-------------------------------------------")
 op = case.get("OptimalPoints")[-1]
 print("- Nombre de positions optimales de mesure..............: %i"%op.size)
 print("- Positions optimales de mesure, numérotées par défaut.: %s"%op)

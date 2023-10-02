@@ -57,6 +57,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
                 "Analysis",
+                "ReducedCoordinates",
                 ]
             )
         self.requireInputArguments(

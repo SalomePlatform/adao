@@ -29,6 +29,8 @@
 .. index:: single: Ensemble de snapshots
 .. index:: single: Simulations (Ensemble)
 .. index:: single: Snapshots (Ensemble)
+.. index:: single: Reduced Order Model
+.. index:: single: ROM
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask:
 
 Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
@@ -36,11 +38,6 @@ Algorithme de tâche "*MeasurementsOptimalPositioningTask*"
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo00.rst
-
-.. warning::
-
-  Cet algorithme n'est utilisable qu'en interface textuelle (TUI) et pas en
-  interface graphique (GUI).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
@@ -58,8 +55,9 @@ un jeu de paramètres donné :math:`\mathbf{x}`, ou d'une observation explicite
 du (ou des) champ(s) complet(s) :math:`\mathbf{y}`.
 
 Pour établir la position optimale de mesures, on utilise une méthode de type
-Empirical Interpolation Method (EIM [Barrault04]_), avec contraintes (variant
-"*lcEIM*") ou sans contraintes (variant "*EIM*") de positionnement.
+Empirical Interpolation Method (EIM [Barrault04]_), qui établit un modèle
+réduit de type Reduced Order Model (ROM), avec contraintes (variant "*lcEIM*")
+ou sans contraintes (variant "*EIM*") de positionnement.
 
 Il y a deux manières d'utiliser cet algorithme:
 

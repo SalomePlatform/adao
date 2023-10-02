@@ -15,8 +15,8 @@ Recherche des positions optimales de mesure
 -------------------------------------------
 - Calcul ADAO effectué
 
-Positions optimales de mesure
------------------------------
+Affichage des positions optimales de mesure
+-------------------------------------------
 - Nombre de positions optimales de mesure..............: 2
 - Positions optimales de mesure, numérotées par défaut.: [6 0]
 

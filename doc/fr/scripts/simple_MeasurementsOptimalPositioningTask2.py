@@ -33,8 +33,8 @@ case.execute()
 print("- Calcul ADAO effectué")
 print()
 #
-print("Positions optimales de mesure")
-print("-----------------------------")
+print("Affichage des positions optimales de mesure")
+print("-------------------------------------------")
 op = case.get("OptimalPoints")[-1]
 print("- Nombre de positions optimales de mesure..............: %i"%op.size)
 print("- Positions optimales de mesure, numérotées par défaut.: %s"%op)
@@ -50,8 +50,8 @@ rs = case.get("Residus")[-1]
 print("- Résidus ordonnés d'erreur de reconstruction\n ",rs)
 print()
 a0, a1 = 7, -2.5
-print("- Exemple élémentaire de reconstruction du second champ")
-print("  comme combinaison linéaire des deux vecteurs de base,")
-print("  avec les coefficients respectifs %.1f et %.1f :"%(a0,a1))
+print("- Exemple élémentaire de reconstruction du second champ comme une")
+print("  combinaison linéaire des deux vecteurs de base, qui peuvent être")
+print("  multipliés par les coefficients respectifs %.1f et %.1f :"%(a0,a1))
 print( a0*rb[:,0] + a1*rb[:,1])
 print()

@@ -35,11 +35,6 @@ Task algorithm "*EnsembleOfSimulationGenerationTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo00.rst
 
-.. warning::
-
-  This algorithm is only available in textual user interface (TUI) and not in
-  graphical user interface (GUI).
-
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 

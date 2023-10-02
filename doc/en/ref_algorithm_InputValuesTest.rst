@@ -28,9 +28,6 @@ Checking algorithm "*InputValuesTest*"
 --------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm verifies the content of the current input variables and the way

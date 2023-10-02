@@ -23,19 +23,20 @@
 
 .. index:: single: InterpolationByReducedModelTask
 .. index:: single: Measurements interpolation
+.. index:: single: Field reconstruction
 .. index:: single: Snapshots (Ensemble)
+.. index:: single: Reduced Order Model
+.. index:: single: ROM
 .. _section_ref_algorithm_InterpolationByReducedModelTask:
 
 Task algorithm "*InterpolationByReducedModelTask*"
 --------------------------------------------------
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo99.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo00.rst
-
-.. warning::
-
-  This algorithm is only available in textual user interface (TUI) and not in
-  graphical user interface (GUI).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
@@ -43,11 +44,12 @@ Task algorithm "*InterpolationByReducedModelTask*"
 This algorithm enables highly efficient interpolation of physical measurements
 using a reduced representation of the model for that physics. The output, for
 each set of measurements supplied at the required positions, is a complete
-field :math:`\mathbf{y}` by interpolation.
+field :math:`\mathbf{y}` by interpolation. Put another way, it's a physical
+field reconstruction using measurements and a reduced numerical model.
 
 To interpolate these measurements, a method of Empirical Interpolation Method
-(EIM [Barrault04]_) type is used, which establishes a reduced model, with or
-without measurement positioning constraints.
+(EIM [Barrault04]_) type is used, which uses a reduced model of type Reduced
+Order Model (ROM), with or without measurement positioning constraints.
 
 To use this algorithm, you need the optimally positioned measurements and the
 associated reduced basis for model representation. This can be achieved as
@@ -92,6 +94,7 @@ StoreSupplementaryCalculations
   sub-section "*Information and variables available at the end of the
   algorithm*"): [
   "Analysis",
+  "ReducedCoordinates",
   ].
 
   Example :
@@ -107,9 +110,24 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/Analysis.rst
 
+.. include:: snippets/ReducedCoordinates.rst
+
 .. ------------------------------------ ..
 .. _section_ref_algorithm_InterpolationByReducedModelTask_examples:
 
+.. include:: snippets/Header2Algo09.rst
+
+.. --------- ..
+.. include:: scripts/simple_InterpolationByReducedModelTask1.rst
+
+.. literalinclude:: scripts/simple_InterpolationByReducedModelTask1.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_InterpolationByReducedModelTask1.res
+    :language: none
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`

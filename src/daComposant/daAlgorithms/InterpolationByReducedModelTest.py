@@ -21,7 +21,9 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy, math
-from daCore import BasicObjects
+from daCore import BasicObjects, PlatformInfo
+mpr = PlatformInfo.PlatformInfo().MachinePrecision()
+mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
 from daCore.PlatformInfo import vfloat
 from daAlgorithms.Atoms import ecweim, eosg
 
@@ -29,7 +31,7 @@ from daAlgorithms.Atoms import ecweim, eosg
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         #
-        BasicObjects.Algorithm.__init__(self, "INTERPOLATIONBYREDUCEDMODEL")
+        BasicObjects.Algorithm.__init__(self, "INTERPOLATIONBYREDUCEDMODELTEST")
         self.defineRequiredParameter(
             name     = "ReducedBasis",
             default  = [],
@@ -100,6 +102,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         __s = self._parameters["ShowElementarySummary"]
         __p = self._parameters["NumberOfPrintedDigits"]
+        __r = __nsn
         #
         __marge = 5*u" "
         __flech = 3*"="+"> "
@@ -141,6 +144,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += (__flech + "Interpolation error test for all given states:\n")
         msgs += (__marge + "----------------------------------------------\n")
         msgs += ("\n")
+        Es = []
         for ns in range(__nsn):
             __rm = __eos[__ip,ns]
             __im = ecweim.EIM_online(self, __rb, __eos[__ip,ns], __ip)
@@ -149,8 +153,29 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 __ecart = vfloat(numpy.linalg.norm( __eos[:,ns] - __im ) / numpy.linalg.norm( __eos[:,ns] ))
             else:
                 __ecart = vfloat(numpy.linalg.norm( __eos[:,ns] - __im, ord=numpy.inf ) / numpy.linalg.norm( __eos[:,ns], ord=numpy.inf ))
+            Es.append( __ecart )
             if __s:
                 msgs += (__marge + "Normalized interpolation error (%s) for state number %0"+str(__ordre)+"i..: %."+str(__p)+"e\n")%(self._parameters["ErrorNorm"],ns,__ecart)
+        msgs += ("\n")
+        msgs += (__marge + "%s\n"%("-"*75,))
+        #
+        if __r > 1:
+            msgs += ("\n")
+            msgs += (__flech + "Launching statistical summary calculation for %i states\n"%__r)
+            msgs += ("\n")
+            msgs += (__marge + "Statistical analysis of the errors Es obtained over the collection of states\n")
+            msgs += (__marge + "(Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
+            msgs += ("\n")
+            Yy = numpy.array( Es )
+            msgs += (__marge + "Number of evaluations...........................: %i\n")%len( Es )
+            msgs += ("\n")
+            msgs += (__marge + "Characteristics of the whole set of error outputs Es:\n")
+            msgs += (__marge + "  Minimum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.min(  Yy )
+            msgs += (__marge + "  Maximum value of the whole set of outputs.....: %."+str(__p)+"e\n")%numpy.max(  Yy )
+            msgs += (__marge + "  Mean of vector of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.mean( Yy, dtype=mfp )
+            msgs += (__marge + "  Standard error of the whole set of outputs....: %."+str(__p)+"e\n")%numpy.std(  Yy, dtype=mfp )
+            msgs += ("\n")
+            msgs += (__marge + "%s\n"%("-"*75,))
         #
         msgs += ("\n")
         msgs += (__marge + "End of the \"%s\" verification\n\n"%self._name)

@@ -64,7 +64,8 @@ Utilisations d'algorithmes de vérification
 Utilisations d'algorithmes orientés tâches ou études dédiées
 ------------------------------------------------------------
 
-#. :ref:`Exemples de vérification avec "MeasurementsOptimalPositioningTask"<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
+#. :ref:`Exemples d'étude avec "InterpolationByReducedModelTask"<section_ref_algorithm_InterpolationByReducedModelTask_examples>`
+#. :ref:`Exemples d'étude avec "MeasurementsOptimalPositioningTask"<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
 
 Utilisations avancées
 ---------------------

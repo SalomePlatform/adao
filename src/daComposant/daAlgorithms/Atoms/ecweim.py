@@ -208,6 +208,8 @@ def EIM_online(selfA, QEIM, gJmu = None, mPoints = None, mu = None, PseudoInvers
     logging.debug("%s The full field of size %i has been correctly build"%(selfA._name,__gMmu.size))
     if hasattr(selfA, "StoredVariables"):
         selfA.StoredVariables["Analysis"].store( __gMmu )
+        if selfA._toStore("ReducedCoordinates"):
+            selfA.StoredVariables["ReducedCoordinates"].store( __gammaMu )
     #
     return __gMmu
 

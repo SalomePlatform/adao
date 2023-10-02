@@ -26,24 +26,25 @@
 Liste des commandes et mots-clés pour un cas de vérification
 ------------------------------------------------------------
 
-Ce jeu de commandes est lié à la description d'un cas de vérification, qui est
-une procédure pour vérifier les propriétés d'une information requise, utilisée
-ailleurs par un cas de calcul.
+On résume ici l’ensemble des commandes et des mots-clés disponibles pour
+décrire un cas de vérification en évitant les particularités de chaque
+algorithme. C’est donc un inventaire commun des commandes.
 
-Le premier terme décrit le choix entre un calcul ou une vérification. Dans
-l'interface graphique, le choix est désigné obligatoirement par la commande:
+Un terme particulier désigne le choix explicite d'une vérification. Dans
+l'interface graphique, ce choix se fait par la commande obligatoire
+"*CHECKING_STUDY*".
 
-.. include:: snippets/CHECKING_STUDY.rst
-
-Les termes imbriqués sont classés par ordre alphabétique. Ils ne sont pas
-obligatoirement requis pour tous les algorithmes. Les différentes commandes
-sont les suivantes:
+Tous les termes possibles, imbriqués ou non, sont classés par ordre
+alphabétique. Ils ne sont pas obligatoirement requis pour tous les algorithmes.
+Les commandes ou mots-clés disponibles sont les suivants:
 
 .. include:: snippets/AlgorithmParameters.rst
 
+.. include:: snippets/BackgroundError.rst
+
 .. include:: snippets/CheckingPoint.rst
 
-.. include:: snippets/BackgroundError.rst
+.. include:: snippets/CHECKING_STUDY.rst
 
 .. include:: snippets/Debug.rst
 

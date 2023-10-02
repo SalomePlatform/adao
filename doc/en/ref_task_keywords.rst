@@ -26,17 +26,23 @@
 List of commands and keywords for a dedicated task or study oriented case
 -------------------------------------------------------------------------
 
-This set of commands is related to the description of a dedicated task or study
-oriented case, which consists of a simple specific procedure to perform a
-computational task dedicated to a general application of data assimilation or
-optimization methods.
+We summarize here all the commands and keywords available to describe a
+dedicated task or study oriented case by avoiding the particularities of each
+algorithm. It is therefore a common inventory of commands.
 
-The nested terms are sorted in alphabetical order. They are not necessarily
-required for all algorithms. The various commands are the following:
+All the possible terms, nested or not, are listed by alphabetical order. They
+are not required for all the algorithms. The commands or keywords available are
+the following
 
 .. include:: snippets/AlgorithmParameters.rst
 
+.. include:: snippets/Background.rst
+
 .. include:: snippets/Debug.rst
+
+.. include:: snippets/Observation.rst
+
+.. include:: snippets/ObservationOperator.rst
 
 .. include:: snippets/Observers.rst
 

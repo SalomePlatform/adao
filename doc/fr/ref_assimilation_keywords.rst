@@ -26,31 +26,24 @@
 Liste des commandes et mots-clés pour un cas d'assimilation de données ou d'optimisation
 ----------------------------------------------------------------------------------------
 
-On résume ici l'ensemble des commandes disponibles pour décrire un cas de
-calcul en évitant les particularités de chaque algorithme. C'est donc un
-inventaire commun des commandes.
+On résume ici l’ensemble des commandes et des mots-clés disponibles pour
+décrire un cas de calcul en évitant les particularités de chaque algorithme.
+C’est donc un inventaire commun des commandes.
 
 Le jeu de commandes pour un cas d'assimilation de données ou d'optimisation est
 lié à la description d'un cas de calcul, qui est une procédure en *Assimilation
-de Données*, en *Méthodes avec Réduction* ou en méthodes *Optimisation*.
+de Données* (désignée en interface graphique par la commande
+"*ASSIMILATION_STUDY*"), en *Méthodes avec Réduction* (désignée en interface
+graphique par la commande "*REDUCTION_STUDY*") ou en méthodes *Optimisation*
+(désignée en interface graphique par la commande "*OPTIMIZATION_STUDY*").
 
-Le premier terme décrit le choix entre un calcul ou une vérification. Dans
-l'interface graphique, chacun des trois types de calculs, individuellement
-plutôt orientés soit *assimilation de données*, soit "méthodes d'optimisation*,
-"soit *méthodes avec réduction* (sachant que certains sont simultanément dans
-plusieurs catégories), est impérativement désigné par l'une ces commandes:
-
-.. include:: snippets/ASSIMILATION_STUDY.rst
-
-.. include:: snippets/OPTIMIZATION_STUDY.rst
-
-.. include:: snippets/REDUCTION_STUDY.rst
-
-Les termes imbriqués sont classés par ordre alphabétique. Ils ne sont pas
-obligatoirement requis pour tous les algorithmes. Les différentes commandes
-sont les suivantes:
+Tous les termes possibles, imbriqués ou non, sont classés par ordre
+alphabétique. Ils ne sont pas obligatoirement requis pour tous les algorithmes.
+Les commandes ou mots-clés disponibles sont les suivants:
 
 .. include:: snippets/AlgorithmParameters.rst
+
+.. include:: snippets/ASSIMILATION_STUDY.rst
 
 .. include:: snippets/Background.rst
 
@@ -76,7 +69,11 @@ sont les suivantes:
 
 .. include:: snippets/Observers.rst
 
+.. include:: snippets/OPTIMIZATION_STUDY.rst
+
 .. include:: snippets/OutputVariables.rst
+
+.. include:: snippets/REDUCTION_STUDY.rst
 
 .. include:: snippets/StudyName.rst
 

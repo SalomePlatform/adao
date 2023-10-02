@@ -726,6 +726,7 @@ class Algorithm(object):
             - MahalanobisConsistency : indicateur de consistance des covariances
             - OMA : Observation moins Analyse : Y - Xa
             - OMB : Observation moins Background : Y - Xb
+            - ReducedCoordinates : coordonnées dans la base réduite
             - Residu : dans le cas des algorithmes de vérification
             - SampledStateForQuantiles : échantillons d'états pour l'estimation des quantiles
             - SigmaBck2 : indicateur de correction optimale des erreurs d'ébauche
@@ -798,6 +799,7 @@ class Algorithm(object):
         self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
         self.StoredVariables["OptimalPoints"]                        = Persistence.OneVector(name = "OptimalPoints")
         self.StoredVariables["ReducedBasis"]                         = Persistence.OneMatrix(name = "ReducedBasis")
+        self.StoredVariables["ReducedCoordinates"]                   = Persistence.OneVector(name = "ReducedCoordinates")
         self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
         self.StoredVariables["Residus"]                              = Persistence.OneVector(name = "Residus")
         self.StoredVariables["SampledStateForQuantiles"]             = Persistence.OneMatrix(name = "SampledStateForQuantiles")

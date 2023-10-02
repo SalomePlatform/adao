@@ -1,5 +1,2 @@
-.. warning::
-
-  Dans la présente version, cet algorithme ou certaines de ses variantes sont
-  expérimentaux, et restent donc susceptibles de changements dans les
-  prochaines versions.
+Cet algorithme est réservé à une utilisation en interface textuelle (TUI), et
+donc pas en interface graphique (GUI).

@@ -28,9 +28,6 @@ Algorithme de vérification "*InputValuesTest*"
 ----------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet de vérifier le contenu des variables d'entrée courantes

@@ -29,8 +29,8 @@ case.execute()
 print("- ADAO calculation performed")
 print()
 #
-print("Optimal positioning of measures")
-print("-------------------------------")
+print("Display the optimal positioning of measures")
+print("-------------------------------------------")
 op = case.get("OptimalPoints")[-1]
 print("- Number of optimal measurement positions..............: %i"%op.size)
 print("- Optimal measurement positions, numbered by default...: %s"%op)

@@ -1,4 +1,2 @@
-.. warning::
-
-   In this particular version, this algorithm or some of its variants are
-   experimental, and therefore remain subject to change in future versions.
+This algorithm is reserved for use in the textual user interface (TUI), and
+therefore not in graphical user interface (GUI).

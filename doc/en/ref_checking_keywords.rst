@@ -26,23 +26,24 @@
 List of commands and keywords for an ADAO checking case
 -------------------------------------------------------
 
-This set of commands is related to the description of a checking case, that is a
-procedure to check required properties on information, used somewhere else by a
-calculation case.
+We summarize here all the commands and keywords available to describe a
+checking case, by avoiding the particularities of each algorithm. It is
+therefore a common inventory of commands.
 
-The first term describes the choice between calculation or checking. In the
-graphical interface, the choice is imperatively indicated by the command:
+A special term allow to choose explicitly a checking. In the graphical user
+interface, this choice is done by the command "*CHECKING_STUDY*".
 
-.. include:: snippets/CHECKING_STUDY.rst
-
-The nested terms are sorted in alphabetical order. They are not necessarily
-required for all algorithms. The various commands are the following:
+All the possible terms, nested or not, are listed by alphabetical order. They
+are not required for all the algorithms. The commands or keywords available are
+the following
 
 .. include:: snippets/AlgorithmParameters.rst
 
+.. include:: snippets/BackgroundError.rst
+
 .. include:: snippets/CheckingPoint.rst
 
-.. include:: snippets/BackgroundError.rst
+.. include:: snippets/CHECKING_STUDY.rst
 
 .. include:: snippets/Debug.rst
 

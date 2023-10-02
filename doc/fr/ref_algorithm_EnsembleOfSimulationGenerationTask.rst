@@ -35,11 +35,6 @@ Algorithme de tâche "*EnsembleOfSimulationGenerationTask*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo00.rst
 
-.. warning::
-
-  Cet algorithme n'est utilisable qu'en interface textuelle (TUI) et pas en
-  interface graphique (GUI).
-
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 

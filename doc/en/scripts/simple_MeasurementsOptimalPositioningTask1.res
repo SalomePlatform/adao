@@ -15,8 +15,8 @@ Search for optimal measurement positions
 -------------------------------------------
 - ADAO calculation performed
 
-Optimal positioning of measures
--------------------------------
+Display the optimal positioning of measures
+-------------------------------------------
 - Number of optimal measurement positions..............: 2
 - Optimal measurement positions, numbered by default...: [6 0]
 

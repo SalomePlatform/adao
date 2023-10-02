@@ -15,8 +15,8 @@ Recherche des positions optimales de mesure
 -------------------------------------------
 - Calcul ADAO effectué
 
-Positions optimales de mesure
------------------------------
+Affichage des positions optimales de mesure
+-------------------------------------------
 - Nombre de positions optimales de mesure..............: 2
 - Positions optimales de mesure, numérotées par défaut.: [6 0]
 
@@ -35,9 +35,9 @@ Représentation réduite et informations d'erreurs
 - Résidus ordonnés d'erreur de reconstruction
   [2.43926218e+01 4.76969601e+00 2.51214793e-15]
 
-- Exemple élémentaire de reconstruction du second champ
-  comme combinaison linéaire des deux vecteurs de base,
-  avec les coefficients respectifs 7.0 et -2.5 :
+- Exemple élémentaire de reconstruction du second champ comme une
+  combinaison linéaire des deux vecteurs de base, qui peuvent être
+  multipliés par les coefficients respectifs 7.0 et -2.5 :
 [[1.]
  [2.]
  [3.]

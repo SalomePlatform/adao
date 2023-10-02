@@ -1,4 +1,4 @@
-.. index:: single: MeasurementsOptimalPositioningTask (exemple)
+.. index:: single: MeasurementsOptimalPositioningTask (example)
 
 Second example
 ..............

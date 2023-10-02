@@ -29,9 +29,6 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 ---------------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization

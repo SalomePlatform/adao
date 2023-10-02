@@ -29,6 +29,8 @@
 .. index:: single: Ensemble of snapshots
 .. index:: single: Simulations (Ensemble)
 .. index:: single: Snapshots (Ensemble)
+.. index:: single: Reduced Order Model
+.. index:: single: ROM
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask:
 
 Task algorithm "*MeasurementsOptimalPositioningTask*"
@@ -36,11 +38,6 @@ Task algorithm "*MeasurementsOptimalPositioningTask*"
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo00.rst
-
-.. warning::
-
-  This algorithm is only available in textual user interface (TUI) and not in
-  graphical user interface (GUI).
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
@@ -57,8 +54,9 @@ returns the complete field(s) for a given set of parameters :math:`\mathbf{x}`,
 or of an explicit observation of the complete field(s) :math:`\mathbf{y}`.
 
 To determine the optimum positioning of measurements, an Empirical
-Interpolation Method (EIM [Barrault04]_) is used, with (variant "*lcEIM*") or
-without (variant "*EIM*") positioning constraints.
+Interpolation Method (EIM [Barrault04]_) is used, which establishes a reduced
+model of type Reduced Order Model (ROM), with (variant "*lcEIM*") or without
+(variant "*EIM*") positioning constraints.
 
 There are two ways to use this algorithm:
 
