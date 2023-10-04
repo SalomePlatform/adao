@@ -22,7 +22,7 @@
 
 import numpy
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecweim, eosg
+from daAlgorithms.Atoms import ecweim, ecwdeim, eosg
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -30,12 +30,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "MEASUREMENTSOPTIMALPOSITIONING")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "PositioningBylcEIM",
+            default  = "lcEIM",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "EIM",   "PositioningByEIM",
-                "lcEIM", "PositioningBylcEIM",
+                "EIM",    "PositioningByEIM",
+                "lcEIM",  "PositioningBylcEIM",
+                "DEIM",   "PositioningByDEIM",
+                "lcDEIM", "PositioningBylcDEIM",
                 ],
             )
         self.defineRequiredParameter(
@@ -119,6 +121,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "OptimalPoints",
                 "ReducedBasis",
                 "Residus",
+                "SingularValues",
                 ]
             )
         self.defineRequiredParameter(
@@ -156,6 +159,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 ecweim.EIM_offline(self, self._parameters["EnsembleOfSnapshots"])
             elif isinstance(HO, dict):
                 ecweim.EIM_offline(self, eosg.eosg(self, Xb, HO))
+            else:
+                raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
+        #
+        #--------------------------
+        elif self._parameters["Variant"] in ["lcDEIM", "PositioningBylcDEIM"]:
+            if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+                if self._toStore("EnsembleOfSimulations"):
+                    self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
+                ecwdeim.DEIM_offline(self, self._parameters["EnsembleOfSnapshots"])
+            elif isinstance(HO, dict):
+                ecwdeim.DEIM_offline(self, eosg.eosg(self, Xb, HO))
+            else:
+                raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
+        #
+        elif self._parameters["Variant"] in ["DEIM", "PositioningByDEIM"]:
+            if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+                if self._toStore("EnsembleOfSimulations"):
+                    self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
+                ecwdeim.DEIM_offline(self, self._parameters["EnsembleOfSnapshots"])
+            elif isinstance(HO, dict):
+                ecwdeim.DEIM_offline(self, eosg.eosg(self, Xb, HO))
             else:
                 raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
         #

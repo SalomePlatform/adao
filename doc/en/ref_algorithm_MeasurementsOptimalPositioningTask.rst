@@ -54,9 +54,12 @@ returns the complete field(s) for a given set of parameters :math:`\mathbf{x}`,
 or of an explicit observation of the complete field(s) :math:`\mathbf{y}`.
 
 To determine the optimum positioning of measurements, an Empirical
-Interpolation Method (EIM [Barrault04]_) is used, which establishes a reduced
-model of type Reduced Order Model (ROM), with (variant "*lcEIM*") or without
-(variant "*EIM*") positioning constraints.
+Interpolation Method (EIM [Barrault04]_) or Discrete Empirical Interpolation
+Method (DEIM [Chaturantabut10]_) is used, which establishes a reduced model of
+type Reduced Order Model (ROM), with (variant "*lcEIM*" or "*lcDEIM*") or
+without (variant "*EIM*" or "*DEIM*") positioning constraints. For performance,
+we recommend using the variant "*lcEIM*" or "*EIM*" when the dimension of the
+full fields space is large.
 
 There are two ways to use this algorithm:
 
@@ -88,8 +91,8 @@ it can grow quickly to be quite large.
     **General scheme for using the algorithm**
 
 It is possible to exclude a priori potential positions for measurement
-positioning, using the analysis variant "*lcEIM*" for a constrained positioning
-search.
+positioning, using the analysis variant "*lcEIM*" or "*lcDEIM*" for a
+constrained positioning search.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -142,6 +145,7 @@ StoreSupplementaryCalculations
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
+  "SingularValues",
   ].
 
   Example :
@@ -168,6 +172,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/ReducedBasis.rst
 
 .. include:: snippets/Residus.rst
+
+.. include:: snippets/SingularValues.rst
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask_examples:
@@ -205,5 +211,6 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo07.rst
 
 - [Barrault04]_
+- [Chaturantabut10]_
 - [Gong18]_
 - [Quarteroni16]_

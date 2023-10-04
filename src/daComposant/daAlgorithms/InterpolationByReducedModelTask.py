@@ -22,15 +22,11 @@
 
 import numpy
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecweim, eosg
+from daAlgorithms.Atoms import ecweim
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
-        # ModelInterpolationByROM
-        # ModelEvaluationByReducedInterpolation
-        # MeasuresInterpolationByReducedModel
-        #
         BasicObjects.Algorithm.__init__(self, "INTERPOLATIONBYREDUCEDMODEL")
         self.defineRequiredParameter(
             name     = "ReducedBasis",

@@ -6,4 +6,4 @@ Residus
   l'algorithme.
 
   Exemple :
-  ``rs = ADD.get("Residus")[:]``
+  ``rs = ADD.get("Residus")[-1]``

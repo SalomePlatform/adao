@@ -55,6 +55,8 @@ exhaustive bibliography.
 
 .. [Chakraborty08] Chakraborty U.K., *Advances in differential evolution*, Studies in computational intelligence, Vol.143, Springer, 2008
 
+.. [Chaturantabut10] Chaturantabut S., Sorensen D.C., *Nonlinear model reduction via discrete empirical interpolation*, SIMA Journal of Scientific Computing, 32(5), pp.2737-2764, 2010
+
 .. [Cohn98] Cohn S. E., Da Silva A., Guo J., Sienkiewicz M., Lamich D., *Assessing the effects of data selection with the DAO Physical-space Statistical Analysis System*, Monthly Weather Review, 126, pp.2913–2926, 1998
 
 .. [Courtier94] Courtier P., Thépaut J.-N., Hollingsworth A., *A strategy for operational implementation of 4D-Var, using an incremental approach*, Quarterly Journal of the Royal Meteorological Society, 120(519), pp.1367–1387, 1994

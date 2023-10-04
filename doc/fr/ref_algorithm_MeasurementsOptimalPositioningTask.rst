@@ -55,9 +55,13 @@ un jeu de paramètres donné :math:`\mathbf{x}`, ou d'une observation explicite
 du (ou des) champ(s) complet(s) :math:`\mathbf{y}`.
 
 Pour établir la position optimale de mesures, on utilise une méthode de type
-Empirical Interpolation Method (EIM [Barrault04]_), qui établit un modèle
-réduit de type Reduced Order Model (ROM), avec contraintes (variant "*lcEIM*")
-ou sans contraintes (variant "*EIM*") de positionnement.
+Empirical Interpolation Method (EIM [Barrault04]_) ou Discrete Empirical
+Interpolation Method (DEIM [Chaturantabut10]_), qui établit un modèle réduit de
+type Reduced Order Model (ROM), avec contraintes (variante "*lcEIM*" ou
+"*lcDEIM*") ou sans contraintes (variante "*EIM*" ou "*DEIM*") de
+positionnement. Pour la performance, il est recommandé d'utiliser la variante
+"*lcEIM*" ou "*EIM*" lorsque la dimension de l'espace des champs complets est
+grande.
 
 Il y a deux manières d'utiliser cet algorithme:
 
@@ -90,8 +94,8 @@ d'atteindre, elle peut rapidement devenir importante.
     **Schéma général d'utilisation de l'algorithme**
 
 Il est possible d'exclure a priori des positions potentielles pour le
-positionnement des mesures, en utilisant le variant "*lcEIM*" d'analyse pour
-une recherche de positionnement contraint.
+positionnement des mesures, en utilisant le variant "*lcEIM*" ou "*lcDEIM*"
+d'analyse pour une recherche de positionnement contraint.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -144,6 +148,7 @@ StoreSupplementaryCalculations
   "OptimalPoints",
   "ReducedBasis",
   "Residus",
+  "SingularValues",
   ].
 
   Exemple :
@@ -170,6 +175,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/ReducedBasis.rst
 
 .. include:: snippets/Residus.rst
+
+.. include:: snippets/SingularValues.rst
 
 .. ------------------------------------ ..
 .. _section_ref_algorithm_MeasurementsOptimalPositioningTask_examples:
@@ -207,5 +214,6 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo07.rst
 
 - [Barrault04]_
+- [Chaturantabut10]_
 - [Gong18]_
 - [Quarteroni16]_

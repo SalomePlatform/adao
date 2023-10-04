@@ -139,7 +139,6 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         #
         __restrictedEOSi = __EOS[__I,:]
         #
-        __interpolator = numpy.empty(__EOS.shape)
         if __M > 1:
             __interpolator = numpy.dot(__Q,numpy.dot(__Qi_inv,__restrictedEOSi))
         else:
@@ -152,7 +151,7 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         __residuM = __dataForNextIter[:,__muM]
     #
     #--------------------------
-    if __eM < selfA._parameters["EpsilonEIM"]:
+    if __errors[-1] < selfA._parameters["EpsilonEIM"]:
         logging.debug("%s %s (%.1e)"%(selfA._name,"The convergence is obtained when reaching the required EIM tolerance",selfA._parameters["EpsilonEIM"]))
     if __M >= __maxM:
         logging.debug("%s %s (%i)"%(selfA._name,"The convergence is obtained when reaching the maximum number of RB dimension",__maxM))

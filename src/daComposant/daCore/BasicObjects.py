@@ -736,6 +736,7 @@ class Algorithm(object):
             - SimulatedObservationAtCurrentState : l'état observé H(X) à l'état courant
             - SimulatedObservationAtOptimum : l'état observé H(Xa) à l'optimum
             - SimulationQuantiles : états observés H(X) pour les quantiles demandés
+            - SingularValues : valeurs singulières provenant d'une décomposition SVD
         On peut rajouter des variables à stocker dans l'initialisation de
         l'algorithme élémentaire qui va hériter de cette classe
         """
@@ -811,6 +812,7 @@ class Algorithm(object):
         self.StoredVariables["SimulatedObservationAtCurrentState"]   = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
         self.StoredVariables["SimulatedObservationAtOptimum"]        = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
         self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
+        self.StoredVariables["SingularValues"]                       = Persistence.OneVector(name = "SingularValues")
         #
         for k in self.StoredVariables:
             self.__canonical_stored_name[k.lower()] = k

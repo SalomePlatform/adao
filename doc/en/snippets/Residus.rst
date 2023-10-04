@@ -5,4 +5,4 @@ Residus
   of the particular residue checked during the running of the algorithm.
 
   Example :
-  ``rs = ADD.get("Residus")[:]``
+  ``rs = ADD.get("Residus")[-1]``
