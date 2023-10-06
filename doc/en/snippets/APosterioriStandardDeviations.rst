@@ -7,4 +7,4 @@ APosterioriStandardDeviations
   covariances calculation has to be requested at the same time.
 
   Example:
-  ``S = ADD.get("APosterioriStandardDeviations")[-1]``
+  ``aps = ADD.get("APosterioriStandardDeviations")[-1]``

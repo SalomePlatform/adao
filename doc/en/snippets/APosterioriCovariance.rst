@@ -5,4 +5,4 @@ APosterioriCovariance
   matrix :math:`\mathbf{A}` of the optimal state.
 
   Example:
-  ``A = ADD.get("APosterioriCovariance")[-1]``
+  ``apc = ADD.get("APosterioriCovariance")[-1]``

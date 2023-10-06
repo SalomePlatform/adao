@@ -7,4 +7,4 @@ APosterioriVariances
   temps demandé le calcul de ces covariances d'erreurs *a posteriori*.
 
   Exemple :
-  ``V = ADD.get("APosterioriVariances")[-1]``
+  ``apv = ADD.get("APosterioriVariances")[-1]``

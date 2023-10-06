@@ -5,4 +5,4 @@ APosterioriCovariance
   covariances des erreurs *a posteriori* de l'état optimal.
 
   Exemple :
-  ``A = ADD.get("APosterioriCovariance")[-1]``
+  ``apc = ADD.get("APosterioriCovariance")[-1]``

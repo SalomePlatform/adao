@@ -5,4 +5,4 @@ MahalanobisConsistency
   indicator.
 
   Example:
-  ``m = ADD.get("MahalanobisConsistency")[-1]``
+  ``mc = ADD.get("MahalanobisConsistency")[-1]``

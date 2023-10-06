@@ -7,4 +7,4 @@ APosterioriCorrelations
   temps demandé le calcul de ces covariances d'erreurs *a posteriori*.
 
   Exemple :
-  ``C = ADD.get("APosterioriCorrelations")[-1]``
+  ``apc = ADD.get("APosterioriCorrelations")[-1]``

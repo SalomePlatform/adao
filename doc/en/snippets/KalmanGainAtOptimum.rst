@@ -6,4 +6,4 @@ KalmanGainAtOptimum
   state.
 
   Example:
-  ``KG = ADD.get("KalmanGainAtOptimum")[-1]``
+  ``kg = ADD.get("KalmanGainAtOptimum")[-1]``

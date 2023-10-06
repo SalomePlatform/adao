@@ -5,4 +5,4 @@ ForecastState
   during the iterative algorithm procedure.
 
   Example:
-  ``Xp = ADD.get("ForecastState")[:]``
+  ``xf = ADD.get("ForecastState")[:]``

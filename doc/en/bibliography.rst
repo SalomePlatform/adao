@@ -129,7 +129,7 @@ exhaustive bibliography.
 
 .. [Python] *Python programming language*, http://www.python.org/
 
-.. [Quarteroni16] Quarteroni A., Manzoni A., Negri F., *Reduced Basis Methods for Partial Differential Equations - An introduction*, Springer, 2016
+.. [Quarteroni16] Quarteroni A., Manzoni A., Negri F., *Reduced Basis Methods for Partial Differential Equations - An introduction*, Unitext vol.92, Springer, 2016
 
 .. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
 

@@ -6,4 +6,4 @@ KalmanGainAtOptimum
   est effectué à l'état optimal.
 
   Exemple:
-  ``KG = ADD.get("KalmanGainAtOptimum")[-1]``
+  ``kg = ADD.get("KalmanGainAtOptimum")[-1]``

@@ -6,4 +6,4 @@ ForecastState
   déroulement itératif temporel de l'algorithme utilisé.
 
   Exemple :
-  ``Xf = ADD.get("ForecastState")[:]``
+  ``xf = ADD.get("ForecastState")[:]``

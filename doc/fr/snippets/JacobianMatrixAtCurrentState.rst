@@ -7,4 +7,4 @@ JacobianMatrixAtCurrentState
   effectué à l'état courant.
 
   Exemple:
-  ``GradH = ADD.get("JacobianMatrixAtCurrentState")[-1]``
+  ``gradh = ADD.get("JacobianMatrixAtCurrentState")[-1]``

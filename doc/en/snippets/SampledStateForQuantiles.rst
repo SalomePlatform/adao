@@ -7,4 +7,4 @@ SampledStateForQuantiles
   required for this quantile estimate.
 
   Example :
-  ``Xq = ADD.get("SampledStateForQuantiles")[:]``
+  ``xq = ADD.get("SampledStateForQuantiles")[:]``

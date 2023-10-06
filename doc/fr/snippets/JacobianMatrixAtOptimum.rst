@@ -7,4 +7,4 @@ JacobianMatrixAtOptimum
   effectué à l'état optimal.
 
   Exemple:
-  ``GradH = ADD.get("JacobianMatrixAtOptimum")[-1]``
+  ``gradh = ADD.get("JacobianMatrixAtOptimum")[-1]``

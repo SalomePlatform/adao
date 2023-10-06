@@ -6,4 +6,4 @@ CurrentIterationNumber
   d'itération par pas d'assimilation correspondant à un état observé.
 
   Exemple :
-  ``i = ADD.get("CurrentIterationNumber")[-1]``
+  ``cin = ADD.get("CurrentIterationNumber")[-1]``

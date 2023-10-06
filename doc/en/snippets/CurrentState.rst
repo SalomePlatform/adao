@@ -5,4 +5,4 @@ CurrentState
   iterative algorithm procedure.
 
   Example:
-  ``Xs = ADD.get("CurrentState")[:]``
+  ``xs = ADD.get("CurrentState")[:]``

@@ -5,4 +5,4 @@ MahalanobisConsistency
   qualité de Mahalanobis.
 
   Exemple :
-  ``m = ADD.get("MahalanobisConsistency")[-1]``
+  ``mc = ADD.get("MahalanobisConsistency")[-1]``

@@ -6,4 +6,4 @@ CurrentIterationNumber
   per assimilation step corresponding to an observed state.
 
   Example:
-  ``i = ADD.get("CurrentIterationNumber")[-1]``
+  ``cin = ADD.get("CurrentIterationNumber")[-1]``

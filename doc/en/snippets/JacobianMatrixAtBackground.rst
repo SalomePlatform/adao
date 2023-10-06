@@ -7,4 +7,4 @@ JacobianMatrixAtBackground
   at the initial state.
 
   Example:
-  ``GradH = ADD.get("JacobianMatrixAtBackground")[-1]``
+  ``gradh = ADD.get("JacobianMatrixAtBackground")[-1]``

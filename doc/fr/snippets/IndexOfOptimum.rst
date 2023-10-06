@@ -6,4 +6,4 @@ IndexOfOptimum
   n'est pas nécessairement le numéro de la dernière itération.
 
   Exemple :
-  ``i = ADD.get("IndexOfOptimum")[-1]``
+  ``ioo = ADD.get("IndexOfOptimum")[-1]``

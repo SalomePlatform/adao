@@ -6,4 +6,4 @@ CurrentOptimum
   is not necessarily the last state.
 
   Example:
-  ``Xo = ADD.get("CurrentOptimum")[:]``
+  ``xo = ADD.get("CurrentOptimum")[:]``

@@ -28,6 +28,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import numpy, scipy, logging
 import daCore.Persistence
 from daCore.NumericObjects import FindIndexesFromNames
+from daCore.PlatformInfo import vt
 
 # ==============================================================================
 def DEIM_offline(selfA, EOS = None, Verbose = False):
@@ -87,8 +88,13 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
     else:
         selfA._parameters["EpsilonEIM"] = 1.e-2
     #
-    __U, __vs, _ = scipy.linalg.svd( __EOS )
-    __rhoM = numpy.compress(__vs > selfA._parameters["EpsilonEIM"], __U, axis=1)
+    # Ne pas utiliser : scipy.linalg.svd
+    __vs = scipy.linalg.svdvals( __EOS )
+    if vt(scipy.version.version) < vt("1.1.0"):
+        __rhoM = scipy.linalg.orth( __EOS )
+        __rhoM = numpy.compress(__vs > selfA._parameters["EpsilonEIM"]*max(__vs), __rhoM, axis=1)
+    else:
+        __rhoM = scipy.linalg.orth( __EOS, selfA._parameters["EpsilonEIM"] )
     __lVs, __svdM = __rhoM.shape
     assert __lVs == __dimS, "Différence entre lVs et dim(EOS)"
     __qivs = (1. - __vs[:__svdM].cumsum()/__vs.sum())

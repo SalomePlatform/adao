@@ -5,4 +5,4 @@ CurrentState
   au cours du déroulement itératif de l'algorithme utilisé.
 
   Exemple :
-  ``Xs = ADD.get("CurrentState")[:]``
+  ``xs = ADD.get("CurrentState")[:]``

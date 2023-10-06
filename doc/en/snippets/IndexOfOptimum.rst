@@ -7,4 +7,4 @@ IndexOfOptimum
   iteration.
 
   Example:
-  ``i = ADD.get("IndexOfOptimum")[-1]``
+  ``ioo = ADD.get("IndexOfOptimum")[-1]``

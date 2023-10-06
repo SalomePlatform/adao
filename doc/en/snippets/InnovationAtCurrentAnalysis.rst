@@ -6,4 +6,4 @@ InnovationAtCurrentAnalysis
   case of a single-state assimilation.
 
   Example:
-  ``ds = ADD.get("InnovationAtCurrentAnalysis")[-1]``
+  ``da = ADD.get("InnovationAtCurrentAnalysis")[-1]``

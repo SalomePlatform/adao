@@ -369,6 +369,7 @@ An overview of reduction methods and of reduced optimization
 .. index:: single: PCA
 .. index:: single: Kahrunen-Loeve
 .. index:: single: RBM
+.. index:: single: ROM
 .. index:: single: EIM
 .. index:: single: Fourier
 .. index:: single: wavelets

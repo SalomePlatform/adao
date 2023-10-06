@@ -6,4 +6,4 @@ InnovationAtCurrentAnalysis
   l'état analysé dans le cas d'une assimilation mono-état.
 
   Exemple :
-  ``ds = ADD.get("InnovationAtCurrentAnalysis")[-1]``
+  ``da = ADD.get("InnovationAtCurrentAnalysis")[-1]``

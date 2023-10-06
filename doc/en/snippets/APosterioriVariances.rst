@@ -7,4 +7,4 @@ APosterioriVariances
   covariances calculation has to be requested at the same time.
 
   Example:
-  ``V = ADD.get("APosterioriVariances")[-1]``
+  ``apv = ADD.get("APosterioriVariances")[-1]``

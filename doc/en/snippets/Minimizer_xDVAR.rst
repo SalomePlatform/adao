@@ -4,7 +4,8 @@
     pair: Minimizer ; TNC
     pair: Minimizer ; CG
     pair: Minimizer ; BFGS
-    pair: Minimizer ; NCG
+
+..    pair: Minimizer ; NCG
 
 Minimizer
   *Predefined name*. This key allows to choose the optimization minimizer. The
@@ -13,8 +14,9 @@ Minimizer
   "TNC" (nonlinear constrained minimizer),
   "CG" (nonlinear unconstrained minimizer),
   "BFGS" (nonlinear unconstrained minimizer),
-  "NCG" (Newton CG minimizer).
   It is strongly recommended to stay with the default.
+
+..  "NCG" (Newton CG minimizer).
 
   Example :
   ``{"Minimizer":"LBFGSB"}``

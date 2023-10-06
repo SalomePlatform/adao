@@ -6,4 +6,4 @@ ForecastCovariance
   used.
 
   Example :
-  ``Pf = ADD.get("ForecastCovariance")[-1]``
+  ``pf = ADD.get("ForecastCovariance")[-1]``

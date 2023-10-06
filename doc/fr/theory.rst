@@ -392,6 +392,7 @@ Un aperçu des méthodes de réduction et de l'optimisation réduite
 .. index:: single: PCA
 .. index:: single: Kahrunen-Loeve
 .. index:: single: RBM
+.. index:: single: ROM
 .. index:: single: EIM
 .. index:: single: Fourier
 .. index:: single: ondelettes

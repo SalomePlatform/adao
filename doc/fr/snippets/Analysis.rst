@@ -6,4 +6,4 @@ Analysis
   :math:`\mathbf{x}^a` en assimilation de données.
 
   Exemple :
-  ``Xa = ADD.get("Analysis")[-1]``
+  ``xa = ADD.get("Analysis")[-1]``

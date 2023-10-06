@@ -7,4 +7,4 @@ APosterioriStandardDeviations
   temps demandé le calcul de ces covariances d'erreurs *a posteriori*.
 
   Exemple :
-  ``S = ADD.get("APosterioriStandardDeviations")[-1]``
+  ``aps = ADD.get("APosterioriStandardDeviations")[-1]``

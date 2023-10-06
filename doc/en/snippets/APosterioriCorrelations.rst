@@ -7,4 +7,4 @@ APosterioriCorrelations
   calculation has to be requested at the same time.
 
   Example:
-  ``C = ADD.get("APosterioriCorrelations")[-1]``
+  ``apc = ADD.get("APosterioriCorrelations")[-1]``

@@ -8,4 +8,4 @@ CurrentStepNumber
   algorithmes non itératifs.
 
   Exemple :
-  ``i = ADD.get("CurrentStepNumber")[-1]``
+  ``csn = ADD.get("CurrentStepNumber")[-1]``

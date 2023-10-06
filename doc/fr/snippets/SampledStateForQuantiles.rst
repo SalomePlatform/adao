@@ -7,4 +7,4 @@ SampledStateForQuantiles
   nombre d'échantillons requis pour cette estimation de quantiles.
 
   Exemple :
-  ``Xq = ADD.get("SampledStateForQuantiles")[:]``
+  ``xq = ADD.get("SampledStateForQuantiles")[:]``
