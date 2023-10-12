@@ -97,10 +97,10 @@ StoreSupplementaryCalculations
 
   *List of names*. This list indicates the names of the supplementary
   variables, that can be available during or at the end of the algorithm, if
-  they are initially required by the user. Their avalability involves,
+  they are initially required by the user. Their availability involves,
   potentially, costly calculations or memory consumptions. The default is then
   a void list, none of these variables being calculated and stored by default
-  (excepted the unconditionnal variables). The possible names are in the
+  (excepted the unconditional variables). The possible names are in the
   following list (the detailed description of each named variable is given in
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the

@@ -125,7 +125,7 @@ alors être spécifiée de manière unique par le multiplicateur :math:`m`:
 
 Le multiplicateur :math:`m` doit être un nombre réel ou entier positif (s'il
 est négatif, ce qui est impossible car une matrice de covariance est positive,
-il est convertit en nombre positif). Par exemple, une simple matrice diagonale
+il est converti en nombre positif). Par exemple, une simple matrice diagonale
 unitaire de covariances des erreurs d'ébauche :math:`\mathbf{B}` peut être
 décrite dans un fichier de script Python par :
 ::
@@ -157,12 +157,12 @@ diagonale. La matrice peut alors être définie uniquement par un vecteur
     0      & \cdots & 0        & v_{n}
     \end{pmatrix}
 
-Cela peut être réalisé soit par vecteur ou une matrice Numpy, soit par
-une liste, soit par une liste de listes de valeurs positives (dans tous les cas,
-si certaines valeurs sont négatives, elles sont converties en valeurs
-positives). Par exemple, un matrice simple diagonale unitaire des covariances
-des erreurs d'ébauche :math:`\mathbf{B}` peut être décrite dans un fichier de
-script Python par :
+Cela peut être réalisé soit par vecteur ou une matrice Numpy, soit par une
+liste, soit par une liste de listes de valeurs positives (dans tous les cas, si
+certaines valeurs sont négatives, elles sont converties en valeurs positives).
+Par exemple, une matrice simple diagonale unitaire des covariances des erreurs
+d'ébauche :math:`\mathbf{B}` peut être décrite dans un fichier de script Python
+par :
 ::
 
     BackgroundError = [1, 1 ... 1]

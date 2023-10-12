@@ -38,23 +38,22 @@ Il existe plusieurs méthodes pratiques pour fournir ces options, que ce soit en
 utilisant l'interface graphique EFICAS d'ADAO (GUI) ou l'interface textuelle
 (TUI). La méthode est déterminée de la manière suivante :
 
-#. Premièrement, en interface graphique (GUI), à l'aide du mot-clé
-   "*Parameters*" dans la commande "*AlgorithmParameters*", qui permet de
-   choisir entre "*Defaults*" (utilisation de mots-clés explicites pré-remplis
-   par les valeurs par défaut des paramètres) et "*Dict*" (utilisation d'un
+#. Soit en interface graphique (GUI), à l'aide du mot-clé "*Parameters*" dans
+   la commande "*AlgorithmParameters*", qui permet de choisir entre
+   "*Defaults*" (utilisation de mots-clés explicites pré-remplis par les
+   valeurs par défaut des paramètres) et "*Dict*" (utilisation d'un
    dictionnaire pour renseigner les mots-clés nécessaires),
-#. Puis deuxièmement ou troisièmement, en interface graphique (GUI), uniquement
-   dans le cas "*Dict*" de "*Parameters*", par le mot-clé "*FROM*" inclus qui
-   permet de choisir entre une entrée par chaîne de caractères ou une entrée par
-   fichier de script Python.
-#. Quatrièmement, en interface textuelle (TUI), à l'aide du mot-clé
-   "*Parameters*" dans la commande "*AlgorithmParameters*", de manière
-   semblable à l'interface graphique, en renseignant les mots-clés explicites
-   décrits dans la documentation de chaque algorithme.
-#. Cinquièmement, en interface textuelle (TUI), à l'aide du mot-clé
-   "*Parameters*" dans la commande "*AlgorithmParameters*", en fournissant un
-   script contenant un dictionnaire similaire aux méthodes deux et trois et
-   compatibles avec ces entrées en GUI.
+#. Soit en interface graphique (GUI), uniquement dans le cas "*Dict*" de
+   "*Parameters*", par le mot-clé "*FROM*" inclus qui permet de choisir entre une
+   entrée par chaîne de caractères ou une entrée par fichier de script Python.
+#. Soit en interface textuelle (TUI), à l'aide du mot-clé "*Parameters*" dans
+   la commande "*AlgorithmParameters*", de manière semblable à l'interface
+   graphique, en renseignant les mots-clés explicites décrits dans la
+   documentation de chaque algorithme.
+#. Soit en interface textuelle (TUI), à l'aide du mot-clé "*Parameters*" dans
+   la commande "*AlgorithmParameters*", en fournissant un script contenant un
+   dictionnaire similaire aux méthodes deux et trois et compatibles avec ces
+   entrées en GUI.
 
 Ces deux dernières options sont celles que l'on peut utiliser dans l'interface
 textuelle (TUI) de manière similaire et compatible aux deux précédentes basées
@@ -108,7 +107,7 @@ commande "*Dict*" qui apparaît, comme montré dans la figure qui suit :
   .. centered::
     **Utiliser une chaîne de caractères pour les paramètres algorithmiques**
 
-Dans le champs de saisie, il faut utiliser des guillemets simples pour une
+Dans le champ de saisie, il faut utiliser des guillemets simples pour une
 définition standard de dictionnaire, comme par exemple::
 
     '{"MaximumNumberOfIterations":25,"SetSeed":1000}'

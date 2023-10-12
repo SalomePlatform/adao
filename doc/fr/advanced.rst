@@ -52,7 +52,7 @@ modèle "type" de fichier Shell.
 Lorsqu'un fichier de commande ADAO est construit par l'interface d'édition
 graphique d'ADAO et est enregistré, s'il est nommé par exemple
 "EtudeAdao1.comm", alors un fichier compagnon nommé "EtudeAdao1.py" est
-automatiquement créé dans la même répertoire. Il est nommé ``<Fichier Python
+automatiquement créé dans le même répertoire. Il est nommé ``<Fichier Python
 ADAO>`` dans le modèle "type", et il est converti vers YACS comme un ``<Schéma
 xml YACS ADAO>`` sous la forme d'un fichier en ".xml" nommé "EtudeAdao1.xml".
 Ensuite, ce dernier peut être exécuté en mode console en utilisant l'ordre
@@ -455,7 +455,7 @@ principalement à travers les entrées sous forme de scripts, l'utilisateur peut
 fixer le niveau de logging en accord avec les besoins d'informations détaillées.
 Les différents niveaux de logging sont : "*DEBUG*", "*INFO*", "*WARNING*",
 "*ERROR*", "*CRITICAL*". Toutes les informations associées à un niveau sont
-affichées à tous les niveaux au-dessus de celui-ci (inclut). La méthode la plus
+affichées à tous les niveaux au-dessus de celui-ci (inclus). La méthode la plus
 facile consiste à changer le niveau de surveillance en utilisant les lignes
 Python suivantes :
 ::

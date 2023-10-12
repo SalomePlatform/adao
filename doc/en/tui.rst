@@ -100,7 +100,7 @@ use in the commands.
 Thereafter, the case has to be build by preparing and storing the data that
 define the study. The commands order does not matter, it is sufficient that all
 the concepts, required by the algorithm used, are present. The user can refer
-to the :ref:`section_reference` and its subparts to get details about commands
+to the :ref:`section_reference` and its sub-parts to get details about commands
 by algorithm. Here, we define successively the chosen data assimilation or
 optimization algorithm and its parameters, then the *a priori* state
 :math:`\mathbf{x}^b` (named ``Background``) and its errors covariance
@@ -139,8 +139,8 @@ operator from :math:`\mathbf{R}^3` into itself:
 
 In the most frequent case of a non-linear operator of :math:`\mathbf{R}^n` into
 :math:`\mathbf{R}^p`, it has to be previously available as a Python function,
-known in the current name space, which takes a ``numpy`` vector (or an ordered
-list) of size :math:`n` as input and which returns as output a ``numpy`` vector
+known in the current name space, which takes a Numpy vector (or an ordered
+list) of size :math:`n` as input and which returns as output a Numpy vector
 of size :math:`p`. When the non-linear operator is the only one to be defined
 by the keyword "*OneFunction*", its adjoint is directly established by
 numerical calculations and it can be parametrized by the keyword

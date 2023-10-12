@@ -8,4 +8,4 @@ identiques. Le modèle :math:`H` observe complètement le champ disponible, c'es
 un opérateur de sélection matriciel.
 
 Le champ interpolé résultant est simplement le "milieu" entre les deux champs,
-avec une confiance améliorée sur les erreurs.
+avec une confiance améliorée (i.e. une variance plus petite) sur les erreurs.

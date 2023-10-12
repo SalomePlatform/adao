@@ -68,7 +68,7 @@ fournir une fonction qui réalise complètement et uniquement l'opération
 fonctionnelle**.
 
 Cette fonction est généralement donnée comme une **fonction ou un script
-Python**, qui peuvent en particulier être exécuté comme une fonction Python
+Python**, qui peuvent en particulier être exécutée comme une fonction Python
 indépendante ou dans un noeud YACS. Cette fonction ou ce script peuvent, sans
 différences, lancer des codes externes ou utiliser des appels et des méthodes
 internes Python ou SALOME. Si l'algorithme nécessite les 3 aspects de
@@ -222,12 +222,12 @@ suivre le squelette suivant::
         ...
         return "un vecteur similaire à X"
 
-Un nouvelle fois, cette seconde définition d'opérateur permet aisément de tester
-les formes fonctionnelles avant de les utiliser dans le cas ADAO, réduisant la
-complexité de l'implémentation de l'opérateur.
+Une nouvelle fois, cette seconde définition d'opérateur permet aisément de
+tester les formes fonctionnelles avant de les utiliser dans le cas ADAO,
+réduisant la complexité de l'implémentation de l'opérateur.
 
 Pour certains algorithmes (en particulier les filtres non ensemblistes), il
-faut que les fonctions tangente et adjointe puisse renvoyer les matrices
+faut que les fonctions tangente et adjointe puissent renvoyer les matrices
 équivalentes à l'opérateur linéaire. Dans ce cas, lorsque, respectivement, les
 arguments ``dX`` ou ``Y`` valent ``None``, le script de l'utilisateur doit
 renvoyer la matrice associée. Les squelettes des fonctions "*TangentOperator*"

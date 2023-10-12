@@ -51,10 +51,10 @@ and observation operators in this algorithm in the following way, with **x**
 the state, **P** the state error covariance, *t* the discrete iterative time :
 
   .. _schema_temporel_KF:
-  .. image:: images/schema_temporel_KF.png
+  .. figure:: images/schema_temporel_KF.png
     :align: center
     :width: 100%
-  .. centered::
+
     **Timeline of steps in Kalman filter data assimilation**
 
 In this scheme, the analysis **(x,P)** is obtained by means of the
@@ -68,7 +68,7 @@ This filter can also be used to estimate (jointly or solely) parameters and not
 the state, in which case neither the time nor the evolution have any meaning.
 The iteration steps are then linked to the insertion of a new observation in
 the recursive estimation. One should consult the section
-:ref:`section_theory_dynamique` for the implementation concepts.
+:ref:`section_theory_dynamic` for the implementation concepts.
 
 In case of non-linearity of the operators, even slightly marked, it will be
 preferred a :ref:`section_ref_algorithm_ExtendedKalmanFilter`, or a
@@ -104,10 +104,10 @@ StoreSupplementaryCalculations
 
   *List of names*. This list indicates the names of the supplementary
   variables, that can be available during or at the end of the algorithm, if
-  they are initially required by the user. Their avalability involves,
+  they are initially required by the user. Their availability involves,
   potentially, costly calculations or memory consumptions. The default is then
   a void list, none of these variables being calculated and stored by default
-  (excepted the unconditionnal variables). The possible names are in the
+  (excepted the unconditional variables). The possible names are in the
   following list (the detailed description of each named variable is given in
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the

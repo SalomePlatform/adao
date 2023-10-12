@@ -70,5 +70,5 @@ l'année en cours :
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,
       http://www.salome-platform.org/
 
-La documentation du module est également entièrement couverte par la licence et
-l'obligation de citation.
+La documentation du module, y compris les figures et les exemples, est
+également entièrement couverte par la licence et l'obligation de citation.

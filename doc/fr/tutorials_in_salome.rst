@@ -52,7 +52,7 @@ le même cas, comment définir les données d'entrée à partir de sources exter
 directement insérables dans les noeuds de script de YACS, mais les fichiers
 externes peuvent utiliser d'autres langages.
 
-Ces exemples sont intentionnellement décrits de manière semblables aux
+Ces exemples sont intentionnellement décrits de manière semblable aux
 :ref:`section_tutorials_in_python` car ils sont similaires à ceux que l'on peut
 traiter dans l'interface textuelle Python (TUI). Les notations mathématiques
 utilisées ci-dessous sont expliquées dans la section :ref:`section_theory`.
@@ -332,11 +332,11 @@ Dans la pratique, cette démarche par scripts est la manière la plus facile pou
 récupérer des informations depuis des calculs en ligne ou préalables, depuis
 des fichiers statiques, depuis des bases de données ou des flux informatiques,
 chacun pouvant être dans ou hors SALOME. Cela permet aussi de modifier aisément
-des données d'entrée, par exemple à des fin de débogage ou pour des traitements
-répétitifs, et c'est la méthode la plus polyvalente pour paramétrer les données
-d'entrée. **Mais attention, la méthodologie par scripts n'est pas une procédure
-"sûre", en ce sens que des données erronées ou des erreurs dans les calculs,
-peuvent être directement introduites dans l'exécution du cas ADAO.
+des données d'entrée, par exemple à des fins de débogage ou pour des
+traitements répétitifs, et c'est la méthode la plus polyvalente pour paramétrer
+les données d'entrée. **Mais attention, la méthodologie par scripts n'est pas
+une procédure "sûre", en ce sens que des données erronées ou des erreurs dans
+les calculs, peuvent être directement introduites dans l'exécution du cas ADAO.
 L'utilisateur doit vérifier avec attention le contenu de ses scripts.**
 
 Ajout de paramètres pour contrôler l'algorithme d'assimilation de données
@@ -561,8 +561,8 @@ linéaire tangent ``"TangentOperator"`` et linéaire adjoint
 le code de simulation de référence physique, et doivent être soigneusement mis
 au point par l'utilisateur de l'assimilation de données ou de l'optimisation.
 Les erreurs de simulation ou d'usage des opérateurs ne peuvent pas être
-détectés ou corrigés par l'environnement seul ADAO d'assimilation de données et
-d'optimisation.
+détectées ou corrigées uniquement par l'environnement ADAO d'assimilation de
+données et d'optimisation.
 
 Dans cet environnement d'expériences jumelles, l'observation
 :math:`\mathbf{y}^o` et sa matrice des covariances d'erreur :math:`\mathbf{R}`
@@ -666,7 +666,7 @@ scripts n'est pas une procédure "sûre", en ce sens que des données erronées 
 des erreurs dans les calculs, peuvent être directement introduites dans
 l'exécution du schéma YACS.**
 
-Construire la cas avec une définition de données externes par scripts
+Construire le cas avec une définition de données externes par scripts
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Tous ces scripts peuvent ensuite être utilisés pour définir le cas ADAO avec une

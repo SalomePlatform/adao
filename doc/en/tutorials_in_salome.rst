@@ -328,7 +328,7 @@ Adding parameters to control the data assimilation algorithm
 One can add some optional parameters to control the data assimilation algorithm
 calculation. This is done by using optional parameters in the
 "*AlgorithmParameters*" command of the ADAO case definition, which is a keyword
-of the general case ommand (to choose between "*ASSIMILATION_STUDY*",
+of the general case command (to choose between "*ASSIMILATION_STUDY*",
 "*OPTIMIZATION_STUDY*" or "*REDUCTION_STUDY*"). This keyword requires an
 explicit definition of the values from default ones, or from a Python
 dictionary, containing some key/value pairs. The list of possible optional

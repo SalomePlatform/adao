@@ -14,7 +14,7 @@ de manière statique dans le modèle.
 Le recalage s'effectue sur la base d'un jeu initial de coefficients (état
 d'ébauche désigné par ``Xb`` dans l'exemple), et avec l'information
 :math:`\mathbf{y}^o` (désignée par ``Yobs`` dans l'exemple) de 5 mesures
-obtenues à aux points de contrôle internes. On se place ici en expériences
+obtenues aux points de contrôle internes. On se place ici en expériences
 jumelles (voir :ref:`section_methodology_twin`), et les mesures sont
 considérées comme parfaites. On choisit de privilégier les observations, au
 détriment de l'ébauche, par l'indication artificielle d'une très importante

@@ -33,7 +33,7 @@ Algorithme de vérification "*InputValuesTest*"
 Cet algorithme permet de vérifier le contenu des variables d'entrée courantes
 et la manière dont les données sont interprétées ou lues lors de leur
 acquisition, à travers l'affichage des informations de taille et des
-statistique sur les entrées. Il permet aussi de restituer la totalité du
+statistiques sur les entrées. Il permet aussi de restituer la totalité du
 contenu des variables lues sous forme imprimée pour vérification (*attention,
 si une variable est de grande taille, cette restitution peut être
 informatiquement problématique*).
@@ -51,7 +51,7 @@ informatiquement problématique*).
 
     Comme la commande *"ObservationOperator"*, dans l'interface graphique, est
     requise pour TOUS les algorithmes de vérification, il faut fournir une
-    valeur, malgré le fait que cette commandes ne soit pas nécessaires pour cet
+    valeur, malgré le fait que cette commandes ne soit pas nécessaire pour cet
     test (et sa valeur n'est donc pas utilisée). La manière la plus simple est
     de donner "1" comme un STRING, pour un *"ObservationOperator"* devant être
     de type *Matrix* creuse.

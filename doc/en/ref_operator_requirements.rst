@@ -246,7 +246,7 @@ become the following::
             return "a vector similar to X"
 
 **Important:** the names "*DirectOperator*", "*TangentOperator*" and
-"*AdjointOperator*" are mandatory when using an independant Python script. The
+"*AdjointOperator*" are mandatory when using an independent Python script. The
 type of the ``X``, Y``, ``dX`` input or output arguments can be either a list
 of float values, a Numpy array or a Numpy matrix. The user function has to
 treat these cases in his script.

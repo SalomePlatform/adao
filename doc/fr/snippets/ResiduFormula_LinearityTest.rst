@@ -6,7 +6,7 @@ ResiduFormula
   possibles sont "CenteredDL" (résidu de la différence entre la fonction au
   point nominal et ses valeurs avec des incréments positif et négatif, qui doit
   rester très faible), "Taylor" (résidu du développement de Taylor de
-  l'opérateur normalisé par sa valeur nominal, qui doit rester très faible),
+  l'opérateur normalisé par sa valeur nominale, qui doit rester très faible),
   "NominalTaylor" (résidu de l'approximation à l'ordre 1 de l'opérateur,
   normalisé au point nominal, qui doit rester proche de 1), et
   "NominalTaylorRMS" (résidu de l'approximation à l'ordre 1 de l'opérateur,

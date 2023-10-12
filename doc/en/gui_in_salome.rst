@@ -93,8 +93,8 @@ or opening an already existing one:
 
 Choosing the "*New*" button, an embedded case editor [#]_ will be opened, along
 with the standard "*Object browser*". You can then click on the "*New*" button
-|eficas_new| (or choose the "*New*" entry in the "*ADAO*" main menu) to create a
-new ADAO case, and you will see:
+|eficas_new| (or choose the "*New*" entry in the "*ADAO*" main menu) to create
+a new ADAO case, and you will see:
 
   .. _adao_viewer:
   .. image:: images/adao_viewer.png
@@ -117,15 +117,16 @@ operators describing the problem [#]_.
 The structured editor indicates hierarchical types, values or keywords allowed.
 Incomplete or incorrect keywords are identified by a visual error red flag.
 Possible values are indicated for keywords defined with a limited list of
-values, and adapted entries are given for the other keywords. Some help messages
-are contextually provided in the editor reserved places.
+values, and adapted entries are given for the other keywords. Some help
+messages are contextually provided in the editor reserved places.
 
 A new case is set up with the minimal list of commands. All the mandatory
 commands or keywords are already present, none of them can be suppressed.
 Optional keywords can be added by choosing them in a list of suggestions of
 allowed ones for the main command, for example the "*ASSIMILATION_STUDY*"
 command. As an example, one can add parameters in the "*AlgorithmParameters*"
-keyword, as described in the last part of the section :ref:`section_tutorials_in_salome`.
+keyword, as described in the last part of the section
+:ref:`section_tutorials_in_salome`.
 
 At the end, when all fields or keywords have been correctly defined, each line
 of the commands tree must have a green flag. This indicates that the whole case
@@ -140,22 +141,23 @@ is valid and completed (and can be saved).
 
 Finally, you have to save your ADAO case by pushing the "*Save*" button
 |eficas_save|, or the "*Save as*" button |eficas_saveas|, or by choosing the
-"*Save/Save as*" entry in the "*ADAO*" menu. You will be prompted for a location
-in your file tree and a name, that will be completed by a "*.comm*" extension
-used for the embedded case editor. This will generate a pair of files describing
-the ADAO case, with the same base name, the first one being completed by a
-"*.comm*" extension and the second one by a "*.py*" extension [#]_.
+"*Save/Save as*" entry in the "*ADAO*" menu. You will be prompted for a
+location in your file tree and a name, that will be completed by a "*.comm*"
+extension used for the embedded case editor. This will generate a pair of files
+describing the ADAO case, with the same base name, the first one being
+completed by a "*.comm*" extension and the second one by a "*.py*" extension
+[#]_.
 
 .. _section_u_step3:
 
 STEP 3: Export the ADAO case as a YACS scheme
 +++++++++++++++++++++++++++++++++++++++++++++
 
-When the ADAO case is completed, you have to export it as a YACS scheme in order
-to execute the data assimilation calculation. This can be easily done by using
-the "*Export to YACS*" button |eficas_yacs|, or equivalently choose the "*Export
-to YACS*" entry in the "*ADAO*" main menu, or in the contextual case menu in the
-SALOME object browser.
+When the ADAO case is completed, you have to export it as a YACS scheme in
+order to execute the data assimilation calculation. This can be easily done by
+using the "*Export to YACS*" button |eficas_yacs|, or equivalently choose the
+"*Export to YACS*" entry in the "*ADAO*" main menu, or in the contextual case
+menu in the SALOME object browser.
 
   .. _adao_exporttoyacs01:
   .. image:: images/adao_exporttoyacs.png
@@ -164,11 +166,12 @@ SALOME object browser.
   .. centered::
     **"Export to YACS" sub-menu to generate the YACS scheme from the ADAO case**
 
-This will lead to automatically generate a YACS scheme, and open the YACS module
-on this scheme. The YACS file, associated with the scheme, will be stored in the
-same directory and with the same base name as the ADAO saved case, only changing
-its extension to "*.xml*". Be careful, *if the XML file name already exist, the
-file will be overwritten without prompting for replacing the XML file*.
+This will lead to automatically generate a YACS scheme, and open the YACS
+module on this scheme. The YACS file, associated with the scheme, will be
+stored in the same directory and with the same base name as the ADAO saved
+case, only changing its extension to "*.xml*". Be careful, *if the XML file
+name already exist, the file will be overwritten without prompting for
+replacing the XML file*.
 
 .. _section_u_step4:
 
@@ -204,9 +207,9 @@ command (for example in an in-line script node or a script provided through the
 
     Analysis = ADD.get("Analysis")[:]
 
-"*Analysis*" is a complex object, similar to a list of values calculated at each
-step of data assimilation calculation. In order to get and print the optimal
-data assimilation state evaluation, in a script provided through the
+"*Analysis*" is a complex object, similar to a list of values calculated at
+each step of data assimilation calculation. In order to get and print the
+optimal data assimilation state evaluation, in a script provided through the
 "*UserPostAnalysis*" keyword, one can use::
 
     Xa = ADD.get("Analysis")[-1]
@@ -232,15 +235,15 @@ with a YACS scheme, as described in the *YACS module User's Guide*.
 
 To recall the simplest way to proceed, the YACS scheme has to be compiled using
 the button |yacs_compile|, or the equivalent YACS menu entry, to prepare the
-scheme to run. Then the compiled scheme can be started, executed step by step or
-using breakpoints, etc.
+scheme to run. Then the compiled scheme can be started, executed step by step
+or using breakpoints, etc.
 
 The standard output will be pushed into the "*YACS Container Log*", obtained
 through the right click menu of the "*proc*" window in the YACS GUI. The errors
 are shown either in the "*YACS Container Log*", or at the command line in the
-terminal window (if SALOME has been launched by its explicit command, and not by
-a menu or a desktop icon). As an example, the output of the above simple case is
-of the following form::
+terminal window (if SALOME has been launched by its explicit command, and not
+by a menu or a desktop icon). As an example, the output of the above simple
+case is of the following form::
 
    Entering in the assimilation study
    Name is set to........: Test
@@ -251,8 +254,8 @@ of the following form::
 
 shown in the "*YACS Container Log*".
 
-The execution can also be done using a Shell script, as described in the section
-:ref:`section_advanced`.
+The execution can also be done using a Shell script, as described in the
+section :ref:`section_advanced`.
 
 .. [#] For more information on YACS, see the *YACS module* and its integrated help available from the main menu *Help* of the SALOME platform.
 

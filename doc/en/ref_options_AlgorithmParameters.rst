@@ -38,20 +38,19 @@ There are several convenient methods for providing these options, either using
 the ADAO EFICAS graphical interface (GUI) or the textual interface (TUI). The
 method is determined as follows:
 
-#. First, in the graphical user interface (GUI), using the "*Parameters*"
+#. Either in the graphical user interface (GUI), using the "*Parameters*"
    keyword in the "*AlgorithmParameters*" command, which allows you to choose
    between "*Defaults*" (use of explicit keywords pre-populated by the default
    values of the parameters) and "*Dict*" (use of a dictionary to fill in the
    necessary keywords),
-#. Then secondly or thirdly, in the graphical user interface (GUI), only in the
-   case "*Dict*" of "*Parameters*", by the included keyword "*FROM*" which
-   allows to choose between an entry by string or an entry by Python script
-   file.
-#. Fourth, in textual interface (TUI), using the "*Parameters*" keyword in the
+#. Or in the graphical user interface (GUI), only in the case "*Dict*" of
+   "*Parameters*", by the included keyword "*FROM*" which allows to choose
+   between an entry by string or an entry by Python script file.
+#. Or in textual interface (TUI), using the "*Parameters*" keyword in the
    "*AlgorithmParameters*" command, in a similar way to the graphical
    interface, by filling in the explicit keywords described in the
    documentation of each algorithm.
-#. Fifth, in textual interface (TUI), using the keyword "*Parameters*" in the
+#. Or in textual interface (TUI), using the keyword "*Parameters*" in the
    command "*AlgorithmParameters*", providing a script containing a dictionary
    similar to methods two and three and compatible with these GUI entries.
 

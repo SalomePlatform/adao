@@ -98,7 +98,7 @@ quelconque, au choix de l'utilisateur :
 
 Il est recommandé d'importer par principe le module ``numpy`` ou ses
 constructeurs particuliers comme celui d'``array``, pour faciliter ensuite son
-usage dans les commandes elle-mêmes.
+usage dans les commandes elles-mêmes.
 
 Ensuite, le cas doit être construit par une préparation et un enregistrement
 des données définissant l'étude. L'ordre de ces commandes n'a pas d'importance,
@@ -145,9 +145,9 @@ d'opérateur linéaire, on utilise la syntaxe suivante pour un opérateur de
 Dans le cas beaucoup plus courant d'un opérateur non-linéaire de
 :math:`\mathbf{R}^n` dans  :math:`\mathbf{R}^p`, il doit être préalablement
 disponible sous la forme d'une fonction Python, connue dans l'espace de nommage
-courant, qui prend en entrée un vecteur ``numpy`` (ou une liste ordonnée) de
-taille :math:`n` et qui restitue en sortie un vecteur ``numpy`` de taille
-:math:`p`. Lorsque seul l'opérateur non-linéaire est défini par l'argument
+courant, qui prend en entrée un vecteur Numpy (ou une liste ordonnée) de taille
+:math:`n` et qui restitue en sortie un vecteur Numpy de taille :math:`p`.
+Lorsque seul l'opérateur non-linéaire est défini par l'argument
 "*OneFunction*", son adjoint est directement établi de manière numérique et il
 est paramétrable par l'argument "*Parameters*". L'exemple suivant montre une
 fonction ``simulation`` (qui réalise ici le même opérateur linéaire que

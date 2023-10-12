@@ -41,7 +41,7 @@ présente ici toujours des scripts Python car ils sont directement insérables
 dans les définitions de script de l'interface Python, mais les fichiers
 externes peuvent utiliser d'autres langages.
 
-Ces exemples sont intentionnellement décrits de manière semblables aux
+Ces exemples sont intentionnellement décrits de manière semblable aux
 :ref:`section_tutorials_in_salome` car ils sont similaires à ceux que l'on peut
 traiter dans l'interface graphique SALOME. On peut d'ailleurs directement
 obtenir une forme scriptée d'un cas construit dans l'interface graphique à
@@ -295,9 +295,9 @@ Dans la pratique, cette démarche par scripts est la manière la plus facile pou
 récupérer des informations depuis des calculs en ligne ou préalables, depuis
 des fichiers statiques, depuis des bases de données ou des flux informatiques,
 chacun pouvant être dans ou hors SALOME. Cela permet aussi de modifier aisément
-des données d'entrée, par exemple à des fin de débogage ou pour des traitements
-répétitifs, et c'est la méthode la plus polyvalente pour paramétrer les données
-d'entrée. **Mais attention, la méthodologie par scripts n'est pas une procédure
-"sûre", en ce sens que des données erronées ou des erreurs dans les calculs,
-peuvent être directement introduites dans l'exécution du cas ADAO.
+des données d'entrée, par exemple à des fins de débogage ou pour des
+traitements répétitifs, et c'est la méthode la plus polyvalente pour paramétrer
+les données d'entrée. **Mais attention, la méthodologie par scripts n'est pas
+une procédure "sûre", en ce sens que des données erronées ou des erreurs dans
+les calculs, peuvent être directement introduites dans l'exécution du cas ADAO.
 L'utilisateur doit vérifier avec soin le contenu de ses scripts.**

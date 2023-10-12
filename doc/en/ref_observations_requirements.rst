@@ -101,7 +101,7 @@ of measurements, or several fields physically homogeneous or not.
     - ``case.setObservation( Vector=True, DataFile = 'data.npy' )```
 
 Use note: in a given study, only the last record (whether a single vector or a
-series of vectors) can be used, as only one observation concept exists per CADD
+series of vectors) can be used, as only one observation concept exists per ADAO
 study.
 
 Use of a time series of spatial observations
@@ -151,7 +151,7 @@ of which we consider a history.
     - ``case.setObservation( VectorSerie=True, DataFile = 'data.npy' )```
 
 Use note: in a given study, only the last record (whether a single vector or a
-series of vectors) can be used, as only one observation concept exists per CADD
+series of vectors) can be used, as only one observation concept exists per ADAO
 study.
 
 Use of a single spatio-temporal observation

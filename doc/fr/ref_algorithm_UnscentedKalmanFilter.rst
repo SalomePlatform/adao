@@ -45,7 +45,9 @@ On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
 (numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
 instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
 observations sont fournies en série par l'utilisateur, la première n'est donc
-pas utilisée.
+pas utilisée. Pour une bonne compréhension de la gestion du temps, on se
+reportera au :ref:`schema_d_AD_temporel` et aux explications décrites dans la
+section pour :ref:`section_theory_dynamic`.
 
 Dans le cas d'opérateurs linéaires ou "faiblement" non-linéaire, on peut
 aisément utiliser l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou même

@@ -28,7 +28,7 @@ List of possible input types
 
 Each variable to be entered for the use of ADAO can be represented by means of
 particular "pseudo-types", which help to logically fill it in and validate it
-computationaly. These pseudo-types explicitly represent mathematical forms
+computationally. These pseudo-types explicitly represent mathematical forms
 (:ref:`section_ref_entry_types_math`) or simple computer forms
 (:ref:`section_ref_entry_types_info`), which are detailed here.
 :ref:`section_notations` are also used, together with

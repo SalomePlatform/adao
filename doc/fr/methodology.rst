@@ -114,7 +114,7 @@ et d'extraction du code de simulation.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Comme les systèmes étudiés ont une réalité physique, il est important d'exprimer
-les **information physiques qui peuvent aider à qualifier un état simulé du
+les **informations physiques qui peuvent aider à qualifier un état simulé du
 système**. Il y a deux grand types d'informations qui conduisent à des critères
 permettant la qualification et la quantification de résultats d'optimisation.
 
@@ -126,10 +126,10 @@ du système. Des critères bien choisis comme des RMS, des RMSE, des extrema de
 champs, des intégrales, etc. permettent d'évaluer la qualité d'un état optimisé.
 
 Deuxièmement, provenant d'une connaissance physique ou expérimentale, des
-informations utiles peuvent être obtenus à partir de l'interprétation des
+informations utiles peuvent être obtenues à partir de l'interprétation des
 résultats d'optimisation. En particulier, la validité physique ou l'intérêt
-technique permettent d'évaluer l'intérêt de résultats des résultats numériques
-de l'optimisation.
+technique permettent d'évaluer l'intérêt des résultats numériques de
+l'optimisation.
 
 Pour obtenir une information signifiante de ces deux types de connaissances, il
 est recommandé, si possible, de construire des critères numériques pour
@@ -143,7 +143,7 @@ faciliter l'évaluation de la qualité globale des résultats numériques
 En tant que seconde source d'information principale à propos du système physique
 à étudier, les **observations, ou mesures,** notées :math:`\mathbf{y}^o`,
 doivent être décrites avec soin. La qualité des mesures, leur erreurs
-intrinsèques, leur particularités, sont importantes à connaître, pour pouvoir
+intrinsèques, leurs particularités, sont importantes à connaître, pour pouvoir
 introduire ces informations dans les calculs d'assimilation de données ou
 d'optimisation.
 
@@ -202,7 +202,7 @@ utilisant l':ref:`section_ref_algorithm_3DVAR`, présentent de remarquables
 propriétés numériques d'efficacité, de robustesse et de fiabilité, ce qui
 conduit à les recommander indépendamment du problème à résoudre. De plus, il est
 souvent difficile de régler les paramètres d'une méthode d'optimisation, donc la
-méthodes la plus robuste est souvent celle qui présente le moins de paramètres.
+méthode la plus robuste est souvent celle qui présente le moins de paramètres.
 Au final, au moins au début, il est recommandé d'utiliser les méthodes les plus
 génériques et de changer le moins possible les paramètres par défaut connus.
 

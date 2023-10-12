@@ -72,10 +72,12 @@ reste la covariance d'ébauche initialement fournie par l'utilisateur. Pour êtr
 explicite, contrairement aux filtres de type Kalman, la covariance d'erreurs
 sur les états n'est pas remise à jour.
 
-Une extension du 3DVAR, couplant en parallèle une méthode 3DVAR avec un filtre
-de Kalman d'ensemble, permet d'améliorer l'estimation des covariances d'erreurs
-*a posteriori*. On atteint cette extension en utilisant le variant "E3DVAR" de
-l'algorithme de filtrage :ref:`section_ref_algorithm_EnsembleKalmanFilter`.
+Une extension du 3DVAR, couplant en parallèle une méthode 3DVAR, pour
+l'estimation d'un unique meilleur état, avec un filtre de Kalman d'ensemble
+pour l'estimation des covariances d'erreurs, permet d'améliorer l'estimation de
+ces covariances d'erreurs *a posteriori*. On atteint cette extension en
+utilisant le variant "E3DVAR" de l'algorithme de filtrage
+:ref:`section_ref_algorithm_EnsembleKalmanFilter`.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

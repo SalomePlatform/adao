@@ -60,7 +60,7 @@ La première partie est l':ref:`section_intro`. La seconde partie présente
 :ref:`section_methodology`. Pour un utilisateur courant, les parties suivantes
 présentent des :ref:`section_docu_examples`, rapidement accessibles par
 l'ensemble des pointeurs vers les sous-parties. Des présentations didactiques
-sont détaillés dans les :ref:`section_tutorials_in_salome` ou les
+sont détaillées dans les :ref:`section_tutorials_in_salome` ou les
 :ref:`section_tutorials_in_python`, et complétées par des indications sur les
 :ref:`section_advanced`, avec l'obtention de renseignements supplémentaires ou
 l'usage par scripts de commandes hors interface de contrôle graphique.

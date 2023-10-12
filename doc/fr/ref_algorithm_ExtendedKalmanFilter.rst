@@ -45,11 +45,11 @@ opérateurs d'évolution et d'observation dans cet algorithme de la manière
 suivante, avec **x** l'état, **P** la covariance d'erreur d'état, *t* le temps
 itératif discret :
 
-  .. _schema_temporel_KF:
-  .. image:: images/schema_temporel_KF.png
+  .. _schema_temporel_EKF:
+  .. figure:: images/schema_temporel_KF.png
     :align: center
     :width: 100%
-  .. centered::
+
     **Schéma temporel des étapes en assimilation de données par filtre de Kalman étendu**
 
 Dans ce schéma, l'analyse **(x,P)** est obtenue à travers la "*correction*" par
@@ -63,7 +63,7 @@ Ce filtre peut aussi être utilisé pour estimer (conjointement ou uniquement)
 des paramètres et non pas l'état, auquel cas ni le temps ni l'évolution n'ont
 plus de signification. Les pas d'itération sont alors liés à l'insertion d'une
 nouvelle observation dans l'estimation récursive. On consultera la section
-:ref:`section_theory_dynamique` pour les concepts de mise en oeuvre.
+:ref:`section_theory_dynamic` pour les concepts de mise en oeuvre.
 
 Dans le cas d'opérateurs plus fortement non-linéaires, on peut utiliser un
 :ref:`section_ref_algorithm_EnsembleKalmanFilter` ou un

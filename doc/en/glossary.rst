@@ -65,7 +65,7 @@ Glossary
       Computational implementation of the set composed of the numerical
       simulator and a particular set of all the input and control variables of
       the simulator. These variables enable the digital simulator to be able to
-      numerically represent the system's behaviour.
+      numerically represent the system's behavior.
 
    observations or measurements
       These are quantities that come from measuring instruments and
@@ -79,7 +79,7 @@ Glossary
 
    boundary conditions
       These are particular input and control variables of the simulator, which
-      characterize the description of the system's behaviour at the border of
+      characterize the description of the system's behavior at the border of
       the simulation spatial domain.
 
    initial conditions

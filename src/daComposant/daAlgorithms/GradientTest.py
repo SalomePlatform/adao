@@ -403,4 +403,4 @@ def dessiner(
 
 # ==============================================================================
 if __name__ == "__main__":
-    print('\n AUTODIAGNOSTIC\n')
+    print("\n AUTODIAGNOSTIC\n")

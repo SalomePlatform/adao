@@ -79,7 +79,7 @@ algorithmes. Avant d'introduire la :ref:`section_theory_da_framework` dans une
 prochaine section, on décrit brièvement ces deux types d'applications. A la fin
 de ce chapitre, quelques informations permettent d'aller plus loin pour
 :ref:`section_theory_more_assimilation` et :ref:`section_theory_optimization`,
-ainsi que pour :ref:`section_theory_dynamique` et avoir
+ainsi que pour :ref:`section_theory_dynamic` et avoir
 :ref:`section_theory_reduction`.
 
 Reconstruction de champs ou interpolation de données
@@ -326,7 +326,7 @@ et de "*Filtre de Kalman (KF)*" et leurs dérivés. Elles doivent alors prendre
 en compte un opérateur d'évolution pour établir aux bons pas de temps une
 analyse de l'écart entre les observations et les simulations et pour avoir, à
 chaque instant, la propagation de l'ébauche à travers le modèle d'évolution. On
-se reportera à la section suivante pour :ref:`section_theory_dynamique`. De
+se reportera à la section suivante pour :ref:`section_theory_dynamic`. De
 la même manière, ces méthodes peuvent aussi être utilisées dans le cas
 d'opérateurs d'observation ou d'évolution non linéaires. Un grand nombre de
 variantes ont été développées pour accroître la qualité numérique des méthodes
@@ -645,7 +645,7 @@ la sélection éventuelle d'un critère de qualité :
     .. index:: single: Linf (QualityCriterion)
     .. math:: J(\mathbf{x})=||\mathbf{y}^o-\mathbf{H}.\mathbf{x}||_{L^{\infty}}
 
-Ces mesures d'erreurs peuvent ne être pas différentiables comme pour les deux
+Ces mesures d'erreurs peuvent ne pas être différentiables comme pour les deux
 dernières, mais certaines méthodes d'optimisation peuvent quand même les
 traiter : heuristiques et méta-heuristiques pour les problèmes à valeurs
 réelles, etc. Comme précédemment, les principaux désavantages de ces méthodes
@@ -660,7 +660,7 @@ mentionne que quelques méthodes qui sont disponibles dans ADAO :
 Le lecteur intéressé par le sujet de l'optimisation pourra utilement commencer
 sa recherche grâce au point d'entrée [WikipediaMO]_.
 
-.. _section_theory_dynamique:
+.. _section_theory_dynamic:
 
 Approfondir l'assimilation de données pour la dynamique
 -------------------------------------------------------
@@ -853,15 +853,15 @@ représentation simple est la suivante, particulièrement adaptée aux algorithm
 itératifs de filtrage de type Kalman :
 
   .. _schema_d_AD_temporel:
-  .. image:: images/schema_temporel_KF.png
+  .. figure:: images/schema_temporel_KF.png
     :align: center
     :width: 100%
-  .. centered::
-    **Schéma d'action des opérateurs pour l'assimilation de données en dynamique**
+
+    **Schéma temporel d'action des opérateurs pour l'assimilation de données en dynamique**
 
 avec **P** la covariance d'erreur d'état et *t* le temps itératif discret. Dans
 ce schéma, l'analyse **(x,P)** est obtenue à travers la "*correction*" par
 l'observation de la "*prévision*" de l'état précédent. Les concepts décrits
 dans ce schéma peuvent directement et simplement être utilisés dans ADAO pour
-construire des cas d'études, et sont repris dans la description de certains
-algorithmes.
+construire des cas d'études, et sont repris dans la description et les exemples
+de certains algorithmes.

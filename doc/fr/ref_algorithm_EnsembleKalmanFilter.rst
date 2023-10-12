@@ -39,15 +39,18 @@ Il s'applique aux cas d'opérateurs d'observation et d'évolution incrémentale
 (processus) non-linéaires et présente d'excellentes qualités de robustesse et
 de performances. Il peut être interprété comme une réduction d'ordre du filtre
 de Kalman classique, avec une remarquable qualité d'assimilation de ce
-filtrage pour les problèmes de grande taille. Il peut être rapproché de
-l':ref:`section_ref_algorithm_UnscentedKalmanFilter` dont les qualités sont
+filtrage pour les problèmes de grande taille. Il peut être rapproché d'un
+:ref:`section_ref_algorithm_UnscentedKalmanFilter` dont les qualités sont
 similaires pour les systèmes non-linéaires.
 
 On remarque qu'il n'y a pas d'analyse effectuée au pas de temps initial
 (numéroté 0 dans l'indexage temporel) car il n'y a pas de prévision à cet
 instant (l'ébauche est stockée comme pseudo-analyse au pas initial). Si les
 observations sont fournies en série par l'utilisateur, la première n'est donc
-pas utilisée.
+pas utilisée. Pour une bonne compréhension de la gestion du temps, on se
+reportera au :ref:`schema_d_AD_temporel` et aux explications décrites dans la
+section pour :ref:`section_theory_dynamic`.
+
 
 Dans le cas d'opérateurs linéaires ou "faiblement" non-linéaire, on peut
 aisément utiliser l':ref:`section_ref_algorithm_ExtendedKalmanFilter` ou même
@@ -72,6 +75,7 @@ la littérature. On propose ici les formulations stables et robustes suivantes :
     pair: Variant ; MLEF
     pair: Variant ; IEnKF
     pair: Variant ; E3DVAR
+    pair: Variant ; 3D-Var-Ben
     pair: Variant ; EnKS
     pair: Variant ; EnSRKF
     pair: Variant ; RRSQRT
@@ -81,7 +85,7 @@ la littérature. On propose ici les formulations stables et robustes suivantes :
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), algorithme d'ETKF dit de "taille finie N", évitant de recourir à une inflation souvent nécessaire avec les autres algorithmes,
 - "MLEF" (Maximum Likelihood Kalman Filter, voir [Zupanski05]_), algorithme déterministe d'EnKF, permettant en plus de traiter de manière consistante un opérateur d'observation non-linéaire),
 - "IEnKF" (Iterative EnKF), algorithme déterministe d'EnKF, améliorant le traitement des non-linéarités des opérateurs,
-- "E3DVAR" (EnKF 3DVAR), algorithme couplant assimilation d'ensemble et variationnelle, qui utilise en parallèle une assimilation variationnelle 3DVAR et un algorithme d'EnKF pour améliorer l'estimation des covariances d'erreurs *a posteriori*,
+- "E3DVAR" (EnKF 3DVAR, ou 3D-Var-Ben), algorithme couplant assimilation d'ensemble et variationnelle, qui utilise en parallèle une assimilation variationnelle 3DVAR pour l'estimation d'un unique meilleur état et un algorithme d'ensemble EnKF pour améliorer l'estimation des covariances d'erreurs *a posteriori*,
 - "EnKS" (Ensemble Kalman Smoother), algorithme de lissage avec un décalage fixe.
 
 Sans pouvoir prétendre à l'universalité, on recommande d'utiliser la

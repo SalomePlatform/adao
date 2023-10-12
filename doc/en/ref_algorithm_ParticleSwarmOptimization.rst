@@ -57,19 +57,19 @@ robust formulations are proposed here:
     pair: Variant ; AIS PSO
     pair: Variant ; APSO
 
-- "CanonicalPSO" (Canonical Particule Swarm Optimisation, see
+- "CanonicalPSO" (Canonical Particle Swarm Optimization, see
   [ZambranoBigiarini13]_), classical algorithm called "canonical" of particle
   swarm, robust and defining a reference for particle swarm algorithms,
-- "OGCR" (Simple Particule Swarm Optimisation), simplified algorithm of
-  particle swarm with no bounds on insects or velocities, not recommanded
+- "OGCR" (Simple Particle Swarm Optimization), simplified algorithm of
+  particle swarm with no bounds on insects or velocities, not recommended
   because less robust, but sometimes a lot more efficient,
-- "SPSO-2011" (Standard Particle Swarm Optimisation 2011, voir
-  [ZambranoBigiarini13]_), 2011 reference algorithm of particule swarm, robust,
+- "SPSO-2011" (Standard Particle Swarm Optimization 2011, voir
+  [ZambranoBigiarini13]_), 2011 reference algorithm of particle swarm, robust,
   efficient and defined as a reference for particle swarm algorithms. This
   algorithm is sometimes called ":math:`\omega`-PSO" or "Inertia PSO" because
   it incorporates a so-called inertia contribution, or also called "AIS" (for
   "Asynchronous Iteration Strategy") or "APSO" (for "Advanced Particle Swarm
-  Optimisation") because it incorporates evolutionary updating of the best
+  Optimization") because it incorporates evolutionary updating of the best
   elements, leading to intrinsically improved convergence of the algorithm.
 
 The following are a few practical suggestions for the effective use of these
@@ -82,7 +82,7 @@ algorithms:
   of the state space. Usually, the best performances are obtained for
   populations of 70 to 500 particles. Even if the default value for this
   elementary parameter comes from extended knowledge on these algorithms, it is
-  recommanded to adapt it to the difficulty of the given problems.
+  recommended to adapt it to the difficulty of the given problems.
 - The recommended number of generations for population evolution is often
   around 50, but it can easily vary between 25 and 500.
 - The maximum number of evaluations of the simulation function should usually
@@ -159,10 +159,10 @@ StoreSupplementaryCalculations
 
   *List of names*. This list indicates the names of the supplementary
   variables, that can be available during or at the end of the algorithm, if
-  they are initially required by the user. Their avalability involves,
+  they are initially required by the user. Their availability involves,
   potentially, costly calculations or memory consumptions. The default is then
   a void list, none of these variables being calculated and stored by default
-  (excepted the unconditionnal variables). The possible names are in the
+  (excepted the unconditional variables). The possible names are in the
   following list (the detailed description of each named variable is given in
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the

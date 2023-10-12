@@ -23,8 +23,8 @@
 
 .. _section_ref_output_variables:
 
-Variables and informations available at the output
---------------------------------------------------
+Variables and information available at the output
+-------------------------------------------------
 
 How to obtain the information available at the output
 +++++++++++++++++++++++++++++++++++++++++++++++++++++

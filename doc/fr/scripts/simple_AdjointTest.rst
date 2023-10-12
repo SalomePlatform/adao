@@ -2,7 +2,7 @@
 
 Cet exemple décrit le test de la qualité de l'adjoint d'un opérateur
 quelconque, dont la formulation directe est donnée et dont la formulation
-adjointe est ici approximé par défaut. Les informations nécessaires sont
+adjointe est ici approximée par défaut. Les informations nécessaires sont
 minimales, à savoir ici un opérateur :math:`F` (décrit pour le test par la
 commande d'observation "*ObservationOperator*"), et un état
 :math:`\mathbf{x}^b` sur lequel le tester (décrit pour le test par la commande

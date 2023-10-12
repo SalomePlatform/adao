@@ -71,7 +71,7 @@ changing the required option "*EstimationOf*" in the algorithm parameters.
 Before introducing the :ref:`section_theory_da_framework` in a next section,
 these two types of applications are briefly described. At the end, some
 detailed information allow :ref:`section_theory_more_assimilation` and
-:ref:`section_theory_optimization`, as well as :ref:`section_theory_dynamique`
+:ref:`section_theory_optimization`, as well as :ref:`section_theory_dynamic`
 and having :ref:`section_theory_reduction`.
 
 Fields reconstruction or measures interpolation
@@ -264,7 +264,7 @@ minimize the following function :math:`J`:
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
 :math:`J` is classically designed as the "*3D-Var*" functional in data
-assimlation (see for example [Talagrand97]_) or as the generalized Tikhonov
+assimilation (see for example [Talagrand97]_) or as the generalized Tikhonov
 regularization functional in optimization (see for example [WikipediaTI]_).
 Since :math:`\mathbf{B}` and :math:`\mathbf{R}` covariance matrices are
 proportional to the variances of errors, their presence in both terms of the
@@ -301,11 +301,11 @@ solution.
 
 It is indicated here that these methods of "*3D-Var*" and "*BLUE*" may be
 extended to dynamic or time-related problems, called respectively "*4D-Var*"
-and "*Kalman filter (KF)*" and their derivatives. They have to take into
+and "*Kalman Filter (KF)*" and their derivatives. They have to take into
 account an evolution operator to establish an analysis at the right time steps
 of the gap between observations and simulations, and to have, at every moment,
 the propagation of the background through the evolution model. The next section
-provides information on :ref:`section_theory_dynamique`. In
+provides information on :ref:`section_theory_dynamic`. In
 the same way, these methods can be used in case of non linear observation or
 evolution operators. Many other variants have been developed to improve the
 numerical quality of the methods or to take into account computer requirements
@@ -345,7 +345,7 @@ links:
 - EKF: :ref:`section_ref_algorithm_ExtendedKalmanFilter`,
 - EnKF: :ref:`section_ref_algorithm_EnsembleKalmanFilter`,
 - DFO: :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
-- Incr-Var: Incremental version Variational optimisation,
+- Incr-Var: Incremental version Variational optimization,
 - KF: :ref:`section_ref_algorithm_KalmanFilter`,
 - LLS: :ref:`section_ref_algorithm_LinearLeastSquares`,
 - NLLS: :ref:`section_ref_algorithm_NonLinearLeastSquares`,
@@ -528,7 +528,7 @@ requires to minimize the goal function :math:`J`:
 .. math:: J(\mathbf{x})=\frac{1}{2}(\mathbf{x}-\mathbf{x}^b)^T.\mathbf{B}^{-1}.(\mathbf{x}-\mathbf{x}^b)+\frac{1}{2}(\mathbf{y}^o-\mathbf{H}.\mathbf{x})^T.\mathbf{R}^{-1}.(\mathbf{y}^o-\mathbf{H}.\mathbf{x})
 
 which is named the "*3D-Var*" objective function. It can be seen as a *least
-squares minimization* extented form, obtained by adding a regularizing term
+squares minimization* extended form, obtained by adding a regularizing term
 using :math:`\mathbf{x}-\mathbf{x}^b`, and by weighting the differences using
 :math:`\mathbf{B}` and :math:`\mathbf{R}` the two covariance matrices. The
 minimization of the :math:`J` function leads to the *best* :math:`\mathbf{x}`
@@ -615,7 +615,7 @@ it is available in the ADAO module:
 The reader interested in the subject of optimization can look at [WikipediaMO]_
 as a general entry point.
 
-.. _section_theory_dynamique:
+.. _section_theory_dynamic:
 
 Going further in data assimilation for dynamics
 -----------------------------------------------
@@ -802,14 +802,14 @@ estimation of the state (:math:`\mathbf{x}`). A possible representation is as
 follows, particularly appropriate for iterative Kalman filtering algorithms:
 
   .. _schema_d_AD_temporel:
-  .. image:: images/schema_temporel_KF.png
+  .. figure:: images/schema_temporel_KF.png
     :align: center
     :width: 100%
-  .. centered::
+
     **Timeline of steps for data assimilation operators in dynamics**
 
 with **P** the state error covariance and *t* the discrete iterative time. In
 this scheme, the analysis **(x,P)** is obtained by means of the "*correction*"
 by observing the "*prediction*" of the previous state. The concepts described
 in this diagram can be directly and simply used in ADAO to elaborate study
-cases, and are included in the description of some algorithms.
+cases, and are included in the description and the examples of some algorithms.

@@ -23,14 +23,14 @@
 
 .. _section_ref_assimilation_keywords:
 
-List of commands and keywords for data assimilation or optimisation case
+List of commands and keywords for data assimilation or optimization case
 ------------------------------------------------------------------------
 
 We summarize here all the commands and keywords available to describe a
 calculation case, by avoiding the particularities of each algorithm. It is
 therefore a common inventory of commands.
 
-The set of commands for an data assimilation or optimisation case is related to
+The set of commands for an data assimilation or optimization case is related to
 the description of a calculation case, that is a *Data Assimilation* procedure
 (chosen  in graphical user interface by the command "*ASSIMILATION_STUDY*"), a
 *Reduction Method* procedure (chosen  in graphical user interface by the

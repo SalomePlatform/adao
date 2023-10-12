@@ -8,4 +8,4 @@ confidence in errors on the two information are considered identical. The
 operator.
 
 The interpolated resulting field is simply the "middle" between the two fields,
-with an increased confidence on the errors.
+with an increased confidence (that is, a smaller variance) on the errors.

@@ -98,7 +98,7 @@ is the real practical way to compare simulations and observations. It is
 usually done by sampling, projection or integration, of the simulation outputs,
 but it can be more complicated. Often, because the observation operator
 directly follows the simulation one in simple data assimilation schemes, this
-observation operator heavily use the postprocessing and extraction capacities
+observation operator heavily use the post-processing and extraction capacities
 of the simulation code.
 
 .. _section_m_step2:

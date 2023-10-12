@@ -45,7 +45,7 @@ L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
 distributions courantes. Attention à la taille de l'hyper-cube (et donc au
 nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante. Lorsque un état n'est pas observable, une valeur *"NaN"* est
+importante. Lorsqu'un état n'est pas observable, une valeur *"NaN"* est
 retournée.
 
 Il est aussi possible de fournir un ensemble de simulations :math:`\mathbf{y}`

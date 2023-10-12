@@ -18,7 +18,7 @@ manière ici un peu plus lente qu'avec un Filtre de Kalman.
     Remarque concernant les covariances *a posteriori* : classiquement,
     l'analyse itérative 3DVAR remet à jour uniquement l'état et non pas sa
     covariance. Comme les hypothèses d'opérateurs et de covariance *a priori*
-    restent inchangées ici au court de l'évolution, la covariance *a
+    restent inchangées ici au cours de l'évolution, la covariance *a
     posteriori* est constante. Le tracé qui suit de cette covariance *a
     posteriori* permet d'insister sur cette propriété tout à fait attendue de
     l'analyse 3DVAR. Une hypothèse plus évoluée est proposée dans l'exemple qui

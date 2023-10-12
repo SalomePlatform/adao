@@ -44,7 +44,9 @@ We notice that there is no analysis performed at the initial time step
 (numbered 0 in the time indexing) because there is no forecast at this time
 (the background is stored as a pseudo analysis at the initial time step). If
 the observations are provided in series by the user, the first one is therefore
-not used.
+not used. For a good understanding of time management, please refer to the
+:ref:`schema_d_AD_temporel` and the explanations in the section
+:ref:`section_theory_dynamic`.
 
 In case of linear of "slightly" non-linear operators, one can easily use the
 :ref:`section_ref_algorithm_ExtendedKalmanFilter` or even the
@@ -94,10 +96,10 @@ StoreSupplementaryCalculations
 
   *List of names*. This list indicates the names of the supplementary
   variables, that can be available during or at the end of the algorithm, if
-  they are initially required by the user. Their avalability involves,
+  they are initially required by the user. Their availability involves,
   potentially, costly calculations or memory consumptions. The default is then
   a void list, none of these variables being calculated and stored by default
-  (excepted the unconditionnal variables). The possible names are in the
+  (excepted the unconditional variables). The possible names are in the
   following list (the detailed description of each named variable is given in
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the
