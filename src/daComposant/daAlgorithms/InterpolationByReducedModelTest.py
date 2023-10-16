@@ -128,7 +128,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += (__marge + "Warning:  in order to be coherent, this test has to use the same norm\n")
         msgs += (__marge + "than the one used to build the reduced basis. The user chosen norm in\n")
         msgs += (__marge + "this test is presently \"%s\". Check the RB building one.\n"%(self._parameters["ErrorNorm"],))
-        msgs += (__marge + "\n")
         msgs += ("\n")
         msgs += (__flech + "Information before launching:\n")
         msgs += (__marge + "-----------------------------\n")

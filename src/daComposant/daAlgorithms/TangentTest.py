@@ -159,7 +159,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += ("\n")
             msgs += (__marge + "When |R-1|/Alpha is less than or equal to a stable value when Alpha varies,\n")
             msgs += (__marge + "the tangent is valid, until the accuracy of the calculation is reached.\n")
-            msgs += (__marge + "\n")
+            msgs += ("\n")
             msgs += (__marge + "If |R-1|/Alpha is very small, the code F is likely linear or quasi-linear,\n")
             msgs += (__marge + "and the tangent is valid until computational accuracy is reached.\n")
             #

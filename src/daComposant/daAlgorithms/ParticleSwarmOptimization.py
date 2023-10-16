@@ -37,11 +37,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CanonicalPSO",
                 "OGCR",
                 "SPSO-2011",
-                ],
-            listadv  = [
                 "SPSO-2011-AIS",
                 "SPSO-2011-SIS",
                 "SPSO-2011-PSIS",
+                ],
+            listadv  = [
                 "PSO",
                 ],
             )
@@ -197,6 +197,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] in ["OGCR"]:
             ecwopso.ecwopso(self, Xb, Y, HO, R, B)
         #
+        # Default SPSO-2011 = SPSO-2011-AIS
         elif self._parameters["Variant"] in ["SPSO-2011", "SPSO-2011-AIS"]:
             ecwapso.ecwapso(self, Xb, Y, HO, R, B)
         #

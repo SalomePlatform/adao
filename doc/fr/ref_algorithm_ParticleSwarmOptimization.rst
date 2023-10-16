@@ -65,21 +65,31 @@ stables et robustes suivantes :
 - "OGCR" (Simple Particule Swarm Optimisation), algorithme simplifié d'essaim
   particulaire sans bornes sur les insectes ou les vitesses, déconseillé car
   peu robuste, mais parfois beaucoup plus rapide,
-- "SPSO-2011" (Standard Particle Swarm Optimisation 2011, voir
-  [ZambranoBigiarini13]_), algorithme de référence 2011 d'essaim particulaire,
-  robuste, performant et défini comme une référence des algorithmes d'essaims
-  particulaires. Cet algorithme est parfois appelé ":math:`\omega`-PSO" ou
-  "Inertia PSO" car il intègre une contribution dite d'inertie, ou encore
-  appelé "AIS" (pour "Asynchronous Iteration Strategy") ou "APSO" (pour
-  "Advanced Particle Swarm Optimisation") car il intègre la mise à jour
-  évolutive des meilleurs éléments, conduisant à une convergence
+- "SPSO-2011" ou "SPSO-2011-AIS" (Standard Particle Swarm Optimisation 2011,
+  voir [ZambranoBigiarini13]_), algorithme de référence 2011 d'essaim
+  particulaire, robuste, performant et défini comme une référence des
+  algorithmes d'essaims particulaires. Cet algorithme est parfois appelé
+  ":math:`\omega`-PSO" ou "Inertia PSO" car il intègre une contribution dite
+  d'inertie, ou encore appelé "AIS" (pour "Asynchronous Iteration Strategy") ou
+  "APSO" (pour "Advanced Particle Swarm Optimisation") car il intègre la mise à
+  jour évolutive des meilleurs éléments, conduisant à une convergence
   intrinsèquement améliorée de l'algorithme.
+- "SPSO-2011-SIS" (Standard Particle Swarm Optimisation 2011 with Synchronous
+  Iteration Strategy), très similaire à l'algorithme de référence 2011 et avec
+  une mise à jour synchrone, appelée "SIS", des particules.
+- "SPSO-2011-PSIS" (Standard Particle Swarm Optimisation 2011 with Parallel
+  Synchronous Iteration Strategy), similaire à l'algorithme "SPSO-2011-SIS"
+  avec mise à jour synchrone et parallélisation, appelée "PSIS", des
+  particules.
 
 Voici quelques suggestions pratiques pour une utilisation efficace de ces
 algorithmes :
 
 - La variante recommandée de cet algorithme est le "SPSO-2011" même si
-  l'algorithme "CanonicalPSO" reste par défaut le plus robuste.
+  l'algorithme "CanonicalPSO" reste par défaut le plus robuste. Dans le cas où
+  l'évaluation de l'état peut être réalisé en parallèle, on peut utiliser
+  l'algorithme "SPSO-2011-PSIS" même si sa convergence est parfois un peu moins
+  performante.
 - Le nombre de particules ou d'insectes usuellement recommandé varie entre 40
   et 100 selon l'algorithme, à peu près indépendamment de la dimension de
   l'espace des états. En général, les meilleurs performances sont obtenues pour

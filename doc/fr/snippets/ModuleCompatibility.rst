@@ -15,7 +15,7 @@ l'étendue décrite ci-dessous.
    :header: "Outil", "Version minimale", "Version atteinte"
    :widths: 20, 10, 10
 
-   Python,     3.6.5,    3.11.5
+   Python,     3.6.5,    3.11.6
    Numpy,      1.14.3,    1.26.0
    Scipy,      0.19.1,    1.11.3
    MatplotLib, 2.2.2,    3.8.0
