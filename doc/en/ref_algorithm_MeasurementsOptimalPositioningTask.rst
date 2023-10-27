@@ -77,11 +77,12 @@ There are two ways to use this algorithm:
 If the design of experiments is supplied, the sampling of the states
 :math:`\mathbf{x}` can be given as in the
 :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`, explicitly or
-under form of hyper-cubes, explicit or sampled according to classic
-distributions. The computations are optimized according to the computer
-resources available and the options requested by the user. Beware of the size
-of the hyper-cube (and then to the number of computations) that can be reached,
-it can grow quickly to be quite large.
+under form of hypercubes, explicit or sampled according to classic
+distributions, or using Latin hypercube sampling (LHS). The computations are
+optimized according to the computer resources available and the options
+requested by the user. Beware of the size of the hypercube (and then to the
+number of computations) that can be reached, it can grow quickly to be quite
+large.
 
   .. _mop_determination:
   .. image:: images/mop_determination.png
@@ -117,6 +118,8 @@ constrained positioning search.
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 

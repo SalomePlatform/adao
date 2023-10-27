@@ -89,13 +89,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SampleAsExplicitHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable comme une liste",
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages explicites de chaque variable comme une liste",
             )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxStepHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable par un triplet [min,max,step]",
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages implicites de chaque variable par un triplet [min,max,step]",
+            )
+        self.defineRequiredParameter(
+            name     = "SampleAsMinMaxLatinHyperCube",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi du nombre de points demandés",
             )
         self.defineRequiredParameter(
             name     = "SampleAsIndependantRandomVariables",

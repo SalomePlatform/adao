@@ -34,7 +34,9 @@ import time
 import numpy
 import warnings
 from functools import partial
-from daCore import Persistence, PlatformInfo, Interfaces
+from daCore import Persistence
+from daCore import PlatformInfo
+from daCore import Interfaces
 from daCore import Templates
 
 # ==============================================================================
@@ -1100,6 +1102,9 @@ class Algorithm(object):
                         raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%(v, __k, listval))
             elif not (listval is not None and __val in listval) and not (listadv is not None and __val in listadv):
                 raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%( __val, __k,listval))
+        #
+        if __k in ["SetSeed",]:
+            __val = value
         #
         return __val
 

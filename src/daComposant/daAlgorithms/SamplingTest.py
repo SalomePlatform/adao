@@ -46,13 +46,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SampleAsExplicitHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable comme une liste",
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages explicites de chaque variable comme une liste",
             )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxStepHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages de chaque variable par un triplet [min,max,step]",
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages implicites de chaque variable par un triplet [min,max,step]",
+            )
+        self.defineRequiredParameter(
+            name     = "SampleAsMinMaxLatinHyperCube",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre de points demandés]",
             )
         self.defineRequiredParameter(
             name     = "SampleAsIndependantRandomVariables",
@@ -174,11 +180,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self._parameters["SampleAsnUplet"],
                 self._parameters["SampleAsExplicitHyperCube"],
                 self._parameters["SampleAsMinMaxStepHyperCube"],
+                self._parameters["SampleAsMinMaxLatinHyperCube"],
                 self._parameters["SampleAsIndependantRandomVariables"],
                 Xb,
+                self._parameters["SetSeed"],
                 )
-            EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
+            if hasattr(sampleList,"__len__") and len(sampleList) == 0:
+                EOX = numpy.array([[]])
+            else:
+                EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
             EOS = self._parameters["EnsembleOfSnapshots"]
+            if EOX.shape[1] != EOS.shape[1]:
+                raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))
             #
             if self._toStore("EnsembleOfStates"):
                 self.StoredVariables["EnsembleOfStates"].store( EOX )

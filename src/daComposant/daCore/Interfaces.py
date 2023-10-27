@@ -36,6 +36,7 @@ from daCore import Persistence
 from daCore import PlatformInfo
 from daCore import Templates
 from daCore import Reporting
+from daCore import version
 
 # ==============================================================================
 class GenericCaseViewer(object):
@@ -675,6 +676,7 @@ class _ReportViewer(GenericCaseViewer):
             self._r.append("ADAO Study report", "title")
         else:
             self._r.append(str(self._name), "title")
+        self._r.append("Summary build with %s version %s"%(version.name, version.version))
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
@@ -683,8 +685,7 @@ class _ReportViewer(GenericCaseViewer):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command is not None and __keys is not None and __local is not None:
             if __command in ("set","get") and "Concept" in __keys: __command = __local["Concept"]
-            __text  = ""
-            __text += "<i>%s</i> command has been set"%str(__command.replace("set",""))
+            __text  = "<i>%s</i> command has been set"%str(__command.replace("set",""))
             __ktext = ""
             for k in __keys:
                 if k not in __local: continue

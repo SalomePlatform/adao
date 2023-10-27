@@ -42,11 +42,13 @@ Ce test est utile pour analyser la sensibilité de la fonctionnelle :math:`J`
 aux variations de l'état :math:`\mathbf{x}` en particulier.
 
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
-ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
-distributions courantes. Attention à la taille de l'hyper-cube (et donc au
-nombre de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante. Lorsqu'un état n'est pas observable, une valeur *"NaN"* est
-retournée.
+ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
+distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
+(LHS). Les calculs sont optimisés selon les ressources informatiques
+disponibles et les options demandées par l'utilisateur. Attention à la taille
+de l'hypercube (et donc au nombre de calculs) qu'il est possible d'atteindre,
+elle peut rapidement devenir importante. Lorsqu'un état n'est pas observable,
+une valeur *"NaN"* est retournée.
 
 Il est aussi possible de fournir un ensemble de simulations :math:`\mathbf{y}`
 déjà établies par ailleurs (donc sans besoin explicite d'un opérateur
@@ -86,6 +88,8 @@ calcul à l'aide des "*observer*" adaptés.
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 

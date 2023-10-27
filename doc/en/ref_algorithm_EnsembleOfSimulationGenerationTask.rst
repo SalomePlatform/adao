@@ -47,11 +47,12 @@ to the chosen homogeneous collection of state vectors :math:`\mathbf{x}`
 (available using the storable variable "*EnsembleOfStates*").
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
-form of hyper-cubes, explicit or sampled according to classic distributions.
-The computations are optimized according to the computer resources available
-and the options requested by the user. Beware of the size of the hyper-cube
-(and then to the number of computations) that can be reached, it can grow
-quickly to be quite large.
+form of hypercubes, explicit or sampled according to classic distributions, or
+using Latin hypercube sampling (LHS). The computations are optimized according
+to the computer resources available and the options requested by the user.
+Beware of the size of the hypercube (and then to the number of computations)
+that can be reached, it can grow quickly to be quite large. When a state is not
+observable, a *"NaN"* value is returned.
 
 To be visible by the user while reducing the risk of storage difficulties, the
 results of sampling or simulations has to be **explicitly** asked for using the
@@ -77,6 +78,8 @@ observations :math:`\mathbf{y}^o`.
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 

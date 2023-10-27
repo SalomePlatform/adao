@@ -38,9 +38,16 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
         selfA._parameters["SampleAsnUplet"],
         selfA._parameters["SampleAsExplicitHyperCube"],
         selfA._parameters["SampleAsMinMaxStepHyperCube"],
+        selfA._parameters["SampleAsMinMaxLatinHyperCube"],
         selfA._parameters["SampleAsIndependantRandomVariables"],
         Xb,
+        selfA._parameters["SetSeed"],
         )
+    #
+    if hasattr(sampleList,"__len__") and len(sampleList) == 0:
+        if outputEOX: return numpy.array([[]]), numpy.array([[]])
+        else:         return numpy.array([[]])
+    #
     if outputEOX or selfA._toStore("EnsembleOfStates"):
         EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
     #
@@ -88,13 +95,15 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
     # ----------
     #
     if selfA._toStore("EnsembleOfStates"):
-        assert EOX.shape[1] == EOS.shape[1], "  Error of number of states in Ensemble Of Simulations Generation"
+        if EOX.shape[1] != EOS.shape[1]:
+            raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))
         selfA.StoredVariables["EnsembleOfStates"].store( EOX )
     if selfA._toStore("EnsembleOfSimulations"):
         selfA.StoredVariables["EnsembleOfSimulations"].store( EOS )
     #
     if outputEOX:
-        assert EOX.shape[1] == EOS.shape[1], "  Error of number of states in Ensemble Of Simulations Generation"
+        if EOX.shape[1] != EOS.shape[1]:
+            raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))
         return EOX, EOS
     else:
         return EOS

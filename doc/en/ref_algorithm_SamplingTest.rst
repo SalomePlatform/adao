@@ -41,8 +41,10 @@ This test is useful for analyzing the sensitivity of the functional :math:`J`
 to variations in the state :math:`\mathbf{x}` in particular.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
-form of hyper-cubes, explicit or sampled according to classic distributions.
-Beware of the size of the hyper-cube (and then to the number of computations)
+form of hypercubes, explicit or sampled according to classic distributions, or
+using Latin hypercube sampling (LHS). The computations are optimized according
+to the computer resources available and the options requested by the user.
+Beware of the size of the hypercube (and then to the number of computations)
 that can be reached, it can grow quickly to be quite large. When a state is not
 observable, a *"NaN"* value is returned.
 
@@ -83,6 +85,8 @@ treatment during the calculation by well suited "*observer*".
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 

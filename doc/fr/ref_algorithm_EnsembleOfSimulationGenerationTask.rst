@@ -48,11 +48,13 @@ choisie de vecteurs d'états :math:`\mathbf{x}` (disponible à l'aide de la
 variable stockable "*EnsembleOfStates*").
 
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
-ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
-distributions courantes. Les calculs sont optimisés selon les ressources
-informatiques disponibles et les options demandées par l'utilisateur. Attention
-à la taille de l'hyper-cube (et donc au nombre de calculs) qu'il est possible
-d'atteindre, elle peut rapidement devenir importante.
+ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
+distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
+(LHS). Les calculs sont optimisés selon les ressources informatiques
+disponibles et les options demandées par l'utilisateur. Attention à la taille
+de l'hypercube (et donc au nombre de calculs) qu'il est possible d'atteindre,
+elle peut rapidement devenir importante. Lorsqu'un état n'est pas observable,
+une valeur *"NaN"* est retournée.
 
 Pour apparaître pour l'utilisateur tout en réduisant les difficultés de
 stockage, les résultats de l'échantillonnage ou des simulations doivent être
@@ -78,6 +80,8 @@ d'échantillonnage pour établir un ensemble de valeurs de fonctionnelle d'erreu
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 

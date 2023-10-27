@@ -5,7 +5,9 @@ The 3DVAR can also be used for a **time analysis of the observations of a given
 dynamic model**. In this case, the analysis is performed iteratively, at the
 arrival of each observation. For this example, we use the same simple dynamic
 system [Welch06]_ that is analyzed in the Kalman Filter
-:ref:`section_ref_algorithm_KalmanFilter_examples`.
+:ref:`section_ref_algorithm_KalmanFilter_examples`. For a good understanding of
+time management, please refer to the :ref:`schema_d_AD_temporel` and the
+explanations in the section :ref:`section_theory_dynamic`.
 
 At each step, the classical 3DVAR analysis updates only the state of the
 system. By modifying the *a priori* covariance values with respect to the

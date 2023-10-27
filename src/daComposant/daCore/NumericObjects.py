@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import os, copy, types, sys, logging, math, numpy, itertools
 from daCore.BasicObjects import Operator, Covariance, PartialAlgorithm
-from daCore.PlatformInfo import PlatformInfo, vfloat
+from daCore.PlatformInfo import PlatformInfo, vt, vfloat
 mpr = PlatformInfo().MachinePrecision()
 mfp = PlatformInfo().MaximumPrecision()
 # logging.getLogger().setLevel(logging.DEBUG)
@@ -1036,8 +1036,10 @@ def BuildComplexSampleList(
     __SampleAsnUplet,
     __SampleAsExplicitHyperCube,
     __SampleAsMinMaxStepHyperCube,
+    __SampleAsMinMaxLatinHyperCube,
     __SampleAsIndependantRandomVariables,
     __X0,
+    __Seed = None,
     ):
     # ---------------------------
     if len(__SampleAsnUplet) > 0:
@@ -1045,8 +1047,10 @@ def BuildComplexSampleList(
         for i,Xx in enumerate(sampleList):
             if numpy.ravel(Xx).size != __X0.size:
                 raise ValueError("The size %i of the %ith state X in the sample and %i of the checking point Xb are different, they have to be identical."%(numpy.ravel(Xx).size,i+1,X0.size))
+    # ---------------------------
     elif len(__SampleAsExplicitHyperCube) > 0:
         sampleList = itertools.product(*list(__SampleAsExplicitHyperCube))
+    # ---------------------------
     elif len(__SampleAsMinMaxStepHyperCube) > 0:
         coordinatesList = []
         for i,dim in enumerate(__SampleAsMinMaxStepHyperCube):
@@ -1055,6 +1059,27 @@ def BuildComplexSampleList(
             else:
                 coordinatesList.append(numpy.linspace(dim[0],dim[1],1+int((float(dim[1])-float(dim[0]))/float(dim[2]))))
         sampleList = itertools.product(*coordinatesList)
+    # ---------------------------
+    elif len(__SampleAsMinMaxLatinHyperCube) > 0:
+        import scipy, warnings
+        if vt(scipy.version.version) <= vt("1.7.0"):
+            __msg = "In order to use Latin Hypercube sampling, you must at least use Scipy version 1.7.0 (and you are presently using Scipy %s). A void sample is then generated."%scipy.version.version
+            warnings.warn(__msg, FutureWarning, stacklevel=50)
+            coordinatesList = []
+        else:
+            __spDesc = list(__SampleAsMinMaxLatinHyperCube)
+            __nbSamp = int(__spDesc.pop()[1])
+            __sample = scipy.stats.qmc.LatinHypercube(
+                d = len(__spDesc),
+                seed = numpy.random.default_rng(__Seed),
+                )
+            __sample = __sample.random(n = __nbSamp)
+            __bounds = numpy.array(__spDesc)[:,0:2]
+            l_bounds = __bounds[:,0]
+            u_bounds = __bounds[:,1]
+            coordinatesList = scipy.stats.qmc.scale(__sample, l_bounds, u_bounds)
+        sampleList = coordinatesList
+    # ---------------------------
     elif len(__SampleAsIndependantRandomVariables) > 0:
         coordinatesList = []
         for i,dim in enumerate(__SampleAsIndependantRandomVariables):

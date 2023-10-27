@@ -2,6 +2,8 @@
 ADAO Study report
 ================================================================================
 
+Summary build with ADAO version 9.12.0
+
   - AlgorithmParameters command has been set with values:
         Algorithm = '3DVAR'
 

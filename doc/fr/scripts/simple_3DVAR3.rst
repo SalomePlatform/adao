@@ -7,7 +7,7 @@ des erreurs d'ébauche au cours des itérations. Cette remise à jour est une
 **hypothèse** de l'utilisateur, et il y a de multiples possibilités qui vont
 dépendre de la physique du cas. On en illustre une ici.
 
-On choisit, arbitrairement, de faire décroître la covariance *a priori* des
+On choisit, **arbitrairement**, de faire décroître la covariance *a priori* des
 erreurs d'ébauche d'un facteur constant :math:`0.9^2=0.81` tant qu'elle reste
 supérieure à une valeur limite de :math:`0.1^2=0.01` (qui est la valeur fixe de
 covariance *a priori* des erreurs d'ébauche de l'exemple précédent), sachant
@@ -28,5 +28,5 @@ décroissance de la covariance *a priori*.
 
     On insiste sur le fait que les variations de covariance *a priori*, qui
     conditionnent les variations de covariance *a posteriori*, relèvent d'une
-    **hypothèse utilisateur** et non pas d'une obligation. Cette hypothèse doit
-    donc être **adaptée en fonction du cas physique**.
+    **hypothèse arbitraire de l'utilisateur** et non pas d'une obligation.
+    Cette hypothèse doit donc être **adaptée en fonction du cas physique**.

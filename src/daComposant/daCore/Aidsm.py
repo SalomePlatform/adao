@@ -35,6 +35,7 @@ from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
 from daCore.BasicObjects import RegulationAndParameters, CaseLogger
 from daCore.BasicObjects import UserScript, ExternalParameters
 from daCore import PlatformInfo
+from daCore import version
 #
 from daCore import ExtendedLogging ; ExtendedLogging.ExtendedLogging() # A importer en premier
 import logging
@@ -486,6 +487,7 @@ class Aidsm(object):
         self.__case.register("setDebug",dir(),locals())
         log = logging.getLogger()
         log.setLevel( __level )
+        logging.debug("Mode debug initialisé avec %s %s"%(version.name, version.version))
         self.__StoredInputs["Debug"]   = __level
         self.__StoredInputs["NoDebug"] = False
         return 0

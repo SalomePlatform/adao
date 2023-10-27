@@ -80,11 +80,12 @@ Il y a deux manières d'utiliser cet algorithme:
 Dans le cas où l'on fournit le plan d'expérience, l'échantillonnage des états
 :math:`\mathbf{x}` peut être fourni comme pour un
 :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`, explicitement
-ou sous la forme d'hyper-cubes, explicites ou échantillonnés selon des
-distributions courantes. Les calculs sont optimisés selon les ressources
-informatiques disponibles et les options demandées par l'utilisateur. Attention
-à la taille de l'hyper-cube (et donc au nombre de calculs) qu'il est possible
-d'atteindre, elle peut rapidement devenir importante.
+ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
+distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
+(LHS). Les calculs sont optimisés selon les ressources informatiques
+disponibles et les options demandées par l'utilisateur. Attention à la taille
+de l'hypercube (et donc au nombre de calculs) qu'il est possible d'atteindre,
+elle peut rapidement devenir importante.
 
   .. _mop_determination:
   .. image:: images/mop_determination.png
@@ -120,6 +121,8 @@ d'analyse pour une recherche de positionnement contraint.
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
+
+.. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
