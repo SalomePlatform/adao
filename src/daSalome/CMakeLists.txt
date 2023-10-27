@@ -27,9 +27,16 @@ if( NOT ADAO_SALOME_MODULE)
 
 else(NOT ADAO_SALOME_MODULE)
 
+  if (WIN32)
+    SET(ENV{PYTHONPATH} "${CMAKE_INSTALL_PREFIX}/${ADAO_SCRIPT_PYTHON};$ENV{PYTHONPATH}")
+  else(WIN32)
+    SET(ENV{PYTHONPATH} "${CMAKE_INSTALL_PREFIX}/${ADAO_SCRIPT_PYTHON}:$ENV{PYTHONPATH}")
+  endif(WIN32)
+  EXECUTE_PROCESS(COMMAND python3 -c "import adao; print(adao.__version__)" OUTPUT_VARIABLE ADAO_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+  SALOME_SETUP_VERSION(${ADAO_VERSION})
   INSTALL(CODE "
     FILE(WRITE ${CMAKE_INSTALL_PREFIX}/${ADAO_SCRIPT_PYTHON_SALOME}/salome/adao/__init__.py
-    \"import adao\n__version__ = adao.__version__\n__sha1__ = \'\'\"
+    \"__version__ = \'${ADAO_VERSION}\'\n__sha1__ = \'${ADAO_GIT_SHA1}\'\"
     )
   ")
 
