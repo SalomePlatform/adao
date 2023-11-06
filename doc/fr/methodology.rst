@@ -66,8 +66,8 @@ Procédure détaillée pour une étude
 
 .. _section_m_step1:
 
-ÉTAPE 1: Spécifier la résolution du système physique et les paramètres à ajuster
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 1 : Spécifier la résolution du système physique et les paramètres à ajuster
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Une source essentielle de connaissance du système physique étudié est la
 simulation numérique. Elle est souvent disponible à travers un ou des cas de
@@ -110,8 +110,8 @@ et d'extraction du code de simulation.
 
 .. _section_m_step2:
 
-ÉTAPE 2: Spécifier les critères de qualification des résultats physiques
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 2 : Spécifier les critères de qualification des résultats physiques
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Comme les systèmes étudiés ont une réalité physique, il est important d'exprimer
 les **informations physiques qui peuvent aider à qualifier un état simulé du
@@ -137,8 +137,8 @@ faciliter l'évaluation de la qualité globale des résultats numériques
 
 .. _section_m_step3:
 
-ÉTAPE 3: Identifier et décrire les observations disponibles
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 3 : Identifier et décrire les observations disponibles
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 En tant que seconde source d'information principale à propos du système physique
 à étudier, les **observations, ou mesures,** notées :math:`\mathbf{y}^o`,
@@ -157,8 +157,8 @@ ou pas, les formats de données, les interfaces d'accès, etc.
 
 .. _section_m_step4:
 
-ÉTAPE 4: Spécifier les éléments de modélisation de l'AD/Optimisation (covariances, ébauche...)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 4 : Spécifier les éléments de modélisation de l'AD/Optimisation (covariances, ébauche...)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Des éléments supplémentaires de modélisation en Assimilation de Données ou en
 Optimisation permettent d'améliorer l'information à propos de la représentation
@@ -182,8 +182,8 @@ d'évolution** associée.
 
 .. _section_m_step5:
 
-ÉTAPE 5: Choisir l'algorithme d'optimisation et ses paramètres
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 5 : Choisir l'algorithme d'optimisation et ses paramètres
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 L'Assimilation de Données ou l'Optimisation demandent de résoudre un problème
 d'optimisation, le plus souvent sous la forme d'un problème de minimisation.
@@ -208,8 +208,8 @@ génériques et de changer le moins possible les paramètres par défaut connus.
 
 .. _section_m_step6:
 
-ÉTAPE 6: Conduire les calculs d'optimisation et obtenir les résultats
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 6 : Conduire les calculs d'optimisation et obtenir les résultats
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Après avoir mis au point une étude d'Assimilation de Données ou d'Optimisation,
 les calculs doivent être conduits de manière efficace.
@@ -234,8 +234,8 @@ d'optimisation.
 
 .. _section_m_step7:
 
-ÉTAPE 7: Exploiter les résultats et qualifier leur pertinence physique
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ÉTAPE 7 : Exploiter les résultats et qualifier leur pertinence physique
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Une fois les résultats obtenus, ils doivent être interprétés en termes de
 significations physique et numérique. Même si la démarche d'optimisation donne
