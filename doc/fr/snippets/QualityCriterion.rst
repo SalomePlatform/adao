@@ -11,6 +11,8 @@ QualityCriterion
   "LeastSquares" <=> "LS" <=> "L2",
   "AbsoluteValue" <=> "L1",
   "MaximumError" <=> "ME" <=> "Linf"].
+  On pourra se reporter à la section pour :ref:`section_theory_optimization`
+  afin de disposer de la définition détaillée de ces critères de qualité.
 
   Exemple :
   ``{"QualityCriterion":"DA"}``

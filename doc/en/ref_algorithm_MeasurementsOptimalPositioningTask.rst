@@ -80,9 +80,10 @@ If the design of experiments is supplied, the sampling of the states
 under form of hypercubes, explicit or sampled according to classic
 distributions, or using Latin hypercube sampling (LHS). The computations are
 optimized according to the computer resources available and the options
-requested by the user. Beware of the size of the hypercube (and then to the
-number of computations) that can be reached, it can grow quickly to be quite
-large.
+requested by the user. You can refer to the
+:ref:`section_ref_sampling_requirements` for an illustration of sampling.
+Beware of the size of the hypercube (and then to the number of computations)
+that can be reached, it can grow quickly to be quite large.
 
   .. _mop_determination:
   .. image:: images/mop_determination.png

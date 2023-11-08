@@ -7,4 +7,4 @@ SampleAsMinMaxStepHyperCube
   of the state. The bounds are included.
 
   Example :
-  ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2
+  ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` for a state space of dimension 2.

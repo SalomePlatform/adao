@@ -12,4 +12,4 @@ SampleAsIndependantRandomVariables
   the one of the state.
 
   Example :
-  ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` for a state space of dimension 2
+  ``{"SampleAsIndependantRandomVariables":[['normal',[0.,1.],3], ['uniform',[-2,2],4]]}`` for a state space of dimension 2.

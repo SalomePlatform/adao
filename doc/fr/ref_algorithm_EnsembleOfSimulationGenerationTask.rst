@@ -51,10 +51,12 @@ L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
 distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
 (LHS). Les calculs sont optimisés selon les ressources informatiques
-disponibles et les options demandées par l'utilisateur. Attention à la taille
-de l'hypercube (et donc au nombre de calculs) qu'il est possible d'atteindre,
-elle peut rapidement devenir importante. Lorsqu'un état n'est pas observable,
-une valeur *"NaN"* est retournée.
+disponibles et les options demandées par l'utilisateur. On pourra se reporter
+aux :ref:`section_ref_sampling_requirements` pour une illustration de
+l'échantillonnage. Attention à la taille de l'hypercube (et donc au nombre de
+calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
+importante. Lorsqu'un état n'est pas observable, une valeur *"NaN"* est
+retournée.
 
 Pour apparaître pour l'utilisateur tout en réduisant les difficultés de
 stockage, les résultats de l'échantillonnage ou des simulations doivent être

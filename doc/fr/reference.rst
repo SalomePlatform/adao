@@ -77,6 +77,7 @@ notations mathématiques relatives à ces entrées sont expliquées dans la sect
    ref_observations_requirements
    ref_operator_requirements
    ref_covariance_requirements
+   ref_sampling_requirements
    ref_observers_requirements
    ref_userpostanalysis_requirements
 

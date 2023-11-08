@@ -10,4 +10,4 @@ SampleAsMinMaxLatinHyperCube
   using the Latin hypercube method (LHS).
 
   Example :
-  ``{"SampleAsMinMaxLatinHyperCube":[[0.,1.],[-1,3]]+[[2,11]]}`` for a state space of dimension 2 and 11 sampling points
+  ``{"SampleAsMinMaxLatinHyperCube":[[0.,1.],[-1,3]]+[[2,11]]}`` for a state space of dimension 2 and 11 sampling points.

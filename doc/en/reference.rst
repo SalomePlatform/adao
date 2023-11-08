@@ -76,6 +76,7 @@ related to these inputs are explained in section :ref:`section_theory`.
    ref_observations_requirements
    ref_operator_requirements
    ref_covariance_requirements
+   ref_sampling_requirements
    ref_observers_requirements
    ref_userpostanalysis_requirements
 

@@ -6,4 +6,4 @@ SampleAsExplicitHyperCube
   explicites de chaque variable comme une liste. C'est donc une liste de
   listes, chacune étant de taille potentiellement différente.
 
-  Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` pour un espace d'état de dimension 2
+  Exemple : ``{"SampleAsExplicitHyperCube":[[0.,0.25,0.5,0.75,1.], [-2,2,1]]}`` pour un espace d'état de dimension 2.

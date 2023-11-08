@@ -12,4 +12,4 @@ SampleAsIndependantRandomVariables
   donc une liste de la même taille que celle de l'état.
 
   Exemple :
-  ``{"SampleAsIndependantRandomVariables":[ ['normal',[0.,1.],3], ['uniform',[-2,2],4]]`` pour un espace d'état de dimension 2
+  ``{"SampleAsIndependantRandomVariables":[['normal',[0.,1.],3], ['uniform',[-2,2],4]]}`` pour un espace d'état de dimension 2.

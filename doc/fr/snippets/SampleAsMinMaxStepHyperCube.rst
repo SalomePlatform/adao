@@ -7,4 +7,4 @@ SampleAsMinMaxStepHyperCube
   liste de la même taille que celle de l'état. Les bornes sont incluses.
 
   Exemple :
-  ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état de dimension 2
+  ``{"SampleAsMinMaxStepHyperCube":[[0.,1.,0.25],[-1,3,1]]}`` pour un espace d'état de dimension 2.
