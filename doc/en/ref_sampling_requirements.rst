@@ -167,7 +167,7 @@ follows:
     "SampleAsMinMaxSobolSequence":[[0, 4], [0, 4], [2, 25]]
     [...]
 
-The distribution of states (there will be 36 here by construction principle of
+The distribution of states (there will be 32 here by construction principle of
 the Sobol sequence) thus described corresponds to the illustration:
 
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png

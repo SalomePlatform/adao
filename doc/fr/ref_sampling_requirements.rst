@@ -172,7 +172,7 @@ La commande de génération implicite d'échantillons par
     "SampleAsMinMaxSobolSequence":[[0, 4, 1], [0, 4, 1], [2, 25]]
     [...]
 
-La répartition des états (il y en a ici 36 par principe de construction de la
+La répartition des états (il y en a ici 32 par principe de construction de la
 séquence de Sobol) ainsi décrite correspond à l'illustration :
 
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
