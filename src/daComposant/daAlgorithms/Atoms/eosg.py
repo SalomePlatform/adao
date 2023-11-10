@@ -39,6 +39,7 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
         selfA._parameters["SampleAsExplicitHyperCube"],
         selfA._parameters["SampleAsMinMaxStepHyperCube"],
         selfA._parameters["SampleAsMinMaxLatinHyperCube"],
+        selfA._parameters["SampleAsMinMaxSobolSequence"],
         selfA._parameters["SampleAsIndependantRandomVariables"],
         Xb,
         selfA._parameters["SetSeed"],

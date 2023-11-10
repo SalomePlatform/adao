@@ -85,6 +85,8 @@ d'échantillonnage pour établir un ensemble de valeurs de fonctionnelle d'erreu
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
+.. include:: snippets/SampleAsMinMaxSobolSequence.rst
+
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
 .. include:: snippets/SampleAsnUplet.rst

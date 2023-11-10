@@ -252,6 +252,8 @@ class ReportViewInPlainTxt(__ReportV__):
     Report in plain TXT
     """
     #
+    __slots__ = ()
+    #
     default_filename="report.txt"
     tags = {
         "p":["\n",""],

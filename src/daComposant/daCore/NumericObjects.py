@@ -544,7 +544,12 @@ def EnsembleOfCenteredPerturbations( __bgCenter, __bgCovariance, __nbMembers ):
     return _Perturbations
 
 # ==============================================================================
-def EnsembleOfBackgroundPerturbations( __bgCenter, __bgCovariance, __nbMembers, __withSVD = True ):
+def EnsembleOfBackgroundPerturbations(
+        __bgCenter,
+        __bgCovariance,
+        __nbMembers,
+        __withSVD = True,
+        ):
     "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
     def __CenteredRandomAnomalies(Zr, N):
         """
@@ -1037,6 +1042,7 @@ def BuildComplexSampleList(
     __SampleAsExplicitHyperCube,
     __SampleAsMinMaxStepHyperCube,
     __SampleAsMinMaxLatinHyperCube,
+    __SampleAsMinMaxSobolSequence,
     __SampleAsIndependantRandomVariables,
     __X0,
     __Seed = None,
@@ -1065,20 +1071,40 @@ def BuildComplexSampleList(
         if vt(scipy.version.version) <= vt("1.7.0"):
             __msg = "In order to use Latin Hypercube sampling, you must at least use Scipy version 1.7.0 (and you are presently using Scipy %s). A void sample is then generated."%scipy.version.version
             warnings.warn(__msg, FutureWarning, stacklevel=50)
-            coordinatesList = []
+            sampleList = []
         else:
             __spDesc = list(__SampleAsMinMaxLatinHyperCube)
-            __nbSamp = int(__spDesc.pop()[1])
+            __nbDime,__nbSamp  = map(int, __spDesc.pop()) # Réduction du dernier
             __sample = scipy.stats.qmc.LatinHypercube(
                 d = len(__spDesc),
                 seed = numpy.random.default_rng(__Seed),
                 )
             __sample = __sample.random(n = __nbSamp)
             __bounds = numpy.array(__spDesc)[:,0:2]
-            l_bounds = __bounds[:,0]
-            u_bounds = __bounds[:,1]
-            coordinatesList = scipy.stats.qmc.scale(__sample, l_bounds, u_bounds)
-        sampleList = coordinatesList
+            __l_bounds = __bounds[:,0]
+            __u_bounds = __bounds[:,1]
+            sampleList = scipy.stats.qmc.scale(__sample, __l_bounds, __u_bounds)
+    # ---------------------------
+    elif len(__SampleAsMinMaxSobolSequence) > 0:
+        import scipy, warnings
+        if vt(scipy.version.version) <= vt("1.7.0"):
+            __msg = "In order to use Latin Hypercube sampling, you must at least use Scipy version 1.7.0 (and you are presently using Scipy %s). A void sample is then generated."%scipy.version.version
+            warnings.warn(__msg, FutureWarning, stacklevel=50)
+            sampleList = []
+        else:
+            __spDesc = list(__SampleAsMinMaxSobolSequence)
+            __nbDime,__nbSamp  = map(int, __spDesc.pop()) # Réduction du dernier
+            if __nbDime != len(__spDesc):
+                warnings.warn("Declared space dimension (%i) is not equal to number of bounds (%i), the last one will be used."%(__nbDime, len(__spDesc)), FutureWarning, stacklevel=50)
+            __sample = scipy.stats.qmc.Sobol(
+                d = len(__spDesc),
+                seed = numpy.random.default_rng(__Seed),
+                )
+            __sample = __sample.random_base2(m = int(math.log2(__nbSamp))+1)
+            __bounds = numpy.array(__spDesc)[:,0:2]
+            __l_bounds = __bounds[:,0]
+            __u_bounds = __bounds[:,1]
+            sampleList = scipy.stats.qmc.scale(__sample, __l_bounds, __u_bounds)
     # ---------------------------
     elif len(__SampleAsIndependantRandomVariables) > 0:
         coordinatesList = []

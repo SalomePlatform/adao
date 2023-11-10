@@ -64,6 +64,8 @@ Ces mots-clés possibles sont les suivants :
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
+.. include:: snippets/SampleAsMinMaxSobolSequence.rst
+
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
 .. include:: snippets/SampleAsnUplet.rst
@@ -158,6 +160,24 @@ La répartition des états ainsi décrite correspond à l'illustration :
   .. image:: images/sampling_04_SampleAsMinMaxLatinHyperCube.png
     :align: center
 
+Répartition implicite d'états par le mot-clé "*SampleAsMinMaxSobolSequence*"
+............................................................................
+
+La commande de génération implicite d'échantillons par
+"*SampleAsMinMaxSobolSequence*" est la suivante :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsMinMaxSobolSequence":[[0, 4, 1], [0, 4, 1], [2, 25]]
+    [...]
+
+La répartition des états (il y en a ici 36 par principe de construction de la
+séquence de Sobol) ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
+    :align: center
+
 Répartition implicite d'états par le mot-clé "*SampleAsIndependantRandomVariables*" avec loi normale
 ....................................................................................................
 
@@ -173,7 +193,7 @@ normale (0,1) de répartition par coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_05_SampleAsIndependantRandomVariables_normal.png
+  .. image:: images/sampling_06_SampleAsIndependantRandomVariables_normal.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependantRandomVariables*" avec loi uniforme
@@ -191,7 +211,7 @@ uniforme entre 0 et 5 de répartition par coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_06_SampleAsIndependantRandomVariables_uniform.png
+  .. image:: images/sampling_07_SampleAsIndependantRandomVariables_uniform.png
     :align: center
 
 Répartition implicite par le mot-clé "*SampleAsIndependantRandomVariables*" avec loi de Weibull
@@ -209,5 +229,5 @@ Weibull à un paramètre de valeur 5 de répartition par coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_07_SampleAsIndependantRandomVariables_weibull.png
+  .. image:: images/sampling_08_SampleAsIndependantRandomVariables_weibull.png
     :align: center

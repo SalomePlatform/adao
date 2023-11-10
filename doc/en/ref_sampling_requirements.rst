@@ -49,9 +49,9 @@ Explicit or implicit description of the state sampling collection
 The state sampling collection can be described using dedicated keywords in the
 command set of an algorithm that requires it.
 
-State sampling :math:`\mathbf{x}` can be provided explicitly or in the form of
-hypercubes, explicit or sampled according to common distributions, or using
-Latin Hypercube Sampling (LHS).
+The sampling of the states :math:`\mathbf{x}` can be provided explicitly or in
+the form of hypercubes, explicit or sampled according to common distributions,
+or using Latin Hypercube Sampling (LHS).
 
 These possible keywords are:
 
@@ -60,6 +60,8 @@ These possible keywords are:
 .. include:: snippets/SampleAsIndependantRandomVariables.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
+
+.. include:: snippets/SampleAsMinMaxSobolSequence.rst
 
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
@@ -153,6 +155,24 @@ The distribution of states thus described corresponds to the illustration:
   .. image:: images/sampling_04_SampleAsMinMaxLatinHyperCube.png
     :align: center
 
+Implicit state distribution by keyword "*SampleAsMinMaxSobolSequence*"
+.......................................................................
+
+Implicit sample generation command by "*SampleAsMinMaxSobolSequence*" is as
+follows:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsMinMaxSobolSequence":[[0, 4], [0, 4], [2, 25]]
+    [...]
+
+The distribution of states (there will be 36 here by construction principle of
+the Sobol sequence) thus described corresponds to the illustration:
+
+  .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
+    :align: center
+
 Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with normal law
 .............................................................................................
 
@@ -167,7 +187,7 @@ follows, using a normal distribution (0,1) by coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_05_SampleAsIndependantRandomVariables_normal.png
+  .. image:: images/sampling_06_SampleAsIndependantRandomVariables_normal.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with uniform law
@@ -185,7 +205,7 @@ distribution:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_06_SampleAsIndependantRandomVariables_uniform.png
+  .. image:: images/sampling_07_SampleAsIndependantRandomVariables_uniform.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with Weibull law
@@ -203,5 +223,5 @@ distribution:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_07_SampleAsIndependantRandomVariables_weibull.png
+  .. image:: images/sampling_08_SampleAsIndependantRandomVariables_weibull.png
     :align: center

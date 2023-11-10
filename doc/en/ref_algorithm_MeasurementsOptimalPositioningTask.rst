@@ -122,6 +122,8 @@ constrained positioning search.
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
+.. include:: snippets/SampleAsMinMaxSobolSequence.rst
+
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
 .. include:: snippets/SampleAsnUplet.rst

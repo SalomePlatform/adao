@@ -104,6 +104,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi du nombre de points demandés",
             )
         self.defineRequiredParameter(
+            name     = "SampleAsMinMaxSobolSequence",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par une séquence de Sobol dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",
+            )
+        self.defineRequiredParameter(
             name     = "SampleAsIndependantRandomVariables",
             default  = [],
             typecast = tuple,

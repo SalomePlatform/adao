@@ -89,6 +89,8 @@ treatment during the calculation by well suited "*observer*".
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
+.. include:: snippets/SampleAsMinMaxSobolSequence.rst
+
 .. include:: snippets/SampleAsMinMaxStepHyperCube.rst
 
 .. include:: snippets/SampleAsnUplet.rst
