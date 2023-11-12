@@ -10,7 +10,8 @@ SampleAsMinMaxLatinHyperCube
   des états, est complétée par une paire d'entier *[dim,nbr]* comportant la
   dimension de l'espace des états et le nombre souhaité de points
   d'échantillonnage. L'échantillonnage est ensuite construit automatiquement
-  selon la méthode de l'hypercube Latin (LHS).
+  selon la méthode de l'hypercube Latin (LHS). Par nature, les points sont
+  inclus dans le domaine défini par les bornes explicites.
 
   Exemple :
   ``{"SampleAsMinMaxLatinHyperCube":[[0.,1.],[-1,3]]+[[2,11]]}`` pour un espace d'état de dimension 2 et 11 points d'échantillonnage.

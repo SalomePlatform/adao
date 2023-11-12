@@ -51,7 +51,9 @@ command set of an algorithm that requires it.
 
 The sampling of the states :math:`\mathbf{x}` can be provided explicitly or in
 the form of hypercubes, explicit or sampled according to common distributions,
-or using Latin Hypercube Sampling (LHS).
+or using Latin Hypercube Sampling (LHS). Depending on the method, the sample
+will be included in the domain described by its bounds, or will be descriptive
+of the unbounded domain of state variables.
 
 These possible keywords are:
 

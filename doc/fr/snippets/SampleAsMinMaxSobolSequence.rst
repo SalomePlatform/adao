@@ -12,7 +12,8 @@ SampleAsMinMaxSobolSequence
   d'échantillonnage (par construction, le nombre de points générés dans la
   séquence de Sobol sera la puissance de 2 immédiatement supérieure à ce nombre
   minimum). L'échantillonnage est ensuite construit automatiquement selon la
-  méthode de séquences de Sobol.
+  méthode de séquences de Sobol. Par nature, les points sont inclus dans le
+  domaine défini par les bornes explicites.
 
   Exemple :
   ``{"SampleAsMinMaxSobolSequence":[[0.,1.],[-1,3]]+[[2,11]]}`` pour un espace d'état de dimension 2 et au moins 11 points d'échantillonnage (il y aura 16 points en pratique).

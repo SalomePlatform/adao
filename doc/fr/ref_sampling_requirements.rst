@@ -54,7 +54,8 @@ mots-clés dédiés dans le jeu de commandes d'un algorithme qui le nécessite.
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
 distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
-(LHS).
+(LHS). Selon la méthode, l'échantillon sera inclus dans le domaine décrit par
+ses bornes ou sera descriptif du domaine non borné des variables d'état.
 
 Ces mots-clés possibles sont les suivants :
 
