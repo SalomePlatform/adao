@@ -33,7 +33,7 @@ simples d’utilisation du module (principalement mais pas uniquement en TUI).
 
 Ces exemples sont disponibles en direct dans les tutoriaux, dans les
 documentations détaillées d'algorithmes ou de problèmes appliqués, et dans les
-usages avancés.
+usages avancés. Ils sont rassemblés ici par catégorie et ordre alphabétique.
 
 Tutoriaux
 ---------

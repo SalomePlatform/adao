@@ -32,7 +32,8 @@ the direct pointers, to the appropriate sections, of simple examples of use of
 the module (mainly but not only in TUI).
 
 These examples are available in the tutorials, in the detailed documentations
-of algorithms or applied problems, and in the advanced uses.
+of algorithms or applied problems, and in the advanced uses. They are listed
+here by category and alphabetical order.
 
 Tutorials
 ---------
