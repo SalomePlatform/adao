@@ -81,8 +81,8 @@ following stable and robust formulations are proposed here:
 - "ETKF" (Ensemble-Transform Kalman Filter), deterministic EnKF algorithm, allowing treatment of non-linear evolution operator with a lot less members (one recommends to use a number of members on the order of 10 or even sometimes less),
 - "ETKF-N" (Ensemble-Transform Kalman Filter of finite size N), ETKF algorithm of "finite size N", that doesn't need inflation that is often required with the other algorithms,
 - "MLEF" (Maximum Likelihood Kalman Filter, see [Zupanski05]_), deterministic EnKF algorithm, allowing in addition the consistent treatment of non-linear observation operator,
-- "IEnKF" (Iterative EnKF), deterministic EnKF algorithm, improving treament of operators non-linearities
-- "E3DVAR" (EnKF 3DVAR, or 3D-Var-Ben), algorithm coupling ensemble and variational assimilation, which uses in parallel a 3DVAR variational assimilation for a single best estimate and an EnKF ensemble algorithm to improve the estimation of *a posteriori* error covariances
+- "IEnKF" (Iterative EnKF), deterministic EnKF algorithm, improving treament of operators non-linearities,
+- "E3DVAR" (EnKF 3DVAR, or 3D-Var-Ben), algorithm coupling ensemble and variational assimilation, which uses in parallel a 3DVAR variational assimilation for a single best estimate and an EnKF ensemble algorithm to improve the estimation of *a posteriori* error covariances,
 - "EnKS" (Ensemble Kalman Smoother), smoothing algorithm with a fixed time lag L.
 
 Without being a universal recommendation, one recommend to use "EnKF"

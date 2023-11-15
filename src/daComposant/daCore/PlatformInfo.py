@@ -33,7 +33,7 @@
 
     La classe "PathManagement" permet de mettre à jour les chemins système pour
     ajouter les outils numériques, matrices... On l'utilise en instanciant
-    simplement cette classe, sans meme récupérer d'objet :
+    simplement cette classe, sans même récupérer d'objet :
         PathManagement()
 
     La classe "SystemUsage" permet de  sous Unix les différentes tailles
@@ -47,6 +47,7 @@ __all__ = []
 import os
 import sys
 import platform
+import socket
 import locale
 import logging
 import re
@@ -97,21 +98,33 @@ class PlatformInfo(object):
                 __msg += "\n%s%30s : %s" %(__prefix,
                     "platform.linux_distribution",str(platform.linux_distribution()))
             elif hasattr(platform, 'dist'):
-                __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
+                __msg += "\n%s%30s : %s" %(__prefix,
+                    "platform.dist",str(platform.dist()))
         elif sys.platform.startswith('darwin'):
             if hasattr(platform, 'mac_ver'):
-                __macosxv = {
+                # https://fr.wikipedia.org/wiki/MacOS
+                __macosxv10 = {
                     '0' : 'Cheetah',      '1' : 'Puma',        '2' : 'Jaguar',
                     '3' : 'Panther',      '4' : 'Tiger',       '5' : 'Leopard',
                     '6' : 'Snow Leopard', '7' : 'Lion',        '8' : 'Mountain Lion',
                     '9' : 'Mavericks',    '10': 'Yosemite',    '11': 'El Capitan',
                     '12': 'Sierra',       '13': 'High Sierra', '14': 'Mojave',
-                    '15': 'Catalina',     '16': 'Big Sur',     '17': 'Monterey',
+                    '15': 'Catalina',
                     }
-                for key in __macosxv:
-                    if (platform.mac_ver()[0].split('.')[1] == key):
+                for key in __macosxv10:
+                    __details = platform.mac_ver()[0].split('.')
+                    if (len(__details)>0) and (__details[1] == key):
                         __msg += "\n%s%30s : %s" %(__prefix,
-                            "platform.mac_ver",str(platform.mac_ver()[0]+"(" + __macosxv[key]+")"))
+                            "platform.mac_ver",str(platform.mac_ver()[0]+"(" + __macosxv10[key]+")"))
+                __macosxv11 = {
+                    '11': 'Big Sur',      '12': 'Monterey',    '13': 'Ventura',
+                    '14': 'Sonoma',
+                    }
+                for key in __macosxv11:
+                    __details = platform.mac_ver()[0].split('.')
+                    if (__details[0] == key):
+                        __msg += "\n%s%30s : %s" %(__prefix,
+                            "platform.mac_ver",str(platform.mac_ver()[0]+"(" + __macosxv11[key]+")"))
             elif hasattr(platform, 'dist'):
                 __msg += "\n%s%30s : %s" %(__prefix,"platform.dist",str(platform.dist()))
         elif os.name == 'nt':
@@ -134,6 +147,7 @@ class PlatformInfo(object):
             __msg += "\n%s%30s : %s" %(__prefix,"len(os.sched_getaffinity(0))","Unsupported on this platform")
         __msg += "\n"
         __msg += "\n%s%30s : %s" %(__prefix,"platform.node",platform.node())
+        __msg += "\n%s%30s : %s" %(__prefix,"socket.getfqdn",socket.getfqdn())
         __msg += "\n%s%30s : %s" %(__prefix,"os.path.expanduser",os.path.expanduser('~'))
         return __msg
     #
@@ -256,6 +270,8 @@ class PlatformInfo(object):
         return "%s %s (%s)"%(dav.name,dav.version,dav.date)
 
 # ==============================================================================
+# Tests d'importation de modules système
+
 try:
     import numpy
     has_numpy = True
@@ -275,12 +291,6 @@ try:
     has_matplotlib = True
 except ImportError:
     has_matplotlib = False
-
-try:
-    import Gnuplot
-    has_gnuplot = True
-except ImportError:
-    has_gnuplot = False
 
 try:
     import sphinx
@@ -563,6 +573,16 @@ class SystemUsage(object):
     def getMaxVirtualMemory(self, unit="o"):
         "Renvoie la mémoire totale maximale mesurée"
         return self._VmB('VmPeak:', unit)
+
+# ==============================================================================
+# Tests d'importation de modules locaux
+
+PathManagement()
+try:
+    import Gnuplot
+    has_gnuplot = True
+except ImportError:
+    has_gnuplot = False
 
 # ==============================================================================
 if __name__ == "__main__":
