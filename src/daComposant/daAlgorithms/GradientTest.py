@@ -216,6 +216,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
         msgs += ("\n")
         msgs += (__marge + "We take dX0 = Normal(0,X) and dX = Alpha*dX0. F is the calculation code.\n")
+        if "DifferentialIncrement" in HO and HO["DifferentialIncrement"] is not None:
+            msgs += ("\n")
+            msgs += (__marge + "Reminder: gradient operator is obtained internally by finite differences,\n")
+            msgs += (__marge + "with a differential increment of value %.2e.\n"%HO["DifferentialIncrement"])
         msgs += ("\n")
         msgs += (__marge + "(Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
         print(msgs) # 1

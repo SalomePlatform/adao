@@ -77,6 +77,25 @@ class Test_Adao(unittest.TestCase):
             adaopy.setObserver           ("CurrentState",Template="ValuePrinter")
             adaopy.execute()
             del adaopy
+        #
+        for algo in ("AdjointTest", "FunctionTest", "GradientTest", "LinearityTest", "TangentTest"):
+            print("")
+            msg = "Algorithme en test : %s"%algo
+            print(msg+"\n"+"-"*len(msg))
+            #
+            def simulation( arguments ):
+                _X = arguments
+                X = numpy.ravel( _X )
+                H = numpy.array([[1,0,0],[0,2,0],[0,0,3],[1,2,3]])
+                return numpy.dot(H,X)
+            #
+            adaopy = adaoBuilder.New()
+            adaopy.setAlgorithmParameters(Algorithm=algo, Parameters={"EpsilonMinimumExponent":-10,"NumberOfRepetition":2, "SetSeed":1000})
+            adaopy.setCheckingPoint      (Vector = [0,1,2])
+            adaopy.setBackgroundError    (ScalarSparseMatrix = 1.)
+            adaopy.setObservationOperator(OneFunction = simulation)
+            adaopy.execute()
+            del adaopy
 
 #===============================================================================
 if __name__ == "__main__":

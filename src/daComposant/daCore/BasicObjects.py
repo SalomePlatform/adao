@@ -587,6 +587,7 @@ class FullOperator(object):
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
                 extraArguments = self.__extraArgs )
+            self.__FO["DifferentialIncrement"] = __Function["DifferentialIncrement"]
         elif isinstance(__Function, dict) and \
                 ("Direct" in __Function) and ("Tangent" in __Function) and ("Adjoint" in __Function) and \
                 (__Function["Direct"] is not None) and (__Function["Tangent"] is not None) and (__Function["Adjoint"] is not None):
@@ -612,6 +613,7 @@ class FullOperator(object):
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
                 extraArguments = self.__extraArgs )
+            self.__FO["DifferentialIncrement"] = None
         elif asMatrix is not None:
             if isinstance(__Matrix, str):
                 __Matrix = PlatformInfo.strmatrix2liststr( __Matrix )
@@ -636,6 +638,7 @@ class FullOperator(object):
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF )
             del __matrice
+            self.__FO["DifferentialIncrement"] = None
         else:
             raise ValueError(
                 "The %s object is improperly defined or undefined,"%self.__name+\
