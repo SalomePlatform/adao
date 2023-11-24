@@ -17,7 +17,7 @@ l'étendue décrite ci-dessous.
 
    Python,     3.6.5,    3.11.6
    Numpy,      1.14.3,    1.26.0
-   Scipy,      0.19.1,    1.11.3
-   MatplotLib, 2.2.2,    3.8.1
+   Scipy,      0.19.1,    1.11.4
+   MatplotLib, 2.2.2,    3.8.2
    GnuplotPy,  1.8,    1.8
    NLopt,      2.4.2,    2.7.1
