@@ -15,5 +15,8 @@ SampleAsMinMaxSobolSequence
   méthode de séquences de Sobol. Par nature, les points sont inclus dans le
   domaine défini par les bornes explicites.
 
+  *Remarque : il est nécessaire de disposer de Scipy en version supérieure à
+  1.7.0 pour utiliser cette option échantillonnage.*
+
   Exemple :
   ``{"SampleAsMinMaxSobolSequence":[[0.,1.],[-1,3]]+[[2,11]]}`` pour un espace d'état de dimension 2 et au moins 11 points d'échantillonnage (il y aura 16 points en pratique).

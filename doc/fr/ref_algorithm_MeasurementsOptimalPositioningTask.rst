@@ -82,11 +82,11 @@ Dans le cas où l'on fournit le plan d'expérience, l'échantillonnage des état
 :ref:`section_ref_algorithm_EnsembleOfSimulationGenerationTask`, explicitement
 ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
 distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
-(LHS). Les calculs sont optimisés selon les ressources informatiques
-disponibles et les options demandées par l'utilisateur. On pourra se reporter
-aux :ref:`section_ref_sampling_requirements` pour une illustration de
-l'échantillonnage. Attention à la taille de l'hypercube (et donc au nombre de
-calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
+(LHS) ou par séquence de Sobol. Les calculs sont optimisés selon les ressources
+informatiques disponibles et les options demandées par l'utilisateur. On pourra
+se reporter aux :ref:`section_ref_sampling_requirements` pour une illustration
+de l'échantillonnage. Attention à la taille de l'hypercube (et donc au nombre
+de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
 importante.
 
   .. _mop_determination:

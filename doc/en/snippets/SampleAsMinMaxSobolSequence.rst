@@ -13,5 +13,8 @@ SampleAsMinMaxSobolSequence
   the Sobol sequence method. By nature, the points are included in the domain
   defined by the explicit bounds.
 
+  *Remark: it is required to have Scipy version 1.7.0 or higher to use this
+  sampling option.*
+
   Example :
   ``{"SampleAsMinMaxSobolSequence":[[0.,1.],[-1,3]]+[[2,11]]}`` for a state space of dimension 2 and 11 sampling points (there will be 16 points in practice).
