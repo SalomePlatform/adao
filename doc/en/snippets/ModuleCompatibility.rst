@@ -15,7 +15,7 @@ versions within the range described below.
    :widths: 20, 10, 10
 
    Python,     3.6.5,    3.11.6
-   Numpy,      1.14.3,    1.26.0
+   Numpy,      1.14.3,    1.26.2
    Scipy,      0.19.1,    1.11.4
    MatplotLib, 2.2.2,    3.8.2
    GnuplotPy,  1.8,    1.8
