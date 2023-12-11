@@ -140,21 +140,25 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += ("\n")
         msgs += (__marge + "%s\n\n"%("-"*75,))
         #
-        msgs += (__flech + "Interpolation error test for all given states:\n")
-        msgs += (__marge + "----------------------------------------------\n")
+        st = "Normalized interpolation error test using \"%s\" norm for all given states:"%self._parameters["ErrorNorm"]
+        msgs += (__flech + "%s\n"%st)
+        msgs += (__marge + "%s\n"%("-"*len(st),))
         msgs += ("\n")
-        Es = []
+        Ns, Es = [], []
         for ns in range(__nsn):
             __rm = __eos[__ip,ns]
             __im = ecweim.EIM_online(self, __rb, __eos[__ip,ns], __ip)
             #
             if   self._parameters["ErrorNorm"] == "L2":
-                __ecart = vfloat(numpy.linalg.norm( __eos[:,ns] - __im ) / numpy.linalg.norm( __eos[:,ns] ))
+                __norms = numpy.linalg.norm( __eos[:,ns] )
+                __ecart = vfloat(numpy.linalg.norm( __eos[:,ns] - __im ) / __norms )
             else:
-                __ecart = vfloat(numpy.linalg.norm( __eos[:,ns] - __im, ord=numpy.inf ) / numpy.linalg.norm( __eos[:,ns], ord=numpy.inf ))
+                __norms = numpy.linalg.norm( __eos[:,ns], ord=numpy.inf )
+                __ecart = vfloat(numpy.linalg.norm( __eos[:,ns] - __im, ord=numpy.inf ) / __norms )
+            Ns.append( __norms )
             Es.append( __ecart )
             if __s:
-                msgs += (__marge + "Normalized interpolation error (%s) for state number %0"+str(__ordre)+"i..: %."+str(__p)+"e\n")%(self._parameters["ErrorNorm"],ns,__ecart)
+                msgs += (__marge + "State %0"+str(__ordre)+"i: error of %."+str(__p)+"e for a state norm of %."+str(__p)+"e (= %3i%s)\n")%(ns,__ecart,__norms,100*__ecart/__norms,"%")
         msgs += ("\n")
         msgs += (__marge + "%s\n"%("-"*75,))
         #

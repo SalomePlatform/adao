@@ -50,8 +50,8 @@ numérique réduit.
 
 Pour interpoler ces mesures, on utilise une méthode de type Empirical
 Interpolation Method (EIM [Barrault04]_), qui utilise un modèle réduit de type
-Reduced Order Model (ROM), avec ou sans contraintes de positionnement de
-mesures.
+Reduced Order Model (ROM) provenant d'une décomposition EIM or DEIM, avec ou
+sans contraintes de positionnement de mesures.
 
 Pour utiliser cet algorithme, il faut disposer des mesures optimalement
 positionnées et de la base réduite associée pour la représentation du modèle.

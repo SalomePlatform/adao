@@ -45,7 +45,7 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     else:
         raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     __dimS, __nbmS = __EOS.shape
-    logging.debug("%s Building a RB using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
+    logging.debug("%s Using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
     #
     if   selfA._parameters["ErrorNorm"] == "L2":
         MaxNormByColumn = MaxL2NormByColumn
@@ -98,7 +98,6 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     __errors = []
     #
     __M      = 0
-    __iM     = -1
     __rhoM   = numpy.empty(__dimS)
     #
     __eM, __muM = MaxNormByColumn(__EOS, __LcCsts, __IncludedMagicPoints)
@@ -131,7 +130,7 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
             __Q = __rhoM.reshape((-1,1))
         __I.append(__iM)
         #
-        __restrictedQi = __Q[__I,:]
+        __restrictedQi = numpy.tril( __Q[__I,:] )
         if __M > 1:
             __Qi_inv = numpy.linalg.inv(__restrictedQi)
         else:
@@ -214,41 +213,27 @@ def EIM_online(selfA, QEIM, gJmu = None, mPoints = None, mu = None, PseudoInvers
 
 # ==============================================================================
 def MaxL2NormByColumn(Ensemble, LcCsts = False, IncludedPoints = []):
-    nmax, imax = -1, -1
     if LcCsts and len(IncludedPoints) > 0:
-        for indice in range(Ensemble.shape[1]):
-            norme = numpy.linalg.norm(
-                numpy.take(Ensemble[:,indice], IncludedPoints, mode='clip'),
-                )
-            if norme > nmax:
-                nmax, imax, = norme, indice
+        normes = numpy.linalg.norm(
+            numpy.take(Ensemble, IncludedPoints, axis=0, mode='clip'),
+            axis = 0,
+            )
     else:
-        for indice in range(Ensemble.shape[1]):
-            norme = numpy.linalg.norm(
-                Ensemble[:,indice],
-                )
-            if norme > nmax:
-                nmax, imax, = norme, indice
+        normes = numpy.linalg.norm( Ensemble, axis = 0)
+    nmax = numpy.max(normes)
+    imax = numpy.argmax(normes)
     return nmax, imax
 
 def MaxLinfNormByColumn(Ensemble, LcCsts = False, IncludedPoints = []):
-    nmax, imax = -1, -1
     if LcCsts and len(IncludedPoints) > 0:
-        for indice in range(Ensemble.shape[1]):
-            norme = numpy.linalg.norm(
-                numpy.take(Ensemble[:,indice], IncludedPoints, mode='clip'),
-                ord=numpy.inf,
-                )
-            if norme > nmax:
-                nmax, imax, = norme, indice
+        normes = numpy.linalg.norm(
+            numpy.take(Ensemble, IncludedPoints, axis=0, mode='clip'),
+            axis = 0, ord=numpy.inf,
+            )
     else:
-        for indice in range(Ensemble.shape[1]):
-            norme = numpy.linalg.norm(
-                Ensemble[:,indice],
-                ord=numpy.inf,
-                )
-            if norme > nmax:
-                nmax, imax, = norme, indice
+        normes = numpy.linalg.norm( Ensemble, axis = 0, ord=numpy.inf)
+    nmax = numpy.max(normes)
+    imax = numpy.argmax(normes)
     return nmax, imax
 
 # ==============================================================================

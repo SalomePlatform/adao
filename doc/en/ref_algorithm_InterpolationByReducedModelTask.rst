@@ -49,7 +49,8 @@ field reconstruction using measurements and a reduced numerical model.
 
 To interpolate these measurements, a method of Empirical Interpolation Method
 (EIM [Barrault04]_) type is used, which uses a reduced model of type Reduced
-Order Model (ROM), with or without measurement positioning constraints.
+Order Model (ROM) issued from EIM or DEIM decomposition, with or without
+measurement positioning constraints.
 
 To use this algorithm, you need the optimally positioned measurements and the
 associated reduced basis for model representation. This can be achieved as

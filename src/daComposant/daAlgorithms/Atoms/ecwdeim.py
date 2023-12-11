@@ -46,7 +46,7 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
     else:
         raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     __dimS, __nbmS = __EOS.shape
-    logging.debug("%s Building a RB using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
+    logging.debug("%s Using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
     #
     if selfA._parameters["Variant"] in ["DEIM", "PositioningByDEIM"]:
         __LcCsts = False
@@ -97,20 +97,21 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
         __rhoM = scipy.linalg.orth( __EOS, selfA._parameters["EpsilonEIM"] )
     __lVs, __svdM = __rhoM.shape
     assert __lVs == __dimS, "Différence entre lVs et dim(EOS)"
-    __qivs = (1. - __vs[:__svdM].cumsum()/__vs.sum())
+    __vs2 = __vs**2
+    __qivs = 1. - __vs2[:__svdM].cumsum()/__vs2.sum()
     __maxM   = min(__maxM,__svdM)
     #
     if __LcCsts and len(__IncludedMagicPoints) > 0:
-        __im = numpy.argmax( numpy.abs(
+        __iM = numpy.argmax( numpy.abs(
             numpy.take(__rhoM[:,0], __IncludedMagicPoints, mode='clip')
             ))
     else:
-        __im = numpy.argmax( numpy.abs(
+        __iM = numpy.argmax( numpy.abs(
             __rhoM[:,0]
             ))
     #
     __mu     = [None,] # Convention
-    __I      = [__im,]
+    __I      = [__iM,]
     __Q      = __rhoM[:,0].reshape((-1,1))
     __errors = []
     #
@@ -137,17 +138,17 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
         __residuM = __rhoM[:,__M].reshape((-1,1)) - __interpolator
         #
         if __LcCsts and len(__IncludedMagicPoints) > 0:
-            __im = numpy.argmax( numpy.abs(
+            __iM = numpy.argmax( numpy.abs(
                 numpy.take(__residuM, __IncludedMagicPoints, mode='clip')
                 ))
         else:
-            __im = numpy.argmax( numpy.abs(
+            __iM = numpy.argmax( numpy.abs(
                 __residuM
                 ))
         __Q = numpy.column_stack((__Q, __rhoM[:,__M]))
-        __I.append(__im)
         #
         __errors.append(__qivs[__M])
+        __I.append(__iM)
         __mu.append(None) # Convention
         #
         __M = __M + 1
