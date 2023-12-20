@@ -24,8 +24,9 @@ import math, numpy, logging
 from daCore import BasicObjects, PlatformInfo
 mpr = PlatformInfo.PlatformInfo().MachinePrecision()
 mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
-from daCore.PlatformInfo import vfloat
+from daCore.PlatformInfo import vfloat, has_matplotlib
 from daCore.NumericObjects import FindIndexesFromNames, SingularValuesEstimation
+from daAlgorithms.Atoms import eosg
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -280,7 +281,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += "\n" + __marge + "-"*__nbtirets
             msgs += ("\n")
         #
-        cut1pd, cut1pc, cut1pm = 1, 1, 1
+        cut1pd, cut1pc, cut1pm, cut1pi = 1, 1, 1, 1
         for ns in range(len(__sv)):
             svalue = __sv[ns]
             rvalue = __sv[ns] / __sv[0]
@@ -288,9 +289,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             rsinfo = 100 * __qisv[ns]
             if __s:
                 msgs += (__marge + "  %0"+str(__ordre)+"i  | %22."+str(__p)+"e | %22."+str(__p)+"e |           %2i%s ,    %4.1f%s\n")%(ns,svalue,rvalue,vsinfo,"%",rsinfo,"%")
-            if rsinfo > 10:  cut1pd = ns+2 # 10%
-            if rsinfo > 1:   cut1pc = ns+2 # 1%
-            if rsinfo > 0.1: cut1pm = ns+2 # 1‰
+            if rsinfo > 10:   cut1pd = ns+2 # 10%
+            if rsinfo > 1:    cut1pc = ns+2 # 1%
+            if rsinfo > 0.1:  cut1pm = ns+2 # 1‰
+            if rsinfo > 0.01: cut1pi = ns+2 # 0.1‰
         #
         if __s:
             msgs += __marge + "-"*__nbtirets + "\n"
@@ -298,59 +300,67 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += (__flech + "Summary of variance cut-off:\n")
         msgs += (__marge + "----------------------------\n")
         if cut1pd > 0:
-            msgs += __marge + "Representing more than   90%s of variance requires at least %i mode(s).\n"%("%",cut1pd)
+            msgs += __marge + "Representing more than 90%s    of variance requires at least %i mode(s).\n"%("%",cut1pd)
         if cut1pc > 0:
-            msgs += __marge + "Representing more than   99%s of variance requires at least %i mode(s).\n"%("%",cut1pc)
-        if cut1pc > 0:
-            msgs += __marge + "Representing more than 99.9%s of variance requires at least %i mode(s).\n"%("%",cut1pm)
+            msgs += __marge + "Representing more than 99%s    of variance requires at least %i mode(s).\n"%("%",cut1pc)
+        if cut1pm > 0:
+            msgs += __marge + "Representing more than 99.9%s  of variance requires at least %i mode(s).\n"%("%",cut1pm)
+        if cut1pi > 0:
+            msgs += __marge + "Representing more than 99.99%s of variance requires at least %i mode(s).\n"%("%",cut1pi)
         #
-        if self._parameters["PlotAndSave"]:
-            msgs += ("\n")
-            msgs += (__marge + "Plot and save results in a file named \"%s\"\n"%str(self._parameters["ResultFile"]))
-            #
-            import matplotlib.pyplot as plt
-            from matplotlib import ticker
-            fig = plt.figure(figsize=(10,15), layout="tight")
-            if len(self._parameters["ResultTitle"]) > 0:
-                fig.suptitle(self._parameters["ResultTitle"])
-            else:
-                fig.suptitle("Singular values analysis on an ensemble of %i snapshots\n"%__nsn)
-            # ----
-            ax = fig.add_subplot(3,1,1)
-            ax.set_xlabel("Singular values index, numbered from 1 (first %i ones)"%len(__qisv))
-            ax.set_ylabel("Remaining variance to be explained (%, linear scale)", color="tab:blue")
-            ax.grid(True, which='both', color="tab:blue")
-            ax.set_xlim(1,1+len(__qisv))
-            ax.set_ylim(0,100)
-            ax.plot(range(1,1+len(__qisv)), 100 * __qisv, linewidth=2, color="b", label="On linear scale")
-            ax.tick_params(axis='y', labelcolor="tab:blue")
-            ax.yaxis.set_major_formatter('{x:.0f}%')
-            #
-            rg = ax.twinx()
-            rg.set_ylabel("Remaining variance to be explained (%, log scale)", color="tab:red")
-            rg.grid(True, which='both', color="tab:red")
-            rg.set_xlim(1,1+len(__qisv))
-            rg.set_yscale("log")
-            rg.plot(range(1,1+len(__qisv)), 100 * __qisv, linewidth=2, color="r", label="On log10 scale")
-            rg.set_ylim(rg.get_ylim()[0],101)
-            rg.tick_params(axis='y', labelcolor="tab:red")
-            # ----
-            ax = fig.add_subplot(3,1,2)
-            ax.set_ylabel("Singular values")
-            ax.set_xlim(1,1+len(__sv))
-            ax.plot(range(1,1+len(__sv)), __sv, linewidth=2)
-            ax.grid(True)
-            # ----
-            ax = fig.add_subplot(3,1,3)
-            ax.set_ylabel("Singular values (log scale)")
-            ax.grid(True, which='both')
-            ax.set_xlim(1,1+len(__sv))
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-            ax.plot(range(1,1+len(__sv)), __sv, linewidth=2)
-            # ----
-            plt.savefig(str(self._parameters["ResultFile"]))
-            plt.close(fig)
+        if has_matplotlib and self._parameters["PlotAndSave"]:
+            try:
+                msgs += ("\n")
+                msgs += (__marge + "Plot and save results in a file named \"%s\"\n"%str(self._parameters["ResultFile"]))
+                #
+                import matplotlib.pyplot as plt
+                from matplotlib import ticker
+                fig = plt.figure(figsize=(10,15))
+                plt.tight_layout()
+                if len(self._parameters["ResultTitle"]) > 0:
+                    fig.suptitle(self._parameters["ResultTitle"])
+                else:
+                    fig.suptitle("Singular values analysis on an ensemble of %i snapshots\n"%__nsn)
+                # ----
+                ax = fig.add_subplot(3,1,1)
+                ax.set_xlabel("Singular values index, numbered from 1 (first %i ones)"%len(__qisv))
+                ax.set_ylabel("Remaining variance to be explained (%, linear scale)", color="tab:blue")
+                ax.grid(True, which='both', color="tab:blue")
+                ax.set_xlim(1,1+len(__qisv))
+                ax.set_ylim(0,100)
+                ax.plot(range(1,1+len(__qisv)), 100 * __qisv, linewidth=2, color="b", label="On linear scale")
+                ax.tick_params(axis='y', labelcolor="tab:blue")
+                ax.yaxis.set_major_formatter('{x:.0f}%')
+                #
+                rg = ax.twinx()
+                rg.set_ylabel("Remaining variance to be explained (%, log scale)", color="tab:red")
+                rg.grid(True, which='both', color="tab:red")
+                rg.set_xlim(1,1+len(__qisv))
+                rg.set_yscale("log")
+                rg.plot(range(1,1+len(__qisv)), 100 * __qisv, linewidth=2, color="r", label="On log10 scale")
+                rg.set_ylim(rg.get_ylim()[0],101)
+                rg.tick_params(axis='y', labelcolor="tab:red")
+                # ----
+                ax = fig.add_subplot(3,1,2)
+                ax.set_ylabel("Singular values")
+                ax.set_xlim(1,1+len(__sv))
+                ax.plot(range(1,1+len(__sv)), __sv, linewidth=2)
+                ax.grid(True)
+                # ----
+                ax = fig.add_subplot(3,1,3)
+                ax.set_ylabel("Singular values (log scale)")
+                ax.grid(True, which='both')
+                ax.set_xlim(1,1+len(__sv))
+                ax.set_xscale("log")
+                ax.set_yscale("log")
+                ax.plot(range(1,1+len(__sv)), __sv, linewidth=2)
+                # ----
+                plt.savefig(str(self._parameters["ResultFile"]))
+                plt.close(fig)
+            except:
+                msgs += ("\n")
+                msgs += (__marge + "Saving figure fail, please update your Matplolib version.\n")
+                msgs += ("\n")
             #
         msgs += ("\n")
         msgs += (__marge + "%s\n"%("-"*75,))
