@@ -13,7 +13,7 @@ The test is repeated a configurable number of times, and a final statistic
 allows to quickly check the good behavior of the operator. The simplest
 diagnostic consists in checking, at the very end of the display, the order of
 magnitude of the variations of the values indicated as the average of the
-differences between the repeated outputs and their average, under the part
+differences between the repeated outputs and their average, under the part here
 entitled "*Launching statistical summary calculation for 5 states*". For a
 satisfactory operator, the values of differences from the mean and the standard
 deviations should be close to the numerical zero.

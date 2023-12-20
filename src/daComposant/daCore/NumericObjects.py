@@ -628,6 +628,37 @@ def EnsembleErrorCovariance( __Ensemble, __Quick = False ):
     return __Covariance
 
 # ==============================================================================
+def SingularValuesEstimation( __Ensemble, __Using = "SVDVALS"):
+    "Renvoie les valeurs singulières de l'ensemble et leur carré"
+    if __Using == "SVDVALS": # Recommandé
+        import scipy
+        __sv   = scipy.linalg.svdvals( __Ensemble )
+        __svsq = __sv**2
+    elif __Using == "SVD":
+        _, __sv, _ = numpy.linalg.svd( __Ensemble )
+        __svsq = __sv**2
+    elif __Using == "EIG": # Lent
+        __eva, __eve = numpy.linalg.eig( __Ensemble @ __Ensemble.T )
+        __svsq = numpy.sort(numpy.abs(numpy.real( __eva )))[::-1]
+        __sv   = numpy.sqrt( __svsq )
+    elif __Using == "EIGH":
+        __eva, __eve = numpy.linalg.eigh( __Ensemble @ __Ensemble.T )
+        __svsq = numpy.sort(numpy.abs(numpy.real( __eva )))[::-1]
+        __sv   = numpy.sqrt( __svsq )
+    elif __Using == "EIGVALS":
+        __eva  = numpy.linalg.eigvals( __Ensemble @ __Ensemble.T )
+        __svsq = numpy.sort(numpy.abs(numpy.real( __eva )))[::-1]
+        __sv   = numpy.sqrt( __svsq )
+    elif __Using == "EIGVALSH":
+        __eva = numpy.linalg.eigvalsh( __Ensemble @ __Ensemble.T )
+        __svsq = numpy.sort(numpy.abs(numpy.real( __eva )))[::-1]
+        __sv   = numpy.sqrt( __svsq )
+    else:
+        raise ValueError("Error in requested variant name: %s"%__Using)
+    #
+    return __sv, __svsq
+
+# ==============================================================================
 def EnsemblePerturbationWithGivenCovariance(
         __Ensemble,
         __Covariance,

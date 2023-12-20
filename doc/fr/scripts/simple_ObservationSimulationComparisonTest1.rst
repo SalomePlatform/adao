@@ -13,7 +13,7 @@ Le test est répété un nombre paramétrable de fois, et une statistique finale
 permet de vérifier rapidement le bon comportement de l'opérateur. Le diagnostic
 le plus simple consiste à vérifier, à la toute fin de l'affichage, l'ordre de
 grandeur des variations des valeurs indiquées comme la moyenne des différences
-entre les sorties répétées et leur moyenne, sous la partie titrée "*Launching
-statistical summary calculation for 5 states*". Pour un opérateur satisfaisant,
-les valeurs de différences à la moyenne et les écarts-types doivent être
-proches du zéro numérique.
+entre les sorties répétées et leur moyenne, sous la partie titrée ici
+"*Launching statistical summary calculation for 5 states*". Pour un opérateur
+satisfaisant, les valeurs de différences à la moyenne et les écarts-types
+doivent être proches du zéro numérique.

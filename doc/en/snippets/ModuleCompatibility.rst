@@ -14,7 +14,7 @@ versions within the range described below.
    :header: "Tool", "Minimal version", "Reached version"
    :widths: 20, 10, 10
 
-   Python,     3.6.5,    3.11.6
+   Python,     3.6.5,    3.11.7
    Numpy,      1.14.3,    1.26.2
    Scipy,      0.19.1,    1.11.4
    MatplotLib, 2.2.2,    3.8.2

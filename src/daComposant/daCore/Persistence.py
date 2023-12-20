@@ -331,6 +331,17 @@ class Persistence(object):
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
+    def powers(self, x2):
+        """
+        Renvoie la série, contenant à chaque pas, la puissance "**x2" au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
+        """
+        try:
+            return [numpy.power(item, x2) for item in self.__values]
+        except Exception:
+            raise TypeError("Base type is incompatible with numpy")
+
     def norms(self, _ord=None):
         """
         Norm (_ord : voir numpy.linalg.norm)
