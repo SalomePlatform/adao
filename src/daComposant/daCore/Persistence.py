@@ -849,6 +849,15 @@ class OneVector(Persistence):
     def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
 
+class OneMatrice(Persistence):
+    """
+    Classe de stockage d'une matrice de valeurs homogènes par pas.
+    """
+    __slots__ = ()
+    #
+    def __init__(self, name="", unit="", basetype = numpy.array):
+        Persistence.__init__(self, name, unit, basetype)
+
 class OneMatrix(Persistence):
     """
     Classe de stockage d'une matrice de valeurs homogènes par pas.

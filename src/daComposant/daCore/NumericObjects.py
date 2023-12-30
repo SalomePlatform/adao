@@ -1083,7 +1083,7 @@ def BuildComplexSampleList(
         sampleList = __SampleAsnUplet
         for i,Xx in enumerate(sampleList):
             if numpy.ravel(Xx).size != __X0.size:
-                raise ValueError("The size %i of the %ith state X in the sample and %i of the checking point Xb are different, they have to be identical."%(numpy.ravel(Xx).size,i+1,X0.size))
+                raise ValueError("The size %i of the %ith state X in the sample and %i of the checking point Xb are different, they have to be identical."%(numpy.ravel(Xx).size,i+1,__X0.size))
     # ---------------------------
     elif len(__SampleAsExplicitHyperCube) > 0:
         sampleList = itertools.product(*list(__SampleAsExplicitHyperCube))

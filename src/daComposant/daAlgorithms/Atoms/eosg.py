@@ -89,6 +89,9 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
                     EOS[i] = numpy.nan*numpy.ones(__s)
             EOS = numpy.stack(EOS, axis=1)
     #
+    if len(EOS.shape) > 2 and EOS.shape[2]==1: # RaJ si transposition de Hm
+        EOS = EOS.squeeze( axis = 2 )
+    #
     if selfA._parameters["SetDebug"]:
         print("\n     %s\n"%("-"*75,))
         print("===> End evaluation, deactivating debug if necessary\n")
