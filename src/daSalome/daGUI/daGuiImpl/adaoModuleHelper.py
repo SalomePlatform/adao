@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2023 EDF R&D
+# Copyright (C) 2008-2024 EDF R&D
 #
 # Copyright (C) 2007-2008  CEA/DEN, EDF R&D, OPEN CASCADE
 #
