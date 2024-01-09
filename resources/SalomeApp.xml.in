@@ -28,7 +28,7 @@
     <parameter name="icon"          value="ADAO.png"/>
     <parameter name="library"       value="SalomePyQtGUI"/>
     <parameter name="documentation" value="adao_help"/>
-    <parameter name="version"       value="9.12.0"/>
+    <parameter name="version"       value="9.13.0"/>
     <!-- parameter name="description"   value="Calibrate numerical simulations, interpolate measurements, combine data and calculations, optimize trajectories, verify and validate models"/ -->
     <!-- parameter name="description"   value="Recaler les simulations numériques, interpoler des mesures, combiner des données et des calculs, optimiser des trajectoires, vérifier et valider des modèles"/ -->
   </section>

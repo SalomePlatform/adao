@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2023 EDF R&D
+# Copyright (C) 2008-2024 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
@@ -32,7 +32,7 @@ from Traducteur.inseremocle  import *
 from Traducteur.movemocle    import *
 from Traducteur.renamemocle  import *
 
-version_out = "V9_12_0"
+version_out = "V9_13_0"
 
 usage="""Usage: python %(prog)s [args]
 
