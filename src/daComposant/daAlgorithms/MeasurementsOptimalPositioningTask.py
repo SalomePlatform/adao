@@ -22,7 +22,7 @@
 
 import numpy
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecweim, ecwdeim, eosg
+from daAlgorithms.Atoms import ecweim, ecwdeim, ecwubfeim, eosg
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -39,12 +39,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "DEIM",   "PositioningByDEIM",
                 "lcDEIM", "PositioningBylcDEIM",
                 ],
+            listadv  = [
+                "UBFEIM",   "PositioningByUBFEIM",
+                "lcUBFEIM", "PositioningBylcUBFEIM",
+                ],
             )
         self.defineRequiredParameter(
             name     = "EnsembleOfSnapshots",
             default  = [],
             typecast = numpy.array,
             message  = "Ensemble de vecteurs d'état physique (snapshots), 1 état par colonne (Training Set)",
+            )
+        self.defineRequiredParameter(
+            name     = "UserBasisFunctions",
+            default  = [],
+            typecast = numpy.array,
+            message  = "Ensemble de fonctions de base définis par l'utilisateur, 1 fonction de base par colonne",
             )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfLocations",
@@ -116,6 +126,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonnage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
             )
         self.defineRequiredParameter(
+            name     = "ReduceMemoryUse",
+            default  = False,
+            typecast = bool,
+            message  = "Réduction de l'empreinte mémoire lors de l'exécution au prix d'une augmentation du temps de calcul",
+            )
+        self.defineRequiredParameter(
             name     = "SetDebug",
             default  = False,
             typecast = bool,
@@ -162,7 +178,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             elif isinstance(HO, dict):
                 ecweim.EIM_offline(self, eosg.eosg(self, Xb, HO))
             else:
-                raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
+                raise ValueError("Snapshots or Operator have to be given in order to launch the EIM analysis")
         #
         #--------------------------
         elif self._parameters["Variant"] in ["lcDEIM", "PositioningBylcDEIM", "DEIM", "PositioningByDEIM"]:
@@ -173,7 +189,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             elif isinstance(HO, dict):
                 ecwdeim.DEIM_offline(self, eosg.eosg(self, Xb, HO))
             else:
-                raise ValueError("Snapshots or Operator have to be given in order to launch the analysis")
+                raise ValueError("Snapshots or Operator have to be given in order to launch the DEIM analysis")
+        #--------------------------
+        elif self._parameters["Variant"] in ["lcUBFEIM", "PositioningBylcUBFEIM", "UBFEIM", "PositioningByUBFEIM"]:
+            if len(self._parameters["EnsembleOfSnapshots"]) > 0:
+                if self._toStore("EnsembleOfSimulations"):
+                    self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
+                ecwubfeim.UBFEIM_offline(self, self._parameters["EnsembleOfSnapshots"])
+            elif isinstance(HO, dict):
+                ecwubfeim.UBFEIM_offline(self, eosg.eosg(self, Xb, HO))
+            else:
+                raise ValueError("Snapshots or Operator have to be given in order to launch the UBFEIM analysis")
         #
         #--------------------------
         else:

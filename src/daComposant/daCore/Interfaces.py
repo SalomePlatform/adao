@@ -952,9 +952,9 @@ class ImportFromFile(object):
         if self._format == "text/csv" or Format.upper() == "CSV":
             self._format = "text/csv"
             self.__filestring = "".join(self.__header)
-            if self.__filestring.count(",") > 1:
+            if self.__filestring.count(",") > 0:
                 self._delimiter = ","
-            elif self.__filestring.count(";") > 1:
+            elif self.__filestring.count(";") > 0:
                 self._delimiter = ";"
             else:
                 self._delimiter = None
@@ -1196,6 +1196,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
                 usecols    = __usecols,
                 skiprows   = self._skiprows,
                 converters = __converters,
+                ndmin      = 1,
                 )
         elif self._format in ["text/csv", "text/tab-separated-values"]:
             __content = numpy.loadtxt(
@@ -1205,6 +1206,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
                 skiprows   = self._skiprows,
                 converters = __converters,
                 delimiter  = self._delimiter,
+                ndmin      = 1,
                 )
         else:
             raise ValueError("Unkown file format \"%s\""%self._format)

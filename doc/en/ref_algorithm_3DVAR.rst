@@ -60,8 +60,9 @@ of the initial point of their minimization, even if it is not recommended.
 This mono-objective optimization algorithm is naturally written for a single
 estimate, without any dynamic or iterative notion (there is no need in this
 case for an incremental evolution operator, nor for an evolution error
-covariance). In ADAO, it can also be used on a succession of observations,
-placing the estimate in a recursive framework similar to a
+covariance). In the traditional framework of temporal or iterative data
+assimilation that ADAO deals with, it can also be used on a succession of
+observations, placing the estimate in a recursive framework similar to a
 :ref:`section_ref_algorithm_KalmanFilter`. A standard estimate is made at each
 observation step on the state predicted by the incremental evolution model,
 knowing that the state error covariance remains the background covariance

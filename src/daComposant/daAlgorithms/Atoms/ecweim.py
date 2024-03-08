@@ -28,6 +28,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import numpy, logging
 import daCore.Persistence
 from daCore.NumericObjects import FindIndexesFromNames
+from daCore.NumericObjects import InterpolationErrorByColumn
 
 # ==============================================================================
 def EIM_offline(selfA, EOS = None, Verbose = False):
@@ -37,20 +38,16 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     #
     # Initialisations
     # ---------------
+    if numpy.array(EOS).size == 0:
+        raise ValueError("EnsembleOfSnapshots has not to be void, but an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     if isinstance(EOS, (numpy.ndarray, numpy.matrix)):
         __EOS = numpy.asarray(EOS)
     elif isinstance(EOS, (list, tuple, daCore.Persistence.Persistence)):
         __EOS = numpy.stack([numpy.ravel(_sn) for _sn in EOS], axis=1)
-        # __EOS = numpy.asarray(EOS).T
     else:
         raise ValueError("EnsembleOfSnapshots has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
     __dimS, __nbmS = __EOS.shape
     logging.debug("%s Using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
-    #
-    if   selfA._parameters["ErrorNorm"] == "L2":
-        MaxNormByColumn = MaxL2NormByColumn
-    else:
-        MaxNormByColumn = MaxLinfNormByColumn
     #
     if selfA._parameters["Variant"] in ["EIM", "PositioningByEIM"]:
         __LcCsts = False
@@ -91,6 +88,10 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         selfA._parameters["EpsilonEIM"] = selfA._parameters["ErrorNormTolerance"]
     else:
         selfA._parameters["EpsilonEIM"] = 1.e-2
+    if "ReduceMemoryUse" in selfA._parameters:
+        rmu = selfA._parameters["ReduceMemoryUse"]
+    else:
+        rmu = False
     #
     __mu     = []
     __I      = []
@@ -100,8 +101,12 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     __M      = 0
     __rhoM   = numpy.empty(__dimS)
     #
-    __eM, __muM = MaxNormByColumn(__EOS, __LcCsts, __IncludedMagicPoints)
-    __residuM = __EOS[:,__muM]
+    __eM, __muM, __residuM = InterpolationErrorByColumn(
+        __Differences = __EOS, __M = __M,
+        __ErrorNorm = selfA._parameters["ErrorNorm"],
+        __LcCsts = __LcCsts, __IncludedPoints = __IncludedMagicPoints,
+        __CDM = True, __RMU = rmu,
+        )
     __errors.append(__eM)
     #
     # Boucle
@@ -130,24 +135,13 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
             __Q = __rhoM.reshape((-1,1))
         __I.append(__iM)
         #
-        __restrictedQi = numpy.tril( __Q[__I,:] )
-        if __M > 1:
-            __Qi_inv = numpy.linalg.inv(__restrictedQi)
-        else:
-            __Qi_inv = 1. / __restrictedQi
-        #
-        __restrictedEOSi = __EOS[__I,:]
-        #
-        if __M > 1:
-            __interpolator = numpy.dot(__Q,numpy.dot(__Qi_inv,__restrictedEOSi))
-        else:
-            __interpolator = numpy.outer(__Q,numpy.outer(__Qi_inv,__restrictedEOSi))
-        #
-        __dataForNextIter = __EOS - __interpolator
-        __eM, __muM = MaxNormByColumn(__dataForNextIter, __LcCsts, __IncludedMagicPoints)
+        __eM, __muM, __residuM = InterpolationErrorByColumn(
+            __Ensemble = __EOS, __Basis = __Q, __Points = __I, __M = __M,
+            __ErrorNorm = selfA._parameters["ErrorNorm"],
+            __LcCsts = __LcCsts, __IncludedPoints = __IncludedMagicPoints,
+            __CDM = True, __RMU = rmu, __FTL = True,
+            )
         __errors.append(__eM)
-        #
-        __residuM = __dataForNextIter[:,__muM]
     #
     #--------------------------
     if __errors[-1] < selfA._parameters["EpsilonEIM"]:
@@ -210,31 +204,6 @@ def EIM_online(selfA, QEIM, gJmu = None, mPoints = None, mu = None, PseudoInvers
             selfA.StoredVariables["ReducedCoordinates"].store( __gammaMu )
     #
     return __gMmu
-
-# ==============================================================================
-def MaxL2NormByColumn(Ensemble, LcCsts = False, IncludedPoints = []):
-    if LcCsts and len(IncludedPoints) > 0:
-        normes = numpy.linalg.norm(
-            numpy.take(Ensemble, IncludedPoints, axis=0, mode='clip'),
-            axis = 0,
-            )
-    else:
-        normes = numpy.linalg.norm( Ensemble, axis = 0)
-    nmax = numpy.max(normes)
-    imax = numpy.argmax(normes)
-    return nmax, imax
-
-def MaxLinfNormByColumn(Ensemble, LcCsts = False, IncludedPoints = []):
-    if LcCsts and len(IncludedPoints) > 0:
-        normes = numpy.linalg.norm(
-            numpy.take(Ensemble, IncludedPoints, axis=0, mode='clip'),
-            axis = 0, ord=numpy.inf,
-            )
-    else:
-        normes = numpy.linalg.norm( Ensemble, axis = 0, ord=numpy.inf)
-    nmax = numpy.max(normes)
-    imax = numpy.argmax(normes)
-    return nmax, imax
 
 # ==============================================================================
 if __name__ == "__main__":

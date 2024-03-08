@@ -30,9 +30,10 @@ Algorithme de calcul "*DerivativeFreeOptimization*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme réalise une estimation d'état d'un système par minimisation
-d'une fonctionnelle d'écart :math:`J` sans gradient. C'est une méthode qui
-n'utilise pas les dérivées de la fonctionnelle d'écart. Elle entre, par
+Cet algorithme réalise une estimation de l'état d'un système par minimisation
+sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode
+de recherche par approximation de type simplexe ou similaire. C'est une méthode
+qui n'utilise pas les dérivées de la fonctionnelle d'écart. Elle entre, par
 exemple, dans la même catégorie que
 l':ref:`section_ref_algorithm_ParticleSwarmOptimization`,
 l':ref:`section_ref_algorithm_DifferentialEvolution` ou

@@ -243,9 +243,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         else:
             __Ensemble = __EOS
         #
-        __sv, __svsq = SingularValuesEstimation( __Ensemble )
-        __tisv = __svsq / __svsq.sum()
-        __qisv = 1. - __tisv.cumsum()
+        __sv, __svsq, __tisv, __qisv = SingularValuesEstimation( __Ensemble )
         if self._parameters["MaximumNumberOfModes"] < len(__sv):
             __sv   = __sv[:self._parameters["MaximumNumberOfModes"]]
             __tisv = __tisv[:self._parameters["MaximumNumberOfModes"]]
@@ -286,7 +284,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             svalue = __sv[ns]
             rvalue = __sv[ns] / __sv[0]
             vsinfo = 100 * __tisv[ns]
-            rsinfo = 100 * __qisv[ns]
+            rsinfo = max(100 * __qisv[ns],0.)
             if __s:
                 msgs += (__marge + "  %0"+str(__ordre)+"i  | %22."+str(__p)+"e | %22."+str(__p)+"e |           %2i%s ,    %4.1f%s\n")%(ns,svalue,rvalue,vsinfo,"%",rsinfo,"%")
             if rsinfo > 10:   cut1pd = ns+2 # 10%
@@ -309,6 +307,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += __marge + "Representing more than 99.99%s of variance requires at least %i mode(s).\n"%("%",cut1pi)
         #
         if has_matplotlib and self._parameters["PlotAndSave"]:
+            # Evite les message debug de matplotlib
+            dL = logging.getLogger().getEffectiveLevel()
+            logging.getLogger().setLevel(logging.WARNING)
             try:
                 msgs += ("\n")
                 msgs += (__marge + "Plot and save results in a file named \"%s\"\n"%str(self._parameters["ResultFile"]))
@@ -361,6 +362,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += ("\n")
                 msgs += (__marge + "Saving figure fail, please update your Matplolib version.\n")
                 msgs += ("\n")
+            logging.getLogger().setLevel(dL)
             #
         msgs += ("\n")
         msgs += (__marge + "%s\n"%("-"*75,))

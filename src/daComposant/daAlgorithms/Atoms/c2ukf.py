@@ -25,11 +25,9 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import math, numpy, scipy
+import math, numpy, scipy, copy
+from daCore.PlatformInfo import vfloat
 from daCore.NumericObjects import ApplyBounds, ForceNumericBounds
-from daCore.PlatformInfo import PlatformInfo, vfloat
-mpr = PlatformInfo().MachinePrecision()
-mfp = PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
@@ -120,80 +118,83 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             Cm = None
         #
         Pndemi = numpy.real(scipy.linalg.sqrtm(Pn))
-        Xnp = numpy.hstack([Xn, Xn+Gamma*Pndemi, Xn-Gamma*Pndemi])
+        Xnmu = numpy.hstack([Xn, Xn+Gamma*Pndemi, Xn-Gamma*Pndemi])
         nbSpts = 2*Xn.size+1
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             for point in range(nbSpts):
-                Xnp[:,point] = ApplyBounds( Xnp[:,point], selfA._parameters["Bounds"] )
+                Xnmu[:,point] = ApplyBounds( Xnmu[:,point], selfA._parameters["Bounds"] )
         #
-        XEtnnp = []
+        XEnnmu = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
                 Mm = EM["Direct"].appliedControledFormTo
-                XEtnnpi = numpy.asarray( Mm( (Xnp[:,point], Un) ) ).reshape((-1,1))
+                XEnnmui = numpy.asarray( Mm( (Xnmu[:,point], Un) ) ).reshape((-1,1))
                 if Cm is not None and Un is not None: # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(Xn.size,Un.size) # ADAO & check shape
-                    XEtnnpi = XEtnnpi + Cm @ Un
+                    XEnnmui = XEnnmui + Cm @ Un
                 if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-                    XEtnnpi = ApplyBounds( XEtnnpi, selfA._parameters["Bounds"] )
+                    XEnnmui = ApplyBounds( XEnnmui, selfA._parameters["Bounds"] )
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
-                XEtnnpi = Xnp[:,point]
-            XEtnnp.append( numpy.ravel(XEtnnpi).reshape((-1,1)) )
-        XEtnnp = numpy.concatenate( XEtnnp, axis=1 )
+                XEnnmui = Xnmu[:,point]
+            XEnnmu.append( numpy.ravel(XEnnmui).reshape((-1,1)) )
+        XEnnmu = numpy.concatenate( XEnnmu, axis=1 )
         #
-        Xncm = ( XEtnnp * Wm ).sum(axis=1)
+        Xhmn = ( XEnnmu * Wm ).sum(axis=1)
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
-            Xncm = ApplyBounds( Xncm, selfA._parameters["Bounds"] )
+            Xhmn = ApplyBounds( Xhmn, selfA._parameters["Bounds"] )
         #
-        if selfA._parameters["EstimationOf"] == "State":        Pnm = Q
-        elif selfA._parameters["EstimationOf"] == "Parameters": Pnm = 0.
+        if selfA._parameters["EstimationOf"] == "State":        Pmn = copy.copy(Q)
+        elif selfA._parameters["EstimationOf"] == "Parameters": Pmn = 0.
         for point in range(nbSpts):
-            Pnm += Wc[i] * ((XEtnnp[:,point]-Xncm).reshape((-1,1)) * (XEtnnp[:,point]-Xncm))
+            dXEnnmuXhmn = XEnnmu[:,point].flat-Xhmn
+            Pmn += Wc[i] * numpy.outer(dXEnnmuXhmn, dXEnnmuXhmn)
         #
         if selfA._parameters["EstimationOf"] == "Parameters" and selfA._parameters["Bounds"] is not None:
-            Pnmdemi = selfA._parameters["Reconditioner"] * numpy.real(scipy.linalg.sqrtm(Pnm))
+            Pmndemi = selfA._parameters["Reconditioner"] * numpy.real(scipy.linalg.sqrtm(Pmn))
         else:
-            Pnmdemi = numpy.real(scipy.linalg.sqrtm(Pnm))
+            Pmndemi = numpy.real(scipy.linalg.sqrtm(Pmn))
         #
-        Xnnp = numpy.hstack([Xncm.reshape((-1,1)), Xncm.reshape((-1,1))+Gamma*Pnmdemi, Xncm.reshape((-1,1))-Gamma*Pnmdemi])
+        Xnnmu = numpy.hstack([Xhmn.reshape((-1,1)), Xhmn.reshape((-1,1))+Gamma*Pmndemi, Xhmn.reshape((-1,1))-Gamma*Pmndemi])
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             for point in range(nbSpts):
-                Xnnp[:,point] = ApplyBounds( Xnnp[:,point], selfA._parameters["Bounds"] )
+                Xnnmu[:,point] = ApplyBounds( Xnnmu[:,point], selfA._parameters["Bounds"] )
         #
         Hm = HO["Direct"].appliedControledFormTo
-        Ynnp = []
+        Ynnmu = []
         for point in range(nbSpts):
             if selfA._parameters["EstimationOf"] == "State":
-                Ynnpi = Hm( (Xnnp[:,point], None) )
+                Ynnmui = Hm( (Xnnmu[:,point], None) )
             elif selfA._parameters["EstimationOf"] == "Parameters":
-                Ynnpi = Hm( (Xnnp[:,point], Un) )
-            Ynnp.append( numpy.ravel(Ynnpi).reshape((-1,1)) )
-        Ynnp = numpy.concatenate( Ynnp, axis=1 )
+                Ynnmui = Hm( (Xnnmu[:,point], Un) )
+            Ynnmu.append( numpy.ravel(Ynnmui).reshape((__p,1)) )
+        Ynnmu = numpy.concatenate( Ynnmu, axis=1 )
         #
-        Yncm = ( Ynnp * Wm ).sum(axis=1)
+        Yhmn = ( Ynnmu * Wm ).sum(axis=1)
         #
-        Pyyn = R
+        Pyyn = copy.copy(R)
         Pxyn = 0.
         for point in range(nbSpts):
-            Pyyn += Wc[i] * ((Ynnp[:,point]-Yncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
-            Pxyn += Wc[i] * ((Xnnp[:,point]-Xncm).reshape((-1,1)) * (Ynnp[:,point]-Yncm))
+            dYnnmuYhmn = Ynnmu[:,point].flat-Yhmn
+            dXnnmuXhmn = Xnnmu[:,point].flat-Xhmn
+            Pyyn += Wc[i] * numpy.outer(dYnnmuYhmn, dYnnmuYhmn)
+            Pxyn += Wc[i] * numpy.outer(dXnnmuXhmn, dYnnmuYhmn)
         #
         if hasattr(Y,"store"):
             Ynpu = numpy.ravel( Y[step+1] ).reshape((__p,1))
         else:
             Ynpu = numpy.ravel( Y ).reshape((__p,1))
-        _Innovation  = Ynpu - Yncm.reshape((-1,1))
+        _Innovation  = Ynpu - Yhmn.reshape((-1,1))
         if selfA._parameters["EstimationOf"] == "Parameters":
             if Cm is not None and Un is not None: # Attention : si Cm est aussi dans H, doublon !
                 _Innovation = _Innovation - Cm @ Un
         #
-        Kn = Pxyn * Pyyn.I
-        Xn = Xncm.reshape((-1,1)) + Kn * _Innovation
-        Pn = Pnm - Kn * Pyyn * Kn.T
+        Kn = Pxyn @ Pyyn.I
+        Xn = Xhmn.reshape((-1,1)) + Kn @ _Innovation
+        Pn = Pmn - Kn @ (Pyyn @ Kn.T)
         #
         if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
             Xn = ApplyBounds( Xn, selfA._parameters["Bounds"] )
@@ -216,16 +217,16 @@ def c2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             or selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
-            selfA.StoredVariables["ForecastState"].store( Xncm )
+            selfA.StoredVariables["ForecastState"].store( Xhmn )
         if selfA._toStore("ForecastCovariance"):
-            selfA.StoredVariables["ForecastCovariance"].store( Pnm )
+            selfA.StoredVariables["ForecastCovariance"].store( Pmn )
         if selfA._toStore("BMA"):
-            selfA.StoredVariables["BMA"].store( Xncm - Xa )
+            selfA.StoredVariables["BMA"].store( Xhmn - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
         if selfA._toStore("SimulatedObservationAtCurrentState") \
             or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Yncm )
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Yhmn )
         # ---> autres
         if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \

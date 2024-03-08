@@ -31,11 +31,12 @@ Calculation algorithm "*TabuSearch*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization
-of a cost function :math:`J` without gradient. It is a method that does not use
-the derivatives of the cost function. It falls in the same category than the
-:ref:`section_ref_algorithm_DerivativeFreeOptimization`, the
-:ref:`section_ref_algorithm_ParticleSwarmOptimization` or the
-:ref:`section_ref_algorithm_DifferentialEvolution`.
+without gradient of a cost function :math:`J`, using a Tabu list search method.
+It is a method that does not use the derivatives of the cost function. It falls
+in the same category than the
+:ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+:ref:`section_ref_algorithm_DifferentialEvolution` or
+:ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 
 This is a mono-objective optimization method allowing for global minimum search
 of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or

@@ -31,9 +31,10 @@ Algorithme de calcul "*DifferentialEvolution*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
-d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
-d'évolution différentielle. C'est une méthode qui n'utilise pas les dérivées de
-la fonctionnelle d'écart. Elle entre dans la même catégorie que
+sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode
+de recherche évolutionnaire d'évolution différentielle. C'est une méthode qui
+n'utilise pas les dérivées de la fonctionnelle d'écart. Elle entre dans la même
+catégorie que
 l':ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 l':ref:`section_ref_algorithm_ParticleSwarmOptimization` ou
 l':ref:`section_ref_algorithm_TabuSearch`.

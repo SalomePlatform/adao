@@ -22,10 +22,10 @@
     be ordered in lines to be acquired record row by record row
     ("ColMajor=True").
 
-    Without information or with a void list, all the values of all the
-    variables are used, but one can also select only the ones of the variables
-    that are indicated in the name list "ColNames". the variable names are
-    always as header of columns.
+    Without information or with a void list for the variable names, all the
+    values of all the variables are used, but one can also select only the ones
+    of the variables that are indicated in the name list "ColNames". The
+    variable names are always as header of columns.
 
     Example of CSV file for "*Observation*" variable in "*DataFile*" ::
 
@@ -59,7 +59,7 @@
 .. warning::
 
     It is recommended, before using them as an input of this type, to carefully
-    check text or binary files . Various checks are carried out on loading, but
+    check text or binary files. Various checks are carried out on loading, but
     the variety of potential errors is great. In practice, by respecting the
-    requirements for naming variables and comments, text files from programs or
-    spreadsheets are (most of the time) compatible.
+    requirements for naming variables and for comments, text files from
+    classical programs or spreadsheets are (most of the time) compatible.

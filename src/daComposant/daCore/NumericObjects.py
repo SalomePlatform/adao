@@ -656,7 +656,119 @@ def SingularValuesEstimation( __Ensemble, __Using = "SVDVALS"):
     else:
         raise ValueError("Error in requested variant name: %s"%__Using)
     #
-    return __sv, __svsq
+    __tisv = __svsq / __svsq.sum()
+    __qisv = 1. - __svsq.cumsum() / __svsq.sum()
+    # Différence à 1.e-16 : __qisv = 1. - __tisv.cumsum()
+    #
+    return __sv, __svsq, __tisv, __qisv
+
+# ==============================================================================
+def MaxL2NormByColumn(__Ensemble, __LcCsts = False, __IncludedPoints = []):
+    "Maximum des normes L2 calculées par colonne"
+    if __LcCsts and len(__IncludedPoints) > 0:
+        normes = numpy.linalg.norm(
+            numpy.take(__Ensemble, __IncludedPoints, axis=0, mode='clip'),
+            axis = 0,
+            )
+    else:
+        normes = numpy.linalg.norm( __Ensemble, axis = 0)
+    nmax = numpy.max(normes)
+    imax = numpy.argmax(normes)
+    return nmax, imax, normes
+
+def MaxLinfNormByColumn(__Ensemble, __LcCsts = False, __IncludedPoints = []):
+    "Maximum des normes Linf calculées par colonne"
+    if __LcCsts and len(__IncludedPoints) > 0:
+        normes = numpy.linalg.norm(
+            numpy.take(__Ensemble, __IncludedPoints, axis=0, mode='clip'),
+            axis = 0, ord=numpy.inf,
+            )
+    else:
+        normes = numpy.linalg.norm( __Ensemble, axis = 0, ord=numpy.inf)
+    nmax = numpy.max(normes)
+    imax = numpy.argmax(normes)
+    return nmax, imax, normes
+
+def InterpolationErrorByColumn(
+        __Ensemble = None, __Basis = None, __Points = None, __M = 2, # Usage 1
+        __Differences = None,                                        # Usage 2
+        __ErrorNorm = None,                                          # Commun
+        __LcCsts = False, __IncludedPoints = [],                     # Commun
+        __CDM = False, # ComputeMaxDifference                        # Commun
+        __RMU = False, # ReduceMemoryUse                             # Commun
+        __FTL = False, # ForceTril                                   # Commun
+        ):
+    "Analyse des normes d'erreurs d'interpolation calculées par colonne"
+    if __ErrorNorm == "L2":
+        NormByColumn = MaxL2NormByColumn
+    else:
+        NormByColumn = MaxLinfNormByColumn
+    #
+    if __Differences is None and not __RMU: # Usage 1
+        if __FTL:
+            rBasis = numpy.tril( __Basis[__Points,:] )
+        else:
+            rBasis = __Basis[__Points,:]
+        rEnsemble = __Ensemble[__Points,:]
+        #
+        if __M > 1:
+            rBasis_inv = numpy.linalg.inv(rBasis)
+            Interpolator = numpy.dot(__Basis,numpy.dot(rBasis_inv,rEnsemble))
+        else:
+            rBasis_inv = 1. / rBasis
+            Interpolator = numpy.outer(__Basis,numpy.outer(rBasis_inv,rEnsemble))
+        #
+        differences = __Ensemble - Interpolator
+        #
+        error, nbr, _ = NormByColumn(differences, __LcCsts, __IncludedPoints)
+        #
+        if __CDM:
+            maxDifference = differences[:,nbr]
+        #
+    elif __Differences is None and __RMU: # Usage 1
+        if __FTL:
+            rBasis = numpy.tril( __Basis[__Points,:] )
+        else:
+            rBasis = __Basis[__Points,:]
+        rEnsemble = __Ensemble[__Points,:]
+        #
+        if __M > 1:
+            rBasis_inv = numpy.linalg.inv(rBasis)
+            rCoordinates = numpy.dot(rBasis_inv,rEnsemble)
+        else:
+            rBasis_inv = 1. / rBasis
+            rCoordinates = numpy.outer(rBasis_inv,rEnsemble)
+        #
+        error = 0.
+        nbr = -1
+        for iCol in range(__Ensemble.shape[1]):
+            if __M > 1:
+                iDifference = __Ensemble[:,iCol] - numpy.dot(__Basis, rCoordinates[:,iCol])
+            else:
+                iDifference = __Ensemble[:,iCol] - numpy.ravel(numpy.outer(__Basis, rCoordinates[:,iCol]))
+            #
+            normDifference, _, _ = NormByColumn(iDifference, __LcCsts, __IncludedPoints)
+            #
+            if normDifference > error:
+                error         = normDifference
+                nbr           = iCol
+        #
+        if __CDM:
+            maxDifference = __Ensemble[:,nbr] - numpy.dot(__Basis, rCoordinates[:,nbr])
+        #
+    else: # Usage 2
+        differences = __Differences
+        #
+        error, nbr, _ = NormByColumn(differences, __LcCsts, __IncludedPoints)
+        #
+        if __CDM:
+            # faire cette variable intermédiaire coûte cher
+            maxDifference = differences[:,nbr]
+    #
+    if __CDM:
+        return error, nbr, maxDifference
+    else:
+        return error, nbr
 
 # ==============================================================================
 def EnsemblePerturbationWithGivenCovariance(

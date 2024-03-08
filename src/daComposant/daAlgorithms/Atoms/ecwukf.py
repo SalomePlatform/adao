@@ -29,7 +29,7 @@ import math, numpy, scipy, copy
 from daCore.PlatformInfo import vfloat
 
 # ==============================================================================
-def uskf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
+def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     """
     Unscented Kalman Filter
     """

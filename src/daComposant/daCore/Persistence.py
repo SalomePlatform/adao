@@ -272,7 +272,7 @@ class Persistence(object):
     # ---------------------------------------------------------
     def means(self):
         """
-        Renvoie la série, contenant à chaque pas, la valeur moyenne des données
+        Renvoie la série contenant, à chaque pas, la valeur moyenne des données
         au pas. Il faut que le type de base soit compatible avec les types
         élémentaires numpy.
         """
@@ -283,7 +283,7 @@ class Persistence(object):
 
     def stds(self, ddof=0):
         """
-        Renvoie la série, contenant à chaque pas, l'écart-type des données
+        Renvoie la série contenant, à chaque pas, l'écart-type des données
         au pas. Il faut que le type de base soit compatible avec les types
         élémentaires numpy.
 
@@ -300,7 +300,7 @@ class Persistence(object):
 
     def sums(self):
         """
-        Renvoie la série, contenant à chaque pas, la somme des données au pas.
+        Renvoie la série contenant, à chaque pas, la somme des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
         """
@@ -311,7 +311,7 @@ class Persistence(object):
 
     def mins(self):
         """
-        Renvoie la série, contenant à chaque pas, le minimum des données au pas.
+        Renvoie la série contenant, à chaque pas, le minimum des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
         """
@@ -322,7 +322,7 @@ class Persistence(object):
 
     def maxs(self):
         """
-        Renvoie la série, contenant à chaque pas, la maximum des données au pas.
+        Renvoie la série contenant, à chaque pas, la maximum des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
         """
@@ -333,7 +333,7 @@ class Persistence(object):
 
     def powers(self, x2):
         """
-        Renvoie la série, contenant à chaque pas, la puissance "**x2" au pas.
+        Renvoie la série contenant, à chaque pas, la puissance "**x2" au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
         """
@@ -346,7 +346,7 @@ class Persistence(object):
         """
         Norm (_ord : voir numpy.linalg.norm)
 
-        Renvoie la série, contenant à chaque pas, la norme des données au pas.
+        Renvoie la série contenant, à chaque pas, la norme des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
         """
@@ -355,12 +355,25 @@ class Persistence(object):
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
+    def traces(self, offset=0):
+        """
+        Trace
+
+        Renvoie la série contenant, à chaque pas, la trace (avec l'offset) des
+        données au pas. Il faut que le type de base soit compatible avec les
+        types élémentaires numpy.
+        """
+        try:
+            return [numpy.trace(item, offset, dtype=mfp) for item in self.__values]
+        except Exception:
+            raise TypeError("Base type is incompatible with numpy")
+
     def maes(self, _predictor=None):
         """
         Mean Absolute Error (MAE)
         mae(dX) = 1/n sum(dX_i)
 
-        Renvoie la série, contenant à chaque pas, la MAE des données au pas.
+        Renvoie la série contenant, à chaque pas, la MAE des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy. C'est réservé aux variables d'écarts ou d'incréments si le
         prédicteur est None, sinon c'est appliqué à l'écart entre les données
@@ -387,7 +400,7 @@ class Persistence(object):
         Mean-Square Error (MSE) ou Mean-Square Deviation (MSD)
         mse(dX) = 1/n sum(dX_i**2)
 
-        Renvoie la série, contenant à chaque pas, la MSE des données au pas. Il
+        Renvoie la série contenant, à chaque pas, la MSE des données au pas. Il
         faut que le type de base soit compatible avec les types élémentaires
         numpy. C'est réservé aux variables d'écarts ou d'incréments si le
         prédicteur est None, sinon c'est appliqué à l'écart entre les données
@@ -418,7 +431,7 @@ class Persistence(object):
         Root-Mean-Square Error (RMSE) ou Root-Mean-Square Deviation (RMSD)
         rmse(dX) = sqrt( 1/n sum(dX_i**2) ) = sqrt( mse(dX) )
 
-        Renvoie la série, contenant à chaque pas, la RMSE des données au pas.
+        Renvoie la série contenant, à chaque pas, la RMSE des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy. C'est réservé aux variables d'écarts ou d'incréments si le
         prédicteur est None, sinon c'est appliqué à l'écart entre les données
@@ -460,14 +473,15 @@ class Persistence(object):
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
+        if ltitle is None: ltitle = ""
+        __geometry = str(geometry)
+        __sizespec = (__geometry.split('+')[0]).replace('x',',')
+        #
         if persist:
-            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
-        else:
-            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
-        if ltitle is None:
-            ltitle = ""
+            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist '
+        #
         self.__g = Gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term)
+        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term+' size '+__sizespec)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
@@ -544,7 +558,7 @@ class Persistence(object):
         i = -1
         for index in indexes:
             self.__g('set title  "'+str(title)+' (pas '+str(index)+')"')
-            if isinstance(steps,list) or isinstance(steps,numpy.ndarray):
+            if isinstance(steps, (list, numpy.ndarray)):
                 Steps = list(steps)
             else:
                 Steps = list(range(len(self.__values[index])))
@@ -690,18 +704,19 @@ class Persistence(object):
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
-        if persist:
-            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist -geometry '+geometry
-        else:
-            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -geometry '+geometry
-        if ltitle is None:
-            ltitle = ""
-        if isinstance(steps,list) or isinstance(steps, numpy.ndarray):
+        if ltitle is None: ltitle = ""
+        if isinstance(steps, (list, numpy.ndarray)):
             Steps = list(steps)
         else:
             Steps = list(range(len(self.__values[0])))
+        __geometry = str(geometry)
+        __sizespec = (__geometry.split('+')[0]).replace('x',',')
+        #
+        if persist:
+            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist '
+        #
         self.__g = Gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term)
+        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term+' size '+__sizespec)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')

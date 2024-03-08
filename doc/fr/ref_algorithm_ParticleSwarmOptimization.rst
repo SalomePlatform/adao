@@ -32,11 +32,9 @@ Algorithme de calcul "*ParticleSwarmOptimization*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
-d'une fonctionnelle d'écart :math:`J` en utilisant une méthode évolutionnaire
-d'essaim particulaire. C'est une méthode qui n'utilise pas les dérivées de la
-fonctionnelle d'écart. Elle est basée sur l'évolution d'une population (appelée
-"essaim") d'états (chaque individu étant appelé une "particule" ou un insecte).
-Elle entre dans la même catégorie que les
+sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode
+évolutionnaire d'essaim particulaire. C'est une méthode qui n'utilise pas les
+dérivées de la fonctionnelle d'écart. Elle entre dans la même catégorie que les
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 :ref:`section_ref_algorithm_DifferentialEvolution` ou
 :ref:`section_ref_algorithm_TabuSearch`.
@@ -48,8 +46,10 @@ comme décrit dans la section pour :ref:`section_theory_optimization`. La
 fonctionnelle d'erreur par défaut est celle de moindres carrés pondérés
 augmentés, classiquement utilisée en assimilation de données.
 
-Il existe diverses variantes de cet algorithme. On propose ici les formulations
-stables et robustes suivantes :
+Elle est basée sur l'évolution d'une population (appelée "essaim") d'états
+(chaque individu étant appelé une "particule" ou un "insecte"). Il existe
+diverses variantes de cet algorithme. On propose ici les formulations stables
+et robustes suivantes :
 
 .. index::
     pair: Variant ; CanonicalPSO
@@ -128,8 +128,8 @@ par défaut. C'est pour cette raison que cet algorithme est usuellement
 intéressant lorsque la dimension de l'espace des états est grande, ou que les
 non-linéarités de la simulation rendent compliqué, ou invalide, l'évaluation du
 gradient de la fonctionnelle par approximation numérique. Mais il est aussi
-nécessaire que le calcul de la fonction à simuler ne soit pas trop coûteuse
-pour éviter une temps d'optimisation rédhibitoire.
+nécessaire que le calcul de la fonction à simuler ne soit pas trop coûteux
+pour éviter une durée d'optimisation rédhibitoire.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

@@ -31,11 +31,11 @@ Calculation algorithm "*DifferentialEvolution*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization
-of a cost function :math:`J` by using an evolutionary strategy of differential
-evolution. It is a method that does not use the derivatives of the cost
-function. It falls in the same category than the
-:ref:`section_ref_algorithm_DerivativeFreeOptimization`, the
-:ref:`section_ref_algorithm_ParticleSwarmOptimization` or the
+without gradient of a cost function :math:`J`, using an evolutionary strategy
+of differential evolution. It is a method that does not use the derivatives of
+the cost function. It falls in the same category than the
+:ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+:ref:`section_ref_algorithm_ParticleSwarmOptimization` or
 :ref:`section_ref_algorithm_TabuSearch`.
 
 This is an optimization method allowing for global minimum search of a general

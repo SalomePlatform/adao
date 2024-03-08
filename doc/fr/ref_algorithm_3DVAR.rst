@@ -63,14 +63,15 @@ recommandé.
 Cet algorithme d'optimisation mono-objectif est naturellement écrit pour une
 estimation unique, sans notion dynamique ou itérative (il n'y a donc pas besoin
 dans ce cas d'opérateur d'évolution incrémentale, ni de covariance d'erreurs
-d'évolution). Dans ADAO, il peut aussi être utilisé sur une succession
-d'observations, plaçant alors l'estimation dans un cadre récursif similaire à
-un :ref:`section_ref_algorithm_KalmanFilter`. Une estimation standard
-"*3D-VAR*" est effectuée à chaque pas d'observation sur l'état prévu par le
-modèle d'évolution incrémentale, sachant que la covariance d'erreur d'état
-reste la covariance d'ébauche initialement fournie par l'utilisateur. Pour être
-explicite, contrairement aux filtres de type Kalman, la covariance d'erreurs
-sur les états n'est pas remise à jour.
+d'évolution). Dans le cadre traditionnel de l'assimilation de données
+temporelle ou itérative que traite ADAO, il peut aussi être utilisé sur une
+succession d'observations, plaçant alors l'estimation dans un cadre récursif
+similaire à un :ref:`section_ref_algorithm_KalmanFilter`. Une estimation
+standard "*3D-VAR*" est effectuée à chaque pas d'observation sur l'état prévu
+par le modèle d'évolution incrémentale, sachant que la covariance d'erreur
+d'état reste la covariance d'ébauche initialement fournie par l'utilisateur.
+Pour être explicite, contrairement aux filtres de type Kalman, la covariance
+d'erreurs sur les états n'est pas remise à jour.
 
 Une extension du 3DVAR, couplant en parallèle une méthode 3DVAR, pour
 l'estimation d'un unique meilleur état, avec un filtre de Kalman d'ensemble

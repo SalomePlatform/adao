@@ -25,9 +25,10 @@
     ("ColMajor=True").
 
     Sans précision ou avec une liste vide pour les noms de variables, on
-    utilise les valeurs toutes les variables, mais on peut aussi sélectionner
-    uniquement celles des variables indiquées dans la liste de noms fournie
-    dans "ColNames". Les noms de variable sont toujours en entête de colonne.
+    utilise les valeurs de toutes les variables, mais on peut aussi
+    sélectionner uniquement celles des variables indiquées dans la liste de
+    noms fournie dans "ColNames". Les noms de variable sont toujours en entête
+    de colonne.
 
     Exemple de fichier CSV pour la variable "*Observation*" en "*DataFile*" ::
 

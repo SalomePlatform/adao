@@ -87,7 +87,8 @@ informatiques disponibles et les options demandées par l'utilisateur. On pourra
 se reporter aux :ref:`section_ref_sampling_requirements` pour une illustration
 de l'échantillonnage. Attention à la taille de l'hypercube (et donc au nombre
 de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante.
+importante. La mémoire requise est ensuite le produit de la taille d'un état
+individuel :math:`\mathbf{y}` par la taille de l'hypercube.
 
   .. _mop_determination:
   .. image:: images/mop_determination.png
@@ -119,6 +120,8 @@ d'analyse pour une recherche de positionnement contraint.
 .. include:: snippets/MaximumNumberOfLocations.rst
 
 .. include:: snippets/NameOfLocations.rst
+
+.. include:: snippets/ReduceMemoryUse.rst
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 

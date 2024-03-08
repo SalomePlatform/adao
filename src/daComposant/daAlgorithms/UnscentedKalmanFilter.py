@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 from daCore import BasicObjects
-from daAlgorithms.Atoms import c2ukf, uskf
+from daAlgorithms.Atoms import ecwukf, c2ukf, uskf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -35,6 +35,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "UKF",
                 "2UKF",
+                ],
+            listadv  = [
+                "UKF-Std",
+                "UKF-MSP",
                 ],
             )
         self.defineRequiredParameter(
@@ -139,13 +143,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #--------------------------
         # Default UKF
         #--------------------------
-        if   self._parameters["Variant"] == "UKF":
-            uskf.uskf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        if   self._parameters["Variant"] in ["UKF", "UKF-Std"]:
+            ecwukf.ecwukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         # Default 2UKF
         elif self._parameters["Variant"] == "2UKF":
             c2ukf.c2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        #
+        #--------------------------
+        # UKF-MSP
+        elif self._parameters["Variant"] == "UKF-MSP":
+            uskf.uskf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         #--------------------------
         else:

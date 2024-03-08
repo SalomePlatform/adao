@@ -2,8 +2,8 @@
 ADAO: A module for Data Assimilation and Optimization
 =====================================================
 
-About
------
+About ADAO: A module for Data Assimilation and Optimization
+-----------------------------------------------------------
 
 **The ADAO module provides data assimilation and optimization** features in
 Python or SALOME context (see http://www.salome-platform.org/). Briefly stated,

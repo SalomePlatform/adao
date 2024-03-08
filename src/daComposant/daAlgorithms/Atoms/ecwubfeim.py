@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Empirical Interpolation Method DEIM & lcDEIM
+    Empirical Interpolation Method EIM & lcEIM with User Defined Function
 """
 __author__ = "Jean-Philippe ARGAUD"
 
@@ -30,10 +30,9 @@ import daCore.Persistence
 from daCore.NumericObjects import FindIndexesFromNames
 from daCore.NumericObjects import InterpolationErrorByColumn
 from daCore.NumericObjects import SingularValuesEstimation
-from daCore.PlatformInfo import vt
 
 # ==============================================================================
-def DEIM_offline(selfA, EOS = None, Verbose = False):
+def UBFEIM_offline(selfA, EOS = None, Verbose = False):
     """
     Établissement de la base
     """
@@ -51,7 +50,22 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
     __dimS, __nbmS = __EOS.shape
     logging.debug("%s Using a collection of %i snapshots of individual size of %i"%(selfA._name,__nbmS,__dimS))
     #
-    if selfA._parameters["Variant"] in ["DEIM", "PositioningByDEIM"]:
+    if numpy.array(selfA._parameters["UserBasisFunctions"]).size == 0:
+        logging.debug("%s Using the snapshots in place of user defined basis functions, the latter being not provided"%(selfA._name))
+        UBF = __EOS
+    else:
+        UBF = selfA._parameters["UserBasisFunctions"]
+    if isinstance(UBF, (numpy.ndarray, numpy.matrix)):
+        __UBF = numpy.asarray(UBF)
+    elif isinstance(UBF, (list, tuple, daCore.Persistence.Persistence)):
+        __UBF = numpy.stack([numpy.ravel(_sn) for _sn in UBF], axis=1)
+    else:
+        raise ValueError("UserBasisFunctions has to be an array/matrix (each column being a vector) or a list/tuple (each element being a vector).")
+    assert __EOS.shape[0] == __UBF.shape[0], "Individual snapshot and user defined basis function has to be of the same size, which is false: %i =/= %i"%(__EOS.shape[0], __UBF.shape[0])
+    __dimS, __nbmS = __UBF.shape
+    logging.debug("%s Using a collection of %i user defined basis functions of individual size of %i"%(selfA._name,__nbmS,__dimS))
+    #
+    if selfA._parameters["Variant"] in ["UBFEIM", "PositioningByUBFEIM"]:
         __LcCsts = False
     else:
         __LcCsts = True
@@ -70,7 +84,7 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
         __ExcludedMagicPoints = FindIndexesFromNames( __NameOfLocations, __ExcludedMagicPoints )
         __ExcludedMagicPoints = numpy.ravel(numpy.asarray(__ExcludedMagicPoints, dtype=int))
         __IncludedMagicPoints = numpy.setdiff1d(
-            numpy.arange(__EOS.shape[0]),
+            numpy.arange(__UBF.shape[0]),
             __ExcludedMagicPoints,
             assume_unique = True,
             )
@@ -91,15 +105,7 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
     else:
         selfA._parameters["EpsilonEIM"] = 1.e-2
     #
-    __sv, __svsq, __tisv, __qisv = SingularValuesEstimation( __EOS )
-    if vt(scipy.version.version) < vt("1.1.0"):
-        __rhoM = scipy.linalg.orth( __EOS )
-        __rhoM = numpy.compress(__sv > selfA._parameters["EpsilonEIM"]*max(__sv), __rhoM, axis=1)
-    else:
-        __rhoM = scipy.linalg.orth( __EOS, selfA._parameters["EpsilonEIM"] )
-    __lVs, __svdM = __rhoM.shape
-    assert __lVs == __dimS, "Différence entre lVs et dim(EOS)"
-    __maxM   = min(__maxM,__svdM)
+    __rhoM = __UBF
     #
     if __LcCsts and len(__IncludedMagicPoints) > 0:
         __iM = numpy.argmax( numpy.abs(
@@ -178,13 +184,11 @@ def DEIM_offline(selfA, EOS = None, Verbose = False):
             selfA.StoredVariables["Residus"].store( __errors )
         if selfA._toStore("ExcludedPoints"):
             selfA.StoredVariables["ExcludedPoints"].store( __ExcludedMagicPoints )
-        if selfA._toStore("SingularValues"):
-            selfA.StoredVariables["SingularValues"].store( __sv )
     #
     return __mu, __I, __Q, __errors
 
 # ==============================================================================
-# DEIM_online == EIM_online
+# UBFEIM_online == EIM_online
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

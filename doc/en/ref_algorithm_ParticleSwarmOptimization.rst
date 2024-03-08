@@ -114,7 +114,7 @@ when the dimension of the state space is large, or when the non-linearities of
 the simulation make the evaluation of the gradient of the functional by
 numerical approximation complicated or invalid. But it is also necessary that
 the calculation of the function to be simulated is not too costly to avoid a
-prohibitive optimization time.
+prohibitive optimization time length.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

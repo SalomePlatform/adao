@@ -83,7 +83,9 @@ computations are optimized according to the computer resources available and
 the options requested by the user. You can refer to the
 :ref:`section_ref_sampling_requirements` for an illustration of sampling.
 Beware of the size of the hypercube (and then to the number of computations)
-that can be reached, it can grow quickly to be quite large.
+that can be reached, it can grow quickly to be quite large. The memory required
+is then the product of the size of an individual :math:`\mathbf{y}` state and
+the size of the hypercube.
 
   .. _mop_determination:
   .. image:: images/mop_determination.png
@@ -115,6 +117,8 @@ constrained positioning search.
 .. include:: snippets/MaximumNumberOfLocations.rst
 
 .. include:: snippets/NameOfLocations.rst
+
+.. include:: snippets/ReduceMemoryUse.rst
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 

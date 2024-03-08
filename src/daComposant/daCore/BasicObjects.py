@@ -835,7 +835,7 @@ class Algorithm(object):
         #
         # Mise à jour des paramètres internes avec le contenu de Parameters, en
         # reprenant les valeurs par défauts pour toutes celles non définies
-        self.__setParameters(Parameters, reset=True)
+        self.__setParameters(Parameters, reset=True) # Copie
         for k, v in self.__variable_names_not_public.items():
             if k not in self._parameters:  self.__setParameters( {k:v} )
 
@@ -851,9 +851,13 @@ class Algorithm(object):
                     logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,symbol))
             else:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    logging.debug("%s %s vector %s is required and set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
+                    logging.debug(
+                        "%s %s vector %s is required and set, and its size is %i."%(
+                        self._name,argname,symbol,numpy.array(argument).size))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s vector %s is optional and set, and its size is %i."%(self._name,argname,symbol,numpy.array(argument).size))
+                    logging.debug(
+                        "%s %s vector %s is optional and set, and its size is %i."%(
+                        self._name,argname,symbol,numpy.array(argument).size))
                 else:
                     logging.debug(
                         "%s %s vector %s is set although neither required nor optional, and its size is %i."%(
@@ -862,7 +866,7 @@ class Algorithm(object):
         __test_vvalue( Xb, "Xb", "Background or initial state" )
         __test_vvalue( Y,  "Y",  "Observation" )
         __test_vvalue( U,  "U",  "Control" )
-
+        #
         # Corrections et compléments des covariances
         def __test_cvalue(argument, variable, argname, symbol=None):
             if symbol is None: symbol = variable
@@ -879,12 +883,14 @@ class Algorithm(object):
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
                     logging.debug("%s %s error covariance matrix %s is optional and set."%(self._name,argname,symbol))
                 else:
-                    logging.debug("%s %s error covariance matrix %s is set although neither required nor optional."%(self._name,argname,symbol))
+                    logging.debug(
+                        "%s %s error covariance matrix %s is set although neither required nor optional."%(
+                        self._name,argname,symbol))
             return 0
         __test_cvalue( B, "B", "Background" )
         __test_cvalue( R, "R", "Observation" )
         __test_cvalue( Q, "Q", "Evolution" )
-
+        #
         # Corrections et compléments des opérateurs
         def __test_ovalue(argument, variable, argname, symbol=None):
             if symbol is None: symbol = variable
@@ -1158,7 +1164,9 @@ class Algorithm(object):
                 self._parameters[k] = self.setParameterValue(k)
             else:
                 pass
-            if hasattr(self._parameters[k],"__len__") and len(self._parameters[k]) > 100:
+            if hasattr(self._parameters[k],"size") and self._parameters[k].size > 100:
+                logging.debug("%s %s d'une taille totale de %s", self._name, self.__required_parameters[k]["message"], self._parameters[k].size)
+            elif hasattr(self._parameters[k],"__len__") and len(self._parameters[k]) > 100:
                 logging.debug("%s %s de longueur %s", self._name, self.__required_parameters[k]["message"], len(self._parameters[k]))
             else:
                 logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])

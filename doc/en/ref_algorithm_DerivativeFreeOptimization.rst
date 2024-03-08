@@ -31,10 +31,11 @@ Calculation algorithm "*DerivativeFreeOptimization*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization
-of a cost function :math:`J` without gradient. It is a method that does not use
-the derivatives of the cost function. It falls in the same category than the
-:ref:`section_ref_algorithm_ParticleSwarmOptimization`, the
-:ref:`section_ref_algorithm_DifferentialEvolution` or the
+without gradient of a cost function :math:`J`, using a search method by simplex
+type or similar approximation. It is a method that does not use the derivatives
+of the cost function. It falls in the same category than the
+:ref:`section_ref_algorithm_DifferentialEvolution`,
+:ref:`section_ref_algorithm_ParticleSwarmOptimization` or
 :ref:`section_ref_algorithm_TabuSearch`.
 
 This is a mono-objective optimization method allowing for global minimum search
