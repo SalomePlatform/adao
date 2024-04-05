@@ -36,9 +36,9 @@ def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     # Initialisations
     # ---------------
     Hm = HO["Tangent"].asMatrix(Xb)
-    Hm = Hm.reshape(Y.size,-1) # ADAO & check shape
+    Hm = Hm.reshape(Y.size, -1)  # ADAO & check shape
     Ha = HO["Adjoint"].asMatrix(Xb)
-    Ha = Ha.reshape(-1,Y.size) # ADAO & check shape
+    Ha = Ha.reshape(-1, Y.size)  # ADAO & check shape
     #
     if R is None:
         RI = 1.
@@ -48,30 +48,31 @@ def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     # Calcul de l'analyse
     # -------------------
     K = (Ha * (RI * Hm)).I * Ha * RI
-    Xa =  K * Y
+    Xa = K * Y
     #
-    if __storeState: selfA._setInternalState("Xn", Xa)
-    #--------------------------
+    if __storeState:
+        selfA._setInternalState("Xn", Xa)
+    # --------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )
     #
     # Calcul de la fonction coût
     # --------------------------
     if selfA._parameters["StoreInternalVariables"] or \
-        selfA._toStore("CostFunctionJ")  or selfA._toStore("CostFunctionJAtCurrentOptimum") or \
-        selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
-        selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
-        selfA._toStore("OMA") or \
-        selfA._toStore("InnovationAtCurrentAnalysis") or \
-        selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
-        selfA._toStore("SimulatedObservationAtCurrentState") or \
-        selfA._toStore("SimulatedObservationAtOptimum"):
+            selfA._toStore("CostFunctionJ" ) or selfA._toStore("CostFunctionJAtCurrentOptimum") or \
+            selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
+            selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
+            selfA._toStore("OMA") or \
+            selfA._toStore("InnovationAtCurrentAnalysis") or \
+            selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
+            selfA._toStore("SimulatedObservationAtCurrentState") or \
+            selfA._toStore("SimulatedObservationAtOptimum"):
         HXa = Hm @ Xa
-        oma = Y - HXa.reshape((-1,1))
+        oma = Y - HXa.reshape((-1, 1))
     if selfA._parameters["StoreInternalVariables"] or \
-        selfA._toStore("CostFunctionJ")  or selfA._toStore("CostFunctionJAtCurrentOptimum") or \
-        selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
-        selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum"):
+            selfA._toStore("CostFunctionJ" ) or selfA._toStore("CostFunctionJAtCurrentOptimum") or \
+            selfA._toStore("CostFunctionJb") or selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
+            selfA._toStore("CostFunctionJo") or selfA._toStore("CostFunctionJoAtCurrentOptimum"):
         Jb  = 0.
         Jo  = vfloat( 0.5 * oma.T * (RI * oma) )
         J   = Jb + Jo

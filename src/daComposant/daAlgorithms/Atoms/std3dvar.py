@@ -44,15 +44,15 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         HXb = numpy.asarray(Hm( Xb, HO["AppliedInX"]["HXb"] ))
     else:
         HXb = numpy.asarray(Hm( Xb ))
-    HXb = HXb.reshape((-1,1))
+    HXb = HXb.reshape((-1, 1))
     if Y.size != HXb.size:
-        raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size,HXb.size))
+        raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size, HXb.size))  # noqa: E501
     if max(Y.shape) != max(HXb.shape):
-        raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape,HXb.shape))
+        raise ValueError("The shapes %s of observations Y and %s of observed calculation H(X) are different, they have to be identical."%(Y.shape, HXb.shape))  # noqa: E501
     #
     if selfA._toStore("JacobianMatrixAtBackground"):
         HtMb = HO["Tangent"].asMatrix(Xb)
-        HtMb = HtMb.reshape(Y.size,Xb.size) # ADAO & check shape
+        HtMb = HtMb.reshape(Y.size, Xb.size)  # ADAO & check shape
         selfA.StoredVariables["JacobianMatrixAtBackground"].store( HtMb )
     #
     BI = B.getI()
@@ -62,16 +62,17 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     #
     # Définition de la fonction-coût
     # ------------------------------
+
     def CostFunction(x):
-        _X  = numpy.asarray(x).reshape((-1,1))
+        _X  = numpy.asarray(x).reshape((-1, 1))
         if selfA._parameters["StoreInternalVariables"] or \
-            selfA._toStore("CurrentState") or \
-            selfA._toStore("CurrentOptimum"):
+                selfA._toStore("CurrentState") or \
+                selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        _HX = numpy.asarray(Hm( _X )).reshape((-1,1))
+        _HX = numpy.asarray(Hm( _X )).reshape((-1, 1))
         _Innovation = Y - _HX
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
-            selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
@@ -85,29 +86,29 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["CostFunctionJo"].store( Jo )
         selfA.StoredVariables["CostFunctionJ" ].store( J )
         if selfA._toStore("IndexOfOptimum") or \
-            selfA._toStore("CurrentOptimum") or \
-            selfA._toStore("CostFunctionJAtCurrentOptimum") or \
-            selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
-            selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
-            selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                selfA._toStore("CurrentOptimum") or \
+                selfA._toStore("CostFunctionJAtCurrentOptimum") or \
+                selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
+                selfA._toStore("CostFunctionJoAtCurrentOptimum") or \
+                selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
         if selfA._toStore("IndexOfOptimum"):
             selfA.StoredVariables["IndexOfOptimum"].store( IndexMin )
         if selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentOptimum"].store( selfA.StoredVariables["CurrentState"][IndexMin] )
         if selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( selfA.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )
+            selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( selfA.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )  # noqa: E501
         if selfA._toStore("CostFunctionJbAtCurrentOptimum"):
-            selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJb"][IndexMin] )
+            selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJb"][IndexMin] )  # noqa: E501
         if selfA._toStore("CostFunctionJoAtCurrentOptimum"):
-            selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJo"][IndexMin] )
+            selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJo"][IndexMin] )  # noqa: E501
         if selfA._toStore("CostFunctionJAtCurrentOptimum"):
-            selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )
+            selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )  # noqa: E501
         return J
-    #
+
     def GradientOfCostFunction(x):
-        _X      = numpy.asarray(x).reshape((-1,1))
-        _HX     = numpy.asarray(Hm( _X )).reshape((-1,1))
+        _X      = numpy.asarray(x).reshape((-1, 1))
+        _HX     = numpy.asarray(Hm( _X )).reshape((-1, 1))
         GradJb  = BI * (_X - Xb)
         GradJo  = - Ha( (_X, RI * (Y - _HX)) )
         GradJ   = numpy.ravel( GradJb ) + numpy.ravel( GradJo )
@@ -118,7 +119,7 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     nbPreviousSteps = selfA.StoredVariables["CostFunctionJ"].stepnumber()
     #
     if selfA._parameters["Minimizer"] == "LBFGSB":
-        if   vt("0.19")  <= vt(scipy.version.version) <= vt("1.4.99"):
+        if vt("0.19")  <= vt(scipy.version.version) <= vt("1.4.99"):
             import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
         elif vt("1.5.0") <= vt(scipy.version.version) <= vt("1.7.99"):
             import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
@@ -138,11 +139,11 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             fprime      = GradientOfCostFunction,
             args        = (),
             bounds      = selfA._parameters["Bounds"],
-            maxfun      = selfA._parameters["MaximumNumberOfIterations"]-1,
-            factr       = selfA._parameters["CostDecrementTolerance"]*1.e14,
+            maxfun      = selfA._parameters["MaximumNumberOfIterations"] - 1,
+            factr       = selfA._parameters["CostDecrementTolerance"] * 1.e14,
             pgtol       = selfA._parameters["ProjectedGradientTolerance"],
             iprint      = selfA._parameters["optiprint"],
-            )
+        )
         # nfeval = Informations['funcalls']
         # rc     = Informations['warnflag']
     elif selfA._parameters["Minimizer"] == "TNC":
@@ -156,7 +157,7 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             pgtol       = selfA._parameters["ProjectedGradientTolerance"],
             ftol        = selfA._parameters["CostDecrementTolerance"],
             messages    = selfA._parameters["optmessages"],
-            )
+        )
     elif selfA._parameters["Minimizer"] == "CG":
         Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
             f           = CostFunction,
@@ -167,7 +168,7 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             gtol        = selfA._parameters["GradientNormTolerance"],
             disp        = selfA._parameters["optdisp"],
             full_output = True,
-            )
+        )
     elif selfA._parameters["Minimizer"] == "NCG":
         Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
             f           = CostFunction,
@@ -178,7 +179,7 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             avextol     = selfA._parameters["CostDecrementTolerance"],
             disp        = selfA._parameters["optdisp"],
             full_output = True,
-            )
+        )
     elif selfA._parameters["Minimizer"] == "BFGS":
         Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
             f           = CostFunction,
@@ -189,7 +190,7 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             gtol        = selfA._parameters["GradientNormTolerance"],
             disp        = selfA._parameters["optdisp"],
             full_output = True,
-            )
+        )
     else:
         raise ValueError("Error in minimizer name: %s is unkown"%selfA._parameters["Minimizer"])
     #
@@ -202,53 +203,56 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         Minimum = selfA.StoredVariables["CurrentState"][IndexMin]
     #
     Xa = Minimum
-    if __storeState: selfA._setInternalState("Xn", Xa)
-    #--------------------------
+    if __storeState:
+        selfA._setInternalState("Xn", Xa)
+    # --------------------------
     #
     selfA.StoredVariables["Analysis"].store( Xa )
     #
     if selfA._toStore("OMA") or \
-        selfA._toStore("InnovationAtCurrentAnalysis") or \
-        selfA._toStore("SigmaObs2") or \
-        selfA._toStore("SimulationQuantiles") or \
-        selfA._toStore("SimulatedObservationAtOptimum"):
+            selfA._toStore("InnovationAtCurrentAnalysis") or \
+            selfA._toStore("SigmaObs2") or \
+            selfA._toStore("SimulationQuantiles") or \
+            selfA._toStore("SimulatedObservationAtOptimum"):
         if selfA._toStore("SimulatedObservationAtCurrentState"):
             HXa = selfA.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
         elif selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             HXa = selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
         else:
             HXa = Hm( Xa )
-        oma = Y - HXa.reshape((-1,1))
+        oma = Y - numpy.asarray(HXa).reshape((-1, 1))
     #
     if selfA._toStore("APosterioriCovariance") or \
-        selfA._toStore("SimulationQuantiles") or \
-        selfA._toStore("JacobianMatrixAtOptimum") or \
-        selfA._toStore("KalmanGainAtOptimum"):
+            selfA._toStore("SimulationQuantiles") or \
+            selfA._toStore("JacobianMatrixAtOptimum") or \
+            selfA._toStore("KalmanGainAtOptimum"):
         HtM = HO["Tangent"].asMatrix(ValueForMethodForm = Xa)
-        HtM = HtM.reshape(Y.size,Xa.size) # ADAO & check shape
+        HtM = HtM.reshape(Y.size, Xa.size)  # ADAO & check shape
     if selfA._toStore("APosterioriCovariance") or \
-        selfA._toStore("SimulationQuantiles") or \
-        selfA._toStore("KalmanGainAtOptimum"):
+            selfA._toStore("SimulationQuantiles") or \
+            selfA._toStore("KalmanGainAtOptimum"):
         HaM = HO["Adjoint"].asMatrix(ValueForMethodForm = Xa)
-        HaM = HaM.reshape(Xa.size,Y.size) # ADAO & check shape
+        HaM = HaM.reshape(Xa.size, Y.size)  # ADAO & check shape
     if selfA._toStore("APosterioriCovariance") or \
-        selfA._toStore("SimulationQuantiles"):
+            selfA._toStore("SimulationQuantiles"):
         A = HessienneEstimation(selfA, Xa.size, HaM, HtM, BI, RI)
     if selfA._toStore("APosterioriCovariance"):
         selfA.StoredVariables["APosterioriCovariance"].store( A )
     if selfA._toStore("JacobianMatrixAtOptimum"):
         selfA.StoredVariables["JacobianMatrixAtOptimum"].store( HtM )
     if selfA._toStore("KalmanGainAtOptimum"):
-        if   (Y.size <= Xb.size): KG  = B * HaM * (R + numpy.dot(HtM, B * HaM)).I
-        elif (Y.size >  Xb.size): KG = (BI + numpy.dot(HaM, RI * HtM)).I * HaM * RI
+        if (Y.size <= Xb.size):
+            KG  = B * HaM * (R + numpy.dot(HtM, B * HaM)).I
+        elif (Y.size > Xb.size):
+            KG = (BI + numpy.dot(HaM, RI * HtM)).I * HaM * RI
         selfA.StoredVariables["KalmanGainAtOptimum"].store( KG )
     #
     # Calculs et/ou stockages supplémentaires
     # ---------------------------------------
     if selfA._toStore("Innovation") or \
-        selfA._toStore("SigmaObs2") or \
-        selfA._toStore("MahalanobisConsistency") or \
-        selfA._toStore("OMB"):
+            selfA._toStore("SigmaObs2") or \
+            selfA._toStore("MahalanobisConsistency") or \
+            selfA._toStore("OMB"):
         Innovation  = Y - HXb
     if selfA._toStore("Innovation"):
         selfA.StoredVariables["Innovation"].store( Innovation )
@@ -264,7 +268,7 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         TraceR = R.trace(Y.size)
         selfA.StoredVariables["SigmaObs2"].store( vfloat( (Innovation.T @ oma) ) / TraceR )
     if selfA._toStore("MahalanobisConsistency"):
-        selfA.StoredVariables["MahalanobisConsistency"].store( float( 2.*MinJ/Innovation.size ) )
+        selfA.StoredVariables["MahalanobisConsistency"].store( float( 2. * MinJ / Innovation.size ) )
     if selfA._toStore("SimulationQuantiles"):
         QuantilesEstimations(selfA, A, Xa, HXa, Hm, HtM)
     if selfA._toStore("SimulatedObservationAtBackground"):

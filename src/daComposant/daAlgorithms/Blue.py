@@ -35,24 +35,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "Blue",
-                ],
+            ],
             listadv  = [
                 "OneCorrection",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "Parameters",
             typecast = str,
             message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -88,8 +88,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
                 "SimulationQuantiles",
-                ]
-            )
+            ]
+        )
         self.defineRequiredParameter(
             name     = "Quantiles",
             default  = [],
@@ -97,56 +97,63 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste des valeurs de quantiles",
             minval   = 0.,
             maxval   = 1.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
-            )
+        )
         self.defineRequiredParameter(
             name     = "NumberOfSamplesForQuantiles",
             default  = 100,
             typecast = int,
             message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
             minval   = 1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SimulationForQuantiles",
             default  = "Linear",
             typecast = str,
             message  = "Type de simulation en estimation des quantiles",
             listval  = ["Linear", "NonLinear"]
-            )
-        self.defineRequiredParameter( # Pas de type
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "StateBoundsForQuantiles",
             message  = "Liste des paires de bornes pour les états utilisés en estimation des quantiles",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
             optional = ("U", "EM", "CM", "Q"),
-            )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "Linear",
-            "Filter",
-            ))
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "Linear",
+                "Filter",
+            ),
+            features=(
+                "LocalOptimization",
+                "DerivativeNeeded",
+                "ParallelDerivativesOnly",
+            ),
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        if   self._parameters["Variant"] == "Blue":
+        # --------------------------
+        if self._parameters["Variant"] == "Blue":
             NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwblue.ecwblue)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
             ecwblue.ecwblue(self, Xb, Y, U, HO, CM, R, B)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

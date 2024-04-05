@@ -79,7 +79,7 @@ import functools
 import time
 from daCore import PlatformInfo
 
-LOGFILE = os.path.join(os.path.abspath(os.curdir),"AdaoOutputLogfile.log")
+LOGFILE = os.path.join(os.path.abspath(os.curdir), "AdaoOutputLogfile.log")
 
 # ==============================================================================
 class ExtendedLogging(object):
@@ -88,12 +88,12 @@ class ExtendedLogging(object):
     sortie sur fichier
     """
     __slots__ = ("__logfile")
-    #
+
     def __init__(self, level=logging.WARNING):
         """
         Initialise un logging à la console pour TOUS les niveaux de messages.
         """
-        if  sys.version_info.major <= 3 and sys.version_info.minor < 8:
+        if sys.version_info.major <= 3 and sys.version_info.minor < 8:
             if logging.getLogger().hasHandlers():
                 while logging.getLogger().hasHandlers():
                     logging.getLogger().removeHandler( logging.getLogger().handlers[-1] )
@@ -105,14 +105,14 @@ class ExtendedLogging(object):
                     format = '%(levelname)-8s %(message)s',
                     level  = level,
                     stream = sys.stdout,
-                    )
-        else: # Actif lorsque Python > 3.7
+                )
+        else:  # Actif lorsque Python > 3.7
             logging.basicConfig(
                 format = '%(levelname)-8s %(message)s',
                 level  = level,
                 stream = sys.stdout,
                 force  = True,
-                )
+            )
         self.__logfile = None
         #
         # Initialise l'affichage de logging
@@ -120,24 +120,24 @@ class ExtendedLogging(object):
         p = PlatformInfo.PlatformInfo()
         #
         logging.info( "--------------------------------------------------" )
-        logging.info( p.getName()+" version "+p.getVersion() )
+        logging.info( p.getName() + " version " + p.getVersion() )
         logging.info( "--------------------------------------------------" )
         logging.info( "Library availability:" )
         logging.info( "- Python.......: True" )
-        logging.info( "- Numpy........: "+str(PlatformInfo.has_numpy) )
-        logging.info( "- Scipy........: "+str(PlatformInfo.has_scipy) )
-        logging.info( "- Matplotlib...: "+str(PlatformInfo.has_matplotlib) )
-        logging.info( "- Gnuplot......: "+str(PlatformInfo.has_gnuplot) )
-        logging.info( "- Sphinx.......: "+str(PlatformInfo.has_sphinx) )
-        logging.info( "- Nlopt........: "+str(PlatformInfo.has_nlopt) )
+        logging.info( "- Numpy........: " + str(PlatformInfo.has_numpy) )
+        logging.info( "- Scipy........: " + str(PlatformInfo.has_scipy) )
+        logging.info( "- Matplotlib...: " + str(PlatformInfo.has_matplotlib) )
+        logging.info( "- Gnuplot......: " + str(PlatformInfo.has_gnuplot) )
+        logging.info( "- Sphinx.......: " + str(PlatformInfo.has_sphinx) )
+        logging.info( "- Nlopt........: " + str(PlatformInfo.has_nlopt) )
         logging.info( "Library versions:" )
-        logging.info( "- Python.......: "+p.getPythonVersion() )
-        logging.info( "- Numpy........: "+p.getNumpyVersion() )
-        logging.info( "- Scipy........: "+p.getScipyVersion() )
-        logging.info( "- Matplotlib...: "+p.getMatplotlibVersion() )
-        logging.info( "- Gnuplot......: "+p.getGnuplotVersion() )
-        logging.info( "- Sphinx.......: "+p.getSphinxVersion() )
-        logging.info( "- Nlopt........: "+p.getNloptVersion() )
+        logging.info( "- Python.......: " + p.getPythonVersion() )
+        logging.info( "- Numpy........: " + p.getNumpyVersion() )
+        logging.info( "- Scipy........: " + p.getScipyVersion() )
+        logging.info( "- Matplotlib...: " + p.getMatplotlibVersion() )
+        logging.info( "- Gnuplot......: " + p.getGnuplotVersion() )
+        logging.info( "- Sphinx.......: " + p.getSphinxVersion() )
+        logging.info( "- Nlopt........: " + p.getNloptVersion() )
         logging.info( "" )
 
     def setLogfile(self, filename=LOGFILE, filemode="w", level=logging.NOTSET):
@@ -171,11 +171,11 @@ class ExtendedLogging(object):
 def logtimer(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        start  = time.clock() # time.time()
+        start  = time.clock()  # time.time()
         result = f(*args, **kwargs)
-        end    = time.clock() # time.time()
+        end    = time.clock()  # time.time()
         msg    = 'TIMER Durée elapsed de la fonction utilisateur "{}": {:.3f}s'
-        logging.debug(msg.format(f.__name__, end-start))
+        logging.debug(msg.format(f.__name__, end - start))
         return result
     return wrapper
 

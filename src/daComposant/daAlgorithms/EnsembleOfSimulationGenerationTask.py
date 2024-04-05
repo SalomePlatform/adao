@@ -33,43 +33,43 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Points de calcul définis par une liste de n-uplet",
-            )
+        )
         self.defineRequiredParameter(
             name     = "SampleAsExplicitHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages explicites de chaque variable comme une liste",
-            )
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages explicites de chaque variable comme une liste",  # noqa: E501
+        )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxStepHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages implicites de chaque variable par un triplet [min,max,step]",
-            )
+            message  = "Points de calcul définis par un hyper-cube dont on donne la liste des échantillonnages implicites de chaque variable par un triplet [min,max,step]",  # noqa: E501
+        )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxLatinHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi du nombre de points demandés",
-            )
+            message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi du nombre de points demandés",  # noqa: E501
+        )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxSobolSequence",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par une séquence de Sobol dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",
-            )
+            message  = "Points de calcul définis par une séquence de Sobol dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",  # noqa: E501
+        )
         self.defineRequiredParameter(
             name     = "SampleAsIndependantRandomVariables",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonnage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",
-            )
+            message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonnage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",  # noqa: E501
+        )
         self.defineRequiredParameter(
             name     = "SetDebug",
             default  = False,
             typecast = bool,
             message  = "Activation du mode debug lors de l'exécution",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = ["EnsembleOfSimulations",],
@@ -78,30 +78,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "EnsembleOfSimulations",
                 "EnsembleOfStates",
-                ]
-            )
+            ]
+        )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "HO"),
             optional = (),
+        )
+        self.setAttributes(
+            tags=(
+                "Reduction",
+                "Checking",
             )
-        self.setAttributes(tags=(
-            "Reduction",
-            "Checking",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         eosg.eosg(self, Xb, HO)
-        #--------------------------
+        # --------------------------
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

@@ -35,14 +35,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Quantile pour la régression de quantile",
             minval   = 0.,
             maxval   = 1.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "MMQR",
             typecast = str,
             message  = "Minimiseur utilisé",
             listval  = ["MMQR",],
-            )
+        )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
             default  = 15000,
@@ -50,19 +50,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Nombre maximal de pas d'optimisation",
             minval   = 1,
             oldname  = "MaximumNumberOfSteps",
-            )
+        )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
             default  = 1.e-6,
             typecast = float,
             message  = "Maximum de variation de la fonction d'estimation lors de l'arrêt",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -82,38 +82,40 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-                ]
-            )
-        self.defineRequiredParameter( # Pas de type
+            ]
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
-            )
+        )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
             typecast = numpy.ravel,
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO" ),
+        )
+        self.setAttributes(
+            tags=(
+                "Optimization",
+                "Risk",
+                "Variational",
             )
-        self.setAttributes(tags=(
-            "Optimization",
-            "Risk",
-            "Variational",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         self._parameters["Bounds"] = NumericObjects.ForceNumericBounds( self._parameters["Bounds"] )
         #
         Hm = HO["Direct"].appliedTo
-        #
+
         def CostFunction(x):
-            _X = numpy.asarray(x).reshape((-1,1))
+            _X = numpy.asarray(x).reshape((-1, 1))
             if self._parameters["StoreInternalVariables"] or \
-                self._toStore("CurrentState"):
+                    self._toStore("CurrentState"):
                 self.StoredVariables["CurrentState"].store( _X )
-            _HX = numpy.asarray(Hm( _X )).reshape((-1,1))
+            _HX = numpy.asarray(Hm( _X )).reshape((-1, 1))
             if self._toStore("SimulatedObservationAtCurrentState"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             Jb  = 0.
@@ -125,9 +127,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CostFunctionJo"].store( Jo )
             self.StoredVariables["CostFunctionJ" ].store( J )
             return _HX
-        #
+
         def GradientOfCostFunction(x):
-            _X = numpy.asarray(x).reshape((-1,1))
+            _X = numpy.asarray(x).reshape((-1, 1))
             Hg = HO["Tangent"].asMatrix( _X )
             return Hg
         #
@@ -145,7 +147,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 maxfun      = self._parameters["MaximumNumberOfIterations"],
                 toler       = self._parameters["CostDecrementTolerance"],
                 y           = Y,
-                )
+            )
         else:
             raise ValueError("Error in minimizer name: %s is unkown"%self._parameters["Minimizer"])
         #
@@ -158,12 +160,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
         if self._toStore("OMA") or \
-            self._toStore("SimulatedObservationAtOptimum"):
-            HXa = Hm(Xa).reshape((-1,1))
+                self._toStore("SimulatedObservationAtOptimum"):
+            HXa = Hm(Xa).reshape((-1, 1))
         if self._toStore("Innovation") or \
-            self._toStore("OMB") or \
-            self._toStore("SimulatedObservationAtBackground"):
-            HXb = Hm(Xb).reshape((-1,1))
+                self._toStore("OMB") or \
+                self._toStore("SimulatedObservationAtBackground"):
+            HXb = Hm(Xb).reshape((-1, 1))
             Innovation = Y - HXb
         if self._toStore("Innovation"):
             self.StoredVariables["Innovation"].store( Innovation )
@@ -178,7 +180,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

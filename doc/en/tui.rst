@@ -342,6 +342,16 @@ are often available in the current name space of the case.
 
 The available commands are:
 
+.. index:: single: set
+
+**set** (*Concept,...*)
+    This command allows to have an equivalent syntax for all the commands of
+    these section. Its first argument is the name of the concept to be defined
+    (for example "*Background*" or "*ObservationOperator*"), on which the
+    following arguments, which are the same as in the individual previous
+    commands, are applied. When using this command, it is required to name the
+    arguments (for example "*Vector=...*").
+
 .. index:: single: Background
 .. index:: single: setBackground
 
@@ -509,16 +519,6 @@ The available commands are:
     they can be given through the variable "*ExtraArguments*" as a named
     parameters dictionary.
 
-.. index:: single: set
-
-**set** (*Concept,...*)
-    This command allows to have an equivalent syntax for all the commands of
-    these section. Its first argument is the name of the concept to be defined
-    (for example "*Background*" or "*ObservationOperator*"), on which the
-    following arguments, which are the same as in the individual previous
-    commands, are applied. When using this command, it is required to name the
-    arguments (for example "*Vector=...*").
-
 Setting the calculation, outputs, etc.
 ++++++++++++++++++++++++++++++++++++++
 
@@ -672,9 +672,12 @@ with these Python external case operations.
     one the commands establishing the current calculation case. Some formats
     are only available as input or as output.
 
-In addition, simple information about the case study as defined by the user can
-be obtained by using the Python "*print*" command directly on the case, at any
-stage during its design. For example:
+Obtain information on the case, the computation or the system
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+It's easy to obtain **aggregate information on the study case** as defined by
+the user, by using Python's "*print*" command directly on the case, at any
+stage during its completion. For example:
 
 .. literalinclude:: scripts/tui_example_07.py
     :language: python
@@ -682,6 +685,34 @@ stage during its design. For example:
 which result is here:
 
 .. literalinclude:: scripts/tui_example_07.res
+
+.. index:: single: callinfo
+
+**Synthetic information on the number of calls to operator computations** can
+be dynamically obtained with the "**callinfo()**" command. These operator
+computations are those defined by the user in an ADAO case, for the observation
+and evolution operators. It is used after the calculation has been performed in
+the ADAO case, bearing in mind that the result of this command is simply empty
+when no calculation has been performed:
+::
+
+    from adao import adaoBuilder
+    case = adaoBuilder.New()
+    ...
+    case.execute()
+    print(case.callinfo())
+
+.. index:: single: sysinfo
+
+Synthetic **system information** can be obtained with the "**sysinfo()**"
+command, present in every calculation case. It dynamically returns system
+information and details of Python modules useful for ADAO. It is used as
+follows:
+::
+
+    from adao import adaoBuilder
+    case = adaoBuilder.New()
+    print(case.sysinfo())
 
 .. _subsection_tui_advanced:
 

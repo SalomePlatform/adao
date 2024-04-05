@@ -33,19 +33,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = numpy.array,
             message  = "Base réduite, 1 vecteur par colonne",
-            )
+        )
         self.defineRequiredParameter(
             name     = "OptimalLocations",
             default  = [],
             typecast = tuple,
-            message  = "Liste des indices ou noms de positions optimales de mesure selon l'ordre interne d'un vecteur de base",
-            )
+            message  = "Liste des indices ou noms de positions optimales de mesure selon l'ordre interne d'un vecteur de base",  # noqa: E501
+        )
         self.defineRequiredParameter(
             name     = "ObservationsAlreadyRestrictedOnOptimalLocations",
             default  = True,
             typecast = bool,
             message  = "Stockage des mesures restreintes a priori aux positions optimales de mesure ou non",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -54,33 +54,35 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "Analysis",
                 "ReducedCoordinates",
-                ]
-            )
+            ]
+        )
         self.requireInputArguments(
             mandatory= ("Y",),
             optional = (),
+        )
+        self.setAttributes(
+            tags=(
+                "Reduction",
+                "Interpolation",
             )
-        self.setAttributes(tags=(
-            "Reduction",
-            "Interpolation",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         __rb = self._parameters["ReducedBasis"]
         __ip = self._parameters["OptimalLocations"]
         if len(__ip) != __rb.shape[1]:
-            raise ValueError("The number of optimal measurement locations (%i) and the dimension of the RB (%i) has to be the same."%(len(__ip),__rb.shape[1]))
+            raise ValueError("The number of optimal measurement locations (%i) and the dimension of the RB (%i) has to be the same."%(len(__ip), __rb.shape[1]))  # noqa: E501
         #
         # Nombre de pas identique au nombre de pas d'observations
-        if hasattr(Y,"stepnumber"):
+        if hasattr(Y, "stepnumber"):
             duration = Y.stepnumber()
         else:
             duration = 2
         #
-        for step in range(0,duration-1):
+        for step in range(0, duration - 1):
             #
             # La boucle sur les mesures permet une interpolation par jeu de mesure,
             # sans qu'il y ait de lien entre deux jeux successifs de mesures.
@@ -88,10 +90,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             # Important : les observations sont données sur tous les points
             # possibles ou déjà restreintes aux points optimaux de mesure, mais
             # ne sont utilisés qu'aux points optimaux
-            if hasattr(Y,"store"):
-                _Ynpu = numpy.ravel( Y[step+1] ).reshape((-1,1))
+            if hasattr(Y, "store"):
+                _Ynpu = numpy.ravel( Y[step + 1] ).reshape((-1, 1))
             else:
-                _Ynpu = numpy.ravel( Y ).reshape((-1,1))
+                _Ynpu = numpy.ravel( Y ).reshape((-1, 1))
             if self._parameters["ObservationsAlreadyRestrictedOnOptimalLocations"]:
                 __rm = _Ynpu
             else:
@@ -99,9 +101,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             # Interpolation
             ecweim.EIM_online(self, __rb, __rm, __ip)
-        #--------------------------
+        # --------------------------
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

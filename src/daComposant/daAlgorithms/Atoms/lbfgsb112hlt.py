@@ -1,4 +1,5 @@
 # Modification de la version 1.12.0
+# flake8: noqa
 """
 Functions
 ---------

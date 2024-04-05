@@ -154,6 +154,7 @@ StoreSupplementaryCalculations
   "ExcludedPoints",
   "OptimalPoints",
   "ReducedBasis",
+  "ReducedBasisMus",
   "Residus",
   "SingularValues",
   ].
@@ -180,6 +181,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/OptimalPoints.rst
 
 .. include:: snippets/ReducedBasis.rst
+
+.. include:: snippets/ReducedBasisMus.rst
 
 .. include:: snippets/Residus.rst
 

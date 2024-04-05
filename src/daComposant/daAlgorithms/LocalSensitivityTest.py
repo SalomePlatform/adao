@@ -32,7 +32,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = False,
             typecast = bool,
             message  = "Activation du mode debug lors de l'exécution",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = ["JacobianMatrixAtCurrentState",],
@@ -42,14 +42,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentState",
                 "JacobianMatrixAtCurrentState",
                 "SimulatedObservationAtCurrentState",
-                ]
-            )
+            ]
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO"),
+        )
+        self.setAttributes(
+            tags=(
+                "Checking",
             )
-        self.setAttributes(tags=(
-            "Checking",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
@@ -58,15 +60,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             CUR_LEVEL = logging.getLogger().getEffectiveLevel()
             logging.getLogger().setLevel(logging.DEBUG)
             print("===> Beginning of evaluation, activating debug\n")
-            print("     %s\n"%("-"*75,))
+            print("     %s\n"%("-" * 75,))
         #
         # ----------
         Ht = HO["Tangent"].asMatrix( Xb )
-        Ht = Ht.reshape(Y.size,Xb.size) # ADAO & check shape
+        Ht = Ht.reshape(Y.size, Xb.size)  # ADAO & check shape
         # ----------
         #
         if self._parameters["SetDebug"]:
-            print("\n     %s\n"%("-"*75,))
+            print("\n     %s\n"%("-" * 75,))
             print("===> End evaluation, deactivating debug if necessary\n")
             logging.getLogger().setLevel(CUR_LEVEL)
         #
@@ -79,14 +81,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 HXb = HO["AppliedInX"]["HXb"]
             else:
                 HXb = Ht @ Xb
-            HXb = numpy.ravel( HXb ).reshape((-1,1))
+            HXb = numpy.ravel( HXb ).reshape((-1, 1))
             if Y.size != HXb.size:
-                raise ValueError("The size %i of observations Yobs and %i of observed calculation F(X) are different, they have to be identical."%(Y.size,HXb.size))
+                raise ValueError("The size %i of observations Yobs and %i of observed calculation F(X) are different, they have to be identical."%(Y.size, HXb.size))  # noqa: E501
             if max(Y.shape) != max(HXb.shape):
-                raise ValueError("The shapes %s of observations Yobs and %s of observed calculation F(X) are different, they have to be identical."%(Y.shape,HXb.shape))
+                raise ValueError("The shapes %s of observations Yobs and %s of observed calculation F(X) are different, they have to be identical."%(Y.shape, HXb.shape))  # noqa: E501
             self.StoredVariables["SimulatedObservationAtCurrentState"].store( HXb )
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

@@ -36,13 +36,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Formule de résidu utilisée",
             listval  = ["ScalarProduct"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "AmplitudeOfInitialDirection",
             default  = 1.,
             typecast = float,
             message  = "Amplitude de la direction initiale de la dérivée directionnelle autour du point nominal",
-            )
+        )
         self.defineRequiredParameter(
             name     = "EpsilonMinimumExponent",
             default  = -8,
@@ -50,31 +50,31 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Exposant minimal en puissance de 10 pour le multiplicateur d'incrément",
             minval   = -20,
             maxval   = 0,
-            )
+        )
         self.defineRequiredParameter(
             name     = "InitialDirection",
             default  = [],
             typecast = list,
             message  = "Direction initiale de la dérivée directionnelle autour du point nominal",
-            )
+        )
         self.defineRequiredParameter(
             name     = "NumberOfPrintedDigits",
             default  = 5,
             typecast = int,
             message  = "Nombre de chiffres affichés pour les impressions de réels",
             minval   = 0,
-            )
+        )
         self.defineRequiredParameter(
             name     = "ResultTitle",
             default  = "",
             typecast = str,
             message  = "Titre du tableau et de la figure",
-            )
+        )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -84,15 +84,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentState",
                 "Residu",
                 "SimulatedObservationAtCurrentState",
-                ]
-            )
+            ]
+        )
         self.requireInputArguments(
-            mandatory= ("Xb", "HO" ),
+            mandatory= ("Xb", "HO"),
             optional = ("Y", ),
-            )
+        )
         self.setAttributes(tags=(
             "Checking",
-            ))
+        ))
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
@@ -101,22 +101,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         Ht = HO["Tangent"].appliedInXTo
         Ha = HO["Adjoint"].appliedInXTo
         #
-        X0      = numpy.ravel( Xb ).reshape((-1,1))
+        X0      = numpy.ravel( Xb ).reshape((-1, 1))
         #
         # ----------
         __p = self._parameters["NumberOfPrintedDigits"]
         #
-        __marge = 5*u" "
-        __flech = 3*"="+"> "
-        msgs  = ("\n") # 1
+        __marge = 5 * u" "
+        __flech = 3 * "=" + "> "
+        msgs  = ("\n")  # 1
         if len(self._parameters["ResultTitle"]) > 0:
             __rt = str(self._parameters["ResultTitle"])
-            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+            msgs += (__marge + "====" + "=" * len(__rt) + "====\n")
             msgs += (__marge + "    " + __rt + "\n")
-            msgs += (__marge + "====" + "="*len(__rt) + "====\n")
+            msgs += (__marge + "====" + "=" * len(__rt) + "====\n")
         else:
             msgs += (__marge + "%s\n"%self._name)
-            msgs += (__marge + "%s\n"%("="*len(self._name),))
+            msgs += (__marge + "%s\n"%("=" * len(self._name),))
         #
         msgs += ("\n")
         msgs += (__marge + "This test allows to analyze the quality of an adjoint operator associated\n")
@@ -130,19 +130,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += (__marge + "Characteristics of input vector X, internally converted:\n")
         msgs += (__marge + "  Type...............: %s\n")%type( X0 )
         msgs += (__marge + "  Length of vector...: %i\n")%max(numpy.ravel( X0 ).shape)
-        msgs += (__marge + "  Minimum value......: %."+str(__p)+"e\n")%numpy.min(  X0 )
-        msgs += (__marge + "  Maximum value......: %."+str(__p)+"e\n")%numpy.max(  X0 )
-        msgs += (__marge + "  Mean of vector.....: %."+str(__p)+"e\n")%numpy.mean( X0, dtype=mfp )
-        msgs += (__marge + "  Standard error.....: %."+str(__p)+"e\n")%numpy.std(  X0, dtype=mfp )
-        msgs += (__marge + "  L2 norm of vector..: %."+str(__p)+"e\n")%numpy.linalg.norm( X0 )
+        msgs += (__marge + "  Minimum value......: %." + str(__p) + "e\n")%numpy.min(  X0 )
+        msgs += (__marge + "  Maximum value......: %." + str(__p) + "e\n")%numpy.max(  X0 )
+        msgs += (__marge + "  Mean of vector.....: %." + str(__p) + "e\n")%numpy.mean( X0, dtype=mfp )
+        msgs += (__marge + "  Standard error.....: %." + str(__p) + "e\n")%numpy.std(  X0, dtype=mfp )
+        msgs += (__marge + "  L2 norm of vector..: %." + str(__p) + "e\n")%numpy.linalg.norm( X0 )
         msgs += ("\n")
-        msgs += (__marge + "%s\n\n"%("-"*75,))
+        msgs += (__marge + "%s\n\n"%("-" * 75,))
         msgs += (__flech + "Numerical quality indicators:\n")
         msgs += (__marge + "-----------------------------\n")
         msgs += ("\n")
         #
         if self._parameters["ResiduFormula"] == "ScalarProduct":
-            msgs += (__marge + "Using the \"%s\" formula, one observes the residue R which is the\n"%self._parameters["ResiduFormula"])
+            msgs += (__marge + "Using the \"%s\" formula, one observes the residue R which is the\n"%self._parameters["ResiduFormula"])  # noqa: E501
             msgs += (__marge + "difference of two scalar products:\n")
             msgs += ("\n")
             msgs += (__marge + "    R(Alpha) = | < TangentF_X(dX) , Y > - < dX , AdjointF_X(Y) > |\n")
@@ -152,25 +152,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += (__marge + "operator. If it is given, Y must be in the image of F. If it is not given,\n")
             msgs += (__marge + "one takes Y = F(X).\n")
             #
-            __entete = str.rstrip("  i   Alpha  "     + \
-                str.center("||X||",2+__p+7)  + \
-                str.center("||Y||",2+__p+7)  + \
-                str.center("||dX||",2+__p+7) + \
-                str.center("R(Alpha)",2+__p+7))
+            __entete = str.rstrip(
+                "  i   Alpha  " + \
+                str.center("||X||", 2 + __p + 7)  + \
+                str.center("||Y||", 2 + __p + 7)  + \
+                str.center("||dX||", 2 + __p + 7) + \
+                str.center("R(Alpha)", 2 + __p + 7)
+            )
             __nbtirets = len(__entete) + 2
             #
         msgs += ("\n")
         msgs += (__marge + "(Remark: numbers that are (about) under %.0e represent 0 to machine precision)\n"%mpr)
-        print(msgs) # 1
+        print(msgs)  # 1
         #
-        Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"],1) ]
+        Perturbations = [ 10**i for i in range(self._parameters["EpsilonMinimumExponent"], 1) ]
         Perturbations.reverse()
         #
         NormeX  = numpy.linalg.norm( X0 )
         if Y is None:
-            Yn = numpy.ravel( Hm( X0 ) ).reshape((-1,1))
+            Yn = numpy.ravel( Hm( X0 ) ).reshape((-1, 1))
         else:
-            Yn = numpy.ravel( Y ).reshape((-1,1))
+            Yn = numpy.ravel( Y ).reshape((-1, 1))
         NormeY = numpy.linalg.norm( Yn )
         if self._toStore("CurrentState"):
             self.StoredVariables["CurrentState"].store( X0 )
@@ -181,37 +183,37 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self._parameters["InitialDirection"],
             self._parameters["AmplitudeOfInitialDirection"],
             X0,
-            )
+        )
         #
         # Boucle sur les perturbations
         # ----------------------------
-        msgs  = ("") # 2
-        msgs += "\n" + __marge + "-"*__nbtirets
+        msgs  = ("")  # 2
+        msgs += "\n" + __marge + "-" * __nbtirets
         msgs += "\n" + __marge + __entete
-        msgs += "\n" + __marge + "-"*__nbtirets
+        msgs += "\n" + __marge + "-" * __nbtirets
         msgs += ("\n")
-        __pf = "  %"+str(__p+7)+"."+str(__p)+"e"
-        __ms = "  %2i  %5.0e"+(__pf*4)+"\n"
-        for i,amplitude in enumerate(Perturbations):
+        __pf = "  %" + str(__p + 7) + "." + str(__p) + "e"
+        __ms = "  %2i  %5.0e" + (__pf * 4) + "\n"
+        for ip, amplitude in enumerate(Perturbations):
             dX          = amplitude * dX0
             NormedX     = numpy.linalg.norm( dX )
             #
             if self._parameters["ResiduFormula"] == "ScalarProduct":
-                TangentFXdX = numpy.ravel( Ht( (X0,dX) ) )
-                AdjointFXY  = numpy.ravel( Ha( (X0,Yn)  ) )
+                TangentFXdX = numpy.ravel( Ht( (X0, dX) ) )
+                AdjointFXY  = numpy.ravel( Ha( (X0, Yn)  ) )
                 #
                 Residu = abs(vfloat(numpy.dot( TangentFXdX, Yn ) - numpy.dot( dX, AdjointFXY )))
                 #
                 self.StoredVariables["Residu"].store( Residu )
-                ttsep = __ms%(i,amplitude,NormeX,NormeY,NormedX,Residu)
+                ttsep = __ms%(ip, amplitude, NormeX, NormeY, NormedX, Residu)
                 msgs += __marge + ttsep
         #
-        msgs += (__marge + "-"*__nbtirets + "\n\n")
-        msgs += (__marge + "End of the \"%s\" verification by the \"%s\" formula.\n\n"%(self._name,self._parameters["ResiduFormula"]))
-        msgs += (__marge + "%s\n"%("-"*75,))
-        print(msgs) # 2
+        msgs += (__marge + "-" * __nbtirets + "\n\n")
+        msgs += (__marge + "End of the \"%s\" verification by the \"%s\" formula.\n\n"%(self._name, self._parameters["ResiduFormula"]))  # noqa: E501
+        msgs += (__marge + "%s\n"%("-" * 75,))
+        print(msgs)  # 2
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

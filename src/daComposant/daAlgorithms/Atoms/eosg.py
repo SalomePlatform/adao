@@ -43,11 +43,13 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
         selfA._parameters["SampleAsIndependantRandomVariables"],
         Xb,
         selfA._parameters["SetSeed"],
-        )
+    )
     #
-    if hasattr(sampleList,"__len__") and len(sampleList) == 0:
-        if outputEOX: return numpy.array([[]]), numpy.array([[]])
-        else:         return numpy.array([[]])
+    if hasattr(sampleList, "__len__") and len(sampleList) == 0:
+        if outputEOX:
+            return numpy.array([[]]), numpy.array([[]])
+        else:
+            return numpy.array([[]])
     #
     if outputEOX or selfA._toStore("EnsembleOfStates"):
         EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
@@ -57,7 +59,7 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
         CUR_LEVEL = logging.getLogger().getEffectiveLevel()
         logging.getLogger().setLevel(logging.DEBUG)
         print("===> Beginning of evaluation, activating debug\n")
-        print("     %s\n"%("-"*75,))
+        print("     %s\n"%("-" * 75,))
     #
     Hm = HO["Direct"].appliedTo
     if assumeNoFailure:
@@ -65,49 +67,49 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
             sampleList,
             argsAsSerie = True,
             returnSerieAsArrayMatrix = True,
-            )
+        )
     else:
         try:
             EOS = Hm(
                 sampleList,
                 argsAsSerie = True,
                 returnSerieAsArrayMatrix = True,
-                )
-        except: # Reprise séquentielle sur erreur de calcul
+            )
+        except Exception:  # Reprise séquentielle sur erreur de calcul
             EOS, __s = [], 1
             for state in sampleList:
                 if numpy.any(numpy.isin((None, numpy.nan), state)):
-                    EOS.append( () ) # Résultat vide
+                    EOS.append( () )  # Résultat vide
                 else:
                     try:
                         EOS.append( Hm(state) )
                         __s = numpy.asarray(EOS[-1]).size
-                    except:
-                        EOS.append( () ) # Résultat vide
+                    except Exception:
+                        EOS.append( () )  # Résultat vide
             for i, resultat in enumerate(EOS):
-                if len(resultat) == 0: # Résultat vide
-                    EOS[i] = numpy.nan*numpy.ones(__s)
+                if len(resultat) == 0:  # Résultat vide
+                    EOS[i] = numpy.nan * numpy.ones(__s)
             EOS = numpy.stack(EOS, axis=1)
     #
-    if len(EOS.shape) > 2 and EOS.shape[2]==1: # RaJ si transposition de Hm
+    if len(EOS.shape) > 2 and EOS.shape[2] == 1:  # RaJ si transposition de Hm
         EOS = EOS.squeeze( axis = 2 )
     #
     if selfA._parameters["SetDebug"]:
-        print("\n     %s\n"%("-"*75,))
+        print("\n     %s\n"%("-" * 75,))
         print("===> End evaluation, deactivating debug if necessary\n")
         logging.getLogger().setLevel(CUR_LEVEL)
     # ----------
     #
     if selfA._toStore("EnsembleOfStates"):
         if EOX.shape[1] != EOS.shape[1]:
-            raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))
+            raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))  # noqa: E501
         selfA.StoredVariables["EnsembleOfStates"].store( EOX )
     if selfA._toStore("EnsembleOfSimulations"):
         selfA.StoredVariables["EnsembleOfSimulations"].store( EOS )
     #
     if outputEOX:
         if EOX.shape[1] != EOS.shape[1]:
-            raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))
+            raise ValueError("Numbers of states (=%i) and snapshots (=%i) has to be the same!"%(EOX.shape[1], EOS.shape[1]))  # noqa: E501
         return EOX, EOS
     else:
         return EOS

@@ -26,6 +26,7 @@ from daAlgorithms.Atoms import std4dvar
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
+
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "4DVAR")
         self.defineRequiredParameter(
@@ -34,7 +35,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Prise en compte des contraintes",
             listval  = ["EstimateProjection"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "Variant",
             default  = "4DVAR",
@@ -42,18 +43,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "4DVAR",
-                ],
+            ],
             listadv  = [
                 "4DVAR-Std",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "LBFGSB",
@@ -64,11 +65,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "TNC",
                 "CG",
                 "BFGS",
-                ],
+            ],
             listadv  = [
                 "NCG",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
             default  = 15000,
@@ -76,34 +77,34 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Nombre maximal de pas d'optimisation",
             minval   = -1,
             oldname  = "MaximumNumberOfSteps",
-            )
+        )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
             message  = "Diminution relative minimale du coût lors de l'arrêt",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "ProjectedGradientTolerance",
             default  = -1,
             typecast = float,
             message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
             minval   = -1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "GradientNormTolerance",
             default  = 1.e-05,
             typecast = float,
             message  = "Maximum des composantes du gradient lors de l'arrêt",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -122,41 +123,47 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentOptimum",
                 "CurrentState",
                 "IndexOfOptimum",
-                ]
-            )
-        self.defineRequiredParameter( # Pas de type
+            ]
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
-            )
+        )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
             typecast = numpy.ravel,
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "EM", "R", "B"),
             optional = ("U", "CM", "Q"),
-            )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "NonLinear",
-            "Variational",
-            "Dynamic",
-            ))
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "NonLinear",
+                "Variational",
+                "Dynamic",
+            ),
+            features=(
+                "NonLocalOptimization",
+                "DerivativeNeeded",
+                "ParallelDerivativesOnly",
+            ),
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        # Default 4DVAR
-        if   self._parameters["Variant"] in ["4DVAR", "4DVAR-Std"]:
+        # --------------------------
+        if self._parameters["Variant"] in ["4DVAR", "4DVAR-Std"]:
             std4dvar.std4dvar(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

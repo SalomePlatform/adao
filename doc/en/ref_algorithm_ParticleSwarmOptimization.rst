@@ -32,23 +32,22 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization
-of a cost function :math:`J` by using an evolutionary strategy of particle
-swarm. It is a method that does not use the derivatives of the cost function.
-It is based on the evolution of a population (called a "swarm") of states (each
-state is called a "particle" or an "insect"). It falls in the same category
-than the
+without gradient of a cost function :math:`J` by using an evolutionary strategy
+of particle swarm. It is a method that does not use the derivatives of the cost
+function. It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`, the
 :ref:`section_ref_algorithm_DifferentialEvolution` or the
 :ref:`section_ref_algorithm_TabuSearch`.
 
-This is a mono-objective optimization method, allowing for global minimum search
-of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
-:math:`L^{\infty}`, with or without weights, as described in the section for
+This is a mono-objective optimization method, allowing for global minimum
+search of a general error function :math:`J` of type :math:`L^1`, :math:`L^2`
+or :math:`L^{\infty}`, with or without weights, as described in the section for
 :ref:`section_theory_optimization`. The default error function is the augmented
 weighted least squares function, classically used in data assimilation.
 
-There exists various variants of this algorithm. The following stable and
-robust formulations are proposed here:
+It is based on the evolution of a population (called a "swarm") of states (each
+state is called a "particle" or an "insect"). There exists various variants of
+this algorithm. The following stable and robust formulations are proposed here:
 
 .. index::
     pair: Variant ; CanonicalPSO
@@ -56,6 +55,8 @@ robust formulations are proposed here:
     pair: Variant ; SPSO-2011
     pair: Variant ; AIS PSO
     pair: Variant ; APSO
+    pair: Variant ; SPSO-2011-SIS
+    pair: Variant ; SPSO-2011-PSIS
 
 - "CanonicalPSO" (Canonical Particle Swarm Optimization, see
   [ZambranoBigiarini13]_), classical algorithm called "canonical" of particle
@@ -71,12 +72,21 @@ robust formulations are proposed here:
   "Asynchronous Iteration Strategy") or "APSO" (for "Advanced Particle Swarm
   Optimization") because it incorporates evolutionary updating of the best
   elements, leading to intrinsically improved convergence of the algorithm.
+- "SPSO-2011-SIS" (Standard Particle Swarm Optimisation 2011 with Synchronous
+  Iteration Strategy), very similar to the 2011 reference algorithm, and with
+  a synchronous particle update, called "SIS",
+- "SPSO-2011-PSIS" (Standard Particle Swarm Optimisation 2011 with Parallel
+  Synchronous Iteration Strategy), similar to the "SPSO-2011-SIS" algorithm
+  with synchronous updating and parallelization, known as "PSIS", of the
+  particles.
 
 The following are a few practical suggestions for the effective use of these
 algorithms:
 
 - The recommended variant of this algorithm is the "SPSO-2011" even if the
-  "CanonicalPSO" algorithm remains by default the more robust one.
+  "CanonicalPSO" algorithm remains by default the more robust one. If the state
+  evaluation can be carried out in parallel, the "SPSO-2011-PSIS" algorithm can
+  be used, even if its convergence is sometimes a little less efficient.
 - The number of particles or insects usually recommended varies between 40 and
   100 depending on the algorithm, more or less independently of the dimension
   of the state space. Usually, the best performances are obtained for

@@ -57,6 +57,8 @@ et robustes suivantes :
     pair: Variant ; SPSO-2011
     pair: Variant ; AIS PSO
     pair: Variant ; APSO
+    pair: Variant ; SPSO-2011-SIS
+    pair: Variant ; SPSO-2011-PSIS
 
 - "CanonicalPSO" (Canonical Particule Swarm Optimisation, voir
   [ZambranoBigiarini13]_), algorithme classique dit "canonique" d'essaim
@@ -73,10 +75,10 @@ et robustes suivantes :
   d'inertie, ou encore appelé "AIS" (pour "Asynchronous Iteration Strategy") ou
   "APSO" (pour "Advanced Particle Swarm Optimisation") car il intègre la mise à
   jour évolutive des meilleurs éléments, conduisant à une convergence
-  intrinsèquement améliorée de l'algorithme.
+  intrinsèquement améliorée de l'algorithme,
 - "SPSO-2011-SIS" (Standard Particle Swarm Optimisation 2011 with Synchronous
   Iteration Strategy), très similaire à l'algorithme de référence 2011 et avec
-  une mise à jour synchrone, appelée "SIS", des particules.
+  une mise à jour synchrone, appelée "SIS", des particules,
 - "SPSO-2011-PSIS" (Standard Particle Swarm Optimisation 2011 with Parallel
   Synchronous Iteration Strategy), similaire à l'algorithme "SPSO-2011-SIS"
   avec mise à jour synchrone et parallélisation, appelée "PSIS", des

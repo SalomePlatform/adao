@@ -93,6 +93,12 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, http://ab-initio.mit.edu/nlopt
 
+.. [Julier95] Julier S., Uhlmann J., Durrant-Whyte H., *A new approach for filtering nonlinear systems*, in: Proceedings of the 1995 American Control Conference, IEEE, 1995
+
+.. [Julier00] Julier S., Uhlmann J., Durrant-Whyte H., *A new method for the nonlinear transformation of means and covariances in filters and estimators*, IEEE Trans. Automat. Control., 45, pp.477–482, 2000
+
+.. [Julier07] Julier S., Laviola J., *On Kalman ﬁltering with nonlinear equality constraints*, IEEE Trans. Signal Process., 55(6), pp.2774-2784, 2007
+
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
 .. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, http://www.econ.uiuc.edu/~roger/research/intro/intro.html
@@ -111,7 +117,9 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Nelder65] Nelder J. A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
 
-.. [NumPy20] Harris C.R. et al., *Array programming with NumPy*, Nature 585, pp.357–362, 2020, https://numpy.org/
+.. [NumPy20] Harris C. R. et al., *Array programming with NumPy*, Nature 585, pp.357–362, 2020, https://numpy.org/
+
+.. [Papakonstantinou22] Papakonstantinou K. G., Amir M., Warn G. P., *A Scaled Spherical Simplex Filter (S3F) with a decreased n+2 sigma points set size and equivalent 2n+1 Unscented Kalman Filter (UKF) accuracy*, Mechanical Systems and Signal Processing, 163, 107433, 2022
 
 .. [Powell64] Powell M. J. D., *An efficient method for finding the minimum of a function of several variables without calculating derivatives*, Computer Journal, 7(2), pp.155-162, 1964
 
@@ -148,6 +156,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 .. [Talagrand97] Talagrand O., *Assimilation of Observations, an Introduction*, Journal of the Meteorological Society of Japan, 75(1B), pp.191-209, 1997
 
 .. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
+
+.. [Wan00] Wan E. A., van der Merwe R., *The Unscented Kalman Filter for Nonlinear Estimation*, in: Adaptive Systems for Signal Processing, Communications, and Control Symposium, IEEE, 2000.
 
 .. [Welch06] Welch G., Bishop G., *An Introduction to the Kalman Filter*, University of North Carolina at Chapel Hill, Department of Computer Science, TR 95-041, 2006, http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
 

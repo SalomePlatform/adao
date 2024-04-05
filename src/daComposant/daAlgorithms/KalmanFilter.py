@@ -34,24 +34,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "KalmanFilter",
-                ],
+            ],
             listadv  = [
                 "OneCorrection",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -81,35 +81,37 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-                ]
-            )
+            ]
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
             optional = ("U", "EM", "CM", "Q"),
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "Linear",
+                "Filter",
+                "Dynamic",
             )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "Linear",
-            "Filter",
-            "Dynamic",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        if   self._parameters["Variant"] == "KalmanFilter":
+        # --------------------------
+        if self._parameters["Variant"] == "KalmanFilter":
             NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
             ecwstdkf.ecwstdkf(self, Xb, Y, U, HO, CM, R, B)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

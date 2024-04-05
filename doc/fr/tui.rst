@@ -356,6 +356,16 @@ présentes dans l'espace de nommage courant du cas.
 
 Les commandes disponibles sont les suivantes :
 
+.. index:: single: set
+
+**set** (*Concept,...*)
+    Cette commande permet de disposer d'une syntaxe équivalente pour toutes les
+    commandes de ce paragraphe. Son premier argument est le nom du concept à
+    définir (par exemple "*Background*" ou "*ObservationOperator*"), sur lequel
+    s'applique ensuite les arguments qui suivent, qui sont les mêmes que dans
+    les commandes individuelles précédentes. Lors de l'usage de cette commande,
+    il est indispensable de nommer les arguments (par exemple "*Vector=...*").
+
 .. index:: single: Background
 .. index:: single: setBackground
 
@@ -532,16 +542,6 @@ Les commandes disponibles sont les suivantes :
     fournis par la variable "*ExtraArguments*" sous la forme d'un dictionnaire
     de paramètres nommés.
 
-.. index:: single: set
-
-**set** (*Concept,...*)
-    Cette commande permet de disposer d'une syntaxe équivalente pour toutes les
-    commandes de ce paragraphe. Son premier argument est le nom du concept à
-    définir (par exemple "*Background*" ou "*ObservationOperator*"), sur lequel
-    s'applique ensuite les arguments qui suivent, qui sont les mêmes que dans
-    les commandes individuelles précédentes. Lors de l'usage de cette commande,
-    il est indispensable de nommer les arguments (par exemple "*Vector=...*").
-
 Paramétrer le calcul, les sorties, etc.
 +++++++++++++++++++++++++++++++++++++++
 
@@ -704,9 +704,13 @@ externes au cas.
     autre les commandes établissant le cas de calcul en cours. Certains
     formats ne sont disponibles qu'en entrée ou qu'en sortie.
 
-De plus, on peut obtenir une information simple sur le cas d'étude tel que
-défini par l'utilisateur en utilisant directement la commande "*print*" de Python
-sur le cas, à toute étape lors de sa construction. Par exemple :
+Obtenir des informations sur le cas, le calcul ou le système
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+On peut obtenir de manière simple une **information agrégée sur le cas
+d'étude** tel que défini par l'utilisateur, en utilisant directement la
+commande "*print*" de Python sur le cas, à n'importe quelle étape lors de sa
+construction. Par exemple :
 
 .. literalinclude:: scripts/tui_example_07.py
     :language: python
@@ -714,6 +718,34 @@ sur le cas, à toute étape lors de sa construction. Par exemple :
 dont le résultat est ici :
 
 .. literalinclude:: scripts/tui_example_07.res
+
+.. index:: single: callinfo
+
+Une **information synthétique sur le nombre d'appels aux calculs d'opérateurs**
+peut être dynamiquement obtenue par la commande "**callinfo()**". Ces calculs
+d'opérateurs sont ceux définis par l'utilisateur dans un cas ADAO, pour les
+opérateurs d'observation et d'évolution. Elle s'utilise après l'exécution du
+calcul dans le cas ADAO, sachant que le résultat de cette commande est
+simplement vide lorsqu'aucun calcul n'a été effectué :
+::
+
+    from adao import adaoBuilder
+    case = adaoBuilder.New()
+    ...
+    case.execute()
+    print(case.callinfo())
+
+.. index:: single: sysinfo
+
+Une **information synthétique sur le système** peut être obtenue par la
+commande "**sysinfo()**", présente dans chaque cas de calcul ADAO. Elle
+retourne dynamiquement des informations système et des détails sur les modules
+Python utiles pour ADAO. Elle s'utilise de la manière suivante :
+::
+
+    from adao import adaoBuilder
+    case = adaoBuilder.New()
+    print(case.sysinfo())
 
 .. _subsection_tui_advanced:
 

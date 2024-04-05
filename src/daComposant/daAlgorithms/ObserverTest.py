@@ -27,9 +27,11 @@ from daCore import BasicObjects
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "OBSERVERTEST")
-        self.setAttributes(tags=(
-            "Checking",
-            ))
+        self.setAttributes(
+            tags=(
+                "Checking",
+            )
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
@@ -37,9 +39,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         print("         only activated on selected ones by explicit association.")
         print("")
         #
-        __Xa = 1.+numpy.arange(3.)
+        __Xa = 1. + numpy.arange(3.)
         __Xb = numpy.zeros(3)
-        __YY = 1.+numpy.arange(5.)
+        __YY = 1. + numpy.arange(5.)
         #
         # Activation des observers sur toutes les variables stockables
         # ------------------------------------------------------------
@@ -67,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.StoredVariables["SigmaObs2"].store( 1. )
         self.StoredVariables["SigmaBck2"].store( 1. )
         self.StoredVariables["MahalanobisConsistency"].store( 1. )
-        self.StoredVariables["SimulationQuantiles"].store( numpy.array((__YY,__YY,__YY)) )
+        self.StoredVariables["SimulationQuantiles"].store( numpy.array((__YY, __YY, __YY)) )
         self.StoredVariables["SimulatedObservationAtBackground"].store( __YY )
         self.StoredVariables["SimulatedObservationAtCurrentState"].store( __YY )
         self.StoredVariables["SimulatedObservationAtOptimum"].store( __YY )

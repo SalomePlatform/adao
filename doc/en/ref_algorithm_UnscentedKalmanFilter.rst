@@ -31,9 +31,10 @@ Calculation algorithm "*UnscentedKalmanFilter*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a dynamic system by a
-"unscented" Kalman Filter, avoiding to have to perform the tangent and adjoint
-operators for the observation and evolution operators, as in the simple or
-extended Kalman filter.
+Kalman Filter using an "unscented" transform and a sampling by "sigma" points,
+avoiding to have to perform the tangent and adjoint operators for the
+observation and evolution operators, as in the simple or extended Kalman
+filters.
 
 It applies to non-linear observation and incremental evolution (process)
 operators with excellent robustness and performance qualities. It can be
@@ -54,14 +55,44 @@ In case of linear of "slightly" non-linear operators, one can easily use the
 to evaluate on small systems. One can verify the linearity of the operators
 with the help of the :ref:`section_ref_algorithm_LinearityTest`.
 
+There exists various variants of this algorithm. The following stable and
+robust formulations are proposed here:
+
 .. index::
     pair: Variant ; UKF
+    pair: Variant ; S3F
+    pair: Variant ; CUKF
+    pair: Variant ; CS3F
     pair: Variant ; 2UKF
 
-A difference is made between the "unscented" Kalman filter taking into account
-bounds on the states (the variant named "2UKF", which is recommended and used
-by default), and the canonical "unscented" Kalman filter conducted without any
-constraint (the variant named "UKF", which is not recommended).
+- "UKF" (Unscented Kalman Filter, see [Julier95]_, [Julier00]_, [Wan00]_),
+  original and reference canonical algorithm, highly robust and efficient,
+- "CUKF", also named "2UKF" (Constrained Unscented Kalman Filter, see
+  [Julier07]_), inequality or boundary constrained version of the  algorithm
+  "UKF",
+- "S3F" (Scaled Spherical Simplex Filter, see [Papakonstantinou22]_),
+  improved algorithm, reducing the number of sampling (sigma) points to achieve
+  the same quality as the canonical "UKF" variant,
+- "CS3F" (Constrained Scaled Spherical Simplex Filter), inequality or boundary
+  constrained version of the  algorithm "S3F".
+
+The following are a few practical suggestions for the effective use of these
+algorithms:
+
+- The recommended variant of this algorithm is the "S3F" even if the canonical
+  "UKF" algorithm remains by default the more robust one.
+- When there are no defined bounds, the constraint-aware versions of the
+  algorithms are identical to the unconstrained versions. This is not the case
+  if constraints are defined, even if the bounds are very wide.
+- An essential difference between the algorithms is the number of sampling
+  "sigma" points used, depending on the :math:`n` dimension of the state space.
+  The canonical "UKF" algorithm uses :math:`2n+1`, the "S3F" algorithm uses
+  :math:`n+2`. This means that about twice as many evaluations of the function to
+  be simulated are required for one as for the other.
+- The evaluations of the function to be simulated are algorithmically
+  independent at each filtering stage (evolution or observation) and can
+  therefore be parallelized or distributed if the function to be simulated
+  supports this.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
@@ -197,4 +228,9 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst
 
+- [Julier95]_
+- [Julier00]_
+- [Julier07]_
+- [Papakonstantinou22]_
+- [Wan00]_
 - [WikipediaUKF]_

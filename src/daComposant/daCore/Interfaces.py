@@ -46,8 +46,8 @@ class GenericCaseViewer(object):
     __slots__ = (
         "_name", "_objname", "_lineSerie", "_switchoff", "_content",
         "_numobservers", "_object", "_missing",
-        )
-    #
+    )
+
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         self._name         = str(__name)
@@ -58,57 +58,59 @@ class GenericCaseViewer(object):
         self._content      = __content
         self._object       = __object
         self._missing = """raise ValueError("This case requires beforehand to import or define the variable named <%s>. When corrected, remove this command, correct and uncomment the following one.")\n# """
-    #------------------------
+
     def _append(self, *args):
         "Transformation d'une commande individuelle en un enregistrement"
         raise NotImplementedError()
+
     def _extract(self, *args):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         raise NotImplementedError()
-    #------------------------------
+
     def _initialize(self, __multilines):
         "Permet des pré-conversions automatiques simples de commandes ou clés"
         __translation = {
-            "Study_name"          :"StudyName",
-            "Study_repertory"     :"StudyRepertory",
-            "MaximumNumberOfSteps":"MaximumNumberOfIterations",
-            "FunctionDict"        :"ScriptWithSwitch",
-            "FUNCTIONDICT_FILE"   :"SCRIPTWITHSWITCH_FILE",
+            "Study_name"          : "StudyName",                  # noqa: E203
+            "Study_repertory"     : "StudyRepertory",             # noqa: E203
+            "MaximumNumberOfSteps": "MaximumNumberOfIterations",
+            "FunctionDict"        : "ScriptWithSwitch",           # noqa: E203
+            "FUNCTIONDICT_FILE"   : "SCRIPTWITHSWITCH_FILE",      # noqa: E203
         }
-        for k,v in __translation.items():
-            __multilines = __multilines.replace(k,v)
+        for k, v in __translation.items():
+            __multilines = __multilines.replace(k, v)
         return __multilines
-    #
+
     def _finalize(self, __upa=None):
         "Enregistrement du final"
         __hasNotExecute = True
         for __l in self._lineSerie:
-            if "%s.execute"%(self._objname,) in __l: __hasNotExecute = False
+            if "%s.execute"%(self._objname,) in __l:
+                __hasNotExecute = False
         if __hasNotExecute:
             self._lineSerie.append("%s.execute()"%(self._objname,))
-        if __upa is not None and len(__upa)>0:
-            __upa = __upa.replace("ADD",str(self._objname))
+        if __upa is not None and len(__upa) > 0:
+            __upa = __upa.replace("ADD", str(self._objname))
             self._lineSerie.append(__upa)
-    #
+
     def _addLine(self, line=""):
         "Ajoute un enregistrement individuel"
         self._lineSerie.append(line)
-    #
+
     def _get_objname(self):
         return self._objname
-    #
+
     def dump(self, __filename=None, __upa=None):
         "Restitution normalisée des commandes"
         self._finalize(__upa)
         __text = "\n".join(self._lineSerie)
-        __text +="\n"
+        __text += "\n"
         if __filename is not None:
             __file = os.path.abspath(__filename)
-            __fid = open(__file,"w")
+            __fid = open(__file, "w")
             __fid.write(__text)
             __fid.close()
         return __text
-    #
+
     def load(self, __filename=None, __content=None, __object=None):
         "Chargement normalisé des commandes"
         if __filename is not None and os.path.exists(__filename):
@@ -119,7 +121,7 @@ class GenericCaseViewer(object):
         elif __object is not None and type(__object) is dict:
             self._object = copy.deepcopy(__object)
         else:
-            pass # use "self._content" from initialization
+            pass  # use "self._content" from initialization
         __commands = self._extract(self._content, self._object)
         return __commands
 
@@ -128,7 +130,7 @@ class _TUIViewer(GenericCaseViewer):
     Établissement des commandes d'un cas ADAO TUI (Cas<->TUI)
     """
     __slots__ = ()
-    #
+
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -140,7 +142,7 @@ class _TUIViewer(GenericCaseViewer):
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
-    #
+
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command is not None and __keys is not None and __local is not None:
@@ -149,37 +151,42 @@ class _TUIViewer(GenericCaseViewer):
             __text  = ""
             if __pre is not None:
                 __text += "%s = "%__pre
-            __text += "%s.%s( "%(self._objname,str(__command))
-            if "self" in __keys: __keys.remove("self")
-            if __command not in ("set","get") and "Concept" in __keys: __keys.remove("Concept")
+            __text += "%s.%s( "%(self._objname, str(__command))
+            if "self" in __keys:
+                __keys.remove("self")
+            if __command not in ("set", "get") and "Concept" in __keys:
+                __keys.remove("Concept")
             for k in __keys:
-                if k not in __local: continue
+                if k not in __local: continue                           # noqa: E701
                 __v = __local[k]
-                if __v is None: continue
-                if   k == "Checked"              and not __v: continue
-                if   k == "Stored"               and not __v: continue
-                if   k == "ColMajor"             and not __v: continue
-                if   k == "InputFunctionAsMulti" and not __v: continue
-                if   k == "nextStep"             and not __v: continue
-                if   k == "PerformanceProfile"   and     __v: continue
-                if   k == "noDetails":                        continue
-                if isinstance(__v,Persistence.Persistence): __v = __v.values()
-                if callable(__v): __text = self._missing%__v.__name__+__text
-                if isinstance(__v,dict):
+                if __v is None: continue                                # noqa: E701
+                if   k == "Checked"              and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "Stored"               and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "ColMajor"             and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "InputFunctionAsMulti" and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "nextStep"             and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "PerformanceProfile"   and     __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "noDetails":                        continue  # noqa: E241,E271,E272,E701
+                if isinstance(__v, Persistence.Persistence):
+                    __v = __v.values()
+                if callable(__v):
+                    __text = self._missing%__v.__name__ + __text
+                if isinstance(__v, dict):
                     for val in __v.values():
-                        if callable(val): __text = self._missing%val.__name__+__text
-                numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
-                __text += "%s=%s, "%(k,repr(__v))
-                numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+                        if callable(val):
+                            __text = self._missing%val.__name__ + __text
+                numpy.set_printoptions(precision=15, threshold=1000000, linewidth=1000 * 15)
+                __text += "%s=%s, "%(k, repr(__v))
+                numpy.set_printoptions(precision=8, threshold=1000, linewidth=75)
             __text = __text.rstrip(", ")
             __text += " )"
             self._addLine(__text)
-    #
+
     def _extract(self, __multilines="", __object=None):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         __is_case = False
         __commands = []
-        __multilines = __multilines.replace("\r\n","\n")
+        __multilines = __multilines.replace("\r\n", "\n")
         for line in __multilines.split("\n"):
             if "adaoBuilder.New" in line and "=" in line:
                 self._objname = line.split("=")[0].strip()
@@ -188,8 +195,8 @@ class _TUIViewer(GenericCaseViewer):
             if not __is_case:
                 continue
             else:
-                if self._objname+".set" in line:
-                    __commands.append( line.replace(self._objname+".","",1) )
+                if self._objname + ".set" in line:
+                    __commands.append( line.replace(self._objname + ".", "", 1) )
                     logging.debug("TUI Extracted command: %s"%(__commands[-1],))
         return __commands
 
@@ -198,7 +205,7 @@ class _COMViewer(GenericCaseViewer):
     Établissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
     """
     __slots__ = ("_observerIndex", "_objdata")
-    #
+
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -211,7 +218,7 @@ class _COMViewer(GenericCaseViewer):
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
-    #
+
     def _extract(self, __multilines=None, __object=None):
         "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
         __suppparameters = {}
@@ -219,57 +226,58 @@ class _COMViewer(GenericCaseViewer):
             if 'adaoBuilder' in __multilines:
                 raise ValueError("Impossible to load given content as an ADAO COMM one (Hint: it's perhaps not a COMM input, but a TUI one).")
             if "ASSIMILATION_STUDY" in __multilines:
-                __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
-                __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
+                __suppparameters.update({'StudyType': "ASSIMILATION_STUDY"})
+                __multilines = __multilines.replace("ASSIMILATION_STUDY", "dict")
             elif "OPTIMIZATION_STUDY" in __multilines:
-                __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
-                __multilines = __multilines.replace("OPTIMIZATION_STUDY",    "dict")
+                __suppparameters.update({'StudyType': "ASSIMILATION_STUDY"})
+                __multilines = __multilines.replace("OPTIMIZATION_STUDY", "dict")
             elif "REDUCTION_STUDY" in __multilines:
-                __suppparameters.update({'StudyType':"ASSIMILATION_STUDY"})
-                __multilines = __multilines.replace("REDUCTION_STUDY",    "dict")
+                __suppparameters.update({'StudyType': "ASSIMILATION_STUDY"})
+                __multilines = __multilines.replace("REDUCTION_STUDY", "dict")
             elif "CHECKING_STUDY" in __multilines:
-                __suppparameters.update({'StudyType':"CHECKING_STUDY"})
-                __multilines = __multilines.replace("CHECKING_STUDY",    "dict")
+                __suppparameters.update({'StudyType': "CHECKING_STUDY"})
+                __multilines = __multilines.replace("CHECKING_STUDY", "dict")
             else:
-                __multilines = __multilines.replace("ASSIMILATION_STUDY","dict")
+                __multilines = __multilines.replace("ASSIMILATION_STUDY", "dict")
             #
-            __multilines = __multilines.replace("_F(",               "dict(")
-            __multilines = __multilines.replace(",),);",             ",),)")
+            __multilines = __multilines.replace("_F(", "dict(")
+            __multilines = __multilines.replace(",),);", ",),)")
         __fulllines = ""
         for line in __multilines.split("\n"):
-            if len(line) < 1: continue
+            if len(line) < 1:
+                continue
             __fulllines += line + "\n"
         __multilines = __fulllines
         self._objname = "case"
         self._objdata = None
-        exec("self._objdata = "+__multilines)
+        exec("self._objdata = " + __multilines)
         #
-        if self._objdata is None or not(type(self._objdata) is dict) or not('AlgorithmParameters' in self._objdata):
+        if self._objdata is None or not (type(self._objdata) is dict) or not ('AlgorithmParameters' in self._objdata):
             raise ValueError("Impossible to load given content as an ADAO COMM one (no dictionnary or no 'AlgorithmParameters' key found).")
         # ----------------------------------------------------------------------
         logging.debug("COMM Extracting commands of '%s' object..."%(self._objname,))
         __commands = []
         __UserPostAnalysis = ""
-        for k,r in self._objdata.items():
+        for k, r in self._objdata.items():
             __command = k
             logging.debug("COMM Extracted command: %s:%s"%(k, r))
-            if   __command == "StudyName" and len(str(r))>0:
+            if __command   == "StudyName" and len(str(r)) > 0:
                 __commands.append( "set( Concept='Name', String='%s')"%(str(r),) )
-            elif   __command == "StudyRepertory":
+            elif __command == "StudyRepertory":
                 __commands.append( "set( Concept='Directory', String='%s')"%(str(r),) )
-            elif   __command == "Debug" and str(r) == "0":
+            elif __command == "Debug" and str(r) == "0":
                 __commands.append( "set( Concept='NoDebug' )" )
-            elif   __command == "Debug" and str(r) == "1":
+            elif __command == "Debug" and str(r) == "1":
                 __commands.append( "set( Concept='Debug' )" )
-            elif   __command == "ExecuteInContainer":
-                __suppparameters.update({'ExecuteInContainer':r})
+            elif __command == "ExecuteInContainer":
+                __suppparameters.update({'ExecuteInContainer': r})
             #
             elif __command == "UserPostAnalysis" and type(r) is dict:
                 if 'STRING' in r:
-                    __UserPostAnalysis = r['STRING'].replace("ADD",str(self._objname))
+                    __UserPostAnalysis = r['STRING'].replace("ADD", str(self._objname))
                     __commands.append( "set( Concept='UserPostAnalysis', String=\"\"\"%s\"\"\" )"%(__UserPostAnalysis,) )
                 elif 'SCRIPT_FILE' in r and os.path.exists(r['SCRIPT_FILE']):
-                    __UserPostAnalysis = open(r['SCRIPT_FILE'],'r').read()
+                    __UserPostAnalysis = open(r['SCRIPT_FILE'], 'r').read()
                     __commands.append( "set( Concept='UserPostAnalysis', Script='%s' )"%(r['SCRIPT_FILE'],) )
                 elif 'Template' in r and 'ValueTemplate' not in r:
                     # AnalysisPrinter...
@@ -290,13 +298,14 @@ class _COMViewer(GenericCaseViewer):
                     __from = r['data']
                     if 'STRING' in __from:
                         __parameters = ", Parameters=%s"%(repr(eval(__from['STRING'])),)
-                    elif 'SCRIPT_FILE' in __from: # Pas de test d'existence du fichier pour accepter un fichier relatif
+                    elif 'SCRIPT_FILE' in __from:  # Pas de test d'existence du fichier pour accepter un fichier relatif
                         __parameters = ", Script='%s'"%(__from['SCRIPT_FILE'],)
-                else: # if 'Parameters' in r and r['Parameters'] == 'Defaults':
+                else:  # if 'Parameters' in r and r['Parameters'] == 'Defaults':
                     __Dict = copy.deepcopy(r)
-                    __Dict.pop('Algorithm','')
-                    __Dict.pop('Parameters','')
-                    if 'SetSeed' in __Dict:__Dict['SetSeed'] = int(__Dict['SetSeed'])
+                    __Dict.pop('Algorithm', '')
+                    __Dict.pop('Parameters', '')
+                    if 'SetSeed' in __Dict:
+                        __Dict['SetSeed'] = int(__Dict['SetSeed'])
                     if 'Bounds' in __Dict and type(__Dict['Bounds']) is str:
                         __Dict['Bounds'] = eval(__Dict['Bounds'])
                     if 'BoxBounds' in __Dict and type(__Dict['BoxBounds']) is str:
@@ -305,7 +314,7 @@ class _COMViewer(GenericCaseViewer):
                         __parameters = ', Parameters=%s'%(repr(__Dict),)
                     else:
                         __parameters = ""
-                __commands.append( "set( Concept='AlgorithmParameters', Algorithm='%s'%s )"%(r['Algorithm'],__parameters) )
+                __commands.append( "set( Concept='AlgorithmParameters', Algorithm='%s'%s )"%(r['Algorithm'], __parameters) )
             #
             elif __command == "Observers" and type(r) is dict and 'SELECTION' in r:
                 if type(r['SELECTION']) is str:
@@ -320,16 +329,16 @@ class _COMViewer(GenericCaseViewer):
                             __info = ", Info=\"\"\"%s\"\"\""%(__idata['Info'],)
                         else:
                             __info = ""
-                        __commands.append( "set( Concept='Observer', Variable='%s', Template=\"\"\"%s\"\"\"%s )"%(sk,__template,__info) )
+                        __commands.append( "set( Concept='Observer', Variable='%s', Template=\"\"\"%s\"\"\"%s )"%(sk, __template, __info) )
                     if __idata['NodeType'] == 'String' and 'Value' in __idata:
-                        __value =__idata['Value']
-                        __commands.append( "set( Concept='Observer', Variable='%s', String=\"\"\"%s\"\"\" )"%(sk,__value) )
+                        __value = __idata['Value']
+                        __commands.append( "set( Concept='Observer', Variable='%s', String=\"\"\"%s\"\"\" )"%(sk, __value) )
             #
             # Background, ObservationError, ObservationOperator...
             elif type(r) is dict:
                 __argumentsList = []
                 if 'Stored' in r and bool(r['Stored']):
-                    __argumentsList.append(['Stored',True])
+                    __argumentsList.append(['Stored', True])
                 if 'INPUT_TYPE' in r and 'data' in r:
                     # Vector, Matrix, ScalarSparseMatrix, DiagonalSparseMatrix, Function
                     __itype = r['INPUT_TYPE']
@@ -337,32 +346,32 @@ class _COMViewer(GenericCaseViewer):
                     if 'FROM' in __idata:
                         # String, Script, DataFile, Template, ScriptWithOneFunction, ScriptWithFunctions
                         __ifrom = __idata['FROM']
-                        __idata.pop('FROM','')
+                        __idata.pop('FROM', '')
                         if __ifrom == 'String' or __ifrom == 'Template':
-                            __argumentsList.append([__itype,__idata['STRING']])
+                            __argumentsList.append([__itype, __idata['STRING']])
                         if __ifrom == 'Script':
-                            __argumentsList.append([__itype,True])
-                            __argumentsList.append(['Script',__idata['SCRIPT_FILE']])
+                            __argumentsList.append([__itype, True])
+                            __argumentsList.append(['Script', __idata['SCRIPT_FILE']])
                         if __ifrom == 'DataFile':
-                            __argumentsList.append([__itype,True])
-                            __argumentsList.append(['DataFile',__idata['DATA_FILE']])
+                            __argumentsList.append([__itype, True])
+                            __argumentsList.append(['DataFile', __idata['DATA_FILE']])
                         if __ifrom == 'ScriptWithOneFunction':
-                            __argumentsList.append(['OneFunction',True])
-                            __argumentsList.append(['Script',__idata.pop('SCRIPTWITHONEFUNCTION_FILE')])
-                            if len(__idata)>0:
-                                __argumentsList.append(['Parameters',__idata])
+                            __argumentsList.append(['OneFunction', True])
+                            __argumentsList.append(['Script', __idata.pop('SCRIPTWITHONEFUNCTION_FILE')])
+                            if len(__idata) > 0:
+                                __argumentsList.append(['Parameters', __idata])
                         if __ifrom == 'ScriptWithFunctions':
-                            __argumentsList.append(['ThreeFunctions',True])
-                            __argumentsList.append(['Script',__idata.pop('SCRIPTWITHFUNCTIONS_FILE')])
-                            if len(__idata)>0:
-                                __argumentsList.append(['Parameters',__idata])
-                __arguments = ["%s = %s"%(k,repr(v)) for k,v in __argumentsList]
+                            __argumentsList.append(['ThreeFunctions', True])
+                            __argumentsList.append(['Script', __idata.pop('SCRIPTWITHFUNCTIONS_FILE')])
+                            if len(__idata) > 0:
+                                __argumentsList.append(['Parameters', __idata])
+                __arguments = ["%s = %s"%(k, repr(v)) for k, v in __argumentsList]
                 __commands.append( "set( Concept='%s', %s )"%(__command, ", ".join(__arguments)))
         #
         __commands.append( "set( Concept='%s', Parameters=%s )"%('SupplementaryParameters', repr(__suppparameters)))
         #
         # ----------------------------------------------------------------------
-        __commands.sort() # Pour commencer par 'AlgorithmParameters'
+        __commands.sort()  # Pour commencer par 'AlgorithmParameters'
         __commands.append(__UserPostAnalysis)
         return __commands
 
@@ -375,15 +384,17 @@ class _SCDViewer(GenericCaseViewer):
     __slots__ = (
         "__DebugCommandNotSet", "__ObserverCommandNotSet",
         "__UserPostAnalysisNotSet", "__hasAlgorithm")
-    #
+
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entête"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         #
         if __content is not None:
             for command in __content:
-                if command[0] == "set": __command = command[2]["Concept"]
-                else:                   __command = command[0].replace("set", "", 1)
+                if command[0] == "set":
+                    __command = command[2]["Concept"]
+                else:
+                    __command = command[0].replace("set", "", 1)
                 if __command == 'Name':
                     self._name = command[2]["String"]
         #
@@ -409,11 +420,13 @@ class _SCDViewer(GenericCaseViewer):
         if __content is not None:
             for command in __content:
                 self._append(*command)
-    #
+
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
-        if __command == "set": __command = __local["Concept"]
-        else:                  __command = __command.replace("set", "", 1)
+        if __command == "set":
+            __command = __local["Concept"]
+        else:
+            __command = __command.replace("set", "", 1)
         logging.debug("SCD Order processed: %s"%(__command))
         #
         __text  = None
@@ -464,52 +477,62 @@ class _SCDViewer(GenericCaseViewer):
                 __text += "Analysis_config['Data'] = \"\"\"%s\"\"\"\n"%(Templates.UserPostAnalysisTemplates[__local['Template']],)
             __text += "study_config['UserPostAnalysis'] = Analysis_config"
             self.__UserPostAnalysisNotSet = False
-        elif __local is not None: # __keys is not None and
-            numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
+        elif __local is not None:  # __keys is not None and
+            numpy.set_printoptions(precision=15, threshold=1000000, linewidth=1000 * 15)
             __text  = "#\n"
             __text += "%s_config = {}\n"%__command
-            __local.pop('self','')
+            __local.pop('self', '')
             __to_be_removed = []
             __vectorIsDataFile = False
             __vectorIsScript = False
-            for __k,__v in __local.items():
-                if __v is None: __to_be_removed.append(__k)
+            for __k, __v in __local.items():
+                if __v is None:
+                    __to_be_removed.append(__k)
             for __k in __to_be_removed:
                 __local.pop(__k)
-            for __k,__v in __local.items():
-                if __k == "Concept": continue
-                if __k in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix','OneFunction','ThreeFunctions'] \
-                    and 'Script' in __local and __local['Script'] is not None: continue
-                if __k in ['Vector','VectorSerie'] \
-                    and 'DataFile' in __local and __local['DataFile'] is not None: continue
-                if __k == 'Parameters' and not (__command in ['AlgorithmParameters','SupplementaryParameters']): continue
+            for __k, __v in __local.items():
+                if __k == "Concept":
+                    continue
+                if __k in ['ScalarSparseMatrix', 'DiagonalSparseMatrix', 'Matrix', 'OneFunction', 'ThreeFunctions'] \
+                        and 'Script' in __local \
+                        and __local['Script'] is not None:
+                    continue
+                if __k in ['Vector', 'VectorSerie'] \
+                        and 'DataFile' in __local \
+                        and __local['DataFile'] is not None:
+                    continue
+                if __k == 'Parameters' and not (__command in ['AlgorithmParameters', 'SupplementaryParameters']):
+                    continue
                 if __k == 'Algorithm':
                     __text += "study_config['Algorithm'] = %s\n"%(repr(__v))
                 elif __k == 'DataFile':
                     __k = 'Vector'
                     __f = 'DataFile'
-                    __v = "'"+repr(__v)+"'"
-                    for __lk in ['Vector','VectorSerie']:
-                        if __lk in __local and __local[__lk]: __k = __lk
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,__f)
-                    __text += "%s_config['Data'] = %s\n"%(__command,__v)
-                    __text = __text.replace("''","'")
+                    __v = "'" + repr(__v) + "'"
+                    for __lk in ['Vector', 'VectorSerie']:
+                        if __lk in __local and __local[__lk]:
+                            __k = __lk
+                    __text += "%s_config['Type'] = '%s'\n"%(__command, __k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command, __f)
+                    __text += "%s_config['Data'] = %s\n"%(__command, __v)
+                    __text = __text.replace("''", "'")
                     __vectorIsDataFile = True
                 elif __k == 'Script':
                     __k = 'Vector'
                     __f = 'Script'
-                    __v = "'"+repr(__v)+"'"
-                    for __lk in ['ScalarSparseMatrix','DiagonalSparseMatrix','Matrix']:
-                        if __lk in __local and __local[__lk]: __k = __lk
-                    if __command == "AlgorithmParameters": __k = "Dict"
+                    __v = "'" + repr(__v) + "'"
+                    for __lk in ['ScalarSparseMatrix', 'DiagonalSparseMatrix', 'Matrix']:
+                        if __lk in __local and __local[__lk]:
+                            __k = __lk
+                    if __command == "AlgorithmParameters":
+                        __k = "Dict"
                     if 'OneFunction' in __local and __local['OneFunction']:
                         __text += "%s_ScriptWithOneFunction = {}\n"%(__command,)
                         __text += "%s_ScriptWithOneFunction['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
                         __text += "%s_ScriptWithOneFunction['Script'] = {}\n"%(__command,)
-                        __text += "%s_ScriptWithOneFunction['Script']['Direct'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithOneFunction['Script']['Tangent'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithOneFunction['Script']['Adjoint'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Direct'] = %s\n"%(__command, __v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Tangent'] = %s\n"%(__command, __v)
+                        __text += "%s_ScriptWithOneFunction['Script']['Adjoint'] = %s\n"%(__command, __v)
                         __text += "%s_ScriptWithOneFunction['DifferentialIncrement'] = 1e-06\n"%(__command,)
                         __text += "%s_ScriptWithOneFunction['CenteredFiniteDifference'] = 0\n"%(__command,)
                         __k = 'Function'
@@ -519,43 +542,50 @@ class _SCDViewer(GenericCaseViewer):
                         __text += "%s_ScriptWithFunctions = {}\n"%(__command,)
                         __text += "%s_ScriptWithFunctions['Function'] = ['Direct', 'Tangent', 'Adjoint']\n"%(__command,)
                         __text += "%s_ScriptWithFunctions['Script'] = {}\n"%(__command,)
-                        __text += "%s_ScriptWithFunctions['Script']['Direct'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithFunctions['Script']['Tangent'] = %s\n"%(__command,__v)
-                        __text += "%s_ScriptWithFunctions['Script']['Adjoint'] = %s\n"%(__command,__v)
+                        __text += "%s_ScriptWithFunctions['Script']['Direct'] = %s\n"%(__command, __v)
+                        __text += "%s_ScriptWithFunctions['Script']['Tangent'] = %s\n"%(__command, __v)
+                        __text += "%s_ScriptWithFunctions['Script']['Adjoint'] = %s\n"%(__command, __v)
                         __k = 'Function'
                         __f = 'ScriptWithFunctions'
                         __v = '%s_ScriptWithFunctions'%(__command,)
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,__f)
-                    __text += "%s_config['Data'] = %s\n"%(__command,__v)
-                    __text = __text.replace("''","'")
+                    __text += "%s_config['Type'] = '%s'\n"%(__command, __k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command, __f)
+                    __text += "%s_config['Data'] = %s\n"%(__command, __v)
+                    __text = __text.replace("''", "'")
                     __vectorIsScript = True
                 elif __k in ('Stored', 'Checked', 'ColMajor', 'InputFunctionAsMulti', 'nextStep'):
                     if bool(__v):
-                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
+                        __text += "%s_config['%s'] = '%s'\n"%(__command, __k, int(bool(__v)))
                 elif __k in ('PerformanceProfile', 'noDetails'):
                     if not bool(__v):
-                        __text += "%s_config['%s'] = '%s'\n"%(__command,__k,int(bool(__v)))
+                        __text += "%s_config['%s'] = '%s'\n"%(__command, __k, int(bool(__v)))
                 else:
-                    if __k == 'Vector' and __vectorIsScript: continue
-                    if __k == 'Vector' and __vectorIsDataFile: continue
-                    if __k == 'Parameters': __k = "Dict"
-                    if isinstance(__v,Persistence.Persistence): __v = __v.values()
-                    if callable(__v): __text = self._missing%__v.__name__+__text
-                    if isinstance(__v,dict):
+                    if __k == 'Vector' and __vectorIsScript:
+                        continue
+                    if __k == 'Vector' and __vectorIsDataFile:
+                        continue
+                    if __k == 'Parameters':
+                        __k = "Dict"
+                    if isinstance(__v, Persistence.Persistence):
+                        __v = __v.values()
+                    if callable(__v):
+                        __text = self._missing%__v.__name__ + __text
+                    if isinstance(__v, dict):
                         for val in __v.values():
-                            if callable(val): __text = self._missing%val.__name__+__text
-                    __text += "%s_config['Type'] = '%s'\n"%(__command,__k)
-                    __text += "%s_config['From'] = '%s'\n"%(__command,'String')
-                    __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command,repr(__v))
-            __text += "study_config['%s'] = %s_config"%(__command,__command)
-            numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+                            if callable(val):
+                                __text = self._missing%val.__name__ + __text
+                    __text += "%s_config['Type'] = '%s'\n"%(__command, __k)
+                    __text += "%s_config['From'] = '%s'\n"%(__command, 'String')
+                    __text += "%s_config['Data'] = \"\"\"%s\"\"\"\n"%(__command, repr(__v))
+            __text += "study_config['%s'] = %s_config"%(__command, __command)
+            numpy.set_printoptions(precision=8, threshold=1000, linewidth=75)
             if __switchoff:
                 self._switchoff = True
-        if __text is not None: self._addLine(__text)
+        if __text is not None:
+            self._addLine(__text)
         if not __switchoff:
             self._switchoff = False
-    #
+
     def _finalize(self, *__args):
         self.__loadVariablesByScript()
         if self.__DebugCommandNotSet:
@@ -568,9 +598,9 @@ class _SCDViewer(GenericCaseViewer):
             self._addLine("xa=ADD.get('Analysis')[-1]")
             self._addLine("print('Analysis:',xa)\"\"\"")
             self._addLine("study_config['UserPostAnalysis'] = Analysis_config")
-    #
+
     def __loadVariablesByScript(self):
-        __ExecVariables = {} # Necessaire pour recuperer la variable
+        __ExecVariables = {}  # Necessaire pour recuperer la variable
         exec("\n".join(self._lineSerie), __ExecVariables)
         study_config = __ExecVariables['study_config']
         # Pour Python 3 : self.__hasAlgorithm = bool(study_config['Algorithm'])
@@ -619,13 +649,13 @@ class _YACSViewer(GenericCaseViewer):
     Etablissement des commandes d'un cas YACS (Cas->SCD->YACS)
     """
     __slots__ = ("__internalSCD", "_append")
-    #
+
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self.__internalSCD = _SCDViewer(__name, __objname, __content, __object)
         self._append       = self.__internalSCD._append
-    #
+
     def dump(self, __filename=None, __upa=None):
         "Restitution normalisée des commandes"
         # -----
@@ -637,9 +667,9 @@ class _YACSViewer(GenericCaseViewer):
                 os.remove(__file)
         # -----
         if not PlatformInfo.has_salome or \
-            not PlatformInfo.has_adao:
+                not PlatformInfo.has_adao:
             raise ImportError(
-                "Unable to get SALOME (%s) or ADAO (%s) environnement for YACS conversion.\n"%(PlatformInfo.has_salome,PlatformInfo.has_adao)+\
+                "Unable to get SALOME (%s) or ADAO (%s) environnement for YACS conversion.\n"%(PlatformInfo.has_salome, PlatformInfo.has_adao) + \
                 "Please load the right SALOME environnement before trying to use it.")
         else:
             from daYacsSchemaCreator.run import create_schema_from_content
@@ -655,7 +685,7 @@ class _YACSViewer(GenericCaseViewer):
             __msg += "See errors details in your launching terminal log.\n"
             raise ValueError(__msg)
         # -----
-        __fid = open(__file,"r")
+        __fid = open(__file, "r")
         __text = __fid.read()
         __fid.close()
         return __text
@@ -666,7 +696,7 @@ class _ReportViewer(GenericCaseViewer):
     Partie commune de restitution simple
     """
     __slots__ = ("_r")
-    #
+
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
         "Initialisation et enregistrement de l'entete"
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
@@ -680,35 +710,37 @@ class _ReportViewer(GenericCaseViewer):
         if self._content is not None:
             for command in self._content:
                 self._append(*command)
-    #
+
     def _append(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Transformation d'une commande individuelle en un enregistrement"
         if __command is not None and __keys is not None and __local is not None:
-            if __command in ("set","get") and "Concept" in __keys: __command = __local["Concept"]
-            __text  = "<i>%s</i> command has been set"%str(__command.replace("set",""))
+            if __command in ("set", "get") and "Concept" in __keys:
+                __command = __local["Concept"]
+            __text  = "<i>%s</i> command has been set"%str(__command.replace("set", ""))
             __ktext = ""
             for k in __keys:
-                if k not in __local: continue
+                if k not in __local: continue                           # noqa: E701
                 __v = __local[k]
-                if __v is None: continue
-                if   k == "Checked"              and not __v: continue
-                if   k == "Stored"               and not __v: continue
-                if   k == "ColMajor"             and not __v: continue
-                if   k == "InputFunctionAsMulti" and not __v: continue
-                if   k == "nextStep"             and not __v: continue
-                if   k == "PerformanceProfile"   and     __v: continue
-                if   k == "noDetails":                        continue
-                if   k == "Concept":                          continue
-                if   k == "self":                             continue
-                if isinstance(__v,Persistence.Persistence): __v = __v.values()
-                numpy.set_printoptions(precision=15,threshold=1000000,linewidth=1000*15)
-                __ktext += "\n        %s = %s,"%(k,repr(__v))
-                numpy.set_printoptions(precision=8,threshold=1000,linewidth=75)
+                if __v is None: continue                                # noqa: E701
+                if   k == "Checked"              and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "Stored"               and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "ColMajor"             and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "InputFunctionAsMulti" and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "nextStep"             and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "PerformanceProfile"   and     __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "noDetails":                        continue  # noqa: E241,E271,E272,E701
+                if   k == "Concept":                          continue  # noqa: E241,E271,E272,E701
+                if   k == "self":                             continue  # noqa: E241,E271,E272,E701
+                if isinstance(__v, Persistence.Persistence):
+                    __v = __v.values()
+                numpy.set_printoptions(precision=15, threshold=1000000, linewidth=1000 * 15)
+                __ktext += "\n        %s = %s,"%(k, repr(__v))
+                numpy.set_printoptions(precision=8, threshold=1000, linewidth=75)
             if len(__ktext) > 0:
                 __text += " with values:" + __ktext
             __text = __text.rstrip(", ")
             self._r.append(__text, "uli")
-    #
+
     def _finalize(self, __upa=None):
         "Enregistrement du final"
         raise NotImplementedError()
@@ -718,7 +750,7 @@ class _SimpleReportInRstViewer(_ReportViewer):
     Restitution simple en RST
     """
     __slots__ = ()
-    #
+
     def _finalize(self, __upa=None):
         self._lineSerie.append(Reporting.ReportViewInRst(self._r).__str__())
 
@@ -727,7 +759,7 @@ class _SimpleReportInHtmlViewer(_ReportViewer):
     Restitution simple en HTML
     """
     __slots__ = ()
-    #
+
     def _finalize(self, __upa=None):
         self._lineSerie.append(Reporting.ReportViewInHtml(self._r).__str__())
 
@@ -736,7 +768,7 @@ class _SimpleReportInPlainTxtViewer(_ReportViewer):
     Restitution simple en TXT
     """
     __slots__ = ()
-    #
+
     def _finalize(self, __upa=None):
         self._lineSerie.append(Reporting.ReportViewInPlainTxt(self._r).__str__())
 
@@ -746,7 +778,7 @@ class ImportFromScript(object):
     Obtention d'une variable nommee depuis un fichier script importé
     """
     __slots__ = ("__basename", "__filenspace", "__filestring")
-    #
+
     def __init__(self, __filename=None):
         "Verifie l'existence et importe le script"
         if __filename is None:
@@ -761,22 +793,22 @@ class ImportFromScript(object):
                 __filename = __fullname
             else:
                 raise ValueError(
-                    "The file containing the variable to be imported doesn't seem to"+\
+                    "The file containing the variable to be imported doesn't seem to" + \
                     " exist. Please check the file. The given file name is:\n  \"%s\""%str(__filename))
         if os.path.dirname(__filename) != '':
             sys.path.insert(0, os.path.dirname(__filename))
             __basename = os.path.basename(__filename).rstrip(".py")
         else:
             __basename = __filename.rstrip(".py")
-        PlatformInfo.checkFileNameImportability( __basename+".py" )
+        PlatformInfo.checkFileNameImportability( __basename + ".py" )
         self.__basename = __basename
         try:
             self.__filenspace = __import__(__basename, globals(), locals(), [])
         except NameError:
             self.__filenspace = ""
-        with open(__filename,'r') as fid:
+        with open(__filename, 'r') as fid:
             self.__filestring = fid.read()
-    #
+
     def getvalue(self, __varname=None, __synonym=None ):
         "Renvoie la variable demandee par son nom ou son synonyme"
         if __varname is None:
@@ -784,19 +816,19 @@ class ImportFromScript(object):
         if not hasattr(self.__filenspace, __varname):
             if __synonym is None:
                 raise ValueError(
-                    "The imported script file \"%s\""%(str(self.__basename)+".py",)+\
-                    " doesn't contain the mandatory variable \"%s\""%(__varname,)+\
+                    "The imported script file \"%s\""%(str(self.__basename) + ".py",) + \
+                    " doesn't contain the mandatory variable \"%s\""%(__varname,) + \
                     " to be read. Please check the content of the file and the syntax.")
             elif not hasattr(self.__filenspace, __synonym):
                 raise ValueError(
-                    "The imported script file \"%s\""%(str(self.__basename)+".py",)+\
-                    " doesn't contain the mandatory variable \"%s\""%(__synonym,)+\
+                    "The imported script file \"%s\""%(str(self.__basename) + ".py",) + \
+                    " doesn't contain the mandatory variable \"%s\""%(__synonym,) + \
                     " to be read. Please check the content of the file and the syntax.")
             else:
                 return getattr(self.__filenspace, __synonym)
         else:
             return getattr(self.__filenspace, __varname)
-    #
+
     def getstring(self):
         "Renvoie le script complet"
         return self.__filestring
@@ -807,12 +839,13 @@ class ImportDetector(object):
     Détection des caractéristiques de fichiers ou objets en entrée
     """
     __slots__ = ("__url", "__usr", "__root", "__end")
-    #
+
     def __enter__(self):
         return self
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         return False
-    #
+
     def __init__(self, __url, UserMime=""):
         if __url is None:
             raise ValueError("The name or url of the file object has to be specified.")
@@ -833,7 +866,7 @@ class ImportDetector(object):
             mimetypes.add_type('text/plain', '.txt')
             mimetypes.add_type('text/csv', '.csv')
             mimetypes.add_type('text/tab-separated-values', '.tsv')
-    #
+
     # File related tests
     # ------------------
     def is_local_file(self):
@@ -841,16 +874,16 @@ class ImportDetector(object):
             return True
         else:
             return False
-    #
+
     def is_not_local_file(self):
         return not self.is_local_file()
-    #
+
     def raise_error_if_not_local_file(self):
         if self.is_not_local_file():
             raise ValueError("The name or the url of the file object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
         else:
             return False
-    #
+
     # Directory related tests
     # -----------------------
     def is_local_dir(self):
@@ -858,27 +891,27 @@ class ImportDetector(object):
             return True
         else:
             return False
-    #
+
     def is_not_local_dir(self):
         return not self.is_local_dir()
-    #
+
     def raise_error_if_not_local_dir(self):
         if self.is_not_local_dir():
             raise ValueError("The name or the url of the directory object doesn't seem to exist. The given name is:\n  \"%s\""%str(self.__url))
         else:
             return False
-    #
+
     # Mime related functions
     # ------------------------
     def get_standard_mime(self):
         (__mtype, __encoding) = mimetypes.guess_type(self.__url, strict=False)
         return __mtype
-    #
+
     def get_user_mime(self):
-        __fake = "fake."+self.__usr.lower()
+        __fake = "fake." + self.__usr.lower()
         (__mtype, __encoding) = mimetypes.guess_type(__fake, strict=False)
         return __mtype
-    #
+
     def get_comprehensive_mime(self):
         if self.get_standard_mime() is not None:
             return self.get_standard_mime()
@@ -886,15 +919,15 @@ class ImportDetector(object):
             return self.get_user_mime()
         else:
             return None
-    #
+
     # Name related functions
     # ----------------------
     def get_user_name(self):
         return self.__url
-    #
+
     def get_absolute_name(self):
         return os.path.abspath(os.path.realpath(self.__url))
-    #
+
     def get_extension(self):
         return self.__end
 
@@ -915,13 +948,13 @@ class ImportFromFile(object):
         "_filename", "_colnames", "_colindex", "_varsline", "_format",
         "_delimiter", "_skiprows", "__url", "__filestring", "__header",
         "__allowvoid", "__binaryformats", "__supportedformats")
-    #
+
     def __enter__(self):
         return self
-    #
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         return False
-    #
+
     def __init__(self, Filename=None, ColNames=None, ColIndex=None, Format="Guess", AllowVoidNameList=True):
         """
         Verifie l'existence et les informations de définition du fichier. Les
@@ -935,11 +968,11 @@ class ImportFromFile(object):
             - AllowVoidNameList : permet, si la liste de noms est vide, de
               prendre par défaut toutes les colonnes
         """
-        self.__binaryformats =(
+        self.__binaryformats = (
             "application/numpy.npy",
             "application/numpy.npz",
             "application/dymola.sdf",
-            )
+        )
         self.__url = ImportDetector( Filename, Format)
         self.__url.raise_error_if_not_local_file()
         self._filename = self.__url.get_absolute_name()
@@ -964,14 +997,18 @@ class ImportFromFile(object):
         else:
             self._delimiter = None
         #
-        if ColNames is not None: self._colnames = tuple(ColNames)
-        else:                    self._colnames = None
+        if ColNames is not None:
+            self._colnames = tuple(ColNames)
+        else:
+            self._colnames = None
         #
-        if ColIndex is not None: self._colindex = str(ColIndex)
-        else:                    self._colindex = None
+        if ColIndex is not None:
+            self._colindex = str(ColIndex)
+        else:
+            self._colindex = None
         #
         self.__allowvoid = bool(AllowVoidNameList)
-    #
+
     def __getentete(self, __nblines = 3):
         "Lit l'entête du fichier pour trouver la définition des variables"
         # La première ligne non vide non commentée est toujours considérée
@@ -980,17 +1017,17 @@ class ImportFromFile(object):
         if self._format in self.__binaryformats:
             pass
         else:
-            with open(self._filename,'r') as fid:
+            with open(self._filename, 'r') as fid:
                 __line = fid.readline().strip()
                 while "#" in __line or len(__line) < 1:
                     __header.append(__line)
                     __skiprows += 1
                     __line = fid.readline().strip()
-                __varsline = __line # Ligne de labels par convention
-                for i in range(max(0,__nblines)):
+                __varsline = __line  # Ligne de labels par convention
+                for i in range(max(0, __nblines)):
                     __header.append(fid.readline())
         return (__header, __varsline, __skiprows)
-    #
+
     def __getindices(self, __colnames, __colindex, __delimiter=None ):
         "Indices de colonnes correspondants à l'index et aux variables"
         if __delimiter is None:
@@ -1003,7 +1040,8 @@ class ImportFromFile(object):
             __colnames = tuple(__colnames)
             for v in __colnames:
                 for i, n in enumerate(__varserie):
-                    if v == n: __usecols.append(i)
+                    if v == n:
+                        __usecols.append(i)
             __usecols = tuple(__usecols)
             if len(__usecols) == 0:
                 if self.__allowvoid:
@@ -1017,12 +1055,13 @@ class ImportFromFile(object):
             __useindex = None
             __colindex = str(__colindex)
             for i, n in enumerate(__varserie):
-                if __colindex == n: __useindex = i
+                if __colindex == n:
+                    __useindex = i
         else:
             __useindex = None
         #
         return (__usecols, __useindex)
-    #
+
     def getsupported(self):
         self.__supportedformats = {}
         self.__supportedformats["text/plain"]                = True
@@ -1032,12 +1071,14 @@ class ImportFromFile(object):
         self.__supportedformats["application/numpy.npz"]     = True
         self.__supportedformats["application/dymola.sdf"]    = PlatformInfo.has_sdf
         return self.__supportedformats
-    #
+
     def getvalue(self, ColNames=None, ColIndex=None ):
         "Renvoie la ou les variables demandées par la liste de leurs noms"
         # Uniquement si mise à jour
-        if ColNames is not None: self._colnames = tuple(ColNames)
-        if ColIndex is not None: self._colindex = str(ColIndex)
+        if ColNames is not None:
+            self._colnames = tuple(ColNames)
+        if ColIndex is not None:
+            self._colindex = str(ColIndex)
         #
         __index = None
         if self._format == "application/numpy.npy":
@@ -1048,25 +1089,25 @@ class ImportFromFile(object):
             with numpy.load(self._filename) as __allcolumns:
                 if self._colnames is None:
                     self._colnames = __allcolumns.files
-                for nom in self._colnames: # Si une variable demandée n'existe pas
+                for nom in self._colnames:  # Si une variable demandée n'existe pas
                     if nom not in __allcolumns.files:
                         self._colnames = tuple( __allcolumns.files )
                 for nom in self._colnames:
                     if nom in __allcolumns.files:
                         if __columns is not None:
                             # Attention : toutes les variables doivent avoir la même taille
-                            __columns = numpy.vstack((__columns, numpy.reshape(__allcolumns[nom], (1,-1))))
+                            __columns = numpy.vstack((__columns, numpy.reshape(__allcolumns[nom], (1, -1))))
                         else:
                             # Première colonne
-                            __columns = numpy.reshape(__allcolumns[nom], (1,-1))
+                            __columns = numpy.reshape(__allcolumns[nom], (1, -1))
                 if self._colindex is not None and self._colindex in __allcolumns.files:
-                    __index = numpy.array(numpy.reshape(__allcolumns[self._colindex], (1,-1)), dtype=bytes)
+                    __index = numpy.array(numpy.reshape(__allcolumns[self._colindex], (1, -1)), dtype=bytes)
         elif self._format == "text/plain":
             __usecols, __useindex = self.__getindices(self._colnames, self._colindex)
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, skiprows=self._skiprows)
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), skiprows=self._skiprows)
-            if __usecols is None: # Si une variable demandée n'existe pas
+            if __usecols is None:  # Si une variable demandée n'existe pas
                 self._colnames = None
         #
         elif self._format == "application/dymola.sdf" and PlatformInfo.has_sdf:
@@ -1079,10 +1120,10 @@ class ImportFromFile(object):
                 if nom in __content:
                     if __columns is not None:
                         # Attention : toutes les variables doivent avoir la même taille
-                        __columns = numpy.vstack((__columns, numpy.reshape(__content[nom].data, (1,-1))))
+                        __columns = numpy.vstack((__columns, numpy.reshape(__content[nom].data, (1, -1))))
                     else:
                         # Première colonne
-                        __columns = numpy.reshape(__content[nom].data, (1,-1))
+                        __columns = numpy.reshape(__content[nom].data, (1, -1))
             if self._colindex is not None and self._colindex in __content:
                 __index = __content[self._colindex].data
         #
@@ -1091,7 +1132,7 @@ class ImportFromFile(object):
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
-            if __usecols is None: # Si une variable demandée n'existe pas
+            if __usecols is None:  # Si une variable demandée n'existe pas
                 self._colnames = None
         #
         elif self._format == "text/tab-separated-values":
@@ -1099,11 +1140,12 @@ class ImportFromFile(object):
             __columns = numpy.loadtxt(self._filename, usecols = __usecols, delimiter = self._delimiter, skiprows=self._skiprows)
             if __useindex is not None:
                 __index = numpy.loadtxt(self._filename, dtype = bytes, usecols = (__useindex,), delimiter = self._delimiter, skiprows=self._skiprows)
-            if __usecols is None: # Si une variable demandée n'existe pas
+            if __usecols is None:  # Si une variable demandée n'existe pas
                 self._colnames = None
         else:
             raise ValueError("Unkown file format \"%s\" or no reader available"%self._format)
-        if __columns is None: __columns = ()
+        if __columns is None:
+            __columns = ()
 
         def toString(value):
             try:
@@ -1114,15 +1156,15 @@ class ImportFromFile(object):
             __index = tuple([toString(v) for v in __index])
         #
         return (self._colnames, __columns, self._colindex, __index)
-    #
+
     def getstring(self):
         "Renvoie le fichier texte complet"
         if self._format in self.__binaryformats:
             return ""
         else:
-            with open(self._filename,'r') as fid:
+            with open(self._filename, 'r') as fid:
                 return fid.read()
-    #
+
     def getformat(self):
         return self._format
 
@@ -1137,54 +1179,62 @@ class ImportScalarLinesFromFile(ImportFromFile):
     Seule la méthode "getvalue" est changée.
     """
     __slots__ = ()
-    #
+
     def __enter__(self):
         return self
-    #
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         return False
-    #
+
     def __init__(self, Filename=None, ColNames=None, ColIndex=None, Format="Guess"):
         ImportFromFile.__init__(self, Filename, ColNames, ColIndex, Format)
         if self._format not in ["text/plain", "text/csv", "text/tab-separated-values"]:
             raise ValueError("Unkown file format \"%s\""%self._format)
-    #
+
     def getvalue(self, VarNames = None, HeaderNames=()):
         "Renvoie la ou les variables demandées par la liste de leurs noms"
-        if VarNames is not None: __varnames = tuple(VarNames)
-        else:                    __varnames = None
+        if VarNames is not None:
+            __varnames = tuple(VarNames)
+        else:
+            __varnames = None
         #
         if "Name" in self._varsline and "Value" in self._varsline and "Minimum" in self._varsline and "Maximum" in self._varsline:
             __ftype = "NamValMinMax"
-            __dtypes   = {'names'  : ('Name', 'Value', 'Minimum', 'Maximum'),
+            __dtypes   = {'names'  : ('Name', 'Value', 'Minimum', 'Maximum'),  # noqa: E203
                           'formats': ('S128', 'g', 'g', 'g')}
             __usecols  = (0, 1, 2, 3)
 
             def __replaceNoneN( s ):
-                if s.strip() == b'None': return numpy.NINF
-                else:                    return s
+                if s.strip() == b'None':
+                    return numpy.NINF
+                else:
+                    return s
 
             def __replaceNoneP( s ):
-                if s.strip() == b'None': return numpy.PINF
-                else:                    return s
+                if s.strip() == b'None':
+                    return numpy.PINF
+                else:
+                    return s
             __converters = {2: __replaceNoneN, 3: __replaceNoneP}
         elif "Name" in self._varsline and "Value" in self._varsline and ("Minimum" not in self._varsline or "Maximum" not in self._varsline):
             __ftype = "NamVal"
-            __dtypes   = {'names'  : ('Name', 'Value'),
+            __dtypes   = {'names'  : ('Name', 'Value'),  # noqa: E203
                           'formats': ('S128', 'g')}
             __converters = None
             __usecols  = (0, 1)
-        elif len(HeaderNames)>0 and numpy.all([kw in self._varsline for kw in HeaderNames]):
+        elif len(HeaderNames) > 0 and numpy.all([kw in self._varsline for kw in HeaderNames]):
             __ftype = "NamLotOfVals"
-            __dtypes   = {'names'  : HeaderNames,
-                          'formats': tuple(['S128',]+['g']*(len(HeaderNames)-1))}
+            __dtypes   = {'names'  : HeaderNames,  # noqa: E203
+                          'formats': tuple(['S128',] + ['g'] * (len(HeaderNames) - 1))}
             __usecols  = tuple(range(len(HeaderNames)))
 
             def __replaceNone( s ):
-                if s.strip() == b'None': return numpy.NAN
-                else:                    return s
+                if s.strip() == b'None':
+                    return numpy.NAN
+                else:
+                    return s
             __converters = dict()
-            for i in range(1,len(HeaderNames)):
+            for i in range(1, len(HeaderNames)):
                 __converters[i] = __replaceNone
         else:
             raise ValueError("Can not find names of columns for initial values. Wrong first line is:\n            \"%s\""%self._varsline)
@@ -1197,7 +1247,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
                 skiprows   = self._skiprows,
                 converters = __converters,
                 ndmin      = 1,
-                )
+            )
         elif self._format in ["text/csv", "text/tab-separated-values"]:
             __content = numpy.loadtxt(
                 self._filename,
@@ -1207,7 +1257,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
                 converters = __converters,
                 delimiter  = self._delimiter,
                 ndmin      = 1,
-                )
+            )
         else:
             raise ValueError("Unkown file format \"%s\""%self._format)
         #
@@ -1215,10 +1265,14 @@ class ImportScalarLinesFromFile(ImportFromFile):
         for sub in __content:
             if len(__usecols) == 4:
                 na, va, mi, ma = sub
-                if numpy.isneginf(mi): mi = None # Réattribue les variables None
-                elif numpy.isnan(mi):  mi = None # Réattribue les variables None
-                if numpy.isposinf(ma): ma = None # Réattribue les variables None
-                elif numpy.isnan(ma):  ma = None # Réattribue les variables None
+                if numpy.isneginf(mi):
+                    mi = None  # Réattribue les variables None
+                elif numpy.isnan(mi):
+                    mi = None  # Réattribue les variables None
+                if numpy.isposinf(ma):
+                    ma = None  # Réattribue les variables None
+                elif numpy.isnan(ma):
+                    ma = None  # Réattribue les variables None
             elif len(__usecols) == 2 and __ftype == "NamVal":
                 na, va = sub
                 mi, ma = None, None
@@ -1226,7 +1280,8 @@ class ImportScalarLinesFromFile(ImportFromFile):
                 nsub = list(sub)
                 na = sub[0]
                 for i, v in enumerate(nsub[1:]):
-                    if numpy.isnan(v): nsub[i+1] = None
+                    if numpy.isnan(v):
+                        nsub[i + 1] = None
                 va = nsub[1:]
                 mi, ma = None, None
             na = na.decode()
@@ -1234,7 +1289,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
                 # Ne stocke que la premiere occurence d'une variable
                 __names.append(na)
                 __thevalue.append(va)
-                __bounds.append((mi,ma))
+                __bounds.append((mi, ma))
         #
         __names      = tuple(__names)
         __thevalue = numpy.array(__thevalue)
@@ -1248,12 +1303,12 @@ class EficasGUI(object):
     Lancement autonome de l'interface EFICAS/ADAO
     """
     __slots__ = ("__msg", "__path_settings_ok")
-    #
+
     def __init__(self, __addpath = None):
         # Chemin pour l'installation (ordre important)
         self.__msg = ""
         self.__path_settings_ok = False
-        #----------------
+        # ----------------
         if "EFICAS_TOOLS_ROOT" in os.environ:
             __EFICAS_TOOLS_ROOT = os.environ["EFICAS_TOOLS_ROOT"]
             __path_ok = True
@@ -1261,60 +1316,60 @@ class EficasGUI(object):
             __EFICAS_TOOLS_ROOT = os.environ["EFICAS_NOUVEAU_ROOT"]
             __path_ok = True
         else:
-            self.__msg += "\nKeyError:\n"+\
-                "  the required environment variable EFICAS_TOOLS_ROOT is unknown.\n"+\
-                "  You have either to be in SALOME environment, or to set this\n"+\
-                "  variable in your environment to the right path \"<...>\" to\n"+\
-                "  find an installed EFICAS application. For example:\n"+\
+            self.__msg += "\nKeyError:\n" + \
+                "  the required environment variable EFICAS_TOOLS_ROOT is unknown.\n" + \
+                "  You have either to be in SALOME environment, or to set this\n" + \
+                "  variable in your environment to the right path \"<...>\" to\n" + \
+                "  find an installed EFICAS application. For example:\n" + \
                 "      EFICAS_TOOLS_ROOT=\"<...>\" command\n"
             __path_ok = False
         try:
             import adao
             __path_ok = True and __path_ok
         except ImportError:
-            self.__msg += "\nImportError:\n"+\
-                "  the required ADAO library can not be found to be imported.\n"+\
-                "  You have either to be in ADAO environment, or to be in SALOME\n"+\
-                "  environment, or to set manually in your Python 3 environment the\n"+\
-                "  right path \"<...>\" to find an installed ADAO application. For\n"+\
-                "  example:\n"+\
+            self.__msg += "\nImportError:\n" + \
+                "  the required ADAO library can not be found to be imported.\n" + \
+                "  You have either to be in ADAO environment, or to be in SALOME\n" + \
+                "  environment, or to set manually in your Python 3 environment the\n" + \
+                "  right path \"<...>\" to find an installed ADAO application. For\n" + \
+                "  example:\n" + \
                 "      PYTHONPATH=\"<...>:${PYTHONPATH}\" command\n"
             __path_ok = False
         try:
-            import PyQt5
+            import PyQt5  # noqa: F401
             __path_ok = True and __path_ok
         except ImportError:
-            self.__msg += "\nImportError:\n"+\
-                "  the required PyQt5 library can not be found to be imported.\n"+\
-                "  You have either to have a raisonable up-to-date Python 3\n"+\
+            self.__msg += "\nImportError:\n" + \
+                "  the required PyQt5 library can not be found to be imported.\n" + \
+                "  You have either to have a raisonable up-to-date Python 3\n" + \
                 "  installation (less than 5 years), or to be in SALOME environment.\n"
             __path_ok = False
-        #----------------
+        # ----------------
         if not __path_ok:
-            self.__msg += "\nWarning:\n"+\
-                "  It seems you have some troubles with your installation.\n"+\
-                "  Be aware that some other errors may exist, that are not\n"+\
-                "  explained as above, like some incomplete or obsolete\n"+\
-                "  Python 3, or incomplete module installation.\n"+\
-                "  \n"+\
-                "  Please correct the above error(s) before launching the\n"+\
+            self.__msg += "\nWarning:\n" + \
+                "  It seems you have some troubles with your installation.\n" + \
+                "  Be aware that some other errors may exist, that are not\n" + \
+                "  explained as above, like some incomplete or obsolete\n" + \
+                "  Python 3, or incomplete module installation.\n" + \
+                "  \n" + \
+                "  Please correct the above error(s) before launching the\n" + \
                 "  standalone EFICAS/ADAO interface.\n"
             logging.debug("Some of the ADAO/EFICAS/QT5 paths have not been found")
             self.__path_settings_ok = False
         else:
             logging.debug("All the ADAO/EFICAS/QT5 paths have been found")
             self.__path_settings_ok = True
-        #----------------
+        # ----------------
         if self.__path_settings_ok:
-            sys.path.insert(0,__EFICAS_TOOLS_ROOT)
-            sys.path.insert(0,os.path.join(adao.adao_py_dir,"daEficas"))
+            sys.path.insert(0, __EFICAS_TOOLS_ROOT)
+            sys.path.insert(0, os.path.join(adao.adao_py_dir, "daEficas"))
             if __addpath is not None and os.path.exists(os.path.abspath(__addpath)):
-                sys.path.insert(0,os.path.abspath(__addpath))
+                sys.path.insert(0, os.path.abspath(__addpath))
             logging.debug("All the paths have been correctly set up")
         else:
             print(self.__msg)
             logging.debug("Errors in path settings have been found")
-    #
+
     def gui(self):
         if self.__path_settings_ok:
             logging.debug("Launching standalone EFICAS/ADAO interface...")

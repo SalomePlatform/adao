@@ -32,5 +32,5 @@ year     = "2024"
 date     = "mercredi 22 mai 2024, 22:22:22 (UTC+0100)"
 
 longname = name + ", a module for Data Assimilation and Optimization"
-cata     = "V" + version.replace(".","_")
+cata     = "V" + version.replace(".", "_")
 __version__ = version

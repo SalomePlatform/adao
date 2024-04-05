@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, logging, copy
+import numpy, logging
 from daCore.NumericObjects import ApplyBounds, VariablesAndIncrementsBounds
 from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
@@ -45,44 +45,44 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
         selfA._parameters["BoxBounds"],
         Xini,
         selfA._name,
-        0.5, # Similaire au SPSO-2011
-        )
-    #
+        0.5,  # Similaire au SPSO-2011
+    )
+
     def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
-        _X  = numpy.asarray( x ).reshape((-1,1))
-        _HX = numpy.asarray( Hm( _X ) ).reshape((-1,1))
+        _X  = numpy.asarray( x ).reshape((-1, 1))
+        _HX = numpy.asarray( Hm( _X ) ).reshape((-1, 1))
         _Innovation = Y - _HX
         #
-        if QualityMeasure in ["AugmentedWeightedLeastSquares","AWLS","DA"]:
+        if QualityMeasure in ["AugmentedWeightedLeastSquares", "AWLS", "DA"]:
             if BI is None or RI is None:
                 raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
             Jb  = 0.5 * (_X - Xb).T @ (BI @ (_X - Xb))
             Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
-        elif QualityMeasure in ["WeightedLeastSquares","WLS"]:
+        elif QualityMeasure in ["WeightedLeastSquares", "WLS"]:
             if RI is None:
                 raise ValueError("Observation error covariance matrix has to be properly defined!")
             Jb  = 0.
             Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
-        elif QualityMeasure in ["LeastSquares","LS","L2"]:
+        elif QualityMeasure in ["LeastSquares", "LS", "L2"]:
             Jb  = 0.
             Jo  = 0.5 * _Innovation.T @ _Innovation
-        elif QualityMeasure in ["AbsoluteValue","L1"]:
+        elif QualityMeasure in ["AbsoluteValue", "L1"]:
             Jb  = 0.
             Jo  = numpy.sum( numpy.abs(_Innovation) )
-        elif QualityMeasure in ["MaximumError","ME", "Linf"]:
+        elif QualityMeasure in ["MaximumError", "ME", "Linf"]:
             Jb  = 0.
             Jo  = numpy.max( numpy.abs(_Innovation) )
         #
         J   = vfloat( Jb ) + vfloat( Jo )
         #
         return J, vfloat( Jb ), vfloat( Jo )
-    #
+
     def KeepRunningCondition(__step, __nbfct):
         if __step >= selfA._parameters["MaximumNumberOfIterations"]:
-            logging.debug("%s Stopping search because the number %i of evolving iterations is exceeding the maximum %i."%(selfA._name, __step, selfA._parameters["MaximumNumberOfIterations"]))
+            logging.debug("%s Stopping search because the number %i of evolving iterations is exceeding the maximum %i."%(selfA._name, __step, selfA._parameters["MaximumNumberOfIterations"]))  # noqa: E501
             return False
         elif __nbfct >= selfA._parameters["MaximumNumberOfFunctionEvaluations"]:
-            logging.debug("%s Stopping search because the number %i of function evaluations is exceeding the maximum %i."%(selfA._name, __nbfct, selfA._parameters["MaximumNumberOfFunctionEvaluations"]))
+            logging.debug("%s Stopping search because the number %i of function evaluations is exceeding the maximum %i."%(selfA._name, __nbfct, selfA._parameters["MaximumNumberOfFunctionEvaluations"]))  # noqa: E501
             return False
         else:
             return True
@@ -90,13 +90,13 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
     # Paramètres internes
     # -------------------
     __nbI = selfA._parameters["NumberOfInsects"]
-    __nbP = len(Xini) # Dimension ou nombre de paramètres
+    __nbP = len(Xini)  # Dimension ou nombre de paramètres
     #
     __iw = float( selfA._parameters["InertiaWeight"] )
     __sa = float( selfA._parameters["SocialAcceleration"] )
     __ca = float( selfA._parameters["CognitiveAcceleration"] )
     __vc = float( selfA._parameters["VelocityClampingFactor"] )
-    logging.debug("%s Cognitive acceleration (recall to the best previously known value of the insect) = %s"%(selfA._name, str(__ca)))
+    logging.debug("%s Cognitive acceleration (recall to the best previously known value of the insect) = %s"%(selfA._name, str(__ca)))  # noqa: E501
     logging.debug("%s Social acceleration (recall to the best insect value of the group) = %s"%(selfA._name, str(__sa)))
     logging.debug("%s Inertial weight = %s"%(selfA._name, str(__iw)))
     logging.debug("%s Velocity clamping factor = %s"%(selfA._name, str(__vc)))
@@ -106,42 +106,42 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
     LimitPlace = Bounds
     LimitSpeed = BoxBounds
     #
-    nbfct = 1 # Nb d'évaluations
-    JXini, JbXini, JoXini = CostFunction(Xini,selfA._parameters["QualityCriterion"])
+    nbfct = 1  # Nb d'évaluations
+    JXini, JbXini, JoXini = CostFunction(Xini, selfA._parameters["QualityCriterion"])
     #
-    Swarm  = numpy.zeros((__nbI,4,__nbP)) # 4 car (x,v,xbest,lbest)
-    for __p in range(__nbP) :
-        Swarm[:,0,__p] = rand( low=LimitPlace[__p,0], high=LimitPlace[__p,1], size=__nbI) # Position
-        Swarm[:,1,__p] = rand( low=LimitSpeed[__p,0], high=LimitSpeed[__p,1], size=__nbI) # Velocity
-    logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name,Swarm.shape[0],Swarm.shape[2]))
+    Swarm  = numpy.zeros((__nbI, 4, __nbP))  # 4 car (x,v,xbest,lbest)
+    for __p in range(__nbP):
+        Swarm[:, 0, __p] = rand( low=LimitPlace[__p, 0], high=LimitPlace[__p, 1], size=__nbI)  # Position
+        Swarm[:, 1, __p] = rand( low=LimitSpeed[__p, 0], high=LimitSpeed[__p, 1], size=__nbI)  # Velocity
+    logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
     #
-    qSwarm = JXini * numpy.ones((__nbI,3)) # Qualité (J, Jb, Jo) par insecte
+    qSwarm = JXini * numpy.ones((__nbI, 3))  # Qualité (J, Jb, Jo) par insecte
     for __i in range(__nbI):
         nbfct += 1
-        JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
+        JTest, JbTest, JoTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
         if JTest < JXini:
-            Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
-            qSwarm[__i,:]  = (JTest, JbTest, JoTest)
+            Swarm[__i, 2, :] = Swarm[__i, 0, :]  # xBest
+            qSwarm[__i, :]   = (JTest, JbTest, JoTest)
         else:
-            Swarm[__i,2,:] = Xini # xBest
-            qSwarm[__i,:]  = (JXini, JbXini, JoXini)
+            Swarm[__i, 2, :] = Xini  # xBest
+            qSwarm[__i, :]   = (JXini, JbXini, JoXini)
     logging.debug("%s Initialisation of the best previous insects"%selfA._name)
     #
-    iBest = numpy.argmin(qSwarm[:,0])
-    xBest = Swarm[iBest,2,:]
+    iBest = numpy.argmin(qSwarm[:, 0])
+    xBest = Swarm[iBest, 2, :]
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
         selfA.StoredVariables["CurrentState"].store( xBest )
-    selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest,0]  )
-    selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest,1] )
-    selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest,2] )
+    selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest, 0]  )
+    selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest, 1] )
+    selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest, 2] )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalStates"):
-        selfA.StoredVariables["InternalStates"].store( Swarm[:,0,:].T )
+        selfA.StoredVariables["InternalStates"].store( Swarm[:, 0, :].T )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
-        selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:,0] )
+        selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:, 0] )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
-        selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:,1] )
+        selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:, 1] )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJo"):
-        selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:,2] )
+        selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:, 2] )
     #
     selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
     #
@@ -154,39 +154,39 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
             rct = rand(size=__nbP)
             rst = rand(size=__nbP)
             # Vitesse
-            __velins = __iw * Swarm[__i,1,:] \
-                     + __ca * rct * (Swarm[__i,2,:]   - Swarm[__i,0,:]) \
-                     + __sa * rst * (Swarm[iBest,2,:] - Swarm[__i,0,:])
-            Swarm[__i,1,:] = ApplyBounds( __velins, LimitSpeed )
+            __velins = __iw * Swarm[__i, 1, :] \
+                + __ca * rct * (Swarm[__i, 2, :]   - Swarm[__i, 0, :]) \
+                + __sa * rst * (Swarm[iBest, 2, :] - Swarm[__i, 0, :])
+            Swarm[__i, 1, :] = ApplyBounds( __velins, LimitSpeed )
             # Position
-            __velins  = Swarm[__i,0,:] + Swarm[__i,1,:]
-            Swarm[__i,0,:] = ApplyBounds( __velins, LimitPlace )
+            __velins  = Swarm[__i, 0, :] + Swarm[__i, 1, :]
+            Swarm[__i, 0, :] = ApplyBounds( __velins, LimitPlace )
             #
             nbfct += 1
-            JTest, JbTest, JoTest = CostFunction(Swarm[__i,0,:],selfA._parameters["QualityCriterion"])
-            if JTest < qSwarm[__i,0]:
-                Swarm[__i,2,:] = Swarm[__i,0,:] # xBest
-                qSwarm[__i,:]  = (JTest, JbTest, JoTest)
+            JTest, JbTest, JoTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
+            if JTest < qSwarm[__i, 0]:
+                Swarm[__i, 2, :] = Swarm[__i, 0, :]  # xBest
+                qSwarm[__i, :]   = (JTest, JbTest, JoTest)
         #
-        iBest = numpy.argmin(qSwarm[:,0])
-        xBest = Swarm[iBest,2,:]
+        iBest = numpy.argmin(qSwarm[:, 0])
+        xBest = Swarm[iBest, 2, :]
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( xBest )
         if selfA._toStore("SimulatedObservationAtCurrentState"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm( xBest ) )
-        selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest,0]  )
-        selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest,1] )
-        selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest,2] )
+        selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest, 0]  )
+        selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest, 1] )
+        selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest, 2] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalStates"):
-            selfA.StoredVariables["InternalStates"].store( Swarm[:,0,:].T )
+            selfA.StoredVariables["InternalStates"].store( Swarm[:, 0, :].T )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
-            selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:,0] )
+            selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:, 0] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
-            selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:,1] )
+            selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:, 1] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJo"):
-            selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:,2] )
-        logging.debug("%s Step %i: insect %i is the better one with J =%.7f"%(selfA._name,step,iBest,qSwarm[iBest,0]))
+            selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:, 2] )
+        logging.debug("%s Step %i: insect %i is the better one with J =%.7f"%(selfA._name, step, iBest, qSwarm[iBest, 0]))  # noqa: E501
     #
     # Obtention de l'analyse
     # ----------------------
@@ -197,11 +197,11 @@ def ecwnpso(selfA, Xb, Y, HO, R, B):
     # Calculs et/ou stockages supplémentaires
     # ---------------------------------------
     if selfA._toStore("OMA") or \
-        selfA._toStore("SimulatedObservationAtOptimum"):
+            selfA._toStore("SimulatedObservationAtOptimum"):
         HXa = Hm(Xa)
     if selfA._toStore("Innovation") or \
-        selfA._toStore("OMB") or \
-        selfA._toStore("SimulatedObservationAtBackground"):
+            selfA._toStore("OMB") or \
+            selfA._toStore("SimulatedObservationAtBackground"):
         HXb = Hm(Xb)
         Innovation = Y - HXb
     if selfA._toStore("Innovation"):

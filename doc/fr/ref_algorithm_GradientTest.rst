@@ -38,8 +38,9 @@ quelconque, d'évolution comme d'observation.
 Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
 vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et
 :math:`\mathbf{dx}=\alpha_0*\mathbf{dx}_0` avec :math:`\alpha_0` un paramètre
-utilisateur de mise à l'échelle, par défaut à 1. :math:`F` est l'opérateur ou
-le code de calcul (qui est ici acquis par la commande d'opérateur d'observation
+utilisateur de mise à l'échelle de l'amplitude initiale, par défaut à 1.
+:math:`F` est l'opérateur ou le code de calcul (qui est ici donné par
+l'utilisateur à l'aide de la commande de l'opérateur d'observation
 "*ObservationOperator*").
 
 Résidu "Taylor"

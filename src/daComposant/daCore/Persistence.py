@@ -30,7 +30,7 @@ __all__ = []
 import os, numpy, copy, math
 import gzip, bz2, pickle
 
-from daCore.PlatformInfo import PathManagement ; PathManagement()
+from daCore.PlatformInfo import PathManagement ; PathManagement()  # noqa: E702,E203
 from daCore.PlatformInfo import has_gnuplot, PlatformInfo
 mfp = PlatformInfo().MaximumPrecision()
 if has_gnuplot:
@@ -45,8 +45,8 @@ class Persistence(object):
     __slots__ = (
         "__name", "__unit", "__basetype", "__values", "__tags", "__dynamic",
         "__g", "__title", "__ltitle", "__pause", "__dataobservers",
-        )
-    #
+    )
+
     def __init__(self, name="", unit="", basetype=str):
         """
         name : nom courant
@@ -89,12 +89,14 @@ class Persistence(object):
         """
         Stocke une valeur avec ses informations de filtrage.
         """
-        if value is None: raise ValueError("Value argument required")
+        if value is None:
+            raise ValueError("Value argument required")
         #
         self.__values.append(copy.copy(self.__basetype(value)))
         self.__tags.append(kwargs)
         #
-        if self.__dynamic: self.__replots()
+        if self.__dynamic:
+            self.__replots()
         __step = len(self.__values) - 1
         for hook, parameters, scheduler in self.__dataobservers:
             if __step in scheduler:
@@ -136,8 +138,8 @@ class Persistence(object):
     def __str__(self):
         "x.__str__() <==> str(x)"
         msg  = "   Index        Value   Tags\n"
-        for i,v in enumerate(self.__values):
-            msg += "  i=%05i  %10s   %s\n"%(i,v,self.__tags[i])
+        for iv, vv in enumerate(self.__values):
+            msg += "  i=%05i  %10s   %s\n"%(iv, vv, self.__tags[iv])
         return msg
 
     def __len__(self):
@@ -157,7 +159,8 @@ class Persistence(object):
 
     def index(self, value, start=0, stop=None):
         "L.index(value, [start, [stop]]) -> integer -- return first index of value."
-        if stop is None : stop = len(self.__values)
+        if stop is None:
+            stop = len(self.__values)
         return self.__values.index(value, start, stop)
 
     # ---------------------------------------------------------
@@ -172,10 +175,11 @@ class Persistence(object):
                     if tagKey in self.__tags[i]:
                         if self.__tags[i][tagKey] == kwargs[tagKey]:
                             __tmp.append( i )
-                        elif isinstance(kwargs[tagKey],(list,tuple)) and self.__tags[i][tagKey] in kwargs[tagKey]:
+                        elif isinstance(kwargs[tagKey], (list, tuple)) and self.__tags[i][tagKey] in kwargs[tagKey]:
                             __tmp.append( i )
                 __indexOfFilteredItems = __tmp
-                if len(__indexOfFilteredItems) == 0: break
+                if len(__indexOfFilteredItems) == 0:
+                    break
         return __indexOfFilteredItems
 
     # ---------------------------------------------------------
@@ -184,7 +188,7 @@ class Persistence(object):
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return [self.__values[i] for i in __indexOfFilteredItems]
 
-    def keys(self, keyword=None , **kwargs):
+    def keys(self, keyword=None, **kwargs):
         "D.keys() -> list of D's keys"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __keys = []
@@ -195,7 +199,7 @@ class Persistence(object):
                 __keys.append( None )
         return __keys
 
-    def items(self, keyword=None , **kwargs):
+    def items(self, keyword=None, **kwargs):
         "D.items() -> list of D's (key, value) pairs, as 2-tuples"
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __pairs = []
@@ -232,7 +236,7 @@ class Persistence(object):
             __indexOfFilteredItems = [item,]
         #
         # Dans le cas où la sortie donne les valeurs d'un "outputTag"
-        if outputTag is not None and isinstance(outputTag,str) :
+        if outputTag is not None and isinstance(outputTag, str):
             outputValues = []
             for index in __indexOfFilteredItems:
                 if outputTag in self.__tags[index].keys():
@@ -424,7 +428,7 @@ class Persistence(object):
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
 
-    msds=mses # Mean-Square Deviation (MSD=MSE)
+    msds = mses  # Mean-Square Deviation (MSD=MSE)
 
     def rmses(self, _predictor=None):
         """
@@ -455,7 +459,7 @@ class Persistence(object):
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
 
-    rmsds = rmses # Root-Mean-Square Deviation (RMSD=RMSE)
+    rmsds = rmses  # Root-Mean-Square Deviation (RMSD=RMSE)
 
     def __preplots(self,
                    title    = "",
@@ -464,8 +468,7 @@ class Persistence(object):
                    ltitle   = None,
                    geometry = "600x400",
                    persist  = False,
-                   pause    = True,
-                  ):
+                   pause    = True ):
         "Préparation des plots"
         #
         # Vérification de la disponibilité du module Gnuplot
@@ -473,20 +476,21 @@ class Persistence(object):
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
-        if ltitle is None: ltitle = ""
+        if ltitle is None:
+            ltitle = ""
         __geometry = str(geometry)
-        __sizespec = (__geometry.split('+')[0]).replace('x',',')
+        __sizespec = (__geometry.split('+')[0]).replace('x', ',')
         #
         if persist:
             Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist '
         #
-        self.__g = Gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term+' size '+__sizespec)
+        self.__g = Gnuplot.Gnuplot()  # persist=1
+        self.__g('set terminal ' + Gnuplot.GnuplotOpts.default_term + ' size ' + __sizespec)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
-        self.__g('set xlabel "'+str(xlabel)+'"')
-        self.__g('set ylabel "'+str(ylabel)+'"')
+        self.__g('set xlabel "' + str(xlabel) + '"')
+        self.__g('set ylabel "' + str(ylabel) + '"')
         self.__title  = title
         self.__ltitle = ltitle
         self.__pause  = pause
@@ -503,8 +507,7 @@ class Persistence(object):
               filename = "",
               dynamic  = False,
               persist  = False,
-              pause    = True,
-             ):
+              pause    = True ):
         """
         Renvoie un affichage de la valeur à chaque pas, si elle est compatible
         avec un affichage Gnuplot (donc essentiellement un vecteur). Si
@@ -544,7 +547,8 @@ class Persistence(object):
             self.__preplots(title, xlabel, ylabel, ltitle, geometry, persist, pause )
             if dynamic:
                 self.__dynamic = True
-                if len(self.__values) == 0: return 0
+                if len(self.__values) == 0:
+                    return 0
         #
         # Tracé du ou des vecteurs demandés
         indexes = []
@@ -557,7 +561,7 @@ class Persistence(object):
         #
         i = -1
         for index in indexes:
-            self.__g('set title  "'+str(title)+' (pas '+str(index)+')"')
+            self.__g('set title  "' + str(title) + ' (pas ' + str(index) + ')"')
             if isinstance(steps, (list, numpy.ndarray)):
                 Steps = list(steps)
             else:
@@ -567,7 +571,7 @@ class Persistence(object):
             #
             if filename != "":
                 i += 1
-                stepfilename = "%s_%03i.ps"%(filename,i)
+                stepfilename = "%s_%03i.ps"%(filename, i)
                 if os.path.isfile(stepfilename):
                     raise ValueError("Error: a file with this name \"%s\" already exists."%stepfilename)
                 self.__g.hardcopy(filename=stepfilename, color=1)
@@ -578,9 +582,10 @@ class Persistence(object):
         """
         Affichage dans le cas du suivi dynamique de la variable
         """
-        if self.__dynamic and len(self.__values) < 2: return 0
+        if self.__dynamic and len(self.__values) < 2:
+            return 0
         #
-        self.__g('set title  "'+str(self.__title))
+        self.__g('set title  "' + str(self.__title))
         Steps = list(range(len(self.__values)))
         self.__g.plot( Gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
         #
@@ -611,7 +616,7 @@ class Persistence(object):
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return numpy.asarray(self.__values).std(ddof=ddof,axis=0).astype('float')
+                return numpy.asarray(self.__values).std(ddof=ddof, axis=0).astype('float')
             else:
                 return numpy.asarray(self.__values).std(axis=0).astype('float')
         except Exception:
@@ -670,8 +675,7 @@ class Persistence(object):
              geometry = "600x400",
              filename = "",
              persist  = False,
-             pause    = True,
-            ):
+             pause    = True ):
         """
         Renvoie un affichage unique pour l'ensemble des valeurs à chaque pas, si
         elles sont compatibles avec un affichage Gnuplot (donc essentiellement
@@ -704,31 +708,32 @@ class Persistence(object):
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
-        if ltitle is None: ltitle = ""
+        if ltitle is None:
+            ltitle = ""
         if isinstance(steps, (list, numpy.ndarray)):
             Steps = list(steps)
         else:
             Steps = list(range(len(self.__values[0])))
         __geometry = str(geometry)
-        __sizespec = (__geometry.split('+')[0]).replace('x',',')
+        __sizespec = (__geometry.split('+')[0]).replace('x', ',')
         #
         if persist:
             Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist '
         #
-        self.__g = Gnuplot.Gnuplot() # persist=1
-        self.__g('set terminal '+Gnuplot.GnuplotOpts.default_term+' size '+__sizespec)
+        self.__g = Gnuplot.Gnuplot()  # persist=1
+        self.__g('set terminal ' + Gnuplot.GnuplotOpts.default_term + ' size ' + __sizespec)
         self.__g('set style data lines')
         self.__g('set grid')
         self.__g('set autoscale')
-        self.__g('set title  "'+str(title) +'"')
-        self.__g('set xlabel "'+str(xlabel)+'"')
-        self.__g('set ylabel "'+str(ylabel)+'"')
+        self.__g('set title  "' + str(title)  + '"')
+        self.__g('set xlabel "' + str(xlabel) + '"')
+        self.__g('set ylabel "' + str(ylabel) + '"')
         #
         # Tracé du ou des vecteurs demandés
         indexes = list(range(len(self.__values)))
-        self.__g.plot( Gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle+" (pas 0)" ) )
+        self.__g.plot( Gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle + " (pas 0)" ) )
         for index in indexes:
-            self.__g.replot( Gnuplot.Data( Steps, self.__values[index], title=ltitle+" (pas %i)"%index ) )
+            self.__g.replot( Gnuplot.Data( Steps, self.__values[index], title=ltitle + " (pas %i)"%index ) )
         #
         if filename != "":
             self.__g.hardcopy(filename=filename, color=1)
@@ -769,13 +774,13 @@ class Persistence(object):
         # Vérification du Scheduler
         # -------------------------
         maxiter = int( 1e9 )
-        if isinstance(Scheduler,int):      # Considéré comme une fréquence à partir de 0
+        if isinstance(Scheduler, int):                # Considéré comme une fréquence à partir de 0
             Schedulers = range( 0, maxiter, int(Scheduler) )
-        elif isinstance(Scheduler,range):  # Considéré comme un itérateur
+        elif isinstance(Scheduler, range):            # Considéré comme un itérateur
             Schedulers = Scheduler
-        elif isinstance(Scheduler,(list,tuple)):   # Considéré comme des index explicites
-            Schedulers = [int(i) for i in Scheduler] # map( long, Scheduler )
-        else:                              # Dans tous les autres cas, activé par défaut
+        elif isinstance(Scheduler, (list, tuple)):    # Considéré comme des index explicites
+            Schedulers = [int(i) for i in Scheduler]  # Similaire à map( int, Scheduler )  # noqa: E262
+        else:                                         # Dans tous les autres cas, activé par défaut
             Schedulers = range( 0, maxiter )
         #
         # Stockage interne de l'observer dans la variable
@@ -790,23 +795,24 @@ class Persistence(object):
         définition, ou un simple string qui est le nom de la fonction. Si
         AllObservers est vrai, supprime tous les observers enregistrés.
         """
-        if hasattr(HookFunction,"func_name"):
+        if hasattr(HookFunction, "func_name"):
             name = str( HookFunction.func_name )
-        elif hasattr(HookFunction,"__name__"):
+        elif hasattr(HookFunction, "__name__"):
             name = str( HookFunction.__name__ )
-        elif isinstance(HookFunction,str):
+        elif isinstance(HookFunction, str):
             name = str( HookFunction )
         else:
             name = None
         #
-        i = -1
+        ih = -1
         index_to_remove = []
         for [hf, hp, hs] in self.__dataobservers:
-            i = i + 1
-            if name is hf.__name__ or AllObservers: index_to_remove.append( i )
+            ih = ih + 1
+            if name is hf.__name__ or AllObservers:
+                index_to_remove.append( ih )
         index_to_remove.reverse()
-        for i in index_to_remove:
-            self.__dataobservers.pop( i )
+        for ih in index_to_remove:
+            self.__dataobservers.pop( ih )
         return len(index_to_remove)
 
     def hasDataObserver(self):
@@ -818,15 +824,14 @@ class SchedulerTrigger(object):
     Classe générale d'interface de type Scheduler/Trigger
     """
     __slots__ = ()
-    #
+
     def __init__(self,
                  simplifiedCombo = None,
                  startTime       = 0,
                  endTime         = int( 1e9 ),
                  timeDelay       = 1,
                  timeUnit        = 1,
-                 frequency       = None,
-                ):
+                 frequency       = None ):
         pass
 
 # ==============================================================================
@@ -841,7 +846,7 @@ class OneScalar(Persistence):
     pour conserver une signification claire des noms.
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = float):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -850,7 +855,7 @@ class OneIndex(Persistence):
     Classe définissant le stockage d'une valeur unique entière (int) par pas.
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = int):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -860,7 +865,7 @@ class OneVector(Persistence):
     pas utiliser cette classe pour des données hétérogènes, mais "OneList".
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -869,7 +874,7 @@ class OneMatrice(Persistence):
     Classe de stockage d'une matrice de valeurs homogènes par pas.
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = numpy.array):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -878,7 +883,7 @@ class OneMatrix(Persistence):
     Classe de stockage d'une matrice de valeurs homogènes par pas.
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = numpy.matrix):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -889,7 +894,7 @@ class OneList(Persistence):
     "OneVector".
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = list):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -906,7 +911,7 @@ class OneNoType(Persistence):
     volontairement, et pas du tout par défaut.
     """
     __slots__ = ()
-    #
+
     def __init__(self, name="", unit="", basetype = NoType):
         Persistence.__init__(self, name, unit, basetype)
 
@@ -920,7 +925,7 @@ class CompositePersistence(object):
     être ajoutés.
     """
     __slots__ = ("__name", "__StoredObjects")
-    #
+
     def __init__(self, name="", defaults=True):
         """
         name : nom courant
@@ -956,7 +961,8 @@ class CompositePersistence(object):
         """
         Stockage d'une valeur "value" pour le "step" dans la variable "name".
         """
-        if name is None: raise ValueError("Storable object name is required for storage.")
+        if name is None:
+            raise ValueError("Storable object name is required for storage.")
         if name not in self.__StoredObjects.keys():
             raise ValueError("No such name '%s' exists in storable objects."%name)
         self.__StoredObjects[name].store( value=value, **kwargs )
@@ -966,7 +972,8 @@ class CompositePersistence(object):
         Ajoute dans les objets stockables un nouvel objet défini par son nom,
         son type de Persistence et son type de base à chaque pas.
         """
-        if name is None: raise ValueError("Object name is required for adding an object.")
+        if name is None:
+            raise ValueError("Object name is required for adding an object.")
         if name in self.__StoredObjects.keys():
             raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
         if basetype is None:
@@ -978,7 +985,8 @@ class CompositePersistence(object):
         """
         Renvoie l'objet de type Persistence qui porte le nom demandé.
         """
-        if name is None: raise ValueError("Object name is required for retrieving an object.")
+        if name is None:
+            raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
             raise ValueError("No such name '%s' exists in stored objects."%name)
         return self.__StoredObjects[name]
@@ -990,7 +998,8 @@ class CompositePersistence(object):
         comporter les méthodes habituelles de Persistence pour que cela
         fonctionne.
         """
-        if name is None: raise ValueError("Object name is required for setting an object.")
+        if name is None:
+            raise ValueError("Object name is required for setting an object.")
         if name in self.__StoredObjects.keys():
             raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
         self.__StoredObjects[name] = objet
@@ -999,7 +1008,8 @@ class CompositePersistence(object):
         """
         Supprime un objet de la liste des objets stockables.
         """
-        if name is None: raise ValueError("Object name is required for retrieving an object.")
+        if name is None:
+            raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
             raise ValueError("No such name '%s' exists in stored objects."%name)
         del self.__StoredObjects[name]
@@ -1034,7 +1044,8 @@ class CompositePersistence(object):
             usedObjs = []
             for k in objs:
                 try:
-                    if len(self.__StoredObjects[k]) > 0: usedObjs.append( k )
+                    if len(self.__StoredObjects[k]) > 0:
+                        usedObjs.append( k )
                 finally:
                     pass
             objs = usedObjs

@@ -21,10 +21,11 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 from daCore import BasicObjects
-from daAlgorithms.Atoms import ecwukf, c2ukf, uskf
+from daAlgorithms.Atoms import ecwukf, ecw2ukf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
+
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "UNSCENTEDKALMANFILTER")
         self.defineRequiredParameter(
@@ -34,62 +35,67 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "UKF",
-                "2UKF",
-                ],
+                "S3F",
+                "CUKF", "2UKF",
+                "CS3F", "2S3F",
+            ],
             listadv  = [
                 "UKF-Std",
-                "UKF-MSP",
-                ],
-            )
+                "MSS",
+                "CMSS", "2MSS",
+                "5OS",
+                "C5OS", "25OS",
+            ],
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "ConstrainedBy",
             default  = "EstimateProjection",
             typecast = str,
             message  = "Prise en compte des contraintes",
             listval  = ["EstimateProjection"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "Alpha",
-            default  = 1.,
+            default  = 1.e-2,
             typecast = float,
-            message  = "",
+            message  = "Coefficient Alpha d'échelle",
             minval   = 1.e-4,
             maxval   = 1.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "Beta",
             default  = 2,
             typecast = float,
-            message  = "",
-            )
+            message  = "Coefficient Beta d'information a priori sur la distribution",
+        )
         self.defineRequiredParameter(
             name     = "Kappa",
             default  = 0,
             typecast = int,
-            message  = "",
+            message  = "Coefficient Kappa secondaire d'échelle",
             maxval   = 2,
-            )
+        )
         self.defineRequiredParameter(
             name     = "Reconditioner",
             default  = 1.,
             typecast = float,
-            message  = "",
+            message  = "Coefficient de reconditionnement",
             minval   = 1.e-3,
             maxval   = 1.e+1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -118,49 +124,66 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-                ]
-            )
-        self.defineRequiredParameter( # Pas de type
+            ]
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
             optional = ("U", "EM", "CM", "Q"),
-            )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "NonLinear",
-            "Filter",
-            "Ensemble",
-            "Dynamic",
-            "Reduction",
-            ))
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "NonLinear",
+                "Filter",
+                "Ensemble",
+                "Dynamic",
+                "Reduction",
+            ),
+            features=(
+                "LocalOptimization",
+                "DerivativeFree",
+                "ParallelAlgorithm",
+            ),
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        # Default UKF
-        #--------------------------
-        if   self._parameters["Variant"] in ["UKF", "UKF-Std"]:
-            ecwukf.ecwukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        # --------------------------
+        if self._parameters["Variant"] in ["UKF", "UKF-Std"]:
+            ecwukf.ecwukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "UKF")
         #
-        #--------------------------
-        # Default 2UKF
-        elif self._parameters["Variant"] == "2UKF":
-            c2ukf.c2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        elif self._parameters["Variant"] == "S3F":
+            ecwukf.ecwukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "S3F")
         #
-        #--------------------------
-        # UKF-MSP
-        elif self._parameters["Variant"] == "UKF-MSP":
-            uskf.uskf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        elif self._parameters["Variant"] == "MSS":
+            ecwukf.ecwukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "MSS")
         #
-        #--------------------------
+        elif self._parameters["Variant"] == "5OS":
+            ecwukf.ecwukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "5OS")
+        #
+        # --------------------------
+        elif self._parameters["Variant"] in ["CUKF", "2UKF"]:
+            ecw2ukf.ecw2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "UKF")
+        #
+        elif self._parameters["Variant"] in ["CS3F", "2S3F"]:
+            ecw2ukf.ecw2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "S3F")
+        #
+        elif self._parameters["Variant"] in ["CMSS", "2MSS"]:
+            ecw2ukf.ecw2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "MSS")
+        #
+        elif self._parameters["Variant"] in ["C5OS", "25OS"]:
+            ecw2ukf.ecw2ukf(self, Xb, Y, U, HO, EM, CM, R, B, Q, "5OS")
+        #
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

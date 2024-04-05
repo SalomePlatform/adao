@@ -34,24 +34,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "LinearLeastSquares",
-                ],
+            ],
             listadv  = [
                 "OneCorrection",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "Parameters",
             typecast = str,
             message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -74,34 +74,36 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-                ]
-            )
+            ]
+        )
         self.requireInputArguments(
             mandatory= ("Y", "HO"),
             optional = ("R"),
+        )
+        self.setAttributes(
+            tags=(
+                "Optimization",
+                "Linear",
+                "Variational",
             )
-        self.setAttributes(tags=(
-            "Optimization",
-            "Linear",
-            "Variational",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        if   self._parameters["Variant"] == "LinearLeastSquares":
+        # --------------------------
+        if self._parameters["Variant"] == "LinearLeastSquares":
             NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwlls.ecwlls)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
             ecwlls.ecwlls(self, Xb, Y, U, HO, CM, R, B)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

@@ -33,7 +33,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = int,
             message  = "Nombre de chiffres affichés pour les impressions de réels",
             minval   = 0,
-            )
+        )
         self.defineRequiredParameter(
             name     = "PrintAllValuesFor",
             default  = [],
@@ -43,8 +43,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Background",
                 "CheckingPoint",
                 "Observation",
-                ]
-            )
+            ]
+        )
         self.defineRequiredParameter(
             name     = "ShowInformationOnlyFor",
             default  = ["Background", "CheckingPoint", "Observation"],
@@ -54,42 +54,48 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Background",
                 "CheckingPoint",
                 "Observation",
-                ]
-            )
+            ]
+        )
         self.defineRequiredParameter(
             name     = "SetDebug",
             default  = False,
             typecast = bool,
             message  = "Activation du mode debug lors de l'exécution",
-            )
+        )
         self.requireInputArguments(
             mandatory= (),
+        )
+        self.setAttributes(
+            tags=(
+                "Checking",
             )
-        self.setAttributes(tags=(
-            "Checking",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         _p = self._parameters["NumberOfPrintedDigits"]
         numpy.set_printoptions(precision=_p)
-        #
+
         def __buildPrintableVectorProperties( __name, __vector ):
-            if __vector is None:                                         return ""
-            if len(__vector) == 0:                                       return ""
-            if hasattr(__vector,"name") and __name != __vector.name():   return ""
-            if __name not in self._parameters["ShowInformationOnlyFor"]: return ""
+            if __vector is None:
+                return ""
+            if len(__vector) == 0:
+                return ""
+            if hasattr(__vector, "name") and __name != __vector.name():
+                return ""
+            if __name not in self._parameters["ShowInformationOnlyFor"]:
+                return ""
             #
-            if hasattr(__vector,"mins"):
-                __title = "Information for %svector series:"%(str(__name)+" ",)
+            if hasattr(__vector, "mins"):
+                __title = "Information for %svector series:"%(str(__name) + " ",)
             else:
-                __title = "Information for %svector:"%(str(__name)+" ",)
+                __title = "Information for %svector:"%(str(__name) + " ",)
             msgs = "\n"
-            msgs += ("===> "+__title+"\n")
-            msgs += ("     "+("-"*len(__title))+"\n")
+            msgs += ("===> " + __title + "\n")
+            msgs += ("     " + ("-" * len(__title)) + "\n")
             msgs += ("     Main characteristics of the vector:\n")
-            if hasattr(__vector,"basetype"):
+            if hasattr(__vector, "basetype"):
                 msgs += ("       Python base type..........: %s\n")%( __vector.basetype(), )
                 msgs += ("       Shape of data.............: %s\n")%( __vector.shape(), )
             else:
@@ -97,31 +103,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 msgs += ("       Shape of serie of vectors.: %s\n")%( __vector.shape, )
             try:
                 msgs += ("       Number of data............: %s\n")%( len(__vector), )
-            except: pass
-            if hasattr(__vector,"mins"):
+            except Exception:
+                pass
+            if hasattr(__vector, "mins"):
                 msgs += ("       Serie of minimum values...: %s\n")%numpy.array(__vector.mins())
             else:
-                msgs += ("       Minimum of vector.........: %12."+str(_p)+"e\n")%__vector.min()
-            if hasattr(__vector,"means"):
+                msgs += ("       Minimum of vector.........: %12." + str(_p) + "e\n")%__vector.min()
+            if hasattr(__vector, "means"):
                 msgs += ("       Serie of mean values......: %s\n")%numpy.array(__vector.means())
             else:
-                msgs += ("       Mean of vector............: %12."+str(_p)+"e\n")%__vector.mean()
-            if hasattr(__vector,"maxs"):
+                msgs += ("       Mean of vector............: %12." + str(_p) + "e\n")%__vector.mean()
+            if hasattr(__vector, "maxs"):
                 msgs += ("       Serie of maximum values...: %s\n")%numpy.array(__vector.maxs())
             else:
-                msgs += ("       Maximum of vector.........: %12."+str(_p)+"e\n")%__vector.max()
+                msgs += ("       Maximum of vector.........: %12." + str(_p) + "e\n")%__vector.max()
             if self._parameters["SetDebug"] or __name in self._parameters["PrintAllValuesFor"]:
                 msgs += ("\n")
                 msgs += ("     Printing all values :\n")
                 msgs += ("%s"%(__vector,))
             print(msgs)
             return msgs
-        #----------
-        __buildPrintableVectorProperties( "Background",    Xb )
-        __buildPrintableVectorProperties( "CheckingPoint", Xb )
-        __buildPrintableVectorProperties( "Observation",    Y )
         #
-        self._post_run(HO)
+        __buildPrintableVectorProperties( "Background", Xb )
+        __buildPrintableVectorProperties( "CheckingPoint", Xb )
+        __buildPrintableVectorProperties( "Observation", Y )
+        #
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

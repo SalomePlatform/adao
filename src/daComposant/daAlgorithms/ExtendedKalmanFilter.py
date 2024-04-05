@@ -35,32 +35,32 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "EKF",
                 "CEKF",
-                ],
+            ],
             listadv  = [
                 "EKS",
                 "CEKS",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "ConstrainedBy",
             default  = "EstimateProjection",
             typecast = str,
             message  = "Prise en compte des contraintes",
             listval  = ["EstimateProjection"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -90,47 +90,49 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-                ]
-            )
-        self.defineRequiredParameter( # Pas de type
+            ]
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des valeurs de bornes",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
             optional = ("U", "EM", "CM", "Q"),
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "NonLinear",
+                "Filter",
+                "Dynamic",
             )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "NonLinear",
-            "Filter",
-            "Dynamic",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        if   self._parameters["Variant"] == "EKF":
+        # --------------------------
+        if self._parameters["Variant"] == "EKF":
             exkf.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "CEKF":
             cekf.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "EKS":
             exks.exks(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "CEKS":
             ceks.ceks(self, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

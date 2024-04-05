@@ -41,7 +41,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "IEnKF",
                 "E3DVAR",
                 "EnKS",
-                ],
+            ],
             listadv  = [
                 "StochasticEnKF",
                 "EnKF-05",
@@ -60,22 +60,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "E3DVAR-EnKF",
                 "E3DVAR-ETKF",
                 "E3DVAR-MLEF",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "NumberOfMembers",
             default  = 100,
             typecast = int,
             message  = "Nombre de membres dans l'ensemble",
             minval   = 2,
-            )
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
             message  = "Estimation d'etat ou de parametres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "InflationType",
             default  = "MultiplicativeOnAnalysisAnomalies",
@@ -84,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "MultiplicativeOnAnalysisAnomalies",
                 "MultiplicativeOnBackgroundAnomalies",
-                ],
+            ],
             listadv  = [
                 "MultiplicativeOnAnalysisCovariance",
                 "MultiplicativeOnBackgroundCovariance",
@@ -92,55 +92,55 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "AdditiveOnBackgroundCovariance",
                 "HybridOnBackgroundCovariance",
                 "Relaxation",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "InflationFactor",
             default  = 1.,
             typecast = float,
             message  = "Facteur d'inflation",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SmootherLagL",
             default  = 0,
             typecast = int,
             message  = "Nombre d'intervalles de temps de lissage dans le passé",
             minval   = 0,
-            )
+        )
         self.defineRequiredParameter(
             name     = "HybridCovarianceEquilibrium",
             default  = 0.5,
             typecast = float,
-            message  = "Facteur d'équilibre entre la covariance statique et la covariance d'ensemble en hybride variationnel",
+            message  = "Facteur d'équilibre entre la covariance statique et la covariance d'ensemble en hybride variationnel",  # noqa: E501
             minval   = 0.,
             maxval   = 1.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "HybridMaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation en hybride variationnel",
             minval   = -1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "HybridCostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
             message  = "Diminution relative minimale du coût lors de l'arrêt en hybride variationnel",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -170,36 +170,42 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-                ],
+            ],
             listadv  = [
                 "CurrentEnsembleState",
-                ],
-            )
+            ],
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
             optional = ("U", "EM", "CM", "Q"),
-            )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "NonLinear",
-            "Filter",
-            "Ensemble",
-            "Dynamic",
-            "Reduction",
-            ))
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "NonLinear",
+                "Filter",
+                "Ensemble",
+                "Dynamic",
+                "Reduction",
+            ),
+            features=(
+                "LocalOptimization",
+                "ParallelAlgorithm",
+            ),
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
+        # --------------------------
         # Default EnKF = EnKF-16 = StochasticEnKF
-        if   self._parameters["Variant"] == "EnKF-05":
+        if self._parameters["Variant"] == "EnKF-05":
             senkf.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula05")
         #
         elif self._parameters["Variant"] in ["EnKF-16", "StochasticEnKF", "EnKF"]:
             senkf.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula16")
         #
-        #--------------------------
+        # --------------------------
         # Default ETKF = ETKF-KFF
         elif self._parameters["Variant"] in ["ETKF-KFF", "ETKF"]:
             etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="KalmanFilterFormula")
@@ -207,7 +213,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] == "ETKF-VAR":
             etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="Variational")
         #
-        #--------------------------
+        # --------------------------
         # Default ETKF-N = ETKF-N-16
         elif self._parameters["Variant"] == "ETKF-N-11":
             etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize11")
@@ -218,7 +224,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] in ["ETKF-N-16", "ETKF-N"]:
             etkf.etkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="FiniteSize16")
         #
-        #--------------------------
+        # --------------------------
         # Default MLEF = MLEF-T
         elif self._parameters["Variant"] in ["MLEF-T", "MLEF"]:
             mlef.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
@@ -226,7 +232,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] == "MLEF-B":
             mlef.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
         #
-        #--------------------------
+        # --------------------------
         # Default IEnKF = IEnKF-T
         elif self._parameters["Variant"] in ["IEnKF-T", "IEnKF"]:
             ienkf.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=False)
@@ -234,12 +240,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] in ["IEnKF-B", "IEKF"]:
             ienkf.ienkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, BnotT=True)
         #
-        #--------------------------
+        # --------------------------
         # Default EnKS = EnKS-KFF
         elif self._parameters["Variant"] in ["EnKS-KFF", "EnKS"]:
             enks.enks(self, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterFormula")
         #
-        #--------------------------
+        # --------------------------
         # Default E3DVAR = E3DVAR-ETKF
         elif self._parameters["Variant"] == "E3DVAR-EnKF":
             senkf.senkf(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
@@ -250,11 +256,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] == "E3DVAR-MLEF":
             mlef.mlef(self, Xb, Y, U, HO, EM, CM, R, B, Q, Hybrid="E3DVAR")
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

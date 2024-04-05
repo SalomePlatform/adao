@@ -32,7 +32,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -46,23 +46,25 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-                ]
-            )
+            ]
+        )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
-            )
-        self.setAttributes(tags=(
-            "DataAssimilation",
-            "NonLinear",
-            "Filter",
-            "Ensemble",
-            "Reduction",
-            ))
+        )
+        self.setAttributes(
+            tags=(
+                "DataAssimilation",
+                "NonLinear",
+                "Filter",
+                "Ensemble",
+                "Reduction",
+            ),
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
@@ -80,18 +82,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # de la diagonale de R
         # --------------------------------------------------------------------
         DiagonaleR = R.diag(Y.size)
-        EnsembleY = numpy.zeros([Y.size,nb_ens])
+        EnsembleY = numpy.zeros([Y.size, nb_ens])
         for npar in range(DiagonaleR.size):
-            bruit = numpy.random.normal(0,DiagonaleR[npar],nb_ens)
-            EnsembleY[npar,:] = Y[npar] + bruit
+            bruit = numpy.random.normal(0, DiagonaleR[npar], nb_ens)
+            EnsembleY[npar, :] = Y[npar] + bruit
         #
         # Initialisation des opérateurs d'observation et de la matrice gain
         # -----------------------------------------------------------------
         Xbm = Xb.mean()
         Hm = HO["Tangent"].asMatrix(Xbm)
-        Hm = Hm.reshape(Y.size,Xbm.size) # ADAO & check shape
+        Hm = Hm.reshape(Y.size, Xbm.size)  # ADAO & check shape
         Ha = HO["Adjoint"].asMatrix(Xbm)
-        Ha = Ha.reshape(Xbm.size,Y.size) # ADAO & check shape
+        Ha = Ha.reshape(Xbm.size, Y.size)  # ADAO & check shape
         #
         # Calcul de la matrice de gain dans l'espace le plus petit et de l'analyse
         # ------------------------------------------------------------------------
@@ -106,7 +108,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             HXb = Hm @ Xb[iens]
             if self._toStore("SimulatedObservationAtBackground"):
                 self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
-            Innovation  = numpy.ravel(EnsembleY[:,iens]) - numpy.ravel(HXb)
+            Innovation  = numpy.ravel(EnsembleY[:, iens]) - numpy.ravel(HXb)
             if self._toStore("Innovation"):
                 self.StoredVariables["Innovation"].store( Innovation )
             Xa = Xb[iens] + K @ Innovation
@@ -124,7 +126,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( Hm @ numpy.ravel(Xa) )
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

@@ -35,11 +35,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Variant ou formulation de la méthode",
             listval  = [
                 "NonLinearLeastSquares",
-                ],
+            ],
             listadv  = [
                 "OneCorrection",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "LBFGSB",
@@ -51,18 +51,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CG",
                 "BFGS",
                 "LM",
-                ],
+            ],
             listadv  = [
                 "NCG",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "EstimationOf",
             default  = "Parameters",
             typecast = str,
             message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
-            )
+        )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
             default  = 15000,
@@ -70,34 +70,34 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Nombre maximal de pas d'optimisation",
             minval   = -1,
             oldname  = "MaximumNumberOfSteps",
-            )
+        )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
             message  = "Diminution relative minimale du coût lors de l'arrêt",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "ProjectedGradientTolerance",
             default  = -1,
             typecast = float,
             message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
             minval   = -1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "GradientNormTolerance",
             default  = 1.e-05,
             typecast = float,
             message  = "Maximum des composantes du gradient lors de l'arrêt",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -127,43 +127,45 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-                ]
-            )
-        self.defineRequiredParameter( # Pas de type
+            ]
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des paires de bornes",
-            )
+        )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
             typecast = numpy.ravel,
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R"),
             optional = ("U", "EM", "CM", "Q"),
+        )
+        self.setAttributes(
+            tags=(
+                "Optimization",
+                "NonLinear",
+                "Variational",
             )
-        self.setAttributes(tags=(
-            "Optimization",
-            "NonLinear",
-            "Variational",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        if   self._parameters["Variant"] == "NonLinearLeastSquares":
+        # --------------------------
+        if self._parameters["Variant"] == "NonLinearLeastSquares":
             NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwnlls.ecwnlls)
         #
-        #--------------------------
+        # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
             ecwnlls.ecwnlls(self, Xb, Y, U, HO, CM, R, B)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================

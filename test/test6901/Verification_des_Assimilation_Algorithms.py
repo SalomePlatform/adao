@@ -107,7 +107,7 @@ class Test_Adao(unittest.TestCase):
         print(msg+"\n"+"="*len(msg))
         verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
         verify_similarity_of_algo_results(("LinearLeastSquares", "NonLinearLeastSquares"), Xa, 5.e-7)
-        verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 1.e-14)
+        verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 5.e-10)
         verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 2.e-1)
         print("  Les resultats obtenus sont corrects.")
         print("")
@@ -179,7 +179,7 @@ class Test_Adao(unittest.TestCase):
         msg = "Tests des ecarts attendus :"
         print(msg+"\n"+"="*len(msg))
         verify_similarity_of_algo_results(("3DVAR", "Blue", "ExtendedBlue", "4DVAR", "DerivativeFreeOptimization"), Xa, 5.e-5)
-        verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 2.e-14)
+        verify_similarity_of_algo_results(("KalmanFilter", "ExtendedKalmanFilter", "UnscentedKalmanFilter"), Xa, 5.e-10)
         verify_similarity_of_algo_results(("KalmanFilter", "EnsembleKalmanFilter"), Xa, 2e-1)
         print("  Les resultats obtenus sont corrects.")
         print("")

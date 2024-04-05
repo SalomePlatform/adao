@@ -37,7 +37,8 @@ formula are available.
 In any cases, one take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
 :math:`\mathbf{dx}=\alpha*\mathbf{dx}_0` with :math:`\alpha_0` a user scaling
 of the initial perturbation, with default to 1. :math:`F` is the calculation
-code.
+code (given here by the user by using the observation operator command
+"*ObservationOperator*").
 
 "Taylor" residue
 ****************

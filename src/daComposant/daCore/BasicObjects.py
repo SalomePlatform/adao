@@ -47,12 +47,11 @@ class CacheManager(object):
     __slots__ = (
         "__tolerBP", "__lengthOR", "__initlnOR", "__seenNames", "__enabled",
         "__listOPCV",
-        )
-    #
+    )
+
     def __init__(self,
                  toleranceInRedundancy = 1.e-18,
-                 lengthOfRedundancy    = -1,
-                ):
+                 lengthOfRedundancy    = -1 ):
         """
         Les caractéristiques de tolérance peuvent être modifiées à la création.
         """
@@ -73,7 +72,7 @@ class CacheManager(object):
         __alc = False
         __HxV = None
         if self.__enabled:
-            for i in range(min(len(self.__listOPCV),self.__lengthOR)-1,-1,-1):
+            for i in range(min(len(self.__listOPCV), self.__lengthOR) - 1, -1, -1):
                 if not hasattr(xValue, 'size'):
                     pass
                 elif (str(oName) != self.__listOPCV[i][3]):
@@ -94,18 +93,18 @@ class CacheManager(object):
             self.__lengthOR = 2 * min(numpy.size(xValue), 50) + 2
             self.__initlnOR = self.__lengthOR
             self.__seenNames.append(str(oName))
-        if str(oName) not in self.__seenNames: # Etend la liste si nouveau
+        if str(oName) not in self.__seenNames:  # Étend la liste si nouveau
             self.__lengthOR += 2 * min(numpy.size(xValue), 50) + 2
             self.__initlnOR += self.__lengthOR
             self.__seenNames.append(str(oName))
         while len(self.__listOPCV) > self.__lengthOR:
             self.__listOPCV.pop(0)
-        self.__listOPCV.append( (
-            copy.copy(numpy.ravel(xValue)), # 0 Previous point
-            copy.copy(HxValue),             # 1 Previous value
-            numpy.linalg.norm(xValue),      # 2 Norm
-            str(oName),                     # 3 Operator name
-            ) )
+        self.__listOPCV.append((
+            copy.copy(numpy.ravel(xValue)),  # 0 Previous point
+            copy.copy(HxValue),              # 1 Previous value
+            numpy.linalg.norm(xValue),       # 2 Norm
+            str(oName),                      # 3 Operator name
+        ))
 
     def disable(self):
         "Inactive le cache"
@@ -127,23 +126,22 @@ class Operator(object):
         "__name", "__NbCallsAsMatrix", "__NbCallsAsMethod",
         "__NbCallsOfCached", "__reduceM", "__avoidRC", "__inputAsMF",
         "__mpEnabled", "__extraArgs", "__Method", "__Matrix", "__Type",
-        )
+    )
     #
     NbCallsAsMatrix = 0
     NbCallsAsMethod = 0
     NbCallsOfCached = 0
     CM = CacheManager()
-    #
+
     def __init__(self,
-        name                 = "GenericOperator",
-        fromMethod           = None,
-        fromMatrix           = None,
-        avoidingRedundancy   = True,
-        reducingMemoryUse    = False,
-        inputAsMultiFunction = False,
-        enableMultiProcess   = False,
-        extraArguments       = None,
-        ):
+                 name                 = "GenericOperator",
+                 fromMethod           = None,
+                 fromMatrix           = None,
+                 avoidingRedundancy   = True,
+                 reducingMemoryUse    = False,
+                 inputAsMultiFunction = False,
+                 enableMultiProcess   = False,
+                 extraArguments       = None ):
         """
         On construit un objet de ce type en fournissant, à l'aide de l'un des
         deux mots-clé, soit une fonction ou un multi-fonction python, soit une
@@ -167,8 +165,8 @@ class Operator(object):
         self.__inputAsMF = bool( inputAsMultiFunction )
         self.__mpEnabled = bool( enableMultiProcess )
         self.__extraArgs = extraArguments
-        if   fromMethod is not None and self.__inputAsMF:
-            self.__Method = fromMethod # logtimer(fromMethod)
+        if fromMethod is not None and self.__inputAsMF:
+            self.__Method = fromMethod  # logtimer(fromMethod)
             self.__Matrix = None
             self.__Type   = "Method"
         elif fromMethod is not None and not self.__inputAsMF:
@@ -178,7 +176,7 @@ class Operator(object):
         elif fromMatrix is not None:
             self.__Method = None
             if isinstance(fromMatrix, str):
-               fromMatrix = PlatformInfo.strmatrix2liststr( fromMatrix )
+                fromMatrix = PlatformInfo.strmatrix2liststr( fromMatrix )
             self.__Matrix = numpy.asarray( fromMatrix, dtype=float )
             self.__Type   = "Matrix"
         else:
@@ -229,14 +227,14 @@ class Operator(object):
             for i in range(len(_HValue)):
                 _HxValue.append( _HValue[i] )
                 if self.__avoidRC:
-                    Operator.CM.storeValueInX(_xValue[i],_HxValue[-1],self.__name)
+                    Operator.CM.storeValueInX(_xValue[i], _HxValue[-1], self.__name)
         else:
             _HxValue = []
             _xserie = []
             _hindex = []
             for i, xv in enumerate(_xValue):
                 if self.__avoidRC:
-                    __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xv,self.__name)
+                    __alreadyCalculated, __HxV = Operator.CM.wasCalculatedIn(xv, self.__name)
                 else:
                     __alreadyCalculated = False
                 #
@@ -254,29 +252,28 @@ class Operator(object):
                         _hv = None
                 _HxValue.append( _hv )
             #
-            if len(_xserie)>0 and self.__Matrix is None:
+            if len(_xserie) > 0 and self.__Matrix is None:
                 if self.__extraArgs is None:
-                    _hserie = self.__Method( _xserie ) # Calcul MF
+                    _hserie = self.__Method( _xserie )  # Calcul MF
                 else:
-                    _hserie = self.__Method( _xserie, self.__extraArgs ) # Calcul MF
+                    _hserie = self.__Method( _xserie, self.__extraArgs )  # Calcul MF
                 if not hasattr(_hserie, "pop"):
                     raise TypeError(
-                        "The user input multi-function doesn't seem to return a"+\
-                        " result sequence, behaving like a mono-function. It has"+\
-                        " to be checked."
-                        )
+                        "The user input multi-function doesn't seem to return a" + \
+                        " result sequence, behaving like a mono-function. It has" + \
+                        " to be checked." )
                 for i in _hindex:
                     _xv = _xserie.pop(0)
                     _hv = _hserie.pop(0)
                     _HxValue[i] = _hv
                     if self.__avoidRC:
-                        Operator.CM.storeValueInX(_xv,_hv,self.__name)
+                        Operator.CM.storeValueInX(_xv, _hv, self.__name)
         #
         if returnSerieAsArrayMatrix:
             _HxValue = numpy.stack([numpy.ravel(_hv) for _hv in _HxValue], axis=1)
         #
-        if argsAsSerie: return _HxValue
-        else:           return _HxValue[-1]
+        if argsAsSerie: return _HxValue      # noqa: E701
+        else:           return _HxValue[-1]  # noqa: E241,E272,E701
 
     def appliedControledFormTo(self, paires, argsAsSerie = False, returnSerieAsArrayMatrix = False):
         """
@@ -290,8 +287,8 @@ class Operator(object):
             - uValue : argument U adapté pour appliquer l'opérateur
         - argsAsSerie : indique si l'argument est une mono ou multi-valeur
         """
-        if argsAsSerie: _xuValue = paires
-        else:           _xuValue = (paires,)
+        if argsAsSerie: _xuValue = paires     # noqa: E701
+        else:           _xuValue = (paires,)  # noqa: E241,E272,E701
         PlatformInfo.isIterable( _xuValue, True, " in Operator.appliedControledFormTo" )
         #
         if self.__Matrix is not None:
@@ -310,15 +307,15 @@ class Operator(object):
                     _xuArgs.append( _xValue )
             self.__addOneMethodCall( len(_xuArgs) )
             if self.__extraArgs is None:
-                _HxValue = self.__Method( _xuArgs ) # Calcul MF
+                _HxValue = self.__Method( _xuArgs )  # Calcul MF
             else:
-                _HxValue = self.__Method( _xuArgs, self.__extraArgs ) # Calcul MF
+                _HxValue = self.__Method( _xuArgs, self.__extraArgs )  # Calcul MF
         #
         if returnSerieAsArrayMatrix:
             _HxValue = numpy.stack([numpy.ravel(_hv) for _hv in _HxValue], axis=1)
         #
-        if argsAsSerie: return _HxValue
-        else:           return _HxValue[-1]
+        if argsAsSerie: return _HxValue      # noqa: E701
+        else:           return _HxValue[-1]  # noqa: E241,E272,E701
 
     def appliedInXTo(self, paires, argsAsSerie = False, returnSerieAsArrayMatrix = False):
         """
@@ -336,8 +333,8 @@ class Operator(object):
             - xValue : série d'arguments adaptés pour appliquer l'opérateur
         - argsAsSerie : indique si l'argument est une mono ou multi-valeur
         """
-        if argsAsSerie: _nxValue = paires
-        else:           _nxValue = (paires,)
+        if argsAsSerie: _nxValue = paires     # noqa: E701
+        else:           _nxValue = (paires,)  # noqa: E241,E272,E701
         PlatformInfo.isIterable( _nxValue, True, " in Operator.appliedInXTo" )
         #
         if self.__Matrix is not None:
@@ -349,15 +346,15 @@ class Operator(object):
         else:
             self.__addOneMethodCall( len(_nxValue) )
             if self.__extraArgs is None:
-                _HxValue = self.__Method( _nxValue ) # Calcul MF
+                _HxValue = self.__Method( _nxValue )  # Calcul MF
             else:
-                _HxValue = self.__Method( _nxValue, self.__extraArgs ) # Calcul MF
+                _HxValue = self.__Method( _nxValue, self.__extraArgs )  # Calcul MF
         #
         if returnSerieAsArrayMatrix:
             _HxValue = numpy.stack([numpy.ravel(_hv) for _hv in _HxValue], axis=1)
         #
-        if argsAsSerie: return _HxValue
-        else:           return _HxValue[-1]
+        if argsAsSerie: return _HxValue      # noqa: E701
+        else:           return _HxValue[-1]  # noqa: E241,E272,E701
 
     def asMatrix(self, ValueForMethodForm = "UnknownVoidValue", argsAsSerie = False):
         """
@@ -366,7 +363,7 @@ class Operator(object):
         if self.__Matrix is not None:
             self.__addOneMatrixCall()
             mValue = [self.__Matrix,]
-        elif not isinstance(ValueForMethodForm,str) or ValueForMethodForm != "UnknownVoidValue": # Ne pas utiliser "None"
+        elif not isinstance(ValueForMethodForm, str) or ValueForMethodForm != "UnknownVoidValue":  # Ne pas utiliser "None"
             mValue = []
             if argsAsSerie:
                 self.__addOneMethodCall( len(ValueForMethodForm) )
@@ -378,8 +375,8 @@ class Operator(object):
         else:
             raise ValueError("Matrix form of the operator defined as a function/method requires to give an operating point.")
         #
-        if argsAsSerie: return mValue
-        else:           return mValue[-1]
+        if argsAsSerie: return mValue      # noqa: E701
+        else:           return mValue[-1]  # noqa: E241,E272,E701
 
     def shape(self):
         """
@@ -396,32 +393,32 @@ class Operator(object):
         Renvoie les nombres d'évaluations de l'opérateur
         """
         __nbcalls = (
-            self.__NbCallsAsMatrix+self.__NbCallsAsMethod,
+            self.__NbCallsAsMatrix + self.__NbCallsAsMethod,
             self.__NbCallsAsMatrix,
             self.__NbCallsAsMethod,
             self.__NbCallsOfCached,
-            Operator.NbCallsAsMatrix+Operator.NbCallsAsMethod,
+            Operator.NbCallsAsMatrix + Operator.NbCallsAsMethod,
             Operator.NbCallsAsMatrix,
             Operator.NbCallsAsMethod,
             Operator.NbCallsOfCached,
-            )
-        if which is None: return __nbcalls
-        else:             return __nbcalls[which]
+        )
+        if which is None: return __nbcalls         # noqa: E701
+        else:             return __nbcalls[which]  # noqa: E241,E272,E701
 
     def __addOneMatrixCall(self):
         "Comptabilise un appel"
-        self.__NbCallsAsMatrix   += 1 # Decompte local
-        Operator.NbCallsAsMatrix += 1 # Decompte global
+        self.__NbCallsAsMatrix   += 1  # Decompte local
+        Operator.NbCallsAsMatrix += 1  # Decompte global
 
     def __addOneMethodCall(self, nb = 1):
         "Comptabilise un appel"
-        self.__NbCallsAsMethod   += nb # Decompte local
-        Operator.NbCallsAsMethod += nb # Decompte global
+        self.__NbCallsAsMethod   += nb  # Decompte local
+        Operator.NbCallsAsMethod += nb  # Decompte global
 
     def __addOneCacheCall(self):
         "Comptabilise un appel"
-        self.__NbCallsOfCached   += 1 # Decompte local
-        Operator.NbCallsOfCached += 1 # Decompte global
+        self.__NbCallsOfCached   += 1  # Décompte local
+        Operator.NbCallsOfCached += 1  # Décompte global
 
 # ==============================================================================
 class FullOperator(object):
@@ -431,22 +428,21 @@ class FullOperator(object):
     """
     __slots__ = (
         "__name", "__check", "__extraArgs", "__FO", "__T",
-        )
-    #
+    )
+
     def __init__(self,
                  name             = "GenericFullOperator",
                  asMatrix         = None,
-                 asOneFunction    = None, # 1 Fonction
-                 asThreeFunctions = None, # 3 Fonctions in a dictionary
-                 asScript         = None, # 1 or 3 Fonction(s) by script
-                 asDict           = None, # Parameters
+                 asOneFunction    = None,   # 1 Fonction
+                 asThreeFunctions = None,   # 3 Fonctions in a dictionary
+                 asScript         = None,   # 1 or 3 Fonction(s) by script
+                 asDict           = None,   # Parameters
                  appliedInX       = None,
                  extraArguments   = None,
                  performancePrf   = None,
-                 inputAsMF        = False,# Fonction(s) as Multi-Functions
+                 inputAsMF        = False,  # Fonction(s) as Multi-Functions
                  scheduledBy      = None,
-                 toBeChecked      = False,
-                 ):
+                 toBeChecked      = False ):
         ""
         self.__name      = str(name)
         self.__check     = bool(toBeChecked)
@@ -461,18 +457,18 @@ class FullOperator(object):
         if "EnableMultiProcessing" in __Parameters and __Parameters["EnableMultiProcessing"]:
             __Parameters["EnableMultiProcessingInDerivatives"] = True
             __Parameters["EnableMultiProcessingInEvaluation"]  = False
-        if "EnableMultiProcessingInDerivatives"  not in __Parameters:
+        if "EnableMultiProcessingInDerivatives" not in __Parameters:
             __Parameters["EnableMultiProcessingInDerivatives"]  = False
         if __Parameters["EnableMultiProcessingInDerivatives"]:
             __Parameters["EnableMultiProcessingInEvaluation"]  = False
-        if "EnableMultiProcessingInEvaluation"  not in __Parameters:
+        if "EnableMultiProcessingInEvaluation" not in __Parameters:
             __Parameters["EnableMultiProcessingInEvaluation"]  = False
-        if "withIncrement" in __Parameters: # Temporaire
+        if "withIncrement" in __Parameters:  # Temporaire
             __Parameters["DifferentialIncrement"] = __Parameters["withIncrement"]
         # Le défaut est équivalent à "ReducedOverallRequirements"
         __reduceM, __avoidRC = True, True
         if performancePrf is not None:
-            if   performancePrf == "ReducedAmountOfCalculation":
+            if performancePrf == "ReducedAmountOfCalculation":
                 __reduceM, __avoidRC = False, True
             elif performancePrf == "ReducedMemoryFootprint":
                 __reduceM, __avoidRC = True, False
@@ -484,15 +480,15 @@ class FullOperator(object):
             if asMatrix:
                 __Matrix = Interfaces.ImportFromScript(asScript).getvalue( self.__name )
             elif asOneFunction:
-                __Function = { "Direct":Interfaces.ImportFromScript(asScript).getvalue( "DirectOperator" ) }
-                __Function.update({"useApproximatedDerivatives":True})
+                __Function = { "Direct": Interfaces.ImportFromScript(asScript).getvalue( "DirectOperator" ) }
+                __Function.update({"useApproximatedDerivatives": True})
                 __Function.update(__Parameters)
             elif asThreeFunctions:
                 __Function = {
-                    "Direct" :Interfaces.ImportFromScript(asScript).getvalue( "DirectOperator" ),
-                    "Tangent":Interfaces.ImportFromScript(asScript).getvalue( "TangentOperator" ),
-                    "Adjoint":Interfaces.ImportFromScript(asScript).getvalue( "AdjointOperator" ),
-                    }
+                    "Direct": Interfaces.ImportFromScript(asScript).getvalue( "DirectOperator" ),
+                    "Tangent": Interfaces.ImportFromScript(asScript).getvalue( "TangentOperator" ),
+                    "Adjoint": Interfaces.ImportFromScript(asScript).getvalue( "AdjointOperator" ),
+                }
                 __Function.update(__Parameters)
         else:
             __Matrix = asMatrix
@@ -503,34 +499,34 @@ class FullOperator(object):
                     else:
                         raise ValueError("The function has to be given in a dictionnary which have 1 key (\"Direct\")")
                 else:
-                    __Function = { "Direct":asOneFunction }
-                __Function.update({"useApproximatedDerivatives":True})
+                    __Function = { "Direct": asOneFunction }
+                __Function.update({"useApproximatedDerivatives": True})
                 __Function.update(__Parameters)
             elif asThreeFunctions is not None:
                 if isinstance(asThreeFunctions, dict) and \
-                   ("Tangent" in asThreeFunctions) and (asThreeFunctions["Tangent"] is not None) and \
-                   ("Adjoint" in asThreeFunctions) and (asThreeFunctions["Adjoint"] is not None) and \
-                   (("useApproximatedDerivatives" not in asThreeFunctions) or not bool(asThreeFunctions["useApproximatedDerivatives"])):
+                        ("Tangent" in asThreeFunctions) and (asThreeFunctions["Tangent"] is not None) and \
+                        ("Adjoint" in asThreeFunctions) and (asThreeFunctions["Adjoint"] is not None) and \
+                        (("useApproximatedDerivatives" not in asThreeFunctions) or not bool(asThreeFunctions["useApproximatedDerivatives"])):
                     __Function = asThreeFunctions
                 elif isinstance(asThreeFunctions, dict) and \
-                   ("Direct" in asThreeFunctions) and (asThreeFunctions["Direct"] is not None):
+                        ("Direct" in asThreeFunctions) and (asThreeFunctions["Direct"] is not None):
                     __Function = asThreeFunctions
-                    __Function.update({"useApproximatedDerivatives":True})
+                    __Function.update({"useApproximatedDerivatives": True})
                 else:
                     raise ValueError(
-                        "The functions has to be given in a dictionnary which have either"+\
-                        " 1 key (\"Direct\") or"+\
+                        "The functions has to be given in a dictionnary which have either" + \
+                        " 1 key (\"Direct\") or" + \
                         " 3 keys (\"Direct\" (optionnal), \"Tangent\" and \"Adjoint\")")
-                if "Direct"  not in asThreeFunctions:
+                if "Direct" not in asThreeFunctions:
                     __Function["Direct"] = asThreeFunctions["Tangent"]
                 __Function.update(__Parameters)
             else:
                 __Function = None
         #
-        if   appliedInX is not None and isinstance(appliedInX, dict):
+        if appliedInX is not None and isinstance(appliedInX, dict):
             __appliedInX = appliedInX
         elif appliedInX is not None:
-            __appliedInX = {"HXb":appliedInX}
+            __appliedInX = {"HXb": appliedInX}
         else:
             __appliedInX = None
         #
@@ -540,15 +536,15 @@ class FullOperator(object):
         if isinstance(__Function, dict) and \
                 ("useApproximatedDerivatives" in __Function) and bool(__Function["useApproximatedDerivatives"]) and \
                 ("Direct" in __Function) and (__Function["Direct"] is not None):
-            if "CenteredFiniteDifference"           not in __Function: __Function["CenteredFiniteDifference"]           = False
-            if "DifferentialIncrement"              not in __Function: __Function["DifferentialIncrement"]              = 0.01
-            if "withdX"                             not in __Function: __Function["withdX"]                             = None
-            if "withReducingMemoryUse"              not in __Function: __Function["withReducingMemoryUse"]              = __reduceM
-            if "withAvoidingRedundancy"             not in __Function: __Function["withAvoidingRedundancy"]             = __avoidRC
-            if "withToleranceInRedundancy"          not in __Function: __Function["withToleranceInRedundancy"]          = 1.e-18
-            if "withLengthOfRedundancy"             not in __Function: __Function["withLengthOfRedundancy"]             = -1
-            if "NumberOfProcesses"                  not in __Function: __Function["NumberOfProcesses"]                  = None
-            if "withmfEnabled"                      not in __Function: __Function["withmfEnabled"]                      = inputAsMF
+            if "CenteredFiniteDifference"           not in __Function: __Function["CenteredFiniteDifference"]           = False      # noqa: E272,E701
+            if "DifferentialIncrement"              not in __Function: __Function["DifferentialIncrement"]              = 0.01       # noqa: E272,E701
+            if "withdX"                             not in __Function: __Function["withdX"]                             = None       # noqa: E272,E701
+            if "withReducingMemoryUse"              not in __Function: __Function["withReducingMemoryUse"]              = __reduceM  # noqa: E272,E701
+            if "withAvoidingRedundancy"             not in __Function: __Function["withAvoidingRedundancy"]             = __avoidRC  # noqa: E272,E701
+            if "withToleranceInRedundancy"          not in __Function: __Function["withToleranceInRedundancy"]          = 1.e-18     # noqa: E272,E701
+            if "withLengthOfRedundancy"             not in __Function: __Function["withLengthOfRedundancy"]             = -1         # noqa: E272,E701
+            if "NumberOfProcesses"                  not in __Function: __Function["NumberOfProcesses"]                  = None       # noqa: E272,E701
+            if "withmfEnabled"                      not in __Function: __Function["withmfEnabled"]                      = inputAsMF  # noqa: E272,E701
             from daCore import NumericObjects
             FDA = NumericObjects.FDApproximation(
                 name                  = self.__name,
@@ -564,7 +560,7 @@ class FullOperator(object):
                 mpEnabled             = __Function["EnableMultiProcessingInDerivatives"],
                 mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
-                )
+            )
             self.__FO["Direct"]  = Operator(
                 name = self.__name,
                 fromMethod = FDA.DirectOperator,
@@ -574,14 +570,14 @@ class FullOperator(object):
                 extraArguments = self.__extraArgs,
                 enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator(
-                name = self.__name+"Tangent",
+                name = self.__name + "Tangent",
                 fromMethod = FDA.TangentOperator,
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
                 extraArguments = self.__extraArgs )
             self.__FO["Adjoint"] = Operator(
-                name = self.__name+"Adjoint",
+                name = self.__name + "Adjoint",
                 fromMethod = FDA.AdjointOperator,
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
@@ -600,14 +596,14 @@ class FullOperator(object):
                 extraArguments = self.__extraArgs,
                 enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator(
-                name = self.__name+"Tangent",
+                name = self.__name + "Tangent",
                 fromMethod = __Function["Tangent"],
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
                 extraArguments = self.__extraArgs )
             self.__FO["Adjoint"] = Operator(
-                name = self.__name+"Adjoint",
+                name = self.__name + "Adjoint",
                 fromMethod = __Function["Adjoint"],
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
@@ -626,13 +622,13 @@ class FullOperator(object):
                 inputAsMultiFunction = inputAsMF,
                 enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
             self.__FO["Tangent"] = Operator(
-                name = self.__name+"Tangent",
+                name = self.__name + "Tangent",
                 fromMatrix = __matrice,
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF )
             self.__FO["Adjoint"] = Operator(
-                name = self.__name+"Adjoint",
+                name = self.__name + "Adjoint",
                 fromMatrix = __matrice.T,
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
@@ -641,9 +637,9 @@ class FullOperator(object):
             self.__FO["DifferentialIncrement"] = None
         else:
             raise ValueError(
-                "The %s object is improperly defined or undefined,"%self.__name+\
-                " it requires at minima either a matrix, a Direct operator for"+\
-                " approximate derivatives or a Tangent/Adjoint operators pair."+\
+                "The %s object is improperly defined or undefined,"%self.__name + \
+                " it requires at minima either a matrix, a Direct operator for" + \
+                " approximate derivatives or a Tangent/Adjoint operators pair." + \
                 " Please check your operator input.")
         #
         if __appliedInX is not None:
@@ -651,12 +647,25 @@ class FullOperator(object):
             for key in __appliedInX:
                 if isinstance(__appliedInX[key], str):
                     __appliedInX[key] = PlatformInfo.strvect2liststr( __appliedInX[key] )
-                self.__FO["AppliedInX"][key] = numpy.ravel( __appliedInX[key] ).reshape((-1,1))
+                self.__FO["AppliedInX"][key] = numpy.ravel( __appliedInX[key] ).reshape((-1, 1))
         else:
             self.__FO["AppliedInX"] = None
 
     def getO(self):
         return self.__FO
+
+    def nbcalls(self, whot=None, which=None):
+        """
+        Renvoie les nombres d'évaluations de l'opérateur
+        """
+        __nbcalls = {}
+        for otype in ["Direct", "Tangent", "Adjoint"]:
+            if otype in self.__FO:
+                __nbcalls[otype] = self.__FO[otype].nbcalls()
+        if whot in __nbcalls and which is not None:
+            return __nbcalls[whot][which]
+        else:
+            return __nbcalls
 
     def __repr__(self):
         "x.__repr__() <==> repr(x)"
@@ -682,8 +691,8 @@ class Algorithm(object):
         "_m", "__variable_names_not_public", "__canonical_parameter_name",
         "__canonical_stored_name", "__replace_by_the_new_name",
         "StoredVariables",
-        )
-    #
+    )
+
     def __init__(self, name):
         """
         L'initialisation présente permet de fabriquer des variables de stockage
@@ -749,75 +758,77 @@ class Algorithm(object):
         self._m = PlatformInfo.SystemUsage()
         #
         self._name = str( name )
-        self._parameters = {"StoreSupplementaryCalculations":[]}
+        self._parameters = {"StoreSupplementaryCalculations": []}
         self.__internal_state = {}
         self.__required_parameters = {}
         self.__required_inputs = {
-            "RequiredInputValues":{"mandatory":(), "optional":()},
-            "ClassificationTags":[],
-            }
-        self.__variable_names_not_public = {"nextStep":False} # Duplication dans AlgorithmAndParameters
-        self.__canonical_parameter_name = {} # Correspondance "lower"->"correct"
-        self.__canonical_stored_name = {}    # Correspondance "lower"->"correct"
-        self.__replace_by_the_new_name = {}  # Nouveau nom à partir d'un nom ancien
+            "RequiredInputValues": {"mandatory": (), "optional": ()},
+            "AttributesTags": [],
+            "AttributesFeatures": [],
+        }
+        self.__variable_names_not_public = {"nextStep": False}  # Duplication dans AlgorithmAndParameters
+        self.__canonical_parameter_name = {}  # Correspondance "lower"->"correct"
+        self.__canonical_stored_name = {}     # Correspondance "lower"->"correct"
+        self.__replace_by_the_new_name = {}   # Nouveau nom à partir d'un nom ancien
         #
         self.StoredVariables = {}
-        self.StoredVariables["APosterioriCorrelations"]              = Persistence.OneMatrix(name = "APosterioriCorrelations")
-        self.StoredVariables["APosterioriCovariance"]                = Persistence.OneMatrix(name = "APosterioriCovariance")
-        self.StoredVariables["APosterioriStandardDeviations"]        = Persistence.OneVector(name = "APosterioriStandardDeviations")
-        self.StoredVariables["APosterioriVariances"]                 = Persistence.OneVector(name = "APosterioriVariances")
-        self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
-        self.StoredVariables["BMA"]                                  = Persistence.OneVector(name = "BMA")
-        self.StoredVariables["CostFunctionJ"]                        = Persistence.OneScalar(name = "CostFunctionJ")
-        self.StoredVariables["CostFunctionJAtCurrentOptimum"]        = Persistence.OneScalar(name = "CostFunctionJAtCurrentOptimum")
-        self.StoredVariables["CostFunctionJb"]                       = Persistence.OneScalar(name = "CostFunctionJb")
-        self.StoredVariables["CostFunctionJbAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJbAtCurrentOptimum")
-        self.StoredVariables["CostFunctionJo"]                       = Persistence.OneScalar(name = "CostFunctionJo")
-        self.StoredVariables["CostFunctionJoAtCurrentOptimum"]       = Persistence.OneScalar(name = "CostFunctionJoAtCurrentOptimum")
-        self.StoredVariables["CurrentEnsembleState"]                 = Persistence.OneMatrix(name = "CurrentEnsembleState")
-        self.StoredVariables["CurrentIterationNumber"]               = Persistence.OneIndex(name  = "CurrentIterationNumber")
-        self.StoredVariables["CurrentOptimum"]                       = Persistence.OneVector(name = "CurrentOptimum")
-        self.StoredVariables["CurrentState"]                         = Persistence.OneVector(name = "CurrentState")
-        self.StoredVariables["CurrentStepNumber"]                    = Persistence.OneIndex(name  = "CurrentStepNumber")
-        self.StoredVariables["EnsembleOfSimulations"]                = Persistence.OneMatrice(name = "EnsembleOfSimulations")
-        self.StoredVariables["EnsembleOfSnapshots"]                  = Persistence.OneMatrice(name = "EnsembleOfSnapshots")
-        self.StoredVariables["EnsembleOfStates"]                     = Persistence.OneMatrice(name = "EnsembleOfStates")
-        self.StoredVariables["ExcludedPoints"]                       = Persistence.OneVector(name = "ExcludedPoints")
-        self.StoredVariables["ForecastCovariance"]                   = Persistence.OneMatrix(name = "ForecastCovariance")
-        self.StoredVariables["ForecastState"]                        = Persistence.OneVector(name = "ForecastState")
-        self.StoredVariables["GradientOfCostFunctionJ"]              = Persistence.OneVector(name = "GradientOfCostFunctionJ")
-        self.StoredVariables["GradientOfCostFunctionJb"]             = Persistence.OneVector(name = "GradientOfCostFunctionJb")
-        self.StoredVariables["GradientOfCostFunctionJo"]             = Persistence.OneVector(name = "GradientOfCostFunctionJo")
-        self.StoredVariables["IndexOfOptimum"]                       = Persistence.OneIndex(name  = "IndexOfOptimum")
-        self.StoredVariables["Innovation"]                           = Persistence.OneVector(name = "Innovation")
-        self.StoredVariables["InnovationAtCurrentAnalysis"]          = Persistence.OneVector(name = "InnovationAtCurrentAnalysis")
-        self.StoredVariables["InnovationAtCurrentState"]             = Persistence.OneVector(name = "InnovationAtCurrentState")
-        self.StoredVariables["InternalCostFunctionJ"]                = Persistence.OneVector(name = "InternalCostFunctionJ")
-        self.StoredVariables["InternalCostFunctionJb"]               = Persistence.OneVector(name = "InternalCostFunctionJb")
-        self.StoredVariables["InternalCostFunctionJo"]               = Persistence.OneVector(name = "InternalCostFunctionJo")
-        self.StoredVariables["InternalStates"]                       = Persistence.OneMatrix(name = "InternalStates")
-        self.StoredVariables["JacobianMatrixAtBackground"]           = Persistence.OneMatrix(name = "JacobianMatrixAtBackground")
-        self.StoredVariables["JacobianMatrixAtCurrentState"]         = Persistence.OneMatrix(name = "JacobianMatrixAtCurrentState")
-        self.StoredVariables["JacobianMatrixAtOptimum"]              = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")
-        self.StoredVariables["KalmanGainAtOptimum"]                  = Persistence.OneMatrix(name = "KalmanGainAtOptimum")
-        self.StoredVariables["MahalanobisConsistency"]               = Persistence.OneScalar(name = "MahalanobisConsistency")
-        self.StoredVariables["OMA"]                                  = Persistence.OneVector(name = "OMA")
-        self.StoredVariables["OMB"]                                  = Persistence.OneVector(name = "OMB")
-        self.StoredVariables["OptimalPoints"]                        = Persistence.OneVector(name = "OptimalPoints")
-        self.StoredVariables["ReducedBasis"]                         = Persistence.OneMatrix(name = "ReducedBasis")
-        self.StoredVariables["ReducedCoordinates"]                   = Persistence.OneVector(name = "ReducedCoordinates")
-        self.StoredVariables["Residu"]                               = Persistence.OneScalar(name = "Residu")
-        self.StoredVariables["Residus"]                              = Persistence.OneVector(name = "Residus")
-        self.StoredVariables["SampledStateForQuantiles"]             = Persistence.OneMatrix(name = "SampledStateForQuantiles")
-        self.StoredVariables["SigmaBck2"]                            = Persistence.OneScalar(name = "SigmaBck2")
-        self.StoredVariables["SigmaObs2"]                            = Persistence.OneScalar(name = "SigmaObs2")
-        self.StoredVariables["SimulatedObservationAtBackground"]     = Persistence.OneVector(name = "SimulatedObservationAtBackground")
-        self.StoredVariables["SimulatedObservationAtCurrentAnalysis"]= Persistence.OneVector(name = "SimulatedObservationAtCurrentAnalysis")
-        self.StoredVariables["SimulatedObservationAtCurrentOptimum"] = Persistence.OneVector(name = "SimulatedObservationAtCurrentOptimum")
-        self.StoredVariables["SimulatedObservationAtCurrentState"]   = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
-        self.StoredVariables["SimulatedObservationAtOptimum"]        = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
-        self.StoredVariables["SimulationQuantiles"]                  = Persistence.OneMatrix(name = "SimulationQuantiles")
-        self.StoredVariables["SingularValues"]                       = Persistence.OneVector(name = "SingularValues")
+        self.StoredVariables["APosterioriCorrelations"]               = Persistence.OneMatrix(name = "APosterioriCorrelations")
+        self.StoredVariables["APosterioriCovariance"]                 = Persistence.OneMatrix(name = "APosterioriCovariance")
+        self.StoredVariables["APosterioriStandardDeviations"]         = Persistence.OneVector(name = "APosterioriStandardDeviations")
+        self.StoredVariables["APosterioriVariances"]                  = Persistence.OneVector(name = "APosterioriVariances")
+        self.StoredVariables["Analysis"]                              = Persistence.OneVector(name = "Analysis")
+        self.StoredVariables["BMA"]                                   = Persistence.OneVector(name = "BMA")
+        self.StoredVariables["CostFunctionJ"]                         = Persistence.OneScalar(name = "CostFunctionJ")
+        self.StoredVariables["CostFunctionJAtCurrentOptimum"]         = Persistence.OneScalar(name = "CostFunctionJAtCurrentOptimum")
+        self.StoredVariables["CostFunctionJb"]                        = Persistence.OneScalar(name = "CostFunctionJb")
+        self.StoredVariables["CostFunctionJbAtCurrentOptimum"]        = Persistence.OneScalar(name = "CostFunctionJbAtCurrentOptimum")
+        self.StoredVariables["CostFunctionJo"]                        = Persistence.OneScalar(name = "CostFunctionJo")
+        self.StoredVariables["CostFunctionJoAtCurrentOptimum"]        = Persistence.OneScalar(name = "CostFunctionJoAtCurrentOptimum")
+        self.StoredVariables["CurrentEnsembleState"]                  = Persistence.OneMatrix(name = "CurrentEnsembleState")
+        self.StoredVariables["CurrentIterationNumber"]                = Persistence.OneIndex(name  = "CurrentIterationNumber")
+        self.StoredVariables["CurrentOptimum"]                        = Persistence.OneVector(name = "CurrentOptimum")
+        self.StoredVariables["CurrentState"]                          = Persistence.OneVector(name = "CurrentState")
+        self.StoredVariables["CurrentStepNumber"]                     = Persistence.OneIndex(name  = "CurrentStepNumber")
+        self.StoredVariables["EnsembleOfSimulations"]                 = Persistence.OneMatrice(name = "EnsembleOfSimulations")
+        self.StoredVariables["EnsembleOfSnapshots"]                   = Persistence.OneMatrice(name = "EnsembleOfSnapshots")
+        self.StoredVariables["EnsembleOfStates"]                      = Persistence.OneMatrice(name = "EnsembleOfStates")
+        self.StoredVariables["ExcludedPoints"]                        = Persistence.OneVector(name = "ExcludedPoints")
+        self.StoredVariables["ForecastCovariance"]                    = Persistence.OneMatrix(name = "ForecastCovariance")
+        self.StoredVariables["ForecastState"]                         = Persistence.OneVector(name = "ForecastState")
+        self.StoredVariables["GradientOfCostFunctionJ"]               = Persistence.OneVector(name = "GradientOfCostFunctionJ")
+        self.StoredVariables["GradientOfCostFunctionJb"]              = Persistence.OneVector(name = "GradientOfCostFunctionJb")
+        self.StoredVariables["GradientOfCostFunctionJo"]              = Persistence.OneVector(name = "GradientOfCostFunctionJo")
+        self.StoredVariables["IndexOfOptimum"]                        = Persistence.OneIndex(name  = "IndexOfOptimum")
+        self.StoredVariables["Innovation"]                            = Persistence.OneVector(name = "Innovation")
+        self.StoredVariables["InnovationAtCurrentAnalysis"]           = Persistence.OneVector(name = "InnovationAtCurrentAnalysis")
+        self.StoredVariables["InnovationAtCurrentState"]              = Persistence.OneVector(name = "InnovationAtCurrentState")
+        self.StoredVariables["InternalCostFunctionJ"]                 = Persistence.OneVector(name = "InternalCostFunctionJ")
+        self.StoredVariables["InternalCostFunctionJb"]                = Persistence.OneVector(name = "InternalCostFunctionJb")
+        self.StoredVariables["InternalCostFunctionJo"]                = Persistence.OneVector(name = "InternalCostFunctionJo")
+        self.StoredVariables["InternalStates"]                        = Persistence.OneMatrix(name = "InternalStates")
+        self.StoredVariables["JacobianMatrixAtBackground"]            = Persistence.OneMatrix(name = "JacobianMatrixAtBackground")
+        self.StoredVariables["JacobianMatrixAtCurrentState"]          = Persistence.OneMatrix(name = "JacobianMatrixAtCurrentState")
+        self.StoredVariables["JacobianMatrixAtOptimum"]               = Persistence.OneMatrix(name = "JacobianMatrixAtOptimum")
+        self.StoredVariables["KalmanGainAtOptimum"]                   = Persistence.OneMatrix(name = "KalmanGainAtOptimum")
+        self.StoredVariables["MahalanobisConsistency"]                = Persistence.OneScalar(name = "MahalanobisConsistency")
+        self.StoredVariables["OMA"]                                   = Persistence.OneVector(name = "OMA")
+        self.StoredVariables["OMB"]                                   = Persistence.OneVector(name = "OMB")
+        self.StoredVariables["OptimalPoints"]                         = Persistence.OneVector(name = "OptimalPoints")
+        self.StoredVariables["ReducedBasis"]                          = Persistence.OneMatrix(name = "ReducedBasis")
+        self.StoredVariables["ReducedBasisMus"]                       = Persistence.OneVector(name = "ReducedBasisMus")
+        self.StoredVariables["ReducedCoordinates"]                    = Persistence.OneVector(name = "ReducedCoordinates")
+        self.StoredVariables["Residu"]                                = Persistence.OneScalar(name = "Residu")
+        self.StoredVariables["Residus"]                               = Persistence.OneVector(name = "Residus")
+        self.StoredVariables["SampledStateForQuantiles"]              = Persistence.OneMatrix(name = "SampledStateForQuantiles")
+        self.StoredVariables["SigmaBck2"]                             = Persistence.OneScalar(name = "SigmaBck2")
+        self.StoredVariables["SigmaObs2"]                             = Persistence.OneScalar(name = "SigmaObs2")
+        self.StoredVariables["SimulatedObservationAtBackground"]      = Persistence.OneVector(name = "SimulatedObservationAtBackground")
+        self.StoredVariables["SimulatedObservationAtCurrentAnalysis"] = Persistence.OneVector(name = "SimulatedObservationAtCurrentAnalysis")
+        self.StoredVariables["SimulatedObservationAtCurrentOptimum"]  = Persistence.OneVector(name = "SimulatedObservationAtCurrentOptimum")
+        self.StoredVariables["SimulatedObservationAtCurrentState"]    = Persistence.OneVector(name = "SimulatedObservationAtCurrentState")
+        self.StoredVariables["SimulatedObservationAtOptimum"]         = Persistence.OneVector(name = "SimulatedObservationAtOptimum")
+        self.StoredVariables["SimulationQuantiles"]                   = Persistence.OneMatrix(name = "SimulationQuantiles")
+        self.StoredVariables["SingularValues"]                        = Persistence.OneVector(name = "SingularValues")
         #
         for k in self.StoredVariables:
             self.__canonical_stored_name[k.lower()] = k
@@ -835,102 +846,127 @@ class Algorithm(object):
         #
         # Mise à jour des paramètres internes avec le contenu de Parameters, en
         # reprenant les valeurs par défauts pour toutes celles non définies
-        self.__setParameters(Parameters, reset=True) # Copie
+        self.__setParameters(Parameters, reset=True)  # Copie
         for k, v in self.__variable_names_not_public.items():
-            if k not in self._parameters:  self.__setParameters( {k:v} )
+            if k not in self._parameters:
+                self.__setParameters( {k: v} )
 
-        # Corrections et compléments des vecteurs
         def __test_vvalue(argument, variable, argname, symbol=None):
-            if symbol is None: symbol = variable
+            "Corrections et compléments des vecteurs"
+            if symbol is None:
+                symbol = variable
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    raise ValueError("%s %s vector %s is not set and has to be properly defined!"%(self._name,argname,symbol))
+                    raise ValueError("%s %s vector %s is not set and has to be properly defined!"%(self._name, argname, symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s vector %s is not set, but is optional."%(self._name,argname,symbol))
+                    logging.debug("%s %s vector %s is not set, but is optional."%(self._name, argname, symbol))
                 else:
-                    logging.debug("%s %s vector %s is not set, but is not required."%(self._name,argname,symbol))
+                    logging.debug("%s %s vector %s is not set, but is not required."%(self._name, argname, symbol))
             else:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
                     logging.debug(
-                        "%s %s vector %s is required and set, and its size is %i."%(
-                        self._name,argname,symbol,numpy.array(argument).size))
+                        "%s %s vector %s is required and set, and its full size is %i." \
+                        % (self._name, argname, symbol, numpy.array(argument).size))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
                     logging.debug(
-                        "%s %s vector %s is optional and set, and its size is %i."%(
-                        self._name,argname,symbol,numpy.array(argument).size))
+                        "%s %s vector %s is optional and set, and its full size is %i." \
+                        % (self._name, argname, symbol, numpy.array(argument).size))
                 else:
                     logging.debug(
-                        "%s %s vector %s is set although neither required nor optional, and its size is %i."%(
-                        self._name,argname,symbol,numpy.array(argument).size))
+                        "%s %s vector %s is set although neither required nor optional, and its full size is %i." \
+                        % (self._name, argname, symbol, numpy.array(argument).size))
             return 0
         __test_vvalue( Xb, "Xb", "Background or initial state" )
-        __test_vvalue( Y,  "Y",  "Observation" )
-        __test_vvalue( U,  "U",  "Control" )
-        #
-        # Corrections et compléments des covariances
+        __test_vvalue( Y, "Y", "Observation" )
+        __test_vvalue( U, "U", "Control" )
+
         def __test_cvalue(argument, variable, argname, symbol=None):
-            if symbol is None: symbol = variable
+            "Corrections et compléments des covariances"
+            if symbol is None:
+                symbol = variable
             if argument is None:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    raise ValueError("%s %s error covariance matrix %s is not set and has to be properly defined!"%(self._name,argname,symbol))
+                    raise ValueError("%s %s error covariance matrix %s is not set and has to be properly defined!"%(self._name, argname, symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s error covariance matrix %s is not set, but is optional."%(self._name,argname,symbol))
+                    logging.debug("%s %s error covariance matrix %s is not set, but is optional."%(self._name, argname, symbol))
                 else:
-                    logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name,argname,symbol))
+                    logging.debug("%s %s error covariance matrix %s is not set, but is not required."%(self._name, argname, symbol))
             else:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    logging.debug("%s %s error covariance matrix %s is required and set."%(self._name,argname,symbol))
+                    logging.debug("%s %s error covariance matrix %s is required and set."%(self._name, argname, symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s error covariance matrix %s is optional and set."%(self._name,argname,symbol))
+                    logging.debug("%s %s error covariance matrix %s is optional and set."%(self._name, argname, symbol))
                 else:
                     logging.debug(
-                        "%s %s error covariance matrix %s is set although neither required nor optional."%(
-                        self._name,argname,symbol))
+                        "%s %s error covariance matrix %s is set although neither required nor optional." \
+                        % (self._name, argname, symbol))
             return 0
         __test_cvalue( B, "B", "Background" )
         __test_cvalue( R, "R", "Observation" )
         __test_cvalue( Q, "Q", "Evolution" )
-        #
-        # Corrections et compléments des opérateurs
+
         def __test_ovalue(argument, variable, argname, symbol=None):
-            if symbol is None: symbol = variable
-            if argument is None or (isinstance(argument,dict) and len(argument)==0):
+            "Corrections et compléments des opérateurs"
+            if symbol is None:
+                symbol = variable
+            if argument is None or (isinstance(argument, dict) and len(argument) == 0):
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    raise ValueError("%s %s operator %s is not set and has to be properly defined!"%(self._name,argname,symbol))
+                    raise ValueError("%s %s operator %s is not set and has to be properly defined!"%(self._name, argname, symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s operator %s is not set, but is optional."%(self._name,argname,symbol))
+                    logging.debug("%s %s operator %s is not set, but is optional."%(self._name, argname, symbol))
                 else:
-                    logging.debug("%s %s operator %s is not set, but is not required."%(self._name,argname,symbol))
+                    logging.debug("%s %s operator %s is not set, but is not required."%(self._name, argname, symbol))
             else:
                 if variable in self.__required_inputs["RequiredInputValues"]["mandatory"]:
-                    logging.debug("%s %s operator %s is required and set."%(self._name,argname,symbol))
+                    logging.debug("%s %s operator %s is required and set."%(self._name, argname, symbol))
                 elif variable in self.__required_inputs["RequiredInputValues"]["optional"]:
-                    logging.debug("%s %s operator %s is optional and set."%(self._name,argname,symbol))
+                    logging.debug("%s %s operator %s is optional and set."%(self._name, argname, symbol))
                 else:
-                    logging.debug("%s %s operator %s is set although neither required nor optional."%(self._name,argname,symbol))
+                    logging.debug("%s %s operator %s is set although neither required nor optional."%(self._name, argname, symbol))
             return 0
         __test_ovalue( HO, "HO", "Observation", "H" )
         __test_ovalue( EM, "EM", "Evolution", "M" )
         __test_ovalue( CM, "CM", "Control Model", "C" )
         #
         # Corrections et compléments des bornes
-        if ("Bounds" in self._parameters) and isinstance(self._parameters["Bounds"], (list, tuple)) and (len(self._parameters["Bounds"]) > 0):
-            logging.debug("%s Bounds taken into account"%(self._name,))
+        if ("Bounds" in self._parameters) \
+                and isinstance(self._parameters["Bounds"], (list, tuple)):
+            if (len(self._parameters["Bounds"]) > 0):
+                logging.debug("%s Bounds taken into account"%(self._name,))
+            else:
+                self._parameters["Bounds"] = None
+        elif ("Bounds" in self._parameters) \
+                and isinstance(self._parameters["Bounds"], (numpy.ndarray, numpy.matrix)):
+            self._parameters["Bounds"] = numpy.ravel(self._parameters["Bounds"]).reshape((-1, 2)).tolist()
+            if (len(self._parameters["Bounds"]) > 0):
+                logging.debug("%s Bounds for states taken into account"%(self._name,))
+            else:
+                self._parameters["Bounds"] = None
         else:
             self._parameters["Bounds"] = None
+        if self._parameters["Bounds"] is None:
+            logging.debug("%s There are no bounds for states to take into account"%(self._name,))
+        #
         if ("StateBoundsForQuantiles" in self._parameters) \
-            and isinstance(self._parameters["StateBoundsForQuantiles"], (list, tuple)) \
-            and (len(self._parameters["StateBoundsForQuantiles"]) > 0):
+                and isinstance(self._parameters["StateBoundsForQuantiles"], (list, tuple)) \
+                and (len(self._parameters["StateBoundsForQuantiles"]) > 0):
             logging.debug("%s Bounds for quantiles states taken into account"%(self._name,))
-            # Attention : contrairement à Bounds, pas de défaut à None, sinon on ne peut pas être sans bornes
+        elif ("StateBoundsForQuantiles" in self._parameters) \
+                and isinstance(self._parameters["StateBoundsForQuantiles"], (numpy.ndarray, numpy.matrix)):
+            self._parameters["StateBoundsForQuantiles"] = numpy.ravel(self._parameters["StateBoundsForQuantiles"]).reshape((-1, 2)).tolist()
+            if (len(self._parameters["StateBoundsForQuantiles"]) > 0):
+                logging.debug("%s Bounds for quantiles states taken into account"%(self._name,))
+            # Attention : contrairement à Bounds, il n'y a pas de défaut à None,
+            #             sinon on ne peut pas être sans bornes
         #
         # Corrections et compléments de l'initialisation en X
-        if  "InitializationPoint" in self._parameters:
+        if "InitializationPoint" in self._parameters:
             if Xb is not None:
-                if self._parameters["InitializationPoint"] is not None and hasattr(self._parameters["InitializationPoint"],'size'):
+                if self._parameters["InitializationPoint"] is not None and hasattr(self._parameters["InitializationPoint"], 'size'):
                     if self._parameters["InitializationPoint"].size != numpy.ravel(Xb).size:
-                        raise ValueError("Incompatible size %i of forced initial point that have to replace the background of size %i" \
-                            %(self._parameters["InitializationPoint"].size,numpy.ravel(Xb).size))
+                        raise ValueError(
+                            "Incompatible size %i of forced initial point that have to replace the background of size %i" \
+                            % (self._parameters["InitializationPoint"].size, numpy.ravel(Xb).size))
                     # Obtenu par typecast : numpy.ravel(self._parameters["InitializationPoint"])
                 else:
                     self._parameters["InitializationPoint"] = numpy.ravel(Xb)
@@ -940,7 +976,7 @@ class Algorithm(object):
         #
         # Correction pour pallier a un bug de TNC sur le retour du Minimum
         if "Minimizer" in self._parameters and self._parameters["Minimizer"] == "TNC":
-            self.setParameterValue("StoreInternalVariables",True)
+            self.setParameterValue("StoreInternalVariables", True)
         #
         # Verbosité et logging
         if logging.getLogger().level < logging.WARNING:
@@ -952,26 +988,33 @@ class Algorithm(object):
         #
         return 0
 
-    def _post_run(self,_oH=None):
+    def _post_run(self, _oH=None, _oM=None):
         "Post-calcul"
         if ("StoreSupplementaryCalculations" in self._parameters) and \
-            "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
+                "APosterioriCovariance" in self._parameters["StoreSupplementaryCalculations"]:
             for _A in self.StoredVariables["APosterioriCovariance"]:
                 if "APosterioriVariances" in self._parameters["StoreSupplementaryCalculations"]:
                     self.StoredVariables["APosterioriVariances"].store( numpy.diag(_A) )
                 if "APosterioriStandardDeviations" in self._parameters["StoreSupplementaryCalculations"]:
                     self.StoredVariables["APosterioriStandardDeviations"].store( numpy.sqrt(numpy.diag(_A)) )
                 if "APosterioriCorrelations" in self._parameters["StoreSupplementaryCalculations"]:
-                    _EI = numpy.diag(1./numpy.sqrt(numpy.diag(_A)))
+                    _EI = numpy.diag(1. / numpy.sqrt(numpy.diag(_A)))
                     _C = numpy.dot(_EI, numpy.dot(_A, _EI))
                     self.StoredVariables["APosterioriCorrelations"].store( _C )
         if _oH is not None and "Direct" in _oH and "Tangent" in _oH and "Adjoint" in _oH:
             logging.debug(
                 "%s Nombre d'évaluation(s) de l'opérateur d'observation direct/tangent/adjoint.: %i/%i/%i",
-                self._name, _oH["Direct"].nbcalls(0),_oH["Tangent"].nbcalls(0),_oH["Adjoint"].nbcalls(0))
+                self._name, _oH["Direct"].nbcalls(0), _oH["Tangent"].nbcalls(0), _oH["Adjoint"].nbcalls(0))
             logging.debug(
                 "%s Nombre d'appels au cache d'opérateur d'observation direct/tangent/adjoint..: %i/%i/%i",
-                self._name, _oH["Direct"].nbcalls(3),_oH["Tangent"].nbcalls(3),_oH["Adjoint"].nbcalls(3))
+                self._name, _oH["Direct"].nbcalls(3), _oH["Tangent"].nbcalls(3), _oH["Adjoint"].nbcalls(3))
+        if _oM is not None and "Direct" in _oM and "Tangent" in _oM and "Adjoint" in _oM:
+            logging.debug(
+                "%s Nombre d'évaluation(s) de l'opérateur d'évolution direct/tangent/adjoint.: %i/%i/%i",
+                self._name, _oM["Direct"].nbcalls(0), _oM["Tangent"].nbcalls(0), _oM["Adjoint"].nbcalls(0))
+            logging.debug(
+                "%s Nombre d'appels au cache d'opérateur d'évolution direct/tangent/adjoint..: %i/%i/%i",
+                self._name, _oM["Direct"].nbcalls(3), _oM["Tangent"].nbcalls(3), _oM["Adjoint"].nbcalls(3))
         logging.debug("%s Taille mémoire utilisée de %.0f Mio", self._name, self._m.getUsedMemory("Mio"))
         logging.debug("%s Durées d'utilisation CPU de %.1fs et elapsed de %.1fs", self._name, self._getTimeState()[0], self._getTimeState()[1])
         logging.debug("%s Terminé", self._name)
@@ -1029,17 +1072,17 @@ class Algorithm(object):
         """
         raise NotImplementedError("Mathematical algorithmic calculation has not been implemented!")
 
-    def defineRequiredParameter(self,
-        name     = None,
-        default  = None,
-        typecast = None,
-        message  = None,
-        minval   = None,
-        maxval   = None,
-        listval  = None,
-        listadv  = None,
-        oldname  = None,
-        ):
+    def defineRequiredParameter(
+            self,
+            name     = None,
+            default  = None,
+            typecast = None,
+            message  = None,
+            minval   = None,
+            maxval   = None,
+            listval  = None,
+            listadv  = None,
+            oldname  = None ):
         """
         Permet de définir dans l'algorithme des paramètres requis et leurs
         caractéristiques par défaut.
@@ -1048,18 +1091,18 @@ class Algorithm(object):
             raise ValueError("A name is mandatory to define a required parameter.")
         #
         self.__required_parameters[name] = {
-            "default"  : default,
-            "typecast" : typecast,
-            "minval"   : minval,
-            "maxval"   : maxval,
-            "listval"  : listval,
-            "listadv"  : listadv,
-            "message"  : message,
-            "oldname"  : oldname,
-            }
+            "default"  : default,   # noqa: E203
+            "typecast" : typecast,  # noqa: E203
+            "minval"   : minval,    # noqa: E203
+            "maxval"   : maxval,    # noqa: E203
+            "listval"  : listval,   # noqa: E203
+            "listadv"  : listadv,   # noqa: E203
+            "message"  : message,   # noqa: E203
+            "oldname"  : oldname,   # noqa: E203
+        }
         self.__canonical_parameter_name[name.lower()] = name
         if oldname is not None:
-            self.__canonical_parameter_name[oldname.lower()] = name # Conversion
+            self.__canonical_parameter_name[oldname.lower()] = name  # Conversion
             self.__replace_by_the_new_name[oldname.lower()] = name
         logging.debug("%s %s (valeur par défaut = %s)", self._name, message, self.setParameterValue(name))
 
@@ -1088,10 +1131,13 @@ class Algorithm(object):
         if value is None and default is None:
             __val = None
         elif value is None and default is not None:
-            if typecast is None: __val = default
-            else:                __val = typecast( default )
+            if typecast is None:
+                __val = default
+            else:
+                __val = typecast( default )
         else:
-            if typecast is None: __val = value
+            if typecast is None:
+                __val = value
             else:
                 try:
                     __val = typecast( value )
@@ -1103,14 +1149,16 @@ class Algorithm(object):
         if maxval is not None and (numpy.array(__val, float) > maxval).any():
             raise ValueError("The parameter named '%s' of value '%s' can not be greater than %s."%(__k, __val, maxval))
         if listval is not None or listadv is not None:
-            if typecast is list or typecast is tuple or isinstance(__val,list) or isinstance(__val,tuple):
+            if typecast is list or typecast is tuple or isinstance(__val, list) or isinstance(__val, tuple):
                 for v in __val:
-                    if listval is not None and v in listval: continue
-                    elif listadv is not None and v in listadv: continue
+                    if listval is not None and v in listval:
+                        continue
+                    elif listadv is not None and v in listadv:
+                        continue
                     else:
                         raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%(v, __k, listval))
             elif not (listval is not None and __val in listval) and not (listadv is not None and __val in listadv):
-                raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%( __val, __k,listval))
+                raise ValueError("The value '%s' is not allowed for the parameter named '%s', it has to be in the list %s."%(__val, __k, listval))
         #
         if __k in ["SetSeed",]:
             __val = value
@@ -1130,13 +1178,14 @@ class Algorithm(object):
         """
         return self.__required_inputs["RequiredInputValues"]["mandatory"], self.__required_inputs["RequiredInputValues"]["optional"]
 
-    def setAttributes(self, tags=()):
+    def setAttributes(self, tags=(), features=()):
         """
         Permet d'adjoindre des attributs comme les tags de classification.
         Renvoie la liste actuelle dans tous les cas.
         """
-        self.__required_inputs["ClassificationTags"].extend( tags )
-        return self.__required_inputs["ClassificationTags"]
+        self.__required_inputs["AttributesTags"].extend( tags )
+        self.__required_inputs["AttributesFeatures"].extend( features )
+        return (self.__required_inputs["AttributesTags"], self.__required_inputs["AttributesFeatures"])
 
     def __setParameters(self, fromDico={}, reset=False):
         """
@@ -1147,26 +1196,26 @@ class Algorithm(object):
         for k in fromDico.keys():
             if k.lower() in self.__canonical_parameter_name:
                 __inverse_fromDico_keys[self.__canonical_parameter_name[k.lower()]] = k
-        #~ __inverse_fromDico_keys = dict([(self.__canonical_parameter_name[k.lower()],k) for k in fromDico.keys()])
+        # __inverse_fromDico_keys = dict([(self.__canonical_parameter_name[k.lower()],k) for k in fromDico.keys()])
         __canonic_fromDico_keys = __inverse_fromDico_keys.keys()
         #
         for k in __inverse_fromDico_keys.values():
             if k.lower() in self.__replace_by_the_new_name:
                 __newk = self.__replace_by_the_new_name[k.lower()]
-                __msg  = "the parameter \"%s\" used in \"%s\" algorithm case is deprecated and has to be replaced by \"%s\"."%(k,self._name,__newk)
+                __msg  = "the parameter \"%s\" used in \"%s\" algorithm case is deprecated and has to be replaced by \"%s\"."%(k, self._name, __newk)
                 __msg += " Please update your code."
                 warnings.warn(__msg, FutureWarning, stacklevel=50)
         #
         for k in self.__required_parameters.keys():
             if k in __canonic_fromDico_keys:
-                self._parameters[k] = self.setParameterValue(k,fromDico[__inverse_fromDico_keys[k]])
+                self._parameters[k] = self.setParameterValue(k, fromDico[__inverse_fromDico_keys[k]])
             elif reset:
                 self._parameters[k] = self.setParameterValue(k)
             else:
                 pass
-            if hasattr(self._parameters[k],"size") and self._parameters[k].size > 100:
+            if hasattr(self._parameters[k], "size") and self._parameters[k].size > 100:
                 logging.debug("%s %s d'une taille totale de %s", self._name, self.__required_parameters[k]["message"], self._parameters[k].size)
-            elif hasattr(self._parameters[k],"__len__") and len(self._parameters[k]) > 100:
+            elif hasattr(self._parameters[k], "__len__") and len(self._parameters[k]) > 100:
                 logging.debug("%s %s de longueur %s", self._name, self.__required_parameters[k]["message"], len(self._parameters[k]))
             else:
                 logging.debug("%s %s : %s", self._name, self.__required_parameters[k]["message"], self._parameters[k])
@@ -1175,7 +1224,7 @@ class Algorithm(object):
         """
         Permet de stocker des variables nommées constituant l'état interne
         """
-        if reset: # Vide le dictionnaire préalablement
+        if reset:  # Vide le dictionnaire préalablement
             self.__internal_state = {}
         if key is not None and value is not None:
             self.__internal_state[key] = value
@@ -1226,11 +1275,11 @@ class PartialAlgorithm(object):
     """
     __slots__ = (
         "_name", "_parameters", "StoredVariables", "__canonical_stored_name",
-        )
-    #
+    )
+
     def __init__(self, name):
         self._name = str( name )
-        self._parameters = {"StoreSupplementaryCalculations":[]}
+        self._parameters = {"StoreSupplementaryCalculations": []}
         #
         self.StoredVariables = {}
         self.StoredVariables["Analysis"]                             = Persistence.OneVector(name = "Analysis")
@@ -1270,14 +1319,13 @@ class AlgorithmAndParameters(object):
         "__name", "__algorithm", "__algorithmFile", "__algorithmName", "__A",
         "__P", "__Xb", "__Y", "__U", "__HO", "__EM", "__CM", "__B", "__R",
         "__Q", "__variable_names_not_public",
-        )
-    #
+    )
+
     def __init__(self,
                  name               = "GenericAlgorithm",
                  asAlgorithm        = None,
                  asDict             = None,
-                 asScript           = None,
-                ):
+                 asScript           = None ):
         """
         """
         self.__name       = str(name)
@@ -1297,16 +1345,13 @@ class AlgorithmAndParameters(object):
         #
         if __Algo is not None:
             self.__A = str(__Algo)
-            self.__P.update( {"Algorithm":self.__A} )
+            self.__P.update( {"Algorithm": self.__A} )
         #
         self.__setAlgorithm( self.__A )
         #
-        self.__variable_names_not_public = {"nextStep":False} # Duplication dans Algorithm
+        self.__variable_names_not_public = {"nextStep": False}  # Duplication dans Algorithm
 
-    def updateParameters(self,
-                 asDict     = None,
-                 asScript   = None,
-                ):
+    def updateParameters(self, asDict = None, asScript = None ):
         "Mise à jour des paramètres"
         if asDict is None and asScript is not None:
             __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "Parameters" )
@@ -1322,19 +1367,19 @@ class AlgorithmAndParameters(object):
         #
         if not isinstance(asDictAO, dict):
             raise ValueError("The objects for algorithm calculation have to be given together as a dictionnary, and they are not")
-        if   hasattr(asDictAO["Background"],"getO"):        self.__Xb = asDictAO["Background"].getO()
-        elif hasattr(asDictAO["CheckingPoint"],"getO"):     self.__Xb = asDictAO["CheckingPoint"].getO()
-        else:                                               self.__Xb = None
-        if hasattr(asDictAO["Observation"],"getO"):         self.__Y  = asDictAO["Observation"].getO()
-        else:                                               self.__Y  = asDictAO["Observation"]
-        if hasattr(asDictAO["ControlInput"],"getO"):        self.__U  = asDictAO["ControlInput"].getO()
-        else:                                               self.__U  = asDictAO["ControlInput"]
-        if hasattr(asDictAO["ObservationOperator"],"getO"): self.__HO = asDictAO["ObservationOperator"].getO()
-        else:                                               self.__HO = asDictAO["ObservationOperator"]
-        if hasattr(asDictAO["EvolutionModel"],"getO"):      self.__EM = asDictAO["EvolutionModel"].getO()
-        else:                                               self.__EM = asDictAO["EvolutionModel"]
-        if hasattr(asDictAO["ControlModel"],"getO"):        self.__CM = asDictAO["ControlModel"].getO()
-        else:                                               self.__CM = asDictAO["ControlModel"]
+        if hasattr(asDictAO["Background"], "getO"):          self.__Xb = asDictAO["Background"].getO()           # noqa: E241,E701
+        elif hasattr(asDictAO["CheckingPoint"], "getO"):     self.__Xb = asDictAO["CheckingPoint"].getO()        # noqa: E241,E701
+        else:                                                self.__Xb = None                                    # noqa: E241,E701
+        if hasattr(asDictAO["Observation"], "getO"):         self.__Y  = asDictAO["Observation"].getO()          # noqa: E241,E701
+        else:                                                self.__Y  = asDictAO["Observation"]                 # noqa: E241,E701
+        if hasattr(asDictAO["ControlInput"], "getO"):        self.__U  = asDictAO["ControlInput"].getO()         # noqa: E241,E701
+        else:                                                self.__U  = asDictAO["ControlInput"]                # noqa: E241,E701
+        if hasattr(asDictAO["ObservationOperator"], "getO"): self.__HO = asDictAO["ObservationOperator"].getO()  # noqa: E241,E701
+        else:                                                self.__HO = asDictAO["ObservationOperator"]         # noqa: E241,E701
+        if hasattr(asDictAO["EvolutionModel"], "getO"):      self.__EM = asDictAO["EvolutionModel"].getO()       # noqa: E241,E701
+        else:                                                self.__EM = asDictAO["EvolutionModel"]              # noqa: E241,E701
+        if hasattr(asDictAO["ControlModel"], "getO"):        self.__CM = asDictAO["ControlModel"].getO()         # noqa: E241,E701
+        else:                                                self.__CM = asDictAO["ControlModel"]                # noqa: E241,E701
         self.__B = asDictAO["BackgroundError"]
         self.__R = asDictAO["ObservationError"]
         self.__Q = asDictAO["EvolutionError"]
@@ -1352,7 +1397,7 @@ class AlgorithmAndParameters(object):
             B          = self.__B,
             Q          = self.__Q,
             Parameters = self.__P,
-            )
+        )
         return 0
 
     def executeYACSScheme(self, FileName=None):
@@ -1363,11 +1408,12 @@ class AlgorithmAndParameters(object):
             __file    = os.path.abspath(FileName)
             logging.debug("The YACS file name is \"%s\"."%__file)
         if not PlatformInfo.has_salome or \
-            not PlatformInfo.has_yacs or \
-            not PlatformInfo.has_adao:
-            raise ImportError("\n\n"+\
-                "Unable to get SALOME, YACS or ADAO environnement variables.\n"+\
-                "Please load the right environnement before trying to use it.\n")
+                not PlatformInfo.has_yacs or \
+                not PlatformInfo.has_adao:
+            raise ImportError(
+                "\n\n" + \
+                "Unable to get SALOME, YACS or ADAO environnement variables.\n" + \
+                "Please load the right environnement before trying to use it.\n" )
         #
         import pilot
         import SALOMERuntime
@@ -1397,7 +1443,7 @@ class AlgorithmAndParameters(object):
             print("The YACS XML schema is not valid and will not be executed:")
             print(p.getErrorReport())
 
-        info=pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
+        info = pilot.LinkInfo(pilot.LinkInfo.ALL_DONT_STOP)
         p.checkConsistency(info)
         if info.areWarningsOrErrors():
             print("The YACS XML schema is not coherent and will not be executed:")
@@ -1418,7 +1464,8 @@ class AlgorithmAndParameters(object):
             return self.__P[key]
         else:
             allvariables = self.__P
-            for k in self.__variable_names_not_public: allvariables.pop(k, None)
+            for k in self.__variable_names_not_public:
+                allvariables.pop(k, None)
             return allvariables
 
     def pop(self, k, d):
@@ -1439,35 +1486,28 @@ class AlgorithmAndParameters(object):
 
     def setObserver(self, __V, __O, __I, __S):
         if self.__algorithm is None \
-            or isinstance(self.__algorithm, dict) \
-            or not hasattr(self.__algorithm,"StoredVariables"):
+                or isinstance(self.__algorithm, dict) \
+                or not hasattr(self.__algorithm, "StoredVariables"):
             raise ValueError("No observer can be build before choosing an algorithm.")
         if __V not in self.__algorithm:
             raise ValueError("An observer requires to be set on a variable named %s which does not exist."%__V)
         else:
-            self.__algorithm.StoredVariables[ __V ].setDataObserver(
-                    Scheduler      = __S,
-                    HookFunction   = __O,
-                    HookParameters = __I,
-                    )
+            self.__algorithm.StoredVariables[ __V ].setDataObserver( Scheduler      = __S, HookFunction   = __O, HookParameters = __I )
 
     def removeObserver(self, __V, __O, __A = False):
         if self.__algorithm is None \
-            or isinstance(self.__algorithm, dict) \
-            or not hasattr(self.__algorithm,"StoredVariables"):
+                or isinstance(self.__algorithm, dict) \
+                or not hasattr(self.__algorithm, "StoredVariables"):
             raise ValueError("No observer can be removed before choosing an algorithm.")
         if __V not in self.__algorithm:
             raise ValueError("An observer requires to be removed on a variable named %s which does not exist."%__V)
         else:
-            return self.__algorithm.StoredVariables[ __V ].removeDataObserver(
-                    HookFunction   = __O,
-                    AllObservers   = __A,
-                    )
+            return self.__algorithm.StoredVariables[ __V ].removeDataObserver( HookFunction = __O, AllObservers = __A )
 
     def hasObserver(self, __V):
         if self.__algorithm is None \
-            or isinstance(self.__algorithm, dict) \
-            or not hasattr(self.__algorithm,"StoredVariables"):
+                or isinstance(self.__algorithm, dict) \
+                or not hasattr(self.__algorithm, "StoredVariables"):
             return False
         if __V not in self.__algorithm:
             return False
@@ -1476,7 +1516,8 @@ class AlgorithmAndParameters(object):
     def keys(self):
         __allvariables = list(self.__algorithm.keys()) + list(self.__P.keys())
         for k in self.__variable_names_not_public:
-            if k in __allvariables: __allvariables.remove(k)
+            if k in __allvariables:
+                __allvariables.remove(k)
         return __allvariables
 
     def __contains__(self, key=None):
@@ -1485,11 +1526,11 @@ class AlgorithmAndParameters(object):
 
     def __repr__(self):
         "x.__repr__() <==> repr(x)"
-        return repr(self.__A)+", "+repr(self.__P)
+        return repr(self.__A) + ", " + repr(self.__P)
 
     def __str__(self):
         "x.__str__() <==> str(x)"
-        return str(self.__A)+", "+str(self.__P)
+        return str(self.__A) + ", " + str(self.__P)
 
     def __setAlgorithm(self, choice = None ):
         """
@@ -1507,7 +1548,7 @@ class AlgorithmAndParameters(object):
         # ------------------------------------------
         module_path = None
         for directory in sys.path:
-            if os.path.isfile(os.path.join(directory, daDirectory, str(choice)+'.py')):
+            if os.path.isfile(os.path.join(directory, daDirectory, str(choice) + '.py')):
                 module_path = os.path.abspath(os.path.join(directory, daDirectory))
         if module_path is None:
             raise ImportError(
@@ -1516,15 +1557,17 @@ class AlgorithmAndParameters(object):
         # Importe le fichier complet comme un module
         # ------------------------------------------
         try:
-            sys_path_tmp = sys.path ; sys.path.insert(0,module_path)
+            sys_path_tmp = sys.path
+            sys.path.insert(0, module_path)
             self.__algorithmFile = __import__(str(choice), globals(), locals(), [])
             if not hasattr(self.__algorithmFile, "ElementaryAlgorithm"):
                 raise ImportError("this module does not define a valid elementary algorithm.")
             self.__algorithmName = str(choice)
-            sys.path = sys_path_tmp ; del sys_path_tmp
+            sys.path = sys_path_tmp
+            del sys_path_tmp
         except ImportError as e:
             raise ImportError(
-                "The module named \"%s\" was found, but is incorrect at the import stage.\n             The import error message is: %s"%(choice,e))
+                "The module named \"%s\" was found, but is incorrect at the import stage.\n             The import error message is: %s"%(choice, e))
         #
         # Instancie un objet du type élémentaire du fichier
         # -------------------------------------------------
@@ -1536,137 +1579,159 @@ class AlgorithmAndParameters(object):
         Validation de la correspondance correcte des tailles des variables et
         des matrices s'il y en a.
         """
-        if self.__Xb is None:                      __Xb_shape = (0,)
-        elif hasattr(self.__Xb,"size"):            __Xb_shape = (self.__Xb.size,)
-        elif hasattr(self.__Xb,"shape"):
-            if isinstance(self.__Xb.shape, tuple): __Xb_shape = self.__Xb.shape
-            else:                                  __Xb_shape = self.__Xb.shape()
-        else: raise TypeError("The background (Xb) has no attribute of shape: problem !")
+        if self.__Xb is None:                      __Xb_shape = (0,)                                                # noqa: E241,E701
+        elif hasattr(self.__Xb, "size"):           __Xb_shape = (self.__Xb.size,)                                   # noqa: E241,E701
+        elif hasattr(self.__Xb, "shape"):
+            if isinstance(self.__Xb.shape, tuple): __Xb_shape = self.__Xb.shape                                     # noqa: E241,E701
+            else:                                  __Xb_shape = self.__Xb.shape()                                   # noqa: E241,E701
+        else: raise TypeError("The background (Xb) has no attribute of shape: problem !")                           # noqa: E701
         #
-        if self.__Y is None:                       __Y_shape = (0,)
-        elif hasattr(self.__Y,"size"):             __Y_shape = (self.__Y.size,)
-        elif hasattr(self.__Y,"shape"):
-            if isinstance(self.__Y.shape, tuple):  __Y_shape = self.__Y.shape
-            else:                                  __Y_shape = self.__Y.shape()
-        else: raise TypeError("The observation (Y) has no attribute of shape: problem !")
+        if self.__Y is None:                       __Y_shape = (0,)                                                 # noqa: E241,E701
+        elif hasattr(self.__Y, "size"):            __Y_shape = (self.__Y.size,)                                     # noqa: E241,E701
+        elif hasattr(self.__Y, "shape"):
+            if isinstance(self.__Y.shape, tuple):  __Y_shape = self.__Y.shape                                       # noqa: E241,E701
+            else:                                  __Y_shape = self.__Y.shape()                                     # noqa: E241,E701
+        else: raise TypeError("The observation (Y) has no attribute of shape: problem !")                           # noqa: E701
         #
-        if self.__U is None:                       __U_shape = (0,)
-        elif hasattr(self.__U,"size"):             __U_shape = (self.__U.size,)
-        elif hasattr(self.__U,"shape"):
-            if isinstance(self.__U.shape, tuple):  __U_shape = self.__U.shape
-            else:                                  __U_shape = self.__U.shape()
-        else: raise TypeError("The control (U) has no attribute of shape: problem !")
+        if self.__U is None:                       __U_shape = (0,)                                                 # noqa: E241,E701
+        elif hasattr(self.__U, "size"):            __U_shape = (self.__U.size,)                                     # noqa: E241,E701
+        elif hasattr(self.__U, "shape"):
+            if isinstance(self.__U.shape, tuple):  __U_shape = self.__U.shape                                       # noqa: E241,E701
+            else:                                  __U_shape = self.__U.shape()                                     # noqa: E241,E701
+        else: raise TypeError("The control (U) has no attribute of shape: problem !")                               # noqa: E701
         #
-        if self.__B is None:                       __B_shape = (0,0)
-        elif hasattr(self.__B,"shape"):
-            if isinstance(self.__B.shape, tuple):  __B_shape = self.__B.shape
-            else:                                  __B_shape = self.__B.shape()
-        else: raise TypeError("The a priori errors covariance matrix (B) has no attribute of shape: problem !")
+        if self.__B is None:                       __B_shape = (0, 0)                                               # noqa: E241,E701
+        elif hasattr(self.__B, "shape"):
+            if isinstance(self.__B.shape, tuple):  __B_shape = self.__B.shape                                       # noqa: E241,E701
+            else:                                  __B_shape = self.__B.shape()                                     # noqa: E241,E701
+        else: raise TypeError("The a priori errors covariance matrix (B) has no attribute of shape: problem !")     # noqa: E701
         #
-        if self.__R is None:                       __R_shape = (0,0)
-        elif hasattr(self.__R,"shape"):
-            if isinstance(self.__R.shape, tuple):  __R_shape = self.__R.shape
-            else:                                  __R_shape = self.__R.shape()
-        else: raise TypeError("The observation errors covariance matrix (R) has no attribute of shape: problem !")
+        if self.__R is None:                       __R_shape = (0, 0)                                               # noqa: E241,E701
+        elif hasattr(self.__R, "shape"):
+            if isinstance(self.__R.shape, tuple):  __R_shape = self.__R.shape                                       # noqa: E241,E701
+            else:                                  __R_shape = self.__R.shape()                                     # noqa: E241,E701
+        else: raise TypeError("The observation errors covariance matrix (R) has no attribute of shape: problem !")  # noqa: E701
         #
-        if self.__Q is None:                       __Q_shape = (0,0)
-        elif hasattr(self.__Q,"shape"):
-            if isinstance(self.__Q.shape, tuple):  __Q_shape = self.__Q.shape
-            else:                                  __Q_shape = self.__Q.shape()
-        else: raise TypeError("The evolution errors covariance matrix (Q) has no attribute of shape: problem !")
+        if self.__Q is None:                       __Q_shape = (0, 0)                                               # noqa: E241,E701
+        elif hasattr(self.__Q, "shape"):
+            if isinstance(self.__Q.shape, tuple):  __Q_shape = self.__Q.shape                                       # noqa: E241,E701
+            else:                                  __Q_shape = self.__Q.shape()                                     # noqa: E241,E701
+        else: raise TypeError("The evolution errors covariance matrix (Q) has no attribute of shape: problem !")    # noqa: E701
         #
-        if len(self.__HO) == 0:                              __HO_shape = (0,0)
-        elif isinstance(self.__HO, dict):                    __HO_shape = (0,0)
-        elif hasattr(self.__HO["Direct"],"shape"):
-            if isinstance(self.__HO["Direct"].shape, tuple): __HO_shape = self.__HO["Direct"].shape
-            else:                                            __HO_shape = self.__HO["Direct"].shape()
-        else: raise TypeError("The observation operator (H) has no attribute of shape: problem !")
+        if len(self.__HO) == 0:                              __HO_shape = (0, 0)                                    # noqa: E241,E701
+        elif isinstance(self.__HO, dict):                    __HO_shape = (0, 0)                                    # noqa: E241,E701
+        elif hasattr(self.__HO["Direct"], "shape"):
+            if isinstance(self.__HO["Direct"].shape, tuple): __HO_shape = self.__HO["Direct"].shape                 # noqa: E241,E701
+            else:                                            __HO_shape = self.__HO["Direct"].shape()               # noqa: E241,E701
+        else: raise TypeError("The observation operator (H) has no attribute of shape: problem !")                  # noqa: E701
         #
-        if len(self.__EM) == 0:                              __EM_shape = (0,0)
-        elif isinstance(self.__EM, dict):                    __EM_shape = (0,0)
-        elif hasattr(self.__EM["Direct"],"shape"):
-            if isinstance(self.__EM["Direct"].shape, tuple): __EM_shape = self.__EM["Direct"].shape
-            else:                                            __EM_shape = self.__EM["Direct"].shape()
-        else: raise TypeError("The evolution model (EM) has no attribute of shape: problem !")
+        if len(self.__EM) == 0:                              __EM_shape = (0, 0)                                    # noqa: E241,E701
+        elif isinstance(self.__EM, dict):                    __EM_shape = (0, 0)                                    # noqa: E241,E701
+        elif hasattr(self.__EM["Direct"], "shape"):
+            if isinstance(self.__EM["Direct"].shape, tuple): __EM_shape = self.__EM["Direct"].shape                 # noqa: E241,E701
+            else:                                            __EM_shape = self.__EM["Direct"].shape()               # noqa: E241,E701
+        else: raise TypeError("The evolution model (EM) has no attribute of shape: problem !")                      # noqa: E241,E70
         #
-        if len(self.__CM) == 0:                              __CM_shape = (0,0)
-        elif isinstance(self.__CM, dict):                    __CM_shape = (0,0)
-        elif hasattr(self.__CM["Direct"],"shape"):
-            if isinstance(self.__CM["Direct"].shape, tuple): __CM_shape = self.__CM["Direct"].shape
-            else:                                            __CM_shape = self.__CM["Direct"].shape()
-        else: raise TypeError("The control model (CM) has no attribute of shape: problem !")
+        if len(self.__CM) == 0:                              __CM_shape = (0, 0)                                    # noqa: E241,E701
+        elif isinstance(self.__CM, dict):                    __CM_shape = (0, 0)                                    # noqa: E241,E701
+        elif hasattr(self.__CM["Direct"], "shape"):
+            if isinstance(self.__CM["Direct"].shape, tuple): __CM_shape = self.__CM["Direct"].shape                 # noqa: E241,E701
+            else:                                            __CM_shape = self.__CM["Direct"].shape()               # noqa: E241,E701
+        else: raise TypeError("The control model (CM) has no attribute of shape: problem !")                        # noqa: E701
         #
         # Vérification des conditions
         # ---------------------------
-        if not( len(__Xb_shape) == 1 or min(__Xb_shape) == 1 ):
+        if not ( len(__Xb_shape) == 1 or min(__Xb_shape) == 1 ):
             raise ValueError("Shape characteristic of background (Xb) is incorrect: \"%s\"."%(__Xb_shape,))
-        if not( len(__Y_shape) == 1 or min(__Y_shape) == 1 ):
+        if not ( len(__Y_shape) == 1 or min(__Y_shape) == 1 ):
             raise ValueError("Shape characteristic of observation (Y) is incorrect: \"%s\"."%(__Y_shape,))
         #
-        if not( min(__B_shape) == max(__B_shape) ):
+        if not ( min(__B_shape) == max(__B_shape) ):
             raise ValueError("Shape characteristic of a priori errors covariance matrix (B) is incorrect: \"%s\"."%(__B_shape,))
-        if not( min(__R_shape) == max(__R_shape) ):
+        if not ( min(__R_shape) == max(__R_shape) ):
             raise ValueError("Shape characteristic of observation errors covariance matrix (R) is incorrect: \"%s\"."%(__R_shape,))
-        if not( min(__Q_shape) == max(__Q_shape) ):
+        if not ( min(__Q_shape) == max(__Q_shape) ):
             raise ValueError("Shape characteristic of evolution errors covariance matrix (Q) is incorrect: \"%s\"."%(__Q_shape,))
-        if not( min(__EM_shape) == max(__EM_shape) ):
+        if not ( min(__EM_shape) == max(__EM_shape) ):
             raise ValueError("Shape characteristic of evolution operator (EM) is incorrect: \"%s\"."%(__EM_shape,))
         #
-        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not( __HO_shape[1] == max(__Xb_shape) ):
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not ( __HO_shape[1] == max(__Xb_shape) ):
             raise ValueError(
-                "Shape characteristic of observation operator (H)"+\
-                " \"%s\" and state (X) \"%s\" are incompatible."%(__HO_shape,__Xb_shape))
-        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not( __HO_shape[0] == max(__Y_shape) ):
+                "Shape characteristic of observation operator (H)" + \
+                " \"%s\" and state (X) \"%s\" are incompatible."%(__HO_shape, __Xb_shape))
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and not ( __HO_shape[0] == max(__Y_shape) ):
             raise ValueError(
-                "Shape characteristic of observation operator (H)"+\
-                " \"%s\" and observation (Y) \"%s\" are incompatible."%(__HO_shape,__Y_shape))
-        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__B) > 0 and not( __HO_shape[1] == __B_shape[0] ):
+                "Shape characteristic of observation operator (H)" + \
+                " \"%s\" and observation (Y) \"%s\" are incompatible."%(__HO_shape, __Y_shape))
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__B) > 0 and not ( __HO_shape[1] == __B_shape[0] ):
             raise ValueError(
-                "Shape characteristic of observation operator (H)"+\
-                " \"%s\" and a priori errors covariance matrix (B) \"%s\" are incompatible."%(__HO_shape,__B_shape))
-        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__R) > 0 and not( __HO_shape[0] == __R_shape[1] ):
+                "Shape characteristic of observation operator (H)" + \
+                " \"%s\" and a priori errors covariance matrix (B) \"%s\" are incompatible."%(__HO_shape, __B_shape))
+        if len(self.__HO) > 0 and not isinstance(self.__HO, dict) and len(self.__R) > 0 and not ( __HO_shape[0] == __R_shape[1] ):
             raise ValueError(
-                "Shape characteristic of observation operator (H)"+\
-                " \"%s\" and observation errors covariance matrix (R) \"%s\" are incompatible."%(__HO_shape,__R_shape))
+                "Shape characteristic of observation operator (H)" + \
+                " \"%s\" and observation errors covariance matrix (R) \"%s\" are incompatible."%(__HO_shape, __R_shape))
         #
-        if self.__B is not None and len(self.__B) > 0 and not( __B_shape[1] == max(__Xb_shape) ):
+        if self.__B is not None and len(self.__B) > 0 and not ( __B_shape[1] == max(__Xb_shape) ):
             if self.__algorithmName in ["EnsembleBlue",]:
-                asPersistentVector = self.__Xb.reshape((-1,min(__B_shape)))
+                asPersistentVector = self.__Xb.reshape((-1, min(__B_shape)))
                 self.__Xb = Persistence.OneVector("Background")
                 for member in asPersistentVector:
                     self.__Xb.store( numpy.asarray(member, dtype=float) )
                 __Xb_shape = min(__B_shape)
             else:
                 raise ValueError(
-                    "Shape characteristic of a priori errors covariance matrix (B)"+\
-                    " \"%s\" and background vector (Xb) \"%s\" are incompatible."%(__B_shape,__Xb_shape))
+                    "Shape characteristic of a priori errors covariance matrix (B)" + \
+                    " \"%s\" and background vector (Xb) \"%s\" are incompatible."%(__B_shape, __Xb_shape))
         #
-        if self.__R is not None and len(self.__R) > 0 and not( __R_shape[1] == max(__Y_shape) ):
+        if self.__R is not None and len(self.__R) > 0 and not ( __R_shape[1] == max(__Y_shape) ):
             raise ValueError(
-                "Shape characteristic of observation errors covariance matrix (R)"+\
-                " \"%s\" and observation vector (Y) \"%s\" are incompatible."%(__R_shape,__Y_shape))
+                "Shape characteristic of observation errors covariance matrix (R)" + \
+                " \"%s\" and observation vector (Y) \"%s\" are incompatible."%(__R_shape, __Y_shape))
         #
-        if self.__EM is not None and len(self.__EM) > 0 and not isinstance(self.__EM, dict) and not( __EM_shape[1] == max(__Xb_shape) ):
+        if self.__EM is not None and len(self.__EM) > 0 and not isinstance(self.__EM, dict) and not ( __EM_shape[1] == max(__Xb_shape) ):
             raise ValueError(
-                "Shape characteristic of evolution model (EM)"+\
-                " \"%s\" and state (X) \"%s\" are incompatible."%(__EM_shape,__Xb_shape))
+                "Shape characteristic of evolution model (EM)" + \
+                " \"%s\" and state (X) \"%s\" are incompatible."%(__EM_shape, __Xb_shape))
         #
-        if self.__CM is not None and len(self.__CM) > 0 and not isinstance(self.__CM, dict) and not( __CM_shape[1] == max(__U_shape) ):
+        if self.__CM is not None and len(self.__CM) > 0 and not isinstance(self.__CM, dict) and not ( __CM_shape[1] == max(__U_shape) ):
             raise ValueError(
-                "Shape characteristic of control model (CM)"+\
-                " \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape,__U_shape))
+                "Shape characteristic of control model (CM)" + \
+                " \"%s\" and control (U) \"%s\" are incompatible."%(__CM_shape, __U_shape))
         #
         if ("Bounds" in self.__P) \
-            and (isinstance(self.__P["Bounds"], list) or isinstance(self.__P["Bounds"], tuple)) \
-            and (len(self.__P["Bounds"]) != max(__Xb_shape)):
-            raise ValueError("The number \"%s\" of bound pairs for the state (X) components is different of the size \"%s\" of the state itself." \
-                %(len(self.__P["Bounds"]),max(__Xb_shape)))
+                and isinstance(self.__P["Bounds"], (list, tuple)) \
+                and (len(self.__P["Bounds"]) != max(__Xb_shape)):
+            if len(self.__P["Bounds"]) > 0:
+                raise ValueError("The number '%s' of bound pairs for the state components is different from the size '%s' of the state (X) itself." \
+                                 % (len(self.__P["Bounds"]), max(__Xb_shape)))
+            else:
+                self.__P["Bounds"] = None
+        if ("Bounds" in self.__P) \
+                and isinstance(self.__P["Bounds"], (numpy.ndarray, numpy.matrix)) \
+                and (self.__P["Bounds"].shape[0] != max(__Xb_shape)):
+            if self.__P["Bounds"].size > 0:
+                raise ValueError("The number '%s' of bound pairs for the state components is different from the size '%s' of the state (X) itself." \
+                                 % (self.__P["Bounds"].shape[0], max(__Xb_shape)))
+            else:
+                self.__P["Bounds"] = None
+        #
+        if ("BoxBounds" in self.__P) \
+                and isinstance(self.__P["BoxBounds"], (list, tuple)) \
+                and (len(self.__P["BoxBounds"]) != max(__Xb_shape)):
+            raise ValueError("The number '%s' of bound pairs for the state box components is different from the size '%s' of the state (X) itself." \
+                             % (len(self.__P["BoxBounds"]), max(__Xb_shape)))
+        if ("BoxBounds" in self.__P) \
+                and isinstance(self.__P["BoxBounds"], (numpy.ndarray, numpy.matrix)) \
+                and (self.__P["BoxBounds"].shape[0] != max(__Xb_shape)):
+            raise ValueError("The number '%s' of bound pairs for the state box components is different from the size '%s' of the state (X) itself." \
+                             % (self.__P["BoxBounds"].shape[0], max(__Xb_shape)))
         #
         if ("StateBoundsForQuantiles" in self.__P) \
-            and (isinstance(self.__P["StateBoundsForQuantiles"], list) or isinstance(self.__P["StateBoundsForQuantiles"], tuple)) \
-            and (len(self.__P["StateBoundsForQuantiles"]) != max(__Xb_shape)):
-            raise ValueError("The number \"%s\" of bound pairs for the quantile state (X) components is different of the size \"%s\" of the state itself." \
-                %(len(self.__P["StateBoundsForQuantiles"]),max(__Xb_shape)))
+                and isinstance(self.__P["StateBoundsForQuantiles"], (list, tuple)) \
+                and (len(self.__P["StateBoundsForQuantiles"]) != max(__Xb_shape)):
+            raise ValueError("The number '%s' of bound pairs for the quantile state components is different from the size '%s' of the state (X) itself." \
+                             % (len(self.__P["StateBoundsForQuantiles"]), max(__Xb_shape)))
         #
         return 1
 
@@ -1676,13 +1741,12 @@ class RegulationAndParameters(object):
     Classe générale d'interface d'action pour la régulation et ses paramètres
     """
     __slots__ = ("__name", "__P")
-    #
+
     def __init__(self,
-                 name               = "GenericRegulation",
-                 asAlgorithm        = None,
-                 asDict             = None,
-                 asScript           = None,
-                ):
+                 name        = "GenericRegulation",
+                 asAlgorithm = None,
+                 asDict      = None,
+                 asScript    = None ):
         """
         """
         self.__name       = str(name)
@@ -1702,7 +1766,7 @@ class RegulationAndParameters(object):
             self.__P.update( dict(__Dict) )
         #
         if __Algo is not None:
-            self.__P.update( {"Algorithm":str(__Algo)} )
+            self.__P.update( {"Algorithm": str(__Algo)} )
 
     def get(self, key = None):
         "Vérifie l'existence d'une clé de variable ou de paramètres"
@@ -1717,7 +1781,7 @@ class DataObserver(object):
     Classe générale d'interface de type observer
     """
     __slots__ = ("__name", "__V", "__O", "__I")
-    #
+
     def __init__(self,
                  name        = "GenericObserver",
                  onVariable  = None,
@@ -1727,8 +1791,7 @@ class DataObserver(object):
                  asObsObject = None,
                  withInfo    = None,
                  scheduledBy = None,
-                 withAlgo    = None,
-                ):
+                 withAlgo    = None ):
         """
         """
         self.__name       = str(name)
@@ -1743,7 +1806,7 @@ class DataObserver(object):
             if withInfo is None:
                 self.__I = self.__V
             else:
-                self.__I = (str(withInfo),)*len(self.__V)
+                self.__I = (str(withInfo),) * len(self.__V)
         elif isinstance(onVariable, str):
             self.__V = (onVariable,)
             if withInfo is None:
@@ -1770,11 +1833,11 @@ class DataObserver(object):
 
     def __repr__(self):
         "x.__repr__() <==> repr(x)"
-        return repr(self.__V)+"\n"+repr(self.__O)
+        return repr(self.__V) + "\n" + repr(self.__O)
 
     def __str__(self):
         "x.__str__() <==> str(x)"
-        return str(self.__V)+"\n"+str(self.__O)
+        return str(self.__V) + "\n" + str(self.__O)
 
 # ==============================================================================
 class UserScript(object):
@@ -1782,13 +1845,12 @@ class UserScript(object):
     Classe générale d'interface de type texte de script utilisateur
     """
     __slots__ = ("__name", "__F")
-    #
+
     def __init__(self,
                  name       = "GenericUserScript",
                  asTemplate = None,
                  asString   = None,
-                 asScript   = None,
-                ):
+                 asScript   = None ):
         """
         """
         self.__name       = str(name)
@@ -1818,12 +1880,11 @@ class ExternalParameters(object):
     Classe générale d'interface pour le stockage des paramètres externes
     """
     __slots__ = ("__name", "__P")
-    #
+
     def __init__(self,
-                 name        = "GenericExternalParameters",
-                 asDict      = None,
-                 asScript    = None,
-                ):
+                 name     = "GenericExternalParameters",
+                 asDict   = None,
+                 asScript = None ):
         """
         """
         self.__name = str(name)
@@ -1831,10 +1892,7 @@ class ExternalParameters(object):
         #
         self.updateParameters( asDict, asScript )
 
-    def updateParameters(self,
-                 asDict     = None,
-                 asScript   = None,
-                ):
+    def updateParameters(self, asDict = None, asScript = None ):
         "Mise à jour des paramètres"
         if asDict is None and asScript is not None:
             __Dict = Interfaces.ImportFromScript(asScript).getvalue( self.__name, "ExternalParameters" )
@@ -1871,8 +1929,8 @@ class State(object):
     __slots__ = (
         "__name", "__check", "__V", "__T", "__is_vector", "__is_series",
         "shape", "size",
-        )
-    #
+    )
+
     def __init__(self,
                  name               = "GenericVector",
                  asVector           = None,
@@ -1882,8 +1940,7 @@ class State(object):
                  colNames           = None,
                  colMajor           = False,
                  scheduledBy        = None,
-                 toBeChecked        = False,
-                ):
+                 toBeChecked        = False ):
         """
         Permet de définir un vecteur :
         - asVector : entrée des données, comme un vecteur compatible avec le
@@ -1944,8 +2001,8 @@ class State(object):
         if __Vector is not None:
             self.__is_vector = True
             if isinstance(__Vector, str):
-               __Vector = PlatformInfo.strvect2liststr( __Vector )
-            self.__V         = numpy.ravel(numpy.asarray( __Vector, dtype=float )).reshape((-1,1))
+                __Vector = PlatformInfo.strvect2liststr( __Vector )
+            self.__V         = numpy.ravel(numpy.asarray( __Vector, dtype=float )).reshape((-1, 1))
             self.shape       = self.__V.shape
             self.size        = self.__V.size
         elif __Series is not None:
@@ -1965,12 +2022,12 @@ class State(object):
             else:
                 self.shape       = self.__V.shape()
             if len(self.shape) == 1:
-                self.shape       = (self.shape[0],1)
-            self.size        = self.shape[0] * self.shape[1]
+                self.shape       = (self.shape[0], 1)
+            self.size            = self.shape[0] * self.shape[1]
         else:
             raise ValueError(
-                "The %s object is improperly defined or undefined,"%self.__name+\
-                " it requires at minima either a vector, a list/tuple of"+\
+                "The %s object is improperly defined or undefined,"%self.__name + \
+                " it requires at minima either a vector, a list/tuple of" + \
                 " vectors or a persistent object. Please check your vector input.")
         #
         if scheduledBy is not None:
@@ -2008,8 +2065,8 @@ class Covariance(object):
     __slots__ = (
         "__name", "__check", "__C", "__is_scalar", "__is_vector", "__is_matrix",
         "__is_object", "shape", "size",
-        )
-    #
+    )
+
     def __init__(self,
                  name          = "GenericCovariance",
                  asCovariance  = None,
@@ -2017,8 +2074,7 @@ class Covariance(object):
                  asEyeByVector = None,
                  asCovObject   = None,
                  asScript      = None,
-                 toBeChecked   = False,
-                ):
+                 toBeChecked   = False ):
         """
         Permet de définir une covariance :
         - asCovariance : entrée des données, comme une matrice compatible avec
@@ -2061,22 +2117,23 @@ class Covariance(object):
         if __Scalar is not None:
             if isinstance(__Scalar, str):
                 __Scalar = PlatformInfo.strvect2liststr( __Scalar )
-                if len(__Scalar) > 0: __Scalar = __Scalar[0]
+                if len(__Scalar) > 0:
+                    __Scalar = __Scalar[0]
             if numpy.array(__Scalar).size != 1:
                 raise ValueError(
-                    "  The diagonal multiplier given to define a sparse matrix is"+\
-                    " not a unique scalar value.\n  Its actual measured size is"+\
+                    "  The diagonal multiplier given to define a sparse matrix is" + \
+                    " not a unique scalar value.\n  Its actual measured size is" + \
                     " %i. Please check your scalar input."%numpy.array(__Scalar).size)
             self.__is_scalar = True
             self.__C         = numpy.abs( float(__Scalar) )
-            self.shape       = (0,0)
+            self.shape       = (0, 0)
             self.size        = 0
         elif __Vector is not None:
             if isinstance(__Vector, str):
                 __Vector = PlatformInfo.strvect2liststr( __Vector )
             self.__is_vector = True
             self.__C         = numpy.abs( numpy.ravel(numpy.asarray( __Vector, dtype=float )) )
-            self.shape       = (self.__C.size,self.__C.size)
+            self.shape       = (self.__C.size, self.__C.size)
             self.size        = self.__C.size**2
         elif __Matrix is not None:
             self.__is_matrix = True
@@ -2086,14 +2143,14 @@ class Covariance(object):
         elif __Object is not None:
             self.__is_object = True
             self.__C         = __Object
-            for at in ("getT","getI","diag","trace","__add__","__sub__","__neg__","__matmul__","__mul__","__rmatmul__","__rmul__"):
-                if not hasattr(self.__C,at):
-                    raise ValueError("The matrix given for %s as an object has no attribute \"%s\". Please check your object input."%(self.__name,at))
-            if hasattr(self.__C,"shape"):
+            for at in ("getT", "getI", "diag", "trace", "__add__", "__sub__", "__neg__", "__matmul__", "__mul__", "__rmatmul__", "__rmul__"):
+                if not hasattr(self.__C, at):
+                    raise ValueError("The matrix given for %s as an object has no attribute \"%s\". Please check your object input."%(self.__name, at))
+            if hasattr(self.__C, "shape"):
                 self.shape       = self.__C.shape
             else:
-                self.shape       = (0,0)
-            if hasattr(self.__C,"size"):
+                self.shape       = (0, 0)
+            if hasattr(self.__C, "size"):
                 self.size        = self.__C.size
             else:
                 self.size        = 0
@@ -2107,11 +2164,11 @@ class Covariance(object):
         if self.__C is None:
             raise UnboundLocalError("%s covariance matrix value has not been set!"%(self.__name,))
         if self.ismatrix() and min(self.shape) != max(self.shape):
-            raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name,self.shape))
+            raise ValueError("The given matrix for %s is not a square one, its shape is %s. Please check your matrix input."%(self.__name, self.shape))
         if self.isobject() and min(self.shape) != max(self.shape):
-            raise ValueError("The matrix given for \"%s\" is not a square one, its shape is %s. Please check your object input."%(self.__name,self.shape))
+            raise ValueError("The matrix given for \"%s\" is not a square one, its shape is %s. Please check your object input."%(self.__name, self.shape))
         if self.isscalar() and self.__C <= 0:
-            raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your scalar input %s."%(self.__name,self.__C))
+            raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your scalar input %s."%(self.__name, self.__C))
         if self.isvector() and (self.__C <= 0).any():
             raise ValueError("The \"%s\" covariance matrix is not positive-definite. Please check your vector input."%(self.__name,))
         if self.ismatrix() and (self.__check or logging.getLogger().level < logging.WARNING):
@@ -2143,87 +2200,87 @@ class Covariance(object):
 
     def getI(self):
         "Inversion"
-        if   self.ismatrix():
-            return Covariance(self.__name+"I", asCovariance  = numpy.linalg.inv(self.__C) )
+        if self.ismatrix():
+            return Covariance(self.__name + "I", asCovariance  = numpy.linalg.inv(self.__C) )
         elif self.isvector():
-            return Covariance(self.__name+"I", asEyeByVector = 1. / self.__C )
+            return Covariance(self.__name + "I", asEyeByVector = 1. / self.__C )
         elif self.isscalar():
-            return Covariance(self.__name+"I", asEyeByScalar = 1. / self.__C )
-        elif self.isobject() and hasattr(self.__C,"getI"):
-            return Covariance(self.__name+"I", asCovObject   = self.__C.getI() )
+            return Covariance(self.__name + "I", asEyeByScalar = 1. / self.__C )
+        elif self.isobject() and hasattr(self.__C, "getI"):
+            return Covariance(self.__name + "I", asCovObject   = self.__C.getI() )
         else:
-            return None # Indispensable
+            return None  # Indispensable
 
     def getT(self):
         "Transposition"
-        if   self.ismatrix():
-            return Covariance(self.__name+"T", asCovariance  = self.__C.T )
+        if self.ismatrix():
+            return Covariance(self.__name + "T", asCovariance  = self.__C.T )
         elif self.isvector():
-            return Covariance(self.__name+"T", asEyeByVector = self.__C )
+            return Covariance(self.__name + "T", asEyeByVector = self.__C )
         elif self.isscalar():
-            return Covariance(self.__name+"T", asEyeByScalar = self.__C )
-        elif self.isobject() and hasattr(self.__C,"getT"):
-            return Covariance(self.__name+"T", asCovObject   = self.__C.getT() )
+            return Covariance(self.__name + "T", asEyeByScalar = self.__C )
+        elif self.isobject() and hasattr(self.__C, "getT"):
+            return Covariance(self.__name + "T", asCovObject   = self.__C.getT() )
         else:
             raise AttributeError("the %s covariance matrix has no getT attribute."%(self.__name,))
 
     def cholesky(self):
         "Décomposition de Cholesky"
-        if   self.ismatrix():
-            return Covariance(self.__name+"C", asCovariance  = numpy.linalg.cholesky(self.__C) )
+        if self.ismatrix():
+            return Covariance(self.__name + "C", asCovariance  = numpy.linalg.cholesky(self.__C) )
         elif self.isvector():
-            return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__C ) )
+            return Covariance(self.__name + "C", asEyeByVector = numpy.sqrt( self.__C ) )
         elif self.isscalar():
-            return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__C ) )
-        elif self.isobject() and hasattr(self.__C,"cholesky"):
-            return Covariance(self.__name+"C", asCovObject   = self.__C.cholesky() )
+            return Covariance(self.__name + "C", asEyeByScalar = numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C, "cholesky"):
+            return Covariance(self.__name + "C", asCovObject   = self.__C.cholesky() )
         else:
             raise AttributeError("the %s covariance matrix has no cholesky attribute."%(self.__name,))
 
     def choleskyI(self):
         "Inversion de la décomposition de Cholesky"
-        if   self.ismatrix():
-            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.inv(numpy.linalg.cholesky(self.__C)) )
+        if self.ismatrix():
+            return Covariance(self.__name + "H", asCovariance  = numpy.linalg.inv(numpy.linalg.cholesky(self.__C)) )
         elif self.isvector():
-            return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
+            return Covariance(self.__name + "H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
         elif self.isscalar():
-            return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
-        elif self.isobject() and hasattr(self.__C,"choleskyI"):
-            return Covariance(self.__name+"H", asCovObject   = self.__C.choleskyI() )
+            return Covariance(self.__name + "H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C, "choleskyI"):
+            return Covariance(self.__name + "H", asCovObject   = self.__C.choleskyI() )
         else:
             raise AttributeError("the %s covariance matrix has no choleskyI attribute."%(self.__name,))
 
     def sqrtm(self):
         "Racine carrée matricielle"
-        if   self.ismatrix():
+        if self.ismatrix():
             import scipy
-            return Covariance(self.__name+"C", asCovariance  = numpy.real(scipy.linalg.sqrtm(self.__C)) )
+            return Covariance(self.__name + "C", asCovariance  = numpy.real(scipy.linalg.sqrtm(self.__C)) )
         elif self.isvector():
-            return Covariance(self.__name+"C", asEyeByVector = numpy.sqrt( self.__C ) )
+            return Covariance(self.__name + "C", asEyeByVector = numpy.sqrt( self.__C ) )
         elif self.isscalar():
-            return Covariance(self.__name+"C", asEyeByScalar = numpy.sqrt( self.__C ) )
-        elif self.isobject() and hasattr(self.__C,"sqrtm"):
-            return Covariance(self.__name+"C", asCovObject   = self.__C.sqrtm() )
+            return Covariance(self.__name + "C", asEyeByScalar = numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C, "sqrtm"):
+            return Covariance(self.__name + "C", asCovObject   = self.__C.sqrtm() )
         else:
             raise AttributeError("the %s covariance matrix has no sqrtm attribute."%(self.__name,))
 
     def sqrtmI(self):
         "Inversion de la racine carrée matricielle"
-        if   self.ismatrix():
+        if self.ismatrix():
             import scipy
-            return Covariance(self.__name+"H", asCovariance  = numpy.linalg.inv(numpy.real(scipy.linalg.sqrtm(self.__C))) )
+            return Covariance(self.__name + "H", asCovariance  = numpy.linalg.inv(numpy.real(scipy.linalg.sqrtm(self.__C))) )
         elif self.isvector():
-            return Covariance(self.__name+"H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
+            return Covariance(self.__name + "H", asEyeByVector = 1.0 / numpy.sqrt( self.__C ) )
         elif self.isscalar():
-            return Covariance(self.__name+"H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
-        elif self.isobject() and hasattr(self.__C,"sqrtmI"):
-            return Covariance(self.__name+"H", asCovObject   = self.__C.sqrtmI() )
+            return Covariance(self.__name + "H", asEyeByScalar = 1.0 / numpy.sqrt( self.__C ) )
+        elif self.isobject() and hasattr(self.__C, "sqrtmI"):
+            return Covariance(self.__name + "H", asCovObject   = self.__C.sqrtmI() )
         else:
             raise AttributeError("the %s covariance matrix has no sqrtmI attribute."%(self.__name,))
 
     def diag(self, msize=None):
         "Diagonale de la matrice"
-        if   self.ismatrix():
+        if self.ismatrix():
             return numpy.diag(self.__C)
         elif self.isvector():
             return self.__C
@@ -2232,14 +2289,14 @@ class Covariance(object):
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
                 return self.__C * numpy.ones(int(msize))
-        elif self.isobject() and hasattr(self.__C,"diag"):
+        elif self.isobject() and hasattr(self.__C, "diag"):
             return self.__C.diag()
         else:
             raise AttributeError("the %s covariance matrix has no diag attribute."%(self.__name,))
 
     def trace(self, msize=None):
         "Trace de la matrice"
-        if   self.ismatrix():
+        if self.ismatrix():
             return numpy.trace(self.__C)
         elif self.isvector():
             return float(numpy.sum(self.__C))
@@ -2255,7 +2312,7 @@ class Covariance(object):
 
     def asfullmatrix(self, msize=None):
         "Matrice pleine"
-        if   self.ismatrix():
+        if self.ismatrix():
             return numpy.asarray(self.__C, dtype=float)
         elif self.isvector():
             return numpy.asarray( numpy.diag(self.__C), dtype=float )
@@ -2264,7 +2321,7 @@ class Covariance(object):
                 raise ValueError("the size of the %s covariance matrix has to be given in case of definition as a scalar over the diagonal."%(self.__name,))
             else:
                 return numpy.asarray( self.__C * numpy.eye(int(msize)), dtype=float )
-        elif self.isobject() and hasattr(self.__C,"asfullmatrix"):
+        elif self.isobject() and hasattr(self.__C, "asfullmatrix"):
             return self.__C.asfullmatrix()
         else:
             raise AttributeError("the %s covariance matrix has no asfullmatrix attribute."%(self.__name,))
@@ -2286,32 +2343,32 @@ class Covariance(object):
 
     def __add__(self, other):
         "x.__add__(y) <==> x+y"
-        if   self.ismatrix() or self.isobject():
+        if self.ismatrix() or self.isobject():
             return self.__C + numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
             _A = numpy.asarray(other)
             if len(_A.shape) == 1:
-                _A.reshape((-1,1))[::2] += self.__C
+                _A.reshape((-1, 1))[::2] += self.__C
             else:
-                _A.reshape(_A.size)[::_A.shape[1]+1] += self.__C
+                _A.reshape(_A.size)[::_A.shape[1] + 1] += self.__C
             return numpy.asmatrix(_A)
 
     def __radd__(self, other):
         "x.__radd__(y) <==> y+x"
-        raise NotImplementedError("%s covariance matrix __radd__ method not available for %s type!"%(self.__name,type(other)))
+        raise NotImplementedError("%s covariance matrix __radd__ method not available for %s type!"%(self.__name, type(other)))
 
     def __sub__(self, other):
         "x.__sub__(y) <==> x-y"
-        if   self.ismatrix() or self.isobject():
+        if self.ismatrix() or self.isobject():
             return self.__C - numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
             _A = numpy.asarray(other)
-            _A.reshape(_A.size)[::_A.shape[1]+1] = self.__C - _A.reshape(_A.size)[::_A.shape[1]+1]
+            _A.reshape(_A.size)[::_A.shape[1] + 1] = self.__C - _A.reshape(_A.size)[::_A.shape[1] + 1]
             return numpy.asmatrix(_A)
 
     def __rsub__(self, other):
         "x.__rsub__(y) <==> y-x"
-        raise NotImplementedError("%s covariance matrix __rsub__ method not available for %s type!"%(self.__name,type(other)))
+        raise NotImplementedError("%s covariance matrix __rsub__ method not available for %s type!"%(self.__name, type(other)))
 
     def __neg__(self):
         "x.__neg__() <==> -x"
@@ -2319,23 +2376,23 @@ class Covariance(object):
 
     def __matmul__(self, other):
         "x.__mul__(y) <==> x@y"
-        if   self.ismatrix() and isinstance(other, (int, float)):
+        if self.ismatrix() and isinstance(other, (int, float)):
             return numpy.asarray(self.__C) * other
         elif self.ismatrix() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
-            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+            if numpy.ravel(other).size == self.shape[1]:  # Vecteur
                 return numpy.ravel(self.__C @ numpy.ravel(other))
-            elif numpy.asarray(other).shape[0] == self.shape[1]: # Matrice
+            elif numpy.asarray(other).shape[0] == self.shape[1]:  # Matrice
                 return numpy.asarray(self.__C) @ numpy.asarray(other)
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asarray(other).shape,self.__name))
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape, numpy.asarray(other).shape, self.__name))
         elif self.isvector() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
-            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+            if numpy.ravel(other).size == self.shape[1]:  # Vecteur
                 return numpy.ravel(self.__C) * numpy.ravel(other)
-            elif numpy.asarray(other).shape[0] == self.shape[1]: # Matrice
-                return numpy.ravel(self.__C).reshape((-1,1)) * numpy.asarray(other)
+            elif numpy.asarray(other).shape[0] == self.shape[1]:  # Matrice
+                return numpy.ravel(self.__C).reshape((-1, 1)) * numpy.asarray(other)
             else:
-                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
-        elif self.isscalar() and isinstance(other,numpy.matrix):
+                raise ValueError("operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape, numpy.ravel(other).shape, self.__name))
+        elif self.isscalar() and isinstance(other, numpy.matrix):
             return numpy.asarray(self.__C * other)
         elif self.isscalar() and isinstance(other, (list, numpy.ndarray, tuple)):
             if len(numpy.asarray(other).shape) == 1 or numpy.asarray(other).shape[1] == 1 or numpy.asarray(other).shape[0] == 1:
@@ -2345,29 +2402,29 @@ class Covariance(object):
         elif self.isobject():
             return self.__C.__matmul__(other)
         else:
-            raise NotImplementedError("%s covariance matrix __matmul__ method not available for %s type!"%(self.__name,type(other)))
+            raise NotImplementedError("%s covariance matrix __matmul__ method not available for %s type!"%(self.__name, type(other)))
 
     def __mul__(self, other):
         "x.__mul__(y) <==> x*y"
-        if   self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
+        if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return self.__C * other
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
-            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+            if numpy.ravel(other).size == self.shape[1]:  # Vecteur
                 return self.__C * numpy.asmatrix(numpy.ravel(other)).T
-            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]:  # Matrice
                 return self.__C * numpy.asmatrix(other)
             else:
                 raise ValueError(
-                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.asmatrix(other).shape,self.__name))
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape, numpy.asmatrix(other).shape, self.__name))
         elif self.isvector() and isinstance(other, (list, numpy.matrix, numpy.ndarray, tuple)):
-            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+            if numpy.ravel(other).size == self.shape[1]:  # Vecteur
                 return numpy.asmatrix(self.__C * numpy.ravel(other)).T
-            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]:  # Matrice
                 return numpy.asmatrix((self.__C * (numpy.asarray(other).transpose())).transpose())
             else:
                 raise ValueError(
-                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape,numpy.ravel(other).shape,self.__name))
-        elif self.isscalar() and isinstance(other,numpy.matrix):
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(self.shape, numpy.ravel(other).shape, self.__name))
+        elif self.isscalar() and isinstance(other, numpy.matrix):
             return self.__C * other
         elif self.isscalar() and isinstance(other, (list, numpy.ndarray, tuple)):
             if len(numpy.asarray(other).shape) == 1 or numpy.asarray(other).shape[1] == 1 or numpy.asarray(other).shape[0] == 1:
@@ -2378,65 +2435,65 @@ class Covariance(object):
             return self.__C.__mul__(other)
         else:
             raise NotImplementedError(
-                "%s covariance matrix __mul__ method not available for %s type!"%(self.__name,type(other)))
+                "%s covariance matrix __mul__ method not available for %s type!"%(self.__name, type(other)))
 
     def __rmatmul__(self, other):
         "x.__rmul__(y) <==> y@x"
         if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return other * self.__C
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
-            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+            if numpy.ravel(other).size == self.shape[1]:  # Vecteur
                 return numpy.asmatrix(numpy.ravel(other)) * self.__C
-            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]:  # Matrice
                 return numpy.asmatrix(other) * self.__C
             else:
                 raise ValueError(
-                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
-        elif self.isvector() and isinstance(other,numpy.matrix):
-            if numpy.ravel(other).size == self.shape[0]: # Vecteur
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape, self.shape, self.__name))
+        elif self.isvector() and isinstance(other, numpy.matrix):
+            if numpy.ravel(other).size == self.shape[0]:  # Vecteur
                 return numpy.asmatrix(numpy.ravel(other) * self.__C)
-            elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
+            elif numpy.asmatrix(other).shape[1] == self.shape[0]:  # Matrice
                 return numpy.asmatrix(numpy.array(other) * self.__C)
             else:
                 raise ValueError(
-                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
-        elif self.isscalar() and isinstance(other,numpy.matrix):
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape, self.shape, self.__name))
+        elif self.isscalar() and isinstance(other, numpy.matrix):
             return other * self.__C
         elif self.isobject():
             return self.__C.__rmatmul__(other)
         else:
             raise NotImplementedError(
-                "%s covariance matrix __rmatmul__ method not available for %s type!"%(self.__name,type(other)))
+                "%s covariance matrix __rmatmul__ method not available for %s type!"%(self.__name, type(other)))
 
     def __rmul__(self, other):
         "x.__rmul__(y) <==> y*x"
         if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return other * self.__C
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
-            if numpy.ravel(other).size == self.shape[1]: # Vecteur
+            if numpy.ravel(other).size == self.shape[1]:  # Vecteur
                 return numpy.asmatrix(numpy.ravel(other)) * self.__C
-            elif numpy.asmatrix(other).shape[0] == self.shape[1]: # Matrice
+            elif numpy.asmatrix(other).shape[0] == self.shape[1]:  # Matrice
                 return numpy.asmatrix(other) * self.__C
             else:
                 raise ValueError(
-                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape,self.shape,self.__name))
-        elif self.isvector() and isinstance(other,numpy.matrix):
-            if numpy.ravel(other).size == self.shape[0]: # Vecteur
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.asmatrix(other).shape, self.shape, self.__name))
+        elif self.isvector() and isinstance(other, numpy.matrix):
+            if numpy.ravel(other).size == self.shape[0]:  # Vecteur
                 return numpy.asmatrix(numpy.ravel(other) * self.__C)
-            elif numpy.asmatrix(other).shape[1] == self.shape[0]: # Matrice
+            elif numpy.asmatrix(other).shape[1] == self.shape[0]:  # Matrice
                 return numpy.asmatrix(numpy.array(other) * self.__C)
             else:
                 raise ValueError(
-                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape,self.shape,self.__name))
-        elif self.isscalar() and isinstance(other,numpy.matrix):
+                    "operands could not be broadcast together with shapes %s %s in %s matrix"%(numpy.ravel(other).shape, self.shape, self.__name))
+        elif self.isscalar() and isinstance(other, numpy.matrix):
             return other * self.__C
-        elif self.isscalar() and isinstance(other,float):
+        elif self.isscalar() and isinstance(other, float):
             return other * self.__C
         elif self.isobject():
             return self.__C.__rmul__(other)
         else:
             raise NotImplementedError(
-                "%s covariance matrix __rmul__ method not available for %s type!"%(self.__name,type(other)))
+                "%s covariance matrix __rmul__ method not available for %s type!"%(self.__name, type(other)))
 
     def __len__(self):
         "x.__len__() <==> len(x)"
@@ -2448,12 +2505,14 @@ class Observer2Func(object):
     Création d'une fonction d'observateur a partir de son texte
     """
     __slots__ = ("__corps")
-    #
+
     def __init__(self, corps=""):
         self.__corps = corps
-    def func(self,var,info):
+
+    def func(self, var, info):
         "Fonction d'observation"
         exec(self.__corps)
+
     def getfunc(self):
         "Restitution du pointeur de fonction dans l'objet"
         return self.func
@@ -2466,25 +2525,25 @@ class CaseLogger(object):
     __slots__ = (
         "__name", "__objname", "__logSerie", "__switchoff", "__viewers",
         "__loaders",
-        )
-    #
+    )
+
     def __init__(self, __name="", __objname="case", __addViewers=None, __addLoaders=None):
         self.__name     = str(__name)
         self.__objname  = str(__objname)
         self.__logSerie = []
         self.__switchoff = False
         self.__viewers = {
-            "TUI" :Interfaces._TUIViewer,
-            "SCD" :Interfaces._SCDViewer,
-            "YACS":Interfaces._YACSViewer,
-            "SimpleReportInRst":Interfaces._SimpleReportInRstViewer,
-            "SimpleReportInHtml":Interfaces._SimpleReportInHtmlViewer,
-            "SimpleReportInPlainTxt":Interfaces._SimpleReportInPlainTxtViewer,
-            }
+            "TUI": Interfaces._TUIViewer,
+            "SCD": Interfaces._SCDViewer,
+            "YACS": Interfaces._YACSViewer,
+            "SimpleReportInRst": Interfaces._SimpleReportInRstViewer,
+            "SimpleReportInHtml": Interfaces._SimpleReportInHtmlViewer,
+            "SimpleReportInPlainTxt": Interfaces._SimpleReportInPlainTxtViewer,
+        }
         self.__loaders = {
-            "TUI" :Interfaces._TUIViewer,
-            "COM" :Interfaces._COMViewer,
-            }
+            "TUI": Interfaces._TUIViewer,
+            "COM": Interfaces._COMViewer,
+        }
         if __addViewers is not None:
             self.__viewers.update(dict(__addViewers))
         if __addLoaders is not None:
@@ -2493,7 +2552,8 @@ class CaseLogger(object):
     def register(self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False):
         "Enregistrement d'une commande individuelle"
         if __command is not None and __keys is not None and __local is not None and not self.__switchoff:
-            if "self" in __keys: __keys.remove("self")
+            if "self" in __keys:
+                __keys.remove("self")
             self.__logSerie.append( (str(__command), __keys, __local, __pre, __switchoff) )
             if __switchoff:
                 self.__switchoff = True
@@ -2522,8 +2582,7 @@ def MultiFonction(
         _extraArguments = None,
         _sFunction      = lambda x: x,
         _mpEnabled      = False,
-        _mpWorkers      = None,
-        ):
+        _mpWorkers      = None ):
     """
     Pour une liste ordonnée de vecteurs en entrée, renvoie en sortie la liste
     correspondante de valeurs de la fonction en argument

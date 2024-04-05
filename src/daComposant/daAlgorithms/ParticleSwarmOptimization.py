@@ -20,7 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import numpy, logging, copy
+import numpy
 from daCore import BasicObjects
 from daAlgorithms.Atoms import ecwnpso, ecwopso, ecwapso, ecwspso, ecwpspso
 
@@ -40,11 +40,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SPSO-2011-AIS",
                 "SPSO-2011-SIS",
                 "SPSO-2011-PSIS",
-                ],
+            ],
             listadv  = [
                 "PSO",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
             default  = 50,
@@ -52,26 +52,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Nombre maximal de pas d'optimisation",
             minval   = 0,
             oldname  = "MaximumNumberOfSteps",
-            )
+        )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfFunctionEvaluations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal d'évaluations de la fonction",
             minval   = -1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SetSeed",
             typecast = numpy.random.seed,
             message  = "Graine fixée pour le générateur aléatoire",
-            )
+        )
         self.defineRequiredParameter(
             name     = "NumberOfInsects",
             default  = 40,
             typecast = int,
             message  = "Nombre d'insectes dans l'essaim",
             minval   = -1,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SwarmTopology",
             default  = "FullyConnectedNeighborhood",
@@ -83,35 +83,35 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "RingNeighborhoodWithRadius2", "RingNeighbourhoodWithRadius2",
                 "AdaptativeRandomWith3Neighbors", "AdaptativeRandomWith3Neighbours", "abest",
                 "AdaptativeRandomWith5Neighbors", "AdaptativeRandomWith5Neighbours",
-                ],
+            ],
             listadv  = [
                 "VonNeumannNeighborhood", "VonNeumannNeighbourhood",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "InertiaWeight",
-            default  = 0.72135, # 1/(2*ln(2))
+            default  = 0.72135,  # 1/(2*ln(2))
             typecast = float,
-            message  = "Part de la vitesse de l'essaim qui est imposée à l'insecte, ou poids de l'inertie (entre 0 et 1)",
+            message  = "Part de la vitesse de l'essaim qui est imposée à l'insecte, ou poids de l'inertie (entre 0 et 1)",  # noqa: E501
             minval   = 0.,
             maxval   = 1.,
             oldname  = "SwarmVelocity",
-            )
+        )
         self.defineRequiredParameter(
             name     = "CognitiveAcceleration",
-            default  = 1.19315, # 1/2+ln(2)
+            default  = 1.19315,  # 1/2+ln(2)
             typecast = float,
             message  = "Taux de rappel à la meilleure position de l'insecte précédemment connue (positif)",
             minval   = 0.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "SocialAcceleration",
-            default  = 1.19315, # 1/2+ln(2)
+            default  = 1.19315,  # 1/2+ln(2)
             typecast = float,
             message  = "Taux de rappel au meilleur insecte du groupe local (positif)",
             minval   = 0.,
             oldname  = "GroupRecallRate",
-            )
+        )
         self.defineRequiredParameter(
             name     = "VelocityClampingFactor",
             default  = 0.3,
@@ -119,7 +119,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Facteur de réduction de l'amplitude de variation des vitesses (entre 0 et 1)",
             minval   = 0.0001,
             maxval   = 1.,
-            )
+        )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
             default  = "AugmentedWeightedLeastSquares",
@@ -131,14 +131,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "LeastSquares", "LS", "L2",
                 "AbsoluteValue", "L1",
                 "MaximumError", "ME", "Linf",
-                ],
-            )
+            ],
+        )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-            )
+        )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
@@ -162,36 +162,38 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-                ]
-            )
-        self.defineRequiredParameter( # Pas de type
+            ]
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des paires de bornes",
-            )
-        self.defineRequiredParameter( # Pas de type
+        )
+        self.defineRequiredParameter(  # Pas de type
             name     = "BoxBounds",
             message  = "Liste des paires de bornes d'incréments",
-            )
+        )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
             typecast = numpy.ravel,
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
-            )
+        )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
+        )
+        self.setAttributes(
+            tags=(
+                "Optimization",
+                "NonLinear",
+                "MetaHeuristic",
+                "Population",
             )
-        self.setAttributes(tags=(
-            "Optimization",
-            "NonLinear",
-            "MetaHeuristic",
-            "Population",
-            ))
+        )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
-        #--------------------------
-        if   self._parameters["Variant"] in ["CanonicalPSO", "PSO"]:
+        # --------------------------
+        if self._parameters["Variant"] in ["CanonicalPSO", "PSO"]:
             ecwnpso.ecwnpso(self, Xb, Y, HO, R, B)
         #
         elif self._parameters["Variant"] in ["OGCR"]:
@@ -207,11 +209,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         elif self._parameters["Variant"] in ["SPSO-2011-PSIS"]:
             ecwpspso.ecwpspso(self, Xb, Y, HO, R, B)
         #
-        #--------------------------
+        # --------------------------
         else:
             raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
         #
-        self._post_run(HO)
+        self._post_run(HO, EM)
         return 0
 
 # ==============================================================================
