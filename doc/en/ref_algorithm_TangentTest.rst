@@ -32,7 +32,8 @@ Checking algorithm "*TangentTest*"
 
 This algorithm allows to check the quality of the tangent operator, by
 calculating a residue whose theoretical properties are known. The test is
-applicable to any operator, of evolution or observation.
+applicable to any operator, of evolution :math:`\mathcal{D}` or observation
+:math:`\mathcal{H}`.
 
 For all formulas, with :math:`\mathbf{x}` the current verification point, we
 take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and

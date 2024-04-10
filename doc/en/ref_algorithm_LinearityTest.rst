@@ -32,10 +32,14 @@ Checking algorithm "*LinearityTest*"
 
 This algorithm allows to check the linear quality of the operator, by
 calculating a residue with known theoretical properties. Different residue
-formula are available.
+formula are available. The test is applicable to any operator, of evolution
+:math:`\mathcal{D}` or observation :math:`\mathcal{H}`.
 
-In any cases, one take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
-:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0`. :math:`F` is the calculation code.
+In any cases, with :math:`\mathbf{x}` the current verification point, one take
+:math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
+:math:`\mathbf{dx}=\alpha*\mathbf{dx}_0` with :math:`\alpha_0`a user scale
+parameter, at 1 by default. :math:`F` is the calculation code (given here by
+the user by using the observation operator command "*ObservationOperator*").
 
 "CenteredDL" residue
 ********************

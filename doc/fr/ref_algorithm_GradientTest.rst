@@ -30,10 +30,11 @@ Algorithme de vérification "*GradientTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme permet de vérifier la qualité du gradient de l'opérateur, en
+Cet algorithme permet de vérifier la qualité du gradient d'un opérateur, en
 calculant un résidu dont les propriétés théoriques sont connues. Plusieurs
 formules de résidu sont disponibles. Le test est applicable à un opérateur
-quelconque, d'évolution comme d'observation.
+quelconque, d'évolution :math:`\mathcal{D}` comme d'observation
+:math:`\mathcal{H}`..
 
 Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
 vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et

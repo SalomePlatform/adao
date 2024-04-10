@@ -107,7 +107,6 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         else:
             Cm = None
         #
-        # Pndemi = numpy.real(scipy.linalg.cholesky(Pn))
         Pndemi = numpy.real(scipy.linalg.sqrtm(Pn))
         Xnmu = Xn + Pndemi @ SC
         nbSpts = SC.shape[1]
@@ -133,7 +132,6 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             dXEnnmuXhmn = XEnnmu[:, point].flat - Xhmn
             Pmn += Wc[point] * numpy.outer(dXEnnmuXhmn, dXEnnmuXhmn)
         #
-        # Pmndemi = numpy.real(scipy.linalg.cholesky(Pmn))
         Pmndemi = numpy.real(scipy.linalg.sqrtm(Pmn))
         Xnnmu = Xhmn.reshape((-1, 1)) + Pmndemi @ SC
         #

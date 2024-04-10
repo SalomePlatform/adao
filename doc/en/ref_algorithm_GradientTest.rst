@@ -30,9 +30,10 @@ Checking algorithm "*GradientTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to check the quality of the adjoint operator, by
+This algorithm allows to check the quality of an adjoint operator, by
 calculating a residue with known theoretical properties. Different residue
-formula are available.
+formula are available. The test is applicable to any operator, of evolution
+:math:`\mathcal{D}` or observation :math:`\mathcal{H}`.
 
 In any cases, one take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and
 :math:`\mathbf{dx}=\alpha*\mathbf{dx}_0` with :math:`\alpha_0` a user scaling

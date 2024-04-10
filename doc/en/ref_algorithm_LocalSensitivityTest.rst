@@ -30,15 +30,15 @@ Checking algorithm "*LocalSensitivityTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm allows to calculate the value of the Jacobian of the operator
-:math:`H` with respect to the input variables :math:`\mathbf{x}`. This operator
-appears in the relation:
+This algorithm allows to calculate the value of the Jacobian of the observation
+operator :math:`\mathcal{H}` with respect to the input variables
+:math:`\mathbf{x}`. This operator appears in the relation:
 
-.. math:: \mathbf{y} = H(\mathbf{x})
+.. math:: \mathbf{y} = \mathcal{H}(\mathbf{x})
 
 (see :ref:`section_theory` for further explanations). This Jacobian is the
-linearized operator (or the tangent one) :math:`\mathbf{H}` of the :math:`H`
-near the chosen checking point.
+linearized operator (or the tangent one) :math:`\mathbf{H}` of the
+:math:`\mathcal{H}` near the chosen checking point.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst

@@ -129,8 +129,11 @@ import os, sys, logging
 adao_py_dir = os.path.abspath(os.path.dirname(__file__)) # Variable témoin
 sys.path.insert(0, adao_py_dir)
 
-from daCore import Persistence # PathManagement activé dans Persistence
 from daCore.version import name, version, year, date, __version__
+try:
+    from daCore import Persistence # PathManagement activé dans Persistence
+except:
+    logging.debug("INIT Pas de chargement initial de Persistence")
 try:
     from daYacsIntegration.daOptimizerLoop import *
 except:

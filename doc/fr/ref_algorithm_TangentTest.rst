@@ -32,7 +32,8 @@ Algorithme de vérification "*TangentTest*"
 
 Cet algorithme permet de vérifier la qualité de l'opérateur tangent, en
 calculant un résidu dont les propriétés théoriques sont connues. Le test est
-applicable à un opérateur quelconque, d'évolution comme d'observation.
+applicable à un opérateur quelconque, d'évolution :math:`\mathcal{D}` comme
+d'observation :math:`\mathcal{H}`.
 
 Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
 vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et

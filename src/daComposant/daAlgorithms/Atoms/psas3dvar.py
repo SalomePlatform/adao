@@ -128,6 +128,8 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
         elif vt("1.12.0") <= vt(scipy.version.version) <= vt("1.12.99"):
             import daAlgorithms.Atoms.lbfgsb112hlt as optimiseur
+        elif vt("1.13.0") <= vt(scipy.version.version) <= vt("1.13.99"):
+            import daAlgorithms.Atoms.lbfgsb113hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(

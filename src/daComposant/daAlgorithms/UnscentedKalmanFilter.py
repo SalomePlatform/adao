@@ -51,7 +51,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "EstimationOf",
             default  = "State",
             typecast = str,
-            message  = "Estimation d'etat ou de parametres",
+            message  = "Estimation d'état ou de paramètres",
             listval  = ["State", "Parameters"],
         )
         self.defineRequiredParameter(

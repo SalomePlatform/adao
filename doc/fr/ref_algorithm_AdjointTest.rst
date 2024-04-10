@@ -32,8 +32,8 @@ Algorithme de vérification "*AdjointTest*"
 
 Cet algorithme permet de vérifier la qualité de l'adjoint d'un opérateur
 :math:`F`, en calculant un résidu dont les propriétés théoriques sont connues.
-Le test est applicable à un opérateur quelconque, d'évolution comme
-d'observation.
+Le test est applicable à un opérateur quelconque, d'évolution
+:math:`\mathcal{D}` comme d'observation :math:`\mathcal{H}`.
 
 Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
 vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et

@@ -32,7 +32,8 @@ Checking algorithm "*AdjointTest*"
 
 This algorithm allows to check the quality of the adjoint of an operator
 :math:`F`, by computing a residue whose theoretical properties are known. The
-test is applicable to any operator, of evolution or observation.
+test is applicable to any operator, of evolution :math:`\mathcal{D}` or
+observation :math:`\mathcal{H}`..
 
 For all formulas, with :math:`\mathbf{x}` the current verification point, we
 take :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` and

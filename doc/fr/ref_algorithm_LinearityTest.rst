@@ -34,7 +34,7 @@ Cet algorithme permet de vérifier la qualité de linéarité d'un opérateur, e
 calculant un résidu dont les propriétés théoriques sont connues. Plusieurs
 formules de résidu sont utilisables et sont décrites ci-dessous avec leur
 interprétation. Le test est applicable à un opérateur quelconque, d'évolution
-comme d'observation.
+:math:`\mathcal{D}` comme d'observation :math:`\mathcal{H}`.
 
 Pour toutes les formules, avec :math:`\mathbf{x}` le point courant de
 vérification, on prend :math:`\mathbf{dx}_0=Normal(0,\mathbf{x})` et

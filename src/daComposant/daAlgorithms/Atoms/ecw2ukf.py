@@ -109,7 +109,6 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         else:
             Cm = None
         #
-        # Pndemi = numpy.real(scipy.linalg.cholesky(Pn))
         Pndemi = numpy.real(scipy.linalg.sqrtm(Pn))
         Xnmu = Xn + Pndemi @ SC
         nbSpts = SC.shape[1]

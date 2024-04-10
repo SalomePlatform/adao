@@ -31,14 +31,14 @@ Algorithme de vérification "*LocalSensitivityTest*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'établir la valeur de la Jacobienne de l'opérateur
-:math:`H` par rapport aux variables d'entrée :math:`\mathbf{x}`. Cet opérateur
-intervient dans la relation :
+d'observation :math:`\mathcal{H}` par rapport aux variables d'entrée
+:math:`\mathbf{x}`. Cet opérateur intervient dans la relation :
 
-.. math:: \mathbf{y} = H(\mathbf{x})
+.. math:: \mathbf{y} = \mathcal{H}(\mathbf{x})
 
 (voir :ref:`section_theory` pour de plus amples explications). Cette jacobienne
 est l'opérateur linéarisé (ou opérateur tangent) :math:`\mathbf{H}` de
-:math:`H` autour du point de vérification choisi.
+:math:`\mathcal{H}` autour du point de vérification choisi.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
