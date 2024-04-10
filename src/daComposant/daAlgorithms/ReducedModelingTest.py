@@ -118,7 +118,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfModes",
-            default  = 15000,
+            default  = 1000000,
             typecast = int,
             message  = "Nombre maximal de modes pour l'analyse",
             minval   = 0,
@@ -144,9 +144,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         )
         self.defineRequiredParameter(
             name     = "ResultFile",
-            default  = self._name + "_result_file",
+            default  = self._name + "_result_file.pdf",
             typecast = str,
-            message  = "Nom de base (hors extension) des fichiers de sauvegarde des résultats",
+            message  = "Nom de base (y.c. extension) des fichiers de sauvegarde des résultats",
         )
         self.defineRequiredParameter(
             name     = "PlotAndSave",

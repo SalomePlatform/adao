@@ -6,7 +6,8 @@ MaximumNumberOfLocations
   optimale peut éventuellement trouver moins de positions que ce qui est requis
   par cette clé, comme par exemple dans le cas où le résidu associé à
   l'approximation est inférieur au critère et conduit à l'arrêt anticipé de la
-  recherche optimale.
+  recherche optimale. Il est recommandé de l’adapter aux besoins pour des
+  problèmes réels.
 
   Exemple :
   ``{"MaximumNumberOfLocations":5}``

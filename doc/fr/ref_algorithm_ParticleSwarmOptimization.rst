@@ -56,6 +56,8 @@ et robustes suivantes :
     pair: Variant ; OGCR
     pair: Variant ; SPSO-2011
     pair: Variant ; AIS PSO
+    pair: Variant ; SIS PSO
+    pair: Variant ; PSIS PSO
     pair: Variant ; APSO
     pair: Variant ; SPSO-2011-SIS
     pair: Variant ; SPSO-2011-PSIS

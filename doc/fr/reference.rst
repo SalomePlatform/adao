@@ -149,6 +149,7 @@ section générale donnant :ref:`section_theory`.
    ref_algorithm_ObservationSimulationComparisonTest
    ref_algorithm_ObserverTest
    ref_algorithm_ParallelFunctionTest
+   ref_algorithm_ReducedModelingTest
    ref_algorithm_SamplingTest
    ref_algorithm_TangentTest
    ref_checking_keywords
