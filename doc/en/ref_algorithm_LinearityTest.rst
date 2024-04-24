@@ -114,6 +114,13 @@ If it is equal to 0 only on part of the variation domain of increment
 :math:`F` is verified.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

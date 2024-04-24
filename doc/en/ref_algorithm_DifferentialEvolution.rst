@@ -44,6 +44,13 @@ with or without weights. The default error function is the augmented weighted
 least squares function, classically used in data assimilation.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropNonLocalOptimization.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

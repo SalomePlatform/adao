@@ -95,6 +95,15 @@ moyens pour obtenir une assimilation de données plus économique et de qualité
 (éventuellement) similaire.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropLocalOptimization.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. include:: snippets/FeaturePropParallelAlgorithm.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

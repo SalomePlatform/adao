@@ -41,6 +41,13 @@ linearized operator (or the tangent one) :math:`\mathbf{H}` of the
 :math:`\mathcal{H}` near the chosen checking point.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

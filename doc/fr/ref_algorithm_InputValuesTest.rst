@@ -39,6 +39,11 @@ si une variable est de grande taille, cette restitution peut être
 informatiquement problématique*).
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

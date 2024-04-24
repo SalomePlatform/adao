@@ -51,6 +51,13 @@ entries themselves beforehand with the intended test
 :ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. include:: snippets/FeaturePropParallelAlgorithm.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

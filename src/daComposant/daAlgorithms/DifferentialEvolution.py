@@ -154,6 +154,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MetaHeuristic",
                 "Population",
             ),
+            features=(
+                "NonLocalOptimization",
+                "DerivativeFree",
+            ),
         )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

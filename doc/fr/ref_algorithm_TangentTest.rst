@@ -60,6 +60,11 @@ l':ref:`section_ref_algorithm_LinearityTest`), et le tangent est valide jusqu'à
 ce que l'on atteigne la précision du calcul.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

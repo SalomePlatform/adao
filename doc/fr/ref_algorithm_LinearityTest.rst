@@ -115,6 +115,13 @@ l'incrément :math:`\alpha`, c'est sur cette partie que l'hypothèse de linéari
 de F est vérifiée.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

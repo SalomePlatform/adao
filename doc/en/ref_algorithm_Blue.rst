@@ -68,6 +68,15 @@ each physical model, making the method not robust. For these reasons, this
 method is not proposed nor recommended.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropLocalOptimization.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

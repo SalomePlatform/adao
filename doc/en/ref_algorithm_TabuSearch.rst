@@ -51,6 +51,13 @@ to exclude (hence the name *tabu*) the return to the last explored states.
 Positions already explored are kept in a list of finite length.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropNonLocalOptimization.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

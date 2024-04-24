@@ -53,6 +53,13 @@ derniers états explorés. Les positions déjà explorées sont conservées dans
 liste de longueur finie.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropNonLocalOptimization.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

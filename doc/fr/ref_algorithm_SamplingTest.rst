@@ -68,6 +68,13 @@ finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en cours de
 calcul à l'aide des "*observer*" adaptés.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. include:: snippets/FeaturePropParallelAlgorithm.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

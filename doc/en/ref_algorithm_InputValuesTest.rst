@@ -37,6 +37,11 @@ whole content of the variables read in printed form for verification (*warning,
 if a variable is large in size, this can be difficult*).
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

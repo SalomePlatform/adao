@@ -36,6 +36,11 @@ that can be potentially observed. It is activated only on those who are
 explicitly associated with the *observer* in its declaration.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Observers.rst

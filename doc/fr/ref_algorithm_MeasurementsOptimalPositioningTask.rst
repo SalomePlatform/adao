@@ -102,6 +102,13 @@ positionnement des mesures, en utilisant le variant "*lcEIM*" ou "*lcDEIM*"
 d'analyse pour une recherche de positionnement contraint.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. include:: snippets/FeaturePropParallelAlgorithm.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 *Aucune*

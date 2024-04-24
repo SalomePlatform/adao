@@ -37,6 +37,13 @@ quantiles sur les variables observées qui vont permettre de déterminer les
 paramètres de modèles satisfaisant aux conditions de quantiles.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropLocalOptimization.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Background.rst

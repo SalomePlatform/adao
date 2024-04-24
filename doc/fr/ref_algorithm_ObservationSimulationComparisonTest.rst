@@ -57,6 +57,11 @@ vérifier préalablement les entrées elles-mêmes avec le test prévu
 :ref:`section_ref_algorithm_InputValuesTest`.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

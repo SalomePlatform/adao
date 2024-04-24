@@ -190,6 +190,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ),
             features=(
                 "LocalOptimization",
+                "DerivativeFree",
                 "ParallelAlgorithm",
             ),
         )

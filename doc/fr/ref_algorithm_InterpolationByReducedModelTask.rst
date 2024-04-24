@@ -69,6 +69,11 @@ mesures aux positions requises, sans devoir refaire l'analyse préalable.
     **Schéma général d'utilisation de l'algorithme**
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Observation.rst

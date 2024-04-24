@@ -41,6 +41,13 @@ est l'opérateur linéarisé (ou opérateur tangent) :math:`\mathbf{H}` de
 :math:`\mathcal{H}` autour du point de vérification choisi.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

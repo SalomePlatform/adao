@@ -37,6 +37,11 @@ activée que sur celles qui sont explicitement associées avec cet *observer*
 dans sa déclaration.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/Observers.rst

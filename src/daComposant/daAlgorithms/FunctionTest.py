@@ -77,7 +77,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.setAttributes(
             tags=(
                 "Checking",
-            )
+            ),
+            features=(
+                "DerivativeFree",
+                "ParallelFree",
+            ),
         )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):

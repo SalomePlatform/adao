@@ -53,6 +53,13 @@ de :math:`F`. Si elle n'est pas donnée, on prend son évaluation par défaut
 Ce résidu doit rester constamment égal à zéro à la précision du calcul.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeNeeded.rst
+
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

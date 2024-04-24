@@ -99,6 +99,13 @@ positioning, using the analysis variant "*lcEIM*" or "*lcDEIM*" for a
 constrained positioning search.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. include:: snippets/FeaturePropParallelAlgorithm.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 *None*

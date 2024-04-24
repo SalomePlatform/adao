@@ -70,6 +70,13 @@ d'échantillonnage pour établir un ensemble de valeurs de fonctionnelle d'erreu
 :math:`J` à partir d'observations :math:`\mathbf{y}^o`.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. include:: snippets/FeaturePropParallelAlgorithm.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/CheckingPoint.rst

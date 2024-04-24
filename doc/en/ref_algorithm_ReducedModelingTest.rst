@@ -47,6 +47,11 @@ Once the analysis is complete, a summary is displayed and, on request, a
 graphical representation of the same information is produced.
 
 .. ------------------------------------ ..
+.. include:: snippets/Header2Algo12.rst
+
+.. include:: snippets/FeaturePropDerivativeFree.rst
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
 .. include:: snippets/EnsembleOfSnapshots.rst
