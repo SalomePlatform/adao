@@ -1130,7 +1130,7 @@ class GenerateWeightsAndSigmaPoints(object):
         self.Alpha = numpy.longdouble( Alpha )
         self.Beta  = numpy.longdouble( Beta )
         if abs(Kappa) < 2 * mpr:
-            if EO == "Parameters":
+            if EO == "Parameters" and VariantM == "UKF":
                 self.Kappa = 3 - self.Nn
             else:  # EO == "State":
                 self.Kappa = 0
@@ -1156,7 +1156,7 @@ class GenerateWeightsAndSigmaPoints(object):
     def __UKF2000(self):
         "Standard Set, Julier et al. 2000 (aka Canonical UKF)"
         # Rq.: W^{(m)}_{i=/=0} = 1. / (2.*(n + Lambda))
-        Winn = 1. / (2. * self.Alpha**2 * ( self.Nn + self.Kappa ))
+        Winn = 1. / (2. * ( self.Nn + self.Kappa ) * self.Alpha**2)
         Ww = []
         Ww.append( 0. )
         for point in range(2 * self.Nn):
@@ -1167,6 +1167,7 @@ class GenerateWeightsAndSigmaPoints(object):
         Wm[0] = LsLpL
         Wc = numpy.array( Ww )
         Wc[0] = LsLpL + (1. - self.Alpha**2 + self.Beta)
+        # OK: assert abs(Wm.sum()-1.) < self.Nn*mpr, "UKF ill-conditioned %s >= %s"%(abs(Wm.sum()-1.), self.Nn*mpr)
         #
         SC = numpy.zeros((self.Nn, len(Ww)))
         for ligne in range(self.Nn):
@@ -1179,7 +1180,7 @@ class GenerateWeightsAndSigmaPoints(object):
     def __S3F2022(self):
         "Scaled Spherical Simplex Set, Papakonstantinou et al. 2022"
         # Rq.: W^{(m)}_{i=/=0} = (n + Kappa) / ((n + Lambda) * (n + 1 + Kappa))
-        Winn = 1. / (self.Alpha**2 * (self.Nn + 1. + self.Kappa))
+        Winn = 1. / ((self.Nn + 1. + self.Kappa) * self.Alpha**2)
         Ww = []
         Ww.append( 0. )
         for point in range(self.Nn + 1):
@@ -1190,7 +1191,7 @@ class GenerateWeightsAndSigmaPoints(object):
         Wm[0] = LsLpL
         Wc = numpy.array( Ww )
         Wc[0] = LsLpL + (1. - self.Alpha**2 + self.Beta)
-        # assert abs(Wm.sum()-1.) < self.Nn*mpr, "S3F ill-conditioned"
+        # OK: assert abs(Wm.sum()-1.) < self.Nn*mpr, "S3F ill-conditioned %s >= %s"%(abs(Wm.sum()-1.), self.Nn*mpr)
         #
         SC = numpy.zeros((self.Nn, len(Ww)))
         for ligne in range(self.Nn):
@@ -1206,8 +1207,8 @@ class GenerateWeightsAndSigmaPoints(object):
         rho2 = (1 - self.Alpha) / self.Nn
         Cc = numpy.real(scipy.linalg.sqrtm( numpy.identity(self.Nn) - rho2 ))
         Ww = self.Alpha * rho2 * scipy.linalg.inv(Cc) @ numpy.ones(self.Nn) @ scipy.linalg.inv(Cc.T)
-        #
         Wm = Wc = numpy.concatenate((Ww, [self.Alpha]))
+        # OK: assert abs(Wm.sum()-1.) < self.Nn*mpr, "MSS ill-conditioned %s >= %s"%(abs(Wm.sum()-1.), self.Nn*mpr)
         #
         # inv(sqrt(W)) = diag(inv(sqrt(W)))
         SC1an = Cc @ numpy.diag(1. / numpy.sqrt( Ww ))
@@ -1225,9 +1226,10 @@ class GenerateWeightsAndSigmaPoints(object):
             Ww.append( 1. / 36. )
         Ww.append( (self.Nn**2 - 7 * self.Nn) / 18. + 1.)
         Wm = Wc = numpy.array( Ww )
+        # OK: assert abs(Wm.sum()-1.) < self.Nn*mpr, "5OS ill-conditioned %s >= %s"%(abs(Wm.sum()-1.), self.Nn*mpr)
         #
-        xi1n  = numpy.diag( 3. * numpy.ones( self.Nn ) )
-        xi2n  = numpy.diag( -3. * numpy.ones( self.Nn ) )
+        xi1n  = numpy.diag( math.sqrt(3) * numpy.ones( self.Nn ) )
+        xi2n  = numpy.diag( -math.sqrt(3) * numpy.ones( self.Nn ) )
         #
         xi3n1 = numpy.zeros((int((self.Nn - 1) * self.Nn / 2), self.Nn), dtype=float)
         xi3n2 = numpy.zeros((int((self.Nn - 1) * self.Nn / 2), self.Nn), dtype=float)
@@ -1236,11 +1238,11 @@ class GenerateWeightsAndSigmaPoints(object):
         ia = 0
         for i1 in range(self.Nn - 1):
             for i2 in range(i1 + 1, self.Nn):
-                xi3n1[ia, i1] = xi3n2[ia, i2] = 3
-                xi3n2[ia, i1] = xi3n1[ia, i2] = -3
+                xi3n1[ia, i1] = xi3n2[ia, i2] = math.sqrt(3)
+                xi3n2[ia, i1] = xi3n1[ia, i2] = -math.sqrt(3)
                 # --------------------------------
-                xi4n1[ia, i1] = xi4n1[ia, i2] = 3
-                xi4n2[ia, i1] = xi4n2[ia, i2] = -3
+                xi4n1[ia, i1] = xi4n1[ia, i2] = math.sqrt(3)
+                xi4n2[ia, i1] = xi4n2[ia, i2] = -math.sqrt(3)
                 ia += 1
         SC = numpy.concatenate((xi1n, xi2n, xi3n1, xi3n2, xi4n1, xi4n2, numpy.zeros((1, self.Nn)))).T
         #

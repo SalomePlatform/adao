@@ -80,12 +80,12 @@ stables et robustes suivantes :
 Voici quelques suggestions pratiques pour une utilisation efficace de ces
 algorithmes :
 
-- La variante recommandée de cet algorithme est le "S3F" même si l'algorithme
+- La variante recommandée de cet algorithme est le "S3F", même si l'algorithme
   canonique "UKF" reste par défaut le plus robuste.
 - Lorsqu'il n'y a aucune borne de définie, les versions avec prise en compte
-  des contraintes des algorithmes sont identiques aux versions sans
-  contraintes. Ce n'est pas le cas s'il a des contraintes définies mêmes si les
-  bornes sont très larges.
+  des contraintes des algorithmes ("CUKF" et "CS3F") sont identiques aux
+  versions sans contraintes ("UKF" et "S3F"). Ce n'est pas le cas s'il a des
+  contraintes définies, mêmes si les bornes choisies sont très larges.
 - Une différence essentielle entre les algorithmes est le nombre de "sigma"
   points d'échantillonnage utilisés en fonction de la dimension :math:`n` de
   l'espace des états. L'algorithme canonique "UKF" en utilise :math:`2n+1`,

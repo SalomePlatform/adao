@@ -79,11 +79,12 @@ robust formulations are proposed here:
 The following are a few practical suggestions for the effective use of these
 algorithms:
 
-- The recommended variant of this algorithm is the "S3F" even if the canonical
+- The recommended variant of this algorithm is the "S3F", even if the canonical
   "UKF" algorithm remains by default the more robust one.
 - When there are no defined bounds, the constraint-aware versions of the
-  algorithms are identical to the unconstrained versions. This is not the case
-  if constraints are defined, even if the bounds are very wide.
+  algorithms ("CUKF" et "CS3F") are identical to the unconstrained versions
+  ("UKF" et "S3F"). This is not the case if constraints are defined, even if
+  the bounds are very wide.
 - An essential difference between the algorithms is the number of sampling
   "sigma" points used, depending on the :math:`n` dimension of the state space.
   The canonical "UKF" algorithm uses :math:`2n+1`, the "S3F" algorithm uses
