@@ -810,6 +810,18 @@ follows, particularly appropriate for iterative Kalman filtering algorithms:
 
 with **P** the state error covariance and *t* the discrete iterative time. In
 this scheme, the analysis **(x,P)** is obtained by means of the "*correction*"
-by observing the "*prediction*" of the previous state. The concepts described
-in this diagram can be directly and simply used in ADAO to elaborate study
-cases, and are included in the description and the examples of some algorithms.
+by observing the "*prediction*" of the previous state. An another way to
+understand data assimilation in dynamics, in the space of measured states and
+measured observations, leads to the following representation of a sequential
+form of data assimilation:
+
+  .. _schema_d_AD_sequentiel:
+  .. figure:: images/schema_temporel_sequentiel.png
+    :align: center
+    :width: 100%
+
+    **Sequential scheme of states and measures for data assimilation in dynamics**
+
+The concepts described in this diagram can be directly and simply used in ADAO
+to understand and elaborate study cases, and are included in the description
+and the examples of some algorithms.

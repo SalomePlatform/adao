@@ -47,6 +47,8 @@ robust formulations are proposed here:
     pair: Variant ; 3DVAR-VAN
     pair: Variant ; 3DVAR-Incr
     pair: Variant ; 3DVAR-PSAS
+    pair: Variant ; OI
+    pair: Variant ; Optimal Interpolation
 
 - "3DVAR" (3D Variational analysis, see [Lorenc86]_, [LeDimet86]_, [Talagrand97]_), original classical algorithm, extremely robust, which operates in the model space,
 - "3DVAR-VAN" (3D Variational Analysis with No inversion of B, see [Lorenc88]_), similar algorithm, which operates in the model space, avoiding inversion of the covariance matrix B (except in the case where there are bounds.),
@@ -73,6 +75,13 @@ An extension of 3DVAR, coupling a "3DVAR" method with a Kalman ensemble filter,
 allows to improve the estimation of *a posteriori* error covariances. This
 extension is obtained by using the "E3DVAR" variant of the filtering algorithm
 :ref:`section_ref_algorithm_EnsembleKalmanFilter`.
+
+Note that observation and evolution error statistics are assumed to be
+Gaussian. So, in the particular case where the observation operator :math:`H`
+is linear, this algorithm is strictly equivalent to optimal interpolation (OI).
+What's more, it performs both minimum variance estimation (MV or "*Minimum
+Variance* estimator") and maximum a posteriori estimation (MAP or "*Maximum A
+Posteriori* estimator"), which coincide in this particular case.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst

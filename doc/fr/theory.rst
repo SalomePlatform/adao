@@ -861,7 +861,18 @@ itératifs de filtrage de type Kalman :
 
 avec **P** la covariance d'erreur d'état et *t* le temps itératif discret. Dans
 ce schéma, l'analyse **(x,P)** est obtenue à travers la "*correction*" par
-l'observation de la "*prévision*" de l'état précédent. Les concepts décrits
-dans ce schéma peuvent directement et simplement être utilisés dans ADAO pour
-construire des cas d'études, et sont repris dans la description et les exemples
-de certains algorithmes.
+l'observation de la "*prévision*" de l'état précédent. Une autre manière de
+comprendre l'assimilation de données dynamique, dans l'espace des états mesurés
+et observations mesurées, consiste à représenter la démarche séquentielle
+d'assimilation sous la forme suivante :
+
+  .. _schema_d_AD_sequentiel:
+  .. figure:: images/schema_temporel_sequentiel.png
+    :align: center
+    :width: 100%
+
+    **Schéma séquentiel de l'état et des mesures pour l'assimilation de données en dynamique**
+
+Les concepts décrits dans ce schéma peuvent directement et simplement être
+utilisés dans ADAO pour comprendre et construire des cas d'études, et sont
+repris dans la description et les exemples de certains algorithmes.
