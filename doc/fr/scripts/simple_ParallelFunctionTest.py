@@ -19,7 +19,7 @@ case.setCheckingPoint( Vector = range(30) )
 case.setObservationOperator(
     OneFunction = SomeOperator,
     Parameters  = {
-        "EnableMultiProcessingInEvaluation":True,
+        "EnableParallelEvaluations":True,
         "NumberOfProcesses":5,
         },
     )

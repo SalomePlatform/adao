@@ -810,10 +810,10 @@ follows, particularly appropriate for iterative Kalman filtering algorithms:
 
 with **P** the state error covariance and *t* the discrete iterative time. In
 this scheme, the analysis **(x,P)** is obtained by means of the "*correction*"
-by observing the "*prediction*" of the previous state. An another way to
-understand data assimilation in dynamics, in the space of measured states and
-measured observations, leads to the following representation of a sequential
-form of data assimilation:
+by observing the "*prediction*" of the previous state. Another way of
+understanding data assimilation in dynamics, by observing the states in the
+measurement space, is to represent the same sequential assimilation process as
+in the previous figure in the following form:
 
   .. _schema_d_AD_sequentiel:
   .. figure:: images/schema_temporel_sequentiel.png

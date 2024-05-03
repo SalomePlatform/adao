@@ -442,7 +442,7 @@ if these variables are not printed).
 Accelerating numerical derivatives calculations by using a parallel mode
 ------------------------------------------------------------------------
 
-.. index:: single: EnableMultiProcessing
+.. index:: single: EnableWiseParallelism
 .. index:: single: NumberOfProcesses
 
 When setting an operator, as described in
@@ -456,11 +456,11 @@ vector. This are these calls that can potentially be executed in parallel.
 Under some conditions (described right after), it is then possible to
 accelerate the numerical derivatives calculations by using a parallel mode for
 the finite differences approximation. When setting up an ADAO case, it is done
-by adding the optional keyword "*EnableMultiProcessing*", set to "1" or
+by adding the optional keyword "*EnableWiseParallelism*", set to "1" or
 "*True*". This keyword is included in the "*SCRIPTWITHONEFUNCTION*" command in
 the operator definition by graphical interface, or in the "*Parameters*"
 accompanying the command "*OneFunction*" by textual interaface. By default,
-this parallel mode is disabled ("*EnableMultiProcessing=0*"). The parallel mode
+this parallel mode is disabled ("*EnableWiseParallelism=0*"). The parallel mode
 will only use local resources (both multi-cores or multi-processors) of the
 computer on which execution is running, requiring by default as many resources
 as available. If necessary, one can reduce the available resources by limiting

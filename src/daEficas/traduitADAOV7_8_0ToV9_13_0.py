@@ -61,6 +61,7 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
     # ==========================================================================
     fsrc = jdc.getSource()
     fsrc = re.sub( "MaximumNumberOfSteps", "MaximumNumberOfIterations", fsrc )
+    fsrc = re.sub( "EnableMultiProcessing", "EnableWiseParallelism", fsrc )
     fsrc = re.sub( "#VERSION_CATALOGUE:.*:FIN VERSION_CATALOGUE", "#VERSION_CATALOGUE:%s:FIN VERSION_CATALOGUE"%version_out, fsrc)
     fsrc = re.sub( "#CHECKSUM.*FIN CHECKSUM", "", fsrc )
     #

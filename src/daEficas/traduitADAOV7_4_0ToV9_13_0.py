@@ -79,6 +79,7 @@ def traduc(infile=None,outfile=None,texte=None,flog=None):
     # ==========================================================================
     fsrc = jdc.getSource()
     fsrc = re.sub( "MaximumNumberOfSteps", "MaximumNumberOfIterations", fsrc )
+    fsrc = re.sub( "EnableMultiProcessing", "EnableWiseParallelism", fsrc )
     fsrc = re.sub( "FunctionDict", "ScriptWithSwitch", fsrc )
     fsrc = re.sub( "FUNCTIONDICT_FILE", "SCRIPTWITHSWITCH_FILE", fsrc )
     fsrc = re.sub( "#VERSION_CATALOGUE:.*:FIN VERSION_CATALOGUE", "#VERSION_CATALOGUE:%s:FIN VERSION_CATALOGUE"%version_out, fsrc)

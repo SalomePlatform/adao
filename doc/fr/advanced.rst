@@ -478,7 +478,7 @@ coûte du temps ou de la mémoire, quel que soit le niveau de surveillance chois
 Accélérer les calculs de dérivées numériques en utilisant un mode parallèle
 ---------------------------------------------------------------------------
 
-.. index:: single: EnableMultiProcessing
+.. index:: single: EnableWiseParallelism
 .. index:: single: NumberOfProcesses
 
 Lors de la définition d'un opérateur, comme décrit dans le chapitre des
@@ -493,12 +493,12 @@ potentiellement exécutés en parallèle.
 Sous certaines conditions (décrites juste après), il est possible d'accélérer
 les calculs de dérivées numériques en utilisant un mode parallèle pour
 l'approximation par différences finies. Lors de la définition d'un cas ADAO,
-c'est effectué en ajoutant le mot-clé optionnel "*EnableMultiProcessing*", mis
+c'est effectué en ajoutant le mot-clé optionnel "*EnableWiseParallelism*", mis
 à "*1*" ou à "*True*". Ce mot-clé est inclus à la commande
 "*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur par interface
 graphique, ou aux "*Parameters*" accompagnant la commande "*OneFunction*" par
 interface textuelle. Par défaut, ce mode parallèle est désactivé
-("*EnableMultiProcessing=0*"). Le mode parallèle utilise uniquement des
+("*EnableWiseParallelism=0*"). Le mode parallèle utilise uniquement des
 ressources locales (à la fois multi-coeurs ou multi-processeurs) de
 l'ordinateur sur lequel l'exécution est en train de se dérouler, demandant par
 défaut autant de ressources que disponible. Si nécessaire, on peut réduire les

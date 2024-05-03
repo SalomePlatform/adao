@@ -17,13 +17,12 @@ satisfactory operator, these values should be close to the numerical zero.
 
 .. note::
 
-    .. index:: single: EnableMultiProcessingInEvaluation
+    .. index:: single: EnableParallelEvaluations
 
     It can be useful to make sure that the evaluation of the operator is really
     done in parallel, and for example that there is no forced use of a
     parallelism acceleration, which would avoid a real parallel test. For this
     purpose, it is recommended to systematically use the boolean special
-    parameter "*EnableMultiProcessingInEvaluation*", exclusively reserved for
-    this purpose, of the operator declaration command. The use of this
-    parameter is illustrated in this example. It should not be used in any
-    other case.
+    parameter "*EnableParallelEvaluations*", exclusively reserved for this
+    purpose, of the operator declaration command. The use of this parameter is
+    illustrated in this example.

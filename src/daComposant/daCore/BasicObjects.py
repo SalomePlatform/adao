@@ -453,20 +453,36 @@ class FullOperator(object):
         __Parameters = {}
         if (asDict is not None) and isinstance(asDict, dict):
             __Parameters.update( asDict )
-        # Priorité à EnableMultiProcessingInDerivatives=True
-        if "EnableMultiProcessing" in __Parameters and __Parameters["EnableMultiProcessing"]:
-            __Parameters["EnableMultiProcessingInDerivatives"] = True
-            __Parameters["EnableMultiProcessingInEvaluation"]  = False
-        if "EnableMultiProcessingInDerivatives" not in __Parameters:
-            __Parameters["EnableMultiProcessingInDerivatives"]  = False
-        if __Parameters["EnableMultiProcessingInDerivatives"]:
-            __Parameters["EnableMultiProcessingInEvaluation"]  = False
-        if "EnableMultiProcessingInEvaluation" not in __Parameters:
-            __Parameters["EnableMultiProcessingInEvaluation"]  = False
+        # Deprecated parameters
+        __Parameters = self.__deprecateOpt(
+            collection = __Parameters,
+            oldn = "EnableMultiProcessing",
+            newn = "EnableWiseParallelism",
+        )
+        __Parameters = self.__deprecateOpt(
+            collection = __Parameters,
+            oldn = "EnableMultiProcessingInEvaluation",
+            newn = "EnableParallelEvaluations",
+        )
+        __Parameters = self.__deprecateOpt(
+            collection = __Parameters,
+            oldn = "EnableMultiProcessingInDerivatives",
+            newn = "EnableParallelDerivatives",
+        )
+        # Priorité à EnableParallelDerivatives=True
+        if "EnableWiseParallelism" in __Parameters and __Parameters["EnableWiseParallelism"]:
+            __Parameters["EnableParallelDerivatives"] = True
+            __Parameters["EnableParallelEvaluations"]  = False
+        if "EnableParallelDerivatives" not in __Parameters:
+            __Parameters["EnableParallelDerivatives"]  = False
+        if __Parameters["EnableParallelDerivatives"]:
+            __Parameters["EnableParallelEvaluations"]  = False
+        if "EnableParallelEvaluations" not in __Parameters:
+            __Parameters["EnableParallelEvaluations"]  = False
         if "withIncrement" in __Parameters:  # Temporaire
             __Parameters["DifferentialIncrement"] = __Parameters["withIncrement"]
-        # Le défaut est équivalent à "ReducedOverallRequirements"
-        __reduceM, __avoidRC = True, True
+        #
+        __reduceM, __avoidRC = True, True  # Défaut
         if performancePrf is not None:
             if performancePrf == "ReducedAmountOfCalculation":
                 __reduceM, __avoidRC = False, True
@@ -474,6 +490,8 @@ class FullOperator(object):
                 __reduceM, __avoidRC = True, False
             elif performancePrf == "NoSavings":
                 __reduceM, __avoidRC = False, False
+            # "ReducedOverallRequirements" et tous les autres choix (y.c rien)
+            #  sont équivalents au défaut
         #
         if asScript is not None:
             __Matrix, __Function = None, None
@@ -557,7 +575,7 @@ class FullOperator(object):
                 avoidingRedundancy    = __Function["withAvoidingRedundancy"],
                 toleranceInRedundancy = __Function["withToleranceInRedundancy"],
                 lengthOfRedundancy    = __Function["withLengthOfRedundancy"],
-                mpEnabled             = __Function["EnableMultiProcessingInDerivatives"],
+                mpEnabled             = __Function["EnableParallelDerivatives"],
                 mpWorkers             = __Function["NumberOfProcesses"],
                 mfEnabled             = __Function["withmfEnabled"],
             )
@@ -568,7 +586,7 @@ class FullOperator(object):
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
                 extraArguments = self.__extraArgs,
-                enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+                enableMultiProcess = __Parameters["EnableParallelEvaluations"] )
             self.__FO["Tangent"] = Operator(
                 name = self.__name + "Tangent",
                 fromMethod = FDA.TangentOperator,
@@ -594,7 +612,7 @@ class FullOperator(object):
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
                 extraArguments = self.__extraArgs,
-                enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+                enableMultiProcess = __Parameters["EnableParallelEvaluations"] )
             self.__FO["Tangent"] = Operator(
                 name = self.__name + "Tangent",
                 fromMethod = __Function["Tangent"],
@@ -620,7 +638,7 @@ class FullOperator(object):
                 reducingMemoryUse = __reduceM,
                 avoidingRedundancy = __avoidRC,
                 inputAsMultiFunction = inputAsMF,
-                enableMultiProcess = __Parameters["EnableMultiProcessingInEvaluation"] )
+                enableMultiProcess = __Parameters["EnableParallelEvaluations"] )
             self.__FO["Tangent"] = Operator(
                 name = self.__name + "Tangent",
                 fromMatrix = __matrice,
@@ -674,6 +692,16 @@ class FullOperator(object):
     def __str__(self):
         "x.__str__() <==> str(x)"
         return str(self.__FO)
+
+    def __deprecateOpt(self, collection: dict, oldn: str, newn: str):
+        if oldn in collection:
+            collection[newn] = collection[oldn]
+            del collection[oldn]
+            __msg  = "the parameter \"%s\" used in this case is"%(oldn,)
+            __msg += " deprecated and has to be replaced by \"%s\"."%(newn,)
+            __msg += " Please update your code."
+            warnings.warn(__msg, FutureWarning, stacklevel=50)
+        return collection
 
 # ==============================================================================
 class Algorithm(object):

@@ -91,7 +91,7 @@ exhaustive bibliography.
 
 .. [Jazwinski70] Jazwinski A. H., *Stochastic Processes and Filtering Theory*,  Academic Press, 1970
 
-.. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, http://ab-initio.mit.edu/nlopt
+.. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, http://github.com/stevengj/nlopt
 
 .. [Julier95] Julier S., Uhlmann J., Durrant-Whyte H., *A new approach for filtering nonlinear systems*, in: Proceedings of the 1995 American Control Conference, IEEE, 1995
 

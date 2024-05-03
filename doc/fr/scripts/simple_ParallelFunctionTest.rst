@@ -18,13 +18,13 @@ opérateur satisfaisant, ces valeurs doivent être proches du zéro numérique.
 
 .. note::
 
-    .. index:: single: EnableMultiProcessingInEvaluation
+    .. index:: single: EnableParallelEvaluations
 
     Il peut être utile de s'assurer que l'évaluation de l'opérateur est
     réalisée réellement en parallèle, et par exemple qu'il n'y a pas
     d'utilisation forcée d'une accélération du parallélisme, qui éviterait
     ainsi un véritable test parallèle. Pour cela, il est recommandé d'utiliser
     systématiquement le paramètre booléen spécial
-    "*EnableMultiProcessingInEvaluation*", exclusivement réservé à cet usage,
-    de la commande de déclaration de l'opérateur. L'usage de ce paramètre est
-    illustré dans l'exemple présent. Il n'est à utiliser dans aucun autre cas.
+    "*EnableParallelEvaluations*", exclusivement réservé à cet usage, de la
+    commande de déclaration de l'opérateur. L'usage de ce paramètre est
+    illustré dans l'exemple présent.

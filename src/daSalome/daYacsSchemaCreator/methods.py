@@ -682,6 +682,8 @@ def create_yacs_proc(study_config):
     node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
     if 'EnableMultiProcessing' in list(ScriptWithOneFunction.keys()):
         node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableMultiProcessing'])
+    if 'EnableWiseParallelism' in list(ScriptWithOneFunction.keys()):
+        node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableWiseParallelism'])
     if 'NumberOfProcesses' in list(ScriptWithOneFunction.keys()):
         node_script += """    mpWorkers  = %s,\n"""%str(ScriptWithOneFunction['NumberOfProcesses'])
     node_script += """    )\n"""
@@ -890,6 +892,8 @@ def create_yacs_proc(study_config):
       node_script += """    centeredDF = %s,\n"""%str(ScriptWithOneFunction['CenteredFiniteDifference'])
       if 'EnableMultiProcessing' in list(ScriptWithOneFunction.keys()):
           node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableMultiProcessing'])
+      if 'EnableWiseParallelism' in list(ScriptWithOneFunction.keys()):
+          node_script += """    mpEnabled  = %s,\n"""%str(ScriptWithOneFunction['EnableWiseParallelism'])
       if 'NumberOfProcesses' in list(ScriptWithOneFunction.keys()):
           node_script += """    mpWorkers  = %s,\n"""%str(ScriptWithOneFunction['NumberOfProcesses'])
       node_script += """    )\n"""

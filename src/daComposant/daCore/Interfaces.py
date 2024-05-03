@@ -70,11 +70,12 @@ class GenericCaseViewer(object):
     def _initialize(self, __multilines):
         "Permet des pré-conversions automatiques simples de commandes ou clés"
         __translation = {
-            "Study_name"          : "StudyName",                  # noqa: E203
-            "Study_repertory"     : "StudyRepertory",             # noqa: E203
-            "MaximumNumberOfSteps": "MaximumNumberOfIterations",
-            "FunctionDict"        : "ScriptWithSwitch",           # noqa: E203
-            "FUNCTIONDICT_FILE"   : "SCRIPTWITHSWITCH_FILE",      # noqa: E203
+            "Study_name"           : "StudyName",                  # noqa: E203
+            "Study_repertory"      : "StudyRepertory",             # noqa: E203
+            "MaximumNumberOfSteps" : "MaximumNumberOfIterations",  # noqa: E203
+            "EnableMultiProcessing": "EnableWiseParallelism",
+            "FunctionDict"         : "ScriptWithSwitch",           # noqa: E203
+            "FUNCTIONDICT_FILE"    : "SCRIPTWITHSWITCH_FILE",      # noqa: E203
         }
         for k, v in __translation.items():
             __multilines = __multilines.replace(k, v)

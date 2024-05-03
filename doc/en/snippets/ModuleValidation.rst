@@ -17,4 +17,4 @@ purposes only, knowing that, in case of doubt, the SALOME version sheet
    Scipy,      1.6.0
    MatplotLib, 3.3.4
    Gnuplot,    1.8
-   NLopt,      2.4.2
+   NLopt,      2.7.0

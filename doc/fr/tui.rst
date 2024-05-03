@@ -479,7 +479,7 @@ Les commandes disponibles sont les suivantes :
     adjoint, dans le cas "*OneFunction*", peuvent être renseignés par un
     dictionnaire dans "*Parameters*". Les entrées potentielles de ce
     dictionnaire de paramètres sont "*DifferentialIncrement*",
-    "*CenteredFiniteDifference*", "*EnableMultiProcessing*",
+    "*CenteredFiniteDifference*", "*EnableWiseParallelism*",
     "*NumberOfProcesses*" (similaires à celles de l'interface graphique). Si
     l'opérateur nécessite des paramètres fixes complémentaires en plus de
     l'état :math:`\mathbf{x}`, ils peuvent être fournis par la variable
@@ -536,7 +536,7 @@ Les commandes disponibles sont les suivantes :
     renseignés par un dictionnaire dans "*Parameters*". Les entrées
     potentielles de ce dictionnaire de paramètres sont
     "*DifferentialIncrement*", "*CenteredFiniteDifference*",
-    "*EnableMultiProcessing*", "*NumberOfProcesses*" (similaires à celles de
+    "*EnableWiseParallelism*", "*NumberOfProcesses*" (similaires à celles de
     l'interface graphique). Si l'opérateur nécessite des paramètres fixes
     complémentaires en plus de l'état :math:`\mathbf{x}`, ils peuvent être
     fournis par la variable "*ExtraArguments*" sous la forme d'un dictionnaire

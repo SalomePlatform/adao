@@ -458,13 +458,13 @@ The available commands are:
     "*Script*" keyword, the operator is of type "*Matrix*", "*OneFunction*" or
     "*ThreeFunctions*" according to whether one of these variables is
     positioned to "*True*". The control parameters of the adjoint numerical
-    approximation, in the "*OneFunction*"case, can be given by a dictionary
+    approximation, in the "*OneFunction*" case, can be given by a dictionary
     through the "*Parameters*" keyword. Potential entries of this dictionary
-    are "*DifferentialIncrement*", "*CenteredFiniteDifference*" (similar to the
-    one of graphical interface). If the operator requires some complementary
-    fixed arguments in addition to the state :math:`\mathbf{x}`, they can be
-    given through the variable "*ExtraArguments*" as a named parameters
-    dictionary.
+    are "*DifferentialIncrement*", "*CenteredFiniteDifference*",
+    "*EnableWiseParallelism*", "*NumberOfProcesses*" (similar to the one of
+    graphical interface). If the operator requires some complementary fixed
+    arguments in addition to the state :math:`\mathbf{x}`, they can be given
+    through the variable "*ExtraArguments*" as a named parameters dictionary.
 
 .. index:: single: Observation
 .. index:: single: setObservation
@@ -513,11 +513,11 @@ The available commands are:
     and will be considered as a vector. The control parameters of the adjoint
     numerical approximation, in the "*OneFunction*"case, can be given by a
     dictionary through the "*Parameters*" keyword. Potential entries of this
-    dictionary are "*DifferentialIncrement*", "*CenteredFiniteDifference*"
-    (similar to the one of graphical interface). If the operator requires some
-    complementary fixed arguments in addition to the state :math:`\mathbf{x}`,
-    they can be given through the variable "*ExtraArguments*" as a named
-    parameters dictionary.
+    dictionary are "*DifferentialIncrement*", "*CenteredFiniteDifference*",
+    "*EnableWiseParallelism*", "*NumberOfProcesses*" (similar to the one of
+    graphical interface). If the operator requires some complementary fixed
+    arguments in addition to the state :math:`\mathbf{x}`, they can be given
+    through the variable "*ExtraArguments*" as a named parameters dictionary.
 
 Setting the calculation, outputs, etc.
 ++++++++++++++++++++++++++++++++++++++

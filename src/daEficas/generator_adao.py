@@ -238,7 +238,9 @@ class AdaoGenerator(PythonGenerator):
       self.text_da += data_name + "_ScriptWithOneFunction['DifferentialIncrement'] = " + str(float(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__DifferentialIncrement"])) + "\n"
       self.text_da += data_name + "_ScriptWithOneFunction['CenteredFiniteDifference'] = " + str(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__CenteredFiniteDifference"]) + "\n"
       if search_type + "SCRIPTWITHONEFUNCTION_DATA__EnableMultiProcessing" in self.dictMCVal.keys():
-        self.text_da += data_name + "_ScriptWithOneFunction['EnableMultiProcessing'] = " + str(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__EnableMultiProcessing"]) + "\n"
+        self.text_da += data_name + "_ScriptWithOneFunction['EnableWiseParallelism'] = " + str(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__EnableMultiProcessing"]) + "\n"
+      if search_type + "SCRIPTWITHONEFUNCTION_DATA__EnableWiseParallelism" in self.dictMCVal.keys():
+        self.text_da += data_name + "_ScriptWithOneFunction['EnableWiseParallelism'] = " + str(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__EnableWiseParallelism"]) + "\n"
       if search_type + "SCRIPTWITHONEFUNCTION_DATA__NumberOfProcesses" in self.dictMCVal.keys():
         self.text_da += data_name + "_ScriptWithOneFunction['NumberOfProcesses'] = " + str(self.dictMCVal[search_type + "SCRIPTWITHONEFUNCTION_DATA__NumberOfProcesses"]) + "\n"
       self.text_da += data_name + "_config = {}\n"
