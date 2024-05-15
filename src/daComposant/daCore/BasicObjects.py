@@ -452,7 +452,7 @@ class FullOperator(object):
         #
         __Parameters = {}
         if (asDict is not None) and isinstance(asDict, dict):
-            __Parameters.update( asDict )
+            __Parameters.update( asDict )  # Copie mémoire
         # Deprecated parameters
         __Parameters = self.__deprecateOpt(
             collection = __Parameters,
@@ -874,7 +874,7 @@ class Algorithm(object):
         #
         # Mise à jour des paramètres internes avec le contenu de Parameters, en
         # reprenant les valeurs par défauts pour toutes celles non définies
-        self.__setParameters(Parameters, reset=True)  # Copie
+        self.__setParameters(Parameters, reset=True)  # Copie mémoire
         for k, v in self.__variable_names_not_public.items():
             if k not in self._parameters:
                 self.__setParameters( {k: v} )

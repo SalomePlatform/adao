@@ -30,9 +30,9 @@ Checking algorithm "*ObservationSimulationComparisonTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This verification algorithm allows to analyze in a simple way the stability of
-the difference between measures and an operator :math:`F` during its execution.
-The operator is any operator, so it can be the observation operator
+This algorithm allows to analyze in a simple way the stability of the
+difference between measures and an operator :math:`F` during its execution. The
+operator is any operator, so it can be the observation operator
 :math:`\mathcal{H}` as well as the evolution operator :math:`\mathcal{D}`, as
 long as it is provided in each case according to the
 :ref:`section_ref_operator_requirements`. The operator :math:`F` is considered

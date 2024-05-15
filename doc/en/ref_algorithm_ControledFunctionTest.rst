@@ -30,14 +30,14 @@ Checking algorithm "*ControledFunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This verification algorithm allows to analyze in a simple way the stability of
-an operator :math:`F` during its execution. The operator is any operator, so it
-can be the observation operator :math:`\mathcal{H}` as well as the evolution
-operator :math:`\mathcal{D}`, as long as it is provided in each case according
-to the :ref:`section_ref_operator_requirements`. The operator :math:`F` is
-considered as depending on a vector variable :math:`\mathbf{x}` and on a
-control vector variable :math:`\mathbf{u}`, the two not necessarily being of
-the same size, and returning another vector variable :math:`\mathbf{y}`.
+This algorithm allows to analyze in a simple way the stability of an operator
+:math:`F` during its execution. The operator is any operator, so it can be the
+observation operator :math:`\mathcal{H}` as well as the evolution operator
+:math:`\mathcal{D}`, as long as it is provided in each case according to the
+:ref:`section_ref_operator_requirements`. The operator :math:`F` is considered
+as depending on a vector variable :math:`\mathbf{x}` and on a control vector
+variable :math:`\mathbf{u}`, the two not necessarily being of the same size,
+and returning another vector variable :math:`\mathbf{y}`.
 
 The algorithm verifies that the operator is working correctly and that its call
 is compatible with its usage in ADAO algorithms. In practice, it allows to call

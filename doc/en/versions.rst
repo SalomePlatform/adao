@@ -60,10 +60,11 @@ However, there may be incompatibilities from user cases written directly in TUI
 interface. It is advisable to review the syntax and arguments in the TUI
 scripts at each version change. In particular, it is advisable to check that
 the algorithm parameters are still adequate and active, knowing that it has
-been explicitly chosen that there is no message when a parameter becomes
-inactive (for the example, we quote the parameter "*MaximumNumberOfSteps*" as
-having changed its name to "*MaximumNumberOfIterations*", for homogeneity with
-the variables that can be displayed).
+been explicitly chosen that there is no message when an optional parameter
+becomes inactive or changes its name (for the example, we quote the parameter
+"*MaximumNumberOfSteps*" as having changed its name to
+"*MaximumNumberOfIterations*", for homogeneity with the variables that can be
+displayed) to avoid a lock.
 
 Switching from 8.5 to 9.2
 +++++++++++++++++++++++++

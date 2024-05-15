@@ -30,16 +30,18 @@ Algorithme de vérification "*SamplingTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme de test permet d'établir la collection des valeurs d'une
-fonctionnelle d'erreur :math:`J` de type :math:`L^1`, :math:`L^2` ou
-:math:`L^{\infty}`, avec ou sans pondérations, à l'aide de l'opérateur
-d'observation :math:`\mathcal{H}`, pour un échantillon donné a priori d'états
-:math:`\mathbf{x}`. La fonctionnelle d'erreur par défaut est celle de moindres
-carrés pondérés augmentés, classiquement utilisée en assimilation de données,
-utilisant en plus des observations :math:`\mathbf{y}^o`.
+Cet algorithme permet d'établir la collection des valeurs d'une fonctionnelle
+d'erreur :math:`J` quelconque de type :math:`L^1`, :math:`L^2` ou
+:math:`L^{\infty}`, avec ou sans pondérations, comme décrit dans la section
+pour :ref:`section_theory_optimization`. Chaque calcul de :math:`J` est conduit
+à l'aide de l'opérateur d'observation :math:`\mathcal{H}` et des observations
+:math:`\mathbf{y}^o` pour un état :math:`\mathbf{x}`. Les états
+:math:`\mathbf{x}` proviennent d'un échantillon d'états défini *a priori*. La
+fonctionnelle d'erreur par défaut est celle de moindres carrés pondérés
+augmentés, classiquement utilisée en assimilation de données.
 
-Ce test est utile pour analyser la sensibilité de la fonctionnelle :math:`J`
-aux variations de l'état :math:`\mathbf{x}` en particulier.
+Ce test est utile pour analyser explicitement la sensibilité de la
+fonctionnelle :math:`J` aux variations de l'état :math:`\mathbf{x}`.
 
 L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
@@ -49,7 +51,7 @@ informatiques disponibles et les options demandées par l'utilisateur. On pourra
 se reporter aux :ref:`section_ref_sampling_requirements` pour une illustration
 de l'échantillonnage. Attention à la taille de l'hypercube (et donc au nombre
 de calculs) qu'il est possible d'atteindre, elle peut rapidement devenir
-importante. Lorsqu'un état n'est pas observable, une valeur *"NaN"* est
+importante. Lorsqu'un état n'est pas observable, une valeur "*NaN*" est
 retournée.
 
 Il est aussi possible de fournir un ensemble de simulations :math:`\mathbf{y}`
@@ -66,6 +68,17 @@ difficultés de stockage (en l'absence de résultats demandés, rien n'est
 disponible). On utilise pour cela, sur la variable désirée, la sauvegarde
 finale à l'aide du mot-clé "*UserPostAnalysis*" ou le traitement en cours de
 calcul à l'aide des "*observer*" adaptés.
+
+Remarque : dans les cas où l'échantillonnage est généré, il peut être utile
+d'obtenir explicitement la collection des états :math:`\mathbf{x}` selon la
+définition *a priori* sans nécessairement effectuer de long calculs pour la
+fonctionnelle :math:`J`. Pour cela, il suffit d'utiliser cet algorithme avec
+des calculs simplifiés. Par exemple, on peut définir un opérateur d'observation
+matriciel égal à l'identité (matrice carrée de la taille d'un état), une
+ébauche et une observation égales, valant 1 (vecteurs de la taille de l'état).
+Ensuite, on établit le cas ADAO avec cet algorithme pour récupérer l'ensemble
+des états échantillonnés à l'aide de la variable habituelle de
+"*CurrentState*".
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst

@@ -30,14 +30,14 @@ Algorithme de vérification "*ControledFunctionTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme de vérification permet d'analyser de manière simple la stabilité
-d'un opérateur :math:`F` lors de son exécution. L'opérateur est quelconque, et
-il peut donc être celui d'observation :math:`\mathcal{H}` comme celui
-d'évolution :math:`\mathcal{D}`, pourvu qu'il soit fourni dans chaque cas selon
-les :ref:`section_ref_operator_requirements`. L'opérateur :math:`F` est
-considéré comme dépendant d'une variable vectorielle :math:`\mathbf{x}` et d'un
-contrôle :math:`\mathbf{u}`, les deux n'étant pas nécessairement de la même
-taille, et restituant une autre variable vectorielle :math:`\mathbf{y}`.
+Cet algorithme permet d'analyser de manière simple la stabilité d'un opérateur
+:math:`F` lors de son exécution. L'opérateur est quelconque, et il peut donc
+être celui d'observation :math:`\mathcal{H}` comme celui d'évolution
+:math:`\mathcal{D}`, pourvu qu'il soit fourni dans chaque cas selon les
+:ref:`section_ref_operator_requirements`. L'opérateur :math:`F` est considéré
+comme dépendant d'une variable vectorielle :math:`\mathbf{x}` et d'un contrôle
+:math:`\mathbf{u}`, les deux n'étant pas nécessairement de la même taille, et
+restituant une autre variable vectorielle :math:`\mathbf{y}`.
 
 L'algorithme vérifie que l'opérateur fonctionne correctement et que son appel
 se déroule de manière compatible avec son usage dans les algorithmes d'ADAO. De

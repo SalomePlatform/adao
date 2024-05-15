@@ -33,16 +33,16 @@ Algorithme de vérification "*ReducedModelingTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme de vérification permet d'analyser de manière simple les
-caractéristiques de la collection d'états du point de vue de la réduction. Il
-vise à diagnostiquer la complexité des informations présentes dans la
-collection d'états disponible, et la possibilité de représenter ces
-informations d'état dans un espace plus réduit que l'ensemble de la collection
-d'états. Techniquement, en s'appuyant sur une décomposition classique de type
-SVD (Singular Value Decomposition) et de la même manière qu'une PCA (Principal
-Component Analysis), il évalue la manière avec laquelle l'information diminue
-avec le nombre de valeurs singulières, soit en tant que valeurs, soit, d'un
-point de vue statistique, en tant que variance restante.
+Cet algorithme permet d'analyser de manière simple les caractéristiques de la
+collection d'états du point de vue de la réduction. Il vise à diagnostiquer la
+complexité des informations présentes dans la collection d'états disponible, et
+la possibilité de représenter ces informations d'état dans un espace plus
+réduit que l'ensemble de la collection d'états. Techniquement, en s'appuyant
+sur une décomposition classique de type SVD (Singular Value Decomposition) et
+de la même manière qu'une PCA (Principal Component Analysis), il évalue la
+manière avec laquelle l'information diminue avec le nombre de valeurs
+singulières, soit en tant que valeurs, soit, d'un point de vue statistique, en
+tant que variance restante.
 
 Une fois l'analyse terminée, un résumé est affiché et, sur demande, une
 représentation graphique des mêmes informations est produite.

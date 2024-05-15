@@ -30,9 +30,9 @@ Algorithme de vérification "*ObservationSimulationComparisonTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme de vérification permet d'analyser de manière simple la stabilité
-de l'écart entre des mesures et le calcul d'un opérateur :math:`F`, lors de son
-exécution. L'opérateur est quelconque, et il peut donc être celui d'observation
+Cet algorithme permet d'analyser de manière simple la stabilité de l'écart
+entre des mesures et le calcul d'un opérateur :math:`F`, lors de son exécution.
+L'opérateur est quelconque, et il peut donc être celui d'observation
 :math:`\mathcal{H}` comme celui d'évolution :math:`\mathcal{D}`, pourvu qu'il
 soit fourni dans chaque cas selon les :ref:`section_ref_operator_requirements`.
 L'opérateur :math:`F` est considéré comme dépendant d'une variable vectorielle

@@ -30,15 +30,18 @@ Checking algorithm "*SamplingTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This test algorithm is used to establish the collection of values of an error
-functional :math:`J` of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`,
-with or without weights, using the observation operator :math:`\mathcal{H}`,
-for an a priori given sample of states :math:`\mathbf{x}`. The default error
-functional is the augmented weighted least squares functional, classically used
-in data assimilation, using in addition to observations :math:`\mathbf{y}^o`.
+This algorithm establishes the collection of values for any :math:`J` error
+functional of type :math:`L^1`, :math:`L^2` or :math:`L^{\infty}`, with or
+without weights, as described in the section for
+:ref:`section_theory_optimization`. Each :math:`J` calculation is conducted
+using the :math:`\mathcal{H}` observation operator and :math:`\mathbf{y}^o`
+observations for a :math:`\mathbf{x}` state. The :math:`\mathbf{x}` states come
+from a sample of states defined *a priori*. The default error functional is the
+augmented weighted least squares functional, classically used in data
+assimilation.
 
-This test is useful for analyzing the sensitivity of the functional :math:`J`
-to variations in the state :math:`\mathbf{x}` in particular.
+This test is useful for explicitly analyzing the sensitivity of the functional
+:math:`J` to variations in the state :math:`\mathbf{x}`.
 
 The sampling of the states :math:`\mathbf{x}` can be given explicitly or under
 form of hypercubes, explicit or sampled according to classic distributions, or
@@ -48,7 +51,7 @@ requested by the user. You can refer to the
 :ref:`section_ref_sampling_requirements` for an illustration of sampling.
 Beware of the size of the hypercube (and then to the number of computations)
 that can be reached, it can grow quickly to be quite large. When a state is not
-observable, a *"NaN"* value is returned.
+observable, a "*NaN*" value is returned.
 
 It is also possible to supply a set of simulations :math:`\mathbf{y}` already
 established elsewhere (so there's no explicit need for an operator
@@ -63,6 +66,16 @@ simulations must be requested **explicitly** to avoid storage difficulties (if
 no results are requested, nothing is available). One use for that, on the
 desired variable, the final saving through "*UserPostAnalysis*" or the
 treatment during the calculation by well suited "*observer*".
+
+Note: in cases where sampling is generated, it may be useful to explicitly
+obtain the collection of states :math:`\mathbf{x}` according to the definition
+*a priori* without necessarily performing time-consuming calculations for the
+functional :math:`J`. To do this, simply use this algorithm with simplified
+calculations. For example, we can define a matrix observation operator equal to
+the identity (square matrix of the state size), a draft and an observation
+equal, worth 1 (vectors of the state size). Next, we set up the ADAO case with
+this algorithm to recover the set of sampled states using the usual
+“*CurrentState*” variable.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst

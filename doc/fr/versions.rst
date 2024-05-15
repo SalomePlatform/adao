@@ -62,10 +62,10 @@ utilisateurs écrits directement en interface TUI. Il est conseillé de revoir l
 syntaxe et les arguments dans les scripts TUI à chaque changement de version.
 En particulier, il convient de vérifier que les paramètres d'algorithme sont
 toujours adéquats et actifs, sachant qu'il a été explicitement choisi qu'il n'y
-ait pas de message lorsqu'un paramètre devient inactif (pour l'exemple, on cite
-le paramètre "*MaximumNumberOfSteps*" comme ayant changé de nom pour devenir
-"*MaximumNumberOfIterations*", par homogénéité avec les variables pouvant être
-affichées).
+ait pas de message lorsqu'un paramètre optionnel devient inactif ou change de
+nom (pour l'exemple, on cite le paramètre "*MaximumNumberOfSteps*" comme ayant
+changé de nom pour devenir "*MaximumNumberOfIterations*", par homogénéité avec
+les variables pouvant être affichées) pour éviter un blocage.
 
 Passer de la version 8.5 à la 9.2
 +++++++++++++++++++++++++++++++++

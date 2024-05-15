@@ -33,15 +33,14 @@ Checking algorithm "*ReducedModelingTest*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This checking algorithm provides a simple analysis of the characteristics of
-the state collection from the point of view of reduction. It aims to diagnose
-the complexity of the information present in the available state collection,
-and the possibility to represent this state information in a space smaller than
-the entire state collection. Technically, based on a classical SVD (Singular
-Value Decomposition) and in the same way as a PCA (Principal Component
-Analysis), it evaluates how information decreases with the number of singular
-values, either as values or, from a statistical point of view, as remaining
-variance.
+This algorithm provides a simple analysis of the characteristics of the state
+collection from the point of view of reduction. It aims to diagnose the
+complexity of the information present in the available state collection, and
+the possibility to represent this state information in a space smaller than the
+entire state collection. Technically, based on a classical SVD (Singular Value
+Decomposition) and in the same way as a PCA (Principal Component Analysis), it
+evaluates how information decreases with the number of singular values, either
+as values or, from a statistical point of view, as remaining variance.
 
 Once the analysis is complete, a summary is displayed and, on request, a
 graphical representation of the same information is produced.
