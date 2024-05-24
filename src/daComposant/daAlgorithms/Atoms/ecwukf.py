@@ -99,9 +99,6 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         else:
             Un = None
         #
-        Hm = HO["Direct"].appliedControledFormTo
-        if selfA._parameters["EstimationOf"] == "State":
-            Mm = EM["Direct"].appliedControledFormTo
         if CM is not None and "Tangent" in CM and U is not None:
             Cm = CM["Tangent"].asMatrix(Xn)
         else:
@@ -112,6 +109,7 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         nbSpts = SC.shape[1]
         #
         if selfA._parameters["EstimationOf"] == "State":
+            Mm = EM["Direct"].appliedControledFormTo
             XEnnmu = Mm( [(Xnmu[:, point].reshape((-1, 1)), Un) for point in range(nbSpts)],
                          argsAsSerie = True,
                          returnSerieAsArrayMatrix = True )
@@ -135,6 +133,7 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         Pmndemi = numpy.real(scipy.linalg.sqrtm(Pmn))
         Xnnmu = Xhmn.reshape((-1, 1)) + Pmndemi @ SC
         #
+        Hm = HO["Direct"].appliedControledFormTo
         Ynnmu = Hm( [(Xnnmu[:, point], None) for point in range(nbSpts)],
                     argsAsSerie = True,
                     returnSerieAsArrayMatrix = True )

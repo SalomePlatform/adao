@@ -142,6 +142,7 @@ providing :ref:`section_theory`.
    ref_algorithm_FunctionTest
    ref_algorithm_GradientTest
    ref_algorithm_InputValuesTest
+   ref_algorithm_InterpolationByReducedModelTest
    ref_algorithm_LinearityTest
    ref_algorithm_LocalSensitivityTest
    ref_algorithm_ObservationSimulationComparisonTest

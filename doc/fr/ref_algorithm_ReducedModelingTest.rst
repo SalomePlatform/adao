@@ -128,6 +128,26 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. _section_ref_algorithm_ReducedModelingTest_examples:
 
+.. include:: snippets/Header2Algo09.rst
+
+.. --------- ..
+.. include:: scripts/simple_ReducedModelingTest1.rst
+
+.. literalinclude:: scripts/simple_ReducedModelingTest1.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_ReducedModelingTest1.res
+    :language: none
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_ReducedModelingTest1:
+.. image:: scripts/simple_ReducedModelingTest1.png
+  :align: center
+  :width: 90%
+
+.. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 
 - :ref:`section_ref_algorithm_FunctionTest`

@@ -1503,12 +1503,11 @@ def multiXOsteps(
             if __CovForecast:
                 Mt = EM["Tangent"].asMatrix(Xn)
                 Mt = Mt.reshape(Xn.size, Xn.size)  # ADAO & check shape
-            if __CovForecast:
                 Ma = EM["Adjoint"].asMatrix(Xn)
                 Ma = Ma.reshape(Xn.size, Xn.size)  # ADAO & check shape
                 Pn_predicted = Q + Mt @ (Pn @ Ma)
-            M  = EM["Direct"].appliedControledFormTo
-            Xn_predicted = M( (Xn, Un) ).reshape((-1, 1))
+            Mm = EM["Direct"].appliedControledFormTo
+            Xn_predicted = Mm( (Xn, Un) ).reshape((-1, 1))
             if CM is not None and "Tangent" in CM and Un is not None:  # Attention : si Cm est aussi dans M, doublon !
                 Cm = CM["Tangent"].asMatrix(Xn_predicted)
                 Cm = Cm.reshape(Xn.size, Un.size)  # ADAO & check shape

@@ -60,6 +60,7 @@ Utilisations d'algorithmes de vérification
 #. :ref:`Exemples de vérification avec "FunctionTest"<section_ref_algorithm_FunctionTest_examples>`
 #. :ref:`Exemples de vérification avec "ObservationSimulationComparisonTest"<section_ref_algorithm_ObservationSimulationComparisonTest_examples>`
 #. :ref:`Exemples de vérification avec "ParallelFunctionTest"<section_ref_algorithm_ParallelFunctionTest_examples>`
+#. :ref:`Exemples de vérification avec "ReducedModelingTest"<section_ref_algorithm_ReducedModelingTest_examples>`
 
 Utilisations d'algorithmes orientés tâches ou études dédiées
 ------------------------------------------------------------

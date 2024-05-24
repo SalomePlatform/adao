@@ -13,7 +13,7 @@ uniquement sachant que, en cas de doute, c'est la fiche de version de SALOME
    EFICAS,     |release|
    SALOME,     |release|
    Python,     3.9.2
-   Numpy,      1.19.5
+   Numpy,      1.20.3
    Scipy,      1.6.0
    MatplotLib, 3.3.4
    Gnuplot,    1.8

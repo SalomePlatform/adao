@@ -276,7 +276,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             msgs += ("\n")
             msgs += (__flech + "Ordered singular values and remaining variance:\n")
             msgs += (__marge + "-----------------------------------------------\n")
-            __entete = ("  %" + str(__ordre) + "s  | %22s | %22s | Variance: part, remaining")%("i", "Singular value σ", "σ[i]/σ[1]")  # noqa: E501
+            __entete = ("  %" + str(__ordre) + "s  | %16s | %16s | Variance: part, remaining")%("i", "Singular value σ", "σ[i]/σ[1]")  # noqa: E501
             #
             __nbtirets = len(__entete) + 2
             msgs += "\n" + __marge + "-" * __nbtirets
@@ -291,7 +291,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             vsinfo = 100 * __tisv[ns]
             rsinfo = max(100 * __qisv[ns], 0.)
             if __s:
-                msgs += (__marge + "  %0" + str(__ordre) + "i  | %22." + str(__p) + "e | %22." + str(__p) + "e |           %2i%s ,    %4.1f%s\n")%(ns, svalue, rvalue, vsinfo, "%", rsinfo, "%")  # noqa: E501
+                msgs += (__marge + "  %0" + str(__ordre) + "i  | %16." + str(__p) + "e | %16." + str(__p) + "e |           %2i%s ,    %4.1f%s\n")%(ns, svalue, rvalue, vsinfo, "%", rsinfo, "%")  # noqa: E501
             if rsinfo > 10:
                 cut1pd = ns + 2  # 10%
             if rsinfo > 1:

@@ -60,6 +60,7 @@ Checking algorithms uses
 #. :ref:`Examples with the "FunctionTest" check<section_ref_algorithm_FunctionTest_examples>`
 #. :ref:`Examples with the "ObservationSimulationComparisonTest" check<section_ref_algorithm_ObservationSimulationComparisonTest_examples>`
 #. :ref:`Examples with the "ParallelFunctionTest" check<section_ref_algorithm_ParallelFunctionTest_examples>`
+#. :ref:`Examples with the "ReducedModelingTest" check<section_ref_algorithm_ReducedModelingTest_examples>`
 
 Dedicated tasks or study oriented cases uses
 --------------------------------------------
