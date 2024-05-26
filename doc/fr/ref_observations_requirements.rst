@@ -94,14 +94,15 @@ physiquement homogènes ou pas.
     - fichier texte de données (TXT, CSV, TSV, DAT), avec pointeur de variable par nom en colonne ou en ligne, indiqué par le mot-clé "*DataFile*" avec la condition ``Vector=True``
     - fichier binaire de données (NPY, NPZ), avec pointeur de variable par nom, indiqué par le mot-clé "*DataFile*" avec la condition ``Vector=True``
 
-- Exemples de déclaration en interface TUI :
+Exemples de déclaration en interface TUI :
+::
 
-    - ``case.setObservation( Vector = [1, 2, 3] )``
-    - ``case.setObservation( Vector = numpy.array([1, 2, 3]) )``
-    - ``case.setObservation( Vector = '1 2 3' )``
-    - ``case.setObservation( Vector=True, Script = 'script.py' )```
-    - ``case.setObservation( Vector=True, DataFile = 'data.csv' )```
-    - ``case.setObservation( Vector=True, DataFile = 'data.npy' )```
+    case.setObservation( Vector = [1, 2, 3] )
+    case.setObservation( Vector = numpy.array([1, 2, 3]) )
+    case.setObservation( Vector = '1 2 3' )
+    case.setObservation( Vector=True, Script = 'script.py' )
+    case.setObservation( Vector=True, DataFile = 'data.csv' )
+    case.setObservation( Vector=True, DataFile = 'data.npy' )
 
 Remarque d'utilisation : dans une étude donnée, seul le dernier enregistrement
 (que ce soit un vecteur unique ou une série de vecteurs) est utilisable, car un
@@ -142,16 +143,17 @@ physiquement homogènes ou pas, dont on considère un historique.
     - fichier texte de données (TXT, CSV, TSV, DAT), avec pointeur de variable par nom en colonne ou en ligne, indiqué par le mot-clé "*DataFile*" avec la condition ``VectorSerie=True``
     - fichier binaire de données (NPY, NPZ), avec pointeur de variable par nom, indiqué par le mot-clé "*DataFile*" avec la condition ``VectorSerie=True``
 
-- Exemples de déclaration en interface TUI :
+Exemples de déclaration en interface TUI :
+::
 
-    - ``case.setObservation( VectorSerie = [[1,2,3], [1,2,3]] )``
-    - ``case.setObservation( VectorSerie = [numpy.array([1,2,3]), numpy.array([1,2,3])] )``
-    - ``case.setObservation( VectorSerie =  ['1 2 3', '1 2 3'] )``
-    - ``case.setObservation( VectorSerie =  '[[1,2,3], [1,2,3]]' )``
-    - ``case.setObservation( VectorSerie =  '1 2 3 ; 1 2 3' )``
-    - ``case.setObservation( VectorSerie=True, Script = 'script.py' )```
-    - ``case.setObservation( VectorSerie=True, DataFile = 'data.csv' )```
-    - ``case.setObservation( VectorSerie=True, DataFile = 'data.npy' )```
+    case.setObservation( VectorSerie = [[1,2,3], [1,2,3]] )
+    case.setObservation( VectorSerie = [numpy.array([1,2,3]), numpy.array([1,2,3])] )
+    case.setObservation( VectorSerie =  ['1 2 3', '1 2 3'] )
+    case.setObservation( VectorSerie =  '[[1,2,3], [1,2,3]]' )
+    case.setObservation( VectorSerie =  '1 2 3 ; 1 2 3' )
+    case.setObservation( VectorSerie=True, Script = 'script.py' )
+    case.setObservation( VectorSerie=True, DataFile = 'data.csv' )
+    case.setObservation( VectorSerie=True, DataFile = 'data.npy' )
 
 Remarque d'utilisation : dans une étude donnée, seul le dernier enregistrement
 (que ce soit un vecteur unique ou une série de vecteurs) est utilisable, car un

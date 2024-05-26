@@ -91,14 +91,15 @@ of measurements, or several fields physically homogeneous or not.
     - data text file (TXT, CSV, TSV, DAT), with variable pointer by name in column or row, indicated by the keyword "*DataFile*" with the condition ``Vector=True``
     - binary data file (NPY, NPZ), with variable pointer by name, indicated by the keyword "*DataFile*" with the condition ``Vector=True``
 
-- Examples of statements in TUI interface:
+Examples of statements in TUI interface:
+::
 
-    - ``case.setObservation( Vector = [1, 2, 3] )``
-    - ``case.setObservation( Vector = numpy.array([1, 2, 3]) )``
-    - ``case.setObservation( Vector = '1 2 3' )``
-    - ``case.setObservation( Vector=True, Script = 'script.py' )```
-    - ``case.setObservation( Vector=True, DataFile = 'data.csv' )```
-    - ``case.setObservation( Vector=True, DataFile = 'data.npy' )```
+    case.setObservation( Vector = [1, 2, 3] )
+    case.setObservation( Vector = numpy.array([1, 2, 3]) )
+    case.setObservation( Vector = '1 2 3' )
+    case.setObservation( Vector=True, Script = 'script.py' )
+    case.setObservation( Vector=True, DataFile = 'data.csv' )
+    case.setObservation( Vector=True, DataFile = 'data.npy' )
 
 Use note: in a given study, only the last record (whether a single vector or a
 series of vectors) can be used, as only one observation concept exists per ADAO
@@ -139,16 +140,17 @@ of which we consider a history.
     - data text file (TXT, CSV, TSV), with variable pointer by name in column or row, indicated by the keyword "*DataFile*" with the condition ``VectorSerie=True``
     - binary data file (NPY, NPZ), with variable pointer by name, indicated by the keyword "*DataFile*" with the condition ``VectorSerie=True``
 
-- Examples of statements in TUI interface:
+Examples of statements in TUI interface:
+::
 
-    - ``case.setObservation( VectorSerie = [[1,2,3], [1,2,3]] )``
-    - ``case.setObservation( VectorSerie = [numpy.array([1,2,3]), numpy.array([1,2,3])] )``
-    - ``case.setObservation( VectorSerie =  ['1 2 3', '1 2 3'] )``
-    - ``case.setObservation( VectorSerie =  '[[1,2,3], [1,2,3]]' )``
-    - ``case.setObservation( VectorSerie =  '1 2 3 ; 1 2 3' )``
-    - ``case.setObservation( VectorSerie=True, Script = 'script.py' )```
-    - ``case.setObservation( VectorSerie=True, DataFile = 'data.csv' )```
-    - ``case.setObservation( VectorSerie=True, DataFile = 'data.npy' )```
+    case.setObservation( VectorSerie = [[1,2,3], [1,2,3]] )
+    case.setObservation( VectorSerie = [numpy.array([1,2,3]), numpy.array([1,2,3])] )
+    case.setObservation( VectorSerie =  ['1 2 3', '1 2 3'] )
+    case.setObservation( VectorSerie =  '[[1,2,3], [1,2,3]]' )
+    case.setObservation( VectorSerie =  '1 2 3 ; 1 2 3' )
+    case.setObservation( VectorSerie=True, Script = 'script.py' )
+    case.setObservation( VectorSerie=True, DataFile = 'data.csv' )
+    case.setObservation( VectorSerie=True, DataFile = 'data.npy' )
 
 Use note: in a given study, only the last record (whether a single vector or a
 series of vectors) can be used, as only one observation concept exists per ADAO

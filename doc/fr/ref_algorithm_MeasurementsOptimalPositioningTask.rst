@@ -223,6 +223,33 @@ StoreSupplementaryCalculations
 .. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask2.res
     :language: none
 
+.. --------- ..
+.. include:: scripts/simple_MeasurementsOptimalPositioningTask3.rst
+
+.. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask3.py
+
+.. include:: snippets/Header2Algo10.rst
+
+.. literalinclude:: scripts/simple_MeasurementsOptimalPositioningTask3.res
+    :language: none
+
+.. include:: snippets/Header2Algo11.rst
+
+.. _simple_MeasurementsOptimalPositioningTask31:
+.. image:: scripts/simple_MeasurementsOptimalPositioningTask31.png
+  :align: center
+  :width: 60%
+
+.. _simple_MeasurementsOptimalPositioningTask32:
+.. image:: scripts/simple_MeasurementsOptimalPositioningTask32.png
+  :align: center
+  :width: 60%
+
+.. _simple_MeasurementsOptimalPositioningTask33:
+.. image:: scripts/simple_MeasurementsOptimalPositioningTask33.png
+  :align: center
+  :width: 60%
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 

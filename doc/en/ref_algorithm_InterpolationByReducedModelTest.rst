@@ -31,13 +31,14 @@ Checking algorithm "*InterpolationByReducedModelTest*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm provides a simple way of analyzing the quality of the empirical
-state interpolation obtained using a reduced basis, using measurements at
-specific points.
+interpolation obtained by a reduced basis for complete states, using
+measurements at precise points.
 
 The results displayed by default are simple statistics related to the
-normalized errors of interpolation with a reduced basis. The test uses a
-reduced base and a set of optimal measurement positions, and uses
-pseudo-measurements from each complete state (“*snapshot*”) included in the
+normalized errors between the interpolation with a reduced basis and the
+complete states we seek to represent on the reduced basis. The test requires a
+reduced basis and a set of optimal measurement positions, and uses
+pseudo-measurements from each complete state ("*snapshot*") included in the
 given test set.
 
 Please note: to be consistent, this test must use the same mathematical norm as

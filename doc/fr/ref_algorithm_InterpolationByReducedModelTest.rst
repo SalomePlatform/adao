@@ -31,14 +31,15 @@ Algorithme de vérification "*InterpolationByReducedModelTest*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'analyser de manière simple la qualité de
-l'interpolation empirique des états obtenue par une base réduite, en utilisant
-des mesures en des points précis.
+l'interpolation empirique obtenue par une base réduite pour des états complets,
+en utilisant des mesures en des points précis.
 
 Les résultats affichés par défaut sont des statistiques simples liées aux
-erreurs normalisées de l'interpolation avec une base réduite. Le test utilise
+erreurs normalisées entre l'interpolation avec une base réduite et les états
+complets que l'on cherche à représenter sur la base réduite. Le test requiert
 une base réduite et un ensemble de positions de mesures optimales, et utilise
 des pseudo-mesures provenant de chaque état complet ("*snapshot*") inclus dans
-l'ensemble de test donné.
+l'ensemble donné de test.
 
 Attention : pour être cohérent, ce test doit utiliser la même norme
 mathématique que celle utilisée pour construire la base réduite. La norme étant
