@@ -232,20 +232,10 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/Header2Algo11.rst
 
-.. _simple_MeasurementsOptimalPositioningTask31:
-.. image:: scripts/simple_MeasurementsOptimalPositioningTask31.png
+.. _simple_MeasurementsOptimalPositioningTask3:
+.. image:: scripts/simple_MeasurementsOptimalPositioningTask3.png
   :align: center
-  :width: 60%
-
-.. _simple_MeasurementsOptimalPositioningTask32:
-.. image:: scripts/simple_MeasurementsOptimalPositioningTask32.png
-  :align: center
-  :width: 60%
-
-.. _simple_MeasurementsOptimalPositioningTask33:
-.. image:: scripts/simple_MeasurementsOptimalPositioningTask33.png
-  :align: center
-  :width: 60%
+  :width: 100%
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

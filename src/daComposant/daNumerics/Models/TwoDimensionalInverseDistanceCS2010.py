@@ -37,12 +37,14 @@ class TwoDimensionalInverseDistanceCS2010:
         SIAM Journal on Scientific Computing, 32(5), pp. 2737-2764 (2010).
     """
     def __init__(self, nx: int = 20, ny: int = 20):
+        "Définition du maillage spatial"
         self.nx  = max(1, nx)
         self.ny  = max(1, ny)
         self.x   = numpy.linspace(0.1, 0.9, self.nx, dtype=float)
         self.y   = numpy.linspace(0.1, 0.9, self.ny, dtype=float)
 
     def FunctionH(self, XX ):
+        "Fonction simulation pour un paramètre donné"
         __mu1, __mu2 = numpy.ravel(XX)
         #
         __x, __y = numpy.meshgrid( self.x, self.y )
@@ -51,15 +53,18 @@ class TwoDimensionalInverseDistanceCS2010:
         return __sxymu
 
     def get_x(self):
+        "Renvoie le maillage spatial"
         return self.x, self.y
 
     def get_sample_of_mu(self, ns1: int = 20, ns2: int = 20):
+        "Renvoie l'échantillonnage paramétrique régulier"
         smu1 = numpy.linspace(-1, -0.01, ns1, dtype=float)
         smu2 = numpy.linspace(-1, -0.01, ns2, dtype=float)
         smu = numpy.array([(mu1, mu2) for mu1 in smu1 for mu2 in smu2])
         return smu
 
     def get_random_sample_of_mu(self, ns1: int = 1, ns2: int = 1):
+        "Renvoie l'échantillonnage paramétrique aléatoire"
         smu = []
         for i in range(ns1 * ns2):
             smu1 = numpy.random.uniform(-1, -0.01)
@@ -69,9 +74,11 @@ class TwoDimensionalInverseDistanceCS2010:
         return smu
 
     def get_bounds_on_space(self):
+        "Renvoie les bornes sur le maillage spatial"
         return [[min(self.x), max(self.x)], [min(self.y), max(self.y)]]
 
     def get_bounds_on_parameter(self):
+        "Renvoie les bornes sur le maillage paramétrique"
         return [[-1, -0.01]] * 2
 
     OneRealisation = FunctionH

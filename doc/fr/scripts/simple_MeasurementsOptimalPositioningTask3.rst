@@ -19,10 +19,12 @@ dans le plan 2D, et du paramètre
 
 La fonction est représenté sur une grille spatiale régulière :math:`\Omega_G`
 de taille 20x20 points. Elle est disponible dans les modèles de tests intégrés
-pour ADAO sous le nom `TwoDimensionalInverseDistanceCS2010`. On construit donc
-ici tout d'abord un ensemble de simulations de :math:`G`, pour lui appliquer
-ensuite l'algorithme de décomposition de type DEIM, et en tirer des
-illustrations simples.
+pour ADAO sous le nom ``TwoDimensionalInverseDistanceCS2010``. On construit
+donc ici tout d'abord un ensemble de simulations de :math:`G`, puis on cherche
+les meilleurs positions de mesures pour obtenir une représentation par
+interpolation DEIM des champs, en appliquant l'algorithme de décomposition de
+type DEIM, et on en tire ensuite des illustrations simples. On choisit de
+rechercher un nombre arbitraire ``nbmeasures`` de 15 positions de mesures.
 
 On observe ainsi que les valeurs singulières décroissent régulièrement jusqu'au
 bruit numérique, indiquant qu'il faut environ une centaine d'éléments de base

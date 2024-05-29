@@ -18,9 +18,13 @@ in the 2D plane, and on the parameter
 
 The function is represented on a regular :math:`\Omega_G` spatial grid of size
 20x20 points. It is available in ADAO built-in test models under the name
-`TwoDimensionalInverseDistanceCS2010`. So here we first build a set of
-simulations of :math:`G`, then apply the DEIM-type decomposition algorithm to
-it, and derive some simple illustrations.
+``TwoDimensionalInverseDistanceCS2010``, together with the spatial and
+parametric domain default definition. So here we first build a set of
+simulations of :math:`G`, then we look for the best locations for measurements
+to obtain an DEIM interpolation representation of the fields, by applying the
+DEIM-type decomposition algorithm to it, and then derive some simple
+illustrations. We choose to look for an arbitrary number ``nbmeasures`` of 15
+measurement locations.
 
 It can be seen that the singular values decrease steadily down to numerical
 noise, indicating that around a hundred basis elements are needed to fully
