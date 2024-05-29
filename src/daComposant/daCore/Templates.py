@@ -149,44 +149,100 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name    = "ValueGnuPlotter",
-    content = """import numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal ifig, gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR   = "Affiche graphiquement avec Gnuplot la valeur courante de la variable",
-    en_EN   = "Graphically plot with Gnuplot the current value of the variable",
+    content = """import numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR   = "Affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant)",
+    en_EN   = "Graphically plot with Gnuplot the current value of the variable (persistent plot)",
     order   = "next",
 )
 ObserverTemplates.store(
     name    = "ValueSerieGnuPlotter",
-    content = """import numpy, Gnuplot\nv=numpy.array(var[:], ndmin=1)\nglobal ifig, gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR   = "Affiche graphiquement avec Gnuplot la série des valeurs de la variable",
-    en_EN   = "Graphically plot with Gnuplot the value series of the variable",
+    content = """import numpy, Gnuplot\nv=numpy.array(var[:], ndmin=1)\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\n    gp('set xlabel \"Step\"')\n    gp('set ylabel \"Variable\"')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR   = "Affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant)",
+    en_EN   = "Graphically plot with Gnuplot the value series of the variable (persistent plot)",
     order   = "next",
 )
 ObserverTemplates.store(
     name    = "ValuePrinterAndGnuPlotter",
-    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la valeur courante de la variable",
-    en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable",
+    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, Gnuplot\nv=numpy.array(var[-1], ndmin=1)\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant)",
+    en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable (persistent plot)",
     order   = "next",
 )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterAndGnuPlotter",
-    content = """print(str(info)+' '+str(var[:]))\nimport numpy, Gnuplot\nv=numpy.array(var[:], ndmin=1)\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable",
-    en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable",
+    content = """print(str(info)+' '+str(var[:]))\nimport numpy, Gnuplot\nv=numpy.array(var[:], ndmin=1)\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\n    gp('set xlabel \"Step\"')\n    gp('set ylabel \"Variable\"')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR   = "Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant)",
+    en_EN   = "Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable (persistent plot)",
     order   = "next",
 )
 ObserverTemplates.store(
     name    = "ValuePrinterSaverAndGnuPlotter",
-    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable",
-    en_EN   = "Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable",
+    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable (affichage persistant)",
+    en_EN   = "Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable (persistent plot)",
     order   = "next",
 )
 ObserverTemplates.store(
     name    = "ValueSeriePrinterSaverAndGnuPlotter",
-    content = """print(str(info)+' '+str(var[:]))\nimport numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal ifig,gp\ntry:\n    ifig+=1\n    gp('set style data lines')\nexcept:\n    ifig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set style data lines')\ngp('set title \"%s (Figure %i)\"'%(info,ifig))\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la série des valeurs de la variable",
-    en_EN   = "Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable",
+    content = """print(str(info)+' '+str(var[:]))\nimport numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\n    gp('set xlabel \"Step\"')\n    gp('set ylabel \"Variable\"')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR   = "Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la série des valeurs de la variable (affichage persistant)",
+    en_EN   = "Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable (persistent plot)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValueMatPlotter",
+    content = """import numpy\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant)",
+    en_EN   = "Graphically plot with Matplolib the current value of the variable (non persistent plot)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValueMatPlotterSaver",
+    content = """import numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante)",
+    en_EN   = "Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant figure)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValueSerieMatPlotter",
+    content = """import numpy\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la série des valeurs de la variable (affichage non persistant)",
+    en_EN   = "Graphically plot with Matplolib the value series of the variable (non persistent plot)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValueSerieMatPlotterSaver",
+    content = """import numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante)",
+    en_EN   = "Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant figure)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValuePrinterAndMatPlotter",
+    content = """print(str(info)+' '+str(var[-1]))\nimport numpy\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant)",
+    en_EN   = "Graphically plot with Matplolib the current value of the variable (non persistent plot)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValuePrinterAndMatPlotterSaver",
+    content = """print(str(info)+' '+str(var[-1]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante)",
+    en_EN   = "Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant figure)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValueSeriePrinterAndMatPlotter",
+    content = """print(str(info)+' '+str(var[:]))\nimport numpy\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la série des valeurs de la variable (affichage non persistant)",
+    en_EN   = "Graphically plot with Matplolib the value series of the variable (non persistent plot)",
+    order   = "next",
+)
+ObserverTemplates.store(
+    name    = "ValueSeriePrinterAndMatPlotterSaver",
+    content = """print(str(info)+' '+str(var[:]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR   = "Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante)",
+    en_EN   = "Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant figure)",
     order   = "next",
 )
 ObserverTemplates.store(

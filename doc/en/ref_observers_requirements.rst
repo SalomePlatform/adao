@@ -288,21 +288,21 @@ Print on standard output and, in the same time, save in a file of the '/tmp' dir
 Template **ValueGnuPlotter**
 ............................
 
-Graphically plot with Gnuplot the current value of the variable.
+Graphically plot with Gnuplot the current value of the variable (persistent plot).
 
 ::
 
     import numpy, Gnuplot
     v=numpy.array(var[-1], ndmin=1)
-    global ifig, gp
+    global igfig, gp
     try:
-        ifig+=1
-        gp('set style data lines')
+        igfig+=1
+        gp('set title "%s (Figure %i)"'%(info,igfig))
     except:
-        ifig=0
+        igfig=0
         gp=Gnuplot.Gnuplot(persist=1)
+        gp('set title "%s (Figure %i)"'%(info,igfig))
         gp('set style data lines')
-    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueSerieGnuPlotter (Observer)
@@ -310,21 +310,23 @@ Graphically plot with Gnuplot the current value of the variable.
 Template **ValueSerieGnuPlotter**
 .................................
 
-Graphically plot with Gnuplot the value series of the variable.
+Graphically plot with Gnuplot the value series of the variable (persistent plot).
 
 ::
 
     import numpy, Gnuplot
     v=numpy.array(var[:], ndmin=1)
-    global ifig, gp
+    global igfig, gp
     try:
-        ifig+=1
-        gp('set style data lines')
+        igfig+=1
+        gp('set title "%s (Figure %i)"'%(info,igfig))
     except:
-        ifig=0
+        igfig=0
         gp=Gnuplot.Gnuplot(persist=1)
+        gp('set title "%s (Figure %i)"'%(info,igfig))
         gp('set style data lines')
-    gp('set title "%s (Figure %i)"'%(info,ifig))
+        gp('set xlabel "Step"')
+        gp('set ylabel "Variable"')
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterAndGnuPlotter (Observer)
@@ -332,22 +334,22 @@ Graphically plot with Gnuplot the value series of the variable.
 Template **ValuePrinterAndGnuPlotter**
 ......................................
 
-Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable.
+Print on standard output and, in the same time, graphically plot with Gnuplot the current value of the variable (persistent plot).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
     import numpy, Gnuplot
     v=numpy.array(var[-1], ndmin=1)
-    global ifig,gp
+    global igfig, gp
     try:
-        ifig+=1
-        gp('set style data lines')
+        igfig+=1
+        gp('set title "%s (Figure %i)"'%(info,igfig))
     except:
-        ifig=0
+        igfig=0
         gp=Gnuplot.Gnuplot(persist=1)
+        gp('set title "%s (Figure %i)"'%(info,igfig))
         gp('set style data lines')
-    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueSeriePrinterAndGnuPlotter (Observer)
@@ -355,22 +357,24 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 Template **ValueSeriePrinterAndGnuPlotter**
 ...........................................
 
-Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable.
+Print on standard output and, in the same time, graphically plot with Gnuplot the value series of the variable (persistent plot).
 
 ::
 
     print(str(info)+' '+str(var[:]))
     import numpy, Gnuplot
     v=numpy.array(var[:], ndmin=1)
-    global ifig,gp
+    global igfig, gp
     try:
-        ifig+=1
-        gp('set style data lines')
+        igfig+=1
+        gp('set title "%s (Figure %i)"'%(info,igfig))
     except:
-        ifig=0
+        igfig=0
         gp=Gnuplot.Gnuplot(persist=1)
+        gp('set title "%s (Figure %i)"'%(info,igfig))
         gp('set style data lines')
-    gp('set title "%s (Figure %i)"'%(info,ifig))
+        gp('set xlabel "Step"')
+        gp('set ylabel "Variable"')
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValuePrinterSaverAndGnuPlotter (Observer)
@@ -378,7 +382,7 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 Template **ValuePrinterSaverAndGnuPlotter**
 ...........................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable.
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable (persistent plot).
 
 ::
 
@@ -395,15 +399,15 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
-    global ifig,gp
+    global igfig, gp
     try:
-        ifig+=1
-        gp('set style data lines')
+        igfig+=1
+        gp('set title "%s (Figure %i)"'%(info,igfig))
     except:
-        ifig=0
+        igfig=0
         gp=Gnuplot.Gnuplot(persist=1)
+        gp('set title "%s (Figure %i)"'%(info,igfig))
         gp('set style data lines')
-    gp('set title "%s (Figure %i)"'%(info,ifig))
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
 
 .. index:: single: ValueSeriePrinterSaverAndGnuPlotter (Observer)
@@ -411,7 +415,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
 Template **ValueSeriePrinterSaverAndGnuPlotter**
 ................................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable.
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable (persistent plot).
 
 ::
 
@@ -428,16 +432,242 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
     import Gnuplot
-    global ifig,gp
+    global igfig, gp
     try:
-        ifig+=1
-        gp('set style data lines')
+        igfig+=1
+        gp('set title "%s (Figure %i)"'%(info,igfig))
     except:
-        ifig=0
+        igfig=0
         gp=Gnuplot.Gnuplot(persist=1)
+        gp('set title "%s (Figure %i)"'%(info,igfig))
         gp('set style data lines')
-    gp('set title "%s (Figure %i)"'%(info,ifig))
+        gp('set xlabel "Step"')
+        gp('set ylabel "Variable"')
     gp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )
+
+.. index:: single: ValueMatPlotter (Observer)
+
+Template **ValueMatPlotter**
+............................
+
+Graphically plot with Matplolib the current value of the variable (non persistent plot).
+
+::
+
+    import numpy
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValueMatPlotterSaver (Observer)
+
+Template **ValueMatPlotterSaver**
+.................................
+
+Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+
+::
+
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValueSerieMatPlotter (Observer)
+
+Template **ValueSerieMatPlotter**
+.................................
+
+Graphically plot with Matplolib the value series of the variable (non persistent plot).
+
+::
+
+    import numpy
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValueSerieMatPlotterSaver (Observer)
+
+Template **ValueSerieMatPlotterSaver**
+......................................
+
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+
+::
+
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValuePrinterAndMatPlotter (Observer)
+
+Template **ValuePrinterAndMatPlotter**
+......................................
+
+Graphically plot with Matplolib the current value of the variable (non persistent plot).
+
+::
+
+    print(str(info)+' '+str(var[-1]))
+    import numpy
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValuePrinterAndMatPlotterSaver (Observer)
+
+Template **ValuePrinterAndMatPlotterSaver**
+...........................................
+
+Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+
+::
+
+    print(str(info)+' '+str(var[-1]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValueSeriePrinterAndMatPlotter (Observer)
+
+Template **ValueSeriePrinterAndMatPlotter**
+...........................................
+
+Graphically plot with Matplolib the value series of the variable (non persistent plot).
+
+::
+
+    print(str(info)+' '+str(var[:]))
+    import numpy
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValueSeriePrinterAndMatPlotterSaver (Observer)
+
+Template **ValueSeriePrinterAndMatPlotterSaver**
+................................................
+
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+
+::
+
+    print(str(info)+' '+str(var[:]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
 
 .. index:: single: ValueMean (Observer)
 
