@@ -31,9 +31,11 @@ import os, numpy, copy, math
 import gzip, bz2, pickle
 
 from daCore.PlatformInfo import PathManagement ; PathManagement()  # noqa: E702,E203
-from daCore.PlatformInfo import has_gnuplot, PlatformInfo
-mfp = PlatformInfo().MaximumPrecision()
-if has_gnuplot:
+from daCore.PlatformInfo import PlatformInfo
+lpi = PlatformInfo()
+mfp = lpi.MaximumPrecision()
+
+if lpi.has_gnuplot:
     import Gnuplot
 
 # ==============================================================================
@@ -472,7 +474,7 @@ class Persistence(object):
         "Préparation des plots"
         #
         # Vérification de la disponibilité du module Gnuplot
-        if not has_gnuplot:
+        if not lpi.has_gnuplot:
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée
@@ -704,7 +706,7 @@ class Persistence(object):
         """
         #
         # Vérification de la disponibilité du module Gnuplot
-        if not has_gnuplot:
+        if not lpi.has_gnuplot:
             raise ImportError("The Gnuplot module is required to plot the object.")
         #
         # Vérification et compléments sur les paramètres d'entrée

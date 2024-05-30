@@ -51,17 +51,56 @@ import socket
 import locale
 import logging
 import re
+import numpy
+
+# ==============================================================================
+def uniq( __sequence ):
+    """
+    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
+    """
+    __seen = set()
+    return [x for x in __sequence if x not in __seen and not __seen.add(x)]
+
+class PathManagement(object):
+    """
+    Mise à jour du path système pour les répertoires d'outils
+    """
+    __slots__ = ("__paths")
+
+    def __init__(self):
+        "Déclaration des répertoires statiques"
+        parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        self.__paths = {}
+        self.__paths["daNumerics"] = os.path.join(parent, "daNumerics")
+        #
+        for v in self.__paths.values():
+            if os.path.isdir(v):
+                sys.path.insert(0, v )
+        #
+        # Conserve en unique exemplaire chaque chemin
+        sys.path = uniq( sys.path )
+        del parent
+
+    def getpaths(self):
+        """
+        Renvoie le dictionnaire des chemins ajoutés
+        """
+        return self.__paths
 
 # ==============================================================================
 class PlatformInfo(object):
     """
     Rassemblement des informations sur le code et la plateforme
     """
-    __slots__ = ()
+    __slots__ = ("has_salome", "has_yacs", "has_adao", "has_eficas")
 
     def __init__(self):
         "Sans effet"
-        pass
+        self.has_salome = bool( "SALOME_ROOT_DIR" in os.environ )
+        self.has_yacs   = bool(   "YACS_ROOT_DIR" in os.environ )
+        self.has_adao   = bool(   "ADAO_ROOT_DIR" in os.environ )
+        self.has_eficas = bool( "EFICAS_ROOT_DIR" in os.environ )
+        PathManagement()
 
     def getName(self):
         "Retourne le nom de l'application"
@@ -178,6 +217,131 @@ class PlatformInfo(object):
         "Retourne la version de python disponible"
         return ".".join([str(x) for x in sys.version_info[0:3]])  # map(str,sys.version_info[0:3]))
 
+    # Tests des modules système
+
+    def _has_numpy(self):
+        try:
+            import numpy  # noqa: F401
+            has_numpy = True
+        except ImportError:
+            raise ImportError("Numpy is not available, despites the fact it is mandatory.")
+        return has_numpy
+    has_numpy = property(fget = _has_numpy)
+
+    def _has_scipy(self):
+        try:
+            import scipy
+            import scipy.version
+            import scipy.optimize  # noqa: F401
+            has_scipy = True
+        except ImportError:
+            has_scipy = False
+        return has_scipy
+    has_scipy = property(fget = _has_scipy)
+
+    def _has_matplotlib(self):
+        try:
+            import matplotlib  # noqa: F401
+            has_matplotlib = True
+        except ImportError:
+            has_matplotlib = False
+        return has_matplotlib
+    has_matplotlib = property(fget = _has_matplotlib)
+
+    def _has_sphinx(self):
+        try:
+            import sphinx  # noqa: F401
+            has_sphinx = True
+        except ImportError:
+            has_sphinx = False
+        return has_sphinx
+    has_sphinx = property(fget = _has_sphinx)
+
+    def _has_nlopt(self):
+        try:
+            import nlopt  # noqa: F401
+            has_nlopt = True
+        except ImportError:
+            has_nlopt = False
+        return has_nlopt
+    has_nlopt = property(fget = _has_nlopt)
+
+    def _has_sdf(self):
+        try:
+            import sdf  # noqa: F401
+            has_sdf = True
+        except ImportError:
+            has_sdf = False
+        return has_sdf
+    has_sdf = property(fget = _has_sdf)
+
+    def _has_fmpy(self):
+        try:
+            import fmpy  # noqa: F401
+            has_fmpy = True
+        except ImportError:
+            has_fmpy = False
+        return has_fmpy
+    has_fmpy = property(fget = _has_fmpy)
+
+    def _has_buildingspy(self):
+        try:
+            import buildingspy  # noqa: F401
+            has_buildingspy = True
+        except ImportError:
+            has_buildingspy = False
+        return has_buildingspy
+    has_buildingspy = property(fget = _has_buildingspy)
+
+    def _has_control(self):
+        try:
+            import control  # noqa: F401
+            has_control = True
+        except ImportError:
+            has_control = False
+        return has_control
+    has_control = property(fget = _has_control)
+
+    def _has_modelicares(self):
+        try:
+            import modelicares  # noqa: F401
+            has_modelicares = True
+        except ImportError:
+            has_modelicares = False
+        return has_modelicares
+    has_modelicares = property(fget = _has_modelicares)
+
+    # Tests des modules locaux
+
+    def _has_gnuplot(self):
+        try:
+            import Gnuplot  # noqa: F401
+            has_gnuplot = True
+        except ImportError:
+            has_gnuplot = False
+        return has_gnuplot
+    has_gnuplot = property(fget = _has_gnuplot)
+
+    def _has_models(self):
+        try:
+            import Models  # noqa: F401
+            has_models = True
+        except ImportError:
+            has_models = False
+        return has_models
+    has_models = property(fget = _has_models)
+
+    def _has_linkmod(self):
+        try:
+            import LinkMod  # noqa: F401
+            has_linkmod = True
+        except ImportError:
+            has_linkmod = False
+        return has_linkmod
+    has_linkmod = property(fget = _has_linkmod)
+
+    # Versions
+
     def getNumpyVersion(self):
         "Retourne la version de numpy disponible"
         import numpy.version
@@ -185,7 +349,8 @@ class PlatformInfo(object):
 
     def getScipyVersion(self):
         "Retourne la version de scipy disponible"
-        if has_scipy:
+        if self.has_scipy:
+            import scipy
             __version = scipy.version.version
         else:
             __version = "0.0.0"
@@ -193,7 +358,8 @@ class PlatformInfo(object):
 
     def getMatplotlibVersion(self):
         "Retourne la version de matplotlib disponible"
-        if has_matplotlib:
+        if self.has_matplotlib:
+            import matplotlib
             __version = matplotlib.__version__
         else:
             __version = "0.0.0"
@@ -201,7 +367,8 @@ class PlatformInfo(object):
 
     def getGnuplotVersion(self):
         "Retourne la version de gnuplotpy disponible"
-        if has_gnuplot:
+        if self.has_gnuplot:
+            import Gnuplot
             __version = Gnuplot.__version__
         else:
             __version = "0.0"
@@ -209,7 +376,8 @@ class PlatformInfo(object):
 
     def getSphinxVersion(self):
         "Retourne la version de sphinx disponible"
-        if has_sphinx:
+        if self.has_sphinx:
+            import sphinx
             __version = sphinx.__version__
         else:
             __version = "0.0.0"
@@ -217,7 +385,8 @@ class PlatformInfo(object):
 
     def getNloptVersion(self):
         "Retourne la version de nlopt disponible"
-        if has_nlopt:
+        if self.has_nlopt:
+            import nlopt
             __version = "%s.%s.%s"%(
                 nlopt.version_major(),
                 nlopt.version_minor(),
@@ -229,7 +398,8 @@ class PlatformInfo(object):
 
     def getSdfVersion(self):
         "Retourne la version de sdf disponible"
-        if has_sdf:
+        if self.has_sdf:
+            import sdf
             __version = sdf.__version__
         else:
             __version = "0.0.0"
@@ -237,7 +407,8 @@ class PlatformInfo(object):
 
     def getFmpyVersion(self):
         "Retourne la version de fmpy disponible"
-        if has_fmpy:
+        if self.has_fmpy:
+            import fmpy
             __version = fmpy.__version__
         else:
             __version = "0.0.0"
@@ -270,65 +441,6 @@ class PlatformInfo(object):
         return "%s %s (%s)"%(dav.name, dav.version, dav.date)
 
 # ==============================================================================
-# Tests d'importation de modules système
-
-try:
-    import numpy
-    has_numpy = True
-except ImportError:
-    raise ImportError("Numpy is not available, despites the fact it is mandatory.")
-
-try:
-    import scipy
-    import scipy.version
-    import scipy.optimize
-    has_scipy = True
-except ImportError:
-    has_scipy = False
-
-try:
-    import matplotlib
-    has_matplotlib = True
-except ImportError:
-    has_matplotlib = False
-
-try:
-    import sphinx
-    has_sphinx = True
-except ImportError:
-    has_sphinx = False
-
-try:
-    import nlopt
-    has_nlopt = True
-except ImportError:
-    has_nlopt = False
-
-try:
-    import sdf
-    has_sdf = True
-except ImportError:
-    has_sdf = False
-
-try:
-    import fmpy
-    has_fmpy = True
-except ImportError:
-    has_fmpy = False
-
-has_salome = bool( "SALOME_ROOT_DIR" in os.environ )
-has_yacs   = bool(   "YACS_ROOT_DIR" in os.environ )
-has_adao   = bool(   "ADAO_ROOT_DIR" in os.environ )
-has_eficas = bool( "EFICAS_ROOT_DIR" in os.environ )
-
-# ==============================================================================
-def uniq( __sequence ):
-    """
-    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
-    """
-    __seen = set()
-    return [x for x in __sequence if x not in __seen and not __seen.add(x)]
-
 def vt( __version ):
     "Version transformée pour comparaison robuste, obtenue comme un tuple"
     serie = []
@@ -455,33 +567,6 @@ def checkFileNameImportability( __filename, __warnInsteadOfPrint=True ):
     return __conform
 
 # ==============================================================================
-class PathManagement(object):
-    """
-    Mise à jour du path système pour les répertoires d'outils
-    """
-    __slots__ = ("__paths")
-
-    def __init__(self):
-        "Déclaration des répertoires statiques"
-        parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        self.__paths = {}
-        self.__paths["daNumerics"] = os.path.join(parent, "daNumerics")
-        #
-        for v in self.__paths.values():
-            if os.path.isdir(v):
-                sys.path.insert(0, v )
-        #
-        # Conserve en unique exemplaire chaque chemin
-        sys.path = uniq( sys.path )
-        del parent
-
-    def getpaths(self):
-        """
-        Renvoie le dictionnaire des chemins ajoutés
-        """
-        return self.__paths
-
-# ==============================================================================
 class SystemUsage(object):
     """
     Permet de récupérer les différentes tailles mémoires du process courant
@@ -581,16 +666,6 @@ class SystemUsage(object):
     def getMaxVirtualMemory(self, unit="o"):
         "Renvoie la mémoire totale maximale mesurée"
         return self._VmB('VmPeak:', unit)
-
-# ==============================================================================
-# Tests d'importation de modules locaux
-
-PathManagement()
-try:
-    import Gnuplot
-    has_gnuplot = True
-except ImportError:
-    has_gnuplot = False
 
 # ==============================================================================
 if __name__ == "__main__":

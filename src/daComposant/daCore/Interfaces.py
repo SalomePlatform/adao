@@ -37,6 +37,7 @@ from daCore import PlatformInfo
 from daCore import Templates
 from daCore import Reporting
 from daCore import version
+lpi = PlatformInfo.PlatformInfo()
 
 # ==============================================================================
 class GenericCaseViewer(object):
@@ -667,10 +668,9 @@ class _YACSViewer(GenericCaseViewer):
             if os.path.isfile(__file) or os.path.islink(__file):
                 os.remove(__file)
         # -----
-        if not PlatformInfo.has_salome or \
-                not PlatformInfo.has_adao:
+        if not lpi.has_salome or not lpi.has_adao:
             raise ImportError(
-                "Unable to get SALOME (%s) or ADAO (%s) environnement for YACS conversion.\n"%(PlatformInfo.has_salome, PlatformInfo.has_adao) + \
+                "Unable to get SALOME (%s) or ADAO (%s) environnement for YACS conversion.\n"%(lpi.has_salome, lpi.has_adao) + \
                 "Please load the right SALOME environnement before trying to use it.")
         else:
             from daYacsSchemaCreator.run import create_schema_from_content
@@ -1070,7 +1070,7 @@ class ImportFromFile(object):
         self.__supportedformats["text/tab-separated-values"] = True
         self.__supportedformats["application/numpy.npy"]     = True
         self.__supportedformats["application/numpy.npz"]     = True
-        self.__supportedformats["application/dymola.sdf"]    = PlatformInfo.has_sdf
+        self.__supportedformats["application/dymola.sdf"]    = lpi.has_sdf
         return self.__supportedformats
 
     def getvalue(self, ColNames=None, ColIndex=None ):
@@ -1111,7 +1111,7 @@ class ImportFromFile(object):
             if __usecols is None:  # Si une variable demandée n'existe pas
                 self._colnames = None
         #
-        elif self._format == "application/dymola.sdf" and PlatformInfo.has_sdf:
+        elif self._format == "application/dymola.sdf" and lpi.has_sdf:
             import sdf
             __content = sdf.load(self._filename)
             __columns = None

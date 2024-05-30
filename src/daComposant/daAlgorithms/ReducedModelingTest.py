@@ -25,8 +25,9 @@ import daCore
 from daCore import BasicObjects, PlatformInfo
 from daCore.NumericObjects import FindIndexesFromNames, SingularValuesEstimation
 from daAlgorithms.Atoms import eosg
-mpr = PlatformInfo.PlatformInfo().MachinePrecision()
-mfp = PlatformInfo.PlatformInfo().MaximumPrecision()
+lpi = PlatformInfo.PlatformInfo()
+mpr = lpi.MachinePrecision()
+mfp = lpi.MaximumPrecision()
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -315,7 +316,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         if cut1pi > 0:
             msgs += __marge + "Representing more than 99.99%s of variance requires at least %i mode(s).\n"%("%", cut1pi)
         #
-        if PlatformInfo.has_matplotlib and self._parameters["PlotAndSave"]:
+        if lpi.has_matplotlib and self._parameters["PlotAndSave"]:
             # Evite les message debug de matplotlib
             dL = logging.getLogger().getEffectiveLevel()
             logging.getLogger().setLevel(logging.WARNING)
