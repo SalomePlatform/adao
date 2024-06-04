@@ -55,6 +55,8 @@ similar to the one of Kalman filters, specially the
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnBoth.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

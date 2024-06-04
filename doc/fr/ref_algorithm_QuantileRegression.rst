@@ -43,6 +43,8 @@ paramètres de modèles satisfaisant aux conditions de quantiles.
 
 .. include:: snippets/FeaturePropDerivativeNeeded.rst
 
+.. include:: snippets/FeaturePropConvergenceOnBoth.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

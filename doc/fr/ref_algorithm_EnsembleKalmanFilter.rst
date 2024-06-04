@@ -103,6 +103,8 @@ moyens pour obtenir une assimilation de données plus économique et de qualité
 
 .. include:: snippets/FeaturePropParallelAlgorithm.rst
 
+.. include:: snippets/FeaturePropConvergenceOnStatic.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

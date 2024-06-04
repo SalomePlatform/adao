@@ -92,6 +92,8 @@ Posteriori* estimator"), which coincide in this particular case.
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnBoth.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

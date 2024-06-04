@@ -86,6 +86,8 @@ can verify the linearity of the operators with the help of a
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnStatic.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

@@ -105,6 +105,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             features=(
                 "LocalOptimization",
                 "DerivativeNeeded",
+                "ConvergenceOnBoth",
             ),
         )
 

@@ -68,6 +68,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "LocalOptimization",
                 "DerivativeNeeded",
                 "ParallelDerivativesOnly",
+                "ConvergenceOnStatic",
             ),
         )
 

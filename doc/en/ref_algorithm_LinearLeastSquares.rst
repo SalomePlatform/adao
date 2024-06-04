@@ -61,6 +61,8 @@ In all cases, it is recommended to prefer at least a
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnStatic.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

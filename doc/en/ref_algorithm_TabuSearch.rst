@@ -57,6 +57,8 @@ Positions already explored are kept in a list of finite length.
 
 .. include:: snippets/FeaturePropDerivativeFree.rst
 
+.. include:: snippets/FeaturePropConvergenceOnNumbers.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

@@ -62,6 +62,8 @@ Dans tous les cas, il est recommandé de lui préférer au minimum un
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnStatic.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

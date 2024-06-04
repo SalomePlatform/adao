@@ -138,6 +138,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             features=(
                 "NonLocalOptimization",
                 "DerivativeFree",
+                "ConvergenceOnNumbers",
             ),
         )
 

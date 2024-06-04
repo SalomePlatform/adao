@@ -149,6 +149,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "NonLocalOptimization",
                 "DerivativeNeeded",
                 "ParallelDerivativesOnly",
+                "ConvergenceOnBoth",
             ),
         )
 

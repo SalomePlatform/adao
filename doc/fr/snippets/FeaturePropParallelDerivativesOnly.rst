@@ -4,5 +4,5 @@
   interne, mais utilisent la dérivation numérique d'opérateur(s) qui est, elle,
   parallélisable**. L'interaction potentielle, entre le parallélisme de la
   dérivation numérique, et le parallélisme éventuellement présent dans les
-  opérateurs d'observation ou d'évolution de l'utilisateur, doit donc être
-  soigneusement réglée.
+  opérateurs d'observation ou d'évolution intégrant les codes de l'utilisateur,
+  doit donc être soigneusement réglée.

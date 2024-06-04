@@ -54,6 +54,8 @@ augmentés, classiquement utilisée en assimilation de données.
 
 .. include:: snippets/FeaturePropParallelFree.rst
 
+.. include:: snippets/FeaturePropConvergenceOnBoth.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

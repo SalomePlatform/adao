@@ -200,8 +200,10 @@ class PlatformInfo(object):
         __msg += "\n%s%30s : %s"%(__prefix, "NLopt version", self.getNloptVersion())
         __msg += "\n%s%30s : %s"%(__prefix, "MatplotLib version", self.getMatplotlibVersion())
         __msg += "\n%s%30s : %s"%(__prefix, "GnuplotPy version", self.getGnuplotVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "Sphinx version", self.getSphinxVersion())
+        __msg += "\n"
+        __msg += "\n%s%30s : %s"%(__prefix, "Pandas version", self.getPandasVersion())
         __msg += "\n%s%30s : %s"%(__prefix, "Fmpy version", self.getFmpyVersion())
+        __msg += "\n%s%30s : %s"%(__prefix, "Sphinx version", self.getSphinxVersion())
         return __msg
 
     def getAllInformation(self, __prefix="", __title="Whole system information"):
@@ -265,6 +267,15 @@ class PlatformInfo(object):
             has_nlopt = False
         return has_nlopt
     has_nlopt = property(fget = _has_nlopt)
+
+    def _has_pandas(self):
+        try:
+            import pandas  # noqa: F401
+            has_pandas = True
+        except ImportError:
+            has_pandas = False
+        return has_pandas
+    has_pandas = property(fget = _has_pandas)
 
     def _has_sdf(self):
         try:
@@ -331,14 +342,14 @@ class PlatformInfo(object):
         return has_models
     has_models = property(fget = _has_models)
 
-    def _has_linkmod(self):
+    def _has_pst4mod(self):
         try:
-            import LinkMod  # noqa: F401
-            has_linkmod = True
+            import pst4mod  # noqa: F401
+            has_pst4mod = True
         except ImportError:
-            has_linkmod = False
-        return has_linkmod
-    has_linkmod = property(fget = _has_linkmod)
+            has_pst4mod = False
+        return has_pst4mod
+    has_pst4mod = property(fget = _has_pst4mod)
 
     # Versions
 
@@ -356,33 +367,6 @@ class PlatformInfo(object):
             __version = "0.0.0"
         return __version
 
-    def getMatplotlibVersion(self):
-        "Retourne la version de matplotlib disponible"
-        if self.has_matplotlib:
-            import matplotlib
-            __version = matplotlib.__version__
-        else:
-            __version = "0.0.0"
-        return __version
-
-    def getGnuplotVersion(self):
-        "Retourne la version de gnuplotpy disponible"
-        if self.has_gnuplot:
-            import Gnuplot
-            __version = Gnuplot.__version__
-        else:
-            __version = "0.0"
-        return __version
-
-    def getSphinxVersion(self):
-        "Retourne la version de sphinx disponible"
-        if self.has_sphinx:
-            import sphinx
-            __version = sphinx.__version__
-        else:
-            __version = "0.0.0"
-        return __version
-
     def getNloptVersion(self):
         "Retourne la version de nlopt disponible"
         if self.has_nlopt:
@@ -396,6 +380,42 @@ class PlatformInfo(object):
             __version = "0.0.0"
         return __version
 
+    def getMatplotlibVersion(self):
+        "Retourne la version de matplotlib disponible"
+        if self.has_matplotlib:
+            import matplotlib
+            __version = matplotlib.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+
+    def getPandasVersion(self):
+        "Retourne la version de pandas disponible"
+        if self.has_pandas:
+            import pandas
+            __version = pandas.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+
+    def getGnuplotVersion(self):
+        "Retourne la version de gnuplotpy disponible"
+        if self.has_gnuplot:
+            import Gnuplot
+            __version = Gnuplot.__version__
+        else:
+            __version = "0.0"
+        return __version
+
+    def getFmpyVersion(self):
+        "Retourne la version de fmpy disponible"
+        if self.has_fmpy:
+            import fmpy
+            __version = fmpy.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+
     def getSdfVersion(self):
         "Retourne la version de sdf disponible"
         if self.has_sdf:
@@ -405,11 +425,11 @@ class PlatformInfo(object):
             __version = "0.0.0"
         return __version
 
-    def getFmpyVersion(self):
-        "Retourne la version de fmpy disponible"
-        if self.has_fmpy:
-            import fmpy
-            __version = fmpy.__version__
+    def getSphinxVersion(self):
+        "Retourne la version de sphinx disponible"
+        if self.has_sphinx:
+            import sphinx
+            __version = sphinx.__version__
         else:
             __version = "0.0.0"
         return __version

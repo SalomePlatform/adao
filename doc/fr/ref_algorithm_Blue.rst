@@ -77,6 +77,8 @@ cette méthode n'est donc pas proposée.
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnStatic.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

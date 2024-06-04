@@ -59,6 +59,8 @@ liste de longueur finie.
 
 .. include:: snippets/FeaturePropDerivativeFree.rst
 
+.. include:: snippets/FeaturePropConvergenceOnNumbers.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

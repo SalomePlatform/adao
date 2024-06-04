@@ -137,6 +137,8 @@ prohibitive optimization time length.
 
 .. include:: snippets/FeaturePropParallelAlgorithm.rst
 
+.. include:: snippets/FeaturePropConvergenceOnNumbers.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

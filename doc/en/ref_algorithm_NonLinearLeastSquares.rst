@@ -59,6 +59,8 @@ for its stability as for its behavior during optimization.
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnBoth.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

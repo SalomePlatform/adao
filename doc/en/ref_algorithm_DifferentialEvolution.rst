@@ -50,6 +50,8 @@ least squares function, classically used in data assimilation.
 
 .. include:: snippets/FeaturePropDerivativeFree.rst
 
+.. include:: snippets/FeaturePropConvergenceOnNumbers.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

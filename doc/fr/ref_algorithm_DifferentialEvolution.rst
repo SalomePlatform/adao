@@ -52,6 +52,8 @@ en assimilation de données.
 
 .. include:: snippets/FeaturePropDerivativeFree.rst
 
+.. include:: snippets/FeaturePropConvergenceOnNumbers.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

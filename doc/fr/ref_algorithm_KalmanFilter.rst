@@ -87,6 +87,8 @@ opérateurs à l'aide d'un :ref:`section_ref_algorithm_LinearityTest`.
 
 .. include:: snippets/FeaturePropParallelDerivativesOnly.rst
 
+.. include:: snippets/FeaturePropConvergenceOnStatic.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 

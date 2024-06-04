@@ -144,6 +144,8 @@ pour éviter une durée d'optimisation rédhibitoire.
 
 .. include:: snippets/FeaturePropParallelAlgorithm.rst
 
+.. include:: snippets/FeaturePropConvergenceOnNumbers.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
