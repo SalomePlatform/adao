@@ -20,37 +20,45 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import sys, unittest, numpy
+import sys, unittest, math, numpy
 
 # ==============================================================================
-class TwoDimensionalInverseDistanceCS2010:
+class TwoDimensionalRosenbrockFunctionR1960:
     """
-    Two-dimensional inverse distance function of parameter µ=(µ1,µ2):
+    Two-dimensional spatial function of µ=(a,b):
 
-        s(x,y,µ) = 1 / sqrt( (x-µ1)² + (y-µ2)² + 0.1² )
+        f(x,y) = (a - x)² + b (y -x²)²
 
-        with (x,y) ∈ [0.1,0.9]² and µ=(µ1,µ2) ∈ [-1,-0.01]².
+        with (x,y) ∈ [-2,2]x[-1,3]² and usually a=1, b=100. There is a
+        global minimum at (x,y) = (a,a²) for which f(x,y) = 0.
 
-    This is the non-linear parametric function (3.38) of the reference:
-        Chaturantabut, S., Sorensen, D. C.,
-        Nonlinear Model Reduction via Discrete Empirical Interpolation,
-        SIAM Journal on Scientific Computing, 32(5), pp. 2737-2764 (2010).
+    This is the non-linear non-convex parametric function of the reference:
+        Rosenbrock, H. H., An Automatic Method for Finding the Greatest or
+        Least Value of a Function, The Computer Journal, 3(3), pp.175–184,
+        (1960)
     """
-    def __init__(self, nx: int = 20, ny: int = 20):
+    def __init__(self, nx: int = 40, ny: int = 40):
         "Définition du maillage spatial"
         self.nx  = max(1, nx)
         self.ny  = max(1, ny)
-        self.x   = numpy.linspace(0.1, 0.9, self.nx, dtype=float)
-        self.y   = numpy.linspace(0.1, 0.9, self.ny, dtype=float)
+        self.x   = numpy.linspace(-2, 2, self.nx, dtype=float)
+        self.y   = numpy.linspace(-1, 3, self.ny, dtype=float)
 
-    def FieldG(self, mu ):
+    def FieldZ(self, mu ):
         "Fonction simulation pour un paramètre donné"
-        mu1, mu2 = numpy.ravel( mu )
+        a, b = numpy.ravel( mu )
         #
         x, y = numpy.meshgrid( self.x, self.y )
-        sxymu = 1. / numpy.sqrt( (x - mu1)**2 + (y - mu2)**2 + 0.1**2 )
+        sxymu = (a - x)**2 + b * (y - x**2)**2
         #
         return sxymu
+
+    def FunctionH(self, xy, a = 1, b = 100):
+        "Construit la fonction de Rosenbrock en L2 (Scipy 1.8.1 p.1322)"
+        xy = numpy.ravel( xy ).reshape((-1, 2))  # Deux colonnes
+        x = xy[:, 0]
+        y = xy[:, 1]
+        return numpy.array([(a - x), math.sqrt(b) * (y - x**2)])
 
     def get_x(self):
         "Renvoie le maillage spatial"
@@ -58,17 +66,17 @@ class TwoDimensionalInverseDistanceCS2010:
 
     def get_sample_of_mu(self, ns1: int = 20, ns2: int = 20):
         "Renvoie l'échantillonnage paramétrique régulier"
-        smu1 = numpy.linspace(-1, -0.01, ns1, dtype=float)
-        smu2 = numpy.linspace(-1, -0.01, ns2, dtype=float)
-        smu = numpy.array([(mu1, mu2) for mu1 in smu1 for mu2 in smu2])
+        sa = numpy.linspace(0, 2, ns1, dtype=float)
+        sb = numpy.linspace(1, 200, ns2, dtype=float)
+        smu = numpy.array([(a, b) for a in sa for b in sb])
         return smu
 
     def get_random_sample_of_mu(self, ns1: int = 1, ns2: int = 1):
         "Renvoie l'échantillonnage paramétrique aléatoire"
         smu = []
         for i in range(ns1 * ns2):
-            smu1 = numpy.random.uniform(-1, -0.01)
-            smu2 = numpy.random.uniform(-1, -0.01)
+            smu1 = numpy.random.uniform(0, 2)
+            smu2 = numpy.random.uniform(1, 200)
             smu.append((smu1, smu2))
         smu = numpy.array(smu)
         return smu
@@ -79,26 +87,22 @@ class TwoDimensionalInverseDistanceCS2010:
 
     def get_bounds_on_parameter(self):
         "Renvoie les bornes sur le maillage paramétrique"
-        return [[-1, -0.01]] * 2
+        return [[0, 2], [1, 200]]
 
-    OneRealisation = FieldG
+    OneRealisation = FieldZ
 
 # ==============================================================================
 class LocalTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         print('\nAUTODIAGNOSTIC\n==============\n')
-        print("    " + TwoDimensionalInverseDistanceCS2010().__doc__.strip())
+        print("    " + TwoDimensionalRosenbrockFunctionR1960().__doc__.strip())
 
     def test001(self):
         numpy.random.seed(123456789)
-        Equation = TwoDimensionalInverseDistanceCS2010()
-        for mu in Equation.get_sample_of_mu(5, 5):
-            solution = Equation.OneRealisation( mu )
-            # Nappe maximale au coin (0,0)
-            self.assertTrue(numpy.max(solution.flat) <= solution[0, 0])
-            # Nappe minimale au coin [-1,-1]
-            self.assertTrue(numpy.min(solution.flat) >= solution[-1, -1])
+        Equation = TwoDimensionalRosenbrockFunctionR1960()
+        optimum = Equation.ValueZ( [1, 1] )
+        self.assertTrue( max(optimum) <= 0.)
 
     def tearDown(cls):
         print("\n    Tests OK\n")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2024 EDF R&D
+# Copyright (C) 2016-2024 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,9 +16,6 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-# See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-#
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
-__doc__ = """
-Python Support Tools for Modelica
-"""
+# Author: Luis Corona Mesa-Molles, luis.corona-mesa-molles@edf.fr, EDF R&D
+# Author: Julien Lagarde, julien.lagarde@edf.fr, EDF R&D
