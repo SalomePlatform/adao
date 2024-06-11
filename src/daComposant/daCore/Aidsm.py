@@ -109,6 +109,7 @@ class Aidsm(object):
             Checked              = False,
             ColMajor             = False,
             ColNames             = None,
+            CrossObs             = False,
             DataFile             = None,
             DiagonalSparseMatrix = None,
             ExtraArguments       = None,
@@ -125,6 +126,7 @@ class Aidsm(object):
             Script               = None,
             Stored               = False,
             String               = None,
+            SyncObs              = True,
             Template             = None,
             ThreeFunctions       = None,
             Variable             = None,
@@ -154,7 +156,8 @@ class Aidsm(object):
             elif Concept == "NoDebug":
                 self.setNoDebug()
             elif Concept == "Observer":
-                self.setObserver( Variable, Template, String, Script, Info, ObjectFunction, Scheduler )
+                self.setObserver( Variable, Template, String, Script, Info,
+                    ObjectFunction, CrossObs, SyncObs, Scheduler )
             elif Concept == "UserPostAnalysis":
                 self.setUserPostAnalysis( Template, String, Script )
             elif Concept == "SupplementaryParameters":
@@ -598,6 +601,8 @@ class Aidsm(object):
             Script         = None,
             Info           = None,
             ObjectFunction = None,
+            CrossObs       = False,
+            SyncObs        = True,
             Scheduler      = None ):
         "Définition d'un concept de calcul"
         Concept = "Observer"
@@ -610,6 +615,8 @@ class Aidsm(object):
             asScript    = self.__with_directory(Script),
             asObsObject = ObjectFunction,
             withInfo    = Info,
+            crossObs    = CrossObs,
+            syncObs     = SyncObs,
             scheduledBy = Scheduler,
             withAlgo    = self.__adaoObject["AlgorithmParameters"]
         ))

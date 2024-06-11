@@ -1512,7 +1512,8 @@ class AlgorithmAndParameters(object):
         "Renvoie la liste des attributs selon l'algorithme"
         return self.__algorithm.setAttributes()
 
-    def setObserver(self, __V, __O, __I, __S):
+    def setObserver(self, __V, __O, __I, __A, __S):
+        "Associe un observer à une variable unique"
         if self.__algorithm is None \
                 or isinstance(self.__algorithm, dict) \
                 or not hasattr(self.__algorithm, "StoredVariables"):
@@ -1520,7 +1521,24 @@ class AlgorithmAndParameters(object):
         if __V not in self.__algorithm:
             raise ValueError("An observer requires to be set on a variable named %s which does not exist."%__V)
         else:
-            self.__algorithm.StoredVariables[ __V ].setDataObserver( Scheduler      = __S, HookFunction   = __O, HookParameters = __I )
+            self.__algorithm.StoredVariables[ __V ].setDataObserver( HookFunction = __O, HookParameters = __I, Scheduler = __S )
+
+    def setCrossObserver(self, __V, __O, __I, __A, __S):
+        "Associe un observer à une collection ordonnée de variables"
+        if self.__algorithm is None \
+                or isinstance(self.__algorithm, dict) \
+                or not hasattr(self.__algorithm, "StoredVariables"):
+            raise ValueError("No observer can be build before choosing an algorithm.")
+        if not isinstance(__V, (list, tuple)):
+            raise ValueError("A cross observer requires to be set on a variable series which is not the case of %s."%__V)
+        if len(__V) != len(__I):
+            raise ValueError("The number of information fields has to be the same than the number of variables on which to set the observer.")
+        #
+        for __eV in __V:
+            if __eV not in self.__algorithm:
+                raise ValueError("An observer requires to be set on a variable named %s which does not exist."%__eV)
+            else:
+                self.__algorithm.StoredVariables[ __eV ].setDataObserver( HookFunction = __O, HookParameters = __I, Scheduler = __S, Order = __V, OSync = __A, DOVar = self.__algorithm.StoredVariables )
 
     def removeObserver(self, __V, __O, __A = False):
         if self.__algorithm is None \
@@ -1818,6 +1836,8 @@ class DataObserver(object):
                  asScript    = None,
                  asObsObject = None,
                  withInfo    = None,
+                 crossObs    = False,
+                 syncObs     = True,
                  scheduledBy = None,
                  withAlgo    = None ):
         """
@@ -1829,10 +1849,12 @@ class DataObserver(object):
         #
         if onVariable is None:
             raise ValueError("setting an observer has to be done over a variable name or a list of variable names, not over None.")
-        elif type(onVariable) in (tuple, list):
+        elif isinstance(onVariable, (tuple, list)):
             self.__V = tuple(map( str, onVariable ))
             if withInfo is None:
                 self.__I = self.__V
+            elif crossObs or isinstance(withInfo, (tuple, list)):
+                self.__I = withInfo
             else:
                 self.__I = (str(withInfo),) * len(self.__V)
         elif isinstance(onVariable, str):
@@ -1852,12 +1874,14 @@ class DataObserver(object):
             self.__O = __Function.getfunc()
         #
         for k in range(len(self.__V)):
-            ename = self.__V[k]
-            einfo = self.__I[k]
-            if ename not in withAlgo:
-                raise ValueError("An observer is asked to be set on a variable named %s which does not exist."%ename)
-            else:
-                withAlgo.setObserver(ename, self.__O, einfo, scheduledBy)
+            if self.__V[k] not in withAlgo:
+                raise ValueError("An observer is asked to be set on a variable named %s which does not exist."%self.__V[k])
+        #
+        if bool(crossObs):
+            withAlgo.setCrossObserver(self.__V, self.__O, self.__I, syncObs, scheduledBy)
+        else:
+            for k in range(len(self.__V)):
+                withAlgo.setObserver(self.__V[k], self.__O, self.__I[k], syncObs, scheduledBy)
 
     def __repr__(self):
         "x.__repr__() <==> repr(x)"

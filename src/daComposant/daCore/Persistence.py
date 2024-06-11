@@ -100,9 +100,23 @@ class Persistence(object):
         if self.__dynamic:
             self.__replots()
         __step = len(self.__values) - 1
-        for hook, parameters, scheduler in self.__dataobservers:
+        for hook, parameters, scheduler, order, osync, dovar in self.__dataobservers:
             if __step in scheduler:
-                hook( self, parameters )
+                if order is None or dovar is None:
+                    hook( self, parameters )
+                else:
+                    if not isinstance(order, (list, tuple)):
+                        continue
+                    if not isinstance(dovar, dict):
+                        continue
+                    if not bool(osync):  # Async observation
+                        hook( self, parameters, order, dovar )
+                    else:  # Sync observations
+                        for v in order:
+                            if len(dovar[v]) != len(self):
+                                break
+                        else:
+                            hook( self, parameters, order, dovar )
 
     def pop(self, item=None):
         """
@@ -765,12 +779,13 @@ class Persistence(object):
             raise TypeError("Base type is incompatible with numpy")
 
     # ---------------------------------------------------------
-    def setDataObserver(self, HookFunction = None, HookParameters = None, Scheduler = None):
+    def setDataObserver(self, HookFunction = None, HookParameters = None, Scheduler = None, Order = None, OSync = True, DOVar = None):
         """
-        Association à la variable d'un triplet définissant un observer
+        Association à la variable d'un triplet définissant un observer.
 
-        Le Scheduler attendu est une fréquence, une simple liste d'index ou un
-        range des index.
+        Les variables Order et DOVar sont utilisées pour un observer
+        multi-variable. Le Scheduler attendu est une fréquence, une simple
+        liste d'index ou un range des index.
         """
         #
         # Vérification du Scheduler
@@ -787,13 +802,13 @@ class Persistence(object):
         #
         # Stockage interne de l'observer dans la variable
         # -----------------------------------------------
-        self.__dataobservers.append( [HookFunction, HookParameters, Schedulers] )
+        self.__dataobservers.append( [HookFunction, HookParameters, Schedulers, Order, OSync, DOVar] )
 
     def removeDataObserver(self, HookFunction = None, AllObservers = False):
         """
         Suppression d'un observer nommé sur la variable.
 
-        On peut donner dans HookFunction la meme fonction que lors de la
+        On peut donner dans HookFunction la même fonction que lors de la
         définition, ou un simple string qui est le nom de la fonction. Si
         AllObservers est vrai, supprime tous les observers enregistrés.
         """
@@ -808,7 +823,7 @@ class Persistence(object):
         #
         ih = -1
         index_to_remove = []
-        for [hf, hp, hs] in self.__dataobservers:
+        for [hf, _, _, _, _, _] in self.__dataobservers:
             ih = ih + 1
             if name is hf.__name__ or AllObservers:
                 index_to_remove.append( ih )

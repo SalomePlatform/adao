@@ -101,8 +101,12 @@ class LocalTest(unittest.TestCase):
     def test001(self):
         numpy.random.seed(123456789)
         Equation = TwoDimensionalRosenbrockFunctionR1960()
-        optimum = Equation.ValueZ( [1, 1] )
-        self.assertTrue( max(optimum) <= 0.)
+
+        optimum = Equation.FunctionH( [1, 1] )
+        self.assertTrue( max(optimum.flat) <= 0.)
+
+        optimum = Equation.FunctionH( [0.5, 0.25], a=0.5 )
+        self.assertTrue( max(optimum.flat) <= 0.)
 
     def tearDown(cls):
         print("\n    Tests OK\n")

@@ -72,6 +72,7 @@ class PathManagement(object):
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         self.__paths = {}
         self.__paths["daNumerics"] = os.path.join(parent, "daNumerics")
+        self.__paths["pst4mod"] = os.path.join(parent, "daNumerics", "pst4mod")
         #
         for v in self.__paths.values():
             if os.path.isdir(v):

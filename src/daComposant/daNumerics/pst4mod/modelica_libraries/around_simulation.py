@@ -628,11 +628,11 @@ class Around_Simulation(object):
                     except KeyError: #The variable is not found
 
                         try:
-                            node_pos = re.search("\[\d+\]",res_name_var).span() #Position of the node number if any (in case the error is due to a remesh of the model)
+                            node_pos = re.search(r"\[\d+\]",res_name_var).span() #Position of the node number if any (in case the error is due to a remesh of the model)
                         except AttributeError: #No node number found
 
                             try:
-                                node_pos = re.search("\[\]",res_name_var).span() #Position of empty brakets (all array values are due)
+                                node_pos = re.search(r"\[\]",res_name_var).span() #Position of empty brakets (all array values are due)
                             except AttributeError :
                                 pass
                             else:
@@ -640,7 +640,7 @@ class Around_Simulation(object):
                                     print('Filters and prefixes still have to be implemented for arrays of unknown size')
                                 else :
                                     print(f'{name_var}: unknown size -> Taking all values in .mat (if any)')
-                                    tmp = f'{res_name_var[:node_pos[0]]}\[\d\{res_name_var[node_pos[0]+1:]}'
+                                    tmp = rf'{res_name_var[:node_pos[0]]}\[\d\{res_name_var[node_pos[0]+1:]}'
                                     expanded_vars = structData.varNames(tmp)
                                     for tmp_var in expanded_vars :
                                         self.__dict_iter_var[tmp_var] = structData.values(tmp_var)[1][mom]
