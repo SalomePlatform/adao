@@ -162,10 +162,10 @@ class _TUIViewer(GenericCaseViewer):
                 if k not in __local: continue                           # noqa: E701
                 __v = __local[k]
                 if __v is None: continue                                # noqa: E701
-                if   k == "SyncObs"              and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "Checked"              and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "ColMajor"             and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "CrossObs"             and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "SyncObs"              and     __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "InputFunctionAsMulti" and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "PerformanceProfile"   and     __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "Stored"               and not __v: continue  # noqa: E241,E271,E272,E701
@@ -557,10 +557,10 @@ class _SCDViewer(GenericCaseViewer):
                     __text += "%s_config['Data'] = %s\n"%(__command, __v)
                     __text = __text.replace("''", "'")
                     __vectorIsScript = True
-                elif __k in ('Stored', 'Checked', 'ColMajor', 'CrossObs', 'SyncObs', 'InputFunctionAsMulti', 'nextStep'):
+                elif __k in ('Stored', 'Checked', 'ColMajor', 'CrossObs', 'InputFunctionAsMulti', 'nextStep'):
                     if bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command, __k, int(bool(__v)))
-                elif __k in ('PerformanceProfile', 'noDetails'):
+                elif __k in ('PerformanceProfile', 'SyncObs', 'noDetails'):
                     if not bool(__v):
                         __text += "%s_config['%s'] = '%s'\n"%(__command, __k, int(bool(__v)))
                 else:
@@ -725,10 +725,10 @@ class _ReportViewer(GenericCaseViewer):
                 if k not in __local: continue                           # noqa: E701
                 __v = __local[k]
                 if __v is None: continue                                # noqa: E701
-                if   k == "SyncObs"              and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "Checked"              and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "ColMajor"             and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "CrossObs"             and not __v: continue  # noqa: E241,E271,E272,E701
+                if   k == "SyncObs"              and     __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "InputFunctionAsMulti" and not __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "PerformanceProfile"   and     __v: continue  # noqa: E241,E271,E272,E701
                 if   k == "Stored"               and not __v: continue  # noqa: E241,E271,E272,E701

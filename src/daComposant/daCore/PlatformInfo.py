@@ -158,7 +158,7 @@ class PlatformInfo(object):
                             "platform.mac_ver", str(platform.mac_ver()[0] + "(" + __macosxv10[key] + ")"))  # noqa: E128
                 __macosxv11 = {
                     '11': 'Big Sur',      '12': 'Monterey',    '13': 'Ventura',  # noqa: E241
-                    '14': 'Sonoma',
+                    '14': 'Sonoma',       '15': 'Sequoia',                       # noqa: E241
                 }
                 for key in __macosxv11:
                     __details = platform.mac_ver()[0].split('.')

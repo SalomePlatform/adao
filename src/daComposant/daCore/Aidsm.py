@@ -156,7 +156,8 @@ class Aidsm(object):
             elif Concept == "NoDebug":
                 self.setNoDebug()
             elif Concept == "Observer":
-                self.setObserver( Variable, Template, String, Script, Info,
+                self.setObserver(
+                    Variable, Template, String, Script, Info,
                     ObjectFunction, CrossObs, SyncObs, Scheduler )
             elif Concept == "UserPostAnalysis":
                 self.setUserPostAnalysis( Template, String, Script )
