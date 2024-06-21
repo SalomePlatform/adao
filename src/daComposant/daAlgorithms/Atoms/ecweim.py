@@ -144,6 +144,10 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         __errors.append(__eM)
     #
     # --------------------------
+    __mu = numpy.array(__mu)
+    __I = numpy.array(__I)
+    __errors = numpy.array(__errors)
+    # --------------------------
     if __errors[-1] < selfA._parameters["EpsilonEIM"]:
         logging.debug("%s %s (%.1e)"%(selfA._name, "The convergence is obtained when reaching the required EIM tolerance", selfA._parameters["EpsilonEIM"]))  # noqa: E501
     if __M >= __maxM:

@@ -86,7 +86,7 @@ class TemplateStorage(object):
         for ik in self.keys():
             __orders.append( self.__values[ik]['order'] )
         __reorder = numpy.array(__orders).argsort()
-        return list(numpy.array(self.keys())[__reorder])
+        return (numpy.array(self.keys())[__reorder]).tolist()
 
 # ==============================================================================
 ObserverTemplates = TemplateStorage()

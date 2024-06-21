@@ -297,9 +297,10 @@ class Persistence(object):
         élémentaires numpy.
         """
         try:
-            return [numpy.mean(item, dtype=mfp).astype('float') for item in self.__values]
+            __sr = [numpy.mean(item, dtype=mfp).astype('float') for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def stds(self, ddof=0):
         """
@@ -312,11 +313,12 @@ class Persistence(object):
         """
         try:
             if numpy.version.version >= '1.1.0':
-                return [numpy.array(item).std(ddof=ddof, dtype=mfp).astype('float') for item in self.__values]
+                __sr = [numpy.array(item).std(ddof=ddof, dtype=mfp).astype('float') for item in self.__values]
             else:
                 return [numpy.array(item).std(dtype=mfp).astype('float') for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def sums(self):
         """
@@ -325,9 +327,10 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.array(item).sum() for item in self.__values]
+            __sr = [numpy.array(item).sum() for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def mins(self):
         """
@@ -336,9 +339,10 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.array(item).min() for item in self.__values]
+            __sr = [numpy.array(item).min() for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def maxs(self):
         """
@@ -347,9 +351,10 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.array(item).max() for item in self.__values]
+            __sr = [numpy.array(item).max() for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def powers(self, x2):
         """
@@ -358,9 +363,10 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.power(item, x2) for item in self.__values]
+            __sr = [numpy.power(item, x2) for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def norms(self, _ord=None):
         """
@@ -371,9 +377,10 @@ class Persistence(object):
         numpy.
         """
         try:
-            return [numpy.linalg.norm(item, _ord) for item in self.__values]
+            __sr = [numpy.linalg.norm(item, _ord) for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def traces(self, offset=0):
         """
@@ -384,9 +391,10 @@ class Persistence(object):
         types élémentaires numpy.
         """
         try:
-            return [numpy.trace(item, offset, dtype=mfp) for item in self.__values]
+            __sr = [numpy.trace(item, offset, dtype=mfp).astype('float') for item in self.__values]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def maes(self, _predictor=None):
         """
@@ -401,7 +409,7 @@ class Persistence(object):
         """
         if _predictor is None:
             try:
-                return [numpy.mean(numpy.abs(item)) for item in self.__values]
+                __sr = [numpy.mean(numpy.abs(item)) for item in self.__values]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
@@ -411,9 +419,10 @@ class Persistence(object):
                 if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
                     raise ValueError("Predictor size at step %i is incompatible with the values"%i)
             try:
-                return [numpy.mean(numpy.abs(numpy.ravel(item) - numpy.ravel(_predictor[i]))) for i, item in enumerate(self.__values)]
+                __sr = [numpy.mean(numpy.abs(numpy.ravel(item) - numpy.ravel(_predictor[i]))) for i, item in enumerate(self.__values)]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     def mses(self, _predictor=None):
         """
@@ -429,7 +438,7 @@ class Persistence(object):
         if _predictor is None:
             try:
                 __n = self.shape()[0]
-                return [(numpy.linalg.norm(item)**2 / __n) for item in self.__values]
+                __sr = [(numpy.linalg.norm(item)**2 / __n) for item in self.__values]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
@@ -440,9 +449,10 @@ class Persistence(object):
                     raise ValueError("Predictor size at step %i is incompatible with the values"%i)
             try:
                 __n = self.shape()[0]
-                return [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i]))**2 / __n) for i, item in enumerate(self.__values)]
+                __sr = [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i]))**2 / __n) for i, item in enumerate(self.__values)]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     msds = mses  # Mean-Square Deviation (MSD=MSE)
 
@@ -460,7 +470,7 @@ class Persistence(object):
         if _predictor is None:
             try:
                 __n = self.shape()[0]
-                return [(numpy.linalg.norm(item) / math.sqrt(__n)) for item in self.__values]
+                __sr = [(numpy.linalg.norm(item) / math.sqrt(__n)) for item in self.__values]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
@@ -471,9 +481,10 @@ class Persistence(object):
                     raise ValueError("Predictor size at step %i is incompatible with the values"%i)
             try:
                 __n = self.shape()[0]
-                return [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i])) / math.sqrt(__n)) for i, item in enumerate(self.__values)]
+                __sr = [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i])) / math.sqrt(__n)) for i, item in enumerate(self.__values)]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
+        return( numpy.array(__sr).tolist() )
 
     rmsds = rmses  # Root-Mean-Square Deviation (RMSD=RMSE)
 

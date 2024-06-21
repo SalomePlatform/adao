@@ -138,6 +138,7 @@ class _TUIViewer(GenericCaseViewer):
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script using ADAO TUI\n#")
+        self._addLine("import numpy as np")
         self._addLine("from numpy import array, matrix")
         self._addLine("from adao import adaoBuilder")
         self._addLine("%s = adaoBuilder.New('%s')"%(self._objname, self._name))
@@ -216,6 +217,7 @@ class _COMViewer(GenericCaseViewer):
         self._observerIndex = 0
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script using ADAO COMM\n#")
+        self._addLine("import numpy as np")
         self._addLine("from numpy import array, matrix")
         self._addLine("#")
         self._addLine("%s = {}"%__objname)
@@ -1210,14 +1212,14 @@ class ImportScalarLinesFromFile(ImportFromFile):
             __usecols  = (0, 1, 2, 3)
 
             def __replaceNoneN( s ):
-                if s.strip() == b'None':
-                    return numpy.NINF
+                if s.strip() in (b'None', 'None'):
+                    return -numpy.inf
                 else:
                     return s
 
             def __replaceNoneP( s ):
-                if s.strip() == b'None':
-                    return numpy.PINF
+                if s.strip() in (b'None', 'None'):
+                    return numpy.inf
                 else:
                     return s
             __converters = {2: __replaceNoneN, 3: __replaceNoneP}
@@ -1234,8 +1236,8 @@ class ImportScalarLinesFromFile(ImportFromFile):
             __usecols  = tuple(range(len(HeaderNames)))
 
             def __replaceNone( s ):
-                if s.strip() == b'None':
-                    return numpy.NAN
+                if s.strip() in (b'None', 'None'):
+                    return numpy.nan
                 else:
                     return s
             __converters = dict()
