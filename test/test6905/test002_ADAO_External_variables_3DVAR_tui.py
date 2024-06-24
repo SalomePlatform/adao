@@ -2,6 +2,7 @@
 #
 # Python script using ADAO TUI
 #
+import numpy as np
 from numpy import array, matrix
 from adao import adaoBuilder
 case = adaoBuilder.New('')

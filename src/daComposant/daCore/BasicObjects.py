@@ -2387,7 +2387,10 @@ class Covariance(object):
 
     def __repr__(self):
         "x.__repr__() <==> repr(x)"
-        return repr(self.__C)
+        if isinstance(self.__C, numpy.float64):
+            return repr(float(self.__C))
+        else:
+            return repr(self.__C)
 
     def __str__(self):
         "x.__str__() <==> str(x)"

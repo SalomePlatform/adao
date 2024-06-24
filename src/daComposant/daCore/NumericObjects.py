@@ -25,7 +25,8 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import os, copy, types, sys, logging, math, numpy, scipy, itertools
+import os, copy, types, sys, logging, math, numpy, scipy, itertools, warnings
+import scipy.linalg  # Py3.6
 from daCore.BasicObjects import Operator, Covariance, PartialAlgorithm
 from daCore.PlatformInfo import PlatformInfo, vt, vfloat
 mpr = PlatformInfo().MachinePrecision()
@@ -643,7 +644,6 @@ def EnsembleErrorCovariance( __Ensemble, __Quick = False ):
 def SingularValuesEstimation( __Ensemble, __Using = "SVDVALS"):
     "Renvoie les valeurs singulières de l'ensemble et leur carré"
     if __Using == "SVDVALS":  # Recommandé
-        import scipy
         __sv   = scipy.linalg.svdvals( __Ensemble )
         __svsq = __sv**2
     elif __Using == "SVD":
@@ -1385,7 +1385,6 @@ def BuildComplexSampleList(
         sampleList = itertools.product(*coordinatesList)
     # ---------------------------
     elif len(__SampleAsMinMaxLatinHyperCube) > 0:
-        import scipy, warnings
         if vt(scipy.version.version) <= vt("1.7.0"):
             __msg = "In order to use Latin Hypercube sampling, you must at least use Scipy version 1.7.0 (and you are presently using Scipy %s). A void sample is then generated."%scipy.version.version
             warnings.warn(__msg, FutureWarning, stacklevel=50)
@@ -1404,7 +1403,6 @@ def BuildComplexSampleList(
             sampleList = scipy.stats.qmc.scale(__sample, __l_bounds, __u_bounds)
     # ---------------------------
     elif len(__SampleAsMinMaxSobolSequence) > 0:
-        import scipy, warnings
         if vt(scipy.version.version) <= vt("1.7.0"):
             __msg = "In order to use Latin Hypercube sampling, you must at least use Scipy version 1.7.0 (and you are presently using Scipy %s). A void sample is then generated."%scipy.version.version
             warnings.warn(__msg, FutureWarning, stacklevel=50)

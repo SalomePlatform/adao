@@ -430,7 +430,12 @@ class Calibration(object):
             if "MaximumNumberOfSteps" in Params:
                 print("  [VERBOSE] Maximum possible number of iteration:",Params['MaximumNumberOfSteps'])
             print("  [VERBOSE] Background read:",Background)
-            print("  [VERBOSE] Bounds read:",Params['Bounds'])
+            __v = Params['Bounds']
+            if isinstance(__v, (numpy.ndarray, numpy.matrix, list, tuple)):
+                __v = numpy.array(__v).astype('float')
+                __v = numpy.where(numpy.isnan(__v), None, __v)
+                __v = __v.tolist()
+            print("  [VERBOSE] Bounds read:",__v)
         #
         if "DifferentialIncrement" not in Params:
             Params["DifferentialIncrement"] = 0.001
@@ -662,7 +667,12 @@ class Calibration(object):
             print("  [VERBOSE] Links read")
             print("  [VERBOSE] Optimization information read")
             print("  [VERBOSE] Background read:",Background)
-            print("  [VERBOSE] Bounds read:",Params['Bounds'])
+            __v = Params['Bounds']
+            if isinstance(__v, (numpy.ndarray, numpy.matrix, list, tuple)):
+                __v = numpy.array(__v).astype('float')
+                __v = numpy.where(numpy.isnan(__v), None, __v)
+                __v = __v.tolist()
+            print("  [VERBOSE] Bounds read:",__v)
         #
         if "DifferentialIncrement" not in Params:
             Params["DifferentialIncrement"] = 0.001
@@ -1921,7 +1931,14 @@ def _saveResults(__resultats, __filename=None, __level=None, __format="Guess", _
         keys = list(__resultats.keys())
         keys.sort()
         for k in keys:
-            output.append("%18s = %s"%(k,tuple(__resultats[k])))
+            __v = __resultats[k]
+            if isinstance(__v, numpy.matrix):  # no1
+                __v = __v.astype('float').tolist()
+            elif isinstance(__v, numpy.ndarray):  # no2
+                __v = tuple(__v.astype('float').tolist())
+            else:
+                __v = tuple(__v)
+            output.append("%22s = %s"%(k,__v))
         output.append("")
         with open(__filename, 'w') as fid:
             fid.write( "\n".join(output) )
@@ -1932,7 +1949,14 @@ def _saveResults(__resultats, __filename=None, __level=None, __format="Guess", _
         keys = list(__resultats.keys())
         keys.sort()
         for k in keys:
-            output.append("%s = %s"%(k,tuple(__resultats[k])))
+            __v = __resultats[k]
+            if isinstance(__v, numpy.matrix):  # no1
+                __v = __v.astype('float').tolist()
+            elif isinstance(__v, numpy.ndarray):  # no2
+                __v = tuple(__v.astype('float').tolist())
+            else:
+                __v = tuple(__v)
+            output.append("%s = %s"%(k,__v))
         output.append("")
         with open(__filename, 'w') as fid:
             fid.write( "\n".join(output) )
@@ -1949,7 +1973,14 @@ def _saveResults(__resultats, __filename=None, __level=None, __format="Guess", _
         keys = list(__resultats.keys())
         keys.sort()
         for k in keys:
-            output.append("%18s = %s"%(k,tuple(__resultats[k])))
+            __v = __resultats[k]
+            if isinstance(__v, numpy.matrix):  # no1
+                __v = __v.astype('float').tolist()
+            elif isinstance(__v, numpy.ndarray):  # no2
+                __v = tuple(__v.astype('float').tolist())
+            else:
+                __v = tuple(__v)
+            output.append("%22s = %s"%(k,__v))
         output.append("")
         print( "\n".join(output) )
     #---------------------------------------------
