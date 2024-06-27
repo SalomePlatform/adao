@@ -24,15 +24,15 @@ __all__ = ["Calibration", "name", "version", "year"]
 # ==============================================================================
 
 name     = "Modelica and Dymola Calibration Tools"
-version  = "1.0.9.7.0" # "x.x"+"adao version"
+version  = "1.0.9.13.0"  # "x.x"+"adao version"
 year     = "2021"
 
 # ==============================================================================
 # Default configuration
 # ---------------------
-import os, sys, io, shutil, numpy, scipy, tempfile, time, logging, pandas, subprocess, copy, csv
-from datetime import timedelta
-from datetime import datetime
+import os, sys, io, shutil, time, logging, subprocess, copy, csv  # noqa: E402
+import tempfile, warnings, numpy, scipy, pandas  # noqa: E402
+from datetime import datetime  # noqa: E402
 
 try:
     import adao
@@ -58,9 +58,10 @@ except ImportError:
 try:
     from fmpy import simulate_fmu
     from fmpy.fmi1 import FMICallException
-# except ImportError:
-#     raise ImportError("fmpy library not found, please install it first")
-except:
+except ImportError:
+    __msg = "fmpy library not found, it will not be possible for you to simulate Functional Mock-up Units (FMUs) as models. Add it to Python installation it if necessary."
+    warnings.warn(__msg, ImportWarning, stacklevel=50)
+except Exception:
     pass
 
 _configuration = {
@@ -69,12 +70,7 @@ _configuration = {
     "DirectoryMethods"  : "Methods",
     "DirectoryResults"  : "Results",
     "Launcher"          : "configuration.py",
-    }
-__paths = []
-__paths.append( os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..','buildingspy-1.5.0')) )
-__paths.append( os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..','Packages')) )
-for __path in __paths:
-    if os.path.exists(__path): sys.path.append(__path)
+}
 
 # ==============================================================================
 class Calibration(object):
@@ -95,12 +91,12 @@ class Calibration(object):
         self.__verbose  = bool(Verbose)
         self.__stdoutid = sys.stdout
         if SaveStdoutIn is not None:
-            sys.stdout = open(SaveStdoutIn,"w")
+            sys.stdout = open(SaveStdoutIn, "w")
         if self.__verbose:
             __msg = "[VERBOSE] %s"%self.__name
             print("")
             print("  %s"%__msg)
-            print("  %s"%("-"*len(__msg),))
+            print("  %s"%("-" * len(__msg),))
             print("")
             VersionsLogicielles()
 
@@ -111,10 +107,10 @@ class Calibration(object):
         """
         if Configuration is None or type(Configuration) is not dict:
             Configuration = _configuration
-        for __k,__v in Configuration.items():
+        for __k, __v in Configuration.items():
             setattr(self, __k, __v)
 
-    def _setModelTmpDir(self, __model_name="dsin.txt", __model_format="DYMOSIM", __model_dest = "dsin.txt", __before_tmp = None, __suffix=None):
+    def _setModelTmpDir(self, __model_name = "dsin.txt", __model_format = "DYMOSIM", __model_dest = "dsin.txt", __before_tmp = None, __suffix=None):
         if __model_name is None:
             raise ValueError('Model file or directory has to be set and can not be None')
         elif os.path.isfile(__model_name):
@@ -128,21 +124,21 @@ class Calibration(object):
         else:
             raise ValueError('Model file or directory not found using %s'%str(__model_name))
         #
-        if __before_tmp is not None: # Mettre "../.." si nécessaire
+        if __before_tmp is not None:  # Mettre "../.." si nécessaire
             __mtmp = os.path.join(__model_dir, __before_tmp, "tmp")
         else:
             __mtmp = os.path.join(__model_dir, "tmp")
         if not os.path.exists(__mtmp):
             os.mkdir(__mtmp)
-        __prefix = time.strftime('%Y%m%d_%Hh%Mm%Ss_tmp_',time.localtime())
+        __prefix = time.strftime('%Y%m%d_%Hh%Mm%Ss_tmp_', time.localtime())
         if __suffix is not None:
             __prefix = __prefix + __suffix + "_"
         __ltmp = tempfile.mkdtemp( prefix=__prefix, dir=__mtmp )
         #
         for sim, pmf, dst in (
-            (__model_nam,__model_format,__model_dst),
-            ("dymosim.exe","DYMOSIM","dymosim.exe"),
-            ("pythonsim.exe","PYSIM","pythonsim.exe"),
+            (__model_nam, __model_format, __model_dst),
+            ("dymosim.exe", "DYMOSIM", "dymosim.exe"),
+            ("pythonsim.exe", "PYSIM", "pythonsim.exe"),
             ):
             # Recherche un fichier de données ou un simulateur dans cet ordre
 
@@ -150,7 +146,7 @@ class Calibration(object):
                 shutil.copy(
                     os.path.join(__model_dir, sim),
                     os.path.join(__ltmp, dst)
-                    )
+                )
 
                 # _secure_copy_textfile(
                 #         os.path.join(__model_dir, sim),
@@ -710,7 +706,7 @@ class Calibration(object):
 
                 try: #to handle situations in which there is only one CL (boundary conditions) file
                     var_int = numpy.ravel(LColumns[:,etat])
-                except :
+                except Exception:
                     var_int = numpy.ravel(LColumns)
                 dict_inputs = dict(zip(LVariablesToChange, var_int))
 
@@ -734,7 +730,7 @@ class Calibration(object):
                     debug_model_file = os.path.join(simudir, os.pardir, 'log_debug_model.txt')
                     try:
                         shutil.copy(dslog_file,debug_model_file)
-                    except:
+                    except Exception:
                         pass
 
                 if auto_simul.success_code == 2 :
@@ -818,7 +814,7 @@ class Calibration(object):
 
                     try: #to handle situations in which there is only one CL (boundary conditions) file
                         var_int = numpy.ravel(LColumns[:,etat])
-                    except :
+                    except Exception:
                         var_int = numpy.ravel(LColumns)
 
                     dict_inputs = dict(zip(LVariablesToChange, var_int))
@@ -859,7 +855,7 @@ class Calibration(object):
                         debug_model_file = os.path.join(simudir, os.pardir, 'log_debug_model.txt')
                         try:
                             shutil.copy(dslog_file,debug_model_file)
-                        except:
+                        except Exception:
                             pass
 
                     if not(os.path.exists(os.path.join(simudir, 'RES','1.0.mat'))):
@@ -908,7 +904,7 @@ class Calibration(object):
                 #
                 try: #to handle situations in which there is only one CL (boundary conditions) file
                     var_int = numpy.ravel(LColumns[:,etat])
-                except :
+                except Exception:
                     var_int = numpy.ravel(LColumns)
                 dict_inputs = dict(zip(LVariablesToChange, var_int))
                 writer_no_CWP = write_in_dsin.Write_in_dsin(dict_inputs = dict_inputs, filedir=simudir, dsin_name=str("dsin_" +LNames[etat]+ ".txt"), old_file_name='old_dsin.txt',new_file_name = str("dsin_" +LNames[etat]+ ".txt"))
@@ -1282,7 +1278,7 @@ class Calibration(object):
                             simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_whole_values_with_bg, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
                         else:
                             raise NotImplementedError("Not yet implemented for current model format: ", model_format)
-                    except:
+                    except Exception:
                         list_failed_model_evaluation.append(x_value_bg_tested)
 
                 dict_check_model_stability[x_bg_tested] = list_failed_model_evaluation
@@ -1542,7 +1538,7 @@ class Calibration(object):
 
                          try:
                              os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +LNames[etat]+ "_optimal.txt")))
-                         except:
+                         except Exception:
                              pass
 
                          shutil.copyfile(
@@ -1568,14 +1564,14 @@ class Calibration(object):
                      else:
                          try: #to handle situations in which there is only one CL (boundary conditions) file
                              var_int = numpy.ravel(LColumns[:,etat])
-                         except :
+                         except Exception:
                              var_int = numpy.ravel(LColumns)
                          dict_inputs_boundary_conditions_optimal_params = dict(zip(LVariablesToChange, var_int))
                          dict_inputs_boundary_conditions_optimal_params.update(dict_optimal_params)
 
                          try:
                              os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +LNames[etat]+ "_optimal.txt")))
-                         except:
+                         except Exception:
                              pass
                          dir_for_dsin_opti = os.path.abspath(os.path.join(self._get_Name_ModelTmpDir_simple(ModelName),os.pardir))
                          shutil.copyfile(
@@ -1628,7 +1624,7 @@ class Calibration(object):
                              outwriter.writerow(row)
                 try:
                     os.remove(optimal_file_results_name_cl_tmp)
-                except:
+                except Exception:
                     pass
 
             if InitialSimulation: #If initial simulation is required as well, the Initial results files are given as well
@@ -1659,7 +1655,7 @@ class Calibration(object):
                                  outwriter.writerow(row)
                     try:
                         os.remove(initial_file_results_name_cl_tmp)
-                    except:
+                    except Exception:
                         pass
 
         return __resultats
@@ -1687,7 +1683,7 @@ def _readLink(__filename=None, __colnames=None, __indexname="Variable", __format
     try: #Solution provisoire pou gérer les cas sans CL précisées par l'utilisateur
         with ImportFromFile(__filename, __colnames, __indexname, __format, False) as reading:
             colnames, columns, indexname, variablestochange = reading.getvalue()
-    except:
+    except Exception:
         colnames =__colnames
         columns =[]
         variablestochange =[]
@@ -2101,7 +2097,7 @@ def TOP_LEVEL_exefmuMultiobs( x_values_matrix , VariablesToCalibrate=None, Outpu
 
         try: #to handle situations in which there is only one CL (boundary conditions) file
             var_int = numpy.ravel(LColumns[:,etat])
-        except :
+        except Exception:
             var_int = numpy.ravel(LColumns)
 
         dict_inputs = dict(zip(LVariablesToChange, var_int))
@@ -2150,7 +2146,7 @@ def TOP_LEVEL_exefmuMultiobs( x_values_matrix , VariablesToCalibrate=None, Outpu
                                   'log_debug_model.txt')
             try: #try toremove the previous file
                 os.remove(log_file)
-            except:
+            except Exception:
                 pass
 
             f=open(log_file,'a')
@@ -2242,7 +2238,7 @@ def TOP_LEVEL_exeOpenModelicaMultiobs( x_values_matrix , KeepCalculationFolders 
 
         try: #to handle situations in which there is only one CL (boundary conditions) file
             var_int = numpy.ravel(LColumns[:,etat])
-        except :
+        except Exception:
             var_int = numpy.ravel(LColumns)
 
         dict_inputs = dict(zip(LVariablesToChange, var_int))
@@ -2259,7 +2255,7 @@ def TOP_LEVEL_exeOpenModelicaMultiobs( x_values_matrix , KeepCalculationFolders 
 
         try:
             reader = Reader(results_file_name,'dymola') #dymola even if it is OpenModelica
-        except:
+        except Exception:
             raise ValueError("Simulation cannot be performed: reduce the number of parameters to calibrate and/or the range in which their optimal value should be found (or modify and simplify the model to make it easier to simulate)" )
 
         y_whole = [reader.values(y_name) for y_name in OutputVariables]
@@ -2360,7 +2356,7 @@ def TOPLEVEL_exedymosimMultiobs_simple( x_values_matrix , VariablesToCalibrate=N
             debug_model_file = os.path.join(ref_simudir,'log_debug_model.txt')
             try:
                 shutil.copy(dslog_file,debug_model_file)
-            except:
+            except Exception:
                 pass
 
         if auto_simul.success_code == 2 :
@@ -2471,7 +2467,7 @@ def TOP_LEVEL_exedymosimMultiobs( x_values_matrix , VariablesToCalibrate=None, O
             debug_model_file = os.path.join(simudir, os.pardir, 'log_debug_model.txt')
             try:
                 shutil.copy(dslog_file,debug_model_file)
-            except:
+            except Exception:
                 pass
 
         if auto_simul.success_code == 2 :
@@ -2539,11 +2535,11 @@ def TOP_LEVEL_exedymosimMultiobs( x_values_matrix , VariablesToCalibrate=None, O
                 debug_model_file = os.path.join(simudir, os.pardir, 'log_debug_model.txt')
                 try:
                     shutil.copy(dslog_file,debug_model_file)
-                except:
+                except Exception:
                     pass
             try:
                 reader = Reader(os.path.join(simudir, 'RES','1.0.mat'),'dymola')
-            except:
+            except Exception:
                 raise ValueError("Simulation cannot be performed: reduce the number of parameters to calibrate and/or the range in which their optimal value should be found (or modify and simplify the model to make it easier to simulate)" )
 
 
@@ -2632,7 +2628,7 @@ def run_OM_model(xml_file, #req arg, file path to _init.xml file
 
         try:
             os.remove(log_file)
-        except:
+        except Exception:
             pass
         try:
             f=open(log_file,'a')
@@ -2646,7 +2642,7 @@ def run_OM_model(xml_file, #req arg, file path to _init.xml file
     else:
         try:
             proc.communicate(timeout = TimeoutModelExecution)
-        except:
+        except Exception:
             raise ValueError("Timeout for simulation reached, please increase it in order to be able to simulate your model and/or check if your model is correct (use TimeoutModelExecution option in configuration.py file)")
 
     # proc.communicate()
@@ -2694,7 +2690,7 @@ def readObsnamesfile(__filenames=None):
         try:
             df = pandas.read_csv(__filename, sep = ";", header =0) #so that repeated names are not modified
             obsnames_infile = df.loc[0, :].values.tolist()[2:]
-        except:
+        except Exception:
             df_tmp = pandas.read_csv(__filename, sep = ";", header =1)
             with open(__filename, 'r') as infile:
                 readie=csv.reader(infile, delimiter=';')
@@ -2711,7 +2707,7 @@ def readObsnamesfile(__filenames=None):
 
             try:
                 os.remove('tmp_obs_file.csv')
-            except:
+            except Exception:
                 pass
     return obsnames_infile
 

@@ -94,7 +94,7 @@ class Around_Simulation(object):
         self.__dict_iter_var = {}
         self.__list_complex_iter_var = []
         self.__dict_complex_iter_var = {}
-        self.__dict_iter_var_from_ini = {} # pour récupérer la valeur du fichier ini.txt
+        self.__dict_iter_var_from_ini = {}  # pour récupérer la valeur du fichier ini.txt
         self.computed_variables = [] #List to store nale of variable computed by user defined function (if any)
 
 
@@ -203,7 +203,7 @@ class Around_Simulation(object):
         return self.__dict_iter_var
 
     @property
-    def dict_iter_var_from_ini(self): # pour récupérer la valeur du fichier ini.txt
+    def dict_iter_var_from_ini(self):  # pour récupérer la valeur du fichier ini.txt
         """
         Dictionary which associates the name of an iteration variable to its value in ini.txt file
         """
@@ -532,7 +532,7 @@ class Around_Simulation(object):
                         out.append(words[0].split(' ',1)[1]) #OpenModelica : Errors lines copied from the compilation log contains the 'unit' as first word (Integer, Real...)
                     else: #Dymola, default case
                         out.append(words[0])
-                        self.__dict_iter_var_from_ini[words[0]] =[word.strip() for word in line.split('=')][1][:-1]  # valeur du ini.txt brute_init
+                        self.__dict_iter_var_from_ini[words[0]] = [word.strip() for word in line.split('=')][1][:-1]  # valeur du ini.txt brute_init
 
 
                     #Detection of the iteration variables that are given the values of other variables
@@ -628,11 +628,11 @@ class Around_Simulation(object):
                     except KeyError: #The variable is not found
 
                         try:
-                            node_pos = re.search(r"\[\d+\]",res_name_var).span() #Position of the node number if any (in case the error is due to a remesh of the model)
+                            node_pos = re.search(r"\[\d+\]",res_name_var).span()  # Position of the node number if any (in case the error is due to a remesh of the model)
                         except AttributeError: #No node number found
 
                             try:
-                                node_pos = re.search(r"\[\]",res_name_var).span() #Position of empty brakets (all array values are due)
+                                node_pos = re.search(r"\[\]",res_name_var).span()  # Position of empty brakets (all array values are due)
                             except AttributeError :
                                 pass
                             else:

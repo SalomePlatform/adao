@@ -194,6 +194,8 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             import daAlgorithms.Atoms.lbfgsb112hlt as optimiseur
         elif vt("1.13.0") <= vt(scipy.version.version) <= vt("1.13.99"):
             import daAlgorithms.Atoms.lbfgsb113hlt as optimiseur
+        elif vt("1.14.0") <= vt(scipy.version.version) <= vt("1.14.99"):
+            import daAlgorithms.Atoms.lbfgsb114hlt as optimiseur
         else:
             import scipy.optimize as optimiseur
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
