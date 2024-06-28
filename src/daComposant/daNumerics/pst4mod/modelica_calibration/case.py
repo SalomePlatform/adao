@@ -170,6 +170,9 @@ class Calibration(object):
                 __model_nam_3 = __model_nam_1[:-9]+'_info.json' #check if this file exists as well
                 if os.path.exists(os.path.join(__model_dir,__model_nam_3)):
                     __model_nam.append(__model_nam_3)                      #get the three files necessar for simulation
+                __model_nam_4 = __model_nam_1[:-9]+'_JacA.bin' #check if this file exists as well
+                if os.path.exists(os.path.join(__model_dir,__model_nam_4)):
+                    __model_nam.append(__model_nam_4)
                 __model_dst = __model_nam #the same file name is kept
 
             else: #cas classique
@@ -196,6 +199,9 @@ class Calibration(object):
                 __model_nam_3 = __model_nam_1[:-9]+'_info.json' #check if this file exists as well
                 if os.path.exists(os.path.join(__model_dir,__model_nam_3)):
                     __model_nam.append(__model_nam_3)                      #get the three files necessar for simulation
+                __model_nam_4 = __model_nam_1[:-9]+'_JacA.bin' #check if this file exists as well
+                if os.path.exists(os.path.join(__model_dir,__model_nam_4)):
+                    __model_nam.append(__model_nam_4)
                 __model_dst = __model_nam #the same file name is kept
 
             else :
@@ -2106,7 +2112,7 @@ def TOP_LEVEL_exefmuMultiobs( x_values_matrix , VariablesToCalibrate=None, Outpu
 
         if FMUInput:
             fmu_inputs = FMUInput[LNames[etat]]
-            timestep = fmu_inputs[1][0] - fmu_inputs[0][0]  #Assuming constant timestep
+            timestep = fmu_inputs[1][0] - fmu_inputs[0][0]  # Assuming constant timestep
             if AdvancedDebugModel: print(f'The timestep for {LNames[etat]} is {timestep} seconds')
         else:
             fmu_inputs = None
@@ -2124,7 +2130,7 @@ def TOP_LEVEL_exefmuMultiobs( x_values_matrix , VariablesToCalibrate=None, Outpu
             new_stdout = io.StringIO()
             sys.stdout = new_stdout
 
-            start_time_simulation_fmi = time.time()#timeout manangement since fmpy does not raise an error for this, it just ends the simulations and continues
+            start_time_simulation_fmi = time.time()  # timeout manangement since fmpy does not raise an error for this, it just ends the simulations and continues
 
             try :
                 reader = simulate_fmu(fmu, output = OutputVariables, start_values = dict_inputs, debug_logging = True, timeout = TimeoutModelExecution, input = fmu_inputs, stop_time= stoptime_fmu, output_interval= timestep)
