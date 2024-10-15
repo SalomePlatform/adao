@@ -20,7 +20,10 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import sys, unittest, numpy
+import sys
+import unittest
+import numpy
+
 
 # ==============================================================================
 class TwoDimensionalInverseDistanceCS2010:
@@ -36,19 +39,20 @@ class TwoDimensionalInverseDistanceCS2010:
         Nonlinear Model Reduction via Discrete Empirical Interpolation,
         SIAM Journal on Scientific Computing, 32(5), pp. 2737-2764 (2010).
     """
+
     def __init__(self, nx: int = 20, ny: int = 20):
         "Définition du maillage spatial"
-        self.nx  = max(1, nx)
-        self.ny  = max(1, ny)
-        self.x   = numpy.linspace(0.1, 0.9, self.nx, dtype=float)
-        self.y   = numpy.linspace(0.1, 0.9, self.ny, dtype=float)
+        self.nx = max(1, nx)
+        self.ny = max(1, ny)
+        self.x = numpy.linspace(0.1, 0.9, self.nx, dtype=float)
+        self.y = numpy.linspace(0.1, 0.9, self.ny, dtype=float)
 
-    def FieldG(self, mu ):
+    def FieldG(self, mu):
         "Fonction simulation pour un paramètre donné"
-        mu1, mu2 = numpy.ravel( mu )
+        mu1, mu2 = numpy.ravel(mu)
         #
-        x, y = numpy.meshgrid( self.x, self.y )
-        sxymu = 1. / numpy.sqrt( (x - mu1)**2 + (y - mu2)**2 + 0.1**2 )
+        x, y = numpy.meshgrid(self.x, self.y)
+        sxymu = 1.0 / numpy.sqrt((x - mu1) ** 2 + (y - mu2) ** 2 + 0.1**2)
         #
         return sxymu
 
@@ -83,18 +87,19 @@ class TwoDimensionalInverseDistanceCS2010:
 
     OneRealisation = FieldG
 
+
 # ==============================================================================
 class LocalTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        print('\nAUTODIAGNOSTIC\n==============\n')
+        print("\nAUTODIAGNOSTIC\n==============\n")
         print("    " + TwoDimensionalInverseDistanceCS2010().__doc__.strip())
 
     def test001(self):
         numpy.random.seed(123456789)
         Equation = TwoDimensionalInverseDistanceCS2010()
         for mu in Equation.get_sample_of_mu(5, 5):
-            solution = Equation.OneRealisation( mu )
+            solution = Equation.OneRealisation(mu)
             # Nappe maximale au coin (0,0)
             self.assertTrue(numpy.max(solution.flat) <= solution[0, 0])
             # Nappe minimale au coin [-1,-1]
@@ -102,6 +107,7 @@ class LocalTest(unittest.TestCase):
 
     def tearDown(cls):
         print("\n    Tests OK\n")
+
 
 # ==============================================================================
 if __name__ == "__main__":

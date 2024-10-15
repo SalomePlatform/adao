@@ -10,7 +10,7 @@ SampleAsIndependantRandomVariables
   'normal' de paramètres (mean,std), 'lognormal' de paramètres (mean,sigma),
   'uniform' de paramètres (low,high), ou 'weibull' de paramètre (shape). C'est
   donc une liste de la même taille que celle de l'état. Par nature, les points
-  sont inclus le domaine non borné ou borné selon les caractéristiques des
+  sont inclus dans le domaine non borné ou borné selon les caractéristiques des
   distributions choisies par variable.
 
   Exemple :

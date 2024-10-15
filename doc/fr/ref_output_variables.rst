@@ -52,8 +52,8 @@ Des patrons (ou "templates") sont donnés ci-après en
 :ref:`subsection_r_o_v_Template`.  Dans tous les cas, le post-processing de
 l'utilisateur dispose dans l'espace de noms d'une variable dont le nom est
 "*ADD*", et dont l'unique méthode utilisable est nommée ``get``. Les arguments
-de cette méthode sont un nom d'information de sortie, comme décrit dans
-l':ref:`subsection_r_o_v_Inventaire`.
+de cette méthode sont un nom d'information de sortie, comme décrit dans un
+:ref:`subsection_r_o_v_Inventaire`.
 
 Par exemple, pour avoir l'état optimal après un calcul d'assimilation de données
 ou d'optimisation, on utilise l'appel suivant::

@@ -184,6 +184,8 @@ pour éviter une durée d'optimisation rédhibitoire.
 
 .. include:: snippets/SocialAcceleration.rst
 
+.. include:: snippets/StoreInitialState.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

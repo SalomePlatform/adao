@@ -91,8 +91,8 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             if selfA._toStore("InnovationAtCurrentState"):
                 selfA.StoredVariables["InnovationAtCurrentState"].store( _dInnovation )
             #
-            Jb  = vfloat( 0.5 * _dX.T * (BI * _dX) )
-            Jo  = vfloat( 0.5 * _dInnovation.T * (RI * _dInnovation) )
+            Jb  = vfloat( 0.5 * _dX.T @ (BI @ _dX) )
+            Jo  = vfloat( 0.5 * _dInnovation.T @ (RI @ _dInnovation) )
             J   = Jb + Jo
             #
             selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )

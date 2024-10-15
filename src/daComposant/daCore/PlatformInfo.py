@@ -53,19 +53,22 @@ import logging
 import re
 import numpy
 
+
 # ==============================================================================
-def uniq( __sequence ):
+def uniq(__sequence):
     """
     Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
     """
     __seen = set()
     return [x for x in __sequence if x not in __seen and not __seen.add(x)]
 
+
 class PathManagement(object):
     """
     Mise à jour du path système pour les répertoires d'outils
     """
-    __slots__ = ("__paths")
+
+    __slots__ = ("__paths",)
 
     def __init__(self):
         "Déclaration des répertoires statiques"
@@ -76,10 +79,10 @@ class PathManagement(object):
         #
         for v in self.__paths.values():
             if os.path.isdir(v):
-                sys.path.insert(0, v )
+                sys.path.insert(0, v)
         #
         # Conserve en unique exemplaire chaque chemin
-        sys.path = uniq( sys.path )
+        sys.path = uniq(sys.path)
         del parent
 
     def getpaths(self):
@@ -88,127 +91,210 @@ class PathManagement(object):
         """
         return self.__paths
 
+
 # ==============================================================================
 class PlatformInfo(object):
     """
     Rassemblement des informations sur le code et la plateforme
     """
+
     __slots__ = ("has_salome", "has_yacs", "has_adao", "has_eficas")
 
     def __init__(self):
         "Sans effet"
-        self.has_salome = bool( "SALOME_ROOT_DIR" in os.environ )
-        self.has_yacs   = bool(   "YACS_ROOT_DIR" in os.environ )
-        self.has_adao   = bool(   "ADAO_ROOT_DIR" in os.environ )
-        self.has_eficas = bool( "EFICAS_ROOT_DIR" in os.environ )
+        self.has_salome = bool("SALOME_ROOT_DIR" in os.environ)
+        self.has_yacs = bool("YACS_ROOT_DIR" in os.environ)
+        self.has_adao = bool("ADAO_ROOT_DIR" in os.environ)
+        self.has_eficas = bool("EFICAS_ROOT_DIR" in os.environ)
         PathManagement()
 
     def getName(self):
         "Retourne le nom de l'application"
         import daCore.version as dav
+
         return dav.name
 
     def getVersion(self):
         "Retourne le numéro de la version"
         import daCore.version as dav
+
         return dav.version
 
     def getDate(self):
         "Retourne la date de création de la version"
         import daCore.version as dav
+
         return dav.date
 
     def getYear(self):
         "Retourne l'année de création de la version"
         import daCore.version as dav
+
         return dav.year
 
     def getSystemInformation(self, __prefix=""):
-        __msg  = ""
-        __msg += "\n%s%30s : %s"%(__prefix, "platform.system", platform.system())
-        __msg += "\n%s%30s : %s"%(__prefix, "sys.platform", sys.platform)
-        __msg += "\n%s%30s : %s"%(__prefix, "platform.version", platform.version())
-        __msg += "\n%s%30s : %s"%(__prefix, "platform.platform", platform.platform())
-        __msg += "\n%s%30s : %s"%(__prefix, "platform.machine", platform.machine())
+        __msg = ""
+        __msg += "\n%s%30s : %s" % (__prefix, "platform.system", platform.system())
+        __msg += "\n%s%30s : %s" % (__prefix, "sys.platform", sys.platform)
+        __msg += "\n%s%30s : %s" % (__prefix, "platform.version", platform.version())
+        __msg += "\n%s%30s : %s" % (__prefix, "platform.platform", platform.platform())
+        __msg += "\n%s%30s : %s" % (__prefix, "platform.machine", platform.machine())
         if len(platform.processor()) > 0:
-            __msg += "\n%s%30s : %s"%(__prefix, "platform.processor", platform.processor())
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "platform.processor",
+                platform.processor(),
+            )
         #
-        if sys.platform.startswith('linux'):
-            if hasattr(platform, 'linux_distribution'):
-                __msg += "\n%s%30s : %s"%(__prefix,
-                    "platform.linux_distribution", str(platform.linux_distribution()))  # noqa: E128
-            elif hasattr(platform, 'dist'):
-                __msg += "\n%s%30s : %s"%(__prefix,
-                    "platform.dist", str(platform.dist()))  # noqa: E128
-        elif sys.platform.startswith('darwin'):
-            if hasattr(platform, 'mac_ver'):
+        if sys.platform.startswith("linux"):
+            if hasattr(platform, "linux_distribution"):
+                __msg += "\n%s%30s : %s" % (
+                    __prefix,
+                    "platform.linux_distribution",
+                    str(platform.linux_distribution()),
+                )
+            elif hasattr(platform, "dist"):
+                __msg += "\n%s%30s : %s" % (
+                    __prefix,
+                    "platform.dist",
+                    str(platform.dist()),
+                )
+        elif sys.platform.startswith("darwin"):
+            if hasattr(platform, "mac_ver"):
                 # https://fr.wikipedia.org/wiki/MacOS
                 __macosxv10 = {
-                    '0' : 'Cheetah',      '1' : 'Puma',        '2' : 'Jaguar',         # noqa: E241,E203
-                    '3' : 'Panther',      '4' : 'Tiger',       '5' : 'Leopard',        # noqa: E241,E203
-                    '6' : 'Snow Leopard', '7' : 'Lion',        '8' : 'Mountain Lion',  # noqa: E241,E203
-                    '9' : 'Mavericks',    '10': 'Yosemite',    '11': 'El Capitan',     # noqa: E241,E203
-                    '12': 'Sierra',       '13': 'High Sierra', '14': 'Mojave',         # noqa: E241,E203
-                    '15': 'Catalina',
+                    "0": "Cheetah",
+                    "1": "Puma",
+                    "2": "Jaguar",
+                    "3": "Panther",
+                    "4": "Tiger",
+                    "5": "Leopard",
+                    "6": "Snow Leopard",
+                    "7": "Lion",
+                    "8": "Mountain Lion",
+                    "9": "Mavericks",
+                    "10": "Yosemite",
+                    "11": "El Capitan",
+                    "12": "Sierra",
+                    "13": "High Sierra",
+                    "14": "Mojave",
+                    "15": "Catalina",
                 }
                 for key in __macosxv10:
-                    __details = platform.mac_ver()[0].split('.')
+                    __details = platform.mac_ver()[0].split(".")
                     if (len(__details) > 0) and (__details[1] == key):
-                        __msg += "\n%s%30s : %s"%(__prefix,
-                            "platform.mac_ver", str(platform.mac_ver()[0] + "(" + __macosxv10[key] + ")"))  # noqa: E128
+                        __msg += "\n%s%30s : %s" % (
+                            __prefix,
+                            "platform.mac_ver",
+                            str(platform.mac_ver()[0] + "(" + __macosxv10[key] + ")"),
+                        )
                 __macosxv11 = {
-                    '11': 'Big Sur',      '12': 'Monterey',    '13': 'Ventura',  # noqa: E241
-                    '14': 'Sonoma',       '15': 'Sequoia',                       # noqa: E241
+                    "11": "Big Sur",
+                    "12": "Monterey",
+                    "13": "Ventura",
+                    "14": "Sonoma",
+                    "15": "Sequoia",
                 }
                 for key in __macosxv11:
-                    __details = platform.mac_ver()[0].split('.')
-                    if (__details[0] == key):
-                        __msg += "\n%s%30s : %s"%(__prefix,
-                            "platform.mac_ver", str(platform.mac_ver()[0] + "(" + __macosxv11[key] + ")"))  # noqa: E128
-            elif hasattr(platform, 'dist'):
-                __msg += "\n%s%30s : %s"%(__prefix, "platform.dist", str(platform.dist()))
-        elif os.name == 'nt':
-            __msg += "\n%s%30s : %s"%(__prefix, "platform.win32_ver", platform.win32_ver()[1])
+                    __details = platform.mac_ver()[0].split(".")
+                    if __details[0] == key:
+                        __msg += "\n%s%30s : %s" % (
+                            __prefix,
+                            "platform.mac_ver",
+                            str(platform.mac_ver()[0] + "(" + __macosxv11[key] + ")"),
+                        )
+            elif hasattr(platform, "dist"):
+                __msg += "\n%s%30s : %s" % (
+                    __prefix,
+                    "platform.dist",
+                    str(platform.dist()),
+                )
+        elif os.name == "nt":
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "platform.win32_ver",
+                platform.win32_ver()[1],
+            )
         #
         __msg += "\n"
-        __msg += "\n%s%30s : %s"%(__prefix, "platform.python_implementation", platform.python_implementation())
-        __msg += "\n%s%30s : %s"%(__prefix, "sys.executable", sys.executable)
-        __msg += "\n%s%30s : %s"%(__prefix, "sys.version", sys.version.replace('\n', ''))
-        __msg += "\n%s%30s : %s"%(__prefix, "sys.getfilesystemencoding", str(sys.getfilesystemencoding()))
+        __msg += "\n%s%30s : %s" % (
+            __prefix,
+            "platform.python_implementation",
+            platform.python_implementation(),
+        )
+        __msg += "\n%s%30s : %s" % (__prefix, "sys.executable", sys.executable)
+        __msg += "\n%s%30s : %s" % (
+            __prefix,
+            "sys.version",
+            sys.version.replace("\n", ""),
+        )
+        __msg += "\n%s%30s : %s" % (
+            __prefix,
+            "sys.getfilesystemencoding",
+            str(sys.getfilesystemencoding()),
+        )
         if sys.version_info.major == 3 and sys.version_info.minor < 11:  # Python 3.10
-            __msg += "\n%s%30s : %s"%(__prefix, "locale.getdefaultlocale", str(locale.getdefaultlocale()))
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "locale.getdefaultlocale",
+                str(locale.getdefaultlocale()),
+            )
         else:
-            __msg += "\n%s%30s : %s"%(__prefix, "locale.getlocale", str(locale.getlocale()))
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "locale.getlocale",
+                str(locale.getlocale()),
+            )
         __msg += "\n"
-        __msg += "\n%s%30s : %s"%(__prefix, "os.cpu_count", os.cpu_count())
-        if hasattr(os, 'sched_getaffinity'):
-            __msg += "\n%s%30s : %s"%(__prefix, "len(os.sched_getaffinity(0))", len(os.sched_getaffinity(0)))
+        __msg += "\n%s%30s : %s" % (__prefix, "os.cpu_count", os.cpu_count())
+        if hasattr(os, "sched_getaffinity"):
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "len(os.sched_getaffinity(0))",
+                len(os.sched_getaffinity(0)),
+            )
         else:
-            __msg += "\n%s%30s : %s"%(__prefix, "len(os.sched_getaffinity(0))", "Unsupported on this platform")
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "len(os.sched_getaffinity(0))",
+                "Unsupported on this platform",
+            )
         __msg += "\n"
-        __msg += "\n%s%30s : %s"%(__prefix, "platform.node", platform.node())
-        __msg += "\n%s%30s : %s"%(__prefix, "socket.getfqdn", socket.getfqdn())
-        __msg += "\n%s%30s : %s"%(__prefix, "os.path.expanduser", os.path.expanduser('~'))
+        __msg += "\n%s%30s : %s" % (__prefix, "platform.node", platform.node())
+        __msg += "\n%s%30s : %s" % (__prefix, "socket.getfqdn", socket.getfqdn())
+        __msg += "\n%s%30s : %s" % (
+            __prefix,
+            "os.path.expanduser",
+            os.path.expanduser("~"),
+        )
         return __msg
 
     def getApplicationInformation(self, __prefix=""):
-        __msg  = ""
-        __msg += "\n%s%30s : %s"%(__prefix, "ADAO version", self.getVersion())
+        __msg = ""
+        __msg += "\n%s%30s : %s" % (__prefix, "ADAO version", self.getVersion())
         __msg += "\n"
-        __msg += "\n%s%30s : %s"%(__prefix, "Python version", self.getPythonVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "Numpy version", self.getNumpyVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "Scipy version", self.getScipyVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "NLopt version", self.getNloptVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "MatplotLib version", self.getMatplotlibVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "GnuplotPy version", self.getGnuplotVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "Python version", self.getPythonVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "Numpy version", self.getNumpyVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "Scipy version", self.getScipyVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "NLopt version", self.getNloptVersion())
+        __msg += "\n%s%30s : %s" % (
+            __prefix,
+            "MatplotLib version",
+            self.getMatplotlibVersion(),
+        )
+        __msg += "\n%s%30s : %s" % (
+            __prefix,
+            "GnuplotPy version",
+            self.getGnuplotVersion(),
+        )
         __msg += "\n"
-        __msg += "\n%s%30s : %s"%(__prefix, "Pandas version", self.getPandasVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "Fmpy version", self.getFmpyVersion())
-        __msg += "\n%s%30s : %s"%(__prefix, "Sphinx version", self.getSphinxVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "Pandas version", self.getPandasVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "Fmpy version", self.getFmpyVersion())
+        __msg += "\n%s%30s : %s" % (__prefix, "Sphinx version", self.getSphinxVersion())
         return __msg
 
     def getAllInformation(self, __prefix="", __title="Whole system information"):
-        __msg  = ""
+        __msg = ""
         if len(__title) > 0:
             __msg += "\n" + "=" * 80 + "\n" + __title + "\n" + "=" * 80 + "\n"
         __msg += self.getSystemInformation(__prefix)
@@ -218,151 +304,185 @@ class PlatformInfo(object):
 
     def getPythonVersion(self):
         "Retourne la version de python disponible"
-        return ".".join([str(x) for x in sys.version_info[0:3]])  # map(str,sys.version_info[0:3]))
+        return ".".join(
+            [str(x) for x in sys.version_info[0:3]]
+        )  # map(str,sys.version_info[0:3]))
 
     # Tests des modules système
 
     def _has_numpy(self):
         try:
             import numpy  # noqa: F401
+
             has_numpy = True
         except ImportError:
-            raise ImportError("Numpy is not available, despites the fact it is mandatory.")
+            raise ImportError(
+                "Numpy is not available, despites the fact it is mandatory."
+            )
         return has_numpy
-    has_numpy = property(fget = _has_numpy)
+
+    has_numpy = property(fget=_has_numpy)
 
     def _has_scipy(self):
         try:
             import scipy
             import scipy.version
             import scipy.optimize  # noqa: F401
+
             has_scipy = True
         except ImportError:
             has_scipy = False
         return has_scipy
-    has_scipy = property(fget = _has_scipy)
+
+    has_scipy = property(fget=_has_scipy)
 
     def _has_matplotlib(self):
         try:
             import matplotlib  # noqa: F401
+
             has_matplotlib = True
         except ImportError:
             has_matplotlib = False
         return has_matplotlib
-    has_matplotlib = property(fget = _has_matplotlib)
+
+    has_matplotlib = property(fget=_has_matplotlib)
 
     def _has_sphinx(self):
         try:
             import sphinx  # noqa: F401
+
             has_sphinx = True
         except ImportError:
             has_sphinx = False
         return has_sphinx
-    has_sphinx = property(fget = _has_sphinx)
+
+    has_sphinx = property(fget=_has_sphinx)
 
     def _has_nlopt(self):
         try:
             import nlopt  # noqa: F401
+
             has_nlopt = True
         except ImportError:
             has_nlopt = False
         return has_nlopt
-    has_nlopt = property(fget = _has_nlopt)
+
+    has_nlopt = property(fget=_has_nlopt)
 
     def _has_pandas(self):
         try:
             import pandas  # noqa: F401
+
             has_pandas = True
         except ImportError:
             has_pandas = False
         return has_pandas
-    has_pandas = property(fget = _has_pandas)
+
+    has_pandas = property(fget=_has_pandas)
 
     def _has_sdf(self):
         try:
             import sdf  # noqa: F401
+
             has_sdf = True
         except ImportError:
             has_sdf = False
         return has_sdf
-    has_sdf = property(fget = _has_sdf)
+
+    has_sdf = property(fget=_has_sdf)
 
     def _has_fmpy(self):
         try:
             import fmpy  # noqa: F401
+
             has_fmpy = True
         except ImportError:
             has_fmpy = False
         return has_fmpy
-    has_fmpy = property(fget = _has_fmpy)
+
+    has_fmpy = property(fget=_has_fmpy)
 
     def _has_buildingspy(self):
         try:
             import buildingspy  # noqa: F401
+
             has_buildingspy = True
         except ImportError:
             has_buildingspy = False
         return has_buildingspy
-    has_buildingspy = property(fget = _has_buildingspy)
+
+    has_buildingspy = property(fget=_has_buildingspy)
 
     def _has_control(self):
         try:
             import control  # noqa: F401
+
             has_control = True
         except ImportError:
             has_control = False
         return has_control
-    has_control = property(fget = _has_control)
+
+    has_control = property(fget=_has_control)
 
     def _has_modelicares(self):
         try:
             import modelicares  # noqa: F401
+
             has_modelicares = True
         except ImportError:
             has_modelicares = False
         return has_modelicares
-    has_modelicares = property(fget = _has_modelicares)
+
+    has_modelicares = property(fget=_has_modelicares)
 
     # Tests des modules locaux
 
     def _has_gnuplot(self):
         try:
             import Gnuplot  # noqa: F401
+
             has_gnuplot = True
         except ImportError:
             has_gnuplot = False
         return has_gnuplot
-    has_gnuplot = property(fget = _has_gnuplot)
+
+    has_gnuplot = property(fget=_has_gnuplot)
 
     def _has_models(self):
         try:
             import Models  # noqa: F401
+
             has_models = True
         except ImportError:
             has_models = False
         return has_models
-    has_models = property(fget = _has_models)
+
+    has_models = property(fget=_has_models)
 
     def _has_pst4mod(self):
         try:
             import pst4mod  # noqa: F401
+
             has_pst4mod = True
         except ImportError:
             has_pst4mod = False
         return has_pst4mod
-    has_pst4mod = property(fget = _has_pst4mod)
+
+    has_pst4mod = property(fget=_has_pst4mod)
 
     # Versions
 
     def getNumpyVersion(self):
         "Retourne la version de numpy disponible"
         import numpy.version
+
         return numpy.version.version
 
     def getScipyVersion(self):
         "Retourne la version de scipy disponible"
         if self.has_scipy:
             import scipy
+
             __version = scipy.version.version
         else:
             __version = "0.0.0"
@@ -372,7 +492,8 @@ class PlatformInfo(object):
         "Retourne la version de nlopt disponible"
         if self.has_nlopt:
             import nlopt
-            __version = "%s.%s.%s"%(
+
+            __version = "%s.%s.%s" % (
                 nlopt.version_major(),
                 nlopt.version_minor(),
                 nlopt.version_bugfix(),
@@ -385,6 +506,7 @@ class PlatformInfo(object):
         "Retourne la version de matplotlib disponible"
         if self.has_matplotlib:
             import matplotlib
+
             __version = matplotlib.__version__
         else:
             __version = "0.0.0"
@@ -394,6 +516,7 @@ class PlatformInfo(object):
         "Retourne la version de pandas disponible"
         if self.has_pandas:
             import pandas
+
             __version = pandas.__version__
         else:
             __version = "0.0.0"
@@ -403,6 +526,7 @@ class PlatformInfo(object):
         "Retourne la version de gnuplotpy disponible"
         if self.has_gnuplot:
             import Gnuplot
+
             __version = Gnuplot.__version__
         else:
             __version = "0.0"
@@ -412,6 +536,7 @@ class PlatformInfo(object):
         "Retourne la version de fmpy disponible"
         if self.has_fmpy:
             import fmpy
+
             __version = fmpy.__version__
         else:
             __version = "0.0.0"
@@ -421,6 +546,7 @@ class PlatformInfo(object):
         "Retourne la version de sdf disponible"
         if self.has_sdf:
             import sdf
+
             __version = sdf.__version__
         else:
             __version = "0.0.0"
@@ -430,6 +556,7 @@ class PlatformInfo(object):
         "Retourne la version de sphinx disponible"
         if self.has_sphinx:
             import sphinx
+
             __version = sphinx.__version__
         else:
             __version = "0.0.0"
@@ -442,11 +569,17 @@ class PlatformInfo(object):
     def MaximumPrecision(self):
         "Retourne la précision maximale flottante pour Numpy"
         import numpy
+
         try:
-            numpy.array([1.,], dtype='float128')
-            mfp = 'float128'
+            numpy.array(
+                [
+                    1.0,
+                ],
+                dtype="float128",
+            )
+            mfp = "float128"
         except Exception:
-            mfp = 'float64'
+            mfp = "float64"
         return mfp
 
     def MachinePrecision(self):
@@ -459,26 +592,29 @@ class PlatformInfo(object):
 
     def __str__(self):
         import daCore.version as dav
-        return "%s %s (%s)"%(dav.name, dav.version, dav.date)
+
+        return "%s %s (%s)" % (dav.name, dav.version, dav.date)
+
 
 # ==============================================================================
-def vt( __version ):
+def vt(__version):
     "Version transformée pour comparaison robuste, obtenue comme un tuple"
     serie = []
     for sv in re.split("[_.+-]", __version):
         serie.append(sv.zfill(6))
     return tuple(serie)
 
-def isIterable( __sequence, __check = False, __header = "" ):
+
+def isIterable(__sequence, __check=False, __header=""):
     """
     Vérification que l'argument est un itérable interne.
     Remarque : pour permettre le test correct en MultiFonctions,
     - Ne pas accepter comme itérable un "numpy.ndarray"
     - Ne pas accepter comme itérable avec hasattr(__sequence, "__iter__")
     """
-    if isinstance( __sequence, (list, tuple, map, dict) ):
+    if isinstance(__sequence, (list, tuple, map, dict)):
         __isOk = True
-    elif type(__sequence).__name__ in ('generator', 'range'):
+    elif type(__sequence).__name__ in ("generator", "range"):
         __isOk = True
     elif "_iterator" in type(__sequence).__name__:
         __isOk = True
@@ -487,25 +623,39 @@ def isIterable( __sequence, __check = False, __header = "" ):
     else:
         __isOk = False
     if __check and not __isOk:
-        raise TypeError("Not iterable or unkown input type%s: %s"%(__header, type(__sequence),))
+        raise TypeError(
+            "Not iterable or unkown input type%s: %s"
+            % (
+                __header,
+                type(__sequence),
+            )
+        )
     return __isOk
 
-def date2int( __date: str, __lang="FR" ):
+
+def date2int(__date: str, __lang="FR"):
     """
     Fonction de secours, conversion pure : dd/mm/yy hh:mm ---> int(yyyymmddhhmm)
     """
     __date = __date.strip()
-    if __date.count('/') == 2 and __date.count(':') == 0 and __date.count(' ') == 0:
+    if __date.count("/") == 2 and __date.count(":") == 0 and __date.count(" ") == 0:
         d, m, y = __date.split("/")
         __number = (10**4) * int(y) + (10**2) * int(m) + int(d)
-    elif __date.count('/') == 2 and __date.count(':') == 1 and __date.count(' ') > 0:
+    elif __date.count("/") == 2 and __date.count(":") == 1 and __date.count(" ") > 0:
         part1, part2 = __date.split()
         d, m, y = part1.strip().split("/")
         h, n = part2.strip().split(":")
-        __number = (10**8) * int(y) + (10**6) * int(m) + (10**4) * int(d) + (10**2) * int(h) + int(n)
+        __number = (
+            (10**8) * int(y)
+            + (10**6) * int(m)
+            + (10**4) * int(d)
+            + (10**2) * int(h)
+            + int(n)
+        )
     else:
-        raise ValueError("Cannot convert \"%s\" as a D/M/Y H:M date"%__date)
+        raise ValueError('Cannot convert "%s" as a D/M/Y H:M date' % __date)
     return __number
+
 
 def vfloat(__value: numpy.ndarray):
     """
@@ -516,9 +666,12 @@ def vfloat(__value: numpy.ndarray):
     elif isinstance(__value, (float, int)):
         return float(__value)
     else:
-        raise ValueError("Error in converting multiple float values from array when waiting for only one")
+        raise ValueError(
+            "Error in converting multiple float values from array when waiting for only one"
+        )
 
-def strvect2liststr( __strvect ):
+
+def strvect2liststr(__strvect):
     """
     Fonction de secours, conversion d'une chaîne de caractères de
     représentation de vecteur en une liste de chaînes de caractères de
@@ -530,7 +683,8 @@ def strvect2liststr( __strvect ):
         __strvect = __strvect.replace(st, " ")  # Blanc
     return __strvect.split()
 
-def strmatrix2liststr( __strvect ):
+
+def strmatrix2liststr(__strvect):
     """
     Fonction de secours, conversion d'une chaîne de caractères de
     représentation de matrice en une liste de chaînes de caractères de
@@ -541,19 +695,21 @@ def strmatrix2liststr( __strvect ):
     __strvect = __strvect.replace(",", " ")  # Blanc
     for st in ("]", ")"):
         __strvect = __strvect.replace(st, ";")  # "]" et ")" par ";"
-    __strvect = re.sub(r';\s*;', r';', __strvect)
+    __strvect = re.sub(r";\s*;", r";", __strvect)
     __strvect = __strvect.rstrip(";")  # Après ^ et avant v
     __strmat = [__l.split() for __l in __strvect.split(";")]
     return __strmat
 
-def checkFileNameConformity( __filename, __warnInsteadOfPrint=True ):
+
+def checkFileNameConformity(__filename, __warnInsteadOfPrint=True):
     if sys.platform.startswith("win") and len(__filename) > 256:
         __conform = False
         __msg = (
-            " For some shared or older file systems on Windows, a file " + \
-            "name longer than 256 characters can lead to access problems." + \
-            "\n  The name of the file in question is the following:" + \
-            "\n  %s")%(__filename,)
+            " For some shared or older file systems on Windows, a file "
+            + "name longer than 256 characters can lead to access problems."
+            + "\n  The name of the file in question is the following:"
+            + "\n  %s"
+        ) % (__filename,)
         if __warnInsteadOfPrint:
             logging.warning(__msg)
         else:
@@ -563,19 +719,21 @@ def checkFileNameConformity( __filename, __warnInsteadOfPrint=True ):
     #
     return __conform
 
-def checkFileNameImportability( __filename, __warnInsteadOfPrint=True ):
+
+def checkFileNameImportability(__filename, __warnInsteadOfPrint=True):
     if str(__filename).count(".") > 1:
         __conform = False
         __msg = (
-            " The file name contains %i point(s) before the extension " + \
-            "separator, which can potentially lead to problems when " + \
-            "importing this file into Python, as it can then be recognized " + \
-            "as a sub-module (generating a \"ModuleNotFoundError\"). If it " + \
-            "is intentional, make sure that there is no module with the " + \
-            "same name as the part before the first point, and that there is " + \
-            "no \"__init__.py\" file in the same directory." + \
-            "\n  The name of the file in question is the following:" + \
-            "\n  %s")%(int(str(__filename).count(".") - 1), __filename)
+            " The file name contains %i point(s) before the extension "
+            + "separator, which can potentially lead to problems when "
+            + "importing this file into Python, as it can then be recognized "
+            + 'as a sub-module (generating a "ModuleNotFoundError"). If it '
+            + "is intentional, make sure that there is no module with the "
+            + "same name as the part before the first point, and that there is "
+            + 'no "__init__.py" file in the same directory.'
+            + "\n  The name of the file in question is the following:"
+            + "\n  %s"
+        ) % (int(str(__filename).count(".") - 1), __filename)
         if __warnInsteadOfPrint is None:
             pass
         elif __warnInsteadOfPrint:
@@ -587,30 +745,32 @@ def checkFileNameImportability( __filename, __warnInsteadOfPrint=True ):
     #
     return __conform
 
+
 # ==============================================================================
 class SystemUsage(object):
     """
     Permet de récupérer les différentes tailles mémoires du process courant
     """
+
     __slots__ = ()
     #
     # Le module resource renvoie 0 pour les tailles mémoire. On utilise donc
     # plutôt : http://code.activestate.com/recipes/286222/ et Wikipedia
     #
-    _proc_status = '/proc/%d/status' % os.getpid()
-    _memo_status = '/proc/meminfo'
+    _proc_status = "/proc/%d/status" % os.getpid()
+    _memo_status = "/proc/meminfo"
     _scale = {
-        'o'  : 1.0,     # Multiples SI de l'octet          # noqa: E203
-        'ko' : 1.e3,                                       # noqa: E203
-        'Mo' : 1.e6,                                       # noqa: E203
-        'Go' : 1.e9,                                       # noqa: E203
-        'kio': 1024.0,  # Multiples binaires de l'octet    # noqa: E203
-        'Mio': 1024.0 * 1024.0,                            # noqa: E203
-        'Gio': 1024.0 * 1024.0 * 1024.0,                   # noqa: E203
-        'B'  : 1.0,     # Multiples binaires du byte=octet # noqa: E203
-        'kB' : 1024.0,                                     # noqa: E203
-        'MB' : 1024.0 * 1024.0,                            # noqa: E203
-        'GB' : 1024.0 * 1024.0 * 1024.0,                   # noqa: E203
+        "o": 1.0,  # Multiples SI de l'octet
+        "ko": 1.0e3,
+        "Mo": 1.0e6,
+        "Go": 1.0e9,
+        "kio": 1024.0,  # Multiples binaires de l'octet
+        "Mio": 1024.0 * 1024.0,
+        "Gio": 1024.0 * 1024.0 * 1024.0,
+        "B": 1.0,  # Multiples binaires du byte=octet
+        "kB": 1024.0,
+        "MB": 1024.0 * 1024.0,
+        "GB": 1024.0 * 1024.0 * 1024.0,
     }
 
     def __init__(self):
@@ -624,33 +784,37 @@ class SystemUsage(object):
             v = t.read()
             t.close()
         except IOError:
-            return 0.0            # non-Linux?
-        i = v.index(VmKey)        # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
+            return 0.0  # non-Linux?
+        i = v.index(VmKey)  # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
         v = v[i:].split(None, 3)  # whitespace
         if len(v) < 3:
-            return 0.0            # invalid format?
+            return 0.0  # invalid format?
         # convert Vm value to bytes
         mem = float(v[1]) * self._scale[v[2]]
         return mem / self._scale[unit]
 
     def getAvailablePhysicalMemory(self, unit="o"):
         "Renvoie la mémoire physique utilisable en octets"
-        return self._VmA('MemTotal:', unit)
+        return self._VmA("MemTotal:", unit)
 
     def getAvailableSwapMemory(self, unit="o"):
         "Renvoie la mémoire swap utilisable en octets"
-        return self._VmA('SwapTotal:', unit)
+        return self._VmA("SwapTotal:", unit)
 
     def getAvailableMemory(self, unit="o"):
         "Renvoie la mémoire totale (physique+swap) utilisable en octets"
-        return self._VmA('MemTotal:', unit) + self._VmA('SwapTotal:', unit)
+        return self._VmA("MemTotal:", unit) + self._VmA("SwapTotal:", unit)
 
     def getUsableMemory(self, unit="o"):
         """Renvoie la mémoire utilisable en octets
         Rq : il n'est pas sûr que ce décompte soit juste...
         """
-        return self._VmA('MemFree:', unit) + self._VmA('SwapFree:', unit) + \
-            self._VmA('Cached:', unit) + self._VmA('SwapCached:', unit)
+        return (
+            self._VmA("MemFree:", unit)
+            + self._VmA("SwapFree:", unit)
+            + self._VmA("Cached:", unit)
+            + self._VmA("SwapCached:", unit)
+        )
 
     def _VmB(self, VmKey, unit):
         "Lecture des paramètres mémoire du processus"
@@ -659,34 +823,35 @@ class SystemUsage(object):
             v = t.read()
             t.close()
         except IOError:
-            return 0.0            # non-Linux?
-        i = v.index(VmKey)        # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
+            return 0.0  # non-Linux?
+        i = v.index(VmKey)  # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
         v = v[i:].split(None, 3)  # whitespace
         if len(v) < 3:
-            return 0.0            # invalid format?
+            return 0.0  # invalid format?
         # convert Vm value to bytes
         mem = float(v[1]) * self._scale[v[2]]
         return mem / self._scale[unit]
 
     def getUsedMemory(self, unit="o"):
         "Renvoie la mémoire résidente utilisée en octets"
-        return self._VmB('VmRSS:', unit)
+        return self._VmB("VmRSS:", unit)
 
     def getVirtualMemory(self, unit="o"):
         "Renvoie la mémoire totale utilisée en octets"
-        return self._VmB('VmSize:', unit)
+        return self._VmB("VmSize:", unit)
 
     def getUsedStacksize(self, unit="o"):
         "Renvoie la taille du stack utilisé en octets"
-        return self._VmB('VmStk:', unit)
+        return self._VmB("VmStk:", unit)
 
     def getMaxUsedMemory(self, unit="o"):
         "Renvoie la mémoire résidente maximale mesurée"
-        return self._VmB('VmHWM:', unit)
+        return self._VmB("VmHWM:", unit)
 
     def getMaxVirtualMemory(self, unit="o"):
         "Renvoie la mémoire totale maximale mesurée"
-        return self._VmB('VmPeak:', unit)
+        return self._VmB("VmPeak:", unit)
+
 
 # ==============================================================================
 if __name__ == "__main__":

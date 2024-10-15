@@ -108,6 +108,15 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     #
     nbfct = 1  # Nb d'évaluations
     JXini, JbXini, JoXini = CostFunction(Xini, selfA._parameters["QualityCriterion"])
+    if selfA._parameters["StoreInitialState"]:
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
+        selfA.StoredVariables["CostFunctionJ" ].store( JXini  )
+        selfA.StoredVariables["CostFunctionJb"].store( JbXini )
+        selfA.StoredVariables["CostFunctionJo"].store( JoXini )
+        if selfA._toStore("CurrentState"):
+            selfA.StoredVariables["CurrentState"].store( Xini )
+        if selfA._toStore("SimulatedObservationAtCurrentState"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm( Xini ) )
     #
     Swarm  = numpy.zeros((__nbI, 3, __nbP))  # 3 car (x,v,xbest)
     for __p in range(__nbP):
@@ -150,6 +159,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     step = 0
     while KeepRunningCondition(step, nbfct):
         step += 1
+        #
         for __i in range(__nbI):
             for __p in range(__nbP):
                 # Vitesse

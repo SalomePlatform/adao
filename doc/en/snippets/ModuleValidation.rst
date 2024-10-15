@@ -5,9 +5,10 @@ current document. The validation versions are indicated here for information
 purposes only, knowing that, in case of doubt, the SALOME version sheet
 [Salome]_ is the official validation version.
 
-.. csv-table:: Validation versions of support tools for ADAO
+.. csv-table:: Validation versions of the support tools for ADAO
    :header: "Tool", "Version"
    :widths: 20, 10
+   :align: center
 
    ADAO,       |release|
    EFICAS,     |release|

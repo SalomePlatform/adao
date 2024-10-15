@@ -7,7 +7,7 @@ variables originating from the calculation. The description of
 named ``get``, of the variable "*ADD*" of the post-processing in graphical
 interface, or of the case in textual interface. The input variables, available
 to the user at the output in order to facilitate the writing of post-processing
-procedures, are described in the :ref:`subsection_r_o_v_Inventaire`.
+procedures, are described in an :ref:`subsection_r_o_v_Inventaire`.
 
 **Permanent outputs (non conditional)**
 

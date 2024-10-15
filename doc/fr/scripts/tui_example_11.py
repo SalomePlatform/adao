@@ -74,7 +74,7 @@ FX_at_optimum = case.get("SimulatedObservationAtOptimum")[-1]
 J_values      = case.get("CostFunctionJ")[:]
 #
 # =============================================================
-# EXPLOITATION DES RÉSULTATS INDÉPENDANTE
+# EXPLOITATION INDÉPENDANTE DES RÉSULTATS
 #
 print("")
 print("Nombre d'itérations internes...: %i"%len(J_values))

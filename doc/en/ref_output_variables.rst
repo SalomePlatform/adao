@@ -51,7 +51,7 @@ output port "*algoResults*" of the calculation block):
 Templates are given hereafter as :ref:`subsection_r_o_v_Template`. In all cases,
 the post-processing of the user has in the namespace a variable whose name is
 "*ADD*", and whose only available method is named ``get``. The arguments of this
-method are an output information name, as described in the
+method are an output information name, as described in an
 :ref:`subsection_r_o_v_Inventaire`.
 
 For example, to have the optimal state after a data assimilation or optimization

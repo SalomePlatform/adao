@@ -177,6 +177,8 @@ prohibitive optimization time length.
 
 .. include:: snippets/SocialAcceleration.rst
 
+.. include:: snippets/StoreInitialState.rst
+
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations
 

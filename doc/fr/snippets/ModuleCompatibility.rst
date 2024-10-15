@@ -11,13 +11,15 @@ inhabituelle est rencontrée pour des calculs fonctionnant précédemment, il es
 fortement conseillé de revenir à des versions d'outils supports comprises dans
 l'étendue décrite ci-dessous.
 
-.. csv-table:: Intervalles de vérification des outils support pour ADAO
+.. csv-table:: Intervalles de version de vérification des outils support pour ADAO
    :header: "Outil", "Version minimale", "Version atteinte"
    :widths: 20, 10, 10
+   :align: center
 
-   Python,     3.6.5,    3.12.3
-   Numpy,      1.14.3,    1.26.4
-   Scipy,      0.19.1,    1.14.0
-   MatplotLib, 2.2.2,    3.8.4
+   Python,     3.6.5,    3.12.6
+   Numpy,      1.14.3,    2.1.2
+   Scipy,      0.19.1,    1.14.1
+   MatplotLib, 2.2.2,    3.9.2
    GnuplotPy,  1.8,    1.8
-   NLopt,      2.4.2,    2.7.1
+   NLopt,      2.4.2,    2.8.0
+   FMPy,       0.3.20,    0.3.20

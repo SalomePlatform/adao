@@ -31,15 +31,17 @@ import os.path
 # ==============================================================================
 # Classes de services non utilisateur
 
+
 class _ReportPartM__(object):
     """
     Store and retrieve the data for C: internal class
     """
+
     __slots__ = ("__part", "__styles", "__content")
 
     def __init__(self, part="default"):
-        self.__part    = str(part)
-        self.__styles  = []
+        self.__part = str(part)
+        self.__styles = []
         self.__content = []
 
     def append(self, content, style="p", position=-1):
@@ -57,17 +59,19 @@ class _ReportPartM__(object):
     def get_content(self):
         return self.__content
 
+
 class _ReportM__(object):
     """
     Store and retrieve the data for C: internal class
     """
-    __slots__ = ("__document")
 
-    def __init__(self, part='default'):
+    __slots__ = ("__document",)
+
+    def __init__(self, part="default"):
         self.__document = {}
         self.__document[part] = _ReportPartM__(part)
 
-    def append(self, content, style="p", position=-1, part='default'):
+    def append(self, content, style="p", position=-1, part="default"):
         if part not in self.__document:
             self.__document[part] = _ReportPartM__(part)
         self.__document[part].append(content, style, position)
@@ -86,10 +90,12 @@ class _ReportM__(object):
     def clear(self):
         self.__init__()
 
+
 class __ReportC__(object):
     """
     Get user commands, update M and V: user intertace to create the report
     """
+
     __slots__ = ()
     #
     m = _ReportM__()
@@ -105,11 +111,13 @@ class __ReportC__(object):
     def clear(self):
         self.m.clear()
 
+
 class __ReportV__(object):
     """
     Interact with user and C: template for reports
     """
-    __slots__ = ("c")
+
+    __slots__ = ("c",)
     #
     default_filename = "report.txt"
 
@@ -122,7 +130,7 @@ class __ReportV__(object):
         _filename = os.path.abspath(filename)
         #
         _inside = self.get()
-        fid = open(_filename, 'w')
+        fid = open(_filename, "w")
         fid.write(_inside)
         fid.close()
         return filename, _filename
@@ -137,14 +145,17 @@ class __ReportV__(object):
         del self.c
         return 0
 
+
 # ==============================================================================
 # Classes d'interface utilisateur : ReportViewIn*, ReportStorage
 # Tags de structure : (title, h1, h2, h3, p, uli, oli, <b></b>, <i></i>)
+
 
 class ReportViewInHtml(__ReportV__):
     """
     Report in HTML
     """
+
     __slots__ = ()
     #
     default_filename = "report.html"
@@ -164,7 +175,11 @@ class ReportViewInHtml(__ReportV__):
             try:
                 ii = ps.index("title")
                 title = pc[ii]
-                pg += "%s\n%s\n%s"%('<hr noshade><h1 align="center">', title, '</h1><hr noshade>')
+                pg += "%s\n%s\n%s" % (
+                    '<hr noshade><h1 align="center">',
+                    title,
+                    "</h1><hr noshade>",
+                )
             except Exception:
                 pass
             for ip, sp in enumerate(ps):
@@ -186,14 +201,16 @@ class ReportViewInHtml(__ReportV__):
                 for tp in self.tags:
                     if sp == tp:
                         sp = self.tags[tp]
-                pg += "\n<%s>%s</%s>"%(sp, cp, sp)
+                pg += "\n<%s>%s</%s>" % (sp, cp, sp)
         pg += "\n</body>\n</html>"
         return pg
+
 
 class ReportViewInRst(__ReportV__):
     """
     Report in RST
     """
+
     __slots__ = ()
     #
     default_filename = "report.rst"
@@ -223,7 +240,7 @@ class ReportViewInRst(__ReportV__):
             try:
                 ii = ps.index("title")
                 title = pc[ii]
-                pg += "%s\n%s\n%s"%("=" * 80, title, "=" * 80)
+                pg += "%s\n%s\n%s" % ("=" * 80, title, "=" * 80)
             except Exception:
                 pass
             for ip, sp in enumerate(ps):
@@ -243,16 +260,22 @@ class ReportViewInRst(__ReportV__):
                 for tp in self.translation:
                     cp = cp.replace(tp, self.translation[tp])
                 if sp in self.titles.keys():
-                    pg += "\n%s\n%s\n%s"%(self.titles[sp][0] * len(cp), cp, self.titles[sp][1] * len(cp))
+                    pg += "\n%s\n%s\n%s" % (
+                        self.titles[sp][0] * len(cp),
+                        cp,
+                        self.titles[sp][1] * len(cp),
+                    )
                 elif sp in self.tags.keys():
-                    pg += "%s%s%s"%(self.tags[sp][0], cp, self.tags[sp][1])
+                    pg += "%s%s%s" % (self.tags[sp][0], cp, self.tags[sp][1])
             pg += "\n"
         return pg
+
 
 class ReportViewInPlainTxt(__ReportV__):
     """
     Report in plain TXT
     """
+
     #
     __slots__ = ()
     #
@@ -283,7 +306,7 @@ class ReportViewInPlainTxt(__ReportV__):
             try:
                 ii = ps.index("title")
                 title = pc[ii]
-                pg += "%s\n%s\n%s"%("=" * 80, title, "=" * 80)
+                pg += "%s\n%s\n%s" % ("=" * 80, title, "=" * 80)
             except Exception:
                 pass
             for ip, sp in enumerate(ps):
@@ -299,11 +322,16 @@ class ReportViewInPlainTxt(__ReportV__):
                 for tp in self.translation:
                     cp = cp.replace(tp, self.translation[tp])
                 if sp in self.titles.keys():
-                    pg += "\n%s\n%s\n%s"%(self.titles[sp][0] * len(cp), cp, -self.titles[sp][1] * len(cp))
+                    pg += "\n%s\n%s\n%s" % (
+                        self.titles[sp][0] * len(cp),
+                        cp,
+                        -self.titles[sp][1] * len(cp),
+                    )
                 elif sp in self.tags.keys():
-                    pg += "\n%s%s%s"%(self.tags[sp][0], cp, self.tags[sp][1])
+                    pg += "\n%s%s%s" % (self.tags[sp][0], cp, self.tags[sp][1])
             pg += "\n"
         return pg
+
 
 # Interface utilisateur de stockage des informations
 ReportStorage = __ReportC__

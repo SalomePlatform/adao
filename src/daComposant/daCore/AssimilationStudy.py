@@ -28,15 +28,18 @@ __all__ = ["AssimilationStudy"]
 
 from daCore.Aidsm import Aidsm as _Aidsm
 
+
 # ==============================================================================
 class AssimilationStudy(_Aidsm):
     """
     Generic ADAO TUI builder
     """
+
     __slots__ = ()
 
-    def __init__(self, name = ""):
+    def __init__(self, name=""):
         _Aidsm.__init__(self, name)
+
 
 # ==============================================================================
 if __name__ == "__main__":

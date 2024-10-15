@@ -24,7 +24,7 @@
 
 import os, sys
 
-# print "import des prefs de Adao"
+# print ("import des prefs de Adao")
 #
 # Configuration de Eficas
 # =======================

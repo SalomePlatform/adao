@@ -43,11 +43,10 @@
 
     Example of TXT file for "*Observation*" variable in "*DataFile*" ::
 
-        # Fichier TXT à séparateur espace
         # TXT file with space delimiter
         # =============================
-        # Ligne de commentaires quelconques débutant par #
-        # Ligne suivante réservée au nommage des variables
+        # Comment line beginning with #
+        # The next line is dedicated to variable naming
         Alpha1 Observation Alpha2
         0.1234 5.6789 9.0123
         1.2345 2.3456 3.

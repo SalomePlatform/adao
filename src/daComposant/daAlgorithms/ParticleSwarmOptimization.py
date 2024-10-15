@@ -140,6 +140,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Stockage des variables internes ou intermédiaires du calcul",
         )
         self.defineRequiredParameter(
+            name     = "StoreInitialState",
+            default  = False,
+            typecast = bool,
+            message  = "Stockage du premier état à la manière des algorithmes récursifs",
+        )
+        self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
             default  = [],
             typecast = tuple,

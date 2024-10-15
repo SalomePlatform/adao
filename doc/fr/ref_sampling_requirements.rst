@@ -171,7 +171,7 @@ La commande de génération implicite d'échantillons par
 .. code-block:: python
 
     [...]
-    "SampleAsMinMaxSobolSequence":[[0, 4, 1], [0, 4, 1], [2, 25]]
+    "SampleAsMinMaxSobolSequence":[[0, 4], [0, 4], [2, 25]]
     [...]
 
 La répartition des états (il y en a ici 32 par principe de construction de la

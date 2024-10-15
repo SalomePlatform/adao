@@ -27,16 +27,23 @@
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
-import os, numpy, copy, math
-import gzip, bz2, pickle
+import os
+import copy
+import math
+import gzip
+import bz2
+import pickle
+import numpy
 
-from daCore.PlatformInfo import PathManagement ; PathManagement()  # noqa: E702,E203
-from daCore.PlatformInfo import PlatformInfo
+from daCore.PlatformInfo import PathManagement, PlatformInfo
+
+PathManagement()
 lpi = PlatformInfo()
 mfp = lpi.MaximumPrecision()
 
 if lpi.has_gnuplot:
     import Gnuplot
+
 
 # ==============================================================================
 class Persistence(object):
@@ -44,9 +51,19 @@ class Persistence(object):
     Classe générale de persistance définissant les accesseurs nécessaires
     (Template)
     """
+
     __slots__ = (
-        "__name", "__unit", "__basetype", "__values", "__tags", "__dynamic",
-        "__g", "__title", "__ltitle", "__pause", "__dataobservers",
+        "__name",
+        "__unit",
+        "__basetype",
+        "__values",
+        "__tags",
+        "__dynamic",
+        "__g",
+        "__title",
+        "__ltitle",
+        "__pause",
+        "__dataobservers",
     )
 
     def __init__(self, name="", unit="", basetype=str):
@@ -67,14 +84,14 @@ class Persistence(object):
         #
         self.__basetype = basetype
         #
-        self.__values   = []
-        self.__tags     = []
+        self.__values = []
+        self.__tags = []
         #
-        self.__dynamic  = False
-        self.__g        = None
-        self.__title    = None
-        self.__ltitle   = None
-        self.__pause    = None
+        self.__dynamic = False
+        self.__g = None
+        self.__title = None
+        self.__ltitle = None
+        self.__pause = None
         #
         self.__dataobservers = []
 
@@ -103,20 +120,20 @@ class Persistence(object):
         for hook, parameters, scheduler, order, osync, dovar in self.__dataobservers:
             if __step in scheduler:
                 if order is None or dovar is None:
-                    hook( self, parameters )
+                    hook(self, parameters)
                 else:
                     if not isinstance(order, (list, tuple)):
                         continue
                     if not isinstance(dovar, dict):
                         continue
                     if not bool(osync):  # Async observation
-                        hook( self, parameters, order, dovar )
+                        hook(self, parameters, order, dovar)
                     else:  # Sync observations
                         for v in order:
                             if len(dovar[v]) != len(self):
                                 break
                         else:
-                            hook( self, parameters, order, dovar )
+                            hook(self, parameters, order, dovar)
 
     def pop(self, item=None):
         """
@@ -139,7 +156,12 @@ class Persistence(object):
         longueur. Par défaut, renvoie 1.
         """
         if len(self.__values) > 0:
-            if self.__basetype in [numpy.matrix, numpy.ndarray, numpy.array, numpy.ravel]:
+            if self.__basetype in [
+                numpy.matrix,
+                numpy.ndarray,
+                numpy.array,
+                numpy.ravel,
+            ]:
                 return self.__values[-1].shape
             elif self.__basetype in [int, float]:
                 return (1,)
@@ -153,9 +175,9 @@ class Persistence(object):
     # ---------------------------------------------------------
     def __str__(self):
         "x.__str__() <==> str(x)"
-        msg  = "   Index        Value   Tags\n"
+        msg = "   Index        Value   Tags\n"
         for iv, vv in enumerate(self.__values):
-            msg += "  i=%05i  %10s   %s\n"%(iv, vv, self.__tags[iv])
+            msg += "  i=%05i  %10s   %s\n" % (iv, vv, self.__tags[iv])
         return msg
 
     def __len__(self):
@@ -165,7 +187,7 @@ class Persistence(object):
     def name(self):
         return self.__name
 
-    def __getitem__(self, index=None ):
+    def __getitem__(self, index=None):
         "x.__getitem__(y) <==> x[y]"
         return copy.copy(self.__values[index])
 
@@ -190,9 +212,12 @@ class Persistence(object):
                 for i in __indexOfFilteredItems:
                     if tagKey in self.__tags[i]:
                         if self.__tags[i][tagKey] == kwargs[tagKey]:
-                            __tmp.append( i )
-                        elif isinstance(kwargs[tagKey], (list, tuple)) and self.__tags[i][tagKey] in kwargs[tagKey]:
-                            __tmp.append( i )
+                            __tmp.append(i)
+                        elif (
+                            isinstance(kwargs[tagKey], (list, tuple))
+                            and self.__tags[i][tagKey] in kwargs[tagKey]
+                        ):
+                            __tmp.append(i)
                 __indexOfFilteredItems = __tmp
                 if len(__indexOfFilteredItems) == 0:
                     break
@@ -210,9 +235,9 @@ class Persistence(object):
         __keys = []
         for i in __indexOfFilteredItems:
             if keyword in self.__tags[i]:
-                __keys.append( self.__tags[i][keyword] )
+                __keys.append(self.__tags[i][keyword])
             else:
-                __keys.append( None )
+                __keys.append(None)
         return __keys
 
     def items(self, keyword=None, **kwargs):
@@ -221,16 +246,16 @@ class Persistence(object):
         __pairs = []
         for i in __indexOfFilteredItems:
             if keyword in self.__tags[i]:
-                __pairs.append( (self.__tags[i][keyword], self.__values[i]) )
+                __pairs.append((self.__tags[i][keyword], self.__values[i]))
             else:
-                __pairs.append( (None, self.__values[i]) )
+                __pairs.append((None, self.__values[i]))
         return __pairs
 
     def tagkeys(self):
         "D.tagkeys() -> list of D's tag keys"
         __allKeys = []
         for dicotags in self.__tags:
-            __allKeys.extend( list(dicotags.keys()) )
+            __allKeys.extend(list(dicotags.keys()))
         __allKeys = sorted(set(__allKeys))
         return __allKeys
 
@@ -249,14 +274,16 @@ class Persistence(object):
         if item is None:
             __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         else:
-            __indexOfFilteredItems = [item,]
+            __indexOfFilteredItems = [
+                item,
+            ]
         #
         # Dans le cas où la sortie donne les valeurs d'un "outputTag"
         if outputTag is not None and isinstance(outputTag, str):
             outputValues = []
             for index in __indexOfFilteredItems:
                 if outputTag in self.__tags[index].keys():
-                    outputValues.append( self.__tags[index][outputTag] )
+                    outputValues.append(self.__tags[index][outputTag])
             outputValues = sorted(set(outputValues))
             return outputValues
         #
@@ -267,7 +294,7 @@ class Persistence(object):
             else:
                 allTags = {}
                 for index in __indexOfFilteredItems:
-                    allTags.update( self.__tags[index] )
+                    allTags.update(self.__tags[index])
                 allKeys = sorted(allTags.keys())
                 return allKeys
 
@@ -297,7 +324,9 @@ class Persistence(object):
         élémentaires numpy.
         """
         try:
-            __sr = [numpy.mean(item, dtype=mfp).astype('float') for item in self.__values]
+            __sr = [
+                numpy.mean(item, dtype=mfp).astype("float") for item in self.__values
+            ]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
@@ -312,10 +341,16 @@ class Persistence(object):
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
         """
         try:
-            if numpy.version.version >= '1.1.0':
-                __sr = [numpy.array(item).std(ddof=ddof, dtype=mfp).astype('float') for item in self.__values]
+            if numpy.version.version >= "1.1.0":
+                __sr = [
+                    numpy.array(item).std(ddof=ddof, dtype=mfp).astype("float")
+                    for item in self.__values
+                ]
             else:
-                return [numpy.array(item).std(dtype=mfp).astype('float') for item in self.__values]
+                return [
+                    numpy.array(item).std(dtype=mfp).astype("float")
+                    for item in self.__values
+                ]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
@@ -384,19 +419,22 @@ class Persistence(object):
 
     def traces(self, offset=0):
         """
-        Trace
+        Trace (offset : voir numpy.trace)
 
         Renvoie la série contenant, à chaque pas, la trace (avec l'offset) des
         données au pas. Il faut que le type de base soit compatible avec les
         types élémentaires numpy.
         """
         try:
-            __sr = [numpy.trace(item, offset, dtype=mfp).astype('float') for item in self.__values]
+            __sr = [
+                numpy.trace(item, offset, dtype=mfp).astype("float")
+                for item in self.__values
+            ]
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
-    def maes(self, _predictor=None):
+    def maes(self, predictor=None):
         """
         Mean Absolute Error (MAE)
         mae(dX) = 1/n sum(dX_i)
@@ -407,27 +445,34 @@ class Persistence(object):
         prédicteur est None, sinon c'est appliqué à l'écart entre les données
         au pas et le prédicteur au même pas.
         """
-        if _predictor is None:
+        if predictor is None:
             try:
                 __sr = [numpy.mean(numpy.abs(item)) for item in self.__values]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
-            if len(_predictor) != len(self.__values):
-                raise ValueError("Predictor number of steps is incompatible with the values")
+            if len(predictor) != len(self.__values):
+                raise ValueError(
+                    "Predictor number of steps is incompatible with the values"
+                )
             for i, item in enumerate(self.__values):
-                if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
-                    raise ValueError("Predictor size at step %i is incompatible with the values"%i)
+                if numpy.asarray(predictor[i]).size != numpy.asarray(item).size:
+                    raise ValueError(
+                        "Predictor size at step %i is incompatible with the values" % i
+                    )
             try:
-                __sr = [numpy.mean(numpy.abs(numpy.ravel(item) - numpy.ravel(_predictor[i]))) for i, item in enumerate(self.__values)]
+                __sr = [
+                    numpy.mean(numpy.abs(numpy.ravel(item) - numpy.ravel(predictor[i])))
+                    for i, item in enumerate(self.__values)
+                ]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
-    def mses(self, _predictor=None):
+    def mses(self, predictor=None):
         """
         Mean-Square Error (MSE) ou Mean-Square Deviation (MSD)
-        mse(dX) = 1/n sum(dX_i**2)
+        mse(dX) = 1/n sum(dX_i**2) = 1/n ||X||^2
 
         Renvoie la série contenant, à chaque pas, la MSE des données au pas. Il
         faut que le type de base soit compatible avec les types élémentaires
@@ -435,28 +480,39 @@ class Persistence(object):
         prédicteur est None, sinon c'est appliqué à l'écart entre les données
         au pas et le prédicteur au même pas.
         """
-        if _predictor is None:
+        if predictor is None:
             try:
                 __n = self.shape()[0]
-                __sr = [(numpy.linalg.norm(item)**2 / __n) for item in self.__values]
+                __sr = [(numpy.linalg.norm(item) ** 2 / __n) for item in self.__values]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
-            if len(_predictor) != len(self.__values):
-                raise ValueError("Predictor number of steps is incompatible with the values")
+            if len(predictor) != len(self.__values):
+                raise ValueError(
+                    "Predictor number of steps is incompatible with the values"
+                )
             for i, item in enumerate(self.__values):
-                if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
-                    raise ValueError("Predictor size at step %i is incompatible with the values"%i)
+                if numpy.asarray(predictor[i]).size != numpy.asarray(item).size:
+                    raise ValueError(
+                        "Predictor size at step %i is incompatible with the values" % i
+                    )
             try:
                 __n = self.shape()[0]
-                __sr = [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i]))**2 / __n) for i, item in enumerate(self.__values)]
+                __sr = [
+                    (
+                        numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(predictor[i]))
+                        ** 2
+                        / __n
+                    )
+                    for i, item in enumerate(self.__values)
+                ]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
     msds = mses  # Mean-Square Deviation (MSD=MSE)
 
-    def rmses(self, _predictor=None):
+    def rmses(self, predictor=None):
         """
         Root-Mean-Square Error (RMSE) ou Root-Mean-Square Deviation (RMSD)
         rmse(dX) = sqrt( 1/n sum(dX_i**2) ) = sqrt( mse(dX) )
@@ -464,38 +520,52 @@ class Persistence(object):
         Renvoie la série contenant, à chaque pas, la RMSE des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy. C'est réservé aux variables d'écarts ou d'incréments si le
-        prédicteur est None, sinon c'est appliqué à l'écart entre les données
-        au pas et le prédicteur au même pas.
+        prédicteur est None (c'est donc une RMS), sinon c'est appliqué à
+        l'écart entre les données au pas et le prédicteur au même pas.
         """
-        if _predictor is None:
+        if predictor is None:
             try:
                 __n = self.shape()[0]
-                __sr = [(numpy.linalg.norm(item) / math.sqrt(__n)) for item in self.__values]
+                __sr = [
+                    (numpy.linalg.norm(item) / math.sqrt(__n)) for item in self.__values
+                ]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         else:
-            if len(_predictor) != len(self.__values):
-                raise ValueError("Predictor number of steps is incompatible with the values")
+            if len(predictor) != len(self.__values):
+                raise ValueError(
+                    "Predictor number of steps is incompatible with the values"
+                )
             for i, item in enumerate(self.__values):
-                if numpy.asarray(_predictor[i]).size != numpy.asarray(item).size:
-                    raise ValueError("Predictor size at step %i is incompatible with the values"%i)
+                if numpy.asarray(predictor[i]).size != numpy.asarray(item).size:
+                    raise ValueError(
+                        "Predictor size at step %i is incompatible with the values" % i
+                    )
             try:
                 __n = self.shape()[0]
-                __sr = [(numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(_predictor[i])) / math.sqrt(__n)) for i, item in enumerate(self.__values)]
+                __sr = [
+                    (
+                        numpy.linalg.norm(numpy.ravel(item) - numpy.ravel(predictor[i]))
+                        / math.sqrt(__n)
+                    )
+                    for i, item in enumerate(self.__values)
+                ]
             except Exception:
                 raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
     rmsds = rmses  # Root-Mean-Square Deviation (RMSD=RMSE)
 
-    def __preplots(self,
-                   title    = "",
-                   xlabel   = "",
-                   ylabel   = "",
-                   ltitle   = None,
-                   geometry = "600x400",
-                   persist  = False,
-                   pause    = True ):
+    def __preplots(
+        self,
+        title="",
+        xlabel="",
+        ylabel="",
+        ltitle=None,
+        geometry="600x400",
+        persist=False,
+        pause=True,
+    ):
         "Préparation des plots"
         #
         # Vérification de la disponibilité du module Gnuplot
@@ -506,35 +576,39 @@ class Persistence(object):
         if ltitle is None:
             ltitle = ""
         __geometry = str(geometry)
-        __sizespec = (__geometry.split('+')[0]).replace('x', ',')
+        __sizespec = (__geometry.split("+")[0]).replace("x", ",")
         #
         if persist:
-            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist '
+            Gnuplot.GnuplotOpts.gnuplot_command = "gnuplot -persist "
         #
         self.__g = Gnuplot.Gnuplot()  # persist=1
-        self.__g('set terminal ' + Gnuplot.GnuplotOpts.default_term + ' size ' + __sizespec)
-        self.__g('set style data lines')
-        self.__g('set grid')
-        self.__g('set autoscale')
+        self.__g(
+            "set terminal " + Gnuplot.GnuplotOpts.default_term + " size " + __sizespec
+        )
+        self.__g("set style data lines")
+        self.__g("set grid")
+        self.__g("set autoscale")
         self.__g('set xlabel "' + str(xlabel) + '"')
         self.__g('set ylabel "' + str(ylabel) + '"')
-        self.__title  = title
+        self.__title = title
         self.__ltitle = ltitle
-        self.__pause  = pause
+        self.__pause = pause
 
-    def plots(self,
-              item     = None,
-              step     = None,
-              steps    = None,
-              title    = "",
-              xlabel   = "",
-              ylabel   = "",
-              ltitle   = None,
-              geometry = "600x400",
-              filename = "",
-              dynamic  = False,
-              persist  = False,
-              pause    = True ):
+    def plots(
+        self,
+        item=None,
+        step=None,
+        steps=None,
+        title="",
+        xlabel="",
+        ylabel="",
+        ltitle=None,
+        geometry="600x400",
+        filename="",
+        dynamic=False,
+        persist=False,
+        pause=True,
+    ):
         """
         Renvoie un affichage de la valeur à chaque pas, si elle est compatible
         avec un affichage Gnuplot (donc essentiellement un vecteur). Si
@@ -571,7 +645,7 @@ class Persistence(object):
                          Par défaut, pause = True
         """
         if not self.__dynamic:
-            self.__preplots(title, xlabel, ylabel, ltitle, geometry, persist, pause )
+            self.__preplots(title, xlabel, ylabel, ltitle, geometry, persist, pause)
             if dynamic:
                 self.__dynamic = True
                 if len(self.__values) == 0:
@@ -588,22 +662,25 @@ class Persistence(object):
         #
         i = -1
         for index in indexes:
-            self.__g('set title  "' + str(title) + ' (pas ' + str(index) + ')"')
+            self.__g('set title  "' + str(title) + " (pas " + str(index) + ')"')
             if isinstance(steps, (list, numpy.ndarray)):
                 Steps = list(steps)
             else:
                 Steps = list(range(len(self.__values[index])))
             #
-            self.__g.plot( Gnuplot.Data( Steps, self.__values[index], title=ltitle ) )
+            self.__g.plot(Gnuplot.Data(Steps, self.__values[index], title=ltitle))
             #
             if filename != "":
                 i += 1
-                stepfilename = "%s_%03i.ps"%(filename, i)
+                stepfilename = "%s_%03i.ps" % (filename, i)
                 if os.path.isfile(stepfilename):
-                    raise ValueError("Error: a file with this name \"%s\" already exists."%stepfilename)
+                    raise ValueError(
+                        'Error: a file with this name "%s" already exists.'
+                        % stepfilename
+                    )
                 self.__g.hardcopy(filename=stepfilename, color=1)
             if self.__pause:
-                eval(input('Please press return to continue...\n'))
+                eval(input("Please press return to continue...\n"))
 
     def __replots(self):
         """
@@ -614,10 +691,10 @@ class Persistence(object):
         #
         self.__g('set title  "' + str(self.__title))
         Steps = list(range(len(self.__values)))
-        self.__g.plot( Gnuplot.Data( Steps, self.__values, title=self.__ltitle ) )
+        self.__g.plot(Gnuplot.Data(Steps, self.__values, title=self.__ltitle))
         #
         if self.__pause:
-            eval(input('Please press return to continue...\n'))
+            eval(input("Please press return to continue...\n"))
 
     # ---------------------------------------------------------
     # On pourrait aussi utiliser d'autres attributs d'un "array" comme "tofile"
@@ -628,7 +705,7 @@ class Persistence(object):
         les types élémentaires numpy.
         """
         try:
-            return numpy.mean(self.__values, axis=0, dtype=mfp).astype('float')
+            return numpy.mean(self.__values, axis=0, dtype=mfp).astype("float")
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -642,10 +719,12 @@ class Persistence(object):
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
         """
         try:
-            if numpy.version.version >= '1.1.0':
-                return numpy.asarray(self.__values).std(ddof=ddof, axis=0).astype('float')
+            if numpy.version.version >= "1.1.0":
+                return (
+                    numpy.asarray(self.__values).std(ddof=ddof, axis=0).astype("float")
+                )
             else:
-                return numpy.asarray(self.__values).std(axis=0).astype('float')
+                return numpy.asarray(self.__values).std(axis=0).astype("float")
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
@@ -693,16 +772,18 @@ class Persistence(object):
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
-    def plot(self,
-             steps    = None,
-             title    = "",
-             xlabel   = "",
-             ylabel   = "",
-             ltitle   = None,
-             geometry = "600x400",
-             filename = "",
-             persist  = False,
-             pause    = True ):
+    def plot(
+        self,
+        steps=None,
+        title="",
+        xlabel="",
+        ylabel="",
+        ltitle=None,
+        geometry="600x400",
+        filename="",
+        persist=False,
+        pause=True,
+    ):
         """
         Renvoie un affichage unique pour l'ensemble des valeurs à chaque pas, si
         elles sont compatibles avec un affichage Gnuplot (donc essentiellement
@@ -742,30 +823,40 @@ class Persistence(object):
         else:
             Steps = list(range(len(self.__values[0])))
         __geometry = str(geometry)
-        __sizespec = (__geometry.split('+')[0]).replace('x', ',')
+        __sizespec = (__geometry.split("+")[0]).replace("x", ",")
         #
         if persist:
-            Gnuplot.GnuplotOpts.gnuplot_command = 'gnuplot -persist '
+            Gnuplot.GnuplotOpts.gnuplot_command = "gnuplot -persist "
         #
         self.__g = Gnuplot.Gnuplot()  # persist=1
-        self.__g('set terminal ' + Gnuplot.GnuplotOpts.default_term + ' size ' + __sizespec)
-        self.__g('set style data lines')
-        self.__g('set grid')
-        self.__g('set autoscale')
-        self.__g('set title  "' + str(title)  + '"')
+        self.__g(
+            "set terminal " + Gnuplot.GnuplotOpts.default_term + " size " + __sizespec
+        )
+        self.__g("set style data lines")
+        self.__g("set grid")
+        self.__g("set autoscale")
+        self.__g('set title  "' + str(title) + '"')
         self.__g('set xlabel "' + str(xlabel) + '"')
         self.__g('set ylabel "' + str(ylabel) + '"')
         #
         # Tracé du ou des vecteurs demandés
         indexes = list(range(len(self.__values)))
-        self.__g.plot( Gnuplot.Data( Steps, self.__values[indexes.pop(0)], title=ltitle + " (pas 0)" ) )
+        self.__g.plot(
+            Gnuplot.Data(
+                Steps, self.__values[indexes.pop(0)], title=ltitle + " (pas 0)"
+            )
+        )
         for index in indexes:
-            self.__g.replot( Gnuplot.Data( Steps, self.__values[index], title=ltitle + " (pas %i)"%index ) )
+            self.__g.replot(
+                Gnuplot.Data(
+                    Steps, self.__values[index], title=ltitle + " (pas %i)" % index
+                )
+            )
         #
         if filename != "":
             self.__g.hardcopy(filename=filename, color=1)
         if pause:
-            eval(input('Please press return to continue...\n'))
+            eval(input("Please press return to continue...\n"))
 
     # ---------------------------------------------------------
     def s2mvr(self):
@@ -790,7 +881,15 @@ class Persistence(object):
             raise TypeError("Base type is incompatible with numpy")
 
     # ---------------------------------------------------------
-    def setDataObserver(self, HookFunction = None, HookParameters = None, Scheduler = None, Order = None, OSync = True, DOVar = None):
+    def setDataObserver(
+        self,
+        HookFunction=None,
+        HookParameters=None,
+        Scheduler=None,
+        Order=None,
+        OSync=True,
+        DOVar=None,
+    ):
         """
         Association à la variable d'un triplet définissant un observer.
 
@@ -801,21 +900,27 @@ class Persistence(object):
         #
         # Vérification du Scheduler
         # -------------------------
-        maxiter = int( 1e9 )
-        if isinstance(Scheduler, int):                # Considéré comme une fréquence à partir de 0
-            Schedulers = range( 0, maxiter, int(Scheduler) )
-        elif isinstance(Scheduler, range):            # Considéré comme un itérateur
+        maxiter = int(1e9)
+        if isinstance(Scheduler, int):  # Considéré comme une fréquence à partir de 0
+            Schedulers = range(0, maxiter, int(Scheduler))
+        elif isinstance(Scheduler, range):  # Considéré comme un itérateur
             Schedulers = Scheduler
-        elif isinstance(Scheduler, (list, tuple)):    # Considéré comme des index explicites
-            Schedulers = [int(i) for i in Scheduler]  # Similaire à map( int, Scheduler )  # noqa: E262
-        else:                                         # Dans tous les autres cas, activé par défaut
-            Schedulers = range( 0, maxiter )
+        elif isinstance(
+            Scheduler, (list, tuple)
+        ):  # Considéré comme des index explicites
+            Schedulers = [
+                int(i) for i in Scheduler
+            ]  # Similaire à map( int, Scheduler )
+        else:  # Dans tous les autres cas, activé par défaut
+            Schedulers = range(0, maxiter)
         #
         # Stockage interne de l'observer dans la variable
         # -----------------------------------------------
-        self.__dataobservers.append( [HookFunction, HookParameters, Schedulers, Order, OSync, DOVar] )
+        self.__dataobservers.append(
+            [HookFunction, HookParameters, Schedulers, Order, OSync, DOVar]
+        )
 
-    def removeDataObserver(self, HookFunction = None, AllObservers = False):
+    def removeDataObserver(self, HookFunction=None, AllObservers=False):
         """
         Suppression d'un observer nommé sur la variable.
 
@@ -824,11 +929,11 @@ class Persistence(object):
         AllObservers est vrai, supprime tous les observers enregistrés.
         """
         if hasattr(HookFunction, "func_name"):
-            name = str( HookFunction.func_name )
+            name = str(HookFunction.func_name)
         elif hasattr(HookFunction, "__name__"):
-            name = str( HookFunction.__name__ )
+            name = str(HookFunction.__name__)
         elif isinstance(HookFunction, str):
-            name = str( HookFunction )
+            name = str(HookFunction)
         else:
             name = None
         #
@@ -837,30 +942,35 @@ class Persistence(object):
         for [hf, _, _, _, _, _] in self.__dataobservers:
             ih = ih + 1
             if name is hf.__name__ or AllObservers:
-                index_to_remove.append( ih )
+                index_to_remove.append(ih)
         index_to_remove.reverse()
         for ih in index_to_remove:
-            self.__dataobservers.pop( ih )
+            self.__dataobservers.pop(ih)
         return len(index_to_remove)
 
     def hasDataObserver(self):
         return bool(len(self.__dataobservers) > 0)
+
 
 # ==============================================================================
 class SchedulerTrigger(object):
     """
     Classe générale d'interface de type Scheduler/Trigger
     """
+
     __slots__ = ()
 
-    def __init__(self,
-                 simplifiedCombo = None,
-                 startTime       = 0,
-                 endTime         = int( 1e9 ),
-                 timeDelay       = 1,
-                 timeUnit        = 1,
-                 frequency       = None ):
+    def __init__(
+        self,
+        simplifiedCombo=None,
+        startTime=0,
+        endTime=int(1e9),
+        timeDelay=1,
+        timeUnit=1,
+        frequency=None,
+    ):
         pass
+
 
 # ==============================================================================
 class OneScalar(Persistence):
@@ -873,47 +983,57 @@ class OneScalar(Persistence):
     ou des matrices comme dans les classes suivantes, mais c'est déconseillé
     pour conserver une signification claire des noms.
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = float):
+    def __init__(self, name="", unit="", basetype=float):
         Persistence.__init__(self, name, unit, basetype)
+
 
 class OneIndex(Persistence):
     """
     Classe définissant le stockage d'une valeur unique entière (int) par pas.
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = int):
+    def __init__(self, name="", unit="", basetype=int):
         Persistence.__init__(self, name, unit, basetype)
+
 
 class OneVector(Persistence):
     """
     Classe de stockage d'une liste de valeurs numériques homogènes par pas. Ne
     pas utiliser cette classe pour des données hétérogènes, mais "OneList".
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = numpy.ravel):
+    def __init__(self, name="", unit="", basetype=numpy.ravel):
         Persistence.__init__(self, name, unit, basetype)
+
 
 class OneMatrice(Persistence):
     """
     Classe de stockage d'une matrice de valeurs homogènes par pas.
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = numpy.array):
+    def __init__(self, name="", unit="", basetype=numpy.array):
         Persistence.__init__(self, name, unit, basetype)
+
 
 class OneMatrix(Persistence):
     """
-    Classe de stockage d'une matrice de valeurs homogènes par pas.
+    Classe de stockage d'une matrice de valeurs homogènes par pas (obsolète).
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = numpy.matrix):
+    def __init__(self, name="", unit="", basetype=numpy.matrix):
         Persistence.__init__(self, name, unit, basetype)
+
 
 class OneList(Persistence):
     """
@@ -921,14 +1041,17 @@ class OneList(Persistence):
     pas utiliser cette classe pour des données numériques homogènes, mais
     "OneVector".
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = list):
+    def __init__(self, name="", unit="", basetype=list):
         Persistence.__init__(self, name, unit, basetype)
 
-def NoType( value ):
+
+def NoType(value):
     "Fonction transparente, sans effet sur son argument"
     return value
+
 
 class OneNoType(Persistence):
     """
@@ -938,10 +1061,12 @@ class OneNoType(Persistence):
     résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
     volontairement, et pas du tout par défaut.
     """
+
     __slots__ = ()
 
-    def __init__(self, name="", unit="", basetype = NoType):
+    def __init__(self, name="", unit="", basetype=NoType):
         Persistence.__init__(self, name, unit, basetype)
+
 
 # ==============================================================================
 class CompositePersistence(object):
@@ -952,6 +1077,7 @@ class CompositePersistence(object):
     Des objets par défaut sont prévus, et des objets supplémentaires peuvent
     être ajoutés.
     """
+
     __slots__ = ("__name", "__StoredObjects")
 
     def __init__(self, name="", defaults=True):
@@ -970,19 +1096,27 @@ class CompositePersistence(object):
         # Definition des objets par defaut
         # --------------------------------
         if defaults:
-            self.__StoredObjects["Informations"]     = OneNoType("Informations")
-            self.__StoredObjects["Background"]       = OneVector("Background", basetype=numpy.array)
-            self.__StoredObjects["BackgroundError"]  = OneMatrix("BackgroundError")
-            self.__StoredObjects["Observation"]      = OneVector("Observation", basetype=numpy.array)
+            self.__StoredObjects["Informations"] = OneNoType("Informations")
+            self.__StoredObjects["Background"] = OneVector(
+                "Background", basetype=numpy.array
+            )
+            self.__StoredObjects["BackgroundError"] = OneMatrix("BackgroundError")
+            self.__StoredObjects["Observation"] = OneVector(
+                "Observation", basetype=numpy.array
+            )
             self.__StoredObjects["ObservationError"] = OneMatrix("ObservationError")
-            self.__StoredObjects["Analysis"]         = OneVector("Analysis", basetype=numpy.array)
-            self.__StoredObjects["AnalysisError"]    = OneMatrix("AnalysisError")
-            self.__StoredObjects["Innovation"]       = OneVector("Innovation", basetype=numpy.array)
-            self.__StoredObjects["KalmanGainK"]      = OneMatrix("KalmanGainK")
-            self.__StoredObjects["OperatorH"]        = OneMatrix("OperatorH")
-            self.__StoredObjects["RmsOMA"]           = OneScalar("RmsOMA")
-            self.__StoredObjects["RmsOMB"]           = OneScalar("RmsOMB")
-            self.__StoredObjects["RmsBMA"]           = OneScalar("RmsBMA")
+            self.__StoredObjects["Analysis"] = OneVector(
+                "Analysis", basetype=numpy.array
+            )
+            self.__StoredObjects["AnalysisError"] = OneMatrix("AnalysisError")
+            self.__StoredObjects["Innovation"] = OneVector(
+                "Innovation", basetype=numpy.array
+            )
+            self.__StoredObjects["KalmanGainK"] = OneMatrix("KalmanGainK")
+            self.__StoredObjects["OperatorH"] = OneMatrix("OperatorH")
+            self.__StoredObjects["RmsOMA"] = OneScalar("RmsOMA")
+            self.__StoredObjects["RmsOMB"] = OneScalar("RmsOMB")
+            self.__StoredObjects["RmsBMA"] = OneScalar("RmsBMA")
         #
 
     def store(self, name=None, value=None, **kwargs):
@@ -992,10 +1126,10 @@ class CompositePersistence(object):
         if name is None:
             raise ValueError("Storable object name is required for storage.")
         if name not in self.__StoredObjects.keys():
-            raise ValueError("No such name '%s' exists in storable objects."%name)
-        self.__StoredObjects[name].store( value=value, **kwargs )
+            raise ValueError("No such name '%s' exists in storable objects." % name)
+        self.__StoredObjects[name].store(value=value, **kwargs)
 
-    def add_object(self, name=None, persistenceType=Persistence, basetype=None ):
+    def add_object(self, name=None, persistenceType=Persistence, basetype=None):
         """
         Ajoute dans les objets stockables un nouvel objet défini par son nom,
         son type de Persistence et son type de base à chaque pas.
@@ -1003,23 +1137,28 @@ class CompositePersistence(object):
         if name is None:
             raise ValueError("Object name is required for adding an object.")
         if name in self.__StoredObjects.keys():
-            raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
+            raise ValueError(
+                "An object with the same name '%s' already exists in storable objects. Choose another one."
+                % name
+            )
         if basetype is None:
-            self.__StoredObjects[name] = persistenceType( name=str(name) )
+            self.__StoredObjects[name] = persistenceType(name=str(name))
         else:
-            self.__StoredObjects[name] = persistenceType( name=str(name), basetype=basetype )
+            self.__StoredObjects[name] = persistenceType(
+                name=str(name), basetype=basetype
+            )
 
-    def get_object(self, name=None ):
+    def get_object(self, name=None):
         """
         Renvoie l'objet de type Persistence qui porte le nom demandé.
         """
         if name is None:
             raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
-            raise ValueError("No such name '%s' exists in stored objects."%name)
+            raise ValueError("No such name '%s' exists in stored objects." % name)
         return self.__StoredObjects[name]
 
-    def set_object(self, name=None, objet=None ):
+    def set_object(self, name=None, objet=None):
         """
         Affecte directement un 'objet' qui porte le nom 'name' demandé.
         Attention, il n'est pas effectué de vérification sur le type, qui doit
@@ -1029,32 +1168,35 @@ class CompositePersistence(object):
         if name is None:
             raise ValueError("Object name is required for setting an object.")
         if name in self.__StoredObjects.keys():
-            raise ValueError("An object with the same name '%s' already exists in storable objects. Choose another one."%name)
+            raise ValueError(
+                "An object with the same name '%s' already exists in storable objects. Choose another one."
+                % name
+            )
         self.__StoredObjects[name] = objet
 
-    def del_object(self, name=None ):
+    def del_object(self, name=None):
         """
         Supprime un objet de la liste des objets stockables.
         """
         if name is None:
             raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
-            raise ValueError("No such name '%s' exists in stored objects."%name)
+            raise ValueError("No such name '%s' exists in stored objects." % name)
         del self.__StoredObjects[name]
 
     # ---------------------------------------------------------
     # Méthodes d'accès de type dictionnaire
-    def __getitem__(self, name=None ):
+    def __getitem__(self, name=None):
         "x.__getitem__(y) <==> x[y]"
-        return self.get_object( name )
+        return self.get_object(name)
 
-    def __setitem__(self, name=None, objet=None ):
+    def __setitem__(self, name=None, objet=None):
         "x.__setitem__(i, y) <==> x[i]=y"
-        self.set_object( name, objet )
+        self.set_object(name, objet)
 
     def keys(self):
         "D.keys() -> list of D's keys"
-        return self.get_stored_objects(hideVoidObjects = False)
+        return self.get_stored_objects(hideVoidObjects=False)
 
     def values(self):
         "D.values() -> list of D's values"
@@ -1065,7 +1207,7 @@ class CompositePersistence(object):
         return self.__StoredObjects.items()
 
     # ---------------------------------------------------------
-    def get_stored_objects(self, hideVoidObjects = False):
+    def get_stored_objects(self, hideVoidObjects=False):
         "Renvoie la liste des objets présents"
         objs = self.__StoredObjects.keys()
         if hideVoidObjects:
@@ -1073,7 +1215,7 @@ class CompositePersistence(object):
             for k in objs:
                 try:
                     if len(self.__StoredObjects[k]) > 0:
-                        usedObjs.append( k )
+                        usedObjs.append(k)
                 finally:
                     pass
             objs = usedObjs
@@ -1088,25 +1230,25 @@ class CompositePersistence(object):
         """
         if filename is None:
             if compress == "gzip":
-                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.gz"
+                filename = os.tempnam(os.getcwd(), "dacp") + ".pkl.gz"
             elif compress == "bzip2":
-                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl.bz2"
+                filename = os.tempnam(os.getcwd(), "dacp") + ".pkl.bz2"
             else:
-                filename = os.tempnam( os.getcwd(), 'dacp' ) + ".pkl"
+                filename = os.tempnam(os.getcwd(), "dacp") + ".pkl"
         else:
-            filename = os.path.abspath( filename )
+            filename = os.path.abspath(filename)
         #
         if mode == "pickle":
             if compress == "gzip":
-                output = gzip.open( filename, 'wb')
+                output = gzip.open(filename, "wb")
             elif compress == "bzip2":
-                output = bz2.BZ2File( filename, 'wb')
+                output = bz2.BZ2File(filename, "wb")
             else:
-                output = open( filename, 'wb')
+                output = open(filename, "wb")
             pickle.dump(self, output)
             output.close()
         else:
-            raise ValueError("Save mode '%s' unknown. Choose another one."%mode)
+            raise ValueError("Save mode '%s' unknown. Choose another one." % mode)
         #
         return filename
 
@@ -1117,22 +1259,23 @@ class CompositePersistence(object):
         if filename is None:
             raise ValueError("A file name if requested to load a composite.")
         else:
-            filename = os.path.abspath( filename )
+            filename = os.path.abspath(filename)
         #
         if mode == "pickle":
             if compress == "gzip":
-                pkl_file = gzip.open( filename, 'rb')
+                pkl_file = gzip.open(filename, "rb")
             elif compress == "bzip2":
-                pkl_file = bz2.BZ2File( filename, 'rb')
+                pkl_file = bz2.BZ2File(filename, "rb")
             else:
-                pkl_file = open(filename, 'rb')
+                pkl_file = open(filename, "rb")
             output = pickle.load(pkl_file)
             for k in output.keys():
                 self[k] = output[k]
         else:
-            raise ValueError("Load mode '%s' unknown. Choose another one."%mode)
+            raise ValueError("Load mode '%s' unknown. Choose another one." % mode)
         #
         return filename
+
 
 # ==============================================================================
 if __name__ == "__main__":

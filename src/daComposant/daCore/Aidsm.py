@@ -29,7 +29,7 @@ __all__ = ["Aidsm"]
 import os
 import sys
 import inspect
-#
+
 from daCore.BasicObjects import State, Covariance, FullOperator, Operator
 from daCore.BasicObjects import AlgorithmAndParameters, DataObserver
 from daCore.BasicObjects import RegulationAndParameters, CaseLogger
@@ -38,24 +38,34 @@ from daCore import PlatformInfo
 from daCore import version
 
 from daCore import ExtendedLogging
+
 ExtendedLogging.ExtendedLogging()  # A importer en premier
 import logging  # noqa: E402
 
+
 # ==============================================================================
 class Aidsm(object):
-    """ ADAO Internal Data Structure Model """
+    """ADAO Internal Data Structure Model"""
+
     __slots__ = (
-        "__name", "__objname", "__directory", "__case", "__parent",
-        "__adaoObject", "__StoredInputs", "__PostAnalysis", "__Concepts",
+        "__name",
+        "__objname",
+        "__directory",
+        "__case",
+        "__parent",
+        "__adaoObject",
+        "__StoredInputs",
+        "__PostAnalysis",
+        "__Concepts",
     )
 
     def __init__(self, name="", addViewers=None):
-        self.__name         = str(name)
-        self.__objname      = None
-        self.__directory    = None
+        self.__name = str(name)
+        self.__objname = None
+        self.__directory = None
         self.__case = CaseLogger(self.__name, "case", addViewers)
         #
-        self.__adaoObject   = {}
+        self.__adaoObject = {}
         self.__StoredInputs = {}
         self.__PostAnalysis = []
         #
@@ -86,11 +96,11 @@ class Aidsm(object):
         for ename in ("ObservationOperator", "EvolutionModel", "ControlModel"):
             self.__adaoObject[ename] = {}
         for ename in ("BackgroundError", "ObservationError"):
-            self.__adaoObject[ename] = Covariance(ename, asEyeByScalar = 1.)
+            self.__adaoObject[ename] = Covariance(ename, asEyeByScalar=1.0)
         for ename in ("EvolutionError",):
-            self.__adaoObject[ename] = Covariance(ename, asEyeByScalar = 1.e-16)
+            self.__adaoObject[ename] = Covariance(ename, asEyeByScalar=1.0e-16)
         for ename in ("Observer", "UserPostAnalysis"):
-            self.__adaoObject[ename]   = []
+            self.__adaoObject[ename] = []
             self.__StoredInputs[ename] = []  # Vide par defaut
         self.__StoredInputs["Name"] = self.__name
         self.__StoredInputs["Directory"] = self.__directory
@@ -100,53 +110,78 @@ class Aidsm(object):
         # qui est activée dans Persistence)
         self.__parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         sys.path.insert(0, self.__parent)
-        sys.path = PlatformInfo.uniq( sys.path )  # Conserve en unique exemplaire chaque chemin
+        sys.path = PlatformInfo.uniq(
+            sys.path
+        )  # Conserve en unique exemplaire chaque chemin
 
-    def set(self,
-            Concept              = None,  # Premier argument
-            Algorithm            = None,
-            AppliedInXb          = None,
-            Checked              = False,
-            ColMajor             = False,
-            ColNames             = None,
-            CrossObs             = False,
-            DataFile             = None,
-            DiagonalSparseMatrix = None,
-            ExtraArguments       = None,
-            Info                 = None,
-            InputFunctionAsMulti = False,
-            Matrix               = None,
-            ObjectFunction       = None,
-            ObjectMatrix         = None,
-            OneFunction          = None,
-            Parameters           = None,
-            PerformanceProfile   = None,
-            ScalarSparseMatrix   = None,
-            Scheduler            = None,
-            Script               = None,
-            Stored               = False,
-            String               = None,
-            SyncObs              = True,
-            Template             = None,
-            ThreeFunctions       = None,
-            Variable             = None,
-            Vector               = None,
-            VectorSerie          = None,
-            ):
+    def set(
+        self,
+        Concept=None,  # Premier argument
+        Algorithm=None,
+        AppliedInXb=None,
+        Checked=False,
+        ColMajor=False,
+        ColNames=None,
+        CrossObs=False,
+        DataFile=None,
+        DiagonalSparseMatrix=None,
+        ExtraArguments=None,
+        Info=None,
+        InputFunctionAsMulti=False,
+        Matrix=None,
+        ObjectFunction=None,
+        ObjectMatrix=None,
+        OneFunction=None,
+        Parameters=None,
+        PerformanceProfile=None,
+        ScalarSparseMatrix=None,
+        Scheduler=None,
+        Script=None,
+        Stored=False,
+        String=None,
+        SyncObs=True,
+        Template=None,
+        ThreeFunctions=None,
+        Variable=None,
+        Vector=None,
+        VectorSerie=None,
+    ):
         "Interface unique de définition de variables d'entrées par argument"
         self.__case.register("set", dir(), locals(), None, True)
         try:
-            if Concept in ("Background", "CheckingPoint", "ControlInput", "Observation"):
+            if Concept in (
+                "Background",
+                "CheckingPoint",
+                "ControlInput",
+                "Observation",
+            ):
                 commande = getattr(self, "set" + Concept)
-                commande(Vector, VectorSerie, Script, DataFile, ColNames, ColMajor, Stored, Scheduler, Checked )
+                commande(
+                    Vector,
+                    VectorSerie,
+                    Script,
+                    DataFile,
+                    ColNames,
+                    ColMajor,
+                    Stored,
+                    Scheduler,
+                    Checked,
+                )
             elif Concept in ("BackgroundError", "ObservationError", "EvolutionError"):
                 commande = getattr(self, "set" + Concept)
-                commande(Matrix, ScalarSparseMatrix, DiagonalSparseMatrix,
-                         Script, Stored, ObjectMatrix, Checked )
+                commande(
+                    Matrix,
+                    ScalarSparseMatrix,
+                    DiagonalSparseMatrix,
+                    Script,
+                    Stored,
+                    ObjectMatrix,
+                    Checked,
+                )
             elif Concept == "AlgorithmParameters":
-                self.setAlgorithmParameters( Algorithm, Parameters, Script )
+                self.setAlgorithmParameters(Algorithm, Parameters, Script)
             elif Concept == "RegulationParameters":
-                self.setRegulationParameters( Algorithm, Parameters, Script )
+                self.setRegulationParameters(Algorithm, Parameters, Script)
             elif Concept == "Name":
                 self.setName(String)
             elif Concept == "Directory":
@@ -157,326 +192,368 @@ class Aidsm(object):
                 self.setNoDebug()
             elif Concept == "Observer":
                 self.setObserver(
-                    Variable, Template, String, Script, Info,
-                    ObjectFunction, CrossObs, SyncObs, Scheduler )
+                    Variable,
+                    Template,
+                    String,
+                    Script,
+                    Info,
+                    ObjectFunction,
+                    CrossObs,
+                    SyncObs,
+                    Scheduler,
+                )
             elif Concept == "UserPostAnalysis":
-                self.setUserPostAnalysis( Template, String, Script )
+                self.setUserPostAnalysis(Template, String, Script)
             elif Concept == "SupplementaryParameters":
-                self.setSupplementaryParameters( Parameters, Script )
+                self.setSupplementaryParameters(Parameters, Script)
             elif Concept == "ObservationOperator":
                 self.setObservationOperator(
-                    Matrix, OneFunction, ThreeFunctions, AppliedInXb,
-                    Parameters, Script, ExtraArguments,
-                    Stored, PerformanceProfile, InputFunctionAsMulti, Checked )
+                    Matrix,
+                    OneFunction,
+                    ThreeFunctions,
+                    AppliedInXb,
+                    Parameters,
+                    Script,
+                    ExtraArguments,
+                    Stored,
+                    PerformanceProfile,
+                    InputFunctionAsMulti,
+                    Checked,
+                )
             elif Concept in ("EvolutionModel", "ControlModel"):
                 commande = getattr(self, "set" + Concept)
                 commande(
-                    Matrix, OneFunction, ThreeFunctions,
-                    Parameters, Script, Scheduler, ExtraArguments,
-                    Stored, PerformanceProfile, InputFunctionAsMulti, Checked )
+                    Matrix,
+                    OneFunction,
+                    ThreeFunctions,
+                    Parameters,
+                    Script,
+                    Scheduler,
+                    ExtraArguments,
+                    Stored,
+                    PerformanceProfile,
+                    InputFunctionAsMulti,
+                    Checked,
+                )
             else:
-                raise ValueError("the variable named '%s' is not allowed."%str(Concept))
+                raise ValueError(
+                    "the variable named '%s' is not allowed." % str(Concept)
+                )
         except Exception as e:
             if isinstance(e, SyntaxError):
-                msg = " at %s: %s"%(e.offset, e.text)
+                msg = " at %s: %s" % (e.offset, e.text)
             else:
                 msg = ""
-            raise ValueError((
-                "during settings, the following error occurs:\n" + \
-                "\n%s%s\n\nSee also the potential messages, " + \
-                "which can show the origin of the above error, " + \
-                "in the launching terminal.")%(str(e), msg))
+            raise ValueError(
+                (
+                    "during settings, the following error occurs:\n"
+                    + "\n%s%s\n\nSee also the potential messages, "
+                    + "which can show the origin of the above error, "
+                    + "in the launching terminal."
+                )
+                % (str(e), msg)
+            )
 
     # -----------------------------------------------------------
 
     def setBackground(
-            self,
-            Vector         = None,
-            VectorSerie    = None,
-            Script         = None,
-            DataFile       = None,
-            ColNames       = None,
-            ColMajor       = False,
-            Stored         = False,
-            Scheduler      = None,
-            Checked        = False ):
+        self,
+        Vector=None,
+        VectorSerie=None,
+        Script=None,
+        DataFile=None,
+        ColNames=None,
+        ColMajor=False,
+        Stored=False,
+        Scheduler=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "Background"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
-            name               = Concept,
-            asVector           = Vector,
-            asPersistentVector = VectorSerie,
-            asScript           = self.__with_directory(Script),
-            asDataFile         = DataFile,
-            colNames           = ColNames,
-            colMajor           = ColMajor,
-            scheduledBy        = Scheduler,
-            toBeChecked        = Checked,
+            name=Concept,
+            asVector=Vector,
+            asPersistentVector=VectorSerie,
+            asScript=self.__with_directory(Script),
+            asDataFile=DataFile,
+            colNames=ColNames,
+            colMajor=ColMajor,
+            scheduledBy=Scheduler,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setCheckingPoint(
-            self,
-            Vector         = None,
-            VectorSerie    = None,
-            Script         = None,
-            DataFile       = None,
-            ColNames       = None,
-            ColMajor       = False,
-            Stored         = False,
-            Scheduler      = None,
-            Checked        = False ):
+        self,
+        Vector=None,
+        VectorSerie=None,
+        Script=None,
+        DataFile=None,
+        ColNames=None,
+        ColMajor=False,
+        Stored=False,
+        Scheduler=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "CheckingPoint"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
-            name               = Concept,
-            asVector           = Vector,
-            asPersistentVector = VectorSerie,
-            asScript           = self.__with_directory(Script),
-            asDataFile         = DataFile,
-            colNames           = ColNames,
-            colMajor           = ColMajor,
-            scheduledBy        = Scheduler,
-            toBeChecked        = Checked,
+            name=Concept,
+            asVector=Vector,
+            asPersistentVector=VectorSerie,
+            asScript=self.__with_directory(Script),
+            asDataFile=DataFile,
+            colNames=ColNames,
+            colMajor=ColMajor,
+            scheduledBy=Scheduler,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setControlInput(
-            self,
-            Vector         = None,
-            VectorSerie    = None,
-            Script         = None,
-            DataFile       = None,
-            ColNames       = None,
-            ColMajor       = False,
-            Stored         = False,
-            Scheduler      = None,
-            Checked        = False ):
+        self,
+        Vector=None,
+        VectorSerie=None,
+        Script=None,
+        DataFile=None,
+        ColNames=None,
+        ColMajor=False,
+        Stored=False,
+        Scheduler=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "ControlInput"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
-            name               = Concept,
-            asVector           = Vector,
-            asPersistentVector = VectorSerie,
-            asScript           = self.__with_directory(Script),
-            asDataFile         = DataFile,
-            colNames           = ColNames,
-            colMajor           = ColMajor,
-            scheduledBy        = Scheduler,
-            toBeChecked        = Checked,
+            name=Concept,
+            asVector=Vector,
+            asPersistentVector=VectorSerie,
+            asScript=self.__with_directory(Script),
+            asDataFile=DataFile,
+            colNames=ColNames,
+            colMajor=ColMajor,
+            scheduledBy=Scheduler,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setObservation(
-            self,
-            Vector         = None,
-            VectorSerie    = None,
-            Script         = None,
-            DataFile       = None,
-            ColNames       = None,
-            ColMajor       = False,
-            Stored         = False,
-            Scheduler      = None,
-            Checked        = False ):
+        self,
+        Vector=None,
+        VectorSerie=None,
+        Script=None,
+        DataFile=None,
+        ColNames=None,
+        ColMajor=False,
+        Stored=False,
+        Scheduler=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "Observation"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
-            name               = Concept,
-            asVector           = Vector,
-            asPersistentVector = VectorSerie,
-            asScript           = self.__with_directory(Script),
-            asDataFile         = DataFile,
-            colNames           = ColNames,
-            colMajor           = ColMajor,
-            scheduledBy        = Scheduler,
-            toBeChecked        = Checked,
+            name=Concept,
+            asVector=Vector,
+            asPersistentVector=VectorSerie,
+            asScript=self.__with_directory(Script),
+            asDataFile=DataFile,
+            colNames=ColNames,
+            colMajor=ColMajor,
+            scheduledBy=Scheduler,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setBackgroundError(
-            self,
-            Matrix               = None,
-            ScalarSparseMatrix   = None,
-            DiagonalSparseMatrix = None,
-            Script               = None,
-            Stored               = False,
-            ObjectMatrix         = None,
-            Checked              = False ):
+        self,
+        Matrix=None,
+        ScalarSparseMatrix=None,
+        DiagonalSparseMatrix=None,
+        Script=None,
+        Stored=False,
+        ObjectMatrix=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "BackgroundError"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
-            name          = Concept,
-            asCovariance  = Matrix,
-            asEyeByScalar = ScalarSparseMatrix,
-            asEyeByVector = DiagonalSparseMatrix,
-            asCovObject   = ObjectMatrix,
-            asScript      = self.__with_directory(Script),
-            toBeChecked   = Checked,
+            name=Concept,
+            asCovariance=Matrix,
+            asEyeByScalar=ScalarSparseMatrix,
+            asEyeByVector=DiagonalSparseMatrix,
+            asCovObject=ObjectMatrix,
+            asScript=self.__with_directory(Script),
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setObservationError(
-            self,
-            Matrix               = None,
-            ScalarSparseMatrix   = None,
-            DiagonalSparseMatrix = None,
-            Script               = None,
-            Stored               = False,
-            ObjectMatrix         = None,
-            Checked              = False ):
+        self,
+        Matrix=None,
+        ScalarSparseMatrix=None,
+        DiagonalSparseMatrix=None,
+        Script=None,
+        Stored=False,
+        ObjectMatrix=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "ObservationError"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
-            name          = Concept,
-            asCovariance  = Matrix,
-            asEyeByScalar = ScalarSparseMatrix,
-            asEyeByVector = DiagonalSparseMatrix,
-            asCovObject   = ObjectMatrix,
-            asScript      = self.__with_directory(Script),
-            toBeChecked   = Checked,
+            name=Concept,
+            asCovariance=Matrix,
+            asEyeByScalar=ScalarSparseMatrix,
+            asEyeByVector=DiagonalSparseMatrix,
+            asCovObject=ObjectMatrix,
+            asScript=self.__with_directory(Script),
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setEvolutionError(
-            self,
-            Matrix               = None,
-            ScalarSparseMatrix   = None,
-            DiagonalSparseMatrix = None,
-            Script               = None,
-            Stored               = False,
-            ObjectMatrix         = None,
-            Checked              = False ):
+        self,
+        Matrix=None,
+        ScalarSparseMatrix=None,
+        DiagonalSparseMatrix=None,
+        Script=None,
+        Stored=False,
+        ObjectMatrix=None,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "EvolutionError"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
-            name          = Concept,
-            asCovariance  = Matrix,
-            asEyeByScalar = ScalarSparseMatrix,
-            asEyeByVector = DiagonalSparseMatrix,
-            asCovObject   = ObjectMatrix,
-            asScript      = self.__with_directory(Script),
-            toBeChecked   = Checked,
+            name=Concept,
+            asCovariance=Matrix,
+            asEyeByScalar=ScalarSparseMatrix,
+            asEyeByVector=DiagonalSparseMatrix,
+            asCovObject=ObjectMatrix,
+            asScript=self.__with_directory(Script),
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setObservationOperator(
-            self,
-            Matrix               = None,
-            OneFunction          = None,
-            ThreeFunctions       = None,
-            AppliedInXb          = None,
-            Parameters           = None,
-            Script               = None,
-            ExtraArguments       = None,
-            Stored               = False,
-            PerformanceProfile   = None,
-            InputFunctionAsMulti = False,
-            Checked              = False ):
+        self,
+        Matrix=None,
+        OneFunction=None,
+        ThreeFunctions=None,
+        AppliedInXb=None,
+        Parameters=None,
+        Script=None,
+        ExtraArguments=None,
+        Stored=False,
+        PerformanceProfile=None,
+        InputFunctionAsMulti=False,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "ObservationOperator"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
-            name             = Concept,
-            asMatrix         = Matrix,
-            asOneFunction    = OneFunction,
-            asThreeFunctions = ThreeFunctions,
-            asScript         = self.__with_directory(Script),
-            asDict           = Parameters,
-            appliedInX       = AppliedInXb,
-            extraArguments   = ExtraArguments,
-            performancePrf   = PerformanceProfile,
-            inputAsMF        = InputFunctionAsMulti,
-            scheduledBy      = None,
-            toBeChecked      = Checked,
+            name=Concept,
+            asMatrix=Matrix,
+            asOneFunction=OneFunction,
+            asThreeFunctions=ThreeFunctions,
+            asScript=self.__with_directory(Script),
+            asDict=Parameters,
+            appliedInX=AppliedInXb,
+            extraArguments=ExtraArguments,
+            performancePrf=PerformanceProfile,
+            inputAsMF=InputFunctionAsMulti,
+            scheduledBy=None,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setEvolutionModel(
-            self,
-            Matrix               = None,
-            OneFunction          = None,
-            ThreeFunctions       = None,
-            Parameters           = None,
-            Script               = None,
-            Scheduler            = None,
-            ExtraArguments       = None,
-            Stored               = False,
-            PerformanceProfile   = None,
-            InputFunctionAsMulti = False,
-            Checked              = False ):
+        self,
+        Matrix=None,
+        OneFunction=None,
+        ThreeFunctions=None,
+        Parameters=None,
+        Script=None,
+        Scheduler=None,
+        ExtraArguments=None,
+        Stored=False,
+        PerformanceProfile=None,
+        InputFunctionAsMulti=False,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "EvolutionModel"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
-            name             = Concept,
-            asMatrix         = Matrix,
-            asOneFunction    = OneFunction,
-            asThreeFunctions = ThreeFunctions,
-            asScript         = self.__with_directory(Script),
-            asDict           = Parameters,
-            appliedInX       = None,
-            extraArguments   = ExtraArguments,
-            performancePrf   = PerformanceProfile,
-            inputAsMF        = InputFunctionAsMulti,
-            scheduledBy      = Scheduler,
-            toBeChecked      = Checked,
+            name=Concept,
+            asMatrix=Matrix,
+            asOneFunction=OneFunction,
+            asThreeFunctions=ThreeFunctions,
+            asScript=self.__with_directory(Script),
+            asDict=Parameters,
+            appliedInX=None,
+            extraArguments=ExtraArguments,
+            performancePrf=PerformanceProfile,
+            inputAsMF=InputFunctionAsMulti,
+            scheduledBy=Scheduler,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
         return 0
 
     def setControlModel(
-            self,
-            Matrix               = None,
-            OneFunction          = None,
-            ThreeFunctions       = None,
-            Parameters           = None,
-            Script               = None,
-            Scheduler            = None,
-            ExtraArguments       = None,
-            Stored               = False,
-            PerformanceProfile   = None,
-            InputFunctionAsMulti = False,
-            Checked              = False ):
+        self,
+        Matrix=None,
+        OneFunction=None,
+        ThreeFunctions=None,
+        Parameters=None,
+        Script=None,
+        Scheduler=None,
+        ExtraArguments=None,
+        Stored=False,
+        PerformanceProfile=None,
+        InputFunctionAsMulti=False,
+        Checked=False,
+    ):
         "Définition d'un concept de calcul"
         Concept = "ControlModel"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
-            name             = Concept,
-            asMatrix         = Matrix,
-            asOneFunction    = OneFunction,
-            asThreeFunctions = ThreeFunctions,
-            asScript         = self.__with_directory(Script),
-            asDict           = Parameters,
-            appliedInX       = None,
-            extraArguments   = ExtraArguments,
-            performancePrf   = PerformanceProfile,
-            inputAsMF        = InputFunctionAsMulti,
-            scheduledBy      = Scheduler,
-            toBeChecked      = Checked,
+            name=Concept,
+            asMatrix=Matrix,
+            asOneFunction=OneFunction,
+            asThreeFunctions=ThreeFunctions,
+            asScript=self.__with_directory(Script),
+            asDict=Parameters,
+            appliedInX=None,
+            extraArguments=ExtraArguments,
+            performancePrf=PerformanceProfile,
+            inputAsMF=InputFunctionAsMulti,
+            scheduledBy=Scheduler,
+            toBeChecked=Checked,
         )
         if Stored:
             self.__StoredInputs[Concept] = self.__adaoObject[Concept].getO()
@@ -500,13 +577,15 @@ class Aidsm(object):
             self.__directory = None
         self.__StoredInputs["Directory"] = self.__directory
 
-    def setDebug(self, __level = 10):
+    def setDebug(self, __level=10):
         "NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"
         self.__case.register("setDebug", dir(), locals())
         log = logging.getLogger()
-        log.setLevel( __level )
-        logging.debug("Mode debug initialisé avec %s %s"%(version.name, version.version))
-        self.__StoredInputs["Debug"]   = __level
+        log.setLevel(__level)
+        logging.debug(
+            "Mode debug initialisé avec %s %s" % (version.name, version.version)
+        )
+        self.__StoredInputs["Debug"] = __level
         self.__StoredInputs["NoDebug"] = False
         return 0
 
@@ -514,200 +593,232 @@ class Aidsm(object):
         "NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"
         self.__case.register("setNoDebug", dir(), locals())
         log = logging.getLogger()
-        log.setLevel( logging.WARNING )
-        self.__StoredInputs["Debug"]   = logging.WARNING
+        log.setLevel(logging.WARNING)
+        self.__StoredInputs["Debug"] = logging.WARNING
         self.__StoredInputs["NoDebug"] = True
         return 0
 
-    def setAlgorithmParameters(
-            self,
-            Algorithm  = None,
-            Parameters = None,
-            Script     = None ):
+    def setAlgorithmParameters(self, Algorithm=None, Parameters=None, Script=None):
         "Définition d'un concept de calcul"
         Concept = "AlgorithmParameters"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = AlgorithmAndParameters(
-            name          = Concept,
-            asAlgorithm   = Algorithm,
-            asDict        = Parameters,
-            asScript      = self.__with_directory(Script),
+            name=Concept,
+            asAlgorithm=Algorithm,
+            asDict=Parameters,
+            asScript=self.__with_directory(Script),
         )
         return 0
 
-    def updateAlgorithmParameters(
-            self,
-            Parameters = None,
-            Script     = None ):
+    def updateAlgorithmParameters(self, Parameters=None, Script=None):
         "Mise à jour d'un concept de calcul"
         Concept = "AlgorithmParameters"
         if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
-            raise ValueError("\n\nNo algorithm registred, set one before updating parameters or executing\n")
+            raise ValueError(
+                "\n\nNo algorithm registred, set one before updating parameters or executing\n"
+            )
         self.__adaoObject[Concept].updateParameters(
-            asDict        = Parameters,
-            asScript      = self.__with_directory(Script),
+            asDict=Parameters,
+            asScript=self.__with_directory(Script),
         )
         # RaJ du register
         return 0
 
-    def setRegulationParameters(
-            self,
-            Algorithm  = None,
-            Parameters = None,
-            Script     = None ):
+    def setRegulationParameters(self, Algorithm=None, Parameters=None, Script=None):
         "Définition d'un concept de calcul"
         Concept = "RegulationParameters"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = RegulationAndParameters(
-            name        = Concept,
-            asAlgorithm = Algorithm,
-            asDict      = Parameters,
-            asScript    = self.__with_directory(Script),
+            name=Concept,
+            asAlgorithm=Algorithm,
+            asDict=Parameters,
+            asScript=self.__with_directory(Script),
         )
         return 0
 
-    def setSupplementaryParameters(
-            self,
-            Parameters = None,
-            Script     = None ):
+    def setSupplementaryParameters(self, Parameters=None, Script=None):
         "Définition d'un concept de calcul"
         Concept = "SupplementaryParameters"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = ExternalParameters(
-            name     = Concept,
-            asDict   = Parameters,
-            asScript = self.__with_directory(Script),
+            name=Concept,
+            asDict=Parameters,
+            asScript=self.__with_directory(Script),
         )
         return 0
 
-    def updateSupplementaryParameters(
-            self,
-            Parameters = None,
-            Script     = None ):
+    def updateSupplementaryParameters(self, Parameters=None, Script=None):
         "Mise à jour d'un concept de calcul"
         Concept = "SupplementaryParameters"
         if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
-            self.__adaoObject[Concept] = ExternalParameters(name = Concept)
+            self.__adaoObject[Concept] = ExternalParameters(name=Concept)
         self.__adaoObject[Concept].updateParameters(
-            asDict   = Parameters,
-            asScript = self.__with_directory(Script),
+            asDict=Parameters,
+            asScript=self.__with_directory(Script),
         )
         return 0
 
     def setObserver(
-            self,
-            Variable       = None,
-            Template       = None,
-            String         = None,
-            Script         = None,
-            Info           = None,
-            ObjectFunction = None,
-            CrossObs       = False,
-            SyncObs        = True,
-            Scheduler      = None ):
+        self,
+        Variable=None,
+        Template=None,
+        String=None,
+        Script=None,
+        Info=None,
+        ObjectFunction=None,
+        CrossObs=False,
+        SyncObs=True,
+        Scheduler=None,
+    ):
         "Définition d'un concept de calcul"
         Concept = "Observer"
         self.__case.register("set" + Concept, dir(), locals())
-        self.__adaoObject[Concept].append( DataObserver(
-            name        = Concept,
-            onVariable  = Variable,
-            asTemplate  = Template,
-            asString    = String,
-            asScript    = self.__with_directory(Script),
-            asObsObject = ObjectFunction,
-            withInfo    = Info,
-            crossObs    = CrossObs,
-            syncObs     = SyncObs,
-            scheduledBy = Scheduler,
-            withAlgo    = self.__adaoObject["AlgorithmParameters"]
-        ))
+        self.__adaoObject[Concept].append(
+            DataObserver(
+                name=Concept,
+                onVariable=Variable,
+                asTemplate=Template,
+                asString=String,
+                asScript=self.__with_directory(Script),
+                asObsObject=ObjectFunction,
+                withInfo=Info,
+                crossObs=CrossObs,
+                syncObs=SyncObs,
+                scheduledBy=Scheduler,
+                withAlgo=self.__adaoObject["AlgorithmParameters"],
+            )
+        )
         return 0
 
-    def removeObserver(
-            self,
-            Variable       = None,
-            ObjectFunction = None ):
+    def removeObserver(self, Variable=None, ObjectFunction=None):
         "Permet de retirer un observer à une ou des variable nommées"
         if "AlgorithmParameters" not in self.__adaoObject:
-            raise ValueError("No algorithm registred, ask for one before removing observers")
+            raise ValueError(
+                "No algorithm registred, ask for one before removing observers"
+            )
         #
         # Vérification du nom de variable et typage
         # -----------------------------------------
         if isinstance(Variable, str):
             VariableNames = (Variable,)
         elif isinstance(Variable, list):
-            VariableNames = tuple(map( str, Variable ))
+            VariableNames = tuple(map(str, Variable))
         else:
-            raise ValueError("The observer requires a name or a list of names of variables.")
+            raise ValueError(
+                "The observer requires a name or a list of names of variables."
+            )
         #
         # Association interne de l'observer à la variable
         # -----------------------------------------------
         for ename in VariableNames:
             if ename not in self.__adaoObject["AlgorithmParameters"]:
-                raise ValueError("An observer requires to be removed on a variable named %s which does not exist."%ename)
+                raise ValueError(
+                    "An observer requires to be removed on a variable named %s which does not exist."
+                    % ename
+                )
             else:
-                return self.__adaoObject["AlgorithmParameters"].removeObserver( ename, ObjectFunction )
+                return self.__adaoObject["AlgorithmParameters"].removeObserver(
+                    ename, ObjectFunction
+                )
 
-    def setUserPostAnalysis(
-            self,
-            Template       = None,
-            String         = None,
-            Script         = None ):
+    def setUserPostAnalysis(self, Template=None, String=None, Script=None):
         "Définition d'un concept de calcul"
         Concept = "UserPostAnalysis"
         self.__case.register("set" + Concept, dir(), locals())
-        self.__adaoObject[Concept].append( repr(UserScript(
-            name        = Concept,
-            asTemplate  = Template,
-            asString    = String,
-            asScript    = self.__with_directory(Script),
-        )))
+        self.__adaoObject[Concept].append(
+            repr(
+                UserScript(
+                    name=Concept,
+                    asTemplate=Template,
+                    asString=String,
+                    asScript=self.__with_directory(Script),
+                )
+            )
+        )
         return 0
 
     # -----------------------------------------------------------
 
-    def get(self, Concept=None, noDetails=True ):
+    def get(self, Concept=None, noDetails=True):
         "Récupération d'une sortie du calcul"
         if Concept is not None:
             try:
-                self.__case.register("get", dir(), locals(), Concept)  # Break pickle in Python 2
+                self.__case.register(
+                    "get", dir(), locals(), Concept
+                )  # Break pickle in Python 2
             except Exception:
                 pass
             if Concept in self.__StoredInputs:
                 return self.__StoredInputs[Concept]
                 #
-            elif self.__adaoObject["AlgorithmParameters"] is not None and Concept == "AlgorithmParameters":
+            elif (
+                self.__adaoObject["AlgorithmParameters"] is not None
+                and Concept == "AlgorithmParameters"
+            ):
                 return self.__adaoObject["AlgorithmParameters"].get()
                 #
-            elif self.__adaoObject["AlgorithmParameters"] is not None and Concept in self.__adaoObject["AlgorithmParameters"]:
-                return self.__adaoObject["AlgorithmParameters"].get( Concept )
+            elif (
+                self.__adaoObject["AlgorithmParameters"] is not None
+                and Concept in self.__adaoObject["AlgorithmParameters"]
+            ):
+                return self.__adaoObject["AlgorithmParameters"].get(Concept)
                 #
-            elif Concept == "AlgorithmRequiredParameters" and self.__adaoObject["AlgorithmParameters"] is not None:
-                return self.__adaoObject["AlgorithmParameters"].getAlgorithmRequiredParameters(noDetails)
+            elif (
+                Concept == "AlgorithmRequiredParameters"
+                and self.__adaoObject["AlgorithmParameters"] is not None
+            ):
+                return self.__adaoObject[
+                    "AlgorithmParameters"
+                ].getAlgorithmRequiredParameters(noDetails)
                 #
-            elif Concept == "AlgorithmRequiredInputs" and self.__adaoObject["AlgorithmParameters"] is not None:
-                return self.__adaoObject["AlgorithmParameters"].getAlgorithmInputArguments()
+            elif (
+                Concept == "AlgorithmRequiredInputs"
+                and self.__adaoObject["AlgorithmParameters"] is not None
+            ):
+                return self.__adaoObject[
+                    "AlgorithmParameters"
+                ].getAlgorithmInputArguments()
                 #
-            elif Concept == "AlgorithmAttributes" and self.__adaoObject["AlgorithmParameters"] is not None:
+            elif (
+                Concept == "AlgorithmAttributes"
+                and self.__adaoObject["AlgorithmParameters"] is not None
+            ):
                 return self.__adaoObject["AlgorithmParameters"].getAlgorithmAttributes()
                 #
-            elif self.__adaoObject["SupplementaryParameters"] is not None and Concept == "SupplementaryParameters":
+            elif (
+                self.__adaoObject["SupplementaryParameters"] is not None
+                and Concept == "SupplementaryParameters"
+            ):
                 return self.__adaoObject["SupplementaryParameters"].get()
                 #
-            elif self.__adaoObject["SupplementaryParameters"] is not None and Concept in self.__adaoObject["SupplementaryParameters"]:
-                return self.__adaoObject["SupplementaryParameters"].get( Concept )
+            elif (
+                self.__adaoObject["SupplementaryParameters"] is not None
+                and Concept in self.__adaoObject["SupplementaryParameters"]
+            ):
+                return self.__adaoObject["SupplementaryParameters"].get(Concept)
                 #
             else:
-                raise ValueError("The requested key \"%s\" does not exists as an input or a stored variable."%Concept)
+                raise ValueError(
+                    'The requested key "%s" does not exists as an input or a stored variable.'
+                    % Concept
+                )
         else:
             allvariables = {}
-            allvariables.update( {"AlgorithmParameters": self.__adaoObject["AlgorithmParameters"].get()} )
+            allvariables.update(
+                {"AlgorithmParameters": self.__adaoObject["AlgorithmParameters"].get()}
+            )
             if self.__adaoObject["SupplementaryParameters"] is not None:
-                allvariables.update( {"SupplementaryParameters": self.__adaoObject["SupplementaryParameters"].get()} )
+                allvariables.update(
+                    {
+                        "SupplementaryParameters": self.__adaoObject[
+                            "SupplementaryParameters"
+                        ].get()
+                    }
+                )
             # allvariables.update( self.__adaoObject["AlgorithmParameters"].get() )
-            allvariables.update( self.__StoredInputs )
-            allvariables.pop('Observer', None)
-            allvariables.pop('UserPostAnalysis', None)
+            allvariables.update(self.__StoredInputs)
+            allvariables.pop("Observer", None)
+            allvariables.pop("UserPostAnalysis", None)
             return allvariables
 
     # -----------------------------------------------------------
@@ -719,20 +830,26 @@ class Aidsm(object):
         identifiés par les chaînes de caractères. L'algorithme doit avoir été
         préalablement choisi sinon la méthode renvoie "None".
         """
-        if len(list(self.__adaoObject["AlgorithmParameters"].keys())) == 0 and \
-                len(list(self.__StoredInputs.keys())) == 0:
+        if (
+            len(list(self.__adaoObject["AlgorithmParameters"].keys())) == 0
+            and len(list(self.__StoredInputs.keys())) == 0
+        ):
             return None
         else:
             variables = []
             if len(list(self.__adaoObject["AlgorithmParameters"].keys())) > 0:
                 variables.extend(list(self.__adaoObject["AlgorithmParameters"].keys()))
-            if self.__adaoObject["SupplementaryParameters"] is not None and \
-                    len(list(self.__adaoObject["SupplementaryParameters"].keys())) > 0:
-                variables.extend(list(self.__adaoObject["SupplementaryParameters"].keys()))
+            if (
+                self.__adaoObject["SupplementaryParameters"] is not None
+                and len(list(self.__adaoObject["SupplementaryParameters"].keys())) > 0
+            ):
+                variables.extend(
+                    list(self.__adaoObject["SupplementaryParameters"].keys())
+                )
             if len(list(self.__StoredInputs.keys())) > 0:
-                variables.extend( list(self.__StoredInputs.keys()) )
-            variables.remove('Observer')
-            variables.remove('UserPostAnalysis')
+                variables.extend(list(self.__StoredInputs.keys()))
+            variables.remove("Observer")
+            variables.remove("UserPostAnalysis")
             variables.sort()
             return variables
 
@@ -752,7 +869,7 @@ class Aidsm(object):
                             continue
                         with open(os.path.join(trypath, fname)) as fc:
                             iselal = bool("class ElementaryAlgorithm" in fc.read())
-                            if iselal and ext == '.py' and root != '__init__':
+                            if iselal and ext == ".py" and root != "__init__":
                                 files.append(root)
         files.sort()
         return files
@@ -769,13 +886,25 @@ class Aidsm(object):
         se trouve un sous-répertoire "daAlgorithms"
         """
         if not os.path.isdir(Path):
-            raise ValueError("The given " + Path + " argument must exist as a directory")
+            raise ValueError(
+                "The given " + Path + " argument must exist as a directory"
+            )
         if not os.path.isdir(os.path.join(Path, "daAlgorithms")):
-            raise ValueError("The given \"" + Path + "\" argument must contain a subdirectory named \"daAlgorithms\"")
+            raise ValueError(
+                'The given "'
+                + Path
+                + '" argument must contain a subdirectory named "daAlgorithms"'
+            )
         if not os.path.isfile(os.path.join(Path, "daAlgorithms", "__init__.py")):
-            raise ValueError("The given \"" + Path + "/daAlgorithms\" path must contain a file named \"__init__.py\"")
+            raise ValueError(
+                'The given "'
+                + Path
+                + '/daAlgorithms" path must contain a file named "__init__.py"'
+            )
         sys.path.insert(0, os.path.abspath(Path))
-        sys.path = PlatformInfo.uniq( sys.path )  # Conserve en unique exemplaire chaque chemin
+        sys.path = PlatformInfo.uniq(
+            sys.path
+        )  # Conserve en unique exemplaire chaque chemin
         return 0
 
     # -----------------------------------------------------------
@@ -788,39 +917,56 @@ class Aidsm(object):
             Operator.CM.clearCache()
         try:
             if Executor == "YACS":
-                self.__executeYACSScheme( SaveCaseInFile )
+                self.__executeYACSScheme(SaveCaseInFile)
             else:
-                self.__executePythonScheme( SaveCaseInFile )
+                self.__executePythonScheme(SaveCaseInFile)
         except Exception as e:
             if isinstance(e, SyntaxError):
-                msg = "at %s: %s"%(e.offset, e.text)
+                msg = "at %s: %s" % (e.offset, e.text)
             else:
                 msg = ""
-            raise ValueError((
-                "during execution, the following error occurs:\n" + \
-                "\n%s %s\n\nSee also the potential messages, " + \
-                "which can show the origin of the above error, " + \
-                "in the launching terminal.\n")%(str(e), msg))
+            raise ValueError(
+                (
+                    "during execution, the following error occurs:\n"
+                    + "\n%s %s\n\nSee also the potential messages, "
+                    + "which can show the origin of the above error, "
+                    + "in the launching terminal.\n"
+                )
+                % (str(e), msg)
+            )
         return 0
 
     def __executePythonScheme(self, FileName=None):
         "Lancement du calcul"
         self.__case.register("executePythonScheme", dir(), locals())
         if FileName is not None:
-            self.dump( FileName, "TUI")
-        self.__adaoObject["AlgorithmParameters"].executePythonScheme( self.__adaoObject )
-        if "UserPostAnalysis" in self.__adaoObject and len(self.__adaoObject["UserPostAnalysis"]) > 0:
+            self.dump(FileName, "TUI")
+        self.__adaoObject["AlgorithmParameters"].executePythonScheme(self.__adaoObject)
+        if (
+            "UserPostAnalysis" in self.__adaoObject
+            and len(self.__adaoObject["UserPostAnalysis"]) > 0
+        ):
             self.__objname = self.__retrieve_objname()
             for __UpaOne in self.__adaoObject["UserPostAnalysis"]:
                 __UpaOne = eval(str(__UpaOne))
-                exec(__UpaOne, {}, {'self': self, 'ADD': self, 'case': self, 'adaopy': self, self.__objname: self})
+                exec(
+                    __UpaOne,
+                    {},
+                    {
+                        "self": self,
+                        "ADD": self,
+                        "case": self,
+                        "adaopy": self,
+                        self.__objname: self,
+                    },
+                )
         return 0
 
     def __executeYACSScheme(self, FileName=None):
         "Lancement du calcul"
         self.__case.register("executeYACSScheme", dir(), locals())
-        self.dump( FileName, "YACS")
-        self.__adaoObject["AlgorithmParameters"].executeYACSScheme( FileName )
+        self.dump(FileName, "YACS")
+        self.__adaoObject["AlgorithmParameters"].executeYACSScheme(FileName)
         return 0
 
     # -----------------------------------------------------------
@@ -834,22 +980,32 @@ class Aidsm(object):
         "Chargement normalisé des commandes"
         __commands = self.__case.load(FileName, Content, Object, Formater)
         from numpy import array, matrix  # noqa: F401
+
         for __command in __commands:
-            if (__command.find("set") > -1 and __command.find("set_") < 0) or 'UserPostAnalysis' in __command:
+            if (
+                __command.find("set") > -1 and __command.find("set_") < 0
+            ) or "UserPostAnalysis" in __command:
                 exec("self." + __command, {}, locals())
             else:
                 self.__PostAnalysis.append(__command)
         return self
 
-    def convert(self,
-                FileNameFrom=None, ContentFrom=None, ObjectFrom=None, FormaterFrom="TUI",
-                FileNameTo=None, FormaterTo="TUI" ):
+    def convert(
+        self,
+        FileNameFrom=None,
+        ContentFrom=None,
+        ObjectFrom=None,
+        FormaterFrom="TUI",
+        FileNameTo=None,
+        FormaterTo="TUI",
+    ):
         "Conversion normalisée des commandes"
         return self.load(
-            FileName=FileNameFrom, Content=ContentFrom, Object=ObjectFrom, Formater=FormaterFrom
-        ).dump(
-            FileName=FileNameTo, Formater=FormaterTo
-        )
+            FileName=FileNameFrom,
+            Content=ContentFrom,
+            Object=ObjectFrom,
+            Formater=FormaterFrom,
+        ).dump(FileName=FileNameTo, Formater=FormaterTo)
 
     def clear(self):
         "Effacement du contenu du cas en cours"
@@ -868,12 +1024,14 @@ class Aidsm(object):
 
     def __retrieve_objname(self):
         "Ne pas utiliser dans le __init__, la variable appelante n'existe pas encore"
-        __names  = []
+        __names = []
         for level in reversed(inspect.stack()):
-            __names += [name for name, value in level.frame.f_locals.items() if value is self]
+            __names += [
+                name for name, value in level.frame.f_locals.items() if value is self
+            ]
         __names += [name for name, value in globals().items() if value is self]
-        while 'self' in __names:
-            __names.remove('self')  # Devrait toujours être trouvé, donc pas d'erreur
+        while "self" in __names:
+            __names.remove("self")  # Devrait toujours être trouvé, donc pas d'erreur
         if len(__names) > 0:
             self.__objname = __names[0]
         else:
@@ -882,11 +1040,20 @@ class Aidsm(object):
 
     def __dir__(self):
         "Clarifie la visibilité des méthodes"
-        return ['set', 'get', 'execute', 'dump', 'load', '__doc__', '__init__', '__module__']
+        return [
+            "set",
+            "get",
+            "execute",
+            "dump",
+            "load",
+            "__doc__",
+            "__init__",
+            "__module__",
+        ]
 
     def __str__(self):
         "Représentation pour impression (mais pas repr)"
-        msg  = self.dump(None, "SimpleReportInPlainTxt")
+        msg = self.dump(None, "SimpleReportInPlainTxt")
         return msg
 
     def sysinfo(self, title=""):
@@ -894,35 +1061,49 @@ class Aidsm(object):
         return msg
 
     def callinfo(self, __prefix="  "):
-        msg  = ""
+        msg = ""
         for oname in ["ObservationOperator", "EvolutionModel"]:
             if hasattr(self.__adaoObject[oname], "nbcalls"):
                 ostats = self.__adaoObject[oname].nbcalls()
-                msg += "\n%sNumber of calls for the %s:"%(__prefix, oname)
+                msg += "\n%sNumber of calls for the %s:" % (__prefix, oname)
                 for otype in ["Direct", "Tangent", "Adjoint"]:
                     if otype in ostats:
-                        msg += "\n%s%30s : %s"%(__prefix, "%s evaluation"%(otype,), ostats[otype][0])
+                        msg += "\n%s%30s : %s" % (
+                            __prefix,
+                            "%s evaluation" % (otype,),
+                            ostats[otype][0],
+                        )
                 msg += "\n"
         return msg
 
     def prepare_to_pickle(self):
         "Retire les variables non pickelisables, avec recopie efficace"
-        if self.__adaoObject['AlgorithmParameters'] is not None:
-            for k in self.__adaoObject['AlgorithmParameters'].keys():
+        if self.__adaoObject["AlgorithmParameters"] is not None:
+            for k in self.__adaoObject["AlgorithmParameters"].keys():
                 if k == "Algorithm":
                     continue
                 if k in self.__StoredInputs:
-                    raise ValueError("The key \"%s\" to be transfered for pickling will overwrite an existing one."%(k,))
-                if self.__adaoObject['AlgorithmParameters'].hasObserver( k ):
-                    self.__adaoObject['AlgorithmParameters'].removeObserver( k, "", True )
-                self.__StoredInputs[k] = self.__adaoObject['AlgorithmParameters'].pop(k, None)
+                    raise ValueError(
+                        'The key "%s" to be transfered for pickling will overwrite an existing one.'
+                        % (k,)
+                    )
+                if self.__adaoObject["AlgorithmParameters"].hasObserver(k):
+                    self.__adaoObject["AlgorithmParameters"].removeObserver(k, "", True)
+                self.__StoredInputs[k] = self.__adaoObject["AlgorithmParameters"].pop(
+                    k, None
+                )
         if sys.version_info[0] == 2:
-            del self.__adaoObject  # Because it breaks pickle in Python 2. Not required for Python 3
-            del self.__case        # Because it breaks pickle in Python 2. Not required for Python 3
+            del (
+                self.__adaoObject
+            )  # Because it breaks pickle in Python 2. Not required for Python 3
+            del (
+                self.__case
+            )  # Because it breaks pickle in Python 2. Not required for Python 3
         if sys.version_info.major < 3:
             return 0
         else:
             return self.__StoredInputs
+
 
 # ==============================================================================
 if __name__ == "__main__":

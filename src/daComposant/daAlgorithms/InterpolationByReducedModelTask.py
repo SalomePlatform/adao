@@ -37,7 +37,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self.defineRequiredParameter(
             name     = "OptimalLocations",
             default  = [],
-            typecast = tuple,
+            typecast = numpy.array,
             message  = "Liste des indices ou noms de positions optimales de mesure selon l'ordre interne d'un vecteur de base",  # noqa: E501
         )
         self.defineRequiredParameter(

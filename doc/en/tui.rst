@@ -71,6 +71,7 @@ command, in the SALOME Python command window of the interface, or by the script
 execution entry of the menu) is the following:
 
 .. literalinclude:: scripts/tui_example_01.res
+    :language: none
 
 Detailed setup of an ADAO TUI calculation case
 +++++++++++++++++++++++++++++++++++++++++++++++
@@ -625,7 +626,7 @@ Get the calculation results separately
     visualization. Its argument the name of a variable "*Concept*" and returns
     back the quantity as a list (even if there is only one specimen) of this
     base variable. For a list of variables and use them, the user has to refer
-    to the :ref:`subsection_r_o_v_Inventaire` and more generally to the
+    to an :ref:`subsection_r_o_v_Inventaire` and more generally to the
     :ref:`section_ref_output_variables` and to the individual documentations of
     the algorithms.
 
@@ -634,8 +635,8 @@ Saving, loading or converting calculation case commands
 
 The saving or loading of a calculation case deals with quantities and actions
 that are linked by the previous commands, excepted case external operations
-(such as, for example, post-processing that can be developped after the
-calculation cas). The registered or loaded commands remain fully compatible
+(such as, for example, post-processing that can be developed after the
+calculation case). The registered or loaded commands remain fully compatible
 with these Python external case operations.
 
 .. index:: single: load
@@ -672,47 +673,54 @@ with these Python external case operations.
     one the commands establishing the current calculation case. Some formats
     are only available as input or as output.
 
-Obtain information on the case, the computation or the system
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Getting information about the case, the calculation or the system
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-It's easy to obtain **aggregate information on the study case** as defined by
-the user, by using Python's "*print*" command directly on the case, at any
-stage during its completion. For example:
+There are various ways to obtain global information relating to the calculation
+case, the run or the system on which a case is run.
 
-.. literalinclude:: scripts/tui_example_07.py
-    :language: python
+*print* (*case*)
+    It's easy to obtain **aggregate information on the study case** as defined
+    by the user, by using Python's "*print*" command directly on the case, at
+    any stage during its construction. For example:
 
-which result is here:
+    .. literalinclude:: scripts/tui_example_07.py
+        :language: python
 
-.. literalinclude:: scripts/tui_example_07.res
+    which result is here:
+
+    .. literalinclude:: scripts/tui_example_07.res
+        :language: none
 
 .. index:: single: callinfo
 
-**Synthetic information on the number of calls to operator computations** can
-be dynamically obtained with the "**callinfo()**" command. These operator
-computations are those defined by the user in an ADAO case, for the observation
-and evolution operators. It is used after the calculation has been performed in
-the ADAO case, bearing in mind that the result of this command is simply empty
-when no calculation has been performed:
-::
+**callinfo** ()
+    A **synthesized information on the number of calls to operator
+    calculations** can be dynamically obtained with the "**callinfo()**"
+    command. These operator calculations are those defined by the user in an
+    ADAO case, for the observation and evolution operators. It is used after
+    the case calculation has been executed, bearing in mind that the result of
+    this command is simply empty when no calculation has been performed:
+    ::
 
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    ...
-    case.execute()
-    print(case.callinfo())
+        from adao import adaoBuilder
+        case = adaoBuilder.New()
+        ...
+        case.execute()
+        print(case.callinfo())
 
 .. index:: single: sysinfo
 
-Synthetic **system information** can be obtained with the "**sysinfo()**"
-command, present in every calculation case. It dynamically returns system
-information and details of Python modules useful for ADAO. It is used as
-follows:
-::
+**sysinfo** ()
+    **Synthetic system information** can be obtained with the "**sysinfo()**"
+    command, present in every ADAO calculation case. It dynamically returns system
+    information and details of Python modules useful for ADAO. It is used as
+    follows:
+    ::
 
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    print(case.sysinfo())
+        from adao import adaoBuilder
+        case = adaoBuilder.New()
+        print(case.sysinfo())
 
 .. _subsection_tui_advanced:
 
@@ -721,6 +729,8 @@ More advanced examples of ADAO TUI calculation case
 
 We propose here more comprehensive examples of ADAO TUI calculation, by giving
 the purpose of the example and a set of commands that can achieve this goal.
+
+.. _subsection_tui_advanced_ex11:
 
 Independent holding of the results of a calculation case
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -750,10 +760,126 @@ Finally, the whole problem is set and solved by the following script:
 The command set execution gives the following results:
 
 .. literalinclude:: scripts/tui_example_11.res
+    :language: none
 
 As it should be in twin experiments, when we trust mainly in observations, it
 is found that we get correctly the parameters that were used to artificially
 build the observations.
+
+.. _subsection_tui_advanced_ex12:
+
+Some common numerical indicators : norm, RMS, MSE et RMSE...
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The numerical quantities obtained from an ADAO calculation are often vectors
+(such as the analysis :math:`\mathbf{x}^a`) or matrices (such as the analysis
+covariance :math:`\mathbf{A}`). They are requested by the user through the
+standard "*StoreSupplementaryCalculations*" variable of the ADAO case
+algorithm. These quantities are available at each step of an iterative
+algorithm, and therefore take the form of a series of vectors, or a series of
+matrices.
+
+These objects support special methods for computing commonly used indicators.
+The methods are named by the name of the indicator followed by "*s*" to note
+that they apply to a series of elementary objects, and that they themselves
+return a series of values.
+
+Note: some indicators are intended to qualify, for example, a "*value
+increment*", a "*value deviation*" or a "*value difference*", rather than a
+"*value*" itself. However, there is no computational impossibility to compute
+indicators for any given quantity, so it's up to the user to check that the
+indicator he is requesting is being used as intended.
+
+.. index:: single: means
+
+**means** ()
+    Average of the quantity values, available at each step.
+
+.. index:: single: stds
+
+**stds** ()
+    Standard deviation of the quantity values, available at each step.
+
+.. index:: single: sums
+
+**sums** ()
+    Sum of the quantity values, available at each step.
+
+.. index:: single: mins
+
+**mins** ()
+    Minimum of the quantity values, available at each step.
+
+.. index:: single: maxs
+
+**maxs** ()
+    Maximum of the quantity values, available at each step.
+
+.. index:: single: norms
+
+**norms** (*_ord=None*)
+    Norm of the quantity, available at each step (*_ord*: see
+    *numpy.linalg.norm*).
+
+.. index:: single: traces
+
+**traces** (*offset=0*)
+    Trace of the quantity, available at each step (*offset*: see
+    *numpy.trace*).
+
+.. index:: single: maes
+.. index:: single: Mean Absolute Error (MAE)
+
+**maes** (*predictor=None*)
+    Mean absolute error (**MAE**). This indicator is computed as the average of
+    the absolute deviations of the quantity from the predictor, and is
+    available at each step. If the predictor is not specified, this indicator
+    theoretically applies only to an increment or a difference.
+
+.. index:: single: mses
+.. index:: single: msds
+.. index:: single: Mean-Square Error (MSE)
+.. index:: single: Mean-Square Deviation (MSD)
+
+**mses** (*predictor=None*) ou **msds** (*predictor=None*)
+    Mean square error (**MSE**) or mean-square deviation* (**MSD**). This
+    indicator is computed as the root-mean-square deviation of the quantity
+    from the predictor, and is available at each step. If the predictor is not
+    specified, this indicator theoretically applies only to an increment or
+    difference.
+
+.. index:: single: rmses
+.. index:: single: rmsds
+.. index:: single: Root-Mean-Square Error (RMSE)
+.. index:: single: Root-Mean-Square Deviation (RMSD)
+.. index:: single: Root-Mean-Square (RMS)
+
+**rmses** (*predictor=None*) or **rmsds** (*predictor=None*)
+    Root-mean-square error (**RMSE**) or root-mean-square deviation (**RMSD**).
+    This indicator is calculated as the root mean square of the deviations of
+    the quantity from the predictor, and is available at each step. If the
+    predictor is not specified, this indicator theoretically applies only to an
+    increment or a difference. In the latter case, it is a **RMS** of the
+    quantity.
+
+As a simple example, we can use the calculation example presented above:
+
+.. literalinclude:: scripts/tui_example_12.py
+    :language: python
+
+Execution of the command set gives the following results, which illustrate the
+series structure of the indicators, associated with the series of values of the
+incremental quantity "*InnovationAtCurrentState*" required:
+
+.. literalinclude:: scripts/tui_example_12.res
+    :language: none
+
+In graphical form, the indicators are displayed over all the steps:
+
+.. _tui_example_12:
+.. image:: scripts/tui_example_12.png
+  :align: center
+  :width: 90%
 
 .. [HOMARD] For more information on HOMARD, see the *HOMARD module* and its integrated help available from the main menu *Help* of the SALOME platform.
 

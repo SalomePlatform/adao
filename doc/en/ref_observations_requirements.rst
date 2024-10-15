@@ -180,7 +180,7 @@ General comments on the observations
 
   When the assimilation explicitly establishes a **temporal iterative
   process**, as in state data assimilation, **the first observation is not used
-  but must be present in the data description of a ADAO case**. By convention,
+  but must be present in the data description of an ADAO case**. By convention,
   it is therefore considered to be available at the same time as the draft time
   value, and does not lead to a correction at that time. The numbering of the
   observations starts at 0 by convention, so it is only from number 1 that the

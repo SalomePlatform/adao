@@ -73,6 +73,7 @@ commande "*shell*" de SALOME, dans une console Python SALOME de l'interface, ou
 par le menu d'exécution d'un script) est le suivant :
 
 .. literalinclude:: scripts/tui_example_01.res
+    :language: none
 
 Création détaillée d'un cas de calcul TUI ADAO
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -655,8 +656,8 @@ Obtenir séparément les résultats de calcul
     variable dans "*Concept*", et renvoie en retour la grandeur sous la forme
     d'une liste (même s'il n'y en a qu'un exemplaire) de cette variable de
     base. Pour connaître la liste des variables et les utiliser, on se
-    reportera à l':ref:`subsection_r_o_v_Inventaire`, et plus généralement à la
-    fois aux :ref:`section_ref_output_variables` et aux documentations
+    reportera à un :ref:`subsection_r_o_v_Inventaire`, et plus généralement à
+    la fois aux :ref:`section_ref_output_variables` et aux documentations
     individuelles des algorithmes.
 
 Enregistrer, charger ou convertir les commandes de cas de calcul
@@ -707,45 +708,53 @@ externes au cas.
 Obtenir des informations sur le cas, le calcul ou le système
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-On peut obtenir de manière simple une **information agrégée sur le cas
-d'étude** tel que défini par l'utilisateur, en utilisant directement la
-commande "*print*" de Python sur le cas, à n'importe quelle étape lors de sa
-construction. Par exemple :
+Il existe plusieurs manières d'obtenir des informations globales relatives
+au cas de calcul, à l'exécution ou au système sur lequel est exécuté un cas.
 
-.. literalinclude:: scripts/tui_example_07.py
-    :language: python
+*print* (*cas*)
+    On peut obtenir de manière simple une **information agrégée sur le cas
+    d'étude** tel que défini par l'utilisateur, en utilisant directement la
+    commande "*print*" de Python sur le cas, à n'importe quelle étape lors de sa
+    construction. Par exemple :
 
-dont le résultat est ici :
+    .. literalinclude:: scripts/tui_example_07.py
+        :language: python
 
-.. literalinclude:: scripts/tui_example_07.res
+    dont le résultat est ici :
+
+    .. literalinclude:: scripts/tui_example_07.res
+        :language: none
 
 .. index:: single: callinfo
 
-Une **information synthétique sur le nombre d'appels aux calculs d'opérateurs**
-peut être dynamiquement obtenue par la commande "**callinfo()**". Ces calculs
-d'opérateurs sont ceux définis par l'utilisateur dans un cas ADAO, pour les
-opérateurs d'observation et d'évolution. Elle s'utilise après l'exécution du
-calcul dans le cas ADAO, sachant que le résultat de cette commande est
-simplement vide lorsqu'aucun calcul n'a été effectué :
-::
+**callinfo** ()
+    Une **information synthétique sur le nombre d'appels aux calculs
+    d'opérateurs** peut être dynamiquement obtenue par la commande
+    "**callinfo()**". Ces calculs d'opérateurs sont ceux définis par
+    l'utilisateur dans un cas ADAO, pour les opérateurs d'observation et
+    d'évolution. Elle s'utilise après l'exécution du calcul du cas, sachant que
+    le résultat de cette commande est simplement vide lorsqu'aucun calcul n'a
+    été effectué :
+    ::
 
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    ...
-    case.execute()
-    print(case.callinfo())
+        from adao import adaoBuilder
+        case = adaoBuilder.New()
+        ...
+        case.execute()
+        print(case.callinfo())
 
 .. index:: single: sysinfo
 
-Une **information synthétique sur le système** peut être obtenue par la
-commande "**sysinfo()**", présente dans chaque cas de calcul ADAO. Elle
-retourne dynamiquement des informations système et des détails sur les modules
-Python utiles pour ADAO. Elle s'utilise de la manière suivante :
-::
+**sysinfo** ()
+    Une **information synthétique sur le système** peut être obtenue par la
+    commande "**sysinfo()**", présente dans chaque cas de calcul ADAO. Elle
+    retourne dynamiquement des informations système et des détails sur les
+    modules Python utiles pour ADAO. Elle s'utilise de la manière suivante :
+    ::
 
-    from adao import adaoBuilder
-    case = adaoBuilder.New()
-    print(case.sysinfo())
+        from adao import adaoBuilder
+        case = adaoBuilder.New()
+        print(case.sysinfo())
 
 .. _subsection_tui_advanced:
 
@@ -755,6 +764,8 @@ Exemples plus avancés de cas de calcul TUI ADAO
 On propose ici des exemples plus complets de cas de calcul TUI ADAO, en donnant
 l'objectif de l'exemple et un jeu de commandes qui permet de parvenir à cet
 objectif.
+
+.. _subsection_tui_advanced_ex11:
 
 Exploitation indépendante des résultats d'un cas de calcul
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -785,10 +796,131 @@ script suivant :
 L'exécution de jeu de commandes donne les résultats suivants :
 
 .. literalinclude:: scripts/tui_example_11.res
+    :language: none
 
 Comme il se doit en expériences jumelles, avec une confiance majoritairement
 placée dans les observations, on constate que l'on retrouve bien les paramètres
 qui ont servi à construire artificiellement les observations.
+
+.. _subsection_tui_advanced_ex12:
+
+Quelques indicateurs numériques particuliers : norme, RMS, MSE et RMSE...
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Les grandeurs numériques obtenues à l'issue d'un calcul ADAO sont souvent des
+vecteurs (comme l'analyse :math:`\mathbf{x}^a`) ou des matrices (comme la
+covariance d'analyse :math:`\mathbf{A}`). Elles sont requises par l'utilisateur
+à travers la variable standard "*StoreSupplementaryCalculations*" de
+l'algorithme du cas ADAO. Ces grandeurs sont disponible à chaque étape d'un
+algorithme itératif, et se présentent donc sous la forme d'une série de
+vecteurs, ou d'une série de matrices.
+
+Les objets portant ces grandeurs supportent des méthodes particulières pour
+calculer des indicateurs courants. Les méthodes sont nommées par le nom de
+l'indicateur suivi de "*s*" pour noter qu'elle s'appliquent à une série d'objets
+élémentaires, et qu'elles renvoient elles-mêmes une série de valeurs.
+
+Remarque : certains indicateurs sont destinés à qualifier par exemple un
+"*incrément de valeur*", un "*écart de valeur*" ou une "*différence de
+valeur*", plutôt qu'une "*valeur*" elle-même. Informatiquement, il n'y a
+néanmoins pas d'impossibilité à calculer les indicateurs quelle que soit la
+grandeur considérée, c'est donc à l'utilisateur de bien vérifier que
+l'indicateur dont il demande le calcul est utilisé de manière licite.
+
+.. index:: single: means
+
+**means** ()
+    Moyenne des valeurs de la grandeur, disponible à chaque pas.
+
+.. index:: single: stds
+
+**stds** ()
+    Écart-type des valeurs de la grandeur, disponible à chaque pas.
+
+.. index:: single: sums
+
+**sums** ()
+    Somme des valeurs de la grandeur, disponible à chaque pas.
+
+.. index:: single: mins
+
+**mins** ()
+    Minimum des valeurs de la grandeur, disponible à chaque pas.
+
+.. index:: single: maxs
+
+**maxs** ()
+    Maximum des valeurs de la grandeur, disponible à chaque pas.
+
+.. index:: single: norms
+
+**norms** (*_ord=None*)
+    Norme de la grandeur, disponible à chaque pas (*_ord* : voir
+    *numpy.linalg.norm*).
+
+.. index:: single: traces
+
+**traces** (*offset=0*)
+    Trace de la grandeur, disponible à chaque pas (*offset* : voir
+    *numpy.trace*).
+
+.. index:: single: maes
+.. index:: single: Mean Absolute Error (MAE)
+
+**maes** (*predictor=None*)
+    Erreur ou écart moyen absolu (*Mean Absolute Error* (**MAE**)). Cet
+    indicateur est calculé comme la moyenne des écarts en valeur absolue de la
+    grandeur par rapport au prédicteur, et l'indicateur est disponible à chaque
+    pas. Si le prédicteur est non renseigné, cet indicateur ne s'applique
+    théoriquement qu'à un incrément ou une différence.
+
+.. index:: single: mses
+.. index:: single: msds
+.. index:: single: Mean-Square Error (MSE)
+.. index:: single: Mean-Square Deviation (MSD)
+
+**mses** (*predictor=None*) ou **msds** (*predictor=None*)
+    Erreur ou écart quadratique moyen (*Mean-Square Error* (**MSE**) ou
+    *Mean-Square Deviation* (**MSD**)). Cet indicateur est calculé comme la
+    moyenne quadratique des écarts de la grandeur par rapport au prédicteur, et
+    l'indicateur est disponible à chaque pas. Si le prédicteur est non
+    renseigné, cet indicateur ne s'applique théoriquement qu'à un incrément ou
+    une différence.
+
+.. index:: single: rmses
+.. index:: single: rmsds
+.. index:: single: Root-Mean-Square Error (RMSE)
+.. index:: single: Root-Mean-Square Deviation (RMSD)
+.. index:: single: Root-Mean-Square (RMS)
+
+**rmses** (*predictor=None*) ou **rmsds** (*predictor=None*)
+    Racine de l'erreur ou de l'écart quadratique moyen (*Root-Mean-Square
+    Error* (**RMSE**) ou *Root-Mean-Square Deviation* (**RMSD**)). Cet
+    indicateur est calculé comme la racine de la moyenne quadratique des écarts
+    de la grandeur par rapport au prédicteur, et l'indicateur est disponible à
+    chaque pas. Si le prédicteur est non renseigné, cet indicateur ne
+    s'applique théoriquement qu'à un incrément ou une différence. Dans ce
+    dernier cas, c'est une **RMS** de la grandeur.
+
+À titre d'exemple simple, on peut reprendre le cas de calcul déjà présenté plus
+haut :
+
+.. literalinclude:: scripts/tui_example_12.py
+    :language: python
+
+L'exécution de jeu de commandes donne les résultats suivants, qui illustrent la
+structure en série des indicateurs, associés à la série de valeurs de la
+grandeur incrémentale "*InnovationAtCurrentState*" requise :
+
+.. literalinclude:: scripts/tui_example_12.res
+    :language: none
+
+Sous forme graphique, on observe les indicateurs sur l'ensemble des pas :
+
+.. _tui_example_12:
+.. image:: scripts/tui_example_12.png
+  :align: center
+  :width: 90%
 
 .. Réconciliation de courbes à l'aide de MedCoupling
 .. +++++++++++++++++++++++++++++++++++++++++++++++++

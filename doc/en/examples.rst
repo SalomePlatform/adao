@@ -71,6 +71,8 @@ Dedicated tasks or study oriented cases uses
 Advanced uses
 -------------
 
+#. :ref:`subsection_tui_advanced_ex11`
+#. :ref:`subsection_tui_advanced_ex12`
 #. :ref:`section_advanced_convert_JDC`
 #. :ref:`section_advanced_YACS_tui`
 #. :ref:`section_advanced_R`

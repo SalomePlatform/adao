@@ -38,11 +38,25 @@ Briefly stated, Data Assimilation is a methodological framework to compute the
 optimal estimate of the inaccessible true value of a system state, eventually
 over time. It uses information coming from experimental measurements or
 observations, and from numerical *a priori* models, including information about
-their errors. Parts of the framework are also known under the names of
-*calibration*, *adjustment*, *state estimation*, *parameter estimation*,
-*parameter adjustment*, *inverse problems*, *inverse methods*, *Bayesian
-estimation*, *optimal interpolation*, *mathematical regularization*,
-*meta-heuristics for optimization*, *model reduction*, *data smoothing*, etc.
+their errors. Some methods that are parts of the framework are also known under
+the names of
+*adjustment*,
+*calibration*,
+*state estimation*,
+*parameter estimation*,
+*parameter adjustment*,
+*inverse problems*,
+*inverse methods*,
+*inversion*,
+*Bayesian estimation*,
+*optimal interpolation*,
+*optimal learning*,
+*mathematical regularization*,
+*meta-heuristics* for optimization,
+*model reduction*,
+*assimilation in reduced space*,
+*data smoothing*,
+etc.
 More details can be found in the section :ref:`section_theory`. The ADAO module
 currently offers more than one hundred different algorithmic methods and allows
 the study of about 400 distinct applied problems.

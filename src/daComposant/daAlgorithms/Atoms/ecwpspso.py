@@ -111,6 +111,15 @@ def ecwpspso(selfA, Xb, Y, HO, R, B):
     nbfct = 1  # Nb d'évaluations
     HX = Hm( Xini )
     JXini, JbXini, JoXini = CostFunction(Xini, HX, selfA._parameters["QualityCriterion"])
+    if selfA._parameters["StoreInitialState"]:
+        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
+        selfA.StoredVariables["CostFunctionJ" ].store( JXini  )
+        selfA.StoredVariables["CostFunctionJb"].store( JbXini )
+        selfA.StoredVariables["CostFunctionJo"].store( JoXini )
+        if selfA._toStore("CurrentState"):
+            selfA.StoredVariables["CurrentState"].store( Xini )
+        if selfA._toStore("SimulatedObservationAtCurrentState"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX )
     #
     Swarm  = numpy.zeros((__nbI, 4, __nbP))  # 4 car (x,v,gbest,lbest)
     for __p in range(__nbP):

@@ -8,6 +8,7 @@ uniquement sachant que, en cas de doute, c'est la fiche de version de SALOME
 .. csv-table:: Versions de validation des outils support pour ADAO
    :header: "Outil", "Version"
    :widths: 20, 10
+   :align: center
 
    ADAO,       |release|
    EFICAS,     |release|

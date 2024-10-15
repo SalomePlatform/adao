@@ -77,8 +77,8 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
         #
-        Jb  = vfloat( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
-        Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
+        Jb  = vfloat( 0.5 * (_X - Xb).T @ (BI @ (_X - Xb)) )
+        Jo  = vfloat( 0.5 * _Innovation.T @ (RI @ _Innovation) )
         J   = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )

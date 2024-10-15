@@ -40,14 +40,27 @@ système, éventuellement au cours du temps. Il utilise des informations
 provenant de mesures expérimentales, ou observations, et de modèles numériques
 *a priori*, y compris des informations sur leurs erreurs. Certaines des
 méthodes incluses dans ce cadre sont également connues sous les noms de
-*calage* ou *recalage*, *calibration*, *estimation d'état*, *estimation de
-paramètres*, *ajustement de paramètres*, *problèmes inverses*, *méthodes
-inverses*, *inversion*, *estimation bayésienne*, *interpolation optimale*,
-*régularisation mathématique*, *méta-heuristiques* d'optimisation, *réduction
-de modèles*, *lissage de données*, etc. De plus amples détails peuvent être
-trouvés dans la partie proposant :ref:`section_theory`. Le module ADAO offre
-actuellement plus d'une centaine de méthodes algorithmiques différentes et
-permet l'étude d'environ 400 problèmes appliqués distincts.
+*calage* ou *recalage*,
+*calibration*,
+*estimation d'état*,
+*estimation de paramètres*,
+*ajustement de paramètres*,
+*problèmes inverses*,
+*méthodes inverses*,
+*inversion*,
+*estimation bayésienne*,
+*interpolation optimale*,
+*apprentissage optimal*,
+*régularisation mathématique*,
+*méta-heuristiques* d'optimisation,
+*réduction de modèles*,
+*assimilation en espace réduit*,
+*lissage de données*,
+etc.
+De plus amples détails peuvent être trouvés dans la partie proposant
+:ref:`section_theory`. Le module ADAO offre actuellement plus d'une centaine de
+méthodes algorithmiques différentes et permet l'étude d'environ 400 problèmes
+appliqués distincts.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la **documentation théorique** (indiquée dans le titre de section

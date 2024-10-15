@@ -10,13 +10,15 @@ remains without guarantee. If an unusual error is encountered for previously
 running calculations, it is strongly recommended to revert to supporting tool
 versions within the range described below.
 
-.. csv-table:: Support tool verification intervals for ADAO
+.. csv-table:: Support tool verification version intervals for ADAO
    :header: "Tool", "Minimal version", "Reached version"
    :widths: 20, 10, 10
+   :align: center
 
-   Python,     3.6.5,    3.12.3
-   Numpy,      1.14.3,    1.26.4
-   Scipy,      0.19.1,    1.14.0
-   MatplotLib, 2.2.2,    3.8.4
+   Python,     3.6.5,    3.12.6
+   Numpy,      1.14.3,    2.1.2
+   Scipy,      0.19.1,    1.14.1
+   MatplotLib, 2.2.2,    3.9.2
    GnuplotPy,  1.8,    1.8
-   NLopt,      2.4.2,    2.7.1
+   NLopt,      2.4.2,    2.8.0
+   FMPy,       0.3.20,    0.3.20

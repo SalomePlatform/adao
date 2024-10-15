@@ -64,7 +64,7 @@ demandés **explicitement** à l'aide de la variable requise.
 
 Les résultats obtenus avec cet algorithme peuvent être utilisés pour alimenter
 un :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`. De manière
-complémentaire, et si le but est d'évaluer l'erreur calcul-mesure, un
+complémentaire, et si le but est d'évaluer l'erreur calculs-mesures, un
 :ref:`section_ref_algorithm_SamplingTest` utilise les mêmes commandes
 d'échantillonnage pour établir un ensemble de valeurs de fonctionnelle d'erreur
 :math:`J` à partir d'observations :math:`\mathbf{y}^o`.
