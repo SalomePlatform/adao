@@ -730,7 +730,7 @@ au cas de calcul, à l'exécution ou au système sur lequel est exécuté un cas
 **callinfo** ()
     Une **information synthétique sur le nombre d'appels aux calculs
     d'opérateurs** peut être dynamiquement obtenue par la commande
-    "**callinfo()**". Ces calculs d'opérateurs sont ceux définis par
+    "*callinfo()*". Ces calculs d'opérateurs sont ceux définis par
     l'utilisateur dans un cas ADAO, pour les opérateurs d'observation et
     d'évolution. Elle s'utilise après l'exécution du calcul du cas, sachant que
     le résultat de cette commande est simplement vide lorsqu'aucun calcul n'a
@@ -747,7 +747,7 @@ au cas de calcul, à l'exécution ou au système sur lequel est exécuté un cas
 
 **sysinfo** ()
     Une **information synthétique sur le système** peut être obtenue par la
-    commande "**sysinfo()**", présente dans chaque cas de calcul ADAO. Elle
+    commande "*sysinfo()*", présente dans chaque cas de calcul ADAO. Elle
     retourne dynamiquement des informations système et des détails sur les
     modules Python utiles pour ADAO. Elle s'utilise de la manière suivante :
     ::

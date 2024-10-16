@@ -696,11 +696,11 @@ case, the run or the system on which a case is run.
 
 **callinfo** ()
     A **synthesized information on the number of calls to operator
-    calculations** can be dynamically obtained with the "**callinfo()**"
-    command. These operator calculations are those defined by the user in an
-    ADAO case, for the observation and evolution operators. It is used after
-    the case calculation has been executed, bearing in mind that the result of
-    this command is simply empty when no calculation has been performed:
+    calculations** can be dynamically obtained with the "*callinfo()*" command.
+    These operator calculations are those defined by the user in an ADAO case,
+    for the observation and evolution operators. It is used after the case
+    calculation has been executed, bearing in mind that the result of this
+    command is simply empty when no calculation has been performed:
     ::
 
         from adao import adaoBuilder
@@ -712,10 +712,10 @@ case, the run or the system on which a case is run.
 .. index:: single: sysinfo
 
 **sysinfo** ()
-    **Synthetic system information** can be obtained with the "**sysinfo()**"
-    command, present in every ADAO calculation case. It dynamically returns system
-    information and details of Python modules useful for ADAO. It is used as
-    follows:
+    **Synthetic system information** can be obtained with the "*sysinfo()*"
+    command, present in every ADAO calculation case. It dynamically returns
+    system information and details of Python modules useful for ADAO. It is
+    used as follows:
     ::
 
         from adao import adaoBuilder
