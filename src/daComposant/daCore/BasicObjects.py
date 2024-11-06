@@ -3522,7 +3522,7 @@ class DynamicalSimulator(object):
     """
     Classe de simulateur ODE d'ordre 1 pour modèles dynamiques :
 
-        dy / dt = F_µ(t, y)
+        dy/dt = F_µ(t, y)
 
     avec y = f(t) et µ les paramètres intrinsèques. t est couramment le temps,
     mais il peut être une variable quelconque non temporelle.
@@ -3559,11 +3559,12 @@ class DynamicalSimulator(object):
         autonomous=None,
     ):
         "None default values are mandatory to allow overriding"
-        self.set_canonical_description()
-        self.set_description(mu, integrator, dt, t0, tf, y0, autonomous)
+        if hasattr(self, "CanonicalDescription"):
+            self.CanonicalDescription()
+        self._description(mu, integrator, dt, t0, tf, y0, autonomous)
 
     # --------------------------------------------------------------------------
-    # User defined ODE model
+    # User defined ODE model and canonical description
 
     def ODEModel(self, t, y):
         """
@@ -3571,24 +3572,140 @@ class DynamicalSimulator(object):
         """
         raise NotImplementedError()
 
-    def set_canonical_description(self):
+    def CanonicalDescription(self):
         """
         User settings for default or recommended EDO description
 
-        Setters that >>> can <<< be used:
-            - self.set_mu
-            - self.set_integrator
-            - self.set_dt
-            - self.set_t0
-            - self.set_tf
-            - self.set_y0
-            - self.set_autonomous
+        Setters/Getters that >>> can <<< be used:
+            - self.Parameters
+            - self.Integrator
+            - self.IntegrationStep
+            - self.ObservationStep
+            - self.InitialTime
+            - self.FinalTime
+            - self.InitialCondition
+            - self.Autonomous
         """
         pass
 
     # --------------------------------------------------------------------------
 
-    def set_description(
+    @property
+    def Parameters(self):
+        return self._mu
+
+    @Parameters.setter
+    def Parameters(self, value):
+        if value is None:
+            pass
+        else:
+            self._mu = numpy.ravel(value)
+
+    # -------
+    @property
+    def Integrator(self):
+        return self._integrator
+
+    @Integrator.setter
+    def Integrator(self, value):
+        if value is None:
+            pass
+        elif not (value in self.__integrator_list):
+            raise ValueError(
+                "wrong value %s set for the integrator scheme. \nAvailable integrator scheme are: %s"
+                % (value, self.__integrator_list)
+            )
+        else:
+            self._integrator = str(value)
+
+    # -------
+    @property
+    def IntegrationStep(self):
+        return self._dt
+
+    @IntegrationStep.setter
+    def IntegrationStep(self, value):
+        if value is None:
+            pass
+        elif float(value) > 0:
+            self._dt = max(2.0e-16, float(value))
+        else:
+            raise ValueError("integration step has to be strictly positive")
+
+    # -------
+    @property
+    def ObservationStep(self):
+        return self._do
+
+    @ObservationStep.setter
+    def ObservationStep(self, value):
+        if value is None:
+            pass
+        elif float(value) > 0:
+            self._do = max(2.0e-16, float(value))
+            if hasattr(self, "_dt") and self._do < self._dt:
+                raise ValueError(
+                    "Observation step is inconsistent with integration one"
+                )
+        else:
+            raise ValueError("observation step has to be strictly positive")
+
+    # -------
+    @property
+    def InitialTime(self):
+        return self._t0
+
+    @InitialTime.setter
+    def InitialTime(self, value):
+        if value is None:
+            pass
+        else:
+            self._t0 = float(value)
+            if hasattr(self, "_tf") and self._t0 > self._tf:
+                raise ValueError("initial time has to remain less than final time")
+
+    # -------
+    @property
+    def FinalTime(self):
+        return self._tf
+
+    @FinalTime.setter
+    def FinalTime(self, value):
+        if value is None:
+            pass
+        else:
+            self._tf = float(value)
+            if hasattr(self, "_t0") and self._t0 > self._tf:
+                raise ValueError("initial time has to remain less than final time")
+
+    # -------
+    @property
+    def InitialCondition(self):
+        return self._y0
+
+    @InitialCondition.setter
+    def InitialCondition(self, value):
+        if value is None:
+            pass
+        else:
+            self._y0 = numpy.ravel(value)
+
+    # -------
+    @property
+    def Autonomous(self):
+        return self._autonomous
+
+    @Autonomous.setter
+    def Autonomous(self, value):
+        "Declare the system to be autonomous"
+        if value is None:
+            pass
+        else:
+            self._autonomous = bool(value)
+
+    # --------------------------------------------------------------------------
+
+    def _description(
         self,
         mu=None,
         integrator=None,
@@ -3598,73 +3715,14 @@ class DynamicalSimulator(object):
         y0=None,
         autonomous=False,
     ):
-        "Explicit setting of EDO description"
-        self.set_mu(mu)
-        self.set_integrator(integrator)
-        self.set_dt(dt)
-        self.set_t0(t0)
-        self.set_tf(tf)
-        self.set_y0(y0)
-        self.set_autonomous(autonomous)
-
-    def set_mu(self, mu=None):
-        "Set EDO intrinsic parameters µ"
-        if mu is not None:
-            self._mu = numpy.ravel(mu)
-        return self._mu
-
-    def set_integrator(self, integrator=None):
-        "Set integration scheme name"
-        if integrator is None:
-            pass
-        elif not (integrator in self.__integrator_list):
-            raise ValueError(
-                "Wrong value %s for integrator in set_integrator call. \nAvailable integrators are: %s"
-                % (integrator, self.__integrator_list)
-            )
-        else:
-            self._integrator = str(integrator)
-        return self._integrator
-
-    def set_dt(self, value=None):
-        "Set integration step size dt"
-        if value is not None:
-            self._dt = max(2.0e-16, abs(float(value)))
-        return self._dt
-
-    def set_t0(self, value=None):
-        "Set initial integration time"
-        if value is not None:
-            self._t0 = float(value)
-            if hasattr(self, "_tf") and self._t0 > self._tf:
-                raise ValueError("Initial time has to remain less than final time")
-        return self._t0
-
-    def set_tf(self, value=None):
-        "Set final integration time"
-        if value is not None:
-            self._tf = float(value)
-            if hasattr(self, "_t0") and self._t0 > self._tf:
-                raise ValueError("Initial time has to remain less than final time")
-        return self._tf
-
-    def set_y0(self, value):
-        "Set integration initial condition"
-        if value is not None:
-            self._y0 = numpy.ravel(value)
-        return self._y0
-
-    def set_autonomous(self, value=None):
-        "Declare the system to be autonomous"
-        if value is not None:
-            self._autonomous = bool(value)
-        return self._autonomous
-
-    def set_do(self, value=None):
-        "Set observation step size do"
-        if value is not None:
-            self._do = max(2.0e-16, abs(float(value)))
-        return self._do
+        "Explicit setting of EDO description at init time"
+        self.Parameters = mu
+        self.Integrator = integrator
+        self.IntegrationStep = dt
+        self.InitialTime = t0
+        self.FinalTime = tf
+        self.InitialCondition = y0
+        self.Autonomous = autonomous
 
     # --------------------------------------------------------------------------
 
@@ -3706,26 +3764,31 @@ class DynamicalSimulator(object):
 
     _euler_step = _rk1_step
 
-    def Integration(self, y0=None, t0=None, tf=None, mu=None):
+    def Integration(self, y1=None, t1=None, t2=None, mu=None):
         """
-        Exécute l'intégration du modèle entre t0 et tf, en partant de y0,
-        via le schéma d'intégration choisi
+        Exécute l'intégration du modèle entre t1 et t2, en partant de y1, via
+        le schéma d'intégration choisi.
         """
-        if y0 is not None:
-            self.set_y0(y0)
-        if t0 is not None:
-            self.set_t0(t0)
-        if tf is not None:
-            self.set_tf(tf)
-        if mu is not None:
-            self.set_mu(mu)
+        if y1 is None:
+            _ly0 = self._y0
+        else:
+            _ly0 = numpy.ravel(y1)
+        if t1 is None:
+            _lt0 = self._t0
+        else:
+            _lt0 = float(t1)
+        if t2 is None:
+            _ltf = self._tf
+        else:
+            _ltf = float(t2)
+        self.Parameters = mu
         if (
             (self._mu is None)
             or (self._integrator is None)
             or (self._dt is None)
-            or (self._t0 is None)
-            or (self._tf is None)
-            or (self._y0 is None)
+            or (_lt0 is None)
+            or (_ltf is None)
+            or (_ly0 is None)
         ):
             raise ValueError(
                 "Some integration input information are None and not defined\n(%s, %s, %s, %s, %s, %s)"
@@ -3733,14 +3796,14 @@ class DynamicalSimulator(object):
                     self._mu,
                     self._integrator,
                     self._dt,
-                    self._t0,
-                    self._tf,
-                    self._y0,
+                    _lt0,
+                    _ltf,
+                    _ly0,
                 )
             )
         #
         ODE = self.ODEModel
-        times = numpy.arange(self._t0, self._tf + self._dt / 2, self._dt)
+        times = numpy.arange(_lt0, _ltf + self._dt / 2, self._dt)
         if self._integrator == "odeint":
             # intégration 'automatique' dans le cas d'un système pouvant être
             # problématique avec rk4 ou euler (comme Van Der Pol)
@@ -3748,7 +3811,7 @@ class DynamicalSimulator(object):
 
             trajectory = odeint(
                 ODE,
-                numpy.array(self._y0, dtype=float),
+                numpy.array(_ly0, dtype=float),
                 times,
                 tfirst=True,
             )
@@ -3759,8 +3822,8 @@ class DynamicalSimulator(object):
 
             sol = solve_ivp(
                 ODE,
-                (self._t0, self._tf),
-                numpy.array(self._y0, dtype=float),
+                (_lt0, _ltf),
+                numpy.array(_ly0, dtype=float),
                 t_eval=times,
             )
             trajectory = sol.y.T
@@ -3773,18 +3836,18 @@ class DynamicalSimulator(object):
                     % self._integrator
                 )
             #
-            t = self._t0
-            y = self._y0
-            trajectory = numpy.array([self._y0])
+            t = _lt0
+            y = _ly0
+            trajectory = numpy.array([_ly0])
             #
-            while t < self._tf - self._dt / 2:
+            while t < _ltf - self._dt / 2:
                 [t, y] = integration_step(t, y, self._dt, ODE)
                 trajectory = numpy.concatenate((trajectory, numpy.array([y])), axis=0)
         #
         return [times, trajectory]
 
     def ForecastedPath(self, y1=None, t1=None, t2=None, mu=None):
-        "Trajectoire de t1 à t2, en partant de yn, pour un paramètre donné mu"
+        "Trajectoire de t1 à t2, en partant de y1, pour un paramètre donné mu"
         #
         _, trajectory_from_t1_to_t2 = self.Integration(y1, t1, t2, mu)
         #
@@ -3798,42 +3861,52 @@ class DynamicalSimulator(object):
         return trajectory_from_t1_to_t2[-1, :]
 
     def StateTransition(self, y1=None):
-        "État y[n+1] intégré depuis y[n] sur pas constant ou non"
-        if self.set_autonomous():
+        "État y[n+1] intégré depuis y[n] sur un pas self.ObservationStep"
+        if self.Autonomous:
             if not hasattr(self, "_do") or self._do is None:
                 raise ValueError(
                     "    StateTransition requires an observation step size to be given"
                 )
-            return self.ForecastedState(y1, t1=0.0, t2=self.set_do())
+            return self.ForecastedState(y1, 0.0, self.ObservationStep, self.Parameters)
         else:
             raise NotImplementedError(
                 "    StateTransition has to be provided by the user in case of non-autonomous ODE"
             )
 
-    def HistoryBoard(self, t_s, i_s, y_s, filename="history_board_of_trajectory.pdf"):
+    def HistoryBoard(
+        self, t_s, y_s, i_s=None, filename="figure_of_trajectory.pdf", suptitle="", title="", xlabel="Time", ylabel="State variables", cmap="gist_gray_r",
+    ):
         """
         t_s : série des instants t
-        i_s : série des indices i des variables
         y_s : série des valeurs 1D des variables du système dynamique, pour
               chaque pas de temps, sous forme d'un tableau 2D de type:
               SDyn(i,t) = SDyn[i][t] = [SDyn[i] pour chaque t]
+        i_s : série des indices i des variables
         """
         import matplotlib
         import matplotlib.pyplot as plt
         from matplotlib.ticker import MaxNLocator
 
+        #
+        if i_s is None:
+            i_s = range(y_s.shape[0])
         levels = MaxNLocator(nbins=25).tick_values(
             numpy.ravel(y_s).min(), numpy.ravel(y_s).max()
         )
         fig, ax = plt.subplots(figsize=(15, 5))
         fig.subplots_adjust(bottom=0.1, left=0.05, right=0.95, top=0.9)
         im = plt.contourf(
-            t_s, i_s, y_s, levels=levels, cmap=plt.get_cmap("gist_gray_r")
+            t_s, i_s, y_s, levels=levels, cmap=plt.get_cmap(cmap)
         )
         fig.colorbar(im, ax=ax)
-        plt.title("Model trajectory with %i variables" % len(y_s[:, 0]))
-        plt.xlabel("Time")
-        plt.ylabel("State variables")
+        if len(suptitle) > 0:
+            plt.suptitle(suptitle)
+        if len(title) > 0:
+            plt.title(title)
+        else:
+            plt.title("Model trajectory with %i variables" % len(y_s[:, 0]))
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
         if filename is None:
             plt.show()
         else:
