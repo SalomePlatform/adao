@@ -40,9 +40,8 @@ class EDS(DynamicalSimulator):
         values. The initial conditions for (x, y, z) at t=0 for the reference
         case are (0, 1, 0).
 
-    This is a parametrized coupled system of three nonlinear ordinary
-    differential equations described in:
-        Lorenz, E. N. (1963). Deterministic nonperiodic flow. Journal of the
+    This Lorenz3D model was described in:
+        Lorenz, E. N. (1963). "Deterministic nonperiodic flow". Journal of the
         Atmospheric Sciences, 20, 130–141.
         doi:10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2
     """
@@ -57,16 +56,29 @@ class EDS(DynamicalSimulator):
         self.Autonomous = True
         return True
 
-    def ODEModel(self, t, Y):
+    def ODEModel(self, t, xyz):
         "ODE dy/dt = F_µ(t, y)"
         sigma, rho, beta = self.Parameters
-        x, y, z = map(float, Y)
+        x, y, z = numpy.ravel(numpy.array(xyz, dtype=float))  # map(float, xyz)
         #
         dxdt = sigma * (y - x)
         dydt = x * rho - y - x * z
         dzdt = x * y - beta * z
         #
         return numpy.array([dxdt, dydt, dzdt])
+
+    def ODETLMModel(self, t, xyz):
+        "Return the tangent linear matrix"
+        sigma, rho, beta = self.Parameters
+        x, y, z = numpy.ravel(numpy.array(xyz, dtype=float))  # map(float, xyz)
+        nt = self.InitialCondition.size
+        tlm = numpy.zeros((nt, nt))
+        #
+        tlm[0, :] = [-sigma, sigma, 0]
+        tlm[1, :] = [rho - z, -1, -x]
+        tlm[2, :] = [y, x, -beta]
+        #
+        return tlm
 
 
 # ==============================================================================

@@ -5,8 +5,8 @@ systematically performed on all intermediate versions. For all tested versions,
 the ADAO module behaves identically (to the extent of modifications depending
 on the support tools). It is strongly discouraged (or impossible) to use ADAO
 with a version lower than the minimum version, and there is no explicit
-limitation to the use of the ADAO module beyond the reached version but this
-remains without guarantee. If an unusual error is encountered for previously
+limitation to the use of the ADAO module beyond the reached version (but this
+remains without guarantee). If an unusual error is encountered for previously
 running calculations, it is strongly recommended to revert to supporting tool
 versions within the range described below.
 
@@ -18,7 +18,7 @@ versions within the range described below.
    Python,     3.6.5,    3.12.7
    Numpy,      1.14.3,    2.1.3
    Scipy,      0.19.1,    1.14.1
-   MatplotLib, 2.2.2,    3.9.2
+   MatplotLib, 2.2.2,    3.9.3
    GnuplotPy,  1.8,    1.8
    NLopt,      2.4.2,    2.9.0
    FMPy,       0.3.20,    0.3.20

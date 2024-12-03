@@ -191,7 +191,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Zupanski05] Zupanski M., *Maximum likelihood ensemble filter: Theoretical aspects*, Monthly Weather Review, 133(6), pp.1710–1726, 2005
 
-*Nota Bene* : un lien vers la version française de chaque page Wikipédia se
-trouve dans le sous-menu "*Languages*". Les deux versions sont complémentaires
-car, même si souvent le contenu en anglais est plus fourni, les informations
-disponibles dans chaque langue ne sont pas identiques.
+*Nota Bene* : pour une référence Wikipédia en anglais, un lien éventuel vers la
+version française se trouve dans le sous-menu "*Languages*" de chaque page. Les
+versions dans les différentes langues disponibles sont complémentaires car,
+même si le contenu en anglais est souvent plus fourni, les informations
+disponibles dans chacune ne sont pas identiques.

@@ -3588,6 +3588,16 @@ class DynamicalSimulator(object):
         """
         pass
 
+    # Optional implementation, used only if present and callable
+    # def ODETLMModel(self, t, y):
+        # """
+        # Return the tangent linear matrix
+        # """
+        # nt = self.InitialCondition.size
+        # tlm = numpy.zeros((nt, nt))
+        # ...
+        # return tlm
+
     # --------------------------------------------------------------------------
 
     @property
@@ -3705,6 +3715,36 @@ class DynamicalSimulator(object):
 
     # --------------------------------------------------------------------------
 
+    def ODETangentModel(self, t, pair):
+        """
+        ODE : return the tangent evaluation
+        """
+        y, dy = pair
+        if not (hasattr(self, "ODETLMModel") and callable(self.ODETLMModel)):
+            raise NotImplementedError("No TLM available, please implement one")
+        #
+        if dy is None or len(dy) == 0:
+            return self.ODETLMModel(t, y)
+        else:
+            dy = numpy.ravel(dy)
+            return self.ODETLMModel(t, y) @ dy
+
+    def ODEAdjointModel(self, t, pair):
+        """
+        ODE : return the adjoint evaluation
+        """
+        y_in, y_out = pair
+        if not (hasattr(self, "ODETLMModel") and callable(self.ODETLMModel)):
+            raise NotImplementedError("No TLM available, please implement one")
+        #
+        if y_out is None or len(y_out) == 0:
+            return numpy.transpose(self.ODETLMModel(t, y_in))
+        else:
+            y_out = numpy.ravel(y_out)
+            return numpy.transpose(self.ODETLMModel(t, y_in)) @ y_out
+
+    # --------------------------------------------------------------------------
+
     def _description(
         self,
         mu=None,
@@ -3802,26 +3842,34 @@ class DynamicalSimulator(object):
                 )
             )
         #
-        ODE = self.ODEModel
         times = numpy.arange(_lt0, _ltf + self._dt / 2, self._dt)
         if self._integrator == "odeint":
             # intégration 'automatique' dans le cas d'un système pouvant être
             # problématique avec rk4 ou euler (comme Van Der Pol)
             from scipy.integrate import odeint
 
-            trajectory = odeint(
-                ODE,
-                numpy.array(_ly0, dtype=float),
-                times,
-                tfirst=True,
-            )
+            if hasattr(self, "ODETLMModel") and callable(self.ODETLMModel):
+                trajectory = odeint(
+                    self.ODEModel,
+                    numpy.array(_ly0, dtype=float),
+                    times,
+                    Dfun = self.ODETLMModel,
+                    tfirst=True,
+                )
+            else:
+                trajectory = odeint(
+                    self.ODEModel,
+                    numpy.array(_ly0, dtype=float),
+                    times,
+                    tfirst=True,
+                )
         elif self._integrator == "solve_ivp":
             # intégration 'automatique' dans le cas d'un système pouvant être
             # problématique avec rk4 ou euler (comme Van Der Pol)
             from scipy.integrate import solve_ivp
 
             sol = solve_ivp(
-                ODE,
+                self.ODEModel,
                 (_lt0, _ltf),
                 numpy.array(_ly0, dtype=float),
                 t_eval=times,
@@ -3841,7 +3889,7 @@ class DynamicalSimulator(object):
             trajectory = numpy.array([_ly0])
             #
             while t < _ltf - self._dt / 2:
-                [t, y] = integration_step(t, y, self._dt, ODE)
+                [t, y] = integration_step(t, y, self._dt, self.ODEModel)
                 trajectory = numpy.concatenate((trajectory, numpy.array([y])), axis=0)
         #
         return [times, trajectory]
@@ -3874,7 +3922,7 @@ class DynamicalSimulator(object):
             )
 
     def HistoryBoard(
-        self, t_s, y_s, i_s=None, filename="figure_of_trajectory.pdf", suptitle="", title="", xlabel="Time", ylabel="State variables", cmap="gist_gray_r",
+        self, t_s, y_s, i_s=None, filename="figure_of_trajectory.pdf", suptitle="", title="", xlabel="Time", ylabel="State variables", cmap="gist_gray_r", grid=False,
     ):
         """
         t_s : série des instants t
@@ -3907,6 +3955,8 @@ class DynamicalSimulator(object):
             plt.title("Model trajectory with %i variables" % len(y_s[:, 0]))
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
+        if grid:
+            ax.grid()
         if filename is None:
             plt.show()
         else:
