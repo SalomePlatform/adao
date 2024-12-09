@@ -68,6 +68,11 @@ Dedicated tasks or study oriented cases uses
 #. :ref:`Examples with the "InterpolationByReducedModelTask" study<section_ref_algorithm_InterpolationByReducedModelTask_examples>`
 #. :ref:`Examples with the "MeasurementsOptimalPositioningTask" study<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
 
+Comprehensive studies and use case examples
+-------------------------------------------
+
+#. :ref:`section_usecase_MOP_Chaturantabut10`
+
 Advanced uses
 -------------
 

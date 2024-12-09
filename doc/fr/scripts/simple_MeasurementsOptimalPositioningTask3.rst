@@ -1,7 +1,8 @@
 .. index:: single: MeasurementsOptimalPositioningTask (exemple)
+.. _section_usecase_MOP_Chaturantabut10:
 
-Troisième exemple
-.................
+Positionnement optimal de mesures associé à une décomposition DEIM
+..................................................................
 
 Cet exemple plus complet décrit le positionnement optimal de mesures associé à
 une décomposition réduite de type DEIM sur une fonction classique paramétrique

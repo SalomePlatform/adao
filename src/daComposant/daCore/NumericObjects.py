@@ -1120,7 +1120,7 @@ def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
     for i in range(int(__nb)):
         __ee = numpy.zeros((__nb, 1))
         __ee[i] = 1.0
-        __HtEE = numpy.dot(__HtM, __ee).reshape((-1, 1))
+        __HtEE = __HtM[:,i].reshape((-1,1))
         __HessienneI.append(numpy.ravel(__BI * __ee + __HaM * (__RI * __HtEE)))
     #
     __A = numpy.linalg.inv(numpy.array(__HessienneI))

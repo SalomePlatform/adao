@@ -68,6 +68,11 @@ Utilisations d'algorithmes orientés tâches ou études dédiées
 #. :ref:`Exemples d'étude avec "InterpolationByReducedModelTask"<section_ref_algorithm_InterpolationByReducedModelTask_examples>`
 #. :ref:`Exemples d'étude avec "MeasurementsOptimalPositioningTask"<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
 
+Analyses complètes et exemples de cas d'usage
+---------------------------------------------
+
+#. :ref:`section_usecase_MOP_Chaturantabut10`
+
 Utilisations avancées
 ---------------------
 
