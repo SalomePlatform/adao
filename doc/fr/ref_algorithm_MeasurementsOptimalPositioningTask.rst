@@ -59,9 +59,12 @@ Empirical Interpolation Method (EIM [Barrault04]_) ou Discrete Empirical
 Interpolation Method (DEIM [Chaturantabut10]_), qui établit un modèle réduit de
 type Reduced Order Model (ROM), avec contraintes (variante "*lcEIM*" ou
 "*lcDEIM*") ou sans contraintes (variante "*EIM*" ou "*DEIM*") de
-positionnement. Pour la performance, il est recommandé d'utiliser la variante
-"*lcEIM*" ou "*EIM*" lorsque la dimension de l'espace des champs complets est
-grande.
+positionnement. Techniquement, ces méthodes permettent de construire une
+approximation de l'état :math:`\mathbf{y}` dans un espace de dimension réduite,
+en utilisant un ensemble de points spéciaux d’interpolation pour représenter de
+manière optimale le comportement global du champ :math:`\mathbf{y}`. Pour la
+performance, il est recommandé d'utiliser la variante "*lcEIM*" ou "*EIM*"
+lorsque la dimension de l'espace des champs complets est grande.
 
 Il y a deux manières d'utiliser cet algorithme:
 

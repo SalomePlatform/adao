@@ -57,9 +57,12 @@ To determine the optimum positioning of measurements, an Empirical
 Interpolation Method (EIM [Barrault04]_) or Discrete Empirical Interpolation
 Method (DEIM [Chaturantabut10]_) is used, which establishes a reduced model of
 type Reduced Order Model (ROM), with (variant "*lcEIM*" or "*lcDEIM*") or
-without (variant "*EIM*" or "*DEIM*") positioning constraints. For performance,
-we recommend using the variant "*lcEIM*" or "*EIM*" when the dimension of the
-full fields space is large.
+without (variant "*EIM*" or "*DEIM*") positioning constraints. Technically,
+these methods build an approximation of the :math:`\mathbf{y}` state in a
+reduced-dimensional space, using a set of special interpolation points to
+optimally represent the global behavior of the :math:`\mathbf{y}` field. For
+performance, we recommend using the variant "*lcEIM*" or "*EIM*" when the
+dimension of the full fields space is large.
 
 There are two ways to use this algorithm:
 

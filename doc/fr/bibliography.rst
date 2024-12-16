@@ -49,6 +49,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Burgers98] Burgers G., Van Leuween P. J., Evensen G., *Analysis scheme in the Ensemble Kalman Filter*, Monthly Weather Review, 126(6), pp.1719–1724, 1998
 
+.. [Butterfly72] Wikipedia, *Butterfly effect*, https://en.wikipedia.org/wiki/Butterfly_effect
+
 .. [Byrd95] Byrd R. H., Lu P., Nocedal J., *A Limited Memory Algorithm for Bound Constrained Optimization*, SIAM Journal on Scientific and Statistical Computing, 16(5), pp.1190-1208, 1995
 
 .. [Cade03] Cade B. S., Noon B. R., *A Gentle Introduction to Quantile Regression for Ecologists*, Frontiers in Ecology and the Environment, 1(8), pp.412-420, 2003
@@ -113,6 +115,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Lorenc88] Lorenc A. C., *Optimal nonlinear objective analysis*, Quarterly Journal of the Royal Meteorological Society, 114(479), pp.205–240, 1988
 
+.. [Lorenz63] Lorenz E. N., *Deterministic nonperiodic flow*, Journal of the Atmospheric Sciences, 20, pp.130–141, 1963 http://doi.org/10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2
+
 .. [Morales11] Morales J. L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
 
 .. [Nelder65] Nelder J. A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
@@ -168,6 +172,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 .. [WikipediaEKF] Wikipedia, *Extended Kalman Filter*, https://en.wikipedia.org/wiki/Extended_Kalman_filter
 
 .. [WikipediaEnKF] Wikipedia, *Ensemble Kalman Filter*, http://en.wikipedia.org/wiki/Ensemble_Kalman_filter
+
+.. [WikipediaL63] Wikipedia, *Lorenz system*, https://en.wikipedia.org/wiki/Lorenz_system
 
 .. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization
 
