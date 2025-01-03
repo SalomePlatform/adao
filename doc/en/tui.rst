@@ -831,10 +831,11 @@ indicator he is requesting is being used as intended.
 .. index:: single: Mean Absolute Error (MAE)
 
 **maes** (*predictor=None*)
-    Mean absolute error (**MAE**). This indicator is computed as the average of
-    the absolute deviations of the quantity from the predictor, and is
-    available at each step. If the predictor is not specified, this indicator
-    theoretically applies only to an increment or a difference.
+    Mean absolute error (**MAE**). This indicator has the same unit as the
+    quantity to which it applies. It is computed as the average of the absolute
+    deviations of the quantity from the predictor, and is available at each
+    step. If the predictor is not specified, this indicator theoretically
+    applies only to an increment or a difference.
 
 .. index:: single: mses
 .. index:: single: msds
@@ -842,8 +843,9 @@ indicator he is requesting is being used as intended.
 .. index:: single: Mean-Square Deviation (MSD)
 
 **mses** (*predictor=None*) ou **msds** (*predictor=None*)
-    Mean square error (**MSE**) or mean-square deviation* (**MSD**). This
-    indicator is computed as the root-mean-square deviation of the quantity
+    Mean square error (**MSE**) or mean-square deviation* (**MSD**). The unit
+    of this indicator is the square of the unit of the quantity to which it
+    applies. It is computed as the root-mean-square deviation of the quantity
     from the predictor, and is available at each step. If the predictor is not
     specified, this indicator theoretically applies only to an increment or
     difference.
@@ -856,11 +858,11 @@ indicator he is requesting is being used as intended.
 
 **rmses** (*predictor=None*) or **rmsds** (*predictor=None*)
     Root-mean-square error (**RMSE**) or root-mean-square deviation (**RMSD**).
-    This indicator is calculated as the root mean square of the deviations of
-    the quantity from the predictor, and is available at each step. If the
-    predictor is not specified, this indicator theoretically applies only to an
-    increment or a difference. In the latter case, it is a **RMS** of the
-    quantity.
+    This indicator has the same unit as the quantity to which it applies. It is
+    computed as the root mean square of the deviations of the quantity from the
+    predictor, and is available at each step. If the predictor is not
+    specified, this indicator theoretically applies only to an increment or a
+    difference. In the latter case, it is a **RMS** of the quantity.
 
 As a simple example, we can use the calculation example presented above:
 

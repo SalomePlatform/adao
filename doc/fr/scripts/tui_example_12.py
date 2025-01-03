@@ -71,7 +71,7 @@ import matplotlib.pyplot as plt
 plt.rcParams['figure.figsize'] = (8, 12)
 #
 plt.figure()
-plt.suptitle('Indicateurs construits sur la valeur courante des écarts (ou erreurs) calculs-mesures\n', fontweight='bold')
+plt.suptitle('Indicateurs construits sur valeur courante des écarts (ou erreurs) calculs-mesures\n', fontweight='bold')
 plt.subplot(611)
 plt.plot(CalculMeasureErrors.maxs(), 'bx--', label='Indicateur au pas courant')
 plt.ylabel('Maximum (u.a.)')

@@ -10,7 +10,7 @@ Displays current state values, at each step:
   Current state: [0.2500 0.8000 0.9500]
 
 Calculation-measurement deviation (or error) indicators
-     (display only first 3 steps)
+     (only the first 3 steps are displayed here)
 
 ===> Maximum error between calculations and measurements, at each step:
      [0.5000 0.4526 0.4095]

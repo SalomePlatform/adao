@@ -605,6 +605,42 @@ def vt(__version):
     return tuple(serie)
 
 
+def trmo():
+    "Usage de l'optimiseur avec condition d'arrêt augmentée"
+    import scipy, scipy.optimize, scipy.version
+    if vt("0.19")  <= vt(scipy.version.version) <= vt("1.4.99"):
+        import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.5.0") <= vt(scipy.version.version) <= vt("1.7.99"):
+        import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.8.0") <= vt(scipy.version.version) <= vt("1.8.99"):
+        import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
+        import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
+        import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.12.0") <= vt(scipy.version.version) <= vt("1.12.99"):
+        import daAlgorithms.Atoms.lbfgsb112hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.13.0") <= vt(scipy.version.version) <= vt("1.13.99"):
+        import daAlgorithms.Atoms.lbfgsb113hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.14.0") <= vt(scipy.version.version) <= vt("1.14.99"):
+        import daAlgorithms.Atoms.lbfgsb114hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    elif vt("1.15.0") <= vt(scipy.version.version) <= vt("1.15.99"):
+        import daAlgorithms.Atoms.lbfgsb115hlt as optimiseur
+        logging.debug("Using enhanced Scipy LBFGSB version %s"%(scipy.version.version))
+    else:
+        import scipy.optimize as optimiseur
+        logging.warning("Using unmodified Scipy LBFGSB version %s"%(scipy.version.version))
+    return optimiseur
+
+
 def isIterable(__sequence, __check=False, __header=""):
     """
     Vérification que l'argument est un itérable interne.

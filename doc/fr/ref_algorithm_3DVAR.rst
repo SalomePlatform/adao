@@ -353,6 +353,9 @@ StoreSupplementaryCalculations
   :align: center
   :width: 90%
 
+.. --------- ..
+.. include:: scripts/simple_3DVAR4.rst
+
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst
 

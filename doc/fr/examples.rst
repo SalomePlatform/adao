@@ -71,6 +71,7 @@ Utilisations d'algorithmes orientés tâches ou études dédiées
 Analyses complètes et exemples de cas d'usage
 ---------------------------------------------
 
+#. :ref:`section_usecase_3DVAR4_L63a`
 #. :ref:`section_usecase_MOP_Chaturantabut10`
 
 Utilisations avancées

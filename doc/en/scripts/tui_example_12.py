@@ -36,7 +36,7 @@ print("")
 #-------------------------------------------------------------------------------
 #
 print("Calculation-measurement deviation (or error) indicators")
-print("     (display only first 3 steps)")
+print("     (only the first 3 steps are displayed here)")
 print("")
 CalculMeasureErrors = case.get("InnovationAtCurrentState")
 #
@@ -71,7 +71,7 @@ import matplotlib.pyplot as plt
 plt.rcParams['figure.figsize'] = (8, 12)
 #
 plt.figure()
-plt.suptitle('Indicators built on the current value of the calculation-measurement deviation (or error)\n', fontweight='bold')
+plt.suptitle('Indicators built on current calculation-measurement deviation (or error)\n', fontweight='bold')
 plt.subplot(611)
 plt.plot(CalculMeasureErrors.maxs(), 'bx--', label='Indicator at current step')
 plt.ylabel('Maximum (a.u.)')

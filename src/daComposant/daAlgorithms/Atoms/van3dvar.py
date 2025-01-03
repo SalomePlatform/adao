@@ -28,7 +28,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 from daCore.NumericObjects import RecentredBounds
-from daCore.PlatformInfo import PlatformInfo, vt, vfloat
+from daCore.PlatformInfo import PlatformInfo, vt, vfloat, trmo
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
@@ -127,24 +127,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     nbPreviousSteps = selfA.StoredVariables["CostFunctionJ"].stepnumber()
     #
     if selfA._parameters["Minimizer"] == "LBFGSB":
-        if vt("0.19")  <= vt(scipy.version.version) <= vt("1.4.99"):
-            import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
-        elif vt("1.5.0") <= vt(scipy.version.version) <= vt("1.7.99"):
-            import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
-        elif vt("1.8.0") <= vt(scipy.version.version) <= vt("1.8.99"):
-            import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
-        elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
-            import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
-        elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
-            import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
-        elif vt("1.12.0") <= vt(scipy.version.version) <= vt("1.12.99"):
-            import daAlgorithms.Atoms.lbfgsb112hlt as optimiseur
-        elif vt("1.13.0") <= vt(scipy.version.version) <= vt("1.13.99"):
-            import daAlgorithms.Atoms.lbfgsb113hlt as optimiseur
-        elif vt("1.14.0") <= vt(scipy.version.version) <= vt("1.14.99"):
-            import daAlgorithms.Atoms.lbfgsb114hlt as optimiseur
-        else:
-            import scipy.optimize as optimiseur
+        optimiseur = trmo()
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
             func        = CostFunction,
             x0          = Xini,

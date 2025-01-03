@@ -71,6 +71,7 @@ Dedicated tasks or study oriented cases uses
 Comprehensive studies and use case examples
 -------------------------------------------
 
+#. :ref:`section_usecase_3DVAR4_L63a`
 #. :ref:`section_usecase_MOP_Chaturantabut10`
 
 Advanced uses
