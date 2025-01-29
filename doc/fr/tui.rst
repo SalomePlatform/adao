@@ -903,8 +903,9 @@ l'indicateur dont il demande le calcul est utilisé de manière licite.
     à laquelle il s'applique. Il est calculé comme la racine de la moyenne
     quadratique des écarts de la grandeur par rapport au prédicteur, et
     l'indicateur est disponible à chaque pas. Si le prédicteur est non
-    renseigné, cet indicateur ne s'applique théoriquement qu'à un incrément ou
-    une différence. Dans ce dernier cas, c'est une **RMS** de la grandeur.
+    renseigné, cet indicateur ne doit théoriquement s'appliquer qu'à un
+    incrément ou une différence. Dans ce dernier cas, c'est une **RMS** de la
+    grandeur.
 
 À titre d'exemple simple, on peut reprendre le cas de calcul déjà présenté plus
 haut :

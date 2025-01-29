@@ -861,7 +861,7 @@ indicator he is requesting is being used as intended.
     This indicator has the same unit as the quantity to which it applies. It is
     computed as the root mean square of the deviations of the quantity from the
     predictor, and is available at each step. If the predictor is not
-    specified, this indicator theoretically applies only to an increment or a
+    specified, in theory this indicator should only apply to an increment or a
     difference. In the latter case, it is a **RMS** of the quantity.
 
 As a simple example, we can use the calculation example presented above:

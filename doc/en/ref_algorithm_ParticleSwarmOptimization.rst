@@ -161,6 +161,8 @@ prohibitive optimization time length.
 
 .. include:: snippets/CognitiveAcceleration.rst
 
+.. include:: snippets/DistributionByComponents.rst
+
 .. include:: snippets/InertiaWeight.rst
 
 .. include:: snippets/InitializationPoint.rst
@@ -178,6 +180,8 @@ prohibitive optimization time length.
 .. include:: snippets/SocialAcceleration.rst
 
 .. include:: snippets/StoreInitialState.rst
+
+.. include:: snippets/SwarmInitialization.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

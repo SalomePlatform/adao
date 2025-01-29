@@ -29,6 +29,7 @@ import numpy, logging
 from daCore.NumericObjects import ApplyBounds, VariablesAndIncrementsBounds
 from daCore.NumericObjects import GenerateRandomPointInHyperSphere
 from daCore.NumericObjects import GetNeighborhoodTopology
+from daCore.NumericObjects import BuildComplexSampleSwarm
 from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
 
@@ -120,10 +121,13 @@ def ecwapso(selfA, Xb, Y, HO, R, B):
         if selfA._toStore("SimulatedObservationAtCurrentState"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm( Xini ) )
     #
-    Swarm  = numpy.zeros((__nbI, 4, __nbP))  # 4 car (x,v,gbest,lbest)
-    for __p in range(__nbP):
-        Swarm[:, 0, __p] = rand( low=LimitPlace[__p, 0], high=LimitPlace[__p, 1], size=__nbI)  # Position
-        Swarm[:, 1, __p] = rand( low=LimitSpeed[__p, 0], high=LimitSpeed[__p, 1], size=__nbI)  # Velocity
+    Swarm = BuildComplexSampleSwarm(
+        (__nbI, 4, __nbP),  # 4 car (x,v,gbest,lbest)
+        LimitPlace,
+        LimitSpeed,
+        selfA._parameters["SwarmInitialization"],
+        selfA._parameters["DistributionByComponents"],
+    )
     logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
     #
     __nbh = GetNeighborhoodTopology( selfA._parameters["SwarmTopology"], list(range(__nbI)) )

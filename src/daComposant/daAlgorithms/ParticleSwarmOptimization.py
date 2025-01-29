@@ -73,6 +73,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = -1,
         )
         self.defineRequiredParameter(
+            name     = "SwarmInitialization",
+            default  = "UniformByComponents",
+            typecast = str,
+            message  = "Mode d'initialisation de l'essaim",
+            listval  = [
+                "UniformByComponents",
+                "LogUniformByComponents",
+                "DistributionByComponents",
+            ],
+        )
+        self.defineRequiredParameter(
+            name     = "DistributionByComponents",
+            default  = [],
+            typecast = tuple,
+            message  = "Lois aléatoires d'initialisation par composante",
+        )
+        self.defineRequiredParameter(
             name     = "SwarmTopology",
             default  = "FullyConnectedNeighborhood",
             typecast = str,

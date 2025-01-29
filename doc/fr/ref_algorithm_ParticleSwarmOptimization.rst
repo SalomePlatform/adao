@@ -168,6 +168,8 @@ pour éviter une durée d'optimisation rédhibitoire.
 
 .. include:: snippets/CognitiveAcceleration.rst
 
+.. include:: snippets/DistributionByComponents.rst
+
 .. include:: snippets/InertiaWeight.rst
 
 .. include:: snippets/InitializationPoint.rst
@@ -185,6 +187,8 @@ pour éviter une durée d'optimisation rédhibitoire.
 .. include:: snippets/SocialAcceleration.rst
 
 .. include:: snippets/StoreInitialState.rst
+
+.. include:: snippets/SwarmInitialization.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

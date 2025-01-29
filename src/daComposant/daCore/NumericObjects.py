@@ -1844,6 +1844,72 @@ def BuildComplexSampleList(
 
 
 # ==============================================================================
+def BuildComplexSampleSwarm(
+    __Dimension,
+    __StateBounds,
+    __SpeedBounds,
+    __Method=None,
+    __ParameterDistributions=[],
+    __Seed=None,
+):
+    "Série de positions et vitesses pour un essaim"
+    if __Seed is not None:
+        numpy.random.seed(__Seed)
+    nbI, _, nbP = __Dimension
+    sampleList = numpy.zeros(__Dimension)
+    if __Method == "UniformByComponents" or __Method is None:
+        for __p in range(nbP):
+            sampleList[:, 0, __p] = numpy.random.uniform(
+                low=__StateBounds[__p, 0], high=__StateBounds[__p, 1], size=nbI
+            )  # Position
+            sampleList[:, 1, __p] = numpy.random.uniform(
+                low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+            )  # Velocity
+    elif __Method == "LogUniformByComponents":
+        for __p in range(nbP):
+            sampleList[:, 0, __p] = numpy.exp(
+                numpy.random.uniform(
+                    low=numpy.log(__StateBounds[__p, 0]),
+                    high=numpy.log(__StateBounds[__p, 1]),
+                    size=nbI,
+                )
+            )  # Position
+            sampleList[:, 1, __p] = numpy.random.uniform(
+                low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+            )  # Velocity
+    elif __Method == "DistributionByComponents":
+        if len(__ParameterDistributions) != nbP:
+            raise ValueError(
+                "The number %i of specified independant distributions has to be the same as the dimension %i"
+                % (len(__ParameterDistributions), nbP)
+            )
+        for __p in range(nbP):
+            if __ParameterDistributions[__p] == "uniform":
+                sampleList[:, 0, __p] = numpy.random.uniform(
+                    low=__StateBounds[__p, 0], high=__StateBounds[__p, 1], size=nbI
+                )  # Position
+            elif __ParameterDistributions[__p] == "loguniform":
+                sampleList[:, 0, __p] = numpy.exp(
+                    numpy.random.uniform(
+                        low=numpy.log(__StateBounds[__p, 0]),
+                        high=numpy.log(__StateBounds[__p, 1]),
+                        size=nbI,
+                    )
+                )  # Position
+            else:
+                raise ValueError(
+                    'Unknown specific parameter distribution "%s"'
+                    % __ParameterDistributions[__p]
+                )
+            sampleList[:, 1, __p] = numpy.random.uniform(
+                low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+            )  # Velocity
+    else:
+        raise ValueError('Unkown initialization method "%s"' % __Method)
+    return sampleList
+
+
+# ==============================================================================
 def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle, __CovForecast=False):
     """
     Prévision multi-pas avec une correction par pas (multi-méthodes)

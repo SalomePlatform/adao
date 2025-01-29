@@ -174,8 +174,8 @@ class Operator(object):
         - fromMethod : argument de type fonction Python
         - fromMatrix : argument adapté au constructeur numpy.array/matrix
         - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants
-        - reducingMemoryUse : booléen forçant (ou pas) des calculs moins
-          gourmands en mémoire
+        - reducingMemoryUse : booléen forçant (ou pas) des calculs pour qu'ils
+          soient moins gourmands en mémoire
         - inputAsMultiFunction : booléen indiquant une fonction explicitement
           définie (ou pas) en multi-fonction
         - extraArguments : arguments supplémentaires passés à la fonction de
@@ -3853,7 +3853,7 @@ class DynamicalSimulator(object):
                     self.ODEModel,
                     numpy.array(_ly0, dtype=float),
                     times,
-                    Dfun = self.ODETLMModel,
+                    Dfun=self.ODETLMModel,
                     tfirst=True,
                 )
             else:
@@ -3922,7 +3922,17 @@ class DynamicalSimulator(object):
             )
 
     def HistoryBoard(
-        self, t_s, y_s, i_s=None, filename="figure_of_trajectory.pdf", suptitle="", title="", xlabel="Time", ylabel="State variables", cmap="gist_gray_r", grid=False,
+        self,
+        t_s,
+        y_s,
+        i_s=None,
+        filename="figure_of_trajectory.pdf",
+        suptitle="",
+        title="",
+        xlabel="Time",
+        ylabel="State variables",
+        cmap="gist_gray_r",
+        grid=False,
     ):
         """
         t_s : série des instants t
@@ -3943,9 +3953,7 @@ class DynamicalSimulator(object):
         )
         fig, ax = plt.subplots(figsize=(15, 5))
         fig.subplots_adjust(bottom=0.1, left=0.05, right=0.95, top=0.9)
-        im = plt.contourf(
-            t_s, i_s, y_s, levels=levels, cmap=plt.get_cmap(cmap)
-        )
+        im = plt.contourf(t_s, i_s, y_s, levels=levels, cmap=plt.get_cmap(cmap))
         fig.colorbar(im, ax=ax)
         if len(suptitle) > 0:
             plt.suptitle(suptitle)
