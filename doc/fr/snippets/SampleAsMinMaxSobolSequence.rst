@@ -3,17 +3,17 @@
 .. index:: single: Séquence de Sobol
 
 SampleAsMinMaxSobolSequence
-  *Liste de triplets de paires réelles*. Cette clé décrit le domaine borné dans
-  lequel les points de calcul seront placés, sous la forme d'une paire
-  *[min,max]* pour chaque composante de l'état. Les bornes inférieures sont
-  incluses. Cette liste de paires, en nombre identique à la taille de l'espace
-  des états, est complétée par une paire d'entiers *[dim,nbr]* comportant la
-  dimension de l'espace des états et le nombre minimum souhaité de points
-  d'échantillonnage (par construction, le nombre de points générés dans la
-  séquence de Sobol sera la puissance de 2 immédiatement supérieure à ce nombre
-  minimum). L'échantillonnage est ensuite construit automatiquement selon la
-  méthode de séquences de Sobol. Par nature, les points sont inclus dans le
-  domaine défini par les bornes explicites.
+  *Liste de paires réelles [Min, Max], plus [Dimension, Nombre]*. Cette clé
+  décrit le domaine borné dans lequel les points de calcul seront placés, sous
+  la forme d'une paire *[Min, Max]* pour chaque composante de l'état. Les
+  bornes inférieures sont incluses. Cette liste de paires, en nombre identique
+  à la taille de l'espace des états, est complétée par une paire d'entiers
+  *[Dimension, Nombre]* comportant la dimension de l'espace des états et le
+  nombre minimum souhaité de points d'échantillonnage (par construction, le
+  nombre de points générés dans la séquence de Sobol sera la puissance de 2
+  immédiatement supérieure à ce nombre minimum). L'échantillonnage est ensuite
+  construit automatiquement selon la méthode de séquences de Sobol. Par nature,
+  les points sont inclus dans le domaine défini par les bornes explicites.
 
   *Remarque : il est nécessaire de disposer de Scipy en version supérieure à
   1.7.0 pour utiliser cette option échantillonnage.*

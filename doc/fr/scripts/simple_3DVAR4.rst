@@ -115,7 +115,9 @@ similaires) ces différentes informations réparties sur l'intervalle temporel
     :math:`u^t=[1,1,1]`, est inconnue en dehors d'expériences jumelles. Seules
     les trajectoires tracées comme continues sont connues par simulation.
 
-Sous forme numérique, les valeurs d'observations sont les suivantes :
+Sous forme numérique, enregistrées dans un fichier nommé
+``simple_3DVAR4Observations.csv`` pour relecture ultérieure, les valeurs
+d'observations sont les suivantes :
 
 .. literalinclude:: scripts/simple_3DVAR4Observations.csv
 

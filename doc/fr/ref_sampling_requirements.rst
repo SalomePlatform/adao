@@ -41,9 +41,9 @@ C'est le cas pour la définition explicite des états simulables des
 :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`.
 
 L'ensemble de ces états peut être décrit de manière explicite ou implicite pour
-en faciliter l'inventaire. On indique ci-dessous les descriptions possibles, et
-on les fait suivre d'exemples très simples pour montrer les types de
-répartitions obtenues dans l'espace des états.
+en faciliter l'inventaire. On indique ci-dessous les différentes descriptions
+possibles, et on les fait suivre d'exemples très simples pour montrer les types
+de répartitions obtenues dans l'espace des états.
 
 Description explicite ou implicite de la collection d'échantillonnage des états
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -55,8 +55,8 @@ L'échantillonnage des états :math:`\mathbf{x}` peut être fourni explicitement
 ou sous la forme d'hypercubes, explicites ou échantillonnés selon des
 distributions courantes, ou à l'aide d'un échantillonnage par hypercube latin
 (LHS) ou par séquence de Sobol. Selon la méthode, l'échantillon sera inclus
-dans le domaine décrit par ses bornes ou sera descriptif du domaine non borné
-des variables d'état.
+dans le domaine décrit par ses bornes ou sera issu du descriptif du domaine non
+borné des variables d'état.
 
 Ces mots-clés possibles sont les suivants :
 
@@ -72,8 +72,8 @@ Ces mots-clés possibles sont les suivants :
 
 .. include:: snippets/SampleAsnUplet.rst
 
-Attention à la taille de l'hypercube (et donc au nombre de calculs) qu'il est
-possible d'atteindre, elle peut rapidement devenir importante.
+Attention à la taille de l'hypercube implicite (et donc au nombre de calculs)
+qu'il est possible d'atteindre, elle peut rapidement devenir importante.
 
 Exemples très simples de répartitions dans l'espace des états
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -149,7 +149,8 @@ Répartition implicite d'états par le mot-clé "*SampleAsMinMaxLatinHyperCube*"
 .............................................................................
 
 La commande de génération implicite d'échantillons par
-"*SampleAsMinMaxLatinHyperCube*" est la suivante :
+"*SampleAsMinMaxLatinHyperCube*", en dimension 2 et avec 25 points, est la
+suivante :
 
 .. code-block:: python
 
@@ -166,7 +167,8 @@ Répartition implicite d'états par le mot-clé "*SampleAsMinMaxSobolSequence*"
 ............................................................................
 
 La commande de génération implicite d'échantillons par
-"*SampleAsMinMaxSobolSequence*" est la suivante :
+"*SampleAsMinMaxSobolSequence*", en dimension 2 et avec 25 points, est la
+suivante :
 
 .. code-block:: python
 
@@ -180,17 +182,17 @@ séquence de Sobol) ainsi décrite correspond à l'illustration :
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
     :align: center
 
-Répartition implicite d'états par le mot-clé "*SampleAsIndependantRandomVariables*" avec loi normale
-....................................................................................................
+Répartition implicite d'états par le mot-clé "*SampleAsIndependantRandomVariables*" avec lois normales
+......................................................................................................
 
 La commande de génération implicite d'échantillons par
 "*SampleAsIndependantRandomVariables*" est la suivante, en utilisant une loi
-normale (0,1) de répartition par coordonnée :
+normale (1,1) de répartition pour chaque coordonnée :
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['normal', [0, 1], 5], ['normal', [0, 1], 5]]
+    "SampleAsIndependantRandomVariables":[['normal', [1, 1], 5], ['normal', [1, 1], 5]]
     [...]
 
 La répartition des états ainsi décrite correspond à l'illustration :

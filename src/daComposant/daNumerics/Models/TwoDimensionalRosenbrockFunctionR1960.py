@@ -38,9 +38,9 @@ class TwoDimensionalRosenbrockFunctionR1960:
         f(x,y) = 0.
 
     This is the non-linear non-convex parametric function of the reference:
-        Rosenbrock, H. H., An Automatic Method for Finding the Greatest or
-        Least Value of a Function, The Computer Journal, 3(3), pp.175–184,
-        (1960)
+        Rosenbrock, H. H. (1960). "An Automatic Method for Finding the Greatest
+        or Least Value of a Function", The Computer Journal, vol.3 (3),
+        pp.175–184.
     """
 
     def __init__(self, nx: int = 40, ny: int = 40):

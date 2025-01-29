@@ -42,7 +42,7 @@ class EDS(DynamicalSimulator):
 
     This Lorenz3D model was described in:
         Lorenz, E. N. (1963). "Deterministic nonperiodic flow". Journal of the
-        Atmospheric Sciences, 20, 130–141.
+        Atmospheric Sciences, vol.20, pp.130–141.
         doi:10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2
     """
 

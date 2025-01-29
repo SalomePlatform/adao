@@ -258,6 +258,12 @@ Pour tester une chaîne d'assimilation de données : les expériences jumelles
 
 .. index:: single: chaîne d'assimilation de données
 .. index:: single: expériences jumelles
+.. index:: single: méthode des expériences jumelles
+.. index:: single: méthode des solutions manufacturées
+.. index:: single: MEJ
+.. index:: single: MSM
+.. index:: single: MTE
+.. index:: single: MMS
 
 Lors de la mise au point d'une étude d'assimilation, les différentes étapes
 décrites ci-dessus forment ce que l'on appelle une "chaîne d'assimilation de
@@ -292,3 +298,16 @@ Ainsi, la méthodologie d'expériences jumelles, appliquée plusieurs fois et av
 des hypothèses contrôlées de bruit ou d'erreur différentes, permet alors de
 vérifier étape par étape chacune des composantes de la chaîne complète
 d'assimilation de données.
+
+Lorsque le modèle est décrit à l'aide d'équations aux dérivées partielles, la
+Méthode des Expériences Jumelles (MEJ, ou MTE de l'anglais "*Method of Twin
+Experiments*") a des relations avec la Méthode des Solutions Manufacturées
+(MSM, ou MMS de l'anglais "*Method of Manufactured Solutions*"). Cette dernière
+est bien connue en mécanique des fluides ou des solides pour vérifier la
+qualité logicielle. Elle permet de créer des solutions de référence, pour un
+système d’équations aux dérivées partielles caractérisant un problème physique
+à résoudre. Dans la pratique, on postule une solution exacte sous la forme
+d'une expression analytique, et on construit les données (paramètres de modèles
+et/ou pseudo-observations) qui sont nécessaires pour obtenir cette solution.
+Les éléments obtenus (paramètres et/ou observations, solution) peuvent ensuite
+faire l'objet de la méthode des expériences jumelles.

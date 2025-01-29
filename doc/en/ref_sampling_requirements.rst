@@ -40,7 +40,7 @@ This is the case for the explicit definition of simulatable states of
 :ref:`section_ref_algorithm_MeasurementsOptimalPositioningTask`.
 
 All these states can be described explicitly or implicitly, to simplify their
-listing. Possible descriptions are given below, followed by very simple
+listing. Various possible descriptions are given below, followed by very simple
 examples to show the types of state distribution obtained in the space.
 
 Explicit or implicit description of the state sampling collection
@@ -53,7 +53,7 @@ The sampling of the states :math:`\mathbf{x}` can be provided explicitly or in
 the form of hypercubes, explicit or sampled according to common distributions,
 or using Latin Hypercube Sampling (LHS) or Sobol sequences. Depending on the
 method, the sample will be included in the domain described by its bounds, or
-will be descriptive of the unbounded domain of state variables.
+will come from the description of the unbounded domain of state variables.
 
 These possible keywords are:
 
@@ -69,8 +69,8 @@ These possible keywords are:
 
 .. include:: snippets/SampleAsnUplet.rst
 
-Beware of the size of the hypercube (and then to the number of computations)
-that can be reached, it can grow quickly to be quite large.
+Beware of the size of the implicit hypercube (and then to the number of
+computations) that can be reached, it can grow quickly to be quite large.
 
 Simple examples of state-space distributions
 ++++++++++++++++++++++++++++++++++++++++++++
@@ -143,8 +143,8 @@ The distribution of states thus described corresponds to the illustration:
 Implicit state distribution by keyword "*SampleAsMinMaxLatinHyperCube*"
 .......................................................................
 
-Implicit sample generation command by "*SampleAsMinMaxLatinHyperCube*" is as
-follows:
+Implicit sample generation command by "*SampleAsMinMaxLatinHyperCube*", in
+dimension 2 et and with 25 points, is as follows:
 
 .. code-block:: python
 
@@ -160,8 +160,8 @@ The distribution of states thus described corresponds to the illustration:
 Implicit state distribution by keyword "*SampleAsMinMaxSobolSequence*"
 .......................................................................
 
-Implicit sample generation command by "*SampleAsMinMaxSobolSequence*" is as
-follows:
+Implicit sample generation command by "*SampleAsMinMaxSobolSequence*", in
+dimension 2 et and with 25 points, is as follows:
 
 .. code-block:: python
 
@@ -175,16 +175,16 @@ the Sobol sequence) thus described corresponds to the illustration:
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
     :align: center
 
-Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with normal law
-.............................................................................................
+Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with normal laws
+..............................................................................................
 
 Implicit sample generation command by "*SampleAsIndependantRandomVariables*" is as
-follows, using a normal distribution (0,1) by coordinate:
+follows, using a normal distribution (1,1) by coordinate:
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['normal', [0, 1], 5], ['normal', [0, 1], 5]]
+    "SampleAsIndependantRandomVariables":[['normal', [1, 1], 5], ['normal', [1, 1], 5]]
     [...]
 
 The distribution of states thus described corresponds to the illustration:

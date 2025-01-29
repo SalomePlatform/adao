@@ -42,9 +42,9 @@ class EDS(DynamicalSimulator):
     Center for Medium-Range Weather Forecasts (ECMWF) in the Autumn of 1995
     (Seminar on Predictability, 4-8 September 1995), the proceedings of which
     were published as Lorenz (1996):
-        Lorenz, E.N. "Predictability: A problem partly solved". In Proceedings
-        of the Seminar on Predictability, ECMWF, Reading, UK, 9–11 September
-        1996, Volume 1, pp. 1-18.
+        Lorenz, E.N. (1996). "Predictability: A problem partly solved". In
+        Proceedings of the Seminar on Predictability, ECMWF, Reading, UK, 9–11
+        September 1996, vol.1, pp.1-18.
     See:
     https://www.ecmwf.int/en/elibrary/75462-predictability-problem-partly-solved
     The system is chaotic and numerically very sensible, even on the order of

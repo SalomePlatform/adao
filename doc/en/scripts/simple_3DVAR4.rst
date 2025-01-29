@@ -110,7 +110,8 @@ others are similar), spread over the time interval [0,2] of measurement:
     true state :math:`u^t=[1,1,1]`, is unknown outside twin experiments. Only
     trajectories plotted as continuous are known by simulation.
 
-In numerical form, the observation values are as follows:
+In numerical form, saved in a file named ``simple_3DVAR4Observations.csv`` to
+be read, the observation values are as follows:
 
 .. literalinclude:: scripts/simple_3DVAR4Observations.csv
 

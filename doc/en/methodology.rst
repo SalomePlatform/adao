@@ -239,6 +239,10 @@ To test a data assimilation chain: the twin experiments
 
 .. index:: single: data assimilation chain
 .. index:: single: twin experiments
+.. index:: single: method of twin experiments
+.. index:: single: method of manufactured solutions
+.. index:: single: MTE
+.. index:: single: MMS
 
 When developing an assimilation study, the various steps described above form
 what is known as a "data assimilation chain". The testing and analysis of this
@@ -271,3 +275,14 @@ be described as follows:
 Thus, the methodology of twin experiments, applied several times and with
 different controlled hypotheses of noise or error, allows to verify step by
 step each component of the complete data assimilation chain.
+
+When the model is described using partial differential equations, the Method of
+Twin Experiments (MTE) has some links with the Method of Manufactured Solutions
+(MMS). The latter is well known in fluid or solid mechanics for verifying
+software quality. It is used to create reference solutions for a system of
+partial differential equations characterizing a physical problem to be solved.
+In practice, an exact solution is given in the form of an analytical
+expression, and the data (model parameters and/or pseudo-observations) required
+to obtain this solution are then built up. The elements obtained (parameters
+and/or observations, solution) can then be subject to the twin experiment
+method.

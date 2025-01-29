@@ -35,9 +35,9 @@ class TwoDimensionalInverseDistanceCS2010:
         with (x,y) ∈ [0.1,0.9]² and µ=(µ1,µ2) ∈ [-1,-0.01]².
 
     This is the non-linear parametric function (3.38) of the reference:
-        Chaturantabut, S., Sorensen, D. C.,
-        Nonlinear Model Reduction via Discrete Empirical Interpolation,
-        SIAM Journal on Scientific Computing, 32(5), pp. 2737-2764 (2010).
+        Chaturantabut, S., Sorensen, D. C. (2010). "Nonlinear Model Reduction
+        via Discrete Empirical Interpolation", SIAM Journal on Scientific
+        Computing, vol.32 (5), pp. 2737-2764.
     """
 
     def __init__(self, nx: int = 20, ny: int = 20):
