@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Définit les outils généraux élémentaires.
+Définit les outils généraux élémentaires.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []

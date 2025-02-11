@@ -21,25 +21,26 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Informations sur le code et la plateforme, et mise à jour des chemins.
+Informations sur le code et la plateforme, et mise à jour des chemins.
 
-    La classe "PlatformInfo" permet de récupérer les informations générales sur
-    le code et la plateforme sous forme de strings, ou d'afficher directement
-    les informations disponibles par les méthodes. L'impression directe d'un
-    objet de cette classe affiche les informations minimales. Par exemple :
-        print(PlatformInfo())
-        print(PlatformInfo().getVersion())
-        created = PlatformInfo().getDate()
+La classe "PlatformInfo" permet de récupérer les informations générales sur le
+code et la plateforme sous forme de strings, ou d'afficher directement les
+informations disponibles par les méthodes. L'impression directe d'un objet de
+cette classe affiche les informations minimales. Par exemple :
 
-    La classe "PathManagement" permet de mettre à jour les chemins système pour
-    ajouter les outils numériques, matrices... On l'utilise en instanciant
-    simplement cette classe, sans même récupérer d'objet :
-        PathManagement()
+    print(PlatformInfo())
+    print(PlatformInfo().getVersion())
+    created = PlatformInfo().getDate()
 
-    La classe "SystemUsage" permet de  sous Unix les différentes tailles
-    mémoires du process courant. Ces tailles peuvent être assez variables et
-    dépendent de la fiabilité des informations du système dans le suivi des
-    process.
+La classe "PathManagement" permet de mettre à jour les chemins système pour
+ajouter les outils numériques, matrices... On l'utilise en instanciant
+simplement cette classe, sans même récupérer d'objet :
+
+    PathManagement()
+
+La classe "SystemUsage" permet de  sous Unix les différentes tailles mémoires
+du process courant. Ces tailles peuvent être assez variables et dépendent de la
+fiabilité des informations du système dans le suivi des process.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
@@ -294,9 +295,14 @@ class PlatformInfo(object):
             self.getGnuplotVersion(),
         )
         __msg += "\n"
-        __msg += "\n%s%30s : %s" % (__prefix, "Pandas version", self.getPandasVersion())
-        __msg += "\n%s%30s : %s" % (__prefix, "Fmpy version", self.getFmpyVersion())
-        __msg += "\n%s%30s : %s" % (__prefix, "Sphinx version", self.getSphinxVersion())
+        if self.has_pandas:
+            __msg += "\n%s%30s : %s" % (__prefix, "Pandas version", self.getPandasVersion())
+        if self.has_scikitlearn:
+            __msg += "\n%s%30s : %s" % (__prefix, "Scikit-learn version", self.getScikitlearnVersion())
+        if self.has_fmpy:
+            __msg += "\n%s%30s : %s" % (__prefix, "Fmpy version", self.getFmpyVersion())
+        if self.has_sphinx:
+            __msg += "\n%s%30s : %s" % (__prefix, "Sphinx version", self.getSphinxVersion())
         return __msg
 
     def getAllInformation(self, __prefix="", __title="Whole system information"):
@@ -441,6 +447,17 @@ class PlatformInfo(object):
 
     has_modelicares = property(fget=_has_modelicares)
 
+    def _has_scikitlearn(self):
+        try:
+            import sklearn  # noqa: F401
+
+            has_scikitlearn = True
+        except ImportError:
+            has_scikitlearn = False
+        return has_scikitlearn
+
+    has_scikitlearn = property(fget=_has_scikitlearn)
+
     # Tests des modules locaux
 
     def _has_gnuplot(self):
@@ -564,6 +581,16 @@ class PlatformInfo(object):
             import sphinx
 
             __version = sphinx.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+
+    def getScikitlearnVersion(self):
+        "Retourne la version de scikit-learn disponible"
+        if self.has_scikitlearn:
+            import sklearn
+
+            __version = sklearn.__version__
         else:
             __version = "0.0.0"
         return __version

@@ -127,13 +127,14 @@ chaque problème que l'on traite.
 Le décompte du nombre d'évaluations de la fonction à simuler lors de cet
 algorithme est déterministe, à savoir le "*nombre d'itérations ou de
 générations*" multiplié par le "*nombre d'individus de la population*". Avec
-les valeurs par défaut, il faut entre `40x50=2000` et `100*50=5000` évaluations
-par défaut. C'est pour cette raison que cet algorithme est usuellement
-intéressant lorsque la dimension de l'espace des états est grande, ou que les
-non-linéarités de la simulation rendent compliqué, ou invalide, l'évaluation du
-gradient de la fonctionnelle par approximation numérique. Mais il est aussi
-nécessaire que le calcul de la fonction à simuler ne soit pas trop coûteux
-pour éviter une durée d'optimisation rédhibitoire.
+les valeurs par défaut de 40 à 100 individus sur 50 générations, il faut entre
+`40x50=2000` et `100*50=5000` évaluations par défaut. C'est pour cette raison
+que cet algorithme est usuellement intéressant lorsque la dimension de l'espace
+des états est grande, ou que les non-linéarités de la simulation rendent
+compliqué, ou invalide, l'évaluation du gradient de la fonctionnelle par
+approximation numérique. Mais il est aussi nécessaire que le calcul de la
+fonction à simuler ne soit pas trop coûteux pour éviter une durée
+d'optimisation rédhibitoire.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst
@@ -168,6 +169,8 @@ pour éviter une durée d'optimisation rédhibitoire.
 
 .. include:: snippets/CognitiveAcceleration.rst
 
+.. include:: snippets/CognitiveAccelerationControl.rst
+
 .. include:: snippets/DistributionByComponents.rst
 
 .. include:: snippets/InertiaWeight.rst
@@ -185,6 +188,8 @@ pour éviter une durée d'optimisation rédhibitoire.
 .. include:: snippets/SetSeed.rst
 
 .. include:: snippets/SocialAcceleration.rst
+
+.. include:: snippets/SocialAccelerationControl.rst
 
 .. include:: snippets/StoreInitialState.rst
 
@@ -310,5 +315,6 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst
 
+- [Wang09]_
 - [WikipediaPSO]_
 - [ZambranoBigiarini13]_

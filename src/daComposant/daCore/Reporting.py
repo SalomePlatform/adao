@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Gestion simple de rapports structurés créés par l'utilisateur.
+Gestion simple de rapports structurés créés par l'utilisateur.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []

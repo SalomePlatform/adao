@@ -161,7 +161,9 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
 
-.. [Wan00] Wan E. A., van der Merwe R., *The Unscented Kalman Filter for Nonlinear Estimation*, in: Adaptive Systems for Signal Processing, Communications, and Control Symposium, IEEE, 2000.
+.. [Wan00] Wan E. A., van der Merwe R., *The Unscented Kalman Filter for Nonlinear Estimation*, in: Adaptive Systems for Signal Processing, Communications, and Control Symposium, IEEE, 2000
+
+.. [Wang09] Wang G.-Y., Han D.-X., *Particle Swarm Optimization Based on Self-adaptive Acceleration Factors*, in: Third International Conference on Genetic and Evolutionary Computing, pp.637-640, 2009
 
 .. [Welch06] Welch G., Bishop G., *An Introduction to the Kalman Filter*, University of North Carolina at Chapel Hill, Department of Computer Science, TR 95-041, 2006, http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
 

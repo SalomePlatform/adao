@@ -109,7 +109,9 @@ des états échantillonnés à l'aide de la variable habituelle de
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
-.. include:: snippets/SampleAsIndependantRandomVariables.rst
+.. include:: snippets/SampleAsIndependentRandomVariables.rst
+
+.. include:: snippets/SampleAsIndependentRandomVectors.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 

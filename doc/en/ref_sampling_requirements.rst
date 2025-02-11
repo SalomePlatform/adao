@@ -59,7 +59,9 @@ These possible keywords are:
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
-.. include:: snippets/SampleAsIndependantRandomVariables.rst
+.. include:: snippets/SampleAsIndependentRandomVariables.rst
+
+.. include:: snippets/SampleAsIndependentRandomVectors.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
@@ -175,55 +177,185 @@ the Sobol sequence) thus described corresponds to the illustration:
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
     :align: center
 
-Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with normal laws
+Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with normal laws
 ..............................................................................................
 
-Implicit sample generation command by "*SampleAsIndependantRandomVariables*" is as
+Implicit sample generation command by "*SampleAsIndependentRandomVariables*" is as
 follows, using a normal distribution (1,1) by coordinate:
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['normal', [1, 1], 5], ['normal', [1, 1], 5]]
+    "SampleAsIndependentRandomVariables":[['normal', [1, 1], 5], ['normal', [1, 1], 5]]
     [...]
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_06_SampleAsIndependantRandomVariables_normal.png
+  .. image:: images/sampling_06_SampleAsIndependentRandomVariables_normal.png
     :align: center
 
-Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with uniform law
-..............................................................................................
+Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with log-normal laws
+..................................................................................................
 
-Implicit sample generation command by "*SampleAsIndependantRandomVariables*" is
-as follows, using a uniform distribution between 0 and 5 for coordinate
+Implicit sample generation command by "*SampleAsIndependentRandomVariables*" is
+as follows, using a log-normal distribution (1,1) (i.e. whose logarithmic
+distribution is normal) by coordinate:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVariables":[['lognormal', [1, 1], 5], ['lognormal', [1, 1], 5]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_07_SampleAsIndependentRandomVariables_lognormal.png
+    :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with uniform laws
+...............................................................................................
+
+Implicit sample generation command by "*SampleAsIndependentRandomVariables*" is
+as follows, using a uniform distribution between 0.01 and 1 for coordinate
 distribution:
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['uniform', [0, 5], 5], ['uniform', [0, 5], 5]]
+    "SampleAsIndependentRandomVariables":[['uniform', [0.01, 1], 5], ['uniform', [0.01, 1], 5]]
     [...]
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_07_SampleAsIndependantRandomVariables_uniform.png
+  .. image:: images/sampling_08_SampleAsIndependentRandomVariables_uniform.png
     :align: center
 
-Implicit state distribution by keyword "*SampleAsIndependantRandomVariables*" with Weibull law
-..............................................................................................
+Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with log-uniform laws
+...................................................................................................
 
-Implicit sample generation command by "*SampleAsIndependantRandomVariables*" is
+Implicit sample generation command by "*SampleAsIndependentRandomVariables*" is
+as follows, using a uniform distribution between 0.01 and 1 (i.e. whose
+logarithmic distribution is uniform) for coordinate distribution:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVariables":[['loguniform', [0.01, 1], 5], ['loguniform', [0.01, 1], 5]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_09_SampleAsIndependentRandomVariables_loguniform.png
+    :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with Weibull laws
+...............................................................................................
+
+Implicit sample generation command by "*SampleAsIndependentRandomVariables*" is
 as follows, using a 1-parameter Weibull distribution of value 5 for coordinate
 distribution:
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['weibull', [5], 5], ['weibull', [5], 5]]
+    "SampleAsIndependentRandomVariables":[['weibull', [5], 5], ['weibull', [5], 5]]
     [...]
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_08_SampleAsIndependantRandomVariables_weibull.png
+  .. image:: images/sampling_10_SampleAsIndependentRandomVariables_weibull.png
     :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with normal laws
+............................................................................................
+
+The implicit command for generating samples of independent vectors by
+"*SampleAsIndependentRandomVectors*" is as follows, in dimension 2 and with 25
+points, using a normal distribution (1,1) for each coordinate:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['normal', [1, 1]], ['normal', [1, 1]], [2, 25]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_11_SampleAsIndependentRandomVectors_normal.png
+    :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with log-normal laws
+................................................................................................
+
+The implicit command for generating samples of independent vectors by
+"*SampleAsIndependentRandomVectors*" is as follows, in dimension 2 and with 25
+points, using a log-normal distribution (1,1) (i.e. whose logarithmic
+distribution is normal) for each coordinate:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['lognormal', [1, 1]], ['lognormal', [1, 1]], [2, 25]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_12_SampleAsIndependentRandomVectors_lognormal.png
+    :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with uniform laws
+.............................................................................................
+
+The implicit command for generating samples of independent vectors by
+"*SampleAsIndependentRandomVectors*" is as follows, in dimension 2 and with 25
+points, using a uniform distribution between 0.01 and 1 for each coordinate:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['normal', [0.01, 1]], ['normal', [0.01, 1]], [2, 25]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_13_SampleAsIndependentRandomVectors_uniform.png
+    :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with log-uniform laws
+.................................................................................................
+
+The implicit command for generating samples of independent vectors by
+"*SampleAsIndependentRandomVectors*" is as follows, in dimension 2 and with 25
+points, using a log-uniform distribution (i.e. whose logarithmic distribution
+is uniform) between 0.01 and 1 for each coordinate:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['lognormal', [1, 1]], ['lognormal', [1, 1]], [2, 25]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_14_SampleAsIndependentRandomVectors_loguniform.png
+    :align: center
+
+Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with Weibull laws
+.............................................................................................
+
+The implicit command for generating samples of independent vectors by
+"*SampleAsIndependentRandomVectors*" is as follows, in dimension 2 and with 25
+points, using a 1-parameter Weibull distribution of value 5 for coordinate
+distribution:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['weibull', [5]], ['weibull', [5]], [2, 25]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_15_SampleAsIndependentRandomVectors_weibull.png
+    :align: center
+

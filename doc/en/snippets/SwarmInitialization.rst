@@ -4,15 +4,16 @@ SwarmInitialization
   *Predefined name*. The name defines the particle swarm initialization mode
   for the "*ParticleSwarmOptimization*" algorithm. The particle series is
   initialized by specifying the distribution per component, which can be
-  identical for all components (as with "UniformByComponents" or
-  "LogUniformByComponents"), or component-specific with
-  "DistributionByComponents". In the latter case, the content of the
-  "DistributionByComponents" keyword must also be specified. The default value
-  is "UniformByComponents".
+  identical for all components (this is the case for all values except
+  "DistributionByComponents"), or component-specific with
+  "DistributionByComponents". In the latter case, it is also necessary to
+  specify the "DistributionByComponents" keyword content. The default value is
+  "UniformByComponents".
 
   The possible name is therefore in the following list:
   ["UniformByComponents",
   "LogUniformByComponents",
+  "LogarithmicByComponents",
   "DistributionByComponents"].
 
   Example :

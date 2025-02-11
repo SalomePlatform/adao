@@ -120,13 +120,13 @@ physics of each problem that is treated.
 The count of the number of evaluations of the function to be simulated during
 this algorithm is deterministic, namely the "*number of iterations or
 generations*" multiplied by the "*number of individuals in the population*".
-With the default values, it takes between `40x50=2000` and `100*50=5000`
-evaluations. It is for this reason that this algorithm is usually interesting
-when the dimension of the state space is large, or when the non-linearities of
-the simulation make the evaluation of the gradient of the functional by
-numerical approximation complicated or invalid. But it is also necessary that
-the calculation of the function to be simulated is not too costly to avoid a
-prohibitive optimization time length.
+With the default values of 40 to 100 individuals on 50 generations, it takes
+between `40x50=2000` and `100*50=5000` evaluations. It is for this reason that
+this algorithm is usually interesting when the dimension of the state space is
+large, or when the non-linearities of the simulation make the evaluation of the
+gradient of the functional by numerical approximation complicated or invalid.
+But it is also necessary that the calculation of the function to be simulated
+is not too costly to avoid a prohibitive optimization time length.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst
@@ -161,6 +161,8 @@ prohibitive optimization time length.
 
 .. include:: snippets/CognitiveAcceleration.rst
 
+.. include:: snippets/CognitiveAccelerationControl.rst
+
 .. include:: snippets/DistributionByComponents.rst
 
 .. include:: snippets/InertiaWeight.rst
@@ -178,6 +180,8 @@ prohibitive optimization time length.
 .. include:: snippets/SetSeed.rst
 
 .. include:: snippets/SocialAcceleration.rst
+
+.. include:: snippets/SocialAccelerationControl.rst
 
 .. include:: snippets/StoreInitialState.rst
 
@@ -303,5 +307,6 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst
 
+- [Wang09]_
 - [WikipediaPSO]_
 - [ZambranoBigiarini13]_

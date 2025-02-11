@@ -80,6 +80,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "UniformByComponents",
                 "LogUniformByComponents",
+                "LogarithmicByComponents",
                 "DistributionByComponents",
             ],
         )
@@ -122,12 +123,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = 0.,
         )
         self.defineRequiredParameter(
+            name     = "CognitiveAccelerationControl",
+            default  = 0.,
+            typecast = float,
+            message  = "Ralentissement du rappel à la meilleure position (positif)",
+            minval   = 0.,
+        )
+        self.defineRequiredParameter(
             name     = "SocialAcceleration",
             default  = 1.19315,  # 1/2+ln(2)
             typecast = float,
             message  = "Taux de rappel au meilleur insecte du groupe local (positif)",
             minval   = 0.,
             oldname  = "GroupRecallRate",
+        )
+        self.defineRequiredParameter(
+            name     = "SocialAccelerationControl",
+            default  = 0.,
+            typecast = float,
+            message  = "Accroissement au rappel au meilleur insecte du groupe local (positif)",
+            minval   = 0.,
         )
         self.defineRequiredParameter(
             name     = "VelocityClampingFactor",

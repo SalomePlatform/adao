@@ -62,7 +62,7 @@ class EDS(DynamicalSimulator):
         x, y, z = numpy.ravel(numpy.array(xyz, dtype=float))  # map(float, xyz)
         #
         dxdt = sigma * (y - x)
-        dydt = x * rho - y - x * z
+        dydt = rho * x - y - x * z
         dzdt = x * y - beta * z
         #
         return numpy.array([dxdt, dydt, dzdt])

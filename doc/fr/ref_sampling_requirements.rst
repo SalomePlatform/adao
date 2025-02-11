@@ -62,7 +62,9 @@ Ces mots-clés possibles sont les suivants :
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
-.. include:: snippets/SampleAsIndependantRandomVariables.rst
+.. include:: snippets/SampleAsIndependentRandomVariables.rst
+
+.. include:: snippets/SampleAsIndependentRandomVectors.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
@@ -182,56 +184,191 @@ séquence de Sobol) ainsi décrite correspond à l'illustration :
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
     :align: center
 
-Répartition implicite d'états par le mot-clé "*SampleAsIndependantRandomVariables*" avec lois normales
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois normales
 ......................................................................................................
 
 La commande de génération implicite d'échantillons par
-"*SampleAsIndependantRandomVariables*" est la suivante, en utilisant une loi
+"*SampleAsIndependentRandomVariables*" est la suivante, en utilisant une loi
 normale (1,1) de répartition pour chaque coordonnée :
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['normal', [1, 1], 5], ['normal', [1, 1], 5]]
+    "SampleAsIndependentRandomVariables":[['normal', [1, 1], 5], ['normal', [1, 1], 5]]
     [...]
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_06_SampleAsIndependantRandomVariables_normal.png
+  .. image:: images/sampling_06_SampleAsIndependentRandomVariables_normal.png
     :align: center
 
-Répartition implicite d'états par le mot-clé "*SampleAsIndependantRandomVariables*" avec loi uniforme
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois log-normales
+..........................................................................................................
+
+La commande de génération implicite d'échantillons par
+"*SampleAsIndependentRandomVariables*" est la suivante, en utilisant une loi
+log-normale (1,1) (c'est-à-dire dont la répartition logarithmique est normale)
+de répartition pour chaque coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVariables":[['lognormal', [1, 1], 5], ['lognormal', [1, 1], 5]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_07_SampleAsIndependentRandomVariables_lognormal.png
+    :align: center
+
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois uniformes
+.......................................................................................................
+
+La commande de génération implicite d'échantillons par
+"*SampleAsIndependentRandomVariables*" est la suivante, en utilisant une loi
+uniforme entre 0.01 et 1 de répartition pour chaque coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVariables":[['uniform', [0.01, 1], 5], ['uniform', [0.01, 1], 5]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_08_SampleAsIndependentRandomVariables_uniform.png
+    :align: center
+
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois log-uniformes
+...........................................................................................................
+
+La commande de génération implicite d'échantillons par
+"*SampleAsIndependentRandomVariables*" est la suivante, en utilisant une loi
+log-uniforme (c'est-à-dire dont la répartition logarithmique est uniforme)
+entre 0.01 et 1 de répartition pour chaque coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVariables":[['loguniform', [0.01, 1], 5], ['loguniform', [0.01, 1], 5]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_09_SampleAsIndependentRandomVariables_loguniform.png
+    :align: center
+
+Répartition implicite par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois de Weibull
+................................................................................................
+
+La commande de génération implicite d'échantillons par
+"*SampleAsIndependentRandomVariables*" est la suivante, en utilisant une loi de
+Weibull à un paramètre de valeur 5 de répartition pour chaque coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVariables":[['weibull', [5], 5], ['weibull', [5], 5]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_10_SampleAsIndependentRandomVariables_weibull.png
+    :align: center
+
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois normales
+....................................................................................................
+
+La commande de génération implicite d'échantillons de vecteurs indépendants par
+"*SampleAsIndependentRandomVectors*" est la suivante, en dimension 2 et avec 25
+points, en utilisant une loi normale (1,1) de répartition pour chaque
+coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['normal', [1, 1]], ['normal', [1, 1]], [2, 25]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_11_SampleAsIndependentRandomVectors_normal.png
+    :align: center
+
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois log-normales
+........................................................................................................
+
+La commande de génération implicite d'échantillons de vecteurs indépendants par
+"*SampleAsIndependentRandomVectors*" est la suivante, en dimension 2 et avec 25
+points, en utilisant une loi log-normale (1,1) (c'est-à-dire dont la
+répartition logarithmique est normale) de répartition pour chaque coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['lognormal', [1, 1]], ['lognormal', [1, 1]], [2, 25]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_12_SampleAsIndependentRandomVectors_lognormal.png
+    :align: center
+
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois uniformes
 .....................................................................................................
 
-La commande de génération implicite d'échantillons par
-"*SampleAsIndependantRandomVariables*" est la suivante, en utilisant une loi
-uniforme entre 0 et 5 de répartition par coordonnée :
+La commande de génération implicite d'échantillons de vecteurs indépendants par
+"*SampleAsIndependentRandomVectors*" est la suivante, en dimension 2 et avec 25
+points, en utilisant une loi uniforme entre 0.01 et 1 de répartition pour
+chaque coordonnée :
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['uniform', [0, 5], 5], ['uniform', [0, 5], 5]]
+    "SampleAsIndependentRandomVectors":[['normal', [0.01, 1]], ['normal', [0.01, 1]], [2, 25]]
     [...]
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_07_SampleAsIndependantRandomVariables_uniform.png
+  .. image:: images/sampling_13_SampleAsIndependentRandomVectors_uniform.png
     :align: center
 
-Répartition implicite par le mot-clé "*SampleAsIndependantRandomVariables*" avec loi de Weibull
-...............................................................................................
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois log-uniformes
+.........................................................................................................
 
-La commande de génération implicite d'échantillons par
-"*SampleAsIndependantRandomVariables*" est la suivante, en utilisant une loi de
-Weibull à un paramètre de valeur 5 de répartition par coordonnée :
+La commande de génération implicite d'échantillons de vecteurs indépendants par
+"*SampleAsIndependentRandomVectors*" est la suivante, en dimension 2 et avec 25
+points, en utilisant une loi log-uniforme (c'est-à-dire dont la répartition
+logarithmique est uniforme) entre 0.01 et 1 de répartition pour chaque
+coordonnée :
 
 .. code-block:: python
 
     [...]
-    "SampleAsIndependantRandomVariables":[['weibull', [5], 5], ['weibull', [5], 5]]
+    "SampleAsIndependentRandomVectors":[['lognormal', [1, 1]], ['lognormal', [1, 1]], [2, 25]]
     [...]
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_08_SampleAsIndependantRandomVariables_weibull.png
+  .. image:: images/sampling_14_SampleAsIndependentRandomVectors_loguniform.png
     :align: center
+
+Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois de Weibull
+......................................................................................................
+
+La commande de génération implicite d'échantillons de vecteurs indépendants par
+"*SampleAsIndependentRandomVectors*" est la suivante, en dimension 2 et avec 25
+points, est la suivante, en utilisant une loi de Weibull à un paramètre de
+valeur 5 de répartition pour chaque coordonnée :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsIndependentRandomVectors":[['weibull', [5]], ['weibull', [5]], [2, 25]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_15_SampleAsIndependentRandomVectors_weibull.png
+    :align: center
+

@@ -75,7 +75,7 @@ calculations. For example, we can define a matrix observation operator equal to
 the identity (square matrix of the state size), a draft and an observation
 equal, worth 1 (vectors of the state size). Next, we set up the ADAO case with
 this algorithm to recover the set of sampled states using the usual
-“*CurrentState*” variable.
+"*CurrentState*" variable.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst
@@ -106,7 +106,9 @@ this algorithm to recover the set of sampled states using the usual
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
-.. include:: snippets/SampleAsIndependantRandomVariables.rst
+.. include:: snippets/SampleAsIndependentRandomVariables.rst
+
+.. include:: snippets/SampleAsIndependentRandomVectors.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 

@@ -21,53 +21,60 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Ce module permet de mettre en place un logging utilisable partout dans
-    l'application, par défaut à la console, et si nécessaire dans un fichier.
+Ce module permet de mettre en place un logging utilisable partout dans
+l'application, par défaut à la console, et si nécessaire dans un fichier.
 
-    Il doit être appelé en premier dans Aidsm (mais pas directement dans les
-    applications utilisateurs), en l'important et en instanciant un objet :
-        import ExtendedLogging ; ExtendedLogging.ExtendedLogging()
+Il doit être appelé en premier dans Aidsm (mais pas directement dans les
+applications utilisateurs), en l'important et en instanciant un objet :
 
-    Par défaut, seuls les messages du niveau WARNING ou au-delà sont disponibles
-    (donc les simples messages d'info ne sont pas disponibles), ce que l'on peut
-    changer à l'instanciation avec le mot-clé "level" :
-        import ExtendedLogging ; ExtendedLogging.ExtendedLogging(level=20)
+    import ExtendedLogging ; ExtendedLogging.ExtendedLogging()
 
-    On peut éventuellement demander à l'objet de sortir aussi les messages dans
-    un fichier (noms par défaut : AdaoOutputLogfile.log, niveau NOTSET) :
-        import ExtendedLogging ; ExtendedLogging.ExtendedLogging().setLogfile()
+Par défaut, seuls les messages du niveau WARNING ou au-delà sont disponibles
+(donc les simples messages d'info ne sont pas disponibles), ce que l'on peut
+changer à l'instanciation avec le mot-clé "level" :
 
-    Si on veut changer le nom du fichier ou le niveau global de message, il faut
-    récupérer l'instance et appliquer les méthodes :
-        import ExtendedLogging
-        log = ExtendedLogging.ExtendedLogging()
-        import logging
-        log.setLevel(logging.DEBUG)
-        log.setLogfile(filename="toto.log", filemode="a", level=logging.WARNING)
-    et on change éventuellement le niveau avec :
-        log.setLogfileLevel(logging.INFO)
+    import ExtendedLogging ; ExtendedLogging.ExtendedLogging(level=20)
 
-    Ensuite, n'importe où dans les applications, il suffit d'utiliser le module
-    "logging" (avec un petit "l") :
-        import logging
-        log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
-        log.critical("...")
-        log.error("...")
-        log.warning("...")
-        log.info("...")
-        log.debug("...")
-    ou encore plus simplement :
-        import logging
-        logging.info("...")
+On peut éventuellement demander à l'objet de sortir aussi les messages dans un
+fichier (noms par défaut : AdaoOutputLogfile.log, niveau NOTSET) :
 
-    Dans une application, à n'importe quel endroit et autant de fois qu'on veut,
-    on peut changer le niveau global de message en utilisant par exemple :
-        import logging
-        log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
-        log.setLevel(logging.DEBUG)
+    import ExtendedLogging ; ExtendedLogging.ExtendedLogging().setLogfile()
 
-    On rappelle les niveaux (attributs de "logging") et leur ordre :
-        NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
+Si on veut changer le nom du fichier ou le niveau global de message, il faut
+récupérer l'instance et appliquer les méthodes :
+
+    import ExtendedLogging
+    log = ExtendedLogging.ExtendedLogging()
+    import logging
+    log.setLevel(logging.DEBUG)
+    log.setLogfile(filename="toto.log", filemode="a", level=logging.WARNING)
+
+et on change éventuellement le niveau avec :
+
+    log.setLogfileLevel(logging.INFO)
+
+Ensuite, n'importe où dans les applications, il suffit d'utiliser le module
+"logging" (avec un petit "l") :
+
+    import logging
+    log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
+    log.critical("...")
+    log.error("...")
+    log.warning("...")
+    log.info("...")
+    log.debug("...")
+ou encore plus simplement :
+    import logging
+    logging.info("...")
+
+Dans une application, à n'importe quel endroit et autant de fois qu'on veut, on
+peut changer le niveau global de message en utilisant par exemple :
+    import logging
+    log = logging.getLogger(NAME) # Avec rien (recommandé) ou un nom NAME
+    log.setLevel(logging.DEBUG)
+
+On rappelle les niveaux (attributs de "logging") et leur ordre :
+    NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []

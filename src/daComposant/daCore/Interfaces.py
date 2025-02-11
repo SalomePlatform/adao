@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Définit les outils d'interfaces normalisées de cas.
+Définit les outils d'interfaces normalisées de cas.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []

@@ -20,7 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 """
-    Modèles généraux pour les observers, le post-processing.
+Modèles généraux pour les observers, le post-processing.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["ObserverTemplates"]

@@ -69,7 +69,9 @@ graphical representation of the same information is produced.
 
 .. include:: snippets/SampleAsExplicitHyperCube.rst
 
-.. include:: snippets/SampleAsIndependantRandomVariables.rst
+.. include:: snippets/SampleAsIndependentRandomVariables.rst
+
+.. include:: snippets/SampleAsIndependentRandomVectors.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 

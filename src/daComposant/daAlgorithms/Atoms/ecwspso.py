@@ -95,14 +95,25 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
     __nbI = selfA._parameters["NumberOfInsects"]
     __nbP = len(Xini)  # Dimension ou nombre de paramètres
     #
-    __iw = float( selfA._parameters["InertiaWeight"] )
-    __sa = float( selfA._parameters["SocialAcceleration"] )
-    __ca = float( selfA._parameters["CognitiveAcceleration"] )
-    __vc = float( selfA._parameters["VelocityClampingFactor"] )
+    __iw = selfA._parameters["InertiaWeight"]
+    __sa = selfA._parameters["SocialAcceleration"]
+    __sc = selfA._parameters["SocialAccelerationControl"]
+    __ca = selfA._parameters["CognitiveAcceleration"]
+    __cc = selfA._parameters["CognitiveAccelerationControl"]
+    __vc = selfA._parameters["VelocityClampingFactor"]
     logging.debug("%s Cognitive acceleration (recall to the best previously known value of the insect) = %s"%(selfA._name, str(__ca)))  # noqa: E501
+    logging.debug("%s Cognitive acceleration control (change in the recall to the best previously known) = %s"%(selfA._name, str(__cc)))  # noqa: E501
     logging.debug("%s Social acceleration (recall to the best insect value of the group) = %s"%(selfA._name, str(__sa)))
+    logging.debug("%s Social acceleration control (change in the recall to the best of the group) = %s"%(selfA._name, str(__sc)))
     logging.debug("%s Inertial weight = %s"%(selfA._name, str(__iw)))
     logging.debug("%s Velocity clamping factor = %s"%(selfA._name, str(__vc)))
+
+    def asapso(istep, ca = __ca, cc = __cc, sa =  __sa, sc = __sc):
+        cs = ca - cc * (istep / selfA._parameters["MaximumNumberOfIterations"])
+        cs = max(0., cs)
+        ss = sa + sc * (istep / selfA._parameters["MaximumNumberOfIterations"])
+        return cs, ss
+
     #
     # Initialisation de l'essaim
     # --------------------------
@@ -170,6 +181,7 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
     step = 0
     while KeepRunningCondition(step, nbfct):
         step += 1
+        __cs, __ss = asapso(step)
         #
         for __i in range(__nbI):
             # Évalue
@@ -192,8 +204,8 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
             __rst = rand(size=__nbP)
             __xPoint = Swarm[__i, 0, :]
             # Points
-            __pPoint = __xPoint + __ca * __rct * (Swarm[__i, 2, :] - __xPoint)
-            __lPoint = __xPoint + __sa * __rst * (Swarm[__i, 3, :] - __xPoint)
+            __pPoint = __xPoint + __cs * __rct * (Swarm[__i, 2, :] - __xPoint)
+            __lPoint = __xPoint + __ss * __rst * (Swarm[__i, 3, :] - __xPoint)
             __gPoint = (__xPoint + __pPoint + __lPoint) / 3
             __radius = numpy.linalg.norm(__gPoint - __xPoint)
             __rPoint = GenerateRandomPointInHyperSphere( __gPoint, __radius  )

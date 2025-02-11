@@ -80,7 +80,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "SampleAsMinMaxLatinHyperCube",
             default  = [],
             typecast = tuple,
-            message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi du nombre de points demandés",  # noqa: E501
+            message  = "Points de calcul définis par un hyper-cube Latin dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre de points demandés]",  # noqa: E501
         )
         self.defineRequiredParameter(
             name     = "SampleAsMinMaxSobolSequence",
@@ -89,10 +89,18 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Points de calcul définis par une séquence de Sobol dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",  # noqa: E501
         )
         self.defineRequiredParameter(
-            name     = "SampleAsIndependantRandomVariables",
+            name     = "SampleAsIndependentRandomVariables",
             default  = [],
             typecast = tuple,
             message  = "Points de calcul définis par un hyper-cube dont les points sur chaque axe proviennent de l'échantillonnage indépendant de la variable selon la spécification ['distribution',[parametres],nombre]",  # noqa: E501
+            oldname  = "SampleAsIndependantRandomVariables",
+        )
+        self.defineRequiredParameter(
+            name     = "SampleAsIndependentRandomVectors",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par l'échantillonnage vectoriel conjoint de chaque variable selon la spécification ['distribution',[parametres]]",  # noqa: E501
+            oldname  = "SampleAsIndependantRandomVectors",
         )
         self.defineRequiredParameter(
             name     = "SetDebug",

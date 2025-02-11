@@ -145,3 +145,10 @@ try:
     from daYacsIntegration.daOptimizerLoop import *
 except:
     logging.debug("INIT Pas de chargement initial de daOptimizerLoop")
+
+def show_versions():
+    "Par similarité à d'autres modules"
+    from daCore.PlatformInfo import PlatformInfo
+    print(PlatformInfo().getAllInformation("    ", ""))
+
+

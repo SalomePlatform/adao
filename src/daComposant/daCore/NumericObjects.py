@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Définit les objets numériques génériques.
+Définit les objets numériques génériques.
 """
 __author__ = "Jean-Philippe ARGAUD"
 
@@ -1120,7 +1120,7 @@ def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
     for i in range(int(__nb)):
         __ee = numpy.zeros((__nb, 1))
         __ee[i] = 1.0
-        __HtEE = __HtM[:,i].reshape((-1,1))
+        __HtEE = __HtM[:, i].reshape((-1, 1))
         __HessienneI.append(numpy.ravel(__BI * __ee + __HaM * (__RI * __HtEE)))
     #
     __A = numpy.linalg.inv(numpy.array(__HessienneI))
@@ -1715,7 +1715,8 @@ def BuildComplexSampleList(
     __SampleAsMinMaxStepHyperCube,
     __SampleAsMinMaxLatinHyperCube,
     __SampleAsMinMaxSobolSequence,
-    __SampleAsIndependantRandomVariables,
+    __SampleAsIndependentRandomVariables,
+    __SampleAsIndependentRandomVectors,
     __X0,
     __Seed=None,
 ):
@@ -1808,31 +1809,75 @@ def BuildComplexSampleList(
             __u_bounds = __bounds[:, 1]
             sampleList = scipy.stats.qmc.scale(__sample, __l_bounds, __u_bounds)
     # ---------------------------
-    elif len(__SampleAsIndependantRandomVariables) > 0:
+    elif len(__SampleAsIndependentRandomVariables) > 0:
         coordinatesList = []
-        for i, dim in enumerate(__SampleAsIndependantRandomVariables):
+        for i, dim in enumerate(__SampleAsIndependentRandomVariables):
             if len(dim) != 3:
                 raise ValueError(
                     'For dimension %i, the variable definition "%s" is incorrect,'
                     % (i, dim)
                     + " it should be ('distribution',(parameters),length) with"
                     + " distribution in ['normal'(mean,std), 'lognormal'(mean,sigma),"
-                    + " 'uniform'(low,high), 'weibull'(shape)]."
+                    + " 'uniform'(low,high), 'loguniform'(low,high), 'weibull'(shape)]."
+                )
+            elif str(dim[0]) == "loguniform":
+                coordinatesList.append(
+                    numpy.exp(
+                        numpy.random.uniform(
+                            *numpy.log(dim[1]), size=max(1, int(dim[2]))
+                        )
+                    )
                 )
             elif not (
-                str(dim[0]) in ["normal", "lognormal", "uniform", "weibull"]
+                str(dim[0])
+                in ["normal", "lognormal", "uniform", "loguniform", "weibull"]
                 and hasattr(numpy.random, str(dim[0]))
             ):
                 raise ValueError(
                     'For dimension %i, the distribution name "%s" is not allowed,'
                     % (i, str(dim[0]))
-                    + " please choose in ['normal'(mean,std), 'lognormal'(mean,sigma),"
-                    + " 'uniform'(low,high), 'weibull'(shape)]"
+                    + " it should be ('distribution',(parameters),length) with"
+                    + " distribution in ['normal'(mean,std), 'lognormal'(mean,sigma),"
+                    + " 'uniform'(low,high), 'loguniform'(low,high), 'weibull'(shape)]."
                 )
             else:
-                distribution = getattr(numpy.random, str(dim[0]), "normal")
+                distribution = getattr(numpy.random, str(dim[0]), "uniform")
                 coordinatesList.append(distribution(*dim[1], size=max(1, int(dim[2]))))
         sampleList = itertools.product(*coordinatesList)
+    # ---------------------------
+    elif len(__SampleAsIndependentRandomVectors) > 0:
+        __spDesc = list(__SampleAsIndependentRandomVectors)
+        __nbDime, __nbSamp = map(int, __spDesc.pop())  # Réduction du dernier
+        sampleList = numpy.empty((__nbSamp, __nbDime))
+        for i, dim in enumerate(__spDesc):
+            if len(dim) != 2:
+                raise ValueError(
+                    'For dimension %i, the variable definition "%s" is incorrect,'
+                    % (i, dim)
+                    + " it should be ('distribution',(parameters)) with"
+                    + " distribution in ['normal'(mean,std), 'lognormal'(mean,sigma),"
+                    + " 'uniform'(low,high), 'loguniform'(low,high), 'weibull'(shape)]."
+                )
+            elif str(dim[0]) == "loguniform":
+                sampleList[:, i] = numpy.exp(
+                    numpy.random.uniform(*numpy.log(dim[1]), size=__nbSamp)
+                )
+            elif not (
+                str(dim[0])
+                in ["normal", "lognormal", "uniform", "loguniform", "weibull"]
+                and hasattr(numpy.random, str(dim[0]))
+            ):
+                raise ValueError(
+                    'For dimension %i, the distribution name "%s" is not allowed,'
+                    % (i, str(dim[0]))
+                    + " it should be ('distribution',(parameters)) with"
+                    + " distribution in ['normal'(mean,std), 'lognormal'(mean,sigma),"
+                    + " 'uniform'(low,high), 'loguniform'(low,high), 'weibull'(shape)]."
+                )
+            else:
+                distribution = getattr(numpy.random, str(dim[0]), "uniform")
+                sampleList[:, i] = distribution(*dim[1], size=__nbSamp)
+    # ---------------------------
     else:
         sampleList = iter(
             [
@@ -1853,6 +1898,11 @@ def BuildComplexSampleSwarm(
     __Seed=None,
 ):
     "Série de positions et vitesses pour un essaim"
+
+    def cutofflog(__x):
+        return numpy.log(max(__x, 2 * mpr))
+
+    #
     if __Seed is not None:
         numpy.random.seed(__Seed)
     nbI, _, nbP = __Dimension
@@ -1869,13 +1919,29 @@ def BuildComplexSampleSwarm(
         for __p in range(nbP):
             sampleList[:, 0, __p] = numpy.exp(
                 numpy.random.uniform(
-                    low=numpy.log(__StateBounds[__p, 0]),
-                    high=numpy.log(__StateBounds[__p, 1]),
+                    low=cutofflog(__StateBounds[__p, 0]),
+                    high=cutofflog(__StateBounds[__p, 1]),
                     size=nbI,
                 )
             )  # Position
             sampleList[:, 1, __p] = numpy.random.uniform(
                 low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+            )  # Velocity
+    elif __Method == "LogarithmicByComponents":
+        for __p in range(nbP):
+            sampleList[:, 0, __p] = numpy.exp(
+                numpy.random.uniform(
+                    low=cutofflog(__StateBounds[__p, 0]),
+                    high=cutofflog(__StateBounds[__p, 1]),
+                    size=nbI,
+                )
+            )  # Position
+            sampleList[:, 1, __p] = numpy.exp(
+                numpy.random.uniform(
+                    low=cutofflog(__SpeedBounds[__p, 0]),
+                    high=cutofflog(__SpeedBounds[__p, 1]),
+                    size=nbI,
+                )
             )  # Velocity
     elif __Method == "DistributionByComponents":
         if len(__ParameterDistributions) != nbP:
@@ -1884,28 +1950,100 @@ def BuildComplexSampleSwarm(
                 % (len(__ParameterDistributions), nbP)
             )
         for __p in range(nbP):
-            if __ParameterDistributions[__p] == "uniform":
+            noPar = isinstance(__ParameterDistributions[__p], str)
+            unPar = len(__ParameterDistributions[__p]) == 2
+            if noPar and __ParameterDistributions[__p] == "uniform":
                 sampleList[:, 0, __p] = numpy.random.uniform(
                     low=__StateBounds[__p, 0], high=__StateBounds[__p, 1], size=nbI
                 )  # Position
-            elif __ParameterDistributions[__p] == "loguniform":
+                sampleList[:, 1, __p] = numpy.random.uniform(
+                    low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+                )  # Velocity
+            elif noPar and __ParameterDistributions[__p] == "loguniform":
                 sampleList[:, 0, __p] = numpy.exp(
                     numpy.random.uniform(
-                        low=numpy.log(__StateBounds[__p, 0]),
-                        high=numpy.log(__StateBounds[__p, 1]),
+                        low=cutofflog(__StateBounds[__p, 0]),
+                        high=cutofflog(__StateBounds[__p, 1]),
                         size=nbI,
                     )
                 )  # Position
+                sampleList[:, 1, __p] = numpy.random.uniform(
+                    low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+                )  # Velocity
+            elif noPar and __ParameterDistributions[__p] == "logarithmic":
+                sampleList[:, 0, __p] = numpy.exp(
+                    numpy.random.uniform(
+                        low=cutofflog(__StateBounds[__p, 0]),
+                        high=cutofflog(__StateBounds[__p, 1]),
+                        size=nbI,
+                    )
+                )  # Position
+                sampleList[:, 1, __p] = numpy.exp(
+                    numpy.random.uniform(
+                        low=cutofflog(__SpeedBounds[__p, 0]),
+                        high=cutofflog(__SpeedBounds[__p, 1]),
+                        size=nbI,
+                    )
+                )  # Velocity
+            elif unPar and __ParameterDistributions[__p][0] == "normal":
+                sampleList[:, 0, __p] = (
+                    numpy.random.normal(
+                        loc=(__StateBounds[__p, 0] + __StateBounds[__p, 1]) / 2,
+                        scale=__ParameterDistributions[__p][1],
+                        size=nbI,
+                    )
+                ).clip(
+                    min=__StateBounds[__p, 0], max=__StateBounds[__p, 1]
+                )  # Position
+                sampleList[:, 1, __p] = numpy.random.uniform(
+                    low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+                )  # Velocity
+            elif unPar and __ParameterDistributions[__p][0] == "lognormal":
+                sampleList[:, 0, __p] = (
+                    numpy.random.lognormal(
+                        mean=(
+                            cutofflog(__StateBounds[__p, 0])
+                            + cutofflog(__StateBounds[__p, 1])
+                        )
+                        / 2,
+                        sigma=__ParameterDistributions[__p][1],
+                        size=nbI,
+                    )
+                ).clip(
+                    min=__StateBounds[__p, 0], max=__StateBounds[__p, 1]
+                )  # Position
+                sampleList[:, 1, __p] = numpy.random.uniform(
+                    low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
+                )  # Velocity
+            elif unPar and __ParameterDistributions[__p][0] == "logarithmicnormal":
+                sampleList[:, 0, __p] = (
+                    numpy.random.lognormal(
+                        mean=(
+                            cutofflog(__StateBounds[__p, 0])
+                            + cutofflog(__StateBounds[__p, 1])
+                        )
+                        / 2,
+                        sigma=__ParameterDistributions[__p][1],
+                        size=nbI,
+                    )
+                ).clip(
+                    min=__StateBounds[__p, 0], max=__StateBounds[__p, 1]
+                )  # Position
+                sampleList[:, 1, __p] = numpy.exp(
+                    numpy.random.uniform(
+                        low=cutofflog(__SpeedBounds[__p, 0]),
+                        high=cutofflog(__SpeedBounds[__p, 1]),
+                        size=nbI,
+                    )
+                )  # Velocity
             else:
                 raise ValueError(
-                    'Unknown specific parameter distribution "%s"'
+                    'Unknown or badly specified parameter distribution named "%s"'
                     % __ParameterDistributions[__p]
                 )
-            sampleList[:, 1, __p] = numpy.random.uniform(
-                low=__SpeedBounds[__p, 0], high=__SpeedBounds[__p, 1], size=nbI
-            )  # Velocity
     else:
         raise ValueError('Unkown initialization method "%s"' % __Method)
+    #
     return sampleList
 
 

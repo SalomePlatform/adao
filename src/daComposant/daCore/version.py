@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-    Version
+Version
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
