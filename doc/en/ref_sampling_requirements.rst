@@ -106,6 +106,10 @@ La répartition des états ainsi décrite correspond à l'illustration  :
   .. image:: images/sampling_01_SampleAsnUplet.png
     :align: center
 
+Note: here we've chosen an ordered distribution, similar to those we'll obtain
+much more synthetically with some of the following commands, precisely to
+illustrate this point.
+
 Implicit state distribution by keyword "*SampleAsExplicitHyperCube*"
 ....................................................................
 

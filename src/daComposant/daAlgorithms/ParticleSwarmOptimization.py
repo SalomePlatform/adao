@@ -200,7 +200,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-            ]
+            ],
+            listadv  = [
+                "APosterioriCorrelations",
+                "APosterioriCovariance",
+                "APosterioriStandardDeviations",
+                "APosterioriVariances",
+                "InternalAPosterioriCovariance",
+            ],
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",

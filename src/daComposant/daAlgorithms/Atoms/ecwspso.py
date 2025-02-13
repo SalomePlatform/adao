@@ -26,10 +26,12 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, logging
-from daCore.NumericObjects import ApplyBounds, VariablesAndIncrementsBounds
+from daCore.NumericObjects import ApplyBounds
+from daCore.NumericObjects import VariablesAndIncrementsBounds
 from daCore.NumericObjects import GenerateRandomPointInHyperSphere
 from daCore.NumericObjects import GetNeighborhoodTopology
 from daCore.NumericObjects import BuildComplexSampleSwarm
+from daCore.NumericObjects import EnsembleErrorCovariance
 from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
 
@@ -159,7 +161,7 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
     xBest = Swarm[iBest, 2, :]
     for __i in range(__nbI):
         Swarm[__i, 3, :] = xBest  # lBest
-        qSwarm[__i, 3:] = qSwarm[iBest, :3]
+        qSwarm[__i, 3: ] = qSwarm[iBest, :3]
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
         selfA.StoredVariables["CurrentState"].store( xBest )
     selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest, 0]  )
@@ -173,6 +175,8 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
         selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:, 1] )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJo"):
         selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:, 2] )
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalAPosterioriCovariance"):
+        selfA.StoredVariables["InternalAPosterioriCovariance"].store( EnsembleErrorCovariance( Swarm[:, 0, :].T ) )
     #
     selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
     #
@@ -236,6 +240,8 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
             selfA.StoredVariables["InternalCostFunctionJb"].store( qSwarm[:, 1] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJo"):
             selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:, 2] )
+        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalAPosterioriCovariance"):
+            selfA.StoredVariables["InternalAPosterioriCovariance"].store( EnsembleErrorCovariance( Swarm[:, 0, :].T ) )
         logging.debug("%s Step %i: insect %i is the better one with J =%.7f"%(selfA._name, step, iBest, qSwarm[iBest, 0]))  # noqa: E501
     #
     # Obtention de l'analyse
@@ -266,6 +272,8 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
     if selfA._toStore("SimulatedObservationAtOptimum"):
         selfA.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+    if selfA._toStore("APosterioriCovariance"):
+        selfA.StoredVariables["APosterioriCovariance"].store( EnsembleErrorCovariance( Swarm[:, 0, :].T ) )
     #
     selfA._post_run(HO)
     return 0

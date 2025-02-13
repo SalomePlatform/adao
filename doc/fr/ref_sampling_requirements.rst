@@ -111,6 +111,10 @@ La répartition des états ainsi décrite correspond à l'illustration  :
   .. image:: images/sampling_01_SampleAsnUplet.png
     :align: center
 
+Remarque : on a ici choisi une répartition régulière, similaire à celle que
+l'on obtiendra de manière beaucoup plus synthétique par certaines commandes
+suivantes, justement pour illustrer ce point.
+
 Répartition implicite d'états par le mot-clé "*SampleAsExplicitHyperCube*"
 ..........................................................................
 

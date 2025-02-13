@@ -888,6 +888,7 @@ class Algorithm(object):
             - Innovation : l'innovation : d = Y - H(X)
             - InnovationAtCurrentAnalysis : l'innovation à l'état analysé : da = Y - H(Xa)
             - InnovationAtCurrentState : l'innovation à l'état courant : dn = Y - H(Xn)
+            - InternalAPosterioriCovariance : ensemble de valeurs internes de matrice de covariances a posteriori
             - InternalCostFunctionJ : ensemble de valeurs internes de fonction-coût J dans un vecteur
             - InternalCostFunctionJb : ensemble de valeurs internes de fonction-coût Jb dans un vecteur
             - InternalCostFunctionJb : ensemble de valeurs internes de fonction-coût Jo dans un vecteur
@@ -1016,6 +1017,9 @@ class Algorithm(object):
         )
         self.StoredVariables["InnovationAtCurrentState"] = Persistence.OneVector(
             name="InnovationAtCurrentState"
+        )
+        self.StoredVariables["InternalAPosterioriCovariance"] = Persistence.OneMatrix(
+            name="InternalAPosterioriCovariance"
         )
         self.StoredVariables["InternalCostFunctionJ"] = Persistence.OneVector(
             name="InternalCostFunctionJ"
