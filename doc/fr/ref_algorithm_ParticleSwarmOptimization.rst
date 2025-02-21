@@ -128,13 +128,41 @@ Le décompte du nombre d'évaluations de la fonction à simuler lors de cet
 algorithme est déterministe, à savoir le "*nombre d'itérations ou de
 générations*" multiplié par le "*nombre d'individus de la population*". Avec
 les valeurs par défaut de 40 à 100 individus sur 50 générations, il faut entre
-`40x50=2000` et `100*50=5000` évaluations par défaut. C'est pour cette raison
-que cet algorithme est usuellement intéressant lorsque la dimension de l'espace
-des états est grande, ou que les non-linéarités de la simulation rendent
-compliqué, ou invalide, l'évaluation du gradient de la fonctionnelle par
-approximation numérique. Mais il est aussi nécessaire que le calcul de la
-fonction à simuler ne soit pas trop coûteux pour éviter une durée
-d'optimisation rédhibitoire.
+`40x50=2000` et `100*50=5000` évaluations par défaut, ce qui est notablement
+plus qu'en optimisation variationnelle. C'est pour cette raison que cet
+algorithme est usuellement intéressant lorsque la dimension de l'espace des
+états est grande, ou que les non-linéarités de la simulation rendent compliqué,
+ou invalide, l'évaluation du gradient de la fonctionnelle par approximation
+numérique. Mais il est aussi nécessaire que le calcul de la fonction à simuler
+ne soit pas trop coûteux pour éviter une durée d'optimisation rédhibitoire.
+
+Pour réduire le nombre de générations, on peut utiliser la méthode adaptative
+ASAPSO [Wang09]_ de modification de la localisation de la recherche optimale de
+l'essaim. Elle consiste à réduire linéairement la propension à la recherche
+globale de l'algorithme, et donc à favoriser la localisation de l'essaim.
+Lorsque le problème s'y prête, il est possible de réduire d'un facteur 2 à 5 le
+nombre de générations tout en obtenant une qualité sensiblement identique pour
+la meilleure particule. Deux mots-clés sont disponibles pour contrôler l'usage
+de cette méthode adaptative.
+
+Comme pour d'autres algorithmes, il est possible de calculer une quantité
+appelée la covariance *a posteriori* de l'essaim des particules. Néanmoins la
+signification de l'indicateur calculé ici diffère par nature d'une covariance
+établie par exemple en filtrage ou en variationnel. L'indicateur est calculé,
+de manière standard, comme la dispersion de l'ensemble des particules. Mais sa
+valeur est exclusivement à comparer à l'évaluation de cette même quantité pour
+l'essaim initial, et à utiliser dans un sens relatif de variation entre le
+début et la fin de la recherche optimale de l'algorithme. En effet, la
+dispersion initiale des particules est contrôlée par les paramètres
+d'initialisation de l'essaim dont le but est de couvrir l'espace de recherche,
+et la dispersion finale des particules reflète la performance de la
+localisation de la recherche optimale. Contrairement à la covariance des
+erreurs d'ébauche, qui intervient classiquement dans le calcul de l'objectif à
+optimiser et qui est liée à la variance de l'état optimal, la covariance
+calculée *a posteriori* ne reflète que la dispersion des particules. Pour
+l'usage correct de cet algorithme, lorsque le calcul de la covariance *a
+posteriori* est demandé, il est effectué pour l'essaim initial et pour l'essaim
+final.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst
@@ -209,6 +237,10 @@ StoreSupplementaryCalculations
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
   "Analysis",
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
   "BMA",
   "CostFunctionJ",
   "CostFunctionJb",
@@ -251,6 +283,14 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo05.rst
 
 .. include:: snippets/Analysis.rst
+
+.. include:: snippets/APosterioriCorrelations.rst
+
+.. include:: snippets/APosterioriCovariance.rst
+
+.. include:: snippets/APosterioriStandardDeviations.rst
+
+.. include:: snippets/APosterioriVariances.rst
 
 .. include:: snippets/BMA.rst
 

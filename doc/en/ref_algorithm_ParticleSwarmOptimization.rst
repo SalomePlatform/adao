@@ -121,12 +121,39 @@ The count of the number of evaluations of the function to be simulated during
 this algorithm is deterministic, namely the "*number of iterations or
 generations*" multiplied by the "*number of individuals in the population*".
 With the default values of 40 to 100 individuals on 50 generations, it takes
-between `40x50=2000` and `100*50=5000` evaluations. It is for this reason that
-this algorithm is usually interesting when the dimension of the state space is
-large, or when the non-linearities of the simulation make the evaluation of the
-gradient of the functional by numerical approximation complicated or invalid.
-But it is also necessary that the calculation of the function to be simulated
-is not too costly to avoid a prohibitive optimization time length.
+between `40x50=2000` and `100*50=5000` evaluations, which is significantly more
+than in variational optimization. It is for this reason that this algorithm is
+usually interesting when the dimension of the state space is large, or when the
+non-linearities of the simulation make the evaluation of the gradient of the
+functional by numerical approximation complicated or invalid. But it is also
+necessary that the calculation of the function to be simulated is not too
+costly to avoid a prohibitive optimization time length.
+
+To reduce the number of generations, we can use the ASAPSO adaptive method
+[Wang09]_ to modify the localization of the optimal swarm search. This consists
+in linearly reducing the algorithm's global search behaviour, thus favouring
+swarm localization. When the problem is favourable, it's possible to reduce the
+number of generations by a factor of 2 to 5, while still achieving virtually
+the same quality for the best particle. Two keywords are available to control
+the use of this adaptive method.
+
+As with other algorithms, it is possible to compute a quantity called the *a
+posteriori* covariance of the particle swarm. However, the meaning of the
+indicator calculated here differs in nature from a covariance established in
+filtering or variational analysis, for example. The indicator is calculated, in
+the standard way, as the dispersion of all the particles. But its value is to
+be compared exclusively with the evaluation of the same quantity for the
+initial swarm, and used in a relative sense of variation between the beginning
+and the end of the algorithm's optimal search. This is because the initial
+dispersion of the particles is controlled by the initialization parameters of
+the swarm, whose aim is to cover the search space, and the final dispersion of
+the particles reflects the localization performance of the optimal search.
+Unlike the covariance of the background errors, which is classically involved
+in calculating the objective to be optimized and is related to the variance of
+the optimal state, the covariance calculated *a posteriori* reflects only the
+dispersion of the particles. For the correct use of this algorithm, when the *a
+posteriori* covariance calculation is requested, it is performed for the
+initial swarm and for the final swarm.
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo12.rst
@@ -201,6 +228,10 @@ StoreSupplementaryCalculations
   sub-section "*Information and variables available at the end of the
   algorithm*"): [
   "Analysis",
+  "APosterioriCorrelations",
+  "APosterioriCovariance",
+  "APosterioriStandardDeviations",
+  "APosterioriVariances",
   "BMA",
   "CostFunctionJ",
   "CostFunctionJb",
@@ -243,6 +274,14 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo05.rst
 
 .. include:: snippets/Analysis.rst
+
+.. include:: snippets/APosterioriCorrelations.rst
+
+.. include:: snippets/APosterioriCovariance.rst
+
+.. include:: snippets/APosterioriStandardDeviations.rst
+
+.. include:: snippets/APosterioriVariances.rst
 
 .. include:: snippets/BMA.rst
 

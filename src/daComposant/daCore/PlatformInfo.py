@@ -296,13 +296,25 @@ class PlatformInfo(object):
         )
         __msg += "\n"
         if self.has_pandas:
-            __msg += "\n%s%30s : %s" % (__prefix, "Pandas version", self.getPandasVersion())
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "Pandas version",
+                self.getPandasVersion(),
+            )
         if self.has_scikitlearn:
-            __msg += "\n%s%30s : %s" % (__prefix, "Scikit-learn version", self.getScikitlearnVersion())
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "Scikit-learn version",
+                self.getScikitlearnVersion(),
+            )
         if self.has_fmpy:
             __msg += "\n%s%30s : %s" % (__prefix, "Fmpy version", self.getFmpyVersion())
         if self.has_sphinx:
-            __msg += "\n%s%30s : %s" % (__prefix, "Sphinx version", self.getSphinxVersion())
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "Sphinx version",
+                self.getSphinxVersion(),
+            )
         return __msg
 
     def getAllInformation(self, __prefix="", __title="Whole system information"):

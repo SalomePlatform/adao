@@ -121,9 +121,9 @@ class OptimizerHooks:
     else:
         it = data.flat
     for val in it:
-      param.pushBack(val)
+      param.pushBack(float(val)) # float permet de convertir des numpy.float128
       val_number += 1
-      # Test si l'argument est ok
+      # Teste si l'argument est ok
       if val_end != -1:
         if val_number == val_end:
           variable_sequence.pushBack(param)

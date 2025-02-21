@@ -547,6 +547,7 @@ def create_yacs_proc(study_config):
     node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += script_str.read()
+    script_str.close()
     opt_script_nodeOO.setScript(node_script)
     opt_script_nodeOO.edAddInputPort("computation", t_param_input)
     opt_script_nodeOO.edAddOutputPort("result", t_param_output)
@@ -578,6 +579,7 @@ def create_yacs_proc(study_config):
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += """# ==============================================\n"""
     node_script += script_str.read()
+    script_str.close()
     node_script += """# ==============================================\n"""
     node_script += """__method = None\n"""
     node_script += """for param in computation["specificParameters"]:\n"""
@@ -660,6 +662,7 @@ def create_yacs_proc(study_config):
     node_script += "  sys.path.insert(0,filepath)\n"
     node_script += """# ==============================================\n"""
     node_script += script_str.read()
+    script_str.close()
     node_script += """# ==============================================\n"""
     node_script += """__method = None\n"""
     node_script += """for param in computation["specificParameters"]:\n"""
@@ -757,6 +760,7 @@ def create_yacs_proc(study_config):
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
+      script_str.close()
       opt_script_nodeEM.setScript(node_script)
       opt_script_nodeEM.edAddInputPort("computation", t_param_input)
       opt_script_nodeEM.edAddOutputPort("result", t_param_output)
@@ -786,6 +790,7 @@ def create_yacs_proc(study_config):
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
+      script_str.close()
       node_script += """# ==============================================\n"""
       node_script += """__method = None\n"""
       node_script += """for param in computation["specificParameters"]:\n"""
@@ -870,6 +875,7 @@ def create_yacs_proc(study_config):
       node_script += "if sys.path.count(filepath)==0 or (sys.path.count(filepath)>0 and sys.path.index(filepath)>0):\n"
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += script_str.read()
+      script_str.close()
       node_script += """# ==============================================\n"""
       node_script += """__method = None\n"""
       node_script += """for param in computation["specificParameters"]:\n"""
@@ -1126,6 +1132,7 @@ def create_yacs_proc(study_config):
       node_script += "  sys.path.insert(0,filepath)\n"
       node_script += default_script
       node_script += analysis_file.read()
+      analysis_file.close()
       analysis_node.setScript(node_script)
       ADAO_Case.edAddChild(analysis_node)
       ADAO_Case.edAddCFLink(compute_bloc, analysis_node)

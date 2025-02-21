@@ -184,6 +184,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
                 "Analysis",
+                "APosterioriCorrelations",
+                "APosterioriCovariance",
+                "APosterioriStandardDeviations",
+                "APosterioriVariances",
                 "BMA",
                 "CostFunctionJ",
                 "CostFunctionJb",
@@ -202,10 +206,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtOptimum",
             ],
             listadv  = [
-                "APosterioriCorrelations",
-                "APosterioriCovariance",
-                "APosterioriStandardDeviations",
-                "APosterioriVariances",
                 "InternalAPosterioriCovariance",
             ],
         )

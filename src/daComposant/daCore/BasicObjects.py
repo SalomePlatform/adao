@@ -1980,11 +1980,8 @@ class AlgorithmAndParameters(object):
         else:
             __file = os.path.abspath(FileName)
             logging.debug('The YACS file name is "%s".' % __file)
-        if (
-            not PlatformInfo.has_salome
-            or not PlatformInfo.has_yacs
-            or not PlatformInfo.has_adao
-        ):
+        lpi = PlatformInfo.PlatformInfo()
+        if not lpi.has_salome or not lpi.has_yacs or not lpi.has_adao:
             raise ImportError(
                 "\n\n"
                 + "Unable to get SALOME, YACS or ADAO environnement variables.\n"
