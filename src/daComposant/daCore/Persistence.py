@@ -201,6 +201,11 @@ class Persistence(object):
             stop = len(self.__values)
         return self.__values.index(value, start, stop)
 
+    def clear(self):
+        "Remove all items from list."
+        self.__values.clear()
+        self.__tags.clear()
+
     # ---------------------------------------------------------
     def __filteredIndexes(self, **kwargs):
         "Function interne filtrant les index"

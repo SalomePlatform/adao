@@ -169,8 +169,8 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
     selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest, 2] )
     if selfA._toStore("APosterioriCovariance"):
         selfA.StoredVariables["APosterioriCovariance"].store( EnsembleErrorCovariance( Swarm[:, 0, :].T ) )
-    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalStates"):
-        selfA.StoredVariables["InternalStates"].store( Swarm[:, 0, :].T )
+    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store( Swarm[:, 0, :].T )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
         selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:, 0] )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
@@ -234,8 +234,8 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
         selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest, 0]  )
         selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest, 1] )
         selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest, 2] )
-        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalStates"):
-            selfA.StoredVariables["InternalStates"].store( Swarm[:, 0, :].T )
+        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("EnsembleOfStates"):
+            selfA.StoredVariables["EnsembleOfStates"].store( Swarm[:, 0, :].T )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
             selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:, 0] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):

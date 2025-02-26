@@ -892,7 +892,6 @@ class Algorithm(object):
             - InternalCostFunctionJ : ensemble de valeurs internes de fonction-coût J dans un vecteur
             - InternalCostFunctionJb : ensemble de valeurs internes de fonction-coût Jb dans un vecteur
             - InternalCostFunctionJb : ensemble de valeurs internes de fonction-coût Jo dans un vecteur
-            - InternalStates : ensemble d'états internes rangés par colonne dans une matrice (=EnsembleOfSnapshots)
             - JacobianMatrixAtBackground : matrice jacobienne à l'état d'ébauche
             - JacobianMatrixAtCurrentState : matrice jacobienne à l'état courant
             - JacobianMatrixAtOptimum : matrice jacobienne à l'optimum
@@ -1029,9 +1028,6 @@ class Algorithm(object):
         )
         self.StoredVariables["InternalCostFunctionJo"] = Persistence.OneVector(
             name="InternalCostFunctionJo"
-        )
-        self.StoredVariables["InternalStates"] = Persistence.OneMatrix(
-            name="InternalStates"
         )
         self.StoredVariables["JacobianMatrixAtBackground"] = Persistence.OneMatrix(
             name="JacobianMatrixAtBackground"

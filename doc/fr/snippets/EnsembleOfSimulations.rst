@@ -2,7 +2,7 @@
 
 EnsembleOfSimulations
   *Liste de vecteurs ou matrice*. Chaque élément est une collection ordonnée de
-  vecteurs d'état physique ou d'état simulé :math:`\mathbf{y}` (nommés
+  vecteurs d'état physique ou d'état simulé :math:`\mathbf{y}` (sorties, nommés
   "*snapshots*" en terminologie de bases réduites), avec 1 état par colonne si
   c'est une matrice, ou 1 état par élément si c'est une liste. Important : la
   numérotation du support ou des points, sur lequel ou auxquels sont fournis

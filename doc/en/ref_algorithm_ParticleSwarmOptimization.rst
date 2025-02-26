@@ -238,11 +238,11 @@ StoreSupplementaryCalculations
   "CostFunctionJo",
   "CurrentIterationNumber",
   "CurrentState",
+  "EnsembleOfStates",
   "Innovation",
   "InternalCostFunctionJ",
   "InternalCostFunctionJb",
   "InternalCostFunctionJo",
-  "InternalStates",
   "OMA",
   "OMB",
   "SimulatedObservationAtBackground",
@@ -295,6 +295,8 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/EnsembleOfStates.rst
+
 .. include:: snippets/Innovation.rst
 
 .. include:: snippets/InternalCostFunctionJ.rst
@@ -302,8 +304,6 @@ StoreSupplementaryCalculations
 .. include:: snippets/InternalCostFunctionJb.rst
 
 .. include:: snippets/InternalCostFunctionJo.rst
-
-.. include:: snippets/InternalStates.rst
 
 .. include:: snippets/OMA.rst
 

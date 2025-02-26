@@ -177,6 +177,8 @@ StoreSupplementaryCalculations
   Exemple :
   ``{"StoreSupplementaryCalculations":["CurrentState", "Residu"]}``
 
+.. include:: snippets/UserBasisFunctions.rst
+
 .. include:: snippets/Variant_MOP.rst
 
 .. ------------------------------------ ..
