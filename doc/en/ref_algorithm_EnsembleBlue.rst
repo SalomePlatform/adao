@@ -85,6 +85,8 @@ StoreSupplementaryCalculations
   "Analysis",
   "CurrentOptimum",
   "CurrentState",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "Innovation",
   "SimulatedObservationAtBackground",
   "SimulatedObservationAtCurrentState",
@@ -111,6 +113,10 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/Innovation.rst
 

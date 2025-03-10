@@ -34,6 +34,7 @@ mfp = PlatformInfo().MaximumPrecision()
 def mmqr( func     = None,
           x0       = None,
           fprime   = None,
+          args     = (),
           bounds   = None,
           quantile = 0.5,
           maxfun   = 15000,
@@ -63,7 +64,7 @@ def mmqr( func     = None,
     #
     # Calculs d'initialisation
     # ------------------------
-    residus  = mesures - numpy.ravel( func( variables ) )
+    residus  = mesures - numpy.ravel( func( variables, *args )[3] )
     poids    = 1. / (epsilon + numpy.abs(residus))
     veps     = 1. - 2. * quantile - residus * poids
     lastsurrogate = - numpy.sum(residus * veps) - (1. - 2. * quantile) * numpy.sum(residus)
@@ -87,13 +88,13 @@ def mmqr( func     = None,
             while ( (variables < numpy.ravel(numpy.asarray(bounds)[:, 0])).any() or (variables > numpy.ravel(numpy.asarray(bounds)[:, 1])).any() ):  # noqa: E501
                 step      = step / 2.
                 variables = variables - step
-        residus   = mesures - numpy.ravel( func(variables) )
+        residus   = mesures - numpy.ravel( func( variables, *args )[3] )
         surrogate = numpy.sum(residus**2 * poids) + (4. * quantile - 2.) * numpy.sum(residus)
         #
         while ( (surrogate > lastsurrogate) and ( max(list(numpy.abs(step))) > 1.e-16 ) ):
             step      = step / 2.
             variables = variables - step
-            residus   = mesures - numpy.ravel( func(variables) )
+            residus   = mesures - numpy.ravel( func( variables, *args )[3] )
             surrogate = numpy.sum(residus**2 * poids) + (4. * quantile - 2.) * numpy.sum(residus)
         #
         increment     = abs(lastsurrogate - surrogate)

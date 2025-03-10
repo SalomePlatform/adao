@@ -29,6 +29,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "TABUSEARCH")
         self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "TabuSearch",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "TabuSearch",
+            ],
+        )
+        self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
             default  = 50,
             typecast = int,
@@ -114,6 +123,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJo",
                 "CurrentIterationNumber",
                 "CurrentState",
+                "CurrentStepNumber",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "Innovation",
                 "OMA",
                 "OMB",
@@ -212,13 +224,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             #
             J   = Jb + Jo
             #
-            return J
+            return J, Jb, Jo, _HX
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
+        if self._toStore("EnsembleOfStates"): sState = []
+        if self._toStore("EnsembleOfSimulations"): sSimus = []
         _n = 0
         _S = Xb
-        _qualityS = CostFunction( _S, self._parameters["QualityCriterion"] )
+        _qualityS, _, _, _HX = CostFunction( _S, self._parameters["QualityCriterion"] )
+        if self._toStore("EnsembleOfStates"): sState.append(numpy.ravel(_S))
+        if self._toStore("EnsembleOfSimulations"): sSimus.append(numpy.ravel(_HX))
         _Best, _qualityBest = _S, _qualityS
         _TabuList = []
         _TabuList.append( _S )
@@ -227,10 +243,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             if len(_TabuList) > self._parameters["LengthOfTabuList"]:
                 _TabuList.pop(0)
             _R = Tweak( _S, self._parameters["NoiseDistribution"], self._parameters["NoiseAddingProbability"] )
-            _qualityR = CostFunction( _R, self._parameters["QualityCriterion"] )
+            _qualityR, _, _, _HX = CostFunction( _R, self._parameters["QualityCriterion"] )
+            if self._toStore("EnsembleOfStates"): sState.append(numpy.ravel(_S))
+            if self._toStore("EnsembleOfSimulations"): sSimus.append(numpy.ravel(_HX))
             for nbt in range(self._parameters["NumberOfElementaryPerturbations"] - 1):
                 _W = Tweak( _S, self._parameters["NoiseDistribution"], self._parameters["NoiseAddingProbability"] )
-                _qualityW = CostFunction( _W, self._parameters["QualityCriterion"] )
+                _qualityW, _, _, _HX = CostFunction( _W, self._parameters["QualityCriterion"] )
+                if self._toStore("EnsembleOfStates"): sState.append(numpy.ravel(_S))
+                if self._toStore("EnsembleOfSimulations"): sSimus.append(numpy.ravel(_HX))
                 if (not StateInList(_W, _TabuList)) and ( (_qualityW < _qualityR) or StateInList(_R, _TabuList) ):
                     _R, _qualityR = _W, _qualityW
             if (not StateInList( _R, _TabuList )) and (_qualityR < _qualityS):
@@ -257,6 +277,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        self.StoredVariables["CurrentStepNumber"].store( len(self.StoredVariables["Analysis"]) )
         if self._toStore("OMA") or \
                 self._toStore("SimulatedObservationAtOptimum"):
             HXa = Hm(Xa).reshape((-1, 1))
@@ -277,6 +298,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+        if self._toStore("EnsembleOfStates"):
+            self.StoredVariables["EnsembleOfStates"].store( numpy.array(sState).T )
+        if self._toStore("EnsembleOfSimulations"):
+            self.StoredVariables["EnsembleOfSimulations"].store( numpy.array(sSimus).T )
         #
         self._post_run(HO, EM)
         return 0

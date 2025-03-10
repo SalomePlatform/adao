@@ -117,6 +117,9 @@ StoreSupplementaryCalculations
   "CostFunctionJo",
   "CurrentIterationNumber",
   "CurrentState",
+  "CurrentStepNumber",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "Innovation",
   "OMA",
   "OMB",
@@ -155,6 +158,12 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentIterationNumber.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/CurrentStepNumber.rst
+
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/Innovation.rst
 

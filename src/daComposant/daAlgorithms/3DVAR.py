@@ -125,6 +125,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentOptimum",
                 "CurrentState",
                 "CurrentStepNumber",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",

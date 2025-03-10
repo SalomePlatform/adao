@@ -135,26 +135,23 @@ class Persistence(object):
                         else:
                             hook(self, parameters, order, dovar)
 
-    def pop(self, item=None):
+    def pop(self, index=-1):
         """
         Retire une valeur enregistrée par son index de stockage. Sans argument,
         retire le dernier objet enregistre.
         """
-        if item is not None:
-            __index = int(item)
-            self.__values.pop(__index)
-            self.__tags.pop(__index)
-        else:
-            self.__values.pop()
-            self.__tags.pop()
+        __index = int(index)
+        self.__values.pop(__index)
+        self.__tags.pop(__index)
 
-    def shape(self):
+    def shape(self, index=-1):
         """
         Renvoie la taille sous forme numpy du dernier objet stocké. Si c'est un
         objet numpy, renvoie le shape. Si c'est un entier, un flottant, un
         complexe, renvoie 1. Si c'est une liste ou un dictionnaire, renvoie la
         longueur. Par défaut, renvoie 1.
         """
+        __index = int(index)
         if len(self.__values) > 0:
             if self.__basetype in [
                 numpy.matrix,
@@ -162,11 +159,11 @@ class Persistence(object):
                 numpy.array,
                 numpy.ravel,
             ]:
-                return self.__values[-1].shape
+                return self.__values[__index].shape
             elif self.__basetype in [int, float]:
                 return (1,)
             elif self.__basetype in [list, dict]:
-                return (len(self.__values[-1]),)
+                return (len(self.__values[__index]),)
             else:
                 return (1,)
         else:

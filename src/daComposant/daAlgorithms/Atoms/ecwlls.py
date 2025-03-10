@@ -66,7 +66,8 @@ def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             selfA._toStore("InnovationAtCurrentAnalysis") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
             selfA._toStore("SimulatedObservationAtCurrentState") or \
-            selfA._toStore("SimulatedObservationAtOptimum"):
+            selfA._toStore("SimulatedObservationAtOptimum") or \
+            selfA._toStore("EnsembleOfSimulations"):
         HXa = Hm @ Xa
         oma = Y - HXa.reshape((-1, 1))
     if selfA._parameters["StoreInternalVariables"] or \
@@ -99,6 +100,10 @@ def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( HXa )
     if selfA._toStore("SimulatedObservationAtOptimum"):
         selfA.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+    if selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store( Xa.reshape((-1,1)) )
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store( HXa.reshape((-1,1)) )
     #
     return 0
 

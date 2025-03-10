@@ -22,6 +22,7 @@
 
 import numpy
 from daCore import BasicObjects, NumericObjects
+from daCore.NumericObjects import CostFunction3D as CostFunction
 from daAlgorithms.Atoms import mmqr
 
 # ==============================================================================
@@ -72,21 +73,30 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Analysis",
                 "BMA",
                 "CostFunctionJ",
+                "CostFunctionJAtCurrentOptimum",
                 "CostFunctionJb",
+                "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
+                "CostFunctionJoAtCurrentOptimum",
                 "CurrentIterationNumber",
+                "CurrentOptimum",
                 "CurrentState",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
+                "IndexOfOptimum",
                 "Innovation",
+                "InnovationAtCurrentState",
                 "OMA",
                 "OMB",
                 "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
             ]
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
-            message  = "Liste des valeurs de bornes",
+            message  = "Liste des paires de bornes",
         )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
@@ -100,11 +110,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             tags=(
                 "Optimization",
                 "Risk",
+                "NonLinear",
                 "Variational",
             ),
             features=(
                 "LocalOptimization",
                 "DerivativeNeeded",
+                "ParallelDerivativesOnly",
                 "ConvergenceOnBoth",
             ),
         )
@@ -115,24 +127,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         Hm = HO["Direct"].appliedTo
 
-        def CostFunction(x):
-            _X = numpy.asarray(x).reshape((-1, 1))
-            if self._parameters["StoreInternalVariables"] or \
-                    self._toStore("CurrentState"):
-                self.StoredVariables["CurrentState"].store( _X )
-            _HX = numpy.asarray(Hm( _X )).reshape((-1, 1))
-            if self._toStore("SimulatedObservationAtCurrentState"):
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
-            Jb  = 0.
-            Jo  = 0.
-            J   = Jb + Jo
-            #
-            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
-            return _HX
-
         def GradientOfCostFunction(x):
             _X = numpy.asarray(x).reshape((-1, 1))
             Hg = HO["Tangent"].asMatrix( _X )
@@ -142,11 +136,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Minimisation de la fonctionnelle
         # --------------------------------
+        nbPreviousSteps = self.StoredVariables["CostFunctionJ"].stepnumber()
+        #
         if self._parameters["Minimizer"] == "MMQR":
             Minimum, J_optimal, Informations = mmqr.mmqr(
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
+                args        = (self, None, Hm, 0., None, None, nbPreviousSteps, "", True, True),
                 bounds      = self._parameters["Bounds"],
                 quantile    = self._parameters["Quantile"],
                 maxfun      = self._parameters["MaximumNumberOfIterations"],
@@ -164,6 +161,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if self._toStore("EnsembleOfStates"):
+            self.StoredVariables["EnsembleOfStates"].store( numpy.asarray(self.StoredVariables["CurrentState"][nbPreviousSteps:]).T )
+        if self._toStore("EnsembleOfSimulations"):
+            self.StoredVariables["EnsembleOfSimulations"].store( numpy.asarray(self.StoredVariables["SimulatedObservationAtCurrentState"][nbPreviousSteps:]).T )
         if self._toStore("OMA") or \
                 self._toStore("SimulatedObservationAtOptimum"):
             HXa = Hm(Xa).reshape((-1, 1))

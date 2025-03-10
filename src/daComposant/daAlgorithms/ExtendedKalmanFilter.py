@@ -25,6 +25,7 @@ from daAlgorithms.Atoms import cekf, ceks, exks, exkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
+
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "EXTENDEDKALMANFILTER")
         self.defineRequiredParameter(
@@ -79,9 +80,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
                 "CostFunctionJoAtCurrentOptimum",
-                "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "CurrentStepNumber",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "ForecastCovariance",
                 "ForecastState",
                 "IndexOfOptimum",

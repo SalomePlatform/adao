@@ -25,6 +25,7 @@ from daAlgorithms.Atoms import ecwstdkf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
+
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
         self.defineRequiredParameter(
@@ -73,6 +74,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentOptimum",
                 "CurrentState",
                 "CurrentStepNumber",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "ForecastCovariance",
                 "ForecastState",
                 "IndexOfOptimum",

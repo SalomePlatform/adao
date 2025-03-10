@@ -42,11 +42,6 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     """
     #
     # Opérateurs
-    H = HO["Direct"].appliedControledFormTo
-    #
-    if selfA._parameters["EstimationOf"] == "State":
-        M = EM["Direct"].appliedControledFormTo
-    #
     if CM is not None and "Tangent" in CM and U is not None:
         Cm = CM["Tangent"].asMatrix(Xb)
     else:
@@ -108,24 +103,35 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
         else:
             Un = None
         #
+        Hm = HO["Direct"].appliedControledFormTo
+        #
         # --------------------------
         if VariantM == "EnKS16-KalmanFilterFormula":
             if selfA._parameters["EstimationOf"] == "State":  # Forecast
-                EL = M( [(EL[:, i], Un) for i in range(__m)],
+                Mm = EM["Direct"].appliedControledFormTo
+                EL = Mm( [(EL[:, i], Un) for i in range(__m)],
                         argsAsSerie = True,
                         returnSerieAsArrayMatrix = True )
                 EL = EnsemblePerturbationWithGivenCovariance( EL, Q )
-                EZ = H( [(EL[:, i], Un) for i in range(__m)],
+                if selfA._toStore("EnsembleOfStates"):
+                    selfA.StoredVariables["EnsembleOfStates"].store( EL )
+                EZ = Hm( [(EL[:, i], Un) for i in range(__m)],
                         argsAsSerie = True,
                         returnSerieAsArrayMatrix = True )
+                if selfA._toStore("EnsembleOfSimulations"):
+                    selfA.StoredVariables["EnsembleOfSimulations"].store( EZ )
                 if Cm is not None and Un is not None:  # Attention : si Cm est aussi dans M, doublon !
                     Cm = Cm.reshape(__n, Un.size)  # ADAO & check shape
                     EZ = EZ + Cm @ Un
             elif selfA._parameters["EstimationOf"] == "Parameters":
                 # --- > Par principe, M = Id, Q = 0
-                EZ = H( [(EL[:, i], Un) for i in range(__m)],
+                if selfA._toStore("EnsembleOfStates"):
+                    selfA.StoredVariables["EnsembleOfStates"].store( EL )
+                EZ = Hm( [(EL[:, i], Un) for i in range(__m)],
                         argsAsSerie = True,
                         returnSerieAsArrayMatrix = True )
+                if selfA._toStore("EnsembleOfSimulations"):
+                    selfA.StoredVariables["EnsembleOfSimulations"].store( EZ )
             #
             vEm   = EL.mean(axis=1, dtype=mfp).astype('float').reshape((__n, 1))
             vZm   = EZ.mean(axis=1, dtype=mfp).astype('float').reshape((__p, 1))
@@ -161,7 +167,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
         else:
             raise ValueError("VariantM has to be chosen in the authorized methods list.")
         #
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
         if selfA._toStore("APosterioriCovariance"):
@@ -169,7 +175,7 @@ def enks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="EnKS16-KalmanFilterForm
     #
     # Stockage des dernières analyses incomplètement remises à jour
     for irl in range(LagL):
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         Xa = sEL[irl].mean(axis=1, dtype=mfp).astype('float').reshape((__n, 1))
         selfA.StoredVariables["Analysis"].store( Xa )
     #

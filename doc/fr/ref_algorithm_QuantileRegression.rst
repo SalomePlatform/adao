@@ -43,6 +43,8 @@ paramètres de modèles satisfaisant aux conditions de quantiles.
 
 .. include:: snippets/FeaturePropDerivativeNeeded.rst
 
+.. include:: snippets/FeaturePropParallelDerivativesOnly.rst
+
 .. include:: snippets/FeaturePropConvergenceOnBoth.rst
 
 .. ------------------------------------ ..
@@ -83,14 +85,23 @@ StoreSupplementaryCalculations
   "Analysis",
   "BMA",
   "CostFunctionJ",
+  "CostFunctionJAtCurrentOptimum",
   "CostFunctionJb",
+  "CostFunctionJbAtCurrentOptimum",
   "CostFunctionJo",
+  "CostFunctionJoAtCurrentOptimum",
   "CurrentIterationNumber",
+  "CurrentOptimum",
   "CurrentState",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
+  "IndexOfOptimum",
   "Innovation",
+  "InnovationAtCurrentState",
   "OMA",
   "OMB",
   "SimulatedObservationAtBackground",
+  "SimulatedObservationAtCurrentOptimum",
   "SimulatedObservationAtCurrentState",
   "SimulatedObservationAtOptimum",
   ].
@@ -126,21 +137,39 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CostFunctionJ.rst
 
+.. include:: snippets/CostFunctionJAtCurrentOptimum.rst
+
 .. include:: snippets/CostFunctionJb.rst
+
+.. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
 
 .. include:: snippets/CostFunctionJo.rst
 
+.. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
+
 .. include:: snippets/CurrentIterationNumber.rst
+
+.. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
 
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
+
+.. include:: snippets/IndexOfOptimum.rst
+
 .. include:: snippets/Innovation.rst
+
+.. include:: snippets/InnovationAtCurrentState.rst
 
 .. include:: snippets/OMA.rst
 
 .. include:: snippets/OMB.rst
 
 .. include:: snippets/SimulatedObservationAtBackground.rst
+
+.. include:: snippets/SimulatedObservationAtCurrentOptimum.rst
 
 .. include:: snippets/SimulatedObservationAtCurrentState.rst
 

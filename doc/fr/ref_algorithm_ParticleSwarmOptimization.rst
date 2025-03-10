@@ -248,6 +248,7 @@ StoreSupplementaryCalculations
   "CurrentIterationNumber",
   "CurrentState",
   "EnsembleOfStates",
+  "EnsembleOfSimulations",
   "Innovation",
   "InternalCostFunctionJ",
   "InternalCostFunctionJb",
@@ -305,6 +306,8 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentState.rst
 
 .. include:: snippets/EnsembleOfStates.rst
+
+.. include:: snippets/EnsembleOfSimulations.rst
 
 .. include:: snippets/Innovation.rst
 

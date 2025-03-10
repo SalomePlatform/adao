@@ -104,14 +104,16 @@ StoreSupplementaryCalculations
   "Analysis",
   "BMA",
   "CostFunctionJ",
-  "CostFunctionJb",
-  "CostFunctionJo",
   "CostFunctionJAtCurrentOptimum",
+  "CostFunctionJb",
   "CostFunctionJbAtCurrentOptimum",
+  "CostFunctionJo",
   "CostFunctionJoAtCurrentOptimum",
   "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "IndexOfOptimum",
   "Innovation",
   "InnovationAtCurrentState",
@@ -148,13 +150,13 @@ StoreSupplementaryCalculations
 
 .. include:: snippets/CostFunctionJ.rst
 
-.. include:: snippets/CostFunctionJb.rst
-
-.. include:: snippets/CostFunctionJo.rst
-
 .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
+.. include:: snippets/CostFunctionJb.rst
+
 .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+.. include:: snippets/CostFunctionJo.rst
 
 .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 
@@ -163,6 +165,10 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/IndexOfOptimum.rst
 

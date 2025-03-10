@@ -119,6 +119,8 @@ StoreSupplementaryCalculations
   "CurrentIterationNumber",
   "CurrentOptimum",
   "CurrentState",
+  "EnsembleOfSimulations",
+  "EnsembleOfStates",
   "IndexOfOptimum",
   ].
 
@@ -160,6 +162,10 @@ StoreSupplementaryCalculations
 .. include:: snippets/CurrentOptimum.rst
 
 .. include:: snippets/CurrentState.rst
+
+.. include:: snippets/EnsembleOfSimulations.rst
+
+.. include:: snippets/EnsembleOfStates.rst
 
 .. include:: snippets/IndexOfOptimum.rst
 

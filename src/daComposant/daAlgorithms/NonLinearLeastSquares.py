@@ -26,6 +26,7 @@ from daAlgorithms.Atoms import ecwnlls
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
+
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "NONLINEARLEASTSQUARES")
         self.defineRequiredParameter(
@@ -116,6 +117,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentOptimum",
                 "CurrentState",
                 "CurrentStepNumber",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "ForecastState",
                 "IndexOfOptimum",
                 "Innovation",

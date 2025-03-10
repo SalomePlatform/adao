@@ -107,6 +107,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "IndexOfOptimum",
                 "Innovation",
                 "InnovationAtCurrentState",
@@ -159,7 +161,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             _Innovation = Y - _HX
             self.StoredVariables["CurrentState"].store( _X )
             if self._toStore("SimulatedObservationAtCurrentState") or \
-                    self._toStore("SimulatedObservationAtCurrentOptimum"):
+                    self._toStore("SimulatedObservationAtCurrentOptimum") or \
+                    self._toStore("EnsembleOfSimulations"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
             if self._toStore("InnovationAtCurrentState"):
                 self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
@@ -451,6 +454,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+        if self._toStore("EnsembleOfStates"):
+            self.StoredVariables["EnsembleOfStates"].store( numpy.array(self.StoredVariables["CurrentState"][nbPreviousSteps:]).T )
+        if self._toStore("EnsembleOfSimulations"):
+            self.StoredVariables["EnsembleOfSimulations"].store( numpy.array(self.StoredVariables["SimulatedObservationAtCurrentState"][nbPreviousSteps:]).T )
         #
         self._post_run(HO, EM)
         return 0

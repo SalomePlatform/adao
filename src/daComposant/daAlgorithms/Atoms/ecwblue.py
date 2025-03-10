@@ -104,7 +104,8 @@ def ecwblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
             selfA._toStore("SimulatedObservationAtCurrentState") or \
             selfA._toStore("SimulatedObservationAtOptimum") or \
-            selfA._toStore("SimulationQuantiles"):
+            selfA._toStore("SimulationQuantiles") or \
+            selfA._toStore("EnsembleOfSimulations"):
         HXa = Hm @ Xa
         oma = Y - HXa.reshape((-1, 1))
     if selfA._parameters["StoreInternalVariables"] or \
@@ -167,9 +168,6 @@ def ecwblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["SigmaBck2"].store( vfloat( (Innovation.T @ (Hm @ (numpy.ravel(Xa) - numpy.ravel(Xb)))) / (Hm * (B * Hm.T)).trace() ) )  # noqa: E501
     if selfA._toStore("MahalanobisConsistency"):
         selfA.StoredVariables["MahalanobisConsistency"].store( float( 2. * J / Innovation.size ) )
-    if selfA._toStore("SimulationQuantiles"):
-        H  = HO["Direct"].appliedTo
-        QuantilesEstimations(selfA, A, Xa, HXa, H, Hm)
     if selfA._toStore("SimulatedObservationAtBackground"):
         selfA.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
     if selfA._toStore("SimulatedObservationAtCurrentState"):
@@ -178,6 +176,13 @@ def ecwblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( HXa )
     if selfA._toStore("SimulatedObservationAtOptimum"):
         selfA.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
+    if selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store( Xa.reshape((-1,1)) )
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store( HXa.reshape((-1,1)) )
+    if selfA._toStore("SimulationQuantiles"):
+        H  = HO["Direct"].appliedTo
+        QuantilesEstimations(selfA, A, Xa, HXa, H, Hm)
     #
     return 0
 

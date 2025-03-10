@@ -122,6 +122,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "IndexOfOptimum",
             ]
         )

@@ -195,6 +195,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentIterationNumber",
                 "CurrentState",
                 "EnsembleOfStates",
+                "EnsembleOfSimulations",
                 "Innovation",
                 "InternalCostFunctionJ",
                 "InternalCostFunctionJb",

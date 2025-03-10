@@ -1200,7 +1200,9 @@ def QuantilesEstimations(selfA, A, Xa, HXa=None, Hm=None, HtM=None):
                 )
             dYr = HtM @ dXr
             Yr = HXa.reshape((-1, 1)) + dYr
-            if selfA._toStore("SampledStateForQuantiles"):
+            if selfA._toStore("SampledStateForQuantiles") or selfA._toStore(
+                "EnsembleOfStates"
+            ):
                 Xr = __Xa + numpy.ravel(dXr)
         elif (
             selfA._parameters["SimulationForQuantiles"] == "NonLinear"
@@ -1222,12 +1224,21 @@ def QuantilesEstimations(selfA, A, Xa, HXa=None, Hm=None, HtM=None):
         #
         if YfQ is None:
             YfQ = Yr.reshape((-1, 1))
-            if selfA._toStore("SampledStateForQuantiles"):
+            if selfA._toStore("SampledStateForQuantiles") or selfA._toStore(
+                "EnsembleOfStates"
+            ):
                 EXr = Xr.reshape((-1, 1))
         else:
             YfQ = numpy.hstack((YfQ, Yr.reshape((-1, 1))))
-            if selfA._toStore("SampledStateForQuantiles"):
+            if selfA._toStore("SampledStateForQuantiles") or selfA._toStore(
+                "EnsembleOfStates"
+            ):
                 EXr = numpy.hstack((EXr, Xr.reshape((-1, 1))))
+    #
+    if selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store(EXr)
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store(numpy.array(YfQ))
     #
     # Extraction des quantiles
     YfQ.sort(axis=-1)
@@ -2056,6 +2067,12 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle, __CovForecast=F
     # Initialisation
     # --------------
     if selfA._parameters["EstimationOf"] == "State":
+        if __CovForecast and not ("Tangent" in EM and "Adjoint" in EM):
+            raise ValueError(
+                "The evolution model doesn't seem to be correctly defined"
+                + " or even defined, and it is required for the covariance"
+                + " forecast. Please update the case definition."
+            )
         if (
             len(selfA.StoredVariables["Analysis"]) == 0
             or not selfA._parameters["nextStep"]
@@ -2154,6 +2171,124 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle, __CovForecast=F
             Pn = selfA._getInternalState("Pn")
     #
     return 0
+
+
+# ==============================================================================
+def CostFunction3D(
+    Xx,
+    selfA=None,
+    Xb=None,
+    Hm=None,
+    Yy=None,
+    BI=None,
+    RI=None,
+    nbPreviousSteps=0,
+    QualityMeasure="DA",
+    CountIterationNumber=False,
+    FullOutput=False,
+    ControledForm=False,
+):
+    _Xx = numpy.asarray(Xx).reshape((-1, 1))
+    _Xb = numpy.asarray(Xb).reshape((-1, 1))
+    _Yy = numpy.asarray(Yy).reshape((-1, 1))
+    #
+    if (
+        selfA._parameters["StoreInternalVariables"]
+        or selfA._toStore("CurrentState")
+        or selfA._toStore("CurrentOptimum")
+        or selfA._toStore("EnsembleOfStates")
+    ):
+        selfA.StoredVariables["CurrentState"].store(_Xx)
+    #
+    if ControledForm:
+        _HX = numpy.asarray(Hm((_Xx, None))).reshape((-1, 1))
+    else:
+        _HX = numpy.asarray(Hm(_Xx)).reshape((-1, 1))
+    if (
+        selfA._toStore("SimulatedObservationAtCurrentState")
+        or selfA._toStore("SimulatedObservationAtCurrentOptimum")
+        or selfA._toStore("EnsembleOfSimulations")
+    ):
+        selfA.StoredVariables["SimulatedObservationAtCurrentState"].store(_HX)
+    #
+    _Innovation = _Yy - _HX
+    if selfA._toStore("InnovationAtCurrentState"):
+        selfA.StoredVariables["InnovationAtCurrentState"].store(_Innovation)
+    #
+    if QualityMeasure in ["AugmentedWeightedLeastSquares", "AWLS", "DA"]:
+        if BI is None or RI is None:
+            raise ValueError(
+                "Background and Observation error covariance matrices has to be properly defined!"
+            )
+        Jb = vfloat(0.5 * (_Xx - _Xb).T @ (BI @ (_Xx - _Xb)))
+        Jo = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
+    elif QualityMeasure in ["WeightedLeastSquares", "WLS"]:
+        if RI is None:
+            raise ValueError(
+                "Observation error covariance matrix has to be properly defined!"
+            )
+        Jb = 0.0
+        Jo = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
+    elif QualityMeasure in ["LeastSquares", "LS", "L2"]:
+        Jb = 0.0
+        Jo = vfloat(0.5 * _Innovation.T @ _Innovation)
+    elif QualityMeasure in ["AbsoluteValue", "L1"]:
+        Jb = 0.0
+        Jo = vfloat(numpy.sum(numpy.abs(_Innovation)))
+    elif QualityMeasure in ["MaximumError", "ME", "Linf"]:
+        Jb = 0.0
+        Jo = vfloat(numpy.max(numpy.abs(_Innovation)))
+    else:
+        Jb = 0.0
+        Jo = 0.0
+    #
+    J = Jb + Jo
+    #
+    if CountIterationNumber:
+        selfA.StoredVariables["CurrentIterationNumber"].store(
+            len(selfA.StoredVariables["CostFunctionJ"])
+        )
+    selfA.StoredVariables["CostFunctionJb"].store(Jb)
+    selfA.StoredVariables["CostFunctionJo"].store(Jo)
+    selfA.StoredVariables["CostFunctionJ"].store(J)
+    if (
+        selfA._toStore("IndexOfOptimum")
+        or selfA._toStore("CurrentOptimum")
+        or selfA._toStore("CostFunctionJAtCurrentOptimum")
+        or selfA._toStore("CostFunctionJbAtCurrentOptimum")
+        or selfA._toStore("CostFunctionJoAtCurrentOptimum")
+        or selfA._toStore("SimulatedObservationAtCurrentOptimum")
+    ):
+        IndexMin = (
+            numpy.argmin(selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:])
+            + nbPreviousSteps
+        )
+    if selfA._toStore("IndexOfOptimum"):
+        selfA.StoredVariables["IndexOfOptimum"].store(IndexMin)
+    if selfA._toStore("CurrentOptimum"):
+        selfA.StoredVariables["CurrentOptimum"].store(
+            selfA.StoredVariables["CurrentState"][IndexMin]
+        )
+    if selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+        selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"].store(
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
+        )
+    if selfA._toStore("CostFunctionJbAtCurrentOptimum"):
+        selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store(
+            selfA.StoredVariables["CostFunctionJb"][IndexMin]
+        )
+    if selfA._toStore("CostFunctionJoAtCurrentOptimum"):
+        selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store(
+            selfA.StoredVariables["CostFunctionJo"][IndexMin]
+        )
+    if selfA._toStore("CostFunctionJAtCurrentOptimum"):
+        selfA.StoredVariables["CostFunctionJAtCurrentOptimum"].store(
+            selfA.StoredVariables["CostFunctionJ"][IndexMin]
+        )
+    if FullOutput:
+        return J, Jb, Jo, _HX
+    else:
+        return J
 
 
 # ==============================================================================

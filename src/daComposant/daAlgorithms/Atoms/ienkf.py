@@ -44,12 +44,6 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
     #
-    # Opérateurs
-    H = HO["Direct"].appliedControledFormTo
-    #
-    if selfA._parameters["EstimationOf"] == "State":
-        M = EM["Direct"].appliedControledFormTo
-    #
     # Durée d'observation et tailles
     if hasattr(Y, "stepnumber"):
         duration = Y.stepnumber()
@@ -110,6 +104,8 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
                 selfA._parameters["InflationFactor"],
             )
         #
+        Hm = HO["Direct"].appliedControledFormTo
+        #
         # --------------------------
         if VariantM == "IEnKF12":
             Xfm = numpy.ravel(Xn.mean(axis=1, dtype=mfp).astype('float'))
@@ -128,18 +124,23 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
                     E1 = vx1 + math.sqrt(__m - 1) * EaX @ Ta
                 #
                 if selfA._parameters["EstimationOf"] == "State":  # Forecast + Q
-                    E2 = M( [(E1[:, i, numpy.newaxis], Un) for i in range(__m)],
+                    Mm = EM["Direct"].appliedControledFormTo
+                    E2 = Mm( [(E1[:, i, numpy.newaxis], Un) for i in range(__m)],
                             argsAsSerie = True,
                             returnSerieAsArrayMatrix = True )
                 elif selfA._parameters["EstimationOf"] == "Parameters":
                     # --- > Par principe, M = Id
                     E2 = Xn
                 vx2 = E2.mean(axis=1, dtype=mfp).astype('float').reshape((__n, 1))
-                vy1 = H((vx2, Un)).reshape((__p, 1))
+                vy1 = Hm((vx2, Un)).reshape((__p, 1))
                 #
-                HE2 = H( [(E2[:, i, numpy.newaxis], Un) for i in range(__m)],
+                if selfA._toStore("EnsembleOfStates"):
+                    selfA.StoredVariables["EnsembleOfStates"].store( E2 )
+                HE2 = Hm( [(E2[:, i, numpy.newaxis], Un) for i in range(__m)],
                          argsAsSerie = True,
                          returnSerieAsArrayMatrix = True )
+                if selfA._toStore("EnsembleOfSimulations"):
+                    selfA.StoredVariables["EnsembleOfSimulations"].store( HE2 )
                 vy2 = HE2.mean(axis=1, dtype=mfp).astype('float').reshape((__p, 1))
                 #
                 if BnotT:
@@ -190,10 +191,10 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
                 or selfA._toStore("InnovationAtCurrentAnalysis") \
                 or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
                 or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            _HXa = numpy.ravel( H((Xa, Un)) ).reshape((-1, 1))
+            _HXa = numpy.ravel( Hm((Xa, Un)) ).reshape((-1, 1))
             _Innovation = Ynpu - _HXa
         #
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
         if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
@@ -263,7 +264,7 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
     if selfA._parameters["EstimationOf"] == "Parameters":
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         selfA.StoredVariables["Analysis"].store( XaMin )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )

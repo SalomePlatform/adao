@@ -58,26 +58,26 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
         if QualityMeasure in ["AugmentedWeightedLeastSquares", "AWLS", "DA"]:
             if BI is None or RI is None:
                 raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
-            Jb  = 0.5 * (_X - Xb).T @ (BI @ (_X - Xb))
-            Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+            Jb  = vfloat(0.5 * (_X - Xb).T @ (BI @ (_X - Xb)))
+            Jo  = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
         elif QualityMeasure in ["WeightedLeastSquares", "WLS"]:
             if RI is None:
                 raise ValueError("Observation error covariance matrix has to be properly defined!")
             Jb  = 0.
-            Jo  = 0.5 * _Innovation.T @ (RI @ _Innovation)
+            Jo  = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
         elif QualityMeasure in ["LeastSquares", "LS", "L2"]:
             Jb  = 0.
-            Jo  = 0.5 * _Innovation.T @ _Innovation
+            Jo  = vfloat(0.5 * _Innovation.T @ _Innovation)
         elif QualityMeasure in ["AbsoluteValue", "L1"]:
             Jb  = 0.
-            Jo  = numpy.sum( numpy.abs(_Innovation) )
+            Jo  = vfloat(numpy.sum( numpy.abs(_Innovation) ))
         elif QualityMeasure in ["MaximumError", "ME", "Linf"]:
             Jb  = 0.
-            Jo  = numpy.max( numpy.abs(_Innovation) )
+            Jo  = vfloat(numpy.max( numpy.abs(_Innovation) ))
         #
-        J   = vfloat( Jb ) + vfloat( Jo )
+        J   = Jb + Jo
         #
-        return J, vfloat( Jb ), vfloat( Jo )
+        return J, Jb, Jo, _HX
 
     def KeepRunningCondition(__step, __nbfct):
         if __step >= selfA._parameters["MaximumNumberOfIterations"]:
@@ -120,7 +120,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     LimitSpeed = BoxBounds
     #
     nbfct = 1  # Nb d'évaluations
-    JXini, JbXini, JoXini = CostFunction(Xini, selfA._parameters["QualityCriterion"])
+    JXini, JbXini, JoXini, HXini = CostFunction(Xini, selfA._parameters["QualityCriterion"])
     if selfA._parameters["StoreInitialState"]:
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )
         selfA.StoredVariables["CostFunctionJ" ].store( JXini  )
@@ -129,7 +129,18 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
         if selfA._toStore("CurrentState"):
             selfA.StoredVariables["CurrentState"].store( Xini )
         if selfA._toStore("SimulatedObservationAtCurrentState"):
-            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm( Xini ) )
+            selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HXini )
+    if selfA._toStore("Innovation") or \
+            selfA._toStore("OMB") or \
+            selfA._toStore("SimulatedObservationAtBackground"):
+        HXb = Hm(Xb)
+        Innovation = Y - HXb
+    if selfA._toStore("Innovation"):
+        selfA.StoredVariables["Innovation"].store( Innovation )
+    if selfA._toStore("OMB"):
+        selfA.StoredVariables["OMB"].store( Innovation )
+    if selfA._toStore("SimulatedObservationAtBackground"):
+        selfA.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
     #
     Swarm = BuildComplexSampleSwarm(
         (__nbI, 3, __nbP),  # 3 car (x,v,xbest)
@@ -141,15 +152,19 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
     #
     qSwarm = JXini * numpy.ones((__nbI, 3))  # Qualité (J, Jb, Jo) par insecte
+    if selfA._toStore("EnsembleOfSimulations"):
+        sSwarm = numpy.zeros((HXini.size, __nbI))
     for __i in range(__nbI):
         nbfct += 1
-        JTest, JbTest, JoTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
+        JTest, JbTest, JoTest, HXTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
         if JTest < JXini:
             Swarm[__i, 2, :] = Swarm[__i, 0, :]  # xBest
             qSwarm[__i, :]   = (JTest, JbTest, JoTest)
         else:
             Swarm[__i, 2, :] = Xini  # xBest
             qSwarm[__i, :]   = (JXini, JbXini, JoXini)
+        if selfA._toStore("EnsembleOfSimulations"):
+            sSwarm[:, __i] = HXTest.flat
     logging.debug("%s Initialisation of the best previous insects"%selfA._name)
     #
     iBest = numpy.argmin(qSwarm[:, 0])
@@ -161,8 +176,10 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest, 2] )
     if selfA._toStore("APosterioriCovariance"):
         selfA.StoredVariables["APosterioriCovariance"].store( EnsembleErrorCovariance( Swarm[:, 0, :].T ) )
-    if selfA._parameters["StoreInternalVariables"] or selfA._toStore("EnsembleOfStates"):
+    if selfA._toStore("EnsembleOfStates"):
         selfA.StoredVariables["EnsembleOfStates"].store( Swarm[:, 0, :].T )
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store( sSwarm )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
         selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:, 0] )
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
@@ -191,10 +208,12 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
                 Swarm[__i, 0, __p] = Swarm[__i, 0, __p] + Swarm[__i, 1, __p]
                 #
             nbfct += 1
-            JTest, JbTest, JoTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
+            JTest, JbTest, JoTest, HXTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
             if JTest < qSwarm[__i, 0]:
                 Swarm[__i, 2, :] = Swarm[__i, 0, :]  # xBest
                 qSwarm[__i, :]   = (JTest, JbTest, JoTest)
+            if selfA._toStore("EnsembleOfSimulations"):
+                sSwarm[:, __i] = HXTest.flat
         #
         iBest = numpy.argmin(qSwarm[:, 0])
         xBest = Swarm[iBest, 2, :]
@@ -206,8 +225,10 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
         selfA.StoredVariables["CostFunctionJ" ].store( qSwarm[iBest, 0]  )
         selfA.StoredVariables["CostFunctionJb"].store( qSwarm[iBest, 1] )
         selfA.StoredVariables["CostFunctionJo"].store( qSwarm[iBest, 2] )
-        if selfA._parameters["StoreInternalVariables"] or selfA._toStore("EnsembleOfStates"):
+        if selfA._toStore("EnsembleOfStates"):
             selfA.StoredVariables["EnsembleOfStates"].store( Swarm[:, 0, :].T )
+        if selfA._toStore("EnsembleOfSimulations"):
+            selfA.StoredVariables["EnsembleOfSimulations"].store( sSwarm )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJ"):
             selfA.StoredVariables["InternalCostFunctionJ"].store( qSwarm[:, 0] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalCostFunctionJb"):
@@ -229,21 +250,10 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
     if selfA._toStore("OMA") or \
             selfA._toStore("SimulatedObservationAtOptimum"):
         HXa = Hm(Xa)
-    if selfA._toStore("Innovation") or \
-            selfA._toStore("OMB") or \
-            selfA._toStore("SimulatedObservationAtBackground"):
-        HXb = Hm(Xb)
-        Innovation = Y - HXb
-    if selfA._toStore("Innovation"):
-        selfA.StoredVariables["Innovation"].store( Innovation )
-    if selfA._toStore("OMB"):
-        selfA.StoredVariables["OMB"].store( Innovation )
     if selfA._toStore("BMA"):
         selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
     if selfA._toStore("OMA"):
         selfA.StoredVariables["OMA"].store( numpy.ravel(Y) - numpy.ravel(HXa) )
-    if selfA._toStore("SimulatedObservationAtBackground"):
-        selfA.StoredVariables["SimulatedObservationAtBackground"].store( HXb )
     if selfA._toStore("SimulatedObservationAtOptimum"):
         selfA.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
     if selfA._toStore("APosterioriCovariance"):

@@ -67,10 +67,12 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         _W = numpy.asarray(w).reshape((-1, 1))
         if selfA._parameters["StoreInternalVariables"] or \
                 selfA._toStore("CurrentState") or \
-                selfA._toStore("CurrentOptimum"):
+                selfA._toStore("CurrentOptimum") or \
+                selfA._toStore("EnsembleOfStates"):
             selfA.StoredVariables["CurrentState"].store( Xb + BHT @ _W )
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
-                selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
+                selfA._toStore("EnsembleOfSimulations"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm( Xb + BHT @ _W ) )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( Innovation )
@@ -235,6 +237,10 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     #
     # Calculs et/ou stockages supplémentaires
     # ---------------------------------------
+    if selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store( numpy.asarray(selfA.StoredVariables["CurrentState"][nbPreviousSteps:]).T )
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.asarray(selfA.StoredVariables["SimulatedObservationAtCurrentState"][nbPreviousSteps:]).T )
     if selfA._toStore("Innovation") or \
             selfA._toStore("SigmaObs2") or \
             selfA._toStore("MahalanobisConsistency") or \

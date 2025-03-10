@@ -33,9 +33,7 @@ mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
 def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
-    """
-    Constrained Unscented Kalman Filter
-    """
+    #
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
     selfA._parameters["Bounds"] = ForceNumericBounds( selfA._parameters["Bounds"] )
@@ -77,13 +75,16 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             Pn = B.asfullmatrix(__n)
         else:
             Pn = B
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( Pn )
     elif selfA._parameters["nextStep"]:
         Xn = selfA._getInternalState("Xn")
         Pn = selfA._getInternalState("Pn")
+    #
+    if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
+        Xn = ApplyBounds( Xn, selfA._parameters["Bounds"] )
     #
     if selfA._parameters["EstimationOf"] == "Parameters":
         XaMin            = Xn
@@ -150,10 +151,15 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             for point in range(nbSpts):
                 Xnnmu[:, point] = ApplyBounds( Xnnmu[:, point], selfA._parameters["Bounds"] )
         #
+        if selfA._toStore("EnsembleOfStates"):
+            selfA.StoredVariables["EnsembleOfStates"].store( Xnnmu )
+        #
         Hm = HO["Direct"].appliedControledFormTo
         Ynnmu = Hm( [(Xnnmu[:, point], None) for point in range(nbSpts)],
                     argsAsSerie = True,
                     returnSerieAsArrayMatrix = True )
+        if selfA._toStore("EnsembleOfSimulations"):
+            selfA.StoredVariables["EnsembleOfSimulations"].store( Ynnmu )
         #
         Yhmn = ( Ynnmu * Wm ).sum(axis=1)
         #
@@ -187,7 +193,7 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         selfA._setInternalState("Pn", Pn)
         # --------------------------
         #
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
         if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
@@ -254,7 +260,7 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
     if selfA._parameters["EstimationOf"] == "Parameters":
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         selfA.StoredVariables["Analysis"].store( XaMin )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )

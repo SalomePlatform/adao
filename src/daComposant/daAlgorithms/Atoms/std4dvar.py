@@ -27,9 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize, scipy.version
 from daCore.NumericObjects import ForceNumericBounds, ApplyBounds
-from daCore.PlatformInfo import PlatformInfo, vt, vfloat, trmo
-mpr = PlatformInfo().MachinePrecision()
-mfp = PlatformInfo().MaximumPrecision()
+from daCore.PlatformInfo import vt, vfloat, trmo
 
 # ==============================================================================
 def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
@@ -40,7 +38,6 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # Initialisations
     # ---------------
     #
-    # Opérateurs
     Hm = HO["Direct"].appliedControledFormTo
     Mm = EM["Direct"].appliedControledFormTo
     #
@@ -80,11 +77,9 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     else:
         duration = 2
     #
-    # Précalcul des inversions de B et R
     BI = B.getI()
     RI = R.getI()
     #
-    # Point de démarrage de l'optimisation
     Xini = selfA._parameters["InitializationPoint"]
     #
     # Définition de la fonction-coût
@@ -101,6 +96,8 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Jb  = vfloat( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
         selfA.DirectCalculation = [None,]
         selfA.DirectInnovation  = [None,]
+        e4dwin = numpy.zeros((Xini.size, duration-1))
+        s4dwin = None
         Jo  = 0.
         _Xn = _X
         for step in range(0, duration - 1):
@@ -119,11 +116,18 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             if selfA._parameters["Bounds"] is not None and selfA._parameters["ConstrainedBy"] == "EstimateProjection":
                 _Xn = ApplyBounds( _Xn, ForceNumericBounds(selfA._parameters["Bounds"]) )
             #
-            # Etape de différence aux observations
+            # Étape de différence aux observations
+            _HX = numpy.asarray(Hm( (_Xn, None) )).reshape((-1, 1))
             if selfA._parameters["EstimationOf"] == "State":
-                _YmHMX = _Ynpu - numpy.ravel( Hm( (_Xn, None) ) ).reshape((-1, 1))
+                _YmHMX = _Ynpu - numpy.ravel( _HX ).reshape((-1, 1))
             elif selfA._parameters["EstimationOf"] == "Parameters":
-                _YmHMX = _Ynpu - numpy.ravel( Hm( (_Xn, None) ) ).reshape((-1, 1)) - CmUn(_Xn, _Un)
+                _YmHMX = _Ynpu - numpy.ravel( _HX ).reshape((-1, 1)) - CmUn(_Xn, _Un)
+            if selfA._toStore("EnsembleOfStates"):
+                e4dwin[:, step] = _Xn.flat
+            if s4dwin is None:
+                s4dwin = numpy.zeros((_HX.size, duration))
+            if selfA._toStore("EnsembleOfSimulations"):
+                s4dwin[:, step] = _HX.flat
             #
             # Stockage de l'état
             selfA.DirectCalculation.append( _Xn )
@@ -142,17 +146,21 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 selfA._toStore("CostFunctionJAtCurrentOptimum") or \
                 selfA._toStore("CostFunctionJbAtCurrentOptimum") or \
                 selfA._toStore("CostFunctionJoAtCurrentOptimum"):
-            IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
+            IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps  # noqa: E501
         if selfA._toStore("IndexOfOptimum"):
             selfA.StoredVariables["IndexOfOptimum"].store( IndexMin )
         if selfA._toStore("CurrentOptimum"):
-            selfA.StoredVariables["CurrentOptimum"].store( selfA.StoredVariables["CurrentState"][IndexMin] )
-        if selfA._toStore("CostFunctionJAtCurrentOptimum"):
-            selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )  # noqa: E501
+            selfA.StoredVariables["CurrentOptimum"].store( selfA.StoredVariables["CurrentState"][IndexMin] )  # noqa: E501
         if selfA._toStore("CostFunctionJbAtCurrentOptimum"):
             selfA.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJb"][IndexMin] )  # noqa: E501
         if selfA._toStore("CostFunctionJoAtCurrentOptimum"):
             selfA.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( selfA.StoredVariables["CostFunctionJo"][IndexMin] )  # noqa: E501
+        if selfA._toStore("CostFunctionJAtCurrentOptimum"):
+            selfA.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( selfA.StoredVariables["CostFunctionJ" ][IndexMin] )  # noqa: E501
+        if selfA._toStore("EnsembleOfStates"):
+            selfA.StoredVariables["EnsembleOfStates"].store( s4dwin )
+        if selfA._toStore("EnsembleOfSimulations"):
+            selfA.StoredVariables["EnsembleOfSimulations"].store( s4dwin )
         return J
 
     def GradientOfCostFunction(x):
@@ -249,8 +257,6 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if selfA._parameters["StoreInternalVariables"] or selfA._toStore("CurrentState"):
         Minimum = selfA.StoredVariables["CurrentState"][IndexMin]
     #
-    # Obtention de l'analyse
-    # ----------------------
     Xa = Minimum
     #
     selfA.StoredVariables["Analysis"].store( Xa )

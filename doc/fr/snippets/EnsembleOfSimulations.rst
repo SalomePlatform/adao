@@ -2,13 +2,15 @@
 
 EnsembleOfSimulations
   *Liste de vecteurs ou matrice*. Chaque élément est une collection ordonnée de
-  vecteurs d'état physique ou d'état simulé :math:`\mathbf{y}` (sorties, nommés
-  "*snapshots*" en terminologie de bases réduites), avec 1 état par colonne si
-  c'est une matrice, ou 1 état par élément si c'est une liste. Important : la
-  numérotation du support ou des points, sur lequel ou auxquels sont fournis
-  une valeur d'état dans chaque vecteur, est implicitement celle de l'ordre
-  naturel de numérotation du vecteur d'état, de 0 à la "taille moins 1" de ce
-  vecteur.
+  vecteurs d'état physique ou d'état simulé éventuellement observé
+  :math:`\mathbf{y}`. Ce sont des **sorties** d'opérateur :math:`H`,
+  c'est-à-dire des états d'observation simulés (nommés "*snapshots*" en
+  terminologie de bases réduites). A chaque index de pas, il y a 1 état par
+  colonne si cette liste est sous forme matricielle, ou 1 état par élément si
+  c'est effectivement une liste. Important : la numérotation du support ou des
+  points, sur lequel ou auxquels sont fournis une valeur d'état dans chaque
+  vecteur, est implicitement celle de l'ordre naturel de numérotation du
+  vecteur d'état, de 0 à la "taille moins 1" de ce vecteur.
 
   Exemple :
   ``{"EnsembleOfSimulations":[y1, y2, y3...]}``

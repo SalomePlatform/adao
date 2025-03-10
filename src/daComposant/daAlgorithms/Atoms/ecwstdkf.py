@@ -94,23 +94,34 @@ def ecwstdkf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         selfA._setInternalState("Pn", Pa)
     # --------------------------
     #
+    # ---> avec analysis
     selfA.StoredVariables["Analysis"].store( Xa )
-    if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
-        selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( Hm @ Xa )
+    if selfA._toStore("SimulatedObservationAtCurrentState") or \
+            selfA._toStore("SimulatedObservationAtCurrentAnalysis") or \
+            selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
+            selfA._toStore("EnsembleOfSimulations"):
+        HXa = Hm @ Xa
+    if selfA._toStore("SimulatedObservationAtCurrentAnalysis") or \
+            selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+        selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( HXa )
     if selfA._toStore("InnovationAtCurrentAnalysis"):
         selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( Innovation )
     # ---> avec current state
     if selfA._parameters["StoreInternalVariables"] \
-            or selfA._toStore("CurrentState"):
+            or selfA._toStore("CurrentState") or \
+            selfA._toStore("EnsembleOfStates"):
         selfA.StoredVariables["CurrentState"].store( Xa )
     if selfA._toStore("BMA"):
         selfA.StoredVariables["BMA"].store( numpy.ravel(Xb) - numpy.ravel(Xa) )
     if selfA._toStore("InnovationAtCurrentState"):
         selfA.StoredVariables["InnovationAtCurrentState"].store( Innovation )
-    if selfA._toStore("SimulatedObservationAtCurrentState") \
-            or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-        selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HXb )
+    if selfA._toStore("SimulatedObservationAtCurrentState"):
+        selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HXa )
     # ---> autres
+    if selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store( Xa.reshape((-1,1)) )
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store( HXa.reshape((-1,1)) )
     if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
             or selfA._toStore("CostFunctionJb") \

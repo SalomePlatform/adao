@@ -28,6 +28,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "ENSEMBLEBLUE")
         self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "EnsembleBlue",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "EnsembleBlue",
+            ],
+        )
+        self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
@@ -42,6 +51,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Analysis",
                 "CurrentOptimum",
                 "CurrentState",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "Innovation",
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentState",
@@ -119,7 +130,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self.StoredVariables["Innovation"].store( Innovation )
             Xa = Xb[iens] + K @ Innovation
             self.StoredVariables["CurrentState"].store( Xa )
-            if self._toStore("SimulatedObservationAtCurrentState"):
+            if self._toStore("SimulatedObservationAtCurrentState") or self._toStore("EnsembleOfSimulations"):
                 self.StoredVariables["SimulatedObservationAtCurrentState"].store( Hm @ numpy.ravel(Xa) )
         #
         # Fabrication de l'analyse
@@ -131,6 +142,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             self.StoredVariables["CurrentOptimum"].store( Xa )
         if self._toStore("SimulatedObservationAtOptimum"):
             self.StoredVariables["SimulatedObservationAtOptimum"].store( Hm @ numpy.ravel(Xa) )
+        if self._toStore("EnsembleOfStates"):
+            self.StoredVariables["EnsembleOfStates"].store( numpy.asarray(self.StoredVariables["CurrentState"][:]).T )
+        if self._toStore("EnsembleOfSimulations"):
+            self.StoredVariables["EnsembleOfSimulations"].store( numpy.asarray(self.StoredVariables["SimulatedObservationAtCurrentState"][:]).T )
         #
         self._post_run(HO, EM)
         return 0

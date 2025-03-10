@@ -22,12 +22,22 @@
 
 import numpy, logging, scipy.optimize
 from daCore import BasicObjects
+from daCore.NumericObjects import CostFunction3D as CostFunction
 from daCore.PlatformInfo import vfloat
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "DIFFERENTIALEVOLUTION")
+        self.defineRequiredParameter(
+            name     = "Variant",
+            default  = "DifferentialEvolution",
+            typecast = str,
+            message  = "Variant ou formulation de la méthode",
+            listval  = [
+                "DifferentialEvolution",
+            ],
+        )
         self.defineRequiredParameter(
             name     = "Minimizer",
             default  = "BEST1BIN",
@@ -114,21 +124,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
-            default  = [],
+            default  = ["CurrentState",],
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
                 "Analysis",
                 "BMA",
                 "CostFunctionJ",
-                "CostFunctionJb",
-                "CostFunctionJo",
                 "CostFunctionJAtCurrentOptimum",
+                "CostFunctionJb",
                 "CostFunctionJbAtCurrentOptimum",
+                "CostFunctionJo",
                 "CostFunctionJoAtCurrentOptimum",
                 "CurrentIterationNumber",
                 "CurrentOptimum",
                 "CurrentState",
+                "EnsembleOfSimulations",
+                "EnsembleOfStates",
                 "IndexOfOptimum",
                 "Innovation",
                 "InnovationAtCurrentState",
@@ -173,64 +185,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         BI = B.getI()
         RI = R.getI()
-
-        def CostFunction(x, QualityMeasure="AugmentedWeightedLeastSquares"):
-            _X  = numpy.ravel( x ).reshape((-1, 1))
-            _HX = numpy.ravel( Hm( _X ) ).reshape((-1, 1))
-            _Innovation = Y - _HX
-            self.StoredVariables["CurrentState"].store( _X )
-            if self._toStore("SimulatedObservationAtCurrentState") or \
-                    self._toStore("SimulatedObservationAtCurrentOptimum"):
-                self.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
-            if self._toStore("InnovationAtCurrentState"):
-                self.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
-            #
-            if QualityMeasure in ["AugmentedWeightedLeastSquares", "AWLS", "DA"]:
-                if BI is None or RI is None:
-                    raise ValueError("Background and Observation error covariance matrices has to be properly defined!")
-                Jb  = vfloat(0.5 * (_X - Xb).T @ (BI @ (_X - Xb)))
-                Jo  = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
-            elif QualityMeasure in ["WeightedLeastSquares", "WLS"]:
-                if RI is None:
-                    raise ValueError("Observation error covariance matrix has to be properly defined!")
-                Jb  = 0.
-                Jo  = vfloat(0.5 * _Innovation.T @ (RI @ _Innovation))
-            elif QualityMeasure in ["LeastSquares", "LS", "L2"]:
-                Jb  = 0.
-                Jo  = vfloat(0.5 * _Innovation.T @ _Innovation)
-            elif QualityMeasure in ["AbsoluteValue", "L1"]:
-                Jb  = 0.
-                Jo  = vfloat(numpy.sum( numpy.abs(_Innovation) ))
-            elif QualityMeasure in ["MaximumError", "ME", "Linf"]:
-                Jb  = 0.
-                Jo  = vfloat(numpy.max( numpy.abs(_Innovation) ))
-            #
-            J   = Jb + Jo
-            #
-            self.StoredVariables["CurrentIterationNumber"].store( len(self.StoredVariables["CostFunctionJ"]) )
-            self.StoredVariables["CostFunctionJb"].store( Jb )
-            self.StoredVariables["CostFunctionJo"].store( Jo )
-            self.StoredVariables["CostFunctionJ" ].store( J )
-            if self._toStore("IndexOfOptimum") or \
-                    self._toStore("CurrentOptimum") or \
-                    self._toStore("CostFunctionJAtCurrentOptimum") or \
-                    self._toStore("CostFunctionJbAtCurrentOptimum") or \
-                    self._toStore("CostFunctionJoAtCurrentOptimum") or \
-                    self._toStore("SimulatedObservationAtCurrentOptimum"):
-                IndexMin = numpy.argmin( self.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps
-            if self._toStore("IndexOfOptimum"):
-                self.StoredVariables["IndexOfOptimum"].store( IndexMin )
-            if self._toStore("CurrentOptimum"):
-                self.StoredVariables["CurrentOptimum"].store( self.StoredVariables["CurrentState"][IndexMin] )
-            if self._toStore("SimulatedObservationAtCurrentOptimum"):
-                self.StoredVariables["SimulatedObservationAtCurrentOptimum"].store( self.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin] )  # noqa: E501
-            if self._toStore("CostFunctionJAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJAtCurrentOptimum" ].store( self.StoredVariables["CostFunctionJ" ][IndexMin] )  # noqa: E501
-            if self._toStore("CostFunctionJbAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJbAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJb"][IndexMin] )  # noqa: E501
-            if self._toStore("CostFunctionJoAtCurrentOptimum"):
-                self.StoredVariables["CostFunctionJoAtCurrentOptimum"].store( self.StoredVariables["CostFunctionJo"][IndexMin] )  # noqa: E501
-            return J
         #
         Xini = numpy.ravel(Xb)
         #
@@ -241,6 +195,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         scipy.optimize.differential_evolution(
             CostFunction,
             self._parameters["Bounds"],
+            args          = (self, Xb, Hm, Y, BI, RI, nbPreviousSteps, "DA", True),
             strategy      = str(self._parameters["Minimizer"]).lower(),
             maxiter       = maxiter,
             popsize       = popsize,
@@ -261,6 +216,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # Calculs et/ou stockages supplémentaires
         # ---------------------------------------
+        if self._toStore("EnsembleOfStates"):
+            self.StoredVariables["EnsembleOfStates"].store( numpy.asarray(self.StoredVariables["CurrentState"][nbPreviousSteps:]).T )
+        if self._toStore("EnsembleOfSimulations"):
+            self.StoredVariables["EnsembleOfSimulations"].store( numpy.asarray(self.StoredVariables["SimulatedObservationAtCurrentState"][nbPreviousSteps:]).T )
         if self._toStore("OMA") or \
                 self._toStore("SimulatedObservationAtOptimum"):
             if self._toStore("SimulatedObservationAtCurrentState"):

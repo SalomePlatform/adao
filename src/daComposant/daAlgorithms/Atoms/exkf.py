@@ -32,9 +32,7 @@ mfp = PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
-    """
-    Extended Kalman Filter
-    """
+    #
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
     #
@@ -65,7 +63,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     if len(selfA.StoredVariables["Analysis"]) == 0 or not selfA._parameters["nextStep"]:
         Xn = Xb
         Pn = B
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         selfA.StoredVariables["Analysis"].store( Xb )
         if selfA._toStore("APosterioriCovariance"):
             if hasattr(B, "asfullmatrix"):
@@ -157,16 +155,19 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         selfA._setInternalState("Pn", Pn)
         # --------------------------
         #
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
-        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
-            selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( H((Xa, None)) )
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis") or \
+                selfA._toStore("EnsembleOfSimulations"):
+            HXa = H((Xa, None))
+            selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( HXa )
         if selfA._toStore("InnovationAtCurrentAnalysis"):
             selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
         # ---> avec current state
-        if selfA._parameters["StoreInternalVariables"] \
-                or selfA._toStore("CurrentState"):
+        if selfA._parameters["StoreInternalVariables"] or \
+                selfA._toStore("CurrentState") or \
+                selfA._toStore("EnsembleOfStates"):
             selfA.StoredVariables["CurrentState"].store( Xn )
         if selfA._toStore("ForecastState"):
             selfA.StoredVariables["ForecastState"].store( Xn_predicted )
@@ -180,6 +181,10 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
         # ---> autres
+        if selfA._toStore("EnsembleOfStates"):
+            selfA.StoredVariables["EnsembleOfStates"].store( numpy.array((numpy.ravel(Xn_predicted),numpy.ravel(Xa))).T )
+        if selfA._toStore("EnsembleOfSimulations"):
+            selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.array((numpy.ravel(HX_predicted),numpy.ravel(HXa))).T )
         if selfA._parameters["StoreInternalVariables"] \
                 or selfA._toStore("CostFunctionJ") \
                 or selfA._toStore("CostFunctionJb") \
@@ -224,7 +229,7 @@ def exkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
     if selfA._parameters["EstimationOf"] == "Parameters":
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         selfA.StoredVariables["Analysis"].store( XaMin )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )

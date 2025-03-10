@@ -50,11 +50,6 @@ def senkf( selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
         selfA._parameters["StoreInternalVariables"] = True
     #
     # Opérateurs
-    H = HO["Direct"].appliedControledFormTo
-    #
-    if selfA._parameters["EstimationOf"] == "State":
-        M = EM["Direct"].appliedControledFormTo
-    #
     if CM is not None and "Tangent" in CM and U is not None:
         Cm = CM["Tangent"].asMatrix(Xb)
     else:
@@ -125,23 +120,33 @@ def senkf( selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 selfA._parameters["InflationFactor"],
             )
         #
+        Hm = HO["Direct"].appliedControledFormTo
         if selfA._parameters["EstimationOf"] == "State":  # Forecast + Q and observation of forecast
-            EMX = M( [(Xn[:, i], Un) for i in range(__m)],
+            Mm = EM["Direct"].appliedControledFormTo
+            EMX = Mm( [(Xn[:, i], Un) for i in range(__m)],
                      argsAsSerie = True,
                      returnSerieAsArrayMatrix = True )
             Xn_predicted = EnsemblePerturbationWithGivenCovariance( EMX, Q )
-            HX_predicted = H( [(Xn_predicted[:, i], None) for i in range(__m)],
+            if selfA._toStore("EnsembleOfStates"):
+                selfA.StoredVariables["EnsembleOfStates"].store( Xn_predicted )
+            HX_predicted = Hm( [(Xn_predicted[:, i], None) for i in range(__m)],
                               argsAsSerie = True,
                               returnSerieAsArrayMatrix = True )
+            if selfA._toStore("EnsembleOfSimulations"):
+                selfA.StoredVariables["EnsembleOfSimulations"].store( HX_predicted )
             if Cm is not None and Un is not None:  # Attention : si Cm est aussi dans M, doublon !
                 Cm = Cm.reshape(__n, Un.size)  # ADAO & check shape
                 Xn_predicted = Xn_predicted + Cm @ Un
         elif selfA._parameters["EstimationOf"] == "Parameters":  # Observation of forecast
             # --- > Par principe, M = Id, Q = 0
             Xn_predicted = EMX = Xn
-            HX_predicted = H( [(Xn_predicted[:, i], Un) for i in range(__m)],
+            if selfA._toStore("EnsembleOfStates"):
+                selfA.StoredVariables["EnsembleOfStates"].store( Xn_predicted )
+            HX_predicted = Hm( [(Xn_predicted[:, i], Un) for i in range(__m)],
                               argsAsSerie = True,
                               returnSerieAsArrayMatrix = True )
+            if selfA._toStore("EnsembleOfSimulations"):
+                selfA.StoredVariables["EnsembleOfSimulations"].store( HX_predicted )
         #
         # Mean of forecast and observation of forecast
         Xfm  = EnsembleMean( Xn_predicted )
@@ -203,10 +208,11 @@ def senkf( selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
                 or selfA._toStore("InnovationAtCurrentAnalysis") \
                 or selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
                 or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
-            _HXa = numpy.ravel( H((Xa, None)) ).reshape((-1, 1))
+            Hm = HO["Direct"].appliedControledFormTo
+            _HXa = numpy.ravel( Hm((Xa, None)) ).reshape((-1, 1))
             _Innovation = Ynpu - _HXa
         #
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
         if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
@@ -276,7 +282,7 @@ def senkf( selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
     # Stockage final supplémentaire de l'optimum en estimation de paramètres
     # ----------------------------------------------------------------------
     if selfA._parameters["EstimationOf"] == "Parameters":
-        selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["Analysis"]) )
+        selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         selfA.StoredVariables["Analysis"].store( XaMin )
         if selfA._toStore("APosterioriCovariance"):
             selfA.StoredVariables["APosterioriCovariance"].store( covarianceXaMin )

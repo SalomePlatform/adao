@@ -81,12 +81,14 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             _dX  = numpy.asarray(dx).reshape((-1, 1))
             if selfA._parameters["StoreInternalVariables"] or \
                     selfA._toStore("CurrentState") or \
-                    selfA._toStore("CurrentOptimum"):
+                    selfA._toStore("CurrentOptimum") or \
+                    selfA._toStore("EnsembleOfStates"):
                 selfA.StoredVariables["CurrentState"].store( Xb + _dX )
             _HdX = (Ht @ _dX).reshape((-1, 1))
             _dInnovation = Innovation - _HdX
             if selfA._toStore("SimulatedObservationAtCurrentState") or \
-                    selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+                    selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
+                    selfA._toStore("EnsembleOfSimulations"):
                 selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HXb + _HdX )
             if selfA._toStore("InnovationAtCurrentState"):
                 selfA.StoredVariables["InnovationAtCurrentState"].store( _dInnovation )
@@ -271,6 +273,10 @@ def incr3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     #
     # Calculs et/ou stockages supplémentaires
     # ---------------------------------------
+    if selfA._toStore("EnsembleOfStates"):
+        selfA.StoredVariables["EnsembleOfStates"].store( numpy.asarray(selfA.StoredVariables["CurrentState"][nbPreviousSteps:]).T )
+    if selfA._toStore("EnsembleOfSimulations"):
+        selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.asarray(selfA.StoredVariables["SimulatedObservationAtCurrentState"][nbPreviousSteps:]).T )
     if selfA._toStore("Innovation") or \
             selfA._toStore("SigmaObs2") or \
             selfA._toStore("MahalanobisConsistency") or \
