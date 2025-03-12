@@ -29,31 +29,32 @@ set(DAEFICAS_FILES
   __init__.py
   ${CMAKE_CURRENT_BINARY_DIR}/prefs_ADAO.py
   prefs.py
-  traduitADAOsansToV9_14_0.py
-  traduitADAOV7_4_0ToV9_14_0.py
-  traduitADAOV7_5_0ToV9_14_0.py
-  traduitADAOV7_5_1ToV9_14_0.py
-  traduitADAOV7_6_0ToV9_14_0.py
-  traduitADAOV7_7_0ToV9_14_0.py
-  traduitADAOV7_8_0ToV9_14_0.py
-  traduitADAOV8_1_0ToV9_14_0.py
-  traduitADAOV8_2_0ToV9_14_0.py
-  traduitADAOV8_3_0ToV9_14_0.py
-  traduitADAOV8_4_0ToV9_14_0.py
-  traduitADAOV8_5_0ToV9_14_0.py
-  traduitADAOV8_6_0ToV9_14_0.py
-  traduitADAOV9_2_0ToV9_14_0.py
-  traduitADAOV9_3_0ToV9_14_0.py
-  traduitADAOV9_4_0ToV9_14_0.py
-  traduitADAOV9_5_0ToV9_14_0.py
-  traduitADAOV9_6_0ToV9_14_0.py
-  traduitADAOV9_7_0ToV9_14_0.py
-  traduitADAOV9_8_0ToV9_14_0.py
-  traduitADAOV9_9_0ToV9_14_0.py
-  traduitADAOV9_10_0ToV9_14_0.py
-  traduitADAOV9_11_0ToV9_14_0.py
-  traduitADAOV9_12_0ToV9_14_0.py
-  traduitADAOV9_13_0ToV9_14_0.py
+  traduitADAOsansToV9_15_0.py
+  traduitADAOV7_4_0ToV9_15_0.py
+  traduitADAOV7_5_0ToV9_15_0.py
+  traduitADAOV7_5_1ToV9_15_0.py
+  traduitADAOV7_6_0ToV9_15_0.py
+  traduitADAOV7_7_0ToV9_15_0.py
+  traduitADAOV7_8_0ToV9_15_0.py
+  traduitADAOV8_1_0ToV9_15_0.py
+  traduitADAOV8_2_0ToV9_15_0.py
+  traduitADAOV8_3_0ToV9_15_0.py
+  traduitADAOV8_4_0ToV9_15_0.py
+  traduitADAOV8_5_0ToV9_15_0.py
+  traduitADAOV8_6_0ToV9_15_0.py
+  traduitADAOV9_2_0ToV9_15_0.py
+  traduitADAOV9_3_0ToV9_15_0.py
+  traduitADAOV9_4_0ToV9_15_0.py
+  traduitADAOV9_5_0ToV9_15_0.py
+  traduitADAOV9_6_0ToV9_15_0.py
+  traduitADAOV9_7_0ToV9_15_0.py
+  traduitADAOV9_8_0ToV9_15_0.py
+  traduitADAOV9_9_0ToV9_15_0.py
+  traduitADAOV9_10_0ToV9_15_0.py
+  traduitADAOV9_11_0ToV9_15_0.py
+  traduitADAOV9_12_0ToV9_15_0.py
+  traduitADAOV9_13_0ToV9_15_0.py
+  traduitADAOV9_14_0ToV9_15_0.py
   )
 
 install(FILES ${DAEFICAS_FILES} DESTINATION "${ADAO_SCRIPT_PYTHON}/adao/daEficas")
