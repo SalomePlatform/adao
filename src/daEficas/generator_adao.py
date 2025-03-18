@@ -22,7 +22,12 @@
 #
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
-from generator.generator_python import PythonGenerator
+try:
+    print("  Import compatible with EFICAS until 9.14 included for: generator_adao")
+    from generator.generator_python import PythonGenerator
+except Exception as e:
+    from Accas.IO.writer.writer_python import PythonGenerator
+
 import logging
 
 def entryPoint():

@@ -24,8 +24,12 @@
 
 # print "import convert_adao"
 
-import convert.parseur_python
-from convert.convert_python import *
+try:
+    print("  Import compatible with EFICAS until 9.14 included for: convert_adao")
+    import convert.parseur_python
+    from convert.convert_python import *
+except Exception as e:
+    from Accas.IO.reader.reader_python import Pythonparser as PythonParser
 
 def entryPoint():
     """

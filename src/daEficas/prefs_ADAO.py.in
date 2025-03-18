@@ -30,11 +30,13 @@ import os, sys
 # =======================
 #
 # INSTALLDIR, repIni est obligatoire
-INSTALLDIR = "@EFICAS_DIR@"
-sys.path.insert(0,INSTALLDIR)
+#   INSTALLDIR est inutile apres la 9.14
+#   INSTALLDIR = "@EFICAS_DIR@"
+#   sys.path.insert(0,INSTALLDIR)
 #
 # Positionnee a repin au debut, mise a jour dans configuration
 repIni=os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0,repIni)
 #
 # Sert comme directory initial des QFileDialog
 initialdir = os.getcwd()
@@ -77,3 +79,6 @@ closeArbre = True
 taille = 800
 nombreDeBoutonParLigne = 2
 
+catalogues = (("ADAO", "V0", os.path.join(repIni, 'ADAO_Cata_V0.py'), "adao"),)
+readerModule = "convert_adao"
+writerModule = "generator_adao"

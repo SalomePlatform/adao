@@ -25,7 +25,11 @@ import sys
 import os
 
 import eficasSalome               # Import from EFICAS_SRC
-from InterfaceQT4 import qtEficas # Import from Eficas
+try:
+    print("  Import compatible with EFICAS until 9.14 included for: adaoEficasWrapper")
+    from InterfaceQT4 import qtEficas  # Import from EficasTools
+except Exception as e:
+    from InterfaceGUI.QT5 import qt_eficas  # Import from EficasTools
 from PyQt5.QtGui  import *        # Import from PyQT
 from PyQt5.QtCore import *        # Import from PyQT
 
@@ -52,12 +56,18 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
       import salome ; salome.salome_init()
 
-      eficasSalome.MyEficas.__init__(self, None, code="ADAO", module="ADAO")
-      self.viewmanager.myQtab.currentChanged.connect(self.tabChanged)
-      # self.menubar.hide()
-      # self.toolBar.hide()
-      # self.frameEntete.close()
-      # self.closeEntete()
+      try:
+        print("EFICAS 9.14 : les deux init risquent de poser problème en cas d'except")
+        eficasSalome.MyEficas.__init__(self, None, code="ADAO", module="ADAO")
+        self.viewmanager.myQtab.currentChanged.connect(self.tabChanged)
+        # self.menubar.hide()
+        # self.toolBar.hide()
+        # self.frameEntete.close()
+        # self.closeEntete()
+      except Exception as e:
+        eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
+        self.editorManager.myQtab.currentChanged.connect(self.tabChanged)
+        self.viewmanager = self.editorManager  # JPA : EFICAS 9.14/15 Uniquement temporaire !!!
 
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))
@@ -86,7 +96,10 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def adaofileNew(self, adao_case):
 
-      qtEficas.Appli.fileNew(self)
+      try:
+        qtEficas.Appli.fileNew(self)
+      except Exception as e:
+        qt_eficas.QtEficasAppli.fileNew(self)
       index = self.viewmanager.myQtab.currentIndex()
       adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
       adao_case.setEditor(self.viewmanager.dictEditors[index])
@@ -94,34 +107,52 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def adaoFileSave(self, adao_case):
 
-      ok = qtEficas.Appli.fileSave(self)
+      try:
+        ok = qtEficas.Appli.fileSave(self)
+      except Exception as e:
+        ok = qt_eficas.QtEficasAppli.fileSave(self)
       if ok:
         index = self.viewmanager.myQtab.currentIndex()
         adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-        adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+        try:
+          adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+        except Exception as e:
+          adao_case.filename      = str(self.editorManager.dictEditors[index].dataSetFile)
         adao_case.setEditor(self.viewmanager.dictEditors[index])
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def adaoFileSaveAs(self, adao_case):
 
-      ok = qtEficas.Appli.fileSaveAs(self)
+      try:
+        ok = qtEficas.Appli.fileSaveAs(self)
+      except Exception as e:
+        ok = qt_eficas.QtEficasAppli.fileSaveAs(self)
       if ok:
         index = self.viewmanager.myQtab.currentIndex()
         adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-        adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+        try:
+          adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+        except Exception as e:
+          adao_case.filename      = str(self.editorManager.dictEditors[index].dataSetFile)
         adao_case.setEditor(self.viewmanager.dictEditors[index])
         self.notifyObserver(EficasEvent.EVENT_TYPES.SAVE, callbackId=adao_case)
 
     def adaoFileOpen(self, adao_case):
 
       tab_number = self.viewmanager.myQtab.count()
-      ok = self.viewmanager.handleOpen()
+      try:
+        ok = self.viewmanager.handleOpen()
+      except Exception as e:
+        ok = self.editorManager.openFile()
       if ok:
         # On regarde si c'est un nouveau editeur
         if self.viewmanager.myQtab.count() > tab_number:
           index = self.viewmanager.myQtab.currentIndex()
           adao_case.name          = str(self.viewmanager.myQtab.tabText(index))
-          adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+          try:
+            adao_case.filename      = str(self.viewmanager.dictEditors[index].fichier)
+          except Exception as e:
+            adao_case.filename      = str(self.editorManager.dictEditors[index].dataSetFile)
           adao_case.setEditor(self.viewmanager.dictEditors[index])
           self.notifyObserver(EficasEvent.EVENT_TYPES.OPEN, callbackId=adao_case)
 
@@ -131,7 +162,9 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         close_editor = self.viewmanager.dictEditors[index]
         res = self.viewmanager.handleClose(self)
         if res != 2: # l utilsateur a annule
-          if close_editor.fichier is None:
+          # JPA : supprimer 'fichier' pour EFICAS > 9.14
+          if (hasattr(close_editor, 'fichier') and close_editor.fichier is None) or \
+             (hasattr(close_editor, 'dataSetFile') and close_editor.dataSetFile is None):
             # Cas fichier vide
             self.notifyObserver(EficasEvent.EVENT_TYPES.CLOSE, callbackId=close_editor)
           else:

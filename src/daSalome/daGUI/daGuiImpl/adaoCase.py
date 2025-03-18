@@ -28,8 +28,12 @@ import subprocess
 import traceback
 import SalomePyQt
 
-import eficasSalome
-from Ihm import CONNECTOR
+import eficasSalome               # Import from EFICAS
+try:
+    print("  Import compatible with EFICAS until 9.14 included for: adaoCase")
+    from Ihm import CONNECTOR  # Import from EficasTools
+except Exception as e:
+    from Accas.accessor import CONNECTOR # Import from EficasTools
 from . import adaoGuiHelper
 from . import adaoStudyEditor
 

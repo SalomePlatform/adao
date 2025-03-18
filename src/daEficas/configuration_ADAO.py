@@ -31,7 +31,11 @@ import os
 from PyQt5.QtGui  import *
 
 # Modules Eficas
-from InterfaceQT4 import configuration
+try:
+    print("  Import compatible with EFICAS until 9.14 included for: configuration_ADAO")
+    from InterfaceQT4 import configuration  # Import from EficasTools
+except Exception as e:
+    from Editeur import configuration  # Import from EficasTools
 
 # Classe de base permettant de lire, afficher
 # et sauvegarder les fichiers utilisateurs

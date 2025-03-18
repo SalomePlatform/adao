@@ -95,9 +95,9 @@ else(ADAO_PYTHON_MODULE)
     message(FATAL_ERROR "EFICAS_ROOT_DIR is absolutely needed !")
   endif(NOT EFICAS_ROOT_DIR)
 
-  find_file(FILE_OF_EFICAS "generator/__init__.py" PATHS ${EFICAS_ROOT_DIR})
+  find_file(FILE_OF_EFICAS "Accas/__init__.py" PATHS ${EFICAS_ROOT_DIR})
   if(NOT FILE_OF_EFICAS)
-    message(FATAL_ERROR "Could not locate generator/__init__.py into EFICAS_ROOT_DIR")
+    message(FATAL_ERROR "Could not locate Accas/__init__.py into EFICAS_ROOT_DIR")
   endif(NOT FILE_OF_EFICAS)
 
   add_subdirectory(src)
