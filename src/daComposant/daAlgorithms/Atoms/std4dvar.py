@@ -93,7 +93,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
                 selfA._toStore("CurrentState") or \
                 selfA._toStore("CurrentOptimum"):
             selfA.StoredVariables["CurrentState"].store( _X )
-        Jb  = vfloat( 0.5 * (_X - Xb).T * (BI * (_X - Xb)) )
+        Jb  = vfloat( 0.5 * (_X - Xb).T @ (BI @ (_X - Xb)) )
         selfA.DirectCalculation = [None,]
         selfA.DirectInnovation  = [None,]
         e4dwin = numpy.zeros((Xini.size, duration-1))
@@ -134,7 +134,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             selfA.DirectInnovation.append( _YmHMX )
             #
             # Ajout dans la fonctionnelle d'observation
-            Jo = Jo + 0.5 * vfloat( _YmHMX.T * (RI * _YmHMX) )
+            Jo = Jo + 0.5 * vfloat( _YmHMX.T @ (RI @ _YmHMX) )
         J = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )

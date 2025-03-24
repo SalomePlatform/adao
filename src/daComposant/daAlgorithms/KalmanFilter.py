@@ -30,14 +30,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "KALMANFILTER")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "KalmanFilter",
+            default  = "KF",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "KalmanFilter",
+                "KF",
             ],
             listadv  = [
                 "OneCorrection",
+                "KalmanFilter",
             ],
         )
         self.defineRequiredParameter(
@@ -109,7 +110,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         # --------------------------
-        if self._parameters["Variant"] == "KalmanFilter":
+        if self._parameters["Variant"] in ["KF", "KalmanFilter"]:
             NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True)
         #
         # --------------------------

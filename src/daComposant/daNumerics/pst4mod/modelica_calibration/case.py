@@ -164,7 +164,12 @@ class Calibration(object):
                 __model_dir = os.path.abspath(os.path.dirname(__model_name))
 
                 __model_nam_1 = os.path.basename(__model_name)
-                __model_nam_2 = __model_nam_1[:-9]+'.exe'
+                if os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9]+'.exe')):
+                    __model_nam_2 = __model_nam_1[:-9]+'.exe'
+                elif os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9])):
+                    __model_nam_2 = __model_nam_1[:-9]
+                else:
+                    raise IOError("Model file not found as %s"%__model_name)
                 __model_nam = [__model_nam_1, __model_nam_2] #the first found model is kept
 
                 __model_nam_3 = __model_nam_1[:-9]+'_info.json' #check if this file exists as well
@@ -193,7 +198,12 @@ class Calibration(object):
             elif __model_format == "OPENMODELICA":
                 __model_dir = os.path.abspath(__model_name)
                 __model_nam_1 = [files for files in os.listdir(__model_dir) if files[-4:] =='.xml'][0] #the first found model is kept, .xml extension is considered
-                __model_nam_2 = __model_nam_1[:-9]+'.exe'
+                if os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9]+'.exe')):
+                    __model_nam_2 = __model_nam_1[:-9]+'.exe'
+                elif os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9])):
+                    __model_nam_2 = __model_nam_1[:-9]
+                else:
+                    raise IOError("Model file not found in %s"%__model_name)
                 __model_nam = [__model_nam_1, __model_nam_2] #the first found model is kept
 
                 __model_nam_3 = __model_nam_1[:-9]+'_info.json' #check if this file exists as well

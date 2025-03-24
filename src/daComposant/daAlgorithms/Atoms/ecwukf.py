@@ -199,8 +199,8 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
                 or selfA._toStore("CostFunctionJo") \
                 or selfA._toStore("CurrentOptimum") \
                 or selfA._toStore("APosterioriCovariance"):
-            Jb  = vfloat( 0.5 * (Xa - Xb).T * (BI * (Xa - Xb)) )
-            Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
+            Jb  = vfloat( 0.5 * (Xa - Xb).T @ (BI @ (Xa - Xb)) )
+            Jo  = vfloat( 0.5 * _Innovation.T @ (RI @ _Innovation) )
             J   = Jb + Jo
             selfA.StoredVariables["CostFunctionJb"].store( Jb )
             selfA.StoredVariables["CostFunctionJo"].store( Jo )

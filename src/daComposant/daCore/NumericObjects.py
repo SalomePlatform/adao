@@ -75,6 +75,7 @@ class FDApproximation(object):
     """
 
     __slots__ = (
+        "nbcalls",
         "__name",
         "__extraArgs",
         "__mpEnabled",
@@ -194,6 +195,7 @@ class FDApproximation(object):
                 self.__userFunction = (
                     self.__userOperator.appliedTo
                 )  # Pour le calcul Direct
+                self.nbcalls = self.__userOperator.nbcalls
             elif isinstance(Function, types.MethodType):
                 logging.debug("FDA Calculs en multiprocessing : MethodType")
                 self.__userFunction__name = Function.__name__
@@ -227,6 +229,7 @@ class FDApproximation(object):
                 self.__userFunction = (
                     self.__userOperator.appliedTo
                 )  # Pour le calcul Direct
+                self.nbcalls = self.__userOperator.nbcalls
             else:
                 raise TypeError(
                     "User defined function or method has to be provided for finite differences approximation."
@@ -240,6 +243,7 @@ class FDApproximation(object):
                 extraArguments=self.__extraArgs,
             )
             self.__userFunction = self.__userOperator.appliedTo
+            self.nbcalls = self.__userOperator.nbcalls
         #
         self.__centeredDF = bool(centeredDF)
         if abs(float(increment)) > 1.0e-15:
@@ -2059,9 +2063,26 @@ def BuildComplexSampleSwarm(
 
 
 # ==============================================================================
-def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle, __CovForecast=False):
+def multiXOsteps(
+    selfA,
+    Xb,
+    Y,
+    U,
+    HO,
+    EM,
+    CM,
+    R,
+    B,
+    Q,
+    oneCycle,
+    __CovForecast=False,
+    __ApplyBounds=False,
+):
     """
     Prévision multi-pas avec une correction par pas (multi-méthodes)
+    (CovForecast force la remise à jour algorithmique de Pn, ApplyBounds
+    nécessite des bornes numériques et force les bornes d'état sur Xn avant
+    l'évolution)
     """
     #
     # Initialisation
@@ -2124,6 +2145,14 @@ def multiXOsteps(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, oneCycle, __CovForecast=F
                 Un = numpy.asarray(U).reshape((-1, 1))
         else:
             Un = None
+        #
+        if (
+            __ApplyBounds
+            and selfA._parameters["Bounds"] is not None
+            and "ConstrainedBy" in selfA._parameters
+            and selfA._parameters["ConstrainedBy"] == "EstimateProjection"
+        ):
+            Xn = ApplyBounds(Xn, selfA._parameters["Bounds"])
         #
         # Predict (Time Update)
         # ---------------------

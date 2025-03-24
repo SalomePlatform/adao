@@ -479,6 +479,13 @@ class Operator(object):
 
 
 # ==============================================================================
+class FakeOperator(object):
+    "Classe complètement vide pour porter un attribut"
+
+    __slots__ = ("nbcalls",)
+
+
+# ==============================================================================
 class FullOperator(object):
     """
     Classe générale d'interface de type opérateur complet
@@ -684,8 +691,10 @@ class FullOperator(object):
                 mpWorkers=__Function["NumberOfProcesses"],
                 mfEnabled=__Function["withmfEnabled"],
             )
+            self.__FO["OneFunction"] = FakeOperator()
+            self.__FO["OneFunction"].nbcalls = FDA.nbcalls
             self.__FO["Direct"] = Operator(
-                name=self.__name,
+                name=self.__name + "Direct",
                 fromMethod=FDA.DirectOperator,
                 reducingMemoryUse=__reduceM,
                 avoidingRedundancy=__avoidRC,
@@ -720,7 +729,7 @@ class FullOperator(object):
             and (__Function["Adjoint"] is not None)
         ):
             self.__FO["Direct"] = Operator(
-                name=self.__name,
+                name=self.__name + "Direct",
                 fromMethod=__Function["Direct"],
                 reducingMemoryUse=__reduceM,
                 avoidingRedundancy=__avoidRC,
@@ -750,7 +759,7 @@ class FullOperator(object):
                 __Matrix = PlatformInfo.strmatrix2liststr(__Matrix)
             __matrice = numpy.asarray(__Matrix, dtype=float)
             self.__FO["Direct"] = Operator(
-                name=self.__name,
+                name=self.__name + "Direct",
                 fromMatrix=__matrice,
                 reducingMemoryUse=__reduceM,
                 avoidingRedundancy=__avoidRC,
@@ -800,7 +809,7 @@ class FullOperator(object):
         Renvoie les nombres d'évaluations de l'opérateur
         """
         __nbcalls = {}
-        for otype in ["Direct", "Tangent", "Adjoint"]:
+        for otype in ["Direct", "Tangent", "Adjoint", "OneFunction"]:
             if otype in self.__FO:
                 __nbcalls[otype] = self.__FO[otype].nbcalls()
         if whot in __nbcalls and which is not None:
@@ -3353,7 +3362,7 @@ class Covariance(object):
             other, (list, numpy.matrix, numpy.ndarray, tuple)
         ):
             if numpy.ravel(other).size == self.shape[1]:  # Vecteur
-                return numpy.ravel(self.__C @ numpy.ravel(other))
+                return numpy.ravel(numpy.asarray(self.__C) @ numpy.ravel(other))
             elif numpy.asarray(other).shape[0] == self.shape[1]:  # Matrice
                 return numpy.asarray(self.__C) @ numpy.asarray(other)
             else:

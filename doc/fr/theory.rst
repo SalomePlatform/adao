@@ -763,7 +763,9 @@ performance de la convergence et du suivi des observations (alors que les
 représentations d'erreurs proviennent du comportement de la physique dans le
 cas de l'estimation d'état). L'estimation des paramètres :math:`\mathbf{a}` se
 fait par utilisation de paires :math:`(\mathbf{x}_{n},\mathbf{y}_{n})`
-d'entrées et de sorties correspondantes.
+d'entrées et de sorties correspondantes. De plus, les fonctionnelles d'écart
+sont posées sur la différence entre l'estimation en entrée et l'estimation en
+sortie.
 
 Dans ce cas de l'estimation de paramètres, pour appliquer les méthodes
 d'assimilation de données, on impose donc l'hypothèse que l'opérateur

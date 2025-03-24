@@ -714,7 +714,8 @@ performance of convergence and observation tracking (while the error
 representations come from the behavior of the physics in the case of state
 estimation). The estimation of the parameters :math:`\mathbf{a}` is done by
 using pairs :math:`(\mathbf{x}_{n},\mathbf{y}_{n})` of corresponding inputs and
-outputs.
+outputs. Moreover, the error functionals are based on the difference between
+the input estimate and the output estimate.
 
 In this case of parameter estimation, in order to apply data assimilation
 methods, we therefore impose the hypothesis that the evolution operator is the

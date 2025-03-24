@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 __doc__ = """
-    Standard Kalman Filter
+    Extended Kalman Filter
 """
 __author__ = "Jean-Philippe ARGAUD"
 
@@ -30,7 +30,7 @@ from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def ecwstdkf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def ecwexkf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """
@@ -44,7 +44,8 @@ def ecwstdkf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     Ha = HO["Adjoint"].asMatrix(Xb)
     Ha = Ha.reshape(Xb.size, Y.size)  # ADAO & check shape
     #
-    HXb = Hm @ Xb
+    H = HO["Direct"].appliedControledFormTo
+    HXb = H((Xb, None))
     HXb = HXb.reshape((-1, 1))
     if Y.size != HXb.size:
         raise ValueError("The size %i of observations Y and %i of observed calculation H(X) are different, they have to be identical."%(Y.size, HXb.size))  # noqa: E501
@@ -100,7 +101,7 @@ def ecwstdkf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             selfA._toStore("SimulatedObservationAtCurrentAnalysis") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
             selfA._toStore("EnsembleOfSimulations"):
-        HXa = Hm @ Xa
+        HXa = H((Xa, None))
     if selfA._toStore("SimulatedObservationAtCurrentAnalysis") or \
             selfA._toStore("SimulatedObservationAtCurrentOptimum"):
         selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( HXa )

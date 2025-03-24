@@ -20,8 +20,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-from daCore import BasicObjects
-from daAlgorithms.Atoms import cekf, ceks, exks, exkf
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import ceks, exks, ecwexkf, ecwcekf
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -40,6 +40,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listadv  = [
                 "EKS",
                 "CEKS",
+                "OneCorrection",
+                "ExtendedKalmanFilter",
             ],
         )
         self.defineRequiredParameter(
@@ -123,11 +125,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] == "EKF":
-            exkf.exkf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexkf.ecwexkf, True)
         #
         # --------------------------
-        elif self._parameters["Variant"] == "CEKF":
-            cekf.cekf(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        elif self._parameters["Variant"] in ["CEKF", "ExtendedKalmanFilter"]:
+            self._parameters["Bounds"] = NumericObjects.ForceNumericBounds( self._parameters["Bounds"] )
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwcekf.ecwcekf, True, True)
         #
         # --------------------------
         elif self._parameters["Variant"] == "EKS":
@@ -136,6 +139,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         # --------------------------
         elif self._parameters["Variant"] == "CEKS":
             ceks.ceks(self, Xb, Y, U, HO, EM, CM, R, B, Q)
+        #
+        # --------------------------
+        elif self._parameters["Variant"] == "OneCorrection":
+            ecwcekf.ecwcekf(self, Xb, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

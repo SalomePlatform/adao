@@ -1066,7 +1066,7 @@ class Aidsm(object):
             if hasattr(self.__adaoObject[oname], "nbcalls"):
                 ostats = self.__adaoObject[oname].nbcalls()
                 msg += "\n%sNumber of calls for the %s:" % (__prefix, oname)
-                for otype in ["Direct", "Tangent", "Adjoint"]:
+                for otype in ["Direct", "Tangent", "Adjoint", "OneFunction"]:
                     if otype in ostats:
                         msg += "\n%s%30s : %s" % (
                             __prefix,
@@ -1074,6 +1074,15 @@ class Aidsm(object):
                             ostats[otype][0],
                         )
                 msg += "\n"
+        return msg
+
+    def callnumbers(self):
+        msg = {}
+        for oname in ["ObservationOperator", "EvolutionModel"]:
+            if hasattr(self.__adaoObject[oname], "nbcalls"):
+                msg[oname] = self.__adaoObject[oname].nbcalls()
+                for otype in msg[oname]:
+                    msg[oname][otype] = msg[oname][otype][0]
         return msg
 
     def prepare_to_pickle(self):

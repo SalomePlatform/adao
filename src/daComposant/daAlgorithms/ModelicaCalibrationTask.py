@@ -20,24 +20,47 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
+import os
 from daCore import BasicObjects
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
     def __init__(self):
         BasicObjects.Algorithm.__init__(self, "MODELICACALIBRATIONTASK")
+        # Modelica specific parameters
+        self.defineRequiredParameter(
+            name     = "ModelicaConfigurationFile",
+            default  = "",
+            typecast = os.path.expanduser,
+            message  = "Nom de fichier maître pour le calage d'une simulation 0D/1D",
+        )
         self.requireInputArguments(
             mandatory= (),
             optional = (),
         )
         self.setAttributes(
-            tags=(),
-            features=(),
+            tags=(
+                "Calibration",
+                "Dynamic",
+                "DataAssimilation",
+                "NonLinear",
+            ),
+            features=(
+                "NonLocalOptimization",
+                "DerivativeNeeded",
+                "ParallelDerivativesOnly",
+            ),
         )
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
+        currdir = os.path.abspath(os.getcwd())
+        workdir = os.path.abspath(os.path.dirname(self._parameters["ModelicaConfigurationFile"]))
+        with open(self._parameters["ModelicaConfigurationFile"]) as fid:
+            os.chdir(workdir)
+            exec(fid.read(), {'__name__':'__main__'})
+        os.chdir(currdir)
         #
         self._post_run(HO, EM)
         return 0
