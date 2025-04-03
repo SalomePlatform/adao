@@ -26,10 +26,10 @@ import os
 
 import eficasSalome               # Import from EFICAS_SRC
 try:
-    print("  Import compatible with EFICAS until 9.14 included for: adaoEficasWrapper")
     from InterfaceQT4 import qtEficas  # Import from EficasTools
+    print("  Import compatible with EFICAS until 9.14 included for: adaoEficasWrapper")
 except Exception as e:
-    from InterfaceGUI.QT5 import qt_eficas  # Import from EficasTools
+    from InterfaceGUI.QT5 import qt_eficas as qtEficas  # Import from EficasTools
 from PyQt5.QtGui  import *        # Import from PyQT
 from PyQt5.QtCore import *        # Import from PyQT
 
@@ -57,13 +57,13 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
       import salome ; salome.salome_init()
 
       try:
-        print("EFICAS 9.14 : les deux init risquent de poser problème en cas d'except")
         eficasSalome.MyEficas.__init__(self, None, code="ADAO", module="ADAO")
         self.viewmanager.myQtab.currentChanged.connect(self.tabChanged)
         # self.menubar.hide()
         # self.toolBar.hide()
         # self.frameEntete.close()
         # self.closeEntete()
+        print("EFICAS 9.14 : les deux init risquent de poser problème en cas d'except")
       except Exception as e:
         eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
         self.editorManager.myQtab.currentChanged.connect(self.tabChanged)

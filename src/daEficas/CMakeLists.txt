@@ -18,17 +18,13 @@
 #
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
-set(EFICAS_DIR "${EFICAS_ROOT_DIR}")
-
-SALOME_CONFIGURE_FILE(prefs_ADAO.py.in prefs_ADAO.py)
-
 set(DAEFICAS_FILES
   configuration_ADAO.py
   convert_adao.py
   generator_adao.py
   __init__.py
-  ${CMAKE_CURRENT_BINARY_DIR}/prefs_ADAO.py
   prefs.py
+  prefs_salome_ADAO.py
   traduitADAOsansToV9_15_0.py
   traduitADAOV7_4_0ToV9_15_0.py
   traduitADAOV7_5_0ToV9_15_0.py

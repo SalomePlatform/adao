@@ -30,8 +30,8 @@ import SalomePyQt
 
 import eficasSalome               # Import from EFICAS
 try:
-    print("  Import compatible with EFICAS until 9.14 included for: adaoCase")
     from Ihm import CONNECTOR  # Import from EficasTools
+    print("  Import compatible with EFICAS until 9.14 included for: adaoCase")
 except Exception as e:
     from Accas.accessor import CONNECTOR # Import from EficasTools
 from . import adaoGuiHelper
