@@ -192,18 +192,19 @@ Imprime sur la sortie standard la série des valeurs de la variable.
 Modèle **ValueSaver**
 .....................
 
-Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement.
+Enregistre la valeur courante de la variable dans un fichier situé dans le répertoire temporaire du système nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -213,18 +214,19 @@ Enregistre la valeur courante de la variable dans un fichier du répertoire '/tm
 Modèle **ValueSerieSaver**
 ..........................
 
-Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape.
+Enregistre la série des valeurs de la variable dans un fichier situé dans le répertoire temporaire du système nommé 'value...txt' selon le nom de la variable et l'étape.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[:], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -234,11 +236,12 @@ Enregistre la série des valeurs de la variable dans un fichier du répertoire '
 Modèle **ValuePrinterAndSaver**
 ...............................
 
-Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la valeur courante de la variable.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     print(str(info)+" "+str(v))
     global istep
@@ -246,7 +249,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -256,11 +259,12 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
 Modèle **ValueIndexPrinterAndSaver**
 ....................................
 
-Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable, en ajoutant son index.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la valeur courante de la variable, en ajoutant son index.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     print(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))
     global istep
@@ -268,7 +272,7 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -278,11 +282,12 @@ Imprime sur la sortie standard et, en même temps enregistre dans un fichier du 
 Modèle **ValueSeriePrinterAndSaver**
 ....................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp', la série des valeurs de la variable.
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système, la série des valeurs de la variable.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[:], ndmin=1)
     print(str(info)+" "+str(v))
     global istep
@@ -290,7 +295,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -394,19 +399,20 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 Modèle **ValuePrinterSaverAndGnuPlotter**
 .........................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant).
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -427,19 +433,20 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 Modèle **ValueSeriePrinterSaverAndGnuPlotter**
 ..............................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant).
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant).
 
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[:], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -487,11 +494,12 @@ Affiche graphiquement avec Matplolib la valeur courante de la variable (affichag
 Modèle **ValueMatPlotterSaver**
 ...............................
 
-Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
+Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant).
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global imfig, mp, ax
@@ -505,7 +513,7 @@ Affiche graphiquement avec Matplolib la valeur courante de la variable, et enreg
         ax = mp.add_subplot(1, 1, 1)
         mp.suptitle('%s (Figure %i)'%(info,imfig))
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -542,11 +550,12 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
 Modèle **ValueSerieMatPlotterSaver**
 ....................................
 
-Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
+Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant).
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global imfig, mp, ax
@@ -562,7 +571,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable, et en
         ax.set_xlabel('Step')
         ax.set_ylabel('Variable')
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -598,12 +607,13 @@ Affiche graphiquement avec Matplolib la valeur courante de la variable (affichag
 Modèle **ValuePrinterAndMatPlotterSaver**
 .........................................
 
-Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
+Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global imfig, mp, ax
@@ -617,7 +627,7 @@ Affiche graphiquement avec Matplolib la valeur courante de la variable, et enreg
         ax = mp.add_subplot(1, 1, 1)
         mp.suptitle('%s (Figure %i)'%(info,imfig))
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -655,12 +665,13 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
 Modèle **ValueSeriePrinterAndMatPlotterSaver**
 ..............................................
 
-Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
+Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant).
 
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global imfig, mp, ax
@@ -676,7 +687,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable, et en
         ax.set_xlabel('Step')
         ax.set_ylabel('Variable')
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -686,12 +697,13 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable, et en
 Modèle **ValuePrinterSaverAndMatPlotter**
 .........................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant).
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global istep
@@ -699,7 +711,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -721,12 +733,13 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 Modèle **ValuePrinterSaverAndMatPlotterSaver**
 ..............................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant et sauvegardé).
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant et sauvegardé).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global istep
@@ -734,7 +747,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -749,7 +762,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
         ax = mp.add_subplot(1, 1, 1)
         mp.suptitle('%s (Figure %i)'%(info,imfig))
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -764,7 +777,8 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global istep
@@ -772,7 +786,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -796,12 +810,13 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
 Modèle **ValueSeriePrinterSaverAndMatPlotterSaver**
 ...................................................
 
-Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
+Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant).
 
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global istep
@@ -809,7 +824,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable, et en
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -826,7 +841,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable, et en
         ax.set_xlabel('Step')
         ax.set_ylabel('Variable')
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()

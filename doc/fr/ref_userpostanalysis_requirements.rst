@@ -151,14 +151,15 @@ Imprime sur la sortie standard la valeur optimale.
 Modèle **AnalysisSaver**
 ........................
 
-Enregistre la valeur optimale dans un fichier du répertoire '/tmp' nommé 'analysis.txt'.
+Enregistre la valeur optimale dans un fichier situé dans le répertoire temporaire du système nommé 'analysis.txt'.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')[-1]
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
@@ -167,15 +168,16 @@ Enregistre la valeur optimale dans un fichier du répertoire '/tmp' nommé 'anal
 Modèle **AnalysisPrinterAndSaver**
 ..................................
 
-Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur optimale.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la valeur optimale.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')[-1]
     print('Analysis',xa)
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
@@ -198,14 +200,15 @@ Imprime sur la sortie standard la série des valeurs optimales.
 Modèle **AnalysisSerieSaver**
 .............................
 
-Enregistre la série des valeurs optimales dans un fichier du répertoire '/tmp' nommé 'analysis.txt'.
+Enregistre la série des valeurs optimales dans un fichier situé dans le répertoire temporaire du système nommé 'analysis.txt'.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
@@ -214,14 +217,15 @@ Enregistre la série des valeurs optimales dans un fichier du répertoire '/tmp'
 Modèle **AnalysisSeriePrinterAndSaver**
 .......................................
 
-Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la série des valeurs optimales.
+Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la série des valeurs optimales.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')
     print('Analysis',xa)
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)

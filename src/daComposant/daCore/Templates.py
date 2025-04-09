@@ -119,37 +119,37 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name="ValueSaver",
-    content="""import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
-    fr_FR="Enregistre la valeur courante de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement",
-    en_EN="Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    fr_FR="Enregistre la valeur courante de la variable dans un fichier situé dans le répertoire temporaire du système nommé 'value...txt' selon le nom de la variable et l'étape d'enregistrement",
+    en_EN="Save the current value of the variable in a file available in the system temporary directory named 'value...txt' from the variable name and the saving step",
     order="next",
 )
 ObserverTemplates.store(
     name="ValueSerieSaver",
-    content="""import numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
-    fr_FR="Enregistre la série des valeurs de la variable dans un fichier du répertoire '/tmp' nommé 'value...txt' selon le nom de la variable et l'étape",
-    en_EN="Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    fr_FR="Enregistre la série des valeurs de la variable dans un fichier situé dans le répertoire temporaire du système nommé 'value...txt' selon le nom de la variable et l'étape",
+    en_EN="Save the value series of the variable in a file available in the system temporary directory named 'value...txt' from the variable name and the saving step",
     order="next",
 )
 ObserverTemplates.store(
     name="ValuePrinterAndSaver",
-    content="""import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
-    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable",
-    en_EN="Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la valeur courante de la variable",
+    en_EN="Print on standard output and, in the same time save in a file available in the system temporary directory, the current value of the variable",
     order="next",
 )
 ObserverTemplates.store(
     name="ValueIndexPrinterAndSaver",
-    content="""import numpy, re\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
-    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur courante de la variable, en ajoutant son index",
-    en_EN="Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable, adding its index",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[-1], ndmin=1)\nprint(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la valeur courante de la variable, en ajoutant son index",
+    en_EN="Print on standard output and, in the same time save in a file available in the system temporary directory, the current value of the variable, adding its index",
     order="next",
 )
 ObserverTemplates.store(
     name="ValueSeriePrinterAndSaver",
-    content="""import numpy, re\nv=numpy.array(var[:], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
-    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp', la série des valeurs de la variable",
-    en_EN="Print on standard output and, in the same time, save in a file of the '/tmp' directory, the value series of the variable",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[:], ndmin=1)\nprint(str(info)+" "+str(v))\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)""",
+    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système, la série des valeurs de la variable",
+    en_EN="Print on standard output and, in the same time, save in a file available in the system temporary directory, the value series of the variable",
     order="next",
 )
 ObserverTemplates.store(
@@ -182,16 +182,16 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name="ValuePrinterSaverAndGnuPlotter",
-    content="""print(str(info)+' '+str(var[-1]))\nimport numpy, re\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant)",
-    en_EN="Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Gnuplot the current value of the variable (persistent plot)",
+    content="""print(str(info)+' '+str(var[-1]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant)",
+    en_EN="Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Gnuplot the current value of the variable (persistent plot)",
     order="next",
 )
 ObserverTemplates.store(
     name="ValueSeriePrinterSaverAndGnuPlotter",
-    content="""print(str(info)+' '+str(var[:]))\nimport numpy, re\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\n    gp('set xlabel \"Step\"')\n    gp('set ylabel \"Variable\"')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
-    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant)",
-    en_EN="Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Gnuplot the value series of the variable (persistent plot)",
+    content="""print(str(info)+' '+str(var[:]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nimport Gnuplot\nglobal igfig, gp\ntry:\n    igfig+=1\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\nexcept:\n    igfig=0\n    gp=Gnuplot.Gnuplot(persist=1)\n    gp('set title \"%s (Figure %i)\"'%(info,igfig))\n    gp('set style data lines')\n    gp('set xlabel \"Step\"')\n    gp('set ylabel \"Variable\"')\ngp.plot( Gnuplot.Data( v, with_='lines lw 2' ) )""",
+    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant)",
+    en_EN="Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Gnuplot the value series of the variable (persistent plot)",
     order="next",
 )
 ObserverTemplates.store(
@@ -203,9 +203,9 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name="ValueMatPlotterSaver",
-    content="""import numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
-    fr_FR="Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant)",
-    en_EN="Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant plot)",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR="Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant)",
+    en_EN="Graphically plot with Matplolib the current value of the variable, and save the figure in a file available in the system temporary directory (persistant plot)",
     order="next",
 )
 ObserverTemplates.store(
@@ -217,9 +217,9 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name="ValueSerieMatPlotterSaver",
-    content="""import numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
-    fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant)",
-    en_EN="Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant plot)",
+    content="""import os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant)",
+    en_EN="Graphically plot with Matplolib the value series of the variable, and save the figure in a file available in the system temporary directory (persistant plot)",
     order="next",
 )
 ObserverTemplates.store(
@@ -231,9 +231,9 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name="ValuePrinterAndMatPlotterSaver",
-    content="""print(str(info)+' '+str(var[-1]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
-    fr_FR="Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant)",
-    en_EN="Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant plot)",
+    content="""print(str(info)+' '+str(var[-1]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR="Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant)",
+    en_EN="Graphically plot with Matplolib the current value of the variable, and save the figure in a file available in the system temporary directory (persistant plot)",
     order="next",
 )
 ObserverTemplates.store(
@@ -245,37 +245,37 @@ ObserverTemplates.store(
 )
 ObserverTemplates.store(
     name="ValueSeriePrinterAndMatPlotterSaver",
-    content="""print(str(info)+' '+str(var[:]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
-    fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant)",
-    en_EN="Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant plot)",
+    content="""print(str(info)+' '+str(var[:]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant)",
+    en_EN="Graphically plot with Matplolib the value series of the variable, and save the figure in a file available in the system temporary directory (persistant plot)",
     order="next",
 )
 ObserverTemplates.store(
     name="ValuePrinterSaverAndMatPlotter",
-    content="""print(str(info)+' '+str(var[-1]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nplt.show()""",
-    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant)",
-    en_EN="Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Matplolib the current value of the variable (non persistent plot)",
+    content="""print(str(info)+' '+str(var[-1]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nplt.show()""",
+    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant)",
+    en_EN="Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Matplolib the current value of the variable (non persistent plot)",
     order="next",
 )
 ObserverTemplates.store(
     name="ValuePrinterSaverAndMatPlotterSaver",
-    content="""print(str(info)+' '+str(var[-1]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
-    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant et sauvegardé)",
-    en_EN="Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Matplolib the current value of the variable (saved and non persistent plot)",
+    content="""print(str(info)+' '+str(var[-1]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[-1], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nax.plot(v)\nf=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR="Imprime sur la sortie standard et, en même temps, enregistre dans un fichier situé dans le répertoire temporaire du système et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant et sauvegardé)",
+    en_EN="Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Matplolib the current value of the variable (saved and non persistent plot)",
     order="next",
 )
 ObserverTemplates.store(
     name="ValueSeriePrinterSaverAndMatPlotter",
-    content="""print(str(info)+' '+str(var[:]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nplt.show()""",
+    content="""print(str(info)+' '+str(var[:]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nplt.show()""",
     fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable (affichage non persistant)",
     en_EN="Graphically plot with Matplolib the value series of the variable (non persistent plot)",
     order="next",
 )
 ObserverTemplates.store(
     name="ValueSeriePrinterSaverAndMatPlotterSaver",
-    content="""print(str(info)+' '+str(var[:]))\nimport numpy, re\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf='/tmp/value_%s_%05i.txt'%(info,istep)\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf='/tmp/figure_%s_%05i.pdf'%(info,imfig)\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
-    fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant)",
-    en_EN="Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (saved and persistant plot)",
+    content="""print(str(info)+' '+str(var[:]))\nimport os.path, numpy, re, tempfile\ntempdir=tempfile.gettempdir()\nimport matplotlib.pyplot as plt\nv=numpy.array(var[:], ndmin=1)\nglobal istep\ntry:\n    istep+=1\nexcept:\n    istep=0\nf=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))\nf=re.sub(r'\\s','_',f)\nprint('Value saved in \"%s\"'%f)\nnumpy.savetxt(f,v)\nglobal imfig, mp, ax\nplt.ion()\ntry:\n    imfig+=1\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\nexcept:\n    imfig=0\n    mp = plt.figure()\n    ax = mp.add_subplot(1, 1, 1)\n    mp.suptitle('%s (Figure %i)'%(info,imfig))\n    ax.set_xlabel('Step')\n    ax.set_ylabel('Variable')\nax.plot(v)\nf=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))\nf=re.sub(r'\\s','_',f)\nplt.savefig(f)\nplt.show()""",
+    fr_FR="Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier situé dans le répertoire temporaire du système (affichage persistant)",
+    en_EN="Graphically plot with Matplolib the value series of the variable, and save the figure in a file available in the system temporary directory (saved and persistant plot)",
     order="next",
 )
 ObserverTemplates.store(
@@ -326,16 +326,16 @@ UserPostAnalysisTemplates.store(
 )
 UserPostAnalysisTemplates.store(
     name="AnalysisSaver",
-    content="""print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')[-1]\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
-    fr_FR="Enregistre la valeur optimale dans un fichier du répertoire '/tmp' nommé 'analysis.txt'",
-    en_EN="Save the optimal value in a file of the '/tmp' directory named 'analysis.txt'",
+    content="""print('# Post-analysis')\nimport os.path, numpy, tempfile\ntempdir=tempfile.gettempdir()\nxa=ADD.get('Analysis')[-1]\nf=os.path.join(tempdir,'analysis.txt')\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    fr_FR="Enregistre la valeur optimale dans un fichier situé dans le répertoire temporaire du système nommé 'analysis.txt'",
+    en_EN="Save the optimal value in a file available in the system temporary directory named 'analysis.txt'",
     order="next",
 )
 UserPostAnalysisTemplates.store(
     name="AnalysisPrinterAndSaver",
-    content="""print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')[-1]\nprint('Analysis',xa)\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
-    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la valeur optimale",
-    en_EN="Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value",
+    content="""print('# Post-analysis')\nimport os.path, numpy, tempfile\ntempdir=tempfile.gettempdir()\nxa=ADD.get('Analysis')[-1]\nprint('Analysis',xa)\nf=os.path.join(tempdir,'analysis.txt')\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la valeur optimale",
+    en_EN="Print on standard output and, in the same time save in a file available in the system temporary directory, the optimal value",
     order="next",
 )
 UserPostAnalysisTemplates.store(
@@ -347,16 +347,16 @@ UserPostAnalysisTemplates.store(
 )
 UserPostAnalysisTemplates.store(
     name="AnalysisSerieSaver",
-    content="""print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
-    fr_FR="Enregistre la série des valeurs optimales dans un fichier du répertoire '/tmp' nommé 'analysis.txt'",
-    en_EN="Save the optimal value series in a file of the '/tmp' directory named 'analysis.txt'",
+    content="""print('# Post-analysis')\nimport os.path, numpy, tempfile\ntempdir=tempfile.gettempdir()\nxa=ADD.get('Analysis')\nf=os.path.join(tempdir,'analysis.txt')\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    fr_FR="Enregistre la série des valeurs optimales dans un fichier situé dans le répertoire temporaire du système nommé 'analysis.txt'",
+    en_EN="Save the optimal value series in a file available in the system temporary directory named 'analysis.txt'",
     order="next",
 )
 UserPostAnalysisTemplates.store(
     name="AnalysisSeriePrinterAndSaver",
-    content="""print('# Post-analysis')\nimport numpy\nxa=ADD.get('Analysis')\nprint('Analysis',xa)\nf='/tmp/analysis.txt'\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
-    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier du répertoire '/tmp', la série des valeurs optimales",
-    en_EN="Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value series",
+    content="""print('# Post-analysis')\nimport os.path, numpy, tempfile\ntempdir=tempfile.gettempdir()\nxa=ADD.get('Analysis')\nprint('Analysis',xa)\nf=os.path.join(tempdir,'analysis.txt')\nprint('Analysis saved in \"%s\"'%f)\nnumpy.savetxt(f,xa)""",
+    fr_FR="Imprime sur la sortie standard et, en même temps enregistre dans un fichier situé dans le répertoire temporaire du système, la série des valeurs optimales",
+    en_EN="Print on standard output and, in the same time save in a file available in the system temporary directory, the optimal value series",
     order="next",
 )
 

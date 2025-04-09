@@ -180,18 +180,19 @@ Print on standard output the value series of the variable.
 Template **ValueSaver**
 .......................
 
-Save the current value of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+Save the current value of the variable in a file available in the system temporary directory named 'value...txt' from the variable name and the saving step.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -201,18 +202,19 @@ Save the current value of the variable in a file of the '/tmp' directory named '
 Template **ValueSerieSaver**
 ............................
 
-Save the value series of the variable in a file of the '/tmp' directory named 'value...txt' from the variable name and the saving step.
+Save the value series of the variable in a file available in the system temporary directory named 'value...txt' from the variable name and the saving step.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[:], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -222,11 +224,12 @@ Save the value series of the variable in a file of the '/tmp' directory named 'v
 Template **ValuePrinterAndSaver**
 .................................
 
-Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable.
+Print on standard output and, in the same time save in a file available in the system temporary directory, the current value of the variable.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     print(str(info)+" "+str(v))
     global istep
@@ -234,7 +237,7 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -244,11 +247,12 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
 Template **ValueIndexPrinterAndSaver**
 ......................................
 
-Print on standard output and, in the same time save in a file of the '/tmp' directory, the current value of the variable, adding its index.
+Print on standard output and, in the same time save in a file available in the system temporary directory, the current value of the variable, adding its index.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     print(str(info)+(" index %i:"%(len(var)-1))+" "+str(v))
     global istep
@@ -256,7 +260,7 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -266,11 +270,12 @@ Print on standard output and, in the same time save in a file of the '/tmp' dire
 Template **ValueSeriePrinterAndSaver**
 ......................................
 
-Print on standard output and, in the same time, save in a file of the '/tmp' directory, the value series of the variable.
+Print on standard output and, in the same time, save in a file available in the system temporary directory, the value series of the variable.
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[:], ndmin=1)
     print(str(info)+" "+str(v))
     global istep
@@ -278,7 +283,7 @@ Print on standard output and, in the same time, save in a file of the '/tmp' dir
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -382,19 +387,20 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 Template **ValuePrinterSaverAndGnuPlotter**
 ...........................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Gnuplot the current value of the variable (persistent plot).
+Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Gnuplot the current value of the variable (persistent plot).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[-1], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -415,19 +421,20 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
 Template **ValueSeriePrinterSaverAndGnuPlotter**
 ................................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Gnuplot the value series of the variable (persistent plot).
+Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Gnuplot the value series of the variable (persistent plot).
 
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     v=numpy.array(var[:], ndmin=1)
     global istep
     try:
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -475,11 +482,12 @@ Graphically plot with Matplolib the current value of the variable (non persisten
 Template **ValueMatPlotterSaver**
 .................................
 
-Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
+Graphically plot with Matplolib the current value of the variable, and save the figure in a file available in the system temporary directory (persistant plot).
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global imfig, mp, ax
@@ -493,7 +501,7 @@ Graphically plot with Matplolib the current value of the variable, and save the 
         ax = mp.add_subplot(1, 1, 1)
         mp.suptitle('%s (Figure %i)'%(info,imfig))
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -530,11 +538,12 @@ Graphically plot with Matplolib the value series of the variable (non persistent
 Template **ValueSerieMatPlotterSaver**
 ......................................
 
-Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file available in the system temporary directory (persistant plot).
 
 ::
 
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global imfig, mp, ax
@@ -550,7 +559,7 @@ Graphically plot with Matplolib the value series of the variable, and save the f
         ax.set_xlabel('Step')
         ax.set_ylabel('Variable')
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -586,12 +595,13 @@ Graphically plot with Matplolib the current value of the variable (non persisten
 Template **ValuePrinterAndMatPlotterSaver**
 ...........................................
 
-Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
+Graphically plot with Matplolib the current value of the variable, and save the figure in a file available in the system temporary directory (persistant plot).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global imfig, mp, ax
@@ -605,7 +615,7 @@ Graphically plot with Matplolib the current value of the variable, and save the 
         ax = mp.add_subplot(1, 1, 1)
         mp.suptitle('%s (Figure %i)'%(info,imfig))
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -643,12 +653,13 @@ Graphically plot with Matplolib the value series of the variable (non persistent
 Template **ValueSeriePrinterAndMatPlotterSaver**
 ................................................
 
-Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file available in the system temporary directory (persistant plot).
 
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global imfig, mp, ax
@@ -664,7 +675,7 @@ Graphically plot with Matplolib the value series of the variable, and save the f
         ax.set_xlabel('Step')
         ax.set_ylabel('Variable')
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -674,12 +685,13 @@ Graphically plot with Matplolib the value series of the variable, and save the f
 Template **ValuePrinterSaverAndMatPlotter**
 ...........................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Matplolib the current value of the variable (non persistent plot).
+Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Matplolib the current value of the variable (non persistent plot).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global istep
@@ -687,7 +699,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -709,12 +721,13 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
 Template **ValuePrinterSaverAndMatPlotterSaver**
 ................................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Matplolib the current value of the variable (saved and non persistent plot).
+Print on standard output and, in the same, time save in a file available in the system temporary directory and graphically plot with Matplolib the current value of the variable (saved and non persistent plot).
 
 ::
 
     print(str(info)+' '+str(var[-1]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[-1], ndmin=1)
     global istep
@@ -722,7 +735,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -737,7 +750,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
         ax = mp.add_subplot(1, 1, 1)
         mp.suptitle('%s (Figure %i)'%(info,imfig))
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()
@@ -752,7 +765,8 @@ Graphically plot with Matplolib the value series of the variable (non persistent
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global istep
@@ -760,7 +774,7 @@ Graphically plot with Matplolib the value series of the variable (non persistent
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -784,12 +798,13 @@ Graphically plot with Matplolib the value series of the variable (non persistent
 Template **ValueSeriePrinterSaverAndMatPlotterSaver**
 .....................................................
 
-Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (saved and persistant plot).
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file available in the system temporary directory (saved and persistant plot).
 
 ::
 
     print(str(info)+' '+str(var[:]))
-    import numpy, re
+    import os.path, numpy, re, tempfile
+    tempdir=tempfile.gettempdir()
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
     global istep
@@ -797,7 +812,7 @@ Graphically plot with Matplolib the value series of the variable, and save the f
         istep+=1
     except:
         istep=0
-    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=os.path.join(tempdir,'value_%s_%05i.txt'%(info,istep))
     f=re.sub(r'\s','_',f)
     print('Value saved in "%s"'%f)
     numpy.savetxt(f,v)
@@ -814,7 +829,7 @@ Graphically plot with Matplolib the value series of the variable, and save the f
         ax.set_xlabel('Step')
         ax.set_ylabel('Variable')
     ax.plot(v)
-    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=os.path.join(tempdir,'figure_%s_%05i.pdf'%(info,imfig))
     f=re.sub(r'\s','_',f)
     plt.savefig(f)
     plt.show()

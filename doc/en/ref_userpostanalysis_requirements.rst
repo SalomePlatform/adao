@@ -147,14 +147,15 @@ Print on standard output the optimal value.
 Modèle **AnalysisSaver**
 ........................
 
-Save the optimal value in a file of the '/tmp' directory named 'analysis.txt'.
+Save the optimal value in a file available in the system temporary directory named 'analysis.txt'.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')[-1]
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
@@ -163,15 +164,16 @@ Save the optimal value in a file of the '/tmp' directory named 'analysis.txt'.
 Modèle **AnalysisPrinterAndSaver**
 ..................................
 
-Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value.
+Print on standard output and, in the same time save in a file available in the system temporary directory, the optimal value.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')[-1]
     print('Analysis',xa)
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
@@ -194,14 +196,15 @@ Print on standard output the optimal value series.
 Modèle **AnalysisSerieSaver**
 .............................
 
-Save the optimal value series in a file of the '/tmp' directory named 'analysis.txt'.
+Save the optimal value series in a file available in the system temporary directory named 'analysis.txt'.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
 
@@ -210,14 +213,15 @@ Save the optimal value series in a file of the '/tmp' directory named 'analysis.
 Modèle **AnalysisSeriePrinterAndSaver**
 .......................................
 
-Print on standard output and, in the same time save in a file of the '/tmp' directory, the optimal value series.
+Print on standard output and, in the same time save in a file available in the system temporary directory, the optimal value series.
 
 ::
 
     print('# Post-analysis')
-    import numpy
+    import os.path, numpy, tempfile
+    tempdir=tempfile.gettempdir()
     xa=ADD.get('Analysis')
     print('Analysis',xa)
-    f='/tmp/analysis.txt'
+    f=os.path.join(tempdir,'analysis.txt')
     print('Analysis saved in "%s"'%f)
     numpy.savetxt(f,xa)
