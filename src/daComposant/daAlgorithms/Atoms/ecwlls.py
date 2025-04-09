@@ -28,7 +28,7 @@ __author__ = "Jean-Philippe ARGAUD"
 from daCore.PlatformInfo import vfloat
 
 # ==============================================================================
-def ecwlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def ecwlls(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """

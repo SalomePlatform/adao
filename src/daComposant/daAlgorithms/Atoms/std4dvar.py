@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, scipy, scipy.optimize, scipy.version
+import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import ForceNumericBounds, ApplyBounds
 from daCore.PlatformInfo import vt, vfloat, trmo
 

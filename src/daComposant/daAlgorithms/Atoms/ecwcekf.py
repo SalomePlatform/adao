@@ -31,7 +31,7 @@ from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def ecwcekf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def ecwcekf(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """
@@ -91,7 +91,10 @@ def ecwcekf(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         Xa = Xb + _u.reshape((-1, 1))
         K = numpy.linalg.inv(_A) @ (Ha @ RI.asfullmatrix(Y.size))
     #
-    Pa = B - K @ (Hm @ B)
+    if max(B.shape)==0:
+        Pa = B - K @ (Hm * B)
+    else:
+        Pa = B - K @ (Hm @ B)
     Pa = (Pa + Pa.T) * 0.5  # Symétrie
     Pa = Pa + mpr * numpy.trace( Pa ) * numpy.identity(Xa.size)  # Positivité
     #

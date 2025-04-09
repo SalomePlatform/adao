@@ -31,7 +31,7 @@ from daCore.PlatformInfo import PlatformInfo, vfloat
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def ecwblue(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def ecwblue(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """

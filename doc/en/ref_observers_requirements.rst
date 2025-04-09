@@ -382,7 +382,7 @@ Print on standard output and, in the same time, graphically plot with Gnuplot th
 Template **ValuePrinterSaverAndGnuPlotter**
 ...........................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the current value of the variable (persistent plot).
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Gnuplot the current value of the variable (persistent plot).
 
 ::
 
@@ -415,7 +415,7 @@ Print on standard output and, in the same, time save in a file of the '/tmp' dir
 Template **ValueSeriePrinterSaverAndGnuPlotter**
 ................................................
 
-Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot the value series of the variable (persistent plot).
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Gnuplot the value series of the variable (persistent plot).
 
 ::
 
@@ -475,7 +475,7 @@ Graphically plot with Matplolib the current value of the variable (non persisten
 Template **ValueMatPlotterSaver**
 .................................
 
-Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
 
 ::
 
@@ -530,7 +530,7 @@ Graphically plot with Matplolib the value series of the variable (non persistent
 Template **ValueSerieMatPlotterSaver**
 ......................................
 
-Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
 
 ::
 
@@ -586,7 +586,7 @@ Graphically plot with Matplolib the current value of the variable (non persisten
 Template **ValuePrinterAndMatPlotterSaver**
 ...........................................
 
-Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+Graphically plot with Matplolib the current value of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
 
 ::
 
@@ -643,7 +643,7 @@ Graphically plot with Matplolib the value series of the variable (non persistent
 Template **ValueSeriePrinterAndMatPlotterSaver**
 ................................................
 
-Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant figure).
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (persistant plot).
 
 ::
 
@@ -651,6 +651,156 @@ Graphically plot with Matplolib the value series of the variable, and save the f
     import numpy, re
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValuePrinterSaverAndMatPlotter (Observer)
+
+Template **ValuePrinterSaverAndMatPlotter**
+...........................................
+
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Matplolib the current value of the variable (non persistent plot).
+
+::
+
+    print(str(info)+' '+str(var[-1]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValuePrinterSaverAndMatPlotterSaver (Observer)
+
+Template **ValuePrinterSaverAndMatPlotterSaver**
+................................................
+
+Print on standard output and, in the same, time save in a file of the '/tmp' directory and graphically plot with Matplolib the current value of the variable (saved and non persistent plot).
+
+::
+
+    print(str(info)+' '+str(var[-1]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValueSeriePrinterSaverAndMatPlotter (Observer)
+
+Template **ValueSeriePrinterSaverAndMatPlotter**
+................................................
+
+Graphically plot with Matplolib the value series of the variable (non persistent plot).
+
+::
+
+    print(str(info)+' '+str(var[:]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValueSeriePrinterSaverAndMatPlotterSaver (Observer)
+
+Template **ValueSeriePrinterSaverAndMatPlotterSaver**
+.....................................................
+
+Graphically plot with Matplolib the value series of the variable, and save the figure in a file of the '/tmp' directory (saved and persistant plot).
+
+::
+
+    print(str(info)+' '+str(var[:]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
     global imfig, mp, ax
     plt.ion()
     try:

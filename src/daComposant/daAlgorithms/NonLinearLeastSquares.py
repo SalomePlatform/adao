@@ -168,7 +168,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            ecwnlls.ecwnlls(self, Xb, Y, U, HO, CM, R, B)
+            Xini = self._parameters["InitializationPoint"]
+            ecwnlls.ecwnlls(self, Xb, Xini, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

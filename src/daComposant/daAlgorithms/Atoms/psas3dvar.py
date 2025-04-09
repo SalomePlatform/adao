@@ -25,12 +25,12 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, scipy, scipy.optimize, scipy.version
+import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 from daCore.PlatformInfo import vt, vfloat, trmo
 
 # ==============================================================================
-def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def psas3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """
@@ -58,7 +58,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     if selfA._toStore("JacobianMatrixAtBackground"):
         selfA.StoredVariables["JacobianMatrixAtBackground"].store( Ht )
     #
-    Xini = numpy.zeros(Y.size)
+    Wini = numpy.zeros(Y.size)
     #
     # Définition de la fonction-coût
     # ------------------------------
@@ -121,7 +121,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         optimiseur = trmo()
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
             func        = CostFunction,
-            x0          = Xini,
+            x0          = Wini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxfun      = selfA._parameters["MaximumNumberOfIterations"] - 1,
@@ -134,7 +134,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "TNC":
         Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
             func        = CostFunction,
-            x0          = Xini,
+            x0          = Wini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxfun      = selfA._parameters["MaximumNumberOfIterations"],
@@ -145,7 +145,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "CG":
         Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
             f           = CostFunction,
-            x0          = Xini,
+            x0          = Wini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxiter     = selfA._parameters["MaximumNumberOfIterations"],
@@ -156,7 +156,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "NCG":
         Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
             f           = CostFunction,
-            x0          = Xini,
+            x0          = Wini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxiter     = selfA._parameters["MaximumNumberOfIterations"],
@@ -167,7 +167,7 @@ def psas3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "BFGS":
         Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
             f           = CostFunction,
-            x0          = Xini,
+            x0          = Wini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxiter     = selfA._parameters["MaximumNumberOfIterations"],

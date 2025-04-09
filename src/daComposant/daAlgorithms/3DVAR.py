@@ -223,7 +223,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            std3dvar.std3dvar(self, Xb, Y, U, HO, CM, R, B)
+            Xini = self._parameters["InitializationPoint"]
+            std3dvar.std3dvar(self, Xb, Xini, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

@@ -115,7 +115,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            ecwstdkf.ecwstdkf(self, Xb, Y, U, HO, CM, R, B)
+            ecwstdkf.ecwstdkf(self, Xb, Xb, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

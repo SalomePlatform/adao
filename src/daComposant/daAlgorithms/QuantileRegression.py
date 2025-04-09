@@ -143,7 +143,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 func        = CostFunction,
                 x0          = Xini,
                 fprime      = GradientOfCostFunction,
-                args        = (self, None, Hm, 0., None, None, nbPreviousSteps, "", True, True),
+                args        = (self, None, Hm, 0., None, None, nbPreviousSteps, "", True, True, False),
                 bounds      = self._parameters["Bounds"],
                 quantile    = self._parameters["Quantile"],
                 maxfun      = self._parameters["MaximumNumberOfIterations"],

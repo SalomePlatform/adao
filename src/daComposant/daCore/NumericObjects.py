@@ -1392,10 +1392,9 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Sup
     selfB._parameters["optiprint"] = -1
     selfB._parameters["optdisp"] = 0
     selfB._parameters["Bounds"] = None
-    selfB._parameters["InitializationPoint"] = Xf
     from daAlgorithms.Atoms import std3dvar
 
-    std3dvar.std3dvar(selfB, Xf, __Ynpu, None, __HO, None, __R, Pf)
+    std3dvar.std3dvar(selfB, Xf, Xf, __Ynpu, None, __HO, None, __R, Pf)
     Xa = selfB.get("Analysis")[-1].reshape((-1, 1))
     del selfB
     #
@@ -2118,6 +2117,10 @@ def multiXOsteps(
         Xn = numpy.asarray(Xb)
         if __CovForecast:
             Pn = B
+    if "InitializationPoint" in selfA._parameters:
+        Xini = selfA._parameters["InitializationPoint"]
+    else:
+        Xini = Xb
     #
     if hasattr(Y, "stepnumber"):
         duration = Y.stepnumber()
@@ -2172,10 +2175,13 @@ def multiXOsteps(
                 Cm = Cm.reshape(Xn.size, Un.size)  # ADAO & check shape
                 Xn_predicted = Xn_predicted + (Cm @ Un).reshape((-1, 1))
         elif selfA._parameters["EstimationOf"] == "Parameters":  # No forecast
-            # --- > Par principe, M = Id, Q = 0
+            # --- > Par principe, M = Id
             Xn_predicted = Xn
             if __CovForecast:
-                Pn_predicted = Pn
+                if hasattr(Pn, "asfullmatrix"):
+                    Pn_predicted = Q + Pn.asfullmatrix(Xn.size)
+                else:
+                    Pn_predicted = Q + Pn
         Xn_predicted = numpy.asarray(Xn_predicted).reshape((-1, 1))
         if selfA._toStore("ForecastState"):
             selfA.StoredVariables["ForecastState"].store(Xn_predicted)
@@ -2190,9 +2196,9 @@ def multiXOsteps(
         # Correct (Measurement Update)
         # ----------------------------
         if __CovForecast:
-            oneCycle(selfA, Xn_predicted, Ynpu, Un, HO, CM, R, Pn_predicted, True)
+            oneCycle(selfA, Xn_predicted, Xini, Ynpu, Un, HO, CM, R, Pn_predicted, True)
         else:
-            oneCycle(selfA, Xn_predicted, Ynpu, Un, HO, CM, R, B, True)
+            oneCycle(selfA, Xn_predicted, Xini, Ynpu, Un, HO, CM, R, B, True)
         #
         # --------------------------
         Xn = selfA._getInternalState("Xn")

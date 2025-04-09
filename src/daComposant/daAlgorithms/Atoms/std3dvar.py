@@ -25,12 +25,12 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, scipy, scipy.optimize, scipy.version
+import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 from daCore.PlatformInfo import vt, vfloat, trmo
 
 # ==============================================================================
-def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def std3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """
@@ -57,8 +57,6 @@ def std3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     #
     BI = B.getI()
     RI = R.getI()
-    #
-    Xini = selfA._parameters["InitializationPoint"]
     #
     # Définition de la fonction-coût
     # ------------------------------

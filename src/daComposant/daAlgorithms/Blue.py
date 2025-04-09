@@ -150,7 +150,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            ecwblue.ecwblue(self, Xb, Y, U, HO, CM, R, B)
+            ecwblue.ecwblue(self, Xb, Xb, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

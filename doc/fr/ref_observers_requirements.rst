@@ -394,7 +394,7 @@ Imprime sur la sortie standard et, en même temps, affiche graphiquement avec Gn
 Modèle **ValuePrinterSaverAndGnuPlotter**
 .........................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la valeur courante de la variable (affichage persistant).
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Gnuplot la valeur courante de la variable (affichage persistant).
 
 ::
 
@@ -427,7 +427,7 @@ Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du
 Modèle **ValueSeriePrinterSaverAndGnuPlotter**
 ..............................................
 
-Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement la série des valeurs de la variable (affichage persistant).
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Gnuplot la série des valeurs de la variable (affichage persistant).
 
 ::
 
@@ -487,7 +487,7 @@ Affiche graphiquement avec Matplolib la valeur courante de la variable (affichag
 Modèle **ValueMatPlotterSaver**
 ...............................
 
-Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante).
+Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
 
 ::
 
@@ -542,7 +542,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
 Modèle **ValueSerieMatPlotterSaver**
 ....................................
 
-Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante).
+Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
 
 ::
 
@@ -598,7 +598,7 @@ Affiche graphiquement avec Matplolib la valeur courante de la variable (affichag
 Modèle **ValuePrinterAndMatPlotterSaver**
 .........................................
 
-Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante).
+Affiche graphiquement avec Matplolib la valeur courante de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
 
 ::
 
@@ -655,7 +655,7 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable (affic
 Modèle **ValueSeriePrinterAndMatPlotterSaver**
 ..............................................
 
-Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (figure persistante).
+Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
 
 ::
 
@@ -663,6 +663,156 @@ Affiche graphiquement avec Matplolib la série des valeurs de la variable, et en
     import numpy, re
     import matplotlib.pyplot as plt
     v=numpy.array(var[:], ndmin=1)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValuePrinterSaverAndMatPlotter (Observer)
+
+Modèle **ValuePrinterSaverAndMatPlotter**
+.........................................
+
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant).
+
+::
+
+    print(str(info)+' '+str(var[-1]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValuePrinterSaverAndMatPlotterSaver (Observer)
+
+Modèle **ValuePrinterSaverAndMatPlotterSaver**
+..............................................
+
+Imprime sur la sortie standard et, en même temps, enregistre dans un fichier du répertoire '/tmp' et affiche graphiquement avec Matplolib la valeur courante de la variable (affichage non persistant et sauvegardé).
+
+::
+
+    print(str(info)+' '+str(var[-1]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[-1], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    ax.plot(v)
+    f='/tmp/figure_%s_%05i.pdf'%(info,imfig)
+    f=re.sub(r'\s','_',f)
+    plt.savefig(f)
+    plt.show()
+
+.. index:: single: ValueSeriePrinterSaverAndMatPlotter (Observer)
+
+Modèle **ValueSeriePrinterSaverAndMatPlotter**
+..............................................
+
+Affiche graphiquement avec Matplolib la série des valeurs de la variable (affichage non persistant).
+
+::
+
+    print(str(info)+' '+str(var[:]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
+    global imfig, mp, ax
+    plt.ion()
+    try:
+        imfig+=1
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+    except:
+        imfig=0
+        mp = plt.figure()
+        ax = mp.add_subplot(1, 1, 1)
+        mp.suptitle('%s (Figure %i)'%(info,imfig))
+        ax.set_xlabel('Step')
+        ax.set_ylabel('Variable')
+    ax.plot(v)
+    plt.show()
+
+.. index:: single: ValueSeriePrinterSaverAndMatPlotterSaver (Observer)
+
+Modèle **ValueSeriePrinterSaverAndMatPlotterSaver**
+...................................................
+
+Affiche graphiquement avec Matplolib la série des valeurs de la variable, et enregistre la figure dans un fichier du répertoire '/tmp' (affichage persistant).
+
+::
+
+    print(str(info)+' '+str(var[:]))
+    import numpy, re
+    import matplotlib.pyplot as plt
+    v=numpy.array(var[:], ndmin=1)
+    global istep
+    try:
+        istep+=1
+    except:
+        istep=0
+    f='/tmp/value_%s_%05i.txt'%(info,istep)
+    f=re.sub(r'\s','_',f)
+    print('Value saved in "%s"'%f)
+    numpy.savetxt(f,v)
     global imfig, mp, ax
     plt.ion()
     try:

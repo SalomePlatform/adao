@@ -25,7 +25,7 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import copy, math, numpy, scipy, scipy.optimize, scipy.version
+import copy, math, numpy, scipy
 from daCore.NumericObjects import EnsembleErrorCovariance
 from daCore.NumericObjects import EnsembleOfAnomalies
 from daCore.NumericObjects import EnsembleOfBackgroundPerturbations

@@ -25,11 +25,11 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, scipy, scipy.optimize, scipy.version
+import numpy, scipy, scipy.optimize
 from daCore.PlatformInfo import vt, vfloat, trmo
 
 # ==============================================================================
-def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def ecwnlls(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """
@@ -53,8 +53,6 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     if selfA._parameters["Minimizer"] == "LM":
         RdemiI = R.choleskyI()
     #
-    Xini = selfA._parameters["InitializationPoint"]
-    #
     # Définition de la fonction-coût
     # ------------------------------
 
@@ -75,7 +73,7 @@ def ecwnlls(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
         #
         Jb  = 0.
-        Jo  = vfloat( 0.5 * _Innovation.T * (RI * _Innovation) )
+        Jo  = vfloat( 0.5 * _Innovation.T @ (RI @ _Innovation) )
         J   = Jb + Jo
         #
         selfA.StoredVariables["CurrentIterationNumber"].store( len(selfA.StoredVariables["CostFunctionJ"]) )

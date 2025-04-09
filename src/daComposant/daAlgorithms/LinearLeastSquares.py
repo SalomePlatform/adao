@@ -105,7 +105,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            ecwlls.ecwlls(self, Xb, Y, U, HO, CM, R, B)
+            ecwlls.ecwlls(self, Xb, Xb, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

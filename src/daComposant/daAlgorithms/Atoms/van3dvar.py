@@ -25,14 +25,14 @@ __doc__ = """
 """
 __author__ = "Jean-Philippe ARGAUD"
 
-import numpy, scipy, scipy.optimize, scipy.version
+import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 from daCore.NumericObjects import RecentredBounds
 from daCore.PlatformInfo import PlatformInfo, vt, vfloat, trmo
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
-def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
+def van3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     """
     Correction
     """
@@ -64,7 +64,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     else:
         BI = None
     #
-    Xini = numpy.zeros(Xb.size)
+    Vini = numpy.zeros(Xb.size)
     #
     # Définition de la fonction-coût
     # ------------------------------
@@ -132,7 +132,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
         optimiseur = trmo()
         Minimum, J_optimal, Informations = optimiseur.fmin_l_bfgs_b(
             func        = CostFunction,
-            x0          = Xini,
+            x0          = Vini,
             fprime      = GradientOfCostFunction,
             args        = (),
             bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb, BI),
@@ -146,7 +146,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "TNC":
         Minimum, nfeval, rc = scipy.optimize.fmin_tnc(
             func        = CostFunction,
-            x0          = Xini,
+            x0          = Vini,
             fprime      = GradientOfCostFunction,
             args        = (),
             bounds      = RecentredBounds(selfA._parameters["Bounds"], Xb, BI),
@@ -158,7 +158,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "CG":
         Minimum, fopt, nfeval, grad_calls, rc = scipy.optimize.fmin_cg(
             f           = CostFunction,
-            x0          = Xini,
+            x0          = Vini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxiter     = selfA._parameters["MaximumNumberOfIterations"],
@@ -169,7 +169,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "NCG":
         Minimum, fopt, nfeval, grad_calls, hcalls, rc = scipy.optimize.fmin_ncg(
             f           = CostFunction,
-            x0          = Xini,
+            x0          = Vini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxiter     = selfA._parameters["MaximumNumberOfIterations"],
@@ -180,7 +180,7 @@ def van3dvar(selfA, Xb, Y, U, HO, CM, R, B, __storeState = False):
     elif selfA._parameters["Minimizer"] == "BFGS":
         Minimum, fopt, gopt, Hopt, nfeval, grad_calls, rc = scipy.optimize.fmin_bfgs(
             f           = CostFunction,
-            x0          = Xini,
+            x0          = Vini,
             fprime      = GradientOfCostFunction,
             args        = (),
             maxiter     = selfA._parameters["MaximumNumberOfIterations"],

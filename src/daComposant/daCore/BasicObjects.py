@@ -3316,14 +3316,24 @@ class Covariance(object):
     def __add__(self, other):
         "x.__add__(y) <==> x+y"
         if self.ismatrix() or self.isobject():
-            return self.__C + numpy.asmatrix(other)
+            _A = self.__C + other
         elif self.isvector() or self.isscalar():
             _A = numpy.asarray(other)
             if len(_A.shape) == 1:
                 _A.reshape((-1, 1))[::2] += self.__C
             else:
                 _A.reshape(_A.size)[:: _A.shape[1] + 1] += self.__C
-            return numpy.asmatrix(_A)
+        return numpy.asmatrix(_A)
+
+    def __float__(self):
+        "Return float value when scalar"
+        if self.isscalar():
+            return self.__C
+        else:
+            raise NotImplementedError(
+                "%s covariance matrix __float__ method not available for %s type!"
+                % (self.__name, type(self.__C))
+            )
 
     def __radd__(self, other):
         "x.__radd__(y) <==> y+x"
