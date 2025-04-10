@@ -118,7 +118,6 @@ AC_CONFIG_FILES([
         src/Makefile
         src/daComposant/Makefile
         src/daEficas/Makefile
-        src/daEficas/prefs_ADAO.py
         src/daSalome/Makefile
         src/daSalome/daGUI/Makefile
         src/daSalome/daGUI/daUtils/Makefile
