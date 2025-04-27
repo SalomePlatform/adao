@@ -43,7 +43,7 @@ from daCore import Templates
 # ==============================================================================
 class CacheManager(object):
     """
-    Classe générale de gestion d'un cache de calculs
+    Classe générale de gestion d'un cache de calculs.
     """
 
     __slots__ = (
@@ -56,9 +56,7 @@ class CacheManager(object):
     )
 
     def __init__(self, toleranceInRedundancy=1.0e-18, lengthOfRedundancy=-1):
-        """
-        Les caractéristiques de tolérance peuvent être modifiées à la création.
-        """
+        """Les tolérances peuvent être modifiées à la création."""
         self.__tolerBP = float(toleranceInRedundancy)
         self.__lengthOR = int(lengthOfRedundancy)
         self.__initlnOR = self.__lengthOR
@@ -67,12 +65,12 @@ class CacheManager(object):
         self.clearCache()
 
     def clearCache(self):
-        "Vide le cache"
+        """Vide le cache."""
         self.__listOPCV = []
         self.__seenNames = []
 
     def wasCalculatedIn(self, xValue, oName=""):
-        "Vérifie l'existence d'un calcul correspondant à la valeur"
+        """Vérifie l'existence d'un calcul correspondant à la valeur."""
         __alc = False
         __HxV = None
         if self.__enabled:
@@ -96,7 +94,7 @@ class CacheManager(object):
         return __alc, __HxV
 
     def storeValueInX(self, xValue, HxValue, oName=""):
-        "Stocke pour un opérateur o un calcul Hx correspondant à la valeur x"
+        """Stocke pour un opérateur o un calcul Hx correspondant à la valeur x."""
         if self.__lengthOR < 0:
             self.__lengthOR = 2 * min(numpy.size(xValue), 50) + 2
             self.__initlnOR = self.__lengthOR
@@ -117,13 +115,13 @@ class CacheManager(object):
         )
 
     def disable(self):
-        "Inactive le cache"
+        """Inactive le cache."""
         self.__initlnOR = self.__lengthOR
         self.__lengthOR = 0
         self.__enabled = False
 
     def enable(self):
-        "Active le cache"
+        """Active le cache."""
         self.__lengthOR = self.__initlnOR
         self.__enabled = True
 
@@ -131,7 +129,7 @@ class CacheManager(object):
 # ==============================================================================
 class Operator(object):
     """
-    Classe générale d'interface de type opérateur simple
+    Classe générale d'interface de type opérateur simple.
     """
 
     __slots__ = (
@@ -170,16 +168,16 @@ class Operator(object):
         deux mots-clé, soit une fonction ou un multi-fonction python, soit une
         matrice.
         Arguments :
-        - name : nom d'opérateur
-        - fromMethod : argument de type fonction Python
-        - fromMatrix : argument adapté au constructeur numpy.array/matrix
-        - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants
+        - name : nom d'opérateur.
+        - fromMethod : argument de type fonction Python.
+        - fromMatrix : argument adapté au constructeur numpy.array/matrix.
+        - avoidingRedundancy : booléen évitant (ou pas) les calculs redondants.
         - reducingMemoryUse : booléen forçant (ou pas) des calculs pour qu'ils
-          soient moins gourmands en mémoire
+          soient moins gourmands en mémoire.
         - inputAsMultiFunction : booléen indiquant une fonction explicitement
-          définie (ou pas) en multi-fonction
+          définie (ou pas) en multi-fonction.
         - extraArguments : arguments supplémentaires passés à la fonction de
-          base et ses dérivées (tuple ou dictionnaire)
+          base et ses dérivées (tuple ou dictionnaire).
         """
         self.__name = str(name)
         self.__NbCallsAsMatrix, self.__NbCallsAsMethod, self.__NbCallsOfCached = 0, 0, 0
@@ -210,18 +208,18 @@ class Operator(object):
             self.__Type = None
 
     def disableAvoidingRedundancy(self):
-        "Inactive le cache"
+        """Inactive le cache."""
         Operator.CM.disable()
 
     def enableAvoidingRedundancy(self):
-        "Active le cache"
+        """Active le cache."""
         if self.__avoidRC:
             Operator.CM.enable()
         else:
             Operator.CM.disable()
 
     def isType(self):
-        "Renvoie le type"
+        """Renvoie le type."""
         return self.__Type
 
     def appliedTo(
@@ -233,9 +231,9 @@ class Operator(object):
         argument devant a priori être du bon type.
         Arguments :
         - les arguments par série sont :
-            - xValue : argument adapté pour appliquer l'opérateur
-            - HValue : valeur précalculée de l'opérateur en ce point
-        - argsAsSerie : indique si les arguments sont une mono ou multi-valeur
+            - xValue : argument adapté pour appliquer l'opérateur.
+            - HValue : valeur précalculée de l'opérateur en ce point.
+        - argsAsSerie : indique si les arguments sont une mono ou multi-valeur.
         """
         if argsAsSerie:
             _xValue = xValue
@@ -319,9 +317,9 @@ class Operator(object):
         on suppose que l'opérateur ne s'applique qu'à xValue.
         Arguments :
         - paires : les arguments par paire sont :
-            - xValue : argument X adapté pour appliquer l'opérateur
-            - uValue : argument U adapté pour appliquer l'opérateur
-        - argsAsSerie : indique si l'argument est une mono ou multi-valeur
+            - xValue : argument X adapté pour appliquer l'opérateur.
+            - uValue : argument U adapté pour appliquer l'opérateur.
+        - argsAsSerie : indique si l'argument est une mono ou multi-valeur.
         """
         if argsAsSerie:
             _xuValue = paires
@@ -369,9 +367,9 @@ class Operator(object):
         Arguments :
         - paires : les arguments par paire sont :
             - xNominal : série d'arguments permettant de donner le point où
-              l'opérateur est construit pour être ensuite appliqué
-            - xValue : série d'arguments adaptés pour appliquer l'opérateur
-        - argsAsSerie : indique si l'argument est une mono ou multi-valeur
+              l'opérateur est construit pour être ensuite appliqué.
+            - xValue : série d'arguments adaptés pour appliquer l'opérateur.
+        - argsAsSerie : indique si l'argument est une mono ou multi-valeur.
         """
         if argsAsSerie:
             _nxValue = paires
@@ -401,9 +399,7 @@ class Operator(object):
             return _HxValue[-1]
 
     def asMatrix(self, ValueForMethodForm="UnknownVoidValue", argsAsSerie=False):
-        """
-        Permet de renvoyer l'opérateur sous la forme d'une matrice
-        """
+        """Permet de renvoyer l'opérateur sous la forme d'une matrice."""
         if self.__Matrix is not None:
             self.__addOneMatrixCall()
             mValue = [
@@ -434,7 +430,7 @@ class Operator(object):
     def shape(self):
         """
         Renvoie la taille sous forme numpy si l'opérateur est disponible sous
-        la forme d'une matrice
+        la forme d'une matrice.
         """
         if self.__Matrix is not None:
             return self.__Matrix.shape
@@ -444,9 +440,7 @@ class Operator(object):
             )
 
     def nbcalls(self, which=None):
-        """
-        Renvoie les nombres d'évaluations de l'opérateur
-        """
+        """Renvoie les nombres d'évaluations de l'opérateur."""
         __nbcalls = (
             self.__NbCallsAsMatrix + self.__NbCallsAsMethod,
             self.__NbCallsAsMatrix,
@@ -463,24 +457,26 @@ class Operator(object):
             return __nbcalls[which]
 
     def __addOneMatrixCall(self):
-        "Comptabilise un appel"
-        self.__NbCallsAsMatrix += 1  # Decompte local
-        Operator.NbCallsAsMatrix += 1  # Decompte global
+        """Comptabilise un appel."""
+        self.__NbCallsAsMatrix += 1  # Décompte local
+        Operator.NbCallsAsMatrix += 1  # Décompte global
 
     def __addOneMethodCall(self, nb=1):
-        "Comptabilise un appel"
-        self.__NbCallsAsMethod += nb  # Decompte local
-        Operator.NbCallsAsMethod += nb  # Decompte global
+        """Comptabilise un appel."""
+        self.__NbCallsAsMethod += nb  # Décompte local
+        Operator.NbCallsAsMethod += nb  # Décompte global
 
     def __addOneCacheCall(self):
-        "Comptabilise un appel"
+        """Comptabilise un appel."""
         self.__NbCallsOfCached += 1  # Décompte local
         Operator.NbCallsOfCached += 1  # Décompte global
 
 
 # ==============================================================================
 class FakeOperator(object):
-    "Classe complètement vide pour porter un attribut"
+    """
+    Classe complètement vide pour porter un attribut.
+    """
 
     __slots__ = ("nbcalls",)
 
@@ -489,7 +485,7 @@ class FakeOperator(object):
 class FullOperator(object):
     """
     Classe générale d'interface de type opérateur complet
-    (Direct, Linéaire Tangent, Adjoint)
+    (Direct, Linéaire Tangent, Adjoint).
     """
 
     __slots__ = (
@@ -515,7 +511,7 @@ class FullOperator(object):
         scheduledBy=None,
         toBeChecked=False,
     ):
-        """"""
+        """Construction complète."""
         self.__name = str(name)
         self.__check = bool(toBeChecked)
         self.__extraArgs = extraArguments
@@ -802,12 +798,11 @@ class FullOperator(object):
             self.__FO["AppliedInX"] = None
 
     def getO(self):
+        """Renvoie l'objet de stockage."""
         return self.__FO
 
     def nbcalls(self, whot=None, which=None):
-        """
-        Renvoie les nombres d'évaluations de l'opérateur
-        """
+        """Renvoie les nombres d'évaluations de l'opérateur."""
         __nbcalls = {}
         for otype in ["Direct", "Tangent", "Adjoint", "OneFunction"]:
             if otype in self.__FO:
@@ -818,14 +813,15 @@ class FullOperator(object):
             return __nbcalls
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """Return repr(self)."""
         return repr(self.__FO)
 
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """Return str(self)."""
         return str(self.__FO)
 
     def __deprecateOpt(self, collection: dict, oldn: str, newn: str):
+        """Remplace et renvoie un message en cas de paramètre renommé."""
         if oldn in collection:
             collection[newn] = collection[oldn]
             del collection[oldn]
@@ -839,7 +835,7 @@ class FullOperator(object):
 # ==============================================================================
 class Algorithm(object):
     """
-    Classe générale d'interface de type algorithme
+    Classe générale d'interface de type algorithme.
 
     Elle donne un cadre pour l'écriture d'une classe élémentaire d'algorithme
     d'assimilation, en fournissant un container (dictionnaire) de variables
@@ -920,7 +916,7 @@ class Algorithm(object):
             - SimulationQuantiles : états observés H(X) pour les quantiles demandés
             - SingularValues : valeurs singulières provenant d'une décomposition SVD
         On peut rajouter des variables à stocker dans l'initialisation de
-        l'algorithme élémentaire qui va hériter de cette classe
+        l'algorithme élémentaire qui va hériter de cette classe.
         """
         logging.debug("%s Initialisation", str(name))
         self._m = PlatformInfo.SystemUsage()
@@ -1119,7 +1115,7 @@ class Algorithm(object):
         B=None,
         Q=None,
     ):
-        "Pré-calcul"
+        """Pré-calcul."""
         logging.debug("%s Lancement", self._name)
         logging.debug(
             "%s Taille mémoire utilisée de %.0f Mio"
@@ -1135,7 +1131,7 @@ class Algorithm(object):
                 self.__setParameters({k: v})
 
         def __test_vvalue(argument, variable, argname, symbol=None):
-            "Corrections et compléments des vecteurs"
+            """Corrections et compléments des vecteurs."""
             if symbol is None:
                 symbol = variable
             if argument is None:
@@ -1189,7 +1185,7 @@ class Algorithm(object):
         __test_vvalue(U, "U", "Control")
 
         def __test_cvalue(argument, variable, argname, symbol=None):
-            "Corrections et compléments des covariances"
+            """Corrections et compléments des covariances."""
             if symbol is None:
                 symbol = variable
             if argument is None:
@@ -1243,7 +1239,7 @@ class Algorithm(object):
         __test_cvalue(Q, "Q", "Evolution")
 
         def __test_ovalue(argument, variable, argname, symbol=None):
-            "Corrections et compléments des opérateurs"
+            """Corrections et compléments des opérateurs."""
             if symbol is None:
                 symbol = variable
             if argument is None or (isinstance(argument, dict) and len(argument) == 0):
@@ -1384,7 +1380,7 @@ class Algorithm(object):
         return 0
 
     def _post_run(self, _oH=None, _oM=None):
-        "Post-calcul"
+        """Post-calcul."""
         if (
             "StoreSupplementaryCalculations" in self._parameters
         ) and "APosterioriCovariance" in self._parameters[
@@ -1465,7 +1461,7 @@ class Algorithm(object):
         return 0
 
     def _toStore(self, key):
-        "True if in StoreSupplementaryCalculations, else False"
+        """True if in StoreSupplementaryCalculations, else False."""
         return key in self._parameters["StoreSupplementaryCalculations"]
 
     def get(self, key=None):
@@ -1482,21 +1478,21 @@ class Algorithm(object):
             return self.StoredVariables
 
     def __contains__(self, key=None):
-        "D.__contains__(k) -> True if D has a key k, else False"
+        """True if the dictionary has the specified key, else False."""
         if key is None or key.lower() not in self.__canonical_stored_name:
             return False
         else:
             return self.__canonical_stored_name[key.lower()] in self.StoredVariables
 
     def keys(self):
-        "D.keys() -> list of D's keys"
+        """D.keys() -> list of D's keys."""
         if hasattr(self, "StoredVariables"):
             return self.StoredVariables.keys()
         else:
             return []
 
     def pop(self, k, d):
-        "D.pop(k[,d]) -> v, remove specified key and return the corresponding value"
+        """D.pop(k[,d]) -> v, remove specified key and return the corresponding value."""
         if (
             hasattr(self, "StoredVariables")
             and k.lower() in self.__canonical_stored_name
@@ -1526,9 +1522,7 @@ class Algorithm(object):
         Q=None,
         Parameters=None,
     ):
-        """
-        Doit implémenter l'opération élémentaire de calcul algorithmique.
-        """
+        """Doit implémenter l'opération élémentaire de calcul algorithmique."""
         raise NotImplementedError(
             "Mathematical algorithmic calculation has not been implemented!"
         )
@@ -1584,9 +1578,7 @@ class Algorithm(object):
             return self.__required_parameters
 
     def setParameterValue(self, name=None, value=None):
-        """
-        Renvoie la valeur d'un paramètre requis de manière contrôlée
-        """
+        """Renvoie la valeur d'un paramètre requis de manière contrôlée."""
         __k = self.__canonical_parameter_name[name.lower()]
         default = self.__required_parameters[__k]["default"]
         typecast = self.__required_parameters[__k]["typecast"]
@@ -1657,16 +1649,12 @@ class Algorithm(object):
         return __val
 
     def requireInputArguments(self, mandatory=(), optional=()):
-        """
-        Permet d'imposer des arguments de calcul requis en entrée.
-        """
+        """Permet d'imposer des arguments de calcul requis en entrée."""
         self.__required_inputs["RequiredInputValues"]["mandatory"] = tuple(mandatory)
         self.__required_inputs["RequiredInputValues"]["optional"] = tuple(optional)
 
     def getInputArguments(self):
-        """
-        Permet d'obtenir les listes des arguments de calcul requis en entrée.
-        """
+        """Permet d'obtenir les listes des arguments de calcul requis en entrée."""
         return (
             self.__required_inputs["RequiredInputValues"]["mandatory"],
             self.__required_inputs["RequiredInputValues"]["optional"],
@@ -1685,9 +1673,7 @@ class Algorithm(object):
         )
 
     def __setParameters(self, fromDico={}, reset=False):
-        """
-        Permet de stocker les paramètres reçus dans le dictionnaire interne.
-        """
+        """Permet de stocker les paramètres reçus dans le dictionnaire interne."""
         self._parameters.update(fromDico)
         __inverse_fromDico_keys = {}
         for k in fromDico.keys():
@@ -1741,9 +1727,7 @@ class Algorithm(object):
                 )
 
     def _setInternalState(self, key=None, value=None, fromDico={}, reset=False):
-        """
-        Permet de stocker des variables nommées constituant l'état interne
-        """
+        """Permet de stocker des variables nommées constituant l'état interne."""
         if reset:  # Vide le dictionnaire préalablement
             self.__internal_state = {}
         if key is not None and value is not None:
@@ -1751,18 +1735,14 @@ class Algorithm(object):
         self.__internal_state.update(dict(fromDico))
 
     def _getInternalState(self, key=None):
-        """
-        Restitue un état interne sous la forme d'un dictionnaire de variables nommées
-        """
+        """Restitue un état interne sous la forme d'un dictionnaire de variables nommées."""
         if key is not None and key in self.__internal_state:
             return self.__internal_state[key]
         else:
             return self.__internal_state
 
     def _getTimeState(self, reset=False):
-        """
-        Initialise ou restitue le temps de calcul (cpu/elapsed) à la seconde
-        """
+        """Initialise ou restitue le temps de calcul (cpu/elapsed) à la seconde."""
         if reset:
             self.__initial_cpu_time = time.process_time()
             self.__initial_elapsed_time = time.perf_counter()
@@ -1773,7 +1753,7 @@ class Algorithm(object):
             return self.__cpu_time, self.__elapsed_time
 
     def _StopOnTimeLimit(self, X=None, withReason=False):
-        "Stop criteria on time limit: True/False [+ Reason]"
+        """Stop criteria on time limit: True/False [+ Reason]."""
         c, e = self._getTimeState()
         if (
             "MaximumCpuTime" in self._parameters
@@ -1815,6 +1795,7 @@ class PartialAlgorithm(object):
     )
 
     def __init__(self, name):
+        """Construction complète."""
         self._name = str(name)
         self._parameters = {"StoreSupplementaryCalculations": []}
         #
@@ -1841,7 +1822,7 @@ class PartialAlgorithm(object):
             self.__canonical_stored_name[k.lower()] = k
 
     def _toStore(self, key):
-        "True if in StoreSupplementaryCalculations, else False"
+        """True if in StoreSupplementaryCalculations, else False."""
         return key in self._parameters["StoreSupplementaryCalculations"]
 
     def get(self, key=None):
@@ -1861,7 +1842,7 @@ class PartialAlgorithm(object):
 # ==============================================================================
 class AlgorithmAndParameters(object):
     """
-    Classe générale d'interface d'action pour l'algorithme et ses paramètres
+    Classe générale d'interface d'action pour l'algorithme et ses paramètres.
     """
 
     __slots__ = (
@@ -1886,7 +1867,7 @@ class AlgorithmAndParameters(object):
     def __init__(
         self, name="GenericAlgorithm", asAlgorithm=None, asDict=None, asScript=None
     ):
-        """ """
+        """Initialisation des stockages."""
         self.__name = str(name)
         self.__A = None
         self.__P = {}
@@ -1913,7 +1894,7 @@ class AlgorithmAndParameters(object):
         }  # Duplication dans Algorithm
 
     def updateParameters(self, asDict=None, asScript=None):
-        "Mise à jour des paramètres"
+        """Mise à jour des paramètres."""
         if asDict is None and asScript is not None:
             __Dict = Interfaces.ImportFromScript(asScript).getvalue(
                 self.__name, "Parameters"
@@ -1925,7 +1906,7 @@ class AlgorithmAndParameters(object):
             self.__P.update(dict(__Dict))
 
     def executePythonScheme(self, asDictAO=None):
-        "Permet de lancer le calcul d'assimilation"
+        """Permet de lancer le calcul d'assimilation."""
         Operator.CM.clearCache()
         #
         if not isinstance(asDictAO, dict):
@@ -1979,7 +1960,7 @@ class AlgorithmAndParameters(object):
         return 0
 
     def executeYACSScheme(self, FileName=None):
-        "Permet de lancer le calcul d'assimilation"
+        """Permet de lancer le calcul d'assimilation."""
         if FileName is None or not os.path.exists(FileName):
             raise ValueError("a YACS file name has to be given for YACS execution.\n")
         else:
@@ -2036,7 +2017,7 @@ class AlgorithmAndParameters(object):
         return 0
 
     def get(self, key=None):
-        "Vérifie l'existence d'une clé de variable ou de paramètres"
+        """Vérifie l'existence d'une clé de variable ou de paramètres."""
         if key in self.__algorithm:
             return self.__algorithm.get(key)
         elif key in self.__P:
@@ -2048,23 +2029,23 @@ class AlgorithmAndParameters(object):
             return allvariables
 
     def pop(self, k, d):
-        "Necessaire pour le pickling"
+        """Nécessaire pour le pickling."""
         return self.__algorithm.pop(k, d)
 
     def getAlgorithmRequiredParameters(self, noDetails=True):
-        "Renvoie la liste des paramètres requis selon l'algorithme"
+        """Renvoie la liste des paramètres requis selon l'algorithme."""
         return self.__algorithm.getRequiredParameters(noDetails)
 
     def getAlgorithmInputArguments(self):
-        "Renvoie la liste des entrées requises selon l'algorithme"
+        """Renvoie la liste des entrées requises selon l'algorithme."""
         return self.__algorithm.getInputArguments()
 
     def getAlgorithmAttributes(self):
-        "Renvoie la liste des attributs selon l'algorithme"
+        """Renvoie la liste des attributs selon l'algorithme."""
         return self.__algorithm.setAttributes()
 
     def setObserver(self, __V, __O, __I, __A, __S):
-        "Associe un observer à une variable unique"
+        """Associe un observer à une variable unique."""
         if (
             self.__algorithm is None
             or isinstance(self.__algorithm, dict)
@@ -2082,7 +2063,7 @@ class AlgorithmAndParameters(object):
             )
 
     def setCrossObserver(self, __V, __O, __I, __A, __S):
-        "Associe un observer à une collection ordonnée de variables"
+        """Associe un observer à une collection ordonnée de variables."""
         if (
             self.__algorithm is None
             or isinstance(self.__algorithm, dict)
@@ -2117,6 +2098,7 @@ class AlgorithmAndParameters(object):
                 )
 
     def removeObserver(self, __V, __O, __A=False):
+        """Retire un observer à une variable existante."""
         if (
             self.__algorithm is None
             or isinstance(self.__algorithm, dict)
@@ -2134,6 +2116,7 @@ class AlgorithmAndParameters(object):
             )
 
     def hasObserver(self, __V):
+        """Vérifie l'existence d'observer sur une variable."""
         if (
             self.__algorithm is None
             or isinstance(self.__algorithm, dict)
@@ -2152,15 +2135,15 @@ class AlgorithmAndParameters(object):
         return __allvariables
 
     def __contains__(self, key=None):
-        "D.__contains__(k) -> True if D has a key k, else False"
+        """True if the dictionary has the specified key, else False."""
         return key in self.__algorithm or key in self.__P
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """Return repr(self)."""
         return repr(self.__A) + ", " + repr(self.__P)
 
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """Return str(self)."""
         return str(self.__A) + ", " + str(self.__P)
 
     def __setAlgorithm(self, choice=None):
@@ -2539,7 +2522,7 @@ class AlgorithmAndParameters(object):
 # ==============================================================================
 class RegulationAndParameters(object):
     """
-    Classe générale d'interface d'action pour la régulation et ses paramètres
+    Classe générale d'interface d'action pour la régulation et ses paramètres.
     """
 
     __slots__ = ("__name", "__P")
@@ -2547,7 +2530,7 @@ class RegulationAndParameters(object):
     def __init__(
         self, name="GenericRegulation", asAlgorithm=None, asDict=None, asScript=None
     ):
-        """ """
+        """Construction complète."""
         self.__name = str(name)
         self.__P = {}
         #
@@ -2570,7 +2553,7 @@ class RegulationAndParameters(object):
             self.__P.update({"Algorithm": str(__Algo)})
 
     def get(self, key=None):
-        "Vérifie l'existence d'une clé de variable ou de paramètres"
+        """Vérifie l'existence d'une clé de variable ou de paramètres."""
         if key in self.__P:
             return self.__P[key]
         else:
@@ -2580,7 +2563,7 @@ class RegulationAndParameters(object):
 # ==============================================================================
 class DataObserver(object):
     """
-    Classe générale d'interface de type observer
+    Classe générale d'interface de type observer.
     """
 
     __slots__ = ("__name", "__V", "__O", "__I")
@@ -2599,7 +2582,7 @@ class DataObserver(object):
         scheduledBy=None,
         withAlgo=None,
     ):
-        """ """
+        """Construction complète."""
         self.__name = str(name)
         self.__V = None
         self.__O = None
@@ -2653,18 +2636,18 @@ class DataObserver(object):
                 )
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """Return repr(self)."""
         return repr(self.__V) + "\n" + repr(self.__O)
 
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """Return str(self)."""
         return str(self.__V) + "\n" + str(self.__O)
 
 
 # ==============================================================================
 class UserScript(object):
     """
-    Classe générale d'interface de type texte de script utilisateur
+    Classe générale d'interface de type texte de script utilisateur.
     """
 
     __slots__ = ("__name", "__F")
@@ -2672,7 +2655,7 @@ class UserScript(object):
     def __init__(
         self, name="GenericUserScript", asTemplate=None, asString=None, asScript=None
     ):
-        """ """
+        """Construction complète."""
         self.__name = str(name)
         #
         if asString is not None:
@@ -2695,31 +2678,31 @@ class UserScript(object):
             self.__F = ""
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """Return repr(self)."""
         return repr(self.__F)
 
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """Return str(self)."""
         return str(self.__F)
 
 
 # ==============================================================================
 class ExternalParameters(object):
     """
-    Classe générale d'interface pour le stockage des paramètres externes
+    Classe générale d'interface pour le stockage des paramètres externes.
     """
 
     __slots__ = ("__name", "__P")
 
     def __init__(self, name="GenericExternalParameters", asDict=None, asScript=None):
-        """ """
+        """Initialise le dictionnaire et le met à jour."""
         self.__name = str(name)
         self.__P = {}
         #
         self.updateParameters(asDict, asScript)
 
     def updateParameters(self, asDict=None, asScript=None):
-        "Mise à jour des paramètres"
+        """Mise à jour des paramètres."""
         if asDict is None and asScript is not None:
             __Dict = Interfaces.ImportFromScript(asScript).getvalue(
                 self.__name, "ExternalParameters"
@@ -2731,29 +2714,33 @@ class ExternalParameters(object):
             self.__P.update(dict(__Dict))
 
     def get(self, key=None):
+        """Return the value for key if key is in the dictionary, else key list."""
         if key in self.__P:
             return self.__P[key]
         else:
             return list(self.__P.keys())
 
     def keys(self):
+        """D.keys() -> a set-like object providing a view on D's keys."""
         return list(self.__P.keys())
 
     def pop(self, k, d):
+        """D.pop(k[,d]) -> v, remove specified key and return the corresponding value."""
         return self.__P.pop(k, d)
 
     def items(self):
+        """D.items() -> a set-like object providing a view on D's items."""
         return self.__P.items()
 
     def __contains__(self, key=None):
-        "D.__contains__(k) -> True if D has a key k, else False"
+        """True if the dictionary has the specified key, else False."""
         return key in self.__P
 
 
 # ==============================================================================
 class State(object):
     """
-    Classe générale d'interface de type état
+    Classe générale d'interface de type état.
     """
 
     __slots__ = (
@@ -2782,10 +2769,10 @@ class State(object):
         """
         Permet de définir un vecteur :
         - asVector : entrée des données, comme un vecteur compatible avec le
-          constructeur de numpy.matrix, ou "True" si entrée par script.
+          constructeur de numpy.array/matrix, ou "True" si entrée par script.
         - asPersistentVector : entrée des données, comme une série de vecteurs
-          compatible avec le constructeur de numpy.matrix, ou comme un objet de
-          type Persistence, ou "True" si entrée par script.
+          compatible avec le constructeur de numpy.array/matrix, ou comme un
+          objet de type Persistence, ou "True" si entrée par script.
         - asScript : si un script valide est donné contenant une variable
           nommée "name", la variable est de type "asVector" (par défaut) ou
           "asPersistentVector" selon que l'une de ces variables est placée à
@@ -2895,6 +2882,7 @@ class State(object):
             self.__T = scheduledBy
 
     def getO(self, withScheduler=False):
+        """Renvoie l'objet de stockage."""
         if withScheduler:
             return self.__V, self.__T
         elif self.__T is None:
@@ -2903,26 +2891,26 @@ class State(object):
             return self.__V
 
     def isvector(self):
-        "Vérification du type interne"
+        """Indicateur de type interne."""
         return self.__is_vector
 
     def isseries(self):
-        "Vérification du type interne"
+        """Indicateur de type interne."""
         return self.__is_series
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """Return repr(self)."""
         return repr(self.__V)
 
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """Return str(self)."""
         return str(self.__V)
 
 
 # ==============================================================================
 class Covariance(object):
     """
-    Classe générale d'interface de type covariance
+    Classe générale d'interface de type covariance.
     """
 
     __slots__ = (
@@ -2950,19 +2938,20 @@ class Covariance(object):
         """
         Permet de définir une covariance :
         - asCovariance : entrée des données, comme une matrice compatible avec
-          le constructeur de numpy.matrix
+          le constructeur de numpy.array/matrix.
         - asEyeByScalar : entrée des données comme un seul scalaire de variance,
           multiplicatif d'une matrice de corrélation identité, aucune matrice
-          n'étant donc explicitement à donner
+          n'étant donc explicitement à donner.
         - asEyeByVector : entrée des données comme un seul vecteur de variance,
           à mettre sur la diagonale d'une matrice de corrélation, aucune matrice
-          n'étant donc explicitement à donner
+          n'étant donc explicitement à donner.
         - asCovObject : entrée des données comme un objet python, qui a les
-          methodes obligatoires "getT", "getI", "diag", "trace", "__add__",
+          méthodes obligatoires "getT", "getI", "diag", "trace", "__add__",
           "__sub__", "__neg__", "__mul__", "__rmul__" et facultatives "shape",
-          "size", "cholesky", "choleskyI", "asfullmatrix", "__repr__", "__str__"
+          "size", "cholesky", "choleskyI", "asfullmatrix", "__repr__",
+          "__str__".
         - toBeChecked : booléen indiquant si le caractère SDP de la matrice
-          pleine doit être vérifié
+          pleine doit être vérifié.
         """
         self.__name = str(name)
         self.__check = bool(toBeChecked)
@@ -3054,7 +3043,7 @@ class Covariance(object):
         self.__validate()
 
     def __validate(self):
-        "Validation"
+        """Validation."""
         if self.__C is None:
             raise UnboundLocalError(
                 "%s covariance matrix value has not been set!" % (self.__name,)
@@ -3101,23 +3090,23 @@ class Covariance(object):
                 )
 
     def isscalar(self):
-        "Vérification du type interne"
+        """Indicateur de type interne."""
         return self.__is_scalar
 
     def isvector(self):
-        "Vérification du type interne"
+        """Indicateur de type interne."""
         return self.__is_vector
 
     def ismatrix(self):
-        "Vérification du type interne"
+        """Indicateur de type interne."""
         return self.__is_matrix
 
     def isobject(self):
-        "Vérification du type interne"
+        """Indicateur de type interne."""
         return self.__is_object
 
     def getI(self):
-        "Inversion"
+        """Inversion de la matrice."""
         if self.ismatrix():
             return Covariance(
                 self.__name + "I", asCovariance=numpy.linalg.inv(self.__C)
@@ -3132,7 +3121,7 @@ class Covariance(object):
             return None  # Indispensable
 
     def getT(self):
-        "Transposition"
+        """Transposition de la matrice."""
         if self.ismatrix():
             return Covariance(self.__name + "T", asCovariance=self.__C.T)
         elif self.isvector():
@@ -3147,7 +3136,7 @@ class Covariance(object):
             )
 
     def cholesky(self):
-        "Décomposition de Cholesky"
+        """Décomposition de Cholesky de la matrice."""
         if self.ismatrix():
             return Covariance(
                 self.__name + "C", asCovariance=numpy.linalg.cholesky(self.__C)
@@ -3164,7 +3153,7 @@ class Covariance(object):
             )
 
     def choleskyI(self):
-        "Inversion de la décomposition de Cholesky"
+        """Inversion de la décomposition de Cholesky de la matrice."""
         if self.ismatrix():
             return Covariance(
                 self.__name + "H",
@@ -3186,7 +3175,7 @@ class Covariance(object):
             )
 
     def sqrtm(self):
-        "Racine carrée matricielle"
+        """Racine carrée matricielle."""
         if self.ismatrix():
             import scipy
 
@@ -3205,7 +3194,7 @@ class Covariance(object):
             )
 
     def sqrtmI(self):
-        "Inversion de la racine carrée matricielle"
+        """Inversion de la racine carrée matricielle."""
         if self.ismatrix():
             import scipy
 
@@ -3229,7 +3218,7 @@ class Covariance(object):
             )
 
     def diag(self, msize=None):
-        "Diagonale de la matrice"
+        """Diagonale de la matrice."""
         if self.ismatrix():
             return numpy.diag(self.__C)
         elif self.isvector():
@@ -3251,7 +3240,7 @@ class Covariance(object):
             )
 
     def trace(self, msize=None):
-        "Trace de la matrice"
+        """Trace de la matrice."""
         if self.ismatrix():
             return numpy.trace(self.__C)
         elif self.isvector():
@@ -3273,7 +3262,7 @@ class Covariance(object):
             )
 
     def asfullmatrix(self, msize=None):
-        "Matrice pleine"
+        """Renvoie la matrice pleine."""
         if self.ismatrix():
             return numpy.asarray(self.__C, dtype=float)
         elif self.isvector():
@@ -3296,25 +3285,26 @@ class Covariance(object):
             )
 
     def assparsematrix(self):
-        "Valeur sparse"
+        """Renvoie la valeur sparse."""
         return self.__C
 
     def getO(self):
+        """Renvoie l'objet de stockage."""
         return self
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """Return repr(self)."""
         if isinstance(self.__C, numpy.float64):
             return repr(float(self.__C))
         else:
             return repr(self.__C)
 
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """Return str(self)."""
         return str(self.__C)
 
     def __add__(self, other):
-        "x.__add__(y) <==> x+y"
+        """x.__add__(y) <==> x+y."""
         if self.ismatrix() or self.isobject():
             _A = self.__C + other
         elif self.isvector() or self.isscalar():
@@ -3326,7 +3316,7 @@ class Covariance(object):
         return numpy.asmatrix(_A)
 
     def __float__(self):
-        "Return float value when scalar"
+        """Renvoi un flottant en cas de matrice sparse scalaire."""
         if self.isscalar():
             return self.__C
         else:
@@ -3336,14 +3326,14 @@ class Covariance(object):
             )
 
     def __radd__(self, other):
-        "x.__radd__(y) <==> y+x"
+        """x.__radd__(y) <==> y+x."""
         raise NotImplementedError(
             "%s covariance matrix __radd__ method not available for %s type!"
             % (self.__name, type(other))
         )
 
     def __sub__(self, other):
-        "x.__sub__(y) <==> x-y"
+        """x.__sub__(y) <==> x-y."""
         if self.ismatrix() or self.isobject():
             return self.__C - numpy.asmatrix(other)
         elif self.isvector() or self.isscalar():
@@ -3354,18 +3344,18 @@ class Covariance(object):
             return numpy.asmatrix(_A)
 
     def __rsub__(self, other):
-        "x.__rsub__(y) <==> y-x"
+        """x.__rsub__(y) <==> y-x."""
         raise NotImplementedError(
             "%s covariance matrix __rsub__ method not available for %s type!"
             % (self.__name, type(other))
         )
 
     def __neg__(self):
-        "x.__neg__() <==> -x"
+        """x.__neg__() <==> -x."""
         return -self.__C
 
     def __matmul__(self, other):
-        "x.__mul__(y) <==> x@y"
+        """x.__mul__(y) <==> x@y."""
         if self.ismatrix() and isinstance(other, (int, float)):
             return numpy.asarray(self.__C) * other
         elif self.ismatrix() and isinstance(
@@ -3412,7 +3402,7 @@ class Covariance(object):
             )
 
     def __mul__(self, other):
-        "x.__mul__(y) <==> x*y"
+        """x.__mul__(y) <==> x*y."""
         if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return self.__C * other
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
@@ -3459,7 +3449,7 @@ class Covariance(object):
             )
 
     def __rmatmul__(self, other):
-        "x.__rmul__(y) <==> y@x"
+        """x.__rmul__(y) <==> y@x."""
         if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return other * self.__C
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
@@ -3493,7 +3483,7 @@ class Covariance(object):
             )
 
     def __rmul__(self, other):
-        "x.__rmul__(y) <==> y*x"
+        """x.__rmul__(y) <==> y*x."""
         if self.ismatrix() and isinstance(other, (int, numpy.matrix, float)):
             return other * self.__C
         elif self.ismatrix() and isinstance(other, (list, numpy.ndarray, tuple)):
@@ -3529,7 +3519,7 @@ class Covariance(object):
             )
 
     def __len__(self):
-        "x.__len__() <==> len(x)"
+        """x.__len__() <==> len(x)."""
         return self.shape[0]
 
 
@@ -3574,7 +3564,10 @@ class DynamicalSimulator(object):
         y0=None,
         autonomous=None,
     ):
-        "None default values are mandatory to allow overriding"
+        """
+        Initialisation. Les valeurs None par défaut pour les arguments sont
+        impératives pour permettre ensuite l'affectation.
+        """
         if hasattr(self, "CanonicalDescription"):
             self.CanonicalDescription()
         self._description(mu, integrator, dt, t0, tf, y0, autonomous)
@@ -3583,16 +3576,14 @@ class DynamicalSimulator(object):
     # User defined ODE model and canonical description
 
     def ODEModel(self, t, y):
-        """
-        ODE : return dy / dt = F_µ(t, y)
-        """
+        """ODE : renvoie dy / dt = F_µ(t, y)."""
         raise NotImplementedError()
 
     def CanonicalDescription(self):
         """
-        User settings for default or recommended EDO description
+        Valeurs par défaut ou recommandées à l'utilisateur de l'ODE.
 
-        Setters/Getters that >>> can <<< be used:
+        Setters/Getters qui >>> peuvent <<< être utilisés :
             - self.Parameters
             - self.Integrator
             - self.IntegrationStep
@@ -3603,16 +3594,6 @@ class DynamicalSimulator(object):
             - self.Autonomous
         """
         pass
-
-    # Optional implementation, used only if present and callable
-    # def ODETLMModel(self, t, y):
-    # """
-    # Return the tangent linear matrix
-    # """
-    # nt = self.InitialCondition.size
-    # tlm = numpy.zeros((nt, nt))
-    # ...
-    # return tlm
 
     # --------------------------------------------------------------------------
 
@@ -3634,6 +3615,7 @@ class DynamicalSimulator(object):
 
     @Integrator.setter
     def Integrator(self, value):
+        """Définit le schéma d'intégration."""
         if value is None:
             pass
         elif not (value in self.__integrator_list):
@@ -3651,6 +3633,7 @@ class DynamicalSimulator(object):
 
     @IntegrationStep.setter
     def IntegrationStep(self, value):
+        """Définit le pas d'intégration."""
         if value is None:
             pass
         elif float(value) > 0:
@@ -3665,6 +3648,7 @@ class DynamicalSimulator(object):
 
     @ObservationStep.setter
     def ObservationStep(self, value):
+        """Définit le pas d'observation."""
         if value is None:
             pass
         elif float(value) > 0:
@@ -3683,6 +3667,7 @@ class DynamicalSimulator(object):
 
     @InitialTime.setter
     def InitialTime(self, value):
+        """Définit l'instant initial de simulation."""
         if value is None:
             pass
         else:
@@ -3697,6 +3682,7 @@ class DynamicalSimulator(object):
 
     @FinalTime.setter
     def FinalTime(self, value):
+        """Définit l'instant final de simulation."""
         if value is None:
             pass
         else:
@@ -3711,6 +3697,7 @@ class DynamicalSimulator(object):
 
     @InitialCondition.setter
     def InitialCondition(self, value):
+        """Définit la condition initiale."""
         if value is None:
             pass
         else:
@@ -3723,7 +3710,7 @@ class DynamicalSimulator(object):
 
     @Autonomous.setter
     def Autonomous(self, value):
-        "Declare the system to be autonomous"
+        """Définit le fait que le système soit autonome ou pas."""
         if value is None:
             pass
         else:
@@ -3732,9 +3719,7 @@ class DynamicalSimulator(object):
     # --------------------------------------------------------------------------
 
     def ODETangentModel(self, t, pair):
-        """
-        ODE : return the tangent evaluation
-        """
+        """Renvoie l'évaluation tangente."""
         y, dy = pair
         if not (hasattr(self, "ODETLMModel") and callable(self.ODETLMModel)):
             raise NotImplementedError("No TLM available, please implement one")
@@ -3746,9 +3731,7 @@ class DynamicalSimulator(object):
             return self.ODETLMModel(t, y) @ dy
 
     def ODEAdjointModel(self, t, pair):
-        """
-        ODE : return the adjoint evaluation
-        """
+        """Renvoie l'évaluation adjointe."""
         y_in, y_out = pair
         if not (hasattr(self, "ODETLMModel") and callable(self.ODETLMModel)):
             raise NotImplementedError("No TLM available, please implement one")
@@ -3758,6 +3741,14 @@ class DynamicalSimulator(object):
         else:
             y_out = numpy.ravel(y_out)
             return numpy.transpose(self.ODETLMModel(t, y_in)) @ y_out
+
+    # Implémentation optionnelle, utilisée uniquement si présente et appelable
+    # def ODETLMModel(self, t, y):
+    # """Renvoie la matrice linéaire tangente."""
+    # nt = self.InitialCondition.size
+    # tlm = numpy.zeros((nt, nt))
+    # ...
+    # return tlm
 
     # --------------------------------------------------------------------------
 
@@ -3771,7 +3762,7 @@ class DynamicalSimulator(object):
         y0=None,
         autonomous=False,
     ):
-        "Explicit setting of EDO description at init time"
+        """Description explicite de l'ODE à l'initialisation."""
         self.Parameters = mu
         self.Integrator = integrator
         self.IntegrationStep = dt
@@ -3783,13 +3774,13 @@ class DynamicalSimulator(object):
     # --------------------------------------------------------------------------
 
     def _rk1_step(self, t, y, h, F):
-        "Euler integration schema"
+        """Schéma d'intégration d'Euler."""
         y = y + h * F(t, y)
         t = t + h
         return [t, y]
 
     def _rk2_step(self, t, y, h, F):
-        "Runge-Kutta integration schema of order 2 (RK2)"
+        """Schéma d'intégration Runge-Kutta d'ordre 2 (RK2)."""
         k1 = h * F(t, y)
         k2 = h * F(t + h / 2.0, y + k1 / 2.0)
         #
@@ -3798,7 +3789,7 @@ class DynamicalSimulator(object):
         return [t, y]
 
     def _rk3_step(self, t, y, h, F):
-        "Runge-Kutta integration schema of order 3 (RK3)"
+        """Schéma d'intégration Runge-Kutta d'ordre 3 (RK3)."""
         k1 = h * F(t, y)
         k2 = h * F(t + h / 2.0, y + k1 / 2.0)
         k3 = h * F(t + h, y - k1 + 2.0 * k2)
@@ -3808,7 +3799,7 @@ class DynamicalSimulator(object):
         return [t, y]
 
     def _rk4_step(self, t, y, h, F):
-        "Runge-Kutta integration schema of order 4 (RK4)"
+        """Schéma d'intégration Runge-Kutta d'ordre 4 (RK4)."""
         k1 = h * F(t, y)
         k2 = h * F(t + h / 2.0, y + k1 / 2.0)
         k3 = h * F(t + h / 2.0, y + k2 / 2.0)
@@ -3911,21 +3902,21 @@ class DynamicalSimulator(object):
         return [times, trajectory]
 
     def ForecastedPath(self, y1=None, t1=None, t2=None, mu=None):
-        "Trajectoire de t1 à t2, en partant de y1, pour un paramètre donné mu"
+        """Trajectoire de t1 à t2, en partant de y1, pour un paramètre donné mu."""
         #
         _, trajectory_from_t1_to_t2 = self.Integration(y1, t1, t2, mu)
         #
         return trajectory_from_t1_to_t2
 
     def ForecastedState(self, y1=None, t1=None, t2=None, mu=None):
-        "État à t2 en intégrant à partir de t1, y1, pour un paramètre donné mu"
+        """État à t2 en intégrant à partir de t1, y1, pour un paramètre donné mu."""
         #
         _, trajectory_from_t1_to_t2 = self.Integration(y1, t1, t2, mu)
         #
         return trajectory_from_t1_to_t2[-1, :]
 
     def StateTransition(self, y1=None):
-        "État y[n+1] intégré depuis y[n] sur un pas self.ObservationStep"
+        """État y[n+1] intégré depuis y[n] sur un pas d'observation."""
         if self.Autonomous:
             if not hasattr(self, "_do") or self._do is None:
                 raise ValueError(
@@ -3951,6 +3942,8 @@ class DynamicalSimulator(object):
         grid=False,
     ):
         """
+        Représente une collection de trajectoires côte à côte.
+
         t_s : série des instants t
         y_s : série des valeurs 1D des variables du système dynamique, pour
               chaque pas de temps, sous forme d'un tableau 2D de type:
@@ -3990,27 +3983,28 @@ class DynamicalSimulator(object):
 # ==============================================================================
 class Observer2Func(object):
     """
-    Création d'une fonction d'observateur a partir de son texte
+    Création d'une fonction d'observateur a partir de son texte.
     """
 
     __slots__ = ("__corps",)
 
     def __init__(self, corps=""):
+        """Stocke le corps de la fonction."""
         self.__corps = corps
 
     def func(self, var, info):
-        "Fonction d'observation"
+        """Fonction d'observation."""
         exec(self.__corps)
 
     def getfunc(self):
-        "Restitution du pointeur de fonction dans l'objet"
+        """Restitution du pointeur de fonction dans l'objet."""
         return self.func
 
 
 # ==============================================================================
 class CaseLogger(object):
     """
-    Conservation des commandes de création d'un cas
+    Conservation des commandes de création d'un cas.
     """
 
     __slots__ = (
@@ -4025,6 +4019,7 @@ class CaseLogger(object):
     def __init__(
         self, __name="", __objname="case", __addViewers=None, __addLoaders=None
     ):
+        """Inventorie les interfaces."""
         self.__name = str(__name)
         self.__objname = str(__objname)
         self.__logSerie = []
@@ -4049,7 +4044,7 @@ class CaseLogger(object):
     def register(
         self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False
     ):
-        "Enregistrement d'une commande individuelle"
+        """Enregistrement d'une commande individuelle."""
         if (
             __command is not None
             and __keys is not None
@@ -4067,7 +4062,7 @@ class CaseLogger(object):
             self.__switchoff = False
 
     def dump(self, __filename=None, __format="TUI", __upa=""):
-        "Restitution normalisée des commandes"
+        """Restitution normalisée des commandes."""
         if __format in self.__viewers:
             __formater = self.__viewers[__format](
                 self.__name, self.__objname, self.__logSerie
@@ -4077,7 +4072,7 @@ class CaseLogger(object):
         return __formater.dump(__filename, __upa)
 
     def load(self, __filename=None, __content=None, __object=None, __format="TUI"):
-        "Chargement normalisé des commandes"
+        """Chargement normalisé des commandes."""
         if __format in self.__loaders:
             __formater = self.__loaders[__format]()
         else:
@@ -4095,7 +4090,7 @@ def MultiFonction(
 ):
     """
     Pour une liste ordonnée de vecteurs en entrée, renvoie en sortie la liste
-    correspondante de valeurs de la fonction en argument
+    correspondante de valeurs de la fonction en argument.
     """
     # Vérifications et définitions initiales
     # logging.debug("MULTF Internal multifonction calculations begin with function %s"%(_sFunction.__name__,))

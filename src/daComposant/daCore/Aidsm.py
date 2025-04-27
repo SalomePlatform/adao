@@ -60,6 +60,7 @@ class Aidsm(object):
     )
 
     def __init__(self, name="", addViewers=None):
+        """Initialisation des objets et répertoires"""
         self.__name = str(name)
         self.__objname = None
         self.__directory = None
@@ -146,7 +147,7 @@ class Aidsm(object):
         Vector=None,
         VectorSerie=None,
     ):
-        "Interface unique de définition de variables d'entrées par argument"
+        """Interface unique de définition de variables d'entrées par argument"""
         self.__case.register("set", dir(), locals(), None, True)
         try:
             if Concept in (
@@ -268,7 +269,7 @@ class Aidsm(object):
         Scheduler=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "Background"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -298,7 +299,7 @@ class Aidsm(object):
         Scheduler=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "CheckingPoint"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -328,7 +329,7 @@ class Aidsm(object):
         Scheduler=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "ControlInput"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -358,7 +359,7 @@ class Aidsm(object):
         Scheduler=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "Observation"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = State(
@@ -386,7 +387,7 @@ class Aidsm(object):
         ObjectMatrix=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "BackgroundError"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
@@ -412,7 +413,7 @@ class Aidsm(object):
         ObjectMatrix=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "ObservationError"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
@@ -438,7 +439,7 @@ class Aidsm(object):
         ObjectMatrix=None,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "EvolutionError"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = Covariance(
@@ -468,7 +469,7 @@ class Aidsm(object):
         InputFunctionAsMulti=False,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "ObservationOperator"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
@@ -503,7 +504,7 @@ class Aidsm(object):
         InputFunctionAsMulti=False,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "EvolutionModel"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
@@ -538,7 +539,7 @@ class Aidsm(object):
         InputFunctionAsMulti=False,
         Checked=False,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "ControlModel"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = FullOperator(
@@ -560,7 +561,7 @@ class Aidsm(object):
         return 0
 
     def setName(self, String=None):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         self.__case.register("setName", dir(), locals())
         if String is not None:
             self.__name = str(String)
@@ -569,7 +570,7 @@ class Aidsm(object):
         self.__StoredInputs["Name"] = self.__name
 
     def setDirectory(self, String=None):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         self.__case.register("setDirectory", dir(), locals())
         if os.path.isdir(os.path.abspath(str(String))):
             self.__directory = os.path.abspath(str(String))
@@ -578,7 +579,7 @@ class Aidsm(object):
         self.__StoredInputs["Directory"] = self.__directory
 
     def setDebug(self, __level=10):
-        "NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"
+        """NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"""
         self.__case.register("setDebug", dir(), locals())
         log = logging.getLogger()
         log.setLevel(__level)
@@ -590,7 +591,7 @@ class Aidsm(object):
         return 0
 
     def setNoDebug(self):
-        "NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"
+        """NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50"""
         self.__case.register("setNoDebug", dir(), locals())
         log = logging.getLogger()
         log.setLevel(logging.WARNING)
@@ -599,7 +600,7 @@ class Aidsm(object):
         return 0
 
     def setAlgorithmParameters(self, Algorithm=None, Parameters=None, Script=None):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "AlgorithmParameters"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = AlgorithmAndParameters(
@@ -611,7 +612,7 @@ class Aidsm(object):
         return 0
 
     def updateAlgorithmParameters(self, Parameters=None, Script=None):
-        "Mise à jour d'un concept de calcul"
+        """Mise à jour d'un concept de calcul"""
         Concept = "AlgorithmParameters"
         if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
             raise ValueError(
@@ -625,7 +626,7 @@ class Aidsm(object):
         return 0
 
     def setRegulationParameters(self, Algorithm=None, Parameters=None, Script=None):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "RegulationParameters"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = RegulationAndParameters(
@@ -637,7 +638,7 @@ class Aidsm(object):
         return 0
 
     def setSupplementaryParameters(self, Parameters=None, Script=None):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "SupplementaryParameters"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept] = ExternalParameters(
@@ -648,7 +649,7 @@ class Aidsm(object):
         return 0
 
     def updateSupplementaryParameters(self, Parameters=None, Script=None):
-        "Mise à jour d'un concept de calcul"
+        """Mise à jour d'un concept de calcul"""
         Concept = "SupplementaryParameters"
         if Concept not in self.__adaoObject or self.__adaoObject[Concept] is None:
             self.__adaoObject[Concept] = ExternalParameters(name=Concept)
@@ -670,7 +671,7 @@ class Aidsm(object):
         SyncObs=True,
         Scheduler=None,
     ):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "Observer"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept].append(
@@ -691,7 +692,7 @@ class Aidsm(object):
         return 0
 
     def removeObserver(self, Variable=None, ObjectFunction=None):
-        "Permet de retirer un observer à une ou des variable nommées"
+        """Permet de retirer un observer à une ou des variable nommées"""
         if "AlgorithmParameters" not in self.__adaoObject:
             raise ValueError(
                 "No algorithm registred, ask for one before removing observers"
@@ -722,7 +723,7 @@ class Aidsm(object):
                 )
 
     def setUserPostAnalysis(self, Template=None, String=None, Script=None):
-        "Définition d'un concept de calcul"
+        """Définition d'un concept de calcul"""
         Concept = "UserPostAnalysis"
         self.__case.register("set" + Concept, dir(), locals())
         self.__adaoObject[Concept].append(
@@ -740,7 +741,7 @@ class Aidsm(object):
     # -----------------------------------------------------------
 
     def get(self, Concept=None, noDetails=True):
-        "Récupération d'une sortie du calcul"
+        """Récupération d'une sortie du calcul"""
         if Concept is not None:
             try:
                 self.__case.register(
@@ -910,7 +911,7 @@ class Aidsm(object):
     # -----------------------------------------------------------
 
     def execute(self, Executor=None, SaveCaseInFile=None, nextStep=False):
-        "Lancement du calcul"
+        """Lancement du calcul"""
         self.__case.register("execute", dir(), locals(), None, True)
         self.updateAlgorithmParameters(Parameters={"nextStep": bool(nextStep)})
         if not nextStep:
@@ -937,7 +938,7 @@ class Aidsm(object):
         return 0
 
     def __executePythonScheme(self, FileName=None):
-        "Lancement du calcul"
+        """Lancement du calcul"""
         self.__case.register("executePythonScheme", dir(), locals())
         if FileName is not None:
             self.dump(FileName, "TUI")
@@ -963,7 +964,7 @@ class Aidsm(object):
         return 0
 
     def __executeYACSScheme(self, FileName=None):
-        "Lancement du calcul"
+        """Lancement du calcul"""
         self.__case.register("executeYACSScheme", dir(), locals())
         self.dump(FileName, "YACS")
         self.__adaoObject["AlgorithmParameters"].executeYACSScheme(FileName)
@@ -972,12 +973,12 @@ class Aidsm(object):
     # -----------------------------------------------------------
 
     def dump(self, FileName=None, Formater="TUI"):
-        "Restitution normalisée des commandes"
+        """Restitution normalisée des commandes"""
         __Upa = "\n".join(self.__PostAnalysis)
         return self.__case.dump(FileName, Formater, __Upa)
 
     def load(self, FileName=None, Content=None, Object=None, Formater="TUI"):
-        "Chargement normalisé des commandes"
+        """Chargement normalisé des commandes"""
         __commands = self.__case.load(FileName, Content, Object, Formater)
         from numpy import array, matrix  # noqa: F401
 
@@ -999,7 +1000,7 @@ class Aidsm(object):
         FileNameTo=None,
         FormaterTo="TUI",
     ):
-        "Conversion normalisée des commandes"
+        """Conversion normalisée des commandes"""
         return self.load(
             FileName=FileNameFrom,
             Content=ContentFrom,
@@ -1008,12 +1009,13 @@ class Aidsm(object):
         ).dump(FileName=FileNameTo, Formater=FormaterTo)
 
     def clear(self):
-        "Effacement du contenu du cas en cours"
+        """Effacement du contenu du cas en cours"""
         self.__init__(self.__name)
 
     # -----------------------------------------------------------
 
     def __with_directory(self, __filename=None):
+        """Complète si possible le fichier avec le répertoire"""
         if os.path.exists(str(__filename)):
             __fullpath = __filename
         elif os.path.exists(os.path.join(str(self.__directory), str(__filename))):
@@ -1023,7 +1025,7 @@ class Aidsm(object):
         return __fullpath
 
     def __retrieve_objname(self):
-        "Ne pas utiliser dans le __init__, la variable appelante n'existe pas encore"
+        """Ne pas utiliser dans le __init__, la variable appelante n'existe pas encore"""
         __names = []
         for level in reversed(inspect.stack()):
             __names += [
@@ -1039,7 +1041,7 @@ class Aidsm(object):
         return self.__objname
 
     def __dir__(self):
-        "Clarifie la visibilité des méthodes"
+        """Clarifie la visibilité des méthodes"""
         return [
             "set",
             "get",
@@ -1052,15 +1054,17 @@ class Aidsm(object):
         ]
 
     def __str__(self):
-        "Représentation pour impression (mais pas repr)"
+        """Représentation pour impression (mais pas repr)"""
         msg = self.dump(None, "SimpleReportInPlainTxt")
         return msg
 
     def sysinfo(self, title=""):
+        """Représentation des informations système pour impression"""
         msg = PlatformInfo.PlatformInfo().getAllInformation("  ", title)
         return msg
 
     def callinfo(self, __prefix="  "):
+        """Collecte et formate les nombres d'appels des opérateurs"""
         msg = ""
         for oname in ["ObservationOperator", "EvolutionModel"]:
             if hasattr(self.__adaoObject[oname], "nbcalls"):
@@ -1076,17 +1080,29 @@ class Aidsm(object):
                 msg += "\n"
         return msg
 
-    def callnumbers(self):
+    def callnumbers(self, key=None, subkey=None):
+        """Collecte les nombres d'appels des opérateurs"""
         msg = {}
         for oname in ["ObservationOperator", "EvolutionModel"]:
             if hasattr(self.__adaoObject[oname], "nbcalls"):
                 msg[oname] = self.__adaoObject[oname].nbcalls()
                 for otype in msg[oname]:
                     msg[oname][otype] = msg[oname][otype][0]
+        if (key is not None) and (key in msg) and (subkey is None):
+            msg = msg[key]
+        elif (
+            (key is not None)
+            and (key in msg)
+            and (subkey is not None)
+            and (subkey in msg[key])
+        ):
+            msg = msg[key][subkey]
+        else:
+            pass
         return msg
 
     def prepare_to_pickle(self):
-        "Retire les variables non pickelisables, avec recopie efficace"
+        """Retire les variables non pickelisables, avec recopie efficace"""
         if self.__adaoObject["AlgorithmParameters"] is not None:
             for k in self.__adaoObject["AlgorithmParameters"].keys():
                 if k == "Algorithm":

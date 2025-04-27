@@ -34,7 +34,7 @@ import os.path
 
 class _ReportPartM__(object):
     """
-    Store and retrieve the data for C: internal class
+    Store and retrieve the data for C: internal class.
     """
 
     __slots__ = ("__part", "__styles", "__content")
@@ -62,7 +62,7 @@ class _ReportPartM__(object):
 
 class _ReportM__(object):
     """
-    Store and retrieve the data for C: internal class
+    Store and retrieve the data for C: internal class.
     """
 
     __slots__ = ("__document",)
@@ -93,7 +93,7 @@ class _ReportM__(object):
 
 class __ReportC__(object):
     """
-    Get user commands, update M and V: user intertace to create the report
+    Get user commands, update M and V: user intertace to create the report.
     """
 
     __slots__ = ()
@@ -114,7 +114,7 @@ class __ReportC__(object):
 
 class __ReportV__(object):
     """
-    Interact with user and C: template for reports
+    Interact with user and C: template for reports.
     """
 
     __slots__ = ("c",)
@@ -153,7 +153,7 @@ class __ReportV__(object):
 
 class ReportViewInHtml(__ReportV__):
     """
-    Report in HTML
+    Report in HTML.
     """
 
     __slots__ = ()
@@ -208,7 +208,7 @@ class ReportViewInHtml(__ReportV__):
 
 class ReportViewInRst(__ReportV__):
     """
-    Report in RST
+    Report in RST.
     """
 
     __slots__ = ()
@@ -273,7 +273,7 @@ class ReportViewInRst(__ReportV__):
 
 class ReportViewInPlainTxt(__ReportV__):
     """
-    Report in plain TXT
+    Report in plain TXT.
     """
 
     #

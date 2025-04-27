@@ -197,7 +197,8 @@ def ienkf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="IEnKF12",
         selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
-        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
+                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( _HXa )
         if selfA._toStore("InnovationAtCurrentAnalysis"):
             selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )

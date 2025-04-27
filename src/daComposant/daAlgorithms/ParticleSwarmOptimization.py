@@ -40,9 +40,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SPSO-2011-AIS",
                 "SPSO-2011-SIS",
                 "SPSO-2011-PSIS",
+                "CanonicalPSO-VLS",
+                "OGCR-VLS",
             ],
             listadv  = [
                 "PSO",
+                "PSO-VLS",
+                "VLS",
             ],
         )
         self.defineRequiredParameter(
@@ -166,6 +170,27 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ],
         )
         self.defineRequiredParameter(
+            name     = "HybridNumberOfLocalHunters",
+            default  = 5,
+            typecast = int,
+            message  = "Nombre maximal d'insectes accélérés en hybride variationnel",
+            minval   = -1,
+        )
+        self.defineRequiredParameter(
+            name     = "HybridMaximumNumberOfIterations",
+            default  = 15000,
+            typecast = int,
+            message  = "Nombre maximal de pas d'optimisation en hybride variationnel",
+            minval   = -1,
+        )
+        self.defineRequiredParameter(
+            name     = "HybridCostDecrementTolerance",
+            default  = 1.e-7,
+            typecast = float,
+            message  = "Diminution relative minimale du coût lors de l'arrêt en hybride variationnel",
+            minval   = 0.,
+        )
+        self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
@@ -260,6 +285,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         elif self._parameters["Variant"] in ["SPSO-2011-PSIS"]:
             ecwpspso.ecwpspso(self, Xb, Y, HO, R, B)
+        #
+        # --------------------------
+        # Default VLS = CanonicalPSO-VLS = PSO-VLS
+        elif self._parameters["Variant"] in ["CanonicalPSO-VLS", "PSO-VLS", "VLS"]:
+            ecwnpso.ecwnpso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
+        #
+        elif self._parameters["Variant"] in ["OGCR-VLS"]:
+            ecwopso.ecwopso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
         #
         # --------------------------
         else:

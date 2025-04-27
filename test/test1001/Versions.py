@@ -137,7 +137,7 @@ class Test_Versions(unittest.TestCase):
 
 def compare_versions(v1,v2):
     "Comparaison v1 >= v2"
-    for s in ['+', 'rc1', 'rc2', 'rc3']:
+    for s in ['+', 'rc1', 'rc2', 'rc3', 'dfsg1', 'dfsg2', 'dfsg3', 'dfsg4']:
         v1 = v1.replace(s,'',1)
         v2 = v2.replace(s,'',1)
     v11,v12,v13 = list(map(float,v1.split('.')))

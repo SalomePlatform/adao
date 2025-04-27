@@ -21,7 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-Normalized interface for ADAO scripting (full version API)
+Normalized interface for ADAO scripting (full version API).
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["AssimilationStudy"]
@@ -32,12 +32,13 @@ from daCore.Aidsm import Aidsm as _Aidsm
 # ==============================================================================
 class AssimilationStudy(_Aidsm):
     """
-    Generic ADAO TUI builder
+    Generic ADAO TUI builder.
     """
 
     __slots__ = ()
 
     def __init__(self, name=""):
+        """Initialisation induite."""
         _Aidsm.__init__(self, name)
 
 

@@ -21,11 +21,12 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-Ce module permet de mettre en place un logging utilisable partout dans
-l'application, par défaut à la console, et si nécessaire dans un fichier.
+Ce module permet de mettre en place un logging général pour l'application.
 
-Il doit être appelé en premier dans Aidsm (mais pas directement dans les
-applications utilisateurs), en l'important et en instanciant un objet :
+Il est utilisable partout dans l'application, permet une sortie par défaut à la
+console, et si nécessaire une sortie dans un fichier. Il doit être appelé en
+premier dans Aidsm (mais pas directement dans les applications utilisateurs),
+en l'important et en instanciant un objet :
 
     import ExtendedLogging ; ExtendedLogging.ExtendedLogging()
 
@@ -92,8 +93,10 @@ LOGFILE = os.path.join(os.path.abspath(os.curdir), "AdaoOutputLogfile.log")
 # ==============================================================================
 class ExtendedLogging(object):
     """
-    Logger général pour disposer conjointement de la sortie standard et de la
-    sortie sur fichier
+    Logger général.
+
+    Permet de disposer conjointement de la sortie standard et de la sortie sur
+    fichier.
     """
 
     __slots__ = ("__logfile",)
@@ -169,14 +172,15 @@ class ExtendedLogging(object):
 
     def setLogfileLevel(self, level=logging.NOTSET):
         """
-        Permet de changer le niveau des messages stockés en fichier. Il ne sera
-        pris en compte que s'il est supérieur au niveau global.
+        Permet de changer le niveau des messages stockés en fichier.
+
+        Il ne sera pris en compte que s'il est supérieur au niveau global.
         """
         self.__logfile.setLevel(level)
 
     def getLevel(self):
         """
-        Renvoie le niveau de logging sous forme texte
+        Renvoie le niveau de logging sous forme texte.
         """
         return logging.getLevelName(logging.getLogger().getEffectiveLevel())
 

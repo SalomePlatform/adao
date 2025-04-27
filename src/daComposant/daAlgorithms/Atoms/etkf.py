@@ -340,7 +340,8 @@ def etkf( selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
         selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
-        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
+                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( _HXa )
         if selfA._toStore("InnovationAtCurrentAnalysis"):
             selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
@@ -356,8 +357,7 @@ def etkf( selfA, Xb, Y, U, HO, EM, CM, R, B, Q,
             selfA.StoredVariables["BMA"].store( EMX - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( - HX_predicted + Ynpu )
-        if selfA._toStore("SimulatedObservationAtCurrentState") \
-                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+        if selfA._toStore("SimulatedObservationAtCurrentState"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
         # ---> autres
         if selfA._parameters["StoreInternalVariables"] \

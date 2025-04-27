@@ -37,6 +37,11 @@ class TwoDimensionalRosenbrockFunctionR1960:
         values. There exists a global minimum at (x,y) = (a,a²) for which
         f(x,y) = 0.
 
+    There are two versions of the function: 1D is the original one (and the
+    default), 2D is the one where 2-dimensionnal results allow to directly
+    build the original Rosenbrock in a L2 norm applied on the results with
+    (0,0) goal, then replacing the L2 criterion by the Rosenbrock one.
+
     This is the non-linear non-convex parametric function of the reference:
         Rosenbrock, H. H. (1960). "An Automatic Method for Finding the Greatest
         or Least Value of a Function", The Computer Journal, vol.3 (3),
@@ -59,8 +64,15 @@ class TwoDimensionalRosenbrockFunctionR1960:
         #
         return sxymu
 
-    def FunctionH(self, xy, a=1, b=100):
-        "Construit la fonction de Rosenbrock en L2 (Scipy 1.8.1 p.1322)"
+    def FunctionH1D(self, xy, a=1, b=100):
+        "Construit la fonction de Rosenbrock pour un champ xy=(x,y)"
+        xy = numpy.ravel(xy).reshape((-1, 2))  # Deux colonnes
+        x = xy[:, 0]
+        y = xy[:, 1]
+        return (a - x) ** 2 + b * (y - x**2) ** 2
+
+    def FunctionH2D(self, xy, a=1, b=100):
+        "Construit la fonction de Rosenbrock spatialisée (Scipy 1.8.1 p.1322)"
         xy = numpy.ravel(xy).reshape((-1, 2))  # Deux colonnes
         x = xy[:, 0]
         y = xy[:, 1]
@@ -97,6 +109,8 @@ class TwoDimensionalRosenbrockFunctionR1960:
 
     OneRealisation = FieldZ
 
+    FunctionH = FunctionH1D
+
 
 # ==============================================================================
 class LocalTest(unittest.TestCase):
@@ -105,18 +119,41 @@ class LocalTest(unittest.TestCase):
         print("\nAUTODIAGNOSTIC\n==============\n")
         print("    " + TwoDimensionalRosenbrockFunctionR1960().__doc__.strip())
 
-    def test001(self):
+    def test001_Default(self):
         numpy.random.seed(123456789)
         Equation = TwoDimensionalRosenbrockFunctionR1960()
 
         optimum = Equation.FunctionH([1, 1])
-        self.assertTrue(max(optimum.flat) <= 0.0)
+        self.assertTrue(optimum <= 0.0)
 
         optimum = Equation.FunctionH([0.5, 0.25], a=0.5)
+        self.assertTrue(optimum <= 0.0)
+
+        print("\n    Tests default OK")
+
+    def test002_1D(self):
+        numpy.random.seed(123456789)
+        Equation = TwoDimensionalRosenbrockFunctionR1960()
+
+        optimum = Equation.FunctionH1D([1, 1])
+        self.assertTrue(optimum <= 0.0)
+
+        optimum = Equation.FunctionH1D([0.5, 0.25], a=0.5)
+        self.assertTrue(optimum <= 0.0)
+
+        print("\n    Tests 1D OK")
+
+    def test003_2D(self):
+        numpy.random.seed(123456789)
+        Equation = TwoDimensionalRosenbrockFunctionR1960()
+
+        optimum = Equation.FunctionH2D([1, 1])
         self.assertTrue(max(optimum.flat) <= 0.0)
 
-    def tearDown(cls):
-        print("\n    Tests OK\n")
+        optimum = Equation.FunctionH2D([0.5, 0.25], a=0.5)
+        self.assertTrue(max(optimum.flat) <= 0.0)
+
+        print("\n    Tests 2D OK\n")
 
 
 # ==============================================================================

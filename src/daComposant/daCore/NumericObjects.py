@@ -20,7 +20,7 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-__doc__ = """
+"""
 Définit les objets numériques génériques.
 """
 __author__ = "Jean-Philippe ARGAUD"
@@ -46,6 +46,7 @@ mfp = PlatformInfo().MaximumPrecision()
 
 # ==============================================================================
 def ExecuteFunction(triplet):
+    """Fonction d'exécution d'un objet fonction."""
     assert len(triplet) == 3, "Incorrect number of arguments"
     X, xArgs, funcrepr = triplet
     __X = numpy.ravel(X).reshape((-1, 1))
@@ -65,13 +66,14 @@ def ExecuteFunction(triplet):
 # ==============================================================================
 class FDApproximation(object):
     """
-    Cette classe sert d'interface pour définir les opérateurs approximés. A la
-    création d'un objet, en fournissant une fonction "Function", on obtient un
-    objet qui dispose de 3 méthodes "DirectOperator", "TangentOperator" et
-    "AdjointOperator". On contrôle l'approximation DF avec l'incrément
-    multiplicatif "increment" valant par défaut 1%, ou avec l'incrément fixe
-    "dX" qui sera multiplié par "increment" (donc en %), et on effectue de DF
-    centrées si le booléen "centeredDF" est vrai.
+    Cette classe sert d'interface pour définir les opérateurs approximés.
+
+    A la création d'un objet, en fournissant une fonction "Function", on
+    obtient un objet qui dispose de 3 méthodes "DirectOperator",
+    "TangentOperator" et "AdjointOperator". On contrôle l'approximation DF avec
+    l'incrément multiplicatif "increment" valant par défaut 1%, ou avec
+    l'incrément fixe "dX" qui sera multiplié par "increment" (donc en %), et on
+    effectue de DF centrées si le booléen "centeredDF" est vrai.
     """
 
     __slots__ = (
@@ -117,6 +119,7 @@ class FDApproximation(object):
         mpWorkers=None,
         mfEnabled=False,
     ):
+        """Vérification des options et définition du stockage."""
         #
         self.__name = str(name)
         self.__extraArgs = extraArguments
@@ -257,6 +260,7 @@ class FDApproximation(object):
 
     # ---------------------------------------------------------
     def __doublon__(self, __e, __l, __n, __v=None):
+        """Recherche et renvoi d'un calcul précédemment effectué."""
         __ac, __iac = False, -1
         for i in range(len(__l) - 1, -1, -1):
             if numpy.linalg.norm(__e - __l[i]) < self.__tolerBP * __n[i]:
@@ -271,7 +275,7 @@ class FDApproximation(object):
 
     # ---------------------------------------------------------
     def __listdotwith__(self, __LMatrix, __dotWith=None, __dotTWith=None):
-        "Produit incrémental d'une matrice liste de colonnes avec un vecteur"
+        """Produit incrémental d'une matrice liste de colonnes avec un vecteur."""
         if not isinstance(__LMatrix, (list, tuple)):
             raise TypeError(
                 "Columnwise list matrix has not the proper type: %s" % type(__LMatrix)
@@ -313,8 +317,10 @@ class FDApproximation(object):
     # ---------------------------------------------------------
     def TangentMatrix(self, X, dotWith=None, dotTWith=None):
         """
-        Calcul de l'opérateur tangent comme la Jacobienne par différences finies,
-        c'est-à-dire le gradient de H en X. On utilise des différences finies
+        Calcul de l'opérateur tangent.
+
+        Il est exprimé comme la Jacobienne par différences finies, c'est-à-dire
+        le gradient de H en X. On utilise des différences finies
         directionnelles autour du point X. X est un numpy.ndarray.
 
         Différences finies centrées (approximation d'ordre 2):
@@ -631,7 +637,7 @@ class FDApproximation(object):
 
 # ==============================================================================
 def SetInitialDirection(__Direction=[], __Amplitude=1.0, __Position=None):
-    "Établit ou élabore une direction avec une amplitude"
+    """Établit ou élabore une direction avec une amplitude."""
     #
     if len(__Direction) == 0 and __Position is None:
         raise ValueError(
@@ -663,7 +669,7 @@ def SetInitialDirection(__Direction=[], __Amplitude=1.0, __Position=None):
 
 # ==============================================================================
 def EnsembleOfCenteredPerturbations(__bgCenter, __bgCovariance, __nbMembers):
-    "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
+    """Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés."""
     #
     __bgCenter = numpy.ravel(__bgCenter)[:, None]
     if __nbMembers < 1:
@@ -687,12 +693,14 @@ def EnsembleOfCenteredPerturbations(__bgCenter, __bgCovariance, __nbMembers):
 def EnsembleOfBackgroundPerturbations(
     __bgCenter, __bgCovariance, __nbMembers, __withSVD=True
 ):
-    "Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés"
+    """Génération d'un ensemble de taille __nbMembers-1 d'états aléatoires centrés."""
 
     def __CenteredRandomAnomalies(Zr, N):
         """
-        Génère une matrice de N anomalies aléatoires centrées sur Zr selon les
-        notes manuscrites de MB et conforme au code de PS avec eps = -1
+        Génère une matrice de N anomalies aléatoires.
+
+        Les anomalies sont centrées sur Zr selon les notes manuscrites de MB et
+        conforme au code de PS avec eps = -1
         """
         eps = -1
         Q = numpy.identity(N - 1) - numpy.ones((N - 1, N - 1)) / numpy.sqrt(N) / (
@@ -751,7 +759,7 @@ def EnsembleOfBackgroundPerturbations(
 
 # ==============================================================================
 def EnsembleMean(__Ensemble):
-    "Renvoie la moyenne empirique d'un ensemble"
+    """Renvoie la moyenne empirique d'un ensemble."""
     return (
         numpy.asarray(__Ensemble)
         .mean(axis=1, dtype=mfp)
@@ -762,7 +770,7 @@ def EnsembleMean(__Ensemble):
 
 # ==============================================================================
 def EnsembleOfAnomalies(__Ensemble, __OptMean=None, __Normalisation=1.0):
-    "Renvoie les anomalies centrées à partir d'un ensemble"
+    """Renvoie les anomalies centrées à partir d'un ensemble."""
     if __OptMean is None:
         __Em = EnsembleMean(__Ensemble)
     else:
@@ -773,7 +781,7 @@ def EnsembleOfAnomalies(__Ensemble, __OptMean=None, __Normalisation=1.0):
 
 # ==============================================================================
 def EnsembleErrorCovariance(__Ensemble, __Quick=False):
-    "Renvoie l'estimation empirique de la covariance d'ensemble"
+    """Renvoie l'estimation empirique de la covariance d'ensemble."""
     if __Quick:
         # Covariance rapide mais rarement définie positive
         __Covariance = numpy.cov(__Ensemble)
@@ -794,7 +802,7 @@ def EnsembleErrorCovariance(__Ensemble, __Quick=False):
 
 # ==============================================================================
 def SingularValuesEstimation(__Ensemble, __Using="SVDVALS"):
-    "Renvoie les valeurs singulières de l'ensemble et leur carré"
+    """Renvoie les valeurs singulières de l'ensemble et leur carré."""
     if __Using == "SVDVALS":  # Recommandé
         __sv = scipy.linalg.svdvals(__Ensemble)
         __svsq = __sv**2
@@ -829,7 +837,7 @@ def SingularValuesEstimation(__Ensemble, __Using="SVDVALS"):
 
 # ==============================================================================
 def MaxL2NormByColumn(__Ensemble, __LcCsts=False, __IncludedPoints=[]):
-    "Maximum des normes L2 calculées par colonne"
+    """Maximum des normes L2 calculées par colonne."""
     if __LcCsts and len(__IncludedPoints) > 0:
         normes = numpy.linalg.norm(
             numpy.take(__Ensemble, __IncludedPoints, axis=0, mode="clip"),
@@ -843,7 +851,7 @@ def MaxL2NormByColumn(__Ensemble, __LcCsts=False, __IncludedPoints=[]):
 
 
 def MaxLinfNormByColumn(__Ensemble, __LcCsts=False, __IncludedPoints=[]):
-    "Maximum des normes Linf calculées par colonne"
+    """Maximum des normes Linf calculées par colonne."""
     if __LcCsts and len(__IncludedPoints) > 0:
         normes = numpy.linalg.norm(
             numpy.take(__Ensemble, __IncludedPoints, axis=0, mode="clip"),
@@ -870,7 +878,7 @@ def InterpolationErrorByColumn(
     __RMU=False,  # ReduceMemoryUse                             # Commun
     __FTL=False,  # ForceTril                                   # Commun
 ):
-    "Analyse des normes d'erreurs d'interpolation calculées par colonne"
+    """Analyse des normes d'erreurs d'interpolation calculées par colonne."""
     if __ErrorNorm == "L2":
         NormByColumn = MaxL2NormByColumn
     else:
@@ -951,7 +959,7 @@ def InterpolationErrorByColumn(
 
 # ==============================================================================
 def EnsemblePerturbationWithGivenCovariance(__Ensemble, __Covariance, __Seed=None):
-    "Ajout d'une perturbation à chaque membre d'un ensemble selon une covariance prescrite"
+    """Ajout d'une perturbation à chaque membre d'un ensemble selon une covariance prescrite."""
     if hasattr(__Covariance, "assparsematrix"):
         if (abs(__Ensemble).mean() > mpr) and (
             abs(__Covariance.assparsematrix()) / abs(__Ensemble).mean() < mpr
@@ -1016,9 +1024,9 @@ def CovarianceInflation(
     __InputCovOrEns, __InflationType=None, __InflationFactor=None, __BackgroundCov=None
 ):
     """
-    Inflation applicable soit sur Pb ou Pa, soit sur les ensembles EXb ou EXa
+    Inflation applicable soit sur Pb ou Pa, soit sur les ensembles EXb ou EXa.
 
-    Synthèse : Hunt 2007, section 2.3.5
+    Synthèse : Hunt 2007, section 2.3.5.
     """
     if __InflationFactor is None:
         return __InputCovOrEns
@@ -1118,7 +1126,7 @@ def CovarianceInflation(
 
 # ==============================================================================
 def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
-    "Estimation de la Hessienne"
+    """Estimation de la Hessienne."""
     #
     __HessienneI = []
     for i in range(int(__nb)):
@@ -1165,7 +1173,7 @@ def HessienneEstimation(__selfA, __nb, __HaM, __HtM, __BI, __RI):
 
 # ==============================================================================
 def QuantilesEstimations(selfA, A, Xa, HXa=None, Hm=None, HtM=None):
-    "Estimation des quantiles a posteriori à partir de A>0 (selfA est modifié)"
+    """Estimation des quantiles a posteriori à partir de A>0 (selfA est modifié)."""
     nbsamples = selfA._parameters["NumberOfSamplesForQuantiles"]
     #
     # Traitement des bornes
@@ -1265,7 +1273,7 @@ def QuantilesEstimations(selfA, A, Xa, HXa=None, Hm=None, HtM=None):
 
 # ==============================================================================
 def ForceNumericBounds(__Bounds, __infNumbers=True):
-    "Force les bornes à être des valeurs numériques, sauf si globalement None"
+    """Force les bornes à être des valeurs numériques, sauf si globalement None."""
     # Conserve une valeur par défaut à None s'il n'y a pas de bornes
     if __Bounds is None:
         return None
@@ -1287,7 +1295,7 @@ def ForceNumericBounds(__Bounds, __infNumbers=True):
 
 # ==============================================================================
 def RecentredBounds(__Bounds, __Center, __Scale=None):
-    "Recentre les bornes autour de 0, sauf si globalement None"
+    """Recentre les bornes autour de 0, sauf si globalement None."""
     # Conserve une valeur par défaut à None s'il n'y a pas de bornes
     if __Bounds is None:
         return None
@@ -1304,7 +1312,7 @@ def RecentredBounds(__Bounds, __Center, __Scale=None):
 
 # ==============================================================================
 def ApplyBounds(__Vector, __Bounds, __newClip=True):
-    "Applique des bornes numériques à un point"
+    """Applique des bornes numériques à un état."""
     # Conserve une valeur par défaut s'il n'y a pas de bornes
     if __Bounds is None:
         return __Vector
@@ -1344,6 +1352,7 @@ def ApplyBounds(__Vector, __Bounds, __newClip=True):
 def VariablesAndIncrementsBounds(
     __Bounds, __BoxBounds, __Xini, __Name, __Multiplier=1.0
 ):
+    """Définit des bornes cohérentes pour les variables et leurs incréments."""
     __Bounds = ForceNumericBounds(__Bounds)
     __BoxBounds = ForceNumericBounds(__BoxBounds)
     if __Bounds is None and __BoxBounds is None:
@@ -1371,14 +1380,14 @@ def VariablesAndIncrementsBounds(
 
 # ==============================================================================
 def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __SuppPars):
-    "Recentre l'ensemble Xn autour de l'analyse 3DVAR"
+    """Recentre l'ensemble Xn autour de l'analyse 3DVAR."""
     __Betaf = __SuppPars["HybridCovarianceEquilibrium"]
     #
     Xf = EnsembleMean(__EnXf)
     Pf = Covariance(asCovariance=EnsembleErrorCovariance(__EnXf))
     Pf = (1 - __Betaf) * __B.asfullmatrix(Xf.size) + __Betaf * Pf
     #
-    selfB = PartialAlgorithm("3DVAR")
+    selfB = PartialAlgorithm("Apply3DVarRecentringOnEnsemble")
     selfB._parameters["Minimizer"] = "LBFGSB"
     selfB._parameters["MaximumNumberOfIterations"] = __SuppPars[
         "HybridMaximumNumberOfIterations"
@@ -1386,12 +1395,12 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Sup
     selfB._parameters["CostDecrementTolerance"] = __SuppPars[
         "HybridCostDecrementTolerance"
     ]
+    selfB._parameters["Bounds"] = None
     selfB._parameters["ProjectedGradientTolerance"] = -1
     selfB._parameters["GradientNormTolerance"] = 1.0e-05
     selfB._parameters["StoreInternalVariables"] = False
     selfB._parameters["optiprint"] = -1
     selfB._parameters["optdisp"] = 0
-    selfB._parameters["Bounds"] = None
     from daAlgorithms.Atoms import std3dvar
 
     std3dvar.std3dvar(selfB, Xf, Xf, __Ynpu, None, __HO, None, __R, Pf)
@@ -1402,8 +1411,63 @@ def Apply3DVarRecentringOnEnsemble(__EnXn, __EnXf, __Ynpu, __HO, __R, __B, __Sup
 
 
 # ==============================================================================
+def VarLocalSearch(__Xn, __Xb, __Ynpu, __HO, __R, __B, __SuppPars):
+    """Effectue une recherche variationnelle élémentaire à partir du point Xn."""
+    selfB = PartialAlgorithm("VarLocalSearch")
+    selfB._parameters["Minimizer"] = "LBFGSB"
+    selfB._parameters["MaximumNumberOfIterations"] = __SuppPars[
+        "HybridMaximumNumberOfIterations"
+    ]
+    selfB._parameters["CostDecrementTolerance"] = __SuppPars[
+        "HybridCostDecrementTolerance"
+    ]
+    selfB._parameters["Bounds"] = __SuppPars["Bounds"]
+    selfB._parameters["ProjectedGradientTolerance"] = -1
+    selfB._parameters["GradientNormTolerance"] = 1.0e-05
+    selfB._parameters["StoreInternalVariables"] = False
+    selfB._parameters["optiprint"] = -1
+    selfB._parameters["optdisp"] = 0
+    #
+    if __SuppPars["QualityCriterion"] in [
+        "AugmentedWeightedLeastSquares",
+        "AWLS",
+        "DA",
+    ]:
+        Xn = __Xn.reshape((-1, 1))
+        Xb = __Xb.reshape((-1, 1))
+        from daAlgorithms.Atoms import std3dvar
+
+        std3dvar.std3dvar(selfB, Xn, Xb, __Ynpu, None, __HO, None, __R, __B)
+    elif __SuppPars["QualityCriterion"] in [
+        "WeightedLeastSquares",
+        "WLS",
+        "LeastSquares",
+        "LS",
+        "L2",
+    ]:
+        Xn = __Xn.reshape((-1, 1))
+        Xb = __Xb.reshape((-1, 1))
+        from daAlgorithms.Atoms import ecwnlls
+
+        ecwnlls.ecwnlls(selfB, Xn, Xb, __Ynpu, None, __HO, None, __R, __B)
+    else:
+        raise ValueError(
+            "Unauthorized QualityCriterion choice: %s" % __SuppPars["QualityCriterion"]
+        )
+    #
+    Xa = selfB.get("Analysis")[-1].reshape((-1, 1))
+    IndexMin = numpy.argmin(selfB.get("CostFunctionJ"))
+    Ja = selfB.get("CostFunctionJ")[IndexMin]
+    Jb = selfB.get("CostFunctionJ")[IndexMin]
+    Jo = selfB.get("CostFunctionJ")[IndexMin]
+    del selfB
+    #
+    return Xa, Ja, Jb, Jo
+
+
+# ==============================================================================
 def GenerateRandomPointInHyperSphere(__Center, __Radius):
-    "Génère un point aléatoire uniformément à l'intérieur d'une hyper-sphère"
+    """Génère un point aléatoire uniformément à l'intérieur d'une hyper-sphère."""
     __Dimension = numpy.asarray(__Center).size
     __GaussDelta = numpy.random.normal(0, 1, size=__Center.shape)
     __VectorNorm = numpy.linalg.norm(__GaussDelta)
@@ -1415,11 +1479,12 @@ def GenerateRandomPointInHyperSphere(__Center, __Radius):
 
 # ==============================================================================
 class GenerateWeightsAndSigmaPoints(object):
-    "Génère les points sigma et les poids associés"
+    """Génère les points sigma et les poids associés."""
 
     def __init__(
         self, Nn=0, EO="State", VariantM="UKF", Alpha=None, Beta=2.0, Kappa=0.0
     ):
+        """Construction complète."""
         self.Nn = int(Nn)
         self.Alpha = numpy.longdouble(Alpha)
         self.Beta = numpy.longdouble(Beta)
@@ -1450,7 +1515,7 @@ class GenerateWeightsAndSigmaPoints(object):
             raise ValueError('Variant "%s" is not a valid one.' % VariantM)
 
     def __UKF2000(self):
-        "Standard Set, Julier et al. 2000 (aka Canonical UKF)"
+        """Standard Set, Julier et al. 2000 (aka Canonical UKF)."""
         # Rq.: W^{(m)}_{i=/=0} = 1. / (2.*(n + Lambda))
         Winn = 1.0 / (2.0 * (self.Nn + self.Kappa) * self.Alpha**2)
         Ww = []
@@ -1474,7 +1539,7 @@ class GenerateWeightsAndSigmaPoints(object):
         return Wm, Wc, SC
 
     def __S3F2022(self):
-        "Scaled Spherical Simplex Set, Papakonstantinou et al. 2022"
+        """Scaled Spherical Simplex Set, Papakonstantinou et al. 2022."""
         # Rq.: W^{(m)}_{i=/=0} = (n + Kappa) / ((n + Lambda) * (n + 1 + Kappa))
         Winn = 1.0 / ((self.Nn + 1.0 + self.Kappa) * self.Alpha**2)
         Ww = []
@@ -1499,7 +1564,7 @@ class GenerateWeightsAndSigmaPoints(object):
         return Wm, Wc, SC
 
     def __MSS2011(self):
-        "Minimum Set, Menegaz et al. 2011"
+        """Minimum Set, Menegaz et al. 2011."""
         rho2 = (1 - self.Alpha) / self.Nn
         Cc = numpy.real(scipy.linalg.sqrtm(numpy.identity(self.Nn) - rho2))
         Ww = (
@@ -1523,7 +1588,7 @@ class GenerateWeightsAndSigmaPoints(object):
         return Wm, Wc, SC
 
     def __5OS2002(self):
-        "Fifth Order Set, Lerner 2002"
+        """Fifth Order Set, Lerner 2002."""
         Ww = []
         for point in range(2 * self.Nn):
             Ww.append((4.0 - self.Nn) / 18.0)
@@ -1556,6 +1621,7 @@ class GenerateWeightsAndSigmaPoints(object):
         return Wm, Wc, SC
 
     def nbOfPoints(self):
+        """Vérifie puis renvois le nombre de points."""
         assert self.Nn == self.SC.shape[0], "Size mismatch %i =/= %i" % (
             self.Nn,
             self.SC.shape[0],
@@ -1571,10 +1637,11 @@ class GenerateWeightsAndSigmaPoints(object):
         return self.Wm.size
 
     def get(self):
+        """Renvoie les points sigma et les poids associés."""
         return self.Wm, self.Wc, self.SC
 
     def __repr__(self):
-        "x.__repr__() <==> repr(x)"
+        """x.__repr__() <==> repr(x)."""
         msg = ""
         msg += "    Alpha   = %s\n" % self.Alpha
         msg += "    Beta    = %s\n" % self.Beta
@@ -1590,7 +1657,7 @@ class GenerateWeightsAndSigmaPoints(object):
 
 # ==============================================================================
 def GetNeighborhoodTopology(__ntype, __ipop):
-    "Renvoi une topologie de connexion pour une population de points"
+    """Renvoi une topologie de connexion pour une population de points."""
     if __ntype in [
         "FullyConnectedNeighborhood",
         "FullyConnectedNeighbourhood",
@@ -1631,7 +1698,7 @@ def GetNeighborhoodTopology(__ntype, __ipop):
 def FindIndexesFromNames(
     __NameOfLocations=None, __ExcludeLocations=None, ForceArray=False
 ):
-    "Exprime les indices des noms exclus, en ignorant les absents"
+    """Exprime les indices des noms exclus, en ignorant les absents."""
     if __ExcludeLocations is None:
         __ExcludeIndexes = ()
     elif (
@@ -1734,6 +1801,7 @@ def BuildComplexSampleList(
     __X0,
     __Seed=None,
 ):
+    """Série contrôlée d'échantillonnage."""
     # ---------------------------
     if len(__SampleAsnUplet) > 0:
         sampleList = __SampleAsnUplet
@@ -1770,8 +1838,8 @@ def BuildComplexSampleList(
     elif len(__SampleAsMinMaxLatinHyperCube) > 0:
         if vt(scipy.version.version) <= vt("1.7.0"):
             __msg = (
-                "In order to use Latin Hypercube sampling, you must at least use"
-                + " Scipy version 1.7.0 (and you are presently using"
+                "In order to elaborate Latin Hypercube sampling, you must use"
+                + " Scipy version 1.7.0 or above (and you are presently using"
                 + " Scipy %s). A void sample is then generated." % scipy.version.version
             )
             warnings.warn(__msg, FutureWarning, stacklevel=50)
@@ -1911,7 +1979,7 @@ def BuildComplexSampleSwarm(
     __ParameterDistributions=[],
     __Seed=None,
 ):
-    "Série de positions et vitesses pour un essaim"
+    """Série de positions et vitesses pour un essaim."""
 
     def cutofflog(__x):
         return numpy.log(max(__x, 2 * mpr))
@@ -2078,10 +2146,11 @@ def multiXOsteps(
     __ApplyBounds=False,
 ):
     """
-    Prévision multi-pas avec une correction par pas (multi-méthodes)
-    (CovForecast force la remise à jour algorithmique de Pn, ApplyBounds
+    Prévision multi-pas avec une correction par pas (multi-méthodes).
+
+    CovForecast force la remise à jour algorithmique de Pn, ApplyBounds
     nécessite des bornes numériques et force les bornes d'état sur Xn avant
-    l'évolution)
+    l'évolution.
     """
     #
     # Initialisation
@@ -2223,6 +2292,7 @@ def CostFunction3D(
     FullOutput=False,
     ControledForm=False,
 ):
+    """Fonction coût générique."""
     _Xx = numpy.asarray(Xx).reshape((-1, 1))
     _Xb = numpy.asarray(Xb).reshape((-1, 1))
     _Yy = numpy.asarray(Yy).reshape((-1, 1))

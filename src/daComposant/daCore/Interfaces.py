@@ -44,7 +44,7 @@ lpi = PlatformInfo.PlatformInfo()
 # ==============================================================================
 class GenericCaseViewer(object):
     """
-    Gestion des commandes de création d'une vue de cas
+    Gestion des commandes de création d'une vue de cas.
     """
 
     __slots__ = (
@@ -59,7 +59,7 @@ class GenericCaseViewer(object):
     )
 
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
+        """Initialisation et enregistrement de l'entête."""
         self._name = str(__name)
         self._objname = str(__objname)
         self._lineSerie = []
@@ -74,15 +74,15 @@ class GenericCaseViewer(object):
         )
 
     def _append(self, *args):
-        "Transformation d'une commande individuelle en un enregistrement"
+        """Transformation d'une commande individuelle en un enregistrement."""
         raise NotImplementedError()
 
     def _extract(self, *args):
-        "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
+        """Transformation d'enregistrement(s) en commande(s) individuelle(s)."""
         raise NotImplementedError()
 
     def _initialize(self, __multilines):
-        "Permet des pré-conversions automatiques simples de commandes ou clés"
+        """Permet des pré-conversions automatiques simples de commandes ou clés."""
         __translation = {
             "Study_name": "StudyName",
             "Study_repertory": "StudyRepertory",
@@ -96,7 +96,7 @@ class GenericCaseViewer(object):
         return __multilines
 
     def _finalize(self, __upa=None):
-        "Enregistrement du final"
+        """Enregistrement du final."""
         __hasNotExecute = True
         for __l in self._lineSerie:
             if "%s.execute" % (self._objname,) in __l:
@@ -108,14 +108,14 @@ class GenericCaseViewer(object):
             self._lineSerie.append(__upa)
 
     def _addLine(self, line=""):
-        "Ajoute un enregistrement individuel"
+        """Ajoute un enregistrement individuel."""
         self._lineSerie.append(line)
 
     def _get_objname(self):
         return self._objname
 
     def dump(self, __filename=None, __upa=None):
-        "Restitution normalisée des commandes"
+        """Restitution normalisée des commandes."""
         self._finalize(__upa)
         __text = "\n".join(self._lineSerie)
         __text += "\n"
@@ -127,7 +127,7 @@ class GenericCaseViewer(object):
         return __text
 
     def load(self, __filename=None, __content=None, __object=None):
-        "Chargement normalisé des commandes"
+        """Chargement normalisé des commandes."""
         if __filename is not None and os.path.exists(__filename):
             self._content = open(__filename, "r").read()
             self._content = self._initialize(self._content)
@@ -143,13 +143,13 @@ class GenericCaseViewer(object):
 
 class _TUIViewer(GenericCaseViewer):
     """
-    Établissement des commandes d'un cas ADAO TUI (Cas<->TUI)
+    Établissement des commandes d'un cas ADAO TUI (Cas<->TUI).
     """
 
     __slots__ = ()
 
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
+        """Initialisation et enregistrement de l'entete."""
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._addLine("# -*- coding: utf-8 -*-")
         self._addLine("#\n# Python script using ADAO TUI\n#")
@@ -164,7 +164,7 @@ class _TUIViewer(GenericCaseViewer):
     def _append(
         self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False
     ):
-        "Transformation d'une commande individuelle en un enregistrement"
+        """Transformation d'une commande individuelle en un enregistrement."""
         if __command is not None and __keys is not None and __local is not None:
             if "Concept" in __keys:
                 logging.debug("TUI Order processed: %s" % (__local["Concept"],))
@@ -218,7 +218,7 @@ class _TUIViewer(GenericCaseViewer):
             self._addLine(__text)
 
     def _extract(self, __multilines="", __object=None):
-        "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
+        """Transformation d'enregistrement(s) en commande(s) individuelle(s)."""
         __is_case = False
         __commands = []
         __multilines = __multilines.replace("\r\n", "\n")
@@ -240,13 +240,13 @@ class _TUIViewer(GenericCaseViewer):
 
 class _COMViewer(GenericCaseViewer):
     """
-    Établissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM)
+    Établissement des commandes d'un cas COMM (Eficas Native Format/Cas<-COM).
     """
 
     __slots__ = ("_observerIndex", "_objdata")
 
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
+        """Initialisation et enregistrement de l'entete."""
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._observerIndex = 0
         self._addLine("# -*- coding: utf-8 -*-")
@@ -260,7 +260,7 @@ class _COMViewer(GenericCaseViewer):
                 self._append(*command)
 
     def _extract(self, __multilines=None, __object=None):
-        "Transformation d'enregistrement(s) en commande(s) individuelle(s)"
+        """Transformation d'enregistrement(s) en commande(s) individuelle(s)."""
         __suppparameters = {}
         if __multilines is not None:
             if "adaoBuilder" in __multilines:
@@ -471,9 +471,9 @@ class _COMViewer(GenericCaseViewer):
 
 class _SCDViewer(GenericCaseViewer):
     """
-    Établissement des commandes d'un cas SCD (Study Config Dictionary/Cas->SCD)
+    Établissement des commandes d'un cas SCD (Study Config Dictionary/Cas->SCD).
 
-    Remarque : le fichier généré est différent de celui obtenu par EFICAS
+    Remarque : le fichier généré est différent de celui obtenu par EFICAS.
     """
 
     __slots__ = (
@@ -484,7 +484,7 @@ class _SCDViewer(GenericCaseViewer):
     )
 
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entête"
+        """Initialisation et enregistrement de l'entête."""
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         #
         if __content is not None:
@@ -522,7 +522,7 @@ class _SCDViewer(GenericCaseViewer):
     def _append(
         self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False
     ):
-        "Transformation d'une commande individuelle en un enregistrement"
+        """Transformation d'une commande individuelle en un enregistrement."""
         if __command == "set":
             __command = __local["Concept"]
         else:
@@ -860,19 +860,19 @@ class _SCDViewer(GenericCaseViewer):
 
 class _YACSViewer(GenericCaseViewer):
     """
-    Etablissement des commandes d'un cas YACS (Cas->SCD->YACS)
+    Etablissement des commandes d'un cas YACS (Cas->SCD->YACS).
     """
 
     __slots__ = ("__internalSCD", "_append")
 
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
+        """Initialisation et enregistrement de l'entete."""
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self.__internalSCD = _SCDViewer(__name, __objname, __content, __object)
         self._append = self.__internalSCD._append
 
     def dump(self, __filename=None, __upa=None):
-        "Restitution normalisée des commandes"
+        """Restitution normalisée des commandes."""
         # -----
         if __filename is None:
             raise ValueError("A file name has to be given for YACS XML output.")
@@ -910,13 +910,13 @@ class _YACSViewer(GenericCaseViewer):
 # ==============================================================================
 class _ReportViewer(GenericCaseViewer):
     """
-    Partie commune de restitution simple
+    Partie commune de restitution simple.
     """
 
     __slots__ = ("_r",)
 
     def __init__(self, __name="", __objname="case", __content=None, __object=None):
-        "Initialisation et enregistrement de l'entete"
+        """Initialisation et enregistrement de l'entete."""
         GenericCaseViewer.__init__(self, __name, __objname, __content, __object)
         self._r = Reporting.ReportStorage()
         self._r.clear()
@@ -934,7 +934,7 @@ class _ReportViewer(GenericCaseViewer):
     def _append(
         self, __command=None, __keys=None, __local=None, __pre=None, __switchoff=False
     ):
-        "Transformation d'une commande individuelle en un enregistrement"
+        """Transformation d'une commande individuelle en un enregistrement."""
         if __command is not None and __keys is not None and __local is not None:
             if __command in ("set", "get") and "Concept" in __keys:
                 __command = __local["Concept"]
@@ -983,13 +983,13 @@ class _ReportViewer(GenericCaseViewer):
             self._r.append(__text, "uli")
 
     def _finalize(self, __upa=None):
-        "Enregistrement du final"
+        """Enregistrement du final."""
         raise NotImplementedError()
 
 
 class _SimpleReportInRstViewer(_ReportViewer):
     """
-    Restitution simple en RST
+    Restitution simple en RST.
     """
 
     __slots__ = ()
@@ -1000,7 +1000,7 @@ class _SimpleReportInRstViewer(_ReportViewer):
 
 class _SimpleReportInHtmlViewer(_ReportViewer):
     """
-    Restitution simple en HTML
+    Restitution simple en HTML.
     """
 
     __slots__ = ()
@@ -1011,7 +1011,7 @@ class _SimpleReportInHtmlViewer(_ReportViewer):
 
 class _SimpleReportInPlainTxtViewer(_ReportViewer):
     """
-    Restitution simple en TXT
+    Restitution simple en TXT.
     """
 
     __slots__ = ()
@@ -1023,13 +1023,13 @@ class _SimpleReportInPlainTxtViewer(_ReportViewer):
 # ==============================================================================
 class ImportFromScript(object):
     """
-    Obtention d'une variable nommee depuis un fichier script importé
+    Obtention d'une variable nommee depuis un fichier script importé.
     """
 
     __slots__ = ("__basename", "__filenspace", "__filestring")
 
     def __init__(self, __filename=None):
-        "Verifie l'existence et importe le script"
+        """Vérifie l'existence et importe le script."""
         if __filename is None:
             raise ValueError(
                 "The name of the file, containing the variable to be read, has to be specified."
@@ -1063,7 +1063,7 @@ class ImportFromScript(object):
             self.__filestring = fid.read()
 
     def getvalue(self, __varname=None, __synonym=None):
-        "Renvoie la variable demandee par son nom ou son synonyme"
+        """Renvoie la variable demandée par son nom ou son synonyme."""
         if __varname is None:
             raise ValueError(
                 "The name of the variable to be read has to be specified."
@@ -1088,14 +1088,14 @@ class ImportFromScript(object):
             return getattr(self.__filenspace, __varname)
 
     def getstring(self):
-        "Renvoie le script complet"
+        """Renvoie le script complet."""
         return self.__filestring
 
 
 # ==============================================================================
 class ImportDetector(object):
     """
-    Détection des caractéristiques de fichiers ou objets en entrée
+    Détection des caractéristiques de fichiers ou objets en entrée.
     """
 
     __slots__ = ("__url", "__usr", "__root", "__end")
@@ -1200,10 +1200,12 @@ class ImportDetector(object):
 
 class ImportFromFile(object):
     """
-    Obtention de variables disrétisées en 1D, définies par une ou des variables
-    nommées, et sous la forme d'une série de points éventuellement indexés. La
-    lecture d'un fichier au format spécifié (ou intuité) permet de charger ces
-    fonctions depuis :
+    Obtention de variables discrétisées en 1D.
+
+    Elles sont définies par une ou des variables nommées, et sous la forme
+    d'une série de points éventuellement indexés. La lecture d'un fichier au
+    format spécifié (ou intuité par son extension ou son contenu) permet de
+    charger ces fonctions depuis :
         - des fichiers textes en colonnes de type TXT, CSV, TSV...
         - des fichiers de données binaires NPY, NPZ, SDF...
     La lecture du fichier complet ne se fait que si nécessaire, pour assurer la
@@ -1243,16 +1245,17 @@ class ImportFromFile(object):
         AllowVoidNameList=True,
     ):
         """
-        Verifie l'existence et les informations de définition du fichier. Les
-        noms de colonnes ou de variables sont ignorées si le format ne permet
-        pas de les indiquer.
+        Verifie l'existence et les informations de définition du fichier.
+
+        Les noms de colonnes ou de variables sont ignorées si le format ne
+        permet pas de les indiquer.
         Arguments :
-            - Filename : nom du fichier
-            - ColNames : noms de la ou des colonnes/variables à lire
-            - ColIndex : nom unique de la colonne/variable servant d'index
-            - Format : format du fichier et/ou des données inclues
+            - Filename : nom du fichier.
+            - ColNames : noms de la ou des colonnes/variables à lire.
+            - ColIndex : nom unique de la colonne/variable servant d'index.
+            - Format : format du fichier et/ou des données inclues.
             - AllowVoidNameList : permet, si la liste de noms est vide, de
-              prendre par défaut toutes les colonnes
+              prendre par défaut toutes les colonnes.
         """
         self.__binaryformats = (
             "application/numpy.npy",
@@ -1296,7 +1299,7 @@ class ImportFromFile(object):
         self.__allowvoid = bool(AllowVoidNameList)
 
     def __getentete(self, __nblines=3):
-        "Lit l'entête du fichier pour trouver la définition des variables"
+        """Lit l'entête du fichier pour trouver la définition des variables."""
         # La première ligne non vide non commentée est toujours considérée
         # porter les labels de colonne, donc pas des valeurs
         __header, __varsline, __skiprows = [], "", 1
@@ -1315,7 +1318,7 @@ class ImportFromFile(object):
         return (__header, __varsline, __skiprows)
 
     def __getindices(self, __colnames, __colindex, __delimiter=None):
-        "Indices de colonnes correspondants à l'index et aux variables"
+        """Indices de colonnes correspondants à l'index et aux variables."""
         if __delimiter is None:
             __varserie = self._varsline.strip("#").strip().split()
         else:
@@ -1352,6 +1355,7 @@ class ImportFromFile(object):
         return (__usecols, __useindex)
 
     def getsupported(self):
+        """Renvoie les formats supportés, y compris dynamiquement."""
         self.__supportedformats = {}
         self.__supportedformats["text/plain"] = True
         self.__supportedformats["text/csv"] = True
@@ -1362,7 +1366,7 @@ class ImportFromFile(object):
         return self.__supportedformats
 
     def getvalue(self, ColNames=None, ColIndex=None):
-        "Renvoie la ou les variables demandées par la liste de leurs noms"
+        """Renvoie la ou les variables demandées par la liste de leurs noms."""
         # Uniquement si mise à jour
         if ColNames is not None:
             self._colnames = tuple(ColNames)
@@ -1493,7 +1497,7 @@ class ImportFromFile(object):
         return (self._colnames, __columns, self._colindex, __index)
 
     def getstring(self):
-        "Renvoie le fichier texte complet"
+        """Renvoie le fichier texte complet."""
         if self._format in self.__binaryformats:
             return ""
         else:
@@ -1506,11 +1510,12 @@ class ImportFromFile(object):
 
 class ImportScalarLinesFromFile(ImportFromFile):
     """
-    Importation de fichier contenant des variables scalaires nommées. Le
-    fichier comporte soit 2, soit 4 colonnes, obligatoirement nommées "Name",
-    "Value", "Minimum", "Maximum" si les noms sont précisés. Sur chaque ligne
-    est indiqué le nom, la valeur, et éventuelement deux bornes min et max (ou
-    None si nécessaire pour une borne).
+    Importation de fichier contenant des variables scalaires nommées.
+
+    Le fichier comporte soit 2, soit 4 colonnes, obligatoirement nommées
+    "Name", "Value", "Minimum", "Maximum" si les noms sont précisés. Sur chaque
+    ligne est indiqué le nom, la valeur, et éventuelement deux bornes min et
+    max (ou None si nécessaire pour une borne).
 
     Seule la méthode "getvalue" est changée.
     """
@@ -1529,7 +1534,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
             raise ValueError('Unkown file format "%s"' % self._format)
 
     def getvalue(self, VarNames=None, HeaderNames=()):
-        "Renvoie la ou les variables demandées par la liste de leurs noms"
+        """Renvoie la ou les variables demandées par la liste de leurs noms."""
         if VarNames is not None:
             __varnames = tuple(VarNames)
         else:
@@ -1665,7 +1670,7 @@ class ImportScalarLinesFromFile(ImportFromFile):
 # ==============================================================================
 class EficasGUI(object):
     """
-    Lancement autonome de l'interface EFICAS/ADAO
+    Lancement autonome de l'interface EFICAS/ADAO.
     """
 
     __slots__ = ("__msg", "__path_settings_ok")

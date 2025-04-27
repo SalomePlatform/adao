@@ -20,8 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
+import numpy
 from daCore import BasicObjects, NumericObjects
-from daAlgorithms.Atoms import ecwdfo
+from daAlgorithms.Atoms import ecwdgsa
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -29,23 +30,29 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "DERIVATIVEFREEOPTIMIZATION")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "DFO",
+            default  = "DualAnnealing",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "DerivativeFreeOptimization",
+                "GeneralizedSimulatedAnnealing",
+                "DualAnnealing",
             ],
             listadv  = [
                 "OneCorrection",
-                "DFO",
+                "GSA",
+                "DA",
             ],
         )
         self.defineRequiredParameter(
             name     = "Minimizer",
-            default  = "BOBYQA",
+            default  = "LBFGSB",
             typecast = str,
             message  = "Minimiseur utilisé",
             listval  = [
+                "LBFGSB",
+            ],
+            listadv  = [
+                "TNC",
                 "BOBYQA",
                 "COBYLA",
                 "NEWUOA",
@@ -71,22 +78,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfFunctionEvaluations",
-            default  = 15000,
+            default  = 150000,
             typecast = int,
             message  = "Nombre maximal d'évaluations de la fonction",
             minval   = -1,
-        )
-        self.defineRequiredParameter(
-            name     = "StateVariationTolerance",
-            default  = 1.e-4,
-            typecast = float,
-            message  = "Variation relative maximale de l'état lors de l'arrêt",
-        )
-        self.defineRequiredParameter(
-            name     = "CostDecrementTolerance",
-            default  = 1.e-7,
-            typecast = float,
-            message  = "Diminution relative minimale du cout lors de l'arrêt",
         )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
@@ -100,6 +95,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "AbsoluteValue", "L1",
                 "MaximumError", "ME", "Linf",
             ],
+        )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
         )
         self.defineRequiredParameter(
             name     = "StoreInternalVariables",
@@ -151,7 +151,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "MetaHeuristic",
             ),
             features=(
-                "NonLocalOptimization",
+                "GlobalOptimization",
                 "DerivativeFree",
                 "ParallelFree",
                 "ConvergenceOnBoth",
@@ -162,13 +162,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         # --------------------------
-        if self._parameters["Variant"] in ["DFO", "DerivativeFreeOptimization"]:
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdfo.ecwdfo)
+        if self._parameters["Variant"] in ["GSA", "GeneralizedSimulatedAnnealing", "DA", "DualAnnealing"]:
+            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdgsa.ecwdgsa)
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
             Xini = self._parameters["InitializationPoint"]
-            ecwdfo.ecwdfo(self, Xb, Xini, Y, U, HO, CM, R, B)
+            ecwdgsa.ecwdgsa(self, Xb, Xini, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

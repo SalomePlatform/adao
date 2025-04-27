@@ -58,7 +58,7 @@ import numpy
 # ==============================================================================
 def uniq(__sequence):
     """
-    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre
+    Fonction pour rendre unique chaque élément d'une liste, en préservant l'ordre.
     """
     __seen = set()
     return [x for x in __sequence if x not in __seen and not __seen.add(x)]
@@ -66,13 +66,13 @@ def uniq(__sequence):
 
 class PathManagement(object):
     """
-    Mise à jour du path système pour les répertoires d'outils
+    Mise à jour du path système pour les répertoires d'outils.
     """
 
     __slots__ = ("__paths",)
 
     def __init__(self):
-        "Déclaration des répertoires statiques"
+        """Déclaration des répertoires statiques."""
         parent = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         self.__paths = {}
         self.__paths["daNumerics"] = os.path.join(parent, "daNumerics")
@@ -87,53 +87,60 @@ class PathManagement(object):
         del parent
 
     def getpaths(self):
-        """
-        Renvoie le dictionnaire des chemins ajoutés
-        """
+        """Renvoie le dictionnaire des chemins ajoutés."""
         return self.__paths
 
 
 # ==============================================================================
 class PlatformInfo(object):
     """
-    Rassemblement des informations sur le code et la plateforme
+    Rassemblement des informations sur le code et la plateforme.
     """
 
     __slots__ = ("has_salome", "has_yacs", "has_adao", "has_eficas")
 
     def __init__(self):
-        "Sans effet"
-        self.has_salome = bool("SALOME_ROOT_DIR" in os.environ)
-        self.has_yacs = bool("YACS_ROOT_DIR" in os.environ)
-        self.has_adao = bool("ADAO_ROOT_DIR" in os.environ)
-        self.has_eficas = bool("EFICAS_ROOT_DIR" in os.environ)
+        """Vérification de variables d'environnement."""
+        self.has_salome = bool(
+            "SALOME_ROOT_DIR" in os.environ and len(os.environ["SALOME_ROOT_DIR"]) > 0
+        )
+        self.has_yacs = bool(
+            "YACS_ROOT_DIR" in os.environ and len(os.environ["YACS_ROOT_DIR"]) > 0
+        )
+        self.has_adao = bool(
+            "ADAO_ROOT_DIR" in os.environ and len(os.environ["ADAO_ROOT_DIR"]) > 0
+        )
+        self.has_eficas = bool(
+            "EFICAS_ROOT_DIR" in os.environ and len(os.environ["EFICAS_ROOT_DIR"]) > 0
+        )
         PathManagement()
 
     def getName(self):
-        "Retourne le nom de l'application"
+        """Retourne le nom de l'application."""
         import daCore.version as dav
 
         return dav.name
 
     def getVersion(self):
-        "Retourne le numéro de la version"
+        """Retourne le numéro de la version."""
         import daCore.version as dav
 
         return dav.version
 
     def getDate(self):
-        "Retourne la date de création de la version"
+        """Retourne la date de création de la version."""
         import daCore.version as dav
 
         return dav.date
 
     def getYear(self):
-        "Retourne l'année de création de la version"
+        """Retourne l'année de création de la version."""
         import daCore.version as dav
 
         return dav.year
 
     def getSystemInformation(self, __prefix=""):
+        """Renvoie les informations de l'ensemble du système."""
         __msg = ""
         __msg += "\n%s%30s : %s" % (__prefix, "platform.system", platform.system())
         __msg += "\n%s%30s : %s" % (__prefix, "sys.platform", sys.platform)
@@ -277,6 +284,7 @@ class PlatformInfo(object):
         return __msg
 
     def getApplicationInformation(self, __prefix=""):
+        """Renvoie les informations de l'ensemble des modules."""
         __msg = ""
         __msg += "\n%s%30s : %s" % (__prefix, "ADAO version", self.getVersion())
         __msg += "\n"
@@ -318,6 +326,7 @@ class PlatformInfo(object):
         return __msg
 
     def getAllInformation(self, __prefix="", __title="Whole system information"):
+        """Renvoie les informations de l'ensemble du système et des modules."""
         __msg = ""
         if len(__title) > 0:
             __msg += "\n" + "=" * 80 + "\n" + __title + "\n" + "=" * 80 + "\n"
@@ -327,7 +336,7 @@ class PlatformInfo(object):
         return __msg
 
     def getPythonVersion(self):
-        "Retourne la version de python disponible"
+        """Renvoie la version de Python disponible."""
         return ".".join(
             [str(x) for x in sys.version_info[0:3]]
         )  # map(str,sys.version_info[0:3]))
@@ -508,13 +517,13 @@ class PlatformInfo(object):
     # Versions
 
     def getNumpyVersion(self):
-        "Retourne la version de numpy disponible"
+        """Retourne la version de numpy disponible."""
         import numpy.version
 
         return numpy.version.version
 
     def getScipyVersion(self):
-        "Retourne la version de scipy disponible"
+        """Retourne la version de scipy disponible."""
         if self.has_scipy:
             import scipy
 
@@ -524,7 +533,7 @@ class PlatformInfo(object):
         return __version
 
     def getNloptVersion(self):
-        "Retourne la version de nlopt disponible"
+        """Retourne la version de nlopt disponible."""
         if self.has_nlopt:
             import nlopt
 
@@ -538,7 +547,7 @@ class PlatformInfo(object):
         return __version
 
     def getMatplotlibVersion(self):
-        "Retourne la version de matplotlib disponible"
+        """Retourne la version de matplotlib disponible."""
         if self.has_matplotlib:
             import matplotlib
 
@@ -548,7 +557,7 @@ class PlatformInfo(object):
         return __version
 
     def getPandasVersion(self):
-        "Retourne la version de pandas disponible"
+        """Retourne la version de pandas disponible."""
         if self.has_pandas:
             import pandas
 
@@ -558,7 +567,7 @@ class PlatformInfo(object):
         return __version
 
     def getGnuplotVersion(self):
-        "Retourne la version de gnuplotpy disponible"
+        """Retourne la version de gnuplotpy disponible."""
         if self.has_gnuplot:
             import Gnuplot
 
@@ -568,7 +577,7 @@ class PlatformInfo(object):
         return __version
 
     def getFmpyVersion(self):
-        "Retourne la version de fmpy disponible"
+        """Retourne la version de fmpy disponible."""
         if self.has_fmpy:
             import fmpy
 
@@ -578,7 +587,7 @@ class PlatformInfo(object):
         return __version
 
     def getSdfVersion(self):
-        "Retourne la version de sdf disponible"
+        """Retourne la version de sdf disponible."""
         if self.has_sdf:
             import sdf
 
@@ -588,7 +597,7 @@ class PlatformInfo(object):
         return __version
 
     def getSphinxVersion(self):
-        "Retourne la version de sphinx disponible"
+        """Retourne la version de sphinx disponible."""
         if self.has_sphinx:
             import sphinx
 
@@ -598,7 +607,7 @@ class PlatformInfo(object):
         return __version
 
     def getScikitlearnVersion(self):
-        "Retourne la version de scikit-learn disponible"
+        """Retourne la version de scikit-learn disponible."""
         if self.has_scikitlearn:
             import sklearn
 
@@ -608,11 +617,11 @@ class PlatformInfo(object):
         return __version
 
     def getCurrentMemorySize(self):
-        "Retourne la taille mémoire courante utilisée"
+        """Retourne la taille mémoire courante utilisée."""
         return 1
 
     def MaximumPrecision(self):
-        "Retourne la précision maximale flottante pour Numpy"
+        """Retourne la précision maximale flottante pour Numpy."""
         import numpy
 
         try:
@@ -643,7 +652,7 @@ class PlatformInfo(object):
 
 # ==============================================================================
 def vt(__version):
-    "Version transformée pour comparaison robuste, obtenue comme un tuple"
+    """Version transformée pour comparaison robuste, obtenue comme un tuple."""
     serie = []
     for sv in re.split("[_.+-]", __version):
         serie.append(sv.zfill(6))
@@ -651,7 +660,7 @@ def vt(__version):
 
 
 def trmo():
-    "Usage de l'optimiseur avec condition d'arrêt augmentée"
+    """Usage de l'optimiseur avec condition d'arrêt augmentée."""
     import scipy, scipy.optimize, scipy.version
 
     if vt("0.19") <= vt(scipy.version.version) <= vt("1.4.99"):
@@ -720,6 +729,7 @@ def trmo():
 def isIterable(__sequence, __check=False, __header=""):
     """
     Vérification que l'argument est un itérable interne.
+
     Remarque : pour permettre le test correct en MultiFonctions,
     - Ne pas accepter comme itérable un "numpy.ndarray"
     - Ne pas accepter comme itérable avec hasattr(__sequence, "__iter__")
@@ -747,7 +757,9 @@ def isIterable(__sequence, __check=False, __header=""):
 
 def date2int(__date: str, __lang="FR"):
     """
-    Fonction de secours, conversion pure : dd/mm/yy hh:mm ---> int(yyyymmddhhmm)
+    Fonction de secours.
+
+    Elle permet la conversion pure : dd/mm/yy hh:mm ---> int(yyyymmddhhmm).
     """
     __date = __date.strip()
     if __date.count("/") == 2 and __date.count(":") == 0 and __date.count(" ") == 0:
@@ -770,9 +782,7 @@ def date2int(__date: str, __lang="FR"):
 
 
 def vfloat(__value: numpy.ndarray):
-    """
-    Conversion en flottant d'un vecteur de taille 1 et de dimensions quelconques
-    """
+    """Conversion en flottant d'un vecteur de taille 1 et de dimensions quelconques."""
     if hasattr(__value, "size") and __value.size == 1:
         return float(__value.flat[0])
     elif isinstance(__value, (float, int)):
@@ -785,9 +795,11 @@ def vfloat(__value: numpy.ndarray):
 
 def strvect2liststr(__strvect):
     """
-    Fonction de secours, conversion d'une chaîne de caractères de
-    représentation de vecteur en une liste de chaînes de caractères de
-    représentation de flottants
+    Fonction de secours.
+
+    Elle permet la conversion d'une chaîne de caractères de représentation de
+    vecteur en une liste de chaînes de caractères de représentation de
+    flottants.
     """
     for st in ("array", "matrix", "list", "tuple", "[", "]", "(", ")"):
         __strvect = __strvect.replace(st, "")  # Rien
@@ -798,9 +810,11 @@ def strvect2liststr(__strvect):
 
 def strmatrix2liststr(__strvect):
     """
-    Fonction de secours, conversion d'une chaîne de caractères de
-    représentation de matrice en une liste de chaînes de caractères de
-    représentation de flottants
+    Fonction de secours.
+
+    Elle permet la conversion d'une chaîne de caractères de représentation de
+    matrice en une liste de chaînes de caractères de représentation de
+    flottants.
     """
     for st in ("array", "matrix", "list", "tuple", "[", "(", "'", '"'):
         __strvect = __strvect.replace(st, "")  # Rien
@@ -861,7 +875,7 @@ def checkFileNameImportability(__filename, __warnInsteadOfPrint=True):
 # ==============================================================================
 class SystemUsage(object):
     """
-    Permet de récupérer les différentes tailles mémoires du process courant
+    Permet de récupérer les différentes tailles mémoires du process courant.
     """
 
     __slots__ = ()
@@ -886,11 +900,11 @@ class SystemUsage(object):
     }
 
     def __init__(self):
-        "Sans effet"
+        """Sans effet."""
         pass
 
     def _VmA(self, VmKey, unit):
-        "Lecture des paramètres mémoire de la machine"
+        """Lecture des paramètres mémoire de la machine."""
         try:
             t = open(self._memo_status)
             v = t.read()
@@ -906,20 +920,22 @@ class SystemUsage(object):
         return mem / self._scale[unit]
 
     def getAvailablePhysicalMemory(self, unit="o"):
-        "Renvoie la mémoire physique utilisable en octets"
+        """Renvoie la mémoire physique utilisable en octets."""
         return self._VmA("MemTotal:", unit)
 
     def getAvailableSwapMemory(self, unit="o"):
-        "Renvoie la mémoire swap utilisable en octets"
+        """Renvoie la mémoire swap utilisable en octets."""
         return self._VmA("SwapTotal:", unit)
 
     def getAvailableMemory(self, unit="o"):
-        "Renvoie la mémoire totale (physique+swap) utilisable en octets"
+        """Renvoie la mémoire totale (physique+swap) utilisable en octets."""
         return self._VmA("MemTotal:", unit) + self._VmA("SwapTotal:", unit)
 
     def getUsableMemory(self, unit="o"):
-        """Renvoie la mémoire utilisable en octets
-        Rq : il n'est pas sûr que ce décompte soit juste...
+        """
+        Renvoie la mémoire utilisable en octets.
+
+        Rq : il n'est pas sûr que ce décompte soit très précis...
         """
         return (
             self._VmA("MemFree:", unit)
@@ -929,7 +945,7 @@ class SystemUsage(object):
         )
 
     def _VmB(self, VmKey, unit):
-        "Lecture des paramètres mémoire du processus"
+        """Lecture des paramètres mémoire du processus."""
         try:
             t = open(self._proc_status)
             v = t.read()
@@ -945,23 +961,23 @@ class SystemUsage(object):
         return mem / self._scale[unit]
 
     def getUsedMemory(self, unit="o"):
-        "Renvoie la mémoire résidente utilisée en octets"
+        """Renvoie la mémoire résidente utilisée en octets."""
         return self._VmB("VmRSS:", unit)
 
     def getVirtualMemory(self, unit="o"):
-        "Renvoie la mémoire totale utilisée en octets"
+        """Renvoie la mémoire totale utilisée en octets."""
         return self._VmB("VmSize:", unit)
 
     def getUsedStacksize(self, unit="o"):
-        "Renvoie la taille du stack utilisé en octets"
+        """Renvoie la taille du stack utilisé en octets."""
         return self._VmB("VmStk:", unit)
 
     def getMaxUsedMemory(self, unit="o"):
-        "Renvoie la mémoire résidente maximale mesurée"
+        """Renvoie la mémoire résidente maximale mesurée."""
         return self._VmB("VmHWM:", unit)
 
     def getMaxVirtualMemory(self, unit="o"):
-        "Renvoie la mémoire totale maximale mesurée"
+        """Renvoie la mémoire totale maximale mesurée."""
         return self._VmB("VmPeak:", unit)
 
 

@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
-from daCore.PlatformInfo import vt, vfloat, trmo
+from daCore.PlatformInfo import vfloat, trmo
 
 # ==============================================================================
 def std3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
@@ -72,6 +72,7 @@ def std3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
         _Innovation = Y - _HX
         if selfA._toStore("SimulatedObservationAtCurrentState") or \
                 selfA._toStore("SimulatedObservationAtCurrentOptimum") or \
+                selfA._toStore("SimulatedObservationAtCurrentAnalysis") or \
                 selfA._toStore("EnsembleOfSimulations"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( _HX )
         if selfA._toStore("InnovationAtCurrentState"):
@@ -200,7 +201,8 @@ def std3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
             selfA._toStore("InnovationAtCurrentAnalysis") or \
             selfA._toStore("SigmaObs2") or \
             selfA._toStore("SimulationQuantiles") or \
-            selfA._toStore("SimulatedObservationAtOptimum"):
+            selfA._toStore("SimulatedObservationAtOptimum") or \
+            selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
         if selfA._toStore("SimulatedObservationAtCurrentState"):
             HXa = selfA.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
         elif selfA._toStore("SimulatedObservationAtCurrentOptimum"):
@@ -208,6 +210,8 @@ def std3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
         else:
             HXa = Hm( Xa )
         oma = Y - numpy.asarray(HXa).reshape((-1, 1))
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
+            selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( HXa )
     #
     if selfA._toStore("APosterioriCovariance") or \
             selfA._toStore("SimulationQuantiles") or \

@@ -71,19 +71,21 @@ assimilation.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03AdOp.rst
 
-.. include:: snippets/Minimizer_DFO.rst
-
 .. include:: snippets/BoundsWithNone.rst
-
-.. include:: snippets/MaximumNumberOfIterations.rst
-
-.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
-
-.. include:: snippets/StateVariationTolerance.rst
 
 .. include:: snippets/CostDecrementTolerance.rst
 
+.. include:: snippets/EstimationOf_Parameters.rst
+
+.. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
+
+.. include:: snippets/MaximumNumberOfIterations.rst
+
+.. include:: snippets/Minimizer_DFO.rst
+
 .. include:: snippets/QualityCriterion.rst
+
+.. include:: snippets/StateVariationTolerance.rst
 
 StoreSupplementaryCalculations
   .. index:: single: StoreSupplementaryCalculations

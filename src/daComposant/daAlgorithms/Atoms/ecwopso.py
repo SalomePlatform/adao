@@ -29,11 +29,15 @@ import numpy, logging
 from daCore.NumericObjects import VariablesAndIncrementsBounds
 from daCore.NumericObjects import BuildComplexSampleSwarm
 from daCore.NumericObjects import EnsembleErrorCovariance
+from daCore.NumericObjects import VarLocalSearch
 from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
 
 # ==============================================================================
-def ecwopso(selfA, Xb, Y, HO, R, B):
+def ecwopso(selfA, Xb, Y, HO, R, B, Hybrid=None):
+    """
+    Correction
+    """
     #
     Hm = HO["Direct"].appliedTo
     #
@@ -149,7 +153,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
         selfA._parameters["SwarmInitialization"],
         selfA._parameters["DistributionByComponents"],
     )
-    logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
+    logging.debug("%s Initialisation of the swarm with %i insects of size %i"%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
     #
     qSwarm = JXini * numpy.ones((__nbI, 3))  # Qualité (J, Jb, Jo) par insecte
     if selfA._toStore("EnsembleOfSimulations"):
@@ -206,7 +210,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
                     + __ss * rand() * (Swarm[iBest, 2, __p] - Swarm[__i, 0, __p])
                 # Position
                 Swarm[__i, 0, __p] = Swarm[__i, 0, __p] + Swarm[__i, 1, __p]
-                #
+            #
             nbfct += 1
             JTest, JbTest, JoTest, HXTest = CostFunction(Swarm[__i, 0, :], selfA._parameters["QualityCriterion"])
             if JTest < qSwarm[__i, 0]:
@@ -214,6 +218,20 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
                 qSwarm[__i, :]   = (JTest, JbTest, JoTest)
             if selfA._toStore("EnsembleOfSimulations"):
                 sSwarm[:, __i] = HXTest.flat
+        #
+        if Hybrid == "VarLocalSearch":
+            __nLH = min(selfA._parameters["HybridNumberOfLocalHunters"], __nbI)
+            theBestOnes = numpy.argsort(qSwarm[:, 0])[0:__nLH]
+            __nII = 0
+            for __i in theBestOnes:
+                Xn = Swarm[__i, 0, :]
+                Xn, JTest, JbTest, JoTest = VarLocalSearch(Xn, Xb, Y, HO, R, B, selfA._parameters)
+                Swarm[__i, 0, :] = Xn.flat
+                if JTest < qSwarm[__i, 0]:
+                    __nII += 1
+                    Swarm[__i, 2, :] = Swarm[__i, 0, :]  # xBest
+                    qSwarm[__i, :]   = (JTest, JbTest, JoTest)
+            logging.debug("%s Variational local search at step %i leads to improve %i insect(s) over %i"%(selfA._name, step, __nII, __nLH))
         #
         iBest = numpy.argmin(qSwarm[:, 0])
         xBest = Swarm[iBest, 2, :]
@@ -237,7 +255,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B):
             selfA.StoredVariables["InternalCostFunctionJo"].store( qSwarm[:, 2] )
         if selfA._parameters["StoreInternalVariables"] or selfA._toStore("InternalAPosterioriCovariance"):
             selfA.StoredVariables["InternalAPosterioriCovariance"].store( EnsembleErrorCovariance( Swarm[:, 0, :].T ) )
-        logging.debug("%s Step %i: insect %i is the better one with J =%.7f"%(selfA._name, step, iBest, qSwarm[iBest, 0]))  # noqa: E501
+        logging.debug("%s Step %i: the insect %i is the better one with J = %.7f"%(selfA._name, step, iBest, qSwarm[iBest, 0]))  # noqa: E501
     #
     # Obtention de l'analyse
     # ----------------------

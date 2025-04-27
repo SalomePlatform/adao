@@ -33,8 +33,7 @@ import numpy
 # ==============================================================================
 class TemplateStorage(object):
     """
-    Classe générale de stockage de type dictionnaire étendu
-    (Template)
+    Classe générale de stockage de type dictionnaire étendu (Template).
     """
 
     __slots__ = ("__preferedLanguage", "__values", "__order")
@@ -45,7 +44,7 @@ class TemplateStorage(object):
         self.__order = -1
 
     def store(self, name=None, content=None, fr_FR="", en_EN="", order="next"):
-        "D.store(k, c,  fr_FR, en_EN, o) -> Store template k and its main characteristics"
+        """Store named template and its main characteristics."""
         if name is None or content is None:
             raise ValueError(
                 "To be consistent, the storage of a template must provide a name and a content."
@@ -62,30 +61,30 @@ class TemplateStorage(object):
         }
 
     def keys(self):
-        "D.keys() -> list of D's keys"
+        """Return the list of self's keys."""
         __keys = sorted(self.__values.keys())
         return __keys
 
     def __contains__(self, name):
-        "D.__contains__(k) -> True if D has a key k, else False"
+        """True if the dictionary has the specified key, else False."""
         return name in self.__values
 
     def __len__(self):
-        "x.__len__() <==> len(x)"
+        """Return len(self)."""
         return len(self.__values)
 
     def __getitem__(self, name=None):
-        "x.__getitem__(y) <==> x[y]"
+        """Return self[name]."""
         return self.__values[name]["content"]
 
     def getdoc(self, name=None, lang="fr_FR"):
-        "D.getdoc(k, l) -> Return documentation of key k in language l"
+        """Return documentation of key name in language lang."""
         if lang not in self.__values[name]:
             lang = self.__preferedLanguage
         return self.__values[name][lang]
 
     def keys_in_presentation_order(self):
-        "D.keys_in_presentation_order() -> list of D's keys in presentation order"
+        """Return the list of self's keys in presentation order."""
         __orders = []
         for ik in self.keys():
             __orders.append(self.__values[ik]["order"])

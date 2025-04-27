@@ -59,7 +59,7 @@ méthodes incluses dans ce cadre sont également connues sous les noms de
 etc.
 De plus amples détails peuvent être trouvés dans la partie proposant
 :ref:`section_theory`. Le module ADAO offre actuellement plus d'une centaine de
-méthodes algorithmiques différentes et permet l'étude d'environ 400 problèmes
+méthodes algorithmiques différentes et permet l'étude d'environ 500 problèmes
 appliqués distincts.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,

@@ -21,8 +21,7 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 """
-Définit des outils de persistance et d'enregistrement de séries de valeurs pour
-analyse ultérieure ou utilisation de calcul.
+Définit des outils de persistance et d'enregistrement de séries de valeurs.
 """
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
@@ -48,8 +47,7 @@ if lpi.has_gnuplot:
 # ==============================================================================
 class Persistence(object):
     """
-    Classe générale de persistance définissant les accesseurs nécessaires
-    (Template)
+    Classe générale de persistance définissant les accesseurs nécessaires.
     """
 
     __slots__ = (
@@ -68,6 +66,8 @@ class Persistence(object):
 
     def __init__(self, name="", unit="", basetype=str):
         """
+        Initialisation des informations stockées.
+
         name : nom courant
         unit : unité
         basetype : type de base de l'objet stocké à chaque pas
@@ -96,18 +96,14 @@ class Persistence(object):
         self.__dataobservers = []
 
     def basetype(self, basetype=None):
-        """
-        Renvoie ou met en place le type de base des objets stockés
-        """
+        """Renvoie ou met en place le type de base des objets stockés."""
         if basetype is None:
             return self.__basetype
         else:
             self.__basetype = basetype
 
     def store(self, value=None, **kwargs):
-        """
-        Stocke une valeur avec ses informations de filtrage.
-        """
+        """Stocke une valeur avec ses informations de filtrage."""
         if value is None:
             raise ValueError("Value argument required")
         #
@@ -137,8 +133,9 @@ class Persistence(object):
 
     def pop(self, index=-1):
         """
-        Retire une valeur enregistrée par son index de stockage. Sans argument,
-        retire le dernier objet enregistre.
+        Retire une valeur enregistrée par son index de stockage.
+
+        Sans argument, retire le dernier objet enregistre.
         """
         __index = int(index)
         self.__values.pop(__index)
@@ -146,10 +143,11 @@ class Persistence(object):
 
     def shape(self, index=-1):
         """
-        Renvoie la taille sous forme numpy du dernier objet stocké. Si c'est un
-        objet numpy, renvoie le shape. Si c'est un entier, un flottant, un
-        complexe, renvoie 1. Si c'est une liste ou un dictionnaire, renvoie la
-        longueur. Par défaut, renvoie 1.
+        Renvoie la taille sous forme numpy du dernier objet stocké.
+
+        Si c'est un objet numpy, renvoie le shape. Si c'est un entier, un
+        flottant, un complexe, renvoie 1. Si c'est une liste ou un
+        dictionnaire, renvoie la longueur. Par défaut, renvoie 1.
         """
         __index = int(index)
         if len(self.__values) > 0:
@@ -171,41 +169,41 @@ class Persistence(object):
 
     # ---------------------------------------------------------
     def __str__(self):
-        "x.__str__() <==> str(x)"
+        """x.__str__() <==> str(x)."""
         msg = "   Index        Value   Tags\n"
         for iv, vv in enumerate(self.__values):
             msg += "  i=%05i  %10s   %s\n" % (iv, vv, self.__tags[iv])
         return msg
 
     def __len__(self):
-        "x.__len__() <==> len(x)"
+        """x.__len__() <==> len(x)."""
         return len(self.__values)
 
     def name(self):
         return self.__name
 
     def __getitem__(self, index=None):
-        "x.__getitem__(y) <==> x[y]"
+        """x.__getitem__(y) <==> x[y]."""
         return copy.copy(self.__values[index])
 
     def count(self, value):
-        "L.count(value) -> integer -- return number of occurrences of value"
+        """L.count(value) -> integer -- return number of occurrences of value."""
         return self.__values.count(value)
 
     def index(self, value, start=0, stop=None):
-        "L.index(value, [start, [stop]]) -> integer -- return first index of value."
+        """L.index(value, [start, [stop]]) -> integer -- return first index of value."""
         if stop is None:
             stop = len(self.__values)
         return self.__values.index(value, start, stop)
 
     def clear(self):
-        "Remove all items from list."
+        """Remove all items from list."""
         self.__values.clear()
         self.__tags.clear()
 
     # ---------------------------------------------------------
     def __filteredIndexes(self, **kwargs):
-        "Function interne filtrant les index"
+        """Function interne filtrant les index."""
         __indexOfFilteredItems = range(len(self.__tags))
         __filteringKwTags = kwargs.keys()
         if len(__filteringKwTags) > 0:
@@ -227,12 +225,12 @@ class Persistence(object):
 
     # ---------------------------------------------------------
     def values(self, **kwargs):
-        "D.values() -> list of D's values"
+        """D.values() -> list of D's values."""
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return [self.__values[i] for i in __indexOfFilteredItems]
 
     def keys(self, keyword=None, **kwargs):
-        "D.keys() -> list of D's keys"
+        """D.keys() -> list of D's keys."""
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __keys = []
         for i in __indexOfFilteredItems:
@@ -243,7 +241,7 @@ class Persistence(object):
         return __keys
 
     def items(self, keyword=None, **kwargs):
-        "D.items() -> list of D's (key, value) pairs, as 2-tuples"
+        """D.items() -> list of D's (key, value) pairs, as 2-tuples."""
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         __pairs = []
         for i in __indexOfFilteredItems:
@@ -254,7 +252,7 @@ class Persistence(object):
         return __pairs
 
     def tagkeys(self):
-        "D.tagkeys() -> list of D's tag keys"
+        """D.tagkeys() -> list of D's tag keys."""
         __allKeys = []
         for dicotags in self.__tags:
             __allKeys.extend(list(dicotags.keys()))
@@ -272,7 +270,7 @@ class Persistence(object):
     #             return [self.__values[i] for i in __indexOfFilteredItems]
 
     def tagserie(self, item=None, withValues=False, outputTag=None, **kwargs):
-        "D.tagserie() -> list of D's tag serie"
+        """D.tagserie() -> list of D's tag serie."""
         if item is None:
             __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         else:
@@ -303,24 +301,26 @@ class Persistence(object):
     # ---------------------------------------------------------
     # Pour compatibilité
     def stepnumber(self):
-        "Nombre de pas"
+        """Nombre de pas."""
         return len(self.__values)
 
     # Pour compatibilité
     def stepserie(self, **kwargs):
-        "Nombre de pas filtrés"
+        """Nombre de pas filtrés."""
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return __indexOfFilteredItems
 
     # Pour compatibilité
     def steplist(self, **kwargs):
-        "Nombre de pas filtrés"
+        """Nombre de pas filtrés."""
         __indexOfFilteredItems = self.__filteredIndexes(**kwargs)
         return list(__indexOfFilteredItems)
 
     # ---------------------------------------------------------
     def means(self):
         """
+        Moyenne.
+
         Renvoie la série contenant, à chaque pas, la valeur moyenne des données
         au pas. Il faut que le type de base soit compatible avec les types
         élémentaires numpy.
@@ -335,6 +335,8 @@ class Persistence(object):
 
     def stds(self, ddof=0):
         """
+        Écart-type.
+
         Renvoie la série contenant, à chaque pas, l'écart-type des données
         au pas. Il faut que le type de base soit compatible avec les types
         élémentaires numpy.
@@ -359,6 +361,8 @@ class Persistence(object):
 
     def sums(self):
         """
+        Somme.
+
         Renvoie la série contenant, à chaque pas, la somme des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
@@ -371,6 +375,8 @@ class Persistence(object):
 
     def mins(self):
         """
+        Minimum.
+
         Renvoie la série contenant, à chaque pas, le minimum des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
@@ -383,6 +389,8 @@ class Persistence(object):
 
     def maxs(self):
         """
+        Maximum.
+
         Renvoie la série contenant, à chaque pas, la maximum des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
@@ -395,6 +403,8 @@ class Persistence(object):
 
     def powers(self, x2):
         """
+        Puissance "**x2".
+
         Renvoie la série contenant, à chaque pas, la puissance "**x2" au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
         numpy.
@@ -407,7 +417,7 @@ class Persistence(object):
 
     def norms(self, _ord=None):
         """
-        Norm (_ord : voir numpy.linalg.norm)
+        Norm (_ord : voir numpy.linalg.norm).
 
         Renvoie la série contenant, à chaque pas, la norme des données au pas.
         Il faut que le type de base soit compatible avec les types élémentaires
@@ -421,7 +431,7 @@ class Persistence(object):
 
     def traces(self, offset=0):
         """
-        Trace (offset : voir numpy.trace)
+        Trace (offset : voir numpy.trace).
 
         Renvoie la série contenant, à chaque pas, la trace (avec l'offset) des
         données au pas. Il faut que le type de base soit compatible avec les
@@ -438,7 +448,8 @@ class Persistence(object):
 
     def maes(self, predictor=None):
         """
-        Mean Absolute Error (MAE)
+        Mean Absolute Error (MAE).
+
         mae(dX) = 1/n sum(dX_i)
 
         Renvoie la série contenant, à chaque pas, la MAE des données au pas.
@@ -473,7 +484,8 @@ class Persistence(object):
 
     def mses(self, predictor=None):
         """
-        Mean-Square Error (MSE) ou Mean-Square Deviation (MSD)
+        Mean-Square Error (MSE) ou Mean-Square Deviation (MSD).
+
         mse(dX) = 1/n sum(dX_i**2) = 1/n ||X||^2
 
         Renvoie la série contenant, à chaque pas, la MSE des données au pas. Il
@@ -516,7 +528,8 @@ class Persistence(object):
 
     def rmses(self, predictor=None):
         """
-        Root-Mean-Square Error (RMSE) ou Root-Mean-Square Deviation (RMSD)
+        Root-Mean-Square Error (RMSE) ou Root-Mean-Square Deviation (RMSD).
+
         rmse(dX) = sqrt( 1/n sum(dX_i**2) ) = sqrt( mse(dX) )
 
         Renvoie la série contenant, à chaque pas, la RMSE des données au pas.
@@ -568,7 +581,7 @@ class Persistence(object):
         persist=False,
         pause=True,
     ):
-        "Préparation des plots"
+        """Préparation des plots."""
         #
         # Vérification de la disponibilité du module Gnuplot
         if not lpi.has_gnuplot:
@@ -612,6 +625,8 @@ class Persistence(object):
         pause=True,
     ):
         """
+        Affichage simplifié utilisant Gnuplot.
+
         Renvoie un affichage de la valeur à chaque pas, si elle est compatible
         avec un affichage Gnuplot (donc essentiellement un vecteur). Si
         l'argument "step" existe dans la liste des pas de stockage effectués,
@@ -685,9 +700,7 @@ class Persistence(object):
                 eval(input("Please press return to continue...\n"))
 
     def __replots(self):
-        """
-        Affichage dans le cas du suivi dynamique de la variable
-        """
+        """Affichage dans le cas du suivi dynamique de la variable."""
         if self.__dynamic and len(self.__values) < 2:
             return 0
         #
@@ -702,9 +715,10 @@ class Persistence(object):
     # On pourrait aussi utiliser d'autres attributs d'un "array" comme "tofile"
     def mean(self):
         """
-        Renvoie la moyenne sur toutes les valeurs sans tenir compte de la
-        longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        Renvoie la moyenne sur toutes les valeurs.
+
+        L'opération se fait sans tenir compte de la longueur des pas. Il faut
+        que le type de base soit compatible avec les types élémentaires numpy.
         """
         try:
             return numpy.mean(self.__values, axis=0, dtype=mfp).astype("float")
@@ -713,9 +727,10 @@ class Persistence(object):
 
     def std(self, ddof=0):
         """
-        Renvoie l'écart-type de toutes les valeurs sans tenir compte de la
-        longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        Renvoie l'écart-type de toutes les valeurs.
+
+        L'opération se fait sans tenir compte de la longueur des pas. Il faut
+        que le type de base soit compatible avec les types élémentaires numpy.
 
         ddof : c'est le nombre de degrés de liberté pour le calcul de
                l'écart-type, qui est dans le diviseur. Inutile avant Numpy 1.1
@@ -732,9 +747,10 @@ class Persistence(object):
 
     def sum(self):
         """
-        Renvoie la somme de toutes les valeurs sans tenir compte de la
-        longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        Renvoie la somme de toutes les valeurs.
+
+        L'opération se fait sans tenir compte de la longueur des pas. Il faut
+        que le type de base soit compatible avec les types élémentaires numpy.
         """
         try:
             return numpy.asarray(self.__values).sum(axis=0)
@@ -743,9 +759,10 @@ class Persistence(object):
 
     def min(self):
         """
-        Renvoie le minimum de toutes les valeurs sans tenir compte de la
-        longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        Renvoie le minimum de toutes les valeurs.
+
+        L'opération se fait sans tenir compte de la longueur des pas. Il faut
+        que le type de base soit compatible avec les types élémentaires numpy.
         """
         try:
             return numpy.asarray(self.__values).min(axis=0)
@@ -754,9 +771,10 @@ class Persistence(object):
 
     def max(self):
         """
-        Renvoie le maximum de toutes les valeurs sans tenir compte de la
-        longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        Renvoie le maximum de toutes les valeurs.
+
+        L'opération se fait sans tenir compte de la longueur des pas. Il faut
+        que le type de base soit compatible avec les types élémentaires numpy.
         """
         try:
             return numpy.asarray(self.__values).max(axis=0)
@@ -765,9 +783,10 @@ class Persistence(object):
 
     def cumsum(self):
         """
-        Renvoie la somme cumulée de toutes les valeurs sans tenir compte de la
-        longueur des pas. Il faut que le type de base soit compatible avec
-        les types élémentaires numpy.
+        Renvoie la somme cumulée de toutes les valeurs.
+
+        L'opération se fait sans tenir compte de la longueur des pas. Il faut
+        que le type de base soit compatible avec les types élémentaires numpy.
         """
         try:
             return numpy.asarray(self.__values).cumsum(axis=0)
@@ -787,6 +806,8 @@ class Persistence(object):
         pause=True,
     ):
         """
+        Affichage simplifié utilisant Gnuplot.
+
         Renvoie un affichage unique pour l'ensemble des valeurs à chaque pas, si
         elles sont compatibles avec un affichage Gnuplot (donc essentiellement
         un vecteur). Si l'argument "step" existe dans la liste des pas de
@@ -862,20 +883,14 @@ class Persistence(object):
 
     # ---------------------------------------------------------
     def s2mvr(self):
-        """
-        Renvoie la série sous la forme d'une unique matrice avec les données au
-        pas rangées par ligne
-        """
+        """Renvoie la série sous la forme d'une unique matrice avec données rangées par ligne."""
         try:
             return numpy.asarray(self.__values)
         except Exception:
             raise TypeError("Base type is incompatible with numpy")
 
     def s2mvc(self):
-        """
-        Renvoie la série sous la forme d'une unique matrice avec les données au
-        pas rangées par colonne
-        """
+        """Renvoie la série sous la forme d'une unique matrice avec données rangées par colonne."""
         try:
             return numpy.asarray(self.__values).transpose()
             # Eqvlt: return numpy.stack([numpy.ravel(sv) for sv in self.__values], axis=1)
@@ -957,7 +972,7 @@ class Persistence(object):
 # ==============================================================================
 class SchedulerTrigger(object):
     """
-    Classe générale d'interface de type Scheduler/Trigger
+    Classe générale d'interface de type Scheduler/Trigger.
     """
 
     __slots__ = ()
@@ -1005,8 +1020,9 @@ class OneIndex(Persistence):
 
 class OneVector(Persistence):
     """
-    Classe de stockage d'une liste de valeurs numériques homogènes par pas. Ne
-    pas utiliser cette classe pour des données hétérogènes, mais "OneList".
+    Classe de stockage d'une liste de valeurs numériques homogènes par pas.
+
+    Ne pas utiliser cette classe pour des données hétérogènes, mais "OneList".
     """
 
     __slots__ = ()
@@ -1016,9 +1032,7 @@ class OneVector(Persistence):
 
 
 class OneMatrice(Persistence):
-    """
-    Classe de stockage d'une matrice de valeurs homogènes par pas.
-    """
+    """Classe de stockage d'une matrice de valeurs homogènes par pas."""
 
     __slots__ = ()
 
@@ -1027,9 +1041,7 @@ class OneMatrice(Persistence):
 
 
 class OneMatrix(Persistence):
-    """
-    Classe de stockage d'une matrice de valeurs homogènes par pas (obsolète).
-    """
+    """Classe de stockage d'une matrice de valeurs homogènes par pas (obsolète)."""
 
     __slots__ = ()
 
@@ -1039,8 +1051,9 @@ class OneMatrix(Persistence):
 
 class OneList(Persistence):
     """
-    Classe de stockage d'une liste de valeurs hétérogènes (list) par pas. Ne
-    pas utiliser cette classe pour des données numériques homogènes, mais
+    Classe de stockage d'une liste de valeurs hétérogènes (list) par pas.
+
+    Ne pas utiliser cette classe pour des données numériques homogènes, mais
     "OneVector".
     """
 
@@ -1051,17 +1064,18 @@ class OneList(Persistence):
 
 
 def NoType(value):
-    "Fonction transparente, sans effet sur son argument"
+    """Fonction transparente, sans effet sur son argument."""
     return value
 
 
 class OneNoType(Persistence):
     """
-    Classe de stockage d'un objet sans modification (cast) de type. Attention,
-    selon le véritable type de l'objet stocké à chaque pas, les opérations
-    arithmétiques à base de numpy peuvent être invalides ou donner des
-    résultats inattendus. Cette classe n'est donc à utiliser qu'à bon escient
-    volontairement, et pas du tout par défaut.
+    Classe de stockage d'un objet sans modification (cast) de type.
+
+    Attention, selon le véritable type de l'objet stocké à chaque pas, les
+    opérations arithmétiques à base de numpy peuvent être invalides ou donner
+    des résultats inattendus. Cette classe n'est donc à utiliser qu'à bon
+    escient volontairement, et pas du tout par défaut.
     """
 
     __slots__ = ()
@@ -1073,8 +1087,7 @@ class OneNoType(Persistence):
 # ==============================================================================
 class CompositePersistence(object):
     """
-    Structure de stockage permettant de rassembler plusieurs objets de
-    persistence.
+    Structure permettant de rassembler plusieurs objets de persistence.
 
     Des objets par défaut sont prévus, et des objets supplémentaires peuvent
     être ajoutés.
@@ -1083,14 +1096,7 @@ class CompositePersistence(object):
     __slots__ = ("__name", "__StoredObjects")
 
     def __init__(self, name="", defaults=True):
-        """
-        name : nom courant
-
-        La gestion interne des données est exclusivement basée sur les
-        variables initialisées ici (qui ne sont pas accessibles depuis
-        l'extérieur des objets comme des attributs) :
-        __StoredObjects : objets de type persistence collectés dans cet objet
-        """
+        """Initialisation des défauts."""
         self.__name = str(name)
         #
         self.__StoredObjects = {}
@@ -1122,9 +1128,7 @@ class CompositePersistence(object):
         #
 
     def store(self, name=None, value=None, **kwargs):
-        """
-        Stockage d'une valeur "value" pour le "step" dans la variable "name".
-        """
+        """Stockage d'une valeur dans la variable nommée."""
         if name is None:
             raise ValueError("Storable object name is required for storage.")
         if name not in self.__StoredObjects.keys():
@@ -1132,10 +1136,7 @@ class CompositePersistence(object):
         self.__StoredObjects[name].store(value=value, **kwargs)
 
     def add_object(self, name=None, persistenceType=Persistence, basetype=None):
-        """
-        Ajoute dans les objets stockables un nouvel objet défini par son nom,
-        son type de Persistence et son type de base à chaque pas.
-        """
+        """Ajoute un nouvel objet  dans les objets stockables."""
         if name is None:
             raise ValueError("Object name is required for adding an object.")
         if name in self.__StoredObjects.keys():
@@ -1151,9 +1152,7 @@ class CompositePersistence(object):
             )
 
     def get_object(self, name=None):
-        """
-        Renvoie l'objet de type Persistence qui porte le nom demandé.
-        """
+        """Renvoie l'objet de type Persistence qui porte le nom demandé."""
         if name is None:
             raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
@@ -1163,6 +1162,7 @@ class CompositePersistence(object):
     def set_object(self, name=None, objet=None):
         """
         Affecte directement un 'objet' qui porte le nom 'name' demandé.
+
         Attention, il n'est pas effectué de vérification sur le type, qui doit
         comporter les méthodes habituelles de Persistence pour que cela
         fonctionne.
@@ -1177,9 +1177,7 @@ class CompositePersistence(object):
         self.__StoredObjects[name] = objet
 
     def del_object(self, name=None):
-        """
-        Supprime un objet de la liste des objets stockables.
-        """
+        """Supprime un objet de la liste des objets stockables."""
         if name is None:
             raise ValueError("Object name is required for retrieving an object.")
         if name not in self.__StoredObjects.keys():
@@ -1189,28 +1187,28 @@ class CompositePersistence(object):
     # ---------------------------------------------------------
     # Méthodes d'accès de type dictionnaire
     def __getitem__(self, name=None):
-        "x.__getitem__(y) <==> x[y]"
+        """x.__getitem__(y) <==> x[y]."""
         return self.get_object(name)
 
     def __setitem__(self, name=None, objet=None):
-        "x.__setitem__(i, y) <==> x[i]=y"
+        """x.__setitem__(i, y) <==> x[i]=y."""
         self.set_object(name, objet)
 
     def keys(self):
-        "D.keys() -> list of D's keys"
+        """D.keys() -> list of D's keys."""
         return self.get_stored_objects(hideVoidObjects=False)
 
     def values(self):
-        "D.values() -> list of D's values"
+        """D.values() -> list of D's values."""
         return self.__StoredObjects.values()
 
     def items(self):
-        "D.items() -> list of D's (key, value) pairs, as 2-tuples"
+        """D.items() -> list of D's (key, value) pairs, as 2-tuples."""
         return self.__StoredObjects.items()
 
     # ---------------------------------------------------------
     def get_stored_objects(self, hideVoidObjects=False):
-        "Renvoie la liste des objets présents"
+        """Renvoie la liste des objets présents."""
         objs = self.__StoredObjects.keys()
         if hideVoidObjects:
             usedObjs = []
@@ -1226,10 +1224,7 @@ class CompositePersistence(object):
 
     # ---------------------------------------------------------
     def save_composite(self, filename=None, mode="pickle", compress="gzip"):
-        """
-        Enregistre l'objet dans le fichier indiqué selon le "mode" demandé,
-        et renvoi le nom du fichier
-        """
+        """Enregistre l'objet dans le fichier indiqué selon le "mode" demandé."""
         if filename is None:
             if compress == "gzip":
                 filename = os.tempnam(os.getcwd(), "dacp") + ".pkl.gz"
@@ -1255,9 +1250,7 @@ class CompositePersistence(object):
         return filename
 
     def load_composite(self, filename=None, mode="pickle", compress="gzip"):
-        """
-        Recharge un objet composite sauvé en fichier
-        """
+        """Recharge un objet composite sauvé en fichier."""
         if filename is None:
             raise ValueError("A file name if requested to load a composite.")
         else:

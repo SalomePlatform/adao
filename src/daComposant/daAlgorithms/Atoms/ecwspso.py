@@ -37,6 +37,9 @@ from numpy.random import uniform as rand
 
 # ==============================================================================
 def ecwspso(selfA, Xb, Y, HO, R, B):
+    """
+    Correction
+    """
     #
     Hm = HO["Direct"].appliedTo
     #
@@ -152,7 +155,7 @@ def ecwspso(selfA, Xb, Y, HO, R, B):
         selfA._parameters["SwarmInitialization"],
         selfA._parameters["DistributionByComponents"],
     )
-    logging.debug("%s Initialisation of the swarm with %i insects of size %i "%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
+    logging.debug("%s Initialisation of the swarm with %i insects of size %i"%(selfA._name, Swarm.shape[0], Swarm.shape[2]))  # noqa: E501
     #
     __nbh = GetNeighborhoodTopology( selfA._parameters["SwarmTopology"], list(range(__nbI)) )
     #

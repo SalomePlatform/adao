@@ -33,6 +33,9 @@ mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================
 def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
+    """
+    Correction
+    """
     #
     if selfA._parameters["EstimationOf"] == "Parameters":
         selfA._parameters["StoreInternalVariables"] = True
@@ -196,7 +199,8 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         selfA.StoredVariables["CurrentStepNumber"].store( len(selfA.StoredVariables["Analysis"]) )
         # ---> avec analysis
         selfA.StoredVariables["Analysis"].store( Xa )
-        if selfA._toStore("SimulatedObservationAtCurrentAnalysis"):
+        if selfA._toStore("SimulatedObservationAtCurrentAnalysis") \
+                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             selfA.StoredVariables["SimulatedObservationAtCurrentAnalysis"].store( Hm((Xa, None)) )
         if selfA._toStore("InnovationAtCurrentAnalysis"):
             selfA.StoredVariables["InnovationAtCurrentAnalysis"].store( _Innovation )
@@ -212,8 +216,7 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             selfA.StoredVariables["BMA"].store( Xhmn - Xa )
         if selfA._toStore("InnovationAtCurrentState"):
             selfA.StoredVariables["InnovationAtCurrentState"].store( _Innovation )
-        if selfA._toStore("SimulatedObservationAtCurrentState") \
-                or selfA._toStore("SimulatedObservationAtCurrentOptimum"):
+        if selfA._toStore("SimulatedObservationAtCurrentState"):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( Yhmn )
         # ---> autres
         if selfA._parameters["StoreInternalVariables"] \

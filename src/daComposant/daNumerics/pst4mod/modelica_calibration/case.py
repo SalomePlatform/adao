@@ -2168,6 +2168,7 @@ def TOP_LEVEL_exefmuMultiobs( x_values_matrix , VariablesToCalibrate=None, Outpu
             f=open(log_file,'a')
             for line in output:
                 f.write(line)
+            f.close()
 
         else:
             start_time_simulation_fmi = time.time()
