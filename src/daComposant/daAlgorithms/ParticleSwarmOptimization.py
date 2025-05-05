@@ -42,10 +42,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SPSO-2011-PSIS",
                 "CanonicalPSO-VLS",
                 "OGCR-VLS",
+                "SPSO-2011-AIS-VLS",
+                "SPSO-2011-SIS-VLS",
+                "SPSO-2011-PSIS-VLS",
             ],
             listadv  = [
                 "PSO",
                 "PSO-VLS",
+                "SPSO-2011-VLS",
                 "VLS",
             ],
         )
@@ -63,6 +67,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = int,
             message  = "Nombre maximal d'évaluations de la fonction",
             minval   = -1,
+        )
+        self.defineRequiredParameter(
+            name     = "GlobalCostReductionTolerance",
+            default  = 1.e-16,
+            typecast = float,
+            message  = "Réduction du coût sur l'ensemble de la recherche lors de l'arrêt",
+            minval   = 0.,
         )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -170,24 +181,31 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ],
         )
         self.defineRequiredParameter(
-            name     = "HybridNumberOfLocalHunters",
-            default  = 5,
+            name     = "HybridNumberOfWarmupIterations",
+            default  = 0,
             typecast = int,
-            message  = "Nombre maximal d'insectes accélérés en hybride variationnel",
+            message  = "Nombre d'itérations initiales non accélérées avant l'accélération en optimisation hybride",
+            minval   = -1,
+        )
+        self.defineRequiredParameter(
+            name     = "HybridNumberOfLocalHunters",
+            default  = 1,
+            typecast = int,
+            message  = "Nombre maximal d'insectes accélérés en optimisation hybride",
             minval   = -1,
         )
         self.defineRequiredParameter(
             name     = "HybridMaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
-            message  = "Nombre maximal de pas d'optimisation en hybride variationnel",
+            message  = "Nombre maximal de pas d'optimisation en optimisation hybride",
             minval   = -1,
         )
         self.defineRequiredParameter(
             name     = "HybridCostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
-            message  = "Diminution relative minimale du coût lors de l'arrêt en hybride variationnel",
+            message  = "Diminution relative minimale du coût lors de l'arrêt en optimisation hybride",
             minval   = 0.,
         )
         self.defineRequiredParameter(
@@ -270,13 +288,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         # --------------------------
+        # CanonicalPSO = PSO
         if self._parameters["Variant"] in ["CanonicalPSO", "PSO"]:
             ecwnpso.ecwnpso(self, Xb, Y, HO, R, B)
         #
         elif self._parameters["Variant"] in ["OGCR"]:
             ecwopso.ecwopso(self, Xb, Y, HO, R, B)
         #
-        # Default SPSO-2011 = SPSO-2011-AIS
+        # SPSO-2011 = SPSO-2011-AIS
         elif self._parameters["Variant"] in ["SPSO-2011", "SPSO-2011-AIS"]:
             ecwapso.ecwapso(self, Xb, Y, HO, R, B)
         #
@@ -287,12 +306,22 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ecwpspso.ecwpspso(self, Xb, Y, HO, R, B)
         #
         # --------------------------
-        # Default VLS = CanonicalPSO-VLS = PSO-VLS
+        # CanonicalPSO-VLS = PSO-VLS = VLS
         elif self._parameters["Variant"] in ["CanonicalPSO-VLS", "PSO-VLS", "VLS"]:
             ecwnpso.ecwnpso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
         #
         elif self._parameters["Variant"] in ["OGCR-VLS"]:
             ecwopso.ecwopso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
+        #
+        # SPSO-2011-VLS = SPSO-2011-AIS-VLS
+        elif self._parameters["Variant"] in ["SPSO-2011-VLS", "SPSO-2011-AIS-VLS"]:
+            ecwapso.ecwapso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
+        #
+        elif self._parameters["Variant"] in ["SPSO-2011-SIS-VLS"]:
+            ecwspso.ecwspso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
+        #
+        elif self._parameters["Variant"] in ["SPSO-2011-PSIS-VLS"]:
+            ecwpspso.ecwpspso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
         #
         # --------------------------
         else:

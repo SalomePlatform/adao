@@ -31,19 +31,22 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-This algorithm realizes an estimation of the state of a system by minimization
-without gradient of a cost function :math:`J` by using an evolutionary strategy
-of particle swarm. It is a method that does not use the derivatives of the cost
-function. It falls in the same category than the
-:ref:`section_ref_algorithm_DerivativeFreeOptimization`, the
-:ref:`section_ref_algorithm_DifferentialEvolution` or the
+This algorithm estimates the state of a system, by minimizing a cost function
+:math:`J`, using an evolutionary particle swarm method. It is a metaheuristic
+that does not require any particular information about the functional, and does
+not require derivatives (except in its hybrid "VSL" version). It falls in the
+same category than the :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+the :ref:`section_ref_algorithm_DifferentialEvolution` or the
 :ref:`section_ref_algorithm_TabuSearch`.
 
 This is a mono-objective optimization method, allowing for global minimum
 search of a general error function :math:`J` of type :math:`L^1`, :math:`L^2`
 or :math:`L^{\infty}`, with or without weights, as described in the section for
-:ref:`section_theory_optimization`. The default error function is the augmented
-weighted least squares function, classically used in data assimilation.
+:ref:`section_theory_optimization`. As it is an optimization metaheuristic,
+reaching a global or local optimal result is nevertheless not guaranteed
+(except in its hybrid "VSL" version). The default error function is the
+augmented weighted least squares function, classically used in data
+assimilation.
 
 It is based on the evolution of a population (called a "swarm") of states (each
 state is called a "particle" or an "insect"). There exists various variants of
@@ -57,6 +60,7 @@ this algorithm. The following stable and robust formulations are proposed here:
     pair: Variant ; SIS PSO
     pair: Variant ; PSIS PSO
     pair: Variant ; APSO
+    pair: Variant ; SPSO-2011-AIS
     pair: Variant ; SPSO-2011-SIS
     pair: Variant ; SPSO-2011-PSIS
 
@@ -81,6 +85,22 @@ this algorithm. The following stable and robust formulations are proposed here:
   Synchronous Iteration Strategy), similar to the "SPSO-2011-SIS" algorithm
   with synchronous updating and parallelization, known as "PSIS", of the
   particles.
+
+.. index::
+    single: Variational Local Search
+    pair: Variant ; CanonicalPSO-VSL
+    pair: Variant ; OGCR-VSL
+    pair: Variant ; SPSO-2011-AIS-VSL
+    pair: Variant ; SPSO-2011-SIS-VSL
+    pair: Variant ; SPSO-2011-PSIS-VSL
+
+Each of the above methods can have the local aspect of its search accelerated
+by a "VSL" (Variational Local Search) method concerning the best insects in the
+swarm. The global aspect of the search remains preserved by the particle swarm
+method, but great care must be taken experimentally to avoid premature
+stagnation of the best particles in the swarm. Simply suffix the name of the
+algorithm variant with "-VSL" to activate the acceleration, e.g.
+"CanonicalPSO-VSL".
 
 The following are a few practical suggestions for the effective use of these
 algorithms:
@@ -112,6 +132,17 @@ algorithms:
   the problem is partially constrained, it is recommended (but not required) to
   define increment bounds. In case these increment bounds are not defined, the
   variable bounds will be used as increment bounds.
+- The use of hybrid "VSL"-type acceleration variants will require the
+  availability of the operator gradient (either given explicitly or requested
+  by finite differences at definition), but normally speeds up the local
+  search. It is therefore a good idea to reduce the number of generations
+  (which can sometimes be reduced to as few as 5 or 10), while specifying a
+  reasonable number of insects (of the order of 1 to 5, for example) to be the
+  subject of this local search. However, the parameters of the hybrid search
+  have to be finely tuned for each case, in the form of a compromise, in order
+  to have both the global and local capacity of this optimization. Indeed, too
+  fast local convergence or too limited global exploration can reduce the
+  algorithm's ability to explore the solution space.
 
 These suggestions are to be used as experimental indications, not as
 requirements, because they are to be appreciated or adapted according to the
@@ -191,6 +222,16 @@ initial swarm and for the final swarm.
 .. include:: snippets/CognitiveAccelerationControl.rst
 
 .. include:: snippets/DistributionByComponents.rst
+
+.. include:: snippets/GlobalCostReductionTolerance.rst
+
+.. include:: snippets/HybridCostDecrementTolerance.rst
+
+.. include:: snippets/HybridMaximumNumberOfIterations.rst
+
+.. include:: snippets/HybridNumberOfLocalHunters.rst
+
+.. include:: snippets/HybridNumberOfWarmupIterations.rst
 
 .. include:: snippets/InertiaWeight.rst
 

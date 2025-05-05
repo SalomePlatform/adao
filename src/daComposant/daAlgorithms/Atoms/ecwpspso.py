@@ -32,11 +32,12 @@ from daCore.NumericObjects import GenerateRandomPointInHyperSphere
 from daCore.NumericObjects import GetNeighborhoodTopology
 from daCore.NumericObjects import BuildComplexSampleSwarm
 from daCore.NumericObjects import EnsembleErrorCovariance
+from daCore.NumericObjects import VarLocalSearch
 from daCore.PlatformInfo import vfloat
 from numpy.random import uniform as rand
 
 # ==============================================================================
-def ecwpspso(selfA, Xb, Y, HO, R, B):
+def ecwpspso(selfA, Xb, Y, HO, R, B, Hybrid=None):
     """
     Correction
     """
@@ -85,12 +86,24 @@ def ecwpspso(selfA, Xb, Y, HO, R, B):
         #
         return J, Jb, Jo
 
-    def KeepRunningCondition(__step, __nbfct):
+    def keepRunningCondition(__step, __nbfct, __jbest):
+        __jdecr = __jbest / max(selfA.StoredVariables["CostFunctionJ" ][0], 1.e-16)
         if __step >= selfA._parameters["MaximumNumberOfIterations"]:
             logging.debug("%s Stopping search because the number %i of evolving iterations is exceeding the maximum %i."%(selfA._name, __step, selfA._parameters["MaximumNumberOfIterations"]))  # noqa: E501
             return False
         elif __nbfct >= selfA._parameters["MaximumNumberOfFunctionEvaluations"]:
             logging.debug("%s Stopping search because the number %i of function evaluations is exceeding the maximum %i."%(selfA._name, __nbfct, selfA._parameters["MaximumNumberOfFunctionEvaluations"]))  # noqa: E501
+            return False
+        elif __jdecr < selfA._parameters["GlobalCostReductionTolerance"]:
+            logging.debug("%s Stopping search because the global relative cost decrement %.2e is under the required minimal threshold of %.2e."%(selfA._name, __jdecr, selfA._parameters["GlobalCostReductionTolerance"]))  # noqa: E501
+            return False
+        else:
+            return True
+
+    def activateLocalSearch(__step, __hybrid):
+        if __hybrid != "VarLocalSearch":
+            return False
+        elif __step <= selfA._parameters["HybridNumberOfWarmupIterations"]:
             return False
         else:
             return True
@@ -207,7 +220,7 @@ def ecwpspso(selfA, Xb, Y, HO, R, B):
     # Minimisation de la fonctionnelle
     # --------------------------------
     step = 0
-    while KeepRunningCondition(step, nbfct):
+    while keepRunningCondition(step, nbfct, qSwarm[iBest, 0]):
         step += 1
         __cs, __ss = asapso(step)
         #
@@ -223,6 +236,20 @@ def ecwpspso(selfA, Xb, Y, HO, R, B):
             if JTest < qSwarm[__i, 0]:
                 Swarm[__i, 2, :] = Swarm[__i, 0, :]
                 qSwarm[__i, :3]  = (JTest, JbTest, JoTest)
+        #
+        if activateLocalSearch(step, Hybrid):
+            __nLH = min(selfA._parameters["HybridNumberOfLocalHunters"], __nbI)
+            theBestOnes = numpy.argsort(qSwarm[:, 0])[0:__nLH]
+            __nII = 0
+            for __i in theBestOnes:
+                Xn = Swarm[__i, 0, :]
+                Xn, JTest, JbTest, JoTest = VarLocalSearch(Xn, Xb, Y, HO, R, B, selfA._parameters)
+                Swarm[__i, 0, :] = Xn.flat
+                if JTest < qSwarm[__i, 0]:
+                    __nII += 1
+                    Swarm[__i, 2, :] = Swarm[__i, 0, :]  # xBest
+                    qSwarm[__i, :3 ] = (JTest, JbTest, JoTest)
+            logging.debug("%s Variational local search at step %i leads to improve %i insect(s) over %i"%(selfA._name, step, __nII, __nLH))
         #
         for __i in range(__nbI):
             # Maj gbest

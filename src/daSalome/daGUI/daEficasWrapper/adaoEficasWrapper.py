@@ -29,7 +29,7 @@ try:
     from InterfaceQT4 import qtEficas  # Import from EficasTools
     print("  Import compatible with EFICAS until 9.14 included for: adaoEficasWrapper")
 except Exception as e:
-    from InterfaceGUI.QT5 import qt_eficas as qtEficas  # Import from EficasTools
+    from InterfaceGUI.QT5 import qt_eficas  # Import from EficasTools
 from PyQt5.QtGui  import *        # Import from PyQT
 from PyQt5.QtCore import *        # Import from PyQT
 

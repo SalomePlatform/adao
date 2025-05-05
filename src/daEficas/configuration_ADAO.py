@@ -32,8 +32,8 @@ from PyQt5.QtGui  import *
 
 # Modules Eficas
 try:
-    print("  Import compatible with EFICAS until 9.14 included for: configuration_ADAO")
     from InterfaceQT4 import configuration  # Import from EficasTools
+    print("  Import compatible with EFICAS until 9.14 included for: configuration_ADAO")
 except Exception as e:
     from Editeur import configuration  # Import from EficasTools
 

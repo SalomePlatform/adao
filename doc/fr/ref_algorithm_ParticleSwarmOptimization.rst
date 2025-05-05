@@ -31,20 +31,23 @@ Algorithme de calcul "*ParticleSwarmOptimization*"
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
-Cet algorithme réalise une estimation de l'état d'un système par minimisation
-sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode
-évolutionnaire d'essaim particulaire. C'est une méthode qui n'utilise pas les
-dérivées de la fonctionnelle d'écart. Elle entre dans la même catégorie que les
-:ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+Cet algorithme réalise une estimation de l'état d'un système, par minimisation
+d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode évolutionnaire
+d'essaim particulaire. C'est une métaheuristique qui ne requiert pas
+d'information particulière sur la fonctionnelle et qui ne nécessite pas les
+dérivées (sauf dans sa version hybride de type "*VSL*"). Elle entre dans la
+même catégorie que les :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 :ref:`section_ref_algorithm_DifferentialEvolution` ou
 :ref:`section_ref_algorithm_TabuSearch`.
 
 C'est une méthode d'optimisation mono-objectif, permettant la recherche du
 minimum global d'une fonctionnelle d'erreur :math:`J` quelconque de type
 :math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations,
-comme décrit dans la section pour :ref:`section_theory_optimization`. La
-fonctionnelle d'erreur par défaut est celle de moindres carrés pondérés
-augmentés, classiquement utilisée en assimilation de données.
+comme décrit dans la section pour :ref:`section_theory_optimization`. Comme
+c'est une métaheuristique d'optimisation, l'atteinte d'un résultat optimal
+global ou local n'est néanmoins pas garanti (sauf dans sa version hybride de
+type "*VSL*"). La fonctionnelle d'erreur par défaut est celle de moindres
+carrés pondérés augmentés, classiquement utilisée en assimilation de données.
 
 Elle est basée sur l'évolution d'une population (appelée "essaim") d'états
 (chaque individu étant appelé une "particule" ou un "insecte"). Il existe
@@ -59,6 +62,7 @@ et robustes suivantes :
     pair: Variant ; SIS PSO
     pair: Variant ; PSIS PSO
     pair: Variant ; APSO
+    pair: Variant ; SPSO-2011-AIS
     pair: Variant ; SPSO-2011-SIS
     pair: Variant ; SPSO-2011-PSIS
 
@@ -85,6 +89,23 @@ et robustes suivantes :
   Synchronous Iteration Strategy), similaire à l'algorithme "SPSO-2011-SIS"
   avec mise à jour synchrone et parallélisation, appelée "PSIS", des
   particules.
+
+.. index::
+    single: Variational Local Search
+    pair: Variant ; CanonicalPSO-VSL
+    pair: Variant ; OGCR-VSL
+    pair: Variant ; SPSO-2011-AIS-VSL
+    pair: Variant ; SPSO-2011-SIS-VSL
+    pair: Variant ; SPSO-2011-PSIS-VSL
+
+Chacune des méthodes ci-dessus peut voir l'aspect local de sa recherche
+accéléré par une méthode variationnelle "VSL" (Variational Local Search)
+concernant les meilleurs insectes de l'essaim. L'aspect global de la recherche
+reste préservé par la méthode d'essaim particulaire, mais il convient
+expérimentalement d'être très attentif à éviter la stagnation prématurée des
+meilleurs particules de l'essaim. Il suffit de suffixer le nom de la variante
+d'algorithme par "-VSL" pour activer l'accélération, comme par exemple
+"CanonicalPSO-VSL".
 
 Voici quelques suggestions pratiques pour une utilisation efficace de ces
 algorithmes :
@@ -119,8 +140,20 @@ algorithmes :
   recommandé (mais pas indispensable) de définir des bornes d'incrément. Dans
   le cas où ces bornes d'incréments ne sont pas définies, ce sont les bornes
   des variables qui seront utilisées comme bornes d'incréments.
+- L'usage des variantes hybrides d'accélération de type "VSL" va requérir la
+  disponibilité du gradient de l'opérateur (soit donné explicitement soit
+  demandé par différences finies à la définition), mais accélère normalement la
+  recherche locale. Il est donc judicieux de réduire notablement le nombre de
+  générations (qui peut être parfois réduit jusqu'à seulement 5 ou 10) tout en
+  spécifiant bien un nombre raisonnable d'insectes (de l'ordre par exemple de 1
+  à 5) faisant l'objet de cette recherche locale. Les paramètres de la
+  recherche hybride sont néanmoins à adapter finement pour chaque cas, sous
+  forme d'un compromis, pour disposer à la fois de la capacité globale et
+  locale de cette optimisation. En effet, une convergence locale trop rapide ou
+  une exploration globale trop restreinte peut réduire la capacité
+  algorithmique à bien explorer l'espace des solutions.
 
-Ces conseils sont à utiliser comme des indications expérimentales, et pas comme
+Ces conseils sont à utiliser comme des indications expérimentales, et non comme
 des prescriptions, car ils sont à apprécier ou à adapter selon la physique de
 chaque problème que l'on traite.
 
@@ -200,6 +233,16 @@ final.
 .. include:: snippets/CognitiveAccelerationControl.rst
 
 .. include:: snippets/DistributionByComponents.rst
+
+.. include:: snippets/GlobalCostReductionTolerance.rst
+
+.. include:: snippets/HybridCostDecrementTolerance.rst
+
+.. include:: snippets/HybridMaximumNumberOfIterations.rst
+
+.. include:: snippets/HybridNumberOfLocalHunters.rst
+
+.. include:: snippets/HybridNumberOfWarmupIterations.rst
 
 .. include:: snippets/InertiaWeight.rst
 

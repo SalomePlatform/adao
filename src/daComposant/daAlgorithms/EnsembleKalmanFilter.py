@@ -112,7 +112,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "HybridCovarianceEquilibrium",
             default  = 0.5,
             typecast = float,
-            message  = "Facteur d'équilibre entre la covariance statique et la covariance d'ensemble en hybride variationnel",  # noqa: E501
+            message  = "Facteur d'équilibre entre la covariance statique et la covariance d'ensemble en optimisation hybride",  # noqa: E501
             minval   = 0.,
             maxval   = 1.,
         )
@@ -120,14 +120,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             name     = "HybridMaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
-            message  = "Nombre maximal de pas d'optimisation en hybride variationnel",
+            message  = "Nombre maximal de pas d'optimisation en optimisation hybride",
             minval   = -1,
         )
         self.defineRequiredParameter(
             name     = "HybridCostDecrementTolerance",
             default  = 1.e-7,
             typecast = float,
-            message  = "Diminution relative minimale du coût lors de l'arrêt en hybride variationnel",
+            message  = "Diminution relative minimale du coût lors de l'arrêt en optimisation hybride",
             minval   = 0.,
         )
         self.defineRequiredParameter(

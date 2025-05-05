@@ -83,12 +83,24 @@ def ecwopso(selfA, Xb, Y, HO, R, B, Hybrid=None):
         #
         return J, Jb, Jo, _HX
 
-    def KeepRunningCondition(__step, __nbfct):
+    def keepRunningCondition(__step, __nbfct, __jbest):
+        __jdecr = __jbest / max(selfA.StoredVariables["CostFunctionJ" ][0], 1.e-16)
         if __step >= selfA._parameters["MaximumNumberOfIterations"]:
             logging.debug("%s Stopping search because the number %i of evolving iterations is exceeding the maximum %i."%(selfA._name, __step, selfA._parameters["MaximumNumberOfIterations"]))  # noqa: E501
             return False
         elif __nbfct >= selfA._parameters["MaximumNumberOfFunctionEvaluations"]:
             logging.debug("%s Stopping search because the number %i of function evaluations is exceeding the maximum %i."%(selfA._name, __nbfct, selfA._parameters["MaximumNumberOfFunctionEvaluations"]))  # noqa: E501
+            return False
+        elif __jdecr < selfA._parameters["GlobalCostReductionTolerance"]:
+            logging.debug("%s Stopping search because the global relative cost decrement %.2e is under the required minimal threshold of %.2e."%(selfA._name, __jdecr, selfA._parameters["GlobalCostReductionTolerance"]))  # noqa: E501
+            return False
+        else:
+            return True
+
+    def activateLocalSearch(__step, __hybrid):
+        if __hybrid != "VarLocalSearch":
+            return False
+        elif __step <= selfA._parameters["HybridNumberOfWarmupIterations"]:
             return False
         else:
             return True
@@ -198,7 +210,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B, Hybrid=None):
     # Minimisation de la fonctionnelle
     # --------------------------------
     step = 0
-    while KeepRunningCondition(step, nbfct):
+    while keepRunningCondition(step, nbfct, qSwarm[iBest, 0]):
         step += 1
         __cs, __ss = asapso(step)
         #
@@ -219,7 +231,7 @@ def ecwopso(selfA, Xb, Y, HO, R, B, Hybrid=None):
             if selfA._toStore("EnsembleOfSimulations"):
                 sSwarm[:, __i] = HXTest.flat
         #
-        if Hybrid == "VarLocalSearch":
+        if activateLocalSearch(step, Hybrid):
             __nLH = min(selfA._parameters["HybridNumberOfLocalHunters"], __nbI)
             theBestOnes = numpy.argsort(qSwarm[:, 0])[0:__nLH]
             __nII = 0

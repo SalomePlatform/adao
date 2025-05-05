@@ -23,8 +23,8 @@
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 try:
-    print("  Import compatible with EFICAS until 9.14 included for: generator_adao")
     from generator.generator_python import PythonGenerator
+    print("  Import compatible with EFICAS until 9.14 included for: generator_adao")
 except Exception as e:
     from Accas.IO.writer.writer_python import PythonGenerator
 
