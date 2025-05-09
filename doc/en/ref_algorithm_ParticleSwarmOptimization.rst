@@ -32,7 +32,7 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm estimates the state of a system, by minimizing a cost function
-:math:`J`, using an evolutionary particle swarm method. It is a metaheuristic
+:math:`J`, using an evolutionary particle swarm method. It is a meta-heuristic
 that does not require any particular information about the functional, and does
 not require derivatives (except in its hybrid "VSL" version). It falls in the
 same category than the :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
@@ -42,7 +42,7 @@ the :ref:`section_ref_algorithm_DifferentialEvolution` or the
 This is a mono-objective optimization method, allowing for global minimum
 search of a general error function :math:`J` of type :math:`L^1`, :math:`L^2`
 or :math:`L^{\infty}`, with or without weights, as described in the section for
-:ref:`section_theory_optimization`. As it is an optimization metaheuristic,
+:ref:`section_theory_optimization`. As it is an optimization meta-heuristic,
 reaching a global or local optimal result is nevertheless not guaranteed
 (except in its hybrid "VSL" version). The default error function is the
 augmented weighted least squares function, classically used in data
@@ -155,15 +155,15 @@ With the default values of 40 to 100 individuals on 50 generations, it takes
 between `40x50=2000` and `100*50=5000` evaluations, which is significantly more
 than in variational optimization. It is for this reason that this algorithm is
 usually interesting when the dimension of the state space is large, or when the
-non-linearities of the simulation make the evaluation of the gradient of the
+non-linearity of the simulation make the evaluation of the gradient of the
 functional by numerical approximation complicated or invalid. But it is also
 necessary that the calculation of the function to be simulated is not too
 costly to avoid a prohibitive optimization time length.
 
 To reduce the number of generations, we can use the ASAPSO adaptive method
 [Wang09]_ to modify the localization of the optimal swarm search. This consists
-in linearly reducing the algorithm's global search behaviour, thus favouring
-swarm localization. When the problem is favourable, it's possible to reduce the
+in linearly reducing the algorithm's global search behavior, thus favoring
+swarm localization. When the problem is favorable, it's possible to reduce the
 number of generations by a factor of 2 to 5, while still achieving virtually
 the same quality for the best particle. Two keywords are available to control
 the use of this adaptive method.

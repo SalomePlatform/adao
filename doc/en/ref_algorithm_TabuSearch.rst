@@ -31,9 +31,9 @@ Calculation algorithm "*TabuSearch*"
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm realizes an estimation of the state of a system by minimization
-without gradient of a cost function :math:`J`, using a Tabu list search method.
-It is a method that does not use the derivatives of the cost function. It falls
-in the same category than the
+without gradient of a cost function :math:`J`, using a Tabu list search
+meta-heuristic. It is a method that does not use the derivatives of the cost
+function. It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 :ref:`section_ref_algorithm_DifferentialEvolution` or
 :ref:`section_ref_algorithm_ParticleSwarmOptimization`.

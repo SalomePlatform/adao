@@ -75,7 +75,7 @@ exhaustive bibliography.
 
 .. [Evensen03] Evensen G., *The Ensemble Kalman Filter: theoretical formulation and practical implementation*, Seminar on Recent developments in data assimilation for atmosphere and ocean, ECMWF, 8 to 12 September 2003
 
-.. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and http://rpython.r-forge.r-project.org/
+.. [GilBellosta15] Gil Bellosta C. J., *rPython: Package Allowing R to Call Python*, CRAN, 2015, https://cran.r-project.org/web/packages/rPython/ and https://rpython.r-forge.r-project.org/
 
 .. [Glover89] Glover F., *Tabu Search-Part I*, ORSA Journal on Computing, 1(2), pp.190-206, 1989
 
@@ -83,7 +83,7 @@ exhaustive bibliography.
 
 .. [Gnuplot] *Gnuplot - Portable command-line driven graphing utility*, http://www.gnuplot.info/
 
-.. [Gnuplot.py] *Gnuplot.py - A pipe-based interface to the gnuplot plotting program*, http://gnuplot-py.sourceforge.net
+.. [Gnuplot.py] *Gnuplot.py - A pipe-based interface to the gnuplot plotting program*, https://gnuplot-py.sourceforge.net
 
 .. [Gong18] Gong H., *Data assimilation with reduced basis and noisy measurement: Applications to nuclear reactor cores*, PhD Thesis, Sorbonne Université (France), 2018
 
@@ -93,7 +93,7 @@ exhaustive bibliography.
 
 .. [Jazwinski70] Jazwinski A. H., *Stochastic Processes and Filtering Theory*,  Academic Press, 1970
 
-.. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, http://github.com/stevengj/nlopt
+.. [Johnson08] Johnson S. G., *The NLopt nonlinear-optimization package*, https://github.com/stevengj/nlopt
 
 .. [Julier95] Julier S., Uhlmann J., Durrant-Whyte H., *A new approach for filtering nonlinear systems*, in: Proceedings of the 1995 American Control Conference, IEEE, 1995
 
@@ -102,6 +102,8 @@ exhaustive bibliography.
 .. [Julier07] Julier S., Laviola J., *On Kalman ﬁltering with nonlinear equality constraints*, IEEE Trans. Signal Process., 55(6), pp.2774-2784, 2007
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
+
+.. [Kirkpatrick83] Kirkpatrick S., Gelatt C. D., Vecchi M. P., *Optimization by Simulated Annealing*, Science, 220 (4598), pp.671–680,
 
 .. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, http://www.econ.uiuc.edu/~roger/research/intro/intro.html
 
@@ -115,13 +117,13 @@ exhaustive bibliography.
 
 .. [Lorenc88] Lorenc A. C., *Optimal nonlinear objective analysis*, Quarterly Journal of the Royal Meteorological Society, 114(479), pp.205–240, 1988
 
-.. [Lorenz63] Lorenz E. N., *Deterministic nonperiodic flow*, Journal of the Atmospheric Sciences, 20, pp.130–141, 1963 http://doi.org/10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2
+.. [Lorenz63] Lorenz E. N., *Deterministic nonperiodic flow*, Journal of the Atmospheric Sciences, 20, pp.130–141, 1963 https://doi.org/10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2
 
 .. [Morales11] Morales J. L., Nocedal J., *L-BFGS-B: Remark on Algorithm 778: L-BFGS-B, FORTRAN routines for large scale bound constrained optimization*, ACM Transactions on Mathematical Software, 38(1), 2011
 
 .. [Nelder65] Nelder J. A., Mead R., *A simplex method for function minimization*, The Computer Journal, 7, pp.308-313, 1965
 
-.. [NumPy20] Harris C. R. et al., *Array programming with NumPy*, Nature 585, pp.357–362, 2020, https://numpy.org/
+.. [NumPy20] Harris C. R. et al., *Array programming with NumPy*, Nature, 585, pp.357–362, 2020, https://numpy.org/
 
 .. [Papakonstantinou22] Papakonstantinou K. G., Amir M., Warn G. P., *A Scaled Spherical Simplex Filter (S3F) with a decreased n+2 sigma points set size and equivalent 2n+1 Unscented Kalman Filter (UKF) accuracy*, Mechanical Systems and Signal Processing, 163, 107433, 2022
 
@@ -139,17 +141,17 @@ exhaustive bibliography.
 
 .. [Price05] Price K.V., Storn R., Lampinen J., *Differential evolution: a practical approach to global optimization*, Springer, 2005
 
-.. [Python] *Python programming language*, http://www.python.org/
+.. [Python] *Python programming language*, https://www.python.org/
 
 .. [Quarteroni16] Quarteroni A., Manzoni A., Negri F., *Reduced Basis Methods for Partial Differential Equations - An introduction*, Unitext vol.92, Springer, 2016
 
-.. [R] *The R Project for Statistical Computing*, http://www.r-project.org/
+.. [R] *The R Project for Statistical Computing*, https://www.r-project.org/
 
 .. [Rowan90] Rowan T., *Functional Stability Analysis of Numerical Algorithms*, Ph.D. thesis, Department of Computer Sciences, University of Texas at Austin, 1990
 
-.. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, http://www.salome-platform.org/
+.. [Salome] *SALOME The Open Source Integration Platform for Numerical Simulation*, https://www.salome-platform.org/
 
-.. [SalomeMeca] *Salome_Meca and Code_Aster, Analysis of Structures and Thermomechanics for Studies & Research*, http://www.code-aster.org/
+.. [SalomeMeca] *Salome_Meca and Code_Aster, Analysis of Structures and Thermomechanics for Studies & Research*, https://www.code-aster.org/
 
 .. [SciPy20] Virtanen P. et al., *SciPy 1.0: Fundamental Algorithms for Scientific Computing in Python*, Nature Methods, 17(3), pp.261-272, 2020, https://scipy.org/
 
@@ -165,15 +167,15 @@ exhaustive bibliography.
 
 .. [Wang09] Wang G.-Y., Han D.-X., *Particle Swarm Optimization Based on Self-adaptive Acceleration Factors*, in: Third International Conference on Genetic and Evolutionary Computing, pp.637-640, 2009
 
-.. [Welch06] Welch G., Bishop G., *An Introduction to the Kalman Filter*, University of North Carolina at Chapel Hill, Department of Computer Science, TR 95-041, 2006, http://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
+.. [Welch06] Welch G., Bishop G., *An Introduction to the Kalman Filter*, University of North Carolina at Chapel Hill, Department of Computer Science, TR 95-041, 2006, https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
 
-.. [WikipediaDA] Wikipedia, *Data assimilation*, http://en.wikipedia.org/wiki/Data_assimilation
+.. [WikipediaDA] Wikipedia, *Data assimilation*, https://en.wikipedia.org/wiki/Data_assimilation
 
 .. [WikipediaKF] Wikipedia, *Kalman Filter*, https://en.wikipedia.org/wiki/Kalman_filter
 
 .. [WikipediaEKF] Wikipedia, *Extended Kalman Filter*, https://en.wikipedia.org/wiki/Extended_Kalman_filter
 
-.. [WikipediaEnKF] Wikipedia, *Ensemble Kalman Filter*, http://en.wikipedia.org/wiki/Ensemble_Kalman_filter
+.. [WikipediaEnKF] Wikipedia, *Ensemble Kalman Filter*, https://en.wikipedia.org/wiki/Ensemble_Kalman_filter
 
 .. [WikipediaL63] Wikipedia, *Lorenz system*, https://en.wikipedia.org/wiki/Lorenz_system
 

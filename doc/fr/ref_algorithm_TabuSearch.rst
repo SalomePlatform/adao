@@ -31,10 +31,10 @@ Algorithme de calcul "*TabuSearch*"
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
-sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode
-de recherche avec liste Tabou. C'est une méthode qui n'utilise pas les dérivées
-de la fonctionnelle d'écart. Elle entre, par exemple, dans la même catégorie
-que
+sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une
+méta-heuristique de recherche avec liste Tabou. C'est une méthode qui n'utilise
+pas les dérivées de la fonctionnelle d'écart. Elle entre, par exemple, dans la
+même catégorie que
 l':ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 l':ref:`section_ref_algorithm_ParticleSwarmOptimization` ou
 l':ref:`section_ref_algorithm_DifferentialEvolution`.

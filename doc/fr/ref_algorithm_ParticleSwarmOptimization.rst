@@ -33,10 +33,11 @@ Algorithme de calcul "*ParticleSwarmOptimization*"
 
 Cet algorithme réalise une estimation de l'état d'un système, par minimisation
 d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode évolutionnaire
-d'essaim particulaire. C'est une métaheuristique qui ne requiert pas
+d'essaim particulaire. C'est une méta-heuristique qui ne requiert pas
 d'information particulière sur la fonctionnelle et qui ne nécessite pas les
-dérivées (sauf dans sa version hybride de type "*VSL*"). Elle entre dans la
-même catégorie que les :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+dérivées (sauf dans sa version hybride de type "VSL").
+Elle entre dans la même catégorie que les
+:ref:`section_ref_algorithm_DerivativeFreeOptimization`,
 :ref:`section_ref_algorithm_DifferentialEvolution` ou
 :ref:`section_ref_algorithm_TabuSearch`.
 
@@ -44,10 +45,10 @@ C'est une méthode d'optimisation mono-objectif, permettant la recherche du
 minimum global d'une fonctionnelle d'erreur :math:`J` quelconque de type
 :math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations,
 comme décrit dans la section pour :ref:`section_theory_optimization`. Comme
-c'est une métaheuristique d'optimisation, l'atteinte d'un résultat optimal
+c'est une méta-heuristique d'optimisation, l'atteinte d'un résultat optimal
 global ou local n'est néanmoins pas garanti (sauf dans sa version hybride de
-type "*VSL*"). La fonctionnelle d'erreur par défaut est celle de moindres
-carrés pondérés augmentés, classiquement utilisée en assimilation de données.
+type "VSL"). La fonctionnelle d'erreur par défaut est celle de moindres carrés
+pondérés augmentés, classiquement utilisée en assimilation de données.
 
 Elle est basée sur l'évolution d'une population (appelée "essaim") d'états
 (chaque individu étant appelé une "particule" ou un "insecte"). Il existe
