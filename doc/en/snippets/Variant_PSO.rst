@@ -5,9 +5,9 @@
     pair: Variant ; SPSO-2011
 
 Variant
-  *Predefined name*.  This key allows to choose one of the possible variants
-  for the main algorithm. The default variant is the original "CanonicalPSO",
-  and the possible choices are
+  *Predefined name*. This key allows to choose one of the possible variants for
+  the main algorithm. The default variant is the original "CanonicalPSO", and
+  the possible choices are
   "CanonicalPSO" (Canonical Particle Swarm Optimization),
   "OGCR" (Simple Particle Swarm Optimization),
   "SPSO-2011" (Standard Standard Particle Swarm Optimization 2011)

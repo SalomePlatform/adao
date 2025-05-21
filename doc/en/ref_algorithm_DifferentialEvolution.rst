@@ -33,9 +33,12 @@ Calculation algorithm "*DifferentialEvolution*"
 This algorithm realizes an estimation of the state of a system by minimization
 without gradient of a cost function :math:`J`, using an evolutionary strategy
 of differential evolution. It is a method that does not use the derivatives of
-the cost function. It falls in the same category than the
+the cost function.
+
+It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
-:ref:`section_ref_algorithm_ParticleSwarmOptimization` or
+:ref:`section_ref_algorithm_ParticleSwarmOptimization`,
+:ref:`section_ref_algorithm_SimulatedAnnealing`,
 :ref:`section_ref_algorithm_TabuSearch`.
 
 This is an optimization method allowing for global minimum search of a general
@@ -193,6 +196,7 @@ StoreSupplementaryCalculations
 
 - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
+- :ref:`section_ref_algorithm_SimulatedAnnealing`
 - :ref:`section_ref_algorithm_TabuSearch`
 
 .. ------------------------------------ ..

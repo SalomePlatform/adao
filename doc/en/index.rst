@@ -59,7 +59,7 @@ the names of
 etc.
 More details can be found in the section :ref:`section_theory`. The ADAO module
 currently offers more than one hundred different algorithmic methods and allows
-the study of about 500 distinct applied problems.
+the study of at least 500 distinct applied problems.
 
 The documentation for this module is divided into several major categories,
 related to the **theoretical documentation** (indicated in the section title by

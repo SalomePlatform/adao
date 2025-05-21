@@ -34,9 +34,12 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 This algorithm estimates the state of a system, by minimizing a cost function
 :math:`J`, using an evolutionary particle swarm method. It is a meta-heuristic
 that does not require any particular information about the functional, and does
-not require derivatives (except in its hybrid "VSL" version). It falls in the
-same category than the :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
-the :ref:`section_ref_algorithm_DifferentialEvolution` or the
+not require derivatives (except in its hybrid "VSL" version).
+
+It falls in the same category than the
+:ref:`section_ref_algorithm_DerivativeFreeOptimization`,
+:ref:`section_ref_algorithm_DifferentialEvolution`,
+:ref:`section_ref_algorithm_SimulatedAnnealing`,
 :ref:`section_ref_algorithm_TabuSearch`.
 
 This is a mono-objective optimization method, allowing for global minimum
@@ -203,6 +206,10 @@ initial swarm and for the final swarm.
 .. include:: snippets/Background.rst
 
 .. include:: snippets/BackgroundError.rst
+
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
 
 .. include:: snippets/Observation.rst
 
@@ -385,6 +392,7 @@ StoreSupplementaryCalculations
 
 - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 - :ref:`section_ref_algorithm_DifferentialEvolution`
+- :ref:`section_ref_algorithm_SimulatedAnnealing`
 - :ref:`section_ref_algorithm_TabuSearch`
 
 .. ------------------------------------ ..

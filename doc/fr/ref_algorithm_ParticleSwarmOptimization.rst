@@ -36,9 +36,11 @@ d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode évolutionnair
 d'essaim particulaire. C'est une méta-heuristique qui ne requiert pas
 d'information particulière sur la fonctionnelle et qui ne nécessite pas les
 dérivées (sauf dans sa version hybride de type "VSL").
+
 Elle entre dans la même catégorie que les
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
-:ref:`section_ref_algorithm_DifferentialEvolution` ou
+:ref:`section_ref_algorithm_DifferentialEvolution`,
+:ref:`section_ref_algorithm_SimulatedAnnealing`,
 :ref:`section_ref_algorithm_TabuSearch`.
 
 C'est une méthode d'optimisation mono-objectif, permettant la recherche du
@@ -46,8 +48,8 @@ minimum global d'une fonctionnelle d'erreur :math:`J` quelconque de type
 :math:`L^1`, :math:`L^2` ou :math:`L^{\infty}`, avec ou sans pondérations,
 comme décrit dans la section pour :ref:`section_theory_optimization`. Comme
 c'est une méta-heuristique d'optimisation, l'atteinte d'un résultat optimal
-global ou local n'est néanmoins pas garanti (sauf dans sa version hybride de
-type "VSL"). La fonctionnelle d'erreur par défaut est celle de moindres carrés
+global ou local n'est pas garantie (sauf dans sa version hybride de type
+"VSL"). La fonctionnelle d'erreur par défaut est celle de moindres carrés
 pondérés augmentés, classiquement utilisée en assimilation de données.
 
 Elle est basée sur l'évolution d'une population (appelée "essaim") d'états
@@ -215,6 +217,10 @@ final.
 .. include:: snippets/Background.rst
 
 .. include:: snippets/BackgroundError.rst
+
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
 
 .. include:: snippets/Observation.rst
 
@@ -397,6 +403,7 @@ StoreSupplementaryCalculations
 
 - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 - :ref:`section_ref_algorithm_DifferentialEvolution`
+- :ref:`section_ref_algorithm_SimulatedAnnealing`
 - :ref:`section_ref_algorithm_TabuSearch`
 
 .. ------------------------------------ ..

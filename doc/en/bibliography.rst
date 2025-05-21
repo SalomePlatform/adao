@@ -103,7 +103,7 @@ exhaustive bibliography.
 
 .. [Kalnay03] Kalnay E., *Atmospheric Modeling, Data Assimilation and Predictability*, Cambridge University Press, 2003
 
-.. [Kirkpatrick83] Kirkpatrick S., Gelatt C. D., Vecchi M. P., *Optimization by Simulated Annealing*, Science, 220 (4598), pp.671–680,
+.. [Kirkpatrick83] Kirkpatrick S., Gelatt C. D., Vecchi M. P., *Optimization by Simulated Annealing*, Science, 220 (4598), pp.671–680, 1983
 
 .. [Koenker00] Koenker R., Hallock K. F., *Quantile Regression: an Introduction*, 2000, http://www.econ.uiuc.edu/~roger/research/intro/intro.html
 
@@ -163,6 +163,8 @@ exhaustive bibliography.
 
 .. [Tikhonov77] Tikhonov A. N., Arsenin V. Y., *Solution of Ill-posed Problems*, Winston & Sons, 1977
 
+.. [Tsallis96] Tsallis C., Stariolo D.A., *Generalized Simulated Annealing*, Physica A, 233, pp.395-406, 1996
+
 .. [Wan00] Wan E. A., van der Merwe R., *The Unscented Kalman Filter for Nonlinear Estimation*, in: Adaptive Systems for Signal Processing, Communications, and Control Symposium, IEEE, 2000
 
 .. [Wang09] Wang G.-Y., Han D.-X., *Particle Swarm Optimization Based on Self-adaptive Acceleration Factors*, in: Third International Conference on Genetic and Evolutionary Computing, pp.637-640, 2009
@@ -189,11 +191,15 @@ exhaustive bibliography.
 
 .. [WikipediaQR] Wikipedia, *Quantile regression*, https://en.wikipedia.org/wiki/Quantile_regression
 
+.. [WikipediaSA] Wikipedia, *Simulated annealing*, https://en.wikipedia.org/wiki/Simulated_annealing
+
 .. [WikipediaTI] Wikipedia, *Tikhonov regularization*, https://en.wikipedia.org/wiki/Tikhonov_regularization
 
 .. [WikipediaTS] Wikipedia, *Tabu search*, https://en.wikipedia.org/wiki/Tabu_search
 
 .. [WikipediaUKF] Wikipedia, *Unscented Kalman Filter*, https://en.wikipedia.org/wiki/Unscented_Kalman_filter
+
+.. [Xiang97] Xiang Y., Sun D.Y., Fan W., Gong X.G., *Generalized Simulated Annealing Algorithm and Its Application to the Thomson Model*, Physics Letters A, 233, pp.216-220, 1997
 
 .. [ZambranoBigiarini13] Zambrano-Bigiarini M., Clerc M., Rojas R., *Standard Particle Swarm Optimisation 2011 at CEC-2013: A baseline for future PSO improvements*, 2013 IEEE Congress on Evolutionary Computation, pp.2337-2344, 2013
 

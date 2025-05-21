@@ -86,6 +86,10 @@ cette méthode n'est donc pas proposée.
 
 .. include:: snippets/BackgroundError.rst
 
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
+
 .. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationError.rst

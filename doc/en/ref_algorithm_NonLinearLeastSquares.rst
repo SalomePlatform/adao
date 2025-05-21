@@ -66,6 +66,10 @@ for its stability as for its behavior during optimization.
 
 .. include:: snippets/Background.rst
 
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
+
 .. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationError.rst
@@ -218,6 +222,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_NonLinearLeastSquares.res
+    :language: none
 
 .. include:: snippets/Header2Algo11.rst
 

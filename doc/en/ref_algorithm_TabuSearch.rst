@@ -33,10 +33,13 @@ Calculation algorithm "*TabuSearch*"
 This algorithm realizes an estimation of the state of a system by minimization
 without gradient of a cost function :math:`J`, using a Tabu list search
 meta-heuristic. It is a method that does not use the derivatives of the cost
-function. It falls in the same category than the
+function.
+
+It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
-:ref:`section_ref_algorithm_DifferentialEvolution` or
-:ref:`section_ref_algorithm_ParticleSwarmOptimization`.
+:ref:`section_ref_algorithm_DifferentialEvolution`,
+:ref:`section_ref_algorithm_ParticleSwarmOptimization`,
+:ref:`section_ref_algorithm_SimulatedAnnealing`.
 
 This is a mono-objective optimization method allowing for global minimum search
 of a general error function :math:`J` of type :math:`L^1`, :math:`L^2` or
@@ -183,6 +186,7 @@ StoreSupplementaryCalculations
 - :ref:`section_ref_algorithm_DerivativeFreeOptimization`
 - :ref:`section_ref_algorithm_DifferentialEvolution`
 - :ref:`section_ref_algorithm_ParticleSwarmOptimization`
+- :ref:`section_ref_algorithm_SimulatedAnnealing`
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo07.rst

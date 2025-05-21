@@ -48,8 +48,10 @@ partly similar to a Kalman Filter. A standard estimate is made at each
 observation step on the state predicted by the incremental evolution model.
 
 In all cases, it is recommended to prefer at least a
-:ref:`section_ref_algorithm_Blue`, or a
-:ref:`section_ref_algorithm_ExtendedBlue` or a
+:ref:`section_ref_algorithm_Blue`,
+or a
+:ref:`section_ref_algorithm_ExtendedBlue`
+or a
 :ref:`section_ref_algorithm_3DVAR`.
 
 .. ------------------------------------ ..
@@ -65,6 +67,10 @@ In all cases, it is recommended to prefer at least a
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
+
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
 
 .. include:: snippets/Observation.rst
 

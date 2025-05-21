@@ -70,6 +70,10 @@ state error covariance is not updated.
 
 .. include:: snippets/BackgroundError.rst
 
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
+
 .. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationError.rst
@@ -222,6 +226,7 @@ StoreSupplementaryCalculations
 .. include:: snippets/Header2Algo10.rst
 
 .. literalinclude:: scripts/simple_ExtendedBlue.res
+    :language: none
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo06.rst

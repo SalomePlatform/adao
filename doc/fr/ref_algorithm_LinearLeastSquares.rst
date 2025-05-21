@@ -49,8 +49,10 @@ Une estimation standard est effectuée à chaque pas d'observation sur l'état
 prévu par le modèle d'évolution incrémentale.
 
 Dans tous les cas, il est recommandé de lui préférer au minimum un
-:ref:`section_ref_algorithm_Blue`, voire un
-:ref:`section_ref_algorithm_ExtendedBlue` ou un
+:ref:`section_ref_algorithm_Blue`,
+voire un
+:ref:`section_ref_algorithm_ExtendedBlue`
+ou un
 :ref:`section_ref_algorithm_3DVAR`.
 
 .. ------------------------------------ ..
@@ -66,6 +68,10 @@ Dans tous les cas, il est recommandé de lui préférer au minimum un
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
+
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
 
 .. include:: snippets/Observation.rst
 

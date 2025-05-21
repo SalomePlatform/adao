@@ -67,6 +67,10 @@ comportement lors de l'optimisation.
 
 .. include:: snippets/Background.rst
 
+.. include:: snippets/EvolutionError.rst
+
+.. include:: snippets/EvolutionModel.rst
+
 .. include:: snippets/Observation.rst
 
 .. include:: snippets/ObservationError.rst

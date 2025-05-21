@@ -63,11 +63,11 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
         # self.toolBar.hide()
         # self.frameEntete.close()
         # self.closeEntete()
-        print("EFICAS 9.14 : les deux init risquent de poser problème en cas d'except")
       except Exception as e:
         eficasSalome.MyEficas.__init__(self, self.__parent, code="ADAO", module="ADAO")
         self.editorManager.myQtab.currentChanged.connect(self.tabChanged)
         self.viewmanager = self.editorManager  # JPA : EFICAS 9.14/15 Uniquement temporaire !!!
+        print("EFICAS 9.14 : les deux init en try/except risquent de poser problème en cas d'except. A supprimer.")
 
     def addJdcInSalome(self, jdcPath):
       debug("addJdcInSalome is called " + str(jdcPath))

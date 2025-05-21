@@ -16,9 +16,9 @@ versions within the range described below.
    :align: center
 
    Python,     3.6.5,    3.13.3
-   Numpy,      1.14.3,    2.2.5
+   Numpy,      1.14.3,    2.2.6
    Scipy,      0.19.1,    1.15.2
-   MatplotLib, 2.2.2,    3.10.1
+   MatplotLib, 2.2.2,    3.10.3
    GnuplotPy,  1.8,    1.8
    NLopt,      2.4.2,    2.10.0
    FMPy,       0.3.20,    0.3.20

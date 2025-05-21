@@ -80,6 +80,7 @@ AssimAlgos = [
     "NonLinearLeastSquares",
     "ParticleSwarmOptimization",
     "QuantileRegression",
+    "SimulatedAnnealing",
     "TabuSearch",
     "UnscentedKalmanFilter",
     ]
@@ -92,6 +93,7 @@ OptimizationAlgos = [
     "LinearLeastSquares",
     "NonLinearLeastSquares",
     "ParticleSwarmOptimization",
+    "SimulatedAnnealing",
     "TabuSearch",
     ]
 ReductionAlgos = [
@@ -181,6 +183,11 @@ AlgoDataRequirements["DifferentialEvolution"] = [
     "Observation", "ObservationError",
     "ObservationOperator",
     ]
+AlgoDataRequirements["SimulatedAnnealing"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
 AlgoDataRequirements["TabuSearch"] = [
     "Background", "BackgroundError",
     "Observation", "ObservationError",
@@ -250,19 +257,20 @@ AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
 AlgoType["4DVAR"] = "Optim"
 AlgoType["Blue"] = "Optim"
-AlgoType["ExtendedBlue"] = "Optim"
-AlgoType["EnsembleBlue"] = "Optim"
-AlgoType["KalmanFilter"] = "Optim"
-AlgoType["ExtendedKalmanFilter"] = "Optim"
-AlgoType["EnsembleKalmanFilter"] = "Optim"
-AlgoType["UnscentedKalmanFilter"] = "Optim"
-AlgoType["QuantileRegression"] = "Optim"
 AlgoType["DerivativeFreeOptimization"] = "Optim"
-AlgoType["ParticleSwarmOptimization"] = "Optim"
 AlgoType["DifferentialEvolution"] = "Optim"
-AlgoType["TabuSearch"] = "Optim"
+AlgoType["EnsembleBlue"] = "Optim"
+AlgoType["EnsembleKalmanFilter"] = "Optim"
+AlgoType["ExtendedBlue"] = "Optim"
+AlgoType["ExtendedKalmanFilter"] = "Optim"
+AlgoType["KalmanFilter"] = "Optim"
 AlgoType["LinearLeastSquares"] = "Optim"
 AlgoType["NonLinearLeastSquares"] = "Optim"
+AlgoType["ParticleSwarmOptimization"] = "Optim"
+AlgoType["QuantileRegression"] = "Optim"
+AlgoType["SimulatedAnnealing"] = "Optim"
+AlgoType["TabuSearch"] = "Optim"
+AlgoType["UnscentedKalmanFilter"] = "Optim"
 
 # Variables qui sont partages avec le generateur de
 # catalogue Eficas

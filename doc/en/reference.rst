@@ -114,6 +114,7 @@ providing :ref:`section_theory`.
    ref_algorithm_NonLinearLeastSquares
    ref_algorithm_ParticleSwarmOptimization
    ref_algorithm_QuantileRegression
+   ref_algorithm_SimulatedAnnealing
    ref_algorithm_TabuSearch
    ref_algorithm_UnscentedKalmanFilter
    ref_assimilation_keywords
