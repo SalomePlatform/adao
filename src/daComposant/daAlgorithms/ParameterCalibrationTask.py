@@ -21,52 +21,96 @@
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
 import numpy
-from daCore import BasicObjects
+from daCore import BasicObjects, NumericObjects
+from daAlgorithms.Atoms import ecwexblue
+from daAlgorithms.Atoms import std3dvar, van3dvar, incr3dvar, psas3dvar
+from daAlgorithms.Atoms import ecwdfo
 from daAlgorithms.Atoms import ecwnpso, ecwopso, ecwapso, ecwspso, ecwpspso
+from daAlgorithms.Atoms import ecwdgsa
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
+
     def __init__(self):
-        BasicObjects.Algorithm.__init__(self, "PARTICLESWARMOPTIMIZATION")
+        BasicObjects.Algorithm.__init__(self, "PARAMETERCALIBRATIONTASK")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "CanonicalPSO",
+            default  = "3DVAR",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
+                "ExtendedBlue",
+                "3DVAR",
+                "DerivativeFreeOptimization",
                 "CanonicalPSO",
-                "OGCR",
-                "SPSO-2011",
-                "SPSO-2011-AIS",
-                "SPSO-2011-SIS",
-                "SPSO-2011-PSIS",
                 "CanonicalPSO-VLS",
-                "OGCR-VLS",
-                "SPSO-2011-AIS-VLS",
-                "SPSO-2011-SIS-VLS",
-                "SPSO-2011-PSIS-VLS",
+                "SPSO-2011",
+                "SPSO-2011-VLS",
             ],
             listadv  = [
+                "DFO",
                 "PSO",
-                "PSO-VLS",
-                "SPSO-2011-VLS",
-                "VLS",
             ],
+        )
+        self.defineRequiredParameter(
+            name     = "Minimizer",
+            default  = "LBFGSB",
+            typecast = str,
+            message  = "Minimiseur utilisé",
+            listval  = [
+                "LBFGSB",
+                "BOBYQA",
+            ],
+            listadv  = [
+                "BFGS",
+                "COBYLA",
+                "NEWUOA",
+                "POWELL",
+                "SIMPLEX",
+                "SUBPLEX",
+            ],
+        )
+        self.defineRequiredParameter(
+            name     = "EstimationOf",
+            default  = "Parameters",
+            typecast = str,
+            message  = "Estimation d'état ou de paramètres",
+            listval  = ["Parameters",],
         )
         self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
-            default  = 50,
+            default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
-            minval   = 0,
+            minval   = -1,
             oldname  = "MaximumNumberOfSteps",
         )
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfFunctionEvaluations",
-            default  = 15000,
-            typecast = int,
-            message  = "Nombre maximal d'évaluations de la fonction",
+            name     = "CostDecrementTolerance",
+            default  = 1.e-7,
+            typecast = float,
+            message  = "Diminution relative minimale du coût lors de l'arrêt",
+            minval   = 0.,
+        )
+        self.defineRequiredParameter(
+            name     = "ProjectedGradientTolerance",
+            default  = -1,
+            typecast = float,
+            message  = "Maximum des composantes du gradient projeté lors de l'arrêt",
             minval   = -1,
+        )
+        self.defineRequiredParameter(
+            name     = "GradientNormTolerance",
+            default  = 1.e-05,
+            typecast = float,
+            message  = "Maximum des composantes du gradient lors de l'arrêt",
+            minval   = 0.,
+        )
+        self.defineRequiredParameter(
+            name     = "StateVariationTolerance",
+            default  = 1.e-4,
+            typecast = float,
+            message  = "Variation relative maximale de l'état lors de l'arrêt",
         )
         self.defineRequiredParameter(
             name     = "GlobalCostReductionTolerance",
@@ -74,11 +118,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = float,
             message  = "Réduction du coût sur l'ensemble de la recherche lors de l'arrêt",
             minval   = 0.,
-        )
-        self.defineRequiredParameter(
-            name     = "SetSeed",
-            typecast = numpy.random.seed,
-            message  = "Graine fixée pour le générateur aléatoire",
         )
         self.defineRequiredParameter(
             name     = "NumberOfInsects",
@@ -168,22 +207,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             maxval   = 1.,
         )
         self.defineRequiredParameter(
-            name     = "QualityCriterion",
-            default  = "AugmentedWeightedLeastSquares",
-            typecast = str,
-            message  = "Critère de qualité utilisé",
-            listval  = [
-                "AugmentedWeightedLeastSquares",
-                "WeightedLeastSquares",
-                "LeastSquares",
-                "AbsoluteValue",
-                "MaximumError",
-            ],
-            listadv  = [
-                "AWLS", "DA", "WLS", "L2", "LS", "L1", "ME", "Linf",
-            ],
-        )
-        self.defineRequiredParameter(
             name     = "HybridNumberOfWarmupIterations",
             default  = 0,
             typecast = int,
@@ -212,16 +235,26 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = 0.,
         )
         self.defineRequiredParameter(
+            name     = "QualityCriterion",
+            default  = "AugmentedWeightedLeastSquares",
+            typecast = str,
+            message  = "Critère de qualité utilisé",
+            listval  = [
+                "AugmentedWeightedLeastSquares",
+                "WeightedLeastSquares",
+                "LeastSquares",
+                "AbsoluteValue",
+                "MaximumError",
+            ],
+            listadv  = [
+                "AWLS", "DA", "WLS", "L2", "LS", "L1", "ME", "Linf",
+            ],
+        )
+        self.defineRequiredParameter(
             name     = "StoreInternalVariables",
             default  = False,
             typecast = bool,
             message  = "Stockage des variables internes ou intermédiaires du calcul",
-        )
-        self.defineRequiredParameter(
-            name     = "StoreInitialState",
-            default  = False,
-            typecast = bool,
-            message  = "Stockage du premier état à la manière des algorithmes récursifs",
         )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
@@ -236,33 +269,71 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "APosterioriVariances",
                 "BMA",
                 "CostFunctionJ",
+                "CostFunctionJAtCurrentOptimum",
                 "CostFunctionJb",
+                "CostFunctionJbAtCurrentOptimum",
                 "CostFunctionJo",
+                "CostFunctionJoAtCurrentOptimum",
                 "CurrentIterationNumber",
+                "CurrentOptimum",
                 "CurrentState",
-                "EnsembleOfStates",
+                "CurrentStepNumber",
                 "EnsembleOfSimulations",
+                "EnsembleOfStates",
+                "ForecastState",
+                "IndexOfOptimum",
                 "Innovation",
-                "InternalCostFunctionJ",
-                "InternalCostFunctionJb",
-                "InternalCostFunctionJo",
+                "InnovationAtCurrentAnalysis",
+                "InnovationAtCurrentState",
+                "JacobianMatrixAtBackground",
+                "JacobianMatrixAtOptimum",
+                "KalmanGainAtOptimum",
+                "MahalanobisConsistency",
                 "OMA",
                 "OMB",
+                "SampledStateForQuantiles",
+                "SigmaObs2",
                 "SimulatedObservationAtBackground",
+                "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
+                "SimulationQuantiles",
             ],
-            listadv  = [
-                "InternalAPosterioriCovariance",
-            ],
+        )
+        self.defineRequiredParameter(
+            name     = "Quantiles",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des valeurs de quantiles",
+            minval   = 0.,
+            maxval   = 1.,
+        )
+        self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+        )
+        self.defineRequiredParameter(
+            name     = "NumberOfSamplesForQuantiles",
+            default  = 100,
+            typecast = int,
+            message  = "Nombre d'échantillons simulés pour le calcul des quantiles",
+            minval   = 1,
+        )
+        self.defineRequiredParameter(
+            name     = "SimulationForQuantiles",
+            default  = "Linear",
+            typecast = str,
+            message  = "Type de simulation en estimation des quantiles",
+            listval  = ["Linear", "NonLinear"]
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
             message  = "Liste des paires de bornes",
         )
         self.defineRequiredParameter(  # Pas de type
-            name     = "BoxBounds",
-            message  = "Liste des paires de bornes d'incréments",
+            name     = "StateBoundsForQuantiles",
+            message  = "Liste des paires de bornes pour les états utilisés en estimation des quantiles",
         )
         self.defineRequiredParameter(
             name     = "InitializationPoint",
@@ -270,20 +341,17 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "État initial imposé (par défaut, c'est l'ébauche si None)",
         )
         self.requireInputArguments(
-            mandatory= ("Xb", "Y", "HO", "R", "B"),
+            mandatory= ("Xb", "Y", "HO"),
+            optional = ("U", "EM", "CM", "R", "B", "Q"),
         )
         self.setAttributes(
             tags=(
-                "Optimization",
+                "Calibration",
+                "DataAssimilation",
                 "NonLinear",
-                "MetaHeuristic",
-                "Population",
             ),
             features=(
-                "NonLocalOptimization",
-                "DerivativeFree",
                 "ParallelAlgorithm",
-                "ConvergenceOnNumbers",
             ),
         )
 
@@ -291,40 +359,40 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         # --------------------------
-        # CanonicalPSO = PSO
-        if self._parameters["Variant"] in ["CanonicalPSO", "PSO"]:
-            ecwnpso.ecwnpso(self, Xb, Y, HO, R, B)
+        if self._parameters["Variant"] == "ExtendedBlue":
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexblue.ecwexblue
+            )
         #
-        elif self._parameters["Variant"] in ["OGCR"]:
-            ecwopso.ecwopso(self, Xb, Y, HO, R, B)
+        # --------------------------
+        elif self._parameters["Variant"] in ["3DVAR", "3DVAR-Std"]:
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, std3dvar.std3dvar
+            )
+        #
+        # --------------------------
+        elif self._parameters["Variant"] in ["DFO", "DerivativeFreeOptimization"]:
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdfo.ecwdfo
+            )
+        #
+        # --------------------------
+        # CanonicalPSO = PSO
+        elif self._parameters["Variant"] in ["CanonicalPSO", "PSO"]:
+            ecwnpso.ecwnpso(self, Xb, Y, HO, R, B)
         #
         # SPSO-2011 = SPSO-2011-AIS
         elif self._parameters["Variant"] in ["SPSO-2011", "SPSO-2011-AIS"]:
             ecwapso.ecwapso(self, Xb, Y, HO, R, B)
-        #
-        elif self._parameters["Variant"] in ["SPSO-2011-SIS"]:
-            ecwspso.ecwspso(self, Xb, Y, HO, R, B)
-        #
-        elif self._parameters["Variant"] in ["SPSO-2011-PSIS"]:
-            ecwpspso.ecwpspso(self, Xb, Y, HO, R, B)
         #
         # --------------------------
         # CanonicalPSO-VLS = PSO-VLS = VLS
         elif self._parameters["Variant"] in ["CanonicalPSO-VLS", "PSO-VLS", "VLS"]:
             ecwnpso.ecwnpso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
         #
-        elif self._parameters["Variant"] in ["OGCR-VLS"]:
-            ecwopso.ecwopso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
-        #
         # SPSO-2011-VLS = SPSO-2011-AIS-VLS
         elif self._parameters["Variant"] in ["SPSO-2011-VLS", "SPSO-2011-AIS-VLS"]:
             ecwapso.ecwapso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
-        #
-        elif self._parameters["Variant"] in ["SPSO-2011-SIS-VLS"]:
-            ecwspso.ecwspso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
-        #
-        elif self._parameters["Variant"] in ["SPSO-2011-PSIS-VLS"]:
-            ecwpspso.ecwpspso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
         #
         # --------------------------
         else:

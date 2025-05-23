@@ -95,7 +95,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
@@ -125,12 +125,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] == "EKF":
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexkf.ecwexkf, True)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexkf.ecwexkf, True
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] in ["CEKF", "ExtendedKalmanFilter"]:
             self._parameters["Bounds"] = NumericObjects.ForceNumericBounds( self._parameters["Bounds"] )
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwcekf.ecwcekf, True, True)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwcekf.ecwcekf, True, True
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] == "EKS":
@@ -146,7 +150,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

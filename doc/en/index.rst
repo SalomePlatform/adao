@@ -58,8 +58,8 @@ the names of
 *data smoothing*,
 etc.
 More details can be found in the section :ref:`section_theory`. The ADAO module
-currently offers more than one hundred different algorithmic methods and allows
-the study of at least 500 distinct applied problems.
+currently offers more than 150 different algorithmic methods and allows the
+study of more than 300 distinct applied problems.
 
 The documentation for this module is divided into several major categories,
 related to the **theoretical documentation** (indicated in the section title by

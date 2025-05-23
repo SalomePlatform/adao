@@ -76,7 +76,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "InnovationAtCurrentState",
                 "OMB",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),

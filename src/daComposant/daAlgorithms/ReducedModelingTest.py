@@ -118,7 +118,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "EnsembleOfStates",
                 "Residus",
                 "SingularValues",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "SetSeed",

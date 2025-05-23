@@ -145,7 +145,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
                 "SimulationQuantiles",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -210,16 +210,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] in ["3DVAR", "3DVAR-Std"]:
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, std3dvar.std3dvar)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, std3dvar.std3dvar
+            )
         #
         elif self._parameters["Variant"] == "3DVAR-VAN":
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, van3dvar.van3dvar)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, van3dvar.van3dvar
+            )
         #
         elif self._parameters["Variant"] in ["3DVAR-Incr", "Incr3DVAR"]:
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, incr3dvar.incr3dvar)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, incr3dvar.incr3dvar
+            )
         #
         elif self._parameters["Variant"] == "3DVAR-PSAS":
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, psas3dvar.psas3dvar)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, psas3dvar.psas3dvar
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
@@ -228,7 +236,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

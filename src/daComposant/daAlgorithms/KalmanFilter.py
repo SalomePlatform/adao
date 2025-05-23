@@ -85,7 +85,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentAnalysis",
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO", "R", "B"),
@@ -111,7 +111,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] in ["KF", "KalmanFilter"]:
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwstdkf.ecwstdkf, True
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
@@ -119,7 +121,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

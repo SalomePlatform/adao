@@ -130,7 +130,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-            ]
+            ],
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
@@ -164,7 +164,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] == "NonLinearLeastSquares":
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwnlls.ecwnlls)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwnlls.ecwnlls
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
@@ -173,7 +175,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

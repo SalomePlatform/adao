@@ -55,6 +55,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
+        if not os.path.exists(self._parameters["ConfigurationFile"]):
+            raise ValueError("Configuration file not found with the name: %s"%self._parameters["ConfigurationFile"])
+        #
         currdir = os.path.abspath(os.getcwd())
         workdir = os.path.abspath(os.path.dirname(self._parameters["ConfigurationFile"]))
         with open(self._parameters["ConfigurationFile"]) as fid:

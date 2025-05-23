@@ -43,7 +43,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Background",
                 "CheckingPoint",
                 "Observation",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "ShowInformationOnlyFor",
@@ -54,7 +54,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Background",
                 "CheckingPoint",
                 "Observation",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "SetDebug",

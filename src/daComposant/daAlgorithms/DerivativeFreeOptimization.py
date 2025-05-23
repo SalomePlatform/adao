@@ -94,11 +94,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Critère de qualité utilisé",
             listval  = [
-                "AugmentedWeightedLeastSquares", "AWLS", "DA",
-                "WeightedLeastSquares", "WLS",
-                "LeastSquares", "LS", "L2",
-                "AbsoluteValue", "L1",
-                "MaximumError", "ME", "Linf",
+                "AugmentedWeightedLeastSquares",
+                "WeightedLeastSquares",
+                "LeastSquares",
+                "AbsoluteValue",
+                "MaximumError",
+            ],
+            listadv  = [
+                "AWLS", "DA", "WLS", "L2", "LS", "L1", "ME", "Linf",
             ],
         )
         self.defineRequiredParameter(
@@ -135,7 +138,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-            ]
+            ],
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",
@@ -163,7 +166,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] in ["DFO", "DerivativeFreeOptimization"]:
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdfo.ecwdfo)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdfo.ecwdfo
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
@@ -172,7 +177,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

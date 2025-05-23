@@ -58,9 +58,9 @@ méthodes incluses dans ce cadre sont également connues sous les noms de
 *lissage de données*,
 etc.
 De plus amples détails peuvent être trouvés dans la partie proposant
-:ref:`section_theory`. Le module ADAO offre actuellement plus d'une centaine de
-méthodes algorithmiques différentes et permet l'étude d'au moins 500 problèmes
-appliqués distincts.
+:ref:`section_theory`. Le module ADAO offre actuellement plus de 150 méthodes
+algorithmiques différentes et permet l'étude de plus de 300 problèmes appliqués
+distincts.
 
 La documentation de ce module est divisée en plusieurs grandes catégories,
 relatives à la **documentation théorique** (indiquée dans le titre de section

@@ -92,7 +92,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-            ]
+            ],
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",

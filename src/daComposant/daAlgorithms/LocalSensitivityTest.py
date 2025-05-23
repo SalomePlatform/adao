@@ -42,7 +42,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentState",
                 "JacobianMatrixAtCurrentState",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.requireInputArguments(
             mandatory= ("Xb", "Y", "HO"),

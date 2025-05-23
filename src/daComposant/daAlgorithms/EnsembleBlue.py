@@ -57,7 +57,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtBackground",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "SetSeed",

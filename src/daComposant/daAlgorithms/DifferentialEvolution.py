@@ -109,11 +109,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Critère de qualité utilisé",
             listval  = [
-                "AugmentedWeightedLeastSquares", "AWLS", "DA",
-                "WeightedLeastSquares", "WLS",
-                "LeastSquares", "LS", "L2",
-                "AbsoluteValue", "L1",
-                "MaximumError", "ME", "Linf",
+                "AugmentedWeightedLeastSquares",
+                "WeightedLeastSquares",
+                "LeastSquares",
+                "AbsoluteValue",
+                "MaximumError",
+            ],
+            listadv  = [
+                "AWLS", "DA", "WLS", "L2", "LS", "L1", "ME", "Linf",
             ],
         )
         self.defineRequiredParameter(
@@ -150,7 +153,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentOptimum",
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
-            ]
+            ],
         )
         self.defineRequiredParameter(  # Pas de type
             name     = "Bounds",

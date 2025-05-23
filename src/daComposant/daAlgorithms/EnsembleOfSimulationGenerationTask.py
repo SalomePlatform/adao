@@ -86,7 +86,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "EnsembleOfSimulations",
                 "EnsembleOfStates",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "SetSeed",

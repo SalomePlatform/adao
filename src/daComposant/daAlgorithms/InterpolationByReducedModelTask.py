@@ -54,7 +54,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "Analysis",
                 "ReducedCoordinates",
-            ]
+            ],
         )
         self.requireInputArguments(
             mandatory= ("Y",),

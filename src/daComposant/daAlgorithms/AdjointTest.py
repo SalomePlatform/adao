@@ -84,7 +84,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "CurrentState",
                 "Residu",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.requireInputArguments(
             mandatory= ("Xb", "HO"),

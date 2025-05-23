@@ -90,7 +90,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "SimulatedObservationAtCurrentState",
                 "SimulatedObservationAtOptimum",
                 "SimulationQuantiles",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "Quantiles",
@@ -146,7 +146,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] == "ExtendedBlue":
-            NumericObjects.multiXOsteps(self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexblue.ecwexblue)
+            NumericObjects.multiXOsteps(
+                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexblue.ecwexblue
+            )
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
@@ -154,7 +156,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

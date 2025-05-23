@@ -86,16 +86,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = str,
             message  = "Critère de qualité utilisé",
             listval  = [
-                "DA",
-                "AugmentedWeightedLeastSquares", "AWLS",
-                "WeightedLeastSquares", "WLS",
-                "LeastSquares", "LS", "L2",
-                "AbsoluteValue", "L1",
-                "MaximumError", "ME", "Linf",
+                "AugmentedWeightedLeastSquares",
+                "WeightedLeastSquares",
+                "LeastSquares",
+                "AbsoluteValue",
+                "MaximumError",
             ],
             listadv  = [
-                "AugmentedPonderatedLeastSquares", "APLS",
-                "PonderatedLeastSquares", "PLS",
+                "AWLS", "DA", "WLS", "L2", "LS", "L1", "ME", "Linf",
             ],
         )
         self.defineRequiredParameter(
@@ -119,7 +117,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "Innovation",
                 "InnovationAtCurrentState",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "SetSeed",

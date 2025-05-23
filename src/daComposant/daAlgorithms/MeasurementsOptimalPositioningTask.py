@@ -159,7 +159,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "ReducedBasisMus",
                 "Residus",
                 "SingularValues",
-            ]
+            ],
         )
         self.defineRequiredParameter(
             name     = "SetSeed",
@@ -218,7 +218,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         else:
-            raise ValueError("Error in Variant name: %s"%self._parameters["Variant"])
+            raise ValueError("Error in Variant name: %s" % self._parameters["Variant"])
         #
         self._post_run(HO, EM)
         return 0

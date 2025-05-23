@@ -86,7 +86,7 @@ def ecwdgsa(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
         Minimum = numpy.ravel(result["x"])
         J_optimal = vfloat(result["fun"])
     else:
-        raise ValueError("Error in minimizer name: %s is unkown"%selfA._parameters["Minimizer"])
+        raise ValueError("Error in variant name: %s is unkown"%selfA._parameters["Variant"])
     #
     Xa = Minimum
     if __storeState:

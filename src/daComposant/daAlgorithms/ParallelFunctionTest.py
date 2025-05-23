@@ -69,7 +69,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = [
                 "CurrentState",
                 "SimulatedObservationAtCurrentState",
-            ]
+            ],
         )
         self.requireInputArguments(
             mandatory= ("Xb", "HO"),
