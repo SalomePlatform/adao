@@ -93,6 +93,7 @@ this algorithm. The following stable and robust formulations are proposed here:
     single: Variational Local Search
     pair: Variant ; CanonicalPSO-VSL
     pair: Variant ; OGCR-VSL
+    pair: Variant ; SPSO-2011-VSL
     pair: Variant ; SPSO-2011-AIS-VSL
     pair: Variant ; SPSO-2011-SIS-VSL
     pair: Variant ; SPSO-2011-PSIS-VSL

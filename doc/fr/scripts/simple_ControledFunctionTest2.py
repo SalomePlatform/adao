@@ -17,19 +17,19 @@ def ControledQuadFunction( paire ):
 #
 from adao import adaoBuilder
 case = adaoBuilder.New()
-case.set( 'CheckingPoint', Vector = array([1., 1., 1.]), Stored=True )
-case.set( 'ObservationOperator', ThreeFunctions = {
+case.set( "CheckingPoint", Vector = array([1., 1., 1.]), Stored=True )
+case.set( "ObservationOperator", ThreeFunctions = {
     "Direct" :ControledQuadFunction,
     "Tangent":0, # Opérateur vide (et pas None) car non utilisé
     "Adjoint":0, # Opérateur vide (et pas None) car non utilisé
     } )
 case.set( "ControlInput", Vector = (1, 0) )
 case.setAlgorithmParameters(
-    Algorithm='ControledFunctionTest',
+    Algorithm="ControledFunctionTest",
     Parameters={
-        'NumberOfRepetition' : 15,
-        'NumberOfPrintedDigits' : 3,
-        'ShowElementarySummary':False,
+        "NumberOfRepetition" : 15,
+        "NumberOfPrintedDigits" : 3,
+        "ShowElementarySummary":False,
         },
     )
 case.execute()

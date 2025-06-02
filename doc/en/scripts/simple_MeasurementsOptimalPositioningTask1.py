@@ -18,7 +18,7 @@ print("-------------------------------------------")
 from adao import adaoBuilder
 case = adaoBuilder.New()
 case.setAlgorithmParameters(
-    Algorithm = 'MeasurementsOptimalPositioningTask',
+    Algorithm = "MeasurementsOptimalPositioningTask",
     Parameters = {
         "EnsembleOfSnapshots":Ensemble,
         "MaximumNumberOfLocations":3,

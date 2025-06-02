@@ -42,8 +42,8 @@ Bounds = (
 # --------
 case = adaoBuilder.New()
 case.set(
-    'AlgorithmParameters',
-    Algorithm = '3DVAR',
+    "AlgorithmParameters",
+    Algorithm = "3DVAR",
     Parameters = {
         "Bounds":Bounds,
         "MaximumNumberOfIterations":100,
@@ -54,16 +54,16 @@ case.set(
             ],
         }
     )
-case.set( 'Background', Vector = numpy.array(Xb), Stored = True )
-case.set( 'Observation', Vector = numpy.array(observations) )
-case.set( 'BackgroundError', ScalarSparseMatrix = 1.0e10 )
-case.set( 'ObservationError', ScalarSparseMatrix = 1.0 )
+case.set( "Background", Vector = numpy.array(Xb), Stored = True )
+case.set( "Observation", Vector = numpy.array(observations) )
+case.set( "BackgroundError", ScalarSparseMatrix = 1.0e10 )
+case.set( "ObservationError", ScalarSparseMatrix = 1.0 )
 case.set(
-    'ObservationOperator',
+    "ObservationOperator",
     OneFunction = simulation,
     Parameters  = {"DifferentialIncrement":0.0001},
     )
-case.set( 'Observer', Variable="CurrentState", Template="ValuePrinter" )
+case.set( "Observer", Variable="CurrentState", Template="ValuePrinter" )
 case.execute()
 #
 # Récupération des variables d'intérêt

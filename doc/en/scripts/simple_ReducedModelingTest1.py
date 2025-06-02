@@ -13,7 +13,7 @@ Ensemble[:,nbsnapshots:2*nbsnapshots] = Ensemble[:,:nbsnapshots]
 #
 case = adaoBuilder.New()
 case.setAlgorithmParameters(
-    Algorithm = 'ReducedModelingTest',
+    Algorithm = "ReducedModelingTest",
     Parameters = {
         "EnsembleOfSnapshots":Ensemble,
         "StoreSupplementaryCalculations":["Residus","SingularValues"],

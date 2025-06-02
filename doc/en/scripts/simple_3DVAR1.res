@@ -37,4 +37,6 @@ Expected theoretical coefficients..: [ 2 -1  2]
 
 Number of iterations...............: 25
 Number of simulations..............: 100
+Diff. Observation-Analysis (OMA)...: [ 5.82916385e-07  1.30744229e-07  5.87730300e-08 -6.67061357e-08
+ -3.12019267e-07]
 Calibration resulting coefficients.: [ 2.         -0.99999992  1.99999987]

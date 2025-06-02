@@ -8,10 +8,10 @@ def SomeOperator( x ):
 #
 case = adaoBuilder.New()
 case.setAlgorithmParameters(
-    Algorithm='ParallelFunctionTest',
+    Algorithm="ParallelFunctionTest",
     Parameters={
-        'NumberOfRepetition' : 50,
-        'NumberOfPrintedDigits' : 2,
+        "NumberOfRepetition" : 50,
+        "NumberOfPrintedDigits" : 2,
         "ShowElementarySummary":False,
         },
     )

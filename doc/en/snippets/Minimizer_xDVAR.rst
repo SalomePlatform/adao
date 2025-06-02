@@ -14,7 +14,7 @@ Minimizer
   "TNC" (nonlinear constrained minimizer),
   "CG" (nonlinear unconstrained minimizer),
   "BFGS" (nonlinear unconstrained minimizer),
-  It is strongly recommended to stay with the default.
+  It is highly recommended to keep the default value.
 
 ..  "NCG" (Newton CG minimizer).
 

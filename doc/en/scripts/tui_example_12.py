@@ -3,13 +3,13 @@
 from matplotlib import pyplot as plt
 from numpy import array, set_printoptions
 from adao import adaoBuilder
-set_printoptions(precision=4, floatmode='fixed')
+set_printoptions(precision=4, floatmode="fixed")
 #
 #-------------------------------------------------------------------------------
 #
 case = adaoBuilder.New()
-case.set( 'AlgorithmParameters',
-    Algorithm='3DVAR',
+case.set( "AlgorithmParameters",
+    Algorithm="3DVAR",
     Parameters = {
         "StoreSupplementaryCalculations":[
             "CostFunctionJ",
@@ -18,12 +18,12 @@ case.set( 'AlgorithmParameters',
         ],
     }
 )
-case.set( 'Background',          Vector=[0, 1, 2] )
-case.set( 'BackgroundError',     ScalarSparseMatrix=1.0 )
-case.set( 'Observation',         Vector=array([0.5, 1.5, 2.5]) )
-case.set( 'ObservationError',    DiagonalSparseMatrix='1 1 1' )
-case.set( 'ObservationOperator', Matrix='1 0 0;0 2 0;0 0 3' )
-case.set( 'Observer',
+case.set( "Background",          Vector=[0, 1, 2] )
+case.set( "BackgroundError",     ScalarSparseMatrix=1.0 )
+case.set( "Observation",         Vector=array([0.5, 1.5, 2.5]) )
+case.set( "ObservationError",    DiagonalSparseMatrix="1 1 1" )
+case.set( "ObservationOperator", Matrix="1 0 0;0 2 0;0 0 3" )
+case.set( "Observer",
     Variable="CurrentState",
     Template="ValuePrinter",
     Info="  Current state:",
@@ -68,34 +68,34 @@ print("    ",array(
 #-------------------------------------------------------------------------------
 #
 import matplotlib.pyplot as plt
-plt.rcParams['figure.figsize'] = (8, 12)
+plt.rcParams["figure.figsize"] = (8, 12)
 #
 plt.figure()
-plt.suptitle('Indicators built on current calculation-measurement deviation (or error)\n', fontweight='bold')
+plt.suptitle("Indicators built on current calculation-measurement deviation (or error)\n", fontweight="bold")
 plt.subplot(611)
-plt.plot(CalculMeasureErrors.maxs(), 'bx--', label='Indicator at current step')
-plt.ylabel('Maximum (a.u.)')
+plt.plot(CalculMeasureErrors.maxs(), "bx--", label="Indicator at current step")
+plt.ylabel("Maximum (a.u.)")
 plt.legend()
 plt.subplot(612)
-plt.plot(CalculMeasureErrors.mins(), 'bx--', label='Indicator at current step')
-plt.ylabel('Minimum (a.u.)')
+plt.plot(CalculMeasureErrors.mins(), "bx--", label="Indicator at current step")
+plt.ylabel("Minimum (a.u.)")
 plt.legend()
 plt.subplot(613)
-plt.plot(CalculMeasureErrors.norms(), 'bx-', label='Indicator at current step')
-plt.ylabel('Norm (a.u.)')
+plt.plot(CalculMeasureErrors.norms(), "bx-", label="Indicator at current step")
+plt.ylabel("Norm (a.u.)")
 plt.legend()
 plt.subplot(614)
-plt.plot(CalculMeasureErrors.maes(), 'kx-', label='Indicator at current step')
-plt.ylabel('MAE (a.u.)')
+plt.plot(CalculMeasureErrors.maes(), "kx-", label="Indicator at current step")
+plt.ylabel("MAE (a.u.)")
 plt.legend()
 plt.subplot(615)
-plt.plot(CalculMeasureErrors.mses(), 'gx-', label='Indicator at current step')
-plt.ylabel('MSE (a.u.)')
+plt.plot(CalculMeasureErrors.mses(), "gx-", label="Indicator at current step")
+plt.ylabel("MSE (a.u.)")
 plt.legend()
 plt.subplot(616)
-plt.plot(CalculMeasureErrors.rmses(), 'rx-', label='Indicator at current step')
-plt.ylabel('RMSE (a.u.)')
+plt.plot(CalculMeasureErrors.rmses(), "rx-", label="Indicator at current step")
+plt.ylabel("RMSE (a.u.)")
 plt.legend()
-plt.xlabel('Step size calculation (step number or rank)')
+plt.xlabel("Step size calculation (step number or rank)")
 plt.tight_layout()
 plt.savefig("tui_example_12.png")

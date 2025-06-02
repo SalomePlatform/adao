@@ -17,7 +17,7 @@ print("-------------------------------------------")
 from adao import adaoBuilder
 case = adaoBuilder.New()
 case.setAlgorithmParameters(
-    Algorithm = 'MeasurementsOptimalPositioningTask',
+    Algorithm = "MeasurementsOptimalPositioningTask",
     Parameters = {
         "EnsembleOfSnapshots":Ensemble,
         "MaximumNumberOfLocations":3,
@@ -46,7 +46,7 @@ measures_at_op = Ensemble[op,1]
 #
 interpolation = adaoBuilder.New()
 interpolation.setAlgorithmParameters(
-    Algorithm = 'InterpolationByReducedModelTask',
+    Algorithm = "InterpolationByReducedModelTask",
     Parameters = {
         "ReducedBasis":rb,
         "OptimalLocations":op,

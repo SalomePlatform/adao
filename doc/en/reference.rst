@@ -91,11 +91,14 @@ optimization methods or methods with reduction, available in ADAO, detailing
 their characteristics and their options.
 
 Some examples on these commands usage are available in the section of
-:ref:`section_tutorials_in_salome`, in the section of
-:ref:`section_tutorials_in_python`, in the section of
-:ref:`section_docu_examples`, and in the sample files installed with ADAO. The
-mathematical concepts and notations used are explained in the general section
-providing :ref:`section_theory`.
+:ref:`section_tutorials_in_salome`,
+in the section of
+:ref:`section_tutorials_in_python`,
+in the section of
+:ref:`section_docu_examples`,
+and in the sample files installed with ADAO. The mathematical concepts and
+notations used are explained in the general section providing
+:ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -129,11 +132,14 @@ This section describes the checking algorithms available in ADAO, detailing
 their usage characteristics and their options.
 
 Some examples on these commands usage are available in the section of
-:ref:`section_tutorials_in_salome`, in the section of
-:ref:`section_tutorials_in_python`, in the section of
-:ref:`section_docu_examples`, and in the sample files installed with ADAO. The
-mathematical concepts and notations used are explained in the general section
-providing :ref:`section_theory`.
+:ref:`section_tutorials_in_salome`,
+in the section of
+:ref:`section_tutorials_in_python`,
+in the section of
+:ref:`section_docu_examples`,
+and in the sample files installed with ADAO. The mathematical concepts and
+notations used are explained in the general section providing
+:ref:`section_theory`.
 
 .. toctree::
    :maxdepth: 1
@@ -174,4 +180,5 @@ section for the underlying algorithmic details.
    ref_algorithm_EnsembleOfSimulationGenerationTask
    ref_algorithm_InterpolationByReducedModelTask
    ref_algorithm_MeasurementsOptimalPositioningTask
+   ref_algorithm_ParameterCalibrationTask
    ref_task_keywords

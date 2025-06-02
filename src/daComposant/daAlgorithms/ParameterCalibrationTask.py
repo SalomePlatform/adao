@@ -35,21 +35,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         BasicObjects.Algorithm.__init__(self, "PARAMETERCALIBRATIONTASK")
         self.defineRequiredParameter(
             name     = "Variant",
-            default  = "3DVAR",
+            default  = "3DVARGradientOptimization",
             typecast = str,
             message  = "Variant ou formulation de la méthode",
             listval  = [
-                "ExtendedBlue",
-                "3DVAR",
+                "3DVARGradientOptimization",
+                "ExtendedBlueOptimization",
                 "DerivativeFreeOptimization",
-                "CanonicalPSO",
-                "CanonicalPSO-VLS",
-                "SPSO-2011",
-                "SPSO-2011-VLS",
+                "CanonicalParticuleSwarmOptimization",
+                "VariationalParticuleSwarmOptimization",
             ],
             listadv  = [
+                "3DVAR",
+                "ExtendedBlue",
                 "DFO",
                 "PSO",
+                "CanonicalPSO",
+                "SPSO-2011-VLS",
+                "SPSO-2011-AIS-VSL",
             ],
         )
         self.defineRequiredParameter(
@@ -59,10 +62,8 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Minimiseur utilisé",
             listval  = [
                 "LBFGSB",
-                "BOBYQA",
-            ],
-            listadv  = [
                 "BFGS",
+                "BOBYQA",
                 "COBYLA",
                 "NEWUOA",
                 "POWELL",
@@ -71,19 +72,19 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             ],
         )
         self.defineRequiredParameter(
-            name     = "EstimationOf",
-            default  = "Parameters",
-            typecast = str,
-            message  = "Estimation d'état ou de paramètres",
-            listval  = ["Parameters",],
-        )
-        self.defineRequiredParameter(
             name     = "MaximumNumberOfIterations",
             default  = 15000,
             typecast = int,
             message  = "Nombre maximal de pas d'optimisation",
             minval   = -1,
             oldname  = "MaximumNumberOfSteps",
+        )
+        self.defineRequiredParameter(
+            name     = "MaximumNumberOfFunctionEvaluations",
+            default  = 15000,
+            typecast = int,
+            message  = "Nombre maximal d'évaluations de la fonction",
+            minval   = -1,
         )
         self.defineRequiredParameter(
             name     = "CostDecrementTolerance",
@@ -357,15 +358,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
 
     def run(self, Xb=None, Y=None, U=None, HO=None, EM=None, CM=None, R=None, B=None, Q=None, Parameters=None):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
+        self._parameters["EstimationOf"] = "Parameters"
         #
         # --------------------------
-        if self._parameters["Variant"] == "ExtendedBlue":
+        if self._parameters["Variant"] in ["ExtendedBlue", "ExtendedBlueOptimization"]:
             NumericObjects.multiXOsteps(
                 self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwexblue.ecwexblue
             )
         #
         # --------------------------
-        elif self._parameters["Variant"] in ["3DVAR", "3DVAR-Std"]:
+        elif self._parameters["Variant"] in ["3DVAR", "3DVAR-Std", "3DVARGradientOptimization"]:
             NumericObjects.multiXOsteps(
                 self, Xb, Y, U, HO, EM, CM, R, B, Q, std3dvar.std3dvar
             )
@@ -377,21 +379,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             )
         #
         # --------------------------
-        # CanonicalPSO = PSO
-        elif self._parameters["Variant"] in ["CanonicalPSO", "PSO"]:
+        elif self._parameters["Variant"] in ["CanonicalPSO", "PSO", "CanonicalParticuleSwarmOptimization"]:
             ecwnpso.ecwnpso(self, Xb, Y, HO, R, B)
         #
-        # SPSO-2011 = SPSO-2011-AIS
-        elif self._parameters["Variant"] in ["SPSO-2011", "SPSO-2011-AIS"]:
-            ecwapso.ecwapso(self, Xb, Y, HO, R, B)
-        #
         # --------------------------
-        # CanonicalPSO-VLS = PSO-VLS = VLS
-        elif self._parameters["Variant"] in ["CanonicalPSO-VLS", "PSO-VLS", "VLS"]:
-            ecwnpso.ecwnpso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
-        #
-        # SPSO-2011-VLS = SPSO-2011-AIS-VLS
-        elif self._parameters["Variant"] in ["SPSO-2011-VLS", "SPSO-2011-AIS-VLS"]:
+        elif self._parameters["Variant"] in ["SPSO-2011-VLS", "SPSO-2011-AIS-VLS", "VariationalParticuleSwarmOptimization"]:
             ecwapso.ecwapso(self, Xb, Y, HO, R, B, Hybrid="VarLocalSearch")
         #
         # --------------------------
