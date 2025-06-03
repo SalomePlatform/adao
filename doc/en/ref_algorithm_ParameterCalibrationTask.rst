@@ -39,8 +39,11 @@ This algorithm can be used to establish the calibration (or adjustment) of
 model parameters, based on observations or measurements and an *a priori* idea
 of these parameters.
 
-It provides easy access to the most useful methods for such calibration. It
-also enables, when necessary, to initiate a calibration with the most classical
+It provides easy access to the most useful methods for such calibration. It is
+not intended to replace the other algorithms of data assimilation or
+optimization described elsewhere, but to accelerate the use of algorithms that
+are the most simple and the more efficient for parameter calibration. It also
+enables, when necessary, to initiate a calibration with the most classical
 methods, then very simply, by changing algorithm, to switch to more advanced
 specific methods or to those better adapted to the particular characteristics
 of the problems to be treated.

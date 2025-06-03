@@ -51,7 +51,7 @@ print("")
 print("Expected theoretical coefficients..:", ravel((2,-1,2)))
 print("")
 print("Number of simulations..............:", len(case.get("CurrentState"))*4)
-print("Maximum diff. Observation-Analyse..:", max(abs(ravel(case.get("OMA")[-1]))))
+print("Maximum diff. Observation-Analyse..:", "%.2e"%max(abs(ravel(case.get("OMA")[-1]))))
 print("Calibration resulting coefficients.:", ravel(case.get("Analysis")[-1]))
 #
 Xa = case.get("Analysis")[-1]

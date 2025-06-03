@@ -40,8 +40,11 @@ modèle, à partir d'observations ou de mesures et d'une idée *a priori* de ces
 paramètres.
 
 Il permet d'agréger l'accès aux méthodes les plus utiles pour réaliser un tel
-calage. Il permet aussi, lorsque c'est nécessaire, d'initier un recalage avec
-les méthodes les plus classique, puis très simplement, en changeant
+calage. Il n'est pas destiné à remplacer les autres algorithmes d'assimilation
+de données ou d'optimisation décrits par ailleurs, mais à rendre plus rapide
+l'usage des algorithmes les plus simples et les plus performants pour le calage
+de paramètres. Il permet aussi, lorsque c'est nécessaire, d'initier un recalage
+avec les méthodes les plus classique, puis très simplement, en changeant
 d'algorithme, de passer à des méthodes spécifiques plus avancées ou plus
 adaptées aux particularités des problèmes à traiter.
 
@@ -110,7 +113,7 @@ Optimisation par essaim particulaire, accélérée : variante "VariationalPartic
     locale de type variationnel pour pallier à la difficulté de convergence
     locale de l'essaim. Cette méthode est plus économique que la précédente en
     nombre d'évaluations du modèle à recaler, mais elle est assez délicate à
-    régler sur un modèle donné à recaler. Pour les détails et l'association
+    régler sur un modèle particulier donné. Pour les détails et l'association
     précise des options, on peut se reporter à la documentation spécifique pour
     un :ref:`section_ref_algorithm_ParticleSwarmOptimization`.
 

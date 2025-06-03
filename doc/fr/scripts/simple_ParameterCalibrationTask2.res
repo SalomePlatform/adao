@@ -7,5 +7,5 @@ Vecteur d'observation.............: [ 57.   2.   3.  17. 192.]
 Coefficients théoriques attendus..: [ 2 -1  2]
 
 Nombre de simulations.............: 54
-Écart maximum Observation-Analyse.: 6.087560646506063e-05
+Écart maximum Observation-Analyse.: 6.09e-05
 Coefficients résultants du calage.: [ 2.0000017 -1.0000109  1.9999648]

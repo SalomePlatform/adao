@@ -51,7 +51,7 @@ print("")
 print("Coefficients théoriques attendus..:", ravel((2,-1,2)))
 print("")
 print("Nombre de simulations.............:", len(case.get("CurrentState")))
-print("Écart maximum Observation-Analyse.:", max(abs(ravel(case.get("OMA")[-1]))))
+print("Écart maximum Observation-Analyse.:", "%.2e"%max(abs(ravel(case.get("OMA")[-1]))))
 print("Coefficients résultants du calage.:", ravel(case.get("Analysis")[-1]))
 #
 Xa = case.get("Analysis")[-1]

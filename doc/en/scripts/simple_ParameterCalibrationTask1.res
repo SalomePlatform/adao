@@ -7,5 +7,5 @@ A priori background state..........: [1. 1. 1.]
 Expected theoretical coefficients..: [ 2 -1  2]
 
 Number of simulations..............: 100
-Maximum diff. Observation-Analyse..: 5.829163853832142e-07
+Maximum diff. Observation-Analyse..: 5.83e-07
 Calibration resulting coefficients.: [ 2.        -0.9999999  1.9999999]
