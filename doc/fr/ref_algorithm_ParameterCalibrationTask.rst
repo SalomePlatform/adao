@@ -30,9 +30,6 @@ Algorithme de tâche "*ParameterCalibrationTask*"
 ------------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 Cet algorithme permet d'établir le calage (ou le recalage) de paramètres d'un

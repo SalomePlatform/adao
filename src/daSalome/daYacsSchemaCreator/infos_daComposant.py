@@ -78,6 +78,7 @@ AssimAlgos = [
     "KalmanFilter",
     "LinearLeastSquares",
     "NonLinearLeastSquares",
+    "ParameterCalibrationTask",
     "ParticleSwarmOptimization",
     "QuantileRegression",
     "SimulatedAnnealing",
@@ -252,6 +253,11 @@ AlgoDataRequirements["ObserverTest"] = [
 AlgoDataRequirements["InputValuesTest"] = [
     "CheckingPoint",
     ]
+AlgoDataRequirements["ParameterCalibrationTask"] = [
+    "Background", "BackgroundError",
+    "Observation", "ObservationError",
+    "ObservationOperator",
+    ]
 
 AlgoType = {}
 AlgoType["3DVAR"] = "Optim"
@@ -271,6 +277,7 @@ AlgoType["QuantileRegression"] = "Optim"
 AlgoType["SimulatedAnnealing"] = "Optim"
 AlgoType["TabuSearch"] = "Optim"
 AlgoType["UnscentedKalmanFilter"] = "Optim"
+AlgoType["ParameterCalibrationTask"] = "Optim"
 
 # Variables qui sont partages avec le generateur de
 # catalogue Eficas

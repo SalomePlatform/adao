@@ -30,9 +30,6 @@ Task algorithm "*ParameterCalibrationTask*"
 -------------------------------------------
 
 .. ------------------------------------ ..
-.. include:: snippets/Header2Algo00.rst
-
-.. ------------------------------------ ..
 .. include:: snippets/Header2Algo01.rst
 
 This algorithm can be used to establish the calibration (or adjustment) of
