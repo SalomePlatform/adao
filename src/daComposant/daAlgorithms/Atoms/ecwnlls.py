@@ -26,7 +26,7 @@ __doc__ = """
 __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize
-from daCore.PlatformInfo import vt, vfloat, trmo
+from daCore.PlatformInfo import vfloat, trmo
 
 # ==============================================================================
 def ecwnlls(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):

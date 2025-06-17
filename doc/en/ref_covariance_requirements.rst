@@ -32,10 +32,10 @@ Requirements to describe covariance matrices
 .. index:: single: setBackgroundError
 .. index:: single: setObservationError
 .. index:: single: setEvolutionError
-.. index:: single: covariance matrix
-.. index:: single: background error covariances
-.. index:: single: observation error covariances
-.. index:: single: covariances
+.. index:: single: Covariance matrix
+.. index:: single: Background error covariances
+.. index:: single: Observation error covariances
+.. index:: single: Covariances
 
 In general, a variance-covariance matrix, generally called a covariance matrix,
 has to be squared, symmetric and semi-definite positive. Each of its terms

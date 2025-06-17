@@ -28,7 +28,7 @@ __author__ = "Jean-Philippe ARGAUD"
 import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
 from daCore.NumericObjects import RecentredBounds
-from daCore.PlatformInfo import PlatformInfo, vt, vfloat, trmo
+from daCore.PlatformInfo import PlatformInfo, vfloat, trmo
 mpr = PlatformInfo().MachinePrecision()
 
 # ==============================================================================

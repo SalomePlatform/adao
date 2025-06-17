@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import ForceNumericBounds, ApplyBounds
-from daCore.PlatformInfo import vt, vfloat, trmo
+from daCore.PlatformInfo import vfloat, trmo
 
 # ==============================================================================
 def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
@@ -96,7 +96,7 @@ def std4dvar(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
         Jb  = vfloat( 0.5 * (_X - Xb).T @ (BI @ (_X - Xb)) )
         selfA.DirectCalculation = [None,]
         selfA.DirectInnovation  = [None,]
-        e4dwin = numpy.zeros((Xini.size, duration-1))
+        e4dwin = numpy.zeros((Xini.size, duration - 1))
         s4dwin = None
         Jo  = 0.
         _Xn = _X

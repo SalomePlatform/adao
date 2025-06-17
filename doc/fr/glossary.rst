@@ -29,7 +29,7 @@ Glossaire
 .. glossary::
    :sorted:
 
-   cas
+   Cas
       Un cas ADAO est défini par un jeu de données et de choix, rassemblés par
       l'intermédiaire de l'interface utilisateur du module (en TUI comme en
       GUI). Les données sont les mesures physiques qui doivent être
@@ -38,7 +38,7 @@ Glossaire
       d'optimisation, ainsi que leurs paramètres, doivent être choisis, ils
       définissent les propriétés d'exécution du cas.
 
-   itération (interne)
+   Itération (interne)
       Une itération (interne) a lieu lorsque l'on utilise des méthodes
       d'optimisation itératives (par exemple pour l'algorithme de 3DVAR). Les
       itérations internes sont effectuées à l'intérieur de chaque opération
@@ -46,47 +46,47 @@ Glossaire
       intégré dans l'exécution des algorithmes itératifs, et il n'est apparent
       pour l'utilisateur que lorsque son observation est explicitement demandée
       en utilisant des "*Observer*" attachés à des variables de calcul. Voir
-      aussi :term:`pas (d'assimilation)`.
+      aussi :term:`Pas (d'assimilation)`.
 
-   pas (d'assimilation)
+   Pas (d'assimilation)
       Un pas (d'assimilation) a lieu lorsqu'une nouvelle observation, ou un
       nouveau jeu d'observations, est utilisé, pour suivre par exemple le
       déroulement temporel d'un système dynamique. Remarque : un *unique pas*
       d'assimilation peut contenir par nature *plusieurs itérations*
       d'optimisation lorsque l'assimilation utilise une méthode itérative
-      d'optimisation. Voir aussi :term:`itération (interne)`.
+      d'optimisation. Voir aussi :term:`Itération (interne)`.
 
-   système physique
+   Système physique
       C'est l'objet d'étude que l'on va représenter par simulation numérique,
       et que l'on observe par des mesures.
 
-   simulateur numérique
+   Simulateur numérique
       Ensemble des relations numériques et des équations caractérisant le
       système physique étudié.
 
-   simulation numérique
+   Simulation numérique
       Mise en oeuvre calculatoire de l'ensemble constitué du simulateur
       numérique et d'un jeu particulier de toutes les variables d'entrée et de
       contrôle du simulateur. Ces variables permettent de mettre le simulateur
       numérique en capacité de représenter numériquement le comportement du
       système.
 
-   observations ou mesures
+   Observations ou mesures
       Ce sont des quantités qui proviennent d'instruments de mesures et qui
       caractérisent le système physique à étudier. Ces quantités peuvent varier
       en espace ou en temps, peuvent être ponctuelles ou intégrées. Elles sont
       elles-mêmes caractérisées par leur nature de mesure, leur dimension, etc.
 
-   opérateur d'observation
+   Opérateur d'observation
       C'est une transformation de l'état simulé en un ensemble de quantités
       explicitement comparables aux observations.
 
-   conditions aux limites
+   Conditions aux limites
       Ce sont des variables particulières d'entrée et de contrôle du
       simulateur, qui caractérisent la description du comportement du système
       en bordure du domaine spatial de simulation.
 
-   conditions initiales
+   Conditions initiales
       Ce sont des variables particulières d'entrée et de contrôle du
       simulateur, qui caractérisent la description du comportement du système
       en bordure initiale du domaine temporel de simulation.
@@ -144,20 +144,20 @@ Glossaire
       être comparée à 1, une "bonne" estimation conduisant à un paramètre
       "proche" de 1.
 
-   analyse
+   Analyse
       C'est l'état optimal de représentation du système estimé par une
       procédure d'assimilation de données ou d'optimisation.
 
-   background
+   Background
       C'est le terme anglais pour désigner l'ébauche.
 
-   ebauche
+   Ebauche
       C'est une part (choisie pour être modifiable) de la représentation de
       l'état du système, représentation connue *a priori* ou initiale, qui
       n'est pas optimale, et qui est utilisée comme une estimation grossière ou
       comme "la meilleure connue", avant une estimation optimale.
 
-   innovation
+   Innovation
       Différence entre les observations et le résultat de la simulation basée
       sur l'état d'ébauche,  filtré pour être compatible avec les observations.
       C'est similaire à OMB dans les cas statiques.

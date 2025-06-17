@@ -1755,9 +1755,17 @@ class EficasGUI(object):
         if self.__path_settings_ok:
             logging.debug("Launching standalone EFICAS/ADAO interface...")
             from daEficas import prefs
-            from InterfaceQT4 import eficas_go
 
-            eficas_go.lanceEficas(code=prefs.code)
+            try:
+                from InterfaceQT4 import eficas_go
+
+                print(
+                    "  Import compatible with EFICAS until 9.14 included for: Interfaces"
+                )
+            except Exception as e:
+                from Editeur import eficas_go  # Import from EficasTools
+
+            eficas_go.lanceQtEficas(code=prefs.code)
         else:
             logging.debug(
                 "Can not launch standalone EFICAS/ADAO interface for path errors."

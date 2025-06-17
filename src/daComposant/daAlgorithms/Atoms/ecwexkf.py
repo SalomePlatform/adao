@@ -86,7 +86,7 @@ def ecwexkf(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
         Xa = Xb + _u.reshape((-1, 1))
         K = numpy.linalg.inv(_A) @ (Ha @ RI.asfullmatrix(Y.size))
     #
-    if max(B.shape)==0:
+    if max(B.shape) == 0:
         Pa = B - K @ (Hm * B)
     else:
         Pa = B - K @ (Hm @ B)
@@ -123,9 +123,9 @@ def ecwexkf(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
         selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HXa )
     # ---> autres
     if selfA._toStore("EnsembleOfStates"):
-        selfA.StoredVariables["EnsembleOfStates"].store( numpy.array((numpy.ravel(Xb),numpy.ravel(Xa))).T )
+        selfA.StoredVariables["EnsembleOfStates"].store( numpy.array((numpy.ravel(Xb), numpy.ravel(Xa))).T )
     if selfA._toStore("EnsembleOfSimulations"):
-        selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.array((numpy.ravel(HXb),numpy.ravel(HXa))).T )
+        selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.array((numpy.ravel(HXb), numpy.ravel(HXa))).T )
     if selfA._parameters["StoreInternalVariables"] \
             or selfA._toStore("CostFunctionJ") \
             or selfA._toStore("CostFunctionJb") \

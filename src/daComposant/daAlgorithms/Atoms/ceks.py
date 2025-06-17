@@ -219,9 +219,9 @@ def ceks(selfA, Xb, Y, U, HO, EM, CM, R, B, Q):
             selfA.StoredVariables["SimulatedObservationAtCurrentState"].store( HX_predicted )
         # ---> autres
         if selfA._toStore("EnsembleOfStates"):
-            selfA.StoredVariables["EnsembleOfStates"].store( numpy.array((numpy.ravel(Xn_predicted),numpy.ravel(Xa))).T )
+            selfA.StoredVariables["EnsembleOfStates"].store( numpy.array((numpy.ravel(Xn_predicted), numpy.ravel(Xa))).T )
         if selfA._toStore("EnsembleOfSimulations"):
-            selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.array((numpy.ravel(HX_predicted),numpy.ravel(HXa))).T )
+            selfA.StoredVariables["EnsembleOfSimulations"].store( numpy.array((numpy.ravel(HX_predicted), numpy.ravel(HXa))).T )
         if selfA._parameters["StoreInternalVariables"] \
                 or selfA._toStore("CostFunctionJ") \
                 or selfA._toStore("CostFunctionJb") \

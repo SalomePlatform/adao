@@ -29,7 +29,7 @@ Glossary
 .. glossary::
    :sorted:
 
-   case
+   Case
       One ADAO case is defined by a set of data and of choices, packed together
       through the user interface of the module (in TUI as in GUI). The data are
       physical measurements that have technically to be available before or
@@ -37,52 +37,52 @@ Glossary
       assimilation or optimization method, and their parameters, has to be
       chosen, they define the execution properties of the case.
 
-   iteration (internal)
+   Iteration (internal)
       An (internal) iteration takes place when using iterative optimization
       methods (e.g. for the 3DVAR algorithm). Internal iterations are performed
       within each iterative optimization operation. The iterative behavior is
       fully integrated into the execution of the iterative algorithms, and is
       only apparent to the user when his observation is explicitly requested
       using "*Observer*" attached to computational variables. See also
-      :term:`step (of assimilation)`.
+      :term:`Step (of assimilation)`.
 
-   step (of assimilation)
+   Step (of assimilation)
       An assimilation step takes place when a new observation, or a new set of
       observations, is used, for example to follow the temporal course of a
       dynamic system. Remark: a *single step* of assimilation can contain by
       nature *several iterations* of optimization when the assimilation uses an
-      iterative optimization method. See also :term:`iteration (internal)`.
+      iterative optimization method. See also :term:`Iteration (internal)`.
 
-   physical system
+   Physical system
       This is the object of study that will be represented by numerical
       simulation and observed by measurements.
 
-   digital simulator
+   Digital simulator
       All the numerical relationships and equations characterizing the physical
       system studied.
 
-   numerical simulation
+   Numerical simulation
       Computational implementation of the set composed of the numerical
       simulator and a particular set of all the input and control variables of
       the simulator. These variables enable the digital simulator to be able to
       numerically represent the system's behavior.
 
-   observations or measurements
+   Observations or measurements
       These are quantities that come from measuring instruments and
       characterize the physical system to be studied. These quantities can vary
       in space or time, can be punctual or integrated. They are themselves
       characterized by their measurement nature, size, etc.
 
-   observation operator
+   Observation operator
       It is a transformation of the simulated state into a set of quantities
       explicitly comparable to the observations.
 
-   boundary conditions
+   Boundary conditions
       These are particular input and control variables of the simulator, which
       characterize the description of the system's behavior at the border of
       the simulation spatial domain.
 
-   initial conditions
+   Initial conditions
       These are specific simulator input and control variables that
       characterize the description of the system's behavior at the initial edge
       of the simulation time domain.
@@ -140,17 +140,17 @@ Glossary
       the data assimilation optimal state estimation. Its value can be compared
       to 1, a "good" estimation leading to a parameter "close" to 1.
 
-   analysis
+   Analysis
       It is the optimal state estimated through a data assimilation or
       optimization procedure.
 
-   background
+   Background
       It is a part (chosen to be modified) of the system state representation,
       representation known *a priori* or initial one, which is not optimal, and
       which is used as a rough estimate, or a "best estimate", before an
       optimal estimation.
 
-   innovation
+   Innovation
       Difference between the observations and the result of the simulation based
       on the background state, filtered to be compatible with the observation.
       It is similar with OMB in static cases.

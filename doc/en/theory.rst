@@ -28,11 +28,11 @@
 =================================================================================
 
 .. index:: single: Data Assimilation
-.. index:: single: true state
-.. index:: single: observation
+.. index:: single: True state
+.. index:: single: Observation
 .. index:: single: a priori
 .. index:: single: EstimationOf
-.. index:: single: analysis
+.. index:: single: Analysis
 
 **Data Assimilation** is a general well established framework for computing the
 optimal estimate of the true state of a system, over time if necessary. It uses
@@ -77,11 +77,11 @@ and having :ref:`section_theory_reduction`.
 Fields reconstruction or measures interpolation
 -----------------------------------------------
 
-.. index:: single: fields reconstruction
-.. index:: single: measures interpolation
-.. index:: single: fields interpolation
-.. index:: single: state estimation
-.. index:: single: background
+.. index:: single: Fields reconstruction
+.. index:: single: Measures interpolation
+.. index:: single: Fields interpolation
+.. index:: single: State estimation
+.. index:: single: Background
 
 **Fields reconstruction (or interpolation)** consists in finding, from a
 restricted set of real measures, the physical field which is the most
@@ -112,14 +112,14 @@ previous time steps.
 Parameters identification, models adjustment, or calibration
 ------------------------------------------------------------
 
-.. index:: single: parameters identification
-.. index:: single: parameters adjustment
-.. index:: single: models adjustment
-.. index:: single: calibration
-.. index:: single: background
-.. index:: single: regularization
-.. index:: single: inverse problems
-.. index:: single: parameters estimation
+.. index:: single: Parameters identification
+.. index:: single: Parameters adjustment
+.. index:: single: Models adjustment
+.. index:: single: Calibration
+.. index:: single: Background
+.. index:: single: Regularization
+.. index:: single: Inverse problems
+.. index:: single: Parameters estimation
 
 The **identification (or adjustment) of parameters** by data assimilation is a
 form of state calibration which uses both the physical measurement and an *a
@@ -159,7 +159,7 @@ information.
 Joint estimation of states and parameters
 -----------------------------------------
 
-.. index:: single: joint estimation of states and parameters
+.. index:: single: Joint estimation of states and parameters
 
 It is sometimes necessary, when considering the two previous types of
 applications, to need to simultaneously estimate states (fields) and parameters
@@ -193,11 +193,11 @@ way the problem of joint estimation of states and parameters.
 Simple description of the data assimilation methodological framework
 --------------------------------------------------------------------
 
-.. index:: single: analysis
-.. index:: single: background
-.. index:: single: background error covariances
-.. index:: single: observation error covariances
-.. index:: single: covariances
+.. index:: single: Analysis
+.. index:: single: Background
+.. index:: single: Background error covariances
+.. index:: single: Observation error covariances
+.. index:: single: Covariances
 .. index:: single: 3DVAR
 .. index:: single: Blue
 
@@ -359,11 +359,11 @@ links:
 An overview of reduction methods and of reduced optimization
 ------------------------------------------------------------
 
-.. index:: single: reduction
-.. index:: single: reduction methods
-.. index:: single: reduced methods
-.. index:: single: reduced space
-.. index:: single: neutral sub-space
+.. index:: single: Reduction
+.. index:: single: Reduction methods
+.. index:: single: Reduced methods
+.. index:: single: Reduced space
+.. index:: single: Neutral sub-space
 .. index:: single: SVD
 .. index:: single: POD
 .. index:: single: PCA
@@ -372,9 +372,9 @@ An overview of reduction methods and of reduced optimization
 .. index:: single: ROM
 .. index:: single: EIM
 .. index:: single: Fourier
-.. index:: single: wavelets
+.. index:: single: Wavelets
 .. index:: single: EOF
-.. index:: single: sparse
+.. index:: single: Sparse
 
 Data assimilation and optimization approaches always imply a certain amount of
 reiteration of a unitary numerical simulation representing the physics that is
@@ -463,26 +463,26 @@ allows to use proven methods without even knowing it.
 Going further in the data assimilation framework
 ------------------------------------------------
 
-.. index:: single: adjustment
-.. index:: single: artificial intelligence
+.. index:: single: Adjustment
+.. index:: single: Artificial intelligence
 .. index:: single: Bayesian estimation
-.. index:: single: calibration
-.. index:: single: data smoothing
-.. index:: single: data-driven
-.. index:: single: field interpolation
-.. index:: single: inverse problems
-.. index:: single: inversion
-.. index:: single: machine learning
-.. index:: single: mathematical regularization
-.. index:: single: meta-heuristics
-.. index:: single: model reduction
-.. index:: single: optimal interpolation
-.. index:: single: parameter adjustment
-.. index:: single: parameter estimation
-.. index:: single: quadratic optimization
-.. index:: single: regularization methods
-.. index:: single: state estimation
-.. index:: single: variational optimization
+.. index:: single: Calibration
+.. index:: single: Data smoothing
+.. index:: single: Data-driven
+.. index:: single: Field interpolation
+.. index:: single: Inverse problems
+.. index:: single: Inversion
+.. index:: single: Machine learning
+.. index:: single: Mathematical regularization
+.. index:: single: Meta-heuristics
+.. index:: single: Model reduction
+.. index:: single: Optimal interpolation
+.. index:: single: Parameter adjustment
+.. index:: single: Parameter estimation
+.. index:: single: Quadratic optimization
+.. index:: single: Regularization methods
+.. index:: single: State estimation
+.. index:: single: Variational optimization
 
 To get more information about the data assimilation techniques, the reader can
 consult introductory documents like [Talagrand97]_ or [Argaud09]_, on-line
@@ -512,8 +512,8 @@ used in bibliographic searches.
 Going further in the state estimation by optimization methods
 -------------------------------------------------------------
 
-.. index:: single: state estimation
-.. index:: single: optimization methods
+.. index:: single: State estimation
+.. index:: single: Optimization methods
 .. index:: single: Local optimization
 .. index:: single: Global optimization
 .. index:: single: DerivativeFreeOptimization
@@ -620,9 +620,9 @@ as a general entry point.
 Going further in data assimilation for dynamics
 -----------------------------------------------
 
-.. index:: single: dynamic (system)
-.. index:: single: system dynamic
-.. index:: single: temporal evolution
+.. index:: single: Dynamic (system)
+.. index:: single: System dynamic
+.. index:: single: Temporal evolution
 .. index:: single: ODE (Ordinary Differential Equation)
 .. index:: single: EstimationOf
 

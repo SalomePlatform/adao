@@ -29,10 +29,10 @@ Conditions requises pour décrire des matrices de covariance
 .. index:: single: setBackgroundError
 .. index:: single: setObservationError
 .. index:: single: setEvolutionError
-.. index:: single: matrice de covariance
-.. index:: single: covariances d'erreurs d'ébauche
-.. index:: single: covariances d'erreurs d'observation
-.. index:: single: covariances
+.. index:: single: Matrice de covariance
+.. index:: single: Covariances d'erreurs d'ébauche
+.. index:: single: Covariances d'erreurs d'observation
+.. index:: single: Covariances
 
 De manière générale, une matrice de variances-covariances, généralement appelée
 matrice de covariance, doit être carrée, symétrique et semi-définie positive.

@@ -124,7 +124,7 @@ def ecwnpso(selfA, Xb, Y, HO, R, B, Hybrid=None):
     logging.debug("%s Inertial weight = %s"%(selfA._name, str(__iw)))
     logging.debug("%s Velocity clamping factor = %s"%(selfA._name, str(__vc)))
 
-    def asapso(istep, ca = __ca, cc = __cc, sa =  __sa, sc = __sc):
+    def asapso(istep, ca = __ca, cc = __cc, sa = __sa, sc = __sc):
         cs = ca - cc * (istep / selfA._parameters["MaximumNumberOfIterations"])
         cs = max(0., cs)
         ss = sa + sc * (istep / selfA._parameters["MaximumNumberOfIterations"])

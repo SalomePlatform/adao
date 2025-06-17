@@ -237,10 +237,10 @@ of a more complete study of the physical system of interest.
 To test a data assimilation chain: the twin experiments
 -------------------------------------------------------
 
-.. index:: single: data assimilation chain
-.. index:: single: twin experiments
-.. index:: single: method of twin experiments
-.. index:: single: method of manufactured solutions
+.. index:: single: Data assimilation chain
+.. index:: single: Twin experiments
+.. index:: single: Method of twin experiments
+.. index:: single: Method of manufactured solutions
 .. index:: single: MTE
 .. index:: single: MMS
 

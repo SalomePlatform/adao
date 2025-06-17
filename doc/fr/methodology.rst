@@ -256,10 +256,10 @@ physique d'intérêt.
 Pour tester une chaîne d'assimilation de données : les expériences jumelles
 ---------------------------------------------------------------------------
 
-.. index:: single: chaîne d'assimilation de données
-.. index:: single: expériences jumelles
-.. index:: single: méthode des expériences jumelles
-.. index:: single: méthode des solutions manufacturées
+.. index:: single: Chaîne d'assimilation de données
+.. index:: single: Expériences jumelles
+.. index:: single: Méthode des expériences jumelles
+.. index:: single: Méthode des solutions manufacturées
 .. index:: single: MEJ
 .. index:: single: MSM
 .. index:: single: MTE

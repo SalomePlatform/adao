@@ -28,12 +28,12 @@
 =================================================================================
 
 .. index:: single: Data Assimilation
-.. index:: single: assimilation de données
-.. index:: single: etat vrai
-.. index:: single: observation
+.. index:: single: Assimilation de données
+.. index:: single: Etat vrai
+.. index:: single: Observation
 .. index:: single: a priori
 .. index:: single: EstimationOf
-.. index:: single: analyse
+.. index:: single: Analyse
 
 **L'assimilation de données** est un cadre général bien établi pour le calcul
 de l'estimation optimale de l'état réel d'un système, au cours du temps si
@@ -85,11 +85,11 @@ ainsi que pour :ref:`section_theory_dynamic` et avoir
 Reconstruction de champs ou interpolation de données
 ----------------------------------------------------
 
-.. index:: single: reconstruction de champs
-.. index:: single: interpolation de données
-.. index:: single: interpolation de champs
-.. index:: single: estimation d'état
-.. index:: single: ebauche
+.. index:: single: Reconstruction de champs
+.. index:: single: Interpolation de données
+.. index:: single: Interpolation de champs
+.. index:: single: Estimation d'état
+.. index:: single: Ebauche
 
 La **reconstruction (ou l'interpolation) de champs** consiste à trouver, à
 partir d'un nombre restreint de mesures réelles, le (ou les) champ(s)
@@ -122,15 +122,15 @@ mesures aux précédents pas de temps.
 Identification de paramètres, ajustement de modèles, ou calage
 --------------------------------------------------------------
 
-.. index:: single: identification de paramètres
-.. index:: single: ajustement de paramètres
-.. index:: single: ajustement de modèles
-.. index:: single: recalage
-.. index:: single: calage
-.. index:: single: ebauche
-.. index:: single: régularisation
-.. index:: single: problèmes inverses
-.. index:: single: estimation de paramètres
+.. index:: single: Identification de paramètres
+.. index:: single: Ajustement de paramètres
+.. index:: single: Ajustement de modèles
+.. index:: single: Recalage
+.. index:: single: Calage
+.. index:: single: Ebauche
+.. index:: single: Régularisation
+.. index:: single: Problèmes inverses
+.. index:: single: Estimation de paramètres
 
 **L'identification (ou l'ajustement) de paramètres** par assimilation de
 données est une forme de calage d'état qui utilise simultanément les mesures
@@ -173,8 +173,8 @@ un ensemble hétérogène d'informations à disposition.
 Estimation conjointe d'états et de paramètres
 ---------------------------------------------
 
-.. index:: single: jointe (estimation d'états et de paramètres)
-.. index:: single: estimation conjointe d'états et de paramètres
+.. index:: single: Jointe (estimation d'états et de paramètres)
+.. index:: single: Estimation conjointe d'états et de paramètres
 
 Il parfois nécessaire, en considérant les deux types d'applications
 précédentes, d'avoir besoin d'estimer en même temps des états (champs) et des
@@ -211,11 +211,11 @@ d'états et de paramètres.
 Description simple du cadre méthodologique de l'assimilation de données
 -----------------------------------------------------------------------
 
-.. index:: single: analyse
-.. index:: single: ebauche
-.. index:: single: covariances d'erreurs d'ébauche
-.. index:: single: covariances d'erreurs d'observation
-.. index:: single: covariances
+.. index:: single: Analyse
+.. index:: single: Ebauche
+.. index:: single: Covariances d'erreurs d'ébauche
+.. index:: single: Covariances d'erreurs d'observation
+.. index:: single: Covariances
 .. index:: single: 3DVAR
 .. index:: single: Blue
 
@@ -382,11 +382,11 @@ associés :
 Un aperçu des méthodes de réduction et de l'optimisation réduite
 ----------------------------------------------------------------
 
-.. index:: single: réduction
-.. index:: single: méthodes de réduction
-.. index:: single: méthodes réduites
-.. index:: single: espace réduit
-.. index:: single: sous-espace neutre
+.. index:: single: Réduction
+.. index:: single: Méthodes de réduction
+.. index:: single: Méthodes réduites
+.. index:: single: Espace réduit
+.. index:: single: Sous-espace neutre
 .. index:: single: SVD
 .. index:: single: POD
 .. index:: single: PCA
@@ -395,9 +395,9 @@ Un aperçu des méthodes de réduction et de l'optimisation réduite
 .. index:: single: ROM
 .. index:: single: EIM
 .. index:: single: Fourier
-.. index:: single: ondelettes
+.. index:: single: Ondelettes
 .. index:: single: EOF
-.. index:: single: sparse
+.. index:: single: Sparse
 
 Les démarches d'assimilation de données et d'optimisation impliquent toujours
 une certaine réitération d'une simulation numérique unitaire représentant la
@@ -405,7 +405,7 @@ physique que l'on veut traiter. Pour traiter au mieux cette physique, cette
 simulation numérique unitaire est souvent de taille importante voire imposante,
 et conduit à un coût calcul extrêmement important dès lors qu'il est répété. La
 simulation physique complète est souvent appelée "*simulation haute fidélité*"
-(ou "*full scale simulation*").
+(ou "*high fidelity simulation*" ou "*full scale simulation*").
 
 Pour éviter cette difficulté pratique, **différentes stratégies de réduction du
 coût du calcul d'optimisation existent, et certaines permettent également de
@@ -484,37 +484,37 @@ Combinaison de plusieurs réductions :
     largement l'objet de recherches et d'évolutions.
 
 On peut terminer ce rapide tour d'horizon des méthodes de réduction en
-soulignant que leur usage est omni-présent dans les applications réelles et
-dans les outils numériques, et qu'ADAO permet d'utiliser des méthodes éprouvées
-sans même le savoir.
+soulignant que leur usage est omniprésent dans les applications réelles et dans
+les outils numériques, et qu'ADAO permet d'utiliser des méthodes éprouvées sans
+même le savoir.
 
 .. _section_theory_more_assimilation:
 
 Approfondir le cadre méthodologique de l'assimilation de données
 ----------------------------------------------------------------
 
-.. index:: single: ajustement de paramètres
-.. index:: single: apprentissage
-.. index:: single: calage
-.. index:: single: calibration
-.. index:: single: data-driven
-.. index:: single: estimation bayésienne
-.. index:: single: estimation d'état
-.. index:: single: estimation de paramètres
-.. index:: single: intelligence artificielle
-.. index:: single: interpolation de champs
-.. index:: single: interpolation optimale
-.. index:: single: inversion
-.. index:: single: lissage de données
-.. index:: single: machine learning
-.. index:: single: méta-heuristiques
-.. index:: single: méthodes de régularisation
-.. index:: single: optimisation quadratique
-.. index:: single: optimisation variationnelle
-.. index:: single: problèmes inverses
-.. index:: single: recalage
-.. index:: single: réduction de modèles
-.. index:: single: régularisation mathématique
+.. index:: single: Ajustement de paramètres
+.. index:: single: Apprentissage
+.. index:: single: Calage
+.. index:: single: Calibration
+.. index:: single: Data-driven
+.. index:: single: Estimation bayésienne
+.. index:: single: Estimation d'état
+.. index:: single: Estimation de paramètres
+.. index:: single: Intelligence artificielle
+.. index:: single: Interpolation de champs
+.. index:: single: Interpolation optimale
+.. index:: single: Inversion
+.. index:: single: Lissage de données
+.. index:: single: Machine learning
+.. index:: single: Méta-heuristiques
+.. index:: single: Méthodes de régularisation
+.. index:: single: Optimisation quadratique
+.. index:: single: Optimisation variationnelle
+.. index:: single: Problèmes inverses
+.. index:: single: Recalage
+.. index:: single: Réduction de modèles
+.. index:: single: Régularisation mathématique
 
 Pour obtenir de plus amples informations sur les techniques d'assimilation de
 données, le lecteur peut consulter les documents introductifs comme
@@ -548,8 +548,8 @@ termes peuvent être utilisés dans les recherches bibliographiques.
 Approfondir l'estimation d'état par des méthodes d'optimisation
 ---------------------------------------------------------------
 
-.. index:: single: estimation d'état
-.. index:: single: méthodes d'optimisation
+.. index:: single: Estimation d'état
+.. index:: single: Méthodes d'optimisation
 .. index:: single: Optimisation locale
 .. index:: single: Locale (optimisation)
 .. index:: single: Optimisation globale
@@ -665,9 +665,9 @@ sa recherche grâce au point d'entrée [WikipediaMO]_.
 Approfondir l'assimilation de données pour la dynamique
 -------------------------------------------------------
 
-.. index:: single: dynamique (système)
-.. index:: single: système dynamique
-.. index:: single: evolution temporelle
+.. index:: single: Dynamique (système)
+.. index:: single: Système dynamique
+.. index:: single: Evolution temporelle
 .. index:: single: EDO (Équation Différentielle Ordinaire)
 .. index:: single: ODE (Ordinary Differential Equation)
 .. index:: single: EstimationOf

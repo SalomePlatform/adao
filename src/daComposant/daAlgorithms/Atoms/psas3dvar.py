@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, scipy, scipy.optimize
 from daCore.NumericObjects import HessienneEstimation, QuantilesEstimations
-from daCore.PlatformInfo import vt, vfloat, trmo
+from daCore.PlatformInfo import vfloat, trmo
 
 # ==============================================================================
 def psas3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):

@@ -177,9 +177,9 @@ def ecwblue(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     if selfA._toStore("SimulatedObservationAtOptimum"):
         selfA.StoredVariables["SimulatedObservationAtOptimum"].store( HXa )
     if selfA._toStore("EnsembleOfStates"):
-        selfA.StoredVariables["EnsembleOfStates"].store( Xa.reshape((-1,1)) )
+        selfA.StoredVariables["EnsembleOfStates"].store( Xa.reshape((-1, 1)) )
     if selfA._toStore("EnsembleOfSimulations"):
-        selfA.StoredVariables["EnsembleOfSimulations"].store( HXa.reshape((-1,1)) )
+        selfA.StoredVariables["EnsembleOfSimulations"].store( HXa.reshape((-1, 1)) )
     if selfA._toStore("SimulationQuantiles"):
         H  = HO["Direct"].appliedTo
         QuantilesEstimations(selfA, A, Xa, HXa, H, Hm)

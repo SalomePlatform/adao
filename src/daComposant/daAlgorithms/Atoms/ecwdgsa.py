@@ -27,7 +27,7 @@ __author__ = "Jean-Philippe ARGAUD"
 
 import numpy, logging, scipy
 from daCore.NumericObjects import CostFunction3D as CostFunction
-from daCore.PlatformInfo import vt, vfloat
+from daCore.PlatformInfo import vt
 
 # ==============================================================================
 def ecwdgsa(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
@@ -72,7 +72,7 @@ def ecwdgsa(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
             no_local_search = True,
         )
         Minimum = numpy.ravel(result["x"])
-        J_optimal = vfloat(result["fun"])
+        # J_optimal = vfloat(result["fun"])
     elif selfA._parameters["Variant"] in ["DA", "DualAnnealing"]:
         result = scipy.optimize.dual_annealing(
             func            = CostFunction,
@@ -84,7 +84,7 @@ def ecwdgsa(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
             no_local_search = False,
         )
         Minimum = numpy.ravel(result["x"])
-        J_optimal = vfloat(result["fun"])
+        # J_optimal = vfloat(result["fun"])
     else:
         raise ValueError("Error in variant name: %s is unkown"%selfA._parameters["Variant"])
     #
@@ -99,6 +99,7 @@ def ecwdgsa(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
     if selfA._toStore("OMA") or \
             selfA._toStore("SimulatedObservationAtOptimum"):
         if selfA._toStore("SimulatedObservationAtCurrentState"):
+            IndexMin = numpy.argmin( selfA.StoredVariables["CostFunctionJ"][nbPreviousSteps:] ) + nbPreviousSteps  # noqa: E501
             HXa = selfA.StoredVariables["SimulatedObservationAtCurrentState"][IndexMin]
         elif selfA._toStore("SimulatedObservationAtCurrentOptimum"):
             HXa = selfA.StoredVariables["SimulatedObservationAtCurrentOptimum"][-1]
@@ -132,4 +133,3 @@ def ecwdgsa(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
 # ==============================================================================
 if __name__ == "__main__":
     print("\n AUTODIAGNOSTIC\n")
-
