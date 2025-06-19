@@ -29,7 +29,10 @@ import os, sys
 # =======================
 #
 # Positionnee a repin au debut, mise a jour dans configuration
-repIni=os.path.dirname(os.path.abspath(__file__))
+try:
+    repIni=os.path.dirname(os.path.abspath(__file__))
+except:
+    repIni = "."
 sys.path.insert(0,repIni)
 #
 # Sert comme directory initial des QFileDialog
@@ -40,12 +43,14 @@ initialdir = os.getcwd()
 # Indique la langue du catalogue utilisee pour les chaines d'aide : fr ou ang
 # lang = 'fr'
 # Traduction des labels de boutons ou autres
-lookfor = os.path.abspath(os.path.join(os.path.dirname(__file__),"../resources"))
+lookfor = os.path.abspath(os.path.join(repIni,"../resources"))
 if os.path.exists(lookfor):
     translatorFichier = os.path.join(lookfor, "adao")
-else:
+elif "ADAO_ENGINE_ROOT_DIR" in os.environ:
     # Ce nom sera complete par EFICAS avec _<LANG>.qm
     translatorFichier = os.environ["ADAO_ENGINE_ROOT_DIR"] + "/share/resources/adao/adao"
+else:
+    translatorFichier = "."
 #
 # Pilotage des sous-fenetres d'EFICAS
 closeAutreCommande = True
