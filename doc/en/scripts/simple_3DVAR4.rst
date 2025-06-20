@@ -62,8 +62,8 @@ the successive windings and jumps.
   :width: 90%
 
 If we observe the same trajectory by plotting the 3 components of the system
-state separately, with the same simulation parameters, we obtain the following
-figure:
+state separately (over a shorter period :math:`[0,10]`), with the same
+simulation parameters, we obtain the following figure:
 
 .. _simple_3DVAR4Plus02:
 .. image:: scripts/simple_3DVAR4Plus02.png

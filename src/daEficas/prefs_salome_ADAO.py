@@ -28,31 +28,33 @@ import os, sys
 # Configuration de Eficas
 # =======================
 #
-# Positionnee a repin au debut, mise a jour dans configuration
+# Positionnée a repIni au début, mise a jour dans configuration
 try:
-    repIni=os.path.dirname(os.path.abspath(__file__))
-except:
+    prefsFile = os.path.abspath(__file__)
+    repIni = os.path.dirname(prefsFile)
+except:  # Si non importé
+    prefsFile = "prefs_salome_ADAO.py"
     repIni = "."
 sys.path.insert(0,repIni)
 #
-# Sert comme directory initial des QFileDialog
+# Sert comme répertoire initial des QFileDialog
 initialdir = os.getcwd()
 #
-# Traductions et codages
-#
-# Indique la langue du catalogue utilisee pour les chaines d'aide : fr ou ang
+# Indique la langue du catalogue utilisée pour les chaînes d'aide : fr ou ang
 # lang = 'fr'
+#
 # Traduction des labels de boutons ou autres
 lookfor = os.path.abspath(os.path.join(repIni,"../resources"))
 if os.path.exists(lookfor):
+    # Ce nom sera complete par EFICAS avec _<LANG>.qm
     translatorFichier = os.path.join(lookfor, "adao")
 elif "ADAO_ENGINE_ROOT_DIR" in os.environ:
     # Ce nom sera complete par EFICAS avec _<LANG>.qm
     translatorFichier = os.environ["ADAO_ENGINE_ROOT_DIR"] + "/share/resources/adao/adao"
 else:
-    translatorFichier = "."
+    translatorFichier = "adao"
 #
-# Pilotage des sous-fenetres d'EFICAS
+# Pilotage des sous-fenêtres d'EFICAS
 closeAutreCommande = True
 closeFrameRechercheCommande = True
 closeFrameRechercheCommandeSurPageDesCommandes = True
@@ -60,7 +62,17 @@ closeEntete = True
 closeArbre = True
 taille = 800
 nombreDeBoutonParLigne = 2
-
-catalogues = (("ADAO", "V0", os.path.join(repIni, 'ADAO_Cata_V0.py'), "adao"),)
+#
+# Catalogue
+if os.path.exists(os.path.join(repIni, 'ADAO_Cata_V0.py')):
+    catalogues = (("ADAO", "V0", os.path.join(repIni, 'ADAO_Cata_V0.py'), "adao"),)
+else:
+    catalogues = None
+    for spath in sys.path:
+        if os.path.exists(os.path.join(spath, 'ADAO_Cata_V0.py')):
+            catalogues = (("ADAO", "V0", os.path.join(spath, 'ADAO_Cata_V0.py'), "adao"),)
+            break  # Choisit le premier trouvé
+    if catalogues is None:
+        catalogues = (('ADAO', 'V0', 'ADAO_Cata_V0.py', 'adao'),)
 readerModule = "convert_adao"
 writerModule = "generator_adao"

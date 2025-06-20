@@ -67,6 +67,7 @@ Utilisations d'algorithmes orientés tâches ou études dédiées
 
 #. :ref:`Exemples d'étude avec "InterpolationByReducedModelTask"<section_ref_algorithm_InterpolationByReducedModelTask_examples>`
 #. :ref:`Exemples d'étude avec "MeasurementsOptimalPositioningTask"<section_ref_algorithm_MeasurementsOptimalPositioningTask_examples>`
+#. :ref:`Exemples d'étude avec "ParameterCalibrationTask"<section_ref_algorithm_ParameterCalibrationTask_examples>`
 
 Analyses complètes et exemples de cas d'usage
 ---------------------------------------------

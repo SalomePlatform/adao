@@ -160,7 +160,10 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
         index = self.viewmanager.myQtab.currentIndex()
         close_editor = self.viewmanager.dictEditors[index]
-        res = self.viewmanager.handleClose(self)
+        try:
+          res = self.viewmanager.handleClose()
+        except Exception as e:
+          res = self.editorManager.fileClose()
         if res != 2: # l utilsateur a annule
           # JPA : supprimer 'fichier' pour EFICAS > 9.14
           if (hasattr(close_editor, 'fichier') and close_editor.fichier is None) or \

@@ -65,8 +65,8 @@ illustrer les enroulements et sauts successifs.
   :width: 90%
 
 Si on observe la même trajectoire en traçant séparément les 3 composantes de
-l'état du système, avec les mêmes paramètres de simulation, on obtient la
-figure suivante :
+l'état du système (sur une durée plus courte :math:`[0,10]`), avec les mêmes
+paramètres de simulation, on obtient la figure suivante :
 
 .. _simple_3DVAR4Plus02:
 .. image:: scripts/simple_3DVAR4Plus02.png
