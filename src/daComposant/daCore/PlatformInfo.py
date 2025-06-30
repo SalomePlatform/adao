@@ -202,6 +202,7 @@ class PlatformInfo(object):
                     "13": "Ventura",
                     "14": "Sonoma",
                     "15": "Sequoia",
+                    "26": "Tahoe",
                 }
                 for key in __macosxv11:
                     __details = platform.mac_ver()[0].split(".")
@@ -713,6 +714,12 @@ def trmo():
         )
     elif vt("1.15.0") <= vt(scipy.version.version) <= vt("1.15.99"):
         import daAlgorithms.Atoms.lbfgsb115hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.16.0") <= vt(scipy.version.version) <= vt("1.16.99"):
+        import daAlgorithms.Atoms.lbfgsb116hlt as optimiseur
 
         logging.debug(
             "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)

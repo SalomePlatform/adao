@@ -127,7 +127,7 @@ def psas3dvar(selfA, Xb, Xini, Y, U, HO, CM, R, B, __storeState = False):
             maxfun      = selfA._parameters["MaximumNumberOfIterations"] - 1,
             factr       = selfA._parameters["CostDecrementTolerance"] * 1.e14,
             pgtol       = selfA._parameters["ProjectedGradientTolerance"],
-            iprint      = selfA._parameters["optiprint"],
+            # iprint      = selfA._parameters["optiprint"],
         )
         # nfeval = Informations['funcalls']
         # rc     = Informations['warnflag']

@@ -25,7 +25,7 @@
 import os, sys
 
 #
-# Configuration de Eficas (pour ADAO dans SALOME)
+# Configuration de Eficas (pour ADAO hors SALOME)
 # =======================
 #
 # Positionnée a repIni au début, mise a jour dans configuration
@@ -33,7 +33,7 @@ try:
     prefsFile = os.path.abspath(__file__)
     repIni = os.path.dirname(prefsFile)
 except:  # Si non importé
-    prefsFile = "prefs_salome_ADAO.py"
+    prefsFile = "prefs_ADAO.py"
     repIni = "."
 sys.path.insert(0,repIni)
 #
@@ -58,21 +58,21 @@ else:
 closeAutreCommande = True
 closeFrameRechercheCommande = True
 closeFrameRechercheCommandeSurPageDesCommandes = True
-closeEntete = True
+closeEntete = False
 closeArbre = True
 taille = 800
 nombreDeBoutonParLigne = 2
 #
 # Catalogue
 if os.path.exists(os.path.join(repIni, 'ADAO_Cata_V0.py')):
-    catalogues = (("ADAO", "V0", os.path.join(repIni, 'ADAO_Cata_V0.py'), "adao"),)
+    catalogues = (("ADAO", "V0", os.path.join(repIni, 'ADAO_Cata_V0.py'), "python"),)
 else:
     catalogues = None
     for spath in sys.path:
         if os.path.exists(os.path.join(spath, 'ADAO_Cata_V0.py')):
-            catalogues = (("ADAO", "V0", os.path.join(spath, 'ADAO_Cata_V0.py'), "adao"),)
+            catalogues = (("ADAO", "V0", os.path.join(spath, 'ADAO_Cata_V0.py'), "python"),)
             break  # Choisit le premier trouvé
     if catalogues is None:
-        catalogues = (('ADAO', 'V0', 'ADAO_Cata_V0.py', 'adao'),)
+        catalogues = (('ADAO', 'V0', 'ADAO_Cata_V0.py', 'python'),)
 # readerModule = "convert_adao"
-writerModule = "generator_adao"
+# writerModule = "generator_adao"

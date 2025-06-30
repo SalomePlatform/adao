@@ -1755,7 +1755,7 @@ class EficasGUI(object):
         if self.__path_settings_ok:
             logging.debug("Launching standalone EFICAS/ADAO interface...")
             from daEficas import prefs
-            from daEficas import prefs_salome_ADAO  # Positionne le catalogue
+            from daEficas import prefs_ADAO  # Positionne le catalogue hors SALOME
 
             try:
                 from InterfaceQT4 import eficas_go
@@ -1766,7 +1766,7 @@ class EficasGUI(object):
             except Exception as e:
                 from Editeur import eficas_go  # Import from EficasTools
 
-            eficas_go.lanceQtEficas(code=prefs.code, prefsFile=prefs_salome_ADAO.prefsFile)
+            eficas_go.lanceQtEficas(code=prefs.code, prefsFile=prefs_ADAO.prefsFile)
         else:
             logging.debug(
                 "Can not launch standalone EFICAS/ADAO interface for path errors."
