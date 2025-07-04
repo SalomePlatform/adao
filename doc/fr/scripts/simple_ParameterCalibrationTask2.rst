@@ -10,6 +10,6 @@ optimisation sans dérivées. Elle est indiquée à cet algorithme par la varian
 le mot-clé "Minimizer"). Seuls les valeurs de ces deux mot-clés "Variant" et
 "Minimizer" changent donc entre les deux approches.
 
-Dans ce cas extrêmement simple de petite dimension et sans difficulté, les
-paramètres de contrôle restent les mêmes. Les résultats sont de la même qualité
-que pour l'optimisation variationnelle de référence.
+Dans ce cas extrêmement simple, de petite dimension et sans difficulté spéciale
+d'optimisation, les paramètres de contrôle restent les mêmes. Les résultats
+sont de la même qualité que pour l'optimisation variationnelle de référence.

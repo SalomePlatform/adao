@@ -15,13 +15,13 @@ Variant
   "SPSO-2011-AIS" (Standard Standard Particle Swarm Optimisation 2011 with Asynchronous Iteration Strategy),
   "SPSO-2011-SIS" (Standard Particle Swarm Optimisation 2011 with Synchronous Iteration Strategy),
   "SPSO-2011-PSIS" (Standard Particle Swarm Optimisation 2011 with Parallel Synchronous Iteration Strategy).
-  The local accelerated "VSL" (Variational Local Search) versions are obtained
-  by adding the suffix "-VSL" to each method:
-  "CanonicalPSO-VSL",
-  "OGCR-VSL",
-  "SPSO-2011-AIS-VSL",
-  "SPSO-2011-SIS-VSL",
-  "SPSO-2011-PSIS-VSL".
+  The local accelerated "VLS" (Variational Local Search) versions are obtained
+  by adding the suffix "-VLS" to each method:
+  "CanonicalPSO-VLS",
+  "OGCR-VLS",
+  "SPSO-2011-AIS-VLS",
+  "SPSO-2011-SIS-VLS",
+  "SPSO-2011-PSIS-VLS".
 
   It is recommended to try the "CanonicalPSO" variant with about 100 particles
   for robust performance, and to reduce the number of particles to about 40

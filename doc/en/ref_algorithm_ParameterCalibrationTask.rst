@@ -65,15 +65,15 @@ available in each algorithm-specific section of the documentation.
     :ref:`section_ref_algorithm_3DVAR`.
 
 BLUE type semi-linear estimation: variant "ExtendedBlueOptimization"
-    This is an "ExtendedBlue" estimation method, of the BLUE type which
-    includes a non-linear evaluation of the model to be calibrated. The
-    advantage of this method is that it's a non-iterative estimate, and
-    therefore very economical in terms of number of evaluations. What's more,
-    there are very few parameters to set when using this method. Nevertheless,
-    it is usually less accurate and less robust to errors arising from the
-    non-linear nature of the model used. For details and the precise
-    association of options, please refer to the specific documentation for a
-    :ref:`section_ref_algorithm_ExtendedBlue`.
+    This is an "ExtendedBlue" estimation method, of BLUE (Best Linear Unbiased
+    Estimator) type, which includes a non-linear evaluation of the model to be
+    calibrated. The advantage of this method is that it's a non-iterative
+    estimate, and therefore very economical in terms of number of evaluations.
+    What's more, there are very few parameters to set when using this method.
+    Nevertheless, by nature, it is usually less accurate and less robust to
+    errors arising from the non-linear nature of the model used. For details
+    and the precise association of options, please refer to the specific
+    documentation for a :ref:`section_ref_algorithm_ExtendedBlue`.
 
 Derivative free optimization: variant "DerivativeFreeOptimization"
     It's an optimization method that doesn't use model derivation, but proceeds

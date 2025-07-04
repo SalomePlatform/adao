@@ -56,7 +56,7 @@ Optimisation variationnelle de type 3DVAR : variante "3DVARGradientOptimization"
     grande précision obtenue. Elle nécessite à la fois une bonne régularité du
     modèle à recaler par rapport à ses paramètres, une bonne précision des
     simulations disponibles, et une bonne séparation d'éventuels minima
-    équivalents. Cela étant, lorsqu'elle d'applique correctement, c'est la
+    équivalents. Cela étant, lorsqu'elle s'applique correctement, c'est la
     méthode la plus économique en évaluations du modèle et la plus précise pour
     ce nombre d'évaluations. C'est en particulier vrai lorsque le nombre de
     paramètres à optimiser augmente, nombre auquel la méthode est très peu
@@ -66,19 +66,19 @@ Optimisation variationnelle de type 3DVAR : variante "3DVARGradientOptimization"
     documentation spécifique pour un :ref:`section_ref_algorithm_3DVAR`.
 
 Estimation semi-linéaire de type BLUE : variante "ExtendedBlueOptimization"
-    C'est une méthode d'estimation "ExtendedBlue", de type BLUE qui inclue une
-    évaluation non-linéaire du modèle à recaler. L'intérêt de cette méthode est
-    d'être une estimation non itérative, donc très économique en nombre
-    d'évaluations. De plus, il y a très peu de paramètres à régler pour
-    utiliser cette méthode. Néanmoins, elle est usuellement moins précise et
-    moins robuste aux erreurs provenant de l'aspect non linéaire du modèle
-    utilisé. Pour les détails et l'association précise des options, on peut se
-    reporter à la documentation spécifique pour un
-    :ref:`section_ref_algorithm_ExtendedBlue`.
+    C'est une méthode d'estimation "ExtendedBlue", de type BLUE (Best Linear
+    Unbiased Estimator), qui inclue une évaluation non-linéaire du modèle à
+    recaler. L'intérêt de cette méthode est d'être une estimation non
+    itérative, donc très économique en nombre d'évaluations. De plus, il y a
+    très peu de paramètres à régler pour utiliser cette méthode. Néanmoins, par
+    nature, elle est usuellement moins précise et moins robuste aux erreurs
+    provenant de l'aspect non linéaire du modèle utilisé. Pour les détails et
+    l'association précise des options, on peut se reporter à la documentation
+    spécifique pour un :ref:`section_ref_algorithm_ExtendedBlue`.
 
 Optimisation sans dérivées : variante "DerivativeFreeOptimization"
     C'est une méthode d'optimisation qui n'utilise pas de dérivation du modèle
-    à recaler, et qui procède par approximation de type simplexe ou autres.
+    à recaler, et qui procède par approximations de type simplexe ou autres.
     L'intérêt de cette méthode est de n'imposer aucun comportement particulier
     du modèle par rapport à ses paramètres. Mais elle nécessite souvent un
     nombre important d'évaluations du modèle pour construire en interne une

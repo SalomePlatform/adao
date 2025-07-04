@@ -52,7 +52,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 "PSO",
                 "CanonicalPSO",
                 "SPSO-2011-VLS",
-                "SPSO-2011-AIS-VSL",
+                "SPSO-2011-AIS-VLS",
             ],
         )
         self.defineRequiredParameter(

@@ -34,7 +34,7 @@ Calculation algorithm "*ParticleSwarmOptimization*"
 This algorithm estimates the state of a system, by minimizing a cost function
 :math:`J`, using an evolutionary particle swarm method. It is a meta-heuristic
 that does not require any particular information about the functional, and does
-not require derivatives (except in its hybrid "VSL" version).
+not require derivatives (except in its hybrid "VLS" version).
 
 It falls in the same category than the
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
@@ -47,7 +47,7 @@ search of a general error function :math:`J` of type :math:`L^1`, :math:`L^2`
 or :math:`L^{\infty}`, with or without weights, as described in the section for
 :ref:`section_theory_optimization`. As it is an optimization meta-heuristic,
 reaching a global or local optimal result is nevertheless not guaranteed
-(except in its hybrid "VSL" version). The default error function is the
+(except in its hybrid "VLS" version). The default error function is the
 augmented weighted least squares function, classically used in data
 assimilation.
 
@@ -91,20 +91,20 @@ this algorithm. The following stable and robust formulations are proposed here:
 
 .. index::
     single: Variational Local Search
-    pair: Variant ; CanonicalPSO-VSL
-    pair: Variant ; OGCR-VSL
-    pair: Variant ; SPSO-2011-VSL
-    pair: Variant ; SPSO-2011-AIS-VSL
-    pair: Variant ; SPSO-2011-SIS-VSL
-    pair: Variant ; SPSO-2011-PSIS-VSL
+    pair: Variant ; CanonicalPSO-VLS
+    pair: Variant ; OGCR-VLS
+    pair: Variant ; SPSO-2011-VLS
+    pair: Variant ; SPSO-2011-AIS-VLS
+    pair: Variant ; SPSO-2011-SIS-VLS
+    pair: Variant ; SPSO-2011-PSIS-VLS
 
 Each of the above methods can have the local aspect of its search accelerated
-by a "VSL" (Variational Local Search) method concerning the best insects in the
+by a "VLS" (Variational Local Search) method concerning the best insects in the
 swarm. The global aspect of the search remains preserved by the particle swarm
 method, but great care must be taken experimentally to avoid premature
 stagnation of the best particles in the swarm. Simply suffix the name of the
-algorithm variant with "-VSL" to activate the acceleration, e.g.
-"CanonicalPSO-VSL".
+algorithm variant with "-VLS" to activate the acceleration, e.g.
+"CanonicalPSO-VLS".
 
 The following are a few practical suggestions for the effective use of these
 algorithms:
@@ -136,7 +136,7 @@ algorithms:
   the problem is partially constrained, it is recommended (but not required) to
   define increment bounds. In case these increment bounds are not defined, the
   variable bounds will be used as increment bounds.
-- The use of hybrid "VSL"-type acceleration variants will require the
+- The use of hybrid "VLS"-type acceleration variants will require the
   availability of the operator gradient (either given explicitly or requested
   by finite differences at definition), but normally speeds up the local
   search. It is therefore a good idea to reduce the number of generations

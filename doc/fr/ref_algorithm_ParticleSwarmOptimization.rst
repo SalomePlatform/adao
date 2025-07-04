@@ -35,7 +35,7 @@ Cet algorithme réalise une estimation de l'état d'un système, par minimisatio
 d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode évolutionnaire
 d'essaim particulaire. C'est une méta-heuristique qui ne requiert pas
 d'information particulière sur la fonctionnelle et qui ne nécessite pas les
-dérivées (sauf dans sa version hybride de type "VSL").
+dérivées (sauf dans sa version hybride de type "VLS").
 
 Elle entre dans la même catégorie que les
 :ref:`section_ref_algorithm_DerivativeFreeOptimization`,
@@ -49,7 +49,7 @@ minimum global d'une fonctionnelle d'erreur :math:`J` quelconque de type
 comme décrit dans la section pour :ref:`section_theory_optimization`. Comme
 c'est une méta-heuristique d'optimisation, l'atteinte d'un résultat optimal
 global ou local n'est pas garantie (sauf dans sa version hybride de type
-"VSL"). La fonctionnelle d'erreur par défaut est celle de moindres carrés
+"VLS"). La fonctionnelle d'erreur par défaut est celle de moindres carrés
 pondérés augmentés, classiquement utilisée en assimilation de données.
 
 Elle est basée sur l'évolution d'une population (appelée "essaim") d'états
@@ -95,21 +95,21 @@ et robustes suivantes :
 
 .. index::
     single: Variational Local Search
-    pair: Variant ; CanonicalPSO-VSL
-    pair: Variant ; OGCR-VSL
-    pair: Variant ; SPSO-2011-VSL
-    pair: Variant ; SPSO-2011-AIS-VSL
-    pair: Variant ; SPSO-2011-SIS-VSL
-    pair: Variant ; SPSO-2011-PSIS-VSL
+    pair: Variant ; CanonicalPSO-VLS
+    pair: Variant ; OGCR-VLS
+    pair: Variant ; SPSO-2011-VLS
+    pair: Variant ; SPSO-2011-AIS-VLS
+    pair: Variant ; SPSO-2011-SIS-VLS
+    pair: Variant ; SPSO-2011-PSIS-VLS
 
 Chacune des méthodes ci-dessus peut voir l'aspect local de sa recherche
-accéléré par une méthode variationnelle "VSL" (Variational Local Search)
+accéléré par une méthode variationnelle "VLS" (Variational Local Search)
 concernant les meilleurs insectes de l'essaim. L'aspect global de la recherche
 reste préservé par la méthode d'essaim particulaire, mais il convient
 expérimentalement d'être très attentif à éviter la stagnation prématurée des
 meilleurs particules de l'essaim. Il suffit de suffixer le nom de la variante
-d'algorithme par "-VSL" pour activer l'accélération, comme par exemple
-"CanonicalPSO-VSL".
+d'algorithme par "-VLS" pour activer l'accélération, comme par exemple
+"CanonicalPSO-VLS".
 
 Voici quelques suggestions pratiques pour une utilisation efficace de ces
 algorithmes :
@@ -144,7 +144,7 @@ algorithmes :
   recommandé (mais pas indispensable) de définir des bornes d'incrément. Dans
   le cas où ces bornes d'incréments ne sont pas définies, ce sont les bornes
   des variables qui seront utilisées comme bornes d'incréments.
-- L'usage des variantes hybrides d'accélération de type "VSL" va requérir la
+- L'usage des variantes hybrides d'accélération de type "VLS" va requérir la
   disponibilité du gradient de l'opérateur (soit donné explicitement soit
   demandé par différences finies à la définition), mais accélère normalement la
   recherche locale. Il est donc judicieux de réduire notablement le nombre de

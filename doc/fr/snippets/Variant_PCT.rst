@@ -19,7 +19,7 @@ Variant
   "ExtendedBlueOptimization" ou "ExtendedBlue" (estimation semi-linéaire de type BLUE),
   "DerivativeFreeOptimization" ou "DFO" (optimisation sans dérivées par approximation de type simplexe ou autres),
   "CanonicalParticuleSwarmOptimization" ou "CanonicalPSO" ou "PSO" (optimisation canonique par essaim particulaire),
-  "VariationalParticuleSwarmOptimization" ou "SPSO-2011-AIS-VSL" (optimisation standard 2011 par essaim particulaire, avec accélération par recherche variationnelle locale),
+  "VariationalParticuleSwarmOptimization" ou "SPSO-2011-AIS-VLS" (optimisation standard 2011 par essaim particulaire, avec accélération par recherche variationnelle locale),
   Il est fortement recommandé de conserver la valeur par défaut.
 
   Exemple :
