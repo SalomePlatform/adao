@@ -128,11 +128,12 @@ pas requise dans le calcul et par l'utilisateur, l'exécution de cet
 
 Certains "*observer*" permettent de créer des fichiers ou des figures
 successives, qui sont numérotées de manière unique et, le cas échéant,
-enregistrées par défaut dans le répertoire standard ``/tmp``. Dans le cas où
-ces informations sont à modifier (comme par exemple lorsque le répertoire
-``/tmp`` est un dossier virtuel ou local non pérenne, ou lorsque l'on désire
-une numérotation en fonction de l'itération), l'utilisateur est invité à
-s'inspirer d'un modèle lui convenant pour le modifier en spécifiant
+enregistrées par défaut dans un répertoire temporaire standard ``/tmp`` ou
+obtenu par le module Python ``tempfile``. Dans le cas où ces informations sont
+à modifier (comme par exemple lorsque le répertoire temporaire est un dossier
+virtuel ou local non pérenne, ou lorsque l'on désire une numérotation en
+fonction de l'itération comme dans certains exemples), l'utilisateur est invité
+à s'inspirer d'un modèle lui convenant pour le modifier en spécifiant
 différemment ces informations communes. Ensuite, la fonction modifiée peut être
 utilisée dans une entrée de type "*String*" ou de type "*Script*".
 

@@ -118,13 +118,14 @@ execution of this "*observer*" is simply never activated.
     can otherwise be really difficult!
 
 Some "*observer*" allow the creation of successive files or figures, which are
-uniquely numbered and, if applicable, stored by default in the standard
-``/tmp`` directory. In the case where this information needs to be modified (as
-for example when the ``/tmp`` directory is a virtual or local non-permanent
-folder, or when one wishes to have a numbering according to the iteration), the
-user is encouraged to take inspiration from a model that is suitable for him
-and to modify it by specifying differently this shared information. Then, the
-modified function can be used in a "*String*" or "*Script*" input.
+uniquely numbered and, if applicable, stored by default in a standard temporary
+directory as ``/tmp`` or obtained by the Python module ``tempfile``. In the
+case where this information needs to be modified (as for example when the
+temporary directory is a virtual or local non-permanent folder, or when one
+wishes to have a numbering according to the iteration like in some examples),
+the user is encouraged to take inspiration from a model that is suitable for
+him and to modify it by specifying differently this shared information. Then,
+the modified function can be used in a "*String*" or "*Script*" input.
 
 .. note::
 

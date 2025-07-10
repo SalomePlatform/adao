@@ -316,6 +316,12 @@ class PlatformInfo(object):
                 "Scikit-learn version",
                 self.getScikitlearnVersion(),
             )
+        if self.has_mordicus:
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "Mordicus version",
+                self.getMordicusVersion(),
+            )
         if self.has_fmpy:
             __msg += "\n%s%30s : %s" % (__prefix, "Fmpy version", self.getFmpyVersion())
         if self.has_sphinx:
@@ -480,6 +486,17 @@ class PlatformInfo(object):
 
     has_scikitlearn = property(fget=_has_scikitlearn)
 
+    def _has_mordicus(self):
+        try:
+            import Mordicus  # noqa: F401
+
+            has_mordicus = True
+        except ImportError:
+            has_mordicus = False
+        return has_mordicus
+
+    has_mordicus = property(fget=_has_mordicus)
+
     # Tests des modules locaux
 
     def _has_gnuplot(self):
@@ -613,6 +630,19 @@ class PlatformInfo(object):
             import sklearn
 
             __version = sklearn.__version__
+        else:
+            __version = "0.0.0"
+        return __version
+
+    def getMordicusVersion(self):
+        """Retourne la version de mordicus disponible."""
+        if self.has_mordicus:
+            import Mordicus
+
+            if hasattr(Mordicus, "__version__"):
+                __version = Mordicus.__version__
+            else:
+                __version = "1.0.0"
         else:
             __version = "0.0.0"
         return __version
