@@ -716,10 +716,12 @@ On peut alors caractériser deux types d'estimation en dynamique, que l'on
 décrit ci-après sur le système dynamique en temps discret : `Estimation d'état
 en dynamique`_ et `Estimation de paramètres en dynamique`_. Combinés, les deux
 types peuvent permettre de faire une `Estimation conjointe d'état et de
-paramètres en dynamique`_. Dans ADAO, certains algorithmes peuvent être
+paramètres en dynamique`_. Dans ADAO, nombre d'algorithmes peuvent être
 utilisés soit en estimation d'état, soit en estimation de paramètres. Cela se
-fait simplement en changeant l'option requise "*EstimationOf*" dans les
-paramètres des algorithmes.
+fait simplement en modifiant l'option requise "*EstimationOf*" dans les
+paramètres des algorithmes, qui change uniquement la manière dont le contrôle
+:math:`\mathbf{u}` est appliqué dans le cas où il n'est explicitement pas
+inclus dans :math:`M`.
 
 Estimation d'état en dynamique
 ++++++++++++++++++++++++++++++
@@ -744,7 +746,8 @@ Estimation de paramètres en dynamique
 +++++++++++++++++++++++++++++++++++++
 
 L'estimation de paramètres s'écrit un peu différemment pour être conduite par
-assimilation de données. Toujours sur la version en temps discret du système
+assimilation de données. Les paramètres à estimer sont dénotés
+:math:`\mathbf{a}`. Toujours sur la version en temps discret du système
 dynamique, on recherche une correspondance :math:`G` ("mapping") non-linéaire,
 paramétrée par :math:`\mathbf{a}`, entre des entrées :math:`\mathbf{x}_{n}` et
 des mesures :math:`\mathbf{y}_{n}` à chaque pas :math:`t_n`, l'erreur à
@@ -770,8 +773,8 @@ sortie.
 Dans ce cas de l'estimation de paramètres, pour appliquer les méthodes
 d'assimilation de données, on impose donc l'hypothèse que l'opérateur
 d'évolution est l'identité (*Remarque : il n'est donc pas utilisé, mais doit
-être déclaré dans ADAO, par exemple en matrice à 1*), et l'opérateur
-d'observation est :math:`G`.
+être déclaré dans ADAO, sous la forme par exemple d'une matrice à diagonale
+unité*), et l'opérateur d'observation est :math:`G`.
 
 Estimation conjointe d'état et de paramètres en dynamique
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -780,8 +783,8 @@ Un cas spécial concerne l'estimation conjointe d'état et de paramètres utilis
 dans un système dynamique. On cherche à estimer conjointement l'état
 :math:`\mathbf{x}` (qui dépend du temps) et les paramètres :math:`\mathbf{a}`
 (qui ici ne dépendent pas du temps). Il existe plusieurs manières de traiter ce
-problème, mais la plus générale consiste à utiliser un vecteur d'état augmenté
-par les paramètres, et à étendre les opérateurs en conséquence.
+problème, mais la plus générale consiste à utiliser comme ci-dessous un vecteur
+d'état augmenté par les paramètres, et à étendre les opérateurs en conséquence.
 
 Pour cela, en utilisant les notations des deux sous-sections précédentes, on
 définit la variable auxiliaire :math:`\mathbf{w}` telle que :

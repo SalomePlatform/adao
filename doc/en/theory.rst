@@ -668,9 +668,11 @@ We can then characterize two types of estimates in dynamics, which we describe
 hereafter on the discrete time dynamical system: `State estimation in
 dynamics`_ and `Parameter estimation in dynamics`_. Combined, the two types can
 be used to make a `Joint state and parameter estimation in dynamics`_. In ADAO,
-some algorithms can be used either in state estimation or in parameter
+many algorithms can be used either in state estimation or in parameter
 estimation. This is done simply by changing the required option
-"*EstimationOf*" in the algorithm parameters.
+"*EstimationOf*" in the algorithm parameters, which only changes the way the
+:math:`\mathbf{u}` control is applied in cases where it is explicitly not
+included in :math:`M`.
 
 State estimation in dynamics
 ++++++++++++++++++++++++++++
@@ -694,12 +696,13 @@ and :math:`H` are directly usable in data assimilation with ADAO.
 Parameter estimation in dynamics
 ++++++++++++++++++++++++++++++++
 
-The parameter estimation can be written a differently to be solved by data
-assimilation. Still on the discrete time version of the dynamical system, we
-look for a nonlinear :math:`G` mapping, parameterized by :math:`\mathbf{a}`,
-between inputs :math:`\mathbf{x}_{n}` and measurements :math:`\mathbf{y}_{n}`
-at each step :math:`t_n`, the error to be controlled as a function of
-parameters :math:`\mathbf{y}_{n}` being
+The parameter estimation can be written in a slightly differently way to be
+solved by data assimilation. The parameters are denoted :math:`\mathbf{a}`.
+Still on the discrete time version of the dynamical system, we look for a
+nonlinear :math:`G` mapping, parameterized by :math:`\mathbf{a}`, between
+inputs :math:`\mathbf{x}_{n}` and measurements :math:`\mathbf{y}_{n}` at each
+step :math:`t_n`, the error to be controlled as a function of parameters
+:math:`\mathbf{y}_{n}` being
 :math:`\mathbf{y}_{n}-G(\mathbf{x}_{n},\mathbf{a})`. We can proceed by
 optimization on this error, with regularization, or by filtering by writing the
 problem represented in state estimation:
@@ -720,7 +723,8 @@ the input estimate and the output estimate.
 In this case of parameter estimation, in order to apply data assimilation
 methods, we therefore impose the hypothesis that the evolution operator is the
 identity (*Note: it is therefore not used, but must be declared in ADAO, for
-example as a 1 matrix*), and the observation operator is :math:`G`.
+example as a unitary diagonal matrix*), and the observation operator is
+:math:`G`.
 
 Joint state and parameter estimation in dynamics
 ++++++++++++++++++++++++++++++++++++++++++++++++
@@ -729,8 +733,8 @@ A special case concerns the joint estimation of state and parameters used in a
 dynamic system. One seeks to jointly estimate the state :math:`\mathbf{x}`
 (which depends on time) and the parameters :math:`\mathbf{a}` (which here does
 not depend on time). There are several ways to deal with this problem, but the
-most general one is to use a state vector augmented by the parameters, and to
-extend the operators accordingly.
+most general one is to use as below a state vector augmented by the parameters,
+and to extend the operators accordingly.
 
 To do this, using the notations of the previous two subsections, we define the
 auxiliary variable :math:`\mathbf{w}` such that:

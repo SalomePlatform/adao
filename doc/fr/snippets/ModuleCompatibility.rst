@@ -16,7 +16,7 @@ comprises dans l'étendue décrite ci-dessous.
    :widths: 20, 10, 10
    :align: center
 
-   Python,     3.6.5,    3.13.3
+   Python,     3.6.5,    3.13.5
    Numpy,      1.14.3,    2.3.1
    Scipy,      0.19.1,    1.16.0
    MatplotLib, 2.2.2,    3.10.3
