@@ -24,6 +24,7 @@ set(DAEFICAS_FILES
   generator_adao.py
   __init__.py
   prefs.py
+  prefs_ADAO.py
   prefs_salome_ADAO.py
   traduitADAOsansToV9_15_0.py
   traduitADAOV7_4_0ToV9_15_0.py

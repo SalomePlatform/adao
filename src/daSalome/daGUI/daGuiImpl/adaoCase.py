@@ -144,15 +144,22 @@ class AdaoCase:
         #
         import adaoBuilder
         fullcase = adaoBuilder.New()
-        rtn = fullcase.convert(FileNameFrom=self.filename, FormaterFrom="COM",
-                               FileNameTo=self.tui_filename, FormaterTo="TUI",
-                              )
+        try:
+            rtn = fullcase.convert(FileNameFrom=self.filename, FormaterFrom="COM",
+                                   FileNameTo=self.tui_filename, FormaterTo="TUI",
+                                  )
+            erm = ""
+        except Exception as e:
+            rtn = ""
+            erm = str(e)
         del fullcase
         #
         if not os.path.exists(self.tui_filename) or len(rtn) == 0:
             msg  = "An error occurred during the conversion of the COMM case\n"
             msg += "to the TUI one. If SALOME GUI is launched by command\n"
             msg += "line, see error details in your terminal.\n"
+            if len(erm) != 0:
+                msg += "\nMessage: " + erm + "\n"
         else:
             msg  = "The current ADAO case has been successfully exported to\n"
             msg += "the file named %s.\n"%self.tui_filename

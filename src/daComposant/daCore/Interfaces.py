@@ -1074,13 +1074,15 @@ class ImportFromScript(object):
                 raise ValueError(
                     'The imported script file "%s"' % (str(self.__basename) + ".py",)
                     + ' doesn\'t contain the mandatory variable "%s"' % (__varname,)
-                    + " to be read. Please check the content of the file and the syntax."
+                    + " to be read or is incorrect at import stage. Please check"
+                    + " the content of the file and the syntax."
                 )
             elif not hasattr(self.__filenspace, __synonym):
                 raise ValueError(
                     'The imported script file "%s"' % (str(self.__basename) + ".py",)
                     + ' doesn\'t contain the mandatory variable "%s"' % (__synonym,)
-                    + " to be read. Please check the content of the file and the syntax."
+                    + " to be read or is incorrect at import stage. Please check"
+                    + " the content of the file and the syntax."
                 )
             else:
                 return getattr(self.__filenspace, __synonym)
