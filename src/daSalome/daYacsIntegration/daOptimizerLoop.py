@@ -22,8 +22,8 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
-import SALOMERuntime
-import pilot
+from salome.yacs import SALOMERuntime
+from salome.yacs import pilot
 try:
     import cPickle as pickle
 except:

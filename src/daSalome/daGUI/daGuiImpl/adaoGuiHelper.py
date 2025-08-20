@@ -23,7 +23,7 @@
 
 __author__="aribes/gboulant"
 
-import salome
+from salome.kernel import salome
 # Get SALOME PyQt interface
 import SalomePyQt
 __sgPyQt = SalomePyQt.SalomePyQt()

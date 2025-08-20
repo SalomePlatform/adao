@@ -25,9 +25,9 @@
 import sys
 import traceback
 import logging
-import pilot
-import loader
-import SALOMERuntime
+from salome.yacs import pilot
+from salome.yacs import loader
+from salome.yacs import SALOMERuntime
 import os
 
 from daYacsSchemaCreator.infos_daComposant import *

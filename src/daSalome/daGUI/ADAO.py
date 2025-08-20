@@ -23,9 +23,9 @@
 # Author: André Ribes, andre.ribes@edf.fr, EDF R&D
 
 import ADAO_COMPONENT__POA
-import SALOME_ComponentPy
+from salome.kernel import SALOME_ComponentPy
 import SALOME_DriverPy
-import SALOME_Embedded_NamingService_ClientPy
+from salome.kernel import SALOME_Embedded_NamingService_ClientPy
 
 from daUtils.adaoLogger import *
 

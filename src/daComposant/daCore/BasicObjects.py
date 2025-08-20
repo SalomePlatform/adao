@@ -1974,9 +1974,9 @@ class AlgorithmAndParameters(object):
                 + "Please load the right environnement before trying to use it.\n"
             )
         #
-        import pilot
-        import SALOMERuntime
-        import loader
+        from salome.yacs import pilot
+        from salome.yacs import SALOMERuntime
+        from salome.yacs import loader
 
         SALOMERuntime.RuntimeSALOME_setRuntime()
 

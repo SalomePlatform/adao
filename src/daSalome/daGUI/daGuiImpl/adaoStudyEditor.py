@@ -25,7 +25,7 @@ __author__="aribes/gboulant"
 
 from daUtils.enumerate import Enumerate
 
-from salome.kernel import studyedit
+from salome.kernel.salome.kernel import studyedit
 
 from . import adaoModuleHelper
 
