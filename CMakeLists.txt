@@ -35,7 +35,7 @@ if(NOT PYTHONINTERP_FOUND)
 endif(NOT PYTHONINTERP_FOUND)
 
 set(ADAO_SCRIPT_PYTHON "lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages")
-set(ADAO_SCRIPT_PYTHON_SALOME "${ADAO_SCRIPT_PYTHON}/salome")
+set(ADAO_SCRIPT_PYTHON_SALOME "${ADAO_SCRIPT_PYTHON}")
 set(ADAO_LIB "lib/salome")
 set(ADAO_RES "share/resources/adao")
 set(ADAO_RES_SALOME "share/salome/resources/adao")

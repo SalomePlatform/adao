@@ -43,10 +43,10 @@ __all__ = [
 import os
 from omniORB import CORBA
 from SALOME_NamingServicePy import SALOME_NamingServicePy_i
-from LifeCycleCORBA import LifeCycleCORBA
+from salome.kernel.LifeCycleCORBA import LifeCycleCORBA
 from salome.kernel import salome
 from salome.kernel import SALOMEDS
-import SALOMEDS_Attributes_idl
+from salome.kernel import SALOMEDS_Attributes_idl
 from salome.kernel.salome.kernel.studyedit import getStudyEditor
 
 #import OMA_ORB

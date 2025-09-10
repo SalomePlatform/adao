@@ -54,7 +54,8 @@ class AdaoEficasWrapper(eficasSalome.MyEficas):
 
     def init_gui(self):
 
-      import salome ; salome.salome_init()
+      from salome.kernel import salome
+      salome.salome_init()
 
       try:
         eficasSalome.MyEficas.__init__(self, None, code="ADAO", module="ADAO")
