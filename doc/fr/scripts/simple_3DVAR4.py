@@ -5,12 +5,13 @@ from adao import adaoBuilder
 from Models.Lorenz1963 import EDS as Lorenz1963
 numpy.set_printoptions(precision=5)
 #
-u0Back = numpy.array([2, 3, 4])    # Ébauche (différente de l'état vrai)
-sigma_m = 0.15                     # Écart-type du bruit de mesure
-sigma_b = 0.1                      # Écart-type du bruit d'ébauche
-H = numpy.eye(3)                   # Opérateur d'observation
-ODE = Lorenz1963(dt = 0.01)        # Modèle dynamique
-ODE.ObservationStep = 0.2          # Intervalle d'observation
+u0True = numpy.array([1, 1, 1])  # État initial vrai
+u0Back = numpy.array([2, 3, 4])  # Ébauche (différente de l'état vrai)
+sigma_m = 0.15  # Écart-type du bruit de mesure
+sigma_b = 0.1  # Écart-type du bruit d'ébauche
+H = numpy.eye(3)  # Opérateur d'observation
+ODE = Lorenz1963(dt = 0.01, y0 = u0True)  # Modèle dynamique
+ODE.ObservationStep = 0.2  # Intervalle d'observation
 #
 observations = numpy.loadtxt("simple_3DVAR4Observations.csv")[:, 1:]
 #

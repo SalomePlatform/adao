@@ -5,7 +5,7 @@
   avoir plusieurs critères de convergence actifs simultanément.
 
   Le résidu peut être une mesure standard basée sur un écart ("*écart
-  calculs-mesures*" par exemple), ou une valeur remarquable lié à l'algorithme
+  calculs-mesures*" par exemple), ou une valeur remarquable liée à l'algorithme
   ("*nullité d'un gradient*" par exemple).
 
   Le nombre est fréquemment un élément remarquable lié à l'algorithme, comme un

@@ -5,12 +5,13 @@ from adao import adaoBuilder
 from Models.Lorenz1963 import EDS as Lorenz1963
 numpy.set_printoptions(precision=5)
 #
-u0Back = numpy.array([2, 3, 4])    # Background (not equal to the true state)
-sigma_m = 0.15                     # Standard deviation of the measure noise
-sigma_b = 0.1                      # Standard deviation of the background noise
-H = numpy.eye(3)                   # Observation operator
-ODE = Lorenz1963(dt = 0.01)        # Dynamic model
-ODE.ObservationStep = 0.2          # Observation interval
+u0True = numpy.array([1, 1, 1])  # Initial True state
+u0Back = numpy.array([2, 3, 4])  # Background (not equal to the true state)
+sigma_m = 0.15  # Standard deviation of the measure noise
+sigma_b = 0.1  # Standard deviation of the background noise
+H = numpy.eye(3)  # Observation operator
+ODE = Lorenz1963(dt = 0.01, y0 = u0True)  # Dynamic model
+ODE.ObservationStep = 0.2  # Observation interval
 #
 observations = numpy.loadtxt("simple_3DVAR4Observations.csv")[:, 1:]
 #

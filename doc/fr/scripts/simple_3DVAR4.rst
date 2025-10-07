@@ -10,9 +10,10 @@ partie :ref:`Exemples avec l'algorithme de
 "3DVAR"<section_ref_algorithm_3DVAR_examples>`, ou un exemple similaire dans
 [Asch16]_). Il décrit l'effet d'une assimilation de données sur la prévision
 temporelle d'un système dynamique. C'est un cas très simplifié qui illustre une
-démarche classique en météorologie (prévision du temps à court terme, en-deçà
-de la quinzaine de jours) ou en prévision saisonnière (prévision du temps à
-plus long terme, au-delà de la quinzaine de jours).
+démarche classique d'assimilation de données en météorologie (prévision du
+temps à court terme, en-deçà de la quinzaine de jours) ou en prévision
+saisonnière (prévision du temps à plus long terme, au-delà de la quinzaine de
+jours).
 
 On utilise ici un modèle simple classique de système dynamique, nommé *système
 de Lorenz*, *oscillateur de Lorenz*, *Lorenz3D* ou *Lorenz63* d'après le nom de
@@ -49,7 +50,7 @@ chaotique. La condition initiale est quelconque.
 
 La figure suivante illustre l'attracteur de Lorenz par la simulation directe de
 ce système dynamique, que l'on représente ici pour :math:`t\in[0,40]` et avec
-la condition initiale :math:`(0,1,0)`. L'attracteur est la structure qui
+la condition initiale :math:`(1,1,1)`. L'attracteur est la structure qui
 correspond au comportement long terme de l'oscillateur de Lorenz, qui se
 présente donc ici comme deux "*ailes de papillon*". La figure montre que la
 variable d'état :math:`u=(x,y,z)` de ce système dynamique évolue sur une
@@ -84,7 +85,7 @@ expériences jumelles** (voir la partie :ref:`section_methodology_twin`).
 On choisit ici de **perturber uniquement l'état initial de la simulation**, en
 utilisant la valeur d'ébauche :math:`u^b=[2,3,4]`, dont les effets sont à
 comparer à ceux de l'état initial, dit *idéal* ou *vrai*, non perturbé, valant
-:math:`u^t=[1,1,1]`.
+:math:`u^t=[1,1,1]` comme précédemment.
 
 Le modèle est considéré comme parfait, et il est observé sur l'intervalle
 temporel [0,2]. Les pseudo-observations :math:`\mathbf{y}^o` sont au nombre de
@@ -98,7 +99,7 @@ correspondant au modèle simplifié de Lorenz.
 
 La figure suivante illustre sur la première variable (les autres sont
 similaires) ces différentes informations réparties sur l'intervalle temporel
-[0,2] de mesure :
+[0,2] de mesure ou d'observation :
 
 .. _simple_3DVAR4Plus03:
 .. image:: scripts/simple_3DVAR4Plus03.png
@@ -108,10 +109,10 @@ similaires) ces différentes informations réparties sur l'intervalle temporel
 .. note::
 
     On insiste fortement sur le fait que les observations successives ne sont
-    pas disponibles simultanément, à l'instant initial par exemple, mais
-    qu'elles sont disponibles à chaque fois que la simulation atteint l'un des
-    instants de mesure. On rappelle de plus que la courbe de simulation bleue
-    en pointillés, obtenue à partir de l'état idéal ou vrai
+    pas disponibles simultanément, à l'instant initial par exemple, mais que
+    chaque observation est disponible uniquement à partir du moment où la
+    simulation atteint son instant de mesure. On rappelle de plus que la courbe
+    de simulation bleue en pointillés, obtenue à partir de l'état idéal ou vrai
     :math:`u^t=[1,1,1]`, est inconnue en dehors d'expériences jumelles. Seules
     les trajectoires tracées comme continues sont connues par simulation.
 

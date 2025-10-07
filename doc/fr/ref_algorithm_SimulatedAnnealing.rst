@@ -88,7 +88,7 @@ algorithmes :
 - Le contrôle de la convergence le plus aisé se fait en laissant les paramètres
   par défaut, en laissant le recuit simulé se stabiliser. Néanmoins, comme la
   convergence stochastique peut être longue, on peut aussi restreindre les
-  calculs par la limitation du nombre d'évaluation de la fonction de
+  calculs par la limitation du nombre d'évaluations de la fonction de
   simulation. Cela ne limite la convergence théorique, mais permet néanmoins de
   restreindre notablement le nombre de calculs.
 

@@ -41,13 +41,13 @@ calage. Il n'est pas destiné à remplacer les autres algorithmes d'assimilation
 de données ou d'optimisation décrits par ailleurs, mais à rendre plus rapide
 l'usage des algorithmes les plus simples et les plus performants pour le calage
 de paramètres. Il permet aussi, lorsque c'est nécessaire, d'initier un recalage
-avec les méthodes les plus classique, puis très simplement, en changeant
+avec les méthodes les plus classiques, puis très simplement, en changeant
 d'algorithme, de passer à des méthodes spécifiques plus avancées ou plus
 adaptées aux particularités des problèmes à traiter.
 
 Il y a principalement 4 classes de méthodes qui permettent de réaliser
 simplement un recalage de paramètres de modèle. On indique ici les conditions
-générale de choix, dont les détails sont disponibles dans chaque partie
+générales de choix, dont les détails sont disponibles dans chaque partie
 spécifique de la documentation par algorithme.
 
 Optimisation variationnelle de type 3DVAR : variante "3DVARGradientOptimization"

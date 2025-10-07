@@ -157,9 +157,9 @@ de types pour éviter d'obscures difficultés :
 ::
 
     #-*- coding: utf-8 -*-
-    import pilot
-    import SALOMERuntime
-    import loader
+    from salome.yacs import import pilot
+    from salome.yacs import import SALOMERuntime
+    from salome.yacs import import loader
     SALOMERuntime.RuntimeSALOME_setRuntime()
 
     r = pilot.getRuntime()
@@ -178,7 +178,7 @@ de types pour éviter d'obscures difficultés :
 
     logger = p.getLogger("parser")
     if not logger.isEmpty():
-        print("The imported file has errors :")
+        print("Le fichier importé présente des erreurs :")
         print(logger.getStr())
 
     if not p.isValid():
@@ -449,15 +449,15 @@ textuelle (TUI). La mettre à "*1*" permet d'envoyer des messages dans la
 fenêtre de sortie de l'exécution dans YACS ("*YACS Container Log*").
 
 La seconde consiste à utiliser le module Python natif "*logging*" (voir la
-documentation Python http://docs.python.org/library/logging.html pour de plus
+documentation Python https://docs.python.org/library/logging.html pour de plus
 amples informations sur ce module). Dans l'ensemble du schéma YACS,
 principalement à travers les entrées sous forme de scripts, l'utilisateur peut
-fixer le niveau de logging en accord avec les besoins d'informations détaillées.
-Les différents niveaux de logging sont : "*DEBUG*", "*INFO*", "*WARNING*",
-"*ERROR*", "*CRITICAL*". Toutes les informations associées à un niveau sont
-affichées à tous les niveaux au-dessus de celui-ci (inclus). La méthode la plus
-facile consiste à changer le niveau de surveillance en utilisant les lignes
-Python suivantes :
+fixer le niveau de logging en accord avec les besoins d'informations
+détaillées. Les différents niveaux de logging sont : "*DEBUG*", "*INFO*",
+"*WARNING*", "*ERROR*", "*CRITICAL*". Toutes les informations associées à un
+niveau sont affichées à tous les niveaux au-dessus de celui-ci (inclus). La
+méthode la plus facile consiste à changer le niveau de surveillance en
+utilisant les lignes Python suivantes :
 ::
 
     import logging
@@ -496,8 +496,8 @@ l'approximation par différences finies. Lors de la définition d'un cas ADAO,
 c'est effectué en ajoutant le mot-clé optionnel "*EnableWiseParallelism*", mis
 à "*1*" ou à "*True*". Ce mot-clé est inclus à la commande
 "*SCRIPTWITHONEFUNCTION*" dans la définition de l'opérateur par interface
-graphique, ou aux "*Parameters*" accompagnant la commande "*OneFunction*" par
-interface textuelle. Par défaut, ce mode parallèle est désactivé
+graphique, ou aux "*Parameters*" accompagnant la commande "*OneFunction*" de
+opérateurs par interface textuelle. Par défaut, ce mode parallèle est désactivé
 ("*EnableWiseParallelism=0*"). Le mode parallèle utilise uniquement des
 ressources locales (à la fois multi-coeurs ou multi-processeurs) de
 l'ordinateur sur lequel l'exécution est en train de se dérouler, demandant par
