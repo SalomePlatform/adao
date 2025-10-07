@@ -260,6 +260,7 @@ Pour tester une chaîne d'assimilation de données : les expériences jumelles
 .. index:: single: Expériences jumelles
 .. index:: single: Méthode des expériences jumelles
 .. index:: single: Méthode des solutions manufacturées
+.. index:: single: Données synthétiques
 .. index:: single: MEJ
 .. index:: single: MSM
 .. index:: single: MTE
@@ -270,11 +271,11 @@ décrites ci-dessus forment ce que l'on appelle une "chaîne d'assimilation de
 données". Les tests et l'analyse de cette chaîne sont essentiels pour évaluer
 la confiance que l'on peut avoir dans la démarche globale de l'étude.
 
-Pour cela, les expériences jumelles forment un outil classique et très utile,
-qui permet de se placer dans un environnement particulier où les simulations et
-les erreurs attendues peuvent être contrôlées. Ainsi, les difficultés
-méthodologiques ou numériques peuvent être séparées et identifiées, puis
-corrigées.
+Pour cela, les **expériences jumelles** forment un outil classique et très
+utile, qui permet de se placer dans un environnement particulier où les
+simulations et les erreurs attendues peuvent être contrôlées. Ainsi, les
+difficultés méthodologiques ou numériques peuvent être séparées et identifiées,
+puis corrigées.
 
 On peut schématiser l'approche par expériences jumelles par la figure qui suit,
 qui présente l'objectif et les moyens de la démarche :
@@ -290,7 +291,7 @@ Pour simplifier, on peut décrire l'approche générale pour appliquer la
 méthodologie d'expériences jumelles de la manière suivante :
 
 - on choisit de manière arbitraire un état dit "vrai", qui doit être valide pour la simulation ;
-- on élabore ensuite des "pseudo-observations" à partir de la simulation de l'état vrai, en échantillonnant la simulation de manière similaire à de vraies observations ;
+- on élabore ensuite des "pseudo-observations" à partir de la simulation de l'état vrai (elles sont parfois appelées "Données Synthétiques", ou "Synthetic Data"), en échantillonnant la simulation de manière similaire à de vraies observations ;
 - on incorpore éventuellement du bruit, soit dans l'état vrai, soit dans les pseudo-observations, soit dans la chaîne de calcul, et cela de manière cohérente avec les hypothèses d'élaboration de la chaîne, pour voir son effet sur une partie spécifique de la chaîne ;
 - on analyse ensuite, selon les hypothèses de bruit appliquées, la capacité de la chaîne à retrouver l'état vrai ou des différences attendues.
 
@@ -300,9 +301,9 @@ vérifier étape par étape chacune des composantes de la chaîne complète
 d'assimilation de données.
 
 Lorsque le modèle est décrit à l'aide d'équations aux dérivées partielles, la
-Méthode des Expériences Jumelles (MEJ, ou MTE de l'anglais "*Method of Twin
-Experiments*") a des relations avec la Méthode des Solutions Manufacturées
-(MSM, ou MMS de l'anglais "*Method of Manufactured Solutions*"). Cette dernière
+"Méthode des Expériences Jumelles" (MEJ, ou MTE de l'anglais "Method of Twin
+Experiments") a des relations avec la "Méthode des Solutions Manufacturées"
+(MSM, ou MMS de l'anglais "Method of Manufactured Solutions"). Cette dernière
 est bien connue en mécanique des fluides ou des solides pour vérifier la
 qualité logicielle. Elle permet de créer des solutions de référence, pour un
 système d’équations aux dérivées partielles caractérisant un problème physique

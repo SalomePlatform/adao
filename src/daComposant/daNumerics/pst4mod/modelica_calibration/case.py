@@ -24,8 +24,8 @@ __all__ = ["Calibration", "name", "version", "year"]
 # ==============================================================================
 
 name     = "Modelica and Dymola Calibration Tools"
-version  = "1.0.9.15.0"  # "x.x"+"adao version"
-year     = "2021"
+version  = "1.0.10.0.0"  # "x.x"+"adao version"
+year     = "2025"
 
 # ==============================================================================
 # Default configuration

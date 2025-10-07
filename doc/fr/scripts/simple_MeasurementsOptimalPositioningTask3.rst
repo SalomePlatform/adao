@@ -18,14 +18,14 @@ Cette fonction :math:`G` dépend de la position
 
 .. math:: G(x;\mu) = \frac{1}{\sqrt{(x_1 - \mu_1)^2 + (x_2 - \mu_2)^2 + 0.1^2}}
 
-La fonction est représenté sur une grille spatiale régulière :math:`\Omega_G`
+La fonction est représentée sur une grille spatiale régulière :math:`\Omega_G`
 de taille 20x20 points. Elle est disponible dans les modèles de tests intégrés
 pour ADAO sous le nom ``TwoDimensionalInverseDistanceCS2010``. On construit
 donc ici tout d'abord un ensemble de simulations de :math:`G` pour différents
-paramètres :math:`\mu`, puis on cherche les meilleurs positions de mesures pour
-obtenir une représentation par interpolation DEIM des champs, en appliquant
-l'algorithme de décomposition de type DEIM, et on en tire ensuite des
-illustrations simples. On choisit de rechercher un nombre arbitraire
+paramètres :math:`\mu`, puis on cherche les meilleures positions de mesures
+pour obtenir une représentation par interpolation DEIM des champs, en
+appliquant l'algorithme de décomposition de type DEIM, et on en tire ensuite
+des illustrations simples. On choisit de rechercher un nombre arbitraire
 ``nbmeasures`` de 15 positions de mesures.
 
 On observe ainsi que les valeurs singulières décroissent régulièrement jusqu'au

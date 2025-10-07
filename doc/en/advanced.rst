@@ -144,9 +144,10 @@ We give here a whole sequence of command lines to test the validity of the
 scheme before executing it, adding some initial supplementary ones to
 explicitly load the types catalog to avoid weird difficulties::
 
-    import pilot
-    import SALOMERuntime
-    import loader
+    #-*- coding: utf-8 -*-
+    from salome.yacs import import pilot
+    from salome.yacs import import SALOMERuntime
+    from salome.yacs import import loader
     SALOMERuntime.RuntimeSALOME_setRuntime()
 
     r = pilot.getRuntime()
@@ -416,7 +417,7 @@ interface (GUI) as well as in the textual interface (TUI). Setting it to "*1*"
 will send messages in the log window of the YACS scheme execution.
 
 The second one consist in using the "*logging*" native module of Python (see
-the Python documentation http://docs.python.org/library/logging.html for more
+the Python documentation https://docs.python.org/library/logging.html for more
 information on this module). Everywhere in the YACS scheme, mainly through the
 scripts entries, the user can set the logging level in accordance to the needs
 of detailed information. The different logging levels are: "*DEBUG*", "*INFO*",
@@ -459,14 +460,14 @@ the finite differences approximation. When setting up an ADAO case, it is done
 by adding the optional keyword "*EnableWiseParallelism*", set to "1" or
 "*True*". This keyword is included in the "*SCRIPTWITHONEFUNCTION*" command in
 the operator definition by graphical interface, or in the "*Parameters*"
-accompanying the command "*OneFunction*" by textual interaface. By default,
-this parallel mode is disabled ("*EnableWiseParallelism=0*"). The parallel mode
-will only use local resources (both multi-cores or multi-processors) of the
-computer on which execution is running, requiring by default as many resources
-as available. If necessary, one can reduce the available resources by limiting
-the possible number of parallel processes using the keyword
-"*NumberOfProcesses*", set to desired maximum number (or to "0" for automatic
-control, which is the default value).
+accompanying the command "*OneFunction*" of the operators by textual interface.
+By default, this parallel mode is disabled ("*EnableWiseParallelism=0*"). The
+parallel mode will only use local resources (both multi-cores or
+multi-processors) of the computer on which execution is running, requiring by
+default as many resources as available. If necessary, one can reduce the
+available resources by limiting the possible number of parallel processes using
+the keyword "*NumberOfProcesses*", set to desired maximum number (or to "0" for
+automatic control, which is the default value).
 
 The main conditions to perform parallel calculations come from the user defined
 function, that represents the direct operator. This function has at least to be

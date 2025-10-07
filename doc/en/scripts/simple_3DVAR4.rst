@@ -9,9 +9,9 @@ This example extends the simple use cases of the 3DVAR algorithm (see
 :ref:`Examples with the "3DVAR"<section_ref_algorithm_3DVAR_examples>`, or a
 similar example in [Asch16]_). It describes the effect of data assimilation on
 the time forecast of a dynamic system. It is a highly simplified case that
-illustrates a classical approach in meteorology (short-term weather
-forecasting, below a two-week period) or in seasonal forecasting (longer-term
-weather forecasting, beyond a two-week period).
+illustrates a classical data assimilation approach in meteorology (short-term
+weather forecasting, below a two-week period) or in seasonal forecasting
+(longer-term weather forecasting, beyond a two-week period).
 
 Here, we use a simple classical model of a dynamic system, named *Lorenz
 system*, *Lorenz oscillator*, *Lorenz3D* or *Lorenz63* after its author, the
@@ -47,7 +47,7 @@ The initial condition is arbitrary.
 
 The following figure illustrates the Lorenz attractor by direct simulation of
 this dynamic system, shown here for :math:`t\in[0,40]` and with initial
-condition :math:`(0,1,0)`. The attractor is the structure corresponding to the
+condition :math:`(1,1,1)`. The attractor is the structure corresponding to the
 long-term behavior of the Lorenz oscillator, which here appears as two
 "*butterfly wings*". The figure shows that the state variable :math:`u=(x,y,z)`
 of this dynamical system evolves on a deterministic, non-periodic trajectory,
@@ -81,7 +81,7 @@ section :ref:`section_methodology_twin`).
 We choose here to **perturb only the initial state of the simulation**, using
 the background value :math:`u^b=[2,3,4]`, whose effects are to be compared with
 those of the initial state, said to be *ideal* or *true*, unperturbed, equal to
-:math:`u^t=[1,1,1]`.
+:math:`u^t=[1,1,1]` as before.
 
 The model is considered to be perfect, and is observed over the time interval
 [0,2]. Pseudo-observations :math:`\mathbf{y}^o` are of 10 in number,
@@ -94,7 +94,8 @@ experimental noise of real variable measurements corresponding to the
 simplified Lorenz model.
 
 The following figure illustrates this information for the first variable (the
-others are similar), spread over the time interval [0,2] of measurement:
+others are similar), spread over the time interval [0,2] of measurement or
+observation:
 
 .. _simple_3DVAR4Plus03:
 .. image:: scripts/simple_3DVAR4Plus03.png
@@ -104,8 +105,8 @@ others are similar), spread over the time interval [0,2] of measurement:
 .. note::
 
     It is strongly emphasized that successive observations are not available
-    simultaneously, at the initial time for example, but are available each
-    time the simulation reaches one of the measurement instants. It is also
+    simultaneously, at the initial time for example, but each observation is
+    only available once the simulation reaches its measurement time. It is also
     recalled that the blue dashed simulation curve, obtained from the ideal or
     true state :math:`u^t=[1,1,1]`, is unknown outside twin experiments. Only
     trajectories plotted as continuous are known by simulation.

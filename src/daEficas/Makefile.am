@@ -29,34 +29,34 @@ mypkgpythondir = $(ADAODIR)/daEficas
 
 mypkgpython_PYTHON = \
 		configuration_ADAO.py \
-		convert_adao.py \
 		generator_adao.py \
 		__init__.py \
 		prefs_salome_ADAO.py \
 		prefs.py \
-		traduitADAOsansToV9_15_0.py \
-		traduitADAOV7_4_0ToV9_15_0.py \
-		traduitADAOV7_5_0ToV9_15_0.py \
-		traduitADAOV7_5_1ToV9_15_0.py \
-		traduitADAOV7_6_0ToV9_15_0.py \
-		traduitADAOV7_7_0ToV9_15_0.py \
-		traduitADAOV7_8_0ToV9_15_0.py \
-		traduitADAOV8_1_0ToV9_15_0.py \
-		traduitADAOV8_2_0ToV9_15_0.py \
-		traduitADAOV8_3_0ToV9_15_0.py \
-		traduitADAOV8_4_0ToV9_15_0.py \
-		traduitADAOV8_5_0ToV9_15_0.py \
-		traduitADAOV8_6_0ToV9_15_0.py \
-		traduitADAOV9_2_0ToV9_15_0.py \
-		traduitADAOV9_3_0ToV9_15_0.py \
-		traduitADAOV9_4_0ToV9_15_0.py \
-		traduitADAOV9_5_0ToV9_15_0.py \
-		traduitADAOV9_6_0ToV9_15_0.py \
-		traduitADAOV9_7_0ToV9_15_0.py \
-		traduitADAOV9_8_0ToV9_15_0.py \
-		traduitADAOV9_9_0ToV9_15_0.py \
-		traduitADAOV9_10_0ToV9_15_0.py \
-		traduitADAOV9_11_0ToV9_15_0.py \
-		traduitADAOV9_12_0ToV9_15_0.py \
-		traduitADAOV9_13_0ToV9_15_0.py \
-		traduitADAOV9_14_0ToV9_15_0.py
+		traduitADAOsansToV10_0_0.py \
+		traduitADAOV7_4_0ToV10_0_0.py \
+		traduitADAOV7_5_0ToV10_0_0.py \
+		traduitADAOV7_5_1ToV10_0_0.py \
+		traduitADAOV7_6_0ToV10_0_0.py \
+		traduitADAOV7_7_0ToV10_0_0.py \
+		traduitADAOV7_8_0ToV10_0_0.py \
+		traduitADAOV8_1_0ToV10_0_0.py \
+		traduitADAOV8_2_0ToV10_0_0.py \
+		traduitADAOV8_3_0ToV10_0_0.py \
+		traduitADAOV8_4_0ToV10_0_0.py \
+		traduitADAOV8_5_0ToV10_0_0.py \
+		traduitADAOV8_6_0ToV10_0_0.py \
+		traduitADAOV9_2_0ToV10_0_0.py \
+		traduitADAOV9_3_0ToV10_0_0.py \
+		traduitADAOV9_4_0ToV10_0_0.py \
+		traduitADAOV9_5_0ToV10_0_0.py \
+		traduitADAOV9_6_0ToV10_0_0.py \
+		traduitADAOV9_7_0ToV10_0_0.py \
+		traduitADAOV9_8_0ToV10_0_0.py \
+		traduitADAOV9_9_0ToV10_0_0.py \
+		traduitADAOV9_10_0ToV10_0_0.py \
+		traduitADAOV9_11_0ToV10_0_0.py \
+		traduitADAOV9_12_0ToV10_0_0.py \
+		traduitADAOV9_13_0ToV10_0_0.py \
+		traduitADAOV9_14_0ToV10_0_0.py \
+		traduitADAOV9_15_0ToV10_0_0.py

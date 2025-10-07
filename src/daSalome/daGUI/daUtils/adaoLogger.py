@@ -21,7 +21,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-from salome.kernel.salome.kernel.logger  import Logger
+from salome.kernel.salome.kernel.logger import Logger
 from salome.kernel.salome.kernel import termcolor
 
 adao_logger = Logger("ADAO")
