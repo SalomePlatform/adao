@@ -173,7 +173,8 @@ class AdaoCase:
             return rtn
 
         try:
-            from salome.yacs import libYACS_Swig
+            # from salome.yacs import libYACS_Swig
+            import libYACS_Swig
             yacs_swig = libYACS_Swig.YACS_Swig()
             #~ yacs_swig.loadSchema(self.yacs_filename, 1, 1)
             yacs_swig.loadSchema(self.yacs_filename, True, True)
