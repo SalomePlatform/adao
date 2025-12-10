@@ -51,8 +51,11 @@ if os.path.exists(lookfor):
 elif "ADAO_ENGINE_ROOT_DIR" in os.environ:
     # Ce nom sera complete par EFICAS avec _<LANG>.qm
     translatorFichier = os.environ["ADAO_ENGINE_ROOT_DIR"] + "/share/resources/adao/adao"
+    # print("translatorFichier (ADAO_ENGINE_ROOT_DIR) =", translatorFichier)
 else:
     translatorFichier = "adao"
+# Nouvelle appellation de variable
+translatorFile = translatorFichier
 #
 # Pilotage des sous-fenêtres d'EFICAS
 closeAutreCommande = True
