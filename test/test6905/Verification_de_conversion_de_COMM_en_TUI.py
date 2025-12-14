@@ -26,6 +26,7 @@ import unittest
 import numpy
 
 fichiers = glob.glob("*.comm")+glob.glob("snippets*_Convert_XXX_to_YYY/*.comm")
+fichiers.sort()
 
 # ==============================================================================
 class Test_Adao(unittest.TestCase):

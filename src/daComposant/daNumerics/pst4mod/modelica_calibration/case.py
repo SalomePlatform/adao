@@ -1807,14 +1807,19 @@ def _readBackground(__filename="dsin.txt", __varnames=None, __backgroundformat="
     #---------------------------------------------
     elif __format.upper() == "ADAO":
         with open(__bgfile, 'r') as fid:
-            exec(fid.read())
+            if sys.version_info.major == 3 and sys.version_info.minor >= 13: # Python 3.13+
+                variables = {} # Impératif sinon on ne récupère pas les variables
+                exec(fid.read(), globals={}, locals=variables)
+            else:
+                exec(fid.read())
+                variables = locals()
         #
-        __background = locals().get("Background", None)
+        __background = variables.get("Background", None)
         if __background is None:
             raise ValueError("Background is not defined")
         else:
             __background = numpy.ravel(__background)
-        __Params     = locals().get("Parameters", {})
+        __Params     = variables.get("Parameters", {})
         if "Bounds" not in __Params:
             raise ValueError("Bounds can not be find in file \"%s\""%str(__filename))
         else:
@@ -1892,12 +1897,17 @@ def _readMethod(__filename="parameters.py", __format="ADAO"):
     #---------------------------------------------
     if __format.upper() in ["GUESS", "ADAO"]:
         with open(__filename, 'r') as fid:
-            exec(fid.read())
-        __Algo   = locals().get("Algorithm", "3DVAR")
-        __Params = locals().get("Parameters", {})
-        __CovB   = locals().get("BackgroundError", 1.)
-        __CovR   = locals().get("ObservationError", 1.)
-        # __Xb     = locals().get("Background", __background)
+            if sys.version_info.major == 3 and sys.version_info.minor >= 13: # Python 3.13+
+                variables = {} # Impératif sinon on ne récupère pas les variables
+                exec(fid.read(), globals={}, locals=variables)
+            else:
+                exec(fid.read())
+                variables = locals()
+        __Algo   = variables.get("Algorithm", "3DVAR")
+        __Params = variables.get("Parameters", {})
+        __CovB   = variables.get("BackgroundError", 1.)
+        __CovR   = variables.get("ObservationError", 1.)
+        # __Xb     = variables.get("Background", __background)
         # if not isinstance(__Params, dict): __Params = {"Bounds":__bounds}
         # if "Bounds" not in __Params:       __Params["Bounds"] = __bounds
     #---------------------------------------------
@@ -2036,8 +2046,13 @@ class Python_Simulation(object):
 
     def single_simulation(self, __inputs = None):
         with open(os.path.join(self.__simu_dir,"pythonsim.exe"), 'r') as fid:
-            exec(fid.read())
-        __directoperator = locals().get("DirectOperator", None)
+            if sys.version_info.major == 3 and sys.version_info.minor >= 13: # Python 3.13+
+                variables = {} # Impératif sinon on ne récupère pas les variables
+                exec(fid.read(), globals={}, locals=variables)
+            else:
+                exec(fid.read())
+                variables = locals()
+        __directoperator = variables.get("DirectOperator", None)
         if __inputs is None: __inputs = self.__inputs
         return __directoperator(__inputs)
 
