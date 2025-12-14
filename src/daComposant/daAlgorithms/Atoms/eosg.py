@@ -53,7 +53,18 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
             return numpy.array([[]])
     #
     if outputEOX or selfA._toStore("EnsembleOfStates"):
-        EOX = numpy.stack(tuple(copy.copy(sampleList)), axis=1)
+        rebuildList = daCore.NumericObjects.BuildComplexSampleList(
+            selfA._parameters["SampleAsnUplet"],
+            selfA._parameters["SampleAsExplicitHyperCube"],
+            selfA._parameters["SampleAsMinMaxStepHyperCube"],
+            selfA._parameters["SampleAsMinMaxLatinHyperCube"],
+            selfA._parameters["SampleAsMinMaxSobolSequence"],
+            selfA._parameters["SampleAsIndependentRandomVariables"],
+            selfA._parameters["SampleAsIndependentRandomVectors"],
+            Xb,
+            selfA._parameters["SetSeed"],
+        ) # Requis car le tuple épuise l'iterator
+        EOX = numpy.stack(tuple(rebuildList), axis=1)
     #
     # ----------
     if selfA._parameters["SetDebug"]:
@@ -77,8 +88,19 @@ def eosg(selfA, Xb, HO, outputEOX = False, assumeNoFailure = True):
                 returnSerieAsArrayMatrix = True,
             )
         except Exception:  # Reprise séquentielle sur erreur de calcul
+            rebuildList = daCore.NumericObjects.BuildComplexSampleList(
+                selfA._parameters["SampleAsnUplet"],
+                selfA._parameters["SampleAsExplicitHyperCube"],
+                selfA._parameters["SampleAsMinMaxStepHyperCube"],
+                selfA._parameters["SampleAsMinMaxLatinHyperCube"],
+                selfA._parameters["SampleAsMinMaxSobolSequence"],
+                selfA._parameters["SampleAsIndependentRandomVariables"],
+                selfA._parameters["SampleAsIndependentRandomVectors"],
+                Xb,
+                selfA._parameters["SetSeed"],
+            ) # Requis car le try épuise l'iterator
             EOS, __s = [], 1
-            for state in sampleList:
+            for state in rebuildList:
                 if numpy.any(numpy.isin((None, numpy.nan), state)):
                     EOS.append( () )  # Résultat vide
                 else:

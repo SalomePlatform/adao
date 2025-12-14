@@ -15,10 +15,10 @@ versions within the range described below.
    :widths: 20, 10, 10
    :align: center
 
-   Python,     3.6.5,    3.13.9
+   Python,     3.6.5,    3.14.2
    Numpy,      1.14.3,    2.3.5
    Scipy,      0.19.1,    1.16.3
    MatplotLib, 2.2.2,    3.10.8
    GnuplotPy,  1.8,    1.8
    NLopt,      2.4.2,    2.10.0
-   FMPy,       0.3.20,    0.3.20
+   FMPy,       0.3.20,    0.3.26
