@@ -1,4 +1,4 @@
-dnl  Copyright (C) 2008-2025 EDF R&D
+dnl  Copyright (C) 2008-2026 EDF R&D
 dnl
 dnl  This file is part of SALOME ADAO module
 dnl
