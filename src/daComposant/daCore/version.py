@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2025 EDF R&D
+# Copyright (C) 2008-2026 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ __all__ = []
 
 name = "ADAO"
 version = "10.0.0"
-year = "2025"
-date = "vendredi 12 décembre 2025, 22:22:22 (UTC+0100)"
+year = "2026"
+date = "jeudi 22 janvier 2026, 22:22:22 (UTC+0100)"
 
 longname = name + ", a module for Data Assimilation and Optimization"
 cata = "V" + version.replace(".", "_")

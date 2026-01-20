@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2025 EDF R&D
+# Copyright (C) 2008-2026 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
@@ -55,7 +55,7 @@ except:
 
 begin_catalog_file = """# -*- coding: utf-8 -*-
 #
-# Copyright (C) 2008-2025 EDF R&D
+# Copyright (C) 2008-2026 EDF R&D
 #
 # This file is part of SALOME ADAO module
 #
