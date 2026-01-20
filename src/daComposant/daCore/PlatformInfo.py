@@ -754,6 +754,12 @@ def trmo():
         logging.debug(
             "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
         )
+    elif vt("1.17.0") <= vt(scipy.version.version) <= vt("1.17.99"):
+        import daAlgorithms.Atoms.lbfgsb117hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
     else:
         import scipy.optimize as optimiseur
 

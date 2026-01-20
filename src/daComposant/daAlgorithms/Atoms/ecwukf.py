@@ -150,6 +150,7 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             dXnnmuXhmn = Xnnmu[:, point].flat - Xhmn
             Pyyn += Wc[point] * numpy.outer(dYnnmuYhmn, dYnnmuYhmn)
             Pxyn += Wc[point] * numpy.outer(dXnnmuXhmn, dYnnmuYhmn)
+        Pyyn = numpy.array(Pyyn, numpy.float64)
         #
         if hasattr(Y, "store"):
             Ynpu = numpy.ravel( Y[step + 1] ).reshape((__p, 1))
