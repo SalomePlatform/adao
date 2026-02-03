@@ -33,7 +33,7 @@ class TwoDimensionalRosenbrockFunctionR1960:
 
         f(x,y) = (a - x)² + b (y -x²)²
 
-        with (x,y) ∈ [-2,2]x[-1,3]² and a=1, b=100 the commonly used parameter
+        with (x,y) ∈ [-2,2]x[-1,3] and a=1, b=100 the commonly used parameter
         values. There exists a global minimum at (x,y) = (a,a²) for which
         f(x,y) = 0.
 
