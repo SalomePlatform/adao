@@ -17,7 +17,7 @@ comprises dans l'étendue décrite ci-dessous.
    :align: center
 
    Python,     3.6.5,    3.14.2
-   Numpy,      1.14.3,    2.4.1
+   Numpy,      1.14.3,    2.4.2
    Scipy,      0.19.1,    1.17.0
    MatplotLib, 2.2.2,    3.10.8
    GnuplotPy,  1.8,    1.8
