@@ -1860,7 +1860,7 @@ def BuildComplexSampleList(
     elif len(__SampleAsMinMaxSobolSequence) > 0:
         if vt(scipy.version.version) <= vt("1.7.0"):
             __msg = (
-                "In order to use Latin Hypercube sampling, you must at least use"
+                "In order to use Sobol sampling, you must at least use"
                 + " Scipy version 1.7.0 (and you are presently using"
                 + " Scipy %s). A void sample is then generated." % scipy.version.version
             )
