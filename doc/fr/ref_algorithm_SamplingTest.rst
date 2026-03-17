@@ -113,6 +113,8 @@ des états échantillonnés à l'aide de la variable habituelle de
 
 .. include:: snippets/SampleAsIndependentRandomVectors.rst
 
+.. include:: snippets/SampleAsMinMaxHaltonSequence.rst
+
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxSobolSequence.rst

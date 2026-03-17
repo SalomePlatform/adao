@@ -188,6 +188,24 @@ séquence de Sobol) ainsi décrite correspond à l'illustration :
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
     :align: center
 
+Répartition implicite d'états par le mot-clé "*SampleAsMinMaxHaltonSequence*"
+.............................................................................
+
+La commande de génération implicite d'échantillons par
+"*SampleAsMinMaxHaltonSequence*", en dimension 2 et avec 25 points, est la
+suivante :
+
+.. code-block:: python
+
+    [...]
+    "SampleAsMinMaxHaltonSequence":[[0, 4], [0, 4], [2, 25]]
+    [...]
+
+La répartition des états ainsi décrite correspond à l'illustration :
+
+  .. image:: images/sampling_06_SampleAsMinMaxHaltonSequence.png
+    :align: center
+
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois normales
 ......................................................................................................
 
@@ -203,7 +221,7 @@ normale (1,1) de répartition pour chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_06_SampleAsIndependentRandomVariables_normal.png
+  .. image:: images/sampling_07_SampleAsIndependentRandomVariables_normal.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois log-normales
@@ -222,7 +240,7 @@ de répartition pour chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_07_SampleAsIndependentRandomVariables_lognormal.png
+  .. image:: images/sampling_08_SampleAsIndependentRandomVariables_lognormal.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois uniformes
@@ -240,7 +258,7 @@ uniforme entre 0.01 et 1 de répartition pour chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_08_SampleAsIndependentRandomVariables_uniform.png
+  .. image:: images/sampling_09_SampleAsIndependentRandomVariables_uniform.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois log-uniformes
@@ -259,7 +277,7 @@ entre 0.01 et 1 de répartition pour chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_09_SampleAsIndependentRandomVariables_loguniform.png
+  .. image:: images/sampling_10_SampleAsIndependentRandomVariables_loguniform.png
     :align: center
 
 Répartition implicite par le mot-clé "*SampleAsIndependentRandomVariables*" avec lois de Weibull
@@ -277,7 +295,7 @@ Weibull à un paramètre de valeur 5 de répartition pour chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_10_SampleAsIndependentRandomVariables_weibull.png
+  .. image:: images/sampling_11_SampleAsIndependentRandomVariables_weibull.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois normales
@@ -296,7 +314,7 @@ coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_11_SampleAsIndependentRandomVectors_normal.png
+  .. image:: images/sampling_12_SampleAsIndependentRandomVectors_normal.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois log-normales
@@ -315,7 +333,7 @@ répartition logarithmique est normale) de répartition pour chaque coordonnée 
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_12_SampleAsIndependentRandomVectors_lognormal.png
+  .. image:: images/sampling_13_SampleAsIndependentRandomVectors_lognormal.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois uniformes
@@ -334,7 +352,7 @@ chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_13_SampleAsIndependentRandomVectors_uniform.png
+  .. image:: images/sampling_14_SampleAsIndependentRandomVectors_uniform.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois log-uniformes
@@ -354,7 +372,7 @@ coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_14_SampleAsIndependentRandomVectors_loguniform.png
+  .. image:: images/sampling_15_SampleAsIndependentRandomVectors_loguniform.png
     :align: center
 
 Répartition implicite d'états par le mot-clé "*SampleAsIndependentRandomVectors*" avec lois de Weibull
@@ -373,6 +391,6 @@ valeur 5 de répartition pour chaque coordonnée :
 
 La répartition des états ainsi décrite correspond à l'illustration :
 
-  .. image:: images/sampling_15_SampleAsIndependentRandomVectors_weibull.png
+  .. image:: images/sampling_16_SampleAsIndependentRandomVectors_weibull.png
     :align: center
 

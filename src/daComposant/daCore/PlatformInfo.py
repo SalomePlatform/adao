@@ -42,6 +42,7 @@ La classe "SystemUsage" permet de  sous Unix les différentes tailles mémoires
 du process courant. Ces tailles peuvent être assez variables et dépendent de la
 fiabilité des informations du système dans le suivi des process.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 

@@ -23,6 +23,7 @@
 """
 Gestion simple de rapports structurés créés par l'utilisateur.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 

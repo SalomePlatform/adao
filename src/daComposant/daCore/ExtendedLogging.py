@@ -77,6 +77,7 @@ peut changer le niveau global de message en utilisant par exemple :
 On rappelle les niveaux (attributs de "logging") et leur ordre :
     NOTSET=0 < DEBUG=10 < INFO=20 < WARNING=30 < ERROR=40 < CRITICAL=50
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 

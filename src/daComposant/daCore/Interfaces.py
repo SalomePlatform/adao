@@ -23,6 +23,7 @@
 """
 Définit les outils d'interfaces normalisées de cas.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
@@ -1119,7 +1120,7 @@ class ImportDetector(object):
             self.__usr = UserMime.decode().lower()
         else:
             self.__usr = str(UserMime).lower()
-        (self.__root, self.__end) = os.path.splitext(self.__url)
+        self.__root, self.__end = os.path.splitext(self.__url)
         #
         mimetypes.add_type("application/numpy.npy", ".npy")
         mimetypes.add_type("application/numpy.npz", ".npz")
@@ -1172,12 +1173,12 @@ class ImportDetector(object):
     # Mime related functions
     # ------------------------
     def get_standard_mime(self):
-        (__mtype, __encoding) = mimetypes.guess_type(self.__url, strict=False)
+        __mtype, __encoding = mimetypes.guess_type(self.__url, strict=False)
         return __mtype
 
     def get_user_mime(self):
         __fake = "fake." + self.__usr.lower()
-        (__mtype, __encoding) = mimetypes.guess_type(__fake, strict=False)
+        __mtype, __encoding = mimetypes.guess_type(__fake, strict=False)
         return __mtype
 
     def get_comprehensive_mime(self):

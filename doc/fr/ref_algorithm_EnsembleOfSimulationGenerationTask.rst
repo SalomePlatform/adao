@@ -92,6 +92,8 @@ d'échantillonnage pour établir un ensemble de valeurs de fonctionnelle d'erreu
 
 .. include:: snippets/SampleAsIndependentRandomVectors.rst
 
+.. include:: snippets/SampleAsMinMaxHaltonSequence.rst
+
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxSobolSequence.rst

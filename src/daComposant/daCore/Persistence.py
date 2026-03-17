@@ -23,6 +23,7 @@
 """
 Définit des outils de persistance et d'enregistrement de séries de valeurs.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 
