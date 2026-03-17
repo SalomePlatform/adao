@@ -23,6 +23,7 @@
 """
 Définit les objets numériques génériques.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 
 import os
@@ -1796,6 +1797,7 @@ def BuildComplexSampleList(
     __SampleAsMinMaxStepHyperCube,
     __SampleAsMinMaxLatinHyperCube,
     __SampleAsMinMaxSobolSequence,
+    __SampleAsMinMaxHaltonSequence,
     __SampleAsIndependentRandomVariables,
     __SampleAsIndependentRandomVectors,
     __X0,
@@ -1886,6 +1888,40 @@ def BuildComplexSampleList(
                 seed=numpy.random.default_rng(__Seed),
             )
             __sample = __sample.random_base2(m=int(math.log2(__nbSamp)) + 1)
+            __bounds = numpy.array(__spDesc)[:, 0:2]
+            __l_bounds = __bounds[:, 0]
+            __u_bounds = __bounds[:, 1]
+            sampleList = scipy.stats.qmc.scale(__sample, __l_bounds, __u_bounds)
+    # ---------------------------
+    elif len(__SampleAsMinMaxHaltonSequence) > 0:
+        if vt(scipy.version.version) <= vt("1.7.0"):
+            __msg = (
+                "In order to use Halton sampling, you must at least use"
+                + " Scipy version 1.7.0 (and you are presently using"
+                + " Scipy %s). A void sample is then generated." % scipy.version.version
+            )
+            warnings.warn(__msg, FutureWarning, stacklevel=50)
+            sampleList = []
+        else:
+            __spDesc = list(__SampleAsMinMaxHaltonSequence)
+            __nbDime, __nbSamp = map(int, __spDesc.pop())  # Réduction du dernier
+            if __nbDime != len(__spDesc):
+                __msg = (
+                    "Declared space dimension"
+                    + " (%i) is not equal to number of bounds (%i),"
+                    % (__nbDime, len(__spDesc))
+                    + " the last one will be used."
+                )
+                warnings.warn(
+                    __msg,
+                    FutureWarning,
+                    stacklevel=50,
+                )
+            __sample = scipy.stats.qmc.Halton(
+                d=len(__spDesc),
+                seed=numpy.random.default_rng(__Seed),
+            )
+            __sample = __sample.random(n=__nbSamp)
             __bounds = numpy.array(__spDesc)[:, 0:2]
             __l_bounds = __bounds[:, 0]
             __u_bounds = __bounds[:, 1]

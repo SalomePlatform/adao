@@ -164,7 +164,7 @@ The distribution of states thus described corresponds to the illustration:
     :align: center
 
 Implicit state distribution by keyword "*SampleAsMinMaxSobolSequence*"
-.......................................................................
+......................................................................
 
 Implicit sample generation command by "*SampleAsMinMaxSobolSequence*", in
 dimension 2 et and with 25 points, is as follows:
@@ -181,6 +181,23 @@ the Sobol sequence) thus described corresponds to the illustration:
   .. image:: images/sampling_05_SampleAsMinMaxSobolSequence.png
     :align: center
 
+Implicit state distribution by keyword "*SampleAsMinMaxHaltonSequence*"
+.......................................................................
+
+Implicit sample generation command by "*SampleAsMinMaxHaltonSequence*", in
+dimension 2 et and with 25 points, is as follows:
+
+.. code-block:: python
+
+    [...]
+    "SampleAsMinMaxHaltonSequence":[[0, 4], [0, 4], [2, 25]]
+    [...]
+
+The distribution of states thus described corresponds to the illustration:
+
+  .. image:: images/sampling_06_SampleAsMinMaxHaltonSequence.png
+    :align: center
+
 Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with normal laws
 ..............................................................................................
 
@@ -195,7 +212,7 @@ follows, using a normal distribution (1,1) by coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_06_SampleAsIndependentRandomVariables_normal.png
+  .. image:: images/sampling_07_SampleAsIndependentRandomVariables_normal.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with log-normal laws
@@ -213,7 +230,7 @@ distribution is normal) by coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_07_SampleAsIndependentRandomVariables_lognormal.png
+  .. image:: images/sampling_08_SampleAsIndependentRandomVariables_lognormal.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with uniform laws
@@ -231,7 +248,7 @@ distribution:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_08_SampleAsIndependentRandomVariables_uniform.png
+  .. image:: images/sampling_09_SampleAsIndependentRandomVariables_uniform.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with log-uniform laws
@@ -249,7 +266,7 @@ logarithmic distribution is uniform) for coordinate distribution:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_09_SampleAsIndependentRandomVariables_loguniform.png
+  .. image:: images/sampling_10_SampleAsIndependentRandomVariables_loguniform.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVariables*" with Weibull laws
@@ -267,7 +284,7 @@ distribution:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_10_SampleAsIndependentRandomVariables_weibull.png
+  .. image:: images/sampling_11_SampleAsIndependentRandomVariables_weibull.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with normal laws
@@ -285,7 +302,7 @@ points, using a normal distribution (1,1) for each coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_11_SampleAsIndependentRandomVectors_normal.png
+  .. image:: images/sampling_12_SampleAsIndependentRandomVectors_normal.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with log-normal laws
@@ -304,7 +321,7 @@ distribution is normal) for each coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_12_SampleAsIndependentRandomVectors_lognormal.png
+  .. image:: images/sampling_13_SampleAsIndependentRandomVectors_lognormal.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with uniform laws
@@ -322,7 +339,7 @@ points, using a uniform distribution between 0.01 and 1 for each coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_13_SampleAsIndependentRandomVectors_uniform.png
+  .. image:: images/sampling_14_SampleAsIndependentRandomVectors_uniform.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with log-uniform laws
@@ -341,7 +358,7 @@ is uniform) between 0.01 and 1 for each coordinate:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_14_SampleAsIndependentRandomVectors_loguniform.png
+  .. image:: images/sampling_15_SampleAsIndependentRandomVectors_loguniform.png
     :align: center
 
 Implicit state distribution by keyword "*SampleAsIndependentRandomVectors*" with Weibull laws
@@ -360,6 +377,6 @@ distribution:
 
 The distribution of states thus described corresponds to the illustration:
 
-  .. image:: images/sampling_15_SampleAsIndependentRandomVectors_weibull.png
+  .. image:: images/sampling_16_SampleAsIndependentRandomVectors_weibull.png
     :align: center
 

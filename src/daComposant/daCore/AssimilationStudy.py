@@ -23,6 +23,7 @@
 """
 Normalized interface for ADAO scripting (full version API).
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["AssimilationStudy"]
 

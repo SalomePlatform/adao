@@ -110,6 +110,8 @@ this algorithm to recover the set of sampled states using the usual
 
 .. include:: snippets/SampleAsIndependentRandomVectors.rst
 
+.. include:: snippets/SampleAsMinMaxHaltonSequence.rst
+
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxSobolSequence.rst

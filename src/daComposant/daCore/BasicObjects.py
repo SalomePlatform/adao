@@ -23,6 +23,7 @@
 """
 Définit les outils généraux élémentaires.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = []
 

@@ -139,6 +139,8 @@ d'analyse pour une recherche de positionnement contraint.
 
 .. include:: snippets/SampleAsIndependentRandomVectors.rst
 
+.. include:: snippets/SampleAsMinMaxHaltonSequence.rst
+
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxSobolSequence.rst

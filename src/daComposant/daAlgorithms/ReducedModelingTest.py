@@ -40,13 +40,6 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Ensemble de vecteurs d'état physique (snapshots), 1 état par colonne (Training Set)",
         )
         self.defineRequiredParameter(
-            name     = "MaximumNumberOfLocations",
-            default  = 1,
-            typecast = int,
-            message  = "Nombre maximal de positions",
-            minval   = 0,
-        )
-        self.defineRequiredParameter(
             name     = "ExcludeLocations",
             default  = [],
             typecast = tuple,
@@ -87,6 +80,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = [],
             typecast = tuple,
             message  = "Points de calcul définis par une séquence de Sobol dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",  # noqa: E501
+        )
+        self.defineRequiredParameter(
+            name     = "SampleAsMinMaxHaltonSequence",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par une séquence de Halton dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",  # noqa: E501
         )
         self.defineRequiredParameter(
             name     = "SampleAsIndependentRandomVariables",

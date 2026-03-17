@@ -22,6 +22,7 @@
 """
 Modèles généraux pour les observers, le post-processing.
 """
+
 __author__ = "Jean-Philippe ARGAUD"
 __all__ = ["ObserverTemplates"]
 

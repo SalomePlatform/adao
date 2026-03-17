@@ -136,6 +136,8 @@ constrained positioning search.
 
 .. include:: snippets/SampleAsIndependentRandomVectors.rst
 
+.. include:: snippets/SampleAsMinMaxHaltonSequence.rst
+
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 
 .. include:: snippets/SampleAsMinMaxSobolSequence.rst

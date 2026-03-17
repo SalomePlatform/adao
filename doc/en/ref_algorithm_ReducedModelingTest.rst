@@ -57,8 +57,6 @@ graphical representation of the same information is produced.
 
 .. include:: snippets/ExcludeLocations.rst
 
-.. include:: snippets/MaximumNumberOfLocations.rst
-
 .. include:: snippets/MaximumNumberOfModes.rst
 
 .. include:: snippets/NameOfLocations.rst
@@ -72,6 +70,8 @@ graphical representation of the same information is produced.
 .. include:: snippets/SampleAsIndependentRandomVariables.rst
 
 .. include:: snippets/SampleAsIndependentRandomVectors.rst
+
+.. include:: snippets/SampleAsMinMaxHaltonSequence.rst
 
 .. include:: snippets/SampleAsMinMaxLatinHyperCube.rst
 

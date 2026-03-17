@@ -67,6 +67,12 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Points de calcul définis par une séquence de Sobol dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",  # noqa: E501
         )
         self.defineRequiredParameter(
+            name     = "SampleAsMinMaxHaltonSequence",
+            default  = [],
+            typecast = tuple,
+            message  = "Points de calcul définis par une séquence de Halton dont on donne les bornes de chaque variable par une paire [min,max], suivi de la paire [dimension, nombre minimal de points demandés]",  # noqa: E501
+        )
+        self.defineRequiredParameter(
             name     = "SampleAsIndependentRandomVariables",
             default  = [],
             typecast = tuple,
@@ -201,6 +207,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 self._parameters["SampleAsMinMaxStepHyperCube"],
                 self._parameters["SampleAsMinMaxLatinHyperCube"],
                 self._parameters["SampleAsMinMaxSobolSequence"],
+                self._parameters["SampleAsMinMaxHaltonSequence"],
                 self._parameters["SampleAsIndependentRandomVariables"],
                 self._parameters["SampleAsIndependentRandomVectors"],
                 Xb,
