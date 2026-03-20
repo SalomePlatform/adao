@@ -157,9 +157,9 @@ de types pour éviter d'obscures difficultés :
 ::
 
     #-*- coding: utf-8 -*-
-    from salome.yacs import import pilot
-    from salome.yacs import import SALOMERuntime
-    from salome.yacs import import loader
+    import pilot
+    import SALOMERuntime
+    import loader
     SALOMERuntime.RuntimeSALOME_setRuntime()
 
     r = pilot.getRuntime()

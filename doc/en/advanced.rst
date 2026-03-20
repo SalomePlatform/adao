@@ -145,9 +145,9 @@ scheme before executing it, adding some initial supplementary ones to
 explicitly load the types catalog to avoid weird difficulties::
 
     #-*- coding: utf-8 -*-
-    from salome.yacs import import pilot
-    from salome.yacs import import SALOMERuntime
-    from salome.yacs import import loader
+    import pilot
+    import SALOMERuntime
+    import loader
     SALOMERuntime.RuntimeSALOME_setRuntime()
 
     r = pilot.getRuntime()
