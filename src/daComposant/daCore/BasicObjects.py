@@ -4042,7 +4042,7 @@ class DynamicalSimulator(object):
                 plt.suptitle(suptitle)
             else:
                 plt.suptitle(
-                    "Evolution of a 1D model of size %i between time %.2f and %.2f)"
+                    "Evolution of a 1D model of size %i between time %.2f and %.2f"
                     % (dimension, t_s[0], t_s[-1])
                 )
             plt.xlabel(xlabel)

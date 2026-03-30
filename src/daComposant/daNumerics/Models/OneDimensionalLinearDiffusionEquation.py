@@ -109,7 +109,7 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
 
     def ODEModel(self, t, y):
         "ODE dy/dt = F_µ(t, y)"
-        return numpy.dot(self.A, y)
+        return numpy.dot(self.A, y) + self.dt * self.st
 
     def ODETLMModel(self, t, xyz):
         "Return the tangent linear matrix"
@@ -171,27 +171,19 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
             raise ValueError("Predefined choice '%s' is not allowed" % str(Predefined))
         return sigma, field
 
-    def FieldUFromDiffusionCoefficient(self, coefficient):
+    def StationaryFieldUFromDiffusionCoefficient(self, coefficient):
         "Here, the parameter is the diffusion coefficient"
         alpha = numpy.ravel(numpy.array(coefficient, dtype=float))[0]
         self.setDiffusionCoefficientAndMatrix(alpha)
         solution = scipy.linalg.solve_banded((1, 1), self.A, self.st)
         return solution
 
-    def FieldUFromInitialConditionCoefficient(self, coefficient):
-        "Here, the parameter is the initial condition coefficient"
-        sigma_i = numpy.ravel(numpy.array(coefficient, dtype=float))[0]
-        raise ValueError("Warning: function to be implemented")
-
-    def FieldUFromSourceTermCoefficient(self, coefficient):
+    def StationaryFieldUFromSourceTermCoefficient(self, coefficient):
         "Here, the parameter is the source term coefficient"
         sigma_s = numpy.ravel(numpy.array(coefficient, dtype=float))[0]
-        raise ValueError("Warning: function to be implemented")
-
-    def FieldUFromAllCoefficients(self, coefficients):
-        "Here, the parameter is the source term coefficient"
-        alpha, sigma_i, sigma_s = numpy.ravel(numpy.array(coefficients, dtype=float))
-        raise ValueError("Warning: function to be implemented")
+        self.sigma_s, self.st = self.setInitialConditionOrSourceTerm(ST, sigma_s)
+        solution = scipy.linalg.solve_banded((1, 1), self.A, self.st)
+        return solution
 
     def get_t(self):
         return self.t
@@ -213,8 +205,6 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
 
     def get_sample_of_mu(self, ns: int = 1):
         raise ValueError("Warning: function to be implemented")
-
-    OneRealisation = FieldUFromAllCoefficients
 
 
 # ==============================================================================
