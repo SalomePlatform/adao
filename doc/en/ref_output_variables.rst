@@ -188,7 +188,8 @@ standard command ".get(...)", which return the unique object given on input.
   .. include:: snippets/ObservationError.rst
 
 All other information are conditioned by the algorithm and/or the user requests
-of availability. The main ones are the following, in alphabetical order:
+of availability. The main ones are the following, without being exhaustive, in
+alphabetical order:
 
   .. include:: snippets/APosterioriCorrelations.rst
 
@@ -202,13 +203,13 @@ of availability. The main ones are the following, in alphabetical order:
 
   .. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/CostFunctionJb.rst
-
-  .. include:: snippets/CostFunctionJo.rst
-
   .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
+  .. include:: snippets/CostFunctionJb.rst
+
   .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+  .. include:: snippets/CostFunctionJo.rst
 
   .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 

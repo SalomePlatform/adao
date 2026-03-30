@@ -119,6 +119,8 @@ d'analyse pour une recherche de positionnement contraint.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Task.rst
 
+.. include:: snippets/AuthorizeLocations.rst
+
 .. include:: snippets/EnsembleOfSnapshots.rst
 
 .. include:: snippets/ExcludeLocations.rst
@@ -166,6 +168,7 @@ StoreSupplementaryCalculations
   (la description détaillée de chaque variable nommée est donnée dans la suite
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
+  "AuthorizedPoints",
   "EnsembleOfSimulations",
   "EnsembleOfStates",
   "ExcludedPoints",
@@ -190,6 +193,8 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
+
+.. include:: snippets/AuthorizedPoints.rst
 
 .. include:: snippets/EnsembleOfSimulations.rst
 

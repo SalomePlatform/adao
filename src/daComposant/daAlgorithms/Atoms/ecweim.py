@@ -53,6 +53,10 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         __LcCsts = False
     else:
         __LcCsts = True
+    if __LcCsts and "AuthorizeLocations" in selfA._parameters:
+        __AuthorizedMagicPoints = selfA._parameters["AuthorizeLocations"]
+    else:
+        __AuthorizedMagicPoints = ()
     if __LcCsts and "ExcludeLocations" in selfA._parameters:
         __ExcludedMagicPoints = selfA._parameters["ExcludeLocations"]
     else:
@@ -64,7 +68,15 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
             __NameOfLocations = ()
     else:
         __NameOfLocations = ()
-    if __LcCsts and len(__ExcludedMagicPoints) > 0:
+    if __LcCsts and len(__AuthorizedMagicPoints) > 0: # Prioritaire
+        __IncludedMagicPoints = FindIndexesFromNames( __NameOfLocations, __AuthorizedMagicPoints )
+        __IncludedMagicPoints = numpy.ravel(numpy.asarray(__IncludedMagicPoints, dtype=int))
+        __ExcludedMagicPoints = numpy.setdiff1d(
+            numpy.arange(__EOS.shape[0]),
+            __IncludedMagicPoints,
+            assume_unique = True,
+        )
+    elif __LcCsts and len(__ExcludedMagicPoints) > 0: # Secondaire
         __ExcludedMagicPoints = FindIndexesFromNames( __NameOfLocations, __ExcludedMagicPoints )
         __ExcludedMagicPoints = numpy.ravel(numpy.asarray(__ExcludedMagicPoints, dtype=int))
         __IncludedMagicPoints = numpy.setdiff1d(
@@ -73,7 +85,12 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
             assume_unique = True,
         )
     else:
-        __IncludedMagicPoints = []
+        __IncludedMagicPoints = ()  # All
+        __ExcludedMagicPoints = ()  # None
+    if len(__IncludedMagicPoints) < len(__ExcludedMagicPoints):
+        __searchInIncluded, __searchInExcluded = True, False
+    else:
+        __searchInIncluded, __searchInExcluded = False, True
     #
     if "MaximumNumberOfLocations" in selfA._parameters and "MaximumRBSize" in selfA._parameters:
         selfA._parameters["MaximumRBSize"] = min(selfA._parameters["MaximumNumberOfLocations"], selfA._parameters["MaximumRBSize"])  # noqa: E501
@@ -119,15 +136,23 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
         # Détermination du point et de la fonction magiques
         __abs_residuM = numpy.abs(__residuM)
         __iM   = numpy.argmax(__abs_residuM)
-        __rhoM = __residuM / __residuM[__iM]
         #
-        if __LcCsts and __iM in __ExcludedMagicPoints:
+        if __LcCsts and __searchInExcluded and __iM in __ExcludedMagicPoints:
             __sIndices = numpy.argsort(__abs_residuM)
             __rang = -1
             assert __iM == __sIndices[__rang]
             while __iM in __ExcludedMagicPoints and __rang >= -len(__abs_residuM):
                 __rang = __rang - 1
                 __iM   = __sIndices[__rang]
+        if __LcCsts and __searchInIncluded and __iM not in __IncludedMagicPoints:
+            __sIndices = numpy.argsort(__abs_residuM)
+            __rang = -1
+            assert __iM == __sIndices[__rang]
+            while __iM not in __IncludedMagicPoints and __rang >= -len(__abs_residuM):
+                __rang = __rang - 1
+                __iM   = __sIndices[__rang]
+        #
+        __rhoM = __residuM / __residuM[__iM]
         #
         if __M > 1:
             __Q = numpy.column_stack((__Q, __rhoM))
@@ -162,6 +187,8 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
             selfA.StoredVariables["ReducedBasis"].store( __Q )
         if selfA._toStore("Residus"):
             selfA.StoredVariables["Residus"].store( __errors )
+        if selfA._toStore("AuthorizedPoints"):
+            selfA.StoredVariables["AuthorizedPoints"].store( __IncludedMagicPoints )
         if selfA._toStore("ExcludedPoints"):
             selfA.StoredVariables["ExcludedPoints"].store( __ExcludedMagicPoints )
     #

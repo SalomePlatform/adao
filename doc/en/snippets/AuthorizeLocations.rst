@@ -1,6 +1,6 @@
-.. index:: single: ExcludeLocations
+.. index:: single: AuthorizeLocations
 
-ExcludeLocations
+AuthorizeLocations
   *List of integers or names*. This key specifies the list of points in the
   state vector excluded from the optimal search. The default value is an empty
   list. The list can contain either **indices of points** (in the implicit
@@ -17,4 +17,4 @@ ExcludeLocations
   state considered arbitrarily in one-dimensional form.
 
   Example :
-  ``{"ExcludeLocations":[3, 125, 286]}`` or ``{"ExcludeLocations":["Point3", "XgTaC"]}``
+  ``{"AuthorizeLocations":[3, 125, 286]}`` or ``{"AuthorizeLocations":["Point3", "XgTaC"]}``
