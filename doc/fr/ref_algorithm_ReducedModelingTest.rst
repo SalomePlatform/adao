@@ -55,6 +55,8 @@ représentation graphique des mêmes informations est produite.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo02.rst
 
+.. include:: snippets/AuthorizeLocations.rst
+
 .. include:: snippets/EnsembleOfSnapshots.rst
 
 .. include:: snippets/ExcludeLocations.rst
@@ -102,8 +104,10 @@ StoreSupplementaryCalculations
   (la description détaillée de chaque variable nommée est donnée dans la suite
   de cette documentation par algorithme spécifique, dans la sous-partie
   "*Informations et variables disponibles à la fin de l'algorithme*") : [
+  "AuthorizedPoints",
   "EnsembleOfSimulations",
   "EnsembleOfStates",
+  "ExcludedPoints",
   "Residus",
   "SingularValues",
   ].
@@ -119,9 +123,13 @@ StoreSupplementaryCalculations
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
 
+.. include:: snippets/AuthorizedPoints.rst
+
 .. include:: snippets/EnsembleOfSimulations.rst
 
 .. include:: snippets/EnsembleOfStates.rst
+
+.. include:: snippets/ExcludedPoints.rst
 
 .. include:: snippets/Residus.rst
 

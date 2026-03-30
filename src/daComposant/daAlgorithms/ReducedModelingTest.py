@@ -40,10 +40,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Ensemble de vecteurs d'état physique (snapshots), 1 état par colonne (Training Set)",
         )
         self.defineRequiredParameter(
+            name     = "AuthorizeLocations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des indices ou noms des seules positions autorisées selon l'ordre interne d'un snapshot",
+        )
+        self.defineRequiredParameter(
             name     = "ExcludeLocations",
             default  = [],
             typecast = tuple,
-            message  = "Liste des indices ou noms de positions exclues selon l'ordre interne d'un snapshot",
+            message  = "Liste des indices ou noms des positions exclues selon l'ordre interne d'un snapshot",
         )
         self.defineRequiredParameter(
             name     = "NameOfLocations",
@@ -113,8 +119,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
+                "AuthorizedPoints",
                 "EnsembleOfSimulations",
                 "EnsembleOfStates",
+                "ExcludedPoints",
                 "Residus",
                 "SingularValues",
             ],
@@ -180,7 +188,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         self._pre_run(Parameters, Xb, Y, U, HO, EM, CM, R, B, Q)
         #
         if len(self._parameters["EnsembleOfSnapshots"]) > 0:
-            if self._toStore("EnsembleOfSimulations"):
+            if hasattr(self, "StoredVariables") and self._toStore("EnsembleOfSimulations"):
                 self.StoredVariables["EnsembleOfSimulations"].store( self._parameters["EnsembleOfSnapshots"] )
             EOS = self._parameters["EnsembleOfSnapshots"]
         elif isinstance(HO, dict):
@@ -229,10 +237,10 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         msgs += (__marge + "  State dimension................: %i\n")%__fdim
         msgs += (__marge + "  Number of snapshots to test....: %i\n")%__nsn
         #
+        if "AuthorizeLocations" in self._parameters:
+            __AuthorizedPoints = self._parameters["AuthorizeLocations"]
         if "ExcludeLocations" in self._parameters:
             __ExcludedPoints = self._parameters["ExcludeLocations"]
-        else:
-            __ExcludedPoints = ()
         if "NameOfLocations" in self._parameters:
             if isinstance(self._parameters["NameOfLocations"], (list, numpy.ndarray, tuple)) \
                     and len(self._parameters["NameOfLocations"]) == __dimS:
@@ -241,7 +249,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 __NameOfLocations = ()
         else:
             __NameOfLocations = ()
-        if len(__ExcludedPoints) > 0:
+        if len(__AuthorizedPoints) > 0: # Prioritaire
+            __IncludedPoints = FindIndexesFromNames( __NameOfLocations, __AuthorizedPoints )
+            __IncludedPoints = numpy.ravel(numpy.asarray(__IncludedPoints, dtype=int))
+            __ExcludedPoints = numpy.setdiff1d(
+                numpy.arange(__EOS.shape[0]),
+                __IncludedPoints,
+                assume_unique = True,
+            )
+        elif len(__ExcludedPoints) > 0: # Secondaire
             __ExcludedPoints = FindIndexesFromNames( __NameOfLocations, __ExcludedPoints )
             __ExcludedPoints = numpy.ravel(numpy.asarray(__ExcludedPoints, dtype=int))
             __IncludedPoints = numpy.setdiff1d(
@@ -250,7 +266,13 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 assume_unique = True,
             )
         else:
-            __IncludedPoints = []
+            __IncludedPoints = ()  # All
+            __ExcludedPoints = ()  # None
+        if hasattr(self, "StoredVariables") and self._toStore("AuthorizedPoints"):
+            self.StoredVariables["AuthorizedPoints"].store( __IncludedPoints )
+        if hasattr(self, "StoredVariables") and self._toStore("ExcludedPoints"):
+            self.StoredVariables["ExcludedPoints"].store( __ExcludedPoints )
+        #
         if len(__IncludedPoints) > 0:
             __Ensemble = numpy.take(__EOS, __IncludedPoints, axis=0, mode='clip')
         else:
@@ -262,9 +284,9 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             __tisv = __tisv[:self._parameters["MaximumNumberOfModes"]]
             __qisv = __qisv[:self._parameters["MaximumNumberOfModes"]]
         #
-        if self._toStore("SingularValues"):
+        if hasattr(self, "StoredVariables") and self._toStore("SingularValues"):
             self.StoredVariables["SingularValues"].store( __sv )
-        if self._toStore("Residus"):
+        if hasattr(self, "StoredVariables") and self._toStore("Residus"):
             self.StoredVariables["Residus"].store( __qisv )
         #
         nbsv = min(5, self._parameters["MaximumNumberOfModes"])

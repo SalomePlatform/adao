@@ -1697,20 +1697,20 @@ def GetNeighborhoodTopology(__ntype, __ipop):
 
 # ==============================================================================
 def FindIndexesFromNames(
-    __NameOfLocations=None, __ExcludeLocations=None, ForceArray=False
+    __NameOfLocations=None, __ListOfLocationsNames=None, ForceArray=False
 ):
     """Exprime les indices des noms exclus, en ignorant les absents."""
-    if __ExcludeLocations is None:
-        __ExcludeIndexes = ()
+    if __ListOfLocationsNames is None:
+        __IndexOfLocations = ()
     elif (
-        isinstance(__ExcludeLocations, (list, numpy.ndarray, tuple))
-        and len(__ExcludeLocations) == 0
+        isinstance(__ListOfLocationsNames, (list, numpy.ndarray, tuple))
+        and len(__ListOfLocationsNames) == 0
     ):
-        __ExcludeIndexes = ()
+        __IndexOfLocations = ()
     # ----------
     elif __NameOfLocations is None:
         try:
-            __ExcludeIndexes = numpy.asarray(__ExcludeLocations, dtype=int)
+            __IndexOfLocations = numpy.asarray(__ListOfLocationsNames, dtype=int)
         except ValueError as e:
             if "invalid literal for int() with base 10:" in str(e):
                 raise ValueError(
@@ -1724,7 +1724,7 @@ def FindIndexesFromNames(
         and len(__NameOfLocations) == 0
     ):
         try:
-            __ExcludeIndexes = numpy.asarray(__ExcludeLocations, dtype=int)
+            __IndexOfLocations = numpy.asarray(__ListOfLocationsNames, dtype=int)
         except ValueError as e:
             if "invalid literal for int() with base 10:" in str(e):
                 raise ValueError(
@@ -1736,12 +1736,12 @@ def FindIndexesFromNames(
     # ----------
     else:
         try:
-            __ExcludeIndexes = numpy.asarray(__ExcludeLocations, dtype=int)
+            __IndexOfLocations = numpy.asarray(__ListOfLocationsNames, dtype=int)
         except ValueError as e:
             if "invalid literal for int() with base 10:" in str(e):
                 if (
                     len(__NameOfLocations) < 1.0e6 + 1
-                    and len(__ExcludeLocations) > 1500
+                    and len(__ListOfLocationsNames) > 1500
                 ):
                     __Heuristic = True
                 else:
@@ -1753,8 +1753,8 @@ def FindIndexesFromNames(
                             (__NameOfLocations, range(len(__NameOfLocations)))
                         ).T
                     )
-                    __ExcludeIndexes = numpy.asarray(
-                        [__NameToIndex.get(k, -1) for k in __ExcludeLocations],
+                    __IndexOfLocations = numpy.asarray(
+                        [__NameToIndex.get(k, -1) for k in __ListOfLocationsNames],
                         dtype=int,
                     )
                     #
@@ -1766,28 +1766,28 @@ def FindIndexesFromNames(
                         else:
                             return default
 
-                    __ExcludeIndexes = numpy.asarray(
-                        [__NameToIndex_get(k, -1) for k in __ExcludeLocations],
+                    __IndexOfLocations = numpy.asarray(
+                        [__NameToIndex_get(k, -1) for k in __ListOfLocationsNames],
                         dtype=int,
                     )
                     #
                     # Exemple de recherche par liste encore un peu plus efficace,
                     # mais interdisant des noms invalides :
-                    # __ExcludeIndexes = numpy.asarray(
-                    #     [__NameOfLocations.index(k) for k in __ExcludeLocations],
+                    # __IndexOfLocations = numpy.asarray(
+                    #     [__NameOfLocations.index(k) for k in __ListOfLocationsNames],
                     #     dtype=int,
                     # )
                     #
                 # Ignore les noms absents
-                __ExcludeIndexes = numpy.compress(
-                    __ExcludeIndexes > -1, __ExcludeIndexes
+                __IndexOfLocations = numpy.compress(
+                    __IndexOfLocations > -1, __IndexOfLocations
                 )
-                if len(__ExcludeIndexes) == 0:
-                    __ExcludeIndexes = ()
+                if len(__IndexOfLocations) == 0:
+                    __IndexOfLocations = ()
             else:
                 raise ValueError(str(e))
     # ----------
-    return __ExcludeIndexes
+    return __IndexOfLocations
 
 
 # ==============================================================================

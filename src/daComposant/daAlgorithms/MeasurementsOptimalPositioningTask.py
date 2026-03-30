@@ -64,10 +64,16 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = 0,
         )
         self.defineRequiredParameter(
+            name     = "AuthorizeLocations",
+            default  = [],
+            typecast = tuple,
+            message  = "Liste des indices ou noms des seules positions autorisées selon l'ordre interne d'un snapshot",
+        )
+        self.defineRequiredParameter(
             name     = "ExcludeLocations",
             default  = [],
             typecast = tuple,
-            message  = "Liste des indices ou noms de positions exclues selon l'ordre interne d'un snapshot",
+            message  = "Liste des indices ou noms des positions exclues selon l'ordre interne d'un snapshot",
         )
         self.defineRequiredParameter(
             name     = "NameOfLocations",
@@ -157,6 +163,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             typecast = tuple,
             message  = "Liste de calculs supplémentaires à stocker et/ou effectuer",
             listval  = [
+                "AuthorizedPoints",
                 "EnsembleOfSimulations",
                 "EnsembleOfStates",
                 "ExcludedPoints",

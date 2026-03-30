@@ -9,11 +9,14 @@ ExcludeLocations
   mot-clé "*NameOfLocations*" pour pouvoir être exclus). Par défaut, si les
   éléments de la liste sont des chaînes de caractères assimilables à des
   indices, alors ces chaînes sont bien considérées comme des indices et pas des
-  noms.
+  noms. Cette clé est exclusive de "*AuthorizeLocations*". Si les deux clés
+  sont présentes non vides, la priorité est donnée à la clé
+  "*AuthorizeLocations*" et l'autre est omise.
 
-  Rappel important : la numérotation de ces points exclus doit être identique à
-  celle qui est adoptée, implicitement et impérativement, par les variables
-  constituant un état considéré arbitrairement sous forme unidimensionnelle.
+  Rappel important : la numérotation par les indices de ces points doit être
+  identique à celle qui est adoptée, implicitement et impérativement, par les
+  variables constituant un état considéré arbitrairement sous forme
+  unidimensionnelle.
 
   Exemple :
   ``{"ExcludeLocations":[3, 125, 286]}`` ou ``{"ExcludeLocations":["Point3", "XgTaC"]}``

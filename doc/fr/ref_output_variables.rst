@@ -195,8 +195,8 @@ en entrée.
   .. include:: snippets/ObservationError.rst
 
 Toutes les autres informations sont conditionnées par l'algorithme et/ou par la
-demande utilisateur de disponibilité. Les principales sont les suivantes, par
-ordre alphabétique:
+demande utilisateur de disponibilité. Les principales sont les suivantes, sans
+être exhaustif, par ordre alphabétique:
 
   .. include:: snippets/APosterioriCorrelations.rst
 
@@ -210,13 +210,13 @@ ordre alphabétique:
 
   .. include:: snippets/CostFunctionJ.rst
 
-  .. include:: snippets/CostFunctionJb.rst
-
-  .. include:: snippets/CostFunctionJo.rst
-
   .. include:: snippets/CostFunctionJAtCurrentOptimum.rst
 
+  .. include:: snippets/CostFunctionJb.rst
+
   .. include:: snippets/CostFunctionJbAtCurrentOptimum.rst
+
+  .. include:: snippets/CostFunctionJo.rst
 
   .. include:: snippets/CostFunctionJoAtCurrentOptimum.rst
 

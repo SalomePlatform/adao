@@ -952,6 +952,9 @@ class Algorithm(object):
             name="APosterioriVariances"
         )
         self.StoredVariables["Analysis"] = Persistence.OneVector(name="Analysis")
+        self.StoredVariables["AuthorizedPoints"] = Persistence.OneVector(
+            name="AuthorizedPoints"
+        )
         self.StoredVariables["BMA"] = Persistence.OneVector(name="BMA")
         self.StoredVariables["CostFunctionJ"] = Persistence.OneScalar(
             name="CostFunctionJ"
@@ -3934,11 +3937,11 @@ class DynamicalSimulator(object):
         t_s,
         y_s,
         i_s=None,
-        filename="figure_of_trajectory.pdf",
+        filename="figure_of_trajectory_history.pdf",
         suptitle="",
         title="",
-        xlabel="Time",
-        ylabel="State variables",
+        xlabel="X",
+        ylabel="Y",
         cmap="gist_gray_r",
         grid=False,
     ):
@@ -3949,15 +3952,16 @@ class DynamicalSimulator(object):
         y_s : série des valeurs 1D des variables du système dynamique, pour
               chaque pas de temps, sous forme d'un tableau 2D de type:
               SDyn(i,t) = SDyn[i][t] = [SDyn[i] pour chaque t]
-        i_s : série des indices i des variables
+        i_s : série des positions ou des indices en x
         """
         import matplotlib
         import matplotlib.pyplot as plt
         from matplotlib.ticker import MaxNLocator
 
         #
+        dimension = y_s.shape[0]
         if i_s is None:
-            i_s = range(y_s.shape[0])
+            i_s = range(dimension)
         levels = MaxNLocator(nbins=25).tick_values(
             numpy.ravel(y_s).min(), numpy.ravel(y_s).max()
         )
@@ -3967,10 +3971,13 @@ class DynamicalSimulator(object):
         fig.colorbar(im, ax=ax)
         if len(suptitle) > 0:
             plt.suptitle(suptitle)
+        else:
+            plt.suptitle(
+                "Evolution of a 1D model of size %i between time %.2f and %.2f)"
+                % (dimension, t_s[0], t_s[-1])
+            )
         if len(title) > 0:
             plt.title(title)
-        else:
-            plt.title("Model trajectory with %i variables" % len(y_s[:, 0]))
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         if grid:
@@ -3979,6 +3986,85 @@ class DynamicalSimulator(object):
             plt.show()
         else:
             plt.savefig(filename)
+
+    def HistoryAnimation(
+        self,
+        t_s,
+        y_s,
+        i_s=None,
+        u_0=None,
+        nbframes=1,
+        filename="figure_of_trajectory_animation.mp4",
+        suptitle="",
+        title="",
+        xlabel="X",
+        ylabel="Y",
+        grid=False,
+    ):
+        """
+        Représente une collection animée de trajectoires.
+
+        t_s : série des instants t
+        y_s : série des valeurs 1D des variables du système dynamique, pour
+              chaque pas de temps, sous forme d'un tableau 2D de type:
+              SDyn(i,t) = SDyn[i][t] = [SDyn[i] pour chaque t]
+        i_s : série des positions ou des indices en x
+        """
+        import matplotlib
+        import matplotlib.pyplot as plt
+        import matplotlib.animation as anim
+
+        #
+        dimension = y_s.shape[0]
+        Nbtime = numpy.array(t_s).size  # Nombre d'instants sur la durée complète
+        DeltaP = Nbtime // nbframes  # Nombre de pas d'intégration entre deux images
+        if i_s is None:
+            i_s = range(dimension)
+        if u_0 is None:
+            u_0 = y_s[:, 0]
+            i_p = 0  # Compteur de pas de temps d'intégration
+        else:
+            i_p = DeltaP  # Compteur de pas de temps d'intégration
+        Tiniti = t_s[0]
+        Tfinal = t_s[-1]
+        y_mini = numpy.ravel(y_s).min()
+        y_maxi = numpy.ravel(y_s).max()
+        #
+        FFMpeg = anim.writers["ffmpeg"]
+        metadata = dict(
+            title="Evolution of a %i-dimensional 1D model )" % len(y_s[:, 0]),
+            artist="ADAO",
+            comment="Trajectory animation",
+        )
+        writer = FFMpeg(fps=15, metadata=metadata, codec="h264")
+        with writer.saving(plt.figure(figsize=(10, 5)), filename, nbframes):
+            if len(suptitle) > 0:
+                plt.suptitle(suptitle)
+            else:
+                plt.suptitle(
+                    "Evolution of a 1D model of size %i between time %.2f and %.2f)"
+                    % (dimension, t_s[0], t_s[-1])
+                )
+            plt.xlabel(xlabel)
+            plt.ylabel(ylabel)
+            plt.xlim(i_s[0], i_s[-1])
+            plt.ylim(
+                y_mini - 0.05 * (y_maxi - y_mini), y_maxi + 0.05 * (y_maxi - y_mini)
+            )
+            if grid:
+                plt.grid()
+            #
+            (line1,) = plt.plot(i_s, u_0, "r", label="Initial value")
+            #
+            writer.grab_frame()
+            while i_p < Nbtime:
+                if len(title) > 0:
+                    plt.title(title)
+                else:
+                    plt.title("Time: %.2f" % t_s[i_p])
+                line1.set_ydata(y_s[:, i_p])
+                writer.grab_frame()
+                i_p += DeltaP
 
 
 # ==============================================================================

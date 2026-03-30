@@ -116,6 +116,8 @@ constrained positioning search.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Task.rst
 
+.. include:: snippets/AuthorizeLocations.rst
+
 .. include:: snippets/EnsembleOfSnapshots.rst
 
 .. include:: snippets/ExcludeLocations.rst
@@ -163,6 +165,7 @@ StoreSupplementaryCalculations
   the following part of this specific algorithmic documentation, in the
   sub-section "*Information and variables available at the end of the
   algorithm*"): [
+  "AuthorizedPoints",
   "EnsembleOfSimulations",
   "EnsembleOfStates",
   "ExcludedPoints",
@@ -187,6 +190,8 @@ StoreSupplementaryCalculations
 
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo05.rst
+
+.. include:: snippets/AuthorizedPoints.rst
 
 .. include:: snippets/EnsembleOfSimulations.rst
 
