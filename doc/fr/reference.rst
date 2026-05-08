@@ -130,7 +130,7 @@ mathématiques utilisées sont expliquées dans la section générale donnant
 **[DocR]** Cas de vérification
 ================================================================================
 
-Cette section décrit les algorithmes de vérification disponibles dans ADAO,
+Cette section décrit les algorithmes de vérification, disponibles dans ADAO,
 détaillant leurs caractéristiques d'utilisation et leurs options.
 
 Des exemples sur l'usage de ces commandes sont disponibles dans la section des
@@ -168,7 +168,7 @@ mathématiques utilisées sont expliquées dans la section générale donnant
 **[DocR]** Cas orientés tâches ou études dédiées
 ================================================================================
 
-Cette section décrit les algorithmes de tâches facilitant une étude dédiée
+Cette section décrit les algorithmes de tâches facilitant une étude dédiée,
 disponibles dans ADAO, détaillant leurs caractéristiques d'utilisation et leurs
 options.
 
