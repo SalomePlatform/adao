@@ -128,7 +128,7 @@ notations used are explained in the general section providing
 **[DocR]** Checking cases
 ================================================================================
 
-This section describes the checking algorithms available in ADAO, detailing
+This section describes the checking algorithms, available in ADAO, detailing
 their usage characteristics and their options.
 
 Some examples on these commands usage are available in the section of
@@ -166,7 +166,7 @@ notations used are explained in the general section providing
 **[DocR]** Dedicated tasks or study oriented cases
 ================================================================================
 
-This section describes the dedicated task or study oriented cases available in
+This section describes the dedicated task or study oriented cases, available in
 ADAO, detailing their usage characteristics and their options.
 
 These tasks use algorithms from data assimilation methods, optimization methods

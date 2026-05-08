@@ -35,13 +35,13 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
     """
     One-dimensional linear diffusion equation of parameters α, σ_i and σ_s:
 
-        Un-stationary version write:
+        Un-steady version write:
 
             ð_t u(x,t) - α ð²_x u(x,t) = s(x,t)     for (x,t) ∈ [0,Lx] x [0,Tf]
             u(x,0) = u_0(x)                         for x ∈ [0,Lx]
             u(0,t) = u(Lx,t) = 0                    for t ∈ [0,Tf]
 
-        Stationary version write:
+        Steady version write:
 
             - α ð²_x u(x,t) = s(x,t)                for (x,t) ∈ [0,Lx] x [0,Tf]
             u(x,0) = u_0(x)                         for x ∈ [0,Lx]
@@ -72,7 +72,7 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
         Tf: float = 1,
         ndx: int = 100,
         Lx: float = 1,
-        stationary: bool = True,
+        steady: bool = True,
         InitialCondition: str = "Null",
         SourceTerm: str = "CenteredSin",
         sigma_i: float = 1,
@@ -88,7 +88,7 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
         self.dt = self.Tf / (self.ndt - 1)
         self.dx = self.Lx / (self.ndx - 1)
         #
-        self.stationary = stationary
+        self.steady = steady
         #
         self.setDiffusionCoefficientAndMatrix(alpha)
         self.setInitialConditionAndSourceTerm(
@@ -117,7 +117,7 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
 
     def setDiffusionCoefficientAndMatrix(self, alpha: float = 1):
         self.alpha = alpha
-        if self.stationary:
+        if self.steady:
             self.A = numpy.zeros((3, self.ndx))  # Tri-diagonal banded matrix
             asdx2 = self.alpha / self.dx**2
             self.A[0, 2:-1] = -asdx2
@@ -171,14 +171,14 @@ class OneDimensionalLinearDiffusionEquation(DynamicalSimulator):
             raise ValueError("Predefined choice '%s' is not allowed" % str(Predefined))
         return sigma, field
 
-    def StationaryFieldUFromDiffusionCoefficient(self, coefficient):
+    def SteadyFieldUFromDiffusionCoefficient(self, coefficient):
         "Here, the parameter is the diffusion coefficient"
         alpha = numpy.ravel(numpy.array(coefficient, dtype=float))[0]
         self.setDiffusionCoefficientAndMatrix(alpha)
         solution = scipy.linalg.solve_banded((1, 1), self.A, self.st)
         return solution
 
-    def StationaryFieldUFromSourceTermCoefficient(self, coefficient):
+    def SteadyFieldUFromSourceTermCoefficient(self, coefficient):
         "Here, the parameter is the source term coefficient"
         sigma_s = numpy.ravel(numpy.array(coefficient, dtype=float))[0]
         self.sigma_s, self.st = self.setInitialConditionOrSourceTerm(ST, sigma_s)

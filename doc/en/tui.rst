@@ -773,22 +773,22 @@ Some common numerical indicators : norm, RMS, MSE et RMSE...
 
 The numerical quantities obtained from an ADAO calculation are often vectors
 (such as the analysis :math:`\mathbf{x}^a`) or matrices (such as the analysis
-covariance :math:`\mathbf{A}`). They are requested by the user through the
-standard "*StoreSupplementaryCalculations*" variable of the ADAO case
-algorithm. These quantities are available at each step of an iterative
-algorithm, and therefore take the form of a series of vectors, or a series of
-matrices.
+covariance :math:`\mathbf{A}`). They are requested by the user and available
+through the standard "*StoreSupplementaryCalculations*" variable of the ADAO
+case algorithm. These quantities are available at each step of an iterative or
+evolution algorithm, and therefore take the form of a series of vectors, or a
+series of matrices.
 
 These objects support special methods for computing commonly used indicators.
 The methods are named by the name of the indicator followed by "*s*" to note
 that they apply to a series of elementary objects, and that they themselves
 return a series of values.
 
-Note: some indicators are intended to qualify, for example, a "*value
-increment*", a "*value deviation*" or a "*value difference*", rather than a
-"*value*" itself. However, there is no computational impossibility to compute
-indicators for any given quantity, so it's up to the user to check that the
-indicator he is requesting is being used as intended.
+Note: some indicators are usually intended to qualify a "*value increment*", a
+"*value deviation*" or a "*value difference*", rather than a "*value*" itself.
+However, there is no computational impossibility to compute indicators for any
+given quantity, so it's up to the user to check that the indicator he is
+requesting is being used as intended.
 
 .. index:: single: means
 
@@ -864,7 +864,8 @@ indicator he is requesting is being used as intended.
     specified, in theory this indicator should only apply to an increment or a
     difference. In the latter case, it is a **RMS** of the quantity.
 
-As a simple example, we can use the calculation example presented above:
+As a simple example, we can use the calculation example presented above and
+graphically display indicators throughout the iterations:
 
 .. literalinclude:: scripts/tui_example_12.py
     :language: python

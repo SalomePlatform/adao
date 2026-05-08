@@ -810,17 +810,19 @@ Quelques indicateurs numériques particuliers : norme, RMS, MSE et RMSE...
 Les grandeurs numériques obtenues à l'issue d'un calcul ADAO sont souvent des
 vecteurs (comme l'analyse :math:`\mathbf{x}^a`) ou des matrices (comme la
 covariance d'analyse :math:`\mathbf{A}`). Elles sont requises par l'utilisateur
-à travers la variable standard "*StoreSupplementaryCalculations*" de
-l'algorithme du cas ADAO. Ces grandeurs sont disponible à chaque étape d'un
-algorithme itératif, et se présentent donc sous la forme d'une série de
-vecteurs, ou d'une série de matrices.
+et mises à disposition à travers la variable standard
+"*StoreSupplementaryCalculations*" de l'algorithme du cas ADAO. Ces grandeurs
+sont disponible à chaque étape d'un algorithme itératif ou d'évolution, et se
+présentent donc sous la forme d'une série de vecteurs, ou d'une série de
+matrices.
 
 Les objets portant ces grandeurs supportent des méthodes particulières pour
-calculer des indicateurs courants. Les méthodes sont nommées par le nom de
-l'indicateur suivi de "*s*" pour noter qu'elle s'appliquent à une série d'objets
-élémentaires, et qu'elles renvoient elles-mêmes une série de valeurs.
+calculer des **indicateurs** courants. Les méthodes sont nommées par le nom
+mathématique classique de l'indicateur, suivi de "*s*" pour noter que
+chaque méthode s'applique à une série d'objets élémentaires, et qu'elle renvoie
+elle-même une série de valeurs.
 
-Remarque : certains indicateurs sont destinés à qualifier par exemple un
+Remarque : certains indicateurs sont plus usuellement destinés à qualifier un
 "*incrément de valeur*", un "*écart de valeur*" ou une "*différence de
 valeur*", plutôt qu'une "*valeur*" elle-même. Informatiquement, il n'y a
 néanmoins pas d'impossibilité à calculer les indicateurs quelle que soit la
@@ -908,7 +910,7 @@ l'indicateur dont il demande le calcul est utilisé de manière licite.
     grandeur.
 
 À titre d'exemple simple, on peut reprendre le cas de calcul déjà présenté plus
-haut :
+haut et afficher graphiquement des indicateurs au cours des itérations :
 
 .. literalinclude:: scripts/tui_example_12.py
     :language: python
