@@ -20,7 +20,8 @@ perfect. We choose to emphasize the observations, versus the background, by
 setting artificially a great variance for the background error, here of
 :math:`10^{6}`.
 
-A 3DVAR variational optimization is used (default method), explicitly requested
-here by the "3DVARGradientOptimization" variant specified for this algorithm.
-By nature, the same results are obtained as in the first "3DVAR" algorithme
-example (see its :ref:`section_ref_algorithm_3DVAR_examples`).
+By default, a 3DVAR-type variational optimization is used, which is implicitly
+specified here by the "3DVARGradientOptimization" variant or the "3DVAR"
+variant specified by default for this algorithm. By nature, the same results
+are obtained as in the first "3DVAR" algorithme example (see its
+:ref:`section_ref_algorithm_3DVAR_examples`).

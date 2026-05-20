@@ -256,6 +256,36 @@ class PlatformInfo(object):
                 str(locale.getlocale()),
             )
         __msg += "\n"
+        if os.path.exists(f"/proc/cpuinfo"):
+            with open(f"/proc/cpuinfo") as cpuinfo:
+                physical = {}
+                core = {}
+                logical_cores = 0
+                for line in cpuinfo:
+                    line = line.strip().lower()
+                    if not line:
+                        try:
+                            physical[core["physical id"]] = core["cpu cores"]
+                        except KeyError:
+                            pass
+                        core = {}
+                    if line.startswith(("physical id", "cpu cores")):
+                        key, value = line.split("\t:", 1)
+                        core[key] = int(value)
+                    if line.startswith("processor"):
+                        logical_cores += 1
+            physical_cores = sum(physical.values()) or None
+            logical_cores = logical_cores or None
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "physical core number (cpuinfo)",
+                physical_cores,
+            )
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "logical core number (cpuinfo)",
+                logical_cores,
+            )
         __msg += "\n%s%30s : %s" % (__prefix, "os.cpu_count", os.cpu_count())
         if hasattr(os, "process_cpu_count"):
             __msg += "\n%s%30s : %s" % (
