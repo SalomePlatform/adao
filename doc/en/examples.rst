@@ -35,6 +35,18 @@ These examples are available in the tutorials, in the detailed documentations
 of algorithms or applied problems, and in the advanced uses. They are listed
 here by category and alphabetical order.
 
+General usage guidelines
+------------------------
+
+The examples in this subsection are defined in terms of uses or applications
+(rather than in terms of methods or algorithms, as in the following
+subsections). Their numbers are intentionally kept small to maximize their
+usefulness. We strongly recommend that occasional users start with these
+examples or return to them when analyzing and solving a realistic problem.
+
+#. :ref:`Calibration of a parametric simulation model using "ParameterCalibrationTask"<section_ref_algorithm_ParameterCalibrationTask_examples>`
+#. :ref:`Verifying the correct functioning of a simulation model using "FunctionTest"<section_ref_algorithm_FunctionTest_examples>`
+
 Tutorials
 ---------
 

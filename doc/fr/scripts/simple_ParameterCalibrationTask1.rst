@@ -20,8 +20,8 @@ considérées comme parfaites. On choisit de privilégier les observations, au
 détriment de l'ébauche, par l'indication artificielle d'une très importante
 variance d'erreur d'ébauche, ici de :math:`10^{6}`.
 
-On utilise une optimisation variationnelle de type 3DVAR (méthode par défaut),
-explicitement demandée ici par la variante "3DVARGradientOptimization" indiquée
-pour cet algorithme. On obtient par nature les mêmes résultats que dans le
-premier exemple de l'algorithme du "3DVAR" (voir ses
-:ref:`section_ref_algorithm_3DVAR_examples`).
+On utilise une optimisation variationnelle par défaut de type 3DVAR,
+implicitement demandée ici par la variante "3DVARGradientOptimization" ou
+"3DVAR" indiquée par défaut pour cet algorithme. On obtient par nature les
+mêmes résultats que dans le premier exemple de l'algorithme du "3DVAR" (voir
+ses :ref:`section_ref_algorithm_3DVAR_examples`).

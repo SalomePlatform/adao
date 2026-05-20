@@ -26,9 +26,6 @@ case.setObservationOperator( OneFunction = QuadFunction )
 case.setAlgorithmParameters(
     Algorithm="ParameterCalibrationTask",
     Parameters={
-        "Variant":"3DVARGradientOptimization",
-        "Minimizer":"LBFGSB",
-        "MaximumNumberOfIterations": 100,
         "StoreSupplementaryCalculations": [
             "CurrentState",
             "OMA",
