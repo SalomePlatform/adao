@@ -102,7 +102,7 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         else:
             Cm = None
         #
-        Pndemi = numpy.real(scipy.linalg.sqrtm(Pn))
+        Pndemi = numpy.real(scipy.linalg.sqrtm(numpy.asarray(Pn, dtype=numpy.float64)))
         Xnmu = Xn + Pndemi @ SC
         nbSpts = SC.shape[1]
         #
@@ -128,7 +128,7 @@ def ecwukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             dXEnnmuXhmn = XEnnmu[:, point].flat - Xhmn
             Pmn += Wc[point] * numpy.outer(dXEnnmuXhmn, dXEnnmuXhmn)
         #
-        Pmndemi = numpy.real(scipy.linalg.sqrtm(Pmn))
+        Pmndemi = numpy.real(scipy.linalg.sqrtm(numpy.asarray(Pmn, dtype=numpy.float64)))
         Xnnmu = Xhmn.reshape((-1, 1)) + Pmndemi @ SC
         #
         if selfA._toStore("EnsembleOfStates"):

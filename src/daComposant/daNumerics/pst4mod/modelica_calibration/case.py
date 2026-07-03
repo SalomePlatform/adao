@@ -31,7 +31,7 @@ year     = "2026"
 # Default configuration
 # ---------------------
 import os, sys, io, shutil, time, logging, subprocess, copy, csv  # noqa: E402
-import tempfile, warnings, numpy, scipy, pandas  # noqa: E402
+import tempfile, warnings, numpy, scipy, pandas, platform  # noqa: E402
 from datetime import datetime  # noqa: E402
 
 try:
@@ -90,6 +90,7 @@ class Calibration(object):
         self._setConfigurationDefaults()
         self.__verbose  = bool(Verbose)
         self.__stdoutid = sys.stdout
+        self.Linux = platform.system() == "Linux"
         if SaveStdoutIn is not None:
             sys.stdout = open(SaveStdoutIn, "w")
         if self.__verbose:
@@ -166,7 +167,7 @@ class Calibration(object):
                 __model_nam_1 = os.path.basename(__model_name)
                 if os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9]+'.exe')):
                     __model_nam_2 = __model_nam_1[:-9]+'.exe'
-                elif os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9])):
+                elif self.Linux and os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9])):
                     __model_nam_2 = __model_nam_1[:-9]
                 else:
                     raise IOError("Model file not found as %s"%__model_name)
@@ -200,7 +201,7 @@ class Calibration(object):
                 __model_nam_1 = [files for files in os.listdir(__model_dir) if files[-4:] =='.xml'][0] #the first found model is kept, .xml extension is considered
                 if os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9]+'.exe')):
                     __model_nam_2 = __model_nam_1[:-9]+'.exe'
-                elif os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9])):
+                elif self.Linux and os.path.exists(os.path.join(__model_dir,__model_nam_1[:-9])):
                     __model_nam_2 = __model_nam_1[:-9]
                 else:
                     raise IOError("Model file not found in %s"%__model_name)
@@ -516,11 +517,11 @@ class Calibration(object):
         __adaocase.set( 'AlgorithmParameters',  Algorithm=Algo, Parameters=Params )
         __adaocase.set( 'Background',           Vector=Background)
         __adaocase.set( 'Observation',          Vector=Observations )
-        if type(CovB) is float:
+        if isinstance(CovB, (float, int)):
             __adaocase.set( 'BackgroundError',  ScalarSparseMatrix=CovB )
         else:
             __adaocase.set( 'BackgroundError',  Matrix=CovB )
-        if type(CovR) is float:
+        if isinstance(CovR, (float, int)):
             __adaocase.set( 'ObservationError', ScalarSparseMatrix=CovR )
         else:
             __adaocase.set( 'ObservationError', Matrix=CovR )
@@ -736,7 +737,7 @@ class Calibration(object):
                     logfile=True,
                     timeout=TimeoutModelExecution,
                     without_modelicares=True,
-                    linux = Linux)
+                    linux = self.Linux)
                 auto_simul.single_simulation()
 
 
@@ -789,7 +790,7 @@ class Calibration(object):
                                                                         dsres_path = os.path.join(path_around_simu, str("ref" + ".mat")),
                                                                         timeout=TimeoutModelExecution,
                                                                         without_modelicares=True,
-                                                                        linux = Linux)
+                                                                        linux = self.Linux)
                                         auto_simul_ref.single_simulation()
 
                                         if not(auto_simul_ref.success_code == 0):
@@ -861,7 +862,7 @@ class Calibration(object):
                                  nit_max= 1000000000000000,
                                  min_step_val = 0.00000000000005,
                                  timeout = TimeoutModelExecution,
-                                 linux = Linux)
+                                 linux = self.Linux)
 
                     working_point_modif.create_working_directory()
                     working_point_modif.working_point_modification(skip_reference_simulation=True)
@@ -1043,11 +1044,11 @@ class Calibration(object):
 
 
         def prev_adao_version_TOP_LEVEL_exedymosimMultiobs( x_values_matrix):
-            y_values_matrix = TOP_LEVEL_exedymosimMultiobs( x_values_matrix=x_values_matrix, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables, LNames = LNames, ModelFormat = ModelFormat, KeepCalculationFolders = KeepCalculationFolders, Verbose = Verbose, dict_dsin_paths = dict_dsin_path_ref, Linux = Linux, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+            y_values_matrix = TOP_LEVEL_exedymosimMultiobs( x_values_matrix=x_values_matrix, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables, LNames = LNames, ModelFormat = ModelFormat, KeepCalculationFolders = KeepCalculationFolders, Verbose = Verbose, dict_dsin_paths = dict_dsin_path_ref, Linux = self.Linux, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
             return y_values_matrix
 
         def prev_adao_version_TOPLEVEL_exedymosimMultiobs_simple(x_values_matrix):
-            y_values_matrix = TOPLEVEL_exedymosimMultiobs_simple(x_values_matrix = x_values_matrix, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables, LNames = LNames, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName), KeepCalculationFolders = KeepCalculationFolders, Linux = Linux, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+            y_values_matrix = TOPLEVEL_exedymosimMultiobs_simple(x_values_matrix = x_values_matrix, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables, LNames = LNames, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName), KeepCalculationFolders = KeepCalculationFolders, Linux = self.Linux, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
             return y_values_matrix
 
         if self.__model["Format"].upper() in ["DYMOSIM", "GUESS"]:
@@ -1095,7 +1096,7 @@ class Calibration(object):
                 elif model_format in ["FMI","FMU"]:
                     simulation_results = TOP_LEVEL_exefmuMultiobs(x_values, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
                 elif model_format in ["OPENMODELICA"]:
-                    simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_values, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+                    simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_values, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
                 else:
                     raise NotImplementedError("Not yet implemented for current model format: ", model_format)
                 end_time_verify = time.time()
@@ -1149,7 +1150,7 @@ class Calibration(object):
             elif model_format in ["FMI","FMU"]:
                 simulation_results = TOP_LEVEL_exefmuMultiobs(x_values, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
             elif model_format in ["OPENMODELICA"]:
-                simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_values, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+                simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_values, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
             else:
                 raise NotImplementedError("Not yet implemented for current model format: ", model_format)
 
@@ -1164,7 +1165,7 @@ class Calibration(object):
             elif model_format in ["FMI","FMU"]:
                 simulation_results_modif = TOP_LEVEL_exefmuMultiobs(x_values_modif, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
             elif model_format in ["OPENMODELICA"]:
-                simulation_results_modif = TOP_LEVEL_exeOpenModelicaMultiobs(x_values_modif, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+                simulation_results_modif = TOP_LEVEL_exeOpenModelicaMultiobs(x_values_modif, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
             else:
                 raise NotImplementedError("Not yet implemented for current model format: ", model_format)
 
@@ -1206,7 +1207,7 @@ class Calibration(object):
             elif model_format in ["FMI","FMU"]:
                 simulation_results_ref = TOP_LEVEL_exefmuMultiobs(x_values, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
             elif model_format in ["OPENMODELICA"]:
-                simulation_results_ref = TOP_LEVEL_exeOpenModelicaMultiobs(x_values, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+                simulation_results_ref = TOP_LEVEL_exeOpenModelicaMultiobs(x_values, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
             else:
                 raise NotImplementedError("Not yet implemented for current model format: ", model_format)
 
@@ -1227,7 +1228,7 @@ class Calibration(object):
                 elif model_format in ["FMI","FMU"]:
                     simulation_results_param = TOP_LEVEL_exefmuMultiobs(x_values_param, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
                 elif model_format in ["OPENMODELICA"]:
-                    simulation_results_param = TOP_LEVEL_exeOpenModelicaMultiobs(x_values_param, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+                    simulation_results_param = TOP_LEVEL_exeOpenModelicaMultiobs(x_values_param, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
                 else:
                     raise NotImplementedError("Not yet implemented for current model format: ", model_format)
 
@@ -1291,7 +1292,7 @@ class Calibration(object):
                         elif model_format in ["FMI","FMU"]:
                             simulation_results = TOP_LEVEL_exefmuMultiobs(x_whole_values_with_bg, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
                         elif model_format in ["OPENMODELICA"]:
-                            simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_whole_values_with_bg, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+                            simulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(x_whole_values_with_bg, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
                         else:
                             raise NotImplementedError("Not yet implemented for current model format: ", model_format)
                     except Exception:
@@ -1343,7 +1344,7 @@ class Calibration(object):
         __adaocase.set( 'AlgorithmParameters',  Algorithm=Algo, Parameters=Params )
         __adaocase.set( 'Background',           Vector=Background)
         __adaocase.set( 'Observation',          Vector=Observations )
-        if type(CovB) is float:
+        if isinstance(CovB, (float, int)):
             __adaocase.set( 'BackgroundError',  ScalarSparseMatrix=CovB )
         else:
             __adaocase.set( 'BackgroundError',  Matrix=CovB )
@@ -1351,8 +1352,7 @@ class Calibration(object):
         if AdaptObservationError:
             Square_Observations = [x*x for x  in Observations]
 
-            # if (type(CovR) is float and CovR!= 1.0 ):# by default we still consider the square, better not to modify it
-            if type(CovR) is float:
+            if isinstance(CovR, (float, int)):# by default we still consider the square, better not to modify it
                 ObsError = CovR*numpy.diag(Square_Observations)
                 __adaocase.set( 'ObservationError', Matrix = ObsError )
             else:
@@ -1361,7 +1361,7 @@ class Calibration(object):
             print("  [VERBOSE] AdaptObservationError was set to True, the following ObservationError matrix has been considered: ")
             print(ObsError)
         else: #classical situation
-            if type(CovR) is float:
+            if isinstance(CovR, (float, int)):
                 __adaocase.set( 'ObservationError', ScalarSparseMatrix=CovR )
             else:
                 __adaocase.set( 'ObservationError', Matrix=CovR )
@@ -1370,7 +1370,6 @@ class Calibration(object):
             ParallelComputationGradient = True
         else:
             ParallelComputationGradient = False
-
 
         if self.__model["Format"].upper() in ["DYMOSIM"]:
             if ParallelComputationGradient:
@@ -1381,12 +1380,12 @@ class Calibration(object):
                 if ComplexModel:
                       __adaocase.set( 'ObservationOperator',  OneFunction=simulateur,
                                Parameters = {"DifferentialIncrement":Params["DifferentialIncrement"], "EnableMultiProcessing":Params["EnableMultiProcessing"], "NumberOfProcesses" : Params["NumberOfProcesses"]},
-                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ModelFormat': ModelFormat, 'KeepCalculationFolders': KeepCalculationFolders, 'Verbose' : Verbose, 'dict_dsin_paths' : dict_dsin_path_ref, 'Linux': Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution   },
+                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ModelFormat': ModelFormat, 'KeepCalculationFolders': KeepCalculationFolders, 'Verbose' : Verbose, 'dict_dsin_paths' : dict_dsin_path_ref, 'Linux': self.Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution   },
                                )
                 else:
                     __adaocase.set( 'ObservationOperator',  OneFunction=simulateur,
                                Parameters = {"DifferentialIncrement":Params["DifferentialIncrement"], "EnableMultiProcessing":Params["EnableMultiProcessing"], "NumberOfProcesses" : Params["NumberOfProcesses"]},
-                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'KeepCalculationFolders': KeepCalculationFolders, 'Linux': Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution  },
+                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'KeepCalculationFolders': KeepCalculationFolders, 'Linux': self.Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution  },
                                )
 
             else:
@@ -1397,12 +1396,12 @@ class Calibration(object):
                     if ComplexModel:
                           __adaocase.set( 'ObservationOperator',  OneFunction=simulateur,
                                    Parameters = {"DifferentialIncrement":Params["DifferentialIncrement"]},
-                                   ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ModelFormat': ModelFormat, 'KeepCalculationFolders': KeepCalculationFolders, 'Verbose' : Verbose, 'dict_dsin_paths' : dict_dsin_path_ref, 'Linux': Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution  },
+                                   ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ModelFormat': ModelFormat, 'KeepCalculationFolders': KeepCalculationFolders, 'Verbose' : Verbose, 'dict_dsin_paths' : dict_dsin_path_ref, 'Linux': self.Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution  },
                                    )
                     else:
                         __adaocase.set( 'ObservationOperator',  OneFunction=simulateur,
                                    Parameters = {"DifferentialIncrement":Params["DifferentialIncrement"]},
-                                   ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'KeepCalculationFolders': KeepCalculationFolders, 'Linux': Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution  })
+                                   ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'KeepCalculationFolders': KeepCalculationFolders, 'Linux': self.Linux, 'List_Multideltatime' : List_Multideltatime, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution  })
 
         elif self.__model["Format"].upper() in ["OPENMODELICA"]: #OPENMODELICA (different from FMI since there are different keywords for the function: Linux and KeepCalculationFolders)
 
@@ -1415,7 +1414,7 @@ class Calibration(object):
                 else:
                     __adaocase.set( 'ObservationOperator',  OneFunction=simulateur,
                                Parameters = {"DifferentialIncrement":Params["DifferentialIncrement"]},
-                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'LColumns':LColumns, 'LVariablesToChange':LVariablesToChange, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'ModelName': ModelName, 'List_Multideltatime' : List_Multideltatime, 'Linux': Linux, 'KeepCalculationFolders': KeepCalculationFolders, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution})
+                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'LColumns':LColumns, 'LVariablesToChange':LVariablesToChange, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'ModelName': ModelName, 'List_Multideltatime' : List_Multideltatime, 'Linux': self.Linux, 'KeepCalculationFolders': KeepCalculationFolders, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution})
 
             else:
                 if adao.version[:5] < '9.7.0' and adao.version[5]=='.':
@@ -1423,7 +1422,7 @@ class Calibration(object):
                 else:
                     __adaocase.set( 'ObservationOperator',  OneFunction=simulateur,
                                Parameters = {"DifferentialIncrement":Params["DifferentialIncrement"]},
-                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'LColumns':LColumns, 'LVariablesToChange':LVariablesToChange, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'ModelName': ModelName, 'List_Multideltatime' : List_Multideltatime, 'Linux': Linux, 'KeepCalculationFolders': KeepCalculationFolders, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution})
+                               ExtraArguments = {'VariablesToCalibrate':VariablesToCalibrate, 'OutputVariables' : OutputVariables, 'LNames': LNames, 'LColumns':LColumns, 'LVariablesToChange':LVariablesToChange, 'ref_simudir': self._get_Name_ModelTmpDir_simple(ModelName), 'ModelName': ModelName, 'List_Multideltatime' : List_Multideltatime, 'Linux': self.Linux, 'KeepCalculationFolders': KeepCalculationFolders, 'AdvancedDebugModel':AdvancedDebugModel, 'TimeoutModelExecution':TimeoutModelExecution})
 
         else: #FMI or GUESS format
 
@@ -1471,7 +1470,7 @@ class Calibration(object):
                 initialsimulation_results = TOP_LEVEL_exefmuMultiobs(Background, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution, FMUInput = FMUInput)
 
             elif self.__model["Format"].upper() in ["OPENMODELICA"]:
-                initialsimulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(Background, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = Linux, AdvancedDebugModel = AdvancedDebugModel,  TimeoutModelExecution = TimeoutModelExecution )
+                initialsimulation_results = TOP_LEVEL_exeOpenModelicaMultiobs(Background, KeepCalculationFolders = KeepCalculationFolders, VariablesToCalibrate=VariablesToCalibrate, OutputVariables=OutputVariables,  LNames = LNames, LColumns = LColumns, LVariablesToChange=LVariablesToChange, ref_simudir = self._get_Name_ModelTmpDir_simple(ModelName),  ModelName = ModelName, List_Multideltatime = List_Multideltatime, Linux = self.Linux, AdvancedDebugModel = AdvancedDebugModel,  TimeoutModelExecution = TimeoutModelExecution )
 
             __resultats = dict(
                 InitialParameters = numpy.asarray(Background),
@@ -1571,7 +1570,7 @@ class Calibration(object):
                                                      logfile=False,
                                                      timeout=TimeoutModelExecution,
                                                      without_modelicares=True,
-                                                     linux=Linux
+                                                     linux=self.Linux
                                                      )
                          auto_simul_opti.single_simulation()
 
@@ -1807,12 +1806,12 @@ def _readBackground(__filename="dsin.txt", __varnames=None, __backgroundformat="
     #---------------------------------------------
     elif __format.upper() == "ADAO":
         with open(__bgfile, 'r') as fid:
+            variables = {}  # Impératif sinon on ne récupère pas les variables
             if sys.version_info.major == 3 and sys.version_info.minor >= 13: # Python 3.13+
-                variables = {} # Impératif sinon on ne récupère pas les variables
                 exec(fid.read(), globals={}, locals=variables)
             else:
-                exec(fid.read())
-                variables = locals()
+                exec(fid.read(), variables)
+                variables.update(locals())
         #
         __background = variables.get("Background", None)
         if __background is None:
@@ -1897,12 +1896,18 @@ def _readMethod(__filename="parameters.py", __format="ADAO"):
     #---------------------------------------------
     if __format.upper() in ["GUESS", "ADAO"]:
         with open(__filename, 'r') as fid:
+            variables = {} # Impératif sinon on ne récupère pas les variables
             if sys.version_info.major == 3 and sys.version_info.minor >= 13: # Python 3.13+
-                variables = {} # Impératif sinon on ne récupère pas les variables
-                exec(fid.read(), globals={}, locals=variables)
+                try:
+                    exec(fid.read(), globals={}, locals=variables)
+                except Exception as err:
+                    raise Exception(f"Error while reading  file {__filename}. Please see error: {err}")
             else:
-                exec(fid.read())
-                variables = locals()
+                try:
+                    exec(fid.read(), variables)
+                except Exception as err:
+                    raise Exception(f"Error while reading  file {__filename}. Please see error: {err}")
+                variables.update(locals())
         __Algo   = variables.get("Algorithm", "3DVAR")
         __Params = variables.get("Parameters", {})
         __CovB   = variables.get("BackgroundError", 1.)
@@ -2046,11 +2051,17 @@ class Python_Simulation(object):
 
     def single_simulation(self, __inputs = None):
         with open(os.path.join(self.__simu_dir,"pythonsim.exe"), 'r') as fid:
+            variables = {} # Impératif sinon on ne récupère pas les variables
             if sys.version_info.major == 3 and sys.version_info.minor >= 13: # Python 3.13+
-                variables = {} # Impératif sinon on ne récupère pas les variables
-                exec(fid.read(), globals={}, locals=variables)
+                try:
+                    exec(fid.read(), globals={}, locals=variables)
+                except Exception as err:
+                    raise Exception(f"Error while reading  file {__filename}. Please see error: {err}")
             else:
-                exec(fid.read())
+                try:
+                    exec(fid.read())
+                except Exception as err:
+                    raise Exception(f"Error while reading  file {__filename}. Please see error: {err}")
                 variables = locals()
         __directoperator = variables.get("DirectOperator", None)
         if __inputs is None: __inputs = self.__inputs
@@ -2283,12 +2294,12 @@ def TOP_LEVEL_exeOpenModelicaMultiobs( x_values_matrix , KeepCalculationFolders 
 
         results_file_name = os.path.join(results_dir,os.path.basename(om_xml)[:-9] + '_' + LNames[etat].replace('.','_') + ".mat")
 
-        OM_execution = run_OM_model(om_xml, dict_inputs = dict_inputs, result_file_name = results_file_name , Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
+        stdout = run_OM_model(om_xml, dict_inputs = dict_inputs, result_file_name = results_file_name , Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
 
         try:
             reader = Reader(results_file_name,'dymola') #dymola even if it is OpenModelica
-        except Exception:
-            raise ValueError("Simulation cannot be performed: reduce the number of parameters to calibrate and/or the range in which their optimal value should be found (or modify and simplify the model to make it easier to simulate)" )
+        except Exception as err:
+            raise ValueError(f"Simulation cannot be performed: reduce the number of parameters to calibrate and/or the range in which their optimal value should be found (or modify and simplify the model to make it easier to simulate):{err} Maybe an error occured during OpenModelica simulation, please see: {stdout}" )
 
         y_whole = [reader.values(y_name) for y_name in OutputVariables]
 
@@ -2714,7 +2725,7 @@ def run_OM_model(xml_file, #req arg, file path to _init.xml file
 
     #     return_code=2
 
-    return #return_code
+    return proc.stdout
 
 def readObsnamesfile(__filenames=None):
     "Provisionnel pour lire les noms des observations d'un fichier"

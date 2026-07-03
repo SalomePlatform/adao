@@ -204,6 +204,7 @@ class PlatformInfo(object):
                     "14": "Sonoma",
                     "15": "Sequoia",
                     "26": "Tahoe",
+                    "27": "Golden Gate",
                 }
                 for key in __macosxv11:
                     __details = platform.mac_ver()[0].split(".")
@@ -274,17 +275,17 @@ class PlatformInfo(object):
                         core[key] = int(value)
                     if line.startswith("processor"):
                         logical_cores += 1
-            physical_cores = sum(physical.values()) or None
-            logical_cores = logical_cores or None
+            physical_core_nbr = sum(physical.values()) or None
+            logical_core_nbr = logical_cores or None
             __msg += "\n%s%30s : %s" % (
                 __prefix,
                 "physical core number (cpuinfo)",
-                physical_cores,
+                physical_core_nbr,
             )
             __msg += "\n%s%30s : %s" % (
                 __prefix,
                 "logical core number (cpuinfo)",
-                logical_cores,
+                logical_core_nbr,
             )
         __msg += "\n%s%30s : %s" % (__prefix, "os.cpu_count", os.cpu_count())
         if hasattr(os, "process_cpu_count"):
@@ -725,62 +726,14 @@ def trmo():
     """Usage de l'optimiseur avec condition d'arrêt augmentée."""
     import scipy, scipy.optimize, scipy.version
 
-    if vt("0.19") <= vt(scipy.version.version) <= vt("1.4.99"):
-        import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
+    if not (vt("0.19") <= vt(scipy.version.version) <= vt("1.18.99")):
+        import scipy.optimize as optimiseur
 
         logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+            "Using unmodified Scipy LBFGSB version %s" % (scipy.version.version)
         )
-    elif vt("1.5.0") <= vt(scipy.version.version) <= vt("1.7.99"):
-        import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.8.0") <= vt(scipy.version.version) <= vt("1.8.99"):
-        import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
-        import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
-        import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.12.0") <= vt(scipy.version.version) <= vt("1.12.99"):
-        import daAlgorithms.Atoms.lbfgsb112hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.13.0") <= vt(scipy.version.version) <= vt("1.13.99"):
-        import daAlgorithms.Atoms.lbfgsb113hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.14.0") <= vt(scipy.version.version) <= vt("1.14.99"):
-        import daAlgorithms.Atoms.lbfgsb114hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.15.0") <= vt(scipy.version.version) <= vt("1.15.99"):
-        import daAlgorithms.Atoms.lbfgsb115hlt as optimiseur
-
-        logging.debug(
-            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
-        )
-    elif vt("1.16.0") <= vt(scipy.version.version) <= vt("1.16.99"):
-        import daAlgorithms.Atoms.lbfgsb116hlt as optimiseur
+    elif vt("1.18.0") <= vt(scipy.version.version) <= vt("1.18.99"):
+        import daAlgorithms.Atoms.lbfgsb118hlt as optimiseur
 
         logging.debug(
             "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
@@ -791,11 +744,72 @@ def trmo():
         logging.debug(
             "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
         )
+    elif vt("1.16.0") <= vt(scipy.version.version) <= vt("1.16.99"):
+        import daAlgorithms.Atoms.lbfgsb116hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.15.0") <= vt(scipy.version.version) <= vt("1.15.99"):
+        import daAlgorithms.Atoms.lbfgsb115hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.14.0") <= vt(scipy.version.version) <= vt("1.14.99"):
+        import daAlgorithms.Atoms.lbfgsb114hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.13.0") <= vt(scipy.version.version) <= vt("1.13.99"):
+        import daAlgorithms.Atoms.lbfgsb113hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.12.0") <= vt(scipy.version.version) <= vt("1.12.99"):
+        import daAlgorithms.Atoms.lbfgsb112hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.11.0") <= vt(scipy.version.version) <= vt("1.11.99"):
+        import daAlgorithms.Atoms.lbfgsb111hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.9.0") <= vt(scipy.version.version) <= vt("1.10.99"):
+        import daAlgorithms.Atoms.lbfgsb19hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.8.0") <= vt(scipy.version.version) <= vt("1.8.99"):
+        import daAlgorithms.Atoms.lbfgsb18hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("1.5.0") <= vt(scipy.version.version) <= vt("1.7.99"):
+        import daAlgorithms.Atoms.lbfgsb17hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
+    elif vt("0.19") <= vt(scipy.version.version) <= vt("1.4.99"):
+        import daAlgorithms.Atoms.lbfgsb14hlt as optimiseur
+
+        logging.debug(
+            "Using enhanced Scipy LBFGSB version %s" % (scipy.version.version)
+        )
     else:
         import scipy.optimize as optimiseur
 
-        logging.warning(
-            "Using unmodified Scipy LBFGSB version %s" % (scipy.version.version)
+        logging.debug(
+            "Mismatch in internal Scipy LBFGSB version %s management"
+            % (scipy.version.version)
         )
     return optimiseur
 
@@ -986,11 +1000,11 @@ class SystemUsage(object):
         except IOError:
             return 0.0  # non-Linux?
         i = v.index(VmKey)  # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
-        v = v[i:].split(None, 3)  # whitespace
-        if len(v) < 3:
+        vvv = v[i:].split(None, 3)  # whitespace
+        if len(vvv) < 3:
             return 0.0  # invalid format?
         # convert Vm value to bytes
-        mem = float(v[1]) * self._scale[v[2]]
+        mem = float(vvv[1]) * self._scale[vvv[2]]
         return mem / self._scale[unit]
 
     def getAvailablePhysicalMemory(self, unit="o"):
@@ -1027,11 +1041,11 @@ class SystemUsage(object):
         except IOError:
             return 0.0  # non-Linux?
         i = v.index(VmKey)  # get VmKey line e.g. 'VmRSS:  9999  kB\n ...'
-        v = v[i:].split(None, 3)  # whitespace
-        if len(v) < 3:
+        vvv = v[i:].split(None, 3)  # whitespace
+        if len(vvv) < 3:
             return 0.0  # invalid format?
         # convert Vm value to bytes
-        mem = float(v[1]) * self._scale[v[2]]
+        mem = float(vvv[1]) * self._scale[vvv[2]]
         return mem / self._scale[unit]
 
     def getUsedMemory(self, unit="o"):

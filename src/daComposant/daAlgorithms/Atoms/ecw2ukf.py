@@ -110,7 +110,7 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
         else:
             Cm = None
         #
-        Pndemi = numpy.real(scipy.linalg.sqrtm(Pn))
+        Pndemi = numpy.real(scipy.linalg.sqrtm(numpy.asarray(Pn, dtype=numpy.float64)))
         Xnmu = Xn + Pndemi @ SC
         nbSpts = SC.shape[1]
         #
@@ -144,9 +144,9 @@ def ecw2ukf(selfA, Xb, Y, U, HO, EM, CM, R, B, Q, VariantM="UKF"):
             Pmn += Wc[point] * numpy.outer(dXEnnmuXhmn, dXEnnmuXhmn)
         #
         if selfA._parameters["EstimationOf"] == "Parameters" and selfA._parameters["Bounds"] is not None:
-            Pmndemi = selfA._parameters["Reconditioner"] * numpy.real(scipy.linalg.sqrtm(Pmn))
+            Pmndemi = selfA._parameters["Reconditioner"] * numpy.real(scipy.linalg.sqrtm(numpy.asarray(Pmn, dtype=numpy.float64)))
         else:
-            Pmndemi = numpy.real(scipy.linalg.sqrtm(Pmn))
+            Pmndemi = numpy.real(scipy.linalg.sqrtm(numpy.asarray(Pmn, dtype=numpy.float64)))
         #
         Xnnmu = Xhmn.reshape((-1, 1)) + Pmndemi @ SC
         #

@@ -1210,7 +1210,7 @@ class CompositePersistence(object):
     # ---------------------------------------------------------
     def get_stored_objects(self, hideVoidObjects=False):
         """Renvoie la liste des objets présents."""
-        objs = self.__StoredObjects.keys()
+        objs = list(self.__StoredObjects.keys())
         if hideVoidObjects:
             usedObjs = []
             for k in objs:

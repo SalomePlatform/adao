@@ -1567,7 +1567,11 @@ class GenerateWeightsAndSigmaPoints(object):
     def __MSS2011(self):
         """Minimum Set, Menegaz et al. 2011."""
         rho2 = (1 - self.Alpha) / self.Nn
-        Cc = numpy.real(scipy.linalg.sqrtm(numpy.identity(self.Nn) - rho2))
+        Cc = numpy.real(
+            scipy.linalg.sqrtm(
+                numpy.asarray(numpy.identity(self.Nn) - rho2, dtype=numpy.float64)
+            )
+        )
         Ww = (
             self.Alpha
             * rho2

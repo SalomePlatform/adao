@@ -214,12 +214,12 @@ class LocalTest(unittest.TestCase):
         print("\nAUTODIAGNOSTIC\n==============\n")
         print("    " + OneDimensionalLinearDiffusionEquation().__doc__.strip())
 
-    @unittest.skip("Debug")
+    # @unittest.skip("Debug")
     def test001(self, Figure=False):
         Equation = OneDimensionalLinearDiffusionEquation()  # Default parameters
         #
         alpha = 0.2
-        state = Equation.FieldUFromDiffusionCoefficient(alpha)
+        state = Equation.SteadyFieldUFromDiffusionCoefficient(alpha)
         st = Equation.get_st()
         print("\n    Source term s:\n", st)
         print("\n    Solution for α=%.2f:" % alpha, "\n", state)
