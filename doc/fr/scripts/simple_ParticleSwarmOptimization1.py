@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-from numpy import array, ravel
+from numpy import array, ravel, abs, max, set_printoptions
+set_printoptions(precision=7)
 def QuadFunction( coefficients ):
     """
     Simulation quadratique aux points x : y = a x^2 + b x + c
@@ -34,6 +35,7 @@ case.setAlgorithmParameters(
         "MaximumNumberOfIterations": 20,
         "StoreSupplementaryCalculations": [
             "CurrentState",
+            "OMA",
             ],
         "Bounds":[[0,5],[-2,2],[0,5]],
         "SetSeed":123456789,
@@ -62,6 +64,7 @@ print("Coefficients théoriques attendus..:", ravel((2,-1,2)))
 print("")
 print("Nombre d'itérations...............:", len(case.get("CurrentState")))
 print("Nombre de simulations.............:", NumberOfInsects*len(case.get("CurrentState")))
+print("Écart maximum Observation-Analyse.:", "%.2e"%max(abs(ravel(case.get("OMA")[-1]))))
 print("Coefficients résultants du calage.:", ravel(case.get("Analysis")[-1]))
 #
 Xa = case.get("Analysis")[-1]
@@ -69,9 +72,12 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.figsize"] = (10, 4)
 #
 plt.figure()
-plt.plot((-5,0,1,3,10),QuadFunction(Xb),"b--",label="Simulation à l'ébauche")
-plt.plot((-5,0,1,3,10),Yobs,            "kX", label="Observation",markersize=10)
-plt.plot((-5,0,1,3,10),QuadFunction(Xa),"r-", label="Simulation à l'optimum")
+plt.plot((-5,0,1,3,10),QuadFunction(Xb), "bo--",
+    label="Simulation aux points de contrôle à l'ébauche", markersize=5)
+plt.plot((-5,0,1,3,10),Yobs,             "kX",
+    label="Observation aux points de contrôle", markersize=10)
+plt.plot((-5,0,1,3,10),QuadFunction(Xa), "ro--",
+    label="Simulation aux points de contrôle à l'optimum", markersize=5)
 plt.legend()
 plt.title("Calage de coefficients", fontweight="bold")
 plt.xlabel("Coordonnée arbitraire")

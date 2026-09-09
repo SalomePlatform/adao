@@ -1,3 +1,7 @@
+Resolution of the calibration problem
+-------------------------------------
+
+
 Calibration of 3 coefficients in a 1D quadratic function on 5 measures
 ----------------------------------------------------------------------
 
@@ -7,5 +11,5 @@ A priori background state..........: [1. 1. 1.]
 Expected theoretical coefficients..: [ 2 -1  2]
 
 Number of simulations..............: 216
-Maximum diff. Observation-Analyse..: 6.09e-05
+Maximum diff. Observation-Analysis.: 6.09e-05
 Calibration resulting coefficients.: [ 2.0000017 -1.0000109  1.9999648]

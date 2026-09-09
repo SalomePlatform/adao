@@ -1,3 +1,7 @@
+Résolution du problème de calage
+--------------------------------
+
+
 Calage de 3 coefficients pour une forme quadratique 1D sur 5 mesures
 --------------------------------------------------------------------
 

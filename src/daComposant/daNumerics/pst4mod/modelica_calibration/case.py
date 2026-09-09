@@ -1491,8 +1491,10 @@ class Calibration(object):
                 NamesOfMeasures   = ONames,
                 )
 
-        if "APosterioriCovariance" in Params["StoreSupplementaryCalculations"]:
-            __resultats["APosterioriCovariance"] = __adaocase.get("APosterioriCovariance")[-1]
+        __allvariables = __adaocase.get("StoreSupplementaryCalculations")
+        for suppc in Params["StoreSupplementaryCalculations"]:
+            if suppc in __allvariables:
+                __resultats[suppc] = __adaocase.get(suppc)[-1]
 
         if ResultsSummary:
             if InitialSimulation:
@@ -1963,9 +1965,11 @@ def _saveResults(__resultats, __filename=None, __level=None, __format="Guess", _
                 __v = __v.astype('float').tolist()
             elif isinstance(__v, numpy.ndarray):  # no2
                 __v = tuple(__v.astype('float').tolist())
-            else:
+            elif hasattr(__v, "__len__"):  # no3
                 __v = tuple(__v)
-            output.append("%22s = %s"%(k,__v))
+            else:
+                __v = tuple([__v])
+            output.append("%30s = %s"%(k,__v))
         output.append("")
         with open(__filename, 'w') as fid:
             fid.write( "\n".join(output) )
@@ -1981,8 +1985,10 @@ def _saveResults(__resultats, __filename=None, __level=None, __format="Guess", _
                 __v = __v.astype('float').tolist()
             elif isinstance(__v, numpy.ndarray):  # no2
                 __v = tuple(__v.astype('float').tolist())
-            else:
+            elif hasattr(__v, "__len__"):  # no3
                 __v = tuple(__v)
+            else:
+                __v = tuple([__v])
             output.append("%s = %s"%(k,__v))
         output.append("")
         with open(__filename, 'w') as fid:
@@ -2005,9 +2011,11 @@ def _saveResults(__resultats, __filename=None, __level=None, __format="Guess", _
                 __v = __v.astype('float').tolist()
             elif isinstance(__v, numpy.ndarray):  # no2
                 __v = tuple(__v.astype('float').tolist())
-            else:
+            elif hasattr(__v, "__len__"):  # no3
                 __v = tuple(__v)
-            output.append("%22s = %s"%(k,__v))
+            else:
+                __v = tuple([__v])
+            output.append("%30s = %s"%(k,__v))
         output.append("")
         print( "\n".join(output) )
     #---------------------------------------------
