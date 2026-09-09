@@ -19,6 +19,7 @@
 # Author: Anthony Geay, anthony.geay@edf.fr, EDF R&D
 
 set(DAEFICAS_FILES
+  ADAO_Cata_V0.py
   configuration_ADAO.py
   generator_adao.py
   __init__.py
