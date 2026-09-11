@@ -867,47 +867,68 @@ l'indicateur dont il demande le calcul est utilisé de manière licite.
     *numpy.trace*).
 
 .. index:: single: maes
+.. index:: single: mean_absolute_errors
 .. index:: single: Mean Absolute Error (MAE)
 
-**maes** (*predictor=None*)
+**mean_absolute_errors** (*predictor=None*)
     Erreur ou écart moyen absolu (*Mean Absolute Error* (**MAE**)). Cet
     indicateur est de la même unité que la grandeur à laquelle il s'applique.
     Il est calculé comme la moyenne des écarts en valeur absolue de la grandeur
     par rapport au prédicteur, et l'indicateur est disponible à chaque pas. Si
     le prédicteur est non renseigné, cet indicateur ne s'applique théoriquement
-    qu'à un incrément ou une différence.
+    qu'à un incrément ou une différence. On peut utiliser de manière
+    équivalente le raccourci **maes**.
 
 .. index:: single: mses
+.. index:: single: mean_squared_errors
+.. index:: single: Mean-Squared Error (MSE)
 .. index:: single: msds
-.. index:: single: Mean-Square Error (MSE)
-.. index:: single: Mean-Square Deviation (MSD)
+.. index:: single: mean_squared_deviations
+.. index:: single: Mean-Squared Deviation (MSD)
 
-**mses** (*predictor=None*) ou **msds** (*predictor=None*)
-    Erreur ou écart quadratique moyen (*Mean-Square Error* (**MSE**) ou
-    *Mean-Square Deviation* (**MSD**)). Cet indicateur a pour unité le carré de
-    celle de la grandeur à laquelle il s'applique. Il est calculé comme la
+**mean_squared_errors** (*predictor=None*) ou **mean_squared_deviations** (*predictor=None*)
+    Erreur ou écart quadratique moyen (*Mean-Squared Error* (**MSE**) ou
+    *Mean-Squared Deviation* (**MSD**)). Cet indicateur a pour unité le carré
+    de celle de la grandeur à laquelle il s'applique. Il est calculé comme la
     moyenne quadratique des écarts de la grandeur par rapport au prédicteur, et
     l'indicateur est disponible à chaque pas. Si le prédicteur est non
     renseigné, cet indicateur ne s'applique théoriquement qu'à un incrément ou
-    une différence.
+    une différence. On peut utiliser de manière équivalente les raccourcis
+    **mses** ou **msds**.
 
 .. index:: single: rmses
+.. index:: single: root_mean_squared_errors
+.. index:: single: Root-Mean-Squared Error (RMSE)
 .. index:: single: rmsds
-.. index:: single: Root-Mean-Square Error (RMSE)
-.. index:: single: Root-Mean-Square Deviation (RMSD)
-.. index:: single: Root-Mean-Square (RMS)
+.. index:: single: root_mean_squared_deviations
+.. index:: single: Root-Mean-Squared Deviation (RMSD)
 .. index:: single: Racine de l'erreur quadratique moyenne (REQM)
 
-**rmses** (*predictor=None*) ou **rmsds** (*predictor=None*)
+**root_mean_squared_errors** (*predictor=None*) ou **root_mean_squared_deviations** (*predictor=None*)
     Racine de l'erreur ou de l'écart quadratique moyen (en français **REQM**,
-    en anglais *Root-Mean-Square Error* (**RMSE**) ou *Root-Mean-Square
+    en anglais *Root-Mean-Squared Error* (**RMSE**) ou *Root-Mean-Squared
     Deviation* (**RMSD**)). Cet indicateur est de la même unité que la grandeur
     à laquelle il s'applique. Il est calculé comme la racine de la moyenne
     quadratique des écarts de la grandeur par rapport au prédicteur, et
     l'indicateur est disponible à chaque pas. Si le prédicteur est non
     renseigné, cet indicateur ne doit théoriquement s'appliquer qu'à un
     incrément ou une différence. Dans ce dernier cas, c'est une **RMS** de la
-    grandeur.
+    grandeur. On peut utiliser de manière équivalente les raccourcis **rmses**
+    ou **rmsds**.
+
+.. index:: single: rmss
+.. index:: single: root_mean_squareds
+.. index:: single: Root-Mean-Squared (RMS)
+.. index:: single: qms
+.. index:: single: quadratic_means
+.. index:: single: Quadratic Mean (QM)
+
+**root_mean_squareds** () ou **quadratic_means** ()
+    Racine de la moyenne des valeurs au carré (*Root-Mean-Square* (**RMS**) ou
+    *Root-Mean-Squared*). Cet indicateur est de la même unité que la grandeur à
+    laquelle il s'applique. Il est calculé comme la racine de la moyenne
+    quadratique de la grandeur, et l'indicateur est disponible à chaque pas. On
+    peut utiliser de manière équivalente les raccourcis **rmss** ou **qms**.
 
 À titre d'exemple simple, on peut reprendre le cas de calcul déjà présenté plus
 haut et afficher graphiquement des indicateurs au cours des itérations :

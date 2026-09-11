@@ -118,27 +118,27 @@ class PlatformInfo(object):
 
     def getName(self):
         """Retourne le nom de l'application."""
-        import daCore.version as dav
+        import daCore.version
 
-        return dav.name
+        return daCore.version.name
 
     def getVersion(self):
         """Retourne le numéro de la version."""
-        import daCore.version as dav
+        import daCore.version
 
-        return dav.version
+        return daCore.version.version
 
     def getDate(self):
         """Retourne la date de création de la version."""
-        import daCore.version as dav
+        import daCore.version
 
-        return dav.date
+        return daCore.version.date
 
     def getYear(self):
         """Retourne l'année de création de la version."""
-        import daCore.version as dav
+        import daCore.version
 
-        return dav.year
+        return daCore.version.year
 
     def getSystemInformation(self, __prefix=""):
         """Renvoie les informations de l'ensemble du système."""
@@ -354,6 +354,12 @@ class PlatformInfo(object):
                 "Mordicus version",
                 self.getMordicusVersion(),
             )
+        if self.has_cma:
+            __msg += "\n%s%30s : %s" % (
+                __prefix,
+                "CMA-ES version",
+                self.getCmaVersion(),
+            )
         if self.has_fmpy:
             __msg += "\n%s%30s : %s" % (__prefix, "Fmpy version", self.getFmpyVersion())
         if self.has_sphinx:
@@ -529,6 +535,17 @@ class PlatformInfo(object):
 
     has_mordicus = property(fget=_has_mordicus)
 
+    def _has_cma(self):
+        try:
+            import cma  # noqa: F401
+
+            has_cma = True
+        except ImportError:
+            has_cma = False
+        return has_cma
+
+    has_cma = property(fget=_has_cma)
+
     # Tests des modules locaux
 
     def _has_gnuplot(self):
@@ -679,6 +696,19 @@ class PlatformInfo(object):
             __version = "0.0.0"
         return __version
 
+    def getCmaVersion(self):
+        """Retourne la version de cma disponible."""
+        if self.has_cma:
+            import cma
+
+            if hasattr(cma, "__version__"):
+                __version = cma.__version__
+            else:
+                __version = "1.0.0"
+        else:
+            __version = "0.0.0"
+        return __version
+
     def getCurrentMemorySize(self):
         """Retourne la taille mémoire courante utilisée."""
         return 1
@@ -708,9 +738,13 @@ class PlatformInfo(object):
         return sys.float_info.epsilon
 
     def __str__(self):
-        import daCore.version as dav
+        import daCore.version
 
-        return "%s %s (%s)" % (dav.name, dav.version, dav.date)
+        return "%s %s (%s)" % (
+            daCore.version.name,
+            daCore.version.version,
+            daCore.version.date,
+        )
 
 
 # ==============================================================================

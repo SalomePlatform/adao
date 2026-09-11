@@ -483,9 +483,11 @@ class Persistence(object):
                 raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
+    mean_absolute_errors = maes
+
     def mses(self, predictor=None):
         """
-        Mean-Square Error (MSE) ou Mean-Square Deviation (MSD).
+        Mean-Squared Error (MSE) ou Mean-Squared Deviation (MSD).
 
         mse(dX) = 1/n sum(dX_i**2) = 1/n ||X||^2
 
@@ -525,11 +527,13 @@ class Persistence(object):
                 raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
-    msds = mses  # Mean-Square Deviation (MSD=MSE)
+    mean_squared_errors = mses
+    msds = mses  # Mean-Squared Deviation (MSD=MSE)
+    mean_squared_deviations = msds
 
     def rmses(self, predictor=None):
         """
-        Root-Mean-Square Error (RMSE) ou Root-Mean-Square Deviation (RMSD).
+        Root-Mean-Squared Error (RMSE) ou Root-Mean-Squared Deviation (RMSD).
 
         rmse(dX) = sqrt( 1/n sum(dX_i**2) ) = sqrt( mse(dX) )
 
@@ -570,7 +574,25 @@ class Persistence(object):
                 raise TypeError("Base type is incompatible with numpy")
         return numpy.array(__sr).tolist()
 
-    rmsds = rmses  # Root-Mean-Square Deviation (RMSD=RMSE)
+    root_mean_squared_errors = rmses
+    rmsds = rmses  # Root-Mean-Squared Deviation (RMSD=RMSE)
+    root_mean_squared_deviations = rmsds
+
+    def rmss(self):
+        """
+        Root-Mean-Squared (RMS) ou Quadratic Mean (QM).
+
+        rms(X) = sqrt( 1/n sum(X_i**2) ) = rmse(X, predictor=None)
+
+        Renvoie la série contenant, à chaque pas, la RMS des données au pas.
+        Il faut que le type de base soit compatible avec les types élémentaires
+        numpy.
+        """
+        return rmses(self, predictor=None)
+
+    root_mean_squareds = rmss
+    qms = rmss  # Quadratic Mean (QM)
+    quadratic_means = qms
 
     def __preplots(
         self,

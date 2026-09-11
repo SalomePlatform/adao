@@ -828,41 +828,61 @@ requesting is being used as intended.
     *numpy.trace*).
 
 .. index:: single: maes
+.. index:: single: mean_absolute_errors
 .. index:: single: Mean Absolute Error (MAE)
 
-**maes** (*predictor=None*)
+**mean_absolute_errors** (*predictor=None*)
     Mean absolute error (**MAE**). This indicator has the same unit as the
     quantity to which it applies. It is computed as the average of the absolute
     deviations of the quantity from the predictor, and is available at each
     step. If the predictor is not specified, this indicator theoretically
-    applies only to an increment or a difference.
+    applies only to an increment or a difference. One can equivalently use the
+    shortcut **maes**.
 
 .. index:: single: mses
+.. index:: single: mean_squared_errors
+.. index:: single: Mean-Squared Error (MSE)
 .. index:: single: msds
-.. index:: single: Mean-Square Error (MSE)
-.. index:: single: Mean-Square Deviation (MSD)
+.. index:: single: mean_squared_deviations
+.. index:: single: Mean-Squared Deviation (MSD)
 
-**mses** (*predictor=None*) ou **msds** (*predictor=None*)
-    Mean square error (**MSE**) or mean-square deviation* (**MSD**). The unit
+**mean_squared_errors** (*predictor=None*) ou **mean_squared_deviations** (*predictor=None*)
+    Mean squared error (**MSE**) or mean-squared deviation* (**MSD**). The unit
     of this indicator is the square of the unit of the quantity to which it
     applies. It is computed as the root-mean-square deviation of the quantity
     from the predictor, and is available at each step. If the predictor is not
     specified, this indicator theoretically applies only to an increment or
-    difference.
+    difference. One can equivalently use the shortcuts **mses** or **msds**.
 
 .. index:: single: rmses
+.. index:: single: root_mean_squared_errors
+.. index:: single: Root-Mean-Squared Error (RMSE)
 .. index:: single: rmsds
-.. index:: single: Root-Mean-Square Error (RMSE)
-.. index:: single: Root-Mean-Square Deviation (RMSD)
-.. index:: single: Root-Mean-Square (RMS)
+.. index:: single: root_mean_squared_deviations
+.. index:: single: Root-Mean-Squared Deviation (RMSD)
 
-**rmses** (*predictor=None*) or **rmsds** (*predictor=None*)
-    Root-mean-square error (**RMSE**) or root-mean-square deviation (**RMSD**).
-    This indicator has the same unit as the quantity to which it applies. It is
-    computed as the root mean square of the deviations of the quantity from the
-    predictor, and is available at each step. If the predictor is not
-    specified, in theory this indicator should only apply to an increment or a
-    difference. In the latter case, it is a **RMS** of the quantity.
+**root_mean_squared_errors** (*predictor=None*) or **root_mean_squared_deviations** (*predictor=None*)
+    Root-mean-squared error (**RMSE**) or root-mean-squared deviation
+    (**RMSD**). This indicator has the same unit as the quantity to which it
+    applies. It is computed as the root mean square of the deviations of the
+    quantity from the predictor, and is available at each step. If the
+    predictor is not specified, in theory this indicator should only apply to
+    an increment or a difference. In the latter case, it is a **RMS** of the
+    quantity. One can equivalently use the shortcuts **rmses** or **rmsds**.
+
+.. index:: single: rmss
+.. index:: single: root_mean_squareds
+.. index:: single: Root-Mean-Squared (RMS)
+.. index:: single: qms
+.. index:: single: quadratic_means
+.. index:: single: Quadratic Mean (QM)
+
+**root_mean_squareds** () ou **quadratic_means** ()
+    Root mean squared values (*Root-Mean-Square* (**RMS**) or
+    *Root-Mean-Squared*, or *Quadratic Mean* (**QM**)). This indicator has the
+    same unit as the quantity to which it applies. It is computed as the root
+    mean square of the quantity, and is available at each step. One can
+    equivalently use the shortcuts **rmss** or **qms**.
 
 As a simple example, we can use the calculation example presented above and
 graphically display indicators throughout the iterations:
