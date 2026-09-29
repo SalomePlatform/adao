@@ -94,9 +94,7 @@ class ExempleOperateurChaleur:
         self.nbobs = min(int(nbobs),self.nbpt)
 
     def Direct(self, XX ):
-        if type(XX) is type(numpy.matrix([])):  alpha = XX.A1
-        elif type(XX) is type(numpy.array([])): alpha = numpy.matrix(XX).A1
-        else:                                alpha = XX
+        alpha = numpy.ravel(XX)[0]
         #
         eq=EqChaleur(alpha)
         HX = eq.obs(self.nbobs)
@@ -104,9 +102,7 @@ class ExempleOperateurChaleur:
         return numpy.array( HX )
 
     def DirectExp(self, XX ): # Version en Log/Exp
-        if type(XX) is type(numpy.matrix([])):  alpha = XX.A1
-        elif type(XX) is type(numpy.array([])): alpha = numpy.matrix(XX).A1
-        else:                                   alpha = XX
+        alpha = numpy.ravel(XX)[0]
         alpha = numpy.exp(alpha)
         #
         eq=EqChaleur(alpha)

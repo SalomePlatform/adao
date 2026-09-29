@@ -81,9 +81,11 @@ mesures aux positions requises, sans devoir refaire l'analyse préalable.
 .. ------------------------------------ ..
 .. include:: snippets/Header2Algo03Task.rst
 
-.. include:: snippets/ObservationsAlreadyRestrictedOnOptimalLocations.rst
+.. include:: snippets/InverseRegularization.rst
 
-.. include:: snippets/OptimalLocations.rst
+.. include:: snippets/MeasurementLocations.rst
+
+.. include:: snippets/ObservationsAlreadyRestrictedOnMeasurementLocations.rst
 
 .. include:: snippets/ReducedBasis.rst
 

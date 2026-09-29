@@ -179,6 +179,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [WikipediaEnKF] Wikipedia, *Ensemble Kalman Filter*, https://en.wikipedia.org/wiki/Ensemble_Kalman_filter
 
+.. [WikipediaCMAES] Wikipedia, *CMA-ES*, https://en.wikipedia.org/wiki/CMA-ES
+
 .. [WikipediaL63] Wikipedia, *Lorenz system*, https://en.wikipedia.org/wiki/Lorenz_system
 
 .. [WikipediaMO] Wikipedia, *Mathematical optimization*, https://en.wikipedia.org/wiki/Mathematical_optimization

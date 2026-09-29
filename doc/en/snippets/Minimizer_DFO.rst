@@ -1,6 +1,7 @@
 .. index::
     single: Minimizer
     pair: Minimizer ; BOBYQA
+    pair: Minimizer ; CMA-ES
     pair: Minimizer ; COBYLA
     pair: Minimizer ; NEWUOA
     pair: Minimizer ; POWELL
@@ -12,10 +13,11 @@ Minimizer
   default choice is "BOBYQA", and the possible ones are
   "BOBYQA" (minimization, with or without constraints, by quadratic approximation, see [Powell09]_),
   "COBYLA" (minimization, with or without constraints, by linear approximation, see [Powell94]_ [Powell98]_).
-  "NEWUOA" (minimization, with or without constraints, by iterative quadratic approximation, see [Powell04]_),
+  "NEWUOA" (minimization, with or without constraints, by iterative quadratic approximation, see [Powell04]_. In at least 2 dimensions),
   "POWELL" (minimization, unconstrained, using conjugate directions, see [Powell64]_),
   "SIMPLEX" (minimization, with or without constraints, using Nelder-Mead simplex algorithm, see [Nelder65]_ and [WikipediaNM]_),
-  "SUBPLEX" (minimization, with or without constraints, using Nelder-Mead simplex algorithm on a sequence of subspaces, see [Rowan90]_).
+  "SUBPLEX" (minimization, with or without constraints, using Nelder-Mead simplex algorithm on a sequence of subspaces, see [Rowan90]_),
+  "CMA-ES" (minimization, with or without constraints, through evolutionary adaptation of the mutation covariance matrix, see [WikipediaCMAES]_).
   Only the "POWELL" minimizer does not allow to deal with boundary constraints,
   all the others take them into account if they are present in the case
   definition.

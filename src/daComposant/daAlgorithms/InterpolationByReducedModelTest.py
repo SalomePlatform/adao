@@ -58,6 +58,14 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             listval  = ["L2", "Linf"]
         )
         self.defineRequiredParameter(
+            name     = "InverseRegularization",
+            default  = -1.,
+            typecast = float,
+            message  = "Régularisation du calcul inverse des coordonnées réduites (pseudo-inverse si <0, régularisation si >0, inversion si nul)",
+            minval   = -1.,
+            maxval   = 1.,
+        )
+        self.defineRequiredParameter(
             name     = "ShowElementarySummary",
             default  = True,
             typecast = bool,

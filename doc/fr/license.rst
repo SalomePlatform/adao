@@ -62,13 +62,18 @@ cite explicitement ADAO et au moins l'une des références ci-dessous en ajoutan
 l'année en cours :
 
     * *ADAO, a module for Data Assimilation and Optimization*,
-      http://www.salome-platform.org/
+      https://www.salome-platform.org/
 
     * *ADAO, un module pour l'Assimilation de Données et l'Aide à
-      l'Optimisation*, http://www.salome-platform.org/
+      l'Optimisation*, https://www.salome-platform.org/
 
     * *SALOME The Open Source Integration Platform for Numerical Simulation*,
-      http://www.salome-platform.org/
+      https://www.salome-platform.org/
 
 La documentation du module, y compris les figures et les exemples, est
 également entièrement couverte par la licence et l'obligation de citation.
+
+Les outils utilisés par le module, ou qui lui sont utiles, sont tous en
+licences ouvertes (voir https://opensource.org) : PSF (comme **Python**), BSD
+(comme **Numpy**, **Scipy**, **CMA-ES**), LGPL (comme **NLopt**), ad-hoc (comme
+**Matplotlib**), etc. Se reporter aux différents outils pour les détails.

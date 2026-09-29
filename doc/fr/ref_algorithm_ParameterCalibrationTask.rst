@@ -83,12 +83,13 @@ Optimisation sans dérivées : variante "DerivativeFreeOptimization"
     du modèle par rapport à ses paramètres. Mais elle nécessite souvent un
     nombre important d'évaluations du modèle pour construire en interne une
     approximation efficiente. De plus, elle est très sensible au nombre de
-    paramètres à optimiser, et ne convient qu'en faible dimension. Le nombre
-    d'évaluations nécessaire est souvent supérieur de plusieurs ordres de
-    grandeurs aux autres méthodes. Enfin, le réglage des paramètres est délicat
-    sur un modèle particulier à recaler. Pour les détails et l'association
-    précise des options, on peut se reporter à la documentation spécifique pour
-    un :ref:`section_ref_algorithm_DerivativeFreeOptimization`.
+    paramètres à optimiser, et ne convient qu'en faible dimension (sauf pour la
+    variante CMA-ES). Le nombre d'évaluations nécessaire est souvent supérieur
+    de plusieurs ordres de grandeurs aux autres méthodes. Enfin, le réglage des
+    paramètres est délicat sur un modèle particulier à recaler. Pour les
+    détails et l'association précise des options, on peut se reporter à la
+    documentation spécifique pour un
+    :ref:`section_ref_algorithm_DerivativeFreeOptimization`.
 
 Optimisation par essaim particulaire, canonique : variante "CanonicalParticuleSwarmOptimization"
     C'est une méthode d'optimisation de type méta-heuristique, qui utilise un

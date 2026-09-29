@@ -65,6 +65,8 @@ norme de construction de la base réduite.
 
 .. include:: snippets/ErrorNorm.rst
 
+.. include:: snippets/InverseRegularization.rst
+
 .. include:: snippets/NumberOfPrintedDigits.rst
 
 .. include:: snippets/ShowElementarySummary.rst

@@ -354,7 +354,7 @@ class PlatformInfo(object):
                 "Mordicus version",
                 self.getMordicusVersion(),
             )
-        if self.has_cma:
+        if self.has_cmaes:
             __msg += "\n%s%30s : %s" % (
                 __prefix,
                 "CMA-ES version",
@@ -535,16 +535,16 @@ class PlatformInfo(object):
 
     has_mordicus = property(fget=_has_mordicus)
 
-    def _has_cma(self):
+    def _has_cmaes(self):
         try:
             import cma  # noqa: F401
 
-            has_cma = True
+            has_cmaes = True
         except ImportError:
-            has_cma = False
-        return has_cma
+            has_cmaes = False
+        return has_cmaes
 
-    has_cma = property(fget=_has_cma)
+    has_cmaes = property(fget=_has_cmaes)
 
     # Tests des modules locaux
 
@@ -698,7 +698,7 @@ class PlatformInfo(object):
 
     def getCmaVersion(self):
         """Retourne la version de cma disponible."""
-        if self.has_cma:
+        if self.has_cmaes:
             import cma
 
             if hasattr(cma, "__version__"):

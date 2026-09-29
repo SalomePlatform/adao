@@ -20,8 +20,9 @@
 #
 # Author: Jean-Philippe Argaud, jean-philippe.argaud@edf.fr, EDF R&D
 
+import numpy
 from daCore import BasicObjects, NumericObjects
-from daAlgorithms.Atoms import ecwdfo
+from daAlgorithms.Atoms import ecwdfo, ecwcmaes
 
 # ==============================================================================
 class ElementaryAlgorithm(BasicObjects.Algorithm):
@@ -47,11 +48,15 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Minimiseur utilisé",
             listval  = [
                 "BOBYQA",
+                "CMA-ES",
                 "COBYLA",
                 "NEWUOA",
                 "POWELL",
                 "SIMPLEX",
                 "SUBPLEX",
+            ],
+            listadv  = [
+                "CMAES",
             ],
         )
         self.defineRequiredParameter(
@@ -77,6 +82,11 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             minval   = -1,
         )
         self.defineRequiredParameter(
+            name     = "SetSeed",
+            typecast = numpy.random.seed,
+            message  = "Graine fixée pour le générateur aléatoire",
+        )
+        self.defineRequiredParameter(
             name     = "StateVariationTolerance",
             default  = 1.e-4,
             typecast = float,
@@ -87,6 +97,20 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             default  = 1.e-7,
             typecast = float,
             message  = "Diminution relative minimale du cout lors de l'arrêt",
+        )
+        self.defineRequiredParameter(
+            name     = "EvolutionaryPopulationSize",
+            default  = 0,
+            typecast = int,
+            message  = "Nombre d'évaluations ou taille de population à chaque étape d'adaptation évolutionnaire (0=défaut)",
+            minval   = 0,
+        )
+        self.defineRequiredParameter(
+            name     = "EvolutionaryCovarianceOverallScale",
+            default  = 0.5,
+            typecast = float,
+            message  = "Échelle globale d'adaptation évolutionnaire de la matrice de covariance (positif)",
+            minval   = 0.,
         )
         self.defineRequiredParameter(
             name     = "QualityCriterion",
@@ -166,14 +190,23 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         if self._parameters["Variant"] in ["DFO", "DerivativeFreeOptimization"]:
-            NumericObjects.multiXOsteps(
-                self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdfo.ecwdfo
-            )
+            if self._parameters["Minimizer"] in ["CMA-ES", "CMAES"]:
+                NumericObjects.multiXOsteps(
+                    self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwcmaes.ecwcmaes
+                )
+            else:
+                NumericObjects.multiXOsteps(
+                    self, Xb, Y, U, HO, EM, CM, R, B, Q, ecwdfo.ecwdfo
+                )
         #
         # --------------------------
         elif self._parameters["Variant"] == "OneCorrection":
-            Xini = self._parameters["InitializationPoint"]
-            ecwdfo.ecwdfo(self, Xb, Xini, Y, U, HO, CM, R, B)
+            if self._parameters["Minimizer"] in ["CMA-ES", "CMAES"]:
+                Xini = self._parameters["InitializationPoint"]
+                ecwcmaes.ecwcmaes(self, Xb, Xini, Y, U, HO, CM, R, B)
+            else:
+                Xini = self._parameters["InitializationPoint"]
+                ecwdfo.ecwdfo(self, Xb, Xini, Y, U, HO, CM, R, B)
         #
         # --------------------------
         else:

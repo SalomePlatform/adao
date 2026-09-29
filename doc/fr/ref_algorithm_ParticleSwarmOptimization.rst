@@ -130,7 +130,7 @@ algorithmes :
 - Le nombre maximal d'évaluation de la fonction de simulation doit usuellement
   être limité entre quelques milliers et quelques dizaines de milliers de fois
   la dimension de l'espace des états.
-- La fonctionnelle d'erreur décroît usuellement par pallier (donc avec une
+- La fonctionnelle d'erreur décroît usuellement par palier (donc avec une
   progression nulle de la valeur de fonctionnelle à chaque génération lorsque
   l'on reste dans le palier), rendant *non recommandé* un arrêt sur critère de
   décroissance de la fonction-coût. Il est normalement plus judicieux d'adapter

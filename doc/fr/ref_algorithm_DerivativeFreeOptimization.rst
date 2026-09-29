@@ -32,8 +32,9 @@ Algorithme de calcul "*DerivativeFreeOptimization*"
 
 Cet algorithme réalise une estimation de l'état d'un système par minimisation
 sans gradient d'une fonctionnelle d'écart :math:`J`, en utilisant une méthode
-de recherche par approximation de type simplexe ou similaire. C'est une méthode
-qui n'utilise pas les dérivées de la fonctionnelle d'écart.
+de recherche par approximation de type simplexe ou similaire, ou évolutionnaire
+avec adaptation de la matrice de covariance de mutation. Ces méthodes
+n'utilisent pas les dérivées de la fonctionnelle d'écart.
 
 Elle entre dans la même catégorie que les
 :ref:`section_ref_algorithm_DifferentialEvolution`,
@@ -84,6 +85,10 @@ augmentés, classiquement utilisée en assimilation de données.
 
 .. include:: snippets/EstimationOf_Parameters.rst
 
+.. include:: snippets/EvolutionaryCovarianceOverallScale.rst
+
+.. include:: snippets/EvolutionaryPopulationSize.rst
+
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
 .. include:: snippets/MaximumNumberOfIterations.rst
@@ -91,6 +96,8 @@ augmentés, classiquement utilisée en assimilation de données.
 .. include:: snippets/Minimizer_DFO.rst
 
 .. include:: snippets/QualityCriterion.rst
+
+.. include:: snippets/SetSeed.rst
 
 .. include:: snippets/StateVariationTolerance.rst
 

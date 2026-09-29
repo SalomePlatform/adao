@@ -35,16 +35,24 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
             message  = "Base réduite, 1 vecteur par colonne",
         )
         self.defineRequiredParameter(
-            name     = "OptimalLocations",
+            name     = "MeasurementLocations",
             default  = [],
             typecast = numpy.array,
-            message  = "Liste des indices ou noms de positions optimales de mesure selon l'ordre interne d'un vecteur de base",  # noqa: E501
+            message  = "Liste des indices de positions de mesure selon l'ordre interne d'un vecteur de base",  # noqa: E501
         )
         self.defineRequiredParameter(
-            name     = "ObservationsAlreadyRestrictedOnOptimalLocations",
+            name     = "ObservationsAlreadyRestrictedOnMeasurementLocations",
             default  = True,
             typecast = bool,
             message  = "Stockage des mesures restreintes a priori aux positions optimales de mesure ou non",
+        )
+        self.defineRequiredParameter(
+            name     = "InverseRegularization",
+            default  = -1.,
+            typecast = float,
+            message  = "Régularisation du calcul inverse des coordonnées réduites (pseudo-inverse si <0, régularisation si >0, inversion si nul)",
+            minval   = -1.,
+            maxval   = 1.,
         )
         self.defineRequiredParameter(
             name     = "StoreSupplementaryCalculations",
@@ -75,7 +83,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
         #
         # --------------------------
         __rb = self._parameters["ReducedBasis"]
-        __ip = self._parameters["OptimalLocations"]
+        __ip = self._parameters["MeasurementLocations"]
         if len(__ip) != __rb.shape[1]:
             raise ValueError("The number of optimal measurement locations (%i) and the dimension of the RB (%i) has to be the same."%(len(__ip), __rb.shape[1]))  # noqa: E501
         #
@@ -97,7 +105,7 @@ class ElementaryAlgorithm(BasicObjects.Algorithm):
                 _Ynpu = numpy.ravel( Y[step + 1] ).reshape((-1, 1))
             else:
                 _Ynpu = numpy.ravel( Y ).reshape((-1, 1))
-            if self._parameters["ObservationsAlreadyRestrictedOnOptimalLocations"]:
+            if self._parameters["ObservationsAlreadyRestrictedOnMeasurementLocations"]:
                 __rm = _Ynpu
             else:
                 __rm = _Ynpu[__ip]

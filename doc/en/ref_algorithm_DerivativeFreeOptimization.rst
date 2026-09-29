@@ -32,8 +32,9 @@ Calculation algorithm "*DerivativeFreeOptimization*"
 
 This algorithm realizes an estimation of the state of a system by minimization
 without gradient of a cost function :math:`J`, using a search method by simplex
-type or similar approximation. It is a method that does not use the derivatives
-of the cost function.
+type or similar approximation, or through evolutionary adaptation of the
+mutation covariance matrix. These methods don't use the derivatives of the cost
+function.
 
 It falls in the same category than the
 :ref:`section_ref_algorithm_DifferentialEvolution`,
@@ -84,6 +85,10 @@ assimilation.
 
 .. include:: snippets/EstimationOf_Parameters.rst
 
+.. include:: snippets/EvolutionaryCovarianceOverallScale.rst
+
+.. include:: snippets/EvolutionaryPopulationSize.rst
+
 .. include:: snippets/MaximumNumberOfFunctionEvaluations.rst
 
 .. include:: snippets/MaximumNumberOfIterations.rst
@@ -91,6 +96,8 @@ assimilation.
 .. include:: snippets/Minimizer_DFO.rst
 
 .. include:: snippets/QualityCriterion.rst
+
+.. include:: snippets/SetSeed.rst
 
 .. include:: snippets/StateVariationTolerance.rst
 

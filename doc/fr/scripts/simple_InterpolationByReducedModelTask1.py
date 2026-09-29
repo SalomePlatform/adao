@@ -49,7 +49,7 @@ interpolation.setAlgorithmParameters(
     Algorithm = "InterpolationByReducedModelTask",
     Parameters = {
         "ReducedBasis":rb,
-        "OptimalLocations":op,
+        "MeasurementLocations":op,
         }
     )
 interpolation.setObservation( Vector = measures_at_op )

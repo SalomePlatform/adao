@@ -22,7 +22,7 @@
 
 #===============================================================================
 import numpy
-ObservationError = numpy.matrix('1 0 ; 0 1')
+ObservationError = numpy.array(((1, 0), (0, 1)))
 Background = numpy.array([1, 1])
 
 def DirectOperator(x):

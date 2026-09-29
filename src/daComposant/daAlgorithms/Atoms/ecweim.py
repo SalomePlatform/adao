@@ -195,40 +195,45 @@ def EIM_offline(selfA, EOS = None, Verbose = False):
     return __mu, __I, __Q, __errors
 
 # ==============================================================================
-def EIM_online(selfA, QEIM, gJmu = None, mPoints = None, mu = None,
-               PseudoInverse = True, rbDimension = None, Verbose = False):
+def RB_online(selfA, ReducedBasis, Measurements = None, mPoints = None, mu = None,
+               PseudoInverse = 0., Regularization = 0., rbDimension = None, Verbose = False):
     """
     Reconstruction du champ complet
     """
-    if gJmu is None and mu is None:
-        raise ValueError("Either measurements or parameters has to be given as a list, both can not be None simultaneously.")  # noqa: E501
     if mPoints is None:
         raise ValueError("List of optimal locations for measurements has to be given.")
-    if gJmu is not None:
-        if len(gJmu) > len(mPoints):
-            raise ValueError("The number of measurements (%i) has to be less or equal to the number of optimal locations (%i)."%(len(gJmu), len(mPoints)))  # noqa: E501
-        if len(gJmu) > QEIM.shape[1]:
-            raise ValueError("The number of measurements (%i) in optimal locations has to be less or equal to the dimension of the RB (%i)."%(len(gJmu), QEIM.shape[1]))  # noqa: E501
-        __gJmu = numpy.ravel(gJmu)
-    if mu is not None:
-        # __gJmu = H(mu)
+    if Measurements is None and mu is None:
+        raise ValueError("Either measurements or parameters has to be given as a list, both can not be None simultaneously.")  # noqa: E501
+    elif Measurements is not None:
+        if len(Measurements) > len(mPoints):
+            raise ValueError("The number of measurements (%i) has to be less or equal to the number of optimal locations (%i)."%(len(Measurements), len(mPoints)))  # noqa: E501
+        if len(Measurements) > ReducedBasis.shape[1]:
+            raise ValueError("The number of measurements (%i) in optimal locations has to be less or equal to the dimension of the RB (%i)."%(len(Measurements), ReducedBasis.shape[1]))  # noqa: E501
+        __Measurements = numpy.ravel(Measurements)
+    elif mu is not None:
+        # __Measurements = H(mu)
         raise NotImplementedError()
     if rbDimension is not None:
-        rbDimension = min(QEIM.shape[1], rbDimension)
+        __rbDimension = min(ReducedBasis.shape[1], int(rbDimension))
     else:
-        rbDimension = QEIM.shape[1]
-    __rbDim = min(QEIM.shape[1], len(mPoints), len(gJmu), rbDimension)  # Modulation
+        __rbDimension = ReducedBasis.shape[1]
+    __rbDim = min(ReducedBasis.shape[1], len(mPoints), len(__Measurements), __rbDimension)  # Modulation
+    __PseudoInverse  = min(selfA._parameters["InverseRegularization"], PseudoInverse)  # <= 0
+    __Regularization = max(selfA._parameters["InverseRegularization"], Regularization)  # >= 0
     # --------------------------
     #
     # Restriction aux mesures
-    if PseudoInverse:
-        __QJinv = numpy.linalg.pinv( QEIM[mPoints, 0:__rbDim] )
-        __gammaMu = numpy.dot( __QJinv, __gJmu[0:__rbDim])
+    __P = ReducedBasis[mPoints, 0:__rbDim]  # Matrice de passage
+    if __PseudoInverse < 0:
+        __QJinv = numpy.linalg.pinv( __P )
+        __gammaMu = numpy.dot( __QJinv, __Measurements[0:__rbDim])
+    elif __Regularization > 0:
+        __gammaMu = numpy.linalg.solve( (__P.T @ __P + __Regularization), __P.T @ __Measurements[0:__rbDim] )
     else:
-        __gammaMu = numpy.linalg.solve( QEIM[mPoints, 0:__rbDim], __gJmu[0:__rbDim] )
+        __gammaMu = numpy.linalg.solve( __P, __Measurements[0:__rbDim] )
     #
     # Interpolation du champ complet
-    __gMmu = numpy.dot( QEIM[:, 0:__rbDim], __gammaMu )
+    __gMmu = numpy.dot( ReducedBasis[:, 0:__rbDim], __gammaMu )
     #
     # --------------------------
     logging.debug("%s The full field of size %i has been correctly build"%(selfA._name, __gMmu.size))
@@ -239,6 +244,8 @@ def EIM_online(selfA, QEIM, gJmu = None, mPoints = None, mu = None,
     #
     return __gMmu
 
+# ==============================================================================
+EIM_online = RB_online
 # ==============================================================================
 if __name__ == "__main__":
     print('\n AUTODIAGNOSTIC\n')

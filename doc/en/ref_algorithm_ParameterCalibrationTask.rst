@@ -82,11 +82,11 @@ Derivative free optimization: variant "DerivativeFreeOptimization"
     its parameters. However, it often requires a large number of model
     evaluations to build an efficient approximation internally. Moreover, it is
     very sensitive to the number of parameters to be optimized, and is only
-    suitable for low-dimensional models. The number of evaluations required is
-    often several orders of magnitude greater than with other methods. Last but
-    not least, parameter tuning is tricky on a particular model to be
-    calibrated. For details and the precise association of options, please
-    refer to the specific documentation for a
+    suitable for low-dimensional models (except for the variant CMA-ES). The
+    number of evaluations required is often several orders of magnitude greater
+    than with other methods. Last but not least, parameter tuning is tricky on
+    a particular model to be calibrated. For details and the precise
+    association of options, please refer to the specific documentation for a
     :ref:`section_ref_algorithm_DerivativeFreeOptimization`.
 
 Particle swarm optimization, canonical: variant "CanonicalParticuleSwarmOptimization"
