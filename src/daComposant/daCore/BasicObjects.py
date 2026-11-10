@@ -3986,6 +3986,7 @@ class DynamicalSimulator(object):
             plt.show()
         else:
             plt.savefig(filename)
+        plt.close()
 
     def HistoryAnimation(
         self,
@@ -4065,6 +4066,7 @@ class DynamicalSimulator(object):
                 line1.set_ydata(y_s[:, i_p])
                 writer.grab_frame()
                 i_p += DeltaP
+        plt.close()
 
 
 # ==============================================================================

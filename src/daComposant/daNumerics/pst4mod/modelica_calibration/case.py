@@ -345,7 +345,8 @@ class Calibration(object):
                 else:
                     self.__model["Verbose_printing_name"] = xml_file_name + ' ' + exe_file_name + ' '
             else:
-                print("  [VERBOSE] Model described: ", "/!\\ Unknown ModelFormat /!\\ ")
+                self.__model["Verbose_printing_name"] = "/!\\ Unknown ModelFormat /!\\"
+                print("  [VERBOSE] Model described: ", "/!\\ Unknown ModelFormat /!\\, exit() error")
                 exit()
         if self.__verbose: print("  [VERBOSE] Model described: ", self.__model["Verbose_printing_name"] )
         return self.__model
@@ -694,10 +695,13 @@ class Calibration(object):
         if "NumberOfProcesses" not in Params:
             Params["NumberOfProcesses"] = 0
         if "StoreSupplementaryCalculations" not in Params:
-            Params["StoreSupplementaryCalculations"] = ["SimulatedObservationAtOptimum",]
+            Params["StoreSupplementaryCalculations"] = ["SimulatedObservationAtOptimum", "CurrentIterationNumber"]
         if "StoreSupplementaryCalculations" in Params and \
             "SimulatedObservationAtOptimum" not in Params["StoreSupplementaryCalculations"]:
             Params["StoreSupplementaryCalculations"].append("SimulatedObservationAtOptimum")
+        if "StoreSupplementaryCalculations" in Params and \
+            "CurrentIterationNumber" not in Params["StoreSupplementaryCalculations"]:
+            Params["StoreSupplementaryCalculations"].append("CurrentIterationNumber")
         if self.__verbose and "StoreSupplementaryCalculations" in Params and \
             "CurrentOptimum" not in Params["StoreSupplementaryCalculations"]:
             Params["StoreSupplementaryCalculations"].append("CurrentOptimum")
@@ -719,7 +723,7 @@ class Calibration(object):
 
 #            multi_y_values_matrix = []
             for etat in range(len(LNames)):
-                simudir = self._setModelTmpDir_REF_CALCULATION(ModelName, ModelFormat, LNames[etat])
+                simudir = self._setModelTmpDir_REF_CALCULATION(ModelName, ModelFormat, os.path.basename(LNames[etat]))
 
                 try: #to handle situations in which there is only one CL (boundary conditions) file
                     var_int = numpy.ravel(LColumns[:,etat])
@@ -732,7 +736,7 @@ class Calibration(object):
                 auto_simul = Automatic_Simulation(
                     simu_dir=simudir,
                     dymosim_path = os.path.join(simudir, os.pardir, os.pardir) ,
-                    dsres_path = os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat")),
+                    dsres_path = os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat")),
                     dict_inputs=dict_inputs,
                     logfile=True,
                     timeout=TimeoutModelExecution,
@@ -763,17 +767,17 @@ class Calibration(object):
                                       curdir=path_around_simu_no_CWP,
                                       source_list_iter_var = 'from_dymtranslog',
                                       copy_from_dym_trans_log= os.path.join(path_around_simu_no_CWP,'ini.txt'),
-                                      mat = os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat")),
+                                      mat = os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat")),
                                       iter_var_values_options={'source':'from_mat', 'moment':'initial'},
                                       verbose = False)
                     around_simu_no_CWP.set_list_iter_var()
                     around_simu_no_CWP.set_dict_iter_var()
 
-                    writer_no_CWP = write_in_dsin.Write_in_dsin(dict_inputs =around_simu_no_CWP.dict_iter_var,filedir=simudir,dsin_name='dsin.txt',old_file_name='old_dsin.txt',new_file_name=str("dsin_updated_" +LNames[etat]+ ".txt"))
+                    writer_no_CWP = write_in_dsin.Write_in_dsin(dict_inputs =around_simu_no_CWP.dict_iter_var,filedir=simudir,dsin_name='dsin.txt',old_file_name='old_dsin.txt',new_file_name=str("dsin_updated_" +os.path.basename(LNames[etat])+ ".txt"))
                     writer_no_CWP.write_in_dsin
                     writer_no_CWP.write_in_dsin()
 
-                    dict_dsin_paths[LNames[etat]] = os.path.join(simudir,str("dsin_updated_" +LNames[etat]+ ".txt"))
+                    dict_dsin_paths[LNames[etat]] = os.path.join(simudir,str("dsin_updated_" +os.path.basename(LNames[etat])+ ".txt"))
 
                 else:
                     from pst4mod.modelica_libraries.change_working_point import Dict_Var_To_Fix
@@ -880,7 +884,7 @@ class Calibration(object):
 
                     shutil.copy(
                         os.path.join(simudir, 'RES','1.0.mat'),
-                        os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat"))
+                        os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat"))
                         )
 
                     path_around_simu_after_CWP = os.path.join(simudir,os.path.pardir,os.path.pardir)
@@ -900,12 +904,12 @@ class Calibration(object):
 
                     shutil.copy(
                         os.path.join(simudir, 'SIMUS','dsin_updated.txt'),
-                        os.path.join(simudir, str("dsin_updated_" +LNames[etat]+ ".txt"))
+                        os.path.join(simudir, str("dsin_updated_" +os.path.basename(LNames[etat])+ ".txt"))
                         )
-                    dict_dsin_paths[LNames[etat]] = os.path.join(simudir,str("dsin_updated_" +LNames[etat]+ ".txt"))
+                    dict_dsin_paths[LNames[etat]] = os.path.join(simudir,str("dsin_updated_" +os.path.basename(LNames[etat])+ ".txt"))
 
                 os.rename(
-                os.path.join(os.path.dirname(dict_dsin_paths[LNames[etat]]), str("dsres" +LNames[etat]+ ".mat")),
+                os.path.join(os.path.dirname(dict_dsin_paths[LNames[etat]]), str("dsres" +os.path.basename(LNames[etat])+ ".mat")),
                 os.path.join(os.path.dirname(dict_dsin_paths[LNames[etat]]), str("REF_for_CWP" + ".mat"))
                         )
 
@@ -917,14 +921,14 @@ class Calibration(object):
             from pst4mod.modelica_libraries import write_in_dsin
 
             for etat in range(len(LNames)):
-                simudir = self._setModelTmpDir_simple(ModelName, ModelFormat, str("dsin_" +LNames[etat]+ ".txt"))
+                simudir = self._setModelTmpDir_simple(ModelName, ModelFormat, str("dsin_" +os.path.basename(LNames[etat])+ ".txt"))
                 #
                 try: #to handle situations in which there is only one CL (boundary conditions) file
                     var_int = numpy.ravel(LColumns[:,etat])
                 except Exception:
                     var_int = numpy.ravel(LColumns)
                 dict_inputs = dict(zip(LVariablesToChange, var_int))
-                writer_no_CWP = write_in_dsin.Write_in_dsin(dict_inputs = dict_inputs, filedir=simudir, dsin_name=str("dsin_" +LNames[etat]+ ".txt"), old_file_name='old_dsin.txt',new_file_name = str("dsin_" +LNames[etat]+ ".txt"))
+                writer_no_CWP = write_in_dsin.Write_in_dsin(dict_inputs = dict_inputs, filedir=simudir, dsin_name=str("dsin_" +os.path.basename(LNames[etat])+ ".txt"), old_file_name='old_dsin.txt',new_file_name = str("dsin_" +os.path.basename(LNames[etat])+ ".txt"))
                 writer_no_CWP.write_in_dsin
                 writer_no_CWP.write_in_dsin()
             return
@@ -1548,26 +1552,26 @@ class Calibration(object):
                          dir_for_dsin_opti = os.path.abspath(os.path.join(self._get_Name_ModelTmpDir_simple(ModelName),os.pardir))
                          simu_dir_opti = os.path.abspath(self._get_Name_ModelTmpDir_simple(ModelName))
 
-                         writer_opti = write_in_dsin.Write_in_dsin(dict_inputs =dict_optimal_params,filedir=simu_dir_opti,dsin_name=str("dsin_" +LNames[etat]+ ".txt"),old_file_name='dsin.txt',new_file_name= str("dsin_" +LNames[etat]+ "_optimal.txt"))
+                         writer_opti = write_in_dsin.Write_in_dsin(dict_inputs =dict_optimal_params,filedir=simu_dir_opti,dsin_name=str("dsin_" +os.path.basename(LNames[etat])+ ".txt"),old_file_name='dsin.txt',new_file_name= str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt"))
                          writer_opti.write_in_dsin
 
                          writer_opti.write_in_dsin()
 
                          try:
-                             os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +LNames[etat]+ "_optimal.txt")))
+                             os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt")))
                          except Exception:
                              pass
 
                          shutil.copyfile(
-                                    os.path.join(simu_dir_opti, str("dsin_" +LNames[etat]+ "_optimal.txt")),
-                                    os.path.join(dir_for_dsin_opti, str("dsin_" +LNames[etat]+ "_optimal.txt"))
+                                    os.path.join(simu_dir_opti, str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt")),
+                                    os.path.join(dir_for_dsin_opti, str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt"))
                                     )
 
                          auto_simul_opti = Automatic_Simulation(
                                                      simu_dir=simu_dir_opti,
-                                                     dsin_name= str("dsin_" +LNames[etat]+ "_optimal.txt"),
+                                                     dsin_name= str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt"),
                                                      dymosim_path = os.path.join(simu_dir_opti, os.pardir) ,
-                                                     dsres_path = str("dsres_" +LNames[etat]+ "_opti.mat"),
+                                                     dsres_path = str("dsres_" +os.path.basename(LNames[etat])+ "_opti.mat"),
                                                      dict_inputs= {},
                                                      logfile=False,
                                                      timeout=TimeoutModelExecution,
@@ -1587,18 +1591,18 @@ class Calibration(object):
                          dict_inputs_boundary_conditions_optimal_params.update(dict_optimal_params)
 
                          try:
-                             os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +LNames[etat]+ "_optimal.txt")))
+                             os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt")))
                          except Exception:
                              pass
                          dir_for_dsin_opti = os.path.abspath(os.path.join(self._get_Name_ModelTmpDir_simple(ModelName),os.pardir))
                          shutil.copyfile(
                                     os.path.join(dir_for_dsin_opti, str("dsin.txt")),
-                                    os.path.join(dir_for_dsin_opti, str("dsin_" +LNames[etat]+ "_optimal.txt"))
+                                    os.path.join(dir_for_dsin_opti, str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt"))
                                     )
-                         writer_opti = write_in_dsin.Write_in_dsin(dict_inputs =dict_inputs_boundary_conditions_optimal_params,filedir=dir_for_dsin_opti,dsin_name=str("dsin_" +LNames[etat]+ "_optimal.txt"),old_file_name=str("dsin_" +LNames[etat]+ "_old.txt"),new_file_name= str("dsin_" +LNames[etat]+ "_optimal.txt"))
+                         writer_opti = write_in_dsin.Write_in_dsin(dict_inputs =dict_inputs_boundary_conditions_optimal_params,filedir=dir_for_dsin_opti,dsin_name=str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt"),old_file_name=str("dsin_" +os.path.basename(LNames[etat])+ "_old.txt"),new_file_name= str("dsin_" +os.path.basename(LNames[etat])+ "_optimal.txt"))
                          writer_opti.write_in_dsin
                          writer_opti.write_in_dsin()
-                         os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +LNames[etat]+ "_old.txt")))
+                         os.remove(os.path.join(dir_for_dsin_opti,str("dsin_" +os.path.basename(LNames[etat])+ "_old.txt")))
                          print("The dsin.txt with the optimal values has not been tested, updating the values of iteration variables might be necessary: this can be done by using Change_working_Point script (consider both calibrated paramaters and boundary conditions in the procedure)")
 
              else: #FMI, OM or GUESS format
@@ -1631,7 +1635,7 @@ class Calibration(object):
                 optimal_file_results_name_cl_tmp = "Optimal_simulation_tmp.csv"
                 df_optimal_results_cl_to_csv.to_csv(optimal_file_results_name_cl_tmp, sep = ";", index = False)
 
-                optimal_file_results_name_cl = "Optimal_simulation_"+obs_filename
+                optimal_file_results_name_cl = "Optimal_simulation_"+os.path.basename(obs_filename)
                 with open(optimal_file_results_name_cl_tmp, 'r') as infile:
                     readie=csv.reader(infile, delimiter=';')
                     with open(optimal_file_results_name_cl, 'wt', newline='') as output:
@@ -1662,7 +1666,7 @@ class Calibration(object):
                     initial_file_results_name_cl_tmp = "Initial_simulation_tmp.csv"
                     df_initial_results_cl_to_csv.to_csv(initial_file_results_name_cl_tmp, sep = ";", index = False)
 
-                    initial_file_results_name_cl = "Initial_simulation_"+obs_filename
+                    initial_file_results_name_cl = "Initial_simulation_"+os.path.basename(obs_filename)
                     with open(initial_file_results_name_cl_tmp, 'r') as infile:
                         readie=csv.reader(infile, delimiter=';')
                         with open(initial_file_results_name_cl, 'wt', newline='') as output:
@@ -2300,7 +2304,7 @@ def TOP_LEVEL_exeOpenModelicaMultiobs( x_values_matrix , KeepCalculationFolders 
 
         results_dir = tempfile.mkdtemp( dir=os.path.dirname(om_xml) ) #to handle parallel computation
 
-        results_file_name = os.path.join(results_dir,os.path.basename(om_xml)[:-9] + '_' + LNames[etat].replace('.','_') + ".mat")
+        results_file_name = os.path.join(results_dir,os.path.basename(om_xml)[:-9] + '_' + os.path.basename(LNames[etat]).replace('.','_') + ".mat")
 
         stdout = run_OM_model(om_xml, dict_inputs = dict_inputs, result_file_name = results_file_name , Linux = Linux, AdvancedDebugModel = AdvancedDebugModel, TimeoutModelExecution = TimeoutModelExecution)
 
@@ -2381,19 +2385,19 @@ def TOPLEVEL_exedymosimMultiobs_simple( x_values_matrix , VariablesToCalibrate=N
         dict_inputs.update( x_inputs )
         #
         shutil.copy(
-            os.path.join(ref_simudir, str("dsin_" +LNames[etat]+ ".txt")),
-            os.path.join(simudir, str("dsin_" +LNames[etat]+ ".txt"))
+            os.path.join(ref_simudir, str("dsin_" +os.path.basename(LNames[etat])+ ".txt")),
+            os.path.join(simudir, str("dsin_" +os.path.basename(LNames[etat])+ ".txt"))
             )
         _secure_copy_textfile(
-                        os.path.join(ref_simudir, str("dsin_" +LNames[etat]+ ".txt")),
-                        os.path.join(simudir, str("dsin_" +LNames[etat]+ ".txt"))
+                        os.path.join(ref_simudir, str("dsin_" +os.path.basename(LNames[etat])+ ".txt")),
+                        os.path.join(simudir, str("dsin_" +os.path.basename(LNames[etat])+ ".txt"))
                         )
 
         auto_simul = Automatic_Simulation(
                                         simu_dir = simudir,
                                         dymosim_path = os.path.join(ref_simudir,os.pardir) ,
-                                        dsin_name = str("dsin_" +LNames[etat]+ ".txt"),
-                                        dsres_path = os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat")),
+                                        dsin_name = str("dsin_" +os.path.basename(LNames[etat])+ ".txt"),
+                                        dsres_path = os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat")),
                                         dict_inputs = dict_inputs,
                                         logfile = True,
                                         timeout = TimeoutModelExecution,
@@ -2421,7 +2425,7 @@ def TOPLEVEL_exedymosimMultiobs_simple( x_values_matrix , VariablesToCalibrate=N
         else  :
             raise ValueError("The NeedInitVariables iteration should be set to True, convergence issues found for %s" % str(LNames[etat])) #means this value is 1--> not correct initialization
 
-        reader = Reader(os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat")),'dymola')
+        reader = Reader(os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat")),'dymola')
 
         y_whole = [reader.values(y_name) for y_name in OutputVariables]
 
@@ -2495,7 +2499,7 @@ def TOP_LEVEL_exedymosimMultiobs( x_values_matrix , VariablesToCalibrate=None, O
     for etat in range(len(LNames)):
         y_values =[]
 
-        ref_simudir = Calibration._setModelTmpDir( None,dict_dsin_paths[LNames[etat]], ModelFormat,   'dsin.txt', os.path.join(os.path.pardir,os.path.pardir),  LNames[etat])
+        ref_simudir = Calibration._setModelTmpDir( None,dict_dsin_paths[LNames[etat]], ModelFormat,   'dsin.txt', os.path.join(os.path.pardir,os.path.pardir),  os.path.basename(LNames[etat]))
         simudir = ref_simudir
         dict_inputs={}
         dict_inputs.update(x_inputs)
@@ -2504,7 +2508,7 @@ def TOP_LEVEL_exedymosimMultiobs( x_values_matrix , VariablesToCalibrate=None, O
         auto_simul = Automatic_Simulation(
             simu_dir=simudir,
             dymosim_path = os.path.join(simudir, os.pardir, os.pardir) ,
-            dsres_path = os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat")),
+            dsres_path = os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat")),
             dict_inputs=dict_inputs,
             logfile=True,
             timeout=TimeoutModelExecution,
@@ -2529,7 +2533,7 @@ def TOP_LEVEL_exedymosimMultiobs( x_values_matrix , VariablesToCalibrate=None, O
 
 
         if auto_simul.success_code == 0:
-            reader = Reader(os.path.join(simudir, str("dsres" +LNames[etat]+ ".mat")),'dymola')
+            reader = Reader(os.path.join(simudir, str("dsres" +os.path.basename(LNames[etat])+ ".mat")),'dymola')
 
         else:
 
