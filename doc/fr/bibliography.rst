@@ -89,6 +89,8 @@ néanmoins d'intention de constituer une bibliographie exhaustive.
 
 .. [Hamill00] Hamill T. M., Snyder C., *A Hybrid Ensemble Kalman Filter-3D Variational Analysis Scheme*, Monthly Weather Review, 128(8), pp.2905-2919, 2000
 
+.. [Hansen01] Hansen N., Ostermeier A., *Completely derandomized self-adaptation in evolution strategies*, Evolutionary Computation, 9(2), pp.159–195, 2001
+
 .. [Ide97] Ide K., Courtier P., Ghil M., Lorenc A. C., *Unified notation for data assimilation: operational, sequential and variational*, Journal of the Meteorological Society of Japan, 75(1B), pp.181-189, 1997
 
 .. [Jazwinski70] Jazwinski A. H., *Stochastic Processes and Filtering Theory*,  Academic Press, 1970

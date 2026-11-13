@@ -23,7 +23,7 @@ Minimizer
   "POWELL" (minimization, unconstrained, using conjugate directions, see [Powell64]_),
   "SIMPLEX" (minimization, with or without constraints, using Nelder-Mead simplex algorithm, see [Nelder65]_ and [WikipediaNM]_),
   "SUBPLEX" (minimization, with or without constraints, using Nelder-Mead simplex algorithm on a sequence of subspaces, see [Rowan90]_),
-  "CMA-ES" (minimization, with or without constraints, through evolutionary adaptation of the mutation covariance matrix, see [WikipediaCMAES]_).
+  "CMA-ES" (minimization, with or without constraints, through evolutionary adaptation of the mutation covariance matrix, see [Hansen01]_ and [WikipediaCMAES]_).
   Only the "POWELL" minimizer does not allow to deal with boundary constraints,
   all the others take them into account if they are present in the case
   definition.

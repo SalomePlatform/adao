@@ -17,7 +17,7 @@ Minimizer
   "POWELL" (minimisation, sans contraintes, de type directions conjuguées, voir [Powell64]_),
   "SIMPLEX" (minimisation, avec ou sans contraintes, de type Nelder-Mead utilisant le concept de simplexe, voir [Nelder65]_ et [WikipediaNM]_),
   "SUBPLEX" (minimisation, avec ou sans contraintes, de type Nelder-Mead utilisant le concept de simplexe sur une suite de sous-espaces, voir [Rowan90]_),
-  "CMA-ES" (minimisation, avec ou sans contraintes, par adaptation évolutionnaire de la matrice de covariance de mutation, voir [WikipediaCMAES]_).
+  "CMA-ES" (minimisation, avec ou sans contraintes, par adaptation évolutionnaire de la matrice de covariance de mutation, voir [Hansen01]_ et [WikipediaCMAES]_).
   Seul le minimiseur "POWELL" ne permet pas de traiter les contraintes de
   bornes, tous les autres en tiennent compte si elles sont présentes dans la
   définition du cas.

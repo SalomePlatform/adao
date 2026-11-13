@@ -183,9 +183,14 @@ Versions de compatibilité d'ADAO avec les outils support
 
 Le module ADAO bénéficie largement de l'**environnement Python** [Python]_ et
 des nombreuses possibilités de ce langage, des outils de calcul scientifique
-inclus dans **NumPy** [NumPy20]_, **SciPy** [SciPy20]_, **NLopt** [Johnson08]_
-ou dans les outils atteignables grâce à eux, et des nombreuses capacités de
-**SALOME** [Salome]_ lorsqu'il est utilisé en association.
+inclus dans **NumPy** [NumPy20]_, **SciPy** [SciPy20]_, **NLopt** [Johnson08]_,
+**CMA-ES** [Hansen01]_ ou dans les outils atteignables grâce à eux, et des
+nombreuses capacités de **SALOME** [Salome]_ lorsqu'il est utilisé en
+association. Seuls les outils de calcul scientifique NumPy et SciPy sont
+impérativement requis. Les autres outils, comme NLopt (module "nlopt"), CMA-ES
+(module "cma"), Matplotlib (module "matplotlib"), Pandas (module "pandas"),
+Scikit-Learn (module "sklearn"), sont fortement recommandés et sont
+majoritairement disponibles dans SALOME.
 
 .. include:: snippets/ModuleValidation.rst
 
